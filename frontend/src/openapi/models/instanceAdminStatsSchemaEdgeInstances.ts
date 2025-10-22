@@ -5,22 +5,17 @@
  */
 
 /**
- * The billable number of edge instances in the last 30, 60 and 90 days
+ * The rounded up average number of edge instances in the last month and month before last
  */
 export type InstanceAdminStatsSchemaEdgeInstances = {
     /**
-     * The billable number of edge instances in the last 30 days
+     * The rounded up average number of edge instances in the last month
      * @minimum 0
      */
-    last30?: number;
+    lastMonth?: number;
     /**
-     * The billable number of edge instances in the last 60 days
+     * The rounded up average number of edge instances in the month before last
      * @minimum 0
      */
-    last60?: number;
-    /**
-     * The billable number of edge instances in the last 90 days
-     * @minimum 0
-     */
-    last90?: number;
+    monthBeforeLast?: number;
 };

@@ -25,7 +25,7 @@ export interface InstanceAdminStatsSchema {
      * @minimum 0
      */
     contextFields?: number;
-    /** The billable number of edge instances in the last 30, 60 and 90 days */
+    /** The rounded up average number of edge instances in the last month and month before last */
     edgeInstances?: InstanceAdminStatsSchemaEdgeInstances;
     /**
      * The number of environments defined in this instance

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Alert, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import type {
     ChangeRequestState,
     IChangeRequestCreateMilestoneProgression,
@@ -25,6 +25,82 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     flexFlow: 'column',
     gap: theme.spacing(1),
 }));
+
+type ProgressionChange =
+    | IChangeRequestCreateMilestoneProgression
+    | IChangeRequestUpdateMilestoneProgression
+    | IChangeRequestDeleteMilestoneProgression;
+
+const getFirstChangeWithSnapshot = (
+    progressionChanges: ProgressionChange[],
+) => {
+    return (
+        progressionChanges.find(
+            (change) =>
+                change.payload?.snapshot &&
+                (change.action === 'createMilestoneProgression' ||
+                    change.action === 'updateMilestoneProgression'),
+        ) || progressionChanges.find((change) => change.payload?.snapshot)
+    );
+};
+
+const getMilestonesWithAutomation = (
+    progressionChanges: ProgressionChange[],
+): Set<string> => {
+    return new Set(
+        progressionChanges
+            .filter(
+                (change) =>
+                    change.action === 'createMilestoneProgression' ||
+                    change.action === 'updateMilestoneProgression',
+            )
+            .map((change) =>
+                change.action === 'createMilestoneProgression'
+                    ? change.payload.sourceMilestone
+                    : change.payload.sourceMilestoneId ||
+                      change.payload.sourceMilestone,
+            )
+            .filter((id): id is string => Boolean(id)),
+    );
+};
+
+const getMilestonesWithDeletedAutomation = (
+    progressionChanges: ProgressionChange[],
+): Set<string> => {
+    return new Set(
+        progressionChanges
+            .filter((change) => change.action === 'deleteMilestoneProgression')
+            .map(
+                (change) =>
+                    change.payload.sourceMilestoneId ||
+                    change.payload.sourceMilestone,
+            )
+            .filter((id): id is string => Boolean(id)),
+    );
+};
+
+const getChangeDescriptions = (
+    progressionChanges: ProgressionChange[],
+    basePlan: IReleasePlan,
+): string[] => {
+    return progressionChanges.map((change) => {
+        const sourceId =
+            change.action === 'createMilestoneProgression'
+                ? change.payload.sourceMilestone
+                : change.payload.sourceMilestoneId ||
+                  change.payload.sourceMilestone;
+        const sourceName =
+            basePlan.milestones.find((milestone) => milestone.id === sourceId)
+                ?.name || sourceId;
+        const action =
+            change.action === 'createMilestoneProgression'
+                ? 'Adding'
+                : change.action === 'deleteMilestoneProgression'
+                  ? 'Deleting'
+                  : 'Updating';
+        return `${action} automation for ${sourceName}`;
+    });
+};
 
 export const ConsolidatedProgressionChanges: FC<{
     feature: IChangeRequestFeature;
@@ -57,84 +133,32 @@ export const ConsolidatedProgressionChanges: FC<{
 
     if (progressionChanges.length === 0) return null;
 
-    // Use snapshot from first change if available, otherwise use current release plan
     const firstChangeWithSnapshot =
-        progressionChanges.find(
-            (change) =>
-                change.payload?.snapshot &&
-                (change.action === 'createMilestoneProgression' ||
-                    change.action === 'updateMilestoneProgression'),
-        ) || progressionChanges.find((change) => change.payload?.snapshot);
+        getFirstChangeWithSnapshot(progressionChanges);
     const basePlan =
         firstChangeWithSnapshot?.payload?.snapshot || currentReleasePlan;
 
     if (!basePlan) {
-        return (
-            <Alert severity='error'>
-                Unable to load release plan data. Please refresh the page.
-            </Alert>
-        );
+        return null;
     }
 
-    // Apply all progression changes
     const modifiedPlan = applyProgressionChanges(basePlan, progressionChanges);
-
-    // Collect milestone IDs with automation (modified or original)
-    const milestonesWithAutomation = new Set(
-        progressionChanges
-            .filter(
-                (change) =>
-                    change.action === 'createMilestoneProgression' ||
-                    change.action === 'updateMilestoneProgression',
-            )
-            .map((change) =>
-                change.action === 'createMilestoneProgression'
-                    ? change.payload.sourceMilestone
-                    : change.payload.sourceMilestoneId ||
-                      change.payload.sourceMilestone,
-            )
-            .filter((id): id is string => Boolean(id)),
+    const milestonesWithAutomation =
+        getMilestonesWithAutomation(progressionChanges);
+    const milestonesWithDeletedAutomation =
+        getMilestonesWithDeletedAutomation(progressionChanges);
+    const changeDescriptions = getChangeDescriptions(
+        progressionChanges,
+        basePlan,
     );
 
-    const milestonesWithDeletedAutomation = new Set(
-        progressionChanges
-            .filter((change) => change.action === 'deleteMilestoneProgression')
-            .map(
-                (change) =>
-                    change.payload.sourceMilestoneId ||
-                    change.payload.sourceMilestone,
-            )
-            .filter((id): id is string => Boolean(id)),
-    );
-
-    const changeDescriptions = progressionChanges.map((change) => {
-        const sourceId =
-            change.action === 'createMilestoneProgression'
-                ? change.payload.sourceMilestone
-                : change.payload.sourceMilestoneId ||
-                  change.payload.sourceMilestone;
-        const sourceName =
-            basePlan.milestones.find((milestone) => milestone.id === sourceId)
-                ?.name || sourceId;
-        const action =
-            change.action === 'createMilestoneProgression'
-                ? 'Adding'
-                : change.action === 'deleteMilestoneProgression'
-                  ? 'Deleting'
-                  : 'Updating';
-        return `${action} automation for ${sourceName}`;
-    });
-
-    // For diff view, we need to use basePlan with deleted automations shown
     const basePlanWithDeletedAutomations: IReleasePlan = {
         ...basePlan,
-        milestones: basePlan.milestones.map((milestone) => {
-            // If this milestone is being deleted, ensure it has its transition condition
-            if (milestonesWithDeletedAutomation.has(milestone.id)) {
-                return milestone;
-            }
-            return milestone;
-        }),
+        milestones: basePlan.milestones.map((milestone) =>
+            milestonesWithDeletedAutomation.has(milestone.id)
+                ? milestone
+                : milestone,
+        ),
     };
 
     return (

@@ -39,7 +39,7 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
     onUpdateChangeRequestSubmit,
     onDeleteChangeRequestSubmit,
 }) => {
-    const basePlan = change.payload.snapshot || currentReleasePlan;
+    const basePlan = currentReleasePlan;
     if (!basePlan) return null;
 
     const sourceId = change.payload.sourceMilestone;
@@ -83,7 +83,9 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
                 <MilestoneListRenderer
                     plan={modifiedPlan}
                     changeRequestState={changeRequestState}
-                    milestonesWithAutomation={new Set([sourceId])}
+                    milestonesWithAutomation={
+                        new Set([sourceId].filter(Boolean))
+                    }
                     onUpdateAutomation={onUpdateChangeRequestSubmit}
                     onDeleteAutomation={onDeleteChangeRequestSubmit}
                 />

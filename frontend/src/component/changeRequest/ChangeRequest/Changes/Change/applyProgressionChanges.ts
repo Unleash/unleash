@@ -23,8 +23,7 @@ export const applyProgressionChanges = (
             const deleteChange = progressionChanges.find(
                 (change): change is IChangeRequestDeleteMilestoneProgression =>
                     change.action === 'deleteMilestoneProgression' &&
-                    (change.payload.sourceMilestoneId === milestone.id ||
-                        change.payload.sourceMilestone === milestone.id),
+                    change.payload.sourceMilestone === milestone.id,
             );
 
             if (deleteChange) {

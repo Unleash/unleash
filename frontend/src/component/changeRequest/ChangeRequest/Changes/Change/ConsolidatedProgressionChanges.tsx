@@ -29,18 +29,6 @@ type ProgressionChange =
     | IChangeRequestChangeMilestoneProgression
     | IChangeRequestDeleteMilestoneProgression;
 
-const getFirstChangeWithSnapshot = (
-    progressionChanges: ProgressionChange[],
-) => {
-    return (
-        progressionChanges.find(
-            (change) =>
-                change.payload?.snapshot &&
-                change.action === 'changeMilestoneProgression',
-        ) || progressionChanges.find((change) => change.payload?.snapshot)
-    );
-};
-
 const getMilestonesWithAutomation = (
     progressionChanges: ProgressionChange[],
 ): Set<string> => {
@@ -109,10 +97,7 @@ export const ConsolidatedProgressionChanges: FC<{
 
     if (progressionChanges.length === 0) return null;
 
-    const firstChangeWithSnapshot =
-        getFirstChangeWithSnapshot(progressionChanges);
-    const basePlan =
-        firstChangeWithSnapshot?.payload?.snapshot || currentReleasePlan;
+    const basePlan = currentReleasePlan;
 
     if (!basePlan) {
         return null;

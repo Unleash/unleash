@@ -2,10 +2,7 @@ import type { IFeatureVariant } from 'interfaces/featureToggle';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
-import type {
-    SetStrategySortOrderSchema,
-    ChangeMilestoneProgressionSchema,
-} from 'openapi';
+import type { SetStrategySortOrderSchema } from 'openapi';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 
 type BaseChangeRequest = {
@@ -287,15 +284,14 @@ type ChangeRequestStartMilestone = {
     snapshot?: IReleasePlan;
 };
 
-type ChangeRequestChangeMilestoneProgression =
-    ChangeMilestoneProgressionSchema & {
-        snapshot?: IReleasePlan;
-    };
+type ChangeRequestChangeMilestoneProgression = {
+    sourceMilestone: string;
+    targetMilestone: string;
+    transitionCondition: { intervalMinutes: number };
+};
 
 type ChangeRequestDeleteMilestoneProgression = {
-    sourceMilestoneId?: string;
-    sourceMilestone?: string; // Backward compatibility for existing change requests
-    snapshot?: IReleasePlan;
+    sourceMilestone: string;
 };
 
 export type ChangeRequestAddStrategy = Pick<

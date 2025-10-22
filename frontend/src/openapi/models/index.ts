@@ -964,6 +964,7 @@ export * from './instanceAdminStatsSchemaActiveUsers.js';
 export * from './instanceAdminStatsSchemaApiTokens.js';
 export * from './instanceAdminStatsSchemaClientAppsItem.js';
 export * from './instanceAdminStatsSchemaClientAppsItemRange.js';
+export * from './instanceAdminStatsSchemaEdgeInstances.js';
 export * from './instanceAdminStatsSchemaPreviousDayMetricsBucketsCount.js';
 export * from './instanceAdminStatsSchemaProductionChanges.js';
 export * from './instanceInsightsSchema.js';

@@ -6,6 +6,7 @@
 import type { InstanceAdminStatsSchemaActiveUsers } from './instanceAdminStatsSchemaActiveUsers.js';
 import type { InstanceAdminStatsSchemaApiTokens } from './instanceAdminStatsSchemaApiTokens.js';
 import type { InstanceAdminStatsSchemaClientAppsItem } from './instanceAdminStatsSchemaClientAppsItem.js';
+import type { InstanceAdminStatsSchemaEdgeInstances } from './instanceAdminStatsSchemaEdgeInstances.js';
 import type { InstanceAdminStatsSchemaPreviousDayMetricsBucketsCount } from './instanceAdminStatsSchemaPreviousDayMetricsBucketsCount.js';
 import type { InstanceAdminStatsSchemaProductionChanges } from './instanceAdminStatsSchemaProductionChanges.js';
 
@@ -24,6 +25,8 @@ export interface InstanceAdminStatsSchema {
      * @minimum 0
      */
     contextFields?: number;
+    /** The rounded up average number of edge instances in the last month and month before last */
+    edgeInstances?: InstanceAdminStatsSchemaEdgeInstances;
     /**
      * The number of environments defined in this instance
      * @minimum 0

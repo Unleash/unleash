@@ -284,6 +284,27 @@ export const instanceAdminStatsSchema = {
             example: 1,
             description: 'The number of release plans in this instance',
         },
+        edgeInstances: {
+            type: 'object',
+            description:
+                'The rounded up average number of edge instances in the last month and month before last',
+            properties: {
+                lastMonth: {
+                    type: 'integer',
+                    description:
+                        'The rounded up average number of edge instances in the last month',
+                    example: 10,
+                    minimum: 0,
+                },
+                monthBeforeLast: {
+                    type: 'integer',
+                    description:
+                        'The rounded up average number of edge instances in the month before last',
+                    example: 12,
+                    minimum: 0,
+                },
+            },
+        },
         sum: {
             type: 'string',
             description:

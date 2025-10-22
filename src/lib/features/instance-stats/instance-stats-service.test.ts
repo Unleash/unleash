@@ -14,6 +14,7 @@ import type {
 import { createFakeGetLicensedUsers } from './getLicensedUsers.js';
 import { vi } from 'vitest';
 import { DEFAULT_ENV } from '../../server-impl.js';
+import { createFakeGetEdgeInstances } from './getEdgeInstances.js';
 
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
@@ -39,6 +40,7 @@ beforeEach(() => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
         createFakeGetLicensedUsers(),
+        createFakeGetEdgeInstances(),
     );
 
     const { collectAggDbMetrics } = registerPrometheusMetrics(

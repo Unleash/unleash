@@ -69,7 +69,7 @@ html[data-theme="dark"] .course-banner-container {
     grid-area: bullets;
     display: flex;
     flex-flow: column;
-    gap: calc(var(--ifm-spacing-horizontal) * 2);
+    gap: calc(var(--ifm-spacing-horizontal) * 0.75);
     padding-inline-start: 0;
 }
 
@@ -88,6 +88,10 @@ html[data-theme="dark"] .course-banner-container {
 
 .unleash-academy-banner-list > li + li {
     margin-block-start: 0;
+}
+
+.unleash-academy-banner-list {
+    margin-block-end: 0;
 }
 
 @media (min-width: 711px) and (max-width: 996px), (min-width: 1247px) {
@@ -111,6 +115,32 @@ html[data-theme="dark"] .course-banner-container {
 .unleash-action-button:hover {
     background: var(--button-hover-color);
     color: white;
+    text-decoration: none;
+}
+
+/* Layout wrapper for stacked action buttons on academy cards */
+.unleash-academy-buttons {
+    display: flex;
+    flex-direction: column;
+    /* Use a smaller vertical gap between buttons */
+    gap: calc(var(--ifm-spacing-vertical) * 0.25);
+}
+
+/* Fallback spacer if markup includes an explicit spacing element */
+.unleash-academy-buttons .button-spacing {
+    height: calc(var(--ifm-spacing-vertical) * 0.5);
+}
+
+/* "Get certified" button variant: gray background, purple text and border */
+.unleash-academy-buttons .get-certified {
+    background: var(--ifm-color-emphasis-100);
+    color: var(--unleash-logo-purple);
+    border: 2px solid var(--unleash-logo-purple);
+}
+
+.unleash-academy-buttons .get-certified:hover {
+    background: var(--ifm-color-emphasis-200);
+    color: var(--unleash-logo-purple);
     text-decoration: none;
 }
 
@@ -198,7 +228,8 @@ html[data-theme="dark"] .course-banner-container {
 @media (min-width: 711px) and (max-width: 996px), (min-width: 1247px) {
     .academy-general-banner-content {
         grid-template-areas: "header logo" "bullets logo" "button logo";
-        grid-template-columns: 480px auto;
+        grid-template-columns: 420px auto;
+        padding-right: 240px;
     }
 
     .academy-general-banner-content .unleash-action-button {
@@ -212,13 +243,13 @@ html[data-theme="dark"] .course-banner-container {
     .academy-general-banner .big-logo {
         position: absolute;
         background-image: url("/img/unleash-academy/academy-logo.svg");
-        bottom: 0;
-        right: 40px;
+        bottom: -20px;
+        right: 20px;
         width: 200px;
-        height: 100%;
+        height: 200px;
         background-repeat: no-repeat;
-        background-position-x: left;
-        background-position-y: 190%;
+        background-position: center;
+        background-size: contain;
     }
 }
 

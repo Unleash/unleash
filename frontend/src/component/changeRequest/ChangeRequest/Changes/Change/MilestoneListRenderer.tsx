@@ -6,6 +6,7 @@ import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverv
 import { MilestoneAutomationSection } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneAutomationSection.tsx';
 import { MilestoneTransitionDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
 import type { MilestoneStatus } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
+import { Badge } from 'component/common/Badge/Badge';
 
 const StyledConnection = styled('div')(({ theme }) => ({
     width: 2,
@@ -53,6 +54,10 @@ export const MilestoneListRenderer = ({
                     milestone.id,
                 );
 
+                const badge = hasPendingDelete ? (
+                    <Badge color='error'>Deleted in draft</Badge>
+                ) : undefined;
+
                 const automationSection =
                     showAutomation && milestone.transitionCondition ? (
                         <MilestoneAutomationSection status={status}>
@@ -73,8 +78,7 @@ export const MilestoneListRenderer = ({
                                 }
                                 milestoneName={milestone.name}
                                 status={status}
-                                hasPendingUpdate={false}
-                                hasPendingDelete={hasPendingDelete}
+                                badge={badge}
                             />
                         </MilestoneAutomationSection>
                     ) : undefined;

@@ -96,6 +96,12 @@ export const MilestoneAutomation = ({
     const hasPendingDelete =
         pendingProgressionChange?.action === 'deleteMilestoneProgression';
 
+    const badge = hasPendingDelete ? (
+        <Badge color='error'>Deleted in draft</Badge>
+    ) : hasPendingUpdate ? (
+        <Badge color='warning'>Modified in draft</Badge>
+    ) : undefined;
+
     return (
         <MilestoneAutomationSection status={status}>
             {isProgressionFormOpen ? (
@@ -114,8 +120,7 @@ export const MilestoneAutomation = ({
                     onDelete={() => onDeleteProgression(milestone)}
                     milestoneName={milestone.name}
                     status={status}
-                    hasPendingUpdate={hasPendingUpdate}
-                    hasPendingDelete={hasPendingDelete}
+                    badge={badge}
                 />
             ) : (
                 <StyledAddAutomationContainer>

@@ -1,7 +1,6 @@
 import BoltIcon from '@mui/icons-material/Bolt';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Button, IconButton, styled } from '@mui/material';
-import { Badge } from 'component/common/Badge/Badge';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput.tsx';
 import {
@@ -9,6 +8,7 @@ import {
     getTimeValueAndUnitFromMinutes,
 } from '../hooks/useMilestoneProgressionForm.js';
 import type { UpdateMilestoneProgressionSchema } from 'openapi';
+import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
@@ -64,8 +64,7 @@ interface IMilestoneTransitionDisplayProps {
     onDelete: () => void;
     milestoneName: string;
     status?: MilestoneStatus;
-    hasPendingUpdate?: boolean;
-    hasPendingDelete?: boolean;
+    badge?: ReactNode;
 }
 
 export const MilestoneTransitionDisplay = ({
@@ -74,8 +73,7 @@ export const MilestoneTransitionDisplay = ({
     onDelete,
     milestoneName,
     status,
-    hasPendingUpdate = false,
-    hasPendingDelete = false,
+    badge,
 }: IMilestoneTransitionDisplayProps) => {
     const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
     const form = useMilestoneProgressionForm(
@@ -89,8 +87,6 @@ export const MilestoneTransitionDisplay = ({
 
     const currentIntervalMinutes = form.getIntervalMinutes();
     const hasChanged = currentIntervalMinutes !== intervalMinutes;
-
-    const showDraftBadge = hasPendingUpdate || hasPendingDelete;
 
     useEffect(() => {
         const newInitial = getTimeValueAndUnitFromMinutes(intervalMinutes);
@@ -155,13 +151,7 @@ export const MilestoneTransitionDisplay = ({
                         Save
                     </Button>
                 )}
-                {showDraftBadge && (
-                    <Badge color={hasPendingDelete ? 'error' : 'warning'}>
-                        {hasPendingDelete
-                            ? 'Deleted in draft'
-                            : 'Modified in draft'}
-                    </Badge>
-                )}
+                {badge}
                 <IconButton
                     onClick={onDelete}
                     size='small'

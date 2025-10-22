@@ -2,7 +2,7 @@ import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import type {
     IReleasePlanMilestoneItemProps,
     PendingProgressionChange,
-} from './ReleasePlanMilestoneItem';
+} from './ReleasePlanMilestoneItem.jsx';
 
 interface PendingProgressionChangeResult {
     pendingProgressionChange: PendingProgressionChange | null;

@@ -35,6 +35,7 @@ export const MilestoneListRenderer = ({
     onUpdateAutomation,
     onDeleteAutomation,
 }: MilestoneListRendererProps) => {
+    // TODO: Split into read and write model at the type level to avoid having optional handlers
     const readonly =
         changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
     const status: MilestoneStatus = 'not-started';

@@ -10,9 +10,9 @@ import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgr
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { calculateMilestoneStatus } from './milestoneStatusUtils';
-import { usePendingProgressionChanges } from './usePendingProgressionChanges';
-import { MilestoneAutomation } from './MilestoneAutomation';
+import { calculateMilestoneStatus } from './milestoneStatusUtils.js';
+import { usePendingProgressionChanges } from './usePendingProgressionChanges.js';
+import { MilestoneAutomation } from './MilestoneAutomation.tsx';
 
 const StyledConnection = styled('div', {
     shouldForwardProp: (prop) => prop !== 'isCompleted',
@@ -171,7 +171,8 @@ export const ReleasePlanMilestoneItem = ({
     const { pendingProgressionChange, effectiveTransitionCondition } =
         usePendingProgressionChanges(milestone, getPendingProgressionChange);
 
-    const shouldShowAutomation = isNotLastMilestone && milestoneProgressionsEnabled;
+    const shouldShowAutomation =
+        isNotLastMilestone && milestoneProgressionsEnabled;
 
     const automationSection = shouldShowAutomation ? (
         <MilestoneAutomation

@@ -338,6 +338,7 @@ export const ReleasePlanChange: FC<{
         // Only render if this is the first progression change
         const isFirstProgression =
             progressionChanges.length > 0 && progressionChanges[0] === change;
+
         if (!isFirstProgression) {
             return null; // Skip rendering, will be handled by the first one
         }

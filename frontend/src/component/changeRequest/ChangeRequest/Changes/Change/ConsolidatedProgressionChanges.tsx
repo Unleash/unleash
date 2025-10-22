@@ -17,7 +17,7 @@ import {
 } from './Change.styles.tsx';
 import type { UpdateMilestoneProgressionSchema } from 'openapi';
 import { MilestoneListRenderer } from './MilestoneListRenderer.tsx';
-import { applyProgressionChanges } from './applyProgressionChanges';
+import { applyProgressionChanges } from './applyProgressionChanges.js';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -139,15 +139,6 @@ export const ConsolidatedProgressionChanges: FC<{
         basePlan,
     );
 
-    const basePlanWithDeletedAutomations: IReleasePlan = {
-        ...basePlan,
-        milestones: basePlan.milestones.map((milestone) =>
-            milestonesWithDeletedAutomation.has(milestone.id)
-                ? milestone
-                : milestone,
-        ),
-    };
-
     return (
         <StyledTabs>
             <ChangeItemWrapper>
@@ -173,11 +164,7 @@ export const ConsolidatedProgressionChanges: FC<{
             </ChangeItemWrapper>
             <TabPanel>
                 <MilestoneListRenderer
-                    plan={
-                        milestonesWithDeletedAutomation.size > 0
-                            ? basePlanWithDeletedAutomations
-                            : modifiedPlan
-                    }
+                    plan={modifiedPlan}
                     changeRequestState={changeRequestState}
                     milestonesWithAutomation={milestonesWithAutomation}
                     milestonesWithDeletedAutomation={

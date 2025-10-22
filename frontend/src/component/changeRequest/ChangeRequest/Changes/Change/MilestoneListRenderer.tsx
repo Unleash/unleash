@@ -45,10 +45,9 @@ export const MilestoneListRenderer = ({
                 const shouldShowAutomation =
                     milestonesWithAutomation.has(milestone.id) ||
                     milestonesWithDeletedAutomation.has(milestone.id);
+
                 const showAutomation =
-                    isNotLastMilestone &&
-                    shouldShowAutomation &&
-                    milestone.transitionCondition;
+                    isNotLastMilestone && shouldShowAutomation;
 
                 const hasPendingDelete = milestonesWithDeletedAutomation.has(
                     milestone.id,
@@ -59,7 +58,8 @@ export const MilestoneListRenderer = ({
                         <MilestoneAutomationSection status={status}>
                             <MilestoneTransitionDisplay
                                 intervalMinutes={
-                                    milestone.transitionCondition.intervalMinutes
+                                    milestone.transitionCondition
+                                        .intervalMinutes
                                 }
                                 onSave={async (payload) => {
                                     await onUpdateAutomation?.(

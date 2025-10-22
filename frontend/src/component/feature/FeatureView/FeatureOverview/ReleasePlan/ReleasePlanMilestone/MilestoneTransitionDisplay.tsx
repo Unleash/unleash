@@ -92,7 +92,6 @@ export const MilestoneTransitionDisplay = ({
 
     const showDraftBadge = hasPendingUpdate || hasPendingDelete;
 
-    // Sync form when intervalMinutes prop changes (e.g., after refetch)
     useEffect(() => {
         const newInitial = getTimeValueAndUnitFromMinutes(intervalMinutes);
         form.setTimeValue(newInitial.value);
@@ -110,8 +109,6 @@ export const MilestoneTransitionDisplay = ({
 
         const result = await onSave(payload);
 
-        // If change request, reset to current saved value
-        // Otherwise, form will automatically sync when intervalMinutes prop updates after refetch
         if (result?.shouldReset) {
             handleReset();
         }

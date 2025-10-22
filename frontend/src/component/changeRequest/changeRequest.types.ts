@@ -289,7 +289,6 @@ type ChangeRequestStartMilestone = {
 
 type ChangeRequestChangeMilestoneProgression =
     ChangeMilestoneProgressionSchema & {
-        sourceMilestoneId: string;
         snapshot?: IReleasePlan;
     };
 

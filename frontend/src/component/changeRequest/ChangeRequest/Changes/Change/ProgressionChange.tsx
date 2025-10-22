@@ -8,12 +8,7 @@ import type { IReleasePlan } from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
-import {
-    Action,
-    Added,
-    ChangeItemInfo,
-    ChangeItemWrapper,
-} from './Change.styles.tsx';
+import { Action, ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
 import { styled } from '@mui/material';
 import { MilestoneListRenderer } from './MilestoneListRenderer.tsx';
 import { applyProgressionChanges } from './applyProgressionChanges.ts';
@@ -47,7 +42,7 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
     const basePlan = change.payload.snapshot || currentReleasePlan;
     if (!basePlan) return null;
 
-    const sourceId = change.payload.sourceMilestoneId;
+    const sourceId = change.payload.sourceMilestone;
     if (!sourceId) return null;
 
     const sourceMilestone = basePlan.milestones.find(
@@ -55,9 +50,10 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
     );
     const sourceMilestoneName = sourceMilestone?.name || sourceId;
 
-    const targetMilestoneName = basePlan.milestones.find(
-        (milestone) => milestone.id === change.payload.targetMilestone,
-    )?.name || change.payload.targetMilestone;
+    const targetMilestoneName =
+        basePlan.milestones.find(
+            (milestone) => milestone.id === change.payload.targetMilestone,
+        )?.name || change.payload.targetMilestone;
 
     const modifiedPlan = applyProgressionChanges(basePlan, [change]);
 

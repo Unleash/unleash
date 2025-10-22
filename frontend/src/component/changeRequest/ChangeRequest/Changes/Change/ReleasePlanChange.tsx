@@ -281,7 +281,7 @@ export const ReleasePlanChange: FC<{
             feature: featureName,
             action: 'changeMilestoneProgression',
             payload: {
-                sourceMilestoneId: sourceMilestoneId,
+                sourceMilestone: sourceMilestoneId,
                 ...payload,
             },
         });

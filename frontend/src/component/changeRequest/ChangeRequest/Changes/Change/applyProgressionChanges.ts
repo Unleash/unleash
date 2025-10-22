@@ -18,7 +18,7 @@ export const applyProgressionChanges = (
             const changeProgression = progressionChanges.find(
                 (change): change is IChangeRequestChangeMilestoneProgression =>
                     change.action === 'changeMilestoneProgression' &&
-                    change.payload.sourceMilestoneId === milestone.id,
+                    change.payload.sourceMilestone === milestone.id,
             );
             const deleteChange = progressionChanges.find(
                 (change): change is IChangeRequestDeleteMilestoneProgression =>

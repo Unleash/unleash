@@ -4,10 +4,7 @@ import type {
     IReleasePlan,
     IReleasePlanMilestone,
 } from 'interfaces/releasePlans';
-import type {
-    CreateMilestoneProgressionSchema,
-    UpdateMilestoneProgressionSchema,
-} from 'openapi';
+import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { getTimeValueAndUnitFromMinutes } from '../hooks/useMilestoneProgressionForm.js';
 
 const StyledBoldSpan = styled('span')(({ theme }) => ({
@@ -24,13 +21,8 @@ type ChangeRequestAction =
           milestone: IReleasePlanMilestone;
       }
     | {
-          type: 'createMilestoneProgression';
-          payload: CreateMilestoneProgressionSchema;
-      }
-    | {
-          type: 'updateMilestoneProgression';
-          sourceMilestoneId: string;
-          payload: UpdateMilestoneProgressionSchema;
+          type: 'changeMilestoneProgression';
+          payload: ChangeMilestoneProgressionSchema;
       }
     | {
           type: 'deleteMilestoneProgression';
@@ -91,7 +83,7 @@ export const ReleasePlanChangeRequestDialog = ({
                     </p>
                 );
 
-            case 'createMilestoneProgression': {
+            case 'changeMilestoneProgression': {
                 const sourceMilestone = releasePlan.milestones.find(
                     (milestone) =>
                         milestone.id === action.payload.sourceMilestone,
@@ -108,32 +100,11 @@ export const ReleasePlanChangeRequestDialog = ({
 
                 return (
                     <p>
-                        Create automation to proceed from{' '}
+                        Configure automation to proceed from{' '}
                         <StyledBoldSpan>{sourceMilestone?.name}</StyledBoldSpan>{' '}
                         to{' '}
                         <StyledBoldSpan>{targetMilestone?.name}</StyledBoldSpan>{' '}
                         after <StyledBoldSpan>{timeInterval}</StyledBoldSpan> in{' '}
-                        {environmentId}
-                    </p>
-                );
-            }
-
-            case 'updateMilestoneProgression': {
-                const milestone = releasePlan.milestones.find(
-                    (milestone) => milestone.id === action.sourceMilestoneId,
-                );
-
-                const { value, unit } = getTimeValueAndUnitFromMinutes(
-                    action.payload.transitionCondition.intervalMinutes,
-                );
-                const timeInterval = `${value} ${unit}`;
-
-                return (
-                    <p>
-                        Update automation for{' '}
-                        <StyledBoldSpan>{milestone?.name}</StyledBoldSpan> to
-                        proceed after{' '}
-                        <StyledBoldSpan>{timeInterval}</StyledBoldSpan> in{' '}
                         {environmentId}
                     </p>
                 );

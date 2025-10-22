@@ -13,4 +13,5 @@ export interface ChangeMilestoneProgressionSchema {
     targetMilestone: string;
     /** The condition configuration for the transition */
     transitionCondition: TransitionConditionSchema;
+    [key: string]: unknown;
 }

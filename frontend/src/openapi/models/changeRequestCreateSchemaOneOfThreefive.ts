@@ -4,15 +4,15 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestCreateSchemaOneOfThreefiveAction } from './changeRequestCreateSchemaOneOfThreefiveAction.js';
-import type { CreateMilestoneProgressionSchema } from './createMilestoneProgressionSchema.js';
+import type { ChangeRequestCreateSchemaOneOfThreefivePayload } from './changeRequestCreateSchemaOneOfThreefivePayload.js';
 
 /**
- * Create milestone progression from one milestone to another.
+ * Create or update milestone progression from one milestone to another.
  */
 export type ChangeRequestCreateSchemaOneOfThreefive = {
     /** The name of this action. */
     action: ChangeRequestCreateSchemaOneOfThreefiveAction;
     /** The name of the feature that this change applies to. */
     feature: string;
-    payload: CreateMilestoneProgressionSchema;
+    payload: ChangeRequestCreateSchemaOneOfThreefivePayload;
 };

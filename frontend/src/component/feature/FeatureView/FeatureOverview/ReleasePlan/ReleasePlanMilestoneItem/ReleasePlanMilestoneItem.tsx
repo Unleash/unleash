@@ -43,7 +43,6 @@ export interface IReleasePlanMilestoneItemProps {
     onDeleteProgression: (milestone: IReleasePlanMilestone) => void;
     onAddToChangeRequest: (action: {
         type: 'changeMilestoneProgression';
-        sourceMilestoneId: string;
         payload: ChangeMilestoneProgressionSchema;
     }) => void;
     getPendingProgressionChange: (
@@ -93,8 +92,10 @@ export const ReleasePlanMilestoneItem = ({
         if (isChangeRequestConfigured(environment)) {
             onAddToChangeRequest({
                 type: 'changeMilestoneProgression',
-                sourceMilestoneId: milestone.id,
-                payload,
+                payload: {
+                    ...payload,
+                    sourceMilestone: milestone.id,
+                },
             });
             return { shouldReset: true };
         }

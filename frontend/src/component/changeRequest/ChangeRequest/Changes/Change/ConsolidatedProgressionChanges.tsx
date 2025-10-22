@@ -47,7 +47,7 @@ const getMilestonesWithAutomation = (
     return new Set(
         progressionChanges
             .filter((change) => change.action === 'changeMilestoneProgression')
-            .map((change) => change.payload.sourceMilestoneId)
+            .map((change) => change.payload.sourceMilestone)
             .filter((id): id is string => Boolean(id)),
     );
 };
@@ -58,11 +58,7 @@ const getMilestonesWithDeletedAutomation = (
     return new Set(
         progressionChanges
             .filter((change) => change.action === 'deleteMilestoneProgression')
-            .map(
-                (change) =>
-                    change.payload.sourceMilestoneId ||
-                    change.payload.sourceMilestone,
-            )
+            .map((change) => change.payload.sourceMilestone)
             .filter((id): id is string => Boolean(id)),
     );
 };
@@ -72,11 +68,7 @@ const getChangeDescriptions = (
     basePlan: IReleasePlan,
 ): string[] => {
     return progressionChanges.map((change) => {
-        const sourceId =
-            change.action === 'changeMilestoneProgression'
-                ? change.payload.sourceMilestoneId
-                : change.payload.sourceMilestoneId ||
-                  change.payload.sourceMilestone;
+        const sourceId = change.payload.sourceMilestone;
         const sourceName =
             basePlan.milestones.find((milestone) => milestone.id === sourceId)
                 ?.name || sourceId;

@@ -23,6 +23,6 @@ export type ChangeRequestSearchItemSchemaOneOf = {
     segments: string[];
     /** The current state of the change request. */
     state: ChangeRequestSearchItemSchemaOneOfState;
-    /** Title of the change request. */
-    title: string;
+    /** Title of the change request. Only present if a custom title is set for this change request. */
+    title?: string;
 };

@@ -102,14 +102,12 @@ const ChangeRequestsInner = () => {
 
     const columns = useMemo(
         () => [
-            {
+            columnHelper.accessor('id', {
                 id: 'Title',
                 header: 'Title',
                 meta: { width: '300px' },
-                cell: ({ row }) => (
-                    <GlobalChangeRequestTitleCell {...row.original} />
-                ),
-            },
+                cell: GlobalChangeRequestTitleCell,
+            }),
             columnHelper.accessor('features', {
                 id: 'Updated feature flags',
                 header: 'Updated feature flags',

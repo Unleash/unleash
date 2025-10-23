@@ -4,6 +4,7 @@ import { Link as RouterLink, type LinkProps } from 'react-router-dom';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import type { ChangeRequestSearchItemSchema } from 'openapi';
+import type { Row } from '@tanstack/react-table';
 
 const LinkContainer = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -34,13 +35,21 @@ const UpdateText = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
 }));
 
+type GlobalChangeRequestTitleCellProps = {
+    row: Row<ChangeRequestSearchItemSchema>;
+};
+
 export const GlobalChangeRequestTitleCell = ({
-    id,
-    title,
-    project,
-    features: featureChanges,
-    segments: segmentChanges,
-}: ChangeRequestSearchItemSchema) => {
+    row: {
+        original: {
+            id,
+            title,
+            project,
+            features: featureChanges,
+            segments: segmentChanges,
+        },
+    },
+}: GlobalChangeRequestTitleCellProps) => {
     const projectName = useProjectOverviewNameOrId(project);
     const totalChanges =
         featureChanges?.length ?? 0 + segmentChanges?.length ?? 0;

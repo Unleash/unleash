@@ -17,6 +17,10 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { ReleasePlanChangeRequestDialog } from './ChangeRequest/ReleasePlanChangeRequestDialog.tsx';
+import type {
+    IChangeRequestChangeMilestoneProgression,
+    IChangeRequestDeleteMilestoneProgression,
+} from 'component/changeRequest/changeRequest.types';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -136,17 +140,15 @@ export const ReleasePlan = ({
 
             // Look for change or delete progression changes
             const progressionChange = featureInChangeRequest.changes.find(
-                (change: any) =>
+                (
+                    change,
+                ): change is
+                    | IChangeRequestChangeMilestoneProgression
+                    | IChangeRequestDeleteMilestoneProgression =>
                     (change.action === 'changeMilestoneProgression' &&
-                        (change.payload.sourceMilestoneId ===
-                            sourceMilestoneId ||
-                            change.payload.sourceMilestone ===
-                                sourceMilestoneId)) ||
+                        change.payload.sourceMilestone === sourceMilestoneId) ||
                     (change.action === 'deleteMilestoneProgression' &&
-                        (change.payload.sourceMilestoneId ===
-                            sourceMilestoneId ||
-                            change.payload.sourceMilestone ===
-                                sourceMilestoneId)),
+                        change.payload.sourceMilestone === sourceMilestoneId),
             );
 
             if (progressionChange) {

@@ -12,12 +12,10 @@ export type ChangeRequestSearchItemSchemaOneOfCreatedBy = {
     id: number;
     /**
      * Avatar image URL for the user.
-     * @nullable
      */
-    imageUrl?: string | null;
+    imageUrl?: string;
     /**
      * Username of the user.
-     * @nullable
      */
-    username?: string | null;
+    username?: string;
 };

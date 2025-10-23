@@ -9,7 +9,7 @@ interface PendingProgressionChangeResult {
     effectiveTransitionCondition: IReleasePlanMilestone['transitionCondition'];
 }
 
-export const usePendingProgressionChanges = (
+export const getPendingProgressionData = (
     milestone: IReleasePlanMilestone,
     getPendingProgressionChange: IReleasePlanMilestoneItemProps['getPendingProgressionChange'],
 ): PendingProgressionChangeResult => {

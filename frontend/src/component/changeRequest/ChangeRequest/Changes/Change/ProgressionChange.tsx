@@ -10,7 +10,10 @@ import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 import { Action, ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
 import { styled } from '@mui/material';
-import { MilestoneListRenderer } from './MilestoneListRenderer.tsx';
+import {
+    ReadonlyMilestoneListRenderer,
+    EditableMilestoneListRenderer,
+} from './MilestoneListRenderer.tsx';
 import { applyProgressionChanges } from './applyProgressionChanges.ts';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -24,11 +27,11 @@ interface ProgressionChangeProps {
     currentReleasePlan?: IReleasePlan;
     actions?: ReactNode;
     changeRequestState: ChangeRequestState;
-    onUpdateChangeRequestSubmit?: (
+    onUpdateChangeRequestSubmit: (
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
-    onDeleteChangeRequestSubmit?: (sourceMilestoneId: string) => void;
+    onDeleteChangeRequestSubmit: (sourceMilestoneId: string) => void;
 }
 
 export const ProgressionChange: FC<ProgressionChangeProps> = ({
@@ -62,6 +65,9 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
         (milestone) => milestone.id === sourceId,
     );
 
+    const readonly =
+        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+
     return (
         <StyledTabs>
             <ChangeItemWrapper>
@@ -80,15 +86,23 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
                 </div>
             </ChangeItemWrapper>
             <TabPanel>
-                <MilestoneListRenderer
-                    plan={modifiedPlan}
-                    changeRequestState={changeRequestState}
-                    milestonesWithAutomation={
-                        new Set([sourceId].filter(Boolean))
-                    }
-                    onUpdateAutomation={onUpdateChangeRequestSubmit}
-                    onDeleteAutomation={onDeleteChangeRequestSubmit}
-                />
+                {readonly ? (
+                    <ReadonlyMilestoneListRenderer
+                        plan={modifiedPlan}
+                        milestonesWithAutomation={
+                            new Set([sourceId].filter(Boolean))
+                        }
+                    />
+                ) : (
+                    <EditableMilestoneListRenderer
+                        plan={modifiedPlan}
+                        milestonesWithAutomation={
+                            new Set([sourceId].filter(Boolean))
+                        }
+                        onUpdateAutomation={onUpdateChangeRequestSubmit}
+                        onDeleteAutomation={onDeleteChangeRequestSubmit}
+                    />
+                )}
             </TabPanel>
             <TabPanel variant='diff'>
                 <EventDiff

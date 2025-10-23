@@ -292,7 +292,7 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1121jr7"
+                        className="css-1ui83sq"
                         data-loading={true}
                       >
                         Tag type description when loading
@@ -471,7 +471,7 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1121jr7"
+                        className="css-1ui83sq"
                         data-loading={true}
                       >
                         Tag type description when loading
@@ -650,7 +650,7 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1121jr7"
+                        className="css-1ui83sq"
                         data-loading={true}
                       >
                         Tag type description when loading
@@ -829,7 +829,7 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1121jr7"
+                        className="css-1ui83sq"
                         data-loading={true}
                       >
                         Tag type description when loading
@@ -1008,7 +1008,7 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1121jr7"
+                        className="css-1ui83sq"
                         data-loading={true}
                       >
                         Tag type description when loading

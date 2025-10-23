@@ -10,12 +10,8 @@
 export type ChangeRequestSearchItemSchemaOneOfFourCreatedBy = {
     /** Unique identifier of the user. */
     id: number;
-    /**
-     * Avatar image URL for the user.
-     */
+    /** Avatar image URL for the user. */
     imageUrl?: string;
-    /**
-     * Username of the user.
-     */
+    /** Username of the user. */
     username?: string;
 };

@@ -79,7 +79,6 @@ const sidebars: SidebarsConfig = {
                         'reference/projects',
                         'reference/project-collaboration-mode',
                         'reference/environments',
-                        'how-to/how-to-environment-import-export',
                     ],
                 },
                 {
@@ -178,6 +177,11 @@ const sidebars: SidebarsConfig = {
                         'reference/search-operators',
                         'reference/maintenance-mode',
                     ],
+                },
+                {
+                    type: 'doc',
+                    label: 'Import and export',
+                    id: 'how-to/how-to-environment-import-export',
                 },
             ],
         },
@@ -329,11 +333,6 @@ const sidebars: SidebarsConfig = {
                                     type: 'doc',
                                     label: 'Examples',
                                     id: 'feature-flag-tutorials/react/examples',
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'Manage feature flags in code',
-                                    id: 'feature-flag-tutorials/use-cases/manage-feature-flags-in-code',
                                 },
                             ],
                         },

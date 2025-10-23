@@ -40,7 +40,8 @@ const links = [
         description:
             'For all roles working with Unleash - Developers, Product owners, Leaders',
         link: 'foundational',
-        academyLink: 'https://docs.google.com/forms/d/e/1FAIpQLSe5F9cuGlkkUgVOGZ8Ny6xtsaSRygfUCMR-cab0e_DRIMk5sw/viewform',
+        academyLink:
+            'https://docs.google.com/forms/d/e/1FAIpQLSe5F9cuGlkkUgVOGZ8Ny6xtsaSRygfUCMR-cab0e_DRIMk5sw/viewform',
     },
     {
         level: 'Advanced',
@@ -48,7 +49,8 @@ const links = [
         description:
             'For Developers only, after Foundational content has been reviewed',
         link: 'advanced-for-devs',
-        academyLink: 'https://docs.google.com/forms/d/e/1FAIpQLSfvux6w80HTHg5SEHxir6vEp5dQxDVsyk_-F2IPKbBgH5faMg/viewform',
+        academyLink:
+            'https://docs.google.com/forms/d/e/1FAIpQLSfvux6w80HTHg5SEHxir6vEp5dQxDVsyk_-F2IPKbBgH5faMg/viewform',
     },
     {
         level: 'Advanced',
@@ -56,7 +58,8 @@ const links = [
         description:
             'For DevOps, Platform leads and Admins only after Foundational content has been reviewed',
         link: 'managing-unleash-for-devops',
-        academyLink: 'https://docs.google.com/forms/d/e/1FAIpQLScS8yHuDs0xSsqmFs9W9ptBJUKDts7WSi9g_FoU2D-oK2W7Bg/viewform',
+        academyLink:
+            'https://docs.google.com/forms/d/e/1FAIpQLScS8yHuDs0xSsqmFs9W9ptBJUKDts7WSi9g_FoU2D-oK2W7Bg/viewform',
     },
 ];
 
@@ -64,17 +67,19 @@ const Component = () => {
     return (
         <div className='unleash-academy-links-container'>
             <ul className='unleash-academy-links'>
-                {links.map(({ level, header, description, link, academyLink }) => (
-                    <li key={header}>
-                        <LinkBox
-                            level={level}
-                            header={header}
-                            description={description}
-                            link={link}
-                            academyLink={academyLink}
-                        />
-                    </li>
-                ))}
+                {links.map(
+                    ({ level, header, description, link, academyLink }) => (
+                        <li key={header}>
+                            <LinkBox
+                                level={level}
+                                header={header}
+                                description={description}
+                                link={link}
+                                academyLink={academyLink}
+                            />
+                        </li>
+                    ),
+                )}
             </ul>
         </div>
     );

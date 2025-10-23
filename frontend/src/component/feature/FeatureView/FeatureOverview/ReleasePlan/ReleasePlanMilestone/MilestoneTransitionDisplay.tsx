@@ -11,6 +11,26 @@ import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 
+const StyledFormWrapper = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'hasChanged',
+})<{ hasChanged: boolean }>(({ theme, hasChanged }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.5),
+    width: '100%',
+    transition: theme.transitions.create(
+        ['background-color', 'padding', 'border-radius'],
+        {
+            duration: theme.transitions.duration.short,
+        },
+    ),
+    ...(hasChanged && {
+        backgroundColor: theme.palette.background.elevation1,
+        padding: theme.spacing(1.5, 2),
+        borderRadius: `${theme.shape.borderRadiusLarge}px`,
+    }),
+}));
+
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -50,10 +70,24 @@ const StyledLabel = styled('span', {
     flexShrink: 0,
 }));
 
-const StyledButtonGroup = styled('div')(({ theme }) => ({
+const StyledButtonGroup = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'hasChanged',
+})<{ hasChanged: boolean }>(({ theme, hasChanged }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
+    justifyContent: 'flex-end',
+    transition: theme.transitions.create(
+        ['border-top', 'padding-top', 'margin-top'],
+        {
+            duration: theme.transitions.duration.short,
+        },
+    ),
+    ...(hasChanged && {
+        paddingTop: theme.spacing(1),
+        marginTop: theme.spacing(0.5),
+        borderTop: `1px solid ${theme.palette.divider}`,
+    }),
 }));
 
 interface IMilestoneTransitionDisplayProps {
@@ -130,21 +164,44 @@ export const MilestoneTransitionDisplay = ({
     };
 
     return (
-        <StyledDisplayContainer onKeyDown={handleKeyDown}>
-            <StyledContentGroup>
-                <StyledIcon status={status} />
-                <StyledLabel status={status}>
-                    Proceed to the next milestone after
-                </StyledLabel>
-                <MilestoneProgressionTimeInput
-                    timeValue={form.timeValue}
-                    timeUnit={form.timeUnit}
-                    onTimeValueChange={form.handleTimeValueChange}
-                    onTimeUnitChange={form.handleTimeUnitChange}
-                />
-            </StyledContentGroup>
-            <StyledButtonGroup>
-                {hasChanged && (
+        <StyledFormWrapper hasChanged={hasChanged} onKeyDown={handleKeyDown}>
+            <StyledDisplayContainer>
+                <StyledContentGroup>
+                    <StyledIcon status={status} />
+                    <StyledLabel status={status}>
+                        Proceed to the next milestone after
+                    </StyledLabel>
+                    <MilestoneProgressionTimeInput
+                        timeValue={form.timeValue}
+                        timeUnit={form.timeUnit}
+                        onTimeValueChange={form.handleTimeValueChange}
+                        onTimeUnitChange={form.handleTimeUnitChange}
+                    />
+                </StyledContentGroup>
+                {!hasChanged && (
+                    <StyledButtonGroup hasChanged={false}>
+                        {badge}
+                        <IconButton
+                            onClick={onDelete}
+                            size='small'
+                            aria-label={`Delete automation for ${milestoneName}`}
+                            sx={{ padding: 0.5 }}
+                        >
+                            <DeleteOutlineIcon fontSize='small' />
+                        </IconButton>
+                    </StyledButtonGroup>
+                )}
+            </StyledDisplayContainer>
+            {hasChanged && (
+                <StyledButtonGroup hasChanged={true}>
+                    <Button
+                        variant='outlined'
+                        color='primary'
+                        onClick={handleReset}
+                        size='small'
+                    >
+                        Cancel
+                    </Button>
                     <Button
                         variant='contained'
                         color='primary'
@@ -153,17 +210,8 @@ export const MilestoneTransitionDisplay = ({
                     >
                         Save
                     </Button>
-                )}
-                {badge}
-                <IconButton
-                    onClick={onDelete}
-                    size='small'
-                    aria-label={`Delete automation for ${milestoneName}`}
-                    sx={{ padding: 0.5 }}
-                >
-                    <DeleteOutlineIcon fontSize='small' />
-                </IconButton>
-            </StyledButtonGroup>
-        </StyledDisplayContainer>
+                </StyledButtonGroup>
+            )}
+        </StyledFormWrapper>
     );
 };

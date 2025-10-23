@@ -29,6 +29,46 @@ describe('DB is up', () => {
         );
         await request.get('/ready').expect(200).expect('{"health":"GOOD"}');
     });
+
+    test('fails fast when readiness query hangs', async () => {
+        const { request } = await setupAppWithCustomConfig(
+            db.stores,
+            { checkDbOnReady: true },
+            db.rawDatabase,
+        );
+
+        const pool = db.rawDatabase.client.pool;
+        const originalAcquire = pool.acquire.bind(pool);
+
+        pool.acquire = () => {
+            const pending = originalAcquire();
+            pending.promise = pending.promise.then((conn: any) => {
+                const originalQuery = conn.query;
+                conn.query = (queryConfig: any, ...args: any[]) => {
+                    const isSelectOne =
+                        queryConfig?.toUpperCase() === 'SELECT 1';
+
+                    if (isSelectOne) {
+                        return originalQuery.call(
+                            conn,
+                            'SELECT pg_sleep(1)',
+                            ...args,
+                        );
+                    }
+
+                    return originalQuery.call(conn, queryConfig, ...args);
+                };
+                return conn;
+            });
+            return pending;
+        };
+
+        try {
+            await request.get('/ready').expect(503);
+        } finally {
+            pool.acquire = originalAcquire;
+        }
+    });
 });
 
 describe('DB is down', () => {

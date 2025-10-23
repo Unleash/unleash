@@ -81,9 +81,22 @@ export class ReadyCheckController extends Controller {
         }
 
         try {
-            connection.query({
-                text: 'SELECT 1',
+            await connection.query('BEGIN');
+            await connection.query({
+                text: `SET LOCAL statement_timeout = ${timeoutMs}`,
             });
+            await connection.query('SELECT 1');
+            await connection.query('COMMIT');
+        } catch (error) {
+            try {
+                await connection.query('ROLLBACK');
+            } catch (rollbackError) {
+                this.logger.debug(
+                    'Failed to rollback readiness timeout transaction',
+                    rollbackError,
+                );
+            }
+            throw error;
         } finally {
             if (connection) {
                 await client.releaseConnection(connection);

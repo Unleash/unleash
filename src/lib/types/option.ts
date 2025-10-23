@@ -302,6 +302,5 @@ export interface IUnleashConfig {
     userInactivityThresholdInDays: number;
     buildDate?: string;
     unleashFrontendToken?: string;
-    /** If true, the readiness endpoint will attempt a simple Postgres query to verify DB availability */
     checkDbOnReady?: boolean;
 }

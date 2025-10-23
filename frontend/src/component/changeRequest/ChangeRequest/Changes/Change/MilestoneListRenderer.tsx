@@ -51,9 +51,14 @@ const MilestoneListRendererCore = ({
                 const hasPendingDelete = milestonesWithDeletedAutomation.has(
                     milestone.id,
                 );
+                const hasPendingModification = milestonesWithAutomation.has(
+                    milestone.id,
+                );
 
                 const badge = hasPendingDelete ? (
                     <Badge color='error'>Deleted in draft</Badge>
+                ) : hasPendingModification ? (
+                    <Badge color='warning'>Modified in draft</Badge>
                 ) : undefined;
 
                 const automationSection =

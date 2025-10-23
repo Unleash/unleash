@@ -84,14 +84,14 @@ export const MilestoneAutomation = ({
 
     const hasPendingCreate =
         pendingProgressionChange?.action === 'createMilestoneProgression';
-    const hasPendingUpdate =
-        pendingProgressionChange?.action === 'updateMilestoneProgression';
+    const hasPendingChange =
+        pendingProgressionChange?.action === 'changeMilestoneProgression';
     const hasPendingDelete =
         pendingProgressionChange?.action === 'deleteMilestoneProgression';
 
     const badge = hasPendingDelete ? (
         <Badge color='error'>Deleted in draft</Badge>
-    ) : hasPendingUpdate ? (
+    ) : hasPendingChange ? (
         <Badge color='warning'>Modified in draft</Badge>
     ) : undefined;
 

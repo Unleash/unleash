@@ -57,7 +57,7 @@ export const GlobalChangeRequestTitleCell = ({
     const crPath = `${projectPath}/change-requests/${id}`;
 
     return (
-        <TextCell sx={{ minWidth: '300px' }}>
+        <TextCell>
             <LinkContainer>
                 <Truncator title={projectName}>
                     <BaseLink to={projectPath}>{projectName}</BaseLink>

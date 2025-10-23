@@ -59,7 +59,7 @@ const StyledTitleContainer = styled('div')(({ theme }) => ({
 }));
 
 const StyledMilestoneLabel = styled('span')(({ theme }) => ({
-    fontSize: '0.75rem',
+    fontSize: theme.typography.caption.fontSize,
     color: theme.palette.text.secondary,
 }));
 
@@ -126,7 +126,9 @@ export const ReleasePlanMilestone = ({
                 <StyledAccordion status={status} hasAutomation={hasAutomation}>
                     <StyledAccordionSummary>
                         <StyledTitleContainer>
-                            <StyledMilestoneLabel>Milestone</StyledMilestoneLabel>
+                            <StyledMilestoneLabel>
+                                Milestone
+                            </StyledMilestoneLabel>
                             <StyledTitle status={status}>
                                 {milestone.name}
                             </StyledTitle>

@@ -175,6 +175,7 @@ export interface IUnleashOptions {
     resourceLimits?: Partial<ResourceLimits>;
     userInactivityThresholdInDays?: number;
     unleashFrontendToken?: string;
+    checkDbOnReady?: boolean;
 }
 
 export interface IEmailOption {
@@ -301,4 +302,6 @@ export interface IUnleashConfig {
     userInactivityThresholdInDays: number;
     buildDate?: string;
     unleashFrontendToken?: string;
+    /** If true, the readiness endpoint will attempt a simple Postgres query to verify DB availability */
+    checkDbOnReady?: boolean;
 }

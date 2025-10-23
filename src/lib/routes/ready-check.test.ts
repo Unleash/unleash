@@ -28,14 +28,14 @@ afterEach(() => {
     getLogger.setMuteError(false);
 });
 
-test('should give 200 when healthy', async () => {
-    await request.get('/health').expect(200);
+test('should give 200 when ready', async () => {
+    await request.get('/ready').expect(200);
 });
 
-test('should give health=GOOD when healthy', async () => {
+test('should give health=GOOD when ready', async () => {
     expect.assertions(2);
     await request
-        .get('/health')
+        .get('/ready')
         .expect(200)
         .expect((res) => {
             expect(res.status).toBe(200);

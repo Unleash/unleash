@@ -10,9 +10,9 @@ export const readyCheckSchema = {
     properties: {
         health: {
             description:
-                'The readiness state this Unleash instance is in. GOOD if the server is up and running. It never returns BAD; if the server is unhealthy you will get an unsuccessful http response.',
+                'The readiness state this Unleash instance is in. GOOD if the server is up and running. If the server is unhealthy you will get an unsuccessful http response.',
             type: 'string',
-            enum: ['GOOD', 'BAD'],
+            enum: ['GOOD'],
             example: 'GOOD',
         },
     },

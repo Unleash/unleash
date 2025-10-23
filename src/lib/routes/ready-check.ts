@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import type { PoolClient } from 'pg';
 import type { IUnleashConfig } from '../types/option.js';
 import type { IUnleashServices } from '../services/index.js';
 import type { Db } from '../db/db.js';
@@ -8,6 +9,7 @@ import Controller from './controller.js';
 import { NONE } from '../types/permissions.js';
 import { createResponseSchema } from '../openapi/util/create-response-schema.js';
 import type { ReadyCheckSchema } from '../openapi/spec/ready-check-schema.js';
+import { emptyResponse, parseEnvVarNumber } from '../server-impl.js';
 
 export class ReadyCheckController extends Controller {
     private logger: Logger;
@@ -37,7 +39,7 @@ export class ReadyCheckController extends Controller {
                         'This operation returns information about whether this Unleash instance is ready to serve requests or not. Typically used by your deployment orchestrator (e.g. Kubernetes, Docker Swarm, Mesos, et al.).',
                     responses: {
                         200: createResponseSchema('readyCheckSchema'),
-                        500: createResponseSchema('readyCheckSchema'),
+                        503: emptyResponse,
                     },
                 }),
             ],
@@ -47,16 +49,53 @@ export class ReadyCheckController extends Controller {
     async getReady(_: Request, res: Response<ReadyCheckSchema>): Promise<void> {
         if (this.config.checkDbOnReady && this.db) {
             try {
-                await this.db.raw('select 1');
+                const timeoutMs = parseEnvVarNumber(
+                    process.env.DATABASE_STATEMENT_TIMEOUT_MS,
+                    200,
+                );
+
+                await this.runReadinessQuery(timeoutMs);
                 res.status(200).json({ health: 'GOOD' });
                 return;
             } catch (err: any) {
                 this.logger.warn('Database readiness check failed', err);
-                res.status(500).json({ health: 'BAD' });
+                res.status(503).end();
                 return;
             }
         }
 
         res.status(200).json({ health: 'GOOD' });
     }
+
+    private async runReadinessQuery(timeoutMs: number): Promise<void> {
+        const client = getKnexClient(this.db!);
+        const pendingAcquire = client.pool.acquire();
+
+        const abortDelay = setTimeout(() => pendingAcquire.abort(), timeoutMs);
+        let connection: PoolClient | undefined;
+
+        try {
+            connection = (await pendingAcquire.promise) as PoolClient;
+        } finally {
+            clearTimeout(abortDelay);
+        }
+
+        try {
+            connection.query({
+                text: 'SELECT 1',
+            });
+        } finally {
+            if (connection) {
+                await client.releaseConnection(connection);
+            }
+        }
+    }
+}
+
+function getKnexClient(db: Db): Db['client'] {
+    if (db.client?.pool && typeof db.client.releaseConnection === 'function') {
+        return db.client as Db['client'];
+    }
+
+    throw new Error('Unsupported database handle for readiness check');
 }

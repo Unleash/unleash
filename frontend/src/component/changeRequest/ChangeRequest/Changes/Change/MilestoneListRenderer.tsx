@@ -1,7 +1,6 @@
 import { styled } from '@mui/material';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
-import type { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
 import { MilestoneAutomationSection } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneAutomationSection.tsx';
 import { MilestoneTransitionDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
@@ -15,29 +14,26 @@ const StyledConnection = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(3.25),
 }));
 
-interface MilestoneListRendererProps {
+interface MilestoneListRendererCoreProps {
     plan: IReleasePlan;
-    changeRequestState: ChangeRequestState;
-    milestonesWithAutomation?: Set<string>;
-    milestonesWithDeletedAutomation?: Set<string>;
-    onUpdateAutomation?: (
+    readonly: boolean;
+    milestonesWithAutomation: Set<string>;
+    milestonesWithDeletedAutomation: Set<string>;
+    onUpdateAutomation: (
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
-    onDeleteAutomation?: (sourceMilestoneId: string) => void;
+    onDeleteAutomation: (sourceMilestoneId: string) => void;
 }
 
-export const MilestoneListRenderer = ({
+const MilestoneListRendererCore = ({
     plan,
-    changeRequestState,
-    milestonesWithAutomation = new Set(),
-    milestonesWithDeletedAutomation = new Set(),
+    readonly,
+    milestonesWithAutomation,
+    milestonesWithDeletedAutomation,
     onUpdateAutomation,
     onDeleteAutomation,
-}: MilestoneListRendererProps) => {
-    // TODO: Split into read and write model at the type level to avoid having optional handlers
-    const readonly =
-        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+}: MilestoneListRendererCoreProps) => {
     const status: MilestoneStatus = 'not-started';
 
     return (
@@ -70,14 +66,14 @@ export const MilestoneListRenderer = ({
                                 }
                                 targetMilestoneId={nextMilestoneId}
                                 onSave={async (payload) => {
-                                    await onUpdateAutomation?.(
+                                    await onUpdateAutomation(
                                         milestone.id,
                                         payload,
                                     );
                                     return { shouldReset: true };
                                 }}
                                 onDelete={() =>
-                                    onDeleteAutomation?.(milestone.id)
+                                    onDeleteAutomation(milestone.id)
                                 }
                                 milestoneName={milestone.name}
                                 status={status}
@@ -100,5 +96,58 @@ export const MilestoneListRenderer = ({
                 );
             })}
         </>
+    );
+};
+
+interface ReadonlyMilestoneListRendererProps {
+    plan: IReleasePlan;
+    milestonesWithAutomation?: Set<string>;
+    milestonesWithDeletedAutomation?: Set<string>;
+}
+
+export const ReadonlyMilestoneListRenderer = ({
+    plan,
+    milestonesWithAutomation = new Set(),
+    milestonesWithDeletedAutomation = new Set(),
+}: ReadonlyMilestoneListRendererProps) => {
+    return (
+        <MilestoneListRendererCore
+            plan={plan}
+            readonly={true}
+            milestonesWithAutomation={milestonesWithAutomation}
+            milestonesWithDeletedAutomation={milestonesWithDeletedAutomation}
+            onUpdateAutomation={async () => {}}
+            onDeleteAutomation={() => {}}
+        />
+    );
+};
+
+interface EditableMilestoneListRendererProps {
+    plan: IReleasePlan;
+    milestonesWithAutomation?: Set<string>;
+    milestonesWithDeletedAutomation?: Set<string>;
+    onUpdateAutomation: (
+        sourceMilestoneId: string,
+        payload: ChangeMilestoneProgressionSchema,
+    ) => Promise<void>;
+    onDeleteAutomation: (sourceMilestoneId: string) => void;
+}
+
+export const EditableMilestoneListRenderer = ({
+    plan,
+    milestonesWithAutomation = new Set(),
+    milestonesWithDeletedAutomation = new Set(),
+    onUpdateAutomation,
+    onDeleteAutomation,
+}: EditableMilestoneListRendererProps) => {
+    return (
+        <MilestoneListRendererCore
+            plan={plan}
+            readonly={false}
+            milestonesWithAutomation={milestonesWithAutomation}
+            milestonesWithDeletedAutomation={milestonesWithDeletedAutomation}
+            onUpdateAutomation={onUpdateAutomation}
+            onDeleteAutomation={onDeleteAutomation}
+        />
     );
 };

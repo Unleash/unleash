@@ -8,7 +8,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { calculateMilestoneStatus } from './milestoneStatusUtils.js';
-import { usePendingProgressionChanges } from './usePendingProgressionChanges.js';
+import { getPendingProgressionData } from './pendingProgressionChanges.js';
 import { MilestoneAutomation } from './MilestoneAutomation.tsx';
 
 const StyledConnection = styled('div', {
@@ -130,7 +130,7 @@ export const ReleasePlanMilestoneItem = ({
     );
 
     const { pendingProgressionChange, effectiveTransitionCondition } =
-        usePendingProgressionChanges(milestone, getPendingProgressionChange);
+        getPendingProgressionData(milestone, getPendingProgressionChange);
 
     const shouldShowAutomation =
         isNotLastMilestone && milestoneProgressionsEnabled;

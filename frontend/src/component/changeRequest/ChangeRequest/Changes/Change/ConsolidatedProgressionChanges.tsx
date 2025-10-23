@@ -15,7 +15,10 @@ import {
     Deleted,
 } from './Change.styles.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
-import { MilestoneListRenderer } from './MilestoneListRenderer.tsx';
+import {
+    ReadonlyMilestoneListRenderer,
+    EditableMilestoneListRenderer,
+} from './MilestoneListRenderer.tsx';
 import { applyProgressionChanges } from './applyProgressionChanges.js';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 
@@ -72,11 +75,11 @@ export const ConsolidatedProgressionChanges: FC<{
     feature: IChangeRequestFeature;
     currentReleasePlan?: IReleasePlan;
     changeRequestState: ChangeRequestState;
-    onUpdateChangeRequestSubmit?: (
+    onUpdateChangeRequestSubmit: (
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
-    onDeleteChangeRequestSubmit?: (sourceMilestoneId: string) => Promise<void>;
+    onDeleteChangeRequestSubmit: (sourceMilestoneId: string) => Promise<void>;
 }> = ({
     feature,
     currentReleasePlan,
@@ -113,6 +116,9 @@ export const ConsolidatedProgressionChanges: FC<{
         basePlan,
     );
 
+    const readonly =
+        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+
     return (
         <StyledTabs>
             <ChangeItemWrapper>
@@ -137,16 +143,25 @@ export const ConsolidatedProgressionChanges: FC<{
                 </div>
             </ChangeItemWrapper>
             <TabPanel>
-                <MilestoneListRenderer
-                    plan={modifiedPlan}
-                    changeRequestState={changeRequestState}
-                    milestonesWithAutomation={milestonesWithAutomation}
-                    milestonesWithDeletedAutomation={
-                        milestonesWithDeletedAutomation
-                    }
-                    onUpdateAutomation={onUpdateChangeRequestSubmit}
-                    onDeleteAutomation={onDeleteChangeRequestSubmit}
-                />
+                {readonly ? (
+                    <ReadonlyMilestoneListRenderer
+                        plan={modifiedPlan}
+                        milestonesWithAutomation={milestonesWithAutomation}
+                        milestonesWithDeletedAutomation={
+                            milestonesWithDeletedAutomation
+                        }
+                    />
+                ) : (
+                    <EditableMilestoneListRenderer
+                        plan={modifiedPlan}
+                        milestonesWithAutomation={milestonesWithAutomation}
+                        milestonesWithDeletedAutomation={
+                            milestonesWithDeletedAutomation
+                        }
+                        onUpdateAutomation={onUpdateChangeRequestSubmit}
+                        onDeleteAutomation={onDeleteChangeRequestSubmit}
+                    />
+                )}
             </TabPanel>
             <TabPanel variant='diff'>
                 <EventDiff

@@ -19,7 +19,7 @@ const StyledConnection = styled('div', {
     backgroundColor: isCompleted
         ? theme.palette.divider
         : theme.palette.primary.main,
-    marginLeft: theme.spacing(3.25),
+    marginLeft: theme.spacing(3.5),
 }));
 
 export interface PendingProgressionChange {
@@ -133,7 +133,7 @@ export const ReleasePlanMilestoneItem = ({
         getPendingProgressionData(milestone, getPendingProgressionChange);
 
     const shouldShowAutomation =
-        isNotLastMilestone && milestoneProgressionsEnabled;
+        isNotLastMilestone && milestoneProgressionsEnabled && !readonly;
 
     const automationSection = shouldShowAutomation ? (
         <MilestoneAutomation

@@ -134,10 +134,10 @@ export const ReleasePlan = ({
             );
             if (!featureInChangeRequest) continue;
 
-            // Look for update or delete progression changes
+            // Look for change or delete progression changes
             const progressionChange = featureInChangeRequest.changes.find(
                 (change: any) =>
-                    (change.action === 'updateMilestoneProgression' &&
+                    (change.action === 'changeMilestoneProgression' &&
                         (change.payload.sourceMilestoneId ===
                             sourceMilestoneId ||
                             change.payload.sourceMilestone ===

@@ -23,10 +23,10 @@ const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
 })<{ status: MilestoneStatus; hasAutomation?: boolean }>(
     ({ theme, status, hasAutomation }) => ({
-        border: `${status === 'active' ? '1.25px' : '1px'} solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+        border: `${status === 'active' ? '1.5px' : '1px'} solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
         borderBottom: hasAutomation
             ? 'none'
-            : `${status === 'active' ? '1.25px' : '1px'} solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+            : `${status === 'active' ? '1.5px' : '1px'} solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
         overflow: 'hidden',
         boxShadow: 'none',
         margin: 0,
@@ -56,6 +56,11 @@ const StyledTitleContainer = styled('div')(({ theme }) => ({
     alignItems: 'start',
     flexDirection: 'column',
     gap: theme.spacing(0.5),
+}));
+
+const StyledMilestoneLabel = styled('span')(({ theme }) => ({
+    fontSize: theme.typography.caption.fontSize,
+    color: theme.palette.text.secondary,
 }));
 
 const StyledTitle = styled('span', {
@@ -121,6 +126,9 @@ export const ReleasePlanMilestone = ({
                 <StyledAccordion status={status} hasAutomation={hasAutomation}>
                     <StyledAccordionSummary>
                         <StyledTitleContainer>
+                            <StyledMilestoneLabel>
+                                Milestone
+                            </StyledMilestoneLabel>
                             <StyledTitle status={status}>
                                 {milestone.name}
                             </StyledTitle>
@@ -175,6 +183,7 @@ export const ReleasePlanMilestone = ({
             >
                 <StyledAccordionSummary expandIcon={<ExpandMore />}>
                     <StyledTitleContainer>
+                        <StyledMilestoneLabel>Milestone</StyledMilestoneLabel>
                         <StyledTitle status={status}>
                             {milestone.name}
                         </StyledTitle>

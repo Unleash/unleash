@@ -11,7 +11,7 @@ const StyledConnection = styled('div')(({ theme }) => ({
     width: 2,
     height: theme.spacing(2),
     backgroundColor: theme.palette.divider,
-    marginLeft: theme.spacing(3.25),
+    marginLeft: theme.spacing(3.5),
 }));
 
 interface MilestoneListRendererCoreProps {

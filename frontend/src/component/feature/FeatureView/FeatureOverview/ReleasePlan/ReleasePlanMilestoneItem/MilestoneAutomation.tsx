@@ -36,12 +36,6 @@ const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const StyledAddAutomationContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
 interface MilestoneAutomationProps {
     milestone: IReleasePlanMilestone;
     status: MilestoneStatus;
@@ -82,20 +76,14 @@ export const MilestoneAutomation = ({
         return null;
     }
 
-    // When milestone has no original transitionCondition but has a pending changeMilestoneProgression, it's a create
-    const isOriginallyEmpty = !milestone.transitionCondition;
-    const hasPendingCreate =
-        isOriginallyEmpty &&
-        pendingProgressionChange?.action === 'changeMilestoneProgression';
     const hasPendingChange =
-        !isOriginallyEmpty &&
         pendingProgressionChange?.action === 'changeMilestoneProgression';
     const hasPendingDelete =
         pendingProgressionChange?.action === 'deleteMilestoneProgression';
 
     const badge = hasPendingDelete ? (
         <Badge color='error'>Deleted in draft</Badge>
-    ) : hasPendingChange || hasPendingCreate ? (
+    ) : hasPendingChange ? (
         <Badge color='warning'>Modified in draft</Badge>
     ) : undefined;
 
@@ -121,18 +109,13 @@ export const MilestoneAutomation = ({
                     badge={badge}
                 />
             ) : (
-                <StyledAddAutomationContainer>
-                    <StyledAddAutomationButton
-                        onClick={onOpenProgressionForm}
-                        color='primary'
-                        startIcon={<Add />}
-                    >
-                        Add automation
-                    </StyledAddAutomationButton>
-                    {hasPendingCreate && (
-                        <Badge color='warning'>Modified in draft</Badge>
-                    )}
-                </StyledAddAutomationContainer>
+                <StyledAddAutomationButton
+                    onClick={onOpenProgressionForm}
+                    color='primary'
+                    startIcon={<Add />}
+                >
+                    Add automation
+                </StyledAddAutomationButton>
             )}
         </MilestoneAutomationSection>
     );

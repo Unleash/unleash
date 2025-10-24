@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { SearchChangeRequestsState } from './searchChangeRequestsState.js';
 
 export type SearchChangeRequestsParams = {
     /**
@@ -13,6 +14,10 @@ export type SearchChangeRequestsParams = {
      * Filter by requested approver user ID
      */
     requestedApproverId?: string;
+    /**
+     * Filter by open / closed change requests. Change requests that are in 'draft', 'in review', 'approved', or 'scheduled' states are considered open. Change requests that are in 'cancelled', 'applied', or 'rejected' states are considered closed.
+     */
+    state?: SearchChangeRequestsState;
     /**
      * The number of change requests to skip when returning a page. By default it is set to 0.
      */

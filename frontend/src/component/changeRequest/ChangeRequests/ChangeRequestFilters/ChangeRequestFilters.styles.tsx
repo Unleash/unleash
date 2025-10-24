@@ -28,13 +28,11 @@ export const makeStyledChip = (ariaControlTarget: string) =>
             borderBottomRightRadius: theme.shape.borderRadius,
         },
 
-        '&:not(&[aria-current="true"])': {
-            '&:not(&:first-of-type)': {
-                borderLeftWidth: 0,
-            },
-            '&:not(&:last-of-type)': {
-                borderRightWidth: 0,
-            },
+        '&:not(&[aria-current="true"], :last-of-type)': {
+            borderRightWidth: 0,
+        },
+        '[aria-current="true"] + &': {
+            borderLeftWidth: 0,
         },
 
         '& .MuiChip-label': {

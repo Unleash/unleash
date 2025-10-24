@@ -97,7 +97,8 @@ export const ReleasePlanMilestoneItem = ({
                     sourceMilestone: milestone.id,
                 },
             });
-            return { shouldReset: true };
+            handleCloseProgressionForm();
+            return {};
         }
 
         try {

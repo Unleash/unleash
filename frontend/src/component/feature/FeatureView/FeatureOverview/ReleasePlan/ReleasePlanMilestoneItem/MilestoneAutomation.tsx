@@ -82,16 +82,20 @@ export const MilestoneAutomation = ({
         return null;
     }
 
+    // When milestone has no original transitionCondition but has a pending changeMilestoneProgression, it's a create
+    const isOriginallyEmpty = !milestone.transitionCondition;
     const hasPendingCreate =
-        pendingProgressionChange?.action === 'createMilestoneProgression';
+        isOriginallyEmpty &&
+        pendingProgressionChange?.action === 'changeMilestoneProgression';
     const hasPendingChange =
+        !isOriginallyEmpty &&
         pendingProgressionChange?.action === 'changeMilestoneProgression';
     const hasPendingDelete =
         pendingProgressionChange?.action === 'deleteMilestoneProgression';
 
     const badge = hasPendingDelete ? (
         <Badge color='error'>Deleted in draft</Badge>
-    ) : hasPendingChange ? (
+    ) : hasPendingChange || hasPendingCreate ? (
         <Badge color='warning'>Modified in draft</Badge>
     ) : undefined;
 

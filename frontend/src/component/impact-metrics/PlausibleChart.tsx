@@ -91,9 +91,9 @@ export const PlausibleChart: FC<PlausibleChartProps> = ({
         ...overrideOptions,
         scales: {
             x: {
-                type: 'time',
+                type: 'time' as const,
                 time: {
-                    unit: 'hour',
+                    unit: 'hour' as const,
                     displayFormats: {
                         hour: 'MMM dd, HH:mm',
                     },

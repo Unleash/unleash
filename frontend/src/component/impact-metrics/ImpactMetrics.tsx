@@ -110,21 +110,14 @@ export const ImpactMetrics: FC = () => {
             const plausibleChartItem: GridItem = {
                 id: 'plausible-analytics',
                 component: <PlausibleChartItem />,
-                w: 12,
-                h: 4,
-                x: 0,
-                y: 0,
-                minW: 6,
-                minH: 3,
-                maxW: 12,
-                maxH: 6,
+                w: 6,
+                h: 2,
             };
             items.push(plausibleChartItem);
         }
 
         const impactMetricsItems: GridItem[] = charts.map((config, index) => {
             const existingLayout = layout?.find((item) => item.i === config.id);
-            const yOffset = plausibleMetricsEnabled ? 4 : 0;
             return {
                 id: config.id,
                 component: (
@@ -137,7 +130,7 @@ export const ImpactMetrics: FC = () => {
                 w: existingLayout?.w ?? 6,
                 h: existingLayout?.h ?? 4,
                 x: existingLayout?.x,
-                y: existingLayout?.y ? existingLayout.y + yOffset : yOffset,
+                y: existingLayout?.y,
                 minW: 4,
                 minH: 2,
                 maxW: 12,

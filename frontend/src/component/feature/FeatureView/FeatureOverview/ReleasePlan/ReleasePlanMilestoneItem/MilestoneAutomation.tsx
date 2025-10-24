@@ -36,12 +36,6 @@ const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const StyledAddAutomationContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
 interface MilestoneAutomationProps {
     milestone: IReleasePlanMilestone;
     status: MilestoneStatus;
@@ -82,8 +76,6 @@ export const MilestoneAutomation = ({
         return null;
     }
 
-    const hasPendingCreate =
-        pendingProgressionChange?.action === 'createMilestoneProgression';
     const hasPendingChange =
         pendingProgressionChange?.action === 'changeMilestoneProgression';
     const hasPendingDelete =
@@ -117,18 +109,13 @@ export const MilestoneAutomation = ({
                     badge={badge}
                 />
             ) : (
-                <StyledAddAutomationContainer>
-                    <StyledAddAutomationButton
-                        onClick={onOpenProgressionForm}
-                        color='primary'
-                        startIcon={<Add />}
-                    >
-                        Add automation
-                    </StyledAddAutomationButton>
-                    {hasPendingCreate && (
-                        <Badge color='warning'>Modified in draft</Badge>
-                    )}
-                </StyledAddAutomationContainer>
+                <StyledAddAutomationButton
+                    onClick={onOpenProgressionForm}
+                    color='primary'
+                    startIcon={<Add />}
+                >
+                    Add automation
+                </StyledAddAutomationButton>
             )}
         </MilestoneAutomationSection>
     );

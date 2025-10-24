@@ -15,10 +15,10 @@ export const getPendingProgressionData = (
 ): PendingProgressionChangeResult => {
     const pendingProgressionChange = getPendingProgressionChange(milestone.id);
 
-    // Determine effective transition condition (use pending create if exists)
+    // Determine effective transition condition (use pending change if exists)
     let effectiveTransitionCondition = milestone.transitionCondition;
     if (
-        pendingProgressionChange?.action === 'createMilestoneProgression' &&
+        pendingProgressionChange?.action === 'changeMilestoneProgression' &&
         'transitionCondition' in pendingProgressionChange.payload &&
         pendingProgressionChange.payload.transitionCondition
     ) {

@@ -14,25 +14,16 @@ import { useUiFlag } from 'hooks/useUiFlag.js';
 import { withTableState } from 'utils/withTableState';
 import {
     useChangeRequestSearch,
-    DEFAULT_PAGE_LIMIT,
     type SearchChangeRequestsInput,
 } from 'hooks/api/getters/useChangeRequestSearch/useChangeRequestSearch';
 import type { ChangeRequestSearchItemSchema } from 'openapi';
-import {
-    NumberParam,
-    StringParam,
-    withDefault,
-    useQueryParams,
-    encodeQueryParams,
-} from 'use-query-params';
+import { useQueryParams, encodeQueryParams } from 'use-query-params';
 import useLoading from 'hooks/useLoading';
 import { styles as themeStyles } from 'component/common';
-import { FilterItemParam } from 'utils/serializeQueryParams';
-import {
-    ChangeRequestFilters,
-    type ChangeRequestQuickFilter,
-} from './ChangeRequestFilters.js';
+import { ChangeRequestFilters } from './ChangeRequestFilters/ChangeRequestFilters.js';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser.js';
+import type { IUser } from 'interfaces/user.js';
+import { stateConfig } from './ChangeRequests.types.js';
 
 const columnHelper = createColumnHelper<ChangeRequestSearchItemSchema>();
 
@@ -49,46 +40,33 @@ const StyledPaginatedTable = styled(
     },
 }));
 
-const ChangeRequestsInner = () => {
-    const { user } = useAuthUser();
+const defaultTableState = (user: IUser) => ({
+    createdBy: {
+        operator: 'IS' as const,
+        values: [user.id.toString()],
+    },
+    state: {
+        operator: 'IS' as const,
+        values: ['open'],
+    },
+});
+
+const ChangeRequestsInner = ({ user }: { user: IUser }) => {
     const urlParams = new URLSearchParams(window.location.search);
-    const shouldApplyDefaults =
-        user &&
-        !urlParams.has('createdBy') &&
-        !urlParams.has('requestedApproverId');
-    const initialFilter = urlParams.has('requestedApproverId')
-        ? 'Approval Requested'
-        : 'Created';
+    const shouldApplyDefaults = !urlParams.toString();
 
-    const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-        sortBy: withDefault(StringParam, 'createdAt'),
-        sortOrder: withDefault(StringParam, 'desc'),
-        createdBy: FilterItemParam,
-        requestedApproverId: FilterItemParam,
-    };
-
-    const initialState = shouldApplyDefaults
-        ? {
-              createdBy: {
-                  operator: 'IS' as const,
-                  values: [user.id.toString()],
-              },
-          }
-        : {};
+    const initialState = shouldApplyDefaults ? defaultTableState(user) : {};
 
     const [tableState, setTableState] = useQueryParams(stateConfig, {
         updateType: 'replaceIn',
     });
 
-    const effectiveTableState = useMemo(
-        () => ({
-            ...tableState,
-            ...initialState,
-        }),
-        [initialState, tableState],
-    );
+    const effectiveTableState = shouldApplyDefaults
+        ? {
+              ...tableState,
+              ...initialState,
+          }
+        : tableState;
 
     const {
         changeRequests: data,
@@ -172,30 +150,6 @@ const ChangeRequestsInner = () => {
         }),
     );
     const tableId = useId();
-    const handleQuickFilterChange = (filter: ChangeRequestQuickFilter) => {
-        if (!user) {
-            // todo (globalChangeRequestList): handle this somehow? Or just ignore.
-            return;
-        }
-        const [targetProperty, otherProperty] =
-            filter === 'Created'
-                ? ['createdBy', 'requestedApproverId']
-                : ['requestedApproverId', 'createdBy'];
-
-        // todo (globalChangeRequestList): extract and test the logic for wiping out createdby/requestedapproverid
-        setTableState((state) => ({
-            [targetProperty]: {
-                operator: 'IS',
-                values: [user.id.toString()],
-            },
-            [otherProperty]:
-                state[otherProperty]?.values.length === 1 &&
-                state[otherProperty].values[0] === user.id.toString()
-                    ? null
-                    : state[otherProperty],
-        }));
-    };
-
     const bodyLoadingRef = useLoading(loading);
 
     return (
@@ -205,8 +159,9 @@ const ChangeRequestsInner = () => {
         >
             <ChangeRequestFilters
                 ariaControlTarget={tableId}
-                initialSelection={initialFilter}
-                onSelectionChange={handleQuickFilterChange}
+                tableState={effectiveTableState}
+                setTableState={setTableState}
+                userId={user.id}
             />
 
             <div
@@ -231,6 +186,7 @@ const ChangeRequestsInner = () => {
 };
 
 export const ChangeRequests = () => {
+    const { user } = useAuthUser();
     if (!useUiFlag('globalChangeRequestList')) {
         return (
             <PageContent header={<PageHeader title='Change requests' />}>
@@ -239,5 +195,16 @@ export const ChangeRequests = () => {
         );
     }
 
-    return <ChangeRequestsInner />;
+    if (!user) {
+        return (
+            <PageContent header={<PageHeader title='Change requests' />}>
+                <p>
+                    Failed to get your user information. Please refresh. If the
+                    problem persists, get in touch.
+                </p>
+            </PageContent>
+        );
+    }
+
+    return <ChangeRequestsInner user={user} />;
 };

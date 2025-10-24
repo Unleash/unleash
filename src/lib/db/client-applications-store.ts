@@ -141,7 +141,6 @@ export default class ClientApplicationsStore
     }
 
     async upsert(details: Partial<IClientApplication>): Promise<void> {
-        const stopTimer = this.timer('upsert');
         const row = remapRow(details);
         await this.db(TABLE).insert(row).onConflict('app_name').merge();
         const usageRows = this.remapUsageRow(details);
@@ -149,11 +148,9 @@ export default class ClientApplicationsStore
             .insert(usageRows)
             .onConflict(['app_name', 'project', 'environment'])
             .merge();
-        stopTimer();
     }
 
     async bulkUpsert(apps: Partial<IClientApplication>[]): Promise<void> {
-        const stopTimer = this.timer('bulkUpsert');
         const rows = apps.map(remapRow);
         const uniqueRows = Object.values(
             rows.reduce((acc, row) => {
@@ -179,38 +176,33 @@ export default class ClientApplicationsStore
             .insert(uniqueUsageRows)
             .onConflict(['app_name', 'project', 'environment'])
             .merge();
-        stopTimer();
     }
 
     async exists(appName: string): Promise<boolean> {
-        const stopTimer = this.timer('exists');
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE app_name = ?) AS present`,
             [appName],
         );
         const { present } = result.rows[0];
-        stopTimer();
         return present;
     }
 
     async getAll(): Promise<IClientApplication[]> {
-        const stopTimer = this.timer('getAll');
         const rows = await this.db
             .select(COLUMNS)
             .from(TABLE)
             .orderBy('app_name', 'asc');
-        stopTimer();
+
         return rows.map(mapRow);
     }
 
     async getApplication(appName: string): Promise<IClientApplication> {
-        const stopTimer = this.timer('getApplication');
         const row = await this.db
             .select(COLUMNS)
             .where('app_name', appName)
             .from(TABLE)
             .first();
-        stopTimer();
+
         if (!row) {
             throw new NotFoundError(`Could not find appName=${appName}`);
         }
@@ -225,7 +217,6 @@ export default class ClientApplicationsStore
     async getApplications(
         params: IClientApplicationsSearchParams,
     ): Promise<IClientApplications> {
-        const stopTimer = this.timer('getApplications');
         const { limit, offset, sortOrder = 'asc', searchParams } = params;
         const validatedSortOrder =
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
@@ -266,7 +257,6 @@ export default class ClientApplicationsStore
             .whereBetween('rank', [offset + 1, offset + limit]);
 
         const rows = await query;
-        stopTimer();
 
         if (rows.length !== 0) {
             const applications = reduceRows(rows);
@@ -283,11 +273,9 @@ export default class ClientApplicationsStore
     }
 
     async getUnannounced(): Promise<IClientApplication[]> {
-        const stopTimer = this.timer('getUnannounced');
         const rows = await this.db(TABLE)
             .select(COLUMNS)
             .where('announced', false);
-        stopTimer();
         return rows.map(mapRow);
     }
 
@@ -296,38 +284,31 @@ export default class ClientApplicationsStore
      * @return {[app]} - Apps that hadn't been announced
      */
     async setUnannouncedToAnnounced(): Promise<IClientApplication[]> {
-        const stopTimer = this.timer('setUnannouncedToAnnounced');
         const rows = await this.db(TABLE)
             .update({ announced: true })
             .where('announced', false)
             .whereNotNull('announced')
             .returning(COLUMNS);
-        stopTimer();
         return rows.map(mapRow);
     }
 
     async delete(key: string): Promise<void> {
-        const stopTimer = this.timer('delete');
         await this.db(TABLE).where('app_name', key).del();
-        stopTimer();
     }
 
     async deleteAll(): Promise<void> {
-        const stopTimer = this.timer('deleteAll');
         await this.db(TABLE).del();
-        stopTimer();
     }
 
     destroy(): void {}
 
     async get(appName: string): Promise<IClientApplication> {
-        const stopTimer = this.timer('get');
         const row = await this.db
             .select(COLUMNS)
             .where('app_name', appName)
             .from(TABLE)
             .first();
-        stopTimer();
+
         if (!row) {
             throw new NotFoundError(`Could not find appName=${appName}`);
         }
@@ -500,11 +481,10 @@ export default class ClientApplicationsStore
     };
 
     async removeInactiveApplications(): Promise<number> {
-        const stopTimer = this.timer('removeInactiveApplications');
         const rows = await this.db(TABLE)
             .whereRaw("seen_at < now() - interval '30 days'")
             .del();
-        stopTimer();
+
         if (rows > 0) {
             this.logger.debug(`Deleted ${rows} applications`);
         }

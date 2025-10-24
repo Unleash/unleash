@@ -39,7 +39,6 @@ export type IFlagKey =
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
     | 'projectRoleAssignment'
-    | 'originMiddlewareRequestLogging'
     | 'webhookDomainLogging'
     | 'productivityReportEmail'
     | 'productivityReportUnsubscribers'

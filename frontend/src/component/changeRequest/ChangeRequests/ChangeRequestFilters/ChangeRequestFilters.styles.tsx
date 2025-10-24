@@ -28,6 +28,15 @@ export const makeStyledChip = (ariaControlTarget: string) =>
             borderBottomRightRadius: theme.shape.borderRadius,
         },
 
+        '&:not(&[aria-current="true"])': {
+            '&:not(&:first-of-type)': {
+                borderLeftWidth: 0,
+            },
+            '&:not(&:last-of-type)': {
+                borderRightWidth: 0,
+            },
+        },
+
         '& .MuiChip-label': {
             position: 'relative',
             textAlign: 'center',

@@ -191,6 +191,7 @@ import type { ReleasePlanMilestoneWriteModel } from './features/release-plans/re
 import type { IReleasePlanReadModel } from './features/release-plans/release-plan-read-model-type.js';
 import { ReleasePlanReadModel } from './features/release-plans/release-plan-read-model.js';
 import { FakeChangeRequestAccessReadModel } from './features/change-request-access-service/fake-change-request-access-read-model.js';
+import { fakeImpactMetricsResolver } from '../test/fixtures/fake-impact-metrics.js';
 
 export async function initialServiceSetup(
     { authentication }: Pick<IUnleashConfig, 'authentication'>,
@@ -447,6 +448,7 @@ export {
     DB_TIME,
     EventStore,
     FakeEventStore,
+    fakeImpactMetricsResolver,
     createChangeRequestAccessReadModel,
     createFeatureToggleService,
     createProjectService,

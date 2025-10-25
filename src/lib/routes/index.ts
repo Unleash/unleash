@@ -8,6 +8,7 @@ import Controller from './controller.js';
 import { AdminApi } from './admin-api/index.js';
 import ClientApi from './client-api/index.js';
 
+import { ReadyCheckController } from './ready-check.js';
 import { HealthCheckController } from './health-check.js';
 import FrontendAPIController from '../features/frontend-api/frontend-api-controller.js';
 import EdgeController from './edge-api/index.js';
@@ -25,6 +26,10 @@ class IndexRouter extends Controller {
     ) {
         super(config);
 
+        this.use(
+            '/ready',
+            new ReadyCheckController(config, services, db).router,
+        );
         this.use('/health', new HealthCheckController(config, services).router);
         this.use(
             '/invite',

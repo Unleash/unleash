@@ -158,7 +158,7 @@
       "last 1 safari version"
     ]
   },
-  "packageManager": "yarn@4.9.2",
+  "packageManager": "yarn@4.10.3",
   "dependencies": {
     "chartjs-plugin-datalabels": "^2.2.0",
     "json-2-csv": "^5.5.5",

@@ -276,7 +276,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         name,
         displayName,
         description,
-        documentationUrl = 'https://unleash.github.io/docs/addons',
+        documentationUrl = 'https://docs.getunleash.io/reference/integrations',
         installation,
         alerts,
     } = provider ? provider : ({} as Partial<AddonTypeSchema>);

@@ -110,7 +110,6 @@ const createMilestoneProgression = async (progressionData: {
     executedAt?: Date;
 }) => {
     await db.rawDatabase('milestone_progressions').insert({
-        id: ulid(),
         source_milestone: progressionData.sourceMilestoneId,
         target_milestone: progressionData.targetMilestoneId,
         transition_condition: progressionData.transitionCondition || null,

@@ -3,7 +3,7 @@ import { Fragment, useId, useState } from 'react';
 import type { ISegment } from 'interfaces/segment';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentChip';
-import { styled } from '@mui/material';
+import { Alert, styled } from '@mui/material';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 
 interface IFeatureStrategySegmentListProps {
@@ -38,6 +38,11 @@ const StyledPreviewContainer = styled('div')({
     display: 'contents',
 });
 
+const StyledWarningAlert = styled(Alert)(({ theme }) => ({
+    marginTop: theme.spacing(1.5),
+    marginBottom: theme.spacing(0.5),
+}));
+
 export const FeatureStrategySegmentList = ({
     segments,
     setSegments,
@@ -50,6 +55,11 @@ export const FeatureStrategySegmentList = ({
         return null;
     }
 
+    const emptySegments = segments.filter(
+        (segment) => !segment.constraints || segment.constraints.length === 0,
+    );
+    const hasEmptySegments = emptySegments.length > 0;
+
     return (
         <>
             <ConditionallyRender
@@ -58,6 +68,17 @@ export const FeatureStrategySegmentList = ({
                     <StyledSelectedSegmentsLabel>
                         Selected Segments
                     </StyledSelectedSegmentsLabel>
+                }
+            />
+            <ConditionallyRender
+                condition={hasEmptySegments}
+                show={
+                    <StyledWarningAlert severity='warning'>
+                        <strong>Warning!</strong> You are adding an empty
+                        segment{emptySegments.length > 1 ? 's' : ''} (
+                        {emptySegments.map((s) => s.name).join(', ')}). This
+                        will activate this feature for ALL USERS.
+                    </StyledWarningAlert>
                 }
             />
             <StyledList>

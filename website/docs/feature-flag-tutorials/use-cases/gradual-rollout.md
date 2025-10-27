@@ -117,7 +117,7 @@ Segments let you create user groups based on data available in the Unleash conte
 -   Users on a specific device type
 -   Users who signed up before a specific point in time
 
-![In the top navigation menu in Unleash, go to Configure and then 'Segments' to manage your segments.](/img/segments-page.png)
+![In the top navigation menu in Unleash, go to Configure and then 'Segments' to manage your segments.](/img/segments.png)
 
 Because segments stay in sync across strategies, any changes will propagate to all the activation strategies that use them. This also makes them ideal for use cases such as activating or deactivating multiple feature flags at the same time. You can use segments to:
 

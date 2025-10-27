@@ -10,6 +10,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { calculateMilestoneStatus } from './milestoneStatusUtils.js';
 import { getPendingProgressionData } from './pendingProgressionChanges.js';
 import { MilestoneAutomation } from './MilestoneAutomation.tsx';
+import { usePlausibleTracker } from '../../../../../../hooks/usePlausibleTracker.ts';
 
 const StyledConnection = styled('div', {
     shouldForwardProp: (prop) => prop !== 'isCompleted',
@@ -77,6 +78,7 @@ export const ReleasePlanMilestoneItem = ({
     const { changeMilestoneProgression } = useMilestoneProgressionsApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { setToastData, setToastApiError } = useToast();
+    const { trackEvent } = usePlausibleTracker();
 
     const isNotLastMilestone = index < milestones.length - 1;
     const isProgressionFormOpen = progressionFormOpenIndex === index;
@@ -89,6 +91,12 @@ export const ReleasePlanMilestoneItem = ({
     const handleChangeProgression = async (
         payload: ChangeMilestoneProgressionSchema,
     ): Promise<{ shouldReset?: boolean }> => {
+        trackEvent('release-management', {
+            props: {
+                eventType: 'change-progression',
+                transition: payload.transitionCondition.intervalMinutes,
+            },
+        });
         if (isChangeRequestConfigured(environment)) {
             onAddToChangeRequest({
                 type: 'changeMilestoneProgression',

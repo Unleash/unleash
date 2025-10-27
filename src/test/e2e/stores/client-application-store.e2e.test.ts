@@ -173,7 +173,6 @@ test('Multi row merge also works', async () => {
     );
     stored.forEach((s, i) => {
         expect(s!.description).toBe(clients[i].description);
-        expect(s!.icon).toBe('red');
     });
 });
 

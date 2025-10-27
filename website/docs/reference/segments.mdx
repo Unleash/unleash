@@ -21,7 +21,7 @@ Segments make these strategies easier to manage. Instead of repeating the same r
 
 Segments let you describe groups of users or contexts. You can use them to define conditions such as users in a specific country or region, users on mobile devices, or internal users or testers.
 
-Segments stay in sync across strategies and any updates propagate automatically to all activation strategies that use them. This makes them ideal for grouping larger releases together, for example, enabling or disabling a collection of flags at the same time using time-based constraints.
+Segments stay in sync across activation strategies and any updates propagate automatically to all strategies that use them. This makes them ideal for grouping larger releases together, for example, enabling or disabling a collection of flags at the same time using time-based constraints.
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/LWMCCFcRic0"]}/>
 
@@ -36,7 +36,7 @@ An empty segment always evaluates to `true`. Use caution when creating or applyi
 
 ## Create a segment
 
-Make sure you have [permission](/reference/rbac) to manage segments in your project. If your project requires [change requests](/reference/change-requests#change-requests-for-segments), your changes may require approval before they go live.
+Before you begin, make sure you have [permissions](/reference/rbac) to manage segments in your project. If your project requires [change requests](/reference/change-requests#change-requests-for-segments), your changes to segments need to go through the same approval process before they go live.
 
 To create a segment:
 
@@ -70,6 +70,8 @@ If a segment is referenced in an open [change requests](/reference/change-reques
 
 If a segment is used by an archived feature flag, you can still delete it. Deleting the segment removes it from the archived flag's strategies.
 
+Before you begin, make sure you that have [permissions](/reference/rbac) to manage segments in your project. If your project requires [change requests](/reference/change-requests#change-requests-for-segments), deleting segments also need to go through the same approval process.
+
 To delete a segment:
 
 1. Go to **Configure > Segments**.
@@ -77,8 +79,6 @@ To delete a segment:
 3. Click **Remove segment**.
 4. Enter the segment name to confirm.
 5. Click **Save**.
-
-For project-scoped segments, if the project uses change requests, the segment deletion needs to go through the same approval process.
 
 ## Segment limits
 

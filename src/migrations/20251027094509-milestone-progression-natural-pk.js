@@ -3,8 +3,6 @@ exports.up = function(db, cb) {
         `
         DROP INDEX IF EXISTS milestone_progressions_source_milestone_idx;
 
-        ALTER TABLE milestone_progressions DROP CONSTRAINT milestone_progressions_pkey;
-
         ALTER TABLE milestone_progressions DROP COLUMN id;
 
         ALTER TABLE milestone_progressions ADD PRIMARY KEY (source_milestone);

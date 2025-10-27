@@ -174,11 +174,18 @@ export default class ClientApplicationsStore
             }, {}),
         );
 
-        await this.db(TABLE).insert(uniqueRows).onConflict('app_name').merge();
+        await this.db(TABLE)
+            .insert(uniqueRows)
+            .onConflict('app_name')
+            .merge({
+                updated_at: this.db.raw('EXCLUDED.updated_at'),
+                seen_at: this.db.raw('EXCLUDED.seen_at'),
+            });
+
         await this.db(TABLE_USAGE)
             .insert(uniqueUsageRows)
             .onConflict(['app_name', 'project', 'environment'])
-            .merge();
+            .ignore();
         stopTimer();
     }
 

@@ -50,13 +50,10 @@ export const MilestoneStrategySegmentList = ({
         return null;
     }
 
-    const hasEmptySegments = segments.some(
-        (segment) => !segment.constraints || segment.constraints.length === 0,
-    );
-
     const emptySegments = segments.filter(
         (segment) => !segment.constraints || segment.constraints.length === 0,
     );
+    const hasEmptySegments = emptySegments.length > 0;
 
     return (
         <>

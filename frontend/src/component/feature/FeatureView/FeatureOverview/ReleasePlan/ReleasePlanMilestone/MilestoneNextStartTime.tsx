@@ -10,10 +10,10 @@ export const formatSmartDate = (date: Date): string => {
     const timeString = format(date, 'HH:mm');
 
     if (isToday(date)) {
-        return `today after ${timeString}`;
+        return `today at ${timeString}`;
     }
     if (isTomorrow(date)) {
-        return `tomorrow after ${timeString}`;
+        return `tomorrow at ${timeString}`;
     }
 
     // For other dates, show full date with time

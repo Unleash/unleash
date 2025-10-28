@@ -74,7 +74,7 @@ export const MilestoneNextStartTime = ({
     );
 
     const text = projectedStartTime
-        ? `Starting after ${formatSmartDate(projectedStartTime)}`
+        ? `Starting ${formatSmartDate(projectedStartTime)}`
         : 'Waiting to start';
 
     return (

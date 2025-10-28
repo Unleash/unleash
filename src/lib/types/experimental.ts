@@ -202,10 +202,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
         false,
     ),
-    originMiddlewareRequestLogging: parseEnvVarBoolean(
-        process.env.UNLEASH_ORIGIN_MIDDLEWARE_REQUEST_LOGGING,
-        false,
-    ),
     webhookDomainLogging: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENT_WEBHOOK_DOMAIN_LOGGING,
         false,

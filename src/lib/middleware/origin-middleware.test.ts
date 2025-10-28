@@ -68,5 +68,4 @@ describe('originMiddleware', () => {
             source: 'Other',
         });
     });
-
 });

@@ -55,6 +55,16 @@ export interface IReleasePlanMilestoneItemProps {
     onUpdate: () => void | Promise<void>;
 }
 
+const getTimeUnit = (intervalMinutes: number): 'minutes' | 'hours' | 'days' => {
+    if (intervalMinutes < 60) {
+        return 'minutes';
+    } else if (intervalMinutes < 1440) {
+        return 'hours';
+    } else {
+        return 'days';
+    }
+};
+
 export const ReleasePlanMilestoneItem = ({
     milestone,
     index,
@@ -94,7 +104,9 @@ export const ReleasePlanMilestoneItem = ({
         trackEvent('release-management', {
             props: {
                 eventType: 'change-progression',
-                transition: payload.transitionCondition.intervalMinutes,
+                transitionUnit: getTimeUnit(
+                    payload.transitionCondition.intervalMinutes,
+                ),
             },
         });
         if (isChangeRequestConfigured(environment)) {

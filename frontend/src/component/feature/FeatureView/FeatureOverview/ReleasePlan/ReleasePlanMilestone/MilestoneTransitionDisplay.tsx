@@ -90,9 +90,16 @@ const StyledButtonGroup = styled('div', {
     }),
 }));
 
+const StyledErrorMessage = styled('span')(({ theme }) => ({
+    color: theme.palette.error.main,
+    fontSize: theme.typography.body2.fontSize,
+    paddingLeft: theme.spacing(3.25),
+}));
+
 interface IMilestoneTransitionDisplayProps {
     intervalMinutes: number;
     targetMilestoneId: string;
+    sourceMilestoneStartedAt?: string | null;
     onSave: (
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<{ shouldReset?: boolean }>;
@@ -105,6 +112,7 @@ interface IMilestoneTransitionDisplayProps {
 export const MilestoneTransitionDisplay = ({
     intervalMinutes,
     targetMilestoneId,
+    sourceMilestoneStartedAt,
     onSave,
     onDelete,
     milestoneName,
@@ -119,6 +127,8 @@ export const MilestoneTransitionDisplay = ({
             timeValue: initial.value,
             timeUnit: initial.unit,
         },
+        sourceMilestoneStartedAt,
+        status,
     );
 
     const currentIntervalMinutes = form.getIntervalMinutes();
@@ -130,8 +140,18 @@ export const MilestoneTransitionDisplay = ({
         form.setTimeUnit(newInitial.unit);
     }, [intervalMinutes]);
 
+    useEffect(() => {
+        if (!hasChanged) {
+            form.clearErrors();
+        }
+    }, [hasChanged, form.clearErrors]);
+
     const handleSave = async () => {
         if (!hasChanged) return;
+
+        if (!form.validate()) {
+            return;
+        }
 
         const payload: ChangeMilestoneProgressionSchema = {
             targetMilestone: targetMilestoneId,
@@ -151,6 +171,7 @@ export const MilestoneTransitionDisplay = ({
         const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
         form.setTimeValue(initial.value);
         form.setTimeUnit(initial.unit);
+        form.clearErrors();
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -192,6 +213,9 @@ export const MilestoneTransitionDisplay = ({
                     </StyledButtonGroup>
                 )}
             </StyledDisplayContainer>
+            {form.errors.time && (
+                <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
+            )}
             {hasChanged && (
                 <StyledButtonGroup hasChanged={true}>
                     <Button

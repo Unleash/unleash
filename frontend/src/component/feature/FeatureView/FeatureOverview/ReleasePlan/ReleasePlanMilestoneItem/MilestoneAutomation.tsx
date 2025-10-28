@@ -93,6 +93,8 @@ export const MilestoneAutomation = ({
                 <MilestoneProgressionForm
                     sourceMilestoneId={milestone.id}
                     targetMilestoneId={nextMilestoneId}
+                    sourceMilestoneStartedAt={milestone.startedAt}
+                    status={status}
                     onSubmit={onChangeProgression}
                     onCancel={onCloseProgressionForm}
                 />
@@ -102,6 +104,7 @@ export const MilestoneAutomation = ({
                         effectiveTransitionCondition.intervalMinutes
                     }
                     targetMilestoneId={nextMilestoneId}
+                    sourceMilestoneStartedAt={milestone.startedAt}
                     onSave={onChangeProgression}
                     onDelete={() => onDeleteProgression(milestone)}
                     milestoneName={milestone.name}

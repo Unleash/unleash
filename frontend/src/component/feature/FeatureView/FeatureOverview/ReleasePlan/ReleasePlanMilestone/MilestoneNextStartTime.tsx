@@ -1,12 +1,12 @@
 import { styled } from '@mui/material';
 import HourglassEmptyOutlinedIcon from '@mui/icons-material/HourglassEmptyOutlined';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
-import { formatDateYMDHMS } from 'utils/formatDate';
+import { formatDateYMDHM } from 'utils/formatDate';
 import { isToday, isTomorrow, format } from 'date-fns';
 import { calculateMilestoneStartTime } from '../utils/calculateMilestoneStartTime.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-const formatSmartDate = (date: Date): string => {
+export const formatSmartDate = (date: Date): string => {
     const timeString = format(date, 'HH:mm');
 
     if (isToday(date)) {
@@ -17,7 +17,7 @@ const formatSmartDate = (date: Date): string => {
     }
 
     // For other dates, show full date with time
-    return formatDateYMDHMS(date);
+    return formatDateYMDHM(date);
 };
 
 const StyledTimeContainer = styled('span')(({ theme }) => ({
@@ -74,7 +74,7 @@ export const MilestoneNextStartTime = ({
     );
 
     const text = projectedStartTime
-        ? `Starting ${formatSmartDate(projectedStartTime)}`
+        ? `Starting after ${formatSmartDate(projectedStartTime)}`
         : 'Waiting to start';
 
     return (

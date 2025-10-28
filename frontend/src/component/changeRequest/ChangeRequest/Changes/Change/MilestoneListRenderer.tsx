@@ -70,6 +70,7 @@ const MilestoneListRendererCore = ({
                                         .intervalMinutes
                                 }
                                 targetMilestoneId={nextMilestoneId}
+                                sourceMilestoneStartedAt={milestone.startedAt}
                                 onSave={async (payload) => {
                                     await onUpdateAutomation(
                                         milestone.id,

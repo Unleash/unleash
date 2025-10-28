@@ -3,6 +3,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
 import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
+import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -49,12 +50,14 @@ const StyledButtonGroup = styled('div')(({ theme }) => ({
 const StyledErrorMessage = styled('span')(({ theme }) => ({
     color: theme.palette.error.main,
     fontSize: theme.typography.body2.fontSize,
-    marginRight: 'auto',
+    paddingLeft: theme.spacing(3.25),
 }));
 
 interface IMilestoneProgressionFormProps {
     sourceMilestoneId: string;
     targetMilestoneId: string;
+    sourceMilestoneStartedAt?: string | null;
+    status?: MilestoneStatus;
     onSubmit: (
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<{ shouldReset?: boolean }>;
@@ -64,12 +67,17 @@ interface IMilestoneProgressionFormProps {
 export const MilestoneProgressionForm = ({
     sourceMilestoneId,
     targetMilestoneId,
+    sourceMilestoneStartedAt,
+    status,
     onSubmit,
     onCancel,
 }: IMilestoneProgressionFormProps) => {
     const form = useMilestoneProgressionForm(
         sourceMilestoneId,
         targetMilestoneId,
+        {},
+        sourceMilestoneStartedAt,
+        status,
     );
 
     const handleSubmit = async () => {
@@ -102,10 +110,10 @@ export const MilestoneProgressionForm = ({
                     onTimeUnitChange={form.handleTimeUnitChange}
                 />
             </StyledTopRow>
+            {form.errors.time && (
+                <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
+            )}
             <StyledButtonGroup>
-                {form.errors.time && (
-                    <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
-                )}
                 <Button variant='outlined' onClick={onCancel} size='small'>
                     Cancel
                 </Button>

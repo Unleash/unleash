@@ -49,12 +49,13 @@ const StyledButtonGroup = styled('div')(({ theme }) => ({
 const StyledErrorMessage = styled('span')(({ theme }) => ({
     color: theme.palette.error.main,
     fontSize: theme.typography.body2.fontSize,
-    marginRight: 'auto',
+    paddingLeft: theme.spacing(3.25),
 }));
 
 interface IMilestoneProgressionFormProps {
     sourceMilestoneId: string;
     targetMilestoneId: string;
+    sourceMilestoneStartedAt?: string | null;
     onSubmit: (
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<{ shouldReset?: boolean }>;
@@ -64,12 +65,15 @@ interface IMilestoneProgressionFormProps {
 export const MilestoneProgressionForm = ({
     sourceMilestoneId,
     targetMilestoneId,
+    sourceMilestoneStartedAt,
     onSubmit,
     onCancel,
 }: IMilestoneProgressionFormProps) => {
     const form = useMilestoneProgressionForm(
         sourceMilestoneId,
         targetMilestoneId,
+        {},
+        sourceMilestoneStartedAt,
     );
 
     const handleSubmit = async () => {
@@ -102,10 +106,10 @@ export const MilestoneProgressionForm = ({
                     onTimeUnitChange={form.handleTimeUnitChange}
                 />
             </StyledTopRow>
+            {form.errors.time && (
+                <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
+            )}
             <StyledButtonGroup>
-                {form.errors.time && (
-                    <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
-                )}
                 <Button variant='outlined' onClick={onCancel} size='small'>
                     Cancel
                 </Button>

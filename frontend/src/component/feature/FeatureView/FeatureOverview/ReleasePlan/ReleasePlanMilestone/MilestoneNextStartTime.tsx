@@ -6,7 +6,7 @@ import { isToday, isTomorrow, format } from 'date-fns';
 import { calculateMilestoneStartTime } from '../utils/calculateMilestoneStartTime.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-const formatSmartDate = (date: Date): string => {
+export const formatSmartDate = (date: Date): string => {
     const timeString = format(date, 'HH:mm');
 
     if (isToday(date)) {

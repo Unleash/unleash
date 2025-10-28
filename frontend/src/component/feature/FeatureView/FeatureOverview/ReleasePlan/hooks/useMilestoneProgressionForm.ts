@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { isPast, addMinutes } from 'date-fns';
+import { formatSmartDate } from '../ReleasePlanMilestone/MilestoneNextStartTime.tsx';
 
 const MAX_INTERVAL_MINUTES = 525600; // 365 days
 
@@ -42,6 +44,7 @@ export const useMilestoneProgressionForm = (
         timeUnit: initialTimeUnit = 'hours',
         timeValue: initialTimeValue = 5,
     }: MilestoneProgressionFormDefaults = {},
+    sourceMilestoneStartedAt?: string | null,
 ) => {
     const [timeUnit, setTimeUnit] = useState<TimeUnit>(initialTimeUnit);
     const [timeValue, setTimeValue] = useState(initialTimeValue);
@@ -76,6 +79,16 @@ export const useMilestoneProgressionForm = (
             newErrors.time = 'Time cannot be zero';
         } else if (total > MAX_INTERVAL_MINUTES) {
             newErrors.time = 'Time interval cannot exceed 365 days';
+        }
+
+        if (sourceMilestoneStartedAt && total > 0) {
+            const startDate = new Date(sourceMilestoneStartedAt);
+            const nextMilestoneDate = addMinutes(startDate, total);
+
+            if (isPast(nextMilestoneDate)) {
+                const formattedDate = formatSmartDate(nextMilestoneDate);
+                newErrors.time = `Next milestone can't start in the past (${formattedDate})`;
+            }
         }
 
         setErrors(newErrors);

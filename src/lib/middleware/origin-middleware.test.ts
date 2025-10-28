@@ -30,11 +30,6 @@ describe('originMiddleware', () => {
         config = {
             ...createTestConfig({
                 getLogger,
-                experimental: {
-                    flags: {
-                        originMiddlewareRequestLogging: true,
-                    },
-                },
             }),
             eventBus,
         };
@@ -71,21 +66,6 @@ describe('originMiddleware', () => {
             type: 'API',
             method: req.method,
             source: 'Other',
-        });
-    });
-
-    it('should log API request', () => {
-        const middleware = originMiddleware(config);
-
-        req.headers.authorization = TEST_UNLEASH_TOKEN;
-        req.headers['user-agent'] = TEST_USER_AGENT;
-
-        middleware(req, res, next);
-
-        expect(loggerMock.info).toHaveBeenCalledWith('API request', {
-            method: req.method,
-            userAgent: TEST_USER_AGENT,
-            origin: undefined,
         });
     });
 });

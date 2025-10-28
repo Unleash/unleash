@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { isPast, addMinutes } from 'date-fns';
-import { formatSmartDate } from '../ReleasePlanMilestone/MilestoneNextStartTime.tsx';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
+import { formatDateYMDHM } from 'utils/formatDate.ts';
 
 const MAX_INTERVAL_MINUTES = 525600; // 365 days
 
@@ -94,7 +94,7 @@ export const useMilestoneProgressionForm = (
             const nextMilestoneDate = addMinutes(startDate, total);
 
             if (isPast(nextMilestoneDate)) {
-                const formattedDate = formatSmartDate(nextMilestoneDate);
+                const formattedDate = formatDateYMDHM(nextMilestoneDate);
                 newErrors.time = `Next milestone can't start in the past (${formattedDate})`;
             }
         }

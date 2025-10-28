@@ -10,7 +10,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { calculateMilestoneStatus } from './milestoneStatusUtils.js';
 import { getPendingProgressionData } from './pendingProgressionChanges.js';
 import { MilestoneAutomation } from './MilestoneAutomation.tsx';
-import { usePlausibleTracker } from '../../../../../../hooks/usePlausibleTracker.ts';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 
 const StyledConnection = styled('div', {
     shouldForwardProp: (prop) => prop !== 'isCompleted',

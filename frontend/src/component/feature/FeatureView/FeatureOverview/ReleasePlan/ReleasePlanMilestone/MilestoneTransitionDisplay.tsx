@@ -128,6 +128,7 @@ export const MilestoneTransitionDisplay = ({
             timeUnit: initial.unit,
         },
         sourceMilestoneStartedAt,
+        status,
     );
 
     const currentIntervalMinutes = form.getIntervalMinutes();
@@ -138,6 +139,12 @@ export const MilestoneTransitionDisplay = ({
         form.setTimeValue(newInitial.value);
         form.setTimeUnit(newInitial.unit);
     }, [intervalMinutes]);
+
+    useEffect(() => {
+        if (!hasChanged) {
+            form.clearErrors();
+        }
+    }, [hasChanged, form.clearErrors]);
 
     const handleSave = async () => {
         if (!hasChanged) return;
@@ -164,6 +171,7 @@ export const MilestoneTransitionDisplay = ({
         const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
         form.setTimeValue(initial.value);
         form.setTimeUnit(initial.unit);
+        form.clearErrors();
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {

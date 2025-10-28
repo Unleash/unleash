@@ -3,6 +3,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
 import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
+import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -56,6 +57,7 @@ interface IMilestoneProgressionFormProps {
     sourceMilestoneId: string;
     targetMilestoneId: string;
     sourceMilestoneStartedAt?: string | null;
+    status?: MilestoneStatus;
     onSubmit: (
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<{ shouldReset?: boolean }>;
@@ -66,6 +68,7 @@ export const MilestoneProgressionForm = ({
     sourceMilestoneId,
     targetMilestoneId,
     sourceMilestoneStartedAt,
+    status,
     onSubmit,
     onCancel,
 }: IMilestoneProgressionFormProps) => {
@@ -74,6 +77,7 @@ export const MilestoneProgressionForm = ({
         targetMilestoneId,
         {},
         sourceMilestoneStartedAt,
+        status,
     );
 
     const handleSubmit = async () => {

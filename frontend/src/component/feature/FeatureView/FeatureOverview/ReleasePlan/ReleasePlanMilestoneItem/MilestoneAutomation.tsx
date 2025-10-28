@@ -94,6 +94,7 @@ export const MilestoneAutomation = ({
                     sourceMilestoneId={milestone.id}
                     targetMilestoneId={nextMilestoneId}
                     sourceMilestoneStartedAt={milestone.startedAt}
+                    status={status}
                     onSubmit={onChangeProgression}
                     onCancel={onCloseProgressionForm}
                 />

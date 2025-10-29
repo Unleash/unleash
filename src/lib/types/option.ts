@@ -307,5 +307,5 @@ export interface IUnleashConfig {
     userInactivityThresholdInDays: number;
     buildDate?: string;
     unleashFrontendToken?: string;
-    customStrategySettings: ICustomStrategySettings;
+    customStrategySettings?: ICustomStrategySettings;
 }

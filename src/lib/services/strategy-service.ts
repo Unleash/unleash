@@ -71,7 +71,6 @@ class StrategyService {
         strategyName: string,
         auditUser: IAuditUser,
     ): Promise<void> {
-        this.assertEditingAllowed();
         if (await this.strategyStore.exists(strategyName)) {
             // Check existence
             await this.strategyStore.deprecateStrategy({ name: strategyName });
@@ -94,7 +93,6 @@ class StrategyService {
         strategyName: string,
         auditUser: IAuditUser,
     ): Promise<void> {
-        this.assertEditingAllowed();
         await this.strategyStore.get(strategyName); // Check existence
         await this.strategyStore.reactivateStrategy({ name: strategyName });
         await this.eventService.storeEvent(
@@ -167,7 +165,7 @@ class StrategyService {
     }
 
     private assertCreationAllowed(): void {
-        if (this.customStrategySettings.disableCreation) {
+        if (this.customStrategySettings?.disableCreation) {
             throw new OperationDeniedError(
                 'Custom strategy creation is disabled by configuration.',
             );
@@ -175,7 +173,7 @@ class StrategyService {
     }
 
     private assertEditingAllowed(): void {
-        if (this.customStrategySettings.disableEditing) {
+        if (this.customStrategySettings?.disableEditing) {
             throw new OperationDeniedError(
                 'Custom strategy modification is disabled by configuration.',
             );

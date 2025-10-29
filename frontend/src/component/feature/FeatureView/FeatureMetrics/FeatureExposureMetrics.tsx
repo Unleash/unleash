@@ -29,9 +29,34 @@ export const FeatureExposureMetrics = () => {
     const environments = useFeatureMetricsEnvironments(projectId, featureId);
 
     usePageTitle('Metrics');
-    const TARGET_ENV = "production";
-    const environmentArray = Array.from(environments);
-    const defaultEnvironment = environmentArray.includes(TARGET_ENV) ? TARGET_ENV : environmentArray[0]
+
+    const [defaultEnvironment, setDefaultEnvironment] = useState<string>(environments[0])
+    const { featureMetrics } = useFeatureMetricsRaw(featureId, 48);
+
+    // Keep a cache of the fetched metrics so that we can
+    // show the cached result while fetching new metrics.
+    const [cachedMetrics, setCachedMetrics] = useState<
+        Readonly<IFeatureMetricsRaw[]> | undefined
+    >(featureMetrics);
+
+    const highestRequest: string = useMemo(() => {
+        if (!cachedMetrics?.length) return environments[0];
+
+        const totals = cachedMetrics.reduce<Record<string, number>>((acc, m) => {
+            acc[m.environment] = (acc[m.environment] ?? 0) + m.yes + m.no;
+            return acc;
+        }, {});
+
+        return Object.entries(totals).reduce((maxEnv, [env, val]) =>
+            val > (totals[maxEnv] ?? -Infinity) ? env : maxEnv,
+            environments?.[0] ?? ''
+        )
+    }, [cachedMetrics, environments]);
+    
+    useEffect(() => {
+        const environment = highestRequest || environments[0];
+        setDefaultEnvironment(environment)
+    }, [highestRequest, environments])
 
     const [query, setQuery] = useQueryParams({
         environment: withDefault(StringParam, defaultEnvironment),
@@ -50,6 +75,7 @@ export const FeatureExposureMetrics = () => {
     const selectedApplications = query.applications.filter(
         (item) => item !== null,
     ) as string[];
+
     useEffect(() => {
         if (query.applications && query.applications.length === 0) {
             setQuery({ applications: allApplications });
@@ -59,14 +85,6 @@ export const FeatureExposureMetrics = () => {
     const allSelected = [...applications].every((element) =>
         selectedApplications.includes(element),
     );
-
-    const { featureMetrics } = useFeatureMetricsRaw(featureId, hoursBack);
-
-    // Keep a cache of the fetched metrics so that we can
-    // show the cached result while fetching new metrics.
-    const [cachedMetrics, setCachedMetrics] = useState<
-        Readonly<IFeatureMetricsRaw[]> | undefined
-    >(featureMetrics);
 
     useEffect(() => {
         featureMetrics && setCachedMetrics(featureMetrics);

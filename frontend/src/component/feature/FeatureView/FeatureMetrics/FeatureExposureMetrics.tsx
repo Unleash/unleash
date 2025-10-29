@@ -29,8 +29,9 @@ export const FeatureExposureMetrics = () => {
     const environments = useFeatureMetricsEnvironments(projectId, featureId);
 
     usePageTitle('Metrics');
-
-    const defaultEnvironment = Array.from(environments)[0];
+    const TARGET_ENV = "production";
+    const environmentArray = Array.from(environments);
+    const defaultEnvironment = environmentArray.includes(TARGET_ENV) ? TARGET_ENV : environmentArray[0]
 
     const [query, setQuery] = useQueryParams({
         environment: withDefault(StringParam, defaultEnvironment),

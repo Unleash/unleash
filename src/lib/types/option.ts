@@ -175,6 +175,7 @@ export interface IUnleashOptions {
     resourceLimits?: Partial<ResourceLimits>;
     userInactivityThresholdInDays?: number;
     unleashFrontendToken?: string;
+    checkDbOnReady?: boolean;
 }
 
 export interface IEmailOption {
@@ -301,4 +302,5 @@ export interface IUnleashConfig {
     userInactivityThresholdInDays: number;
     buildDate?: string;
     unleashFrontendToken?: string;
+    checkDbOnReady?: boolean;
 }

@@ -28,6 +28,10 @@ exports[`should create default config 1`] = `
     "enabled": true,
     "maxAge": 3600000,
   },
+  "customStrategySettings": {
+    "disableCreation": false,
+    "disableEditing": false,
+  },
   "dailyMetricsStorageDays": 91,
   "db": {
     "acquireConnectionTimeout": 30000,

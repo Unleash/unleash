@@ -87,12 +87,7 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
             </ChangeItemWrapper>
             <TabPanel>
                 {readonly ? (
-                    <ReadonlyMilestoneListRenderer
-                        plan={modifiedPlan}
-                        milestonesWithAutomation={
-                            new Set([sourceId].filter(Boolean))
-                        }
-                    />
+                    <ReadonlyMilestoneListRenderer plan={modifiedPlan} />
                 ) : (
                     <EditableMilestoneListRenderer
                         plan={modifiedPlan}

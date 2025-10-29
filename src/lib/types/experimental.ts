@@ -39,7 +39,6 @@ export type IFlagKey =
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
     | 'projectRoleAssignment'
-    | 'originMiddlewareRequestLogging'
     | 'webhookDomainLogging'
     | 'productivityReportEmail'
     | 'productivityReportUnsubscribers'
@@ -201,10 +200,6 @@ const flags: IFlags = {
     ),
     projectRoleAssignment: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
-        false,
-    ),
-    originMiddlewareRequestLogging: parseEnvVarBoolean(
-        process.env.UNLEASH_ORIGIN_MIDDLEWARE_REQUEST_LOGGING,
         false,
     ),
     webhookDomainLogging: parseEnvVarBoolean(

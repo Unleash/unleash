@@ -17,7 +17,7 @@ import {
     StrategyUpdatedEvent,
 } from '../types/index.js';
 import strategySchema from './strategy-schema.js';
-import { NameExistsError } from '../error/index.js';
+import { NameExistsError, OperationDeniedError } from '../error/index.js';
 
 class StrategyService {
     private logger: Logger;
@@ -26,14 +26,20 @@ class StrategyService {
 
     private eventService: EventService;
 
+    private customStrategySettings: IUnleashConfig['customStrategySettings'];
+
     constructor(
         { strategyStore }: Pick<IUnleashStores, 'strategyStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            customStrategySettings,
+        }: Pick<IUnleashConfig, 'getLogger' | 'customStrategySettings'>,
         eventService: EventService,
     ) {
         this.strategyStore = strategyStore;
         this.eventService = eventService;
         this.logger = getLogger('services/strategy-service.js');
+        this.customStrategySettings = customStrategySettings;
     }
 
     async getStrategies(): Promise<IStrategy[]> {
@@ -65,6 +71,7 @@ class StrategyService {
         strategyName: string,
         auditUser: IAuditUser,
     ): Promise<void> {
+        this.assertEditingAllowed();
         if (await this.strategyStore.exists(strategyName)) {
             // Check existence
             await this.strategyStore.deprecateStrategy({ name: strategyName });
@@ -87,6 +94,7 @@ class StrategyService {
         strategyName: string,
         auditUser: IAuditUser,
     ): Promise<void> {
+        this.assertEditingAllowed();
         await this.strategyStore.get(strategyName); // Check existence
         await this.strategyStore.reactivateStrategy({ name: strategyName });
         await this.eventService.storeEvent(
@@ -103,6 +111,7 @@ class StrategyService {
         value: IMinimalStrategy,
         auditUser: IAuditUser,
     ): Promise<IStrategy | undefined> {
+        this.assertCreationAllowed();
         const strategy = await strategySchema.validateAsync(value);
         strategy.deprecated = false;
         await this._validateStrategyName(strategy);
@@ -120,6 +129,7 @@ class StrategyService {
         input: IMinimalStrategy,
         auditUser: IAuditUser,
     ): Promise<void> {
+        this.assertEditingAllowed();
         const value = await strategySchema.validateAsync(input);
         const strategy = await this.strategyStore.get(input.name);
         await this._validateEditable(strategy);
@@ -153,6 +163,22 @@ class StrategyService {
     _validateEditable(strategy: IStrategy | undefined): void {
         if (!strategy?.editable) {
             throw new Error(`Cannot edit strategy ${strategy?.name}`);
+        }
+    }
+
+    private assertCreationAllowed(): void {
+        if (this.customStrategySettings.disableCreation) {
+            throw new OperationDeniedError(
+                'Custom strategy creation is disabled by configuration.',
+            );
+        }
+    }
+
+    private assertEditingAllowed(): void {
+        if (this.customStrategySettings.disableEditing) {
+            throw new OperationDeniedError(
+                'Custom strategy modification is disabled by configuration.',
+            );
         }
     }
 }

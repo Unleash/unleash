@@ -118,6 +118,11 @@ export interface IClientCachingOption {
     maxAge: number;
 }
 
+export interface ICustomStrategySettings {
+    disableCreation: boolean;
+    disableEditing: boolean;
+}
+
 export interface ResourceLimits {
     apiTokens: number;
     constraints: number;
@@ -175,6 +180,7 @@ export interface IUnleashOptions {
     resourceLimits?: Partial<ResourceLimits>;
     userInactivityThresholdInDays?: number;
     unleashFrontendToken?: string;
+    customStrategySettings?: Partial<ICustomStrategySettings>;
 }
 
 export interface IEmailOption {
@@ -301,4 +307,5 @@ export interface IUnleashConfig {
     userInactivityThresholdInDays: number;
     buildDate?: string;
     unleashFrontendToken?: string;
+    customStrategySettings: ICustomStrategySettings;
 }

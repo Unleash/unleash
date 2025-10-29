@@ -6,6 +6,7 @@ import {
     type IAuthOption,
     IAuthType,
     type IClientCachingOption,
+    type ICustomStrategySettings,
     type ICspDomainConfig,
     type ICspDomainOptions,
     type IDBOption,
@@ -585,6 +586,29 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ).values(),
     ];
 
+    const customStrategyEnv: Partial<ICustomStrategySettings> = {};
+    if (process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION !== undefined) {
+        customStrategyEnv.disableCreation = parseEnvVarBoolean(
+            process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION,
+            false,
+        );
+    }
+    if (process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_EDITING !== undefined) {
+        customStrategyEnv.disableEditing = parseEnvVarBoolean(
+            process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_EDITING,
+            false,
+        );
+    }
+
+    const customStrategySettings = mergeAll<ICustomStrategySettings>([
+        {
+            disableCreation: false,
+            disableEditing: false,
+        },
+        options.customStrategySettings ?? {},
+        customStrategyEnv,
+    ]);
+
     const environmentEnableOverrides = loadEnvironmentEnableOverrides();
 
     const importSetting: IImportOption = mergeAll([
@@ -830,5 +854,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         userInactivityThresholdInDays,
         buildDate: process.env.BUILD_DATE,
         unleashFrontendToken,
+        customStrategySettings,
     };
 }

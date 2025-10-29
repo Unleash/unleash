@@ -288,10 +288,12 @@ type ChangeRequestChangeMilestoneProgression = {
     sourceMilestone: string;
     targetMilestone: string;
     transitionCondition: { intervalMinutes: number };
+    snapshot?: IReleasePlan;
 };
 
 type ChangeRequestDeleteMilestoneProgression = {
     sourceMilestone: string;
+    snapshot?: IReleasePlan;
 };
 
 export type ChangeRequestAddStrategy = Pick<

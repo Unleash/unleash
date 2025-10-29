@@ -100,7 +100,14 @@ export const ConsolidatedProgressionChanges: FC<{
 
     if (progressionChanges.length === 0) return null;
 
-    const basePlan = currentReleasePlan;
+    const firstChange = progressionChanges[0];
+    const releasePlan =
+        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        firstChange.payload.snapshot
+            ? firstChange.payload.snapshot
+            : currentReleasePlan;
+
+    const basePlan = releasePlan;
 
     if (!basePlan) {
         return null;

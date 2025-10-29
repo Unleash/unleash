@@ -181,6 +181,7 @@ export interface IUnleashOptions {
     userInactivityThresholdInDays?: number;
     unleashFrontendToken?: string;
     customStrategySettings?: Partial<ICustomStrategySettings>;
+    checkDbOnReady?: boolean;
 }
 
 export interface IEmailOption {
@@ -308,4 +309,5 @@ export interface IUnleashConfig {
     buildDate?: string;
     unleashFrontendToken?: string;
     customStrategySettings?: ICustomStrategySettings;
+    checkDbOnReady?: boolean;
 }

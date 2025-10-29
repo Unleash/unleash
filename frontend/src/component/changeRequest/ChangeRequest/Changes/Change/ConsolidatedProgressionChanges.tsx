@@ -144,13 +144,7 @@ export const ConsolidatedProgressionChanges: FC<{
             </ChangeItemWrapper>
             <TabPanel>
                 {readonly ? (
-                    <ReadonlyMilestoneListRenderer
-                        plan={modifiedPlan}
-                        milestonesWithAutomation={milestonesWithAutomation}
-                        milestonesWithDeletedAutomation={
-                            milestonesWithDeletedAutomation
-                        }
-                    />
+                    <ReadonlyMilestoneListRenderer plan={modifiedPlan} />
                 ) : (
                     <EditableMilestoneListRenderer
                         plan={modifiedPlan}

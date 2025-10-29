@@ -109,6 +109,30 @@ interface IMilestoneTransitionDisplayProps {
     badge?: ReactNode;
 }
 
+export const ReadonlyMilestoneTransitionDisplay = ({
+    intervalMinutes,
+    status,
+}: {
+    intervalMinutes: number;
+    status?: MilestoneStatus;
+}) => {
+    const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
+
+    return (
+        <StyledDisplayContainer>
+            <StyledContentGroup>
+                <StyledIcon status={status} />
+                <StyledLabel status={status}>
+                    Proceed to the next milestone after
+                </StyledLabel>
+                <span style={{ fontSize: 'inherit' }}>
+                    {initial.value} {initial.unit}
+                </span>
+            </StyledContentGroup>
+        </StyledDisplayContainer>
+    );
+};
+
 export const MilestoneTransitionDisplay = ({
     intervalMinutes,
     targetMilestoneId,

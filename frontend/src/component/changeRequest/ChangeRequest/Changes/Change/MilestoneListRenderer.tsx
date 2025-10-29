@@ -3,7 +3,10 @@ import type { IReleasePlan } from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
 import { MilestoneAutomationSection } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneAutomationSection.tsx';
-import { MilestoneTransitionDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
+import {
+    MilestoneTransitionDisplay,
+    ReadonlyMilestoneTransitionDisplay,
+} from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
 import type { MilestoneStatus } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { Badge } from 'component/common/Badge/Badge';
 
@@ -41,9 +44,10 @@ const MilestoneListRendererCore = ({
             {plan.milestones.map((milestone, index) => {
                 const isNotLastMilestone = index < plan.milestones.length - 1;
                 const nextMilestoneId = plan.milestones[index + 1]?.id || '';
-                const shouldShowAutomation =
-                    milestonesWithAutomation.has(milestone.id) ||
-                    milestonesWithDeletedAutomation.has(milestone.id);
+                const shouldShowAutomation = readonly
+                    ? milestone.transitionCondition !== undefined
+                    : milestonesWithAutomation.has(milestone.id) ||
+                      milestonesWithDeletedAutomation.has(milestone.id);
 
                 const showAutomation =
                     isNotLastMilestone && shouldShowAutomation;
@@ -64,27 +68,39 @@ const MilestoneListRendererCore = ({
                 const automationSection =
                     showAutomation && milestone.transitionCondition ? (
                         <MilestoneAutomationSection status={status}>
-                            <MilestoneTransitionDisplay
-                                intervalMinutes={
-                                    milestone.transitionCondition
-                                        .intervalMinutes
-                                }
-                                targetMilestoneId={nextMilestoneId}
-                                sourceMilestoneStartedAt={milestone.startedAt}
-                                onSave={async (payload) => {
-                                    await onUpdateAutomation(
-                                        milestone.id,
-                                        payload,
-                                    );
-                                    return { shouldReset: true };
-                                }}
-                                onDelete={() =>
-                                    onDeleteAutomation(milestone.id)
-                                }
-                                milestoneName={milestone.name}
-                                status={status}
-                                badge={badge}
-                            />
+                            {readonly ? (
+                                <ReadonlyMilestoneTransitionDisplay
+                                    intervalMinutes={
+                                        milestone.transitionCondition
+                                            .intervalMinutes
+                                    }
+                                    status={status}
+                                />
+                            ) : (
+                                <MilestoneTransitionDisplay
+                                    intervalMinutes={
+                                        milestone.transitionCondition
+                                            .intervalMinutes
+                                    }
+                                    targetMilestoneId={nextMilestoneId}
+                                    sourceMilestoneStartedAt={
+                                        milestone.startedAt
+                                    }
+                                    onSave={async (payload) => {
+                                        await onUpdateAutomation(
+                                            milestone.id,
+                                            payload,
+                                        );
+                                        return { shouldReset: true };
+                                    }}
+                                    onDelete={() =>
+                                        onDeleteAutomation(milestone.id)
+                                    }
+                                    milestoneName={milestone.name}
+                                    status={status}
+                                    badge={badge}
+                                />
+                            )}
                         </MilestoneAutomationSection>
                     ) : undefined;
 

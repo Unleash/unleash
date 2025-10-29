@@ -121,8 +121,6 @@ import {
     FEATURE_LINK_UPDATED,
     FEATURE_LINK_ADDED,
     APPLICATION_CREATED,
-    MILESTONE_PROGRESSION_CREATED,
-    MILESTONE_PROGRESSION_UPDATED,
     MILESTONE_PROGRESSION_DELETED,
     MILESTONE_PROGRESSION_CHANGED,
 } from '../events/index.js';
@@ -1806,49 +1804,6 @@ export class GroupDeletedEvent extends BaseEvent {
         auditUser: IAuditUser;
     }) {
         super(GROUP_DELETED, eventData.auditUser);
-        this.preData = eventData.preData;
-    }
-}
-
-export class MilestoneProgressionCreatedEvent extends BaseEvent {
-    readonly project: string;
-    readonly environment: string;
-    readonly featureName: string;
-    readonly data: any;
-    constructor(eventData: {
-        project: string;
-        environment: string;
-        featureName: string;
-        data: any;
-        auditUser: IAuditUser;
-    }) {
-        super(MILESTONE_PROGRESSION_CREATED, eventData.auditUser);
-        this.project = eventData.project;
-        this.environment = eventData.environment;
-        this.featureName = eventData.featureName;
-        this.data = eventData.data;
-    }
-}
-
-export class MilestoneProgressionUpdatedEvent extends BaseEvent {
-    readonly project: string;
-    readonly environment: string;
-    readonly featureName: string;
-    readonly preData: any;
-    readonly data: any;
-    constructor(eventData: {
-        project: string;
-        environment: string;
-        featureName: string;
-        data: any;
-        preData: any;
-        auditUser: IAuditUser;
-    }) {
-        super(MILESTONE_PROGRESSION_UPDATED, eventData.auditUser);
-        this.project = eventData.project;
-        this.environment = eventData.environment;
-        this.featureName = eventData.featureName;
-        this.data = eventData.data;
         this.preData = eventData.preData;
     }
 }

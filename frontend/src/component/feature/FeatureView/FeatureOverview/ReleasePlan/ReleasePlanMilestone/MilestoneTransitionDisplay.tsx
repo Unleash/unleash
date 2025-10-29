@@ -26,6 +26,7 @@ const StyledFormWrapper = styled('div', {
     ),
     ...(hasChanged && {
         backgroundColor: theme.palette.background.elevation1,
+        border: `1px solid ${theme.palette.divider}`,
         padding: theme.spacing(1.5, 2),
         borderRadius: `${theme.shape.borderRadiusLarge}px`,
     }),
@@ -108,6 +109,30 @@ interface IMilestoneTransitionDisplayProps {
     status?: MilestoneStatus;
     badge?: ReactNode;
 }
+
+export const ReadonlyMilestoneTransitionDisplay = ({
+    intervalMinutes,
+    status,
+}: {
+    intervalMinutes: number;
+    status?: MilestoneStatus;
+}) => {
+    const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
+
+    return (
+        <StyledDisplayContainer>
+            <StyledContentGroup>
+                <StyledIcon status={status} />
+                <StyledLabel status={status}>
+                    Proceed to the next milestone after
+                </StyledLabel>
+                <span style={{ fontSize: 'inherit' }}>
+                    {initial.value} {initial.unit}
+                </span>
+            </StyledContentGroup>
+        </StyledDisplayContainer>
+    );
+};
 
 export const MilestoneTransitionDisplay = ({
     intervalMinutes,

@@ -11,6 +11,7 @@ const StyledFormContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(1.5),
     padding: theme.spacing(1.5, 2),
     backgroundColor: theme.palette.background.elevation1,
+    border: `1px solid ${theme.palette.divider}`,
     width: '100%',
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     position: 'relative',

@@ -26,6 +26,7 @@ const StyledFormWrapper = styled('div', {
     ),
     ...(hasChanged && {
         backgroundColor: theme.palette.background.elevation1,
+        border: `1px solid ${theme.palette.divider}`,
         padding: theme.spacing(1.5, 2),
         borderRadius: `${theme.shape.borderRadiusLarge}px`,
     }),

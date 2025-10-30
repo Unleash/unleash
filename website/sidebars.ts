@@ -189,9 +189,9 @@ const sidebars: SidebarsConfig = {
             label: 'Tutorials and guides',
             type: 'category',
             link: {
-                        type: 'doc',
-                        id: 'guides-overview',
-                    },
+                type: 'doc',
+                id: 'guides-overview',
+            },
             items: [
                 {
                     label: 'Feature management best practices',

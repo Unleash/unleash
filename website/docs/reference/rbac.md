@@ -326,6 +326,8 @@ Groups themselves do not grant permissions. To be functional, a group must eithe
 A user can belong to multiple groups, and each group a user belongs to can have a different role assigned to it on a specific project.
 If a user gains permissions for a project through multiple groups, they will inherit the most permissive set of permissions from all their assigned group roles for that project.
 
+You can’t add a group with a [custom root role](#custom-root-roles) to a project. If you need both root-level and project-level access through [group syncing](#set-up-group-sso-syncing), you can sync the same directory group from your Active Directory or identity provider to two separate Unleash groups: one for root permissions and one for project access.
+
 ## Set up group SSO syncing
 
 :::note Availability

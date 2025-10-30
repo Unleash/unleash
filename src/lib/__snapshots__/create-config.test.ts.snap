@@ -24,6 +24,7 @@ exports[`should create default config 1`] = `
     "type": "open-source",
   },
   "buildDate": undefined,
+  "checkDbOnReady": false,
   "clientFeatureCaching": {
     "enabled": true,
     "maxAge": 3600000,

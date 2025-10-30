@@ -32,14 +32,16 @@ All users of your Unleash instance can view the project but only project Members
 
 ### Private collaboration mode
 
-Only project Members, Admins, Editors, and users with [custom root roles](./rbac#custom-root-roles) can view the project. Viewers, who are not project Members, can't see the project in the project list. Only project Members and Admins can submit change requests. 
+Only project Members, Admins, Editors, and users with any [custom root role](./rbac#custom-root-roles) can view the project. Viewers, who are not project Members, can't see the project in the project list. Only project Members and Admins can submit change requests. 
+
+To grant users visibility into private projects through a custom root role, you must assign the role directly to the user rather than through a [user group](/reference/rbac#usergroups).
 
 
 |           | View project                                                                                    | Submit change requests     |
 |-----------|-------------------------------------------------------------------------------------------------|----------------------------|
 | Open      | All users                                                                                       | All users                  |
 | Protected | All users                                                                                       | Project Members and Admins |
-| Private   | Project Members, Admins, Editors, and users with [custom root roles](rbac.md#custom-root-roles) | Project Members and Admins |
+| Private   | Project Members, Admins, Editors, and users with any [custom root role](rbac.md#custom-root-roles) assigned directly (not through a user group) | Project Members and Admins |
 
 ## Set project collaboration mode
 

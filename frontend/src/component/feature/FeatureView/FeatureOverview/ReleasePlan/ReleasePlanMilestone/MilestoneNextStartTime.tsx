@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import HourglassEmptyOutlinedIcon from '@mui/icons-material/HourglassEmptyOutlined';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import { isToday, isTomorrow, format, addMinutes } from 'date-fns';
 import { calculateMilestoneStartTime } from '../utils/calculateMilestoneStartTime.ts';
@@ -34,8 +35,17 @@ const StyledTimeContainer = styled('span')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const StyledIcon = styled(HourglassEmptyOutlinedIcon)(({ theme }) => ({
+const StyledHourglassIcon = styled(HourglassEmptyOutlinedIcon)(({ theme }) => ({
     fontSize: 18,
+    color: theme.palette.primary.main,
+}));
+
+const StyledPlayIcon = styled(PlayCircleIcon)(({ theme }) => ({
+    fontSize: 18,
+    color: theme.palette.primary.main,
+}));
+
+const PrimaryText = styled('span')(({ theme }) => ({
     color: theme.palette.primary.main,
 }));
 
@@ -75,13 +85,15 @@ export const MilestoneNextStartTime = ({
         activeMilestoneId,
     );
 
-    const text = projectedStartTime
-        ? `Starting ${formatSmartDate(projectedStartTime)}`
-        : 'Waiting to start';
+    const text = projectedStartTime ? (
+        `Starting ${formatSmartDate(projectedStartTime)}`
+    ) : (
+        <PrimaryText>Start manually</PrimaryText>
+    );
 
     return (
         <StyledTimeContainer>
-            <StyledIcon />
+            {projectedStartTime ? <StyledHourglassIcon /> : <StyledPlayIcon />}
             {text}
         </StyledTimeContainer>
     );

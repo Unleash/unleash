@@ -30,33 +30,7 @@ export const FeatureExposureMetrics = () => {
 
     usePageTitle('Metrics');
 
-    const [defaultEnvironment, setDefaultEnvironment] = useState<string>(environments[0])
-    const { featureMetrics } = useFeatureMetricsRaw(featureId, 48);
-
-    // Keep a cache of the fetched metrics so that we can
-    // show the cached result while fetching new metrics.
-    const [cachedMetrics, setCachedMetrics] = useState<
-        Readonly<IFeatureMetricsRaw[]> | undefined
-    >(featureMetrics);
-
-    const highestRequest: string = useMemo(() => {
-        if (!cachedMetrics?.length) return environments[0];
-
-        const totals = cachedMetrics.reduce<Record<string, number>>((acc, m) => {
-            acc[m.environment] = (acc[m.environment] ?? 0) + m.yes + m.no;
-            return acc;
-        }, {});
-
-        return Object.entries(totals).reduce((maxEnv, [env, val]) =>
-            val > (totals[maxEnv] ?? -Infinity) ? env : maxEnv,
-            environments?.[0] ?? ''
-        )
-    }, [cachedMetrics, environments]);
-    
-    useEffect(() => {
-        const environment = highestRequest || environments[0];
-        setDefaultEnvironment(environment)
-    }, [highestRequest, environments])
+    const defaultEnvironment = Array.from(environments)[0];
 
     const [query, setQuery] = useQueryParams({
         environment: withDefault(StringParam, defaultEnvironment),
@@ -75,7 +49,6 @@ export const FeatureExposureMetrics = () => {
     const selectedApplications = query.applications.filter(
         (item) => item !== null,
     ) as string[];
-
     useEffect(() => {
         if (query.applications && query.applications.length === 0) {
             setQuery({ applications: allApplications });
@@ -85,6 +58,14 @@ export const FeatureExposureMetrics = () => {
     const allSelected = [...applications].every((element) =>
         selectedApplications.includes(element),
     );
+
+    const { featureMetrics } = useFeatureMetricsRaw(featureId, hoursBack);
+
+    // Keep a cache of the fetched metrics so that we can
+    // show the cached result while fetching new metrics.
+    const [cachedMetrics, setCachedMetrics] = useState<
+        Readonly<IFeatureMetricsRaw[]> | undefined
+    >(featureMetrics);
 
     useEffect(() => {
         featureMetrics && setCachedMetrics(featureMetrics);
@@ -190,15 +171,22 @@ export const FeatureExposureMetrics = () => {
 
 // Get all the environment names for a feature,
 // not just the one's we have metrics for.
-const useFeatureMetricsEnvironments = (
+export const useFeatureMetricsEnvironments = (
     projectId: string,
     featureId: string,
 ): Set<string> => {
     const { feature } = useFeature(projectId, featureId);
 
-    const environments = feature.environments.map((environment) => {
+    let productionIndex = 0;
+    const environments = feature.environments.map((environment, index) => {
+        if (!productionIndex && environment.type === 'production') {
+            productionIndex = index;
+        }
         return environment.name;
     });
+
+    const productionValue = environments.splice(productionIndex, 1)[0];
+    environments.unshift(productionValue);
 
     return new Set(environments);
 };

@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { formatDistanceToNow, addMinutes } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHM } from 'utils/formatDate.ts';
@@ -11,24 +10,22 @@ export const useMilestoneProgressionInfo = (
 ) => {
     const { locationSettings } = useLocationSettings();
 
-    return useMemo(() => {
-        if (!sourceMilestoneStartedAt || !(status === 'active' || status === 'paused')) {
-            return null;
-        }
+    if (!sourceMilestoneStartedAt || !(status === 'active' || status === 'paused')) {
+        return null;
+    }
 
-        const startDate = new Date(sourceMilestoneStartedAt);
-        const now = new Date();
-        const elapsedMinutes = Math.floor((now.getTime() - startDate.getTime()) / 60000);
-        const proceedDate = addMinutes(startDate, intervalMinutes);
+    const startDate = new Date(sourceMilestoneStartedAt);
+    const now = new Date();
+    const elapsedMinutes = Math.floor((now.getTime() - startDate.getTime()) / 60000);
+    const proceedDate = addMinutes(startDate, intervalMinutes);
 
-        if (elapsedMinutes >= intervalMinutes) {
-            const elapsedTime = formatDistanceToNow(startDate, { addSuffix: false });
-            return `Already ${elapsedTime} in this milestone.`;
-        }
+    if (elapsedMinutes >= intervalMinutes) {
+        const elapsedTime = formatDistanceToNow(startDate, { addSuffix: false });
+        return `Already ${elapsedTime} in this milestone.`;
+    }
 
-        const proceedTime = formatDateYMDHM(proceedDate, locationSettings.locale);
-        const remainingTime = formatDistanceToNow(proceedDate, { addSuffix: false });
-        return `Will proceed at ${proceedTime} (in ${remainingTime}).`;
-    }, [intervalMinutes, sourceMilestoneStartedAt, status, locationSettings.locale]);
+    const proceedTime = formatDateYMDHM(proceedDate, locationSettings.locale);
+    const remainingTime = formatDistanceToNow(proceedDate, { addSuffix: false });
+    return `Will proceed at ${proceedTime} (in ${remainingTime}).`;
 };
 

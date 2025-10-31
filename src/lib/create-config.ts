@@ -798,6 +798,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.prometheusImpactMetricsApi ||
         process.env.PROMETHEUS_IMPACT_METRICS_API;
 
+    const checkDbOnReady =
+        Boolean(options.checkDbOnReady) ??
+        parseEnvVarBoolean(process.env.CHECK_DB_ON_READY, false);
+
     return {
         db,
         session,
@@ -843,5 +847,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         buildDate: process.env.BUILD_DATE,
         unleashFrontendToken,
         customStrategySettings,
+        checkDbOnReady,
     };
 }

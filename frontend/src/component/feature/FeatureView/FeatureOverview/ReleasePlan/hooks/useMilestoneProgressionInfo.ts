@@ -9,7 +9,7 @@ export const useMilestoneProgressionInfo = (
 ) => {
     const { locationSettings } = useLocationSettings();
 
-    if (status !== 'active') {
+    if (!status || status !== 'active') {
         return null;
     }
 

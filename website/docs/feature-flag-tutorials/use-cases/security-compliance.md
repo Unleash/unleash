@@ -108,7 +108,7 @@ Next, we’ll explore how to extend access controls in Unleash for network secur
 
 Securing your network layer is non-negotiable for building and using software systems. It’s foundational knowledge and good practice for any organization with engineering teams deploying software. Now that you understand how to set up and manage users at scale in Unleash, you can begin configuring Unleash in your applications and services [using our SDKs](/reference/sdks#official-sdks).
 
-Using the Admin UI is an easy, direct way to make changes to your feature flags, projects, rollout strategies, and more. But when you’re making calls to our frontend API from your services, you can update cross-origin resource sharing (CORS) settings to control application access to Unleash. You can also set up IP allow lists to restrict access to Unleash.
+Using the Admin UI is an easy, direct way to make changes to your feature flags, projects, rollout strategies, and more. But when you’re making calls to our frontend API from your services, you can update cross-origin resource sharing (CORS) settings to control application access to Unleash. To further restrict access, Unleash also supports [IP allow lists](#set-up-ip-allow-lists-for-enhanced-security).
 
 ### Set up CORS policies for Frontend API security
 
@@ -125,6 +125,8 @@ By default, this CORS origin list includes an asterisk (\*), meaning that any do
 ### Set up IP allow lists for enhanced security
 
 Enhance your network security with IP allow lists, which give your organization access control based on specific network parameters. This feature restricts all access to Unleash to only be used by certain IP addresses. For example, if you’re using company VPNs or servers, you can add those IP addresses to the list to ensure they can access Unleash.
+
+If you need to update or review your allow list configuration, contact [Unleash support](https://www.getunleash.io/support).
 
 Next, we’ll explore change management as an important tool to further enhance access control mechanisms and make your workflows auditable.
 

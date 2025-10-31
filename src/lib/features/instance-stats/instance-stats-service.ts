@@ -547,6 +547,7 @@ export class InstanceStatsService {
             releasePlans,
             edgeInstancesLastMonth: edgeInstances.lastMonth,
             edgeInstancesMonthBeforeLast: edgeInstances.monthBeforeLast,
+            edgeInstancesLast12Months: edgeInstances.last12Months,
         };
         return featureInfo;
     }

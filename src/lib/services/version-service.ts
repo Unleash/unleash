@@ -56,6 +56,7 @@ export interface IFeatureUsageInfo {
     releasePlans: number;
     edgeInstancesLastMonth?: number;
     edgeInstancesMonthBeforeLast?: number;
+    edgeInstancesLast12Months?: number;
 }
 
 export default class VersionService {

@@ -47,6 +47,7 @@ const fakeTelemetryData = {
     releasePlans: 4,
     edgeInstancesLastMonth: 0,
     edgeInstancesMonthBeforeLast: 0,
+    edgeInstancesLast12Months: 0,
 };
 
 test('yields current versions', async () => {

@@ -303,6 +303,13 @@ export const instanceAdminStatsSchema = {
                     example: 12,
                     minimum: 0,
                 },
+                last12Months: {
+                    type: 'integer',
+                    description:
+                        'The rounded up average number of edge instances in the last 12 months',
+                    example: 15,
+                    minimum: 0,
+                },
             },
         },
         sum: {

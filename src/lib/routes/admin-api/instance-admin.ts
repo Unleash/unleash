@@ -136,6 +136,7 @@ class InstanceAdminController extends Controller {
             edgeInstances: {
                 lastMonth: 10,
                 monthBeforeLast: 15,
+                last12Months: 12,
             },
         };
     }

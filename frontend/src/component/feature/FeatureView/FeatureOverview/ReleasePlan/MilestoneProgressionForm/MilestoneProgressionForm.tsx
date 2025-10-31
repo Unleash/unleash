@@ -4,7 +4,7 @@ import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionFor
 import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
-import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.js';
+import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',

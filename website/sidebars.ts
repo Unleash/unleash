@@ -42,23 +42,23 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'quickstart',
+                id: 'get-started/quickstart',
             },
             items: [
                 {
                     type: 'doc',
                     label: 'Quickstart',
-                    id: 'quickstart',
+                    id: 'get-started/quickstart',
                 },
                 {
                     type: 'doc',
                     label: 'Introduction to feature flags',
-                    id: 'topics/what-is-a-feature-flag',
+                    id: 'get-started/what-is-a-feature-flag',
                 },
                 {
                     type: 'doc',
                     label: 'Unleash architecture overview',
-                    id: 'understanding-unleash/unleash-overview',
+                    id: 'get-started/unleash-overview',
                 },
             ],
         },
@@ -67,7 +67,7 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'understanding-unleash/the-anatomy-of-unleash',
+                id: 'reference/core-concepts',
             },
             items: [
                 {

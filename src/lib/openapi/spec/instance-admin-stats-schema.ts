@@ -288,6 +288,10 @@ export const instanceAdminStatsSchema = {
             type: 'object',
             description:
                 'The average number of edge instances, per month, in the last 12 months, rounded to 3 decimal places',
+            additionalProperties: {
+                type: 'number',
+                minimum: 0,
+            },
             example: {
                 '2025-09': 2.25,
                 '2025-08': 1.75,

@@ -10,7 +10,7 @@ import {
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
-import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
+import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.js';
 
 const StyledFormWrapper = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasChanged',

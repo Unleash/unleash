@@ -9,6 +9,11 @@
  */
 export type InstanceAdminStatsSchemaEdgeInstances = {
     /**
+     * The rounded up average number of edge instances in the last 12 months
+     * @minimum 0
+     */
+    last12Months?: number;
+    /**
      * The rounded up average number of edge instances in the last month
      * @minimum 0
      */

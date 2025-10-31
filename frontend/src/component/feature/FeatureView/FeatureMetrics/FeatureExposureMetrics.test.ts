@@ -1,14 +1,70 @@
 import { vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import * as useFeatureHook from 'hooks/api/getters/useFeature/useFeature';
-import { useFeatureMetricsEnvironments } from './FeatureExposureMetrics.tsx';
+import {
+    useFeatureMetricsEnvironments,
+    useDefaultEnvironments,
+} from './FeatureExposureMetrics.tsx';
 
 describe('useFeatureMetricsEnvironments', () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
-    it('should return environments with production first when production exists', () => {
+    it('should return all environments in their original order', () => {
+        vi.spyOn(useFeatureHook, 'useFeature').mockReturnValue({
+            feature: {
+                environments: [
+                    {
+                        name: 'dev',
+                        type: 'development',
+                        enabled: false,
+                        strategies: [],
+                    },
+                    {
+                        name: 'prod',
+                        type: 'production',
+                        enabled: false,
+                        strategies: [],
+                    },
+                    {
+                        name: 'staging',
+                        type: 'staging',
+                        enabled: false,
+                        strategies: [],
+                    },
+                ],
+                stale: false,
+                archived: false,
+                createdAt: '',
+                name: '',
+                favorite: false,
+                project: '',
+                type: 'experiment',
+                variants: [],
+                impressionData: false,
+                dependencies: [],
+                children: [],
+            },
+            refetchFeature: vi.fn(),
+            loading: false,
+        });
+
+        const { result } = renderHook(() =>
+            useFeatureMetricsEnvironments('project-x', 'feature-y'),
+        );
+
+        const envArray = Array.from(result.current);
+        expect(envArray).toEqual(['dev', 'prod', 'staging']);
+    });
+});
+
+describe('useDefaultEnvironments', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
+    it('should return the name of the first production environment if it exists', () => {
         vi.spyOn(useFeatureHook, 'useFeature').mockReturnValue({
             feature: {
                 environments: [
@@ -50,14 +106,13 @@ describe('useFeatureMetricsEnvironments', () => {
         });
 
         const { result } = renderHook(() =>
-            useFeatureMetricsEnvironments('project-x', 'feature-y'),
+            useDefaultEnvironments('project-x', 'feature-y'),
         );
 
-        const envArray = Array.from(result.current);
-        expect(envArray).toEqual(['prod', 'dev', 'staging']);
+        expect(result.current).toBe('prod');
     });
 
-    it('should return environments in original order if no production type exists', () => {
+    it('should return the first environment name if no production environment exists', () => {
         vi.spyOn(useFeatureHook, 'useFeature').mockReturnValue({
             feature: {
                 environments: [
@@ -93,24 +148,16 @@ describe('useFeatureMetricsEnvironments', () => {
         });
 
         const { result } = renderHook(() =>
-            useFeatureMetricsEnvironments('project-x', 'feature-y'),
+            useDefaultEnvironments('project-x', 'feature-y'),
         );
 
-        const envArray = Array.from(result.current);
-        expect(envArray).toEqual(['alpha', 'beta']);
+        expect(result.current).toBe('alpha');
     });
 
-    it('should handle a single production environment gracefully', () => {
+    it('should return an empty string if no environments exist', () => {
         vi.spyOn(useFeatureHook, 'useFeature').mockReturnValue({
             feature: {
-                environments: [
-                    {
-                        name: 'prod',
-                        type: 'production',
-                        enabled: false,
-                        strategies: [],
-                    },
-                ],
+                environments: [],
                 stale: false,
                 archived: false,
                 createdAt: '',
@@ -130,10 +177,9 @@ describe('useFeatureMetricsEnvironments', () => {
         });
 
         const { result } = renderHook(() =>
-            useFeatureMetricsEnvironments('project-x', 'feature-y'),
+            useDefaultEnvironments('project-x', 'feature-y'),
         );
 
-        const envArray = Array.from(result.current);
-        expect(envArray).toEqual(['prod']);
+        expect(result.current).toBe('');
     });
 });

@@ -137,9 +137,7 @@ export const ReadonlyMilestoneTransitionDisplay = ({
                 <span style={{ fontSize: 'inherit' }}>
                     {initial.value} {initial.unit}
                 </span>
-                <StyledLabel status={status}>
-                    from milestone start
-                </StyledLabel>
+                <StyledLabel status={status}>from milestone start</StyledLabel>
             </StyledContentGroup>
         </StyledDisplayContainer>
     );
@@ -231,9 +229,7 @@ export const MilestoneTransitionDisplay = ({
             <StyledDisplayContainer>
                 <StyledContentGroup>
                     <StyledIcon status={status} />
-                    <StyledLabel status={status}>
-                        Proceed after
-                    </StyledLabel>
+                    <StyledLabel status={status}>Proceed after</StyledLabel>
                     <MilestoneProgressionTimeInput
                         timeValue={form.timeValue}
                         timeUnit={form.timeUnit}

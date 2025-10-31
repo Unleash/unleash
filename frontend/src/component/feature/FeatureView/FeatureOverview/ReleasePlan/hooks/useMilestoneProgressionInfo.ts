@@ -10,22 +10,27 @@ export const useMilestoneProgressionInfo = (
 ) => {
     const { locationSettings } = useLocationSettings();
 
-    if (!sourceMilestoneStartedAt || !(status === 'active' || status === 'paused')) {
+    if (status !== 'active' || !sourceMilestoneStartedAt) {
         return null;
     }
 
     const startDate = new Date(sourceMilestoneStartedAt);
     const now = new Date();
-    const elapsedMinutes = Math.floor((now.getTime() - startDate.getTime()) / 60000);
+    const elapsedMinutes = Math.floor(
+        (now.getTime() - startDate.getTime()) / 60000,
+    );
     const proceedDate = addMinutes(startDate, intervalMinutes);
 
     if (elapsedMinutes >= intervalMinutes) {
-        const elapsedTime = formatDistanceToNow(startDate, { addSuffix: false });
+        const elapsedTime = formatDistanceToNow(startDate, {
+            addSuffix: false,
+        });
         return `Already ${elapsedTime} in this milestone.`;
     }
 
     const proceedTime = formatDateYMDHM(proceedDate, locationSettings.locale);
-    const remainingTime = formatDistanceToNow(proceedDate, { addSuffix: false });
+    const remainingTime = formatDistanceToNow(proceedDate, {
+        addSuffix: false,
+    });
     return `Will proceed at ${proceedTime} (in ${remainingTime}).`;
 };
-

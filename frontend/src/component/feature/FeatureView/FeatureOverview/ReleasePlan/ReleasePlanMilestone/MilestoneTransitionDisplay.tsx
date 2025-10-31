@@ -10,7 +10,8 @@ import {
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
-import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { getMilestoneProgressionInfo } from '../hooks/getMilestoneProgressionInfo.ts';
 
 const StyledFormWrapper = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasChanged',
@@ -168,11 +169,15 @@ export const MilestoneTransitionDisplay = ({
     const currentIntervalMinutes = form.getIntervalMinutes();
     const hasChanged = currentIntervalMinutes !== intervalMinutes;
 
-    const progressionInfo = useMilestoneProgressionInfo(
-        currentIntervalMinutes,
-        sourceMilestoneStartedAt,
-        status,
-    );
+    const { locationSettings } = useLocationSettings();
+    const progressionInfo =
+        status === 'active'
+            ? getMilestoneProgressionInfo(
+                  currentIntervalMinutes,
+                  sourceMilestoneStartedAt,
+                  locationSettings.locale,
+              )
+            : null;
 
     useEffect(() => {
         const newInitial = getTimeValueAndUnitFromMinutes(intervalMinutes);

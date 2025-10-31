@@ -4,8 +4,7 @@ import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionFor
 import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
-import { useLocationSettings } from 'hooks/useLocationSettings';
-import { getMilestoneProgressionInfo } from '../hooks/getMilestoneProgressionInfo.ts';
+import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -90,15 +89,11 @@ export const MilestoneProgressionForm = ({
         status,
     );
 
-    const { locationSettings } = useLocationSettings();
-    const progressionInfo =
-        status === 'active'
-            ? getMilestoneProgressionInfo(
-                  form.getIntervalMinutes(),
-                  sourceMilestoneStartedAt,
-                  locationSettings.locale,
-              )
-            : null;
+    const progressionInfo = useMilestoneProgressionInfo(
+        form.getIntervalMinutes(),
+        sourceMilestoneStartedAt,
+        status,
+    );
 
     const handleSubmit = async () => {
         if (!form.validate()) {

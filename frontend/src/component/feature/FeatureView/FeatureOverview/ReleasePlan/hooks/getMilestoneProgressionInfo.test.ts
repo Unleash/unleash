@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getMilestoneProgressionInfo } from './getMilestoneProgressionInfo.ts';
+import { getMilestoneProgressionInfo } from './getMilestoneProgressionInfo.js';
 
 describe('getMilestoneProgressionInfo', () => {
     const currentTime = new Date('2025-10-31T15:00:00.000Z');

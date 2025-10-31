@@ -180,7 +180,7 @@ export interface IUnleashOptions {
     resourceLimits?: Partial<ResourceLimits>;
     userInactivityThresholdInDays?: number;
     unleashFrontendToken?: string;
-    customStrategySettings?: Partial<ICustomStrategySettings>;
+    customStrategySettings?: ICustomStrategySettings;
     checkDbOnReady?: boolean;
 }
 

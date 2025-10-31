@@ -292,21 +292,21 @@ export const instanceAdminStatsSchema = {
                 lastMonth: {
                     type: 'integer',
                     description:
-                        'The rounded up average number of edge instances in the last month',
+                        'The average number of edge instances in the last month, rounded to 3 decimal places',
                     example: 10,
                     minimum: 0,
                 },
                 monthBeforeLast: {
                     type: 'integer',
                     description:
-                        'The rounded up average number of edge instances in the month before last',
+                        'The average number of edge instances in the month before last, rounded to 3 decimal places',
                     example: 12,
                     minimum: 0,
                 },
                 last12Months: {
                     type: 'integer',
                     description:
-                        'The rounded up average number of edge instances in the last 12 months',
+                        'The average number of edge instances in the last 12 months, rounded to 3 decimal places',
                     example: 15,
                     minimum: 0,
                 },

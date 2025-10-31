@@ -287,7 +287,7 @@ export const instanceAdminStatsSchema = {
         edgeInstances: {
             type: 'object',
             description:
-                'The rounded up average number of edge instances in the last month and month before last',
+                'The average number of edge instances in the last month, month before that, and last 12 months, rounded to 3 decimal places',
             properties: {
                 lastMonth: {
                     type: 'number',

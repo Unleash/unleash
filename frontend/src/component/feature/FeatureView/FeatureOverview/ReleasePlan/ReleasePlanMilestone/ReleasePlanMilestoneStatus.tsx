@@ -10,10 +10,8 @@ export type MilestoneStatus =
     | { type: 'paused' }
     | { type: 'completed' };
 
-const StyledStatusButton = styled('button', {
-    shouldForwardProp: (prop) => prop !== 'status',
-})<{ status: MilestoneStatus; disabled?: boolean }>(
-    ({ theme, status, disabled }) => ({
+const BaseStatusButton = styled('button')<{ disabled?: boolean }>(
+    ({ theme, disabled }) => ({
         display: 'flex',
         alignItems: 'center',
         border: 'none',
@@ -21,41 +19,15 @@ const StyledStatusButton = styled('button', {
         padding: 0,
         paddingRight: theme.spacing(1),
         cursor: 'pointer',
-        backgroundColor:
-            status.type === 'active'
-                ? theme.palette.success.light
-                : theme.palette.neutral.light,
-        '&:focus-visible': {
-            outline: `2px solid ${theme.palette.primary.main}`,
-        },
-        '&:hover': {
-            backgroundColor:
-                status.type === 'active'
-                    ? theme.palette.success.light
-                    : status.type === 'paused'
-                      ? 'transparent'
-                      : theme.palette.neutral.light,
-            textDecoration: 'none',
-        },
         fontSize: theme.fontSizes.smallerBody,
         lineHeight: theme.fontSizes.smallerBody,
         fontWeight: theme.fontWeight.medium,
         borderRadius: theme.shape.borderRadiusMedium,
-        color:
-            status.type === 'active'
-                ? theme.palette.success.contrastText
-                : status.type === 'paused'
-                  ? theme.palette.text.primary
-                  : theme.palette.primary.main,
+        textDecoration: 'none',
+        '&:focus-visible': {
+            outline: `2px solid ${theme.palette.primary.main}`,
+        },
         '& svg': {
-            color:
-                status.type === 'active'
-                    ? theme.palette.success.main
-                    : status.type === 'paused'
-                      ? theme.palette.text.disabled
-                      : status.type === 'completed'
-                        ? theme.palette.neutral.border
-                        : theme.palette.primary.main,
             height: theme.spacing(3),
             width: theme.spacing(3),
         },
@@ -64,6 +36,67 @@ const StyledStatusButton = styled('button', {
         }),
     }),
 );
+
+const ActiveStatusButton = styled(BaseStatusButton)(({ theme }) => ({
+    backgroundColor: theme.palette.success.light,
+    color: theme.palette.success.contrastText,
+    '&:hover': {
+        backgroundColor: theme.palette.success.light,
+        textDecoration: 'none',
+    },
+    '& svg': {
+        color: theme.palette.success.main,
+    },
+}));
+
+const PausedStatusButton = styled(BaseStatusButton)(({ theme }) => ({
+    backgroundColor: theme.palette.neutral.light,
+    color: theme.palette.text.primary,
+    '&:hover': {
+        backgroundColor: 'transparent',
+        textDecoration: 'none',
+    },
+    '& svg': {
+        color: theme.palette.text.disabled,
+    },
+}));
+
+const ScheduledStatusButton = styled(BaseStatusButton)(({ theme }) => ({
+    backgroundColor: 'transparent',
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
+    '&:hover': {
+        backgroundColor: 'transparent',
+        textDecoration: 'none',
+    },
+    '& svg': {
+        color: theme.palette.primary.main,
+    },
+}));
+
+const DefaultStatusButton = styled(BaseStatusButton)(({ theme }) => ({
+    backgroundColor: theme.palette.neutral.light,
+    color: theme.palette.primary.main,
+    '&:hover': {
+        backgroundColor: theme.palette.neutral.light,
+        textDecoration: 'none',
+    },
+    '& svg': {
+        color: theme.palette.primary.main,
+    },
+}));
+
+const CompletedStatusButton = styled(BaseStatusButton)(({ theme }) => ({
+    backgroundColor: theme.palette.neutral.light,
+    color: theme.palette.primary.main,
+    '&:hover': {
+        backgroundColor: theme.palette.neutral.light,
+        textDecoration: 'none',
+    },
+    '& svg': {
+        color: theme.palette.neutral.border,
+    },
+}));
 
 interface IReleasePlanMilestoneStatusProps {
     status: MilestoneStatus;
@@ -97,27 +130,48 @@ const getStatusIcon = (status: MilestoneStatus) => {
     }
 };
 
+const getStatusButton = (
+    status: MilestoneStatus,
+    progressionsEnabled: boolean,
+) => {
+    if (status.type === 'active') return ActiveStatusButton;
+    if (status.type === 'paused') return PausedStatusButton;
+    if (
+        progressionsEnabled &&
+        status.type === 'not-started' &&
+        status.scheduledAt
+    ) {
+        return ScheduledStatusButton;
+    }
+    if (status.type === 'completed') return CompletedStatusButton;
+    return DefaultStatusButton;
+};
+
 export const ReleasePlanMilestoneStatus = ({
     status,
     onStartMilestone,
 }: IReleasePlanMilestoneStatusProps) => {
     const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
 
+    const StatusButton = getStatusButton(status, milestoneProgressionsEnabled);
     const statusText = getStatusText(status, milestoneProgressionsEnabled);
     const statusIcon = getStatusIcon(status);
     const disabled = status.type === 'active' || status.type === 'paused';
+    const isScheduled =
+        milestoneProgressionsEnabled &&
+        status.type === 'not-started' &&
+        status.scheduledAt;
 
     return (
-        <StyledStatusButton
-            status={status}
+        <StatusButton
             onClick={(e) => {
                 e.stopPropagation();
                 onStartMilestone();
             }}
             disabled={disabled}
         >
-            {statusIcon}
+            {!isScheduled && statusIcon}
             {statusText}
-        </StyledStatusButton>
+        </StatusButton>
     );
 };

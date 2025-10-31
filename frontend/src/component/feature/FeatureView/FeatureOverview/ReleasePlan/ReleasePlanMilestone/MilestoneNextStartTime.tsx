@@ -1,12 +1,14 @@
 import { styled } from '@mui/material';
 import HourglassEmptyOutlinedIcon from '@mui/icons-material/HourglassEmptyOutlined';
-import { isToday, isTomorrow, format, addMinutes } from 'date-fns';
+import { isToday, isTomorrow, addMinutes } from 'date-fns';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { formatDateHM, formatDateYMD } from 'utils/formatDate';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 
-export const formatSmartDate = (date: Date): string => {
-    const startTime = format(date, 'HH:mm');
-    const endTime = format(addMinutes(date, 2), 'HH:mm');
+export const formatSmartDate = (date: Date, locale: string): string => {
+    const startTime = formatDateHM(date, locale);
+    const endTime = formatDateHM(addMinutes(date, 2), locale);
     const timeRange = `between ${startTime} - ${endTime}`;
 
     if (isToday(date)) {
@@ -16,8 +18,7 @@ export const formatSmartDate = (date: Date): string => {
         return `tomorrow ${timeRange}`;
     }
 
-    // For other dates, show full date with time range
-    const dateString = format(date, 'yyyy-MM-dd');
+    const dateString = formatDateYMD(date, locale);
     return `${dateString} ${timeRange}`;
 };
 
@@ -46,12 +47,12 @@ export const MilestoneNextStartTime = ({
     status,
 }: IMilestoneNextStartTimeProps) => {
     const milestoneProgressionEnabled = useUiFlag('milestoneProgression');
+    const { locationSettings } = useLocationSettings();
 
     if (!milestoneProgressionEnabled) {
         return null;
     }
 
-    // Only show for not-started milestones with scheduledAt
     if (status.type !== 'not-started' || !status.scheduledAt) {
         return null;
     }
@@ -63,7 +64,7 @@ export const MilestoneNextStartTime = ({
     return (
         <StyledTimeContainer>
             <StyledHourglassIcon />
-            {`Starting ${formatSmartDate(projectedStartTime)}`}
+            {`Starting ${formatSmartDate(projectedStartTime, locationSettings.locale)}`}
         </StyledTimeContainer>
     );
 };

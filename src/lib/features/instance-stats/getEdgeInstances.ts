@@ -2,59 +2,46 @@ import type { Db } from '../../types/index.js';
 
 const TABLE = 'edge_node_presence';
 
-export type GetEdgeInstances = () => Promise<{
-    lastMonth: number;
-    monthBeforeLast: number;
-    last12Months: number;
-}>;
+export type EdgeInstanceAveragesPerMonth = Record<string, number>;
+export type GetEdgeInstances = () => Promise<EdgeInstanceAveragesPerMonth>;
 
 export const createGetEdgeInstances =
     (db: Db): GetEdgeInstances =>
     async () => {
-        const result = await db
-            .with('mw', (qb) =>
-                qb.select(
+        const rows = await db
+            .with('months', (qb) =>
+                qb.fromRaw('generate_series(1, 12) AS gs').select(
                     db.raw(
-                        "(date_trunc('month', NOW()) - INTERVAL '1 month')::timestamptz AS last_start",
+                        "(date_trunc('month', NOW()) - (gs * INTERVAL '1 month'))::timestamptz AS mon_start",
                     ),
                     db.raw(
-                        "date_trunc('month', NOW())::timestamptz AS last_end",
+                        "(date_trunc('month', NOW()) - ((gs - 1) * INTERVAL '1 month'))::timestamptz AS mon_end",
                     ),
                     db.raw(
-                        "(date_trunc('month', NOW()) - INTERVAL '2 months')::timestamptz AS prev_start",
-                    ),
-                    db.raw(
-                        "(date_trunc('month', NOW()) - INTERVAL '1 month')::timestamptz AS prev_end",
-                    ),
-                    db.raw(
-                        "(date_trunc('month', NOW()) - INTERVAL '12 months')::timestamptz AS last12_start",
-                    ),
-                    db.raw(
-                        "date_trunc('month', NOW())::timestamptz AS last12_end",
+                        "to_char((date_trunc('month', NOW()) - (gs * INTERVAL '1 month')),'YYYY-MM') AS key",
                     ),
                     db.raw(`
-                        FLOOR(EXTRACT(EPOCH FROM (
-                            date_trunc('month', NOW()) - (date_trunc('month', NOW()) - INTERVAL '1 month')
-                        )) / 300)::int AS last_expected
-                    `),
-                    db.raw(`
-                        FLOOR(EXTRACT(EPOCH FROM (
-                            (date_trunc('month', NOW()) - INTERVAL '1 month') - (date_trunc('month', NOW()) - INTERVAL '2 months')
-                        )) / 300)::int AS prev_expected
-                    `),
-                    db.raw(`
-                        FLOOR(EXTRACT(EPOCH FROM (
-                            date_trunc('month', NOW()) - (date_trunc('month', NOW()) - INTERVAL '12 months')
-                        )) / 300)::int AS last12_expected
-                    `),
+                            FLOOR(EXTRACT(EPOCH FROM (
+                                (date_trunc('month', NOW()) - ((gs - 1) * INTERVAL '1 month'))
+                                - (date_trunc('month', NOW()) - (gs * INTERVAL '1 month'))
+                            )) / 300)::int AS expected
+                        `),
                 ),
+            )
+            .with('rng', (qb) =>
+                qb
+                    .from('months')
+                    .select(
+                        db.raw('MIN(mon_start) AS min_start'),
+                        db.raw('MAX(mon_end) AS max_end'),
+                    ),
             )
             .with('buckets', (qb) =>
                 qb
                     .from(TABLE)
-                    .joinRaw('CROSS JOIN mw')
+                    .joinRaw('CROSS JOIN rng')
                     .whereRaw(
-                        'bucket_ts >= mw.last12_start AND bucket_ts < mw.last12_end',
+                        'bucket_ts >= rng.min_start AND bucket_ts < rng.max_end',
                     )
                     .groupBy('bucket_ts')
                     .select(
@@ -64,72 +51,34 @@ export const createGetEdgeInstances =
                         ),
                     ),
             )
-            .with('agg', (qb) =>
-                qb
-                    .from('buckets')
-                    .joinRaw('CROSS JOIN mw')
-                    .select(
-                        db.raw(`
-                            COALESCE(
-                                SUM(active_nodes) FILTER (
-                                    WHERE bucket_ts >= mw.last_start AND bucket_ts < mw.last_end
-                                ), 0
-                            ) AS last_total
-                        `),
-                        db.raw(`
-                            COALESCE(
-                                SUM(active_nodes) FILTER (
-                                    WHERE bucket_ts >= mw.prev_start AND bucket_ts < mw.prev_end
-                                ), 0
-                            ) AS prev_total
-                        `),
-                        db.raw(`
-                            COALESCE(
-                                SUM(active_nodes) FILTER (
-                                    WHERE bucket_ts >= mw.last12_start AND bucket_ts < mw.last12_end
-                                ), 0
-                            ) AS last12_total
-                        `),
-                    ),
+            .from('months as m')
+            .joinRaw(
+                'LEFT JOIN buckets b ON b.bucket_ts >= m.mon_start AND b.bucket_ts < m.mon_end',
             )
-            .from('agg')
-            .joinRaw('CROSS JOIN mw')
-            .select({
-                lastMonth: db.raw(`
+            .groupBy('m.key', 'm.expected')
+            .orderBy('m.key', 'desc')
+            .select(
+                db.raw('m.key'),
+                db.raw(
+                    `
                     COALESCE(
-                        ROUND((agg.last_total::numeric) / NULLIF(mw.last_expected, 0), 3),
+                        ROUND((SUM(b.active_nodes)::numeric) / NULLIF(m.expected, 0), 3),
                         0
-                    )
-                `),
-                monthBeforeLast: db.raw(`
-                    COALESCE(
-                        ROUND((agg.prev_total::numeric) / NULLIF(mw.prev_expected, 0), 3),
-                        0
-                    )
-                `),
-                last12Months: db.raw(`
-                    COALESCE(
-                        ROUND((agg.last12_total::numeric) / NULLIF(mw.last12_expected, 0), 3),
-                        0
-                    )
-                `),
-            })
-            .first();
+                    ) AS value
+                `,
+                ),
+            );
 
-        return {
-            lastMonth: Number(result?.lastMonth ?? 0),
-            monthBeforeLast: Number(result?.monthBeforeLast ?? 0),
-            last12Months: Number(result?.last12Months ?? 0),
-        };
+        const series: EdgeInstanceAveragesPerMonth = {};
+        for (const r of rows as Array<{ key: string; value: number }>) {
+            series[r.key] = Number(r.value ?? 0);
+        }
+        return series;
     };
 
 export const createFakeGetEdgeInstances =
     (
-        edgeInstances: Awaited<ReturnType<GetEdgeInstances>> = {
-            lastMonth: 0,
-            monthBeforeLast: 0,
-            last12Months: 0,
-        },
+        edgeInstances: Awaited<ReturnType<GetEdgeInstances>> = {},
     ): GetEdgeInstances =>
     () =>
         Promise.resolve(edgeInstances);

@@ -12,28 +12,17 @@ let getEdgeInstances: GetEdgeInstances;
 
 const TABLE = 'edge_node_presence';
 
-const getBounds = async (raw: ITestDb['rawDatabase']) => {
-    const { rows } = await raw.raw(`
+const getMonthRange = async (raw: ITestDb['rawDatabase'], offset: number) => {
+    const { rows } = await raw.raw(
+        `
         SELECT
-            (date_trunc('month', NOW()) - INTERVAL '2 months')::timestamptz AS prev_start,
-            (date_trunc('month', NOW()) - INTERVAL '1 month')::timestamptz AS prev_end,
-            (date_trunc('month', NOW()) - INTERVAL '1 month')::timestamptz AS last_start,
-            date_trunc('month', NOW())::timestamptz AS last_end,
-            date_trunc('month', NOW())::timestamptz AS this_start,
-            (date_trunc('month', NOW()) + INTERVAL '1 month')::timestamptz AS this_end,
-            (date_trunc('month', NOW()) - INTERVAL '12 months')::timestamptz AS last12_start,
-            date_trunc('month', NOW())::timestamptz AS last12_end
-    `);
-    return rows[0] as {
-        prev_start: string;
-        prev_end: string;
-        last_start: string;
-        last_end: string;
-        this_start: string;
-        this_end: string;
-        last12_start: string;
-        last12_end: string;
-    };
+            (date_trunc('month', NOW()) - (? * INTERVAL '1 month'))::timestamptz AS start_ts,
+            (date_trunc('month', NOW()) - ((? - 1) * INTERVAL '1 month'))::timestamptz AS end_ts,
+            to_char((date_trunc('month', NOW()) - (? * INTERVAL '1 month')), 'YYYY-MM') AS key
+        `,
+        [offset, offset, offset],
+    );
+    return rows[0] as { start_ts: string; end_ts: string; key: string };
 };
 
 const expectedForWindow = async (
@@ -70,6 +59,22 @@ const expectedForWindow = async (
     return Number(rows[0].val);
 };
 
+const countRowsInWindow = async (
+    raw: ITestDb['rawDatabase'],
+    startIso: string,
+    endIso: string,
+) => {
+    const { rows } = await raw.raw(
+        `
+        SELECT COUNT(*)::int AS c
+        FROM ${TABLE}
+        WHERE bucket_ts >= ?::timestamptz AND bucket_ts < ?::timestamptz
+        `,
+        [startIso, endIso],
+    );
+    return Number(rows[0].c);
+};
+
 const insertSpreadAcrossMonth = async (
     raw: ITestDb['rawDatabase'],
     startIso: string,
@@ -104,7 +109,7 @@ const insertSpreadAcrossMonth = async (
 };
 
 beforeAll(async () => {
-    db = await dbInit('edge_instances_e2e', getLogger);
+    db = await dbInit('edge_instances_series_e2e', getLogger);
     await db.rawDatabase.raw(`SET TIME ZONE 'UTC'`);
     getEdgeInstances = createGetEdgeInstances(db.rawDatabase);
 });
@@ -117,122 +122,99 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('returns 0 when no data', async () => {
-    await expect(getEdgeInstances()).resolves.toEqual({
-        lastMonth: 0,
-        monthBeforeLast: 0,
-        last12Months: 0,
-    });
+test('returns 12 months with zeros when no data and keys match exact last-12 range', async () => {
+    const res = await getEdgeInstances();
+    const keys = Object.keys(res);
+    expect(keys.length).toBe(12);
+    for (let i = 1; i <= 12; i++) {
+        const { key } = await getMonthRange(db.rawDatabase, i);
+        expect(keys).toContain(key);
+        expect(res[key]).toBe(0);
+    }
 });
 
-test('counts only last full month with uniformly spread load', async () => {
-    const { last_start, last_end } = await getBounds(db.rawDatabase);
-    await insertSpreadAcrossMonth(db.rawDatabase, last_start, last_end, 2, 3);
-    const expectedLast = await expectedForWindow(
+test('computes average for last month and guarantees data actually inserted', async () => {
+    const { start_ts, end_ts, key } = await getMonthRange(db.rawDatabase, 1);
+    await insertSpreadAcrossMonth(db.rawDatabase, start_ts, end_ts, 2, 3);
+    const inserted = await countRowsInWindow(db.rawDatabase, start_ts, end_ts);
+    expect(inserted).toBeGreaterThan(0);
+    const expected = await expectedForWindow(db.rawDatabase, start_ts, end_ts);
+    expect(expected).toBeGreaterThan(0);
+    const res = await getEdgeInstances();
+    expect(res[key]).toBe(expected);
+});
+
+test('separates last two months with different loads and at least one non-zero in series', async () => {
+    const m1 = await getMonthRange(db.rawDatabase, 1);
+    const m2 = await getMonthRange(db.rawDatabase, 2);
+    await insertSpreadAcrossMonth(db.rawDatabase, m2.start_ts, m2.end_ts, 4, 9);
+    await insertSpreadAcrossMonth(db.rawDatabase, m1.start_ts, m1.end_ts, 3, 4);
+    const insertedM1 = await countRowsInWindow(
         db.rawDatabase,
-        last_start,
-        last_end,
+        m1.start_ts,
+        m1.end_ts,
+    );
+    const insertedM2 = await countRowsInWindow(
+        db.rawDatabase,
+        m2.start_ts,
+        m2.end_ts,
+    );
+    expect(insertedM1).toBeGreaterThan(0);
+    expect(insertedM2).toBeGreaterThan(0);
+    const expectedM1 = await expectedForWindow(
+        db.rawDatabase,
+        m1.start_ts,
+        m1.end_ts,
+    );
+    const expectedM2 = await expectedForWindow(
+        db.rawDatabase,
+        m2.start_ts,
+        m2.end_ts,
     );
     const res = await getEdgeInstances();
-    expect(res).toMatchObject({ lastMonth: expectedLast, monthBeforeLast: 0 });
+    expect(res[m1.key]).toBe(expectedM1);
+    expect(res[m2.key]).toBe(expectedM2);
+    const nonZero = Object.values(res).filter((v) => v > 0).length;
+    expect(nonZero).toBeGreaterThan(0);
 });
 
-test('counts only month before last with uniformly spread load', async () => {
-    const { prev_start, prev_end } = await getBounds(db.rawDatabase);
-    await insertSpreadAcrossMonth(db.rawDatabase, prev_start, prev_end, 2, 5);
-    const expectedPrev = await expectedForWindow(
+test('ignores current month data; verifies current-month insert happened but key is absent and previous month has non-zero', async () => {
+    const current = await getMonthRange(db.rawDatabase, 0);
+    const m1 = await getMonthRange(db.rawDatabase, 1);
+    const m2 = await getMonthRange(db.rawDatabase, 2);
+    await insertSpreadAcrossMonth(
         db.rawDatabase,
-        prev_start,
-        prev_end,
+        current.start_ts,
+        current.end_ts,
+        1,
+        12,
+    );
+    await insertSpreadAcrossMonth(
+        db.rawDatabase,
+        m1.start_ts,
+        m1.end_ts,
+        5,
+        11,
+    );
+    const currentInserted = await countRowsInWindow(
+        db.rawDatabase,
+        current.start_ts,
+        current.end_ts,
+    );
+    expect(currentInserted).toBeGreaterThan(0);
+    const expectedM1 = await expectedForWindow(
+        db.rawDatabase,
+        m1.start_ts,
+        m1.end_ts,
+    );
+    const expectedM2 = await expectedForWindow(
+        db.rawDatabase,
+        m2.start_ts,
+        m2.end_ts,
     );
     const res = await getEdgeInstances();
-    expect(res).toMatchObject({ lastMonth: 0, monthBeforeLast: expectedPrev });
-});
-
-test('separates months correctly with different distributed loads', async () => {
-    const { prev_start, prev_end, last_start, last_end } = await getBounds(
-        db.rawDatabase,
-    );
-    await insertSpreadAcrossMonth(db.rawDatabase, prev_start, prev_end, 4, 9);
-    await insertSpreadAcrossMonth(db.rawDatabase, last_start, last_end, 3, 4);
-    const expectedPrev = await expectedForWindow(
-        db.rawDatabase,
-        prev_start,
-        prev_end,
-    );
-    const expectedLast = await expectedForWindow(
-        db.rawDatabase,
-        last_start,
-        last_end,
-    );
-    await expect(getEdgeInstances()).resolves.toMatchObject({
-        lastMonth: expectedLast,
-        monthBeforeLast: expectedPrev,
-    });
-});
-
-test('ignores current month data even when current month is heavy', async () => {
-    const { prev_start, prev_end, last_start, last_end, this_start, this_end } =
-        await getBounds(db.rawDatabase);
-    await insertSpreadAcrossMonth(db.rawDatabase, this_start, this_end, 1, 12);
-    await insertSpreadAcrossMonth(db.rawDatabase, last_start, last_end, 5, 11);
-    const expectedLast = await expectedForWindow(
-        db.rawDatabase,
-        last_start,
-        last_end,
-    );
-    const expectedPrev = await expectedForWindow(
-        db.rawDatabase,
-        prev_start,
-        prev_end,
-    );
-    await expect(getEdgeInstances()).resolves.toMatchObject({
-        lastMonth: expectedLast,
-        monthBeforeLast: expectedPrev,
-    });
-});
-
-test('exact integral average is preserved after rounding', async () => {
-    const { last_start, last_end } = await getBounds(db.rawDatabase);
-    await insertSpreadAcrossMonth(db.rawDatabase, last_start, last_end, 3, 6);
-    const expectedLast = await expectedForWindow(
-        db.rawDatabase,
-        last_start,
-        last_end,
-    );
-    const res = await getEdgeInstances();
-    expect(res.lastMonth).toBe(expectedLast);
-    expect(res.monthBeforeLast).toBe(0);
-});
-
-test('computes weighted average for the last 12 months window', async () => {
-    const {
-        prev_start,
-        prev_end,
-        last_start,
-        last_end,
-        last12_start,
-        last12_end,
-    } = await getBounds(db.rawDatabase);
-    await insertSpreadAcrossMonth(db.rawDatabase, prev_start, prev_end, 4, 7);
-    await insertSpreadAcrossMonth(db.rawDatabase, last_start, last_end, 5, 9);
-    const expectedPrev = await expectedForWindow(
-        db.rawDatabase,
-        prev_start,
-        prev_end,
-    );
-    const expectedLast = await expectedForWindow(
-        db.rawDatabase,
-        last_start,
-        last_end,
-    );
-    const expected12 = await expectedForWindow(
-        db.rawDatabase,
-        last12_start,
-        last12_end,
-    );
-    const res = await getEdgeInstances();
-    expect(res.lastMonth).toBe(expectedLast);
-    expect(res.monthBeforeLast).toBe(expectedPrev);
-    expect(res.last12Months).toBe(expected12);
+    expect(Object.keys(res)).not.toContain(current.key);
+    expect(expectedM1).toBeGreaterThan(0);
+    expect(res[m1.key]).toBe(expectedM1);
+    expect(res[m2.key]).toBe(expectedM2);
 });

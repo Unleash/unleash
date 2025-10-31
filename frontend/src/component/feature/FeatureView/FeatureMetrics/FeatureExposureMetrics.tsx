@@ -30,13 +30,14 @@ export const FeatureExposureMetrics = () => {
 
     usePageTitle('Metrics');
 
-    const defaultEnvironment = Array.from(environments)[0];
+    const defaultEnvironment = useDefaultEnvironments(projectId, featureId);
 
     const [query, setQuery] = useQueryParams({
         environment: withDefault(StringParam, defaultEnvironment),
         applications: withDefault(ArrayParam, []),
         hoursBack: withDefault(NumberParam, FEATURE_METRIC_HOURS_BACK_DEFAULT),
     });
+
     const applications = useFeatureMetricsApplications(
         featureId,
         query.hoursBack || FEATURE_METRIC_HOURS_BACK_DEFAULT,
@@ -197,4 +198,17 @@ const useFeatureMetricsApplications = (
     });
 
     return new Set(applications);
+};
+
+export const useDefaultEnvironments = (
+    projectId: string,
+    featureId: string,
+): string => {
+    const { feature } = useFeature(projectId, featureId);
+    const { environments = [] } = feature;
+
+    if (environments.length === 0) return '';
+
+    const productionEnv = environments.find((env) => env.type === 'production');
+    return productionEnv?.name ?? environments[0].name;
 };

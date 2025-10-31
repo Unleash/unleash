@@ -5,16 +5,21 @@
  */
 
 /**
- * The rounded up average number of edge instances in the last month and month before last
+ * The average number of edge instances in the last month, month before that, and last 12 months, rounded to 3 decimal places
  */
 export type InstanceAdminStatsSchemaEdgeInstances = {
     /**
-     * The rounded up average number of edge instances in the last month
+     * The average number of edge instances in the last 12 months, rounded to 3 decimal places
+     * @minimum 0
+     */
+    last12Months?: number;
+    /**
+     * The average number of edge instances in the last month, rounded to 3 decimal places
      * @minimum 0
      */
     lastMonth?: number;
     /**
-     * The rounded up average number of edge instances in the month before last
+     * The average number of edge instances in the month before last, rounded to 3 decimal places
      * @minimum 0
      */
     monthBeforeLast?: number;

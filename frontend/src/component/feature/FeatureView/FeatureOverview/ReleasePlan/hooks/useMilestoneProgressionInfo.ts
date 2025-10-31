@@ -1,6 +1,5 @@
-import { formatDistanceToNow, addMinutes } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { formatDateYMDHM } from 'utils/formatDate.ts';
+import { getMilestoneProgressionInfo } from './getMilestoneProgressionInfo.ts';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 
 export const useMilestoneProgressionInfo = (
@@ -10,27 +9,13 @@ export const useMilestoneProgressionInfo = (
 ) => {
     const { locationSettings } = useLocationSettings();
 
-    if (status !== 'active' || !sourceMilestoneStartedAt) {
+    if (status !== 'active') {
         return null;
     }
 
-    const startDate = new Date(sourceMilestoneStartedAt);
-    const now = new Date();
-    const elapsedMinutes = Math.floor(
-        (now.getTime() - startDate.getTime()) / 60000,
+    return getMilestoneProgressionInfo(
+        intervalMinutes,
+        sourceMilestoneStartedAt,
+        locationSettings.locale,
     );
-    const proceedDate = addMinutes(startDate, intervalMinutes);
-
-    if (elapsedMinutes >= intervalMinutes) {
-        const elapsedTime = formatDistanceToNow(startDate, {
-            addSuffix: false,
-        });
-        return `Already ${elapsedTime} in this milestone.`;
-    }
-
-    const proceedTime = formatDateYMDHM(proceedDate, locationSettings.locale);
-    const remainingTime = formatDistanceToNow(proceedDate, {
-        addSuffix: false,
-    });
-    return `Will proceed at ${proceedTime} (in ${remainingTime}).`;
 };

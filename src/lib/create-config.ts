@@ -585,6 +585,18 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ).values(),
     ];
 
+    const customStrategySettings = options.customStrategySettings ?? {
+        disableCreation: parseEnvVarBoolean(
+            process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION,
+            false,
+        ),
+
+        disableEditing: parseEnvVarBoolean(
+            process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_EDITING,
+            false,
+        ),
+    };
+
     const environmentEnableOverrides = loadEnvironmentEnableOverrides();
 
     const importSetting: IImportOption = mergeAll([
@@ -834,6 +846,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         userInactivityThresholdInDays,
         buildDate: process.env.BUILD_DATE,
         unleashFrontendToken,
+        customStrategySettings,
         checkDbOnReady,
     };
 }

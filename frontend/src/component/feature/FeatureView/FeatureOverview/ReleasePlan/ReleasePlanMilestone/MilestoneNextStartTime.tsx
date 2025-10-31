@@ -34,7 +34,7 @@ const StyledTimeContainer = styled('span')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const StyledIcon = styled(HourglassEmptyOutlinedIcon)(({ theme }) => ({
+const StyledHourglassIcon = styled(HourglassEmptyOutlinedIcon)(({ theme }) => ({
     fontSize: 18,
     color: theme.palette.primary.main,
 }));
@@ -75,14 +75,12 @@ export const MilestoneNextStartTime = ({
         activeMilestoneId,
     );
 
-    const text = projectedStartTime
-        ? `Starting ${formatSmartDate(projectedStartTime)}`
-        : 'Waiting to start';
+    if (!projectedStartTime) return null;
 
     return (
         <StyledTimeContainer>
-            <StyledIcon />
-            {text}
+            <StyledHourglassIcon />
+            {`Starting ${formatSmartDate(projectedStartTime)}`}
         </StyledTimeContainer>
     );
 };

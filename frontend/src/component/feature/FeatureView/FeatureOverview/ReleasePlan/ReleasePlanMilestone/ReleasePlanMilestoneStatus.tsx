@@ -18,7 +18,9 @@ const StyledStatusButton = styled('button', {
         paddingRight: theme.spacing(1),
         cursor: 'pointer',
         backgroundColor:
-            status === 'active' ? theme.palette.success.light : 'transparent',
+            status === 'active'
+                ? theme.palette.success.light
+                : theme.palette.neutral.light,
         '&:focus-visible': {
             outline: `2px solid ${theme.palette.primary.main}`,
         },
@@ -41,10 +43,6 @@ const StyledStatusButton = styled('button', {
                 : status === 'paused'
                   ? theme.palette.text.primary
                   : theme.palette.primary.main,
-        textDecoration:
-            status === 'not-started' || status === 'completed'
-                ? 'underline'
-                : 'none',
         '& svg': {
             color:
                 status === 'active'
@@ -105,12 +103,6 @@ export const ReleasePlanMilestoneStatus = ({
     const statusIcon = getStatusIcon(status);
     const disabled = status === 'active' || status === 'paused';
 
-    // Hide the play icon when progressions are enabled and milestone is not active/paused
-    const shouldShowIcon =
-        status === 'active' ||
-        status === 'paused' ||
-        !milestoneProgressionsEnabled;
-
     return (
         <StyledStatusButton
             status={status}
@@ -120,7 +112,7 @@ export const ReleasePlanMilestoneStatus = ({
             }}
             disabled={disabled}
         >
-            {shouldShowIcon && statusIcon}
+            {statusIcon}
             {statusText}
         </StyledStatusButton>
     );

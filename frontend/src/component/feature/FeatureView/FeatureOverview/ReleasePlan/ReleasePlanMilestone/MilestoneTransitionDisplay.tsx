@@ -170,7 +170,7 @@ export const MilestoneTransitionDisplay = ({
 
     const progressionInfo = useMilestoneProgressionInfo(
         currentIntervalMinutes,
-        sourceMilestoneStartedAt,
+        sourceMilestoneStartedAt ?? null,
         status,
     );
 

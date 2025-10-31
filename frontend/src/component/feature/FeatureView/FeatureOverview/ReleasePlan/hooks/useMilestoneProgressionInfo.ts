@@ -8,8 +8,7 @@ export const useMilestoneProgressionInfo = (
     status?: MilestoneStatus,
 ) => {
     const { locationSettings } = useLocationSettings();
-
-    if (!status || status !== 'active') {
+    if (!status || status.type !== 'active') {
         return null;
     }
 

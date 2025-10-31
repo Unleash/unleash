@@ -10,6 +10,7 @@ import {
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
+import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
 
 const StyledFormWrapper = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasChanged',
@@ -97,6 +98,13 @@ const StyledErrorMessage = styled('span')(({ theme }) => ({
     paddingLeft: theme.spacing(3.25),
 }));
 
+const StyledInfoLine = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.caption.fontSize,
+    paddingLeft: theme.spacing(3.25),
+    fontStyle: 'italic',
+}));
+
 interface IMilestoneTransitionDisplayProps {
     intervalMinutes: number;
     targetMilestoneId: string;
@@ -129,6 +137,9 @@ export const ReadonlyMilestoneTransitionDisplay = ({
                 <span style={{ fontSize: 'inherit' }}>
                     {initial.value} {initial.unit}
                 </span>
+                <StyledLabel status={status}>
+                    from milestone start
+                </StyledLabel>
             </StyledContentGroup>
         </StyledDisplayContainer>
     );
@@ -158,6 +169,12 @@ export const MilestoneTransitionDisplay = ({
 
     const currentIntervalMinutes = form.getIntervalMinutes();
     const hasChanged = currentIntervalMinutes !== intervalMinutes;
+
+    const progressionInfo = useMilestoneProgressionInfo(
+        currentIntervalMinutes,
+        sourceMilestoneStartedAt,
+        status,
+    );
 
     useEffect(() => {
         const newInitial = getTimeValueAndUnitFromMinutes(intervalMinutes);
@@ -215,7 +232,7 @@ export const MilestoneTransitionDisplay = ({
                 <StyledContentGroup>
                     <StyledIcon status={status} />
                     <StyledLabel status={status}>
-                        Proceed to the next milestone after
+                        Proceed after
                     </StyledLabel>
                     <MilestoneProgressionTimeInput
                         timeValue={form.timeValue}
@@ -223,6 +240,9 @@ export const MilestoneTransitionDisplay = ({
                         onTimeValueChange={form.handleTimeValueChange}
                         onTimeUnitChange={form.handleTimeUnitChange}
                     />
+                    <StyledLabel status={status}>
+                        from milestone start
+                    </StyledLabel>
                 </StyledContentGroup>
                 {!hasChanged && (
                     <StyledButtonGroup hasChanged={false}>
@@ -238,6 +258,9 @@ export const MilestoneTransitionDisplay = ({
                     </StyledButtonGroup>
                 )}
             </StyledDisplayContainer>
+            {progressionInfo && (
+                <StyledInfoLine>{progressionInfo}</StyledInfoLine>
+            )}
             {form.errors.time && (
                 <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
             )}

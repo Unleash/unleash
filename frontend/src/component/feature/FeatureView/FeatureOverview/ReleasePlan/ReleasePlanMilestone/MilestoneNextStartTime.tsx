@@ -1,9 +1,8 @@
 import { styled } from '@mui/material';
 import HourglassEmptyOutlinedIcon from '@mui/icons-material/HourglassEmptyOutlined';
-import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import { isToday, isTomorrow, format, addMinutes } from 'date-fns';
-import { calculateMilestoneStartTime } from '../utils/calculateMilestoneStartTime.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
+import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 
 export const formatSmartDate = (date: Date): string => {
     const startTime = format(date, 'HH:mm');
@@ -40,15 +39,11 @@ const StyledHourglassIcon = styled(HourglassEmptyOutlinedIcon)(({ theme }) => ({
 }));
 
 interface IMilestoneNextStartTimeProps {
-    milestone: IReleasePlanMilestone;
-    allMilestones: IReleasePlanMilestone[];
-    activeMilestoneId?: string;
+    status: MilestoneStatus;
 }
 
 export const MilestoneNextStartTime = ({
-    milestone,
-    allMilestones,
-    activeMilestoneId,
+    status,
 }: IMilestoneNextStartTimeProps) => {
     const milestoneProgressionEnabled = useUiFlag('milestoneProgression');
 
@@ -56,24 +51,12 @@ export const MilestoneNextStartTime = ({
         return null;
     }
 
-    const activeIndex = allMilestones.findIndex(
-        (milestone) => milestone.id === activeMilestoneId,
-    );
-    const currentIndex = allMilestones.findIndex((m) => m.id === milestone.id);
-
-    const isActiveMilestone = milestone.id === activeMilestoneId;
-    const isBehindActiveMilestone =
-        activeIndex !== -1 && currentIndex !== -1 && currentIndex < activeIndex;
-
-    if (isActiveMilestone || isBehindActiveMilestone) {
+    // Only show for not-started milestones with scheduledAt
+    if (status.type !== 'not-started' || !status.scheduledAt) {
         return null;
     }
 
-    const projectedStartTime = calculateMilestoneStartTime(
-        allMilestones,
-        milestone.id,
-        activeMilestoneId,
-    );
+    const projectedStartTime = status.scheduledAt;
 
     if (!projectedStartTime) return null;
 

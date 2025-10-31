@@ -4,7 +4,11 @@ import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import TripOriginIcon from '@mui/icons-material/TripOrigin';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-export type MilestoneStatus = 'not-started' | 'active' | 'paused' | 'completed';
+export type MilestoneStatus =
+    | { type: 'not-started'; scheduledAt?: Date }
+    | { type: 'active' }
+    | { type: 'paused' }
+    | { type: 'completed' };
 
 const StyledStatusButton = styled('button', {
     shouldForwardProp: (prop) => prop !== 'status',
@@ -18,7 +22,7 @@ const StyledStatusButton = styled('button', {
         paddingRight: theme.spacing(1),
         cursor: 'pointer',
         backgroundColor:
-            status === 'active'
+            status.type === 'active'
                 ? theme.palette.success.light
                 : theme.palette.neutral.light,
         '&:focus-visible': {
@@ -26,9 +30,9 @@ const StyledStatusButton = styled('button', {
         },
         '&:hover': {
             backgroundColor:
-                status === 'active'
+                status.type === 'active'
                     ? theme.palette.success.light
-                    : status === 'paused'
+                    : status.type === 'paused'
                       ? 'transparent'
                       : theme.palette.neutral.light,
             textDecoration: 'none',
@@ -38,18 +42,18 @@ const StyledStatusButton = styled('button', {
         fontWeight: theme.fontWeight.medium,
         borderRadius: theme.shape.borderRadiusMedium,
         color:
-            status === 'active'
+            status.type === 'active'
                 ? theme.palette.success.contrastText
-                : status === 'paused'
+                : status.type === 'paused'
                   ? theme.palette.text.primary
                   : theme.palette.primary.main,
         '& svg': {
             color:
-                status === 'active'
+                status.type === 'active'
                     ? theme.palette.success.main
-                    : status === 'paused'
+                    : status.type === 'paused'
                       ? theme.palette.text.disabled
-                      : status === 'completed'
+                      : status.type === 'completed'
                         ? theme.palette.neutral.border
                         : theme.palette.primary.main,
             height: theme.spacing(3),
@@ -70,7 +74,7 @@ const getStatusText = (
     status: MilestoneStatus,
     progressionsEnabled: boolean,
 ): string => {
-    switch (status) {
+    switch (status.type) {
         case 'active':
             return 'Running';
         case 'paused':
@@ -83,7 +87,7 @@ const getStatusText = (
 };
 
 const getStatusIcon = (status: MilestoneStatus) => {
-    switch (status) {
+    switch (status.type) {
         case 'active':
             return <TripOriginIcon />;
         case 'paused':
@@ -101,7 +105,7 @@ export const ReleasePlanMilestoneStatus = ({
 
     const statusText = getStatusText(status, milestoneProgressionsEnabled);
     const statusIcon = getStatusIcon(status);
-    const disabled = status === 'active' || status === 'paused';
+    const disabled = status.type === 'active' || status.type === 'paused';
 
     return (
         <StyledStatusButton

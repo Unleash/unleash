@@ -23,15 +23,15 @@ const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
 })<{ status: MilestoneStatus; hasAutomation?: boolean }>(
     ({ theme, status, hasAutomation }) => ({
-        border: `${status === 'active' ? '1.5px' : '1px'} solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+        border: `${status.type === 'active' ? '1.5px' : '1px'} solid ${status.type === 'active' ? theme.palette.success.border : theme.palette.divider}`,
         borderBottom: hasAutomation
             ? 'none'
-            : `${status === 'active' ? '1.5px' : '1px'} solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+            : `${status.type === 'active' ? '1.5px' : '1px'} solid ${status.type === 'active' ? theme.palette.success.border : theme.palette.divider}`,
         overflow: 'hidden',
         boxShadow: 'none',
         margin: 0,
         backgroundColor:
-            status === 'completed'
+            status.type === 'completed'
                 ? theme.palette.background.default
                 : theme.palette.background.paper,
         borderRadius: hasAutomation
@@ -68,7 +68,7 @@ const StyledTitle = styled('span', {
 })<{ status?: MilestoneStatus }>(({ theme, status }) => ({
     fontWeight: theme.fontWeight.bold,
     color:
-        status === 'completed'
+        status?.type === 'completed'
             ? theme.palette.text.secondary
             : theme.palette.text.primary,
 }));
@@ -110,7 +110,7 @@ interface IReleasePlanMilestoneProps {
 
 export const ReleasePlanMilestone = ({
     milestone,
-    status = 'not-started',
+    status = { type: 'not-started' },
     onStartMilestone,
     readonly,
     automationSection,
@@ -133,15 +133,12 @@ export const ReleasePlanMilestone = ({
                                 {milestone.name}
                             </StyledTitle>
                             {(!readonly && onStartMilestone) ||
-                            (status === 'active' && milestone.startedAt) ? (
+                            (status.type === 'active' &&
+                                milestone.startedAt) ? (
                                 <StyledStatusRow>
                                     {!readonly && (
                                         <MilestoneNextStartTime
-                                            milestone={milestone}
-                                            allMilestones={allMilestones}
-                                            activeMilestoneId={
-                                                activeMilestoneId
-                                            }
+                                            status={status}
                                         />
                                     )}
                                     {!readonly && onStartMilestone && (
@@ -152,7 +149,7 @@ export const ReleasePlanMilestone = ({
                                             }
                                         />
                                     )}
-                                    {status === 'active' &&
+                                    {status.type === 'active' &&
                                         milestone.startedAt && (
                                             <StyledStartedAt>
                                                 Started{' '}
@@ -188,14 +185,10 @@ export const ReleasePlanMilestone = ({
                             {milestone.name}
                         </StyledTitle>
                         {(!readonly && onStartMilestone) ||
-                        (status === 'active' && milestone.startedAt) ? (
+                        (status.type === 'active' && milestone.startedAt) ? (
                             <StyledStatusRow>
                                 {!readonly && (
-                                    <MilestoneNextStartTime
-                                        milestone={milestone}
-                                        allMilestones={allMilestones}
-                                        activeMilestoneId={activeMilestoneId}
-                                    />
+                                    <MilestoneNextStartTime status={status} />
                                 )}
                                 {!readonly && onStartMilestone && (
                                     <ReleasePlanMilestoneStatus
@@ -205,12 +198,15 @@ export const ReleasePlanMilestone = ({
                                         }
                                     />
                                 )}
-                                {status === 'active' && milestone.startedAt && (
-                                    <StyledStartedAt>
-                                        Started{' '}
-                                        {formatDateYMDHMS(milestone.startedAt)}
-                                    </StyledStartedAt>
-                                )}
+                                {status.type === 'active' &&
+                                    milestone.startedAt && (
+                                        <StyledStartedAt>
+                                            Started{' '}
+                                            {formatDateYMDHMS(
+                                                milestone.startedAt,
+                                            )}
+                                        </StyledStartedAt>
+                                    )}
                             </StyledStatusRow>
                         ) : null}
                     </StyledTitleContainer>

@@ -88,7 +88,8 @@ export const useMilestoneProgressionForm = (
         if (
             sourceMilestoneStartedAt &&
             total > 0 &&
-            (status === 'active' || status === 'paused')
+            status &&
+            (status.type === 'active' || status.type === 'paused')
         ) {
             const startDate = new Date(sourceMilestoneStartedAt);
             const nextMilestoneDate = addMinutes(startDate, total);

@@ -4,13 +4,13 @@ import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 const StyledAutomationContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'status',
 })<{ status?: MilestoneStatus }>(({ theme, status }) => ({
-    border: `${status === 'active' ? '1.5px' : '1px'} solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+    border: `${status?.type === 'active' ? '1.5px' : '1px'} solid ${status?.type === 'active' ? theme.palette.success.border : theme.palette.divider}`,
     borderTop: `1px solid ${theme.palette.divider}`,
     borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
     padding: theme.spacing(1.5, 2),
     paddingLeft: theme.spacing(2.25),
     backgroundColor:
-        status === 'completed'
+        status?.type === 'completed'
             ? theme.palette.background.default
             : theme.palette.background.paper,
     display: 'flex',

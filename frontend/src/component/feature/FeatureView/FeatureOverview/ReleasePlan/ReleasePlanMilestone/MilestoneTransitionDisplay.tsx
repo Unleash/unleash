@@ -53,7 +53,7 @@ const StyledIcon = styled(BoltIcon, {
     fontSize: 18,
     flexShrink: 0,
     backgroundColor:
-        status === 'completed'
+        status?.type === 'completed'
             ? theme.palette.neutral.border
             : theme.palette.primary.main,
     borderRadius: '50%',
@@ -64,7 +64,7 @@ const StyledLabel = styled('span', {
     shouldForwardProp: (prop) => prop !== 'status',
 })<{ status?: MilestoneStatus }>(({ theme, status }) => ({
     color:
-        status === 'completed'
+        status?.type === 'completed'
             ? theme.palette.text.secondary
             : theme.palette.text.primary,
     fontSize: theme.typography.body2.fontSize,

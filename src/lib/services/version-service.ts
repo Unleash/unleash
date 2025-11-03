@@ -4,6 +4,7 @@ import type { IUnleashConfig } from '../types/option.js';
 import version from '../util/version.js';
 import type { Logger } from '../logger.js';
 import type { ISettingStore } from '../types/stores/settings-store.js';
+import type { EdgeInstanceUsage } from '../features/instance-stats/getEdgeInstances.js';
 
 export interface IVersionInfo {
     oss: string;
@@ -54,8 +55,7 @@ export interface IFeatureUsageInfo {
     hostedBy: string;
     releaseTemplates: number;
     releasePlans: number;
-    edgeInstancesLastMonth?: number;
-    edgeInstancesMonthBeforeLast?: number;
+    edgeInstanceUsage?: EdgeInstanceUsage;
 }
 
 export default class VersionService {

@@ -2,68 +2,83 @@ import type { Db } from '../../types/index.js';
 
 const TABLE = 'edge_node_presence';
 
-export type GetEdgeInstances = () => Promise<{
-    lastMonth: number;
-    monthBeforeLast: number;
-}>;
+export type EdgeInstanceUsage = Record<string, number>;
+export type GetEdgeInstances = () => Promise<EdgeInstanceUsage>;
 
 export const createGetEdgeInstances =
     (db: Db): GetEdgeInstances =>
     async () => {
-        const result = await db
+        const rows = await db
+            .with('months', (qb) =>
+                qb.fromRaw('generate_series(1, 12) AS gs').select(
+                    db.raw(
+                        "(date_trunc('month', NOW()) - (gs * INTERVAL '1 month'))::timestamptz AS mon_start",
+                    ),
+                    db.raw(
+                        "(date_trunc('month', NOW()) - ((gs - 1) * INTERVAL '1 month'))::timestamptz AS mon_end",
+                    ),
+                    db.raw(
+                        "to_char((date_trunc('month', NOW()) - (gs * INTERVAL '1 month')),'YYYY-MM') AS key",
+                    ),
+                    db.raw(`
+                            FLOOR(EXTRACT(EPOCH FROM (
+                                (date_trunc('month', NOW()) - ((gs - 1) * INTERVAL '1 month'))
+                                - (date_trunc('month', NOW()) - (gs * INTERVAL '1 month'))
+                            )) / 300)::int AS expected
+                        `),
+                ),
+            )
+            .with('range', (qb) =>
+                qb
+                    .from('months')
+                    .select(
+                        db.raw('MIN(mon_start) AS min_start'),
+                        db.raw('MAX(mon_end) AS max_end'),
+                    ),
+            )
             .with('buckets', (qb) =>
                 qb
                     .from(TABLE)
+                    .joinRaw('CROSS JOIN range')
                     .whereRaw(
-                        "bucket_ts >= date_trunc('month', NOW()) - INTERVAL '2 months'",
+                        'bucket_ts >= range.min_start AND bucket_ts < range.max_end',
                     )
                     .groupBy('bucket_ts')
                     .select(
                         db.raw('bucket_ts'),
-                        db.raw('COUNT(*)::int AS active_nodes'),
+                        db.raw(
+                            'COUNT(DISTINCT node_ephem_id)::int AS active_nodes',
+                        ),
                     ),
             )
-            .from('buckets')
-            .select({
-                lastMonth: db.raw(`
+            .from('months as m')
+            .joinRaw(
+                'LEFT JOIN buckets b ON b.bucket_ts >= m.mon_start AND b.bucket_ts < m.mon_end',
+            )
+            .groupBy('m.key', 'm.expected')
+            .orderBy('m.key', 'desc')
+            .select(
+                db.raw('m.key'),
+                db.raw(
+                    `
                     COALESCE(
-                        CEIL(
-                            AVG(active_nodes)
-                            FILTER (
-                                WHERE bucket_ts >= date_trunc('month', NOW()) - INTERVAL '1 month'
-                                  AND bucket_ts < date_trunc('month', NOW())
-                            )
-                        )::int,
+                        ROUND((SUM(b.active_nodes)::numeric) / NULLIF(m.expected, 0), 3),
                         0
-                    )
-                `),
-                monthBeforeLast: db.raw(`
-                    COALESCE(
-                        CEIL(
-                            AVG(active_nodes)
-                            FILTER (
-                                WHERE bucket_ts >= date_trunc('month', NOW()) - INTERVAL '2 months'
-                                  AND bucket_ts < date_trunc('month', NOW()) - INTERVAL '1 month'
-                            )
-                        )::int,
-                        0
-                    )
-                `),
-            })
-            .first();
+                    ) AS value
+                `,
+                ),
+            );
 
-        return {
-            lastMonth: Number(result?.lastMonth ?? 0),
-            monthBeforeLast: Number(result?.monthBeforeLast ?? 0),
-        };
+        const series: EdgeInstanceUsage = {};
+        for (const r of rows as Array<{ key: string; value: number }>) {
+            series[r.key] = Number(r.value ?? 0);
+        }
+        return series;
     };
 
 export const createFakeGetEdgeInstances =
     (
-        edgeInstances: Awaited<ReturnType<GetEdgeInstances>> = {
-            lastMonth: 0,
-            monthBeforeLast: 0,
-        },
+        edgeInstances: Awaited<ReturnType<GetEdgeInstances>> = {},
     ): GetEdgeInstances =>
     () =>
         Promise.resolve(edgeInstances);

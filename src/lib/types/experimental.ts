@@ -45,6 +45,7 @@ export type IFlagKey =
     | 'showUserDeviceCount'
     | 'memorizeStats'
     | 'streaming'
+    | 'streamingEnforceEdgeSdk'
     | 'deltaApi'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
@@ -253,6 +254,10 @@ const flags: IFlags = {
             false,
         ),
     },
+    streamingEnforceEdgeSdk: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_STREAMING_ENFORCE_EDGE_SDK,
+        false,
+    ),
     fetchMode: {
         name: 'disabled',
         enabled: parseEnvVarBoolean(

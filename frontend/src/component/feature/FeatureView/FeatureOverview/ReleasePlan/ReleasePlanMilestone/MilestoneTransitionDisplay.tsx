@@ -10,6 +10,7 @@ import {
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
+import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
 
 const StyledFormWrapper = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasChanged',
@@ -53,7 +54,7 @@ const StyledIcon = styled(BoltIcon, {
     fontSize: 18,
     flexShrink: 0,
     backgroundColor:
-        status === 'completed'
+        status?.type === 'completed'
             ? theme.palette.neutral.border
             : theme.palette.primary.main,
     borderRadius: '50%',
@@ -64,7 +65,7 @@ const StyledLabel = styled('span', {
     shouldForwardProp: (prop) => prop !== 'status',
 })<{ status?: MilestoneStatus }>(({ theme, status }) => ({
     color:
-        status === 'completed'
+        status?.type === 'completed'
             ? theme.palette.text.secondary
             : theme.palette.text.primary,
     fontSize: theme.typography.body2.fontSize,
@@ -95,6 +96,13 @@ const StyledErrorMessage = styled('span')(({ theme }) => ({
     color: theme.palette.error.main,
     fontSize: theme.typography.body2.fontSize,
     paddingLeft: theme.spacing(3.25),
+}));
+
+const StyledInfoLine = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.caption.fontSize,
+    paddingLeft: theme.spacing(3.25),
+    fontStyle: 'italic',
 }));
 
 interface IMilestoneTransitionDisplayProps {
@@ -129,6 +137,7 @@ export const ReadonlyMilestoneTransitionDisplay = ({
                 <span style={{ fontSize: 'inherit' }}>
                     {initial.value} {initial.unit}
                 </span>
+                <StyledLabel status={status}>from milestone start</StyledLabel>
             </StyledContentGroup>
         </StyledDisplayContainer>
     );
@@ -158,6 +167,12 @@ export const MilestoneTransitionDisplay = ({
 
     const currentIntervalMinutes = form.getIntervalMinutes();
     const hasChanged = currentIntervalMinutes !== intervalMinutes;
+
+    const progressionInfo = useMilestoneProgressionInfo(
+        currentIntervalMinutes,
+        sourceMilestoneStartedAt ?? null,
+        status,
+    );
 
     useEffect(() => {
         const newInitial = getTimeValueAndUnitFromMinutes(intervalMinutes);
@@ -214,15 +229,16 @@ export const MilestoneTransitionDisplay = ({
             <StyledDisplayContainer>
                 <StyledContentGroup>
                     <StyledIcon status={status} />
-                    <StyledLabel status={status}>
-                        Proceed to the next milestone after
-                    </StyledLabel>
+                    <StyledLabel status={status}>Proceed after</StyledLabel>
                     <MilestoneProgressionTimeInput
                         timeValue={form.timeValue}
                         timeUnit={form.timeUnit}
                         onTimeValueChange={form.handleTimeValueChange}
                         onTimeUnitChange={form.handleTimeUnitChange}
                     />
+                    <StyledLabel status={status}>
+                        from milestone start
+                    </StyledLabel>
                 </StyledContentGroup>
                 {!hasChanged && (
                     <StyledButtonGroup hasChanged={false}>
@@ -238,6 +254,9 @@ export const MilestoneTransitionDisplay = ({
                     </StyledButtonGroup>
                 )}
             </StyledDisplayContainer>
+            {progressionInfo && (
+                <StyledInfoLine>{progressionInfo}</StyledInfoLine>
+            )}
             {form.errors.time && (
                 <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
             )}

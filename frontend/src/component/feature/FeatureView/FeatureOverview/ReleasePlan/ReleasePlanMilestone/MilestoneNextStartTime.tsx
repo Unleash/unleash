@@ -1,13 +1,14 @@
 import { styled } from '@mui/material';
 import HourglassEmptyOutlinedIcon from '@mui/icons-material/HourglassEmptyOutlined';
-import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
-import { isToday, isTomorrow, format, addMinutes } from 'date-fns';
-import { calculateMilestoneStartTime } from '../utils/calculateMilestoneStartTime.ts';
+import { isToday, isTomorrow, addMinutes } from 'date-fns';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { formatDateHM, formatDateYMD } from 'utils/formatDate';
+import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 
-export const formatSmartDate = (date: Date): string => {
-    const startTime = format(date, 'HH:mm');
-    const endTime = format(addMinutes(date, 2), 'HH:mm');
+export const formatSmartDate = (date: Date, locale: string): string => {
+    const startTime = formatDateHM(date, locale);
+    const endTime = formatDateHM(addMinutes(date, 2), locale);
     const timeRange = `between ${startTime} - ${endTime}`;
 
     if (isToday(date)) {
@@ -17,8 +18,7 @@ export const formatSmartDate = (date: Date): string => {
         return `tomorrow ${timeRange}`;
     }
 
-    // For other dates, show full date with time range
-    const dateString = format(date, 'yyyy-MM-dd');
+    const dateString = formatDateYMD(date, locale);
     return `${dateString} ${timeRange}`;
 };
 
@@ -34,55 +34,37 @@ const StyledTimeContainer = styled('span')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const StyledIcon = styled(HourglassEmptyOutlinedIcon)(({ theme }) => ({
+const StyledHourglassIcon = styled(HourglassEmptyOutlinedIcon)(({ theme }) => ({
     fontSize: 18,
     color: theme.palette.primary.main,
 }));
 
 interface IMilestoneNextStartTimeProps {
-    milestone: IReleasePlanMilestone;
-    allMilestones: IReleasePlanMilestone[];
-    activeMilestoneId?: string;
+    status: MilestoneStatus;
 }
 
 export const MilestoneNextStartTime = ({
-    milestone,
-    allMilestones,
-    activeMilestoneId,
+    status,
 }: IMilestoneNextStartTimeProps) => {
     const milestoneProgressionEnabled = useUiFlag('milestoneProgression');
+    const { locationSettings } = useLocationSettings();
 
     if (!milestoneProgressionEnabled) {
         return null;
     }
 
-    const activeIndex = allMilestones.findIndex(
-        (milestone) => milestone.id === activeMilestoneId,
-    );
-    const currentIndex = allMilestones.findIndex((m) => m.id === milestone.id);
-
-    const isActiveMilestone = milestone.id === activeMilestoneId;
-    const isBehindActiveMilestone =
-        activeIndex !== -1 && currentIndex !== -1 && currentIndex < activeIndex;
-
-    if (isActiveMilestone || isBehindActiveMilestone) {
+    if (status.type !== 'not-started' || !status.scheduledAt) {
         return null;
     }
 
-    const projectedStartTime = calculateMilestoneStartTime(
-        allMilestones,
-        milestone.id,
-        activeMilestoneId,
-    );
+    const projectedStartTime = status.scheduledAt;
 
-    const text = projectedStartTime
-        ? `Starting ${formatSmartDate(projectedStartTime)}`
-        : 'Waiting to start';
+    if (!projectedStartTime) return null;
 
     return (
         <StyledTimeContainer>
-            <StyledIcon />
-            {text}
+            <StyledHourglassIcon />
+            {`Starting ${formatSmartDate(projectedStartTime, locationSettings.locale)}`}
         </StyledTimeContainer>
     );
 };

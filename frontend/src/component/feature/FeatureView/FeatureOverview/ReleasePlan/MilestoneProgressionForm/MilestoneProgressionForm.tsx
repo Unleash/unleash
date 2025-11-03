@@ -4,6 +4,7 @@ import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionFor
 import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
+import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
 
 const StyledFormContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -54,6 +55,13 @@ const StyledErrorMessage = styled('span')(({ theme }) => ({
     paddingLeft: theme.spacing(3.25),
 }));
 
+const StyledInfoLine = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.caption.fontSize,
+    paddingLeft: theme.spacing(3.25),
+    fontStyle: 'italic',
+}));
+
 interface IMilestoneProgressionFormProps {
     sourceMilestoneId: string;
     targetMilestoneId: string;
@@ -81,6 +89,12 @@ export const MilestoneProgressionForm = ({
         status,
     );
 
+    const progressionInfo = useMilestoneProgressionInfo(
+        form.getIntervalMinutes(),
+        sourceMilestoneStartedAt,
+        status,
+    );
+
     const handleSubmit = async () => {
         if (!form.validate()) {
             return;
@@ -103,14 +117,18 @@ export const MilestoneProgressionForm = ({
         <StyledFormContainer onKeyDown={handleKeyDown}>
             <StyledTopRow>
                 <StyledIcon />
-                <StyledLabel>Proceed to the next milestone after</StyledLabel>
+                <StyledLabel>Proceed after</StyledLabel>
                 <MilestoneProgressionTimeInput
                     timeValue={form.timeValue}
                     timeUnit={form.timeUnit}
                     onTimeValueChange={form.handleTimeValueChange}
                     onTimeUnitChange={form.handleTimeUnitChange}
                 />
+                <StyledLabel>from milestone start</StyledLabel>
             </StyledTopRow>
+            {progressionInfo && (
+                <StyledInfoLine>{progressionInfo}</StyledInfoLine>
+            )}
             {form.errors.time && (
                 <StyledErrorMessage>{form.errors.time}</StyledErrorMessage>
             )}

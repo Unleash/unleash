@@ -148,6 +148,7 @@ export const ReleasePlanMilestoneItem = ({
         index,
         activeIndex,
         environmentIsDisabled,
+        milestones,
     );
 
     const { pendingProgressionChange, effectiveTransitionCondition } =

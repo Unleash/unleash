@@ -28,7 +28,7 @@ export const createGetEdgeInstances =
                         `),
                 ),
             )
-            .with('rng', (qb) =>
+            .with('range', (qb) =>
                 qb
                     .from('months')
                     .select(
@@ -39,9 +39,9 @@ export const createGetEdgeInstances =
             .with('buckets', (qb) =>
                 qb
                     .from(TABLE)
-                    .joinRaw('CROSS JOIN rng')
+                    .joinRaw('CROSS JOIN range')
                     .whereRaw(
-                        'bucket_ts >= rng.min_start AND bucket_ts < rng.max_end',
+                        'bucket_ts >= range.min_start AND bucket_ts < range.max_end',
                     )
                     .groupBy('bucket_ts')
                     .select(

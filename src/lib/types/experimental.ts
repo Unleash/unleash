@@ -63,7 +63,8 @@ export type IFlagKey =
     | 'milestoneProgression'
     | 'envAddStrategySuggestion'
     | 'featureReleasePlans'
-    | 'plausibleMetrics';
+    | 'plausibleMetrics'
+    | 'safeguards';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -290,6 +291,10 @@ const flags: IFlags = {
     ),
     plausibleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
+        false,
+    ),
+    safeguards: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SAFEGUARDS,
         false,
     ),
 };

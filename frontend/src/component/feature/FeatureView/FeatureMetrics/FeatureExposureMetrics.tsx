@@ -26,11 +26,12 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 export const FeatureExposureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const environments = useFeatureMetricsEnvironments(projectId, featureId);
+    const { environments, defaultProductionIndex } =
+        useFeatureMetricsEnvironments(projectId, featureId);
 
     usePageTitle('Metrics');
 
-    const defaultEnvironment = useDefaultEnvironments(projectId, featureId);
+    const defaultEnvironment = Array.from(environments)[defaultProductionIndex];
 
     const [query, setQuery] = useQueryParams({
         environment: withDefault(StringParam, defaultEnvironment),
@@ -172,17 +173,21 @@ export const FeatureExposureMetrics = () => {
 
 // Get all the environment names for a feature,
 // not just the one's we have metrics for.
-const useFeatureMetricsEnvironments = (
+export const useFeatureMetricsEnvironments = (
     projectId: string,
     featureId: string,
-): Set<string> => {
+): { environments: Set<string>; defaultProductionIndex: number } => {
     const { feature } = useFeature(projectId, featureId);
 
-    const environments = feature.environments.map((environment) => {
+    let defaultProductionIndex = 0;
+    const environments = feature.environments.map((environment, index) => {
+        if (!defaultProductionIndex && environment.type === 'production') {
+            defaultProductionIndex = index;
+        }
         return environment.name;
     });
 
-    return new Set(environments);
+    return { environments: new Set(environments), defaultProductionIndex };
 };
 
 // Get all application names for a feature. Respect current hoursBack since
@@ -198,17 +203,4 @@ const useFeatureMetricsApplications = (
     });
 
     return new Set(applications);
-};
-
-export const useDefaultEnvironments = (
-    projectId: string,
-    featureId: string,
-): string => {
-    const { feature } = useFeature(projectId, featureId);
-    const { environments = [] } = feature;
-
-    if (environments.length === 0) return '';
-
-    const productionEnv = environments.find((env) => env.type === 'production');
-    return productionEnv?.name ?? environments[0].name;
 };

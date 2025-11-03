@@ -2,8 +2,8 @@ import type { Db } from '../../types/index.js';
 
 const TABLE = 'edge_node_presence';
 
-export type EdgeInstanceAveragesPerMonth = Record<string, number>;
-export type GetEdgeInstances = () => Promise<EdgeInstanceAveragesPerMonth>;
+export type EdgeInstanceUsage = Record<string, number>;
+export type GetEdgeInstances = () => Promise<EdgeInstanceUsage>;
 
 export const createGetEdgeInstances =
     (db: Db): GetEdgeInstances =>
@@ -69,7 +69,7 @@ export const createGetEdgeInstances =
                 ),
             );
 
-        const series: EdgeInstanceAveragesPerMonth = {};
+        const series: EdgeInstanceUsage = {};
         for (const r of rows as Array<{ key: string; value: number }>) {
             series[r.key] = Number(r.value ?? 0);
         }

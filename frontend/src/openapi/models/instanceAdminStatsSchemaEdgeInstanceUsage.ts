@@ -7,6 +7,6 @@
 /**
  * The average number of edge instances, per month, in the last 12 months, rounded to 3 decimal places
  */
-export type InstanceAdminStatsSchemaEdgeInstanceAveragesPerMonth = {
+export type InstanceAdminStatsSchemaEdgeInstanceUsage = {
     [key: string]: number;
 };

@@ -133,7 +133,7 @@ class InstanceAdminController extends Controller {
             maxConstraintValues: 123,
             releaseTemplates: 3,
             releasePlans: 5,
-            edgeInstanceAveragesPerMonth: {
+            edgeInstanceUsage: {
                 '2022-06': 2.345,
                 '2022-07': 2.567,
                 '2022-08': 2.789,

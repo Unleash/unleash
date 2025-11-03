@@ -75,7 +75,7 @@ export interface InstanceStats {
     maxConstraintValues: number;
     releaseTemplates?: number;
     releasePlans?: number;
-    edgeInstanceAveragesPerMonth?: Awaited<ReturnType<GetEdgeInstances>>;
+    edgeInstanceUsage?: Awaited<ReturnType<GetEdgeInstances>>;
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -363,7 +363,7 @@ export class InstanceStatsService {
             maxConstraints,
             releaseTemplates,
             releasePlans,
-            edgeInstanceAveragesPerMonth,
+            edgeInstanceUsage,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getArchivedToggleCount(),
@@ -451,7 +451,7 @@ export class InstanceStatsService {
             maxConstraints: maxConstraints?.count ?? 0,
             releaseTemplates,
             releasePlans,
-            edgeInstanceAveragesPerMonth,
+            edgeInstanceUsage,
         };
     }
 
@@ -481,7 +481,7 @@ export class InstanceStatsService {
             hostedBy,
             releaseTemplates,
             releasePlans,
-            edgeInstances,
+            edgeInstanceUsage,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getRegisteredUsers(),
@@ -545,7 +545,7 @@ export class InstanceStatsService {
             hostedBy,
             releaseTemplates,
             releasePlans,
-            edgeInstanceAveragesPerMonth: edgeInstances,
+            edgeInstanceUsage,
         };
         return featureInfo;
     }

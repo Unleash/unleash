@@ -54,7 +54,6 @@ process.nextTick(async () => {
                         lifecycleGraphs: true,
                         newStrategyModal: true,
                         globalChangeRequestList: true,
-                        newUiConfigService: true,
                         trafficBillingDisplay: true,
                         milestoneProgression: true,
                         featureReleasePlans: true,

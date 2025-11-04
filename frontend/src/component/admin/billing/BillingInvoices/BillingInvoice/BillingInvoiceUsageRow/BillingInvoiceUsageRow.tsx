@@ -70,6 +70,7 @@ export const BillingInvoiceUsageRow = ({
             : totalAmount;
 
     const hasAmount = calculatedAmount && calculatedAmount > 0;
+    const showConsumption = hasValidData;
 
     const formatIncludedDisplay = () => {
         if (includedAmount !== undefined && limit !== undefined) {
@@ -87,10 +88,14 @@ export const BillingInvoiceUsageRow = ({
     return (
         <>
             <StyledDescriptionCell>{description}</StyledDescriptionCell>
-            <StyledCellWithIndicator>
-                <ConsumptionIndicator percentage={percentage || 0} />
-                <div>{formatIncludedDisplay()}</div>
-            </StyledCellWithIndicator>
+            {showConsumption ? (
+                <StyledCellWithIndicator>
+                    <ConsumptionIndicator percentage={percentage || 0} />
+                    <div>{formatIncludedDisplay()}</div>
+                </StyledCellWithIndicator>
+            ) : (
+                <div />
+            )}
             <div>{overage ? formatLargeNumbers(overage) : ''}</div>
             {hasAmount ? (
                 <StyledAmountCell>

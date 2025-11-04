@@ -1,6 +1,5 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PermissionButton, {
     type IPermissionButtonProps,
 } from 'component/common/PermissionButton/PermissionButton';
@@ -16,7 +15,6 @@ import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useRele
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ReleasePlanPreview } from './ReleasePlanPreview.tsx';
 import {
     FeatureStrategyMenuCards,
@@ -60,7 +58,6 @@ export const FeatureStrategyMenu = ({
     const [isStrategyMenuDialogOpen, setIsStrategyMenuDialogOpen] =
         useState<boolean>(false);
     const [filter, setFilter] = useState<StrategyFilterValue>(null);
-    const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const [selectedTemplate, setSelectedTemplate] =
         useState<IReleasePlanTemplate>();
@@ -81,7 +78,6 @@ export const FeatureStrategyMenu = ({
         environmentId,
     );
     const { addReleasePlanToFeature } = useReleasePlansApi();
-    const { isEnterprise } = useUiConfig();
     const crProtected = isChangeRequestConfigured(environmentId);
 
     const activeReleasePlan = releasePlans[0];
@@ -146,7 +142,6 @@ export const FeatureStrategyMenu = ({
                 },
             });
             setAddReleasePlanConfirmationOpen(false);
-            setAddReleasePlanOpen(false);
             setSelectedTemplate(undefined);
             onClose();
         } catch (error: unknown) {

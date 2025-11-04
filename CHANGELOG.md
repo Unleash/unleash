@@ -222,6 +222,8 @@ All notable changes to this project will be documented in this file.
 
 - AddConfiguration flag cleanup ([#10628](https://github.com/Unleash/unleash/issues/10628))
 
+- Add newStrategyModal flag ([#10629](https://github.com/Unleash/unleash/issues/10629))
+
 - Update node sdk with fetch mode cleanup ([#10630](https://github.com/Unleash/unleash/issues/10630))
 
 - Switch to polling in node sdk ([#10632](https://github.com/Unleash/unleash/issues/10632))

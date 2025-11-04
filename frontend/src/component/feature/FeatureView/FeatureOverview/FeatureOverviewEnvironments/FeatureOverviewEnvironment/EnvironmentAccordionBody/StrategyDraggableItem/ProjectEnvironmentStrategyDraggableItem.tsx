@@ -96,13 +96,6 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                             ).map((scheduledChange) => scheduledChange.id)}
                         />
                     ) : null}
-                    {otherEnvironments && otherEnvironments?.length > 0 ? (
-                        <CopyStrategyIconMenu
-                            environmentId={environmentName}
-                            environments={otherEnvironments as string[]}
-                            strategy={strategy}
-                        />
-                    ) : null}
                     <PermissionIconButton
                         permission={UPDATE_FEATURE_STRATEGY}
                         environmentId={environmentName}
@@ -116,6 +109,13 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                     >
                         <Edit />
                     </PermissionIconButton>
+                    {otherEnvironments && otherEnvironments?.length > 0 ? (
+                        <CopyStrategyIconMenu
+                            environmentId={environmentName}
+                            environments={otherEnvironments as string[]}
+                            strategy={strategy}
+                        />
+                    ) : null}
                     <MenuStrategyRemove
                         projectId={projectId}
                         featureId={featureId}

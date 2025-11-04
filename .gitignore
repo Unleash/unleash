@@ -8,7 +8,7 @@ npm-debug
 
 # Logs
 logs
-*.log
+
 
 # Runtime data
 pids

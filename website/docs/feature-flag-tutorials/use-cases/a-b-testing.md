@@ -61,7 +61,7 @@ Different strategies use different parameters. Predefined strategies are bundled
 Activation strategies are defined on the server. For backend SDKs, activation strategy implementation is done on the client side. For frontend SDKs, the feature is calculated on the server side.
 :::
 
-Open your feature flag and click **Add strategy**.
+Open your feature flag and click **Add strategy**, select **Gradual rollout**, and click **Configure**.
 
 ![Add your first strategy from the flag view in Unleash.](/img/use-case-experiment-add-strategy.png)
 

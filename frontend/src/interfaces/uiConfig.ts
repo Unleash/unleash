@@ -87,7 +87,6 @@ export type UiFlags = {
     impactMetrics?: boolean;
     plausibleMetrics?: boolean;
     lifecycleGraphs?: boolean;
-    newStrategyModal?: boolean;
     globalChangeRequestList?: boolean;
     trafficBillingDisplay?: boolean;
     milestoneProgression?: boolean;

@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'etagByEnv'
     | 'fetchMode'
     | 'optimizeLifecycle'
-    | 'newStrategyModal'
     | 'globalChangeRequestList'
     | 'trafficBillingDisplay'
     | 'milestoneProgression'
@@ -265,10 +264,6 @@ const flags: IFlags = {
             false,
         ),
     },
-    newStrategyModal: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_MODAL,
-        false,
-    ),
     globalChangeRequestList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_LIST,
         false,

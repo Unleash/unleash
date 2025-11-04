@@ -59,7 +59,6 @@ export type IFlagKey =
     | 'optimizeLifecycle'
     | 'newStrategyModal'
     | 'globalChangeRequestList'
-    | 'newUiConfigService'
     | 'trafficBillingDisplay'
     | 'milestoneProgression'
     | 'envAddStrategySuggestion'
@@ -272,10 +271,6 @@ const flags: IFlags = {
     ),
     globalChangeRequestList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_LIST,
-        false,
-    ),
-    newUiConfigService: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_UI_CONFIG_SERVICE,
         false,
     ),
     trafficBillingDisplay: parseEnvVarBoolean(

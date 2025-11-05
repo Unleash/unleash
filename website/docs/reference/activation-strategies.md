@@ -13,7 +13,7 @@ An activation strategy determines who should get a feature. They allow you to en
 
 An activation strategy is assigned to one [feature flag](/reference/feature-toggles) in one [environment](/reference/environments). A feature flag is enabled in a given context (for example, user or application) if at least one of its activation strategies resolves to true.
 
-When adding a strategy to a flag, you can choose from several [strategy types](#strategy-types), such as a [gradual rollout](#gradual-rollout). DeDepending on the strategy type, you can further refine the configuration using [rollout percentage](#rollout-percentage), [targeting](#targeting), and [variants](/reference/strategy-variants).
+When adding a strategy to a flag, you can choose from several [strategy types](#strategy-types), such as a [gradual rollout](#gradual-rollout). Depending on the strategy type, you can further refine the configuration using [rollout percentage](#rollout-percentage), [targeting](#targeting), and [variants](/reference/strategy-variants).
 
 Feature flags can have multiple activation strategies. Unleash evaluates each strategy independently, enabling the flag if any resolves to true. This behavior is equivalent to the OR logical operator.
 

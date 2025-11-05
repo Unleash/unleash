@@ -28,6 +28,7 @@ import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgr
 import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestoneItem } from './ReleasePlanMilestoneItem/ReleasePlanMilestoneItem.tsx';
+import { ReleasePlanAddSafeguard } from './ReleasePlanAddSafeguard.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -72,6 +73,10 @@ const StyledHeaderDescription = styled('p')(({ theme }) => ({
 const StyledBody = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+}));
+
+const StyledBodyHeader = styled('div')(({ theme }) => ({
+    color: theme.palette.text.primary,
 }));
 
 interface IReleasePlanProps {
@@ -379,6 +384,9 @@ export const ReleasePlan = ({
                 )}
             </StyledHeader>
             <StyledBody>
+                <StyledBodyHeader>
+                    <ReleasePlanAddSafeguard />
+                </StyledBodyHeader>
                 {milestones.map((milestone, index) => (
                     <ReleasePlanMilestoneItem
                         key={milestone.id}

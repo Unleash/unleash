@@ -58,7 +58,7 @@ export class ProjectReadModel implements IProjectReadModel {
         this.db = db;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
-                store: 'project',
+                store: 'project-read-model',
                 action,
             });
         this.flagResolver = flagResolver;

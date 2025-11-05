@@ -1,4 +1,4 @@
-import { subDays } from 'date-fns';
+import { subDays, secondsToMilliseconds } from 'date-fns';
 import joi from 'joi';
 const { ValidationError } = joi;
 import createSlug from 'slug';
@@ -86,6 +86,7 @@ import { canGrantProjectRole } from './can-grant-project-role.js';
 import { batchExecute } from '../../util/index.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
+import memoizee from 'memoizee';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 
 type Days = number;
@@ -156,6 +157,17 @@ export default class ProjectService {
 
     private timer: Function;
 
+    private getProjectsForAdminUiCached: ((
+        query?: IProjectQuery & IProjectsQuery,
+        userId?: number,
+    ) => Promise<ProjectForUi[]>) &
+        memoizee.Memoized<
+            (
+                query?: IProjectQuery & IProjectsQuery,
+                userId?: number,
+            ) => Promise<ProjectForUi[]>
+        >;
+
     constructor(
         {
             projectStore,
@@ -221,16 +233,35 @@ export default class ProjectService {
                 className: 'ProjectService',
                 functionName,
             });
+        const cacheTtl = secondsToMilliseconds(20);
+        this.getProjectsForAdminUiCached = memoizee(
+            (
+                projectsQuery?: IProjectQuery & IProjectsQuery,
+                projectsUserId?: number,
+            ) =>
+                this.projectReadModel.getProjectsForAdminUi(
+                    projectsQuery,
+                    projectsUserId,
+                ),
+            {
+                promise: true,
+                maxAge: cacheTtl,
+                normalizer: ([projectsQuery, projectsUserId]) =>
+                    this.buildProjectsCacheKey(
+                        projectsQuery as
+                            | (IProjectQuery & IProjectsQuery)
+                            | undefined,
+                        projectsUserId as number | undefined,
+                    ),
+            },
+        );
     }
 
     async getProjects(
         query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
-        const projects = await this.projectReadModel.getProjectsForAdminUi(
-            query,
-            userId,
-        );
+        const projects = await this.getProjectsForAdminUiCached(query, userId);
 
         if (userId) {
             const projectAccess =
@@ -247,6 +278,20 @@ export default class ProjectService {
             }
         }
         return projects;
+    }
+
+    private buildProjectsCacheKey(
+        query?: IProjectQuery & IProjectsQuery,
+        userId?: number,
+    ): string {
+        const ids = query?.ids === undefined ? null : [...query.ids].sort();
+        return JSON.stringify({
+            userId: userId ?? null,
+            id: query?.id ?? null,
+            archived:
+                typeof query?.archived === 'undefined' ? null : query.archived,
+            ids,
+        });
     }
 
     async addOwnersToProjects(
@@ -1094,10 +1139,6 @@ export default class ProjectService {
                 },
             }),
         );
-    }
-
-    async getMembers(projectId: string): Promise<number> {
-        return this.projectStore.getMembersCountByProject(projectId);
     }
 
     async getProjectUsers(

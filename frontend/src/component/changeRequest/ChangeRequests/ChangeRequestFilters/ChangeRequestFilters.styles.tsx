@@ -54,7 +54,7 @@ export const Wrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-start',
     flexFlow: 'row wrap',
-    padding: theme.spacing(1.5, 3, 0, 3),
+    paddingInline: theme.spacing(3),
     minHeight: theme.spacing(7),
     gap: theme.spacing(2),
 }));

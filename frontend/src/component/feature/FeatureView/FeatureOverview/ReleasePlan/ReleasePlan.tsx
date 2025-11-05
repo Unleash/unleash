@@ -69,9 +69,20 @@ const StyledHeaderDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const StyledBodyHeader = styled('p')(({ theme }) => ({
+    padding: theme.spacing(1.5, 2),
+}));
+
 const StyledBody = styled('div')(({ theme }) => ({
+    border: `1px dashed ${theme.palette.neutral.border}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+}));
+
+const StyledContent = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    borderTop: `1px dashed ${theme.palette.neutral.border}`,
+    padding: theme.spacing(2),
 }));
 
 interface IReleasePlanProps {
@@ -379,35 +390,38 @@ export const ReleasePlan = ({
                 )}
             </StyledHeader>
             <StyledBody>
-                {milestones.map((milestone, index) => (
-                    <ReleasePlanMilestoneItem
-                        key={milestone.id}
-                        milestone={milestone}
-                        index={index}
-                        milestones={milestones}
-                        activeMilestoneId={activeMilestoneId}
-                        activeIndex={activeIndex}
-                        environmentIsDisabled={environmentIsDisabled}
-                        readonly={readonly}
-                        milestoneProgressionsEnabled={
-                            milestoneProgressionsEnabled
-                        }
-                        progressionFormOpenIndex={progressionFormOpenIndex}
-                        onSetProgressionFormOpenIndex={
-                            setProgressionFormOpenIndex
-                        }
-                        onStartMilestone={onStartMilestone}
-                        onDeleteProgression={handleDeleteProgression}
-                        onAddToChangeRequest={handleAddToChangeRequest}
-                        getPendingProgressionChange={
-                            getPendingProgressionChange
-                        }
-                        projectId={projectId}
-                        environment={environment}
-                        featureName={featureName}
-                        onUpdate={refetch}
-                    />
-                ))}
+                <StyledBodyHeader />
+                <StyledContent>
+                    {milestones.map((milestone, index) => (
+                        <ReleasePlanMilestoneItem
+                            key={milestone.id}
+                            milestone={milestone}
+                            index={index}
+                            milestones={milestones}
+                            activeMilestoneId={activeMilestoneId}
+                            activeIndex={activeIndex}
+                            environmentIsDisabled={environmentIsDisabled}
+                            readonly={readonly}
+                            milestoneProgressionsEnabled={
+                                milestoneProgressionsEnabled
+                            }
+                            progressionFormOpenIndex={progressionFormOpenIndex}
+                            onSetProgressionFormOpenIndex={
+                                setProgressionFormOpenIndex
+                            }
+                            onStartMilestone={onStartMilestone}
+                            onDeleteProgression={handleDeleteProgression}
+                            onAddToChangeRequest={handleAddToChangeRequest}
+                            getPendingProgressionChange={
+                                getPendingProgressionChange
+                            }
+                            projectId={projectId}
+                            environment={environment}
+                            featureName={featureName}
+                            onUpdate={refetch}
+                        />
+                    ))}
+                </StyledContent>
             </StyledBody>
             <ReleasePlanRemoveDialog
                 plan={plan}

@@ -7,7 +7,6 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import {
     StyledOuterContainer,
@@ -35,6 +34,7 @@ import type {
 } from 'component/changeRequest/changeRequest.types';
 import { getBrowserTimezone } from './utils.ts';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon.tsx';
 
 interface ISuggestChangeReviewsStatusProps {
     changeRequest: ChangeRequestType;
@@ -82,11 +82,7 @@ export const ChangeRequestReviewStatus: FC<
             <StyledButtonContainer
                 {...resolveIconColors(changeRequest.state, theme)}
             >
-                <ChangesAppliedIcon
-                    style={{
-                        transform: `scale(1.5)`,
-                    }}
-                />
+                <ChangeRequestIcon />
             </StyledButtonContainer>
             <StyledReviewStatusContainer
                 sx={{

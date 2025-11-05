@@ -142,6 +142,17 @@ export const routes: IRoute[] = [
         menu: { primary: true },
     },
 
+    // Global change request overview
+    {
+        path: '/change-requests',
+        title: 'Change Requests',
+        component: ChangeRequests,
+        type: 'protected',
+        menu: { primary: true },
+        flag: 'globalChangeRequestList',
+        enterprise: true,
+    },
+
     // Playground
     {
         path: '/playground',
@@ -477,18 +488,6 @@ export const routes: IRoute[] = [
         component: UnknownFlagsTable,
         type: 'protected',
         menu: {},
-    },
-
-    // My change requests
-    {
-        path: '/change-requests',
-        title: 'Change Requests',
-        component: ChangeRequests,
-        type: 'protected',
-        menu: {},
-        flag: 'globalChangeRequestList',
-        hidden: true,
-        enterprise: true,
     },
 
     // Admin

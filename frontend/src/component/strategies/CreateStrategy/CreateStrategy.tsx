@@ -1,4 +1,4 @@
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -11,25 +11,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { GO_BACK } from 'constants/navigate';
 import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo.tsx';
-import { Alert } from '@mui/material';
-
-const CreateStrategyDeprecationWarning = () => (
-    <Alert
-        severity='warning'
-        sx={(theme) => ({
-            marginBottom: theme.spacing(3),
-        })}
-    >
-        Custom strategies are deprecated and may be removed in a future major
-        release. We recommend using the predefined strategies like Gradual
-        rollout with{' '}
-        <Link to='https://docs.getunleash.io/reference/activation-strategies#constraints'>
-            {' '}
-            constraints
-        </Link>{' '}
-        instead of creating a custom strategy.
-    </Alert>
-);
 
 export const CreateStrategy = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -94,7 +75,6 @@ export const CreateStrategy = () => {
             documentationLinkLabel='Custom strategies documentation'
             formatApiCode={formatApiCode}
         >
-            <CreateStrategyDeprecationWarning />
             <CustomStrategyInfo alert />
             <StrategyForm
                 errors={errors}

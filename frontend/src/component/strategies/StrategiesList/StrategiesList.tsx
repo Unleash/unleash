@@ -92,25 +92,6 @@ const Title: FC<{
     </StyledTitle>
 );
 
-const StrategyDeprecationWarning = () => (
-    <Alert severity='warning' sx={{ mb: 2 }}>
-        Custom strategies are deprecated and may be removed in a future major
-        version. We recommend not using custom strategies going forward and
-        instead using the gradual rollout strategy with{' '}
-        <Link
-            href={
-                'https://docs.getunleash.io/reference/activation-strategies#constraints'
-            }
-            target='_blank'
-            rel='noopener noreferrer'
-        >
-            constraints
-        </Link>
-        . If you have a need for custom strategies that you cannot support with
-        constraints, please reach out to us.
-    </Alert>
-);
-
 const RecommendationAlert = () => (
     <Alert severity='info' sx={{ mb: 2 }}>
         We recommend using gradual rollout. You can customize it with{' '}
@@ -550,7 +531,6 @@ export const StrategiesList = () => {
                         <span>Custom strategies</span>
                         <AddStrategyButton />
                     </StyledSubtitle>
-                    <StrategyDeprecationWarning />
                     <Table {...customGetTableProps()}>
                         <SortableTableHeader
                             headerGroups={customHeaderGroups}

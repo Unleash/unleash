@@ -7,7 +7,7 @@ export const makeStyledChip = (ariaControlTarget: string) =>
         padding: theme.spacing(0.5),
         fontSize: theme.typography.body2.fontSize,
         height: 'auto',
-        '&[aria-current="true"]': {
+        '&[data-selected="true"]': {
             backgroundColor: theme.palette.secondary.light,
             fontWeight: 'bold',
             borderColor: theme.palette.primary.main,
@@ -28,10 +28,10 @@ export const makeStyledChip = (ariaControlTarget: string) =>
             borderBottomRightRadius: theme.shape.borderRadius,
         },
 
-        '&:not(&[aria-current="true"], :last-of-type)': {
+        '&:not(&[data-selected="true"], :last-of-type)': {
             borderRightWidth: 0,
         },
-        '[aria-current="true"] + &': {
+        '[data-selected="true"] + &': {
             borderLeftWidth: 0,
         },
 

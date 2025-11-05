@@ -33,13 +33,13 @@ export const StateFilterChips: FC<FilterChipsProps> = ({
         <StyledContainer>
             <StyledChip
                 label={'Open'}
-                aria-current={activeStateFilter === 'open'}
+                data-selected={activeStateFilter === 'open'}
                 onClick={handleStateFilterChange('open')}
                 title={'Show open change requests'}
             />
             <StyledChip
                 label={'Closed'}
-                aria-current={activeStateFilter === 'closed'}
+                data-selected={activeStateFilter === 'closed'}
                 onClick={handleStateFilterChange('closed')}
                 title={'Show closed change requests'}
             />

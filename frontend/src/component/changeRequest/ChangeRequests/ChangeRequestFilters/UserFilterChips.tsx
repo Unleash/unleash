@@ -67,13 +67,13 @@ export const UserFilterChips: FC<UserFilterChipsProps> = ({
         <StyledContainer>
             <StyledChip
                 label={'Created'}
-                aria-current={activeUserFilter === 'created'}
+                data-selected={activeUserFilter === 'created'}
                 onClick={handleUserFilterChange('created')}
                 title={'Show change requests created by you'}
             />
             <StyledChip
                 label={'Approval Requested'}
-                aria-current={activeUserFilter === 'approval requested'}
+                data-selected={activeUserFilter === 'approval requested'}
                 onClick={handleUserFilterChange('approval requested')}
                 title={'Show change requests requesting your approval'}
             />

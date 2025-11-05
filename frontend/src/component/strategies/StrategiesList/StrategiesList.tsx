@@ -498,7 +498,7 @@ export const StrategiesList = () => {
                         <Title
                             title='Advanced and custom strategies'
                             description='Advanced strategies let you target based on specific properties. Custom activation strategies let you define your own activation strategies to use with Unleash.'
-                            link='https://docs.getunleash.io/reference/custom-activation-strategies'
+                            link='https://docs.getunleash.io/reference/activation-strategies#custom-strategies'
                         />
                     </PageHeader>
                 }

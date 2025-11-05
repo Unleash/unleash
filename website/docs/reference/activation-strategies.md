@@ -39,7 +39,7 @@ Segmentation and constraints allow you to define conditions for your activation 
 
 :::
 
-Constraints are conditional rules that determine whether a strategy applies, based on fields from the [Unleash context](/reference/unleash-context). Constraints can reference both [standard context fields](../reference/unleash-context#overview) and [custom context fields](../reference/unleash-context#custom-context-fields).
+Constraints are conditional rules that determine whether a strategy applies, based on fields from the [Unleash context](/reference/unleash-context). Constraints can reference both [standard context fields](/reference/unleash-context#overview) and [custom context fields](/reference/unleash-context#custom-context-fields).
 
 An activation strategy can have as many constraints as needed. When an activation strategy has multiple constraints, then every constraint must be evaluated to true for the strategy to be evaluated. This behavior is equivalent to the AND logical operator.
 
@@ -171,7 +171,7 @@ When you add an activation strategy to a flag, you can choose from several optio
 
 ### Default strategy
 
-The default activation strategy is a type of gradual rollout strategy that you configure once per project and environment. It defines your most common configuration and is available as a quick option when adding strategies to flags.
+The default activation strategy is a type of gradual rollout strategy that you can configure per project and environment. It defines your most common configuration and is available as a quick option when adding strategies to flags.
 
 #### Configure the default strategy
 
@@ -192,7 +192,7 @@ In environments without an active strategy, you’ll also see a suggested option
 
 Roll out a feature to a percentage of your users while ensuring each user has a consistent experience. You can combine gradual rollout with [targeting](#targeting) rules to support most rollout scenarios.
 
-#### Standard
+#### Standard on/off
 
 Turn the feature on or off for your entire user base. For more control, we recommend using a [gradual rollout](#gradual-rollout) strategy set to 100% instead.
 
@@ -217,8 +217,51 @@ The `applicationHostname` strategy activates a feature flag for specific hostnam
 Parameters:
 - `hostNames` – List of hostnames to enable the feature for.
 
-### Custom activation strategies
+### Custom strategies
 
-[Custom activation strategies](/reference/custom-activation-strategies) are deprecated and may be removed in a future major version. We recommend using the [gradual rollout](#gradual-rollout) strategy with constraints instead.
+:::note
+
+Whenever possible, we recommend using a standard [gradual rollout](#gradual-rollout) strategy with [strategy constraints](#constraints) instead of defining a custom strategy. They offer similar flexibility without requiring custom code distribution within your SDKs.
+
+:::
+
+Custom activation strategies let you define your own activation strategies to use with Unleash.
+
+![A strategy creation form. It has fields labeled "strategy name" — "TimeStamp" — and "description" — "activate toggle after a given timestamp". It also has fields for a parameter named "enableAfter". The parameter is of type "string" and the parameter description is "Expected format: YYYY-MM-DD HH:MM". The parameter is required.](/img/timestamp_create_strategy.png)
+
+When creating a custom strategy, you must set a name, optionally add a description, and define one or more parameters. The parameters are passed as arguments to your activation strategy and are available to your custom implementation in the SDK.
+
+#### Parameters
+
+![A strategy with five parameters, one of each type.](/img/strategy-parameters-ui-controls.png)
+
+Parameters define the inputs available to your strategy. Each parameter can be marked as required or optional. This setting helps users understand which fields they must complete, but users can still save the strategy without filling out required parameters.
+
+Each parameter includes:
+- A **name**: Must be unique within the strategy.
+- An optional **description**: Explains the purpose or expected format.
+- A **type**: Determines the input field shown in the Admin UI and the value type in your code.
+
+Each parameter type affects both the Admin UI control and the value representation in the JSON payload returned from the Unleash server. Actual data types depend on your SDK’s language.
+
+By default, all parameter values are empty strings: `""`. If you don’t set a value, the SDK receives an empty string.
+
+| Type name | Code representation | Example value | UI control |
+| --- | --- | --- | --- |
+| string | `string` | `"a string"` | A standard input field |
+| percentage | `string` representing a number between 0 and 100 (inclusive) | `"99"` | A value slider |
+| list | `string` (values are comma-separated) | `"one,two"` | A multi-input text field |
+| number | `string` | `"123"` | A numeric text field |
+| boolean | `string`: one of `"true"` or `"false"` | `"true"` | An on/off toggle |
+
+#### Implementation
+
+:::note
+
+If the strategy isn’t implemented in your backend SDK, all checks using it return `false` because the SDK doesn’t recognize the strategy.
+
+:::
+
+Custom strategies are defined on the Unleash server, but implemented in your [backend SDK](/reference/sdks#backend-sdks). All official Unleash backend SDKs provide a way to implement custom strategies. When implementing your custom strategy, you have access to both the strategy parameters and the [Unleash context](/reference/unleash-context). See your SDK’s documentation for language-specific examples.
 
 

@@ -103,12 +103,17 @@
     },
     {
       "source": "/advanced/custom-activation-strategy",
-      "destination": "/reference/custom-activation-strategies",
+      "destination": "/reference/activation-strategies#custom-strategies",
       "permanent": true
     },
     {
       "source": "/advanced/custom_activation_strategy",
-      "destination": "/reference/custom-activation-strategies",
+      "destination": "/reference/activation-strategies#custom-strategies",
+      "permanent": true
+    },
+    {
+      "source": "/reference/custom-activation-strategies",
+      "destination": "/reference/activation-strategies#custom-strategies",
       "permanent": true
     },
     {

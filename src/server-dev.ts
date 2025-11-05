@@ -57,7 +57,6 @@ process.nextTick(async () => {
                         trafficBillingDisplay: true,
                         milestoneProgression: true,
                         featureReleasePlans: true,
-                        envAddStrategySuggestion: true,
                         safeguards: true,
                     },
                 },

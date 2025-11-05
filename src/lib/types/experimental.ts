@@ -61,7 +61,6 @@ export type IFlagKey =
     | 'globalChangeRequestList'
     | 'trafficBillingDisplay'
     | 'milestoneProgression'
-    | 'envAddStrategySuggestion'
     | 'featureReleasePlans'
     | 'plausibleMetrics'
     | 'safeguards';
@@ -279,10 +278,6 @@ const flags: IFlags = {
     ),
     milestoneProgression: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MILESTONE_PROGRESSION,
-        false,
-    ),
-    envAddStrategySuggestion: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ENV_ADD_STRATEGY_SUGGESTION,
         false,
     ),
     featureReleasePlans: parseEnvVarBoolean(

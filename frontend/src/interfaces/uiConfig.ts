@@ -91,7 +91,6 @@ export type UiFlags = {
     trafficBillingDisplay?: boolean;
     milestoneProgression?: boolean;
     featureReleasePlans?: boolean;
-    envAddStrategySuggestion?: boolean;
     safeguards?: boolean;
 };
 

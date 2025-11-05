@@ -7,7 +7,7 @@ import { MilestoneTransitionDisplay } from '../ReleasePlanMilestone/MilestoneTra
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { MilestoneProgressionForm } from '../MilestoneProgressionForm/MilestoneProgressionForm.tsx';
 import type { PendingProgressionChange } from './ReleasePlanMilestoneItem.tsx';
-import { StyledAddActionButton } from '../commonComponets.tsx';
+import { StyledAddActionButton } from '../ReleasePlanCommonComponets.tsx';
 
 interface MilestoneAutomationProps {
     milestone: IReleasePlanMilestone;

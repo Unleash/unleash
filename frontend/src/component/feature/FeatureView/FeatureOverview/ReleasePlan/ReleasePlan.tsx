@@ -70,14 +70,10 @@ const StyledHeaderDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledBody = styled('div')(({ theme }) => ({
+const StyledBody = styled('div')({
     display: 'flex',
     flexDirection: 'column',
-}));
-
-const StyledBodyHeader = styled('div')(({ theme }) => ({
-    color: theme.palette.text.primary,
-}));
+});
 
 interface IReleasePlanProps {
     plan: IReleasePlan;
@@ -168,6 +164,7 @@ export const ReleasePlan = ({
         return null;
     };
     const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
+    const isSafeguardEnabled = useUiFlag('safeguards');
     const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
         number | null
     >(null);
@@ -384,9 +381,7 @@ export const ReleasePlan = ({
                 )}
             </StyledHeader>
             <StyledBody>
-                <StyledBodyHeader>
-                    <ReleasePlanAddSafeguard />
-                </StyledBodyHeader>
+                {isSafeguardEnabled && <ReleasePlanAddSafeguard />}
                 {milestones.map((milestone, index) => (
                     <ReleasePlanMilestoneItem
                         key={milestone.id}

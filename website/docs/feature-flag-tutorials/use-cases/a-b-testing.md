@@ -64,7 +64,7 @@ Activation strategies are defined and configured on the Unleash server. Backend 
 
 Let's set up the strategy! Open your feature flag, and select an environment. Click **Add strategy**, select **Gradual rollout**, and click **Configure**.
 
-![Add your first strategy from the flag view in Unleash.](/img/use-case-experiment-add-strategy.png)
+![Add your first strategy from the flag view in Unleash.](/img/add-strategy.png)
 
 The gradual rollout strategy form has multiple fields that control the rollout of your feature. You can name the strategy something relevant to the A/B test you’re creating, but this is an optional field.
 

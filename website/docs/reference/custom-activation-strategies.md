@@ -6,7 +6,8 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 <SearchPriority level="medium" />
 
-::: warning
+:::warning
+
 Custom strategies are deprecated and may be removed in a future major version. We recommend not using custom strategies going forward and instead using the gradual rollout strategy with constraints.
 If you have a use case you can't solve without using custom strategies, please reach out to us.
 :::

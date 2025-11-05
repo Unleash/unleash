@@ -137,7 +137,7 @@ Backend SDKs fetch the full feature flag configuration associated with your API 
 However, every value that you add to your feature flag constraints, increases the payload size. We recommend avoiding large constraint value lists. For example, instead of adding many user IDs or emails to the constraint value list, consider what properties those users share. This typically helps define and use a [custom context field](/reference/unleash-context#custom-context-fields) instead.
 
 
-## Add a gradual rollout activation strategy with a constraint
+## Add an activation strategy
 
 To add an activation strategy with a constraint to a feature flag, do the following:
 
@@ -150,7 +150,7 @@ To add an activation strategy with a constraint to a feature flag, do the follow
 7. Enter a value that the operator should evaluate, such as `@user.com`, and click **Add values**. Then click **Done**.
 8. Click **Save strategy**.
 
-![A feature flag with two strategies](/img/add-strategy.png)
+![A feature flag with two strategies](/img/add-strategy-modal.png)
 
 ## Client-side implementation
 
@@ -190,11 +190,11 @@ In environments without an active strategy, you’ll also see a suggested option
 
 #### Gradual rollout
 
-Roll out a feature to a percentage of your users while ensuring each user has a consistent experience. You can combine gradual rollout with targeting rules to support most rollout scenarios.
+Roll out a feature to a percentage of your users while ensuring each user has a consistent experience. You can combine gradual rollout with [targeting](#targeting) rules to support most rollout scenarios.
 
 #### Standard
 
-Turn the feature on or off for your entire user base. For more control, we recommend using a gradual rollout strategy set to 100% instead.
+Turn the feature on or off for your entire user base. For more control, we recommend using a [gradual rollout](#gradual-rollout) strategy set to 100% instead.
 
 
 ### Release templates
@@ -219,7 +219,6 @@ Parameters:
 
 ### Custom activation strategies
 
-[Custom activation strategies](/reference/custom-activation-strategies) are deprecated and may be removed in a future major version.  
-We recommend using the **Gradual rollout** strategy with constraints instead.
+[Custom activation strategies](/reference/custom-activation-strategies) are deprecated and may be removed in a future major version. We recommend using the [gradual rollout](#gradual-rollout) strategy with constraints instead.
 
 

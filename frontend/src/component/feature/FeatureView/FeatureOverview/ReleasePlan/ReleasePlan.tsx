@@ -73,16 +73,28 @@ const StyledBodyHeader = styled('p')(({ theme }) => ({
     padding: theme.spacing(1.5, 2),
 }));
 
-const StyledBody = styled('div')(({ theme }) => ({
-    border: `1px dashed ${theme.palette.neutral.border}`,
-    borderRadius: theme.shape.borderRadiusMedium,
+interface StyledBodyProps {
+    isSafeguardEnabled?: boolean;
+}
+
+const StyledBody = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'isSafeguardEnabled',
+})<StyledBodyProps>(({ theme, isSafeguardEnabled }) => ({
+    ...(isSafeguardEnabled && {
+        border: `1px dashed ${theme.palette.neutral.border}`,
+        borderRadius: theme.shape.borderRadiusMedium,
+    }),
 }));
 
-const StyledContent = styled('div')(({ theme }) => ({
+const StyledContent = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'isSafeguardEnabled',
+})<StyledBodyProps>(({ theme, isSafeguardEnabled }) => ({
     display: 'flex',
     flexDirection: 'column',
-    borderTop: `1px dashed ${theme.palette.neutral.border}`,
     padding: theme.spacing(2),
+    ...(isSafeguardEnabled && {
+        borderTop: `1px dashed ${theme.palette.neutral.border}`,
+    }),
 }));
 
 interface IReleasePlanProps {
@@ -174,6 +186,7 @@ export const ReleasePlan = ({
         return null;
     };
     const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
+    const isSafeguardEnabled = useUiFlag('safeguards');
     const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
         number | null
     >(null);
@@ -389,9 +402,9 @@ export const ReleasePlan = ({
                     </PermissionIconButton>
                 )}
             </StyledHeader>
-            <StyledBody>
+            <StyledBody isSafeguardEnabled={isSafeguardEnabled}>
                 <StyledBodyHeader />
-                <StyledContent>
+                <StyledContent isSafeguardEnabled={isSafeguardEnabled}>
                     {milestones.map((milestone, index) => (
                         <ReleasePlanMilestoneItem
                             key={milestone.id}

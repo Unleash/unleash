@@ -227,10 +227,12 @@ export default class ProjectService {
         query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
-        const projects = await this.projectReadModel.getProjectsForAdminUi(
-            query,
-            userId,
-        );
+        const projects = this.flagResolver.isEnabled('projectJoinedQueries')
+            ? await this.projectReadModel.getProjectsForAdminUiWithJoinedQuery(
+                  query,
+                  userId,
+              )
+            : await this.projectReadModel.getProjectsForAdminUi(query, userId);
 
         if (userId) {
             const projectAccess =

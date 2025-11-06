@@ -36,6 +36,10 @@ export interface IProjectReadModel {
         query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]>;
+    getProjectsForAdminUiWithJoinedQuery(
+        query?: IProjectQuery & IProjectsQuery,
+        userId?: number,
+    ): Promise<ProjectForUi[]>;
     getProjectsForInsights(
         query?: IProjectQuery,
     ): Promise<ProjectForInsights[]>;

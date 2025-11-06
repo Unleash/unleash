@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatAssetPath } from 'utils/formatPath';
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import ReleaseTemplatePreviewImage from 'assets/img/releaseTemplatePreview.png';
+import semverLt from 'semver/functions/lt';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0, 1, 0),
@@ -100,8 +101,26 @@ export const NewInUnleash = ({
         'new-in-unleash-seen:v1',
         new Set(),
     );
-    const { isEnterprise } = useUiConfig();
-    const signalsEnabled = useUiFlag('signals');
+    const {
+        isEnterprise,
+        uiConfig: { version },
+    } = useUiConfig();
+
+    const shouldBeDisplayed = ({
+        enterpriseOnly,
+        flag,
+        versionLowerThan,
+    }: NewInUnleashItemDetails['filter']) => {
+        if (enterpriseOnly && !isEnterprise) {
+            return false;
+        }
+
+        if (flag && !useUiFlag(flag)) {
+            return false;
+        }
+
+        return semverLt(version, versionLowerThan);
+    };
 
     const items: NewInUnleashItemDetails[] = [
         {
@@ -116,7 +135,9 @@ export const NewInUnleash = ({
             ),
             docsLink:
                 'https://docs.getunleash.io/reference/feature-toggles#feature-flag-lifecycle',
-            show: true,
+            filter: {
+                versionLowerThan: '7.2.0',
+            },
             longDescription: (
                 <p>
                     We have updated the names, icons, and colors for the
@@ -133,7 +154,11 @@ export const NewInUnleash = ({
             preview: <SignalsPreview />,
             onCheckItOut: () => navigate('/integrations/signals'),
             docsLink: 'https://docs.getunleash.io/reference/signals',
-            show: isEnterprise() && signalsEnabled,
+            filter: {
+                flag: 'signals',
+                enterpriseOnly: true,
+                versionLowerThan: '7.3.0',
+            },
             longDescription: (
                 <>
                     <p>
@@ -174,14 +199,17 @@ export const NewInUnleash = ({
             ),
             onCheckItOut: () => navigate('/release-templates'),
             docsLink: 'https://docs.getunleash.io/reference/release-templates',
-            show: isEnterprise(),
+            filter: {
+                enterpriseOnly: true,
+                versionLowerThan: '7.4.0',
+            },
             beta: false,
             popout: true,
         },
     ];
 
     const visibleItems = items.filter(
-        (item) => item.show && !seenItems.has(item.label),
+        (item) => shouldBeDisplayed(item.filter) && !seenItems.has(item.label),
     );
 
     if (!visibleItems.length) return null;

@@ -133,7 +133,6 @@ export const ChangeRequestsTabs = ({
             {
                 id: 'Title',
                 Header: 'Title',
-                // maxWidth: '35%',
                 canSort: true,
                 accessor: 'title',
                 searchable: true,

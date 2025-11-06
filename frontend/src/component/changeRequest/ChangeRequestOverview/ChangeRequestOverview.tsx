@@ -9,7 +9,6 @@ import {
 import { type FC, useContext, useState } from 'react';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { ChangeRequestHeader } from './ChangeRequestHeader/ChangeRequestHeader.tsx';
-import { ReactComponent as ApprovedIcon } from 'assets/icons/merge.svg';
 import {
     ChangeRequestTimeline,
     type ISuggestChangeTimelineProps,
@@ -42,6 +41,7 @@ import type { PlausibleChangeRequestState } from '../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { ChangeRequestRequestedApprovers } from './ChangeRequestRequestedApprovers/ChangeRequestRequestedApprovers.tsx';
+import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon.tsx';
 
 const breakpoint = 'md';
 
@@ -522,11 +522,7 @@ export const ChangeRequestOverview: FC = () => {
                                 <StyledApplyInnerContainer>
                                     <StyledOuterContainer>
                                         <StyledButtonContainer>
-                                            <ApprovedIcon
-                                                style={{
-                                                    transform: `scale(1.5)`,
-                                                }}
-                                            />
+                                            <ChangeRequestIcon />
                                         </StyledButtonContainer>
                                         <StyledBox>
                                             <StyledTypography>

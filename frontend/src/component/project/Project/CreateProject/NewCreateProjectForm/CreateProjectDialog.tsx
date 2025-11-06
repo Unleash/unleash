@@ -1,5 +1,4 @@
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ReactComponent as ChangeRequestIcon } from 'assets/icons/merge.svg';
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import StickinessIcon from '@mui/icons-material/FormatPaint';
 import ProjectModeIcon from '@mui/icons-material/Adjust';
@@ -27,6 +26,7 @@ import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton.tsx';
 import { StyledDefinitionList } from './CreateProjectDialog.styles';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon.tsx';
 
 interface ICreateProjectDialogProps {
     open: boolean;

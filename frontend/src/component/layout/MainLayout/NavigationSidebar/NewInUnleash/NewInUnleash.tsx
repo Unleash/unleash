@@ -1,4 +1,3 @@
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import {
@@ -103,7 +102,7 @@ export const NewInUnleash = ({
     );
     const {
         isEnterprise,
-        uiConfig: { version },
+        uiConfig: { version, flags },
     } = useUiConfig();
 
     const shouldBeDisplayed = ({
@@ -115,7 +114,8 @@ export const NewInUnleash = ({
             return false;
         }
 
-        if (flag && !useUiFlag(flag)) {
+        // flag is enable check stolen from useUiFlag hook
+        if (flag && !(flags?.[flag] || false)) {
             return false;
         }
 

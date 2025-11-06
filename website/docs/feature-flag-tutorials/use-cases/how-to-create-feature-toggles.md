@@ -21,7 +21,7 @@ To create a feature flag in the Admin UI, do the following:
 [Activation strategies](/reference/activation-strategies) determine how and for whom a feature flag is enabled within a specific environment (for example, development, or production). To add an activation strategy to your feature flag in the Admin UI, do the following:
 
 1. Go to a feature flag, and select the [environment](/reference/environments) where you want to configure the flag.
-2. Click **Add strategy** for that environment.
+2. Click **Add strategy**, select **Gradual rollout**, and click **Configure**.
 3. In the **General** tab, select your rollout percentage. Optionally, you can set the strategy status to **Inactive** if you don't yet want the strategy to be exposed.
 4. Click **Save strategy**.
 

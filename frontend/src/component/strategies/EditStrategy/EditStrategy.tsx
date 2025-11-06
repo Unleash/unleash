@@ -78,7 +78,7 @@ export const EditStrategy = () => {
             title='Edit strategy type'
             description="The strategy type and the parameters will be selectable when adding an activation strategy to a toggle in the environments.
             The parameter defines the type of activation strategy. E.g. you can create a type 'Teams' and add a parameter 'List'. Then it's easy to add team names to the activation strategy"
-            documentationLink='https://docs.getunleash.io/reference/custom-activation-strategies'
+            documentationLink='https://docs.getunleash.io/reference/activation-strategies#custom-strategies'
             documentationLinkLabel='Custom strategies documentation'
             formatApiCode={formatApiCode}
         >

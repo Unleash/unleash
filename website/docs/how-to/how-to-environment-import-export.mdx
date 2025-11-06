@@ -35,7 +35,7 @@ For additional global configuration, you can import and export:
 - [Feature flag tag types](/reference/feature-toggles#tags)
 
 Not included in the export:
-- [Segments](/reference/segments) and [custom strategies](/reference/custom-activation-strategies): Only references are included in the export. If an import file contains references that don't exist in the target, the import process will stop. You must create the segments or custom strategies manually in the target instance before running the import again.
+- [Segments](/reference/segments) and [custom strategies](/reference/activation-strategies#custom-strategies): Only references are included in the export. If an import file contains references that don't exist in the target, the import process will stop. You must create the segments or custom strategies manually in the target instance before running the import again.
 - [Release plans](/reference/release-templates): You must manually recreate any release plans for imported feature flags.
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/Bs73l2fZxJ4"]}/>
@@ -136,7 +136,7 @@ Unleash enforces the following validation rules during import:
   [Parent features](/reference/feature-toggles#feature-flag-dependencies) must already exist in the target instance or be included in the import file.
 
 - **Custom strategies:**
-  If your import contains [custom strategies](/reference/activation-strategies#custom-activation-strategies), then custom strategies with the same names must already exist in the target Unleash instance. Note that Unleash doesn't verify that the [configuration parameters](/reference/custom-activation-strategies#parameters) of the strategies match.
+  If your import contains [custom strategies](/reference/activation-strategies#custom-strategies), then custom strategies with the same names must already exist in the target Unleash instance. Note that Unleash doesn't verify that the [configuration parameters](/reference/activation-strategies#parameters) of the strategies match.
 
 - **Existing features in other projects:**
   If a feature exists in a different project on the target instance, the import is rejected.

@@ -22,7 +22,7 @@ export const applicationSchema = {
         },
         strategies: {
             description:
-                'Which [strategies](https://docs.getunleash.io/topics/the-anatomy-of-unleash#activation-strategies) the application has loaded. Useful when trying to figure out if your [custom strategy](https://docs.getunleash.io/reference/custom-activation-strategies) has been loaded in the SDK',
+                'Which [strategies](https://docs.getunleash.io/topics/the-anatomy-of-unleash#activation-strategies) the application has loaded. Useful when trying to figure out if your [custom strategy](https://docs.getunleash.io/reference/activation-strategies#custom-strategies) has been loaded in the SDK',
             type: 'array',
             items: {
                 type: 'string',

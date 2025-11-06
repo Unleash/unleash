@@ -25,7 +25,7 @@ exports[`should render DrawerMenu 1`] = `
             Unleash
              
              
-            5.x
+            7.3.0
           </h2>
           <br />
           <small>
@@ -551,7 +551,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
             Unleash
              
              
-            5.x
+            7.3.0
           </h2>
           <br />
           <small>

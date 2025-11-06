@@ -3,7 +3,6 @@ import {
     Button,
     styled,
     Alert,
-    Link,
     Tab,
     Tabs,
     Typography,
@@ -14,7 +13,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import type { ISegment } from 'interfaces/segment';
 import { useEffect, useState } from 'react';
-import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
+import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useFormErrors } from 'hooks/useFormErrors';
 import produce from 'immer';
@@ -64,15 +63,6 @@ const StyledTitle = styled('h1')(({ theme }) => ({
     alignItems: 'center',
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
-}));
-
-const StyledAlertBox = styled(Box)(({ theme }) => ({
-    paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(6),
-    '& > *': {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-    },
 }));
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -245,27 +235,6 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                     )}
                 </StyledTitle>
             </StyledHeaderBox>
-            {!BuiltInStrategies.includes(
-                strategy.strategyName || 'default',
-            ) && (
-                <StyledAlertBox>
-                    <Alert severity='warning'>
-                        Custom strategies are deprecated. We recommend not
-                        adding them to any templates going forward and using the
-                        predefined strategies like Gradual rollout with{' '}
-                        <Link
-                            href={
-                                'https://docs.getunleash.io/reference/activation-strategies#constraints'
-                            }
-                            target='_blank'
-                            variant='body2'
-                        >
-                            constraints
-                        </Link>{' '}
-                        instead.
-                    </Alert>
-                </StyledAlertBox>
-            )}
             <StyledTabs value={activeTab} onChange={handleChange}>
                 <StyledTab label='General' />
                 <Tab

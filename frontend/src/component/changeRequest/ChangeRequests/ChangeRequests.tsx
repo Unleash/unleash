@@ -85,6 +85,7 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
                 header: 'Title',
                 meta: { width: '35%' },
                 cell: GlobalChangeRequestTitleCell,
+                enableSorting: false,
             }),
             columnHelper.accessor('features', {
                 header: 'Updated feature flags',
@@ -117,11 +118,13 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
             columnHelper.accessor('createdAt', {
                 header: 'Submitted',
                 meta: { width: '5%' },
+                enableSorting: false,
                 cell: ({ getValue }) => <TimeAgoCell value={getValue()} />,
             }),
             columnHelper.accessor('environment', {
                 header: 'Environment',
                 meta: { width: '10%' },
+                enableSorting: false,
                 cell: ({ getValue }) => (
                     <HighlightCell maxTitleLines={1} value={getValue()} />
                 ),
@@ -129,6 +132,7 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
             columnHelper.accessor('state', {
                 header: 'Status',
                 meta: { width: '10%' },
+                enableSorting: false,
                 cell: ({ getValue, row }) => (
                     <ChangeRequestStatusCell value={getValue()} row={row} />
                 ),

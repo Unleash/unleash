@@ -111,7 +111,7 @@ export const NewInUnleash = ({
         flag,
         versionLowerThan,
     }: NewInUnleashItemDetails['filter']) => {
-        if (enterpriseOnly && !isEnterprise) {
+        if (enterpriseOnly && !isEnterprise()) {
             return false;
         }
 

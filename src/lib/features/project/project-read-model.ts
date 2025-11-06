@@ -7,9 +7,9 @@ import type {
     ProjectForUi,
 } from './project-read-model-type.js';
 import type { IProjectQuery, IProjectsQuery } from './project-store-type.js';
+import type { IProjectMembersCount } from './project-store.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import type EventEmitter from 'events';
-import type { IProjectMembersCount } from './project-store.js';
 import Raw = Knex.Raw;
 
 const TABLE = 'projects';
@@ -80,7 +80,162 @@ export class ProjectReadModel implements IProjectReadModel {
         return { project: result.project, createdAt: result.created_at };
     }
 
+    private getMemberCountsCte() {
+        return (qb) => {
+            qb.select('project')
+                .select(this.db.raw('count(user_id) as count'))
+                .from((db) => {
+                    db.select('user_id', 'project')
+                        .from('role_user')
+                        .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                        .where((builder) => builder.whereNot('type', 'root'))
+                        .union((queryBuilder) => {
+                            queryBuilder
+                                .select('user_id', 'project')
+                                .from('group_role')
+                                .leftJoin(
+                                    'group_user',
+                                    'group_user.group_id',
+                                    'group_role.group_id',
+                                );
+                        })
+                        .as('query');
+                })
+                .groupBy('project');
+        };
+    }
+
+    private async getMembersCount(): Promise<IProjectMembersCount[]> {
+        const memberTimer = this.timer('getMembersCount');
+        const members = await this.db
+            .select('project')
+            .from((db) => {
+                db.select('user_id', 'project')
+                    .from('role_user')
+                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                    .where((builder) => builder.whereNot('type', 'root'))
+                    .union((queryBuilder) => {
+                        queryBuilder
+                            .select('user_id', 'project')
+                            .from('group_role')
+                            .leftJoin(
+                                'group_user',
+                                'group_user.group_id',
+                                'group_role.group_id',
+                            );
+                    })
+                    .as('query');
+            })
+            .groupBy('project')
+            .count('user_id');
+
+        memberTimer();
+        return members;
+    }
+
     async getProjectsForAdminUi(
+        query?: IProjectQuery & IProjectsQuery,
+        userId?: number,
+    ): Promise<ProjectForUi[]> {
+        if (this.flagResolver.isEnabled('projectJoinedQueries')) {
+            return this.getProjectsForAdminUiWithJoinedQuery(query, userId);
+        } else {
+            return this.getProjectsForAdminUiWithSeparateQuery(query, userId);
+        }
+    }
+
+    private async getProjectsForAdminUiWithJoinedQuery(
+        query?: IProjectQuery & IProjectsQuery,
+        userId?: number,
+    ): Promise<ProjectForUi[]> {
+        const projectTimer = this.timer('getProjectsForAdminUi');
+        let projects = this.db
+            .with('latest_events', (qb) => {
+                qb.select('project', 'feature_name')
+                    .max('created_at as last_updated')
+                    .whereNotNull('feature_name')
+                    .from('events')
+                    .groupBy('project', 'feature_name');
+            })
+            .with('member_counts', this.getMemberCountsCte())
+            .leftJoin('features', 'features.project', 'projects.id')
+            .leftJoin(
+                'last_seen_at_metrics',
+                'features.name',
+                'last_seen_at_metrics.feature_name',
+            )
+            .leftJoin(
+                'project_settings',
+                'project_settings.project',
+                'projects.id',
+            )
+            .leftJoin('latest_events', (join) => {
+                join.on(
+                    'latest_events.feature_name',
+                    '=',
+                    'features.name',
+                ).andOn('latest_events.project', '=', 'projects.id');
+            })
+            .leftJoin('member_counts', 'member_counts.project', 'projects.id')
+            .from(TABLE)
+            .orderBy('projects.name', 'asc');
+
+        if (query?.archived === true) {
+            projects = projects.whereNot(`${TABLE}.archived_at`, null);
+        } else {
+            projects = projects.where(`${TABLE}.archived_at`, null);
+        }
+
+        if (query?.id) {
+            projects = projects.where(`${TABLE}.id`, query.id);
+        }
+        if (query?.ids) {
+            projects = projects.whereIn(`${TABLE}.id`, query.ids);
+        }
+
+        let selectColumns = [
+            this.db.raw(
+                'projects.id, projects.name, projects.description, projects.health, projects.created_at, ' +
+                    'count(DISTINCT features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
+                    'MAX(last_seen_at_metrics.last_seen_at) AS last_usage, ' +
+                    'MAX(latest_events.last_updated) AS last_updated, ' +
+                    'COALESCE(member_counts.count, 0) AS number_of_users',
+            ),
+            'project_settings.project_mode',
+            'projects.archived_at',
+        ] as (string | Raw<any>)[];
+
+        let groupByColumns = ['projects.id', 'project_settings.project_mode', 'member_counts.count'];
+
+        if (userId) {
+            projects = projects.leftJoin(`favorite_projects`, function () {
+                this.on('favorite_projects.project', 'projects.id').andOnVal(
+                    'favorite_projects.user_id',
+                    '=',
+                    userId,
+                );
+            });
+            selectColumns = [
+                ...selectColumns,
+                this.db.raw(
+                    'favorite_projects.project is not null as favorite',
+                ),
+            ];
+            groupByColumns = [...groupByColumns, 'favorite_projects.project'];
+        }
+
+        const projectAndFeatureCount = await projects
+            .select(selectColumns)
+            .groupBy(groupByColumns);
+
+        const projectsWithFeatureCount =
+            projectAndFeatureCount.map(mapProjectForUi);
+        projectTimer();
+
+        return projectsWithFeatureCount;
+    }
+
+    private async getProjectsForAdminUiWithSeparateQuery(
         query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
@@ -181,6 +336,67 @@ export class ProjectReadModel implements IProjectReadModel {
     async getProjectsForInsights(
         query?: IProjectQuery,
     ): Promise<ProjectForInsights[]> {
+        if (this.flagResolver.isEnabled('projectJoinedQueries')) {
+            return this.getProjectsForInsightsWithJoinedQuery(query);
+        } else {
+            return this.getProjectsForInsightsWithSeparateQuery(query);
+        }
+    }
+
+    private async getProjectsForInsightsWithJoinedQuery(
+        query?: IProjectQuery,
+    ): Promise<ProjectForInsights[]> {
+        const projectTimer = this.timer('getProjectsForInsights');
+        let projects = this.db(TABLE)
+            .with('member_counts', this.getMemberCountsCte())
+            .leftJoin('features', 'features.project', 'projects.id')
+            .leftJoin('project_stats', 'project_stats.project', 'projects.id')
+            .leftJoin('member_counts', 'member_counts.project', 'projects.id')
+            .orderBy('projects.name', 'asc');
+
+        if (query?.archived === true) {
+            projects = projects.whereNot(`${TABLE}.archived_at`, null);
+        } else {
+            projects = projects.where(`${TABLE}.archived_at`, null);
+        }
+
+        if (query?.id) {
+            projects = projects.where(`${TABLE}.id`, query.id);
+        }
+
+        const selectColumns = [
+            this.db.raw(
+                'projects.id, projects.health, ' +
+                    'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
+                    'count(features.name) FILTER (WHERE features.archived_at is null and features.stale IS TRUE) AS stale_feature_count, ' +
+                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE and features.stale IS FALSE) AS potentially_stale_feature_count, ' +
+                    'COALESCE(member_counts.count, 0) AS number_of_users',
+            ),
+            'project_stats.avg_time_to_prod_current_window',
+            'projects.archived_at',
+        ] as (string | Raw<any>)[];
+
+        const groupByColumns = [
+            'projects.id',
+            'project_stats.avg_time_to_prod_current_window',
+            'member_counts.count',
+        ];
+
+        const projectAndFeatureCount = await projects
+            .select(selectColumns)
+            .groupBy(groupByColumns);
+
+        const projectsWithFeatureCount = projectAndFeatureCount.map(
+            mapProjectForInsights,
+        );
+        projectTimer();
+
+        return projectsWithFeatureCount;
+    }
+
+    private async getProjectsForInsightsWithSeparateQuery(
+        query?: IProjectQuery,
+    ): Promise<ProjectForInsights[]> {
         const projectTimer = this.timer('getProjectsForInsights');
         let projects = this.db(TABLE)
             .leftJoin('features', 'features.project', 'projects.id')
@@ -235,33 +451,6 @@ export class ProjectReadModel implements IProjectReadModel {
         });
     }
 
-    private async getMembersCount(): Promise<IProjectMembersCount[]> {
-        const memberTimer = this.timer('getMembersCount');
-        const members = await this.db
-            .select('project')
-            .from((db) => {
-                db.select('user_id', 'project')
-                    .from('role_user')
-                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .where((builder) => builder.whereNot('type', 'root'))
-                    .union((queryBuilder) => {
-                        queryBuilder
-                            .select('user_id', 'project')
-                            .from('group_role')
-                            .leftJoin(
-                                'group_user',
-                                'group_user.group_id',
-                                'group_role.group_id',
-                            );
-                    })
-                    .as('query');
-            })
-            .groupBy('project')
-            .count('user_id');
-
-        memberTimer();
-        return members;
-    }
 
     async getProjectsByUser(userId: number): Promise<string[]> {
         const projects = await this.db

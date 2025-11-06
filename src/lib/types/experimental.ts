@@ -62,6 +62,7 @@ export type IFlagKey =
     | 'milestoneProgression'
     | 'featureReleasePlans'
     | 'plausibleMetrics'
+    | 'projectJoinedQueries'
     | 'safeguards';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -281,6 +282,10 @@ const flags: IFlags = {
     ),
     plausibleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
+        false,
+    ),
+    projectJoinedQueries: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_JOINED_QUERIES,
         false,
     ),
     safeguards: parseEnvVarBoolean(

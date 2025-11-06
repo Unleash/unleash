@@ -13,5 +13,6 @@ export const comparisonModerator = (
         'no',
         'lifecycle',
         'collaborators',
+        'releasePlans',
     );
 };

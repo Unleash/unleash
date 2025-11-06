@@ -109,6 +109,17 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
+    "component": [Function],
+    "enterprise": true,
+    "flag": "globalChangeRequestList",
+    "menu": {
+      "primary": true,
+    },
+    "path": "/change-requests",
+    "title": "Change Requests",
+    "type": "protected",
+  },
+  {
     "component": {
       "$$typeof": Symbol(react.lazy),
       "_init": [Function],

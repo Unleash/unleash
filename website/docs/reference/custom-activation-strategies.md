@@ -6,6 +6,12 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 <SearchPriority level="medium" />
 
+:::warning
+
+Custom strategies are deprecated and may be removed in a future major version. We recommend not using custom strategies going forward and instead using the gradual rollout strategy with constraints.
+If you have a use case you can't solve without using custom strategies, please reach out to us.
+:::
+
 **Custom activation strategies** let you define your own activation strategies to use with Unleash. When the [built-in activation strategies](../reference/activation-strategies.md) aren't enough, custom activation strategies are there to provide you with the flexibility you need.
 
 Custom activation strategies work exactly like the built-in activation strategies when working in the admin UI.

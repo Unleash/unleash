@@ -7,7 +7,7 @@ exports.up = function (db, cb) {
             id TEXT PRIMARY KEY,
             impact_metric_id TEXT NOT NULL REFERENCES impact_metrics (id) ON DELETE CASCADE,
             action JSONB NOT NULL,
-            config JSONB NOT NULL
+            trigger_condition JSONB NOT NULL
         );
         `,
         cb,
@@ -22,4 +22,3 @@ exports.down = function (db, cb) {
         cb,
     );
 };
-

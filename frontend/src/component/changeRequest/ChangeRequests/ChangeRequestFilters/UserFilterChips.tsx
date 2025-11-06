@@ -66,7 +66,7 @@ export const UserFilterChips: FC<UserFilterChipsProps> = ({
     return (
         <StyledContainer>
             <StyledChip
-                label={'Created'}
+                label={'Created by me'}
                 data-selected={activeUserFilter === 'created'}
                 onClick={handleUserFilterChange('created')}
                 title={'Show change requests created by you'}

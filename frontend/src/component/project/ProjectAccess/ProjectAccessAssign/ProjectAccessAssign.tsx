@@ -4,6 +4,7 @@ import {
     Button,
     capitalize,
     Checkbox,
+    Chip,
     styled,
     TextField,
     Tooltip,
@@ -85,6 +86,18 @@ const StyledUserOption = styled('div')(({ theme }) => ({
         color: theme.palette.text.secondary,
     },
 }));
+
+const getOptionLabel = (option: IAccessOption) => {
+    if (
+        option.type === ENTITY_TYPE.USER ||
+        option.type === ENTITY_TYPE.SERVICE_ACCOUNT
+    ) {
+        const optionUser = option.entity as IUser;
+        return optionUser.email || optionUser.name || optionUser.username || '';
+    } else {
+        return option.entity.name;
+    }
+};
 
 interface IAccessOption {
     id: number;
@@ -272,7 +285,7 @@ export const ProjectAccessAssign = ({
     };
 
     const renderOption = (
-        props: React.HTMLAttributes<HTMLLIElement>,
+        { key, ...props }: React.HTMLAttributes<HTMLLIElement> & { key?: any },
         option: IAccessOption,
         selected: boolean,
     ) => {
@@ -283,9 +296,9 @@ export const ProjectAccessAssign = ({
             optionUser = option.entity as IUser;
         }
         return (
-            <Tooltip title={createRootGroupWarning(optionGroup)}>
-                <span>
-                    <li {...props}>
+            <li key={key} {...props}>
+                <Tooltip title={createRootGroupWarning(optionGroup)}>
+                    <>
                         <Checkbox
                             icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
                             checkedIcon={<CheckBoxIcon fontSize='small' />}
@@ -319,9 +332,9 @@ export const ProjectAccessAssign = ({
                                 </StyledUserOption>
                             }
                         />
-                    </li>
-                </span>
-            </Tooltip>
+                    </>
+                </Tooltip>
+            </li>
         );
     };
 
@@ -339,6 +352,8 @@ export const ProjectAccessAssign = ({
             userRoles.some((userrole) => role.id === userrole.id),
         );
     }
+
+    const autocompleteSize = 'small';
 
     return (
         <SidebarModal
@@ -365,7 +380,7 @@ export const ProjectAccessAssign = ({
                         <StyledAutocompleteWrapper>
                             <AutocompleteVirtual
                                 data-testid={PA_USERS_GROUPS_ID}
-                                size='small'
+                                size={autocompleteSize}
                                 multiple
                                 openOnFocus
                                 limitTags={10}
@@ -396,24 +411,19 @@ export const ProjectAccessAssign = ({
                                 renderOption={(props, option, { selected }) =>
                                     renderOption(props, option, selected)
                                 }
-                                getOptionLabel={(option: IAccessOption) => {
-                                    if (
-                                        option.type === ENTITY_TYPE.USER ||
-                                        option.type ===
-                                            ENTITY_TYPE.SERVICE_ACCOUNT
-                                    ) {
-                                        const optionUser =
-                                            option.entity as IUser;
+                                getOptionLabel={getOptionLabel}
+                                renderTags={(tagValue, getTagProps) =>
+                                    tagValue.map((option, index) => {
                                         return (
-                                            optionUser.email ||
-                                            optionUser.name ||
-                                            optionUser.username ||
-                                            ''
+                                            <Chip
+                                                {...getTagProps({ index })}
+                                                size={autocompleteSize}
+                                                key={`${option.type}:${option.id}`}
+                                                label={getOptionLabel(option)}
+                                            />
                                         );
-                                    } else {
-                                        return option.entity.name;
-                                    }
-                                }}
+                                    })
+                                }
                                 filterOptions={(options, { inputValue }) =>
                                     options.filter((option: IAccessOption) => {
                                         if (

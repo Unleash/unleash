@@ -80,34 +80,6 @@ export class ProjectReadModel implements IProjectReadModel {
         return { project: result.project, createdAt: result.created_at };
     }
 
-    private async getMembersCount(): Promise<IProjectMembersCount[]> {
-        const memberTimer = this.timer('getMembersCount');
-        const members = await this.db
-            .select('project')
-            .from((db) => {
-                db.select('user_id', 'project')
-                    .from('role_user')
-                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .where((builder) => builder.whereNot('type', 'root'))
-                    .union((queryBuilder) => {
-                        queryBuilder
-                            .select('user_id', 'project')
-                            .from('group_role')
-                            .leftJoin(
-                                'group_user',
-                                'group_user.group_id',
-                                'group_role.group_id',
-                            );
-                    })
-                    .as('query');
-            })
-            .groupBy('project')
-            .count('user_id');
-
-        memberTimer();
-        return members;
-    }
-
     async getProjectsForAdminUi(
         query?: IProjectQuery & IProjectsQuery,
         userId?: number,
@@ -463,6 +435,34 @@ export class ProjectReadModel implements IProjectReadModel {
                 memberCount: memberMap.get(projectWithCount.id) || 0,
             };
         });
+    }
+
+    private async getMembersCount(): Promise<IProjectMembersCount[]> {
+        const memberTimer = this.timer('getMembersCount');
+        const members = await this.db
+            .select('project')
+            .from((db) => {
+                db.select('user_id', 'project')
+                    .from('role_user')
+                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                    .where((builder) => builder.whereNot('type', 'root'))
+                    .union((queryBuilder) => {
+                        queryBuilder
+                            .select('user_id', 'project')
+                            .from('group_role')
+                            .leftJoin(
+                                'group_user',
+                                'group_user.group_id',
+                                'group_role.group_id',
+                            );
+                    })
+                    .as('query');
+            })
+            .groupBy('project')
+            .count('user_id');
+
+        memberTimer();
+        return members;
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {

@@ -32,6 +32,18 @@ Unleash currently also works with PostgreSQL v14.0+, but this might change in a 
 
 ### Create a local unleash databases in postgres {#create-a-local-unleash-databases-in-postgres}
 
+Start the ready-to-use Postgres container (first run builds a small image that
+executes the required SQL automatically):
+
+```bash
+$ docker compose -f docker-compose.postgres.yml up -d
+```
+
+The container exposes Postgres on `localhost:5432` with the expected role and
+databases already created. Stop it with `docker compose -f docker-compose.postgres.yml down`.
+
+If you prefer to run the SQL manually outside of Docker, you can execute:
+
 ```bash
 $ psql postgres <<SQL
 CREATE USER unleash_user WITH PASSWORD 'password';

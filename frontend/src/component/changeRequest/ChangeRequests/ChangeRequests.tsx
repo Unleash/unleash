@@ -82,13 +82,11 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
     const columns = useMemo(
         () => [
             columnHelper.accessor('id', {
-                id: 'Title',
                 header: 'Title',
                 meta: { width: '35%' },
                 cell: GlobalChangeRequestTitleCell,
             }),
             columnHelper.accessor('features', {
-                id: 'Updated feature flags',
                 header: 'Updated feature flags',
                 enableSorting: false,
                 cell: ({
@@ -111,20 +109,17 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
                 },
             }),
             columnHelper.accessor('createdBy', {
-                id: 'By',
-                header: 'By',
+                header: 'Created by',
                 meta: { width: '10%' },
                 enableSorting: false,
                 cell: ({ getValue }) => <AvatarCell value={getValue()} />,
             }),
             columnHelper.accessor('createdAt', {
-                id: 'Submitted',
                 header: 'Submitted',
                 meta: { width: '5%' },
                 cell: ({ getValue }) => <TimeAgoCell value={getValue()} />,
             }),
             columnHelper.accessor('environment', {
-                id: 'Environment',
                 header: 'Environment',
                 meta: { width: '10%' },
                 cell: ({ getValue }) => (
@@ -132,7 +127,6 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
                 ),
             }),
             columnHelper.accessor('state', {
-                id: 'Status',
                 header: 'Status',
                 meta: { width: '10%' },
                 cell: ({ getValue, row }) => (

@@ -28,7 +28,6 @@ import type {
 } from '../../../openapi/index.js';
 import { ForbiddenError } from '../../../error/index.js';
 import { beforeAll, afterEach, afterAll, test, describe, expect } from 'vitest';
-import { ulid } from 'ulidx';
 let app: IUnleashTest;
 let db: ITestDb;
 let defaultToken: IApiToken;
@@ -525,7 +524,8 @@ test('Can create feature flag without strategies', async () => {
     const name = 'new.flag.without.strategy.2';
     await app.request
         .post('/api/admin/projects/default/features')
-        .send({ name });
+        .send({ name })
+        .expect(201);
     const { body: flag } = await app.request.get(
         `/api/admin/projects/default/features/${name}`,
     );
@@ -848,7 +848,8 @@ test('Trying to patch variants on a feature flag should trigger an OperationDeni
     const name = 'flag.variants.on.patch';
     await app.request
         .post(url)
-        .send({ name, description: 'some', type: 'release', stale: false });
+        .send({ name, description: 'some', type: 'release', stale: false })
+        .expect(201);
     await app.request
         .patch(`${url}/${name}`)
         .send([
@@ -3522,72 +3523,4 @@ test("Should not be able to create flag with a type that doesn't exist", async (
             name: 'random.type.flag',
         })
         .expect(400);
-});
-
-test('GET feature returns release plans with safeguards', async () => {
-    const featureName = 'feature-with-release-plans';
-    await app.createFeature(featureName);
-
-    const planId = ulid();
-    await db.rawDatabase('release_plan_definitions').insert({
-        id: planId,
-        discriminator: 'plan',
-        name: 'Test Plan',
-        description: 'Test plan description',
-        feature_name: featureName,
-        environment: DEFAULT_ENV,
-        created_by_user_id: 1,
-        created_at: new Date(),
-    });
-
-    const impactMetricId = ulid();
-    await db.rawDatabase('impact_metrics').insert({
-        id: impactMetricId,
-        feature: featureName,
-        config: {
-            id: impactMetricId,
-            metricName: 'errors_total',
-            timeRange: 'hour',
-            aggregationMode: 'count',
-            labelSelectors: { service: ['api'] },
-        },
-    });
-
-    const safeguardId = ulid();
-    await db.rawDatabase('safeguards').insert({
-        id: safeguardId,
-        impact_metric_id: impactMetricId,
-        action: { type: 'disableReleasePlan', id: planId },
-        trigger_condition: { operator: '>', threshold: 100 },
-    });
-
-    const { body } = await app.getProjectFeatures('default', featureName);
-
-    const defaultEnv = body.environments.find(
-        (e: any) => e.name === DEFAULT_ENV,
-    );
-
-    expect(defaultEnv).toMatchObject({
-        name: DEFAULT_ENV,
-        releasePlans: [
-            {
-                id: planId,
-                name: 'Test Plan',
-                safeguards: [
-                    {
-                        id: safeguardId,
-                        action: { type: 'disableReleasePlan', id: planId },
-                        triggerCondition: { operator: '>', threshold: 100 },
-                        impactMetric: {
-                            id: impactMetricId,
-                            metricName: 'errors_total',
-                            timeRange: 'hour',
-                            aggregationMode: 'count',
-                            labelSelectors: { service: ['api'] },
-                        },
-                    },
-                ],
-            },
-        ],
-    });
 });

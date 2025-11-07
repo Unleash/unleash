@@ -33,9 +33,14 @@ const selectColumns = [
     'mss.segment_id AS segmentId',
     // Safeguards
     'sg.id AS safeguardId',
-    'sg.impact_metric_id AS safeguardImpactMetricId',
+    'im.id AS safeguardImpactMetricId',
     'sg.action AS safeguardAction',
     'sg.trigger_condition AS safeguardTriggerCondition',
+    // Impact metric (from im.config JSONB)
+    "im.config->>'metricName' AS safeguardImpactMetricMetricName",
+    "im.config->>'timeRange' AS safeguardImpactMetricTimeRange",
+    "im.config->>'aggregationMode' AS safeguardImpactMetricAggregationMode",
+    "im.config->'labelSelectors' AS safeguardImpactMetricLabelSelectors",
 ];
 
 const processReleasePlanRows = (templateRows): ReleasePlan[] =>
@@ -71,6 +76,11 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
                 safeguardImpactMetricId,
                 safeguardAction,
                 safeguardTriggerCondition,
+                safeguardImpactMetricId,
+                safeguardImpactMetricMetricName,
+                safeguardImpactMetricTimeRange,
+                safeguardImpactMetricAggregationMode,
+                safeguardImpactMetricLabelSelectors,
             },
         ) => {
             let plan = acc.find(({ id }) => id === planId);
@@ -102,9 +112,17 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
                         ...(plan.safeguards || []),
                         {
                             id: safeguardId,
-                            impactMetricId: safeguardImpactMetricId,
                             action: safeguardAction,
                             triggerCondition: safeguardTriggerCondition,
+                            impactMetric: {
+                                id: safeguardImpactMetricId,
+                                metricName: safeguardImpactMetricMetricName,
+                                timeRange: safeguardImpactMetricTimeRange,
+                                aggregationMode:
+                                    safeguardImpactMetricAggregationMode,
+                                labelSelectors:
+                                    safeguardImpactMetricLabelSelectors ?? {},
+                            },
                         },
                     ];
                 }
@@ -197,6 +215,7 @@ export class ReleasePlanReadModel implements IReleasePlanReadModel {
             .leftJoin(
                 this.db.raw("safeguards AS sg ON (sg.action->>'id') = rpd.id"),
             )
+            .leftJoin('impact_metrics AS im', 'im.id', 'sg.impact_metric_id')
             .leftJoin(
                 'milestones AS mi',
                 'mi.release_plan_definition_id',

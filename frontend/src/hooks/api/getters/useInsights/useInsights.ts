@@ -18,6 +18,13 @@ type InstanceInsightsWithLabels = InstanceInsightsSchema & {
     labels: { date: string; week: string }[];
 };
 
+// note: these could be generated on the API instead and returned as part of the
+// payload. However, that would require updating the API response, and would
+// make it harder to change if we need to. For the time being (Nov 7, 2025),
+// I'll leave them here.
+//
+// If you're working on something relating to this feature later, please
+// consider moving this to the API instead.
 const generateWeekLabels = (
     start: string,
     end: string,

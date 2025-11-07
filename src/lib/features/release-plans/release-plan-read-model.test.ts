@@ -239,7 +239,14 @@ test('returns release plans with safeguards joined by action.id', async () => {
     await db.rawDatabase('impact_metrics').insert({
         id: impactMetricId,
         feature: 'feat-with-sg',
-        config: { type: 'counter' },
+        config: {
+            id: impactMetricId,
+            metricName: 'errors_total',
+            timeRange: 'hour',
+            yAxisMin: 'auto',
+            aggregationMode: 'count',
+            labelSelectors: { service: ['api'] },
+        },
     });
 
     // Insert a safeguard referencing the plan via action.id
@@ -248,7 +255,7 @@ test('returns release plans with safeguards joined by action.id', async () => {
         id: safeguardId,
         impact_metric_id: impactMetricId,
         action: { type: 'disableReleasePlan', id: plan.id },
-        trigger_condition: { condition: 'always' },
+        trigger_condition: { operator: '>', threshold: 100 },
     });
 
     const releasePlans = await releasePlanReadModel.getReleasePlans(
@@ -262,9 +269,15 @@ test('returns release plans with safeguards joined by action.id', async () => {
     expect(p.safeguards).toEqual([
         {
             id: safeguardId,
-            impactMetricId: impactMetricId,
             action: { type: 'disableReleasePlan', id: plan.id },
-            triggerCondition: { condition: 'always' },
+            triggerCondition: { operator: '>', threshold: 100 },
+            impactMetric: {
+                id: impactMetricId,
+                metricName: 'errors_total',
+                timeRange: 'hour',
+                aggregationMode: 'count',
+                labelSelectors: { service: ['api'] },
+            },
         },
     ]);
 });

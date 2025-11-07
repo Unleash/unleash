@@ -1,6 +1,6 @@
 import { PayloadType, type Variant } from 'unleash-client';
 import { parseEnvVarBoolean } from '../util/index.js';
-import { getDefaultVariant } from 'unleash-client/lib/variant.js';
+import { defaultVariant } from 'unleash-client/lib/variant.js';
 import type { MetricFlagContext } from 'unleash-client/lib/impact-metrics/metric-types.js';
 import type { Context } from '../features/playground/feature-evaluator/index.js';
 
@@ -288,7 +288,7 @@ export const defaultExperimentalOptions: IExperimentalOptions = {
     flags,
     externalResolver: {
         isEnabled: (): boolean => false,
-        getVariant: () => getDefaultVariant(),
+        getVariant: () => defaultVariant,
         getStaticContext: () => ({}),
     },
 };

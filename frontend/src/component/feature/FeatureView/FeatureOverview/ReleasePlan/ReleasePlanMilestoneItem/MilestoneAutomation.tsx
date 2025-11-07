@@ -1,5 +1,4 @@
 import Add from '@mui/icons-material/Add';
-import { Button, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
@@ -8,33 +7,7 @@ import { MilestoneTransitionDisplay } from '../ReleasePlanMilestone/MilestoneTra
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { MilestoneProgressionForm } from '../MilestoneProgressionForm/MilestoneProgressionForm.tsx';
 import type { PendingProgressionChange } from './ReleasePlanMilestoneItem.tsx';
-
-const StyledAddAutomationButton = styled(Button)(({ theme }) => ({
-    textTransform: 'none',
-    fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.body2.fontSize,
-    padding: 0,
-    minWidth: 'auto',
-    gap: theme.spacing(1),
-    '&:hover': {
-        backgroundColor: 'transparent',
-    },
-    '& .MuiButton-startIcon': {
-        margin: 0,
-        width: 20,
-        height: 20,
-        border: `1px solid ${theme.palette.primary.main}`,
-        backgroundColor: theme.palette.background.elevation2,
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        '& svg': {
-            fontSize: 14,
-            color: theme.palette.primary.main,
-        },
-    },
-}));
+import { StyledActionButton } from './StyledActionButton.tsx';
 
 interface MilestoneAutomationProps {
     milestone: IReleasePlanMilestone;
@@ -112,13 +85,13 @@ export const MilestoneAutomation = ({
                     badge={badge}
                 />
             ) : (
-                <StyledAddAutomationButton
+                <StyledActionButton
                     onClick={onOpenProgressionForm}
                     color='primary'
                     startIcon={<Add />}
                 >
                     Add automation
-                </StyledAddAutomationButton>
+                </StyledActionButton>
             )}
         </MilestoneAutomationSection>
     );

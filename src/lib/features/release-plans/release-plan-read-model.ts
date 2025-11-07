@@ -194,7 +194,6 @@ export class ReleasePlanReadModel implements IReleasePlanReadModel {
             .where('rpd.discriminator', 'plan')
             .andWhere('rpd.feature_name', featureName)
             .whereIn('rpd.environment', environments)
-            // Join safeguards by JSONB action.id matching the plan id
             .leftJoin(
                 this.db.raw("safeguards AS sg ON (sg.action->>'id') = rpd.id"),
             )

@@ -28,6 +28,9 @@ import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgr
 import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestoneItem } from './ReleasePlanMilestoneItem/ReleasePlanMilestoneItem.tsx';
+import Add from '@mui/icons-material/Add';
+
+import { StyledActionButton } from './ReleasePlanMilestoneItem/StyledActionButton.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -69,9 +72,30 @@ const StyledHeaderDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledBody = styled('div')(({ theme }) => ({
+const StyledBody = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'safeguards',
+})<{ safeguards: boolean }>(({ theme, safeguards }) => ({
     display: 'flex',
     flexDirection: 'column',
+    ...(safeguards && {
+        border: `1px dashed ${theme.palette.neutral.border}`,
+        borderRadius: theme.shape.borderRadiusMedium,
+        padding: theme.spacing(0.5, 0),
+    }),
+}));
+
+const StyledAddSafeguard = styled('div')(({ theme }) => ({
+    display: 'flex',
+    borderBottom: `1px dashed ${theme.palette.neutral.border}`,
+    padding: theme.spacing(1.5, 2),
+}));
+
+const StyledMilestones = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'safeguards',
+})<{ safeguards: boolean }>(({ theme, safeguards }) => ({
+    ...(safeguards && {
+        padding: theme.spacing(1.5, 1.5),
+    }),
 }));
 
 interface IReleasePlanProps {
@@ -163,6 +187,7 @@ export const ReleasePlan = ({
         return null;
     };
     const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
+    const safeguardsEnabled = useUiFlag('safeguards');
     const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
         number | null
     >(null);
@@ -378,36 +403,49 @@ export const ReleasePlan = ({
                     </PermissionIconButton>
                 )}
             </StyledHeader>
-            <StyledBody>
-                {milestones.map((milestone, index) => (
-                    <ReleasePlanMilestoneItem
-                        key={milestone.id}
-                        milestone={milestone}
-                        index={index}
-                        milestones={milestones}
-                        activeMilestoneId={activeMilestoneId}
-                        activeIndex={activeIndex}
-                        environmentIsDisabled={environmentIsDisabled}
-                        readonly={readonly}
-                        milestoneProgressionsEnabled={
-                            milestoneProgressionsEnabled
-                        }
-                        progressionFormOpenIndex={progressionFormOpenIndex}
-                        onSetProgressionFormOpenIndex={
-                            setProgressionFormOpenIndex
-                        }
-                        onStartMilestone={onStartMilestone}
-                        onDeleteProgression={handleDeleteProgression}
-                        onAddToChangeRequest={handleAddToChangeRequest}
-                        getPendingProgressionChange={
-                            getPendingProgressionChange
-                        }
-                        projectId={projectId}
-                        environment={environment}
-                        featureName={featureName}
-                        onUpdate={refetch}
-                    />
-                ))}
+            <StyledBody safeguards={safeguardsEnabled}>
+                {safeguardsEnabled ? (
+                    <StyledAddSafeguard>
+                        <StyledActionButton
+                            onClick={() => {}}
+                            color='primary'
+                            startIcon={<Add />}
+                        >
+                            Add safeguard
+                        </StyledActionButton>
+                    </StyledAddSafeguard>
+                ) : null}
+                <StyledMilestones safeguards={safeguardsEnabled}>
+                    {milestones.map((milestone, index) => (
+                        <ReleasePlanMilestoneItem
+                            key={milestone.id}
+                            milestone={milestone}
+                            index={index}
+                            milestones={milestones}
+                            activeMilestoneId={activeMilestoneId}
+                            activeIndex={activeIndex}
+                            environmentIsDisabled={environmentIsDisabled}
+                            readonly={readonly}
+                            milestoneProgressionsEnabled={
+                                milestoneProgressionsEnabled
+                            }
+                            progressionFormOpenIndex={progressionFormOpenIndex}
+                            onSetProgressionFormOpenIndex={
+                                setProgressionFormOpenIndex
+                            }
+                            onStartMilestone={onStartMilestone}
+                            onDeleteProgression={handleDeleteProgression}
+                            onAddToChangeRequest={handleAddToChangeRequest}
+                            getPendingProgressionChange={
+                                getPendingProgressionChange
+                            }
+                            projectId={projectId}
+                            environment={environment}
+                            featureName={featureName}
+                            onUpdate={refetch}
+                        />
+                    ))}
+                </StyledMilestones>
             </StyledBody>
             <ReleasePlanRemoveDialog
                 plan={plan}

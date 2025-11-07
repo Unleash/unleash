@@ -147,11 +147,42 @@ export class ApiTokenStore implements IApiTokenStore {
 
     async getAllActive(): Promise<IApiToken[]> {
         const stopTimer = this.timer('getAllActive');
-        const rows = await this.makeTokenProjectQuery()
-            .where('expires_at', 'IS', null)
-            .orWhere('expires_at', '>', 'now()');
+        // Optimization: avoid joining token_project_link since the consumers
+        // of getAllActive (ApiTokenService cache) do not require project lists.
+        // Select only the necessary columns from api_tokens.
+        const rows = await this.db<ITokenRow>(`${TABLE} as tokens`)
+            .select(
+                'tokens.secret',
+                'username',
+                'token_name',
+                'type',
+                'expires_at',
+                'created_at',
+                'alias',
+                'seen_at',
+                'environment',
+            )
+            .whereNull('expires_at')
+            .orWhere('expires_at', '>', this.db.raw('now()'));
         stopTimer();
-        return toTokens(rows);
+
+        // Map rows directly to IApiToken without project aggregation.
+        return rows.map((token: any) => ({
+            secret: token.secret,
+            tokenName: token.token_name ? token.token_name : token.username,
+            // backend token type needs to be supported in Edge before being able to return them in the API
+            type: (token.type === ApiTokenType.BACKEND
+                ? ApiTokenType.CLIENT
+                : token.type
+            ).toLowerCase(),
+            project: ALL,
+            projects: [ALL],
+            environment: token.environment ? token.environment : ALL,
+            expiresAt: token.expires_at,
+            createdAt: token.created_at,
+            alias: token.alias,
+            seenAt: token.seen_at,
+        }));
     }
 
     private makeTokenProjectQuery() {

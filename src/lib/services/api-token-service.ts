@@ -114,7 +114,12 @@ export class ApiTokenService {
      */
     async fetchActiveTokens(): Promise<void> {
         try {
-            this.activeTokens = await this.store.getAllActive();
+            // Avoid duplicate fetches by memoizing if enabled
+            if (this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
+                // noop; rely on scheduler refreshing periodically
+            } else {
+                this.activeTokens = await this.store.getAllActive();
+            }
         } catch (e) {
             this.logger.warn('Failed to fetch active tokens', e);
         }

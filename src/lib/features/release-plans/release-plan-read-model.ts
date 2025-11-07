@@ -31,6 +31,11 @@ const selectColumns = [
     'ms.constraints AS strategyConstraints',
     'ms.variants AS strategyVariants',
     'mss.segment_id AS segmentId',
+    // Safeguards
+    'sg.id AS safeguardId',
+    'sg.impact_metric_id AS safeguardImpactMetricId',
+    'sg.action AS safeguardAction',
+    'sg.trigger_condition AS safeguardTriggerCondition',
 ];
 
 const processReleasePlanRows = (templateRows): ReleasePlan[] =>
@@ -62,6 +67,10 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
                 strategyConstraints,
                 strategyVariants,
                 segmentId,
+                safeguardId,
+                safeguardImpactMetricId,
+                safeguardAction,
+                safeguardTriggerCondition,
             },
         ) => {
             let plan = acc.find(({ id }) => id === planId);
@@ -78,9 +87,27 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
                     createdAt: planCreatedAt,
                     activeMilestoneId: planActiveMilestoneId,
                     releasePlanTemplateId: planTemplateId,
+                    safeguards: [],
                     milestones: [],
                 };
                 acc.push(plan);
+            }
+
+            if (safeguardId) {
+                const hasSafeguard = (plan.safeguards || []).some(
+                    (sg) => sg.id === safeguardId,
+                );
+                if (!hasSafeguard) {
+                    plan.safeguards = [
+                        ...(plan.safeguards || []),
+                        {
+                            id: safeguardId,
+                            impactMetricId: safeguardImpactMetricId,
+                            action: safeguardAction,
+                            triggerCondition: safeguardTriggerCondition,
+                        },
+                    ];
+                }
             }
 
             if (!milestoneId) {
@@ -167,6 +194,10 @@ export class ReleasePlanReadModel implements IReleasePlanReadModel {
             .where('rpd.discriminator', 'plan')
             .andWhere('rpd.feature_name', featureName)
             .whereIn('rpd.environment', environments)
+            // Join safeguards by JSONB action.id matching the plan id
+            .leftJoin(
+                this.db.raw("safeguards AS sg ON (sg.action->>'id') = rpd.id"),
+            )
             .leftJoin(
                 'milestones AS mi',
                 'mi.release_plan_definition_id',

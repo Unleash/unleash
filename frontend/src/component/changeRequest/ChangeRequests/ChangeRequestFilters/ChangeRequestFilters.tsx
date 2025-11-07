@@ -12,7 +12,7 @@ export const ChangeRequestFilters: FC<ChangeRequestFiltersProps> = ({
     ariaControlTarget,
 }) => {
     const updateTableState = (update: Partial<TableState>) => {
-        setTableState({ ...tableState, ...update, offset: 0 });
+        setTableState({ ...update, offset: 0 });
     };
 
     const StyledChip = makeStyledChip(ariaControlTarget);

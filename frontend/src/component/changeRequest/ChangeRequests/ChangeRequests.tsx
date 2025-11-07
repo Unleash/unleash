@@ -23,7 +23,7 @@ import { styles as themeStyles } from 'component/common';
 import { ChangeRequestFilters } from './ChangeRequestFilters/ChangeRequestFilters.js';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser.js';
 import type { IUser } from 'interfaces/user.js';
-import { stateConfig } from './ChangeRequests.types.js';
+import { stateConfig, type TableState } from './ChangeRequests.types.js';
 
 const columnHelper = createColumnHelper<ChangeRequestSearchItemSchema>();
 
@@ -57,7 +57,7 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
 
     const initialState = shouldApplyDefaults ? defaultTableState(user) : {};
 
-    const [tableState, setTableState] = useQueryParams(stateConfig, {
+    const [tableState, setTableStateRaw] = useQueryParams(stateConfig, {
         updateType: 'replaceIn',
     });
 
@@ -67,6 +67,13 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
               ...initialState,
           }
         : tableState;
+
+    const setTableState = (newState: Partial<TableState>) => {
+        setTableStateRaw({
+            ...effectiveTableState,
+            ...newState,
+        });
+    };
 
     const {
         changeRequests: data,

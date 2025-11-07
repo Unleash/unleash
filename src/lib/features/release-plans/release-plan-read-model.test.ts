@@ -167,6 +167,28 @@ test('should return release plans with complete milestone data', async () => {
         executedAt: executedAt,
     });
 
+    const impactMetricId = ulid();
+    await db.rawDatabase('impact_metrics').insert({
+        id: impactMetricId,
+        feature: 'test-feature',
+        config: {
+            id: impactMetricId,
+            metricName: 'errors_total',
+            timeRange: 'hour',
+            yAxisMin: 'auto',
+            aggregationMode: 'count',
+            labelSelectors: { service: ['api'] },
+        },
+    });
+
+    const safeguardId = ulid();
+    await db.rawDatabase('safeguards').insert({
+        id: safeguardId,
+        impact_metric_id: impactMetricId,
+        action: { type: 'disableReleasePlan', id: plan.id },
+        trigger_condition: { operator: '>', threshold: 100 },
+    });
+
     const releasePlans = await releasePlanReadModel.getReleasePlans(
         'test-feature',
         ['development'],
@@ -185,6 +207,20 @@ test('should return release plans with complete milestone data', async () => {
                 createdAt: expect.any(Date),
                 activeMilestoneId: milestone1.id,
                 releasePlanTemplateId: null,
+                safeguards: [
+                    {
+                        id: safeguardId,
+                        action: { type: 'disableReleasePlan', id: plan.id },
+                        triggerCondition: { operator: '>', threshold: 100 },
+                        impactMetric: {
+                            id: impactMetricId,
+                            metricName: 'errors_total',
+                            timeRange: 'hour',
+                            aggregationMode: 'count',
+                            labelSelectors: { service: ['api'] },
+                        },
+                    },
+                ],
                 milestones: [
                     {
                         id: milestone1.id,
@@ -213,71 +249,4 @@ test('should return release plans with complete milestone data', async () => {
             },
         ],
     });
-});
-
-test('returns release plans with safeguards joined by action.id', async () => {
-    await featureToggleStore.create('default', {
-        name: 'feat-with-sg',
-        createdByUserId: 1,
-    });
-    await featureEnvironmentStore.addEnvironmentToFeature(
-        'feat-with-sg',
-        'development',
-        true,
-    );
-
-    const plan = await createReleasePlan({
-        name: 'Plan with safeguard',
-        description: 'desc',
-        featureName: 'feat-with-sg',
-        environment: 'development',
-        createdByUserId: 1,
-    });
-
-    // Insert required impact metric
-    const impactMetricId = ulid();
-    await db.rawDatabase('impact_metrics').insert({
-        id: impactMetricId,
-        feature: 'feat-with-sg',
-        config: {
-            id: impactMetricId,
-            metricName: 'errors_total',
-            timeRange: 'hour',
-            yAxisMin: 'auto',
-            aggregationMode: 'count',
-            labelSelectors: { service: ['api'] },
-        },
-    });
-
-    // Insert a safeguard referencing the plan via action.id
-    const safeguardId = ulid();
-    await db.rawDatabase('safeguards').insert({
-        id: safeguardId,
-        impact_metric_id: impactMetricId,
-        action: { type: 'disableReleasePlan', id: plan.id },
-        trigger_condition: { operator: '>', threshold: 100 },
-    });
-
-    const releasePlans = await releasePlanReadModel.getReleasePlans(
-        'feat-with-sg',
-        ['development'],
-    );
-
-    expect(releasePlans.development).toHaveLength(1);
-    const [p] = releasePlans.development;
-    expect(p.id).toBe(plan.id);
-    expect(p.safeguards).toEqual([
-        {
-            id: safeguardId,
-            action: { type: 'disableReleasePlan', id: plan.id },
-            triggerCondition: { operator: '>', threshold: 100 },
-            impactMetric: {
-                id: impactMetricId,
-                metricName: 'errors_total',
-                timeRange: 'hour',
-                aggregationMode: 'count',
-                labelSelectors: { service: ['api'] },
-            },
-        },
-    ]);
 });

@@ -1220,10 +1220,24 @@ export class FeatureToggleService {
                 environmentNames,
             );
 
-        return environments.map((env) => ({
-            ...env,
-            releasePlans: releasePlansByEnvironment[env.name] || [],
-        }));
+        const safeguardsEnabled = this.flagResolver.isEnabled('safeguards');
+
+        return environments.map((env) => {
+            const releasePlans = (releasePlansByEnvironment[env.name] || []).map(
+                (plan) => {
+                    if (!safeguardsEnabled && plan.safeguards) {
+                        const { safeguards, ...planWithoutSafeguards } = plan;
+                        return planWithoutSafeguards;
+                    }
+                    return plan;
+                },
+            );
+
+            return {
+                ...env,
+                releasePlans,
+            };
+        });
     }
 
     async getVariantsForEnv(

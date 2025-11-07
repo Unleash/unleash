@@ -6,7 +6,7 @@ import type EventEmitter from 'events';
 
 const TABLE = 'release_plan_definitions';
 
-const selectColumns = [
+const baseSelectColumns = [
     'rpd.id AS planId',
     'rpd.discriminator AS planDiscriminator',
     'rpd.name AS planName',
@@ -31,16 +31,10 @@ const selectColumns = [
     'ms.constraints AS strategyConstraints',
     'ms.variants AS strategyVariants',
     'mss.segment_id AS segmentId',
-    // Safeguards
     'sg.id AS safeguardId',
     'im.id AS safeguardImpactMetricId',
     'sg.action AS safeguardAction',
     'sg.trigger_condition AS safeguardTriggerCondition',
-    // Impact metric (from im.config JSONB)
-    "im.config->>'metricName' AS safeguardImpactMetricMetricName",
-    "im.config->>'timeRange' AS safeguardImpactMetricTimeRange",
-    "im.config->>'aggregationMode' AS safeguardImpactMetricAggregationMode",
-    "im.config->'labelSelectors' AS safeguardImpactMetricLabelSelectors",
 ];
 
 const processReleasePlanRows = (templateRows): ReleasePlan[] =>
@@ -76,7 +70,6 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
                 safeguardImpactMetricId,
                 safeguardAction,
                 safeguardTriggerCondition,
-                safeguardImpactMetricId,
                 safeguardImpactMetricMetricName,
                 safeguardImpactMetricTimeRange,
                 safeguardImpactMetricAggregationMode,
@@ -198,6 +191,24 @@ export class ReleasePlanReadModel implements IReleasePlanReadModel {
             });
     }
 
+    private getSelectColumns() {
+        return [
+            ...baseSelectColumns,
+            this.db.raw(
+                `im.config->>'metricName' as "safeguardImpactMetricMetricName"`,
+            ),
+            this.db.raw(
+                `im.config->>'timeRange' as "safeguardImpactMetricTimeRange"`,
+            ),
+            this.db.raw(
+                `im.config->>'aggregationMode' as "safeguardImpactMetricAggregationMode"`,
+            ),
+            this.db.raw(
+                `im.config->'labelSelectors' as "safeguardImpactMetricLabelSelectors"`,
+            ),
+        ];
+    }
+
     async getReleasePlans(
         featureName: string,
         environments: string[],
@@ -235,7 +246,7 @@ export class ReleasePlanReadModel implements IReleasePlanReadModel {
             .orderBy('rpd.environment', 'asc')
             .orderBy('mi.sort_order', 'asc')
             .orderBy('ms.sort_order', 'asc')
-            .select(selectColumns);
+            .select(this.getSelectColumns());
 
         const allPlans = processReleasePlanRows(planRows);
 

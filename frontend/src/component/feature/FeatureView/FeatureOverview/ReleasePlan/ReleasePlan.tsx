@@ -72,12 +72,16 @@ const StyledHeaderDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledBody = styled('div')(({ theme }) => ({
+const StyledBody = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'safeguards',
+})<{ safeguards: boolean }>(({ theme, safeguards }) => ({
     display: 'flex',
     flexDirection: 'column',
-    border: `1px dashed ${theme.palette.neutral.border}`,
-    borderRadius: theme.shape.borderRadiusMedium,
-    padding: theme.spacing(0.5, 0),
+    ...(safeguards && {
+        border: `1px dashed ${theme.palette.neutral.border}`,
+        borderRadius: theme.shape.borderRadiusMedium,
+        padding: theme.spacing(0.5, 0),
+    }),
 }));
 
 const StyledAddSafeguard = styled('div')(({ theme }) => ({
@@ -86,8 +90,12 @@ const StyledAddSafeguard = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5, 2),
 }));
 
-const StyledMilestones = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1.5, 1.5),
+const StyledMilestones = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'safeguards',
+})<{ safeguards: boolean }>(({ theme, safeguards }) => ({
+    ...(safeguards && {
+        padding: theme.spacing(1.5, 1.5),
+    }),
 }));
 
 interface IReleasePlanProps {
@@ -395,7 +403,7 @@ export const ReleasePlan = ({
                     </PermissionIconButton>
                 )}
             </StyledHeader>
-            <StyledBody>
+            <StyledBody safeguards={safeguardsEnabled}>
                 {safeguardsEnabled ? (
                     <StyledAddSafeguard>
                         <StyledActionButton
@@ -407,7 +415,7 @@ export const ReleasePlan = ({
                         </StyledActionButton>
                     </StyledAddSafeguard>
                 ) : null}
-                <StyledMilestones>
+                <StyledMilestones safeguards={safeguardsEnabled}>
                     {milestones.map((milestone, index) => (
                         <ReleasePlanMilestoneItem
                             key={milestone.id}

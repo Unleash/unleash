@@ -23,7 +23,7 @@ import { styles as themeStyles } from 'component/common';
 import { ChangeRequestFilters } from './ChangeRequestFilters/ChangeRequestFilters.js';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser.js';
 import type { IUser } from 'interfaces/user.js';
-import { stateConfig } from './ChangeRequests.types.js';
+import { stateConfig, type TableState } from './ChangeRequests.types.js';
 
 const columnHelper = createColumnHelper<ChangeRequestSearchItemSchema>();
 
@@ -57,7 +57,7 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
 
     const initialState = shouldApplyDefaults ? defaultTableState(user) : {};
 
-    const [tableState, setTableState] = useQueryParams(stateConfig, {
+    const [tableState, setTableStateRaw] = useQueryParams(stateConfig, {
         updateType: 'replaceIn',
     });
 
@@ -67,6 +67,13 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
               ...initialState,
           }
         : tableState;
+
+    const setTableState = (newState: Partial<TableState>) => {
+        setTableStateRaw({
+            ...effectiveTableState,
+            ...newState,
+        });
+    };
 
     const {
         changeRequests: data,
@@ -82,13 +89,12 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
     const columns = useMemo(
         () => [
             columnHelper.accessor('id', {
-                id: 'Title',
                 header: 'Title',
                 meta: { width: '35%' },
                 cell: GlobalChangeRequestTitleCell,
+                enableSorting: false,
             }),
             columnHelper.accessor('features', {
-                id: 'Updated feature flags',
                 header: 'Updated feature flags',
                 enableSorting: false,
                 cell: ({
@@ -111,30 +117,29 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
                 },
             }),
             columnHelper.accessor('createdBy', {
-                id: 'By',
-                header: 'By',
+                header: 'Created by',
                 meta: { width: '10%' },
                 enableSorting: false,
                 cell: ({ getValue }) => <AvatarCell value={getValue()} />,
             }),
             columnHelper.accessor('createdAt', {
-                id: 'Submitted',
                 header: 'Submitted',
                 meta: { width: '5%' },
+                enableSorting: false,
                 cell: ({ getValue }) => <TimeAgoCell value={getValue()} />,
             }),
             columnHelper.accessor('environment', {
-                id: 'Environment',
                 header: 'Environment',
                 meta: { width: '10%' },
+                enableSorting: false,
                 cell: ({ getValue }) => (
                     <HighlightCell maxTitleLines={1} value={getValue()} />
                 ),
             }),
             columnHelper.accessor('state', {
-                id: 'Status',
                 header: 'Status',
                 meta: { width: '10%' },
+                enableSorting: false,
                 cell: ({ getValue, row }) => (
                     <ChangeRequestStatusCell value={getValue()} row={row} />
                 ),

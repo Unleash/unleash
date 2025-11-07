@@ -10,7 +10,6 @@ import {
     Box,
     Divider,
     Typography,
-    Link,
 } from '@mui/material';
 import type {
     IFeatureStrategy,
@@ -43,7 +42,7 @@ import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle.tsx';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
+import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
@@ -341,29 +340,6 @@ export const FeatureStrategyForm = ({
                                 />
                             }
                         />
-                    }
-                />
-
-                <ConditionallyRender
-                    condition={
-                        !BuiltInStrategies.includes(strategy.name || 'default')
-                    }
-                    show={
-                        <Alert severity='warning'>
-                            Custom strategies are deprecated. We recommend not
-                            adding them to any flags going forward and using the
-                            predefined strategies like Gradual rollout with{' '}
-                            <Link
-                                href={
-                                    'https://docs.getunleash.io/reference/activation-strategies#constraints'
-                                }
-                                target='_blank'
-                                variant='body2'
-                            >
-                                constraints
-                            </Link>{' '}
-                            instead.
-                        </Alert>
                     }
                 />
             </StyledAlertBox>

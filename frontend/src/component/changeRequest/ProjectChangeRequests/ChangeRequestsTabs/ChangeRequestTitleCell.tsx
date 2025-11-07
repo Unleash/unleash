@@ -4,6 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 interface IChangeRequestTitleCellProps {
     value?: any;
@@ -52,7 +53,11 @@ export const ChangeRequestTitleCell = ({
                             },
                         })}
                     >
-                        <Highlighter search={searchQuery}>{title}</Highlighter>
+                        <Truncator title={title}>
+                            <Highlighter search={searchQuery}>
+                                {title}
+                            </Highlighter>
+                        </Truncator>
                     </Link>
                 </Typography>
             </StyledLink>

@@ -28,22 +28,6 @@ The `flexibleRollout` stategy has the following parameters:
 - groupId - Used to ensure that different flags will **hash differently** for the same user. The groupId defaults to _feature flag name_, but the user can override it to _correlate rollout_ of multiple feature flags.
 - rollout - The percentage (0-100) you want to enable the feature flag for.
 
-## IPs
-
-The `remoteAddress` strategy activates a feature flag for remote addresses defined in the IP list.
-
-**Parameters:**
-- IPs - List of IPs to enable the feature for.
-
-
-## Hosts
-
-The `applicationHostname` strategy activates a feature flag for client instances with a hostName in the `hostNames` list.
-
-**Parameters**
-
-- hostNames - List of hostnames to enable the feature flag for.
-
 
 ### Gradual rollout with user ID
 

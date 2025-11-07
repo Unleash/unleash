@@ -56,9 +56,10 @@ To enable an environment for a feature flag, you must first add [activation stra
 To enable a feature flag in a specific environment, do the following:
 1. In the Admin UI, navigate to the feature flag you'd like to enable in an environment.
 2. In the list of environments, click **Add strategy** for the environment you want to enable.
-3. Enter a strategy name and define the rollout percentage. Optionally, you can configure segments, constraints, and variants.
-4. Click **Save strategy**.
-5. In the **Enabled in environments** section, toggle the environment you want to enable. 
+3. Select your desired [strategy type](/reference/activation-strategies#strategy-types) and click **Configure**.
+4. Enter a strategy name and define the rollout percentage. Optionally, you can configure segments, constraints, and variants.
+5. Click **Save strategy**.
+6. In the **Enabled in environments** section, toggle the environment you want to enable. 
 
 ## Clone an environment
 

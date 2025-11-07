@@ -53,7 +53,6 @@ export type IFlagKey =
     | 'edgeObservability'
     | 'customMetrics'
     | 'impactMetrics'
-    | 'lifecycleGraphs'
     | 'etagByEnv'
     | 'fetchMode'
     | 'optimizeLifecycle'
@@ -239,10 +238,6 @@ const flags: IFlags = {
     ),
     impactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
-        false,
-    ),
-    lifecycleGraphs: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_GRAPHS,
         false,
     ),
     streaming: {

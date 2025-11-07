@@ -96,7 +96,6 @@ export class ApiTokenService {
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/services/api-token-service.ts');
         if (!this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
-            // This is probably not needed because the scheduler will run it
             this.fetchActiveTokens();
         }
         this.updateLastSeen();
@@ -114,12 +113,7 @@ export class ApiTokenService {
      */
     async fetchActiveTokens(): Promise<void> {
         try {
-            // Avoid duplicate fetches by memoizing if enabled
-            if (this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
-                // noop; rely on scheduler refreshing periodically
-            } else {
-                this.activeTokens = await this.store.getAllActive();
-            }
+            this.activeTokens = await this.store.getAllActive();
         } catch (e) {
             this.logger.warn('Failed to fetch active tokens', e);
         }

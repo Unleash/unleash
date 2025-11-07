@@ -125,6 +125,8 @@ afterEach(async () => {
                 ),
             ),
     );
+    await db.stores.dependentFeaturesStore.deleteAll();
+    await db.stores.featureToggleStore.deleteAll();
 });
 
 afterAll(async () => {
@@ -184,7 +186,7 @@ test('Trying to add a strategy configuration to environment not connected to fla
             expect(res.body.name).toBe('com.test.feature');
             expect(res.body.createdAt).toBeTruthy();
         });
-    return app.request
+    await app.request
         .post(
             '/api/admin/projects/default/features/com.test.feature/environments/dev/strategies',
         )
@@ -3326,19 +3328,6 @@ test('Enabling a feature environment should add the default strategy when only d
         });
 });
 test('Updating feature strategy sort-order should return strategies in correct order', async () => {
-    app = await setupAppWithCustomConfig(
-        db.stores,
-        {
-            experimental: {
-                flags: {
-                    strictSchemaValidation: true,
-                    strategyVariant: true,
-                },
-            },
-        },
-        db.rawDatabase,
-    );
-
     const envName = 'sort-order-within-environment-strategyVariant2';
     const featureName = 'feature.sort.order.event.list2';
 
@@ -3393,19 +3382,6 @@ test('Updating feature strategy sort-order should return strategies in correct o
 });
 
 test('Updating feature strategy sort-order should trigger a an event', async () => {
-    app = await setupAppWithCustomConfig(
-        db.stores,
-        {
-            experimental: {
-                flags: {
-                    strictSchemaValidation: false,
-                    strategyVariant: true,
-                },
-            },
-        },
-        db.rawDatabase,
-    );
-
     const envName = 'sort-order-within-environment-strategyVariant';
     const featureName = 'feature.sort.order.event.list-strategyVariant';
 

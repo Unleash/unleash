@@ -51,7 +51,6 @@ process.nextTick(async () => {
                         strictSchemaValidation: true,
                         customMetrics: true,
                         impactMetrics: true,
-                        lifecycleGraphs: true,
                         globalChangeRequestList: true,
                         trafficBillingDisplay: true,
                         milestoneProgression: true,

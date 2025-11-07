@@ -23,7 +23,6 @@ import {
     StyledWidgetContent,
     StyledWidgetStats,
 } from '../InsightsCharts.styles';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { NewProductionFlagsChart } from '../componentsChart/NewProductionFlagsChart/NewProductionFlagsChart.tsx';
 import { CreationArchiveChart } from '../componentsChart/CreationArchiveChart/CreationArchiveChart.tsx';
 import { CreationArchiveStats } from '../componentsStat/CreationArchiveStats/CreationArchiveStats.tsx';
@@ -100,8 +99,6 @@ export const PerformanceInsights: FC = () => {
     const lastFlagTrend = flagTrends[flagTrends.length - 1];
     const flagsTotal = lastFlagTrend?.total ?? 0;
 
-    const isLifecycleGraphsEnabled = useUiFlag('lifecycleGraphs');
-
     return (
         <InsightsSection
             title='Performance insights'
@@ -113,7 +110,7 @@ export const PerformanceInsights: FC = () => {
                 />
             }
         >
-            {isLifecycleGraphsEnabled && isEnterprise() ? (
+            {isEnterprise() ? (
                 <NewProductionFlagsWidget
                     groupedLifecycleData={groupedLifecycleData}
                     loading={loading}
@@ -122,7 +119,7 @@ export const PerformanceInsights: FC = () => {
                 />
             ) : null}
 
-            {isLifecycleGraphsEnabled && isEnterprise() ? (
+            {isEnterprise() ? (
                 <StyledWidget>
                     <StyledWidgetStats width={275}>
                         <WidgetTitle title='Flags archived vs flags created' />

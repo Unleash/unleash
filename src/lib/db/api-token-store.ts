@@ -36,6 +36,18 @@ interface ITokenRow extends ITokenInsert {
     project: string;
 }
 
+interface ITokenSelectRow {
+    secret: string;
+    username: string;
+    token_name?: string;
+    type: ApiTokenType;
+    expires_at?: Date;
+    created_at: Date;
+    seen_at?: Date;
+    environment?: string;
+    alias?: string | null;
+}
+
 const tokenRowReducer = (acc, tokenRow) => {
     const { project, ...token } = tokenRow;
     if (!acc[tokenRow.secret]) {
@@ -147,13 +159,40 @@ export class ApiTokenStore implements IApiTokenStore {
 
     async getAllActive(): Promise<IApiToken[]> {
         const stopTimer = this.timer('getAllActive');
-        const rows = await this.makeTokenProjectQuery().where((builder) => {
-            builder
-                .whereNull('expires_at')
-                .orWhere('expires_at', '>', this.db.raw('now()'));
-        });
+        const rows = await this.db<ITokenSelectRow>(`${TABLE} as tokens`)
+            .select(
+                'tokens.secret',
+                'username',
+                'token_name',
+                'type',
+                'expires_at',
+                'created_at',
+                'alias',
+                'seen_at',
+                'environment',
+            )
+            .where((builder) => {
+                builder
+                    .whereNull('expires_at')
+                    .orWhere('expires_at', '>', this.db.raw('now()'));
+            });
         stopTimer();
-        return toTokens(rows);
+
+        return rows.map((token: ITokenSelectRow) => ({
+            secret: token.secret,
+            tokenName: token.token_name ? token.token_name : token.username,
+            type: (token.type === ApiTokenType.BACKEND
+                ? ApiTokenType.CLIENT
+                : token.type
+            ).toLowerCase() as ApiTokenType,
+            project: ALL,
+            projects: [ALL],
+            environment: token.environment ? token.environment : ALL,
+            expiresAt: token.expires_at,
+            createdAt: token.created_at,
+            alias: token.alias,
+            seenAt: token.seen_at,
+        }));
     }
 
     private makeTokenProjectQuery() {

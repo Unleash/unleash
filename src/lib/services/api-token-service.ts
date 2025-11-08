@@ -65,6 +65,8 @@ export class ApiTokenService {
 
     private queryAfter = new Map<string, Date>();
 
+    private tokensWithProjectsLoaded = new Set<string>();
+
     private eventService: EventService;
 
     private lastSeenSecrets: Set<string> = new Set<string>();
@@ -114,6 +116,7 @@ export class ApiTokenService {
     async fetchActiveTokens(): Promise<void> {
         try {
             this.activeTokens = await this.store.getAllActive();
+            this.tokensWithProjectsLoaded.clear();
         } catch (e) {
             this.logger.warn('Failed to fetch active tokens', e);
         }
@@ -162,6 +165,7 @@ export class ApiTokenService {
                         token = undefined;
                     } else {
                         this.activeTokens.push(token);
+                        this.tokensWithProjectsLoaded.add(token.secret);
                     }
                 } else {
                     // prevent querying the same invalid secret multiple times. Expire after 5 minutes
@@ -176,6 +180,20 @@ export class ApiTokenService {
                     )} rate limited until: ${this.queryAfter.get(secret)}`,
                 );
             }
+        } else if (!this.tokensWithProjectsLoaded.has(token.secret)) {
+            const stopCacheTimer = this.timer('getTokenWithCache.lazyLoad');
+            const fullToken = await this.store.get(token.secret);
+            if (fullToken) {
+                const index = this.activeTokens.findIndex(
+                    (t) => t.secret === token!.secret,
+                );
+                if (index !== -1) {
+                    this.activeTokens[index] = fullToken;
+                }
+                token = fullToken;
+                this.tokensWithProjectsLoaded.add(token.secret);
+            }
+            stopCacheTimer();
         }
         return token;
     }
@@ -356,6 +374,7 @@ export class ApiTokenService {
                 this.normalizeTokenType(newApiToken),
             );
             this.activeTokens.push(token);
+            this.tokensWithProjectsLoaded.add(token.secret);
             await this.eventService.storeEvent(
                 new ApiTokenCreatedEvent({
                     auditUser,

@@ -103,15 +103,8 @@ export const MilestoneProgressionForm = ({
         await onSubmit(form.getProgressionPayload());
     };
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === 'Escape') {
-            event.preventDefault();
-            onCancel();
-        }
-    };
-
     return (
-        <StyledFormContainer onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
+        <StyledFormContainer onSubmit={handleSubmit}>
             <StyledTopRow>
                 <StyledIcon />
                 <StyledLabel>Proceed after</StyledLabel>

@@ -5,7 +5,7 @@ import {
 } from '../types/experimental.js';
 import FlagResolver, { getVariantValue } from './flag-resolver.js';
 import type { IExperimentalOptions } from '../types/experimental.js';
-import { getDefaultVariant } from 'unleash-client/lib/variant.js';
+import { defaultVariant } from 'unleash-client/lib/variant.js';
 
 test('should produce empty exposed flags', () => {
     const resolver = new FlagResolver(defaultExperimentalOptions);
@@ -34,7 +34,7 @@ test('should use external resolver for dynamic flags', () => {
                 return true;
             }
         },
-        getVariant: () => getDefaultVariant(),
+        getVariant: () => defaultVariant,
         getStaticContext: () => ({}),
     };
 
@@ -55,7 +55,7 @@ test('should not use external resolver for enabled experiments', () => {
         isEnabled: () => {
             return false;
         },
-        getVariant: () => getDefaultVariant(),
+        getVariant: () => defaultVariant,
         getStaticContext: () => ({}),
     };
 
@@ -76,7 +76,7 @@ test('should load experimental flags', () => {
         isEnabled: () => {
             return false;
         },
-        getVariant: () => getDefaultVariant(),
+        getVariant: () => defaultVariant,
         getStaticContext: () => ({}),
     };
 
@@ -98,7 +98,7 @@ test('should load experimental flags from external provider', () => {
                 return true;
             }
         },
-        getVariant: () => getDefaultVariant(),
+        getVariant: () => defaultVariant,
         getStaticContext: () => ({}),
     };
 
@@ -129,7 +129,7 @@ test('should support variant flags', () => {
             if (name === 'extraFlag') {
                 return variant;
             }
-            return getDefaultVariant();
+            return defaultVariant;
         },
         getStaticContext: () => ({}),
     };
@@ -142,10 +142,10 @@ test('should support variant flags', () => {
     const resolver = new FlagResolver(config as IExperimentalOptions);
 
     expect(resolver.getVariant('someFlag' as IFlagKey)).toStrictEqual(
-        getDefaultVariant(),
+        defaultVariant,
     );
     expect(resolver.getVariant('otherFlag' as IFlagKey)).toStrictEqual(
-        getDefaultVariant(),
+        defaultVariant,
     );
     expect(resolver.getVariant('extraFlag' as IFlagKey)).toStrictEqual(variant);
 });
@@ -199,7 +199,7 @@ test('should call external resolver getVariant when not overridden to be true, e
             if (name === 'variantFlag') {
                 return variant;
             }
-            return getDefaultVariant();
+            return defaultVariant;
         },
         getStaticContext: () => ({}),
     };
@@ -241,7 +241,7 @@ test('should call external resolver getStaticContext ', () => {
             if (name === 'variantFlag') {
                 return variant;
             }
-            return getDefaultVariant();
+            return defaultVariant;
         },
         getStaticContext: () => {
             return { properties: { clientId: 'red' } };

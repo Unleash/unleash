@@ -1,4 +1,4 @@
-import { Button, FormControl, styled } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import BoltIcon from '@mui/icons-material/Bolt';
 import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
 import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
@@ -6,7 +6,7 @@ import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
 
-const StyledFormContainer = styled(FormControl)(({ theme }) => ({
+const StyledFormContainer = styled('form')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.5),
@@ -129,8 +129,8 @@ export const MilestoneProgressionForm = ({
                 <Button
                     variant='contained'
                     color='primary'
-                    onSubmit={handleSubmit}
                     size='small'
+                    type='submit'
                 >
                     Save
                 </Button>

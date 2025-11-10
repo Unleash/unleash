@@ -52,7 +52,6 @@ process.nextTick(async () => {
                         customMetrics: true,
                         impactMetrics: true,
                         globalChangeRequestList: true,
-                        trafficBillingDisplay: true,
                         milestoneProgression: true,
                         featureReleasePlans: true,
                         safeguards: true,

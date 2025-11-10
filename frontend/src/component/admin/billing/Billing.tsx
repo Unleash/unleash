@@ -8,7 +8,6 @@ import { Alert, Box, styled, Typography } from '@mui/material';
 import { BillingDashboard } from './BillingDashboard/BillingDashboard.tsx';
 import { BillingHistory } from './BillingHistory/BillingHistory.tsx';
 import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { BillingInvoices } from './BillingInvoices/BillingInvoices.tsx';
 import { BillingInfo } from './BillingInfo/BillingInfo.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
@@ -32,7 +31,6 @@ export const Billing = () => {
     const { isBilling, refetchInstanceStatus, refresh, loading } =
         useInstanceStatus();
     const { invoices } = useInvoices();
-    const trafficBillingDisplay = useUiFlag('trafficBillingDisplay');
     const {
         uiConfig: { billing },
     } = useUiConfig();
@@ -48,7 +46,7 @@ export const Billing = () => {
         hardRefresh();
     }, [refetchInstanceStatus, refresh]);
 
-    if (trafficBillingDisplay && eligibleForDetailedBilling) {
+    if (eligibleForDetailedBilling) {
         return (
             <Box
                 sx={(theme) => ({

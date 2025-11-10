@@ -382,13 +382,13 @@ export const ReleasePlan = ({
 
     const handleSafeguardSubmit = async (data: CreateSafeguardSchema) => {
         try {
-            await createOrUpdateSafeguard(
+            await createOrUpdateSafeguard({
                 projectId,
                 featureName,
                 environment,
-                id,
-                data,
-            );
+                planId: id,
+                body: data,
+            });
             setSafeguardFormOpen(false);
             setToastData({
                 type: 'success',

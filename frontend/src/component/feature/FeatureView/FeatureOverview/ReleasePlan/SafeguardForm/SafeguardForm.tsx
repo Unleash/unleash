@@ -55,8 +55,8 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
         selectedMetric
             ? {
                   series: selectedMetric,
-                  range: 'day',
-                  aggregationMode: 'rps',
+                  range: timeRange,
+                  aggregationMode: aggregationMode,
               }
             : undefined,
     );

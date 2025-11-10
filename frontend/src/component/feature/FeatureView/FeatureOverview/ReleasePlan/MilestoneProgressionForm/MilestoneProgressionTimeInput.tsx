@@ -59,6 +59,12 @@ const handleNumericPaste = (e: React.ClipboardEvent) => {
     }
 };
 
+const stopEnterPropagation = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+        e.stopPropagation();
+    }
+};
+
 export const MilestoneProgressionTimeInput = ({
     timeValue,
     timeUnit,
@@ -90,9 +96,15 @@ export const MilestoneProgressionTimeInput = ({
                 id='time-unit-select'
                 disabled={disabled}
             >
-                <MenuItem value='minutes'>Minutes</MenuItem>
-                <MenuItem value='hours'>Hours</MenuItem>
-                <MenuItem value='days'>Days</MenuItem>
+                <MenuItem value='minutes' onKeyDown={stopEnterPropagation}>
+                    Minutes
+                </MenuItem>
+                <MenuItem value='hours' onKeyDown={stopEnterPropagation}>
+                    Hours
+                </MenuItem>
+                <MenuItem value='days' onKeyDown={stopEnterPropagation}>
+                    Days
+                </MenuItem>
             </StyledSelect>
         </StyledInputGroup>
     );

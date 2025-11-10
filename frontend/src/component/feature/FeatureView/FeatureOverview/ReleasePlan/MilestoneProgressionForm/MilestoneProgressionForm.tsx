@@ -6,7 +6,7 @@ import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
 
-const StyledFormContainer = styled('div')(({ theme }) => ({
+const StyledFormContainer = styled('form')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.5),
@@ -103,18 +103,8 @@ export const MilestoneProgressionForm = ({
         await onSubmit(form.getProgressionPayload());
     };
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            handleSubmit();
-        } else if (event.key === 'Escape') {
-            event.preventDefault();
-            onCancel();
-        }
-    };
-
     return (
-        <StyledFormContainer onKeyDown={handleKeyDown}>
+        <StyledFormContainer onSubmit={handleSubmit}>
             <StyledTopRow>
                 <StyledIcon />
                 <StyledLabel>Proceed after</StyledLabel>
@@ -139,8 +129,8 @@ export const MilestoneProgressionForm = ({
                 <Button
                     variant='contained'
                     color='primary'
-                    onClick={handleSubmit}
                     size='small'
+                    type='submit'
                 >
                     Save
                 </Button>

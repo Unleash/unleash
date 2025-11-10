@@ -77,11 +77,11 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
     );
     const metricType = selectedMetricData?.type || 'unknown';
 
-    const handleSeriesChange = (series: string) => {
-        setSelectedMetric(series);
+    const handleMetricChange = (metricName: string) => {
+        setSelectedMetric(metricName);
         setApplication('*');
 
-        const metric = metricSeries.find((m) => m.name === series);
+        const metric = metricSeries.find((m) => m.name === metricName);
         const type = metric?.type || 'unknown';
 
         if (type === 'counter') {
@@ -117,7 +117,7 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 <StyledIcon />
                 <SeriesSelector
                     value={selectedMetric}
-                    onChange={handleSeriesChange}
+                    onChange={handleMetricChange}
                     options={metricSeries}
                     loading={loading}
                 />

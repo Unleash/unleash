@@ -1,27 +1,40 @@
 import { Button } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
-import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useImpactMetricsNames } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import {
-    StyledFormContainer,
-    StyledTopRow,
-    StyledLabel,
-    StyledButtonGroup,
-    StyledSelect,
-    StyledMenuItem,
-    StyledTextField,
+    RangeSelector,
+    type TimeRange,
+} from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
+import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
+import { SeriesSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/SeriesSelector';
+import type { AggregationMode } from 'component/impact-metrics/types';
+import {
     createStyledIcon,
+    StyledButtonGroup,
+    StyledFormContainer,
+    StyledLabel,
+    StyledMenuItem,
+    StyledSelect,
+    StyledTextField,
+    StyledTopRow,
 } from '../shared/SharedFormComponents.tsx';
 
 const StyledIcon = createStyledIcon(ShieldIcon);
 
 interface ISafeguardFormProps {
     onSubmit: (data: {
-        metric: string;
-        application: string;
-        aggregation: string;
-        comparison: string;
+        impactMetric: {
+            metricName: string;
+            timeRange: TimeRange;
+            aggregationMode: AggregationMode;
+            labelSelectors: {
+                appName: string[];
+            };
+        };
+        operator: string;
         threshold: number;
     }) => void;
     onCancel: () => void;
@@ -30,32 +43,69 @@ interface ISafeguardFormProps {
 export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
     const { metricSeries, loading } = useImpactMetricsNames();
 
-    // Hardcoded values for now
-    const aggregationModes = ['rps', 'count'];
-    const applicationNames = ['web', 'mobile', 'api', 'backend'];
-
     const [selectedMetric, setSelectedMetric] = useState('');
-    const [application, setApplication] = useState('web');
-    const [aggregationMode, setAggregationMode] = useState('rps');
+    const [application, setApplication] = useState('*');
+    const [aggregationMode, setAggregationMode] =
+        useState<AggregationMode>('rps');
     const [operator, setOperator] = useState('>');
     const [threshold, setThreshold] = useState(0);
+    const [timeRange, setTimeRange] = useState<TimeRange>('day');
 
-    // Set initial metric when data loads
+    const { data: metricsData } = useImpactMetricsData(
+        selectedMetric
+            ? {
+                  series: selectedMetric,
+                  range: 'day',
+                  aggregationMode: 'rps',
+              }
+            : undefined,
+    );
+
+    const applicationNames = useMemo(() => {
+        const appNames = metricsData?.labels?.appName || [];
+        return ['*', ...appNames];
+    }, [metricsData?.labels?.appName]);
+
     useEffect(() => {
         if (metricSeries.length > 0 && !selectedMetric) {
             setSelectedMetric(metricSeries[0].name);
         }
     }, [metricSeries, selectedMetric]);
 
+    const selectedMetricData = metricSeries.find(
+        (m) => m.name === selectedMetric,
+    );
+    const metricType = selectedMetricData?.type || 'unknown';
+
+    const handleSeriesChange = (series: string) => {
+        setSelectedMetric(series);
+        setApplication('*');
+
+        const metric = metricSeries.find((m) => m.name === series);
+        const type = metric?.type || 'unknown';
+
+        if (type === 'counter') {
+            setAggregationMode('count');
+        } else if (type === 'gauge') {
+            setAggregationMode('avg');
+        } else if (type === 'histogram') {
+            setAggregationMode('p50');
+        }
+    };
+
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        if (threshold && !Number.isNaN(Number(threshold))) {
-            const metric = metricSeries.find((m) => m.name === selectedMetric);
+        if (!Number.isNaN(Number(threshold))) {
             onSubmit({
-                metric: metric?.displayName || selectedMetric,
-                application,
-                aggregation: aggregationMode,
-                comparison: operator,
+                impactMetric: {
+                    metricName: selectedMetric,
+                    timeRange,
+                    aggregationMode,
+                    labelSelectors: {
+                        appName: [application],
+                    },
+                },
+                operator,
                 threshold: Number(threshold),
             });
         }
@@ -65,20 +115,12 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
         <StyledFormContainer onSubmit={handleSubmit}>
             <StyledTopRow>
                 <StyledIcon />
-                <StyledSelect
+                <SeriesSelector
                     value={selectedMetric}
-                    onChange={(e) =>
-                        setSelectedMetric(e.target.value as string)
-                    }
-                    variant='outlined'
-                    size='small'
-                >
-                    {metricSeries.map((metric) => (
-                        <StyledMenuItem key={metric.name} value={metric.name}>
-                            {metric.displayName}
-                        </StyledMenuItem>
-                    ))}
-                </StyledSelect>
+                    onChange={handleSeriesChange}
+                    options={metricSeries}
+                    loading={loading}
+                />
 
                 <StyledLabel>filtered by</StyledLabel>
                 <StyledSelect
@@ -89,24 +131,17 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 >
                     {applicationNames.map((app) => (
                         <StyledMenuItem key={app} value={app}>
-                            {app}
+                            {app === '*' ? 'All' : app}
                         </StyledMenuItem>
                     ))}
                 </StyledSelect>
 
                 <StyledLabel>aggregated by</StyledLabel>
-                <StyledSelect
+                <ModeSelector
                     value={aggregationMode}
-                    onChange={(e) => setAggregationMode(String(e.target.value))}
-                    variant='outlined'
-                    size='small'
-                >
-                    {aggregationModes.map((mode) => (
-                        <StyledMenuItem key={mode} value={mode}>
-                            {mode}
-                        </StyledMenuItem>
-                    ))}
-                </StyledSelect>
+                    onChange={setAggregationMode}
+                    metricType={metricType}
+                />
 
                 <StyledLabel>is</StyledLabel>
                 <StyledSelect
@@ -128,6 +163,9 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                     size='small'
                     required
                 />
+
+                <StyledLabel>over</StyledLabel>
+                <RangeSelector value={timeRange} onChange={setTimeRange} />
             </StyledTopRow>
             <StyledButtonGroup>
                 <Button variant='outlined' onClick={onCancel} size='small'>
@@ -138,7 +176,7 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                     color='primary'
                     size='small'
                     type='submit'
-                    disabled={!threshold || Number.isNaN(Number(threshold))}
+                    disabled={Number.isNaN(Number(threshold))}
                 >
                     Save
                 </Button>

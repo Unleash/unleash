@@ -3,7 +3,7 @@ import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
 
 export type ImpactMetricsSeries = {
-    type: string;
+    type: 'counter' | 'gauge' | 'histogram' | 'unknown';
     help: string;
     displayName: string;
 };

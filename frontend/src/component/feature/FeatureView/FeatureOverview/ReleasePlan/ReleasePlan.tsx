@@ -378,10 +378,15 @@ export const ReleasePlan = ({
     );
 
     const handleSafeguardSubmit = (data: {
-        metric: string;
-        application: string;
-        aggregation: string;
-        comparison: string;
+        impactMetric: {
+            metricName: string;
+            timeRange: string;
+            aggregationMode: string;
+            labelSelectors: {
+                appName: string[];
+            };
+        };
+        operator: string;
         threshold: number;
     }) => {
         console.log('Safeguard data:', data);

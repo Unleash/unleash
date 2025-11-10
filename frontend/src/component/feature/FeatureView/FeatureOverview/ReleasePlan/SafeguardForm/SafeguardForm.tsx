@@ -83,7 +83,7 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 <StyledLabel>filtered by</StyledLabel>
                 <StyledSelect
                     value={application}
-                    onChange={(e) => setApplication(e.target.value)}
+                    onChange={(e) => setApplication(String(e.target.value))}
                     variant='outlined'
                     size='small'
                 >
@@ -97,7 +97,7 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 <StyledLabel>aggregated by</StyledLabel>
                 <StyledSelect
                     value={aggregationMode}
-                    onChange={(e) => setAggregationMode(e.target.value)}
+                    onChange={(e) => setAggregationMode(String(e.target.value))}
                     variant='outlined'
                     size='small'
                 >
@@ -111,7 +111,7 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 <StyledLabel>is</StyledLabel>
                 <StyledSelect
                     value={operator}
-                    onChange={(e) => setOperator(e.target.value)}
+                    onChange={(e) => setOperator(String(e.target.value))}
                     variant='outlined'
                     size='small'
                 >

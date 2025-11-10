@@ -1,9 +1,9 @@
-import type { FC } from 'react';
-import { useMemo, useState, useCallback } from 'react';
+import { type FC, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { Typography, Button, Paper, styled, Box } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
-import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+import { useImpactMetricsNames } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { ChartConfigModal } from './ChartConfigModal/ChartConfigModal.tsx';
 import { ChartItem } from './ChartItem.tsx';
 import { PlausibleChartItem } from './PlausibleChartItem.tsx';
@@ -54,20 +54,10 @@ export const ImpactMetrics: FC = () => {
     } = useImpactMetricsState();
 
     const {
-        metadata,
+        metricSeries,
         loading: metadataLoading,
         error: metadataError,
-    } = useImpactMetricsMetadata();
-
-    const metricSeries = useMemo(() => {
-        if (!metadata?.series) {
-            return [];
-        }
-        return Object.entries(metadata.series).map(([name, rest]) => ({
-            name,
-            ...rest,
-        }));
-    }, [metadata]);
+    } = useImpactMetricsNames();
 
     const handleAddChart = () => {
         setEditingChart(undefined);

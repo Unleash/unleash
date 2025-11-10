@@ -31,6 +31,7 @@ import { ReleasePlanMilestoneItem } from './ReleasePlanMilestoneItem/ReleasePlan
 import Add from '@mui/icons-material/Add';
 
 import { StyledActionButton } from './ReleasePlanMilestoneItem/StyledActionButton.tsx';
+import { SafeguardForm } from './SafeguardForm/SafeguardForm.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -194,6 +195,7 @@ export const ReleasePlan = ({
     const [milestoneToDeleteProgression, setMilestoneToDeleteProgression] =
         useState<IReleasePlanMilestone | null>(null);
     const [isDeletingProgression, setIsDeletingProgression] = useState(false);
+    const [safeguardFormOpen, setSafeguardFormOpen] = useState(false);
 
     const onChangeRequestConfirm = async () => {
         if (!changeRequestAction) return;
@@ -375,6 +377,21 @@ export const ReleasePlan = ({
         (milestone) => milestone.id === activeMilestoneId,
     );
 
+    const handleSafeguardSubmit = (data: {
+        metric: string;
+        application: string;
+        aggregation: string;
+        comparison: string;
+        threshold: number;
+    }) => {
+        console.log('Safeguard data:', data);
+        setSafeguardFormOpen(false);
+        setToastData({
+            type: 'success',
+            text: 'Safeguard added successfully',
+        });
+    };
+
     return (
         <StyledContainer>
             <StyledHeader>
@@ -406,13 +423,20 @@ export const ReleasePlan = ({
             <StyledBody safeguards={safeguardsEnabled}>
                 {safeguardsEnabled ? (
                     <StyledAddSafeguard>
-                        <StyledActionButton
-                            onClick={() => {}}
-                            color='primary'
-                            startIcon={<Add />}
-                        >
-                            Add safeguard
-                        </StyledActionButton>
+                        {safeguardFormOpen ? (
+                            <SafeguardForm
+                                onSubmit={handleSafeguardSubmit}
+                                onCancel={() => setSafeguardFormOpen(false)}
+                            />
+                        ) : (
+                            <StyledActionButton
+                                onClick={() => setSafeguardFormOpen(true)}
+                                color='primary'
+                                startIcon={<Add />}
+                            >
+                                Add safeguard
+                            </StyledActionButton>
+                        )}
                     </StyledAddSafeguard>
                 ) : null}
                 <StyledMilestones safeguards={safeguardsEnabled}>

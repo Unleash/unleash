@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
 
@@ -21,6 +22,26 @@ export const useImpactMetricsMetadata = () => {
     return {
         metadata: data,
         refetch,
+        loading,
+        error,
+    };
+};
+
+export const useImpactMetricsNames = () => {
+    const { metadata, loading, error } = useImpactMetricsMetadata();
+
+    const metricSeries = useMemo(() => {
+        if (!metadata?.series) {
+            return [];
+        }
+        return Object.entries(metadata.series).map(([name, rest]) => ({
+            name,
+            ...rest,
+        }));
+    }, [metadata]);
+
+    return {
+        metricSeries,
         loading,
         error,
     };

@@ -1,4 +1,4 @@
-import { Button, styled } from '@mui/material';
+import { Button, FormControl, styled } from '@mui/material';
 import BoltIcon from '@mui/icons-material/Bolt';
 import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
 import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
@@ -6,7 +6,7 @@ import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
 
-const StyledFormContainer = styled('div')(({ theme }) => ({
+const StyledFormContainer = styled(FormControl)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1.5),
@@ -104,17 +104,14 @@ export const MilestoneProgressionForm = ({
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            handleSubmit();
-        } else if (event.key === 'Escape') {
+        if (event.key === 'Escape') {
             event.preventDefault();
             onCancel();
         }
     };
 
     return (
-        <StyledFormContainer onKeyDown={handleKeyDown}>
+        <StyledFormContainer onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
             <StyledTopRow>
                 <StyledIcon />
                 <StyledLabel>Proceed after</StyledLabel>
@@ -139,7 +136,7 @@ export const MilestoneProgressionForm = ({
                 <Button
                     variant='contained'
                     color='primary'
-                    onClick={handleSubmit}
+                    onSubmit={handleSubmit}
                     size='small'
                 >
                     Save

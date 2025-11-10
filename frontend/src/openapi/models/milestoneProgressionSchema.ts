@@ -9,8 +9,6 @@ import type { TransitionConditionSchema } from './transitionConditionSchema.js';
  * A milestone progression configuration
  */
 export interface MilestoneProgressionSchema {
-    /** The unique identifier for this progression */
-    id: string;
     /** The ID of the source milestone */
     sourceMilestone: string;
     /** The ID of the target milestone */

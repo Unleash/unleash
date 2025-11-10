@@ -28,7 +28,7 @@ export interface EdgeInstanceDataSchema {
     connectionConsumptionSinceLastReport?: ConnectionConsumptionSchema;
     /** Which version (semver) of Edge is the Edge instance running. */
     edgeVersion: string;
-    /** A marker that tells Unleash whether this Edge instance is self-hosted or hosted by Unleash. */
+    /** A marker that tells Unleash whether this Edge instance is self-hosted, enterprise self-hosted, or hosted by Unleash. */
     hosting?: EdgeInstanceDataSchemaHosting;
     /** The ID of the Edge process, typically a ULID. Newly generated for each restart of the instance. */
     identifier: string;

@@ -12,7 +12,7 @@ export interface CreateApplicationSchema {
     color?: string;
     /** An URL to an icon file to be used for the applications's entry in the application list */
     icon?: string;
-    /** Which [strategies](https://docs.getunleash.io/topics/the-anatomy-of-unleash#activation-strategies) the application has loaded. Useful when trying to figure out if your [custom strategy](https://docs.getunleash.io/reference/custom-activation-strategies) has been loaded in the SDK */
+    /** Which [strategies](https://docs.getunleash.io/topics/the-anatomy-of-unleash#activation-strategies) the application has loaded. Useful when trying to figure out if your [custom strategy](https://docs.getunleash.io/reference/activation-strategies#custom-strategies) has been loaded in the SDK */
     strategies?: string[];
     /** A link to reference the application reporting the metrics. Could for instance be a GitHub link to the repository of the application */
     url?: string;

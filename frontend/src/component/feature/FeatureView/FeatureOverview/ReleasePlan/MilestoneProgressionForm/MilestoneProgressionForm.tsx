@@ -1,66 +1,21 @@
-import { Button, styled } from '@mui/material';
+import { Button } from '@mui/material';
 import BoltIcon from '@mui/icons-material/Bolt';
 import { useMilestoneProgressionForm } from '../hooks/useMilestoneProgressionForm.js';
 import { MilestoneProgressionTimeInput } from './MilestoneProgressionTimeInput.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
+import {
+    StyledFormContainer,
+    StyledTopRow,
+    StyledLabel,
+    StyledButtonGroup,
+    StyledErrorMessage,
+    StyledInfoLine,
+    createStyledIcon,
+} from '../shared/SharedFormComponents.tsx';
 
-const StyledFormContainer = styled('form')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1.5),
-    padding: theme.spacing(1.5, 2),
-    backgroundColor: theme.palette.background.elevation1,
-    border: `1px solid ${theme.palette.divider}`,
-    width: '100%',
-    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-    position: 'relative',
-}));
-
-const StyledTopRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
-const StyledIcon = styled(BoltIcon)(({ theme }) => ({
-    color: theme.palette.common.white,
-    fontSize: 18,
-    flexShrink: 0,
-    backgroundColor: theme.palette.primary.main,
-    borderRadius: '50%',
-    padding: theme.spacing(0.25),
-}));
-
-const StyledLabel = styled('span')(({ theme }) => ({
-    color: theme.palette.text.primary,
-    fontSize: theme.typography.body2.fontSize,
-    flexShrink: 0,
-}));
-
-const StyledButtonGroup = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    paddingTop: theme.spacing(1),
-    marginTop: theme.spacing(0.5),
-    borderTop: `1px solid ${theme.palette.divider}`,
-}));
-
-const StyledErrorMessage = styled('span')(({ theme }) => ({
-    color: theme.palette.error.main,
-    fontSize: theme.typography.body2.fontSize,
-    paddingLeft: theme.spacing(3.25),
-}));
-
-const StyledInfoLine = styled('span')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.typography.caption.fontSize,
-    paddingLeft: theme.spacing(3.25),
-    fontStyle: 'italic',
-}));
+const StyledIcon = createStyledIcon(BoltIcon);
 
 interface IMilestoneProgressionFormProps {
     sourceMilestoneId: string;

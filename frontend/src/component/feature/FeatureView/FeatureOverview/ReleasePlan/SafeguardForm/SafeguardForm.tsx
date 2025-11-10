@@ -4,13 +4,13 @@ import type { FormEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useImpactMetricsNames } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import {
-    RangeSelector,
-    type TimeRange,
-} from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
+import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import { SeriesSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/SeriesSelector';
-import type { AggregationMode } from 'component/impact-metrics/types';
+import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
+import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
+import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
+import type { CreateSafeguardSchemaOperator } from 'openapi/models/createSafeguardSchemaOperator';
 import {
     createStyledIcon,
     StyledButtonGroup,
@@ -25,18 +25,7 @@ import {
 const StyledIcon = createStyledIcon(ShieldIcon);
 
 interface ISafeguardFormProps {
-    onSubmit: (data: {
-        impactMetric: {
-            metricName: string;
-            timeRange: TimeRange;
-            aggregationMode: AggregationMode;
-            labelSelectors: {
-                appName: string[];
-            };
-        };
-        operator: string;
-        threshold: number;
-    }) => void;
+    onSubmit: (data: CreateSafeguardSchema) => void;
     onCancel: () => void;
 }
 
@@ -46,10 +35,12 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
     const [selectedMetric, setSelectedMetric] = useState('');
     const [application, setApplication] = useState('*');
     const [aggregationMode, setAggregationMode] =
-        useState<AggregationMode>('rps');
-    const [operator, setOperator] = useState('>');
+        useState<MetricQuerySchemaAggregationMode>('rps');
+    const [operator, setOperator] =
+        useState<CreateSafeguardSchemaOperator>('>');
     const [threshold, setThreshold] = useState(0);
-    const [timeRange, setTimeRange] = useState<TimeRange>('day');
+    const [timeRange, setTimeRange] =
+        useState<MetricQuerySchemaTimeRange>('day');
 
     const { data: metricsData } = useImpactMetricsData(
         selectedMetric
@@ -96,7 +87,7 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (!Number.isNaN(Number(threshold))) {
-            onSubmit({
+            const data: CreateSafeguardSchema = {
                 impactMetric: {
                     metricName: selectedMetric,
                     timeRange,
@@ -107,7 +98,8 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 },
                 operator,
                 threshold: Number(threshold),
-            });
+            };
+            onSubmit(data);
         }
     };
 
@@ -146,7 +138,11 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 <StyledLabel>is</StyledLabel>
                 <StyledSelect
                     value={operator}
-                    onChange={(e) => setOperator(String(e.target.value))}
+                    onChange={(e) =>
+                        setOperator(
+                            e.target.value as CreateSafeguardSchemaOperator,
+                        )
+                    }
                     variant='outlined'
                     size='small'
                 >

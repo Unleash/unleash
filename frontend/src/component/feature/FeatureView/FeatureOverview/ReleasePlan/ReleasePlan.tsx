@@ -32,6 +32,8 @@ import Add from '@mui/icons-material/Add';
 
 import { StyledActionButton } from './ReleasePlanMilestoneItem/StyledActionButton.tsx';
 import { SafeguardForm } from './SafeguardForm/SafeguardForm.tsx';
+import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguardsApi';
+import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -129,6 +131,7 @@ export const ReleasePlan = ({
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
     const { deleteMilestoneProgression } = useMilestoneProgressionsApi();
+    const { createOrUpdateSafeguard } = useSafeguardsApi();
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
 
@@ -377,24 +380,24 @@ export const ReleasePlan = ({
         (milestone) => milestone.id === activeMilestoneId,
     );
 
-    const handleSafeguardSubmit = (data: {
-        impactMetric: {
-            metricName: string;
-            timeRange: string;
-            aggregationMode: string;
-            labelSelectors: {
-                appName: string[];
-            };
-        };
-        operator: string;
-        threshold: number;
-    }) => {
-        console.log('Safeguard data:', data);
-        setSafeguardFormOpen(false);
-        setToastData({
-            type: 'success',
-            text: 'Safeguard added successfully',
-        });
+    const handleSafeguardSubmit = async (data: CreateSafeguardSchema) => {
+        try {
+            await createOrUpdateSafeguard(
+                projectId,
+                featureName,
+                environment,
+                id,
+                data,
+            );
+            setSafeguardFormOpen(false);
+            setToastData({
+                type: 'success',
+                text: 'Safeguard added successfully',
+            });
+            refetch();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
     return (

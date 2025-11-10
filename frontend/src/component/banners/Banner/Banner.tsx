@@ -15,38 +15,41 @@ const DEFAULT_VARIANT = 'info';
 
 const StyledBar = styled('aside', {
     shouldForwardProp: (prop) =>
-        prop !== 'variant' && prop !== 'inline' && prop !== 'maxHeight',
-})<{ variant: BannerVariant; inline?: boolean; maxHeight?: number }>(
-    ({ theme, variant, inline, maxHeight }) => ({
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: theme.spacing(1),
-        gap: theme.spacing(1),
-        width: '100%',
-        ...(inline
-            ? {
-                  border: '1px solid',
-                  borderRadius: theme.shape.borderRadiusMedium,
-              }
-            : {
-                  borderBottom: '1px solid',
-              }),
-        ...(maxHeight && {
-            maxHeight: maxHeight,
-            overflow: 'auto',
-        }),
-        borderColor:
-            theme.palette[variant]?.border ??
-            theme.palette[DEFAULT_VARIANT].border,
-        background:
-            theme.palette[variant]?.light ??
-            theme.palette[DEFAULT_VARIANT].light,
-        color:
-            theme.palette[variant]?.dark ?? theme.palette[DEFAULT_VARIANT].dark,
-        fontSize: theme.fontSizes.smallBody,
+        !['variant', 'inline', 'maxHeight', 'height'].includes(prop as string),
+})<{
+    variant: BannerVariant;
+    inline?: boolean;
+    maxHeight?: number;
+    height?: number;
+}>(({ theme, variant, inline, maxHeight, height }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing(1),
+    gap: theme.spacing(1),
+    width: '100%',
+    ...(inline
+        ? {
+              border: '1px solid',
+              borderRadius: theme.shape.borderRadiusMedium,
+          }
+        : {
+              borderBottom: '1px solid',
+          }),
+    ...(maxHeight && {
+        maxHeight: maxHeight,
+        overflow: 'auto',
     }),
-);
+    ...(height && {
+        height: height,
+    }),
+    borderColor:
+        theme.palette[variant]?.border ?? theme.palette[DEFAULT_VARIANT].border,
+    background:
+        theme.palette[variant]?.light ?? theme.palette[DEFAULT_VARIANT].light,
+    color: theme.palette[variant]?.dark ?? theme.palette[DEFAULT_VARIANT].dark,
+    fontSize: theme.fontSizes.smallBody,
+}));
 
 const StyledIcon = styled('div', {
     shouldForwardProp: (prop) => prop !== 'variant',
@@ -60,9 +63,10 @@ interface IBannerProps {
     banner: IBanner;
     inline?: boolean;
     maxHeight?: number;
+    height?: number;
 }
 
-export const Banner = ({ banner, inline, maxHeight }: IBannerProps) => {
+export const Banner = ({ banner, inline, height, maxHeight }: IBannerProps) => {
     const [open, setOpen] = useState(false);
 
     const {
@@ -84,7 +88,12 @@ export const Banner = ({ banner, inline, maxHeight }: IBannerProps) => {
     };
 
     const bannerBar = (
-        <StyledBar variant={variant} inline={inline} maxHeight={maxHeight}>
+        <StyledBar
+            variant={variant}
+            inline={inline}
+            maxHeight={maxHeight}
+            height={height}
+        >
             <StyledIcon variant={variant}>
                 <BannerIcon icon={icon} variant={variant} />
             </StyledIcon>

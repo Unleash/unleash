@@ -247,7 +247,7 @@ const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
         acquireConnectionTimeout: secondsToMilliseconds(30),
         pool: {
             min: parseEnvVarNumber(process.env.DATABASE_POOL_MIN, 0),
-            max: parseEnvVarNumber(process.env.DATABASE_POOL_MAX, 4),
+            max: parseEnvVarNumber(process.env.DATABASE_POOL_MAX, 1),
             idleTimeoutMillis: parseEnvVarNumber(
                 process.env.DATABASE_POOL_IDLE_TIMEOUT_MS,
                 secondsToMilliseconds(30),

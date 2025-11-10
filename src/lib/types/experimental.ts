@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'fetchMode'
     | 'optimizeLifecycle'
     | 'globalChangeRequestList'
-    | 'trafficBillingDisplay'
     | 'milestoneProgression'
     | 'featureReleasePlans'
     | 'plausibleMetrics'
@@ -260,10 +259,6 @@ const flags: IFlags = {
     },
     globalChangeRequestList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_LIST,
-        false,
-    ),
-    trafficBillingDisplay: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TRAFFIC_BILLING_DISPLAY,
         false,
     ),
     milestoneProgression: parseEnvVarBoolean(

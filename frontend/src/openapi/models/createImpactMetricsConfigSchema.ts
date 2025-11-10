@@ -18,7 +18,7 @@ export interface CreateImpactMetricsConfigSchema {
     id?: string;
     /** The selected labels and their values for filtering the metric data. */
     labelSelectors: CreateImpactMetricsConfigSchemaLabelSelectors;
-    /** The Prometheus metric series to display. It includes both unleash prefix and metric type and display name */
+    /** The Prometheus metric series to query. It includes both unleash prefix and metric type and display name */
     metricName: string;
     /** The time range for the metric data. */
     timeRange: CreateImpactMetricsConfigSchemaTimeRange;

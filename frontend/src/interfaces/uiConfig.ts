@@ -52,7 +52,7 @@ export type UiFlags = {
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
-    maintenanceMode?: boolean;
+    maintenanceMode?: boolean | Variant;
     messageBanner?: Variant;
     banner?: Variant;
     notifications?: boolean;

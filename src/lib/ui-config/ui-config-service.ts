@@ -108,7 +108,6 @@ export class UiConfigService {
             email: user.email,
             userId: user.id,
         };
-
         const uiConfig: UiConfigSchema = {
             ...this.config.ui,
             flags,

@@ -428,7 +428,7 @@ export class SegmentsController extends Controller {
     }
 
     async removeSegment(
-        req: IAuthRequest<{ id: number }>,
+        req: IAuthRequest<{ id: string }>,
         res: Response,
     ): Promise<void> {
         const id = Number(req.params.id);

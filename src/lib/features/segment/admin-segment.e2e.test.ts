@@ -23,6 +23,14 @@ let db: ITestDb;
 const SEGMENTS_BASE_PATH = '/api/admin/segments';
 const FEATURES_LIST_BASE_PATH = '/api/admin/projects/default/features';
 
+const withDefaults = (value: any): any => {
+    return {
+        caseInsensitive: false,
+        inverted: false,
+        ...value,
+    };
+};
+
 const getFeatureStrategiesPath = (featureName: string) => {
     return `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/strategies`;
 };
@@ -250,7 +258,7 @@ test('should update segment constraints', async () => {
         constraints: [constraintA],
     });
     const [segmentA] = await fetchSegments();
-    expect(segmentA.constraints).toMatchObject([constraintA]);
+    expect(segmentA.constraints).toEqual([constraintA].map(withDefaults));
 
     await app.request
         .put(`${SEGMENTS_BASE_PATH}/${segmentA.id}`)
@@ -261,7 +269,9 @@ test('should update segment constraints', async () => {
         .expect(204);
 
     const [segmentB] = await fetchSegments();
-    expect(segmentB.constraints).toMatchObject([constraintB, constraintA]);
+    expect(segmentB.constraints).toEqual(
+        [constraintB, constraintA].map(withDefaults),
+    );
 });
 
 test('should delete segments', async () => {

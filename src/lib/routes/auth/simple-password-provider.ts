@@ -4,7 +4,6 @@ import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/index.js';
 import type UserService from '../../services/user-service.js';
 import type { IUnleashServices } from '../../services/index.js';
-import BadDataError from '../../error/bad-data-error.js';
 import { NONE } from '../../types/permissions.js';
 import Controller from '../controller.js';
 import type { IAuthRequest } from '../unleash-types.js';
@@ -61,9 +60,6 @@ export class SimplePasswordProvider extends Controller {
         res: Response<UserSchema>,
     ): Promise<void> {
         const { username, password } = req.body;
-        if (!username || !password) {
-            throw new BadDataError('Username and password are required.');
-        }
         const userAgent = req.get('user-agent');
 
         const { isAPI, ...user } = await this.userService.loginUser(

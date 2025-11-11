@@ -1,5 +1,6 @@
 import request from 'supertest';
 import express from 'express';
+import { vi } from 'vitest';
 import User from '../../types/user.js';
 import { SimplePasswordProvider } from './simple-password-provider.js';
 import PasswordMismatchError from '../../error/password-mismatch.js';
@@ -11,7 +12,10 @@ test('Should require password', async () => {
     const openApiService = new OpenApiService(config);
     const app = express();
     app.use(express.json());
-    const userService = () => {};
+    const router = express.Router();
+    // Stub userService with a loginUser function so handler won't throw TypeErrors
+    const loginUser = vi.fn();
+    const userService = { loginUser };
 
     const ctr = new SimplePasswordProvider(config, {
         // @ts-expect-error
@@ -19,13 +23,17 @@ test('Should require password', async () => {
         openApiService,
     });
 
-    app.use('/auth/simple', ctr.router);
+    router.use('/auth/simple', ctr.router);
+    // Install OpenAPI request validator (normally done in app.ts)
+    await openApiService.initializeOpenApi(app, router);
+    app.use(router);
 
     const res = await request(app)
         .post('/auth/simple/login')
-        .send({ name: 'john' });
+        .send({ name: 'john' }); // missing required username/password keys
 
-    expect(400).toBe(res.status);
+    expect(res.status).toBe(400);
+    expect(loginUser).not.toHaveBeenCalled();
 });
 
 test('Should login user', async () => {

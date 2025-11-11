@@ -50,7 +50,9 @@ export const MilestoneProgressionForm = ({
         status,
     );
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+
         if (!form.validate()) {
             return;
         }

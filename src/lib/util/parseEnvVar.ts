@@ -1,4 +1,4 @@
-import type { Variant } from 'unleash-client';
+import { PayloadType, type Variant } from 'unleash-client';
 
 export function parseEnvVarNumber(
     envVar: string | undefined,
@@ -56,7 +56,7 @@ export function parseEnvVarJSON(
     return defaultVal;
 }
 
-export function parseEnvVarBooleanOrVariant(
+export function parseEnvVarBooleanOrStringVariant(
     envVar: string | undefined,
     defaultVal: boolean | Variant,
 ): boolean | Variant {
@@ -64,21 +64,20 @@ export function parseEnvVarBooleanOrVariant(
         return defaultVal;
     }
 
-    if (envVar === '1' || envVar === 't') {
+    if (envVar === '1' || envVar === 't' || envVar === 'true') {
         return true;
     }
 
-    if (envVar === '0' || envVar === 'f') {
+    if (envVar === '0' || envVar === 'f' || envVar === 'false') {
         return false;
     }
 
-    try {
-        const parsed = JSON.parse(envVar);
-        if ('name' in parsed && 'enabled' in parsed) {
-            return parsed as Variant;
-        }
-    } catch (e) {
-        // ... do nothing?
-    }
-    return defaultVal;
+    return {
+        name: 'Variant',
+        enabled: true,
+        payload: {
+            type: PayloadType.STRING,
+            value: envVar,
+        },
+    };
 }

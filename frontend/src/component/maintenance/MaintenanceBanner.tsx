@@ -20,5 +20,5 @@ const useMaintenanceBannerMessage = (): string => {
 
 export const MaintenanceBanner = () => {
     const message = useMaintenanceBannerMessage();
-    return <Banner banner={{ message, variant: 'error' }} height={65} />;
+    return <Banner banner={{ message, variant: 'error' }} />;
 };

@@ -214,11 +214,11 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async getAddon(
-        req: Request<{ id: number }, any, any, any>,
+        req: Request<{ id: string }, any, any, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
-        const addon = await this.addonService.getAddon(id);
+        const addon = await this.addonService.getAddon(Number(id));
         this.openApiService.respondWithValidation(
             200,
             res,
@@ -228,13 +228,16 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async updateAddon(
-        req: IAuthRequest<{ id: number }, any, AddonCreateUpdateSchema, any>,
+        req: IAuthRequest<{ id: string }, any, AddonCreateUpdateSchema, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
         const data = req.body;
-
-        const addon = await this.addonService.updateAddon(id, data, req.audit);
+        const addon = await this.addonService.updateAddon(
+            Number(id),
+            data,
+            req.audit,
+        );
 
         this.openApiService.respondWithValidation(
             200,
@@ -245,7 +248,7 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async createAddon(
-        req: IAuthRequest<AddonCreateUpdateSchema, any, any, any>,
+        req: IAuthRequest<any, any, AddonCreateUpdateSchema, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const data = req.body;
@@ -260,18 +263,18 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async deleteAddon(
-        req: IAuthRequest<{ id: number }, any, any, any>,
+        req: IAuthRequest<{ id: string }, any, any, any>,
         res: Response<void>,
     ): Promise<void> {
         const { id } = req.params;
-        await this.addonService.removeAddon(id, req.audit);
+        await this.addonService.removeAddon(Number(id), req.audit);
 
         res.status(200).end();
     }
 
     async getIntegrationEvents(
         req: IAuthRequest<
-            { id: number },
+            { id: string },
             unknown,
             unknown,
             BasePaginationParameters
@@ -280,7 +283,8 @@ Note: passing \`null\` as a value for the description property will set it to an
     ): Promise<void> {
         const { id } = req.params;
 
-        if (Number.isNaN(Number(id))) {
+        const numericId = Number(id);
+        if (Number.isNaN(numericId)) {
             throw new BadDataError('Invalid integration configuration id');
         }
 
@@ -292,7 +296,7 @@ Note: passing \`null\` as a value for the description property will set it to an
 
         const integrationEvents =
             await this.integrationEventsService.getPaginatedEvents(
-                id,
+                numericId,
                 normalizedLimit,
                 normalizedOffset,
             );

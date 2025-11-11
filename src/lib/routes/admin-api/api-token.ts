@@ -300,7 +300,7 @@ export class ApiTokenController extends Controller {
     }
 
     async createApiToken(
-        req: IAuthRequest<CreateApiTokenSchema>,
+        req: IAuthRequest<undefined, any, CreateApiTokenSchema>,
         res: Response<ApiTokenSchema>,
     ): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);

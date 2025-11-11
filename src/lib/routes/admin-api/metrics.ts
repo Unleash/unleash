@@ -23,7 +23,10 @@ import {
 } from '../../openapi/spec/application-overview-schema.js';
 import type { OpenApiService } from '../../services/index.js';
 import { applicationsQueryParameters } from '../../openapi/spec/applications-query-parameters.js';
-import { normalizeQueryParams } from '../../features/feature-search/search-utils.js';
+import {
+    normalizeQueryParams,
+    type SearchParams,
+} from '../../features/feature-search/search-utils.js';
 import {
     applicationEnvironmentInstancesSchema,
     type ApplicationEnvironmentInstancesSchema,
@@ -253,7 +256,12 @@ class MetricsController extends Controller {
     }
 
     async getApplications(
-        req: IAuthRequest,
+        req: IAuthRequest<
+            undefined,
+            ApplicationsSchema,
+            unknown,
+            SearchParams & { sortBy: string }
+        >,
         res: Response<ApplicationsSchema>,
     ): Promise<void> {
         const { user } = req;
@@ -272,7 +280,7 @@ class MetricsController extends Controller {
                 searchParams: normalizedQuery,
                 offset: normalizedOffset,
                 limit: normalizedLimit,
-                sortBy: req.query.sortBy,
+                sortBy: req.query.sortBy || 'appName',
                 sortOrder: normalizedSortOrder,
             },
             extractUserIdFromUser(user),

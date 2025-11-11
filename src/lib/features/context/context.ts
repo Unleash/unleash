@@ -287,7 +287,7 @@ export class ContextController extends Controller {
     }
 
     async createContextField(
-        req: IAuthRequest<void, void, CreateContextFieldSchema>,
+        req: IAuthRequest<undefined, void, CreateContextFieldSchema>,
         res: Response<ContextFieldSchema>,
     ): Promise<void> {
         const value = req.body;

@@ -182,7 +182,12 @@ class UserController extends Controller {
     }
 
     async getRoles(
-        req: IAuthRequest,
+        req: IAuthRequest<
+            undefined,
+            undefined,
+            undefined,
+            { projectId?: string }
+        >,
         res: Response<RolesSchema>,
     ): Promise<void> {
         const { projectId } = req.query;

@@ -115,7 +115,7 @@ class ExportImportController extends Controller {
     }
 
     async export(
-        req: IAuthRequest<unknown, unknown, ExportQuerySchema, unknown>,
+        req: IAuthRequest<undefined, unknown, ExportQuerySchema, undefined>,
         res: Response,
     ): Promise<void> {
         const query = req.body;
@@ -132,7 +132,7 @@ class ExportImportController extends Controller {
     }
 
     async validateImport(
-        req: IAuthRequest<unknown, unknown, ImportTogglesSchema, unknown>,
+        req: IAuthRequest<undefined, unknown, ImportTogglesSchema, undefined>,
         res: Response,
     ): Promise<void> {
         const dto = req.body;
@@ -151,7 +151,7 @@ class ExportImportController extends Controller {
     }
 
     async importData(
-        req: IAuthRequest<unknown, unknown, ImportTogglesSchema, unknown>,
+        req: IAuthRequest<undefined, unknown, ImportTogglesSchema, undefined>,
         res: Response,
     ): Promise<void> {
         const { user, audit } = req;

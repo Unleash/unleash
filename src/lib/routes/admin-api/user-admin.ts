@@ -473,7 +473,7 @@ export default class UserAdminController extends Controller {
     }
 
     async resetUserPassword(
-        req: IAuthRequest<unknown, ResetPasswordSchema, IdSchema>,
+        req: IAuthRequest<any, ResetPasswordSchema, IdSchema>,
         res: Response<ResetPasswordSchema>,
     ): Promise<void> {
         const { user } = req;
@@ -577,7 +577,7 @@ export default class UserAdminController extends Controller {
     }
 
     async getUser(
-        req: Request<{ id: number }>,
+        req: Request<{ id: string }>,
         res: Response<UserSchema>,
     ): Promise<void> {
         const { id } = req.params;
@@ -597,7 +597,7 @@ export default class UserAdminController extends Controller {
     }
 
     async createUser(
-        req: IAuthRequest<unknown, unknown, CreateUserSchema>,
+        req: IAuthRequest<undefined, unknown, CreateUserSchema>,
         res: Response<CreateUserResponseSchema>,
     ): Promise<void> {
         const { username, email, name, rootRole, sendEmail, password } =
@@ -654,7 +654,7 @@ export default class UserAdminController extends Controller {
 
     async updateUser(
         req: IAuthRequest<
-            { id: number },
+            { id: string },
             CreateUserResponseSchema,
             UpdateUserSchema
         >,
@@ -664,14 +664,14 @@ export default class UserAdminController extends Controller {
         const { id } = params;
         const { name, email, rootRole } = body;
 
-        await this.throwIfScimUser({ id });
+        await this.throwIfScimUser({ id: Number(id) });
         const normalizedRootRole = Number.isInteger(Number(rootRole))
             ? Number(rootRole)
             : (rootRole as RoleName);
 
         const { isAPI, ...updateUser } = await this.userService.updateUser(
             {
-                id,
+                id: Number(id),
                 name,
                 email,
                 rootRole: normalizedRootRole,
@@ -691,18 +691,18 @@ export default class UserAdminController extends Controller {
     }
 
     async deleteUser(
-        req: IAuthRequest<{ id: number }>,
+        req: IAuthRequest<{ id: string }>,
         res: Response,
     ): Promise<void> {
         const { user, params } = req;
         const { id } = params;
 
-        await this.userService.deleteUser(+id, req.audit);
+        await this.userService.deleteUser(Number(id), req.audit);
         res.status(200).send();
     }
 
     async validateUserPassword(
-        req: IAuthRequest<unknown, unknown, PasswordSchema>,
+        req: IAuthRequest<undefined, unknown, PasswordSchema>,
         res: Response,
     ): Promise<void> {
         const { password } = req.body;
@@ -712,15 +712,15 @@ export default class UserAdminController extends Controller {
     }
 
     async changeUserPassword(
-        req: IAuthRequest<{ id: number }, unknown, PasswordSchema>,
+        req: IAuthRequest<{ id: string }, unknown, PasswordSchema>,
         res: Response,
     ): Promise<void> {
         const { id } = req.params;
         const { password } = req.body;
 
-        await this.throwIfScimUser({ id });
+        await this.throwIfScimUser({ id: Number(id) });
 
-        await this.userService.changePassword(+id, password);
+        await this.userService.changePassword(Number(id), password);
         res.status(200).send();
     }
 
@@ -740,7 +740,7 @@ export default class UserAdminController extends Controller {
 
     async getPermissions(
         req: IAuthRequest<
-            { id: number },
+            { id: string },
             unknown,
             unknown,
             { project?: string; environment?: string }
@@ -749,7 +749,7 @@ export default class UserAdminController extends Controller {
     ): Promise<void> {
         const { project, environment } = req.query;
         const { isAPI, ...user } = await this.userService.getUser(
-            req.params.id,
+            Number(req.params.id),
         );
         const rootRole = await this.accessService.getRootRoleForUser(user.id);
         let projectRoles: IRoleWithPermissions[] = [];

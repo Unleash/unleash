@@ -389,7 +389,7 @@ export class SegmentsController extends Controller {
     }
 
     async getStrategiesBySegment(
-        req: IAuthRequest<{ id: number }>,
+        req: IAuthRequest<{ id: string }>,
         res: Response<SegmentStrategiesSchema>,
     ): Promise<void> {
         const id = Number(req.params.id);
@@ -448,7 +448,7 @@ export class SegmentsController extends Controller {
     }
 
     async updateSegment(
-        req: IAuthRequest<{ id: number }>,
+        req: IAuthRequest<{ id: string }>,
         res: Response,
     ): Promise<void> {
         const id = Number(req.params.id);
@@ -471,7 +471,7 @@ export class SegmentsController extends Controller {
     }
 
     async getSegment(
-        req: Request<{ id: number }>,
+        req: Request<{ id: string }>,
         res: Response,
     ): Promise<void> {
         const id = Number(req.params.id);

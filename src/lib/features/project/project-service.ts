@@ -1034,7 +1034,7 @@ export default class ProjectService {
     ): Promise<IProjectApplications> {
         const applications = await this.projectStore.getApplicationsByProject({
             ...searchParams,
-            sortBy: searchParams.sortBy || 'appName',
+            sortBy: searchParams.sortBy,
         });
         return applications;
     }

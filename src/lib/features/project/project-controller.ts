@@ -36,7 +36,10 @@ import {
     type ProjectApplicationsSchema,
 } from '../../openapi/spec/project-applications-schema.js';
 import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters.js';
-import { normalizeQueryParams } from '../feature-search/search-utils.js';
+import {
+    normalizeQueryParams,
+    type SearchParams,
+} from '../feature-search/search-utils.js';
 import ProjectInsightsController from '../project-insights/project-insights-controller.js';
 import FeatureLifecycleController from '../feature-lifecycle/feature-lifecycle-controller.js';
 import type ClientInstanceService from '../metrics/instance/instance-service.js';
@@ -274,7 +277,12 @@ export default class ProjectController extends Controller {
     }
 
     async getProjectApplications(
-        req: IAuthRequest,
+        req: IAuthRequest<
+            { projectId: string },
+            unknown,
+            unknown,
+            SearchParams & { sortBy?: string }
+        >,
         res: Response<ProjectApplicationsSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
@@ -294,7 +302,7 @@ export default class ProjectController extends Controller {
             project: projectId,
             offset: normalizedOffset,
             limit: normalizedLimit,
-            sortBy: req.query.sortBy,
+            sortBy: req.query.sortBy || 'appName',
             sortOrder: normalizedSortOrder,
         });
 

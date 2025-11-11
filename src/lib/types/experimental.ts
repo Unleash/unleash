@@ -1,6 +1,9 @@
 import { PayloadType, type Variant } from 'unleash-client';
-import { parseEnvVarBoolean } from '../util/index.js';
 import { defaultVariant } from 'unleash-client/lib/variant.js';
+import {
+    parseEnvVarBoolean,
+    parseEnvVarBooleanOrVariant,
+} from '../util/index.js';
 import type { MetricFlagContext } from 'unleash-client/lib/impact-metrics/metric-types.js';
 import type { Context } from '../features/playground/feature-evaluator/index.js';
 
@@ -71,7 +74,7 @@ const flags: IFlags = {
         process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
         false,
     ),
-    maintenanceMode: parseEnvVarBoolean(
+    maintenanceMode: parseEnvVarBooleanOrVariant(
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
         false,
     ),

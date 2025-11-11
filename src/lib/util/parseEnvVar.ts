@@ -1,3 +1,5 @@
+import type { Variant } from 'unleash-client';
+
 export function parseEnvVarNumber(
     envVar: string | undefined,
     defaultVal: number,
@@ -51,5 +53,32 @@ export function parseEnvVarJSON(
         }
     }
 
+    return defaultVal;
+}
+
+export function parseEnvVarBooleanOrVariant(
+    envVar: string | undefined,
+    defaultVal: boolean | Variant,
+): boolean | Variant {
+    if (!envVar) {
+        return defaultVal;
+    }
+
+    if (envVar === '1' || envVar === 't') {
+        return true;
+    }
+
+    if (envVar === '0' || envVar === 'f') {
+        return false;
+    }
+
+    try {
+        const parsed = JSON.parse(envVar);
+        if ('name' in parsed && 'enabled' in parsed) {
+            return parsed as Variant;
+        }
+    } catch (e) {
+        // ... do nothing?
+    }
     return defaultVal;
 }

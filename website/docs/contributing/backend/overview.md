@@ -30,7 +30,7 @@ To run and develop Unleash, you need to have PostgreSQL 14.0+ locally.
 
 Unleash currently also works with PostgreSQL v14.0+, but this might change in a future feature release, and we have stopped running automatic integration tests below PostgreSQL 14. The current recommendation is to use a role with Owner privileges since Unleash uses Postgres functions to simplify our database usage.
 
-### Create a local unleash databases in postgres {#create-a-local-unleash-databases-in-postgres}
+### Create a local Unleash database in Postgres
 
 Start the ready-to-use Postgres container (first run builds a small image that
 executes the required SQL automatically):

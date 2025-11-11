@@ -23,6 +23,8 @@ let enterpriseDb: ITestDb;
 let enterpriseDummyAdmin: IUserWithRootRole;
 let proDummyAdmin: IUserWithRootRole;
 
+const DB_SETUP_TIMEOUT = 60_000; // Concurrent e2e runs may need extra time to clone template DBs.
+
 const getApiClientResponse = (project = 'default') => [
     {
         name: 'test1',
@@ -221,7 +223,7 @@ beforeAll(async () => {
         },
         TEST_AUDIT_USER,
     );
-});
+}, DB_SETUP_TIMEOUT);
 
 afterEach(async () => {
     await cleanup(db, app);

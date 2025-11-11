@@ -1,11 +1,42 @@
 import { performance } from 'node:perf_hooks';
 import { REQUEST_TIME, SDK_CONNECTION_ID_RECEIVED } from '../metric-events.js';
 import type EventEmitter from 'events';
-import type { RequestHandler } from 'express';
+import type { Request, RequestHandler, Response } from 'express';
 import type { IFlagResolver } from '../internals.js';
 import type { InstanceStatsService } from '../server-impl.js';
 
 const appNameReportingThreshold = 1000;
+
+const collapsePrefixes = [
+    '/api/client/metrics/custom',
+    '/api/client/metrics/bulk',
+    '/api/client/metrics',
+    '/api/client',
+    '/api/admin',
+    '/api/frontend',
+    '/api',
+    '/edge',
+    '/auth',
+].sort((a, b) => b.length - a.length); // longest-first specificity
+
+const normalizePath = (
+    req: Pick<Request, 'baseUrl' | 'route' | 'originalUrl' | 'path'>,
+    res: Pick<Response, 'locals'>,
+): string => {
+    if (res.locals?.route) {
+        return res.locals.route;
+    }
+
+    if (req.route?.path) {
+        return `${req.baseUrl ?? ''}${req.route.path}`;
+    }
+
+    if (req.originalUrl) {
+        return req.originalUrl.split('?')[0];
+    }
+
+    return req.path;
+};
 
 export const storeRequestedRoute: RequestHandler = (req, res, next) => {
     if (req.route) {
@@ -17,25 +48,34 @@ export const storeRequestedRoute: RequestHandler = (req, res, next) => {
     next();
 };
 
-function collapse(path: string): string {
-    let prefix = '';
-    if (path) {
-        if (path.startsWith('/api/admin')) {
-            prefix = '/api/admin/';
-        } else if (path.startsWith('/api/client')) {
-            prefix = '/api/client/';
-        } else if (path.startsWith('/api/frontend')) {
-            prefix = '/api/frontend/';
-        } else if (path.startsWith('/api')) {
-            prefix = '/api/';
-        } else if (path.startsWith('/edge')) {
-            prefix = '/edge/';
-        } else if (path.startsWith('/auth')) {
-            prefix = '/auth/';
+function collapse(path?: string): string {
+    if (!path) {
+        return '(hidden)';
+    }
+
+    for (const base of collapsePrefixes) {
+        const baseWithSlash = `${base}/`;
+        if (path === base || path === baseWithSlash) {
+            return base;
+        }
+        if (path.startsWith(baseWithSlash)) {
+            // Special-case: for '/api/admin' keep one segment and hide the rest.
+            if (base === '/api/admin') {
+                const remaining = path.slice(baseWithSlash.length); // e.g., 'features/x/y' or 'features'
+                const segments = remaining.split('/').filter(Boolean);
+                if (segments.length === 0) {
+                    return base;
+                }
+                if (segments.length === 1) {
+                    return `${base}/${segments[0]}`;
+                }
+                return `${base}/${segments[0]}/(hidden)`;
+            }
+            return `${base}/(hidden)`;
         }
     }
 
-    return `${prefix}(hidden)`;
+    return '(hidden)';
 }
 
 export function responseTimeMetrics(
@@ -47,17 +87,11 @@ export function responseTimeMetrics(
         const start = performance.now();
 
         res.once('finish', () => {
-            const { method, path: reqPath, originalUrl, headers, query } = req;
+            const { method, headers, query } = req;
             const statusCode = res.statusCode;
 
-            // — derive pathname —
-            let pathname: string | undefined = undefined;
-            if (res.locals.route) {
-                pathname = res.locals.route;
-            } else if (req.route) {
-                pathname = req.baseUrl + req.route.path;
-            }
-            pathname = pathname ?? collapse(reqPath);
+            const resolvedPath = normalizePath(req, res);
+            const pathname = collapse(resolvedPath);
 
             // — derive appName (feature‐flagged) —
             let appName: string | undefined;
@@ -80,13 +114,13 @@ export function responseTimeMetrics(
                     headers['x-unleash-connection-id'] ||
                     headers['unleash-instanceid'];
 
-                if (originalUrl.includes('/api/client') && connId) {
+                if (resolvedPath.includes('/api/client') && connId) {
                     eventBus.emit(SDK_CONNECTION_ID_RECEIVED, {
                         connectionId: connId,
                         type: 'backend',
                     });
                 }
-                if (originalUrl.includes('/api/frontend') && connId) {
+                if (resolvedPath.includes('/api/frontend') && connId) {
                     eventBus.emit(SDK_CONNECTION_ID_RECEIVED, {
                         connectionId: connId,
                         type: 'frontend',

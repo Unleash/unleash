@@ -17,6 +17,7 @@ export const dateSchema = {
             description:
                 'A [UNIX timestamp](https://en.wikipedia.org/wiki/Unix_time).',
             example: 1690449593,
+            minimum: 1,
         },
     ],
     components: {},

@@ -166,10 +166,20 @@ describe('responseTimeMetrics new behavior', () => {
     );
 
     test.each([
-        ['/api/admin/features', '/api/admin/(hidden)'],
-        ['/api/admin/features/my-feature', '/api/admin/(hidden)'],
+        ['/api/admin/features', '/api/admin/features'],
+        ['/api/admin/features/my-feature', '/api/admin/features/(hidden)'],
+        ['/api/admin/projects', '/api/admin/projects'],
+        ['/api/admin/projects/my-project', '/api/admin/projects/(hidden)'],
         ['/api/frontend/client/metrics', '/api/frontend/(hidden)'],
-        ['/api/client/metrics', '/api/client/(hidden)'],
+        ['/api/client/metrics', '/api/client/metrics'],
+        ['/api/client/metrics/', '/api/client/metrics'],
+        ['/api/client/metrics/foo', '/api/client/metrics/(hidden)'],
+        [
+            '/api/client/metrics/custom/extra',
+            '/api/client/metrics/custom/(hidden)',
+        ],
+        ['/api/client/metrics/bulk', '/api/client/metrics/bulk'],
+        ['/api/client/metrics/bulk/foo', '/api/client/metrics/bulk/(hidden)'],
         ['/edge/validate', '/edge/(hidden)'],
         ['/whatever', '(hidden)'],
         ['/healthz', '(hidden)'],

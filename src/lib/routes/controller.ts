@@ -4,6 +4,7 @@ import {
     type Request,
     type Response,
     type RequestHandler,
+    type ErrorRequestHandler,
 } from 'express';
 import type { Logger } from '../logger.js';
 import { type IUnleashConfig, NONE } from '../types/index.js';
@@ -65,15 +66,27 @@ const checkPrivateProjectPermissions = () => async (req, res, next) => {
     return res.status(404).end();
 };
 
-const openAPIValidationMiddleware = async (err, req, res, next) => {
-    if (err?.status && err.validationErrors) {
-        const apiError = fromOpenApiValidationErrors(req, err.validationErrors);
+const openAPIValidationMiddleware =
+    (routePath: string): ErrorRequestHandler =>
+    async (err, req, res, next) => {
+        if (err?.status && err.validationErrors) {
+            const apiError = fromOpenApiValidationErrors(
+                req,
+                err.validationErrors,
+            );
 
-        res.status(apiError.statusCode).json(apiError);
-    } else {
-        next(err);
-    }
-};
+            if (!res.locals.route) {
+                const originalPath = req.originalUrl?.split('?')[0];
+                const fallbackBase = `${req.baseUrl ?? ''}${routePath}`;
+                res.locals.route =
+                    originalPath || fallbackBase || req.path || undefined;
+            }
+
+            res.status(apiError.statusCode).json(apiError);
+        } else {
+            next(err);
+        }
+    };
 
 /**
  * Base class for Controllers to standardize binding to express Router.
@@ -126,7 +139,7 @@ export default class Controller {
             this.useRouteErrorHandler(options.handler.bind(this)),
         );
 
-        this.app.use(options.path, openAPIValidationMiddleware);
+        this.app.use(options.path, openAPIValidationMiddleware(options.path));
     }
 
     get(

@@ -149,7 +149,6 @@ test.each(['client', 'backend'])(
                 tokenName: `${type}-token-maker`,
                 type,
                 environment: 'development',
-                projects: ['default'],
             })
             .set('Content-Type', 'application/json');
 

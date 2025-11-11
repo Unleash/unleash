@@ -35,7 +35,6 @@ import { timingSafeEqual } from 'crypto';
 import { OperationDeniedError } from '../../../error/index.js';
 import type { CreateProjectApiTokenSchema } from '../../../openapi/spec/create-project-api-token-schema.js';
 import { createProjectApiToken } from '../../../schema/create-project-api-token-schema.js';
-import { BadDataError } from '../../../error/index.js';
 
 interface ProjectTokenParam {
     token: string;
@@ -171,16 +170,6 @@ export class ProjectApiTokenController extends Controller {
         const { projectId } = req.params;
         await this.projectService.getProject(projectId); // Validates that the project exists
 
-        const requestedProjects = Array.isArray(createToken.projects)
-            ? createToken.projects
-            : [projectId];
-
-        if (!requestedProjects.includes(projectId)) {
-            throw new BadDataError(
-                'Project API tokens can only target the current project',
-            );
-        }
-
         const permissionRequired = CREATE_PROJECT_API_TOKEN;
         const hasPermission = await this.accessService.hasPermission(
             req.user,
@@ -193,7 +182,7 @@ export class ProjectApiTokenController extends Controller {
             );
         }
         const token = await this.apiTokenService.createApiTokenWithProjects(
-            { ...createToken, projects: requestedProjects },
+            { ...createToken, projects: [projectId] },
             req.audit,
         );
         this.openApiService.respondWithValidation(

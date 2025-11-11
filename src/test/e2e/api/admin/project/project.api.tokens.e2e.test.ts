@@ -80,7 +80,6 @@ test('fails to create new client token when given wrong project', async () => {
         .send({
             tokenName: 'default-client',
             type: 'client',
-            projects: ['wrong'],
             environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
@@ -95,7 +94,6 @@ test.each(['client', 'frontend', 'backend'])(
             .send({
                 tokenName: `default-${type}`,
                 type,
-                projects: ['default'],
                 environment: DEFAULT_ENV,
             })
             .set('Content-Type', 'application/json');

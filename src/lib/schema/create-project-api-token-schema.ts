@@ -26,5 +26,6 @@ export const createProjectApiToken = joi
                 ),
             then: joi.string().optional().default(DEFAULT_ENV),
         }),
+        projects: joi.array().items(joi.string()).optional(),
     })
     .options({ stripUnknown: true, allowUnknown: false, abortEarly: false });

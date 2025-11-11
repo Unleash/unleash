@@ -392,7 +392,10 @@ export class SegmentsController extends Controller {
         req: IAuthRequest<{ id: number }>,
         res: Response<SegmentStrategiesSchema>,
     ): Promise<void> {
-        const id = req.params.id;
+        const id = Number(req.params.id);
+        if (!Number.isInteger(id)) {
+            throw new BadDataError('Segment id must be a number');
+        }
         const { user } = req;
         const strategies = await this.segmentService.getVisibleStrategies(
             id,
@@ -428,7 +431,10 @@ export class SegmentsController extends Controller {
         req: IAuthRequest<{ id: number }>,
         res: Response,
     ): Promise<void> {
-        const id = req.params.id;
+        const id = Number(req.params.id);
+        if (!Number.isInteger(id)) {
+            throw new BadDataError('Segment id must be a number');
+        }
 
         let segmentIsInUse = false;
         segmentIsInUse = await this.segmentService.isInUse(id);
@@ -445,7 +451,10 @@ export class SegmentsController extends Controller {
         req: IAuthRequest<{ id: number }>,
         res: Response,
     ): Promise<void> {
-        const id = req.params.id;
+        const id = Number(req.params.id);
+        if (!Number.isInteger(id)) {
+            throw new BadDataError('Segment id must be a number');
+        }
         const updateRequest: UpsertSegmentSchema = {
             name: req.body.name,
             description: req.body.description,
@@ -465,7 +474,10 @@ export class SegmentsController extends Controller {
         req: Request<{ id: number }>,
         res: Response,
     ): Promise<void> {
-        const id = req.params.id;
+        const id = Number(req.params.id);
+        if (!Number.isInteger(id)) {
+            throw new BadDataError('Segment id must be a number');
+        }
         const segment = await this.segmentService.get(id);
         if (this.flagResolver.isEnabled('anonymiseEventLog')) {
             res.json(anonymiseKeys(segment, ['createdBy']));

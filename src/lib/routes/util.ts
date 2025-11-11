@@ -33,12 +33,14 @@ export const handleErrors: (
     error: Error,
 ) => void = (res, logger, error) => {
     if (createError.isHttpError(error)) {
-        return res
-            .status(
-                // @ts-expect-error - The error object here is not guaranteed to contain status
-                error.status ?? 400,
-            )
-            .json({ message: error.message });
+        const httpError = error as createError.HttpError & {
+            errors?: Array<Record<string, unknown>>;
+        };
+        const payload: Record<string, unknown> = { message: httpError.message };
+        if (httpError.errors) {
+            payload.details = httpError.errors;
+        }
+        return res.status(httpError.status ?? 400).json(payload);
     }
 
     const finalError =
@@ -68,16 +70,15 @@ export const handleErrors: (
     // Running JSON.stringify(finalError.details) also hangs.
     // As a workaround, we do a roundabout way of getting to the details property
     // by doing JSON.parse(JSON.stringify(finalError))['details']
-    const details =
-        // @ts-expect-error - details might not be present on all UnleashErrors
-        // biome-ignore lint/complexity/useLiteralKeys: see above
-        finalError.details ?? JSON.parse(JSON.stringify(finalError))['details'];
+    const validationDetails =
+        JSON.parse(JSON.stringify(finalError)).details ??
+        JSON.parse(JSON.stringify(error)).validationErrors;
     return res
         .status(finalError.statusCode)
         .json({
             name: finalError.name,
             message: finalError.message,
-            details,
+            details: validationDetails,
         })
         .end();
 };

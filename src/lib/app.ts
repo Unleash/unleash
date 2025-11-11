@@ -100,9 +100,6 @@ export default async function getApp(
     app.use(baseUriPath, favicon(path.join(publicFolder, 'favicon.ico')));
     app.use(baseUriPath, express.static(publicFolder, { index: false }));
 
-    if (config.enableOAS && services.openApiService) {
-        services.openApiService.useDocs(app);
-    }
     app.use(
         `${baseUriPath}/api/frontend*`,
         corsOriginMiddleware(services, config),
@@ -190,10 +187,13 @@ export default async function getApp(
     }
 
     // Setup API routes
-    app.use(
-        `${baseUriPath}/`,
-        new IndexRouter(config, services, stores, db!).router,
-    );
+    const indexRouter = new IndexRouter(config, services, stores, db!);
+
+    if (config.enableOAS && services.openApiService) {
+        await services.openApiService.useDocs(app, indexRouter.router);
+    }
+
+    app.use(`${baseUriPath}/`, indexRouter.router);
 
     if (process.env.NODE_ENV !== 'production') {
         app.use(errorHandler());

@@ -581,13 +581,18 @@ export default class UserAdminController extends Controller {
         res: Response<UserSchema>,
     ): Promise<void> {
         const { id } = req.params;
-        const { isAPI, ...user } = await this.userService.getUser(id);
+        const userId = Number(id);
+        const { isAPI, ...user } = await this.userService.getUser(userId);
+        const normalizedUser = {
+            ...user,
+            id: Number(user.id),
+        };
 
         this.openApiService.respondWithValidation(
             200,
             res,
             userSchema.$id,
-            serializeDates(user),
+            serializeDates(normalizedUser),
         );
     }
 

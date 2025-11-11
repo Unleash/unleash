@@ -143,7 +143,9 @@ test('Tag type with invalid color format gets rejected', async () => {
         .set('Content-Type', 'application/json')
         .expect(400);
 
-    expect(res.body.details[0].message).toMatch(/color/);
+    expect(res.body.details[0].message).toBe(
+        'must match pattern "^#[0-9A-Fa-f]{6}$"',
+    );
 });
 
 test('Can update a tag types description and icon', async () => {
@@ -240,7 +242,9 @@ test('Validation of tag-types with invalid color format is unsuccessful', async 
         .set('Content-Type', 'application/json')
         .expect(400);
 
-    expect(res.body.details[0].message).toMatch(/color/);
+    expect(res.body.details[0].message).toBe(
+        'must match pattern "^#[0-9A-Fa-f]{6}$"',
+    );
 });
 
 test('Validation of tag types allows numbers for description and icons because of coercion', async () => {

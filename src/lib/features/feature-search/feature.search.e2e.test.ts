@@ -71,18 +71,31 @@ beforeEach(async () => {
     await db.stores.segmentStore.deleteAll();
 });
 
+const SEARCH_PATH = '/api/admin/search/features';
+
+const buildSearchQuery = (
+    params: Record<string, string | string[] | undefined>,
+) =>
+    Object.fromEntries(
+        Object.entries(params).filter(([_, value]) => {
+            if (Array.isArray(value)) {
+                return value.length > 0;
+            }
+            return value !== undefined && value !== null && value !== '';
+        }),
+    );
+
 const searchFeatures = async (
     {
         query = '',
         project = 'IS:default',
         archived = 'IS:false',
-    }: FeatureSearchQueryParameters,
+    }: FeatureSearchQueryParameters = {},
     expectedCode = 200,
 ) => {
     return app.request
-        .get(
-            `/api/admin/search/features?query=${query}&project=${project}&archived=${archived}`,
-        )
+        .get(SEARCH_PATH)
+        .query(buildSearchQuery({ query, project, archived }))
         .expect(expectedCode);
 };
 
@@ -92,13 +105,12 @@ const searchFeaturesWithLifecycle = async (
         project = 'IS:default',
         archived = 'IS:false',
         lifecycle = 'IS:initial',
-    }: FeatureSearchQueryParameters,
+    }: FeatureSearchQueryParameters = {},
     expectedCode = 200,
 ) => {
     return app.request
-        .get(
-            `/api/admin/search/features?query=${query}&project=${project}&archived=${archived}&lifecycle=${lifecycle}`,
-        )
+        .get(SEARCH_PATH)
+        .query(buildSearchQuery({ query, project, archived, lifecycle }))
         .expect(expectedCode);
 };
 
@@ -108,12 +120,18 @@ const sortFeatures = async (
         sortOrder = '',
         project = 'default',
         favoritesFirst = 'false',
-    }: FeatureSearchQueryParameters,
+    }: FeatureSearchQueryParameters = {},
     expectedCode = 200,
 ) => {
     return app.request
-        .get(
-            `/api/admin/search/features?sortBy=${sortBy}&sortOrder=${sortOrder}&project=IS:${project}&favoritesFirst=${favoritesFirst}`,
+        .get(SEARCH_PATH)
+        .query(
+            buildSearchQuery({
+                sortBy,
+                sortOrder,
+                project: `IS:${project}`,
+                favoritesFirst,
+            }),
         )
         .expect(expectedCode);
 };
@@ -124,19 +142,26 @@ const searchFeaturesWithOffset = async (
         project = 'default',
         offset = '0',
         limit = '10',
-    }: FeatureSearchQueryParameters,
+    }: FeatureSearchQueryParameters = {},
     expectedCode = 200,
 ) => {
     return app.request
-        .get(
-            `/api/admin/search/features?query=${query}&project=IS:${project}&offset=${offset}&limit=${limit}`,
+        .get(SEARCH_PATH)
+        .query(
+            buildSearchQuery({
+                query,
+                project: `IS:${project}`,
+                offset,
+                limit,
+            }),
         )
         .expect(expectedCode);
 };
 
 const filterFeaturesByType = async (typeParams: string, expectedCode = 200) => {
     return app.request
-        .get(`/api/admin/search/features?type=${typeParams}`)
+        .get(SEARCH_PATH)
+        .query(buildSearchQuery({ type: typeParams }))
         .expect(expectedCode);
 };
 
@@ -145,25 +170,29 @@ const filterFeaturesByCreatedBy = async (
     expectedCode = 200,
 ) => {
     return app.request
-        .get(`/api/admin/search/features?createdBy=${createdByParams}`)
+        .get(SEARCH_PATH)
+        .query(buildSearchQuery({ createdBy: createdByParams }))
         .expect(expectedCode);
 };
 
 const filterFeaturesByTag = async (tag: string, expectedCode = 200) => {
     return app.request
-        .get(`/api/admin/search/features?tag=${tag}`)
+        .get(SEARCH_PATH)
+        .query(buildSearchQuery({ tag }))
         .expect(expectedCode);
 };
 
 const filterFeaturesBySegment = async (segment: string, expectedCode = 200) => {
     return app.request
-        .get(`/api/admin/search/features?segment=${segment}`)
+        .get(SEARCH_PATH)
+        .query(buildSearchQuery({ segment }))
         .expect(expectedCode);
 };
 
 const filterFeaturesByState = async (state: string, expectedCode = 200) => {
     return app.request
-        .get(`/api/admin/search/features?state=${state}`)
+        .get(SEARCH_PATH)
+        .query(buildSearchQuery({ state }))
         .expect(expectedCode);
 };
 
@@ -174,9 +203,8 @@ const filterFeaturesByOperators = async (
     expectedCode = 200,
 ) => {
     return app.request
-        .get(
-            `/api/admin/search/features?createdAt=${createdAt}&state=${state}&tag=${tag}`,
-        )
+        .get(SEARCH_PATH)
+        .query(buildSearchQuery({ createdAt, state, tag }))
         .expect(expectedCode);
 };
 
@@ -185,7 +213,8 @@ const filterFeaturesByCreated = async (
     expectedCode = 200,
 ) => {
     return app.request
-        .get(`/api/admin/search/features?createdAt=${createdAt}`)
+        .get(SEARCH_PATH)
+        .query(buildSearchQuery({ createdAt }))
         .expect(expectedCode);
 };
 
@@ -193,22 +222,35 @@ const filterFeaturesByEnvironmentStatus = async (
     environmentStatuses: string[],
     expectedCode = 200,
 ) => {
-    const statuses = environmentStatuses
-        .map((status) => `status[]=${status}`)
-        .join('&');
     return app.request
-        .get(`/api/admin/search/features?${statuses}`)
+        .get(SEARCH_PATH)
+        .query({ status: environmentStatuses })
         .expect(expectedCode);
 };
 
 const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
-    return app.request.get(`/api/admin/search/features`).expect(expectedCode);
+    return app.request.get(SEARCH_PATH).expect(expectedCode);
 };
+
 const getProjectArchive = async (projectId = 'default', expectedCode = 200) => {
     return app.request
-        .get(
-            `/api/admin/search/features?project=IS%3A${projectId}&archived=IS%3Atrue`,
+        .get(SEARCH_PATH)
+        .query(
+            buildSearchQuery({
+                project: `IS:${projectId}`,
+                archived: 'IS:true',
+            }),
         )
+        .expect(expectedCode);
+};
+
+const filterFeaturesByLastSeenAt = async (
+    lastSeenAt: string,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(SEARCH_PATH)
+        .query(buildSearchQuery({ lastSeenAt }))
         .expect(expectedCode);
 };
 
@@ -972,7 +1014,7 @@ test('should search features by state with operators', async () => {
     });
 
     const { body: isAnyOfBody } = await filterFeaturesByState(
-        'IS_ANY_OF:active, stale',
+        'IS_ANY_OF:active,stale',
     );
     expect(isAnyOfBody).toMatchObject({
         features: [
@@ -983,7 +1025,7 @@ test('should search features by state with operators', async () => {
     });
 
     const { body: isNotAnyBody } = await filterFeaturesByState(
-        'IS_NONE_OF:active, stale',
+        'IS_NONE_OF:active,stale',
     );
     expect(isNotAnyBody).toMatchObject({
         features: [],
@@ -1037,7 +1079,7 @@ test('should search features by potentially stale', async () => {
     ]);
 
     // (potentially-stale OR stale)
-    await check('IS_ANY_OF:potentially-stale, stale', [
+    await check('IS_ANY_OF:potentially-stale,stale', [
         'my_feature_b',
         'my_feature_c',
         'my_feature_d',
@@ -1111,27 +1153,23 @@ test('should filter features by lastSeenAt', async () => {
 
     const sevenDaysAgo = subDays(currentDate, 7);
 
-    const { body: recentFeatures } = await app.request
-        .get(
-            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${sevenDaysAgo.toISOString().split('T')[0]}`,
-        )
-        .expect(200);
+    const { body: recentFeatures } = await filterFeaturesByLastSeenAt(
+        `IS_ON_OR_AFTER:${sevenDaysAgo.toISOString().split('T')[0]}`,
+    );
 
     expect(recentFeatures.features).toHaveLength(1);
     expect(recentFeatures.features[0].name).toBe('recently_seen_feature');
 
-    const { body: oldFeatures } = await app.request
-        .get(
-            `/api/admin/search/features?lastSeenAt=IS_BEFORE:${sevenDaysAgo.toISOString().split('T')[0]}`,
-        )
-        .expect(200);
+    const { body: oldFeatures } = await filterFeaturesByLastSeenAt(
+        `IS_BEFORE:${sevenDaysAgo.toISOString().split('T')[0]}`,
+    );
 
     expect(oldFeatures.features).toHaveLength(1);
     expect(oldFeatures.features[0].name).toBe('old_seen_feature');
 
-    const { body: allFeatures } = await app.request
-        .get('/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:2000-01-01')
-        .expect(200);
+    const { body: allFeatures } = await filterFeaturesByLastSeenAt(
+        'IS_ON_OR_AFTER:2000-01-01',
+    );
     expect(allFeatures.features).toHaveLength(2);
 });
 
@@ -1161,22 +1199,18 @@ test('should filter by last seen even if in different environment', async () => 
 
     const threeDaysAgo = subDays(currentDate, 3);
 
-    const { body: recentFeatures } = await app.request
-        .get(
-            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${threeDaysAgo.toISOString().split('T')[0]}`,
-        )
-        .expect(200);
+    const { body: recentFeatures } = await filterFeaturesByLastSeenAt(
+        `IS_ON_OR_AFTER:${threeDaysAgo.toISOString().split('T')[0]}`,
+    );
 
     expect(recentFeatures.features).toHaveLength(1);
     expect(recentFeatures.features[0].name).toBe('feature_in_production');
 
     const sixDaysAgo = subDays(currentDate, 6);
 
-    const { body: olderFeatures } = await app.request
-        .get(
-            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${sixDaysAgo.toISOString().split('T')[0]}`,
-        )
-        .expect(200);
+    const { body: olderFeatures } = await filterFeaturesByLastSeenAt(
+        `IS_ON_OR_AFTER:${sixDaysAgo.toISOString().split('T')[0]}`,
+    );
 
     expect(olderFeatures.features).toHaveLength(2);
     expect(olderFeatures.features.map((f) => f.name)).toContain(
@@ -1206,11 +1240,9 @@ test('should not return features with no last seen when filtering by lastSeenAt'
 
     const twoDaysAgo = subDays(currentDate, 2);
 
-    const { body: featuresWithLastSeen } = await app.request
-        .get(
-            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${twoDaysAgo.toISOString().split('T')[0]}`,
-        )
-        .expect(200);
+    const { body: featuresWithLastSeen } = await filterFeaturesByLastSeenAt(
+        `IS_ON_OR_AFTER:${twoDaysAgo.toISOString().split('T')[0]}`,
+    );
 
     expect(featuresWithLastSeen.features).toHaveLength(1);
     expect(featuresWithLastSeen.features[0].name).toBe(
@@ -1219,11 +1251,9 @@ test('should not return features with no last seen when filtering by lastSeenAt'
 
     const currentDateFormatted = currentDate.toISOString().split('T')[0];
 
-    const { body: featuresBeforeToday } = await app.request
-        .get(
-            `/api/admin/search/features?lastSeenAt=IS_BEFORE:${currentDateFormatted}`,
-        )
-        .expect(200);
+    const { body: featuresBeforeToday } = await filterFeaturesByLastSeenAt(
+        `IS_BEFORE:${currentDateFormatted}`,
+    );
 
     expect(featuresBeforeToday.features).toHaveLength(1);
     expect(featuresBeforeToday.features[0].name).toBe('feature_with_last_seen');

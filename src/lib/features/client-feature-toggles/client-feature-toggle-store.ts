@@ -23,6 +23,30 @@ import type { Db } from '../../db/db.js';
 import Raw = Knex.Raw;
 import { sortStrategies } from '../../util/sortStrategies.js';
 import type { ITag } from '../../tags/index.js';
+import type { IConstraint } from '../../types/model.js';
+
+const pruneConstraintDefaults = (constraint: IConstraint): IConstraint => {
+    const cleaned = { ...constraint };
+
+    if (cleaned.caseInsensitive === false) {
+        delete cleaned.caseInsensitive;
+    }
+
+    if (cleaned.inverted === false) {
+        delete cleaned.inverted;
+    }
+
+    return cleaned;
+};
+
+const sanitizeConstraints = (
+    constraints: IConstraint[] | undefined | null,
+): IConstraint[] => {
+    if (!constraints || constraints.length === 0) {
+        return [];
+    }
+    return constraints.map(pruneConstraintDefaults);
+};
 
 export interface IGetAllFeatures {
     featureQuery?: IFeatureToggleQuery;
@@ -260,7 +284,7 @@ export default class FeatureToggleClientStore
             id: row.strategy_id,
             name: row.strategy_name,
             title: row.strategy_title,
-            constraints: row.constraints || [],
+            constraints: sanitizeConstraints(row.constraints),
             parameters: mapValues(row.parameters || {}, ensureStringValue),
             sortOrder: row.sort_order,
             milestoneId: row.milestone_id,
@@ -315,7 +339,7 @@ export default class FeatureToggleClientStore
     ) {
         feature.strategies
             ?.find((s) => s?.id === row.strategy_id)
-            ?.constraints?.push(...row.segment_constraints);
+            ?.constraints?.push(...(row.segment_constraints || []));
     }
 
     private addSegmentIdsToStrategy(

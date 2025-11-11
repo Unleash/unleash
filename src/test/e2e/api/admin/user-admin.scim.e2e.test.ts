@@ -5,6 +5,8 @@ import {
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import type { IUnleashStores } from '../../../../lib/types/index.js';
+import { RoleName } from '../../../../lib/types/model.js';
+import { SYSTEM_USER_AUDIT } from '../../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -14,18 +16,24 @@ let scimUserId: number;
 let regularUserId: number;
 let scimDeletableUser: number;
 
-const scimUser = {
+type SeedUser = {
+    email: string;
+    name: string;
+    scim_id?: string;
+};
+
+const scimUser: SeedUser = {
     email: 'scim-user@test.com',
     name: 'SCIM User',
     scim_id: 'some-random-scim-id',
 };
 
-const regularUser = {
+const regularUser: SeedUser = {
     email: 'regular-user@test.com',
     name: 'Regular User',
 };
 
-const scimUserToBeDeleted = {
+const scimUserToBeDeleted: SeedUser = {
     email: 'scim-victim@test.com',
     name: 'SCIM Victim',
     scim_id: 'some-other-random-scim-id',
@@ -50,20 +58,30 @@ beforeAll(async () => {
         enabled: true,
     });
 
-    scimUserId = (
-        await db.rawDatabase('users').insert(scimUser).returning('id')
-    )[0].id;
+    const viewerRole = await app.services.accessService.getPredefinedRole(
+        RoleName.VIEWER,
+    );
+    const createUserWithRole = async (user: SeedUser): Promise<number> => {
+        const createdUser = await app.services.userService.createUser(
+            {
+                email: user.email,
+                name: user.name,
+                rootRole: viewerRole!.id,
+            },
+            SYSTEM_USER_AUDIT,
+        );
+        if (user.scim_id) {
+            await db
+                .rawDatabase('users')
+                .where({ id: createdUser.id })
+                .update({ scim_id: user.scim_id });
+        }
+        return createdUser.id;
+    };
 
-    regularUserId = (
-        await db.rawDatabase('users').insert(regularUser).returning('id')
-    )[0].id;
-
-    scimDeletableUser = (
-        await db
-            .rawDatabase('users')
-            .insert(scimUserToBeDeleted)
-            .returning('id')
-    )[0].id;
+    scimUserId = await createUserWithRole(scimUser);
+    regularUserId = await createUserWithRole(regularUser as any);
+    scimDeletableUser = await createUserWithRole(scimUserToBeDeleted);
 });
 
 afterAll(async () => {

@@ -14,13 +14,14 @@ export const serializeDates = <T>(obj: T): SerializedDates<T> => {
         return obj.map(serializeDates) as unknown as SerializedDates<T>;
     }
 
-    const entries = Object.entries(obj).map(([k, v]) => {
-        if (v instanceof Date) {
-            return [k, v.toJSON()];
-        } else {
+    const entries = Object.entries(obj)
+        .filter(([, value]) => value !== undefined)
+        .map(([k, v]) => {
+            if (v instanceof Date) {
+                return [k, v.toJSON()];
+            }
             return [k, serializeDates(v)];
-        }
-    });
+        });
 
     return Object.fromEntries(entries);
 };

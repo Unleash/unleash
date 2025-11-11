@@ -33,6 +33,14 @@ export const createProjectApiTokenSchema = {
             description: 'A unique name for this particular token',
             example: 'some-user',
         },
+        projects: {
+            type: 'array',
+            description:
+                'The project IDs this token should have access to. When omitted, defaults to the project specified in the URL.',
+            items: {
+                type: 'string',
+            },
+        },
     },
     components: {},
 } as const;

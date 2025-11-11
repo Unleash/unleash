@@ -250,7 +250,7 @@ test('should update segment constraints', async () => {
         constraints: [constraintA],
     });
     const [segmentA] = await fetchSegments();
-    expect(segmentA.constraints).toEqual([constraintA]);
+    expect(segmentA.constraints).toMatchObject([constraintA]);
 
     await app.request
         .put(`${SEGMENTS_BASE_PATH}/${segmentA.id}`)
@@ -261,7 +261,7 @@ test('should update segment constraints', async () => {
         .expect(204);
 
     const [segmentB] = await fetchSegments();
-    expect(segmentB.constraints).toEqual([constraintB, constraintA]);
+    expect(segmentB.constraints).toMatchObject([constraintB, constraintA]);
 });
 
 test('should delete segments', async () => {

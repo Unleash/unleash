@@ -31,6 +31,31 @@ import type {
     MetricsTranslator,
 } from '../impact/metrics-translator.js';
 import type { ClientMetricsSchema } from '../../../server-impl.js';
+import BadDataError from '../../../error/bad-data-error.js';
+
+const isIsoDateString = (value: string): boolean => {
+    if (!value || value.trim().length === 0) {
+        return false;
+    }
+
+    const parsed = Date.parse(value);
+    return Number.isFinite(parsed);
+};
+
+const isUnixTimestamp = (value: number): boolean =>
+    Number.isFinite(value) && value > 0;
+
+const isValidBucketTimestamp = (value: unknown): boolean => {
+    if (typeof value === 'string') {
+        return isIsoDateString(value);
+    }
+
+    if (typeof value === 'number') {
+        return isUnixTimestamp(value);
+    }
+
+    return false;
+};
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -159,6 +184,11 @@ export default class ClientMetricsController extends Controller {
         } else {
             try {
                 const { body: data, ip: clientIp, user } = req;
+                if (!isValidBucketTimestamp(data.bucket?.stop)) {
+                    throw new BadDataError(
+                        'bucket.stop must be a non-empty ISO date string or a positive unix timestamp',
+                    );
+                }
                 const { impactMetrics, ...metricsData } = data;
                 metricsData.environment =
                     this.metricsV2.resolveMetricsEnvironment(user, metricsData);

@@ -16,7 +16,7 @@ let compression: any;
 const openApiService = {
     // returns a middleware
     validPath: vi.fn().mockReturnValue(() => {}),
-    useDocs: vi.fn(),
+    initializeOpenApi: vi.fn(),
 };
 
 const appModule = await import('./app.js');

@@ -50,6 +50,7 @@ const mockFactories: () => UnleashFactoryMethods = () => ({
             openApiService: {
                 // returns a middleware
                 validPath: vi.fn().mockReturnValue(() => {}),
+                initializeOpenApi: vi.fn(),
             },
         } as unknown as IUnleashServices),
     createSessionDb:

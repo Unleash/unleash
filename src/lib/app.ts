@@ -189,8 +189,11 @@ export default async function getApp(
     // Setup API routes
     const indexRouter = new IndexRouter(config, services, stores, db!);
 
-    if (config.enableOAS && services.openApiService) {
-        await services.openApiService.useDocs(app, indexRouter.router);
+    if (services.openApiService) {
+        await services.openApiService.initializeOpenApi(
+            app,
+            indexRouter.router,
+        );
     }
 
     app.use(`${baseUriPath}/`, indexRouter.router);

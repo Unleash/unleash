@@ -121,12 +121,12 @@ export class OpenApiService {
         return middleware;
     }
 
-    async useDocs(app: Express, router: IRouter): Promise<void> {
-        if (this.validatorInstalled || !this.config.enableOAS) {
-            return;
+    async initializeOpenApi(app: Express, router: IRouter): Promise<void> {
+        if (!this.validatorInstalled) {
+            await this.installValidator(router);
         }
-        await this.installValidator(router);
-        if (!this.docsRegistered) {
+
+        if (this.config.enableOAS && !this.docsRegistered) {
             this.registerDocEndpoints(app, router);
             this.docsRegistered = true;
         }
@@ -176,7 +176,10 @@ export class OpenApiService {
         res.status(status).json(data);
     }
 
-    private async installValidator(router: IRouter): Promise<void> {
+    async installValidator(router: IRouter): Promise<void> {
+        if (this.validatorInstalled) {
+            return;
+        }
         const document = toImmutableDocument(this.generate(router));
         const middleware = openApiValidator({
             apiSpec: document,

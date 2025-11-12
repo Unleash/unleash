@@ -1,27 +1,27 @@
 /* Sen font - Self-hosted */
 /* sen-latin-400-normal */
 @font-face {
-  font-family: 'Sen';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 400;
-  src: url(./sen-latin-400-normal.woff2) format('woff2');
+    font-family: "Sen";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url(./sen-latin-400-normal.woff2) format("woff2");
 }
 
 /* sen-latin-700-normal */
 @font-face {
-  font-family: 'Sen';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 700;
-  src: url(./sen-latin-700-normal.woff2) format('woff2');
+    font-family: "Sen";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 700;
+    src: url(./sen-latin-700-normal.woff2) format("woff2");
 }
 
 /* sen-latin-800-normal */
 @font-face {
-  font-family: 'Sen';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 800;
-  src: url(./sen-latin-800-normal.woff2) format('woff2');
+    font-family: "Sen";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 800;
+    src: url(./sen-latin-800-normal.woff2) format("woff2");
 }

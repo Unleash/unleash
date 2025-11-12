@@ -27,10 +27,10 @@ export const useImpactMetricsMetadata = () => {
     };
 };
 
-export const useImpactMetricsNames = () => {
+export const useImpactMetricsOptions = () => {
     const { metadata, loading, error } = useImpactMetricsMetadata();
 
-    const metricSeries = useMemo(() => {
+    const metricOptions = useMemo(() => {
         if (!metadata?.series) {
             return [];
         }
@@ -41,7 +41,7 @@ export const useImpactMetricsNames = () => {
     }, [metadata]);
 
     return {
-        metricSeries,
+        metricOptions,
         loading,
         error,
     };

@@ -120,6 +120,7 @@ export const ReleasePlan = ({
         featureName,
         environment,
         milestones,
+        safeguards,
     } = plan;
 
     const projectId = useRequiredPathParam('projectId');
@@ -389,7 +390,6 @@ export const ReleasePlan = ({
                 planId: id,
                 body: data,
             });
-            setSafeguardFormOpen(false);
             setToastData({
                 type: 'success',
                 text: 'Safeguard added successfully',
@@ -431,9 +431,18 @@ export const ReleasePlan = ({
             <StyledBody safeguards={safeguardsEnabled}>
                 {safeguardsEnabled ? (
                     <StyledAddSafeguard>
-                        {safeguardFormOpen ? (
+                        {safeguards.length > 0 ? (
                             <SafeguardForm
+                                safeguard={safeguards[0]}
                                 onSubmit={handleSafeguardSubmit}
+                                onCancel={() => setSafeguardFormOpen(false)}
+                            />
+                        ) : safeguardFormOpen ? (
+                            <SafeguardForm
+                                onSubmit={(data) => {
+                                    handleSafeguardSubmit(data);
+                                    setSafeguardFormOpen(false);
+                                }}
                                 onCancel={() => setSafeguardFormOpen(false)}
                             />
                         ) : (

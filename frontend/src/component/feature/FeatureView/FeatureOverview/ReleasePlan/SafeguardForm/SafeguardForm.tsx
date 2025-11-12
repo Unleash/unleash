@@ -29,14 +29,12 @@ interface ISafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
     onCancel: () => void;
     safeguard?: ISafeguard;
-    mode?: 'create' | 'edit' | 'display';
 }
 
 export const SafeguardForm = ({
     onSubmit,
     onCancel,
     safeguard,
-    mode = 'create',
 }: ISafeguardFormProps) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
 
@@ -60,7 +58,10 @@ export const SafeguardForm = ({
         safeguard?.impactMetric.timeRange || 'day',
     );
 
-    const [isEditing, setIsEditing] = useState(mode !== 'display');
+    type FormMode = 'create' | 'edit' | 'display';
+    const [mode, setMode] = useState<FormMode>(
+        safeguard ? 'display' : 'create',
+    );
 
     const { data: metricsData } = useImpactMetricsData(
         selectedMetric
@@ -89,8 +90,8 @@ export const SafeguardForm = ({
     const metricType = selectedMetricData?.type || 'unknown';
 
     const enterEditMode = () => {
-        if (mode === 'display' && !isEditing) {
-            setIsEditing(true);
+        if (mode === 'display') {
+            setMode('edit');
         }
     };
 
@@ -154,15 +155,14 @@ export const SafeguardForm = ({
                 threshold: Number(threshold),
             };
             onSubmit(data);
-            if (mode === 'display') {
-                setIsEditing(false);
+            if (mode === 'edit') {
+                setMode('display');
             }
         }
     };
 
     const handleCancel = () => {
-        if (mode === 'display') {
-            // Reset to original values and exit edit mode
+        if (mode === 'edit') {
             if (safeguard) {
                 setSelectedMetric(safeguard.impactMetric.metricName);
                 setApplication(
@@ -173,16 +173,14 @@ export const SafeguardForm = ({
                 setThreshold(safeguard.triggerCondition.threshold);
                 setTimeRange(safeguard.impactMetric.timeRange);
             }
-            setIsEditing(false);
-        } else {
+            setMode('display');
+        } else if (mode === 'create') {
             onCancel();
         }
     };
 
-    const showButtons =
-        mode === 'create' ||
-        mode === 'edit' ||
-        (mode === 'display' && isEditing);
+    // Show buttons in create or edit mode, but not in display mode
+    const showButtons = mode === 'create' || mode === 'edit';
 
     return (
         <StyledFormContainer onSubmit={handleSubmit}>

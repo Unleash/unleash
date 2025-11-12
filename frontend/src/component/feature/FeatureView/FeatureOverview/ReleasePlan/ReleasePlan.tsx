@@ -436,7 +436,6 @@ export const ReleasePlan = ({
                                 safeguard={safeguards[0]}
                                 onSubmit={handleSafeguardSubmit}
                                 onCancel={() => setSafeguardFormOpen(false)}
-                                mode='display'
                             />
                         ) : safeguardFormOpen ? (
                             <SafeguardForm
@@ -445,7 +444,6 @@ export const ReleasePlan = ({
                                     setSafeguardFormOpen(false);
                                 }}
                                 onCancel={() => setSafeguardFormOpen(false)}
-                                mode='create'
                             />
                         ) : (
                             <StyledActionButton

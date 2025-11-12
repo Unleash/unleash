@@ -54,7 +54,7 @@ export default class ProjectInsightsController extends Controller {
     }
 
     async getProjectInsights(
-        req: IAuthRequest<IProjectParam, unknown, unknown, unknown>,
+        req: IAuthRequest<IProjectParam, unknown, unknown>,
         res: Response<ProjectInsightsSchema>,
     ): Promise<void> {
         const { projectId } = req.params;

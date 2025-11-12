@@ -11,6 +11,7 @@ import {
     UPDATE_STRATEGY,
 } from '../../types/permissions.js';
 import type { Request, Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 import type { IAuthRequest } from '../unleash-types.js';
 import type { OpenApiService } from '../../services/openapi-service.js';
 import {
@@ -238,7 +239,7 @@ class StrategyController extends Controller {
     }
 
     async createStrategy(
-        req: IAuthRequest<unknown, unknown, CreateStrategySchema>,
+        req: IAuthRequest<ParamsDictionary, unknown, CreateStrategySchema>,
         res: Response<StrategySchema>,
     ): Promise<void> {
         const userName = extractUsername(req);

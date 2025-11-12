@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 
 import Controller from '../../routes/controller.js';
 
@@ -42,13 +43,13 @@ import { extractUserIdFromUser } from '../../util/index.js';
 import type { LegalValueSchema } from '../../openapi/index.js';
 import type { WithTransactional } from '../../db/transaction.js';
 
-interface ContextParam {
+type ContextParam = ParamsDictionary & {
     contextField: string;
-}
+};
 
-interface DeleteLegalValueParam extends ContextParam {
+type DeleteLegalValueParam = ContextParam & {
     legalValue: string;
-}
+};
 
 export class ContextController extends Controller {
     private transactionalContextService: WithTransactional<ContextService>;
@@ -287,7 +288,7 @@ export class ContextController extends Controller {
     }
 
     async createContextField(
-        req: IAuthRequest<void, void, CreateContextFieldSchema>,
+        req: IAuthRequest<ParamsDictionary, void, CreateContextFieldSchema>,
         res: Response<ContextFieldSchema>,
     ): Promise<void> {
         const value = req.body;
@@ -357,7 +358,7 @@ export class ContextController extends Controller {
     }
 
     async validate(
-        req: Request<void, void, NameSchema>,
+        req: Request<{}, void, NameSchema>,
         res: Response,
     ): Promise<void> {
         const { name } = req.body;
@@ -367,7 +368,7 @@ export class ContextController extends Controller {
     }
 
     async getStrategiesByContextField(
-        req: IAuthRequest<{ contextField: string }>,
+        req: IAuthRequest<ContextParam>,
         res: Response<ContextFieldStrategiesSchema>,
     ): Promise<void> {
         const { contextField } = req.params;

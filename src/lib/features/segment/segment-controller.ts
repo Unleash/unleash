@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../../routes/controller.js';
 
 import type { IAuthRequest, IUnleashConfig } from '../../types/index.js';
@@ -43,7 +44,7 @@ import { BadDataError } from '../../error/index.js';
 import type { Logger } from '../../logger.js';
 
 type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
-    {},
+    ParamsDictionary,
     undefined,
     UpdateFeatureStrategySegmentsSchema
 >;
@@ -389,10 +390,10 @@ export class SegmentsController extends Controller {
     }
 
     async getStrategiesBySegment(
-        req: IAuthRequest<{ id: number }>,
+        req: IAuthRequest<{ id: string }>,
         res: Response<SegmentStrategiesSchema>,
     ): Promise<void> {
-        const id = req.params.id;
+        const id = Number(req.params.id);
         const { user } = req;
         const strategies = await this.segmentService.getVisibleStrategies(
             id,
@@ -425,10 +426,10 @@ export class SegmentsController extends Controller {
     }
 
     async removeSegment(
-        req: IAuthRequest<{ id: number }>,
+        req: IAuthRequest<{ id: string }>,
         res: Response,
     ): Promise<void> {
-        const id = req.params.id;
+        const id = Number(req.params.id);
 
         let segmentIsInUse = false;
         segmentIsInUse = await this.segmentService.isInUse(id);
@@ -442,10 +443,10 @@ export class SegmentsController extends Controller {
     }
 
     async updateSegment(
-        req: IAuthRequest<{ id: number }>,
+        req: IAuthRequest<{ id: string }>,
         res: Response,
     ): Promise<void> {
-        const id = req.params.id;
+        const id = Number(req.params.id);
         const updateRequest: UpsertSegmentSchema = {
             name: req.body.name,
             description: req.body.description,

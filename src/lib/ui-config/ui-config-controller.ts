@@ -1,4 +1,5 @@
 import type { Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 import type { AuthedRequest } from '../types/core.js';
 import type { IUnleashServices } from '../services/index.js';
 import type { IUnleashConfig } from '../types/option.js';
@@ -97,7 +98,7 @@ class UiConfigController extends Controller {
     }
 
     async setCors(
-        req: IAuthRequest<void, void, SetCorsSchema>,
+        req: IAuthRequest<ParamsDictionary, void, SetCorsSchema>,
         res: Response<string>,
     ): Promise<void> {
         if (req.body.frontendApiOrigins) {

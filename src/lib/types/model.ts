@@ -396,7 +396,7 @@ export interface IProjectHealthReport extends IProjectHealth {
     activeCount: number;
 }
 
-export interface IProjectParam {
+export interface IProjectParam extends Record<string, string> {
     projectId: string;
 }
 
@@ -405,8 +405,8 @@ export interface IProjectLinkTemplate {
     urlTemplate: string;
 }
 
-export interface IArchivedQuery {
-    archived: boolean;
+export interface IArchivedQuery extends Record<string, string> {
+    archived: string;
 }
 export interface ITagQuery {
     tagType: string;

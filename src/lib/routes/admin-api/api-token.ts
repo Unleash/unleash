@@ -46,10 +46,10 @@ import { OperationDeniedError } from '../../error/index.js';
 import type { CreateApiTokenSchema } from '../../internals.js';
 import type { IUserPermission } from '../../server-impl.js';
 
-interface TokenParam {
+interface TokenParam extends Record<string, string> {
     token: string;
 }
-interface TokenNameParam {
+interface TokenNameParam extends Record<string, string> {
     name: string;
 }
 export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
@@ -300,9 +300,9 @@ export class ApiTokenController extends Controller {
     }
 
     async createApiToken(
-        req: IAuthRequest<CreateApiTokenSchema>,
+        req: IAuthRequest<{}, any, CreateApiTokenSchema>,
         res: Response<ApiTokenSchema>,
-    ): Promise<any> {
+    ): Promise<void> {
         const createToken = await createApiToken.validateAsync(req.body);
         const permissionRequired = tokenTypeToCreatePermission(
             createToken.type,

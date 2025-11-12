@@ -32,7 +32,7 @@ interface FeatureParams extends ProjectParam {
     featureName: string;
 }
 
-interface ProjectParam {
+interface ProjectParam extends Record<string, string> {
     projectId: string;
 }
 export default class VariantsController extends Controller {

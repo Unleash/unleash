@@ -127,7 +127,7 @@ export default class PatController extends Controller {
     }
 
     async createPat(
-        req: IAuthRequest<unknown, unknown, CreatePatSchema>,
+        req: IAuthRequest<{}, unknown, CreatePatSchema>,
         res: Response<PatSchema>,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('personalAccessTokensKillSwitch')) {
@@ -168,10 +168,10 @@ export default class PatController extends Controller {
     }
 
     async deletePat(
-        req: IAuthRequest<{ id: number }>,
+        req: IAuthRequest<{ id: string }>,
         res: Response,
     ): Promise<void> {
-        const { id } = req.params;
+        const id = Number(req.params.id);
         await this.patService.deletePat(id, req.user.id, req.audit);
         res.status(200).end();
     }

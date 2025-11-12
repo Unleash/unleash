@@ -1,5 +1,6 @@
 import memoizee from 'memoizee';
 import type { Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hashSum from 'hash-sum';
 import Controller from '../../routes/controller.js';
@@ -48,6 +49,10 @@ export interface QueryOverride {
     project?: string[];
     environment?: string;
 }
+
+type FeatureNameParams = ParamsDictionary & {
+    featureName: string;
+};
 
 interface IMeta {
     revisionId: number;
@@ -362,7 +367,7 @@ export default class FeatureController extends Controller {
     }
 
     async getFeatureToggle(
-        req: IAuthRequest<{ featureName: string }, ClientFeaturesQuerySchema>,
+        req: IAuthRequest<FeatureNameParams, ClientFeaturesQuerySchema>,
         res: Response<ClientFeatureSchema>,
     ): Promise<void> {
         const name = req.params.featureName;

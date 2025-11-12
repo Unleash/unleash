@@ -18,7 +18,7 @@ import { type UserSchema, userSchema } from '../openapi/spec/user-schema.js';
 import type { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema.js';
 import type { IUnleashServices } from '../services/index.js';
 
-interface TokenParam {
+interface TokenParam extends Record<string, string> {
     token: string;
 }
 

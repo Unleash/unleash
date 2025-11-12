@@ -473,7 +473,7 @@ export default class UserAdminController extends Controller {
     }
 
     async resetUserPassword(
-        req: IAuthRequest<unknown, ResetPasswordSchema, IdSchema>,
+        req: IAuthRequest<{}, ResetPasswordSchema, IdSchema>,
         res: Response<ResetPasswordSchema>,
     ): Promise<void> {
         const { user } = req;
@@ -592,7 +592,7 @@ export default class UserAdminController extends Controller {
     }
 
     async createUser(
-        req: IAuthRequest<unknown, unknown, CreateUserSchema>,
+        req: IAuthRequest<{}, unknown, CreateUserSchema>,
         res: Response<CreateUserResponseSchema>,
     ): Promise<void> {
         const { username, email, name, rootRole, sendEmail, password } =
@@ -649,14 +649,14 @@ export default class UserAdminController extends Controller {
 
     async updateUser(
         req: IAuthRequest<
-            { id: number },
+            { id: string },
             CreateUserResponseSchema,
             UpdateUserSchema
         >,
         res: Response<CreateUserResponseSchema>,
     ): Promise<void> {
         const { user, params, body } = req;
-        const { id } = params;
+        const id = Number(params.id);
         const { name, email, rootRole } = body;
 
         await this.throwIfScimUser({ id });
@@ -686,18 +686,18 @@ export default class UserAdminController extends Controller {
     }
 
     async deleteUser(
-        req: IAuthRequest<{ id: number }>,
+        req: IAuthRequest<{ id: string }>,
         res: Response,
     ): Promise<void> {
         const { user, params } = req;
-        const { id } = params;
+        const id = Number(params.id);
 
-        await this.userService.deleteUser(+id, req.audit);
+        await this.userService.deleteUser(id, req.audit);
         res.status(200).send();
     }
 
     async validateUserPassword(
-        req: IAuthRequest<unknown, unknown, PasswordSchema>,
+        req: IAuthRequest<{}, unknown, PasswordSchema>,
         res: Response,
     ): Promise<void> {
         const { password } = req.body;
@@ -707,15 +707,15 @@ export default class UserAdminController extends Controller {
     }
 
     async changeUserPassword(
-        req: IAuthRequest<{ id: number }, unknown, PasswordSchema>,
+        req: IAuthRequest<{ id: string }, unknown, PasswordSchema>,
         res: Response,
     ): Promise<void> {
-        const { id } = req.params;
+        const id = Number(req.params.id);
         const { password } = req.body;
 
         await this.throwIfScimUser({ id });
 
-        await this.userService.changePassword(+id, password);
+        await this.userService.changePassword(id, password);
         res.status(200).send();
     }
 
@@ -735,7 +735,7 @@ export default class UserAdminController extends Controller {
 
     async getPermissions(
         req: IAuthRequest<
-            { id: number },
+            { id: string },
             unknown,
             unknown,
             { project?: string; environment?: string }
@@ -743,9 +743,8 @@ export default class UserAdminController extends Controller {
         res: Response<UserAccessOverviewSchema>,
     ): Promise<void> {
         const { project, environment } = req.query;
-        const { isAPI, ...user } = await this.userService.getUser(
-            req.params.id,
-        );
+        const id = Number(req.params.id);
+        const { isAPI, ...user } = await this.userService.getUser(id);
         const rootRole = await this.accessService.getRootRoleForUser(user.id);
         let projectRoles: IRoleWithPermissions[] = [];
         if (project) {

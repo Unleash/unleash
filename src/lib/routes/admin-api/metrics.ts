@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../controller.js';
 import { NONE, UPDATE_APPLICATION } from '../../types/permissions.js';
 import type { IUnleashConfig } from '../../types/option.js';
@@ -33,6 +34,15 @@ import {
     type OutdatedSdksSchema,
 } from '../../openapi/spec/outdated-sdks-schema.js';
 import UnknownFlagsController from '../../features/metrics/unknown-flags/unknown-flags-controller.js';
+
+type AppNameParam = ParamsDictionary & {
+    appName: string;
+};
+
+type AppEnvironmentParam = ParamsDictionary & {
+    appName: string;
+    environment: string;
+};
 
 class MetricsController extends Controller {
     private logger: Logger;
@@ -267,12 +277,15 @@ class MetricsController extends Controller {
             maxLimit: 1000,
         });
 
+        const sortBy =
+            typeof req.query.sortBy === 'string' ? req.query.sortBy : undefined;
+
         const applications = await this.clientInstanceService.getApplications(
             {
                 searchParams: normalizedQuery,
                 offset: normalizedOffset,
                 limit: normalizedLimit,
-                sortBy: req.query.sortBy,
+                sortBy: sortBy ?? 'appName',
                 sortOrder: normalizedSortOrder,
             },
             extractUserIdFromUser(user),
@@ -281,7 +294,7 @@ class MetricsController extends Controller {
     }
 
     async getApplication(
-        req: Request<{ appName: string }>,
+        req: Request<AppNameParam>,
         res: Response<ApplicationSchema>,
     ): Promise<void> {
         const { appName } = req.params;
@@ -292,7 +305,7 @@ class MetricsController extends Controller {
     }
 
     async getApplicationOverview(
-        req: IAuthRequest<{ appName: string }>,
+        req: IAuthRequest<AppNameParam>,
         res: Response<ApplicationOverviewSchema>,
     ): Promise<void> {
         const { appName } = req.params;
@@ -323,7 +336,7 @@ class MetricsController extends Controller {
     }
 
     async getApplicationEnvironmentInstances(
-        req: Request<{ appName: string; environment: string }>,
+        req: Request<AppEnvironmentParam>,
         res: Response<ApplicationEnvironmentInstancesSchema>,
     ): Promise<void> {
         const { appName, environment } = req.params;

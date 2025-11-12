@@ -1,4 +1,5 @@
 import type { Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 
 import Controller from '../controller.js';
 import {
@@ -28,7 +29,7 @@ import {
 } from '../../openapi/index.js';
 import type UserService from '../../services/user-service.js';
 
-interface TokenParam {
+interface TokenParam extends Record<string, string> {
     token: string;
 }
 
@@ -181,7 +182,11 @@ export class PublicSignupController extends Controller {
     }
 
     async createPublicSignupToken(
-        req: IAuthRequest<void, void, PublicSignupTokenCreateSchema>,
+        req: IAuthRequest<
+            ParamsDictionary,
+            void,
+            PublicSignupTokenCreateSchema
+        >,
         res: Response<PublicSignupTokenSchema>,
     ): Promise<void> {
         const token =

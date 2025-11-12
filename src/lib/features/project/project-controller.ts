@@ -244,7 +244,7 @@ export default class ProjectController extends Controller {
         const { user } = req;
         const overview = await this.projectService.getProjectOverview(
             projectId,
-            archived,
+            Boolean(archived),
             user.id,
         );
 
@@ -289,12 +289,15 @@ export default class ProjectController extends Controller {
             maxLimit: 100,
         });
 
+        const sortBy =
+            typeof req.query.sortBy === 'string' ? req.query.sortBy : undefined;
+
         const applications = await this.projectService.getApplications({
             searchParams: normalizedQuery,
             project: projectId,
             offset: normalizedOffset,
             limit: normalizedLimit,
-            sortBy: req.query.sortBy,
+            sortBy: sortBy ?? 'appName',
             sortOrder: normalizedSortOrder,
         });
 

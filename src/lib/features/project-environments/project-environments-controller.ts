@@ -27,7 +27,7 @@ import type { WithTransactional } from '../../db/transaction.js';
 
 const PREFIX = '/:projectId/environments';
 
-interface IProjectEnvironmentParams {
+interface IProjectEnvironmentParams extends Record<string, string> {
     projectId: string;
     environment: string;
 }

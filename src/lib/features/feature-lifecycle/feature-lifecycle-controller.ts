@@ -18,10 +18,11 @@ import {
 } from '../../openapi/index.js';
 import Controller from '../../routes/controller.js';
 import type { Request, Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import type { WithTransactional } from '../../db/transaction.js';
 
-interface FeatureLifecycleParams {
+interface FeatureLifecycleParams extends ParamsDictionary {
     projectId: string;
     featureName: string;
 }

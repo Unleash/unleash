@@ -1,4 +1,5 @@
 import type { Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../../../routes/controller.js';
 import type { IFlagResolver, IUnleashConfig } from '../../../types/index.js';
 import type ClientInstanceService from './instance-service.js';
@@ -151,7 +152,7 @@ export default class ClientMetricsController extends Controller {
     }
 
     async registerMetrics(
-        req: IAuthRequest<void, void, ClientMetricsSchema>,
+        req: IAuthRequest<ParamsDictionary, void, ClientMetricsSchema>,
         res: Response,
     ): Promise<void> {
         if (this.config.flagResolver.isEnabled('disableMetrics')) {
@@ -191,7 +192,7 @@ export default class ClientMetricsController extends Controller {
     }
 
     async customMetrics(
-        req: IAuthRequest<void, void, CustomMetricsSchema>,
+        req: IAuthRequest<ParamsDictionary, void, CustomMetricsSchema>,
         res: Response<void>,
     ): Promise<void> {
         if (this.config.flagResolver.isEnabled('disableMetrics')) {
@@ -231,7 +232,7 @@ export default class ClientMetricsController extends Controller {
     }
 
     async bulkMetrics(
-        req: IAuthRequest<void, void, BulkMetricsSchema>,
+        req: IAuthRequest<ParamsDictionary, void, BulkMetricsSchema>,
         res: Response<void>,
     ): Promise<void> {
         if (this.config.flagResolver.isEnabled('disableMetrics')) {

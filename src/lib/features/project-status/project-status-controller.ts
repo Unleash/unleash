@@ -53,7 +53,7 @@ export default class ProjectStatusController extends Controller {
     }
 
     async getProjectStatus(
-        req: IAuthRequest<IProjectParam, unknown, unknown, unknown>,
+        req: IAuthRequest<IProjectParam, unknown, unknown>,
         res: Response<ProjectStatusSchema>,
     ): Promise<void> {
         const { projectId } = req.params;

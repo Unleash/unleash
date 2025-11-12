@@ -7,7 +7,6 @@ import type { Logger } from '../../logger.js';
 import Controller from '../controller.js';
 
 import { NONE, UPDATE_FEATURE } from '../../types/permissions.js';
-import { extractUsername } from '../../util/extract-user.js';
 import type { IAuthRequest } from '../unleash-types.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
@@ -197,10 +196,9 @@ class TagController extends Controller {
     }
 
     async createTag(
-        req: IAuthRequest<unknown, unknown, CreateTagSchema>,
+        req: IAuthRequest<{}, unknown, CreateTagSchema>,
         res: Response<TagWithVersionSchema>,
     ): Promise<void> {
-        const userName = extractUsername(req);
         const tag = await this.tagService.createTag(req.body, req.audit);
         res.status(201)
             .header('location', `tags/${tag.type}/${tag.value}`)
@@ -209,11 +207,10 @@ class TagController extends Controller {
     }
 
     async deleteTag(
-        req: IAuthRequest<TagSchema>,
+        req: IAuthRequest<{ type: string; value: string }>,
         res: Response,
     ): Promise<void> {
         const { type, value } = req.params;
-        const userName = extractUsername(req);
         await this.tagService.deleteTag({ type, value }, req.audit);
         res.status(200).end();
     }

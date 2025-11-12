@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../../routes/controller.js';
 
 import {
@@ -197,7 +198,7 @@ class TagTypeController extends Controller {
     }
 
     async createTagType(
-        req: IAuthRequest<unknown, unknown, TagTypeSchema>,
+        req: IAuthRequest<ParamsDictionary, unknown, TagTypeSchema>,
         res: Response,
     ): Promise<void> {
         const tagType = await this.tagTypeService.transactional((service) =>

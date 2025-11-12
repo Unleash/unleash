@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../controller.js';
 import type { IFlagResolver, IUnleashConfig } from '../../types/index.js';
 import type { Logger } from '../../logger.js';
@@ -38,6 +39,10 @@ import {
     integrationEventsSchema,
 } from '../../openapi/spec/integration-events-schema.js';
 import { BadDataError } from '../../error/index.js';
+
+type AddonIdParams = ParamsDictionary & {
+    id: string;
+};
 import type {
     IntegrationEventsService,
     IUnleashServices,
@@ -214,11 +219,11 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async getAddon(
-        req: Request<{ id: number }, any, any, any>,
+        req: Request<AddonIdParams>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
-        const addon = await this.addonService.getAddon(id);
+        const addon = await this.addonService.getAddon(Number(id));
         this.openApiService.respondWithValidation(
             200,
             res,
@@ -228,13 +233,17 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async updateAddon(
-        req: IAuthRequest<{ id: number }, any, AddonCreateUpdateSchema, any>,
+        req: IAuthRequest<AddonIdParams, any, AddonCreateUpdateSchema>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
         const data = req.body;
 
-        const addon = await this.addonService.updateAddon(id, data, req.audit);
+        const addon = await this.addonService.updateAddon(
+            Number(id),
+            data,
+            req.audit,
+        );
 
         this.openApiService.respondWithValidation(
             200,
@@ -245,7 +254,7 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async createAddon(
-        req: IAuthRequest<AddonCreateUpdateSchema, any, any, any>,
+        req: IAuthRequest<ParamsDictionary, any, AddonCreateUpdateSchema>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const data = req.body;
@@ -260,18 +269,18 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async deleteAddon(
-        req: IAuthRequest<{ id: number }, any, any, any>,
+        req: IAuthRequest<AddonIdParams>,
         res: Response<void>,
     ): Promise<void> {
         const { id } = req.params;
-        await this.addonService.removeAddon(id, req.audit);
+        await this.addonService.removeAddon(Number(id), req.audit);
 
         res.status(200).end();
     }
 
     async getIntegrationEvents(
         req: IAuthRequest<
-            { id: number },
+            AddonIdParams,
             unknown,
             unknown,
             BasePaginationParameters
@@ -292,7 +301,7 @@ Note: passing \`null\` as a value for the description property will set it to an
 
         const integrationEvents =
             await this.integrationEventsService.getPaginatedEvents(
-                id,
+                Number(id),
                 normalizedLimit,
                 normalizedOffset,
             );

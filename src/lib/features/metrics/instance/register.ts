@@ -1,4 +1,5 @@
 import type { Response } from 'express';
+import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../../../routes/controller.js';
 import type { IFlagResolver } from '../../../types/index.js';
 import type { IUnleashConfig } from '../../../types/option.js';
@@ -90,7 +91,7 @@ export default class RegisterController extends Controller {
     }
 
     async registerClientApplication(
-        req: IAuthRequest<unknown, void, ClientApplicationSchema>,
+        req: IAuthRequest<ParamsDictionary, void, ClientApplicationSchema>,
         res: Response<void>,
     ): Promise<void> {
         const { body: data, ip: clientIp, user } = req;

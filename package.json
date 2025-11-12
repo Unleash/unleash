@@ -132,7 +132,7 @@
     "unleash-client": "^6.8.0-beta.0"
   },
   "devDependencies": {
-    "@apidevtools/swagger-parser": "12.1.0",
+    "@apidevtools/swagger-parser": "10.1.1",
     "@babel/core": "7.26.10",
     "@biomejs/biome": "^1.9.4",
     "@cyclonedx/yarn-plugin-cyclonedx": "^2.0.0",

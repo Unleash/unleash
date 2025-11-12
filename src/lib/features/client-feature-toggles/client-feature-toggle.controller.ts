@@ -165,7 +165,7 @@ export default class FeatureController extends Controller {
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
-        if (this.flagResolver.isEnabled('deltaDiff')) {
+        if (this.flagResolver.isEnabled('deltaApi')) {
             const features =
                 await this.clientFeatureToggleService.getClientFeatures(query);
 
@@ -362,12 +362,7 @@ export default class FeatureController extends Controller {
     }
 
     async getFeatureToggle(
-        req: IAuthRequest<
-            {
-                featureName: string;
-            },
-            ClientFeaturesQuerySchema
-        >,
+        req: IAuthRequest<{ featureName: string }, ClientFeaturesQuerySchema>,
         res: Response<ClientFeatureSchema>,
     ): Promise<void> {
         const name = req.params.featureName;

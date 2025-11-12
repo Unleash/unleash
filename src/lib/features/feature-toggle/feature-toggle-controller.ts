@@ -55,17 +55,36 @@ import { BadDataError } from '../../error/index.js';
 import { anonymise } from '../../util/index.js';
 import { throwOnInvalidSchema } from '../../openapi/validate.js';
 
-interface FeatureStrategyParams {
+interface FeatureStrategyParams extends Record<string, string> {
     projectId: string;
     featureName: string;
     environment: string;
-    sortOrder?: number;
 }
-interface ProjectParam {
+
+interface BulkFeaturesStrategyParams extends Record<string, string> {
+    projectId: string;
+    environment: string;
+}
+
+interface FeatureStrategyQuery extends Record<string, string> {
+    shouldActivateDisabledStrategies: string;
+}
+
+interface FeatureParams extends ProjectParam {
+    featureName: string;
+}
+
+interface ProjectParam extends Record<string, string> {
     projectId: string;
 }
 
-export interface IFeatureProjectUserParams extends ProjectParam {
+interface StrategyIdParams extends FeatureStrategyParams {
+    strategyId: string;
+}
+
+export interface IFeatureProjectUserParams {
+    projectId: string;
+    featureName?: string;
     archived?: boolean;
     userId?: number;
 
@@ -579,14 +598,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeatures(
-        req: IAuthRequest<
-            {
-                projectId: string;
-            },
-            any,
-            any,
-            AdminFeaturesQuerySchema
-        >,
+        req: IAuthRequest<ProjectParam, any, any, AdminFeaturesQuerySchema>,
         res: Response<ProjectFeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
@@ -604,6 +616,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async prepQuery(
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         { tag, namePrefix }: AdminFeaturesQuerySchema,
         projectId: string,
     ): Promise<IFeatureProjectUserParams> {
@@ -631,7 +644,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async cloneFeature(
         req: IAuthRequest<
-            { projectId: string; featureName: string },
+            FeatureParams,
             any,
             { name: string; replaceGroupId?: boolean }
         >,
@@ -660,11 +673,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async createFeature(
-        req: IAuthRequest<
-            { projectId: string; featureName: string },
-            FeatureSchema,
-            CreateFeatureSchema
-        >,
+        req: IAuthRequest<FeatureParams, FeatureSchema, CreateFeatureSchema>,
         res: Response<FeatureSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
@@ -720,12 +729,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeature(
-        req: IAuthRequest<
-            { projectId: string; featureName: string },
-            any,
-            any,
-            any
-        >,
+        req: IAuthRequest<FeatureParams, any, any, any>,
         res: Response<FeatureSchema>,
     ): Promise<void> {
         const { featureName, projectId } = req.params;
@@ -879,10 +883,10 @@ export default class ProjectFeaturesController extends Controller {
 
     async toggleFeatureEnvironmentOn(
         req: IAuthRequest<
-            { projectId: string; environment: string; featureName: string },
+            { featureName: string; environment: string; projectId: string },
             any,
             any,
-            { shouldActivateDisabledStrategies: string }
+            FeatureStrategyQuery
         >,
         res: Response<void>,
     ): Promise<void> {
@@ -904,10 +908,10 @@ export default class ProjectFeaturesController extends Controller {
 
     async bulkToggleFeaturesEnvironmentOn(
         req: IAuthRequest<
-            { projectId: string; environment: string },
+            BulkFeaturesStrategyParams,
             any,
             BulkToggleFeaturesSchema,
-            { shouldActivateDisabledStrategies: string }
+            FeatureStrategyQuery
         >,
         res: Response<void>,
     ): Promise<void> {
@@ -931,10 +935,10 @@ export default class ProjectFeaturesController extends Controller {
 
     async bulkToggleFeaturesEnvironmentOff(
         req: IAuthRequest<
-            { projectId: string; environment: string },
+            BulkFeaturesStrategyParams,
             any,
             BulkToggleFeaturesSchema,
-            { shouldActivateDisabledStrategies: string }
+            FeatureStrategyQuery
         >,
         res: Response<void>,
     ): Promise<void> {
@@ -957,12 +961,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async toggleFeatureEnvironmentOff(
-        req: IAuthRequest<
-            { projectId: string; environment: string; featureName: string },
-            any,
-            any,
-            any
-        >,
+        req: IAuthRequest<FeatureStrategyParams, any, any, any>,
         res: Response<void>,
     ): Promise<void> {
         const { featureName, environment, projectId } = req.params;
@@ -981,7 +980,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async addFeatureStrategy(
         req: IAuthRequest<
-            { projectId: string; environment: string; featureName: string },
+            FeatureStrategyParams,
             any,
             CreateFeatureStrategySchema
         >,
@@ -1027,7 +1026,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async setStrategiesSortOrder(
         req: IAuthRequest<
-            { projectId: string; environment: string; featureName: string },
+            FeatureStrategyParams,
             any,
             SetStrategySortOrderSchema,
             any
@@ -1051,16 +1050,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async updateFeatureStrategy(
-        req: IAuthRequest<
-            {
-                strategyId: string;
-                projectId: string;
-                environment: string;
-                featureName: string;
-            },
-            any,
-            UpdateFeatureStrategySchema
-        >,
+        req: IAuthRequest<StrategyIdParams, any, UpdateFeatureStrategySchema>,
         res: Response<FeatureStrategySchema>,
     ): Promise<void> {
         const { strategyId, environment, projectId, featureName } = req.params;
@@ -1085,17 +1075,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async patchFeatureStrategy(
-        req: IAuthRequest<
-            {
-                strategyId: string;
-                projectId: string;
-                environment: string;
-                featureName: string;
-            },
-            any,
-            Operation[],
-            any
-        >,
+        req: IAuthRequest<StrategyIdParams, any, Operation[], any>,
         res: Response<FeatureStrategySchema>,
     ): Promise<void> {
         const { strategyId, projectId, environment, featureName } = req.params;
@@ -1122,17 +1102,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeatureStrategy(
-        req: IAuthRequest<
-            {
-                strategyId: string;
-                projectId: string;
-                environment: string;
-                featureName: string;
-            },
-            any,
-            any,
-            any
-        >,
+        req: IAuthRequest<StrategyIdParams, any, any, any>,
         res: Response<FeatureStrategySchema>,
     ): Promise<void> {
         this.logger.info('Getting strategy');
@@ -1143,17 +1113,7 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async deleteFeatureStrategy(
-        req: IAuthRequest<
-            {
-                strategyId: string;
-                projectId: string;
-                environment: string;
-                featureName: string;
-            },
-            any,
-            any,
-            any
-        >,
+        req: IAuthRequest<StrategyIdParams, any, any, any>,
         res: Response<void>,
     ): Promise<void> {
         this.logger.info('Deleting strategy');

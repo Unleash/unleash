@@ -161,25 +161,27 @@ export const SafeguardForm = ({
         }
     };
 
-    const handleCancel = () => {
-        if (mode === 'edit') {
-            if (safeguard) {
-                setSelectedMetric(safeguard.impactMetric.metricName);
-                setApplication(
-                    safeguard.impactMetric.labelSelectors.appName[0],
-                );
-                setAggregationMode(safeguard.impactMetric.aggregationMode);
-                setOperator(safeguard.triggerCondition.operator);
-                setThreshold(safeguard.triggerCondition.threshold);
-                setTimeRange(safeguard.impactMetric.timeRange);
-            }
-            setMode('display');
-        } else if (mode === 'create') {
-            onCancel();
-        }
+    const resetToOriginalValues = () => {
+        if (!safeguard) return;
+
+        setSelectedMetric(safeguard.impactMetric.metricName);
+        setApplication(safeguard.impactMetric.labelSelectors.appName[0]);
+        setAggregationMode(safeguard.impactMetric.aggregationMode);
+        setOperator(safeguard.triggerCondition.operator);
+        setThreshold(safeguard.triggerCondition.threshold);
+        setTimeRange(safeguard.impactMetric.timeRange);
     };
 
-    // Show buttons in create or edit mode, but not in display mode
+    const handleCancel = () => {
+        if (mode === 'create') {
+            onCancel();
+            return;
+        }
+
+        resetToOriginalValues();
+        setMode('display');
+    };
+
     const showButtons = mode === 'create' || mode === 'edit';
 
     return (

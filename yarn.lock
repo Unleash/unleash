@@ -25,13 +25,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apidevtools/json-schema-ref-parser@npm:14.0.1":
-  version: 14.0.1
-  resolution: "@apidevtools/json-schema-ref-parser@npm:14.0.1"
+"@apidevtools/json-schema-ref-parser@npm:11.7.2":
+  version: 11.7.2
+  resolution: "@apidevtools/json-schema-ref-parser@npm:11.7.2"
   dependencies:
+    "@jsdevtools/ono": "npm:^7.1.3"
     "@types/json-schema": "npm:^7.0.15"
     js-yaml: "npm:^4.1.0"
-  checksum: 10c0/f8aff4d32f66b81be0e641da175d359ec3e4191f9c65343b30f90cfbcfdbdb78b13e57c4a0a8d0574c828294abde56400a031858f61cf38b3309a4213698dc0c
+  checksum: 10c0/90dd8e60e25ccfe5c7de2453de893d5f5bb7c6cabcce028edf0678a119f0e433f422d730aa14fd718542e80fa7b3acf40923d69dc8e9f6c25603842b76ad2f16
   languageName: node
   linkType: hard
 
@@ -77,19 +78,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apidevtools/swagger-parser@npm:12.1.0":
-  version: 12.1.0
-  resolution: "@apidevtools/swagger-parser@npm:12.1.0"
+"@apidevtools/swagger-parser@npm:10.1.1":
+  version: 10.1.1
+  resolution: "@apidevtools/swagger-parser@npm:10.1.1"
   dependencies:
-    "@apidevtools/json-schema-ref-parser": "npm:14.0.1"
+    "@apidevtools/json-schema-ref-parser": "npm:11.7.2"
     "@apidevtools/openapi-schemas": "npm:^2.1.0"
     "@apidevtools/swagger-methods": "npm:^3.0.2"
+    "@jsdevtools/ono": "npm:^7.1.3"
     ajv: "npm:^8.17.1"
     ajv-draft-04: "npm:^1.0.0"
     call-me-maybe: "npm:^1.0.2"
   peerDependencies:
     openapi-types: ">=7"
-  checksum: 10c0/ccac54e2f67c24c22fbfe8040a70642da20b72c8b0b21ba75c4e97b7444189eff09fb25fcdd8903f1081b9d4d3c78b57ed39c19397502e1bc64b517f0f3a8639
+  checksum: 10c0/21be668c64311d54579ef06e71b6d5640df032f4cdd959dfde93210f26128cbe3c84eb29ead1895c93af703cd4f2fd7efae31dd316549f1f9d29293c78b0ccd4
   languageName: node
   linkType: hard
 
@@ -7556,7 +7558,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "unleash-server@workspace:."
   dependencies:
-    "@apidevtools/swagger-parser": "npm:12.1.0"
+    "@apidevtools/swagger-parser": "npm:10.1.1"
     "@babel/core": "npm:7.26.10"
     "@biomejs/biome": "npm:^1.9.4"
     "@cyclonedx/yarn-plugin-cyclonedx": "npm:^2.0.0"

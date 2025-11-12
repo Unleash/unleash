@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../controller.js';
 import type { IFlagResolver, IUnleashConfig } from '../../types/index.js';
 import type { Logger } from '../../logger.js';
@@ -40,9 +39,6 @@ import {
 } from '../../openapi/spec/integration-events-schema.js';
 import { BadDataError } from '../../error/index.js';
 
-type AddonIdParams = ParamsDictionary & {
-    id: string;
-};
 import type {
     IntegrationEventsService,
     IUnleashServices,
@@ -219,7 +215,7 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async getAddon(
-        req: Request<AddonIdParams>,
+        req: Request<{ id: string }>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
@@ -233,7 +229,7 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async updateAddon(
-        req: IAuthRequest<AddonIdParams, any, AddonCreateUpdateSchema>,
+        req: IAuthRequest<{ id: string }, any, AddonCreateUpdateSchema>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const { id } = req.params;
@@ -254,7 +250,7 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async createAddon(
-        req: IAuthRequest<ParamsDictionary, any, AddonCreateUpdateSchema>,
+        req: IAuthRequest<{ id: string }, any, AddonCreateUpdateSchema>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const data = req.body;
@@ -269,7 +265,7 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async deleteAddon(
-        req: IAuthRequest<AddonIdParams>,
+        req: IAuthRequest<{ id: string }>,
         res: Response<void>,
     ): Promise<void> {
         const { id } = req.params;
@@ -280,7 +276,7 @@ Note: passing \`null\` as a value for the description property will set it to an
 
     async getIntegrationEvents(
         req: IAuthRequest<
-            AddonIdParams,
+            { id: string },
             unknown,
             unknown,
             BasePaginationParameters

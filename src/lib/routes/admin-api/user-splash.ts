@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../controller.js';
 import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/option.js';
@@ -12,10 +11,6 @@ import { createResponseSchema } from '../../openapi/util/create-response-schema.
 import { splashRequestSchema } from '../../openapi/spec/splash-request-schema.js';
 import { getStandardResponses } from '../../openapi/index.js';
 import type { SplashResponseSchema } from '../../openapi/spec/splash-response-schema.js';
-
-type SplashParam = ParamsDictionary & {
-    id: string;
-};
 
 class UserSplashController extends Controller {
     private logger: Logger;
@@ -59,7 +54,7 @@ class UserSplashController extends Controller {
     }
 
     private async updateSplashSettings(
-        req: IAuthRequest<SplashParam>,
+        req: IAuthRequest<{ id: string }>,
         res: Response<SplashResponseSchema>,
     ): Promise<void> {
         const { user } = req;

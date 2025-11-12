@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import type EventService from '../../features/events/event-service.js';
@@ -30,9 +29,6 @@ import { extractUserIdFromUser } from '../../util/index.js';
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;
 
-type FeatureNameParam = ParamsDictionary & {
-    featureName: string;
-};
 export default class EventController extends Controller {
     private eventService: EventService;
 
@@ -169,7 +165,7 @@ export default class EventController extends Controller {
     }
 
     async getEventsForToggle(
-        req: IAuthRequest<FeatureNameParam>,
+        req: IAuthRequest<{ featureName: string }>,
         res: Response<FeatureEventsSchema>,
     ): Promise<void> {
         const { user, params } = req;

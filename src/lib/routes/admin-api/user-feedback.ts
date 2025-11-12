@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../controller.js';
 import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/option.js';
@@ -20,10 +19,6 @@ import {
     feedbackResponseSchema,
     getStandardResponses,
 } from '../../openapi/index.js';
-
-type FeedbackIdParam = ParamsDictionary & {
-    id: string;
-};
 
 class UserFeedbackController extends Controller {
     private logger: Logger;
@@ -88,7 +83,7 @@ class UserFeedbackController extends Controller {
     }
 
     private async createFeedback(
-        req: IAuthRequest<ParamsDictionary, unknown, FeedbackCreateSchema>,
+        req: IAuthRequest<{}, unknown, FeedbackCreateSchema>,
         res: Response<FeedbackResponseSchema>,
     ): Promise<void> {
         if (!req.body.feedbackId) {
@@ -111,7 +106,7 @@ class UserFeedbackController extends Controller {
     }
 
     private async updateFeedback(
-        req: IAuthRequest<FeedbackIdParam, unknown, FeedbackUpdateSchema>,
+        req: IAuthRequest<{ id: string }, unknown, FeedbackUpdateSchema>,
         res: Response<FeedbackResponseSchema>,
     ): Promise<void> {
         const updated = await this.userFeedbackService.updateFeedback({

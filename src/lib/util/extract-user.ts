@@ -2,17 +2,13 @@ import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../../lib/types/index.js';
 import type { IApiUser, IAuditUser, IUser } from '../types/index.js';
 import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
 
-type AnyAuthRequest = IAuthRequest<any, any, any, any>;
-type AnyApiRequest = IApiRequest<any, any, any, any>;
-type AnyRequest = AnyAuthRequest | AnyApiRequest;
-
 export function extractUsernameFromUser(user: IUser | IApiUser): string {
     return (
         (user as IUser)?.email || user?.username || SYSTEM_USER_AUDIT.username
     );
 }
 
-export function extractUsername(req: AnyRequest): string {
+export function extractUsername(req: IAuthRequest | IApiRequest): string {
     return extractUsernameFromUser(req.user);
 }
 
@@ -21,10 +17,10 @@ export const extractUserIdFromUser = (user: IUser | IApiUser) =>
     (user as IApiUser)?.internalAdminTokenUserId ||
     SYSTEM_USER.id;
 
-export const extractUserId = (req: AnyRequest) =>
+export const extractUserId = (req: IAuthRequest | IApiRequest) =>
     extractUserIdFromUser(req.user);
 
-export const extractUserInfo = (req: AnyRequest) => ({
+export const extractUserInfo = (req: IAuthRequest | IApiRequest) => ({
     id: extractUserId(req),
     username: extractUsername(req),
 });
@@ -37,7 +33,9 @@ export const extractAuditInfoFromUser = (
     username: extractUsernameFromUser(user),
     ip,
 });
-export const extractAuditInfo = (req: AnyRequest): IAuditUser => ({
+export const extractAuditInfo = (
+    req: IAuthRequest | IApiRequest,
+): IAuditUser => ({
     id: extractUserId(req),
     username: extractUsername(req),
     ip: req.ip,

@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 
 import Controller from '../controller.js';
 import {
@@ -182,11 +181,7 @@ export class PublicSignupController extends Controller {
     }
 
     async createPublicSignupToken(
-        req: IAuthRequest<
-            ParamsDictionary,
-            void,
-            PublicSignupTokenCreateSchema
-        >,
+        req: IAuthRequest<{}, void, PublicSignupTokenCreateSchema>,
         res: Response<PublicSignupTokenSchema>,
     ): Promise<void> {
         const token =

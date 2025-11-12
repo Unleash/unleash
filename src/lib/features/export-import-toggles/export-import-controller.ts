@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../../routes/controller.js';
 import type { Logger } from '../../logger.js';
 import type {
@@ -116,7 +115,7 @@ class ExportImportController extends Controller {
     }
 
     async export(
-        req: IAuthRequest<ParamsDictionary, unknown, ExportQuerySchema, {}>,
+        req: IAuthRequest<{}, unknown, ExportQuerySchema, {}>,
         res: Response,
     ): Promise<void> {
         const query = req.body;
@@ -133,7 +132,7 @@ class ExportImportController extends Controller {
     }
 
     async validateImport(
-        req: IAuthRequest<ParamsDictionary, unknown, ImportTogglesSchema, {}>,
+        req: IAuthRequest<{}, unknown, ImportTogglesSchema, {}>,
         res: Response,
     ): Promise<void> {
         const dto = req.body;
@@ -152,7 +151,7 @@ class ExportImportController extends Controller {
     }
 
     async importData(
-        req: IAuthRequest<ParamsDictionary, unknown, ImportTogglesSchema, {}>,
+        req: IAuthRequest<{}, unknown, ImportTogglesSchema, {}>,
         res: Response,
     ): Promise<void> {
         const { user, audit } = req;

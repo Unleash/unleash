@@ -4,7 +4,6 @@ import {
     type IUnleashConfig,
 } from '../../types/index.js';
 import type { Request, Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../../routes/controller.js';
 import type { Logger } from '../../logger.js';
 import {
@@ -82,7 +81,7 @@ export default class MaintenanceController extends Controller {
     }
 
     async toggleMaintenance(
-        req: IAuthRequest<ParamsDictionary, unknown, ToggleMaintenanceSchema>,
+        req: IAuthRequest<{}, unknown, ToggleMaintenanceSchema>,
         res: Response<MaintenanceSchema>,
     ): Promise<void> {
         await this.maintenanceService.toggleMaintenanceMode(

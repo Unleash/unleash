@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import Controller from '../../routes/controller.js';
@@ -13,10 +12,6 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses.js';
 import type { WithTransactional } from '../../db/transaction.js';
-
-type FeatureNameParams = ParamsDictionary & {
-    featureName: string;
-};
 
 export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;
@@ -86,7 +81,7 @@ export default class ArchiveController extends Controller {
     }
 
     async deleteFeature(
-        req: IAuthRequest<FeatureNameParams>,
+        req: IAuthRequest<{ featureName: string }>,
         res: Response<void>,
     ): Promise<void> {
         const { featureName } = req.params;
@@ -96,7 +91,7 @@ export default class ArchiveController extends Controller {
     }
 
     async reviveFeature(
-        req: IAuthRequest<FeatureNameParams>,
+        req: IAuthRequest<{ featureName: string }>,
         res: Response<void>,
     ): Promise<void> {
         const { featureName } = req.params;

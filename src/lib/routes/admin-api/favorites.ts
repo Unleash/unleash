@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../controller.js';
 import type {
     FavoritesService,
@@ -10,14 +9,6 @@ import type { Logger } from '../../logger.js';
 import { type IUnleashConfig, NONE } from '../../types/index.js';
 import { emptyResponse, getStandardResponses } from '../../openapi/index.js';
 import type { IAuthRequest } from '../unleash-types.js';
-
-type FeatureNameParam = ParamsDictionary & {
-    featureName: string;
-};
-
-type ProjectIdParam = ParamsDictionary & {
-    projectId: string;
-};
 
 export default class FavoritesController extends Controller {
     private favoritesService: FavoritesService;
@@ -120,7 +111,7 @@ export default class FavoritesController extends Controller {
     }
 
     async addFavoriteFeature(
-        req: IAuthRequest<FeatureNameParam>,
+        req: IAuthRequest<{ featureName: string }>,
         res: Response,
     ): Promise<void> {
         const { featureName } = req.params;
@@ -136,7 +127,7 @@ export default class FavoritesController extends Controller {
     }
 
     async removeFavoriteFeature(
-        req: IAuthRequest<FeatureNameParam>,
+        req: IAuthRequest<{ featureName: string }>,
         res: Response,
     ): Promise<void> {
         const { featureName } = req.params;
@@ -152,7 +143,7 @@ export default class FavoritesController extends Controller {
     }
 
     async addFavoriteProject(
-        req: IAuthRequest<ProjectIdParam>,
+        req: IAuthRequest<{ projectId: string }>,
         res: Response,
     ): Promise<void> {
         const { projectId } = req.params;
@@ -168,7 +159,7 @@ export default class FavoritesController extends Controller {
     }
 
     async removeFavoriteProject(
-        req: IAuthRequest<ProjectIdParam>,
+        req: IAuthRequest<{ projectId: string }>,
         res: Response,
     ): Promise<void> {
         const { projectId } = req.params;

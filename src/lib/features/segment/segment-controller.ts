@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../../routes/controller.js';
 
 import type { IAuthRequest, IUnleashConfig } from '../../types/index.js';
@@ -44,7 +43,7 @@ import { BadDataError } from '../../error/index.js';
 import type { Logger } from '../../logger.js';
 
 type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
-    ParamsDictionary,
+    {},
     undefined,
     UpdateFeatureStrategySegmentsSchema
 >;

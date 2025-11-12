@@ -274,10 +274,17 @@ export default class ProjectController extends Controller {
     }
 
     async getProjectApplications(
-        req: IAuthRequest,
+        req: IAuthRequest<{
+            projectId: string;
+            query: string;
+            offset: string;
+            limit: string;
+            sortBy: string;
+            sortOrder: string;
+        }>,
         res: Response<ProjectApplicationsSchema>,
     ): Promise<void> {
-        const { projectId } = req.params;
+        const { projectId, sortBy } = req.params;
 
         const {
             normalizedQuery,
@@ -288,9 +295,6 @@ export default class ProjectController extends Controller {
             limitDefault: 50,
             maxLimit: 100,
         });
-
-        const sortBy =
-            typeof req.query.sortBy === 'string' ? req.query.sortBy : undefined;
 
         const applications = await this.projectService.getApplications({
             searchParams: normalizedQuery,

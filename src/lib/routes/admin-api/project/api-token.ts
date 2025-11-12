@@ -31,19 +31,15 @@ import type { IAuthRequest } from '../../unleash-types.js';
 import Controller from '../../controller.js';
 import type { Logger } from '../../../logger.js';
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import { timingSafeEqual } from 'crypto';
 import { OperationDeniedError } from '../../../error/index.js';
 import type { CreateProjectApiTokenSchema } from '../../../openapi/spec/create-project-api-token-schema.js';
 import { createProjectApiToken } from '../../../schema/create-project-api-token-schema.js';
 
-interface ProjectTokenParam extends ParamsDictionary {
+interface ProjectTokenParam extends Record<string, string> {
     token: string;
     projectId: string;
 }
-type ProjectParam = ParamsDictionary & {
-    projectId: string;
-};
 
 const PATH = '/:projectId/api-tokens';
 const PATH_TOKEN = `${PATH}/:token`;
@@ -167,7 +163,7 @@ export class ProjectApiTokenController extends Controller {
     }
 
     async createProjectApiToken(
-        req: IAuthRequest<ProjectParam, CreateProjectApiTokenSchema>,
+        req: IAuthRequest<{ projectId: string }, CreateProjectApiTokenSchema>,
         res: Response<ApiTokenSchema>,
     ): Promise<any> {
         const createToken = await createProjectApiToken.validateAsync(req.body);

@@ -18,7 +18,6 @@ import {
 } from '../../openapi/index.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import { anonymise } from '../../util/index.js';
 export class InactiveUsersController extends Controller {
@@ -113,7 +112,7 @@ export class InactiveUsersController extends Controller {
         }));
     }
     async deleteInactiveUsers(
-        req: IAuthRequest<ParamsDictionary, undefined, IdsSchema>,
+        req: IAuthRequest<{}, undefined, IdsSchema>,
         res: Response<void>,
     ): Promise<void> {
         await this.inactiveUsersService.deleteInactiveUsers(

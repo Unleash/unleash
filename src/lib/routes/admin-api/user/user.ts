@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import type { IAuthRequest } from '../../unleash-types.js';
 import Controller from '../../controller.js';
 import type { AccessService } from '../../../services/access-service.js';
@@ -183,20 +182,10 @@ class UserController extends Controller {
     }
 
     async getRoles(
-        req: IAuthRequest,
+        req: IAuthRequest<{}, any, any, { projectId: string }>,
         res: Response<RolesSchema>,
     ): Promise<void> {
-        const projectIdParam = req.query.projectId;
-        let projectId: string | undefined;
-
-        if (typeof projectIdParam === 'string') {
-            projectId = projectIdParam;
-        } else if (Array.isArray(projectIdParam)) {
-            projectId = projectIdParam.find(
-                (value): value is string => typeof value === 'string',
-            );
-        }
-
+        const { projectId } = req.query;
         if (projectId) {
             let roles: IRole[];
             if (this.flagResolver.isEnabled('projectRoleAssignment')) {
@@ -277,7 +266,7 @@ class UserController extends Controller {
     }
 
     async changeMyPassword(
-        req: IAuthRequest<ParamsDictionary, unknown, PasswordSchema>,
+        req: IAuthRequest<{}, unknown, PasswordSchema>,
         res: Response,
     ): Promise<void> {
         const { user } = req;

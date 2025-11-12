@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import Controller from '../../routes/controller.js';
 import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import {
@@ -24,7 +23,7 @@ import type { IAuthRequest } from '../../routes/unleash-types.js';
 import type { DependentFeaturesService } from './dependent-features-service.js';
 import type { WithTransactional } from '../../db/transaction.js';
 
-interface ProjectParams extends ParamsDictionary {
+interface ProjectParams extends Record<string, string> {
     projectId: string;
 }
 

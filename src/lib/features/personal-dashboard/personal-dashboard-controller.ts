@@ -12,7 +12,6 @@ import {
 } from '../../openapi/index.js';
 import Controller from '../../routes/controller.js';
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import type { PersonalDashboardService } from './personal-dashboard-service.js';
 import {
@@ -104,7 +103,7 @@ export default class PersonalDashboardController extends Controller {
     }
 
     async getPersonalDashboardProjectDetails(
-        req: IAuthRequest<ProjectParam>,
+        req: IAuthRequest<{ projectId: string }>,
         res: Response<PersonalDashboardProjectDetailsSchema>,
     ): Promise<void> {
         const user = req.user;
@@ -125,6 +124,3 @@ export default class PersonalDashboardController extends Controller {
         );
     }
 }
-type ProjectParam = ParamsDictionary & {
-    projectId: string;
-};

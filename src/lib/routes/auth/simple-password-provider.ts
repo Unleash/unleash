@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { ParamsDictionary } from 'express-serve-static-core';
 import type { OpenApiService } from '../../services/openapi-service.js';
 import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/index.js';
@@ -57,7 +56,7 @@ export class SimplePasswordProvider extends Controller {
     }
 
     async login(
-        req: IAuthRequest<ParamsDictionary, void, LoginSchema>,
+        req: IAuthRequest<{}, void, LoginSchema>,
         res: Response<UserSchema>,
     ): Promise<void> {
         const { username, password } = req.body;

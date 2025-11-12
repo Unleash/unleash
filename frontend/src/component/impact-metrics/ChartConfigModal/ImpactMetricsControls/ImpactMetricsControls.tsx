@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Box, Typography, FormControlLabel, Checkbox } from '@mui/material';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
-import { SeriesSelector } from './SeriesSelector/SeriesSelector.tsx';
+import { MetricSelector } from './SeriesSelector/MetricSelector.tsx';
 import { RangeSelector } from './RangeSelector/RangeSelector.tsx';
 import { ModeSelector } from './ModeSelector/ModeSelector.tsx';
 import type { ChartFormState } from '../../hooks/useChartFormState.ts';
@@ -42,7 +42,7 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                 rates.
             </Typography>
 
-            <SeriesSelector
+            <MetricSelector
                 value={formData.metricName}
                 onChange={actions.handleSeriesChange}
                 options={metricSeries}

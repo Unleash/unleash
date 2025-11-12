@@ -2,11 +2,11 @@ import { Button } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
 import type { FormEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import { useImpactMetricsNames } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
-import { SeriesSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/SeriesSelector';
+import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
@@ -21,26 +21,46 @@ import {
     StyledTextField,
     StyledTopRow,
 } from '../shared/SharedFormComponents.tsx';
+import type { ISafeguard } from 'interfaces/releasePlans.ts';
 
 const StyledIcon = createStyledIcon(ShieldIcon);
 
 interface ISafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
     onCancel: () => void;
+    safeguard?: ISafeguard;
+    mode?: 'create' | 'edit' | 'display';
 }
 
-export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
-    const { metricSeries, loading } = useImpactMetricsNames();
+export const SafeguardForm = ({
+    onSubmit,
+    onCancel,
+    safeguard,
+    mode = 'create',
+}: ISafeguardFormProps) => {
+    const { metricOptions, loading } = useImpactMetricsOptions();
 
-    const [selectedMetric, setSelectedMetric] = useState('');
-    const [application, setApplication] = useState('*');
+    const [selectedMetric, setSelectedMetric] = useState(
+        safeguard?.impactMetric.metricName || '',
+    );
+    const [application, setApplication] = useState(
+        safeguard?.impactMetric.labelSelectors.appName[0] || '*',
+    );
     const [aggregationMode, setAggregationMode] =
-        useState<MetricQuerySchemaAggregationMode>('rps');
-    const [operator, setOperator] =
-        useState<CreateSafeguardSchemaOperator>('>');
-    const [threshold, setThreshold] = useState(0);
-    const [timeRange, setTimeRange] =
-        useState<MetricQuerySchemaTimeRange>('day');
+        useState<MetricQuerySchemaAggregationMode>(
+            safeguard?.impactMetric.aggregationMode || 'rps',
+        );
+    const [operator, setOperator] = useState<CreateSafeguardSchemaOperator>(
+        safeguard?.triggerCondition.operator || '>',
+    );
+    const [threshold, setThreshold] = useState(
+        safeguard?.triggerCondition?.threshold || 0,
+    );
+    const [timeRange, setTimeRange] = useState<MetricQuerySchemaTimeRange>(
+        safeguard?.impactMetric.timeRange || 'day',
+    );
+
+    const [isEditing, setIsEditing] = useState(mode !== 'display');
 
     const { data: metricsData } = useImpactMetricsData(
         selectedMetric
@@ -58,21 +78,28 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
     }, [metricsData?.labels?.appName]);
 
     useEffect(() => {
-        if (metricSeries.length > 0 && !selectedMetric) {
-            setSelectedMetric(metricSeries[0].name);
+        if (metricOptions.length > 0 && !selectedMetric) {
+            setSelectedMetric(metricOptions[0].name);
         }
-    }, [metricSeries, selectedMetric]);
+    }, [metricOptions, selectedMetric]);
 
-    const selectedMetricData = metricSeries.find(
+    const selectedMetricData = metricOptions.find(
         (m) => m.name === selectedMetric,
     );
     const metricType = selectedMetricData?.type || 'unknown';
 
+    const enterEditMode = () => {
+        if (mode === 'display' && !isEditing) {
+            setIsEditing(true);
+        }
+    };
+
     const handleMetricChange = (metricName: string) => {
+        enterEditMode();
         setSelectedMetric(metricName);
         setApplication('*');
 
-        const metric = metricSeries.find((m) => m.name === metricName);
+        const metric = metricOptions.find((m) => m.name === metricName);
         const type = metric?.type || 'unknown';
 
         if (type === 'counter') {
@@ -82,6 +109,33 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
         } else if (type === 'histogram') {
             setAggregationMode('p50');
         }
+    };
+
+    const handleApplicationChange = (value: string) => {
+        enterEditMode();
+        setApplication(value);
+    };
+
+    const handleAggregationModeChange = (
+        value: MetricQuerySchemaAggregationMode,
+    ) => {
+        enterEditMode();
+        setAggregationMode(value);
+    };
+
+    const handleOperatorChange = (value: CreateSafeguardSchemaOperator) => {
+        enterEditMode();
+        setOperator(value);
+    };
+
+    const handleThresholdChange = (value: number) => {
+        enterEditMode();
+        setThreshold(value);
+    };
+
+    const handleTimeRangeChange = (value: MetricQuerySchemaTimeRange) => {
+        enterEditMode();
+        setTimeRange(value);
     };
 
     const handleSubmit = (e: FormEvent) => {
@@ -100,24 +154,53 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 threshold: Number(threshold),
             };
             onSubmit(data);
+            if (mode === 'display') {
+                setIsEditing(false);
+            }
         }
     };
+
+    const handleCancel = () => {
+        if (mode === 'display') {
+            // Reset to original values and exit edit mode
+            if (safeguard) {
+                setSelectedMetric(safeguard.impactMetric.metricName);
+                setApplication(
+                    safeguard.impactMetric.labelSelectors.appName[0],
+                );
+                setAggregationMode(safeguard.impactMetric.aggregationMode);
+                setOperator(safeguard.triggerCondition.operator);
+                setThreshold(safeguard.triggerCondition.threshold);
+                setTimeRange(safeguard.impactMetric.timeRange);
+            }
+            setIsEditing(false);
+        } else {
+            onCancel();
+        }
+    };
+
+    const showButtons =
+        mode === 'create' ||
+        mode === 'edit' ||
+        (mode === 'display' && isEditing);
 
     return (
         <StyledFormContainer onSubmit={handleSubmit}>
             <StyledTopRow>
                 <StyledIcon />
-                <SeriesSelector
+                <MetricSelector
                     value={selectedMetric}
                     onChange={handleMetricChange}
-                    options={metricSeries}
+                    options={metricOptions}
                     loading={loading}
                 />
 
                 <StyledLabel>filtered by</StyledLabel>
                 <StyledSelect
                     value={application}
-                    onChange={(e) => setApplication(String(e.target.value))}
+                    onChange={(e) =>
+                        handleApplicationChange(String(e.target.value))
+                    }
                     variant='outlined'
                     size='small'
                 >
@@ -131,7 +214,7 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 <StyledLabel>aggregated by</StyledLabel>
                 <ModeSelector
                     value={aggregationMode}
-                    onChange={setAggregationMode}
+                    onChange={handleAggregationModeChange}
                     metricType={metricType}
                 />
 
@@ -139,7 +222,7 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 <StyledSelect
                     value={operator}
                     onChange={(e) =>
-                        setOperator(
+                        handleOperatorChange(
                             e.target.value as CreateSafeguardSchemaOperator,
                         )
                     }
@@ -153,7 +236,9 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 <StyledTextField
                     type='number'
                     value={threshold}
-                    onChange={(e) => setThreshold(Number(e.target.value))}
+                    onChange={(e) =>
+                        handleThresholdChange(Number(e.target.value))
+                    }
                     placeholder='Value'
                     variant='outlined'
                     size='small'
@@ -161,22 +246,31 @@ export const SafeguardForm = ({ onSubmit, onCancel }: ISafeguardFormProps) => {
                 />
 
                 <StyledLabel>over</StyledLabel>
-                <RangeSelector value={timeRange} onChange={setTimeRange} />
+                <RangeSelector
+                    value={timeRange}
+                    onChange={handleTimeRangeChange}
+                />
             </StyledTopRow>
-            <StyledButtonGroup>
-                <Button variant='outlined' onClick={onCancel} size='small'>
-                    Cancel
-                </Button>
-                <Button
-                    variant='contained'
-                    color='primary'
-                    size='small'
-                    type='submit'
-                    disabled={Number.isNaN(Number(threshold))}
-                >
-                    Save
-                </Button>
-            </StyledButtonGroup>
+            {showButtons && (
+                <StyledButtonGroup>
+                    <Button
+                        variant='outlined'
+                        onClick={handleCancel}
+                        size='small'
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        size='small'
+                        type='submit'
+                        disabled={Number.isNaN(Number(threshold))}
+                    >
+                        Save
+                    </Button>
+                </StyledButtonGroup>
+            )}
         </StyledFormContainer>
     );
 };

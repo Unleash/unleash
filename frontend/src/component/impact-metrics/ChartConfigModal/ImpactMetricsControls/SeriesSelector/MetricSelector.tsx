@@ -1,29 +1,30 @@
 import type { FC } from 'react';
 import { Autocomplete, TextField, Typography, Box } from '@mui/material';
-import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 
-type SeriesOption = ImpactMetricsSeries & { name: string; displayName: string };
+type SeriesOption = { name: string; displayName: string; help: string };
 
 export type SeriesSelectorProps = {
     value: string;
     onChange: (series: string) => void;
     options: SeriesOption[];
     loading?: boolean;
+    disabled?: boolean;
 };
 
-export const SeriesSelector: FC<SeriesSelectorProps> = ({
+export const MetricSelector: FC<SeriesSelectorProps> = ({
     value,
     onChange,
     options,
     loading = false,
+    disabled = false,
 }) => (
     <Autocomplete
         options={options}
         getOptionLabel={(option) => option.displayName}
         value={options.find((option) => option.name === value) || null}
         onChange={(_, newValue) => onChange(newValue?.name || '')}
-        disabled={loading}
+        disabled={loading || disabled}
         renderOption={(props, option, { inputValue }) => (
             <Box component='li' {...props} key={option.name}>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>

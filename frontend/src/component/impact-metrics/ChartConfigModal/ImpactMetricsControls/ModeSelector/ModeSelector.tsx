@@ -6,12 +6,14 @@ export type ModeSelectorProps = {
     value: AggregationMode;
     onChange: (mode: AggregationMode) => void;
     metricType: 'counter' | 'gauge' | 'histogram' | 'unknown';
+    disabled?: boolean;
 };
 
 export const ModeSelector: FC<ModeSelectorProps> = ({
     value,
     onChange,
     metricType,
+    disabled = false,
 }) => {
     if (metricType === 'unknown') return null;
     return (
@@ -22,6 +24,7 @@ export const ModeSelector: FC<ModeSelectorProps> = ({
                 value={value}
                 onChange={(e) => onChange(e.target.value as AggregationMode)}
                 label='Mode'
+                disabled={disabled}
             >
                 {metricType === 'counter'
                     ? [

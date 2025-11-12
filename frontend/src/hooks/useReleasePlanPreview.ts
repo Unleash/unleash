@@ -12,6 +12,7 @@ export const useReleasePlanPreview = (
         ...template,
         featureName,
         environment,
+        safeguards: [],
         milestones: template.milestones.map((milestone) => ({
             ...milestone,
             releasePlanDefinitionId: template.id,

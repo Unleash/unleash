@@ -27,10 +27,17 @@ export default class FlagResolver implements IFlagResolver {
             const flag = flags[flagName];
             if (typeof flag === 'boolean') {
                 if (!flag) {
-                    flags[flagName] = this.externalResolver.isEnabled(
+                    const variant = this.externalResolver.getVariant(
                         flagName,
                         context,
                     );
+                    if (variant.enabled) {
+                        flags[flagName] = variant;
+                    } else {
+                        flags[flagName] =
+                            variant.feature_enabled ??
+                            this.externalResolver.isEnabled(flagName, context);
+                    }
                 }
             } else {
                 if (!flag?.enabled) {

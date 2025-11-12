@@ -271,6 +271,26 @@ test('should fall back to isEnabled if variant.feature_enabled is not defined in
     expect(flags.flag).toStrictEqual(true);
 });
 
+test("should return the the flag's enabled state (instead of the disabled variant) if the variant is disabled and the experimental definition is a boolean", () => {
+    const variant = defaultVariant;
+
+    const externalResolver = {
+        isEnabled: () => false,
+        getVariant: () => variant,
+        getStaticContext: () => ({}),
+    };
+
+    const config = {
+        flags: { flag: false },
+        externalResolver,
+    };
+
+    const resolver = new FlagResolver(config as IExperimentalOptions);
+    const flags = resolver.getAll() as typeof config.flags;
+
+    expect(flags.flag).toStrictEqual(false);
+});
+
 test('should call external resolver getStaticContext ', () => {
     const variant = {
         enabled: true,

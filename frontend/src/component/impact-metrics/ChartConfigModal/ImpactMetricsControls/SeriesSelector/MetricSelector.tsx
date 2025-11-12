@@ -9,7 +9,6 @@ export type SeriesSelectorProps = {
     onChange: (series: string) => void;
     options: SeriesOption[];
     loading?: boolean;
-    disabled?: boolean;
 };
 
 export const MetricSelector: FC<SeriesSelectorProps> = ({
@@ -17,14 +16,13 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
     onChange,
     options,
     loading = false,
-    disabled = false,
 }) => (
     <Autocomplete
         options={options}
         getOptionLabel={(option) => option.displayName}
         value={options.find((option) => option.name === value) || null}
         onChange={(_, newValue) => onChange(newValue?.name || '')}
-        disabled={loading || disabled}
+        disabled={loading}
         renderOption={(props, option, { inputValue }) => (
             <Box component='li' {...props} key={option.name}>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>

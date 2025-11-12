@@ -3,6 +3,7 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { ProjectMode } from './useProjectEnterpriseSettingsForm.js';
+import useProjects from 'hooks/api/getters/useProjects/useProjects.js';
 
 export const DEFAULT_PROJECT_STICKINESS = 'default';
 const useProjectForm = (
@@ -18,6 +19,8 @@ const useProjectForm = (
         { requiredApprovals: number }
     > = {},
 ) => {
+    const { projects } = useProjects();
+
     const { isEnterprise } = useUiConfig();
     const [projectId, setProjectId] = useState(initialProjectId);
     const [projectMode, setProjectMode] =
@@ -169,6 +172,11 @@ const useProjectForm = (
     const validateName = () => {
         if (projectName.trim().length === 0) {
             setErrors((prev) => ({ ...prev, name: 'Name can not be empty.' }));
+            return false;
+        }
+
+        if (projects.some(({ name }) => name === projectName)) {
+            setErrors((prev) => ({ ...prev, name: 'Name must be unique.' }));
             return false;
         }
 

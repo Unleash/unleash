@@ -31,6 +31,36 @@ interface ISafeguardFormProps {
     safeguard?: ISafeguard;
 }
 
+type FormMode = 'create' | 'edit' | 'display';
+
+const getInitialValues = (safeguard?: ISafeguard) => ({
+    metricName: safeguard?.impactMetric.metricName || '',
+    appName: safeguard?.impactMetric.labelSelectors.appName[0] || '*',
+    aggregationMode: (safeguard?.impactMetric.aggregationMode ||
+        'rps') as MetricQuerySchemaAggregationMode,
+    operator: (safeguard?.triggerCondition.operator ||
+        '>') as CreateSafeguardSchemaOperator,
+    threshold: safeguard?.triggerCondition?.threshold || 0,
+    timeRange: (safeguard?.impactMetric.timeRange ||
+        'day') as MetricQuerySchemaTimeRange,
+});
+
+const getDefaultAggregationMode = (
+    metricType: string,
+    fallback: MetricQuerySchemaAggregationMode = 'rps',
+): MetricQuerySchemaAggregationMode => {
+    switch (metricType) {
+        case 'counter':
+            return 'count';
+        case 'gauge':
+            return 'avg';
+        case 'histogram':
+            return 'p50';
+        default:
+            return fallback;
+    }
+};
+
 export const SafeguardForm = ({
     onSubmit,
     onCancel,
@@ -38,35 +68,33 @@ export const SafeguardForm = ({
 }: ISafeguardFormProps) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
 
-    const [selectedMetric, setSelectedMetric] = useState(
-        safeguard?.impactMetric.metricName || '',
-    );
-    const [application, setApplication] = useState(
-        safeguard?.impactMetric.labelSelectors.appName[0] || '*',
-    );
-    const [aggregationMode, setAggregationMode] =
-        useState<MetricQuerySchemaAggregationMode>(
-            safeguard?.impactMetric.aggregationMode || 'rps',
-        );
-    const [operator, setOperator] = useState<CreateSafeguardSchemaOperator>(
-        safeguard?.triggerCondition.operator || '>',
-    );
-    const [threshold, setThreshold] = useState(
-        safeguard?.triggerCondition?.threshold || 0,
-    );
-    const [timeRange, setTimeRange] = useState<MetricQuerySchemaTimeRange>(
-        safeguard?.impactMetric.timeRange || 'day',
+    const initialValues = useMemo(
+        () => getInitialValues(safeguard),
+        [safeguard],
     );
 
-    type FormMode = 'create' | 'edit' | 'display';
+    const [metricName, setMetricName] = useState(initialValues.metricName);
+    const [appName, setAppName] = useState(initialValues.appName);
+    const [aggregationMode, setAggregationMode] =
+        useState<MetricQuerySchemaAggregationMode>(
+            initialValues.aggregationMode,
+        );
+    const [operator, setOperator] = useState<CreateSafeguardSchemaOperator>(
+        initialValues.operator,
+    );
+    const [threshold, setThreshold] = useState(initialValues.threshold);
+    const [timeRange, setTimeRange] = useState<MetricQuerySchemaTimeRange>(
+        initialValues.timeRange,
+    );
+
     const [mode, setMode] = useState<FormMode>(
         safeguard ? 'display' : 'create',
     );
 
     const { data: metricsData } = useImpactMetricsData(
-        selectedMetric
+        metricName
             ? {
-                  series: selectedMetric,
+                  series: metricName,
                   range: timeRange,
                   aggregationMode: aggregationMode,
               }
@@ -79,14 +107,12 @@ export const SafeguardForm = ({
     }, [metricsData?.labels?.appName]);
 
     useEffect(() => {
-        if (metricOptions.length > 0 && !selectedMetric) {
-            setSelectedMetric(metricOptions[0].name);
+        if (metricOptions.length > 0 && !metricName) {
+            setMetricName(metricOptions[0].name);
         }
-    }, [metricOptions, selectedMetric]);
+    }, [metricOptions, metricName]);
 
-    const selectedMetricData = metricOptions.find(
-        (m) => m.name === selectedMetric,
-    );
+    const selectedMetricData = metricOptions.find((m) => m.name === metricName);
     const metricType = selectedMetricData?.type || 'unknown';
 
     const enterEditMode = () => {
@@ -95,26 +121,22 @@ export const SafeguardForm = ({
         }
     };
 
-    const handleMetricChange = (metricName: string) => {
+    const handleMetricChange = (value: string) => {
         enterEditMode();
-        setSelectedMetric(metricName);
-        setApplication('*');
+        setMetricName(value);
+        setAppName('*');
 
-        const metric = metricOptions.find((m) => m.name === metricName);
-        const type = metric?.type || 'unknown';
-
-        if (type === 'counter') {
-            setAggregationMode('count');
-        } else if (type === 'gauge') {
-            setAggregationMode('avg');
-        } else if (type === 'histogram') {
-            setAggregationMode('p50');
+        const metric = metricOptions.find((m) => m.name === value);
+        if (metric?.type) {
+            setAggregationMode(
+                getDefaultAggregationMode(metric.type, aggregationMode),
+            );
         }
     };
 
     const handleApplicationChange = (value: string) => {
         enterEditMode();
-        setApplication(value);
+        setAppName(value);
     };
 
     const handleAggregationModeChange = (
@@ -141,35 +163,38 @@ export const SafeguardForm = ({
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        if (!Number.isNaN(Number(threshold))) {
-            const data: CreateSafeguardSchema = {
-                impactMetric: {
-                    metricName: selectedMetric,
-                    timeRange,
-                    aggregationMode,
-                    labelSelectors: {
-                        appName: [application],
-                    },
+
+        if (Number.isNaN(Number(threshold))) {
+            return;
+        }
+
+        onSubmit({
+            impactMetric: {
+                metricName,
+                timeRange,
+                aggregationMode,
+                labelSelectors: {
+                    appName: [appName],
                 },
-                operator,
-                threshold: Number(threshold),
-            };
-            onSubmit(data);
-            if (mode === 'edit') {
-                setMode('display');
-            }
+            },
+            operator,
+            threshold: Number(threshold),
+        });
+
+        if (mode === 'edit') {
+            setMode('display');
         }
     };
 
     const resetToOriginalValues = () => {
         if (!safeguard) return;
 
-        setSelectedMetric(safeguard.impactMetric.metricName);
-        setApplication(safeguard.impactMetric.labelSelectors.appName[0]);
-        setAggregationMode(safeguard.impactMetric.aggregationMode);
-        setOperator(safeguard.triggerCondition.operator);
-        setThreshold(safeguard.triggerCondition.threshold);
-        setTimeRange(safeguard.impactMetric.timeRange);
+        setMetricName(initialValues.metricName);
+        setAppName(initialValues.appName);
+        setAggregationMode(initialValues.aggregationMode);
+        setOperator(initialValues.operator);
+        setThreshold(initialValues.threshold);
+        setTimeRange(initialValues.timeRange);
     };
 
     const handleCancel = () => {
@@ -189,7 +214,7 @@ export const SafeguardForm = ({
             <StyledTopRow>
                 <StyledIcon />
                 <MetricSelector
-                    value={selectedMetric}
+                    value={metricName}
                     onChange={handleMetricChange}
                     options={metricOptions}
                     loading={loading}
@@ -197,7 +222,7 @@ export const SafeguardForm = ({
 
                 <StyledLabel>filtered by</StyledLabel>
                 <StyledSelect
-                    value={application}
+                    value={appName}
                     onChange={(e) =>
                         handleApplicationChange(String(e.target.value))
                     }

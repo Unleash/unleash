@@ -66,7 +66,8 @@ export const releasePlanSchema = {
         },
         safeguards: {
             type: 'array',
-            description: 'An array of safeguards configured for this release plan.',
+            description:
+                'An array of safeguards configured for this release plan.',
             items: {
                 $ref: '#/components/schemas/safeguardSchema',
             },

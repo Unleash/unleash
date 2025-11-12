@@ -46,4 +46,3 @@ export const metricQuerySchema = {
 } as const;
 
 export type MetricQuerySchema = FromSchema<typeof metricQuerySchema>;
-

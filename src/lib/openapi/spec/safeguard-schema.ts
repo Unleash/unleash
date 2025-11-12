@@ -22,7 +22,8 @@ export const safeguardSchema = {
                 },
                 id: {
                     type: 'string',
-                    description: 'The ID of the release plan this safeguard applies to.',
+                    description:
+                        'The ID of the release plan this safeguard applies to.',
                     example: '01JB9GGTGQYEQ9D40R17T3YVW2',
                 },
             },
@@ -33,7 +34,8 @@ export const safeguardSchema = {
         },
         impactMetric: {
             $ref: '#/components/schemas/metricQuerySchema',
-            description: 'The metric configuration used to evaluate the safeguard condition.',
+            description:
+                'The metric configuration used to evaluate the safeguard condition.',
         },
     },
     components: {
@@ -45,4 +47,3 @@ export const safeguardSchema = {
 } as const;
 
 export type SafeguardSchema = FromSchema<typeof safeguardSchema>;
-

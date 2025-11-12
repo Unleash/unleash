@@ -25,4 +25,3 @@ export const safeguardTriggerConditionSchema = {
 export type SafeguardTriggerConditionSchema = FromSchema<
     typeof safeguardTriggerConditionSchema
 >;
-

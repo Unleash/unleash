@@ -281,6 +281,12 @@ export const featureSchema = {
                         description: 'The description of the link',
                         nullable: true,
                     },
+                    feature: {
+                        type: 'string',
+                        example: 'disable-comments',
+                        description:
+                            'The name of the feature this link belongs to',
+                    },
                 },
             },
             description:

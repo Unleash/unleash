@@ -1,5 +1,6 @@
-import { Button, FormControl, TextField } from '@mui/material';
+import { Button, FormControl, IconButton, TextField } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import type { FormEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
@@ -27,6 +28,7 @@ const StyledIcon = createStyledIcon(ShieldIcon);
 interface ISafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
     onCancel: () => void;
+    onDelete?: () => void;
     safeguard?: ISafeguard;
 }
 
@@ -63,6 +65,7 @@ const getDefaultAggregationMode = (
 export const SafeguardForm = ({
     onSubmit,
     onCancel,
+    onDelete,
     safeguard,
 }: ISafeguardFormProps) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
@@ -208,11 +211,27 @@ export const SafeguardForm = ({
 
     const showButtons = mode === 'create' || mode === 'edit';
 
+    const handleDelete = () => {
+        if (onDelete) {
+            onDelete();
+        }
+    };
+
     return (
         <StyledFormContainer onSubmit={handleSubmit}>
-            <StyledTopRow>
+            <StyledTopRow sx={{ mb: 1 }}>
                 <StyledIcon />
                 <StyledLabel>Pause automation when</StyledLabel>
+                {mode !== 'create' && (
+                    <IconButton
+                        onClick={handleDelete}
+                        size='small'
+                        aria-label='Delete safeguard'
+                        sx={{ padding: 0.5, marginLeft: 'auto' }}
+                    >
+                        <DeleteOutlineIcon fontSize='small' />
+                    </IconButton>
+                )}
             </StyledTopRow>
             <StyledTopRow>
                 <MetricSelector

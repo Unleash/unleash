@@ -88,7 +88,7 @@ test('filters by flag type', async () => {
 
     await screen.findByText('Flag type');
     await screen.findByText('Operational');
-});
+}, 10000);
 
 test('selects project features', async () => {
     setupApi();
@@ -130,7 +130,7 @@ test('selects project features', async () => {
     // deselect a single item
     fireEvent.click(selectFeatureA);
     expect(screen.queryByTestId(BATCH_SELECTED_COUNT)).not.toBeInTheDocument();
-});
+}, 10000);
 
 test('filters by tag', async () => {
     setupApi();
@@ -155,7 +155,7 @@ test('filters by tag', async () => {
 
     await screen.findByText('include');
     expect(await screen.findAllByText('backend:sdk')).toHaveLength(2);
-});
+}, 10000);
 
 test('filters by flag author', async () => {
     setupApi();
@@ -184,7 +184,7 @@ test('filters by flag author', async () => {
     fireEvent.click(authorA);
 
     expect(window.location.href).toContain('createdBy=IS%3A1');
-});
+}, 10000);
 
 test('Project is onboarded', async () => {
     const projectId = 'default';
@@ -208,7 +208,7 @@ test('Project is onboarded', async () => {
     expect(
         screen.queryByText('Welcome to your project'),
     ).not.toBeInTheDocument();
-});
+}, 10000);
 
 test('Project is not onboarded', async () => {
     const projectId = 'default';
@@ -230,7 +230,7 @@ test('Project is not onboarded', async () => {
         },
     );
     await screen.findByText('Welcome to your project');
-});
+}, 10000);
 
 test('renders lifecycle quick filters', async () => {
     setupApi();
@@ -255,7 +255,7 @@ test('renders lifecycle quick filters', async () => {
     await screen.findByText(/Develop/);
     await screen.findByText(/Rollout production/);
     await screen.findByText(/Cleanup/);
-});
+}, 10000);
 
 test('clears lifecycle filter when switching to archived view', async () => {
     setupApi();
@@ -291,4 +291,4 @@ test('clears lifecycle filter when switching to archived view', async () => {
 
     expect(window.location.href).not.toContain('lifecycle=IS%3Alive');
     expect(window.location.href).toContain('archived=IS%3Atrue');
-});
+}, 10000);

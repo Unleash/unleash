@@ -9,6 +9,13 @@ export interface CreateSafeguardParams {
     body: CreateSafeguardSchema;
 }
 
+export interface DeleteSafeguardParams {
+    projectId: string;
+    featureName: string;
+    environment: string;
+    planId: string;
+}
+
 export const useSafeguardsApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
@@ -35,8 +42,28 @@ export const useSafeguardsApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const deleteSafeguard = async ({
+        projectId,
+        featureName,
+        environment,
+        planId,
+    }: DeleteSafeguardParams): Promise<void> => {
+        const requestId = 'deleteSafeguard';
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release_plans/${planId}/safeguards`;
+        const req = createRequest(
+            path,
+            {
+                method: 'DELETE',
+            },
+            requestId,
+        );
+
+        await makeRequest(req.caller, req.id);
+    };
+
     return {
         createOrUpdateSafeguard,
+        deleteSafeguard,
         errors,
         loading,
     };

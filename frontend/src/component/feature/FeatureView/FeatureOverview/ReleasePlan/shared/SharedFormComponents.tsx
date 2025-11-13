@@ -1,4 +1,4 @@
-import { styled, Select, MenuItem, TextField } from '@mui/material';
+import { styled, Select, MenuItem } from '@mui/material';
 
 export const StyledFormContainer = styled('form')(({ theme }) => ({
     display: 'flex',
@@ -39,8 +39,6 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
     minWidth: 120,
     maxWidth: 120,
     '& .MuiSelect-select': {
-        fontSize: theme.typography.body2.fontSize,
-        padding: theme.spacing(0.5, 1),
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
@@ -49,14 +47,6 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
 
 export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
-}));
-
-export const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: 80,
-    '& .MuiInputBase-input': {
-        fontSize: theme.typography.body2.fontSize,
-        padding: theme.spacing(0.5, 1),
-    },
 }));
 
 export const createStyledIcon = (IconComponent: React.ComponentType<any>) =>

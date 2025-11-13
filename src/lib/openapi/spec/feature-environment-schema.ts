@@ -122,13 +122,15 @@ export const featureEnvironmentSchema = {
         },
         yes: {
             type: 'integer',
-            description: 'How many times the feature evaluated to true (enabled)',
+            description:
+                'How many times the feature evaluated to true (enabled)',
             example: 974,
             minimum: 0,
         },
         no: {
             type: 'integer',
-            description: 'How many times the feature evaluated to false (disabled)',
+            description:
+                'How many times the feature evaluated to false (disabled)',
             example: 50,
             minimum: 0,
         },

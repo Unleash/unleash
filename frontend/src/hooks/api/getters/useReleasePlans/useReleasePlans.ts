@@ -23,7 +23,7 @@ export const useReleasePlans = (
         isEnterprise() && Boolean(environment) && !featureReleasePlansEnabled,
         DEFAULT_DATA,
         formatApiPath(
-            `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release_plans`,
+            `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release-plans`,
         ),
         fetcher,
     );

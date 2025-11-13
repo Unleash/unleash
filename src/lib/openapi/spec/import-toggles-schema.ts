@@ -61,7 +61,7 @@ const importTogglesSchemaComponents = {
     },
 } as const as any;
 
-export const importTogglesSchema = {
+const _importTogglesSchema = {
     $id: '#/components/schemas/importTogglesSchema',
     type: 'object',
     required: ['project', 'environment', 'data'],
@@ -88,4 +88,41 @@ export const importTogglesSchema = {
     components: importTogglesSchemaComponents,
 } as const;
 
-export type ImportTogglesSchema = FromSchema<typeof importTogglesSchema>;
+export const importTogglesSchema = _importTogglesSchema;
+
+export type ImportTogglesSchema = FromSchema<
+    Omit<typeof _importTogglesSchema, 'components'> & {
+        components: {
+            schemas: {
+                exportResultSchema: typeof exportResultSchema;
+                featureSchema: typeof featureSchema;
+                featureStrategySchema: typeof featureStrategySchema;
+                strategyVariantSchema: typeof strategyVariantSchema;
+                featureEnvironmentSchema: typeof featureEnvironmentSchema;
+                contextFieldSchema: typeof contextFieldSchema;
+                featureTagSchema: typeof featureTagSchema;
+                segmentSchema: typeof segmentSchema;
+                releasePlanSchema: typeof releasePlanSchema;
+                releasePlanMilestoneSchema: typeof releasePlanMilestoneSchema;
+                releasePlanMilestoneStrategySchema: typeof releasePlanMilestoneStrategySchema;
+                createFeatureStrategySchema: typeof createFeatureStrategySchema;
+                createStrategyVariantSchema: typeof createStrategyVariantSchema;
+                transitionConditionSchema: typeof transitionConditionSchema;
+                variantsSchema: typeof variantsSchema;
+                variantSchema: typeof variantSchema;
+                overrideSchema: typeof overrideSchema;
+                constraintSchema: typeof constraintSchema;
+                parametersSchema: typeof parametersSchema;
+                legalValueSchema: typeof legalValueSchema;
+                tagTypeSchema: typeof tagTypeSchema;
+                featureDependenciesSchema: typeof featureDependenciesSchema;
+                dependentFeatureSchema: typeof dependentFeatureSchema;
+                featureLinksSchema: typeof featureLinksSchema;
+                featureLinkSchema: typeof featureLinkSchema;
+                safeguardSchema: typeof safeguardSchema;
+                metricQuerySchema: typeof metricQuerySchema;
+                safeguardTriggerConditionSchema: typeof safeguardTriggerConditionSchema;
+            };
+        };
+    }
+>;

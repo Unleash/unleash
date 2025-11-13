@@ -8,6 +8,8 @@ import { createStrategyVariantSchema } from './create-strategy-variant-schema.js
 import { parametersSchema } from './parameters-schema.js';
 import { transitionConditionSchema } from './transition-condition-schema.js';
 import { safeguardSchema } from './safeguard-schema.js';
+import {metricQuerySchema} from "./metric-query-schema.js";
+import {safeguardTriggerConditionSchema} from "./safeguard-trigger-condition-schema.js";
 
 export const releasePlanSchema = {
     $id: '#/components/schemas/releasePlanSchema',
@@ -83,6 +85,8 @@ export const releasePlanSchema = {
             createStrategyVariantSchema,
             transitionConditionSchema,
             safeguardSchema,
+            metricQuerySchema,
+            safeguardTriggerConditionSchema,
         },
     },
 } as const;

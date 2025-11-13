@@ -28,6 +28,8 @@ import { safeguardSchema } from './safeguard-schema.js';
 import { metricQuerySchema } from './metric-query-schema.js';
 import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
+// error TS7056: The inferred type of this node exceeds the maximum length the compiler will serialize. An explicit type annotation is needed.
+// We needed to do `as any` and then later recreate the type to bypass the maximum length serialization error.
 const importTogglesSchemaComponents = {
     schemas: {
         exportResultSchema,

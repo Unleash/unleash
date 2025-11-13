@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, FormControl, TextField } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
 import type { FormEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
@@ -18,7 +18,6 @@ import {
     StyledLabel,
     StyledMenuItem,
     StyledSelect,
-    StyledTextField,
     StyledTopRow,
 } from '../shared/SharedFormComponents.tsx';
 import type { ISafeguard } from 'interfaces/releasePlans.ts';
@@ -213,6 +212,9 @@ export const SafeguardForm = ({
         <StyledFormContainer onSubmit={handleSubmit}>
             <StyledTopRow>
                 <StyledIcon />
+                <StyledLabel>Pause automation when</StyledLabel>
+            </StyledTopRow>
+            <StyledTopRow>
                 <MetricSelector
                     value={metricName}
                     onChange={handleMetricChange}
@@ -221,20 +223,23 @@ export const SafeguardForm = ({
                 />
 
                 <StyledLabel>filtered by</StyledLabel>
-                <StyledSelect
-                    value={appName}
-                    onChange={(e) =>
-                        handleApplicationChange(String(e.target.value))
-                    }
-                    variant='outlined'
-                    size='small'
-                >
-                    {applicationNames.map((app) => (
-                        <StyledMenuItem key={app} value={app}>
-                            {app === '*' ? 'All' : app}
-                        </StyledMenuItem>
-                    ))}
-                </StyledSelect>
+                <FormControl variant='outlined' size='small'>
+                    <StyledSelect
+                        sx={{ minWidth: 200 }}
+                        value={appName}
+                        onChange={(e) =>
+                            handleApplicationChange(String(e.target.value))
+                        }
+                        variant='outlined'
+                        size='small'
+                    >
+                        {applicationNames.map((app) => (
+                            <StyledMenuItem key={app} value={app}>
+                                {app === '*' ? 'All' : app}
+                            </StyledMenuItem>
+                        ))}
+                    </StyledSelect>
+                </FormControl>
 
                 <StyledLabel>aggregated by</StyledLabel>
                 <ModeSelector
@@ -242,33 +247,39 @@ export const SafeguardForm = ({
                     onChange={handleAggregationModeChange}
                     metricType={metricType}
                 />
-
+            </StyledTopRow>
+            <StyledTopRow>
                 <StyledLabel>is</StyledLabel>
-                <StyledSelect
-                    value={operator}
-                    onChange={(e) =>
-                        handleOperatorChange(
-                            e.target.value as CreateSafeguardSchemaOperator,
-                        )
-                    }
-                    variant='outlined'
-                    size='small'
-                >
-                    <StyledMenuItem value='>'>More than</StyledMenuItem>
-                    <StyledMenuItem value='<'>Less than</StyledMenuItem>
-                </StyledSelect>
+                <FormControl variant='outlined' size='small'>
+                    <StyledSelect
+                        value={operator}
+                        onChange={(e) =>
+                            handleOperatorChange(
+                                e.target.value as CreateSafeguardSchemaOperator,
+                            )
+                        }
+                        variant='outlined'
+                        size='small'
+                    >
+                        <StyledMenuItem value='>'>More than</StyledMenuItem>
+                        <StyledMenuItem value='<'>Less than</StyledMenuItem>
+                    </StyledSelect>
+                </FormControl>
 
-                <StyledTextField
-                    type='number'
-                    value={threshold}
-                    onChange={(e) =>
-                        handleThresholdChange(Number(e.target.value))
-                    }
-                    placeholder='Value'
-                    variant='outlined'
-                    size='small'
-                    required
-                />
+                <FormControl variant='outlined' size='small'>
+                    <TextField
+                        sx={{ minWidth: 120 }}
+                        type='number'
+                        value={threshold}
+                        onChange={(e) =>
+                            handleThresholdChange(Number(e.target.value))
+                        }
+                        placeholder='Value'
+                        variant='outlined'
+                        size='small'
+                        required
+                    />
+                </FormControl>
 
                 <StyledLabel>over</StyledLabel>
                 <RangeSelector

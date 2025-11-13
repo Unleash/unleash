@@ -29,12 +29,11 @@ test('should produce UI flags with extra dynamic flags', () => {
 
 test('should use external resolver for dynamic flags', () => {
     const externalResolver = {
-        isEnabled: (name: string) => {
-            if (name === 'extraFlag') {
-                return true;
-            }
-        },
-        getVariant: () => defaultVariant,
+        isEnabled: (name: string) => name === 'extraFlag',
+        getVariant: (name: string) => ({
+            ...defaultVariant,
+            feature_enabled: name === 'extraFlag',
+        }),
         getStaticContext: () => ({}),
     };
 
@@ -223,6 +222,53 @@ test('should call external resolver getVariant when not overridden to be true, e
     expect(resolver.getVariant('variantFlag' as IFlagKey)).toStrictEqual(
         variant,
     );
+});
+
+test('should allow overriding false experiments with externally resolved variants when getting all flags (getAll)', () => {
+    const variant = {
+        enabled: true,
+        name: 'variant',
+    };
+
+    const externalResolver = {
+        isEnabled: () => false,
+        getVariant: () => variant,
+        getStaticContext: () => ({}),
+    };
+
+    const config = {
+        flags: { willStayBool: true, willBeVariant: false },
+        externalResolver,
+    };
+
+    const resolver = new FlagResolver(config as IExperimentalOptions);
+    const flags = resolver.getAll() as typeof config.flags;
+
+    expect(flags.willStayBool).toStrictEqual(true);
+    expect(flags.willBeVariant).toStrictEqual(variant);
+});
+
+test('should fall back to isEnabled if variant.feature_enabled is not defined in getAll', () => {
+    const variant = {
+        enabled: false,
+        name: 'variant',
+    };
+
+    const externalResolver = {
+        isEnabled: () => true,
+        getVariant: () => variant,
+        getStaticContext: () => ({}),
+    };
+
+    const config = {
+        flags: { flag: false },
+        externalResolver,
+    };
+
+    const resolver = new FlagResolver(config as IExperimentalOptions);
+    const flags = resolver.getAll() as typeof config.flags;
+
+    expect(flags.flag).toStrictEqual(true);
 });
 
 test('should call external resolver getStaticContext ', () => {

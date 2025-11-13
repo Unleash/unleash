@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { Typography, Button, Paper, styled, Box } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
-import { useImpactMetricsNames } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { ChartConfigModal } from './ChartConfigModal/ChartConfigModal.tsx';
 import { ChartItem } from './ChartItem.tsx';
 import { PlausibleChartItem } from './PlausibleChartItem.tsx';
@@ -54,10 +54,10 @@ export const ImpactMetrics: FC = () => {
     } = useImpactMetricsState();
 
     const {
-        metricSeries,
+        metricOptions,
         loading: metadataLoading,
         error: metadataError,
-    } = useImpactMetricsNames();
+    } = useImpactMetricsOptions();
 
     const handleAddChart = () => {
         setEditingChart(undefined);
@@ -193,7 +193,7 @@ export const ImpactMetrics: FC = () => {
                 onClose={() => setModalOpen(false)}
                 onSave={handleSaveChart}
                 initialConfig={editingChart}
-                metricSeries={metricSeries}
+                metricSeries={metricOptions}
                 loading={metadataLoading || settingsLoading}
             />
         </>

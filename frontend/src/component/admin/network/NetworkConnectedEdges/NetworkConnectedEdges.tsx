@@ -162,7 +162,26 @@ export const NetworkConnectedEdges = () => {
     const levels = Array.from(edgeLevels.keys()).sort((a, b) => a - b);
 
     if (edgeLevels.size === 0)
-        return <Alert severity='warning'>No data available.</Alert>;
+        return (
+            <Alert severity='info'>
+                <strong>No Enterprise Edge instances connected</strong>
+                <br />
+                <br />
+                Unlock deeper visibility into your Edge network and enable
+                high-performance streaming for your SDKs.
+                <br />
+                <br />
+                Enterprise Edge gives you:
+                <br />• Real-time SDK updates through the streaming API
+                <br />• Full observability into your Edge instances
+                <br />
+                <br />
+                Interested in getting started?{' '}
+                <a href={`mailto:sales@getunleash.io?subject=Enterprise Edge`}>
+                    Contact us
+                </a>
+            </Alert>
+        );
 
     return (
         <ArcherContainer

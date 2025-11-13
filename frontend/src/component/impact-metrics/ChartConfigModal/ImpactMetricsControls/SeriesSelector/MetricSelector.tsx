@@ -1,9 +1,8 @@
 import type { FC } from 'react';
 import { Autocomplete, TextField, Typography, Box } from '@mui/material';
-import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 
-type SeriesOption = ImpactMetricsSeries & { name: string; displayName: string };
+type SeriesOption = { name: string; displayName: string; help: string };
 
 export type SeriesSelectorProps = {
     value: string;
@@ -12,7 +11,7 @@ export type SeriesSelectorProps = {
     loading?: boolean;
 };
 
-export const SeriesSelector: FC<SeriesSelectorProps> = ({
+export const MetricSelector: FC<SeriesSelectorProps> = ({
     value,
     onChange,
     options,

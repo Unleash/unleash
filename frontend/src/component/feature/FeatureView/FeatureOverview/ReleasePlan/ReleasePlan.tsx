@@ -120,6 +120,7 @@ export const ReleasePlan = ({
         featureName,
         environment,
         milestones,
+        safeguards,
     } = plan;
 
     const projectId = useRequiredPathParam('projectId');
@@ -131,7 +132,7 @@ export const ReleasePlan = ({
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
     const { deleteMilestoneProgression } = useMilestoneProgressionsApi();
-    const { createOrUpdateSafeguard } = useSafeguardsApi();
+    const { createOrUpdateSafeguard, deleteSafeguard } = useSafeguardsApi();
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
 
@@ -389,10 +390,27 @@ export const ReleasePlan = ({
                 planId: id,
                 body: data,
             });
-            setSafeguardFormOpen(false);
             setToastData({
                 type: 'success',
                 text: 'Safeguard added successfully',
+            });
+            refetch();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const handleSafeguardDelete = async () => {
+        try {
+            await deleteSafeguard({
+                projectId,
+                featureName,
+                environment,
+                planId: id,
+            });
+            setToastData({
+                type: 'success',
+                text: 'Safeguard deleted successfully',
             });
             refetch();
         } catch (error: unknown) {
@@ -431,9 +449,19 @@ export const ReleasePlan = ({
             <StyledBody safeguards={safeguardsEnabled}>
                 {safeguardsEnabled ? (
                     <StyledAddSafeguard>
-                        {safeguardFormOpen ? (
+                        {safeguards.length > 0 ? (
                             <SafeguardForm
+                                safeguard={safeguards[0]}
                                 onSubmit={handleSafeguardSubmit}
+                                onCancel={() => setSafeguardFormOpen(false)}
+                                onDelete={handleSafeguardDelete}
+                            />
+                        ) : safeguardFormOpen ? (
+                            <SafeguardForm
+                                onSubmit={(data) => {
+                                    handleSafeguardSubmit(data);
+                                    setSafeguardFormOpen(false);
+                                }}
                                 onCancel={() => setSafeguardFormOpen(false)}
                             />
                         ) : (

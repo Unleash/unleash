@@ -181,6 +181,13 @@ export const featureSchema = {
                     ],
                     example: 'initial',
                 },
+                status: {
+                    type: 'string',
+                    nullable: true,
+                    example: 'kept',
+                    description:
+                        'The name of the detailed status of a given stage. E.g. completed stage can be kept or discarded.',
+                },
                 enteredStageAt: {
                     description: 'When the feature entered this stage',
                     type: 'string',

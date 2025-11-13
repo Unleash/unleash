@@ -7,6 +7,7 @@ import { createFeatureStrategySchema } from './create-feature-strategy-schema.js
 import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 import { parametersSchema } from './parameters-schema.js';
 import { transitionConditionSchema } from './transition-condition-schema.js';
+import { safeguardSchema } from './safeguard-schema.js';
 
 export const releasePlanSchema = {
     $id: '#/components/schemas/releasePlanSchema',
@@ -63,6 +64,14 @@ export const releasePlanSchema = {
             example: '01JB9GGTGQYEQ9D40R17T3YVW2',
             nullable: false,
         },
+        safeguards: {
+            type: 'array',
+            description:
+                'An array of safeguards configured for this release plan.',
+            items: {
+                $ref: '#/components/schemas/safeguardSchema',
+            },
+        },
     },
     components: {
         schemas: {
@@ -73,6 +82,7 @@ export const releasePlanSchema = {
             constraintSchema,
             createStrategyVariantSchema,
             transitionConditionSchema,
+            safeguardSchema,
         },
     },
 } as const;

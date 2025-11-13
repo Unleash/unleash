@@ -24,6 +24,44 @@ import { featureDependenciesSchema } from './feature-dependencies-schema.js';
 import { dependentFeatureSchema } from './dependent-feature-schema.js';
 import { featureLinksSchema } from './feature-links-schema.js';
 import { featureLinkSchema } from './feature-link-schema.js';
+import { safeguardSchema } from './safeguard-schema.js';
+import { metricQuerySchema } from './metric-query-schema.js';
+import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
+
+// error TS7056: The inferred type of this node exceeds the maximum length the compiler will serialize. An explicit type annotation is needed.
+// We needed to do `as any` and then later recreate the type to bypass the maximum length serialization error.
+const importTogglesSchemaComponents = {
+    schemas: {
+        exportResultSchema,
+        featureSchema,
+        featureStrategySchema,
+        strategyVariantSchema,
+        featureEnvironmentSchema,
+        contextFieldSchema,
+        featureTagSchema,
+        segmentSchema,
+        releasePlanSchema,
+        releasePlanMilestoneSchema,
+        releasePlanMilestoneStrategySchema,
+        createFeatureStrategySchema,
+        createStrategyVariantSchema,
+        transitionConditionSchema,
+        variantsSchema,
+        variantSchema,
+        overrideSchema,
+        constraintSchema,
+        parametersSchema,
+        legalValueSchema,
+        tagTypeSchema,
+        featureDependenciesSchema,
+        dependentFeatureSchema,
+        featureLinksSchema,
+        featureLinkSchema,
+        safeguardSchema,
+        metricQuerySchema,
+        safeguardTriggerConditionSchema,
+    },
+} as const as any;
 
 export const importTogglesSchema = {
     $id: '#/components/schemas/importTogglesSchema',
@@ -49,35 +87,42 @@ export const importTogglesSchema = {
             $ref: '#/components/schemas/exportResultSchema',
         },
     },
-    components: {
-        schemas: {
-            exportResultSchema,
-            featureSchema,
-            featureStrategySchema,
-            strategyVariantSchema,
-            featureEnvironmentSchema,
-            contextFieldSchema,
-            featureTagSchema,
-            segmentSchema,
-            releasePlanSchema,
-            releasePlanMilestoneSchema,
-            releasePlanMilestoneStrategySchema,
-            createFeatureStrategySchema,
-            createStrategyVariantSchema,
-            transitionConditionSchema,
-            variantsSchema,
-            variantSchema,
-            overrideSchema,
-            constraintSchema,
-            parametersSchema,
-            legalValueSchema,
-            tagTypeSchema,
-            featureDependenciesSchema,
-            dependentFeatureSchema,
-            featureLinksSchema,
-            featureLinkSchema,
-        },
-    },
+    components: importTogglesSchemaComponents,
 } as const;
 
-export type ImportTogglesSchema = FromSchema<typeof importTogglesSchema>;
+export type ImportTogglesSchema = FromSchema<
+    Omit<typeof importTogglesSchema, 'components'> & {
+        components: {
+            schemas: {
+                exportResultSchema: typeof exportResultSchema;
+                featureSchema: typeof featureSchema;
+                featureStrategySchema: typeof featureStrategySchema;
+                strategyVariantSchema: typeof strategyVariantSchema;
+                featureEnvironmentSchema: typeof featureEnvironmentSchema;
+                contextFieldSchema: typeof contextFieldSchema;
+                featureTagSchema: typeof featureTagSchema;
+                segmentSchema: typeof segmentSchema;
+                releasePlanSchema: typeof releasePlanSchema;
+                releasePlanMilestoneSchema: typeof releasePlanMilestoneSchema;
+                releasePlanMilestoneStrategySchema: typeof releasePlanMilestoneStrategySchema;
+                createFeatureStrategySchema: typeof createFeatureStrategySchema;
+                createStrategyVariantSchema: typeof createStrategyVariantSchema;
+                transitionConditionSchema: typeof transitionConditionSchema;
+                variantsSchema: typeof variantsSchema;
+                variantSchema: typeof variantSchema;
+                overrideSchema: typeof overrideSchema;
+                constraintSchema: typeof constraintSchema;
+                parametersSchema: typeof parametersSchema;
+                legalValueSchema: typeof legalValueSchema;
+                tagTypeSchema: typeof tagTypeSchema;
+                featureDependenciesSchema: typeof featureDependenciesSchema;
+                dependentFeatureSchema: typeof dependentFeatureSchema;
+                featureLinksSchema: typeof featureLinksSchema;
+                featureLinkSchema: typeof featureLinkSchema;
+                safeguardSchema: typeof safeguardSchema;
+                metricQuerySchema: typeof metricQuerySchema;
+                safeguardTriggerConditionSchema: typeof safeguardTriggerConditionSchema;
+            };
+        };
+    }
+>;

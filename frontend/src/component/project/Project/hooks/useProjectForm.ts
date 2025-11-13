@@ -175,7 +175,10 @@ const useProjectForm = (
             return false;
         }
 
-        if (projects.some(({ name }) => name === projectName)) {
+        if (
+            projectName !== initialProjectName &&
+            projects.some(({ name }) => name === projectName)
+        ) {
             setErrors((prev) => ({ ...prev, name: 'Name must be unique.' }));
             return false;
         }

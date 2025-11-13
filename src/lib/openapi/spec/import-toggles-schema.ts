@@ -61,7 +61,7 @@ const importTogglesSchemaComponents = {
     },
 } as const as any;
 
-const _importTogglesSchema = {
+export const importTogglesSchema = {
     $id: '#/components/schemas/importTogglesSchema',
     type: 'object',
     required: ['project', 'environment', 'data'],
@@ -88,10 +88,8 @@ const _importTogglesSchema = {
     components: importTogglesSchemaComponents,
 } as const;
 
-export const importTogglesSchema = _importTogglesSchema;
-
 export type ImportTogglesSchema = FromSchema<
-    Omit<typeof _importTogglesSchema, 'components'> & {
+    Omit<typeof importTogglesSchema, 'components'> & {
         components: {
             schemas: {
                 exportResultSchema: typeof exportResultSchema;

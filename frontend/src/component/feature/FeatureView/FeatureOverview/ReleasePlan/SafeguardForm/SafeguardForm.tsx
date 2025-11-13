@@ -28,6 +28,7 @@ const StyledIcon = createStyledIcon(ShieldIcon);
 interface ISafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
     onCancel: () => void;
+    onDelete?: () => void;
     safeguard?: ISafeguard;
 }
 
@@ -64,6 +65,7 @@ const getDefaultAggregationMode = (
 export const SafeguardForm = ({
     onSubmit,
     onCancel,
+    onDelete,
     safeguard,
 }: ISafeguardFormProps) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
@@ -210,7 +212,9 @@ export const SafeguardForm = ({
     const showButtons = mode === 'create' || mode === 'edit';
 
     const handleDelete = () => {
-        // No-op for now
+        if (onDelete) {
+            onDelete();
+        }
     };
 
     return (

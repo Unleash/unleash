@@ -132,7 +132,7 @@ export const ReleasePlan = ({
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
     const { deleteMilestoneProgression } = useMilestoneProgressionsApi();
-    const { createOrUpdateSafeguard } = useSafeguardsApi();
+    const { createOrUpdateSafeguard, deleteSafeguard } = useSafeguardsApi();
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
 
@@ -400,6 +400,24 @@ export const ReleasePlan = ({
         }
     };
 
+    const handleSafeguardDelete = async () => {
+        try {
+            await deleteSafeguard({
+                projectId,
+                featureName,
+                environment,
+                planId: id,
+            });
+            setToastData({
+                type: 'success',
+                text: 'Safeguard deleted successfully',
+            });
+            refetch();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     return (
         <StyledContainer>
             <StyledHeader>
@@ -436,6 +454,7 @@ export const ReleasePlan = ({
                                 safeguard={safeguards[0]}
                                 onSubmit={handleSafeguardSubmit}
                                 onCancel={() => setSafeguardFormOpen(false)}
+                                onDelete={handleSafeguardDelete}
                             />
                         ) : safeguardFormOpen ? (
                             <SafeguardForm

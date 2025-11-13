@@ -1,5 +1,6 @@
-import { Button, FormControl, TextField } from '@mui/material';
+import { Button, FormControl, IconButton, TextField } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
+import DeleteIcon from '@mui/icons-material/Delete';
 import type { FormEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
@@ -21,8 +22,18 @@ import {
     StyledTopRow,
 } from '../shared/SharedFormComponents.tsx';
 import type { ISafeguard } from 'interfaces/releasePlans.ts';
+import { styled } from '@mui/material';
 
 const StyledIcon = createStyledIcon(ShieldIcon);
+
+const StyledDeleteButton = styled(IconButton)(({ theme }) => ({
+    marginLeft: 'auto',
+    padding: theme.spacing(0.5),
+    color: theme.palette.action.active,
+    '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+    },
+}));
 
 interface ISafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
@@ -208,11 +219,24 @@ export const SafeguardForm = ({
 
     const showButtons = mode === 'create' || mode === 'edit';
 
+    const handleDelete = () => {
+        // No-op for now
+    };
+
     return (
         <StyledFormContainer onSubmit={handleSubmit}>
-            <StyledTopRow>
+            <StyledTopRow sx={{ mb: 1 }}>
                 <StyledIcon />
                 <StyledLabel>Pause automation when</StyledLabel>
+                {mode !== 'create' && (
+                    <StyledDeleteButton
+                        onClick={handleDelete}
+                        size='small'
+                        aria-label='Delete safeguard'
+                    >
+                        <DeleteIcon fontSize='small' />
+                    </StyledDeleteButton>
+                )}
             </StyledTopRow>
             <StyledTopRow>
                 <MetricSelector

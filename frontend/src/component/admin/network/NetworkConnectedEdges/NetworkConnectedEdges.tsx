@@ -176,7 +176,10 @@ export const NetworkConnectedEdges = () => {
                 <br />• Full observability into your Edge instances
                 <br />
                 <br />
-                Interested in getting started? Contact us
+                Interested in getting started?{' '}
+                <a href={`mailto:sales@getunleash.io?subject=Enterprise Edge`}>
+                    Contact us
+                </a>
             </Alert>
         );
 

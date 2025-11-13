@@ -24,6 +24,42 @@ import { featureDependenciesSchema } from './feature-dependencies-schema.js';
 import { dependentFeatureSchema } from './dependent-feature-schema.js';
 import { featureLinksSchema } from './feature-links-schema.js';
 import { featureLinkSchema } from './feature-link-schema.js';
+import { safeguardSchema } from './safeguard-schema.js';
+import { metricQuerySchema } from './metric-query-schema.js';
+import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
+
+const importTogglesSchemaComponents = {
+    schemas: {
+        exportResultSchema,
+        featureSchema,
+        featureStrategySchema,
+        strategyVariantSchema,
+        featureEnvironmentSchema,
+        contextFieldSchema,
+        featureTagSchema,
+        segmentSchema,
+        releasePlanSchema,
+        releasePlanMilestoneSchema,
+        releasePlanMilestoneStrategySchema,
+        createFeatureStrategySchema,
+        createStrategyVariantSchema,
+        transitionConditionSchema,
+        variantsSchema,
+        variantSchema,
+        overrideSchema,
+        constraintSchema,
+        parametersSchema,
+        legalValueSchema,
+        tagTypeSchema,
+        featureDependenciesSchema,
+        dependentFeatureSchema,
+        featureLinksSchema,
+        featureLinkSchema,
+        safeguardSchema,
+        metricQuerySchema,
+        safeguardTriggerConditionSchema,
+    },
+} as const as any;
 
 export const importTogglesSchema = {
     $id: '#/components/schemas/importTogglesSchema',
@@ -49,35 +85,7 @@ export const importTogglesSchema = {
             $ref: '#/components/schemas/exportResultSchema',
         },
     },
-    components: {
-        schemas: {
-            exportResultSchema,
-            featureSchema,
-            featureStrategySchema,
-            strategyVariantSchema,
-            featureEnvironmentSchema,
-            contextFieldSchema,
-            featureTagSchema,
-            segmentSchema,
-            releasePlanSchema,
-            releasePlanMilestoneSchema,
-            releasePlanMilestoneStrategySchema,
-            createFeatureStrategySchema,
-            createStrategyVariantSchema,
-            transitionConditionSchema,
-            variantsSchema,
-            variantSchema,
-            overrideSchema,
-            constraintSchema,
-            parametersSchema,
-            legalValueSchema,
-            tagTypeSchema,
-            featureDependenciesSchema,
-            dependentFeatureSchema,
-            featureLinksSchema,
-            featureLinkSchema,
-        },
-    },
+    components: importTogglesSchemaComponents,
 } as const;
 
 export type ImportTogglesSchema = FromSchema<typeof importTogglesSchema>;

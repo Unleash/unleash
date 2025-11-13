@@ -179,7 +179,10 @@ const useProjectForm = (
             projectName !== initialProjectName &&
             projects.some(({ name }) => name === projectName)
         ) {
-            setErrors((prev) => ({ ...prev, name: 'This name is already taken by a different project.' }));
+            setErrors((prev) => ({
+                ...prev,
+                name: 'This name is already taken by a different project.',
+            }));
             return false;
         }
 

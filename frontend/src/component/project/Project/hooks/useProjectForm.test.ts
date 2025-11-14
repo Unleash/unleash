@@ -1,7 +1,27 @@
 import { renderHook } from '@testing-library/react';
 import useProjectForm from './useProjectForm.js';
-import { test } from 'vitest';
+import { beforeEach, test, vi } from 'vitest';
 import { act } from 'react';
+
+const mockUseProjects = vi.hoisted(() => vi.fn());
+
+vi.mock('hooks/api/getters/useProjects/useProjects.js', () => ({
+    default: mockUseProjects,
+}));
+
+const createProjectsResponse = (
+    projects: Array<{ id: string; name: string }> = [],
+) => ({
+    projects,
+    error: undefined,
+    loading: false,
+    refetch: vi.fn(),
+});
+
+beforeEach(() => {
+    mockUseProjects.mockReset();
+    mockUseProjects.mockReturnValue(createProjectsResponse());
+});
 
 describe('configuring change requests', () => {
     test('setting project environments removes any change request envs that are not in the new project env list', () => {
@@ -93,13 +113,100 @@ describe('payload generation', () => {
 });
 
 describe('name validation', () => {
+    const existingProjects = [
+        { id: 'project1', name: 'Project One' },
+        { id: 'project2', name: 'Project Two' },
+    ];
+
     test.each([
         ['An empty string', ''],
         ['Just whitespace', '     '],
     ])(`%s is not valid`, (_, value) => {
+        const { result } = renderHook(() => useProjectForm(undefined, 'valid'));
+
+        act(() => result.current.setProjectName(value));
+        expect(result.current.validateName()).toBeFalsy();
+    });
+
+    test('accepts a unique project name on creation', () => {
+        mockUseProjects.mockReturnValue(
+            createProjectsResponse(existingProjects),
+        );
+
         const { result } = renderHook(() => useProjectForm());
 
-        result.current.setProjectName(value);
-        expect(result.current.validateName()).toBeFalsy();
+        act(() => result.current.setProjectName('Brand New Project'));
+
+        expect(result.current.validateName()).toBeTruthy();
+    });
+
+    test('rejects duplicate project name on creation', () => {
+        mockUseProjects.mockReturnValue(
+            createProjectsResponse(existingProjects),
+        );
+
+        const { result } = renderHook(() => useProjectForm());
+
+        act(() => result.current.setProjectName('Project One'));
+
+        let isValid = true;
+        act(() => {
+            isValid = result.current.validateName();
+        });
+
+        expect(isValid).toBeFalsy();
+        expect(result.current.errors).toHaveProperty(
+            'name',
+            'This name is already taken by a different project.',
+        );
+    });
+
+    test('allows keeping the original name when editing, even if that name is also used by a different project', () => {
+        mockUseProjects.mockReturnValue(
+            createProjectsResponse(existingProjects),
+        );
+
+        const { result } = renderHook(() =>
+            useProjectForm('project3', 'Project One'),
+        );
+
+        expect(result.current.validateName()).toBeTruthy();
+    });
+
+    test('rejects renaming to another existing project name', () => {
+        mockUseProjects.mockReturnValue(
+            createProjectsResponse(existingProjects),
+        );
+
+        const { result } = renderHook(() =>
+            useProjectForm('project1', 'Project One'),
+        );
+
+        act(() => result.current.setProjectName('Project Two'));
+
+        let isValid = true;
+        act(() => {
+            isValid = result.current.validateName();
+        });
+
+        expect(isValid).toBeFalsy();
+        expect(result.current.errors).toHaveProperty(
+            'name',
+            'This name is already taken by a different project.',
+        );
+    });
+
+    test('accepts renaming to a new unique project name', () => {
+        mockUseProjects.mockReturnValue(
+            createProjectsResponse(existingProjects),
+        );
+
+        const { result } = renderHook(() =>
+            useProjectForm('project1', 'Project One'),
+        );
+
+        act(() => result.current.setProjectName('Project Three'));
+
+        expect(result.current.validateName()).toBeTruthy();
     });
 });

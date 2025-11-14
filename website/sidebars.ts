@@ -676,6 +676,11 @@ const sidebars: SidebarsConfig = {
                             label: 'Terraform',
                             id: 'reference/terraform',
                         },
+                        {
+                            type: 'doc',
+                            label: 'MCP',
+                            id: 'generated/mcp',
+                        },
                     ],
                 },
             ],

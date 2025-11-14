@@ -1228,6 +1228,7 @@ export * from './registerFrontendMetrics400.js';
 export * from './registerFrontendMetrics401.js';
 export * from './registerFrontendMetrics404.js';
 export * from './releasePlanMilestoneSchema.js';
+export * from './releasePlanMilestoneSchemaTransitionCondition.js';
 export * from './releasePlanMilestoneStrategySchema.js';
 export * from './releasePlanSchema.js';
 export * from './releasePlanSchemaDiscriminator.js';

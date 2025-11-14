@@ -3,10 +3,10 @@ import { useCallback } from 'react';
 import { emptyFeature } from './emptyFeature.ts';
 import handleErrorResponses from '../httpErrorResponseHandler.ts';
 import { formatApiPath } from 'utils/formatPath';
-import type { FeatureSchema } from 'openapi';
+import type { IFeatureToggle } from 'interfaces/featureToggle';
 
 export interface IUseFeatureOutput {
-    feature: FeatureSchema;
+    feature: IFeatureToggle;
     refetchFeature: () => void;
     loading: boolean;
     status?: number;
@@ -15,7 +15,7 @@ export interface IUseFeatureOutput {
 
 export interface IFeatureResponse {
     status: number;
-    body?: FeatureSchema;
+    body?: IFeatureToggle;
 }
 
 export const useFeature = (

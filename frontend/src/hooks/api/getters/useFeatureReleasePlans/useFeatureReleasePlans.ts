@@ -8,21 +8,20 @@ export const useFeatureReleasePlans = (
     environmentName?: string,
 ) => {
     const featureReleasePlansEnabled = useUiFlag('featureReleasePlans');
-
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
     const {
         releasePlans: releasePlansFromHook,
         refetch: refetchReleasePlans,
         ...rest
     } = useReleasePlans(projectId, featureId, environmentName);
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
 
-    const matchingEnvironment = feature?.environments?.find(
-        (env) => env.name === environmentName,
-    );
-    const releasePlans = matchingEnvironment?.releasePlans || [];
+    let releasePlans = releasePlansFromHook;
 
-    if (!featureReleasePlansEnabled) {
-        const releasePlans = releasePlansFromHook;
+    if (featureReleasePlansEnabled) {
+        const matchingEnvironment = feature?.environments?.find(
+            (env) => env.name === environmentName,
+        );
+        releasePlans = matchingEnvironment?.releasePlans || [];
     }
 
     const refetch = featureReleasePlansEnabled

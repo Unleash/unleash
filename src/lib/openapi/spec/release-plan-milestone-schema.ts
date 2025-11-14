@@ -45,13 +45,24 @@ export const releasePlanMilestoneSchema = {
         },
         transitionCondition: {
             description: 'The condition configuration for the transition',
-            $ref: '#/components/schemas/transitionConditionSchema',
+            anyOf: [
+                { $ref: '#/components/schemas/transitionConditionSchema' },
+                { type: 'null' },
+            ],
         },
         progressionExecutedAt: {
             type: 'string',
             format: 'date-time',
             description:
                 'The date and time when the milestone progression was executed.',
+            example: '2024-01-01T00:00:00.000Z',
+            nullable: true,
+        },
+        pausedAt: {
+            type: 'string',
+            format: 'date-time',
+            description:
+                'The date and time when the milestone was paused.',
             example: '2024-01-01T00:00:00.000Z',
             nullable: true,
         },

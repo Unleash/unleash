@@ -34,6 +34,11 @@ export interface FeatureEnvironmentSchema {
     milestoneOrder?: number;
     /** The name of the environment */
     name: string;
+    /**
+     * How many times the feature evaluated to false (disabled)
+     * @minimum 0
+     */
+    no?: number;
     /** Release plans for this feature environment (only available when milestoneProgression feature flag is enabled) */
     releasePlans?: ReleasePlanSchema[];
     /** The sort order of the feature environment in the feature environments list */
@@ -48,4 +53,9 @@ export interface FeatureEnvironmentSchema {
     variantCount?: number;
     /** A list of variants for the feature environment */
     variants?: VariantSchema[];
+    /**
+     * How many times the feature evaluated to true (enabled)
+     * @minimum 0
+     */
+    yes?: number;
 }

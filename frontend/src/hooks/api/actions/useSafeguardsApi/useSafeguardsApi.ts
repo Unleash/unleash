@@ -29,7 +29,7 @@ export const useSafeguardsApi = () => {
         body,
     }: CreateSafeguardParams): Promise<void> => {
         const requestId = 'createOrUpdateSafeguard';
-        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release_plans/${planId}/safeguards`;
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release-plans/${planId}/safeguards`;
         const req = createRequest(
             path,
             {
@@ -49,7 +49,7 @@ export const useSafeguardsApi = () => {
         planId,
     }: DeleteSafeguardParams): Promise<void> => {
         const requestId = 'deleteSafeguard';
-        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release_plans/${planId}/safeguards`;
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release-plans/${planId}/safeguards`;
         const req = createRequest(
             path,
             {

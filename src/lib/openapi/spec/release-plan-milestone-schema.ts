@@ -45,10 +45,8 @@ export const releasePlanMilestoneSchema = {
         },
         transitionCondition: {
             description: 'The condition configuration for the transition',
-            anyOf: [
-                { $ref: '#/components/schemas/transitionConditionSchema' },
-                { type: 'null' },
-            ],
+            allOf: [{ $ref: '#/components/schemas/transitionConditionSchema' }],
+            nullable: true,
         },
         progressionExecutedAt: {
             type: 'string',

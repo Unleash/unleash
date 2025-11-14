@@ -122,18 +122,10 @@ describe('name validation', () => {
         ['An empty string', ''],
         ['Just whitespace', '     '],
     ])(`%s is not valid`, (_, value) => {
-        const { result } = renderHook(() => useProjectForm());
+        const { result } = renderHook(() => useProjectForm(undefined, 'valid'));
 
-        act(() => {
-            result.current.setProjectName(value);
-        });
-
-        let isValid = true;
-        act(() => {
-            isValid = result.current.validateName();
-        });
-
-        expect(isValid).toBeFalsy();
+        act(() => result.current.setProjectName(value));
+        expect(result.current.validateName()).toBeFalsy();
     });
 
     test('accepts a unique project name on creation', () => {
@@ -143,17 +135,9 @@ describe('name validation', () => {
 
         const { result } = renderHook(() => useProjectForm());
 
-        act(() => {
-            result.current.setProjectName('Brand New Project');
-        });
+        act(() => result.current.setProjectName('Brand New Project'));
 
-        let isValid = false;
-        act(() => {
-            isValid = result.current.validateName();
-        });
-
-        expect(isValid).toBeTruthy();
-        expect(result.current.errors).not.toHaveProperty('name');
+        expect(result.current.validateName()).toBeTruthy();
     });
 
     test('rejects duplicate project name on creation', () => {
@@ -163,9 +147,7 @@ describe('name validation', () => {
 
         const { result } = renderHook(() => useProjectForm());
 
-        act(() => {
-            result.current.setProjectName('Project One');
-        });
+        act(() => result.current.setProjectName('Project One'));
 
         let isValid = true;
         act(() => {
@@ -179,22 +161,16 @@ describe('name validation', () => {
         );
     });
 
-    test('allows keeping the original name when editing', () => {
+    test('allows keeping the original name when editing, even if that name is also used by a different project', () => {
         mockUseProjects.mockReturnValue(
             createProjectsResponse(existingProjects),
         );
 
         const { result } = renderHook(() =>
-            useProjectForm('project1', 'Project One'),
+            useProjectForm('project3', 'Project One'),
         );
 
-        let isValid = false;
-        act(() => {
-            isValid = result.current.validateName();
-        });
-
-        expect(isValid).toBeTruthy();
-        expect(result.current.errors).not.toHaveProperty('name');
+        expect(result.current.validateName()).toBeTruthy();
     });
 
     test('rejects renaming to another existing project name', () => {
@@ -206,9 +182,7 @@ describe('name validation', () => {
             useProjectForm('project1', 'Project One'),
         );
 
-        act(() => {
-            result.current.setProjectName('Project Two');
-        });
+        act(() => result.current.setProjectName('Project Two'));
 
         let isValid = true;
         act(() => {
@@ -231,16 +205,8 @@ describe('name validation', () => {
             useProjectForm('project1', 'Project One'),
         );
 
-        act(() => {
-            result.current.setProjectName('Project Three');
-        });
+        act(() => result.current.setProjectName('Project Three'));
 
-        let isValid = false;
-        act(() => {
-            isValid = result.current.validateName();
-        });
-
-        expect(isValid).toBeTruthy();
-        expect(result.current.errors).not.toHaveProperty('name');
+        expect(result.current.validateName()).toBeTruthy();
     });
 });

@@ -5,10 +5,15 @@ import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-s
 export const safeguardSchema = {
     $id: '#/components/schemas/safeguardSchema',
     type: 'object',
-    required: ['action', 'triggerCondition', 'impactMetric'],
+    required: ['id', 'action', 'triggerCondition', 'impactMetric'],
     description: 'A safeguard configuration for a release plan.',
     additionalProperties: false,
     properties: {
+        id: {
+            type: 'string',
+            description: 'The unique ULID identifier for this safeguard',
+            example: '01JB9GGTGQYEQ9D40R17T3YVW1',
+        },
         action: {
             type: 'object',
             required: ['type', 'id'],
@@ -33,7 +38,17 @@ export const safeguardSchema = {
             description: 'The condition that triggers the safeguard.',
         },
         impactMetric: {
-            $ref: '#/components/schemas/metricQuerySchema',
+            type: 'object',
+            required: ['id', ...metricQuerySchema.required],
+            additionalProperties: false,
+            properties: {
+                id: {
+                    type: 'string',
+                    description: 'The unique identifier for this impact metric',
+                    example: '01JB9GGTGQYEQ9D40R17T3YVW1',
+                },
+                ...metricQuerySchema.properties,
+            },
             description:
                 'The metric configuration used to evaluate the safeguard condition.',
         },

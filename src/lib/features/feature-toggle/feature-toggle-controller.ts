@@ -742,11 +742,15 @@ export default class ProjectFeaturesController extends Controller {
             userId: user.id,
         });
         const maybeAnonymized = this.maybeAnonymise(feature);
-        res.status(200).json(
-            serializeDates({
-                ...maybeAnonymized,
-                stale: maybeAnonymized.stale || false,
-            }),
+        const responseData = {
+            ...maybeAnonymized,
+            stale: maybeAnonymized.stale || false,
+        };
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            featureSchema.$id,
+            serializeDates(responseData),
         );
     }
 

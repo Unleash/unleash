@@ -61,8 +61,7 @@ export const releasePlanMilestoneSchema = {
         pausedAt: {
             type: 'string',
             format: 'date-time',
-            description:
-                'The date and time when the milestone was paused.',
+            description: 'The date and time when the milestone was paused.',
             example: '2024-01-01T00:00:00.000Z',
             nullable: true,
         },

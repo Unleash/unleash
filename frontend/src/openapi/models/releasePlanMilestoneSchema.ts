@@ -17,6 +17,11 @@ export interface ReleasePlanMilestoneSchema {
     /** The name of the milestone. */
     name: string;
     /**
+     * The date and time when the milestone was paused.
+     * @nullable
+     */
+    pausedAt?: string | null;
+    /**
      * The date and time when the milestone progression was executed.
      * @nullable
      */

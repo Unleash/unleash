@@ -42,6 +42,10 @@ const DOCS = mapObject(enrich)({
             },
         },
     },
+    'unleash-mcp': {
+        sidebarName: 'MCP',
+        slugName: 'mcp',
+    },
 });
 
 const getAdmonitions = (data) => {

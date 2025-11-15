@@ -1,0 +1,402 @@
+Node v22.17.1 | PID 2141941
+Startup window: 2934.39 ms
+First server listening: http://:::4242
+
+= Async operations before listen =
+  ops: 43218 | time (sum): 14113527.21 ms
+  by type:
+    PROMISE        13306289.12 ms (453460.8%)
+    FILEHANDLECLOSEREQ 289939.98 ms (9880.8%)
+    FSREQPROMISE   274105.20 ms (9341.1%)
+    FILEHANDLE     242402.28 ms (8260.8%)
+    TickObject     234.01 ms (8.0%)
+    RANDOMBYTESREQUEST 221.09 ms (7.5%)
+    Timeout        218.94 ms (7.5%)
+    Immediate      45.68 ms (1.6%)
+    TCPWRAP        36.86 ms (1.3%)
+    SHUTDOWNWRAP   15.46 ms (0.5%)
+    GETADDRINFOREQWRAP 11.81 ms (0.4%)
+    TCPCONNECTWRAP 4.23 ms (0.1%)
+    FSREQCALLBACK  2.54 ms (0.1%)
+
+= Top slow async groups (by label) =
+  promise: 13295053.76 ms across 38216 ops
+      at at new Promise (<anonymous>)
+  FILEHANDLECLOSEREQ: 289934.19 ms across 862 ops
+  FSREQPROMISE: 271859.34 ms across 2349 ops
+  FILEHANDLE: 242394.26 ms across 354 ops
+  setImmediate: 368.57 ms across 10 ops
+      at at Async.schedule [as _schedule] (node_modules/bluebird/js/release/schedule.js:12:53)
+      at at Async._queueTick (node_modules/bluebird/js/release/async.js:111:14)
+      at at Async.AsyncInvoke [as invoke] (node_modules/bluebird/js/release/async.js:71:10)
+      at at Promise._then (node_modules/bluebird/js/release/promise.js:290:15)
+      at at Promise.then (node_modules/bluebird/js/release/promise.js:154:17)
+  RANDOMBYTESREQUEST: 221.09 ms across 1 ops
+  setTimeout: 166.54 ms across 6 ops
+      at at Client._connect (node_modules/pg/lib/client.js:104:38)
+      at at Client.connect (node_modules/pg/lib/client.js:166:12)
+      at at exports.connect (node_modules/db-migrate-pg/index.js:775:6)
+      at at connect (node_modules/db-migrate/lib/driver/index.js:93:12)
+      at at exports.connect (node_modules/db-migrate/lib/driver/index.js:134:5)
+  pg.connect: 59.72 ms across 2 ops
+      at at Client_PG._acquireOnlyConnection (node_modules/knex/lib/dialects/postgres/index.js:91:23)
+      at at Client_PG.acquireRawConnection (node_modules/knex/lib/dialects/postgres/index.js:99:17)
+      at at create (node_modules/knex/lib/client.js:262:39)
+  TickObject: 53.63 ms across 1 ops
+
+= Sample of slow ops (>15 ms) =
+  1134.35 ms  PROMISE  [promise] (id 63855)
+  1134.21 ms  PROMISE  [promise] (id 63859)
+      at at new Promise (<anonymous>)
+  1134.08 ms  PROMISE  [promise] (id 63867)
+      at at Promise.then (<anonymous>)
+      at at new Promise (<anonymous>)
+  1134.06 ms  PROMISE  [promise] (id 63868)
+  1134.01 ms  PROMISE  [promise] (id 63870)
+  1133.99 ms  PROMISE  [promise] (id 63871)
+  1133.97 ms  PROMISE  [promise] (id 63872)
+  1133.95 ms  PROMISE  [promise] (id 63873)
+  1133.93 ms  PROMISE  [promise] (id 63874)
+  1133.90 ms  PROMISE  [promise] (id 63875)
+  1133.87 ms  PROMISE  [promise] (id 63876)
+  1133.83 ms  PROMISE  [promise] (id 63878)
+      at at Promise.then (<anonymous>)
+  1133.81 ms  PROMISE  [promise] (id 63879)
+  1133.78 ms  PROMISE  [promise] (id 63880)
+  1133.76 ms  PROMISE  [promise] (id 63881)
+  1133.74 ms  PROMISE  [promise] (id 63882)
+  1133.73 ms  PROMISE  [promise] (id 63883)
+  1133.68 ms  PROMISE  [promise] (id 63885)
+  1133.67 ms  PROMISE  [promise] (id 63886)
+      at at Promise.then (<anonymous>)
+  1133.64 ms  PROMISE  [promise] (id 63887)
+      at at Promise.then (<anonymous>)
+  1133.63 ms  PROMISE  [promise] (id 63888)
+      at at Promise.then (<anonymous>)
+  1133.52 ms  PROMISE  [promise] (id 63896)
+      at at Promise.then (<anonymous>)
+  1128.85 ms  PROMISE  [promise] (id 64070)
+      at at new Promise (<anonymous>)
+  1128.51 ms  PROMISE  [promise] (id 64091)
+      at at new Promise (<anonymous>)
+  1128.50 ms  PROMISE  [promise] (id 64092)
+      at at new Promise (<anonymous>)
+  1128.48 ms  PROMISE  [promise] (id 64093)
+      at at Promise.then (<anonymous>)
+      at at new Promise (<anonymous>)
+  1126.44 ms  PROMISE  [promise] (id 64217)
+      at at Promise.then (<anonymous>)
+  1125.06 ms  PROMISE  [promise] (id 64266)
+      at at Promise.then (<anonymous>)
+  1124.97 ms  PROMISE  [promise] (id 64270)
+      at at Promise.then (<anonymous>)
+  1124.89 ms  PROMISE  [promise] (id 64274)
+      at at Promise.then (<anonymous>)
+  1124.80 ms  PROMISE  [promise] (id 64278)
+      at at Promise.then (<anonymous>)
+  1124.72 ms  PROMISE  [promise] (id 64282)
+      at at Promise.then (<anonymous>)
+  1124.65 ms  PROMISE  [promise] (id 64286)
+      at at Promise.then (<anonymous>)
+  1124.57 ms  PROMISE  [promise] (id 64290)
+      at at Promise.then (<anonymous>)
+  1124.50 ms  PROMISE  [promise] (id 64294)
+      at at Promise.then (<anonymous>)
+  1124.48 ms  PROMISE  [promise] (id 64295)
+  1124.42 ms  PROMISE  [promise] (id 64298)
+      at at Promise.then (<anonymous>)
+  1124.41 ms  PROMISE  [promise] (id 64299)
+      at at new Promise (<anonymous>)
+  1124.32 ms  PROMISE  [promise] (id 64303)
+      at at Promise.then (<anonymous>)
+      at at new Promise (<anonymous>)
+  1124.22 ms  PROMISE  [promise] (id 64309)
+  1124.17 ms  PROMISE  [promise] (id 64311)
+  1124.16 ms  PROMISE  [promise] (id 64312)
+  1124.14 ms  PROMISE  [promise] (id 64313)
+  1124.12 ms  PROMISE  [promise] (id 64314)
+  1124.10 ms  PROMISE  [promise] (id 64315)
+  1124.07 ms  PROMISE  [promise] (id 64316)
+  1124.04 ms  PROMISE  [promise] (id 64317)
+  1124.01 ms  PROMISE  [promise] (id 64319)
+      at at Promise.then (<anonymous>)
+  1123.99 ms  PROMISE  [promise] (id 64320)
+  1123.96 ms  PROMISE  [promise] (id 64321)
+
+= Top PROMISE stacks (aggregated) =
+  3774603.57 ms across 8630 promises :: at Promise.then (<anonymous>) [label:promise]
+      at at Promise.then (<anonymous>)
+  1010836.12 ms across 4832 promises :: at new Promise (<anonymous>) [label:promise]
+      at at new Promise (<anonymous>)
+  1008653.70 ms across 4268 promises :: at Promise.then (<anonymous>) | at new Promise (<anonymous>) [label:promise]
+      at at Promise.then (<anonymous>)
+      at at new Promise (<anonymous>)
+  226733.65 ms across 412 promises :: at new Promise (<anonymous>) | at new Promise (<anonymous>) [label:promise]
+      at at new Promise (<anonymous>)
+      at at new Promise (<anonymous>)
+  226705.14 ms across 412 promises :: at Promise.then (<anonymous>) | at new Promise (<anonymous>) | at new Promise (<anonymous>) [label:promise]
+      at at Promise.then (<anonymous>)
+      at at new Promise (<anonymous>)
+      at at new Promise (<anonymous>)
+  226690.60 ms across 412 promises :: at new Promise (<anonymous>) | at Promise.then (<anonymous>) | at Promise.finally (<anonymous>) | at new Promise (<anonymous>) [label:promise]
+      at at new Promise (<anonymous>)
+      at at Promise.then (<anonymous>)
+      at at Promise.finally (<anonymous>)
+      at at new Promise (<anonymous>)
+  226689.24 ms across 412 promises :: at new Promise (<anonymous>) | at Promise.then (<anonymous>) | at new Promise (<anonymous>) [label:promise]
+      at at new Promise (<anonymous>)
+      at at Promise.then (<anonymous>)
+      at at new Promise (<anonymous>)
+  137085.64 ms across 828 promises :: at new Promise (<anonymous>) | at <anonymous> [label:promise]
+      at at new Promise (<anonymous>)
+      at at <anonymous>
+  137060.61 ms across 828 promises :: at new Promise (<anonymous>) | at Promise.then (<anonymous>) | at <anonymous> [label:promise]
+      at at new Promise (<anonymous>)
+      at at Promise.then (<anonymous>)
+      at at <anonymous>
+  137023.60 ms across 828 promises :: at new Promise (<anonymous>) | at Promise.then (<anonymous>) [label:promise]
+      at at new Promise (<anonymous>)
+      at at Promise.then (<anonymous>)
+  558.43 ms across 1 promises :: at new Promise (<anonymous>) | at <anonymous> (node_modules/ky/source/core/constants.ts) | at <anonymous> (node_modules/ky/source/core/constants.ts) [label:promise]
+      at at new Promise (<anonymous>)
+      at at <anonymous> (node_modules/ky/source/core/constants.ts:14:11)
+      at at <anonymous> (node_modules/ky/source/core/constants.ts:33:3)
+  514.68 ms across 1 promises :: at Function.resolve (<anonymous>) | at Object.<anonymous> (node_modules/lodash/_getTag.js) | at TracingChannel.traceSync (node:diagnostics_channel) | at Object.<anonymous> (node_modules/lodash/_baseClone.js) [label:promise]
+      at at Function.resolve (<anonymous>)
+      at at Object.<anonymous> (node_modules/lodash/_getTag.js:37:32)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/lodash/_baseClone.js:12:14)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/lodash/cloneDeep.js:1:17)
+  494.89 ms across 2 promises :: at new Promise (<anonymous>) | at <anonymous> (node_modules/axios/lib/adapters/fetch.js) | at test (node_modules/axios/lib/adapters/fetch.js) | at Object.<anonymous> (node_modules/axios/lib/adapters/fetch.js) [label:promise]
+      at at new Promise (<anonymous>)
+      at at <anonymous> (node_modules/axios/lib/adapters/fetch.js:32:11)
+      at at test (node_modules/axios/lib/adapters/fetch.js:22:14)
+      at at Object.<anonymous> (node_modules/axios/lib/adapters/fetch.js:28:60)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/@slack/web-api/src/WebClient.ts:8:1)
+  266.54 ms across 5 promises :: at Async.schedule [as _schedule] (node_modules/bluebird/js/release/schedule.js) | at Async._queueTick (node_modules/bluebird/js/release/async.js) | at Async.AsyncInvoke [as invoke] (node_modules/bluebird/js/release/async.js) | at Promise._then (node_modules/bluebird/js/release/promise.js) [label:setImmediate]
+      at at Async.schedule [as _schedule] (node_modules/bluebird/js/release/schedule.js:12:53)
+      at at Async._queueTick (node_modules/bluebird/js/release/async.js:111:14)
+      at at Async.AsyncInvoke [as invoke] (node_modules/bluebird/js/release/async.js:71:10)
+      at at Promise._then (node_modules/bluebird/js/release/promise.js:290:15)
+      at at Promise.then (node_modules/bluebird/js/release/promise.js:154:17)
+      at at module.exports (node_modules/db-migrate/lib/commands/check.js:8:6)
+  227.97 ms across 1 promises :: at Function.resolve (<anonymous>) | at runInContext (node_modules/lodash/lodash.js) | at Object.<anonymous> (node_modules/lodash/lodash.js) | at Object.<anonymous> (node_modules/lodash/lodash.js) [label:promise]
+      at at Function.resolve (<anonymous>)
+      at at runInContext (node_modules/lodash/lodash.js:6113:36)
+      at at Object.<anonymous> (node_modules/lodash/lodash.js:17182:11)
+      at at Object.<anonymous> (node_modules/lodash/lodash.js:17209:3)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  162.49 ms across 1 promises :: at Function.resolve (<anonymous>) | at Object.<anonymous> (node_modules/lodash.isequal/index.js) | at TracingChannel.traceSync (node:diagnostics_channel) | at Object.<anonymous> (node_modules/z-schema/src/SchemaCache.js) [label:promise]
+      at at Function.resolve (<anonymous>)
+      at at Object.<anonymous> (node_modules/lodash.isequal/index.js:1373:32)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/z-schema/src/SchemaCache.js:3:27)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/z-schema/src/ZSchema.js:8:25)
+  101.80 ms across 1 promises :: at requiresMigration (src/migrator.ts) | at start (src/lib/server-impl.ts) | at <anonymous> (src/server-dev.ts) [label:promise]
+      at at requiresMigration (src/migrator.ts:43:40)
+      at at start (src/lib/server-impl.ts:343:23)
+      at at <anonymous> (src/server-dev.ts:8:15)
+  101.65 ms across 1 promises :: at noDatabaseUrl (src/migrator.ts) | at requiresMigration (src/migrator.ts) | at start (src/lib/server-impl.ts) | at <anonymous> (src/server-dev.ts) [label:promise]
+      at at noDatabaseUrl (src/migrator.ts:13:29)
+      at at requiresMigration (src/migrator.ts:46:12)
+      at at start (src/lib/server-impl.ts:343:23)
+      at at <anonymous> (src/server-dev.ts:8:15)
+  101.58 ms across 1 promises :: at <anonymous> (src/migrator.ts) | at noDatabaseUrl (src/migrator.ts) | at requiresMigration (src/migrator.ts) | at start (src/lib/server-impl.ts) [label:promise]
+      at at <anonymous> (src/migrator.ts:46:26)
+      at at noDatabaseUrl (src/migrator.ts:17:20)
+      at at requiresMigration (src/migrator.ts:46:12)
+      at at start (src/lib/server-impl.ts:343:23)
+      at at <anonymous> (src/server-dev.ts:8:15)
+  83.95 ms across 1 promises :: at Function.resolve (<anonymous>) | at Object.<anonymous> (node_modules/lodash.groupby/index.js) | at TracingChannel.traceSync (node:diagnostics_channel) [label:promise]
+      at at Function.resolve (<anonymous>)
+      at at Object.<anonymous> (node_modules/lodash.groupby/index.js:1598:32)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  46.57 ms across 1 promises :: at requiresNode8OrGreater (node_modules/db-migrate/node_modules/yargs/yargs.js) | at Object.<anonymous> (node_modules/db-migrate/node_modules/yargs/yargs.js) | at TracingChannel.traceSync (node:diagnostics_channel) | at Object.<anonymous> (node_modules/db-migrate/node_modules/yargs/index.js) [label:promise]
+      at at requiresNode8OrGreater (node_modules/db-migrate/node_modules/yargs/yargs.js:4:39)
+      at at Object.<anonymous> (node_modules/db-migrate/node_modules/yargs/yargs.js:5:1)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/db-migrate/node_modules/yargs/index.js:5:15)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/db-migrate/lib/commands/set-default-argv.js:1:13)
+  20.07 ms across 1 promises :: at new Promise (<anonymous>) | at Object.getNativePromise (node_modules/bluebird/js/release/util.js) | at Object.<anonymous> (node_modules/bluebird/js/release/schedule.js) | at TracingChannel.traceSync (node:diagnostics_channel) [label:promise]
+      at at new Promise (<anonymous>)
+      at at Object.getNativePromise (node_modules/bluebird/js/release/util.js:328:27)
+      at at Object.<anonymous> (node_modules/bluebird/js/release/schedule.js:7:26)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/bluebird/js/release/async.js:4:16)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+
+= Slow module loads / compilations =
+  278.16 ms across 1 load(s) :: /home/gaston/projects/unleash/node_modules/date-fns/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  278.07 ms across 1 load(s) :: node_modules/date-fns/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  136.18 ms across 1 load(s) :: /home/gaston/projects/unleash/node_modules/@wesleytodd/openapi/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  136.09 ms across 1 load(s) :: node_modules/@wesleytodd/openapi/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  121.67 ms across 1 load(s) :: /home/gaston/projects/unleash/node_modules/unleash-client/lib/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  121.57 ms across 1 load(s) :: node_modules/unleash-client/lib/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  119.88 ms across 1 load(s) :: ./unleash
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/index.ts:2:1)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  119.70 ms across 1 load(s) :: node_modules/unleash-client/lib/unleash.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/index.ts:2:1)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  102.10 ms across 1 load(s) :: /home/gaston/projects/unleash/node_modules/connect-session-knex/dist/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  102.03 ms across 1 load(s) :: node_modules/connect-session-knex/dist/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  101.57 ms across 1 load(s) :: knex
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/connect-session-knex/dist/src/index.ts:1:1)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  101.27 ms across 1 load(s) :: node_modules/knex/knex.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/connect-session-knex/dist/src/index.ts:1:1)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  101.25 ms across 1 load(s) :: ./lib/index
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/knex/knex.js:8:14)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/connect-session-knex/dist/src/index.ts:1:1)
+  101.12 ms across 1 load(s) :: node_modules/knex/lib/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/knex/knex.js:8:14)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/connect-session-knex/dist/src/index.ts:1:1)
+  101.08 ms across 1 load(s) :: ./knex-builder/Knex
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/knex/lib/index.js:1:14)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/knex/knex.js:8:14)
+  100.90 ms across 1 load(s) :: node_modules/knex/lib/knex-builder/Knex.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/knex/lib/index.js:1:14)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/knex/knex.js:8:14)
+  98.83 ms across 1 load(s) :: ../client
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/knex/lib/knex-builder/Knex.js:1:16)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/knex/lib/index.js:1:14)
+  98.57 ms across 1 load(s) :: node_modules/knex/lib/client.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/knex/lib/knex-builder/Knex.js:1:16)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/knex/lib/index.js:1:14)
+  97.78 ms across 1 load(s) :: ./isMatch/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/date-fns/index.js:1797:40)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  97.67 ms across 1 load(s) :: node_modules/date-fns/isMatch/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/date-fns/index.js:1797:40)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  97.10 ms across 1 load(s) :: ../parse/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/date-fns/isMatch/index.js:8:37)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/date-fns/index.js:1797:40)
+  96.91 ms across 1 load(s) :: node_modules/date-fns/parse/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/date-fns/isMatch/index.js:8:37)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/date-fns/index.js:1797:40)
+  95.34 ms across 1 load(s) :: ./repository
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/unleash.ts:4:1)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/index.ts:2:1)
+  95.11 ms across 1 load(s) :: node_modules/unleash-client/lib/repository/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/unleash.ts:4:1)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/index.ts:2:1)
+  93.45 ms across 1 load(s) :: ../request
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/repository/index.ts:9:1)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/unleash.ts:4:1)
+  93.21 ms across 1 load(s) :: node_modules/unleash-client/lib/request.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/repository/index.ts:9:1)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/unleash.ts:4:1)
+  89.85 ms across 1 load(s) :: make-fetch-happen
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/request.ts:1:1)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/repository/index.ts:9:1)
+  89.48 ms across 1 load(s) :: node_modules/make-fetch-happen/lib/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/request.ts:1:1)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/repository/index.ts:9:1)
+  85.40 ms across 1 load(s) :: ./_lib/parsers/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/date-fns/parse/index.js:20:16)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/date-fns/isMatch/index.js:8:37)
+  85.08 ms across 1 load(s) :: node_modules/date-fns/parse/_lib/parsers/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/date-fns/parse/index.js:20:16)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/date-fns/isMatch/index.js:8:37)
+  79.73 ms across 1 load(s) :: swagger-parser
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/@wesleytodd/openapi/index.js:4:23)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  79.59 ms across 1 load(s) :: node_modules/swagger-parser/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/@wesleytodd/openapi/index.js:4:23)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+  79.55 ms across 1 load(s) :: @apidevtools/swagger-parser
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/swagger-parser/index.js:2:18)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/@wesleytodd/openapi/index.js:4:23)
+  79.35 ms across 1 load(s) :: node_modules/swagger-parser/node_modules/@apidevtools/swagger-parser/lib/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/swagger-parser/index.js:2:18)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/@wesleytodd/openapi/index.js:4:23)
+  79.16 ms across 1 load(s) :: ./fetch.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/make-fetch-happen/lib/index.js:4:15)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/request.ts:1:1)
+  78.91 ms across 1 load(s) :: node_modules/make-fetch-happen/lib/fetch.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/make-fetch-happen/lib/index.js:4:15)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/unleash-client/src/request.ts:1:1)
+  73.35 ms across 1 load(s) :: ./cache/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/make-fetch-happen/lib/fetch.js:7:15)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/make-fetch-happen/lib/index.js:4:15)
+  73.08 ms across 1 load(s) :: node_modules/make-fetch-happen/lib/cache/index.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/make-fetch-happen/lib/fetch.js:7:15)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/make-fetch-happen/lib/index.js:4:15)
+  72.33 ms across 1 load(s) :: ./entry.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/make-fetch-happen/lib/cache/index.js:2:20)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/make-fetch-happen/lib/fetch.js:7:15)
+  72.06 ms across 1 load(s) :: node_modules/make-fetch-happen/lib/cache/entry.js
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/make-fetch-happen/lib/cache/index.js:2:20)
+      at at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+      at at Object.<anonymous> (node_modules/make-fetch-happen/lib/fetch.js:7:15)
+
+Tips: move DB connect/migrations after listen(); lazy-load heavy routes; avoid sync FS; defer remote config/secret fetches; inspect "Slow module loads" and "Top PROMISE stacks" (tune with STARTUP_* env vars).

@@ -158,7 +158,7 @@ export const ReleasePlan = ({
     const { addChange } = useChangeRequestApi();
     const { data: pendingChangeRequests, refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
-    const isReleasePlanPaused = milestones.some((milestone) =>
+    const releasePlanAutomationsPaused = milestones.some((milestone) =>
         Boolean(milestone.pausedAt),
     );
 
@@ -454,7 +454,7 @@ export const ReleasePlan = ({
                 )}
             </StyledHeader>
             <StyledBody safeguards={safeguardsEnabled}>
-                {isReleasePlanPaused ? (
+                {releasePlanAutomationsPaused ? (
                     <StyledAlert severity='error'>
                         <b>Automation paused by safeguard.</b> Existing users on
                         this release plan can still access the feature.

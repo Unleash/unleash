@@ -32,9 +32,10 @@ export const FeatureMetricsHours = ({
     };
     const { isEnterprise } = useUiConfig();
     const extendedUsageMetricsEnabled = useUiFlag('extendedUsageMetrics');
-    const options = isEnterprise() && extendedUsageMetricsEnabled
-        ? [...hourOptions, ...daysOptions]
-        : hourOptions;
+    const options =
+        isEnterprise() && extendedUsageMetricsEnabled
+            ? [...hourOptions, ...daysOptions]
+            : hourOptions;
 
     const normalizedHoursBack = options
         .map((option) => Number(option.key))

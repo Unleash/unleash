@@ -14,6 +14,7 @@ export interface DeleteSafeguardParams {
     featureName: string;
     environment: string;
     planId: string;
+    safeguardId: string;
 }
 
 export const useSafeguardsApi = () => {
@@ -47,9 +48,10 @@ export const useSafeguardsApi = () => {
         featureName,
         environment,
         planId,
+        safeguardId,
     }: DeleteSafeguardParams): Promise<void> => {
         const requestId = 'deleteSafeguard';
-        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release-plans/${planId}/safeguards`;
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release-plans/${planId}/safeguards/${safeguardId}`;
         const req = createRequest(
             path,
             {

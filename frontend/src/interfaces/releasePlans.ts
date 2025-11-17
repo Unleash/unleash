@@ -22,6 +22,7 @@ export interface IReleasePlanTemplate {
 }
 
 export interface ISafeguard {
+    id: string;
     impactMetric: {
         aggregationMode: MetricQuerySchemaAggregationMode;
         metricName: string;

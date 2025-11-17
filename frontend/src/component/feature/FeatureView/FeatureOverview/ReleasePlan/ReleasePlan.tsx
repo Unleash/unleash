@@ -409,11 +409,13 @@ export const ReleasePlan = ({
 
     const handleSafeguardDelete = async () => {
         try {
+            if (safeguards.length === 0) return;
             await deleteSafeguard({
                 projectId,
                 featureName,
                 environment,
                 planId: id,
+                safeguardId: safeguards[0].id,
             });
             setToastData({
                 type: 'success',

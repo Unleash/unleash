@@ -41,8 +41,6 @@ jobs:
           LATEST=$(npm show unleash-server version)
           TAG=$(node scripts/npm-tag.js $LATEST)
           npm publish --tag ${TAG:-latest}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

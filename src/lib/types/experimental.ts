@@ -64,7 +64,8 @@ export type IFlagKey =
     | 'milestoneProgression'
     | 'featureReleasePlans'
     | 'plausibleMetrics'
-    | 'safeguards';
+    | 'safeguards'
+    | 'oidcPkceSupport';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -283,6 +284,10 @@ const flags: IFlags = {
     ),
     safeguards: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SAFEGUARDS,
+        false,
+    ),
+    oidcPkceSupport: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_OIDC_PKCE_SUPPORT,
         false,
     ),
 };

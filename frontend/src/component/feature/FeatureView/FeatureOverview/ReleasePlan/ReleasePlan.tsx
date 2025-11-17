@@ -1,5 +1,5 @@
 import Delete from '@mui/icons-material/Delete';
-import { styled } from '@mui/material';
+import { Alert, styled } from '@mui/material';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
@@ -93,6 +93,10 @@ const StyledAddSafeguard = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5, 2),
 }));
 
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    margin: theme.spacing(1, 2),
+}));
+
 const StyledMilestones = styled('div', {
     shouldForwardProp: (prop) => prop !== 'safeguards',
 })<{ safeguards: boolean }>(({ theme, safeguards }) => ({
@@ -154,6 +158,9 @@ export const ReleasePlan = ({
     const { addChange } = useChangeRequestApi();
     const { data: pendingChangeRequests, refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
+    const releasePlanAutomationsPaused = milestones.some((milestone) =>
+        Boolean(milestone.pausedAt),
+    );
 
     // Find progression changes for this feature in pending change requests
     const getPendingProgressionChange = (sourceMilestoneId: string) => {
@@ -447,6 +454,12 @@ export const ReleasePlan = ({
                 )}
             </StyledHeader>
             <StyledBody safeguards={safeguardsEnabled}>
+                {releasePlanAutomationsPaused ? (
+                    <StyledAlert severity='error'>
+                        <b>Automation paused by safeguard.</b> Existing users on
+                        this release plan can still access the feature.
+                    </StyledAlert>
+                ) : null}
                 {safeguardsEnabled ? (
                     <StyledAddSafeguard>
                         {safeguards.length > 0 ? (

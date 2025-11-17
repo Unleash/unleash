@@ -34,6 +34,7 @@ import { StyledActionButton } from './ReleasePlanMilestoneItem/StyledActionButto
 import { SafeguardForm } from './SafeguardForm/SafeguardForm.tsx';
 import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguardsApi';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
+import { DeleteSafeguardDialog } from './DeleteSafeguardDialog.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -135,8 +136,13 @@ export const ReleasePlan = ({
     );
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
-    const { deleteMilestoneProgression } = useMilestoneProgressionsApi();
-    const { createOrUpdateSafeguard, deleteSafeguard } = useSafeguardsApi();
+    const { deleteMilestoneProgression, loading: milestoneProgressionLoading } =
+        useMilestoneProgressionsApi();
+    const {
+        createOrUpdateSafeguard,
+        deleteSafeguard,
+        loading: safeguardLoading,
+    } = useSafeguardsApi();
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
 
@@ -205,8 +211,9 @@ export const ReleasePlan = ({
     >(null);
     const [milestoneToDeleteProgression, setMilestoneToDeleteProgression] =
         useState<IReleasePlanMilestone | null>(null);
-    const [isDeletingProgression, setIsDeletingProgression] = useState(false);
     const [safeguardFormOpen, setSafeguardFormOpen] = useState(false);
+    const [safeguardDeleteDialogOpen, setSafeguardDeleteDialogOpen] =
+        useState(false);
 
     const onChangeRequestConfirm = async () => {
         if (!changeRequestAction) return;
@@ -354,15 +361,15 @@ export const ReleasePlan = ({
     };
 
     const handleCloseDeleteDialog = () => {
-        if (!isDeletingProgression) {
+        if (!milestoneProgressionLoading) {
             setMilestoneToDeleteProgression(null);
         }
     };
 
     const onDeleteProgressionConfirm = async () => {
-        if (!milestoneToDeleteProgression || isDeletingProgression) return;
+        if (!milestoneToDeleteProgression || milestoneProgressionLoading)
+            return;
 
-        setIsDeletingProgression(true);
         try {
             await deleteMilestoneProgression(
                 projectId,
@@ -379,8 +386,6 @@ export const ReleasePlan = ({
         } catch (error: unknown) {
             setMilestoneToDeleteProgression(null);
             setToastApiError(formatUnknownError(error));
-        } finally {
-            setIsDeletingProgression(false);
         }
     };
 
@@ -404,12 +409,19 @@ export const ReleasePlan = ({
             refetch();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setSafeguardFormOpen(false);
         }
     };
 
-    const handleSafeguardDelete = async () => {
+    const handleSafeguardDelete = () => {
+        setSafeguardDeleteDialogOpen(true);
+    };
+
+    const onSafeguardDeleteConfirm = async () => {
+        if (safeguards.length === 0 || safeguardLoading) return;
+
         try {
-            if (safeguards.length === 0) return;
             await deleteSafeguard({
                 projectId,
                 featureName,
@@ -424,6 +436,14 @@ export const ReleasePlan = ({
             refetch();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setSafeguardDeleteDialogOpen(false);
+        }
+    };
+
+    const handleCloseSafeguardDeleteDialog = () => {
+        if (!safeguardLoading) {
+            setSafeguardDeleteDialogOpen(false);
         }
     };
 
@@ -473,10 +493,7 @@ export const ReleasePlan = ({
                             />
                         ) : safeguardFormOpen ? (
                             <SafeguardForm
-                                onSubmit={(data) => {
-                                    handleSafeguardSubmit(data);
-                                    setSafeguardFormOpen(false);
-                                }}
+                                onSubmit={handleSafeguardSubmit}
                                 onCancel={() => setSafeguardFormOpen(false)}
                             />
                         ) : (
@@ -544,9 +561,15 @@ export const ReleasePlan = ({
                     onClose={handleCloseDeleteDialog}
                     onConfirm={onDeleteProgressionConfirm}
                     milestoneName={milestoneToDeleteProgression.name}
-                    isDeleting={isDeletingProgression}
+                    isDeleting={milestoneProgressionLoading}
                 />
             )}
+            <DeleteSafeguardDialog
+                open={safeguardDeleteDialogOpen}
+                onClose={handleCloseSafeguardDeleteDialog}
+                onConfirm={onSafeguardDeleteConfirm}
+                isDeleting={safeguardLoading}
+            />
         </StyledContainer>
     );
 };

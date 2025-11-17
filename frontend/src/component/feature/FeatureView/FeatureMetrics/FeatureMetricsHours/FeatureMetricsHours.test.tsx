@@ -11,6 +11,9 @@ test('Display extended daily metrics', async () => {
         versionInfo: {
             current: { oss: 'irrelevant', enterprise: 'some value' },
         },
+        flags: {
+            extendedUsageMetrics: true,
+        },
     });
     let recordedHoursBack: number | null = null;
     render(

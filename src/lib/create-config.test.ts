@@ -1,4 +1,9 @@
-import { createConfig, resolveIsOss } from './create-config.js';
+import {
+    createConfig,
+    mergeExperimentalOptions,
+    resolveIsOss,
+} from './create-config.js';
+import type { IExternalFlagResolver } from './server-impl.js';
 import { ApiTokenType } from './types/model.js';
 
 beforeEach(() => {
@@ -536,6 +541,31 @@ test('create config should be idempotent in terms of tokens', async () => {
         createConfig(config).authentication.initApiTokens.length,
     );
     expect(config.authentication.initApiTokens).toHaveLength(5);
+});
+
+test('env vars should take precedence over arg-supplied flags', () => {
+    expect(
+        mergeExperimentalOptions({
+            flags: {
+                messageBanner: {
+                    enabled: true,
+                    name: 'env-option',
+                },
+            },
+            externalResolver: {} as IExternalFlagResolver,
+        })({
+            experimental: {
+                flags: {
+                    messageBanner: {
+                        enabled: false,
+                        name: 'arg-option',
+                    },
+                },
+            },
+        }),
+    ).toMatchObject({
+        flags: { messageBanner: { enabled: true, name: 'env-option' } },
+    });
 });
 
 describe('isOSS', () => {

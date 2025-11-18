@@ -1,5 +1,6 @@
 ---
 title: Segments
+description: Learn how to use segments in Unleash to group strategy constraints, target specific user contexts, and manage consistent rollout conditions across multiple feature flags and environments.
 ---
 
 import VideoContent from '@site/src/components/VideoContent.jsx'
@@ -14,64 +15,87 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 :::
 
+A segment is a reusable collection of [strategy constraints](/reference/activation-strategies#constraints). [Feature flags](/reference/feature-toggles) have one or more [activation strategies](/reference/activation-strategies) that define how and when a feature is shown, for example, to a percentage of users, to a specific group, or only in certain environments.
+ 
+Segments make these strategies easier to manage. Instead of repeating the same rules in multiple places, you can define a segment once and reuse it across any number of feature flags or [release templates](/reference/release-templates).
+
+Segments let you describe groups of users or contexts. You can use them to define conditions such as users in a specific country or region, users on mobile devices, or internal users or testers.
+
+Segments stay in sync across activation strategies and any updates propagate automatically to all strategies that use them. This makes them ideal for grouping larger releases together, for example, enabling or disabling a collection of flags at the same time using time-based constraints.
+
 <VideoContent videoUrls={["https://www.youtube.com/embed/LWMCCFcRic0"]}/>
 
-A **segment** is a reusable collection of [strategy constraints](./activation-strategies#constraints). Like with strategy constraints, you apply segments to [feature flag activation strategies](./activation-strategies).
+## Segment evaluation
 
-You can apply the same segment to multiple activation strategies. If you update the segment, the changes will affect every strategy that uses that segment.
+All constraints in a segment must match for the segment to evaluate to `true`.
+If an activation strategy includes both segments and individual constraints, all of them must evaluate to `true` for the strategy to activate.
 
-Segments let you create user groups based on data available in the Unleash context. These groups can be as simple or as complex as you want to make them. You could, for example, use segments to target:
+:::warning
+An empty segment always evaluates to `true`. Use caution when creating or applying segments that don't include any constraints, as you may unintentionally enable a feature for all users.
+:::
 
--   Users in a specific region
--   Users on a specific device type
--   Users who signed up before a specific point in time
--   ... Or any combination of the above.
+## Create a segment
 
-Because segments stay in sync across strategies, any changes will propagate to all the activation strategies that use them. This also makes them ideal for use cases such as activating or deactivating multiple feature flags at the same time. In other words, you can use segments to
+Before you begin, make sure you have [permissions](/reference/rbac) to manage segments in your project. If your project requires [change requests](/reference/change-requests#change-requests-for-segments), your changes to segments need to go through the same approval process before they go live.
 
--   release one or more new features at a specified time
--   create events with start and end times and guarantee that features will only be active during that period
+To create a segment:
 
-Segments can be global or scoped to a specific project. If a segment is scoped to a single project, it can only be used in that project and it adheres to that project's [change request](./change-requests#change-requests-for-segments) settings.
+1. Go to **Configure > Segments**.
+2. Click **New segment**.
+3. Enter a **Segment name** and optionally a description.
+4. [Optional] To limit the segment to a single project, select a project. Leave blank for global segments.
+5. Add constraints:
+   - Select a **predefined context field** (for example, `userId`, `appName`, `region`) or create a new one.
+   - Choose an **operator** (for example, `is one of` or `starts with`).
+   - Select one or more **values**.
+7. Click **Create segment**.
 
-## Structure and evaluation
+![Go to configure and select segments to manage your segments.](/img/segments.png)
 
-Segments are collections of strategy constraints. To satisfy a segment, _all_ the constraints in the collection must be satisfied.
+## Use a segment in a feature release
 
-If an activation strategy has a segment _and_ additional constraints applied, the segment _and_ the strategies must all be satisfied. Similarly, if an activation strategy has multiple segments, then they must _must all be satisfied_.
+To use a segment in a feature flag's activation strategy:
+1. Go to the feature flag you want to configure.
+2. Select the environment, then open the activation strategy you want to target.
+3. In **Targeting**, click **Select segments**.
+4. Add one or more segments and click **Save strategy**.
+
+You can also add segments to strategies defined inside [release templates](/reference/release-templates).
+
+## Delete a segment
+
+You can only delete a segment that isn't in use. Open the segment and check **Used in** to see which flags and strategies reference it.
+
+If a segment is referenced in an open [change requests](/reference/change-requests), first edit, apply, or reject that change request.
+
+If a segment is used by an archived feature flag, you can still delete it. Deleting the segment removes it from the archived flag's strategies.
+
+Before you begin, make sure you that have [permissions](/reference/rbac) to manage segments in your project. If your project requires [change requests](/reference/change-requests#change-requests-for-segments), deleting segments also need to go through the same approval process.
+
+To delete a segment:
+
+1. Go to **Configure > Segments**.
+2. Confirm that **Used in** shows `0 projects` and `0 feature flags`.
+3. Click **Remove segment**.
+4. Enter the segment name to confirm.
+5. Click **Save**.
 
 ## Segment limits
 
-In theory, you could create segments with a thousand constraints, each with a million values. But this wouldn't scale well, so there are limitations in place to stop you from doing this. Unleash enforces the following limits on use of segments:
+Segments are powerful but can become complex. Each constraint and value in a segment adds data that must be stored, synced, and evaluated at runtime.
+Keeping segments a manageable size ensures that evaluations stay lightweight and that your SDKs can respond instantly—even at scale.
 
-- If you're on a [Pro](/availability#plans) plan:
+The combined number of values across all constraints in a single segment is limited by your plan:
 
-    A segment can have **at most 250 values** specified across all of its constraints. That means that if you add a constraint that uses 10 values, you will have 240 more values to use for any other constraints you add to the same segment.
+- [Pro](/availability#plans) and [OSS](/availability#plans): up to 250 total values per instance.
+- [Enterprise](/availability#plans): up to 1,000 total values per instance.
 
-- If you're on an [Enterprise](https://www.getunleash.io/pricing) plan:
+You can attach up to five segments to a single activation strategy. This limit applies per strategy, not per feature flag.
+If a flag includes two strategies, each one can have up to five segments.
 
-    A segment can have **at most 1000 values** specified across all of its constraints. That means that if you add a constraint that uses 70 values, you will have 930 more values to use for any other constraints you add to the same segment.
+If you're self-hosting, you can [configure segment limits](/reference/resource-limits) with environment variables.
 
-By default, you can apply **at most 5 segments to any one strategy**. Separate strategies (even on the same feature) do not count towards the same total, so you can have two strategies with 5 segments each.
+### Large segments
 
-You **can** [configure segment limits](/reference/resource-limits) with environment variables.
-
-### A note on large segments {#large-segments}
-
-Segments are just constraints, so any limitations that apply to constraints also apply to segments. See [Using Unleash with large constraints](../understanding-unleash/managing-constraints) for a more guidance.
-
-## Creating, updating, and deleting segments
-
-:::info
-
-Currently in development, Unleash will soon count segments as being in use when they are used in [change requests](./change-requests).
-
-:::
-
-Segments can be created, edited, and deleted from the segments page in the admin UI or via the API (see the [segments API documentation](/reference/api/legacy/unleash/admin/segments)).
-
-A segment that is in use cannot be deleted. If you'd like to delete a segment that is in use, you must first remove the segment from all the activation strategies that are currently using it. If a segment is in use by an archived flag, you must either unarchive the flag and remove the segment or delete the flag entirely before the segment can be deleted.
-
-A segment that is in use in multiple projects can not be turned into a project-level segment. Further, a segment that is in use in project A cannot be turned into a project-level segment in project B.
-
-![The Segments page, listing two existing segments: "Mobile users" and "Users in the APAC region". The navigation menu with the Segments page link is opened and highlighted to provide navigation help.](/img/segments-page.png)
+Segments follow the same performance principles as individual constraints. When targeting large audiences or using many values, keep payloads small and rely on higher-level attributes instead of long inclusion lists.
+For practical guidance on optimizing performance, see [Using Unleash with large constraints](../understanding-unleash/managing-constraints).

@@ -16,14 +16,13 @@ export const ChangeRequestStatusCell: FC<IChangeRequestStatusCellProps> = ({
     value,
     row: { original },
 }) => {
-    const renderState = () => {
-        if (!value) return null;
-        return <ChangeRequestStatusBadge changeRequest={original} />;
-    };
-
     if (!value) {
         return <TextCell />;
     }
 
-    return <TextCell>{renderState()}</TextCell>;
+    return (
+        <TextCell>
+            <ChangeRequestStatusBadge changeRequest={original} />
+        </TextCell>
+    );
 };

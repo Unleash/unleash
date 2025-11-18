@@ -22,8 +22,7 @@ export interface IChangeSchema {
         | 'addReleasePlan'
         | 'deleteReleasePlan'
         | 'startMilestone'
-        | 'createMilestoneProgression'
-        | 'updateMilestoneProgression'
+        | 'changeMilestoneProgression'
         | 'deleteMilestoneProgression';
     payload: string | boolean | object | number | undefined;
 }

@@ -10,7 +10,7 @@
 export interface PermissionSchema {
     /** The environment this permission applies to */
     environment?: string;
-    /** [Project](https://docs.getunleash.io/reference/rbac#project-permissions) or [environment](https://docs.getunleash.io/reference/rbac#environment-permissions) permission name */
+    /** [Project](https://docs.getunleash.io/reference/rbac#project-level-permissions) or [environment](https://docs.getunleash.io/reference/rbac#environment-level-permissions) permission name */
     permission: string;
     /** The project this permission applies to */
     project?: string;

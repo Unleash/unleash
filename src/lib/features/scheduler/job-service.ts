@@ -33,7 +33,7 @@ export class JobService {
 
             if (acquired) {
                 const { name, bucket } = acquired;
-                this.logger.info(
+                this.logger.debug(
                     `Acquired job lock for ${name} from >= ${subMinutes(
                         bucket,
                         bucketSizeInMinutes,

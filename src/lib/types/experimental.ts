@@ -1,6 +1,9 @@
 import { PayloadType, type Variant } from 'unleash-client';
-import { parseEnvVarBoolean } from '../util/index.js';
-import { getDefaultVariant } from 'unleash-client/lib/variant.js';
+import { defaultVariant } from 'unleash-client/lib/variant.js';
+import {
+    parseEnvVarBoolean,
+    parseEnvVarBooleanOrStringVariant,
+} from '../util/index.js';
 import type { MetricFlagContext } from 'unleash-client/lib/impact-metrics/metric-types.js';
 import type { Context } from '../features/playground/feature-evaluator/index.js';
 
@@ -39,31 +42,29 @@ export type IFlagKey =
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
     | 'projectRoleAssignment'
-    | 'originMiddlewareRequestLogging'
     | 'webhookDomainLogging'
     | 'productivityReportEmail'
     | 'productivityReportUnsubscribers'
     | 'showUserDeviceCount'
     | 'memorizeStats'
     | 'streaming'
+    | 'denyStreamingForNonEdge'
     | 'deltaApi'
+    | 'deltaDiff'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
     | 'consumptionModelUI'
     | 'edgeObservability'
     | 'customMetrics'
     | 'impactMetrics'
-    | 'lifecycleGraphs'
     | 'etagByEnv'
     | 'fetchMode'
     | 'optimizeLifecycle'
-    | 'newStrategyModal'
     | 'globalChangeRequestList'
-    | 'newUiConfigService'
-    | 'trafficBillingDisplay'
     | 'milestoneProgression'
-    | 'envAddStrategySuggestion'
-    | 'featureReleasePlans';
+    | 'featureReleasePlans'
+    | 'plausibleMetrics'
+    | 'safeguards';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -74,7 +75,7 @@ const flags: IFlags = {
         process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
         false,
     ),
-    maintenanceMode: parseEnvVarBoolean(
+    maintenanceMode: parseEnvVarBooleanOrStringVariant(
         process.env.UNLEASH_EXPERIMENTAL_MAINTENANCE_MODE,
         false,
     ),
@@ -202,10 +203,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
         false,
     ),
-    originMiddlewareRequestLogging: parseEnvVarBoolean(
-        process.env.UNLEASH_ORIGIN_MIDDLEWARE_REQUEST_LOGGING,
-        false,
-    ),
     webhookDomainLogging: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENT_WEBHOOK_DOMAIN_LOGGING,
         false,
@@ -224,6 +221,10 @@ const flags: IFlags = {
     ),
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
+        false,
+    ),
+    deltaDiff: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DELTA_DIFF,
         false,
     ),
     uniqueSdkTracking: parseEnvVarBoolean(
@@ -246,10 +247,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS,
         false,
     ),
-    lifecycleGraphs: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_GRAPHS,
-        false,
-    ),
     streaming: {
         name: 'disabled',
         enabled: parseEnvVarBoolean(
@@ -257,6 +254,10 @@ const flags: IFlags = {
             false,
         ),
     },
+    denyStreamingForNonEdge: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_STREAMING_DENY_STREAMING_FOR_NON_EDGE,
+        false,
+    ),
     fetchMode: {
         name: 'disabled',
         enabled: parseEnvVarBoolean(
@@ -264,32 +265,24 @@ const flags: IFlags = {
             false,
         ),
     },
-    newStrategyModal: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_STRATEGY_MODAL,
-        false,
-    ),
     globalChangeRequestList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_LIST,
-        false,
-    ),
-    newUiConfigService: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_UI_CONFIG_SERVICE,
-        false,
-    ),
-    trafficBillingDisplay: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TRAFFIC_BILLING_DISPLAY,
         false,
     ),
     milestoneProgression: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MILESTONE_PROGRESSION,
         false,
     ),
-    envAddStrategySuggestion: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ENV_ADD_STRATEGY_SUGGESTION,
-        false,
-    ),
     featureReleasePlans: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_RELEASE_PLANS,
+        false,
+    ),
+    plausibleMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
+        false,
+    ),
+    safeguards: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SAFEGUARDS,
         false,
     ),
 };
@@ -298,7 +291,7 @@ export const defaultExperimentalOptions: IExperimentalOptions = {
     flags,
     externalResolver: {
         isEnabled: (): boolean => false,
-        getVariant: () => getDefaultVariant(),
+        getVariant: () => defaultVariant,
         getStaticContext: () => ({}),
     },
 };

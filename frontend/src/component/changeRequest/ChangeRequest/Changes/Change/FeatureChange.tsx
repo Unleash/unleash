@@ -80,6 +80,7 @@ export const FeatureChange: FC<{
     feature: IChangeRequestFeature;
     onNavigate?: () => void;
     isDefaultChange?: boolean;
+    onRefetch?: () => void;
 }> = ({
     index,
     change,
@@ -88,6 +89,7 @@ export const FeatureChange: FC<{
     actions,
     onNavigate,
     isDefaultChange,
+    onRefetch,
 }) => {
     const lastIndex = feature.defaultChange
         ? feature.changes.length + 1
@@ -204,7 +206,9 @@ export const FeatureChange: FC<{
                 )}
                 {(change.action === 'addReleasePlan' ||
                     change.action === 'deleteReleasePlan' ||
-                    change.action === 'startMilestone') && (
+                    change.action === 'startMilestone' ||
+                    change.action === 'changeMilestoneProgression' ||
+                    change.action === 'deleteMilestoneProgression') && (
                     <ReleasePlanChange
                         actions={actions}
                         change={change}
@@ -212,6 +216,8 @@ export const FeatureChange: FC<{
                         environmentName={changeRequest.environment}
                         projectId={changeRequest.project}
                         changeRequestState={changeRequest.state}
+                        feature={feature}
+                        onRefetch={onRefetch}
                     />
                 )}
             </ChangeInnerBox>

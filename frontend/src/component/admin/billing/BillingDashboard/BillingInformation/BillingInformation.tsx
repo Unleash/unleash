@@ -4,17 +4,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { InstanceState } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
-
-/**
- * @deprecated remove with `trafficBillingDisplay` flag
- */
-const LegacyStyledInfoBox = styled('aside')(({ theme }) => ({
-    padding: theme.spacing(4),
-    height: '100%',
-    borderRadius: theme.shape.borderRadiusLarge,
-    backgroundColor: theme.palette.background.elevation2,
-}));
 
 const StyledInfoBox = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(4),
@@ -47,15 +36,11 @@ export const BillingInformation = () => {
         uiConfig: { billing },
     } = useUiConfig();
     const isPAYG = billing === 'pay-as-you-go';
-    const trafficBillingDisplay = useUiFlag('trafficBillingDisplay');
-    const StyledWrapper = trafficBillingDisplay
-        ? StyledInfoBox
-        : LegacyStyledInfoBox;
 
     if (!instanceStatus)
         return (
             <Grid item xs={12} md={5}>
-                <StyledWrapper data-loading sx={{ flex: 1, height: '400px' }} />
+                <StyledInfoBox data-loading sx={{ flex: 1, height: '400px' }} />
             </Grid>
         );
 
@@ -65,7 +50,7 @@ export const BillingInformation = () => {
 
     return (
         <Grid item xs={12} md={5}>
-            <StyledWrapper>
+            <StyledInfoBox>
                 <StyledTitle variant='body1'>Billing information</StyledTitle>
                 <ConditionallyRender
                     condition={Boolean(isCustomBilling)}
@@ -104,7 +89,7 @@ export const BillingInformation = () => {
                     </a>{' '}
                     for any clarification
                 </StyledInfoLabel>
-            </StyledWrapper>
+            </StyledInfoBox>
         </Grid>
     );
 };

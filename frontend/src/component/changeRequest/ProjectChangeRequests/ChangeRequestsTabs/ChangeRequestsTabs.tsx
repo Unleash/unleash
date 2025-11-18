@@ -62,6 +62,17 @@ const ConftigurationLinkBox = styled(Box)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
+const StyledTable = styled(Table)(() => ({
+    th: {
+        whiteSpace: 'nowrap',
+    },
+
+    td: {
+        verticalAlign: 'top',
+        maxWidth: '250px',
+    },
+}));
+
 export const ChangeRequestsTabs = ({
     changeRequests = [],
     placeholder,
@@ -122,7 +133,6 @@ export const ChangeRequestsTabs = ({
             {
                 id: 'Title',
                 Header: 'Title',
-                width: 100,
                 canSort: true,
                 accessor: 'title',
                 searchable: true,
@@ -164,7 +174,7 @@ export const ChangeRequestsTabs = ({
             {
                 Header: 'By',
                 accessor: 'createdBy',
-                maxWidth: 180,
+                width: '10%',
                 canSort: false,
                 Cell: AvatarCell,
                 align: 'left',
@@ -177,13 +187,14 @@ export const ChangeRequestsTabs = ({
                 Header: 'Submitted',
                 accessor: 'createdAt',
                 maxWidth: 100,
+                width: '5%',
                 Cell: TimeAgoCell,
             },
             {
                 Header: 'Environment',
                 accessor: 'environment',
                 searchable: true,
-                maxWidth: 100,
+                width: '10%',
                 Cell: HighlightCell,
                 filterName: 'environment',
             },
@@ -192,6 +203,7 @@ export const ChangeRequestsTabs = ({
                 accessor: 'state',
                 searchable: true,
                 maxWidth: '170px',
+                width: '10%',
                 Cell: ChangeRequestStatusCell,
                 filterName: 'status',
             },
@@ -333,7 +345,7 @@ export const ChangeRequestsTabs = ({
                 </Link>
             </ConftigurationLinkBox>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <Table {...getTableProps()}>
+                <StyledTable {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />
                     <TableBody {...getTableBodyProps()}>
                         {rows.map((row) => {
@@ -355,7 +367,7 @@ export const ChangeRequestsTabs = ({
                             );
                         })}
                     </TableBody>
-                </Table>
+                </StyledTable>
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

@@ -13,6 +13,9 @@ import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-str
 import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 import { transitionConditionSchema } from './transition-condition-schema.js';
+import { safeguardSchema } from './safeguard-schema.js';
+import { metricQuerySchema } from './metric-query-schema.js';
+import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
 export const featureSchema = {
     $id: '#/components/schemas/featureSchema',
@@ -178,6 +181,13 @@ export const featureSchema = {
                     ],
                     example: 'initial',
                 },
+                status: {
+                    type: 'string',
+                    nullable: true,
+                    example: 'kept',
+                    description:
+                        'The name of the detailed status of a given stage. E.g. completed stage can be kept or discarded.',
+                },
                 enteredStageAt: {
                     description: 'When the feature entered this stage',
                     type: 'string',
@@ -278,6 +288,12 @@ export const featureSchema = {
                         description: 'The description of the link',
                         nullable: true,
                     },
+                    feature: {
+                        type: 'string',
+                        example: 'disable-comments',
+                        description:
+                            'The name of the feature this link belongs to',
+                    },
                 },
             },
             description:
@@ -300,6 +316,9 @@ export const featureSchema = {
             createFeatureStrategySchema,
             createStrategyVariantSchema,
             transitionConditionSchema,
+            safeguardSchema,
+            metricQuerySchema,
+            safeguardTriggerConditionSchema,
         },
     },
 } as const;

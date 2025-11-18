@@ -14,7 +14,7 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
-import MaintenanceBanner from './maintenance/MaintenanceBanner.tsx';
+import { MaintenanceBanner } from './maintenance/MaintenanceBanner.tsx';
 import { styled } from '@mui/material';
 import { InitialRedirect, useLastViewedPage } from './InitialRedirect.tsx';
 import { InternalBanners } from './banners/internalBanners/InternalBanners.tsx';

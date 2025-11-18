@@ -585,6 +585,18 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ).values(),
     ];
 
+    const customStrategySettings = options.customStrategySettings ?? {
+        disableCreation: parseEnvVarBoolean(
+            process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION,
+            false,
+        ),
+
+        disableEditing: parseEnvVarBoolean(
+            process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_EDITING,
+            false,
+        ),
+    };
+
     const environmentEnableOverrides = loadEnvironmentEnableOverrides();
 
     const importSetting: IImportOption = mergeAll([
@@ -786,6 +798,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.prometheusImpactMetricsApi ||
         process.env.PROMETHEUS_IMPACT_METRICS_API;
 
+    const checkDbOnReady =
+        Boolean(options.checkDbOnReady) ??
+        parseEnvVarBoolean(process.env.CHECK_DB_ON_READY, false);
+
     return {
         db,
         session,
@@ -830,5 +846,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         userInactivityThresholdInDays,
         buildDate: process.env.BUILD_DATE,
         unleashFrontendToken,
+        customStrategySettings,
+        checkDbOnReady,
     };
 }

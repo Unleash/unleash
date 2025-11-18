@@ -177,11 +177,6 @@ Consider migrating to [Unleash Enterprise](https://www.getunleash.io/pricing) to
 
 Support for Internet Explorer has been removed, aligning with upstream dependencies (React v18) and Microsoft's end-of-support for the browser.
 
-### Deprecated custom strategies
-
-While still functional in v6, custom strategies are deprecated in favor of using standard strategies combined with [strategy constraints](/reference/activation-strategies#constraints).
-Consider migrating if possible, as constraints offer similar flexibility without requiring custom code distribution with SDKs.
-
 ### High availability upgrade considerations
 
 If you run multiple Unleash instances in a high-availability setup and are upgrading from a version **below 5.6.11** directly to **version 5.7 or higher**, you might experience temporary UI unavailability during a rolling upgrade while instances with different versions (`<5.7` and `>=5.7`) are running simultaneously.
@@ -261,6 +256,12 @@ Now they look like this:
 ```
 
 If your integrations rely on the specific structure of these validation error messages, you might need to update your error handling logic.
+
+:::note
+In v6, we deprecated custom strategies. However, due to customer feedback, we reverted this change and will continue to support them.
+
+Whenever possible, we recommend using a standard gradual rollout strategy combined with [strategy constraints](/reference/activation-strategies#constraints), as they offer similar flexibility without requiring custom code distribution with SDKs.
+:::
 
 ## Upgrading from v3 to v5
 

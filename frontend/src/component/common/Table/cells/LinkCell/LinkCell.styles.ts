@@ -43,4 +43,5 @@ export const StyledDescription = styled('span')(({ theme }) => ({
     textOverflow: 'ellipsis',
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical',
+    wordBreak: 'break-word',
 }));

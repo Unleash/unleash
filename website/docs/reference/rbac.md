@@ -213,9 +213,9 @@ Once you have the role set up, you can assign it to individual users inside a pr
 2. For **Role**, select the custom project roles you want to apply.
 3. Click **Save**.
 
-### Project permissions
+### Project-level permissions
 
-You can assign the following project permissions. These permissions are valid across all of the [project](./projects)'s environments.
+You can assign the following project-level permissions. These permissions are valid across all of the [project](./projects)'s environments.
 
 #### API tokens
 | Permission Name | Description |
@@ -253,7 +253,7 @@ You can assign the following project permissions. These permissions are valid ac
 | Read settings                             | View other project settings (included in _Update project_). |                                                                                                                                                              |                             
 | Write settings | Edit other project settings (included in _Update project_).                            
 | Delete the project                        | Delete the project.                                                                                                                                                                                                                 |
-### Environment permissions
+### Environment-level permissions
 
 You can assign the following permissions on a per-environment level within the project:
 
@@ -325,6 +325,8 @@ Groups themselves do not grant permissions. To be functional, a group must eithe
 
 A user can belong to multiple groups, and each group a user belongs to can have a different role assigned to it on a specific project.
 If a user gains permissions for a project through multiple groups, they will inherit the most permissive set of permissions from all their assigned group roles for that project.
+
+You can’t add a group with a [custom root role](#custom-root-roles) to a project. If you need both root-level and project-level access through [group syncing](#set-up-group-sso-syncing), you can sync the same directory group from your Active Directory or identity provider to two separate Unleash groups: one for root permissions and one for project access.
 
 ## Set up group SSO syncing
 

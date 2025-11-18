@@ -2,27 +2,28 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { Link, styled, Typography } from '@mui/material';
 import { Link as RouterLink, type LinkProps } from 'react-router-dom';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-
-type IGlobalChangeRequestTitleCellProps = {
-    value?: any;
-    row: { original: any };
-};
+import { Truncator } from 'component/common/Truncator/Truncator';
+import type { ChangeRequestSearchItemSchema } from 'openapi';
+import type { Row } from '@tanstack/react-table';
 
 const LinkContainer = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
+    display: 'flex',
+    columnGap: theme.spacing(0.5),
 }));
 
 const BaseLink = styled(({ children, ...props }: LinkProps) => (
     <Link component={RouterLink} {...props}>
         {children}
     </Link>
-))(({ theme }) => ({
+))({
+    whiteSpace: 'nowrap',
     textDecoration: 'none',
     color: 'inherit',
     ':hover': {
         textDecoration: 'underline',
     },
-}));
+});
 
 const ChangeRequestLink = styled(BaseLink)(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -34,33 +35,43 @@ const UpdateText = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
 }));
 
+type GlobalChangeRequestTitleCellProps = {
+    row: Row<ChangeRequestSearchItemSchema>;
+};
+
 export const GlobalChangeRequestTitleCell = ({
-    value,
-    row: { original },
-}: IGlobalChangeRequestTitleCellProps) => {
-    const {
-        id,
-        title,
-        project,
-        features: featureChanges,
-        segments: segmentChanges,
-    } = original;
+    row: {
+        original: {
+            id,
+            title,
+            project,
+            features: featureChanges,
+            segments: segmentChanges,
+        },
+    },
+}: GlobalChangeRequestTitleCellProps) => {
     const projectName = useProjectOverviewNameOrId(project);
     const totalChanges =
         featureChanges?.length ?? 0 + segmentChanges?.length ?? 0;
     const projectPath = `/projects/${project}`;
     const crPath = `${projectPath}/change-requests/${id}`;
 
-    if (!value) {
-        return <TextCell />;
-    }
-
     return (
-        <TextCell sx={{ minWidth: '300px' }}>
+        <TextCell>
             <LinkContainer>
-                <BaseLink to={projectPath}>{projectName}</BaseLink>
-                <span aria-hidden='true'> / </span>
-                <ChangeRequestLink to={crPath}>{title}</ChangeRequestLink>
+                <Truncator title={projectName}>
+                    <BaseLink to={projectPath}>{projectName}</BaseLink>
+                </Truncator>
+                <span aria-hidden='true'>/</span>
+                {title ? (
+                    <Truncator title={title}>
+                        <ChangeRequestLink to={crPath}>
+                            {title}
+                        </ChangeRequestLink>
+                    </Truncator>
+                ) : (
+                    <ChangeRequestLink to={crPath}>#{id}</ChangeRequestLink>
+                )}
             </LinkContainer>
             <UpdateText>
                 {`${totalChanges}`} {totalChanges === 1 ? `update` : 'updates'}

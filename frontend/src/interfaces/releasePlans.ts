@@ -1,4 +1,7 @@
 import type { IFeatureStrategy } from './strategy.js';
+import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
+import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
+import type { CreateSafeguardSchemaOperator } from 'openapi/models/createSafeguardSchemaOperator';
 
 export interface IReleasePlanTemplate {
     id: string;
@@ -18,6 +21,19 @@ export interface IReleasePlanTemplate {
     archivedAt?: string;
 }
 
+export interface ISafeguard {
+    id: string;
+    impactMetric: {
+        aggregationMode: MetricQuerySchemaAggregationMode;
+        metricName: string;
+        timeRange: MetricQuerySchemaTimeRange;
+        labelSelectors: { appName: [string] };
+    };
+    triggerCondition: {
+        operator: CreateSafeguardSchemaOperator;
+        threshold: number;
+    };
+}
 export interface IReleasePlan {
     id: string;
     name: string;
@@ -28,6 +44,7 @@ export interface IReleasePlan {
     featureName: string;
     environment: string;
     milestones: IReleasePlanMilestone[];
+    safeguards: ISafeguard[];
 }
 
 export interface IReleasePlanMilestone {
@@ -36,6 +53,7 @@ export interface IReleasePlanMilestone {
     releasePlanDefinitionId: string;
     strategies: IReleasePlanMilestoneStrategy[];
     startedAt?: string | null;
+    pausedAt?: string | null;
     transitionCondition?: {
         intervalMinutes: number;
     } | null;

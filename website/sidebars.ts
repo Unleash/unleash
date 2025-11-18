@@ -79,7 +79,6 @@ const sidebars: SidebarsConfig = {
                         'reference/projects',
                         'reference/project-collaboration-mode',
                         'reference/environments',
-                        'how-to/how-to-environment-import-export',
                     ],
                 },
                 {
@@ -179,11 +178,20 @@ const sidebars: SidebarsConfig = {
                         'reference/maintenance-mode',
                     ],
                 },
+                {
+                    type: 'doc',
+                    label: 'Import and export',
+                    id: 'how-to/how-to-environment-import-export',
+                },
             ],
         },
         {
             label: 'Tutorials and guides',
             type: 'category',
+            link: {
+                type: 'doc',
+                id: 'guides-overview',
+            },
             items: [
                 {
                     label: 'Feature management best practices',
@@ -238,6 +246,11 @@ const sidebars: SidebarsConfig = {
                             type: 'doc',
                             label: 'Gradual rollout',
                             id: 'feature-flag-tutorials/use-cases/gradual-rollout',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Unleash Edge quickstart',
+                            id: 'how-to/unleash-edge-quickstart',
                         },
                     ],
                 },
@@ -324,11 +337,6 @@ const sidebars: SidebarsConfig = {
                                     type: 'doc',
                                     label: 'Examples',
                                     id: 'feature-flag-tutorials/react/examples',
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'Manage feature flags in code',
-                                    id: 'feature-flag-tutorials/use-cases/manage-feature-flags-in-code',
                                 },
                             ],
                         },
@@ -667,6 +675,11 @@ const sidebars: SidebarsConfig = {
                             type: 'doc',
                             label: 'Terraform',
                             id: 'reference/terraform',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'MCP',
+                            id: 'generated/mcp',
                         },
                     ],
                 },

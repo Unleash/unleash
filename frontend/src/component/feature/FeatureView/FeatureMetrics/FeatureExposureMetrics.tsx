@@ -26,17 +26,19 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 export const FeatureExposureMetrics = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const environments = useFeatureMetricsEnvironments(projectId, featureId);
+    const { environments, defaultProductionIndex } =
+        useFeatureMetricsEnvironments(projectId, featureId);
 
     usePageTitle('Metrics');
 
-    const defaultEnvironment = Array.from(environments)[0];
+    const defaultEnvironment = Array.from(environments)[defaultProductionIndex];
 
     const [query, setQuery] = useQueryParams({
         environment: withDefault(StringParam, defaultEnvironment),
         applications: withDefault(ArrayParam, []),
         hoursBack: withDefault(NumberParam, FEATURE_METRIC_HOURS_BACK_DEFAULT),
     });
+
     const applications = useFeatureMetricsApplications(
         featureId,
         query.hoursBack || FEATURE_METRIC_HOURS_BACK_DEFAULT,
@@ -171,17 +173,21 @@ export const FeatureExposureMetrics = () => {
 
 // Get all the environment names for a feature,
 // not just the one's we have metrics for.
-const useFeatureMetricsEnvironments = (
+export const useFeatureMetricsEnvironments = (
     projectId: string,
     featureId: string,
-): Set<string> => {
+): { environments: Set<string>; defaultProductionIndex: number } => {
     const { feature } = useFeature(projectId, featureId);
 
-    const environments = feature.environments.map((environment) => {
+    let defaultProductionIndex = 0;
+    const environments = feature.environments.map((environment, index) => {
+        if (!defaultProductionIndex && environment.type === 'production') {
+            defaultProductionIndex = index;
+        }
         return environment.name;
     });
 
-    return new Set(environments);
+    return { environments: new Set(environments), defaultProductionIndex };
 };
 
 // Get all application names for a feature. Respect current hoursBack since

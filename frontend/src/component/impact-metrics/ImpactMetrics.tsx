@@ -1,11 +1,12 @@
-import type { FC } from 'react';
-import { useMemo, useState, useCallback } from 'react';
+import { type FC, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { Typography, Button, Paper, styled, Box } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
-import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { ChartConfigModal } from './ChartConfigModal/ChartConfigModal.tsx';
 import { ChartItem } from './ChartItem.tsx';
+import { PlausibleChartItem } from './PlausibleChartItem.tsx';
 import { GridLayoutWrapper, type GridItem } from './GridLayoutWrapper.tsx';
 import { useImpactMetricsState } from './hooks/useImpactMetricsState.ts';
 import type { ChartConfig } from './types.ts';
@@ -13,6 +14,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import { ADMIN } from '../providers/AccessProvider/permissions.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledEmptyState = styled(Paper)(({ theme }) => ({
     textAlign: 'center',
@@ -39,6 +41,7 @@ export const ImpactMetrics: FC = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editingChart, setEditingChart] = useState<ChartConfig | undefined>();
     const { setToastApiError } = useToast();
+    const plausibleMetricsEnabled = useUiFlag('plausibleMetrics');
 
     const {
         charts,
@@ -51,20 +54,10 @@ export const ImpactMetrics: FC = () => {
     } = useImpactMetricsState();
 
     const {
-        metadata,
+        metricOptions,
         loading: metadataLoading,
         error: metadataError,
-    } = useImpactMetricsMetadata();
-
-    const metricSeries = useMemo(() => {
-        if (!metadata?.series) {
-            return [];
-        }
-        return Object.entries(metadata.series).map(([name, rest]) => ({
-            name,
-            ...rest,
-        }));
-    }, [metadata]);
+    } = useImpactMetricsOptions();
 
     const handleAddChart = () => {
         setEditingChart(undefined);
@@ -100,33 +93,49 @@ export const ImpactMetrics: FC = () => {
         [deleteChart],
     );
 
-    const gridItems: GridItem[] = useMemo(
-        () =>
-            charts.map((config, index) => {
-                const existingLayout = layout?.find(
-                    (item) => item.i === config.id,
-                );
-                return {
-                    id: config.id,
-                    component: (
-                        <ChartItem
-                            config={config}
-                            onEdit={handleEditChart}
-                            onDelete={handleDeleteChart}
-                        />
-                    ),
-                    w: existingLayout?.w ?? 6,
-                    h: existingLayout?.h ?? 4,
-                    x: existingLayout?.x,
-                    y: existingLayout?.y,
-                    minW: 4,
-                    minH: 2,
-                    maxW: 12,
-                    maxH: 8,
-                };
-            }),
-        [charts, layout, handleEditChart, handleDeleteChart],
-    );
+    const gridItems: GridItem[] = useMemo(() => {
+        const items: GridItem[] = [];
+
+        if (plausibleMetricsEnabled) {
+            const plausibleChartItem: GridItem = {
+                id: 'plausible-analytics',
+                component: <PlausibleChartItem />,
+                w: 6,
+                h: 2,
+            };
+            items.push(plausibleChartItem);
+        }
+
+        const impactMetricsItems: GridItem[] = charts.map((config, index) => {
+            const existingLayout = layout?.find((item) => item.i === config.id);
+            return {
+                id: config.id,
+                component: (
+                    <ChartItem
+                        config={config}
+                        onEdit={handleEditChart}
+                        onDelete={handleDeleteChart}
+                    />
+                ),
+                w: existingLayout?.w ?? 6,
+                h: existingLayout?.h ?? 4,
+                x: existingLayout?.x,
+                y: existingLayout?.y,
+                minW: 4,
+                minH: 2,
+                maxW: 12,
+                maxH: 8,
+            };
+        });
+
+        return [...items, ...impactMetricsItems];
+    }, [
+        charts,
+        layout,
+        handleEditChart,
+        handleDeleteChart,
+        plausibleMetricsEnabled,
+    ]);
 
     const hasError = metadataError || settingsError;
     const isLoading = metadataLoading || settingsLoading;
@@ -156,7 +165,7 @@ export const ImpactMetrics: FC = () => {
             {charts.length === 0 && !isLoading && !hasError ? (
                 <StyledEmptyState>
                     <Typography variant='h6' gutterBottom>
-                        No charts configured
+                        No impact metrics charts configured
                     </Typography>
                     <Typography
                         variant='body2'
@@ -175,7 +184,7 @@ export const ImpactMetrics: FC = () => {
                         Add Chart
                     </Button>
                 </StyledEmptyState>
-            ) : charts.length > 0 ? (
+            ) : gridItems.length > 0 ? (
                 <GridLayoutWrapper items={gridItems} />
             ) : null}
 
@@ -184,7 +193,7 @@ export const ImpactMetrics: FC = () => {
                 onClose={() => setModalOpen(false)}
                 onSave={handleSaveChart}
                 initialConfig={editingChart}
-                metricSeries={metricSeries}
+                metricSeries={metricOptions}
                 loading={metadataLoading || settingsLoading}
             />
         </>

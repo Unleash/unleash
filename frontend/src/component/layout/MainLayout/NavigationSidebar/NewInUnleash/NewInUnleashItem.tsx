@@ -3,6 +3,7 @@ import { ListItem } from '@mui/material';
 import { NewInUnleashTooltip } from './NewInUnleashTooltip.tsx';
 import { NewInUnleashDialog } from './NewInUnleashDialog.tsx';
 import { NewInUnleashSideBarItem } from './NewInUnleashSideBarItem.tsx';
+import type { UiFlags } from 'interfaces/uiConfig.ts';
 
 export type NewInUnleashItemDetails = {
     label: string;
@@ -10,7 +11,11 @@ export type NewInUnleashItemDetails = {
     icon: ReactNode;
     onCheckItOut?: () => void;
     docsLink?: string;
-    show: boolean;
+    filter: {
+        versionLowerThan: string;
+        enterpriseOnly?: boolean;
+        flag?: keyof UiFlags; // if this is still controlled by a flag
+    };
     longDescription?: ReactNode;
     preview?: ReactNode;
     beta?: boolean;
@@ -18,7 +23,7 @@ export type NewInUnleashItemDetails = {
 };
 
 interface INewInUnleashItemProps
-    extends Omit<NewInUnleashItemDetails, 'show' | 'beta'> {
+    extends Omit<NewInUnleashItemDetails, 'filter' | 'beta'> {
     onClick: () => void;
     onDismiss: () => void;
     beta: boolean;

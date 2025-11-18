@@ -33,6 +33,7 @@ import type { GetLicensedUsers } from './getLicensedUsers.js';
 import type { IFeatureUsageInfo } from '../../services/version-service.js';
 import type { ReleasePlanTemplateStore } from '../release-plans/release-plan-template-store.js';
 import type { ReleasePlanStore } from '../release-plans/release-plan-store.js';
+import type { GetEdgeInstances } from './getEdgeInstances.js';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -74,6 +75,7 @@ export interface InstanceStats {
     maxConstraintValues: number;
     releaseTemplates?: number;
     releasePlans?: number;
+    edgeInstanceUsage?: Awaited<ReturnType<GetEdgeInstances>>;
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -123,6 +125,8 @@ export class InstanceStatsService {
     getLicencedUsers: GetLicensedUsers;
 
     getProductionChanges: GetProductionChanges;
+
+    getEdgeInstances: GetEdgeInstances;
 
     private featureStrategiesReadModel: IFeatureStrategiesReadModel;
 
@@ -185,6 +189,7 @@ export class InstanceStatsService {
         getActiveUsers: GetActiveUsers,
         getProductionChanges: GetProductionChanges,
         getLicencedUsers: GetLicensedUsers,
+        getEdgeInstances: GetEdgeInstances,
     ) {
         this.strategyStore = strategyStore;
         this.userStore = userStore;
@@ -209,6 +214,8 @@ export class InstanceStatsService {
                 'getProductionChanges',
                 getProductionChanges.bind(this),
             );
+        this.getEdgeInstances = () =>
+            this.memorize('getEdgeInstances', getEdgeInstances.bind(this));
         this.apiTokenStore = apiTokenStore;
         this.clientMetricsStore = clientMetricsStoreV2;
         this.flagResolver = flagResolver;
@@ -356,6 +363,7 @@ export class InstanceStatsService {
             maxConstraints,
             releaseTemplates,
             releasePlans,
+            edgeInstanceUsage,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getArchivedToggleCount(),
@@ -402,6 +410,7 @@ export class InstanceStatsService {
             ),
             this.getReleaseTemplates(),
             this.getReleasePlans(),
+            this.getEdgeInstances(),
         ]);
 
         return {
@@ -442,6 +451,7 @@ export class InstanceStatsService {
             maxConstraints: maxConstraints?.count ?? 0,
             releaseTemplates,
             releasePlans,
+            edgeInstanceUsage,
         };
     }
 
@@ -471,6 +481,7 @@ export class InstanceStatsService {
             hostedBy,
             releaseTemplates,
             releasePlans,
+            edgeInstanceUsage,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getRegisteredUsers(),
@@ -496,6 +507,7 @@ export class InstanceStatsService {
             this.getHostedBy(),
             this.getReleaseTemplates(),
             this.getReleasePlans(),
+            this.getEdgeInstances(),
         ]);
         const versionInfo = await this.versionService.getVersionInfo();
 
@@ -533,6 +545,7 @@ export class InstanceStatsService {
             hostedBy,
             releaseTemplates,
             releasePlans,
+            edgeInstanceUsage,
         };
         return featureInfo;
     }

@@ -1,8 +1,9 @@
+import { useMemo } from 'react';
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
 
 export type ImpactMetricsSeries = {
-    type: string;
+    type: 'counter' | 'gauge' | 'histogram' | 'unknown';
     help: string;
     displayName: string;
 };
@@ -21,6 +22,26 @@ export const useImpactMetricsMetadata = () => {
     return {
         metadata: data,
         refetch,
+        loading,
+        error,
+    };
+};
+
+export const useImpactMetricsOptions = () => {
+    const { metadata, loading, error } = useImpactMetricsMetadata();
+
+    const metricOptions = useMemo(() => {
+        if (!metadata?.series) {
+            return [];
+        }
+        return Object.entries(metadata.series).map(([name, rest]) => ({
+            name,
+            ...rest,
+        }));
+    }, [metadata]);
+
+    return {
+        metricOptions,
         loading,
         error,
     };

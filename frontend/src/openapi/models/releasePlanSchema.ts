@@ -5,6 +5,7 @@
  */
 import type { ReleasePlanSchemaDiscriminator } from './releasePlanSchemaDiscriminator.js';
 import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema.js';
+import type { SafeguardSchema } from './safeguardSchema.js';
 
 /**
  * Schema representing the creation of a release plan.
@@ -48,4 +49,6 @@ export interface ReleasePlanSchema {
      * The ID of the release plan template that this release plan is based on.
      */
     releasePlanTemplateId: string;
+    /** An array of safeguards configured for this release plan. */
+    safeguards?: SafeguardSchema[];
 }

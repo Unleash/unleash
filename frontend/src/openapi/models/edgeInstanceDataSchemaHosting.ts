@@ -5,7 +5,7 @@
  */
 
 /**
- * A marker that tells Unleash whether this Edge instance is self-hosted or hosted by Unleash.
+ * A marker that tells Unleash whether this Edge instance is self-hosted, enterprise self-hosted, or hosted by Unleash.
  */
 export type EdgeInstanceDataSchemaHosting =
     (typeof EdgeInstanceDataSchemaHosting)[keyof typeof EdgeInstanceDataSchemaHosting];
@@ -14,4 +14,5 @@ export type EdgeInstanceDataSchemaHosting =
 export const EdgeInstanceDataSchemaHosting = {
     hosted: 'hosted',
     'self-hosted': 'self-hosted',
+    'enterprise-self-hosted': 'enterprise-self-hosted',
 } as const;

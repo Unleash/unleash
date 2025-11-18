@@ -40,6 +40,7 @@ import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init.js';
 import { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store.js';
 import { FeatureLifecycleReadModel } from './features/feature-lifecycle/feature-lifecycle-read-model.js';
 import { createFakeGetLicensedUsers } from './features/instance-stats/getLicensedUsers.js';
+import { createFakeGetEdgeInstances } from './features/instance-stats/getEdgeInstances.js';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -79,6 +80,7 @@ beforeAll(async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
         createFakeGetLicensedUsers(),
+        createFakeGetEdgeInstances(),
     );
 
     schedulerService = new SchedulerService(

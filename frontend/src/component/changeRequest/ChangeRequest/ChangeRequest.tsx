@@ -77,6 +77,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                             change={change}
                             feature={feature}
                             onNavigate={onNavigate}
+                            onRefetch={onRefetch}
                         />
                     ))}
                     {feature.defaultChange ? (

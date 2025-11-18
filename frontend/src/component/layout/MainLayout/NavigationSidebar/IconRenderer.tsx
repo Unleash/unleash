@@ -37,6 +37,7 @@ import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunchOutlined';
 import BuildIcon from '@mui/icons-material/BuildOutlined';
+import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon';
 
 // TODO: move to routes
 const icons: Record<
@@ -87,6 +88,7 @@ const icons: Record<
     '/projects': ProjectIcon,
     '/playground': PlaygroundIcon,
     '/custom-metrics': RocketLaunchIcon,
+    '/change-requests': ChangeRequestIcon,
     GitHub: GitHubIcon,
     Documentation: LibraryBooksIcon,
     Configure: BuildIcon,

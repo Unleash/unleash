@@ -1,5 +1,7 @@
+import { PayloadType } from 'unleash-client';
 import {
     parseEnvVarBoolean,
+    parseEnvVarBooleanOrStringVariant,
     parseEnvVarNumber,
     parseEnvVarStrings,
 } from './parseEnvVar.js';
@@ -38,4 +40,33 @@ test('parseEnvVarStringList', () => {
     expect(parseEnvVarStrings('a,b,c', [])).toEqual(['a', 'b', 'c']);
     expect(parseEnvVarStrings('a,b,c', [])).toEqual(['a', 'b', 'c']);
     expect(parseEnvVarStrings(' a,,,b,  c , ,', [])).toEqual(['a', 'b', 'c']);
+});
+
+test('parseEnvVarBooleanOrStringVariant', () => {
+    expect(parseEnvVarBooleanOrStringVariant(undefined, true)).toEqual(true);
+    expect(parseEnvVarBooleanOrStringVariant(undefined, false)).toEqual(false);
+    for (const truthy of ['true', 't', '1']) {
+        expect(parseEnvVarBooleanOrStringVariant(truthy, false)).toEqual(true);
+    }
+    for (const falsy of ['false', 'f', '0']) {
+        expect(parseEnvVarBooleanOrStringVariant(falsy, true)).toEqual(false);
+    }
+
+    expect(
+        parseEnvVarBooleanOrStringVariant(undefined, {
+            name: 'default-variant',
+            enabled: false,
+        }),
+    ).toEqual({ name: 'default-variant', enabled: false });
+
+    expect(
+        parseEnvVarBooleanOrStringVariant('custom string', true),
+    ).toMatchObject({
+        name: expect.any(String),
+        enabled: true,
+        payload: {
+            value: 'custom string',
+            type: PayloadType.STRING,
+        },
+    });
 });

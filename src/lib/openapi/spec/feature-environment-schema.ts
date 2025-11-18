@@ -120,6 +120,20 @@ export const featureEnvironmentSchema = {
                 $ref: '#/components/schemas/releasePlanSchema',
             },
         },
+        yes: {
+            type: 'integer',
+            description:
+                'How many times the feature evaluated to true (enabled)',
+            example: 974,
+            minimum: 0,
+        },
+        no: {
+            type: 'integer',
+            description:
+                'How many times the feature evaluated to false (disabled)',
+            example: 50,
+            minimum: 0,
+        },
     },
     components: {
         schemas: {

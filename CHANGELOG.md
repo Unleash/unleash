@@ -2,6 +2,218 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.3.0] - 2025-11-07
+
+### Bug Fixes
+
+- Long descriptions ([#10845](https://github.com/Unleash/unleash/issues/10845))
+
+- Linting website links ([#10846](https://github.com/Unleash/unleash/issues/10846))
+
+- Show draft badges for milestone progression changes ([#10851](https://github.com/Unleash/unleash/issues/10851))
+
+- Update splash nonexistent user ([#10873](https://github.com/Unleash/unleash/issues/10873))
+
+- Missing await in user splash update ([#10878](https://github.com/Unleash/unleash/issues/10878))
+
+- Slack webhook URL documentation link ([#10887](https://github.com/Unleash/unleash/issues/10887))
+
+- Update dependency normalize-url to v8 ([#10193](https://github.com/Unleash/unleash/issues/10193))
+
+- Enterprise edge stats should take into account full month ([#10898](https://github.com/Unleash/unleash/issues/10898))
+
+- Hide usage when there is no limit ([#10918](https://github.com/Unleash/unleash/issues/10918))
+
+- Cap rendered change request title height to 3 lines ([#10922](https://github.com/Unleash/unleash/issues/10922))
+
+- Don't spread props + nest li correctly ([#10923](https://github.com/Unleash/unleash/issues/10923))
+
+- Ignore release plans in strategy diffing ([#10938](https://github.com/Unleash/unleash/issues/10938))
+
+- Don't clear "implicit" filters when updating table state outside quick filters ([#10937](https://github.com/Unleash/unleash/issues/10937))
+
+
+### Chore
+
+- Update Orval with new state query param ([#10860](https://github.com/Unleash/unleash/issues/10860))
+
+- Vertically center change request quick filters ([#10917](https://github.com/Unleash/unleash/issues/10917))
+
+- Remove aria-current; group buttons ([#10919](https://github.com/Unleash/unleash/issues/10919))
+
+
+### Documentation
+
+- Update import export page ([#10854](https://github.com/Unleash/unleash/issues/10854))
+
+- Update segments page ([#10875](https://github.com/Unleash/unleash/issues/10875))
+
+- Update private project collaboration mode explanation ([#10892](https://github.com/Unleash/unleash/issues/10892))
+
+- Add guides overview page ([#10895](https://github.com/Unleash/unleash/issues/10895))
+
+- Explain that IP allow list is configured by us ([#10896](https://github.com/Unleash/unleash/issues/10896))
+
+- Updates for 7.3 ([#10913](https://github.com/Unleash/unleash/issues/10913))
+
+
+### Features
+
+- Add taxes to invoices ([#10821](https://github.com/Unleash/unleash/issues/10821))
+
+- Calculate the esimtate invoice numbers ([#10823](https://github.com/Unleash/unleash/issues/10823))
+
+- Only show detailed billing for consumption and payg ([#10825](https://github.com/Unleash/unleash/issues/10825))
+
+- Overages should be rouned down to nearest integer ([#10826](https://github.com/Unleash/unleash/issues/10826))
+
+- Add billing invoices skeletons ([#10827](https://github.com/Unleash/unleash/issues/10827))
+
+- Delete milestone progression with CR ([#10828](https://github.com/Unleash/unleash/issues/10828))
+
+- Add median per week calculation for the new flags in production widget ([#10829](https://github.com/Unleash/unleash/issues/10829))
+
+- Display median calculation ([#10763](https://github.com/Unleash/unleash/issues/10763))
+
+- Release plan cr conflict ([#10831](https://github.com/Unleash/unleash/issues/10831))
+
+- Unified milestone progression changed event ([#10836](https://github.com/Unleash/unleash/issues/10836))
+
+- Change request progression view ([#10835](https://github.com/Unleash/unleash/issues/10835))
+
+- Add plausibleMetrics feature flag ([#10847](https://github.com/Unleash/unleash/issues/10847))
+
+- Add timers to all SQL queries in client applications store ([#10855](https://github.com/Unleash/unleash/issues/10855))
+
+- Show draft automation inline in release plans ([#10856](https://github.com/Unleash/unleash/issues/10856))
+
+- Plausible metrics chart ([#10859](https://github.com/Unleash/unleash/issues/10859))
+
+- Fake impact metrics improvements ([#10866](https://github.com/Unleash/unleash/issues/10866))
+
+- Warning when empty segment ([#10868](https://github.com/Unleash/unleash/issues/10868))
+
+- Track change progression ([#10874](https://github.com/Unleash/unleash/issues/10874))
+
+- Instant milestone progression prevention ([#10879](https://github.com/Unleash/unleash/issues/10879))
+
+- After to at ([#10880](https://github.com/Unleash/unleash/issues/10880))
+
+- Read only milestone progression in cr ([#10882](https://github.com/Unleash/unleash/issues/10882))
+
+- Milestone progression borders ([#10884](https://github.com/Unleash/unleash/issues/10884))
+
+- Read milestone progressions from snapshot ([#10886](https://github.com/Unleash/unleash/issues/10886))
+
+- Include readiness check option ([#10850](https://github.com/Unleash/unleash/issues/10850))
+
+- Milestone without prior automation ([#10893](https://github.com/Unleash/unleash/issues/10893))
+
+- Start now button with background ([#10897](https://github.com/Unleash/unleash/issues/10897))
+
+- Make milestone progression more clear ([#10899](https://github.com/Unleash/unleash/issues/10899))
+
+- Align milestone time formatting ([#10903](https://github.com/Unleash/unleash/issues/10903))
+
+- Ability to disable custom strategies ([#10885](https://github.com/Unleash/unleash/issues/10885))
+
+- Milestone progression paused at ([#10907](https://github.com/Unleash/unleash/issues/10907))
+
+- Prioritize first production environments in FeatureExposureMetrics ([#10891](https://github.com/Unleash/unleash/issues/10891))
+
+- Add safeguards migration ([#10928](https://github.com/Unleash/unleash/issues/10928))
+
+- Change how we calculate what to show new in Unleash ([#10931](https://github.com/Unleash/unleash/issues/10931))
+
+
+### Miscellaneous Tasks
+
+- Remove uuid from the frontend ([#10808](https://github.com/Unleash/unleash/issues/10808))
+
+- Show edge instances in license info ([#10810](https://github.com/Unleash/unleash/issues/10810))
+
+- Align text to cell top ([#10837](https://github.com/Unleash/unleash/issues/10837))
+
+- Add edge instances to instance stats ([#10839](https://github.com/Unleash/unleash/issues/10839))
+
+- Show avatars in cross-project change requests table. ([#10838](https://github.com/Unleash/unleash/issues/10838))
+
+- Never wrap other text fields in global change requests table ([#10841](https://github.com/Unleash/unleash/issues/10841))
+
+- Replace hand-crafted schemas with orval-generated schemas ([#10849](https://github.com/Unleash/unleash/issues/10849))
+
+- Generate orval ([#10852](https://github.com/Unleash/unleash/issues/10852))
+
+- Expose fake impact metrics resolver ([#10861](https://github.com/Unleash/unleash/issues/10861))
+
+- Add state filter to UI query; default to open ([#10858](https://github.com/Unleash/unleash/issues/10858))
+
+- Support border collapsing for an arbitrary number of filters ([#10862](https://github.com/Unleash/unleash/issues/10862))
+
+- Bump Yarn to 4.10.3 ([#10865](https://github.com/Unleash/unleash/issues/10865))
+
+- Bulk add instances once every 10 seconds ([#10871](https://github.com/Unleash/unleash/issues/10871))
+
+- Increase performance of application upsert ([#10870](https://github.com/Unleash/unleash/issues/10870))
+
+- Starting after time ([#10872](https://github.com/Unleash/unleash/issues/10872))
+
+- OriginMiddlewareRequestLogging flag cleanup ([#10864](https://github.com/Unleash/unleash/issues/10864))
+
+- Remove unused events ([#10883](https://github.com/Unleash/unleash/issues/10883))
+
+- Safeguards flag ([#10906](https://github.com/Unleash/unleash/issues/10906))
+
+- Add a flag to deny streaming for non edge connections ([#10905](https://github.com/Unleash/unleash/issues/10905))
+
+- Swap edit and copy strategy button order ([#10904](https://github.com/Unleash/unleash/issues/10904))
+
+- NewUiConfigService flag cleanup ([#10910](https://github.com/Unleash/unleash/issues/10910))
+
+- NewStrategyModal flag cleanup ([#10912](https://github.com/Unleash/unleash/issues/10912))
+
+- EnvAddStrategySuggestion flag cleanup ([#10916](https://github.com/Unleash/unleash/issues/10916))
+
+- Remove unused legacy featureoverview component ([#10921](https://github.com/Unleash/unleash/issues/10921))
+
+- Remove deprecation warnings for custom strategies ([#10924](https://github.com/Unleash/unleash/issues/10924))
+
+- Remove custom strategy deprecation warnings from release tempates ([#10929](https://github.com/Unleash/unleash/issues/10929))
+
+- Copy change request table improvements to project CR tables ([#10920](https://github.com/Unleash/unleash/issues/10920))
+
+- Add Change Requests to sidebar and fix command menu icon ([#10932](https://github.com/Unleash/unleash/issues/10932))
+
+- Reword "created" to "created by me" ([#10935](https://github.com/Unleash/unleash/issues/10935))
+
+- Update "by" to "created by" in the global change request list ([#10934](https://github.com/Unleash/unleash/issues/10934))
+
+- Disable "sortable" column headers for change requests table ([#10936](https://github.com/Unleash/unleash/issues/10936))
+
+- LifecycleGraphs flag cleanup ([#10942](https://github.com/Unleash/unleash/issues/10942))
+
+
+### Refactor
+
+- Move invoice logic into separate file/function ([#10824](https://github.com/Unleash/unleash/issues/10824))
+
+- Update/create progression to change progression ([#10843](https://github.com/Unleash/unleash/issues/10843))
+
+- Improve type safety in milestone progression components ([#10848](https://github.com/Unleash/unleash/issues/10848))
+
+- Polish progression edit form UI ([#10853](https://github.com/Unleash/unleash/issues/10853))
+
+- Milestone progression natural key ([#10869](https://github.com/Unleash/unleash/issues/10869))
+
+- Smart time range ([#10881](https://github.com/Unleash/unleash/issues/10881))
+
+- Explicit scheduled milestone modelling ([#10900](https://github.com/Unleash/unleash/issues/10900))
+
+- Extract different milestone button types ([#10901](https://github.com/Unleash/unleash/issues/10901))
+
+- Clean up dead code after removing newStrategyModal flag ([#10926](https://github.com/Unleash/unleash/issues/10926))
+
+
 ## [7.2.3] - 2025-10-16
 
 ### Bug Fixes

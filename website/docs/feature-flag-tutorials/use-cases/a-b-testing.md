@@ -55,15 +55,16 @@ To target users accordingly, let's create an [activation strategy](/reference/ac
 
 ![Anatomy of an activation strategy](/img/anatomy-of-unleash-strategy.png)
 
-Different strategies use different parameters. Predefined strategies are bundled with Unleash. The default strategy is a gradual rollout to 100%, which means that the feature is enabled for all users. In this tutorial, we'll adjust the percentage of users who have access to the feature.
+In this tutorial, we'll use a gradual rollout strategy with the rollout percentage set to 100%, which means that the feature is enabled for all users.
 
 :::note
-Activation strategies are defined on the server. For backend SDKs, activation strategy implementation is done on the client side. For frontend SDKs, the feature is calculated on the server side.
+Activation strategies are defined and configured on the Unleash server. Backend SDKs evaluate feature flags locally using the configuration retrieved from the server. For frontend SDKs, evaluation happens on the server side, and the results are delivered to the client by the Unleash server or Unleash Edge.
 :::
 
-Open your feature flag and click **Add strategy**.
 
-![Add your first strategy from the flag view in Unleash.](/img/use-case-experiment-add-strategy.png)
+Let's set up the strategy! Open your feature flag, and select an environment. Click **Add strategy**, select **Gradual rollout**, and click **Configure**.
+
+![Add your first strategy from the flag view in Unleash.](/img/add-strategy.png)
 
 The gradual rollout strategy form has multiple fields that control the rollout of your feature. You can name the strategy something relevant to the A/B test you’re creating, but this is an optional field.
 

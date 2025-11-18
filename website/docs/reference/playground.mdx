@@ -114,14 +114,10 @@ Even if the playground doesn't recognize or otherwise can't evaluate a specific 
 
 ### Custom Strategies
 
-:::caution
-[Custom activation strategies](/reference/custom-activation-strategies) are deprecated. Please use the [default activation strategy](/reference/activation-strategies) with constraints.
-:::
+The playground does not have any implementations for [custom strategies](/reference/activation-strategies#custom-strategies). As a result, custom strategies do not evaluate to `true` regarless of the context.
 
-The playground does not have any implementations for [custom strategies](../reference/custom-activation-strategies). As a result, custom strategies do not evaluate to `true` regarless of the context.
+### The Application Hostname strategy
 
-### The Application Hostname strategy {#application-hostname}
-
-The [application hostname strategy](../reference/predefined-strategy-types#hosts) is a little different from the other built-in strategies: it depends on external state and _not_ on the Unleash context to evaluate. In short, the strategy checks its application environment to get the hostname, so the Unleash context has no effect on the result of this strategy.
+The [application hostname strategy](../reference/activation-strategies#hosts) is a little different from the other built-in strategies: it depends on external state and _not_ on the Unleash context to evaluate. In short, the strategy checks its application environment to get the hostname, so the Unleash context has no effect on the result of this strategy.
 
 Because the application hostname strategy depends on external state, the playground can't guarantee whether the strategy would be true or false in a client. Further, the result in the playground would most likely be different from what you'd see in a client. Because of this, the playground does not evaluate this strategy.

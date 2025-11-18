@@ -5,7 +5,7 @@ import {
 } from '../types/experimental.js';
 import FlagResolver, { getVariantValue } from './flag-resolver.js';
 import type { IExperimentalOptions } from '../types/experimental.js';
-import { getDefaultVariant } from 'unleash-client/lib/variant.js';
+import { defaultVariant } from 'unleash-client/lib/variant.js';
 
 test('should produce empty exposed flags', () => {
     const resolver = new FlagResolver(defaultExperimentalOptions);
@@ -29,12 +29,11 @@ test('should produce UI flags with extra dynamic flags', () => {
 
 test('should use external resolver for dynamic flags', () => {
     const externalResolver = {
-        isEnabled: (name: string) => {
-            if (name === 'extraFlag') {
-                return true;
-            }
-        },
-        getVariant: () => getDefaultVariant(),
+        isEnabled: (name: string) => name === 'extraFlag',
+        getVariant: (name: string) => ({
+            ...defaultVariant,
+            feature_enabled: name === 'extraFlag',
+        }),
         getStaticContext: () => ({}),
     };
 
@@ -55,7 +54,7 @@ test('should not use external resolver for enabled experiments', () => {
         isEnabled: () => {
             return false;
         },
-        getVariant: () => getDefaultVariant(),
+        getVariant: () => defaultVariant,
         getStaticContext: () => ({}),
     };
 
@@ -76,7 +75,7 @@ test('should load experimental flags', () => {
         isEnabled: () => {
             return false;
         },
-        getVariant: () => getDefaultVariant(),
+        getVariant: () => defaultVariant,
         getStaticContext: () => ({}),
     };
 
@@ -98,7 +97,7 @@ test('should load experimental flags from external provider', () => {
                 return true;
             }
         },
-        getVariant: () => getDefaultVariant(),
+        getVariant: () => defaultVariant,
         getStaticContext: () => ({}),
     };
 
@@ -129,7 +128,7 @@ test('should support variant flags', () => {
             if (name === 'extraFlag') {
                 return variant;
             }
-            return getDefaultVariant();
+            return defaultVariant;
         },
         getStaticContext: () => ({}),
     };
@@ -142,10 +141,10 @@ test('should support variant flags', () => {
     const resolver = new FlagResolver(config as IExperimentalOptions);
 
     expect(resolver.getVariant('someFlag' as IFlagKey)).toStrictEqual(
-        getDefaultVariant(),
+        defaultVariant,
     );
     expect(resolver.getVariant('otherFlag' as IFlagKey)).toStrictEqual(
-        getDefaultVariant(),
+        defaultVariant,
     );
     expect(resolver.getVariant('extraFlag' as IFlagKey)).toStrictEqual(variant);
 });
@@ -199,7 +198,7 @@ test('should call external resolver getVariant when not overridden to be true, e
             if (name === 'variantFlag') {
                 return variant;
             }
-            return getDefaultVariant();
+            return defaultVariant;
         },
         getStaticContext: () => ({}),
     };
@@ -225,6 +224,73 @@ test('should call external resolver getVariant when not overridden to be true, e
     );
 });
 
+test('should allow overriding false experiments with externally resolved variants when getting all flags (getAll)', () => {
+    const variant = {
+        enabled: true,
+        name: 'variant',
+    };
+
+    const externalResolver = {
+        isEnabled: () => false,
+        getVariant: () => variant,
+        getStaticContext: () => ({}),
+    };
+
+    const config = {
+        flags: { willStayBool: true, willBeVariant: false },
+        externalResolver,
+    };
+
+    const resolver = new FlagResolver(config as IExperimentalOptions);
+    const flags = resolver.getAll() as typeof config.flags;
+
+    expect(flags.willStayBool).toStrictEqual(true);
+    expect(flags.willBeVariant).toStrictEqual(variant);
+});
+
+test('should fall back to isEnabled if variant.feature_enabled is not defined in getAll', () => {
+    const variant = {
+        enabled: false,
+        name: 'variant',
+    };
+
+    const externalResolver = {
+        isEnabled: () => true,
+        getVariant: () => variant,
+        getStaticContext: () => ({}),
+    };
+
+    const config = {
+        flags: { flag: false },
+        externalResolver,
+    };
+
+    const resolver = new FlagResolver(config as IExperimentalOptions);
+    const flags = resolver.getAll() as typeof config.flags;
+
+    expect(flags.flag).toStrictEqual(true);
+});
+
+test("should return the the flag's enabled state (instead of the disabled variant) if the variant is disabled and the experimental definition is a boolean", () => {
+    const variant = defaultVariant;
+
+    const externalResolver = {
+        isEnabled: () => false,
+        getVariant: () => variant,
+        getStaticContext: () => ({}),
+    };
+
+    const config = {
+        flags: { flag: false },
+        externalResolver,
+    };
+
+    const resolver = new FlagResolver(config as IExperimentalOptions);
+    const flags = resolver.getAll() as typeof config.flags;
+
+    expect(flags.flag).toStrictEqual(false);
+});
+
 test('should call external resolver getStaticContext ', () => {
     const variant = {
         enabled: true,
@@ -241,7 +307,7 @@ test('should call external resolver getStaticContext ', () => {
             if (name === 'variantFlag') {
                 return variant;
             }
-            return getDefaultVariant();
+            return defaultVariant;
         },
         getStaticContext: () => {
             return { properties: { clientId: 'red' } };

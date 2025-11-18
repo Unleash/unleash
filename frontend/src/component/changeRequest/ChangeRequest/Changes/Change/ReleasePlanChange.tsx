@@ -5,6 +5,8 @@ import type {
     IChangeRequestAddReleasePlan,
     IChangeRequestDeleteReleasePlan,
     IChangeRequestStartMilestone,
+    IChangeRequestChangeMilestoneProgression,
+    IChangeRequestDeleteMilestoneProgression,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -21,6 +23,12 @@ import {
     ChangeItemWrapper,
     Deleted,
 } from './Change.styles.tsx';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import useToast from 'hooks/useToast';
+import type { ChangeMilestoneProgressionSchema } from 'openapi';
+import { ProgressionChange } from './ProgressionChange.tsx';
+import { ConsolidatedProgressionChanges } from './ConsolidatedProgressionChanges.tsx';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -235,11 +243,15 @@ export const ReleasePlanChange: FC<{
     change:
         | IChangeRequestAddReleasePlan
         | IChangeRequestDeleteReleasePlan
-        | IChangeRequestStartMilestone;
+        | IChangeRequestStartMilestone
+        | IChangeRequestChangeMilestoneProgression
+        | IChangeRequestDeleteMilestoneProgression;
     environmentName: string;
     featureName: string;
     projectId: string;
     changeRequestState: ChangeRequestState;
+    feature?: any; // Optional feature object for consolidated progression changes
+    onRefetch?: () => void;
 }> = ({
     actions,
     change,
@@ -247,13 +259,97 @@ export const ReleasePlanChange: FC<{
     environmentName,
     projectId,
     changeRequestState,
+    feature,
+    onRefetch,
 }) => {
-    const { releasePlans } = useFeatureReleasePlans(
+    const { releasePlans, refetch } = useFeatureReleasePlans(
         projectId,
         featureName,
         environmentName,
     );
     const currentReleasePlan = releasePlans[0];
+    const { addChange } = useChangeRequestApi();
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
+    const { setToastData } = useToast();
+
+    const handleUpdateChangeRequestSubmit = async (
+        sourceMilestoneId: string,
+        payload: ChangeMilestoneProgressionSchema,
+    ) => {
+        await addChange(projectId, environmentName, {
+            feature: featureName,
+            action: 'changeMilestoneProgression',
+            payload: {
+                sourceMilestone: sourceMilestoneId,
+                ...payload,
+            },
+        });
+        await refetchChangeRequests();
+        setToastData({
+            type: 'success',
+            text: 'Added to draft',
+        });
+        if (onRefetch) {
+            await onRefetch();
+        }
+    };
+
+    const handleDeleteChangeRequestSubmit = async (
+        sourceMilestoneId: string,
+    ) => {
+        await addChange(projectId, environmentName, {
+            feature: featureName,
+            action: 'deleteMilestoneProgression',
+            payload: {
+                sourceMilestone: sourceMilestoneId,
+            },
+        });
+        await refetchChangeRequests();
+        setToastData({
+            type: 'success',
+            text: 'Added to draft',
+        });
+        if (onRefetch) {
+            await onRefetch();
+        }
+    };
+
+    // If this is a progression change and we have the full feature object,
+    // check if we should consolidate with other progression changes
+    if (
+        feature &&
+        (change.action === 'changeMilestoneProgression' ||
+            change.action === 'deleteMilestoneProgression')
+    ) {
+        const progressionChanges = feature.changes.filter(
+            (
+                change,
+            ): change is
+                | IChangeRequestChangeMilestoneProgression
+                | IChangeRequestDeleteMilestoneProgression =>
+                change.action === 'changeMilestoneProgression' ||
+                change.action === 'deleteMilestoneProgression',
+        );
+
+        // Only render if this is the first progression change
+        const isFirstProgression =
+            progressionChanges.length > 0 && progressionChanges[0] === change;
+
+        if (!isFirstProgression) {
+            return null; // Skip rendering, will be handled by the first one
+        }
+
+        return (
+            <ConsolidatedProgressionChanges
+                feature={feature}
+                currentReleasePlan={currentReleasePlan}
+                changeRequestState={changeRequestState}
+                onUpdateChangeRequestSubmit={handleUpdateChangeRequestSubmit}
+                onDeleteChangeRequestSubmit={handleDeleteChangeRequestSubmit}
+            />
+        );
+    }
 
     return (
         <>
@@ -280,6 +376,20 @@ export const ReleasePlanChange: FC<{
                     currentReleasePlan={currentReleasePlan}
                     changeRequestState={changeRequestState}
                     actions={actions}
+                />
+            )}
+            {change.action === 'changeMilestoneProgression' && (
+                <ProgressionChange
+                    change={change}
+                    currentReleasePlan={currentReleasePlan}
+                    actions={actions}
+                    changeRequestState={changeRequestState}
+                    onUpdateChangeRequestSubmit={
+                        handleUpdateChangeRequestSubmit
+                    }
+                    onDeleteChangeRequestSubmit={
+                        handleDeleteChangeRequestSubmit
+                    }
                 />
             )}
         </>

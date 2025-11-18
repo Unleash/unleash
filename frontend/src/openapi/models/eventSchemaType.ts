@@ -173,6 +173,7 @@ export const EventSchemaType = {
     'milestone-progression-created': 'milestone-progression-created',
     'milestone-progression-updated': 'milestone-progression-updated',
     'milestone-progression-deleted': 'milestone-progression-deleted',
+    'milestone-progression-changed': 'milestone-progression-changed',
     'user-preference-updated': 'user-preference-updated',
     'scim-users-deleted': 'scim-users-deleted',
     'scim-groups-deleted': 'scim-groups-deleted',

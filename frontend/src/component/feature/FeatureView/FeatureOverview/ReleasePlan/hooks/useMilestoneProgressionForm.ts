@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { isPast, addMinutes } from 'date-fns';
+import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
+import { formatDateYMDHM } from 'utils/formatDate.ts';
 
 const MAX_INTERVAL_MINUTES = 525600; // 365 days
 
@@ -42,6 +45,8 @@ export const useMilestoneProgressionForm = (
         timeUnit: initialTimeUnit = 'hours',
         timeValue: initialTimeValue = 5,
     }: MilestoneProgressionFormDefaults = {},
+    sourceMilestoneStartedAt?: string | null,
+    status?: MilestoneStatus,
 ) => {
     const [timeUnit, setTimeUnit] = useState<TimeUnit>(initialTimeUnit);
     const [timeValue, setTimeValue] = useState(initialTimeValue);
@@ -78,6 +83,23 @@ export const useMilestoneProgressionForm = (
             newErrors.time = 'Time interval cannot exceed 365 days';
         }
 
+        // Only validate against current time for active/paused milestones
+        // Completed and not-started milestones shouldn't validate against current time
+        if (
+            sourceMilestoneStartedAt &&
+            total > 0 &&
+            status &&
+            (status.type === 'active' || status.type === 'paused')
+        ) {
+            const startDate = new Date(sourceMilestoneStartedAt);
+            const nextMilestoneDate = addMinutes(startDate, total);
+
+            if (isPast(nextMilestoneDate)) {
+                const formattedDate = formatDateYMDHM(nextMilestoneDate);
+                newErrors.time = `Next milestone can't start in the past (${formattedDate})`;
+            }
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -96,12 +118,17 @@ export const useMilestoneProgressionForm = (
         }
     };
 
+    const clearErrors = useCallback(() => {
+        setErrors({});
+    }, []);
+
     return {
         timeUnit,
         setTimeUnit,
         timeValue,
         setTimeValue,
         errors,
+        clearErrors,
         validate,
         getProgressionPayload,
         getIntervalMinutes,

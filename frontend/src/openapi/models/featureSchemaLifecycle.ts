@@ -13,4 +13,9 @@ export type FeatureSchemaLifecycle = {
     enteredStageAt: string;
     /** The name of the current lifecycle stage */
     stage: FeatureSchemaLifecycleStage;
+    /**
+     * The name of the detailed status of a given stage. E.g. completed stage can be kept or discarded.
+     * @nullable
+     */
+    status?: string | null;
 };

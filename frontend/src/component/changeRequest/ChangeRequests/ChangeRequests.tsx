@@ -14,76 +14,66 @@ import { useUiFlag } from 'hooks/useUiFlag.js';
 import { withTableState } from 'utils/withTableState';
 import {
     useChangeRequestSearch,
-    DEFAULT_PAGE_LIMIT,
     type SearchChangeRequestsInput,
 } from 'hooks/api/getters/useChangeRequestSearch/useChangeRequestSearch';
 import type { ChangeRequestSearchItemSchema } from 'openapi';
-import {
-    NumberParam,
-    StringParam,
-    withDefault,
-    useQueryParams,
-    encodeQueryParams,
-} from 'use-query-params';
+import { useQueryParams, encodeQueryParams } from 'use-query-params';
 import useLoading from 'hooks/useLoading';
 import { styles as themeStyles } from 'component/common';
-import { FilterItemParam } from 'utils/serializeQueryParams';
-import {
-    ChangeRequestFilters,
-    type ChangeRequestQuickFilter,
-} from './ChangeRequestFilters.js';
+import { ChangeRequestFilters } from './ChangeRequestFilters/ChangeRequestFilters.js';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser.js';
+import type { IUser } from 'interfaces/user.js';
+import { stateConfig, type TableState } from './ChangeRequests.types.js';
 
 const columnHelper = createColumnHelper<ChangeRequestSearchItemSchema>();
 
 const StyledPaginatedTable = styled(
     PaginatedTable<ChangeRequestSearchItemSchema>,
 )(() => ({
+    th: {
+        whiteSpace: 'nowrap',
+    },
+
     td: {
         verticalAlign: 'top',
+        maxWidth: '250px',
     },
 }));
 
-const ChangeRequestsInner = () => {
-    const { user } = useAuthUser();
+const defaultTableState = (user: IUser) => ({
+    createdBy: {
+        operator: 'IS' as const,
+        values: [user.id.toString()],
+    },
+    state: {
+        operator: 'IS' as const,
+        values: ['open'],
+    },
+});
+
+const ChangeRequestsInner = ({ user }: { user: IUser }) => {
     const urlParams = new URLSearchParams(window.location.search);
-    const shouldApplyDefaults =
-        user &&
-        !urlParams.has('createdBy') &&
-        !urlParams.has('requestedApproverId');
-    const initialFilter = urlParams.has('requestedApproverId')
-        ? 'Approval Requested'
-        : 'Created';
+    const shouldApplyDefaults = !urlParams.toString();
 
-    const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
-        sortBy: withDefault(StringParam, 'createdAt'),
-        sortOrder: withDefault(StringParam, 'desc'),
-        createdBy: FilterItemParam,
-        requestedApproverId: FilterItemParam,
-    };
+    const initialState = shouldApplyDefaults ? defaultTableState(user) : {};
 
-    const initialState = shouldApplyDefaults
-        ? {
-              createdBy: {
-                  operator: 'IS' as const,
-                  values: [user.id.toString()],
-              },
-          }
-        : {};
-
-    const [tableState, setTableState] = useQueryParams(stateConfig, {
+    const [tableState, setTableStateRaw] = useQueryParams(stateConfig, {
         updateType: 'replaceIn',
     });
 
-    const effectiveTableState = useMemo(
-        () => ({
-            ...tableState,
-            ...initialState,
-        }),
-        [initialState, tableState],
-    );
+    const effectiveTableState = shouldApplyDefaults
+        ? {
+              ...tableState,
+              ...initialState,
+          }
+        : tableState;
+
+    const setTableState = (newState: Partial<TableState>) => {
+        setTableStateRaw({
+            ...effectiveTableState,
+            ...newState,
+        });
+    };
 
     const {
         changeRequests: data,
@@ -98,19 +88,13 @@ const ChangeRequestsInner = () => {
 
     const columns = useMemo(
         () => [
-            columnHelper.accessor('title', {
-                id: 'Title',
+            columnHelper.accessor('id', {
                 header: 'Title',
-                meta: { width: '300px' },
-                cell: ({ getValue, row }) => (
-                    <GlobalChangeRequestTitleCell
-                        value={getValue()}
-                        row={row}
-                    />
-                ),
+                meta: { width: '35%' },
+                cell: GlobalChangeRequestTitleCell,
+                enableSorting: false,
             }),
             columnHelper.accessor('features', {
-                id: 'Updated feature flags',
                 header: 'Updated feature flags',
                 enableSorting: false,
                 cell: ({
@@ -133,28 +117,29 @@ const ChangeRequestsInner = () => {
                 },
             }),
             columnHelper.accessor('createdBy', {
-                id: 'By',
-                header: 'By',
-                meta: { width: '180px', align: 'left' },
+                header: 'Created by',
+                meta: { width: '10%' },
                 enableSorting: false,
                 cell: ({ getValue }) => <AvatarCell value={getValue()} />,
             }),
             columnHelper.accessor('createdAt', {
-                id: 'Submitted',
                 header: 'Submitted',
-                meta: { width: '100px' },
+                meta: { width: '5%' },
+                enableSorting: false,
                 cell: ({ getValue }) => <TimeAgoCell value={getValue()} />,
             }),
             columnHelper.accessor('environment', {
-                id: 'Environment',
                 header: 'Environment',
-                meta: { width: '100px' },
-                cell: ({ getValue }) => <HighlightCell value={getValue()} />,
+                meta: { width: '10%' },
+                enableSorting: false,
+                cell: ({ getValue }) => (
+                    <HighlightCell maxTitleLines={1} value={getValue()} />
+                ),
             }),
             columnHelper.accessor('state', {
-                id: 'Status',
                 header: 'Status',
-                meta: { width: '170px' },
+                meta: { width: '10%' },
+                enableSorting: false,
                 cell: ({ getValue, row }) => (
                     <ChangeRequestStatusCell value={getValue()} row={row} />
                 ),
@@ -170,30 +155,6 @@ const ChangeRequestsInner = () => {
         }),
     );
     const tableId = useId();
-    const handleQuickFilterChange = (filter: ChangeRequestQuickFilter) => {
-        if (!user) {
-            // todo (globalChangeRequestList): handle this somehow? Or just ignore.
-            return;
-        }
-        const [targetProperty, otherProperty] =
-            filter === 'Created'
-                ? ['createdBy', 'requestedApproverId']
-                : ['requestedApproverId', 'createdBy'];
-
-        // todo (globalChangeRequestList): extract and test the logic for wiping out createdby/requestedapproverid
-        setTableState((state) => ({
-            [targetProperty]: {
-                operator: 'IS',
-                values: [user.id.toString()],
-            },
-            [otherProperty]:
-                state[otherProperty]?.values.length === 1 &&
-                state[otherProperty].values[0] === user.id.toString()
-                    ? null
-                    : state[otherProperty],
-        }));
-    };
-
     const bodyLoadingRef = useLoading(loading);
 
     return (
@@ -203,8 +164,9 @@ const ChangeRequestsInner = () => {
         >
             <ChangeRequestFilters
                 ariaControlTarget={tableId}
-                initialSelection={initialFilter}
-                onSelectionChange={handleQuickFilterChange}
+                tableState={effectiveTableState}
+                setTableState={setTableState}
+                userId={user.id}
             />
 
             <div
@@ -229,6 +191,7 @@ const ChangeRequestsInner = () => {
 };
 
 export const ChangeRequests = () => {
+    const { user } = useAuthUser();
     if (!useUiFlag('globalChangeRequestList')) {
         return (
             <PageContent header={<PageHeader title='Change requests' />}>
@@ -237,5 +200,16 @@ export const ChangeRequests = () => {
         );
     }
 
-    return <ChangeRequestsInner />;
+    if (!user) {
+        return (
+            <PageContent header={<PageHeader title='Change requests' />}>
+                <p>
+                    Failed to get your user information. Please refresh. If the
+                    problem persists, get in touch.
+                </p>
+            </PageContent>
+        );
+    }
+
+    return <ChangeRequestsInner user={user} />;
 };

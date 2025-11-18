@@ -1,7 +1,7 @@
 import type { Config } from '@docusaurus/types';
 
 import { sdks } from './remote-content/sdks';
-import { docs as edgeAndProxy } from './remote-content/edge-proxy';
+import { docs as services } from './remote-content/services';
 import pluginNpm2Yarn from '@docusaurus/remark-plugin-npm2yarn';
 
 // for a given redirect object, modify it's `from` property such that for every
@@ -516,8 +516,8 @@ class="header-github-link"
                     name: 'content-external',
                     sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
                     outDir: 'docs/generated/', // the base directory to output to.
-                    documents: edgeAndProxy.urls, // the file names to download
-                    modifyContent: edgeAndProxy.modifyContent,
+                    documents: services.urls, // the file names to download
+                    modifyContent: services.modifyContent,
                     noRuntimeDownloads: true,
                 },
             ],

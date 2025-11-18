@@ -45,6 +45,11 @@ export default class UserSplashService {
     }
 
     async updateSplash(splash: IUserSplash): Promise<IUserSplash> {
-        return this.userSplashStore.updateSplash(splash);
+        try {
+            return await this.userSplashStore.updateSplash(splash);
+        } catch (err) {
+            this.logger.warn(err);
+            return splash;
+        }
     }
 }

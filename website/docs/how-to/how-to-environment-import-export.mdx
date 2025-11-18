@@ -1,5 +1,5 @@
 ---
-title: Environment import and export
+title: Import and export
 ---
 
 
@@ -16,147 +16,154 @@ import VideoContent from '@site/src/components/VideoContent.jsx'
 
 :::
 
+You can import and export feature flag configurations between environments within an instance or between different Unleash instances.
+This lets you migrate between self-hosted and cloud-hosted instances, move from open source version to Unleash Enterprise, or use import/export as part of a backup and restore strategy.
+
+On the project-level, you can import and export:
+- [Feature flags](/reference/feature-toggles)
+- [Feature flag tags](/reference/feature-toggles#tags)
+- [Feature flag dependencies](/reference/feature-toggles#feature-flag-dependencies)
+
+On the environment-level, you can import and export:
+
+- [Activation strategies](/reference/activation-strategies) including [constraints](/reference/activation-strategies#constraints) and references to [segments](/reference/segments)
+- [Strategy variants](/reference/feature-toggle-variants)
+- Feature flag status (enabled/disabled)
+
+For additional global configuration, you can import and export:
+- [Custom context fields](/reference/unleash-context#custom-context-fields)
+- [Feature flag tag types](/reference/feature-toggles#tags)
+
+Not included in the export:
+- [Segments](/reference/segments) and [custom strategies](/reference/activation-strategies#custom-strategies): Only references are included in the export. If an import file contains references that don't exist in the target, the import process will stop. You must create the segments or custom strategies manually in the target instance before running the import again.
+- [Release plans](/reference/release-templates): You must manually recreate any release plans for imported feature flags.
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/Bs73l2fZxJ4"]}/>
 
-Environment export and import lets you copy feature configurations from one environment to another and even copy features from one Unleash instance to another.
+## Export feature flags
 
-When exporting, you select a set of features and **one** environment to export the configuration from. The environment must be the same for all features.
+### Export all flags from a project
 
-Then, when you import, you must select **one** environment and **one** project to import into. All features are imported into that project in that environment. If Unleash is unable to import the configuration safely, it will tell you why the import failed and what you need to fix it (read more about [import requirements](#import-requirements).
+1. Go to **Projects** and open the project you want to export from.
+2. Click **Export all project flags**.
+3. Select the environment to export flag configurations from.
+4. Click **Export selection**.
 
-## Import & Export items
+![Export all flags from a project](/img/export-all-project-flags.png)
 
-When you export features, the export will contain both feature-specific configuration and global configuration.
+As a result, you'll have a JSON export that includes the selected flags in the chosen environment.
 
-On the project-level these items are exported:
+### Export a selection of flags from a project
 
-* [the feature itself](/reference/feature-toggles)
-* [feature tags](/reference/feature-toggles#tags)
-* [feature dependencies](/reference/feature-toggles#feature-flag-dependencies)
+1. Go to **Projects** and open the project you want to export from.
+2. [Optional] Use search or filtering to narrow the list.
+3. Select one or more flags. You can use the header checkbox to select all rows in the current view (up to 100).
+4. Click **Export**.
+5. Select the environment to export flag configurations from.
+6. Click **Export selection**.
 
-On the environment-level, these items are exported for the chosen environment:
+![Export a selection of flags from a project.](/img/export-flag-selection.png)
 
-* [activation strategies](/reference/activation-strategies) including [constraints](/reference/activation-strategies#constraints) and references to [segments](/reference/segments)
-* [variants](/reference/feature-toggle-variants)
-* enabled/disabled
+As a result, you'll have a JSON export that includes the selected flags in the chosen environment.
 
-Additionally, these global configuration items are exported:
-* [custom context fields](/reference/unleash-context#custom-context-fields)
-* [feature tag types](/reference/feature-toggles#tags)
 
-Importantly, while references to [segments](/reference/segments) are exported, the segments themselves are **not** exported. Consult the [import requirements](#import-requirements) section for more information.
+### Export flags from the flags overview
 
-## Export
+1. Go to **Flags overview**.
+2. [Optional] Use search or filtering to narrow the list.
+3. Click **Export flags**.
+4. Select the environment to export flag configurations from.
+5. Click **Export selection**.
 
-You can export features either from a project search or the global feature search. Use the search functionality to narrow the results to the list of features you want to export and use the export button to select environment. All features included in your search results will be included in the export.
+![Export flags from the flags overview](/img/export-flags-overview.png)
 
-![Feature flag lists can be filtered using the search bar](/img/export.png)
+As a result, you'll have a JSON export that includes the selected flags in the chosen environment.
 
-## Import
-
-Import is a 3 stage process designed to be efficient and error-resistant.
-
-### Import stages
-
-* **upload** - you can upload previously exported JSON file or copy-paste export data from the exported JSON file into the code editor
-* **validation** - you will get feedback on any errors or warnings before you do the actual import. This ensures your feature flags configurations are correct. You will not be able to finish the import if you have errors. Warnings don't stop you from importing.
-* **import** - the actual import that creates a new configuration in the target environment or creates a [change request](/reference/change-requests) when the environment has change requests enabled
-
-![The import UI. It has three stages: import, file, validate configuration, finish import.](/img/import.png)
+## Import feature flags
 
 ### Import requirements
 
-Unleash will reject an import if it discovers conflicts between the data to be imported and what already exists on the Unleash instance. The import tool will tell you about why an import is rejected in these cases.
+Before you begin an import, ensure that you have met the following requirements:
+- The import file size limit is **500 kB**. Larger files fail with `413 Payload Too Large`. [Export in batches](#export-a-selection-of-flags-from-a-project) to stay under the limit.
+- The project and environment you are importing into must not have any pending [change requests](/reference/change-requests).
+- Your import file must pass all [validation rules](#validation-rules).
 
-The following sections describe requirements that must be met for Unleash not to stop the import job.
+### Import stages
 
-#### Context fields
+The import process runs in three stages: import file, validate configuration, and finish import.
 
-When you import a custom context field **with legal values defined**:
+![The import UI. It has three stages: import file, validate configuration, finish import.](/img/import-steps.png)
 
-If a custom context field with the same name already exists in the target instance, then the pre-existing context field must have **at least** those legal values defined. In other words, the imported context field legal values must be a subset of the already existing context field's legal values.
+#### Import file
 
-When you import custom context fields without legal values or custom context fields that don't already exist in the target instance, then there are no requirements.
+1. Go to **Projects** and open the target project.
+2. Click **Import**.
+3. In the **Import options** section, select the target environment.
+4. Do one of the following:
+   - In the **Upload file** tab, click **Select file** and choose the exported JSON, or
+   - In the **Code editor** tab, paste the exported JSON into the editor.
+5. Click **Validate**.
 
-Custom context fields that don't already exist in the target instance will be created upon import.
+![The import UI. It has three stages: import file, validate configuration, finish import.](/img/import.png)
 
-#### Segments
+#### Validate configuration
 
-If your import has segments, then a segment with the same name must already exist in the Unleash instance you are trying to import into. Only the name must be the same: the constraints in the segment can be different.
+1. Review any errors or warnings.
+   - **Errors** must be fixed before you can continue.
+   - **Warnings** do not block import, but review them carefully.
+2. If you see errors about **segments** or **custom strategies**, create those items in the target instance and restart the import.
+3. If you see errors about **context fields** or **legal values**, add or update those in the target instance and restart the import.
 
-#### Dependencies
+See the full list of validation rules [here](#validation-rules).
 
-If your import has a parent feature dependency, then the parent feature must already exist in the target Unleash instance or be part of the import data. The existing feature is identified by name.
+#### Finish import
 
-#### Custom strategies
+When validation passes with no errors, you can commit the import by clicking **Import configuration**.
 
-If your import contains custom strategies, then custom strategies with the same names must already exist in the target Unleash instance. The custom strategy definitions (including strategy parameters) that exist in the target instance do not otherwise need to match the custom strategy definitions in the instance the import came from.
+The target environment now contains the imported configuration. If [change requests](/reference/change-requests) are enabled for the environment, Unleash creates a draft change request with all changes instead of applying them immediately.
 
-#### Existing features
+### Validation rules
 
-If any of the features you import already exist in the target Unleash instance, then they must exist within the project you're importing into. If any features you are attempting to import exist in a **different** project on the target instance, the import will be rejected.
+Unleash enforces the following validation rules during import:
 
-#### Pending change requests
+- **Context fields:**
+  If the import [contains context](/reference/unleash-context#custom-context-fields) fields with defined legal values, matching context fields must already exist in the target instance. The imported legal values must be a subset of the existing ones.
 
-The project and environment you are importing into must **not have any pending [change requests](/reference/change-requests)**.
+- **Segments:**
+  [Segments](/reference/segments) referenced by name must already exist in the target instance. If not present, the import stops.
 
-### Import warnings
+- **Dependencies:**
+  [Parent features](/reference/feature-toggles#feature-flag-dependencies) must already exist in the target instance or be included in the import file.
 
-The import validation system will warn you about potential problems it finds in the import data. These warnings do not prevent you from importing the data, but you should read them carefully to ensure that Unleash does as you intend.
+- **Custom strategies:**
+  If your import contains [custom strategies](/reference/activation-strategies#custom-strategies), then custom strategies with the same names must already exist in the target Unleash instance. Note that Unleash doesn't verify that the [configuration parameters](/reference/activation-strategies#parameters) of the strategies match.
 
-The following sections list things that the import tool will warn you about.
+- **Existing features in other projects:**
+  If a feature exists in a different project on the target instance, the import is rejected.
 
-#### Archived features
-
-The import tool will not import any features that have already been archived on the target Unleash instance. Because features are identified by their name, that means that if a feature called `feature-a` has been created and archived on the target Unleash instance, then a feature with the same name (`feature-a`) will not be imported.
-
-If you permanently delete the archived `feature-a` from the target instance, then the new `feature-a` (in the import data) **will** be imported.
-
-#### Custom strategies
-
-:::caution
-[Custom activation strategies](/reference/custom-activation-strategies) are deprecated. Please use the [default activation strategy](/reference/activation-strategies) with constraints.
-:::
-
-Unleash will verify that any custom strategies you are trying to import have already been defined on the target instance. However, it only does this verification by name. It does **not** validate that the definitions are otherwise the same or that they have the same [configuration parameters](/reference/custom-activation-strategies.md#parameters).
+- **Archived features:**
+  You can't import any features that have already been [archived](/reference/feature-toggles#archive-a-feature-flag) on the target Unleash instance. You must either permanently delete those archived features from the target instance, or revive them.
 
 ### Required permissions
 
-To import features, you will **always** require the **update feature flags** permission.
-Additionally, depending on the actions your import job would trigger, you may also require any of the following permissions:
-* **Create feature flags**: when the import would create new features
-* **Update tag types**: when the import would create new tag types
-* **Create context fields**: when the import would create new context fields
-* **Create activation strategies**: when the import would add activation strategies to a feature and change requests are disabled
-* **Delete activation strategies**: when import would remove existing activation strategies from a feature and change requests are disabled
-* **Update variants**: when the import would update variants and change requests are disabled
-* **Update feature dependency**: when the import would add feature dependencies and change requests are disabled
+To run an import you always need the **Update feature flags** [permission](/reference/rbac#project-level-permissions). Depending on what your import changes, you may also need:
 
-### Import and change requests
+- Create feature flags 
+- Update tag types
+- Create context fields
+- Create activation strategies
+- Delete activation strategies
+- Update variants
+- Update feature dependency
 
-If change requests are enabled for the target project and environment, the import will not be fully applied. Any new features will be created, but all feature configuration will be added to a new change request.
+If [change requests](/reference/change-requests) are enabled, permissions for activation strategies or variants are not required.
 
-If change requests are enabled, any permissions for **Create activation strategies**, **Delete activation strategies** and **Update variants** are not required.
+## Import on startup
 
-## Environment import/export vs the instance import/export API
+You can also import on startup by using an import file in a JSON format either through configuration parameters and environment variables.
 
-Environment import/export has some similarities to the [instance import/export API](/reference/environment-import-export), but they serve different purposes.
-
-The instance import/export API was designed to export all feature flags (optionally with strategies and projects) from one Unleash instance to another. When it was developed, Unleash had much fewer features than it does now. As such, the API lacks support for some of the more recent features in Unleash.
-
-On the other hand, the environment import/export feature was designed to export a selection of features based on search criteria. It can only export data from a single environment and only import it to a single environment. It also only supports importing into a single project (although it can export features from multiple projects).
-
-Further, the environment import/export comes with a much more stringent validation and will attempt to stop any corrupted data imports.
-
-## Startup import {#startup-import}
-
-You can also import on startup by using an import file in JSON format and the import will be applied on top of existing data. Currently the startup import supports the same data supported in OSS import.
-
-Unleash lets you do this both via configuration parameters and environment variables. The relevant parameters/variables are:
-
-| config parameter   | environment variable    | default       | value                                 |
+| Config parameter   | Environment variable    | Default       | Value                                 |
 |--------------------|-------------------------|---------------|---------------------------------------|
-| `file`             | `IMPORT_FILE`           | none          | path to the configuration file        |
-| `project`          | `IMPORT_PROJECT`        | `default`     | which project to import into          |
-| `environment`      | `IMPORT_ENVIRONMENT`    | `development` | which environment to import for       |
+| `file`             | `IMPORT_FILE`           | none          | Path to the configuration file.        |
+| `project`          | `IMPORT_PROJECT`        | `default`     | The project to import into.          |
+| `environment`      | `IMPORT_ENVIRONMENT`    | `development` | The environment to import for.       |

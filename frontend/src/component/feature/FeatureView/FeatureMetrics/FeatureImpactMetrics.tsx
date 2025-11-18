@@ -2,7 +2,7 @@ import { PageContent } from 'component/common/PageContent/PageContent.tsx';
 import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
 import { Box, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import { useImpactMetricsMetadata } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata.ts';
+import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata.ts';
 import { type FC, useMemo, useState } from 'react';
 import { ChartConfigModal } from '../../../impact-metrics/ChartConfigModal/ChartConfigModal.tsx';
 import { useImpactMetricsApi } from 'hooks/api/actions/useImpactMetricsApi/useImpactMetricsApi.ts';
@@ -49,10 +49,10 @@ export const FeatureImpactMetrics: FC = () => {
     const { setToastApiError } = useToast();
 
     const {
-        metadata,
+        metricOptions,
         loading: metadataLoading,
         error: metadataError,
-    } = useImpactMetricsMetadata();
+    } = useImpactMetricsOptions();
 
     const handleAddChart = () => {
         setModalState({ type: 'creating' });
@@ -93,16 +93,6 @@ export const FeatureImpactMetrics: FC = () => {
             setToastApiError(formatUnknownError(error));
         }
     };
-
-    const metricSeries = useMemo(() => {
-        if (!metadata?.series) {
-            return [];
-        }
-        return Object.entries(metadata.series).map(([name, rest]) => ({
-            name,
-            ...rest,
-        }));
-    }, [metadata]);
 
     const isModalOpen = modalState.type !== 'closed';
     const editingChart =
@@ -161,7 +151,7 @@ export const FeatureImpactMetrics: FC = () => {
                 onClose={handleCloseModal}
                 onSave={handleSaveChart}
                 initialConfig={editingChart}
-                metricSeries={metricSeries}
+                metricSeries={metricOptions}
                 loading={metadataLoading}
             />
         </PageContent>

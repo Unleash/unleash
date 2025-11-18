@@ -52,7 +52,7 @@ export type UiFlags = {
     T?: boolean;
     UNLEASH_CLOUD?: boolean;
     UG?: boolean;
-    maintenanceMode?: boolean;
+    maintenanceMode?: boolean | Variant;
     messageBanner?: Variant;
     banner?: Variant;
     notifications?: boolean;
@@ -85,13 +85,12 @@ export type UiFlags = {
     edgeObservability?: boolean;
     customMetrics?: boolean;
     impactMetrics?: boolean;
-    lifecycleGraphs?: boolean;
-    newStrategyModal?: boolean;
+    plausibleMetrics?: boolean;
     globalChangeRequestList?: boolean;
-    trafficBillingDisplay?: boolean;
     milestoneProgression?: boolean;
     featureReleasePlans?: boolean;
-    envAddStrategySuggestion?: boolean;
+    safeguards?: boolean;
+    extendedUsageMetrics?: boolean;
 };
 
 export interface IVersionInfo {

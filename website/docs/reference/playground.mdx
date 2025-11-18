@@ -108,7 +108,7 @@ Not all strategies can be correctly evaluated by the playground. Strategies that
 There's currently two cases where the playground can't evaluate the strategy:
 
 1. The [strategy is a custom strategy](#custom-strategies) and the playground doesn't have an implementation for the strategy.
-2. The [strategy is the 'Application Hostname' strategy](#application-hostname).
+2. The [strategy is the 'Application Hostname' strategy](#hostname-strategy).
 
 Even if the playground doesn't recognize or otherwise can't evaluate a specific strategy, it _may_ still evaluate the overall strategy result to `false` (and be certain that it is the right result). If a strategy has [constraints](../reference/activation-strategies#constraints) or [segments](segments) that are not satisfied, the playground knows that the strategy result wouldn't be `true`, regardless of the actual strategy implementation. As such, if a strategy can't be evaluated, it can be **either** _unknown_ or _`false`_.
 
@@ -116,8 +116,8 @@ Even if the playground doesn't recognize or otherwise can't evaluate a specific 
 
 The playground does not have any implementations for [custom strategies](/reference/activation-strategies#custom-strategies). As a result, custom strategies do not evaluate to `true` regarless of the context.
 
-### The Application Hostname strategy
+### Hostname strategy
 
-The [application hostname strategy](../reference/activation-strategies#hosts) is a little different from the other built-in strategies: it depends on external state and _not_ on the Unleash context to evaluate. In short, the strategy checks its application environment to get the hostname, so the Unleash context has no effect on the result of this strategy.
+The [application hostname strategy](/reference/activation-strategies#hosts) is a little different from the other built-in strategies: it depends on external state and _not_ on the Unleash context to evaluate. In short, the strategy checks its application environment to get the hostname, so the Unleash context has no effect on the result of this strategy.
 
 Because the application hostname strategy depends on external state, the playground can't guarantee whether the strategy would be true or false in a client. Further, the result in the playground would most likely be different from what you'd see in a client. Because of this, the playground does not evaluate this strategy.

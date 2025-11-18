@@ -82,6 +82,11 @@
       "permanent": true
     },
     {
+      "source": "/topics/feature-flags/feature-flag-best-practices",
+      "destination": "/guides/feature-flag-best-practices",
+      "permanent": true
+    },
+    {
       "source": "/reference/event-types",
       "destination": "/reference/events#event-types",
       "permanent": true
@@ -792,6 +797,11 @@
       "permanent": true
     },
     {
+      "source": "/topics/feature-flags/best-practices-using-feature-flags-at-scale",
+      "destination": "/guides/best-practices-using-feature-flags-at-scale",
+      "permanent": true
+    },
+    {
       "source": "/using-unleash/deploy",
       "destination": "/using-unleash/deploy/getting-started",
       "permanent": true
@@ -829,6 +839,11 @@
     {
       "source": "/topics/data-collection",
       "destination": "/understanding-unleash/data-collection",
+      "permanent": true
+    },
+    {
+      "source": "/topics//eature-flag-migration/feature-flag-migration-best-practices",
+      "destination": "/guides/feature-flag-migration-best-practices",
       "permanent": true
     },
     {
@@ -943,7 +958,7 @@
     },
     {
       "source": "/topics",
-      "destination": "/get-started/what-is-a-feature-flag",
+      "destination": "/guides-overview",
       "permanent": true
     },
     {

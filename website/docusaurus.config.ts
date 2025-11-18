@@ -318,7 +318,7 @@ class="header-github-link"
                         items: [
                             {
                                 label: 'Secure, scalable feature flags',
-                                to: '/topics/feature-flags/feature-flag-best-practices',
+                                to: '/guides/feature-flag-best-practices',
                             },
                             {
                                 label: 'Rollbacks',

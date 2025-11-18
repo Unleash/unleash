@@ -252,7 +252,7 @@ You can assign the following project-level permissions. These permissions are va
 | Default strategy write                    | Edit the default strategy configuration (included in _Update project_).                                                                                                                                                      |                           
 | Read settings                             | View other project settings (included in _Update project_). |                                                                                                                                                              |                             
 | Write settings | Edit other project settings (included in _Update project_).                            
-| Delete the project                        | Delete the project.                                                                                                                                                                                                                 |
+| Delete the project                        | Delete the project.                                                                                                                                                                                                                 |p
 ### Environment-level permissions
 
 You can assign the following permissions on a per-environment level within the project:

@@ -18,7 +18,7 @@ Navigate to the "Single sign-on" configuration page.
 
 ## Step 2: Enable Group Syncing {#step-2}
 
-Turn on "Enable Group Syncing" and enter a value for "Group Field JSON Path". Refer to the [User group SSO integration documentation](../reference/rbac.md#user-group-sso-integration) for more information or to the [how-to guide for integrating with Keycloak](how-to-setup-sso-keycloak-group-sync.md) for a practical example.
+Turn on "Enable Group Syncing" and enter a value for "Group Field JSON Path". Refer to the [User group SSO integration documentation](/reference/rbac#set-up-group-sso-syncing) for more information or to the [how-to guide for integrating with Keycloak](how-to-setup-sso-keycloak-group-sync.md) for a practical example.
 
 The value is the JSON path in the token response where your group properties are located, this is up to your SSO provider, a full example for Keycloak can be [found here](../../how-to/how-to-setup-sso-keycloak-group-sync). Once you're happy, save your configuration.
 

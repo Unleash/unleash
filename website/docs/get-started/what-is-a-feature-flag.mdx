@@ -146,7 +146,7 @@ Contrary to the short-lived nature of most feature flags, kill switches are inhe
 
 Operational flags manage a system’s technical aspects that do not directly influence user-visible features but are crucial for the application’s underlying stability and performance. For example, during a library version upgrade, operational flags can toggle between the old and new implementations to ensure the update does not adversely affect the system. By enabling real-time switching between different operational states or configurations, these flags allow for thorough validation of changes in a live environment without disrupting the user experience.
 
-Operational flags should be short-lived, existing only long enough to confirm that a change, such as a library update, is stable and does not introduce regressions. Once the new state is validated, the flag should be promptly retired to avoid accumulating technical debt. Avoid using operational flags as a solution for long-term configuration management; see our [Best practices for building and scaling feature flags](guides/feature-flag-best-practices) guide to learn more.
+Operational flags should be short-lived, existing only long enough to confirm that a change, such as a library update, is stable and does not introduce regressions. Once the new state is validated, the flag should be promptly retired to avoid accumulating technical debt. Avoid using operational flags as a solution for long-term configuration management; see our [Best practices for building and scaling feature flags](/guides/feature-flag-best-practices) guide to learn more.
 
 
 ### Permission flags
@@ -212,5 +212,5 @@ Unleash is on a mission to make developers’ lives easier. Individual developer
 If you want to learn more about how to implement feature flags at scale, check out the following resources:
 - [Feature Flag Tutorials](/feature-flag-tutorials/use-cases/gradual-rollout)
 - [Best practices for using feature flags at scale](/guides/best-practices-using-feature-flags-at-scale)
-- [Best practices for building and scaling feature flags](/guides.feature-flags/feature-flag-best-practices)
+- [Best practices for building and scaling feature flags](/guides/feature-flag-best-practices)
 - [Try Unleash for Free](https://www.getunleash.io/pricing)

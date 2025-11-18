@@ -54,7 +54,7 @@ Let's break down these components.
 
 The most common use case for feature flags is to manage the [rollout](https://www.getunleash.io/feature-flag-use-cases-progressive-or-gradual-rollouts) of new functionality. Once a rollout is complete, you should remove the feature flag from your code and archive it. Remove any old code paths that the new functionality replaces.
 
-Avoid using feature flags for static application configuration. Application configuration should be consistent, long-lived, and loaded during application startup. In contrast, [feature flags should be short-lived, dynamic, and updated at runtime](/best-practices-using-feature-flags-at-scale). They prioritize availability over consistency and can be modified frequently.
+Avoid using feature flags for static application configuration. Application configuration should be consistent, long-lived, and loaded during application startup. In contrast, [feature flags should be short-lived, dynamic, and updated at runtime](/guides/best-practices-using-feature-flags-at-scale). They prioritize availability over consistency and can be modified frequently.
 
 <table>
   <thead>
@@ -118,7 +118,7 @@ You can implement the following strategies to achieve a resilient architecture:
 
 ## 4. Ensure unique flag names
 
-Ensure that all flags within the same _Feature Flag Control Service_ have unique names across your entire system. [Unique naming](/guides/best-practices-using-feature-flags-at-scale#13-never-reuse-feature-flag-names) prevents the reuse of old flag names, reducing the risk of accidentally re-enabling outdated features with the same name.
+Ensure that all flags within the same _Feature Flag Control Service_ have unique names across your entire system. [Unique naming](/guides/best-practices-using-feature-flags-at-scale#reusing-feature-flag-names) prevents the reuse of old flag names, reducing the risk of accidentally re-enabling outdated features with the same name.
 
 ![Creating a feature flag with a unique name referencing the project and related jira ticket.](/img/feature-flag-unique-name.png)
 

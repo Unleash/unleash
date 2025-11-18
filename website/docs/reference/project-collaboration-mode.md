@@ -34,7 +34,7 @@ All users of your Unleash instance can view the project but only project Members
 
 Only project Members, Admins, Editors, and users with any [custom root role](./rbac#custom-root-roles) can view the project. Viewers, who are not project Members, can't see the project in the project list. Only project Members and Admins can submit change requests. 
 
-To grant users visibility into private projects through a custom root role, you must assign the role directly to the user rather than through a [user group](/reference/rbac#usergroups).
+To grant users visibility into private projects through a custom root role, you must assign the role directly to the user rather than through a [user group](/reference/rbac#user-groups).
 
 
 |           | View project                                                                                    | Submit change requests     |

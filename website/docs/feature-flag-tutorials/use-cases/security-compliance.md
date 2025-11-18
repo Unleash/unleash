@@ -100,7 +100,7 @@ One of the key responsibilities of the Admin role is assigning users as project 
 
 For security best practices, we recommend following the principle of least privilege by assigning users the Viewer role or a custom root role with minimal permissions. From there, specific project-level permissions can be granted as needed.
 
-Unleash can handle all of the complexities that come with access controls and we make that process simple for you. Set up roles and permissions so you’re not only in complete control of how your feature flag system is administered, you’re adhering to compliance standards. For more recommendations on setting up permissions for users, read our guide on [using feature flags at scale](guides/best-practices-using-feature-flags-at-scale).
+Unleash can handle all of the complexities that come with access controls and we make that process simple for you. Set up roles and permissions so you’re not only in complete control of how your feature flag system is administered, you’re adhering to compliance standards. For more recommendations on setting up permissions for users, read our guide on [using feature flags at scale](/guides/best-practices-using-feature-flags-at-scale).
 
 Next, we’ll explore how to extend access controls in Unleash for network security.
 

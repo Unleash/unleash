@@ -42,13 +42,13 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'get-started/quickstart',
+                id: 'quickstart',
             },
             items: [
                 {
                     type: 'doc',
                     label: 'Quickstart',
-                    id: 'get-started/quickstart',
+                    id: 'quickstart',
                 },
                 {
                     type: 'doc',
@@ -199,23 +199,23 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'topics/feature-flags/feature-flag-best-practices',
+                        id: 'guides/feature-flag-best-practices',
                     },
                     items: [
                         {
                             type: 'doc',
                             label: 'Building and scaling feature flag systems',
-                            id: 'topics/feature-flags/feature-flag-best-practices',
+                            id: 'guides/feature-flag-best-practices',
                         },
                         {
                             type: 'doc',
                             label: 'Using feature flags at scale',
-                            id: 'topics/feature-flags/best-practices-using-feature-flags-at-scale',
+                            id: 'guides/best-practices-using-feature-flags-at-scale',
                         },
                         {
                             type: 'doc',
                             label: 'Migrating from homegrown feature management solutions',
-                            id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
+                            id: 'guides/feature-flag-migration-best-practices',
                         },
                     ],
                 },

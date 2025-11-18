@@ -20,7 +20,7 @@ The key benefits of gradual rollouts are that you can experiment rapidly on a co
 
 ## How to perform a gradual rollout with Unleash
 
-To follow along with this tutorial, you will need an Unleash instance. If you’d prefer to self-host Unleash, read our [Quickstart guide](/get-started/quickstart). Alternatively, if you’d like your project to be hosted by Unleash, go to [getunleash.io](https://www.getunleash.io/pricing).
+To follow along with this tutorial, you will need an Unleash instance. If you’d prefer to self-host Unleash, read our [Quickstart guide](/quickstart). Alternatively, if you’d like your project to be hosted by Unleash, go to [getunleash.io](https://www.getunleash.io/pricing).
 
 With Unleash set up, you can use your application to talk to Unleash through one of our SDKs.
 
@@ -140,7 +140,7 @@ After you have implemented a gradual rollout strategy, we recommend managing the
 -   Reviewing audit logs of each change to your flag configurations over time by project collaborators within your organization, which is exportable for reporting
 -   Reviewing and approving change requests to your flags and strategy configurations
 
-Read our documentation on how to effectively manage [feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale) while reducing security risks. Let’s walk through these recommended Unleash features in the subsequent sections.
+Read our documentation on how to effectively manage [feature flags at scale](/guides/best-practices-using-feature-flags-at-scale) while reducing security risks. Let’s walk through these recommended Unleash features in the subsequent sections.
 
 ### Reviewing application metrics
 

@@ -13,7 +13,7 @@ Unleash provides a powerful mechanism for safely managing and controlling these 
 
 ## How to implement trunk-based development with feature flags
 
-To follow along with this tutorial, you need access to an Unleash instance to create and manage feature flags. Head over to our [Quick Start documentation](/get-started/quickstart) for options, including running locally or using an [Unleash SaaS instance](https://www.getunleash.io/pricing?).
+To follow along with this tutorial, you need access to an Unleash instance to create and manage feature flags. Head over to our [Quick Start documentation](/quickstart) for options, including running locally or using an [Unleash SaaS instance](https://www.getunleash.io/pricing?).
 
 With Unleash set up, you can use your application to talk to Unleash through one of our [SDKs](/reference/sdks).
 
@@ -252,7 +252,7 @@ To keep the trunk in a deployable state, keep the flag off in your production en
 To test your incomplete feature, enable the flag in the development environment in the Unleash Admin UI. In some cases, you may also find it valuable to enable the flag in a testing/QA environment. Unleash environment-specific flag configurations make it easy to manage these different states across your [environments](/reference/environments). You can quickly toggle flags on or off for specific environments, ensuring the trunk remains deployable in production while enabling active development and testing in other contexts. Use the default production environment toggle in Unleash to enable your flag when you’re ready to make your feature available.
 
 :::note
-Depending on the size and scope of a feature you’re developing, you may need more than one flag. Generally, we recommend creating as few flags as possible per feature, as making too many flags associated with one feature can become more complex to manage over time with trunk-based development. Our documentation on [best practices for feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale) provides more concrete details on large-scale feature flag management.
+Depending on the size and scope of a feature you’re developing, you may need more than one flag. Generally, we recommend creating as few flags as possible per feature, as making too many flags associated with one feature can become more complex to manage over time with trunk-based development. Our documentation on [best practices for feature flags at scale](/guides/best-practices-using-feature-flags-at-scale) provides more concrete details on large-scale feature flag management.
 :::
 
 ### Automate flag lifecycle management

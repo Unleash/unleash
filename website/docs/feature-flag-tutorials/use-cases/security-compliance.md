@@ -100,7 +100,7 @@ One of the key responsibilities of the Admin role is assigning users as project 
 
 For security best practices, we recommend following the principle of least privilege by assigning users the Viewer role or a custom root role with minimal permissions. From there, specific project-level permissions can be granted as needed.
 
-Unleash can handle all of the complexities that come with access controls and we make that process simple for you. Set up roles and permissions so you’re not only in complete control of how your feature flag system is administered, you’re adhering to compliance standards. For more recommendations on setting up permissions for users, read our guide on [using feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale).
+Unleash can handle all of the complexities that come with access controls and we make that process simple for you. Set up roles and permissions so you’re not only in complete control of how your feature flag system is administered, you’re adhering to compliance standards. For more recommendations on setting up permissions for users, read our guide on [using feature flags at scale](guides/best-practices-using-feature-flags-at-scale).
 
 Next, we’ll explore how to extend access controls in Unleash for network security.
 
@@ -156,7 +156,7 @@ Let’s say a project owner wants to update a rollout strategy so that a new fea
 
 You could also schedule changes by using the [date and time operators](/reference/activation-strategies#date-and-time-operators) in [strategy constraints](/reference/activation-strategies#constraints). However, when you have change requests configured in the project, we recommend using the schedule feature in change requests, as it is a faster and simpler approach.
 
-For more recommendations, read our section on [change management workflow](/topics/feature-flags/best-practices-using-feature-flags-at-scale#implement-flag-approval-workflows-early) from _Using Feature Flags at Scale_.
+For more recommendations, read our section on [change management workflow](/guides/best-practices-using-feature-flags-at-scale#implement-flag-approval-workflows-early) from _Using Feature Flags at Scale_.
 
 Now that we covered change requests as a practical tool for both feature management oversight and good security posture, let’s explore Unleash event logs as an audit logging system for your organization.
 
@@ -185,7 +185,7 @@ Next, we’ll explore data protection measures built into Unleash and how to enh
 
 ## Protect PII for data privacy
 
-Let’s explore Unleash's architectural layers that address data privacy. Our guide on [11 principles for building and scaling feature flag systems](/topics/feature-flags/feature-flag-best-practices), covers best practices for feature flag system implementations, such as protecting personally identifiable information (PII) by implementing the principle of least privilege.
+Let’s explore Unleash's architectural layers that address data privacy. Our guide on [11 principles for building and scaling feature flag systems](/guides/feature-flag-best-practices), covers best practices for feature flag system implementations, such as protecting personally identifiable information (PII) by implementing the principle of least privilege.
 
 Protecting data is critical within any software tool. It’s a security best practice that is ideally implemented across your tech stack where user data is handled. Unleash is architecturally designed to protect organizations and their end users by keeping data private and limiting the scope of data that is evaluated and stored. Think about the types of sensitive data that could be exposed if you use a feature flag system that isn’t designed to protect data. When feature flags are evaluated, here are examples of what could be at risk:
 

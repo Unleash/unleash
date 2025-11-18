@@ -122,7 +122,7 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 
 📚 [Visit the documentation](https://docs.getunleash.io/) for more in-depth descriptions, how-to guides, and more.
 
-📖 Learn more about the principles of building and scaling [feature flag](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices) solutions.
+📖 Learn more about the principles of building and scaling [feature flag](https://docs.getunleash.io/guides/feature-flag-best-practices) solutions.
 
 <br/>
 

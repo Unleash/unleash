@@ -11,7 +11,7 @@ const cardsData = [
         title: 'Quickstart',
         description: 'Get up and running with Unleash in less than 5 minutes.',
         icon: <QuickstartIcon />,
-        href: '/get-started/quickstart',
+        href: '/quickstart',
     },
     {
         title: 'Tutorials and Guides',

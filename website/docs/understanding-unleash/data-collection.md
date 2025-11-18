@@ -3,7 +3,7 @@ title: Data and privacy
 pagination_next: using-unleash/compliance/compliance-overview
 ---
 
-At Unleash, we prioritize the privacy and security of our customers' data. Our [architecture](/understanding-unleash/the-anatomy-of-unleash) ensures privacy by evaluating feature flags locally within the [client SDKs](/reference/sdks) or [Unleash Edge](/reference/unleash-edge), meaning no user data is shared with the Unleash instance.
+At Unleash, we prioritize the privacy and security of our customers' data. Our [architecture](/reference/core-concepts) ensures privacy by evaluating feature flags locally within the [client SDKs](/reference/sdks) or [Unleash Edge](/reference/unleash-edge), meaning no user data is shared with the Unleash instance.
 
 :::info
 

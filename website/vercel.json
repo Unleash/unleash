@@ -23,7 +23,7 @@
           "value": "www.featureflagbook.com"
         }
       ],
-      "destination": "https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices",
+      "destination": "https://docs.getunleash.io/guides/feature-flag-best-practices",
       "permanent": false
     },
     {
@@ -523,22 +523,22 @@
     },
     {
       "source": "/user_guide/quickstart",
-      "destination": "/get-started/quickstart",
+      "destination": "/quickstart",
       "permanent": true
     },
     {
       "source": "/docs/getting_started",
-      "destination": "/get-started/quickstart",
+      "destination": "/quickstart",
       "permanent": true
     },
     {
       "source": "/tutorials/quickstart",
-      "destination": "/get-started/quickstart",
+      "destination": "/quickstart",
       "permanent": true
     },
     {
       "source": "/tutorials/getting-started",
-      "destination": "/get-started/quickstart",
+      "destination": "/quickstart",
       "permanent": true
     },
     {
@@ -943,7 +943,7 @@
     },
     {
       "source": "/topics",
-      "destination": "/topics/what-is-a-feature-flag",
+      "destination": "/get-started/what-is-a-feature-flag",
       "permanent": true
     },
     {
@@ -1084,11 +1084,6 @@
     {
       "source": "/deploy/environment-import-export",
       "destination": "/how-to/how-to-environment-import-export",
-      "permanent": true
-    },
-        {
-      "source": "/quickstart",
-      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {

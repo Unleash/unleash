@@ -1848,3 +1848,46 @@ test('access overview should include users with custom root roles', async () => 
     expect(userAccess.userId).toBe(user.id);
     expect(userAccess.rootRole).toBe('Mischievous Messenger');
 });
+
+test("creating a role with permissions that don't exist should throw a bad data error", async () => {
+    await expect(() =>
+        accessService.createRole(
+            {
+                name: 'Oogus Boogus',
+                type: CUSTOM_ROOT_ROLE_TYPE,
+                description:
+                    "Well, well, well ... what have we here? Sandy Claws, huh? Oooh, I'm really scared!",
+                permissions: [{ name: 'BOGUS' }],
+                createdByUserId: 1,
+            },
+            SYSTEM_USER_AUDIT,
+        ),
+    ).rejects.toThrow(BadDataError);
+});
+
+test("Updating a role with permissions that don't exist should throw a bad data error", async () => {
+    const custom_role = await accessService.createRole(
+        {
+            name: 'Legit custom role',
+            type: CUSTOM_ROOT_ROLE_TYPE,
+            description: '',
+            permissions: [{ name: permissions.CREATE_ADDON }],
+            createdByUserId: 1,
+        },
+        SYSTEM_USER_AUDIT,
+    );
+    await expect(() =>
+        accessService.updateRole(
+            {
+                id: custom_role.id,
+                name: 'Oogus Boogus',
+                type: CUSTOM_ROOT_ROLE_TYPE,
+                description:
+                    'This might be the last time that you hear the Boogus song',
+                permissions: [{ name: 'BOGUS' }],
+                createdByUserId: 1,
+            },
+            SYSTEM_USER_AUDIT,
+        ),
+    ).rejects.toThrow(BadDataError);
+});

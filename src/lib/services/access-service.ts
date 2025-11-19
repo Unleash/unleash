@@ -707,6 +707,8 @@ export class AccessService {
             roleType,
         };
 
+        await this.validatePermissions(role.permissions);
+
         const rolePermissions = cleanPermissionEnvironment(role.permissions);
         const newRole = await this.roleStore.create(baseRole);
         if (rolePermissions) {
@@ -756,6 +758,8 @@ export class AccessService {
             description: role.description,
             roleType,
         };
+
+        await this.validatePermissions(role.permissions);
         const rolePermissions = cleanPermissionEnvironment(role.permissions);
         const updatedRole = await this.roleStore.update(baseRole);
         const existingPermissions = await this.store.getPermissionsForRole(
@@ -877,5 +881,26 @@ export class AccessService {
 
     async getUserAccessOverview(): Promise<IUserAccessOverview[]> {
         return this.store.getUserAccessOverview();
+    }
+
+    async validatePermissions(permissions?: PermissionRef[]): Promise<void> {
+        if (!permissions?.length) {
+            return;
+        }
+        const availablePermissions = await this.store.getAvailablePermissions();
+        const invalidPermissions = permissions.filter(
+            (permission) =>
+                !availablePermissions.some((availablePermission) =>
+                    'id' in permission
+                        ? availablePermission.id === permission.id
+                        : availablePermission.name === permission.name,
+                ),
+        );
+
+        if (invalidPermissions.length > 0) {
+            throw new BadDataError(
+                `Invalid permissions supplied. The following roles don't exist: ${invalidPermissions.join(', ')}.`,
+            );
+        }
     }
 }

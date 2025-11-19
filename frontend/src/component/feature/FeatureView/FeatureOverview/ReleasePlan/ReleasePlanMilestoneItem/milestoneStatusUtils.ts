@@ -10,6 +10,10 @@ export const calculateMilestoneStatus = (
     environmentIsDisabled: boolean | undefined,
     allMilestones: IReleasePlanMilestone[],
 ): MilestoneStatus => {
+    if (milestone.pausedAt) {
+        return { type: 'paused' };
+    }
+
     if (milestone.id === activeMilestoneId) {
         return environmentIsDisabled ? { type: 'paused' } : { type: 'active' };
     }

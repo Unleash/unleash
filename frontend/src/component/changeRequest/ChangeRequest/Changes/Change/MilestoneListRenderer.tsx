@@ -110,8 +110,6 @@ const MilestoneListRendererCore = ({
                             readonly={readonly}
                             milestone={milestone}
                             automationSection={automationSection}
-                            allMilestones={plan.milestones}
-                            activeMilestoneId={plan.activeMilestoneId}
                         />
                         {isNotLastMilestone && <StyledConnection />}
                     </div>

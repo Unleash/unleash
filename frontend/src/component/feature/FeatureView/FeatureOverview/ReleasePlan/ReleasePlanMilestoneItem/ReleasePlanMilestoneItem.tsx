@@ -151,6 +151,18 @@ export const ReleasePlanMilestoneItem = ({
         milestones,
     );
 
+    const previousMilestone = index > 0 ? milestones[index - 1] : null;
+    const previousMilestoneStatus = previousMilestone
+        ? calculateMilestoneStatus(
+              previousMilestone,
+              activeMilestoneId,
+              index - 1,
+              activeIndex,
+              environmentIsDisabled,
+              milestones,
+          )
+        : undefined;
+
     const { pendingProgressionChange, effectiveTransitionCondition } =
         getPendingProgressionData(milestone, getPendingProgressionChange);
 
@@ -183,8 +195,7 @@ export const ReleasePlanMilestoneItem = ({
                 status={status}
                 onStartMilestone={onStartMilestone}
                 automationSection={automationSection}
-                allMilestones={milestones}
-                activeMilestoneId={activeMilestoneId}
+                previousMilestoneStatus={previousMilestoneStatus}
             />
             <ConditionallyRender
                 condition={isNotLastMilestone}

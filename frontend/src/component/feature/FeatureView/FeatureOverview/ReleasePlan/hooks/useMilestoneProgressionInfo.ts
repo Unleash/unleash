@@ -16,6 +16,5 @@ export const useMilestoneProgressionInfo = (
         intervalMinutes,
         sourceMilestoneStartedAt,
         locationSettings.locale,
-        status,
     );
 };

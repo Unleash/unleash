@@ -593,21 +593,21 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'doc',
                     label: 'Unleash hosting options',
-                    id: 'understanding-unleash/hosting-options',
+                    id: 'deploy/hosting-options',
                 },
                 {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'using-unleash/deploy/getting-started',
+                        id: 'deploy/getting-started',
                     },
                     label: 'Self-hosting Unleash',
                     items: [
-                        'using-unleash/deploy/getting-started',
-                        'using-unleash/deploy/configuring-unleash',
-                        'using-unleash/deploy/upgrading-unleash',
-                        'using-unleash/deploy/license-keys',
-                        'using-unleash/deploy/https',
+                        'deploy/getting-started',
+                        'deploy/configuring-unleash',
+                        'deploy/upgrading-unleash',
+                        'deploy/license-keys',
+                        'deploy/https',
                         {
                             type: 'doc',
                             label: 'Synchronize Unleash instances',
@@ -620,15 +620,15 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'how-to/how-to-add-sso-open-id-connect',
+                        id: 'single-sign-on/how-to-add-sso-open-id-connect',
                     },
                     items: [
-                        'how-to/how-to-add-sso-open-id-connect',
-                        'how-to/how-to-add-sso-saml',
-                        'how-to/how-to-add-sso-saml-keycloak',
-                        'how-to/how-to-add-sso-azure-saml',
-                        'how-to/how-to-setup-sso-keycloak-group-sync',
-                        'how-to/how-to-set-up-group-sso-sync',
+                        'single-sign-on/how-to-add-sso-open-id-connect',
+                        'single-sign-on/how-to-add-sso-saml',
+                        'single-sign-on/how-to-add-sso-saml-keycloak',
+                        'single-sign-on/how-to-add-sso-azure-saml',
+                        'single-sign-on/how-to-setup-sso-keycloak-group-sync',
+                        'single-sign-on/how-to-set-up-group-sso-sync',
                     ],
                 },
                 {
@@ -636,11 +636,11 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'how-to/how-to-setup-provisioning-with-okta',
+                        id: 'provisioning/how-to-setup-provisioning-with-okta',
                     },
                     items: [
-                        'how-to/how-to-setup-provisioning-with-okta',
-                        'how-to/how-to-setup-provisioning-with-entra',
+                        'provisioning/how-to-setup-provisioning-with-okta',
+                        'provisioning/how-to-setup-provisioning-with-entra',
                     ],
                 },
                 {

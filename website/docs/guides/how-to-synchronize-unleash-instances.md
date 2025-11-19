@@ -12,7 +12,7 @@ This is an experimental feature.
 
 This script allows you to synchronize feature flags between two Unleash instances using the export and import APIs provided by Unleash. The script exports feature flags from the source instance and imports them into the target instance.
 
-For one-off full instance migrations, we recommend a [database dump/restore](/using-unleash/deploy/configuring-unleash#back-up-and-restore-the-database) (`pg_dump` / `pg_restore`) instead.
+For one-off full instance migrations, we recommend a [database dump/restore](/deploy/configuring-unleash#back-up-and-restore-the-database) (`pg_dump` / `pg_restore`) instead.
 
 You can find this script in the following location within the project:
 

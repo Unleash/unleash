@@ -28,6 +28,6 @@ Unleash uses [semantic versioning](https://semver.org/) with release notes avail
 
 Unleash Cloud is a hosted service with continuous delivery. For transparency, we append build metadata to the base semantic version for every deployment. For example, in `7.0.10+6945.8192287`, `7.0.10` is the base release and `+6945.8192287` identifies the exact build.
 
-If you're self-hosting Unleash, see [Upgrading Unleash](../using-unleash/deploy/upgrading-unleash) for how to keep your instance up to date.
+If you're self-hosting Unleash, see [Upgrading Unleash](/deploy/upgrading-unleash) for how to keep your instance up to date.
 
 [Unleash Edge](https://github.com/Unleash/unleash-edge) and our [SDKs](/reference/sdks) are versioned and released independently of Unleash. We recommend upgrading your SDKs and Unleash Edge to the latest versions to ensure compatibility, optimal performance, and access to the latest features and security updates.

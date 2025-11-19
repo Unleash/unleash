@@ -8,7 +8,7 @@ title: Set up user group SSO syncing
 
 :::
 
-This guide takes you through how to configure your [user groups](../reference/rbac#user-groups) to automatically populate users through Single Sign On (SSO). Refer to [setting up Keycloak for user group sync](../../how-to/how-to-setup-sso-keycloak-group-sync) for an end to end example. Note that the steps below require you to be logged in as an admin user.
+This guide takes you through how to configure your [user groups](/reference/rbac#user-groups) to automatically populate users through Single Sign On (SSO). Refer to [setting up Keycloak for user group sync](/single-sign-on/how-to-setup-sso-keycloak-group-sync) for an end to end example. Note that the steps below require you to be logged in as an admin user.
 
 ## Step 1: Navigate to SSO configuration {#step-1}
 
@@ -18,9 +18,9 @@ Navigate to the "Single sign-on" configuration page.
 
 ## Step 2: Enable Group Syncing {#step-2}
 
-Turn on "Enable Group Syncing" and enter a value for "Group Field JSON Path". Refer to the [User group SSO integration documentation](/reference/rbac#set-up-group-sso-syncing) for more information or to the [how-to guide for integrating with Keycloak](how-to-setup-sso-keycloak-group-sync.md) for a practical example.
+Turn on "Enable Group Syncing" and enter a value for "Group Field JSON Path". Refer to the [User group SSO integration documentation](/reference/rbac#set-up-group-sso-syncing) for more information or to the [how-to guide for integrating with Keycloak](/single-sign-on/how-to-setup-sso-keycloak-group-sync) for a practical example.
 
-The value is the JSON path in the token response where your group properties are located, this is up to your SSO provider, a full example for Keycloak can be [found here](../../how-to/how-to-setup-sso-keycloak-group-sync). Once you're happy, save your configuration.
+The value is the JSON path in the token response where your group properties are located, this is up to your SSO provider, a full example for Keycloak can be [found here](/single-sign-on/how-to-setup-sso-keycloak-group-sync). Once you're happy, save your configuration.
 
 ![The Single sign-on configuration page with enable group syncing, group field JSON path and save inputs highlighted.](/img/setup-sso-group-sync-2.png)
 

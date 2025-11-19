@@ -46,7 +46,7 @@ Your developers and other stakeholders need to securely access platforms used to
 
 To use single sign-on in Unleash, your users can authenticate themselves through OpenID Connect (OIDC) or SAML 2.0 protocols.
 
-We have integration guides to connect Unleash to enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak, but you can use any identity provider that uses OIDC or SAML 2.0 protocol. Read our [how-to guide for single sign-on](/how-to/how-to-add-sso-open-id-connect).
+We have integration guides to connect Unleash to enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak, but you can use any identity provider that uses OIDC or SAML 2.0 protocol. Read our [how-to guide for single sign-on](/single-sign-on/how-to-add-sso-open-id-connect).
 
 ![A diagram showing how Unleash integrates with authentication providers and identity providers.](/img/sso-idp-auth-provider.jpg)
 
@@ -69,7 +69,7 @@ By enabling [SCIM](/reference/scim) in Unleash, you can:
 -   Sync group membership.
 -   Ensure consistent access across multiple platforms.
 
-To unlock these benefits, set up [SCIM for automatic provisioning using our how-to guides](/how-to/how-to-setup-provisioning-with-okta).
+To unlock these benefits, set up [SCIM for automatic provisioning using our how-to guides](/provisioning/how-to-setup-provisioning-with-okta).
 
 ## Configure role-based access control for administrators and developers
 
@@ -197,7 +197,7 @@ Protecting data is critical within any software tool. It’s a security best pra
 
 This is a potential attack surface area that you wouldn’t want to be the root of data breaches or unauthorized access in your system. That’s why Unleash was built in a way where integrating feature flags into your services won’t be a weak link in your organization’s ability to ship software safely.
 
-With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using backend SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For frontend SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/hosting-options#), or [self-hosting Unleash Edge](/understanding-unleash/hosting-options#unleash-edge-options). Read more on the [Unleash architecture here](/get-started/unleash-overview).
+With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using backend SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For frontend SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/deploy/hosting-options#), or [self-hosting Unleash Edge](/deploy/hosting-options#unleash-edge-options). Read more on the [Unleash architecture here](/get-started/unleash-overview).
 
 ### Use Unleash Edge for enterprise-grade data privacy
 

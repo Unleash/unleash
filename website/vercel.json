@@ -808,12 +808,12 @@
     },
     {
       "source": "/tutorials/proxy-hosting",
-      "destination": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
       "permanent": true
     },
     {
       "source": "/topics/proxy-hosting",
-      "destination": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
       "permanent": true
     },
     {
@@ -823,32 +823,37 @@
     },
     {
       "source": "/using-unleash/deploy",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/using-unleash/deploy/database-backup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/using-unleash/deploy/database-setup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/using-unleash/deploy/email-service",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/using-unleash/troubleshooting/email-service",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/understanding-unleash/proxy-hosting",
-      "destination": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
       "permanent": true
     },
     {
@@ -903,7 +908,7 @@
     },
     {
       "source": "/how-to/troubleshooting/https",
-      "destination": "/using-unleash/deploy/https",
+      "destination": "/deploy/https",
       "permanent": true
     },
     {
@@ -958,22 +963,22 @@
     },
     {
       "source": "/reference/deploy",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/reference/deploy/getting-started",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy/getting_started",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
@@ -998,12 +1003,12 @@
     },
     {
       "source": "/reference/deploy/configuring-unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash",
+      "destination": "/deploy/configuring-unleash",
       "permanent": true
     },
     {
       "source": "/deploy/configuring_unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash",
+      "destination": "/deploy/configuring-unleash",
       "permanent": true
     },
     {
@@ -1018,87 +1023,157 @@
     },
     {
       "source": "/how-to/sso",
-      "destination": "/how-to/how-to-add-sso-open-id-connect",
+      "destination": "/single-sign-on/how-to-add-sso-open-id-connect",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-open-id-connect",
+      "destination": "/single-sign-on/how-to-add-sso-open-id-connect",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-saml",
+      "destination": "/single-sign-on/how-to-add-sso-saml",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-saml-keycloak",
+      "destination": "/single-sign-on/how-to-add-sso-saml-keycloak",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-azure-saml",
+      "destination": "/single-sign-on/how-to-add-sso-azure-saml",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-setup-sso-keycloak-group-sync",
+      "destination": "/single-sign-on/how-to-setup-sso-keycloak-group-sync",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-google",
+      "destination": "/single-sign-on/how-to-add-sso-google",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-set-up-group-sso-sync",
+      "destination": "/single-sign-on/how-to-set-up-group-sso-sync",
       "permanent": true
     },
     {
       "source": "/how-to/provisioning",
-      "destination": "/how-to/how-to-setup-provisioning-with-okta",
+      "destination": "/provisioning/how-to-setup-provisioning-with-okta",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-setup-provisioning-with-okta",
+      "destination": "/provisioning/how-to-setup-provisioning-with-okta",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-setup-provisioning-with-entra",
+      "destination": "/provisioning/how-to-setup-provisioning-with-entra",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/configuring-unleash",
+      "destination": "/deploy/configuring-unleash",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/upgrading-unleash",
+      "destination": "/deploy/upgrading-unleash",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/license-keys",
+      "destination": "/deploy/license-keys",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/https",
+      "destination": "/deploy/https",
       "permanent": true
     },
     {
       "source": "/reference/deploy/configuring-unleash-v3",
-      "destination": "/using-unleash/deploy/configuring-unleash-v3",
+      "destination": "/deploy/configuring-unleash-v3",
       "permanent": true
     },
     {
       "source": "/deploy/configuring_unleash_v3",
-      "destination": "/using-unleash/deploy/configuring-unleash-v3",
+      "destination": "/deploy/configuring-unleash-v3",
       "permanent": true
     },
     {
       "source": "/reference/deploy/database-setup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/deploy/database-setup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/reference/deploy/database-backup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/deploy/database-backup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/reference/deploy/email-service",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/deploy/email",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/reference/deploy/google-auth-hook",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy/google_auth",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "'/using-unleash/deploy/google-auth-hook",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy/migration_guide",
-      "destination": "/using-unleash/deploy/upgrading-unleash",
+      "destination": "/deploy/upgrading-unleash",
       "permanent": true
     },
     {
       "source": "/reference/deploy/migration-guide",
-      "destination": "/using-unleash/deploy/upgrading-unleash",
+      "destination": "/deploy/upgrading-unleash",
       "permanent": true
     },
     {
       "source": "/reference/deploy/securing-unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash#securing-unleash",
+      "destination": "/deploy/configuring-unleash#securing-unleash",
       "permanent": true
     },
     {
       "source": "/deploy/securing_unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash#securing-unleash",
+      "destination": "/deploy/configuring-unleash#securing-unleash",
       "permanent": true
     },
     {

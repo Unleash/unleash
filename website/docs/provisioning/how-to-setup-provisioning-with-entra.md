@@ -34,7 +34,7 @@ Enable SCIM by turning on the toggle and keep the token Unleash provides you for
 
 :::info Note
 
-This guide assumes you already have an SSO application setup for Unleash. If you don't already have an application configured, please see our [guide](./how-to-add-sso-azure-saml) on setting up SSO.
+This guide assumes you already have an SSO application setup for Unleash. If you don't already have an application configured, please see our [guide](/single-sign-on/how-to-add-sso-azure-saml) on setting up SSO.
 
 :::
 

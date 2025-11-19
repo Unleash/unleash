@@ -1,6 +1,6 @@
 ---
 title: Set up Okta provisioning
-pagination_next: how-to/how-to-setup-provisioning-with-entra
+pagination_next: provisioning/how-to-setup-provisioning-with-entra
 ---
 
 :::note Availability
@@ -35,7 +35,7 @@ Enable SCIM by turning on the toggle and keep the token Unleash provides you for
 
 :::info Note
 
-If you already have SAML SSO configured for Unleash in Okta you can skip to the [next step](how-to-setup-provisioning-with-okta#okta-setup-step-2). If you're planning on using [SAML for Unleash](../how-to/how-to-add-sso-saml), do that first and skip to the next step. Note that if you're using OIDC SSO in Okta you still need to do this step.
+If you already have SAML SSO configured for Unleash in Okta you can skip to the [next step](how-to-setup-provisioning-with-okta#okta-setup-step-2). If you're planning on using [SAML for Unleash](/single-sign-on/how-to-add-sso-saml), do that first and skip to the next step. Note that if you're using OIDC SSO in Okta you still need to do this step.
 
 This step will create an empty Sign-On Application that will only be used for SCIM.
 

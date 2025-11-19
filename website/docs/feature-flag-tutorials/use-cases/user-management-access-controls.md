@@ -26,7 +26,7 @@ In this tutorial, you will:
 
 When an enterprise like a global banking platform considers implementing feature flags, keeping track of who can access your feature flag platform and handling authentication is critical. Traditional username and password approaches are insecure and [shared accounts pose a security risk](https://www.getunleash.io/blog/stop-sharing-accounts).
 
-To ensure proper user authentication and reduce risk exposure, Unleash provides [single sign-on](/how-to/how-to-add-sso-open-id-connect) as the recommended centralized method for managing user access.
+To ensure proper user authentication and reduce risk exposure, Unleash provides [single sign-on](/single-sign-on/how-to-add-sso-open-id-connect) as the recommended centralized method for managing user access.
 
 Unleash supports any SSO option through OpenID Connect or SAML 2.0, including identity providers like Okta, Microsoft Entra ID, and Keycloak to create a unified authentication process.
 
@@ -34,7 +34,7 @@ To configure SSO for feature flags, navigate to **Admin settings > Single sign-o
 
 ![In Unleash's Single Sign-On page, there are four tabs to set up Open ID Connect, SAML 2.0, traditional passwords, and SCIM.](/img/use-case-user-mgmt-saml.png)
 
-When you connect Unleash to your identity provider, you can synchronize user groups with the identity provider. That way, the synchronization process becomes automated so your group configuration reflects organizational changes. Follow our step-by-step guide to set up [user group syncing](/how-to/how-to-set-up-group-sso-sync).
+When you connect Unleash to your identity provider, you can synchronize user groups with the identity provider. That way, the synchronization process becomes automated so your group configuration reflects organizational changes. Follow our step-by-step guide to set up [user group syncing](/single-sign-on/how-to-set-up-group-sso-sync).
 With SSO integration, groups defined in your identity provider are directly mapped to Unleash access groups. This means:
 
 -   New team members are automatically assigned correct permissions.
@@ -71,7 +71,7 @@ Enable SCIM protocol in the **Single sign-on > SCIM** tab to generate a new toke
 
 ![Turn the **SCIM provisioning** toggle on to enable SCIM.](/img/use-case-user-mgmt-scim-protocol.png)
 
-Next, set up [Okta provisioning](/how-to/how-to-setup-provisioning-with-okta) or [Microsoft Entra ID provisioning](/how-to/how-to-setup-provisioning-with-entra) using our how-to guides.
+Next, set up [Okta provisioning](/provisioning/how-to-setup-provisioning-with-okta) or [Microsoft Entra ID provisioning](/provisioning/how-to-setup-provisioning-with-entra) using our how-to guides.
 
 This automation creates an access control system that adapts in real-time to organizational changes. Within minutes of joining, a new team member can be granted precisely the right level of access, while departing employees are immediately locked out of sensitive systems.
 

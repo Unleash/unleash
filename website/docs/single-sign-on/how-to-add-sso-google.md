@@ -11,7 +11,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 :::caution Deprecation notice
 
-Single Sign-on via the Google Authenticator provider has been removed in Unleash v5 (deprecated in v4). We recommend using [OpenID Connect](./how-to-add-sso-open-id-connect.md) instead. If you're running a self hosted version of Unleash and you need to temporarily re-enable Google SSO, you can do so by setting the `GOOGLE_AUTH_ENABLED` environment variable to `true`. If you're running a hosted version of Unleash, you'll need to reach out to us and ask us to re-enable the flag. Note that this code will be removed in a future release and this is not safe to depend on.
+Single Sign-on via the Google Authenticator provider has been removed in Unleash v5 (deprecated in v4). We recommend using [OpenID Connect](/single-sign-on/how-to-add-sso-open-id-connect) instead. If you're running a self hosted version of Unleash and you need to temporarily re-enable Google SSO, you can do so by setting the `GOOGLE_AUTH_ENABLED` environment variable to `true`. If you're running a hosted version of Unleash, you'll need to reach out to us and ask us to re-enable the flag. Note that this code will be removed in a future release and this is not safe to depend on.
 
 :::
 

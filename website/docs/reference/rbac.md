@@ -337,7 +337,7 @@ You can’t add a group with a [custom root role](#custom-root-roles) to a proje
 :::
 
 You can integrate user groups with your single sign-on (SSO) provider to automatically manage user assignments.
-Note that this just-in-time process updates groups only when a user logs in, which differs from a full provisioning system like [SCIM](/how-to/how-to-setup-provisioning-with-okta) that syncs all user information proactively.
+Note that this just-in-time process updates groups only when a user logs in, which differs from a full provisioning system like [SCIM](/provisioning/how-to-setup-provisioning-with-okta) that syncs all user information proactively.
 
 When a user logs in through SSO, they are automatically added to or removed from a user group based on their SSO group membership. Manually added users are not affected by the SSO sync.
 

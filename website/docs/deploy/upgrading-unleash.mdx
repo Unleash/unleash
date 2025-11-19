@@ -9,7 +9,7 @@ This guide provides recommendations for upgrading your self-hosted Unleash insta
 
 Unleash aims to support client SDKs connecting to a server version that is one major version newer than the client, facilitating gradual upgrades.
 
-Before you begin any major version upgrade, we strongly recommend performing a [full backup of your PostgreSQL database](/using-unleash/deploy/configuring-unleash#back-up-and-restore-the-database). This ensures you can restore your instance if issues occur during the upgrade.
+Before you begin any major version upgrade, we strongly recommend performing a [full backup of your PostgreSQL database](/deploy/configuring-unleash#back-up-and-restore-the-database). This ensures you can restore your instance if issues occur during the upgrade.
 
 ## Upgrading from v6 to v7
 Unleash v7, released in June 2025, introduced several key changes. Ensure you address the following before or during your upgrade to v7.
@@ -157,7 +157,7 @@ Plan to upgrade your PostgreSQL instance to a supported version before or alongs
 
 ### License key required for self-hosted Enterprise
 
-Starting with v6, self-hosted Unleash Enterprise instances require a valid license key to function. Obtain your [license key](/using-unleash/deploy/license-keys) before upgrading and ensure the license key is configured correctly.
+Starting with v6, self-hosted Unleash Enterprise instances require a valid license key to function. Obtain your [license key](/deploy/license-keys) before upgrading and ensure the license key is configured correctly.
 
 ### Passport libraries removed from Open Source Docker distribution
 
@@ -201,7 +201,7 @@ Unleash v5 drops support for Node.js versions below 18, which was the active LTS
 
 ### The Google Authenticator provider for SSO removed
 
-The Google Authenticator, deprecated in v4, has now been removed. Migrate to using [OpenID Connect](../../how-to/how-to-add-sso-open-id-connect.md) instead.
+The Google Authenticator, deprecated in v4, has now been removed. Migrate to using [OpenID Connect](/single-sign-on/how-to-add-sso-open-id-connect) instead.
 
 If you are running a self-hosted version of Unleash and you need to temporarily re-enable the Google Authenticator SSO, you can do so by setting the `GOOGLE_AUTH_ENABLED` environment variable to `true`. If you're running a hosted version of Unleash, you'll need to contact support to request re-enabling the flag.
 
@@ -279,7 +279,7 @@ Read more in the [API token documentation](/guides/how-to-create-api-tokens).
 
 ### Configuring Unleash
 
-The options for configuring Unleash changed significantly in v4. If you are manually configuring Unleash, review the updated [configuring Unleash](/using-unleash/deploy/configuring-unleash) documentation.
+The options for configuring Unleash changed significantly in v4. If you are manually configuring Unleash, review the updated [configuring Unleash](/deploy/configuring-unleash) documentation.
 
 ### Introduced role-based access control
 
@@ -313,4 +313,4 @@ In v3 you could still enable the legacy routes via the `enableLegacyRoutes` opti
 
 ### Unleash CLI removed
 
-Unleash no longer ships with a binary that allows you to start Unleash directly from the command line. We recommend that you run Unleash [using Docker](/using-unleash/deploy/getting-started).
+Unleash no longer ships with a binary that allows you to start Unleash directly from the command line. We recommend that you run Unleash [using Docker](/deploy/getting-started).

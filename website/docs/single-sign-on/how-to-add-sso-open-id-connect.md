@@ -1,7 +1,7 @@
 ---
 title: Set up SSO with OpenID Connect
 description: Set up SSO for Unleash with OpenID Connect.
-pagination_next: how-to/how-to-add-sso-saml
+pagination_next: single-sign-on/how-to-add-sso-saml
 ---
 
 :::note Availability

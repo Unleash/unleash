@@ -137,7 +137,7 @@ If a documented Unleash feature isn't showing up in your Admin UI, check the fol
 
 ## Got locked out of an Admin account after configuring SCIM
 
-When you integrate Unleash with an identity provider (IdP) like [Okta](../how-to/how-to-setup-provisioning-with-okta) or [Entra ID](../how-to/how-to-setup-provisioning-with-entra) via [SCIM](/reference/scim), your IdP becomes the source of truth for user information.
+When you integrate Unleash with an identity provider (IdP) like [Okta](/provisioning/how-to-setup-provisioning-with-okta) or [Entra ID](/provisioning/how-to-setup-provisioning-with-entra) via [SCIM](/reference/scim), your IdP becomes the source of truth for user information.
 This can have an unintended side effect: users, including the one who set up the integration, might lose their admin permissions.
 
 When your IdP syncs a user with Unleash, it sends over the user's attributes. However, the standard SCIM protocol does not have a field for user roles. If role information isn't specified, Unleash defaults the user to the Viewer role for security reasons.

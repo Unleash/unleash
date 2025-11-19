@@ -140,7 +140,7 @@ After you have implemented a gradual rollout strategy, we recommend managing the
 -   Reviewing audit logs of each change to your flag configurations over time by project collaborators within your organization, which is exportable for reporting
 -   Reviewing and approving change requests to your flags and strategy configurations
 
-Read our documentation on how to effectively manage [feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale) while reducing security risks. Let’s walk through these recommended Unleash features in the subsequent sections.
+Read our documentation on how to effectively manage [feature flags at scale](/guides/best-practices-using-feature-flags-at-scale) while reducing security risks. Let’s walk through these recommended Unleash features in the subsequent sections.
 
 ### Reviewing application metrics
 

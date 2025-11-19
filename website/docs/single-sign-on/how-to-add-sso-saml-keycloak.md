@@ -53,7 +53,7 @@ Navigate to “Realm Settings” and open the “SAML 2.0 Identity Provider Meta
 Go back to Unleash Admin Dashboard and navigate to `Admin Menu -> Single-Sign-On -> SAML`. Fill in the values captured in the step 3.
 
 - Entity ID (3b a)
-- Single Sing-On URL (3a b)
+- Single Sign-On URL (3a b)
 - Certificate (3b b)
 
 You may also choose to “auto create users”. This will make Unleash automatically create new users on the fly first time they sign-in to Unleash with the given SSO provider. You may also limit the auto-creation to certain email domains, shown in the example below.

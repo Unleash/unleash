@@ -41,7 +41,7 @@ Most importantly, you must:
 -   Limit feature flag payloads for scalability, security, and efficiency
 -   Use graceful degradation where possible to improve the resiliency of your architecture
 
-For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](/topics/feature-flags/feature-flag-best-practices).
+For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](/guides/feature-flag-best-practices).
 
 ## 2. Install a local feature flag provider
 

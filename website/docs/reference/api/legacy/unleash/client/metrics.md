@@ -7,7 +7,6 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 <SearchPriority level="noindex" />
 
-> In order to access the client API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create a Backend token](/how-to/how-to-create-api-tokens) and add an Authorization header using the token.
 
 ### Send metrics {#send-metrics}
 

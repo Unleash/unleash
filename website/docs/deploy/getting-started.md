@@ -2,7 +2,7 @@
 title: Getting started
 description: "Initial steps for setting up a self-hosted Unleash instance with Docker."
 toc_max_heading_level: 3
-pagination_next: using-unleash/deploy/configuring-unleash
+pagination_next: deploy/configuring-unleash
 ---
 
 import Tabs from '@theme/Tabs';
@@ -11,7 +11,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 <SearchPriority level="high" />
 
-Unleash offers several [hosting options](/understanding-unleash/hosting-options), including fully self-hosted setups. This guide helps you set up Unleash Open Source or Unleash Enterprise in your own environment using Docker.
+Unleash offers several [hosting options](/deploy/hosting-options), including fully self-hosted setups. This guide helps you set up Unleash Open Source or Unleash Enterprise in your own environment using Docker.
 
 Alternatively, for Unleash Enterprise, you can sign up for a [cloud-hosted instance](https://www.getunleash.io/pricing).
 
@@ -140,7 +140,7 @@ The first time Unleash starts, it creates this default `admin` user. To use diff
 
 ### Install your license
 
-If you are running Unleash Enterprise, you need to install a [license key](/using-unleash/deploy/license-keys#get-a-new-license). You'll receive a license key as part of your trial or from your account representative.
+If you are running Unleash Enterprise, you need to install a [license key](/deploy/license-keys#get-a-new-license). You'll receive a license key as part of your trial or from your account representative.
 
 In the Admin UI, go to **Admin > License**, copy the license key you received by email and click **Update license key**.
 
@@ -164,7 +164,7 @@ The first time Unleash starts, it creates this default `admin` user. To use diff
 
 ## Test your server connection
 
-You can quickly test if your server is running and accepting API requests using `curl`. For example, you can attempt creating a feature flag via the [Admin API](/understanding-unleash/unleash-overview#admin-api). Replace `<API_TOKEN>` with a valid [API token](/reference/api-tokens-and-client-keys) and adjust the URL `http://localhost:4242` if needed.
+You can quickly test if your server is running and accepting API requests using `curl`. For example, you can attempt creating a feature flag via the [Admin API](/get-started/unleash-overview#admin-api). Replace `<API_TOKEN>` with a valid [API token](/reference/api-tokens-and-client-keys) and adjust the URL `http://localhost:4242` if needed.
 
 ```shell
 curl --location --request POST 'http://localhost:4242/api/admin/features' \

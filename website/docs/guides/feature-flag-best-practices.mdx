@@ -2,7 +2,7 @@
 title: "11 principles for building and scaling feature flag systems"
 description: Build a scalable, secure feature flag system with 11 key principles. Improve DevOps metrics, ensure reliability, and enhance developer experience."
 toc_max_heading_level: 2
-pagination_next: topics/feature-flags/best-practices-using-feature-flags-at-scale
+pagination_next: guides/best-practices-using-feature-flags-at-scale
 ---
 
 import VideoContent from '@site/src/components/VideoContent.jsx';
@@ -10,7 +10,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 <SearchPriority level="high" />
 
-Feature flags, [sometimes called feature toggles or feature switches](../../what-is-a-feature-flag), are a powerful software development technique that allows engineering teams to decouple the release of new functionality from software deployments. 
+Feature flags, [sometimes called feature toggles or feature switches](/get-started/what-is-a-feature-flag), are a powerful software development technique that allows engineering teams to decouple the release of new functionality from software deployments. 
 
 With feature flags, developers can turn [specific features or code segments on or off at runtime](https://www.getunleash.io/feature-flag-use-cases-software-kill-switches) without needing a code deployment or rollback. Organizations that adopt feature flags see improvements in key [DevOps metrics](https://www.getunleash.io/blog/dora-metrics-in-2023-5-ways-to-measure-devops-performance) like lead time to changes, mean time to recovery, deployment frequency, and change failure rate.
 
@@ -36,7 +36,7 @@ Let's dive deeper into each principle.
 
 A scalable feature management system evaluates flags at runtime. Flags are dynamic, not static. If you need to restart your application to turn on a flag, that's configuration, not a feature flag.
 
-A large-scale feature flag system that enables [runtime control](https://www.getunleash.io/blog/so-what-exactly-is-runtime-control) should have, at minimum, the following components: a [service to manage feature flags](https://www.getunleash.io/blog/feature-management), a database or data store, an [API layer](../../understanding-unleash/unleash-overview), a [feature flag SDK](../../reference/sdks), and a continuous update mechanism.
+A large-scale feature flag system that enables [runtime control](https://www.getunleash.io/blog/so-what-exactly-is-runtime-control) should have, at minimum, the following components: a [service to manage feature flags](https://www.getunleash.io/blog/feature-management), a database or data store, an [API layer](/get-started/unleash-overview), a [feature flag SDK](../../reference/sdks), and a continuous update mechanism.
 
 Let's break down these components.
 
@@ -44,9 +44,9 @@ Let's break down these components.
 
 - **Feature Flag Control Service**: A [service that acts as the control plane for your feature flags](https://www.getunleash.io/feature-flag-service), managing all flag configurations. The scope of this service should reflect the boundaries of your organization.
 - **Database or data store**: A robust, scalable, and highly available database or data store that stores feature flag configurations reliably. Common options include SQL databases, NoSQL databases, or key-value stores.
-- **API layer**: An API layer that exposes endpoints for your application to interact with the _Feature Flag Control Service_. [This API should allow your application to request feature flag configurations](../../understanding-unleash/unleash-overview).
+- **API layer**: An API layer that exposes endpoints for your application to interact with the _Feature Flag Control Service_. [This API should allow your application to request feature flag configurations](/get-started/unleash-overview).
 - **Feature flag SDK**: [An easy-to-use interface for fetching flag configurations and evaluating feature flags at runtime](../../reference/sdks). When considering feature flags in your application, the call to the SDK should query the local cache, and the SDK should ask the central service for updates in the background.
-- **Continuous update mechanism**: An update mechanism that enables [dynamic updates to feature flag configurations](../../understanding-unleash/unleash-overview) without requiring application restarts or redeployments. The SDK should handle subscriptions or polling to the _Feature Flag Control Service_ for updates.
+- **Continuous update mechanism**: An update mechanism that enables [dynamic updates to feature flag configurations](/get-started/unleash-overview) without requiring application restarts or redeployments. The SDK should handle subscriptions or polling to the _Feature Flag Control Service_ for updates.
 
 ![The SDK holds an in-memory feature flag configuration cache which is continuously synced with the Feature Flag Control Service. You can then use the SDK to check the state of feature flags in your application.](/img/feature-flag-scalable-architecture.png)
 
@@ -54,7 +54,7 @@ Let's break down these components.
 
 The most common use case for feature flags is to manage the [rollout](https://www.getunleash.io/feature-flag-use-cases-progressive-or-gradual-rollouts) of new functionality. Once a rollout is complete, you should remove the feature flag from your code and archive it. Remove any old code paths that the new functionality replaces.
 
-Avoid using feature flags for static application configuration. Application configuration should be consistent, long-lived, and loaded during application startup. In contrast, [feature flags should be short-lived, dynamic, and updated at runtime](./best-practices-using-feature-flags-at-scale). They prioritize availability over consistency and can be modified frequently.
+Avoid using feature flags for static application configuration. Application configuration should be consistent, long-lived, and loaded during application startup. In contrast, [feature flags should be short-lived, dynamic, and updated at runtime](/guides/best-practices-using-feature-flags-at-scale). They prioritize availability over consistency and can be modified frequently.
 
 <table>
   <thead>
@@ -93,7 +93,7 @@ Avoid using feature flags for static application configuration. Application conf
 </table>
 
 ### Strategies for large organizations implementing feature flags
-To succeed with feature flags in a large organization, [follow these strategies](https://docs.getunleash.io/topics/feature-flags/best-practices-using-feature-flags-at-scale):
+To succeed with feature flags in a large organization, [follow these strategies](/guides/best-practices-using-feature-flags-at-scale):
 
 - **Set flag expiration dates**: Assign expiration dates to feature flags to track which flags are no longer needed. A good feature flag management tool will alert you to expired flags, making it easier to maintain your codebase.
 - **Treat feature flags like technical debt**: Incorporate tasks to remove outdated feature flags into your sprint or project planning, just as you would with [technical debt](../../reference/technical-debt). Feature flags add complexity to your code by introducing multiple code paths that need context and maintenance. If you don't clean up feature flags in a timely manner, you risk losing the context as time passes or personnel changes, making them harder to manage or remove.
@@ -118,7 +118,7 @@ You can implement the following strategies to achieve a resilient architecture:
 
 ## 4. Ensure unique flag names
 
-Ensure that all flags within the same _Feature Flag Control Service_ have unique names across your entire system. [Unique naming](https://docs.getunleash.io/topics/feature-flags/best-practices-using-feature-flags-at-scale#13-never-reuse-feature-flag-names) prevents the reuse of old flag names, reducing the risk of accidentally re-enabling outdated features with the same name.
+Ensure that all flags within the same _Feature Flag Control Service_ have unique names across your entire system. [Unique naming](/guides/best-practices-using-feature-flags-at-scale#reusing-feature-flag-names) prevents the reuse of old flag names, reducing the risk of accidentally re-enabling outdated features with the same name.
 
 ![Creating a feature flag with a unique name referencing the project and related jira ticket.](/img/feature-flag-unique-name.png)
 
@@ -223,7 +223,7 @@ Keeping the feature flag payload small results in:
 - **Improved system reliability**: Delivering smaller, more manageable payloads minimizes the risk of network timeouts and failures.
 - **Ease of monitoring and debugging**: Smaller payloads are easier to monitor and debug, making issue resolution faster.
 
-For more insights into reducing payload size, visit our [Best practices for using feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale#using-large-targeting-lists) guide.
+For more insights into reducing payload size, visit our [Best practices for using feature flags at scale](/guides/best-practices-using-feature-flags-at-scale#using-large-targeting-lists) guide.
 
 ## 10. Prioritize consistent user experience
 

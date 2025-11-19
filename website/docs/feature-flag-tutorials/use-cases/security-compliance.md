@@ -46,7 +46,7 @@ Your developers and other stakeholders need to securely access platforms used to
 
 To use single sign-on in Unleash, your users can authenticate themselves through OpenID Connect (OIDC) or SAML 2.0 protocols.
 
-We have integration guides to connect Unleash to enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak, but you can use any identity provider that uses OIDC or SAML 2.0 protocol. Read our [how-to guide for single sign-on](/how-to/how-to-add-sso-open-id-connect).
+We have integration guides to connect Unleash to enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak, but you can use any identity provider that uses OIDC or SAML 2.0 protocol. Read our [how-to guide for single sign-on](/single-sign-on/how-to-add-sso-open-id-connect).
 
 ![A diagram showing how Unleash integrates with authentication providers and identity providers.](/img/sso-idp-auth-provider.jpg)
 
@@ -69,7 +69,7 @@ By enabling [SCIM](/reference/scim) in Unleash, you can:
 -   Sync group membership.
 -   Ensure consistent access across multiple platforms.
 
-To unlock these benefits, set up [SCIM for automatic provisioning using our how-to guides](/how-to/how-to-setup-provisioning-with-okta).
+To unlock these benefits, set up [SCIM for automatic provisioning using our how-to guides](/provisioning/how-to-setup-provisioning-with-okta).
 
 ## Configure role-based access control for administrators and developers
 
@@ -100,7 +100,7 @@ One of the key responsibilities of the Admin role is assigning users as project 
 
 For security best practices, we recommend following the principle of least privilege by assigning users the Viewer role or a custom root role with minimal permissions. From there, specific project-level permissions can be granted as needed.
 
-Unleash can handle all of the complexities that come with access controls and we make that process simple for you. Set up roles and permissions so you’re not only in complete control of how your feature flag system is administered, you’re adhering to compliance standards. For more recommendations on setting up permissions for users, read our guide on [using feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale).
+Unleash can handle all of the complexities that come with access controls and we make that process simple for you. Set up roles and permissions so you’re not only in complete control of how your feature flag system is administered, you’re adhering to compliance standards. For more recommendations on setting up permissions for users, read our guide on [using feature flags at scale](/guides/best-practices-using-feature-flags-at-scale).
 
 Next, we’ll explore how to extend access controls in Unleash for network security.
 
@@ -156,7 +156,7 @@ Let’s say a project owner wants to update a rollout strategy so that a new fea
 
 You could also schedule changes by using the [date and time operators](/reference/activation-strategies#date-and-time-operators) in [strategy constraints](/reference/activation-strategies#constraints). However, when you have change requests configured in the project, we recommend using the schedule feature in change requests, as it is a faster and simpler approach.
 
-For more recommendations, read our section on [change management workflow](/topics/feature-flags/best-practices-using-feature-flags-at-scale#implement-flag-approval-workflows-early) from _Using Feature Flags at Scale_.
+For more recommendations, read our section on [change management workflow](/guides/best-practices-using-feature-flags-at-scale#implement-flag-approval-workflows-early) from _Using Feature Flags at Scale_.
 
 Now that we covered change requests as a practical tool for both feature management oversight and good security posture, let’s explore Unleash event logs as an audit logging system for your organization.
 
@@ -185,7 +185,7 @@ Next, we’ll explore data protection measures built into Unleash and how to enh
 
 ## Protect PII for data privacy
 
-Let’s explore Unleash's architectural layers that address data privacy. Our guide on [11 principles for building and scaling feature flag systems](/topics/feature-flags/feature-flag-best-practices), covers best practices for feature flag system implementations, such as protecting personally identifiable information (PII) by implementing the principle of least privilege.
+Let’s explore Unleash's architectural layers that address data privacy. Our guide on [11 principles for building and scaling feature flag systems](/guides/feature-flag-best-practices), covers best practices for feature flag system implementations, such as protecting personally identifiable information (PII) by implementing the principle of least privilege.
 
 Protecting data is critical within any software tool. It’s a security best practice that is ideally implemented across your tech stack where user data is handled. Unleash is architecturally designed to protect organizations and their end users by keeping data private and limiting the scope of data that is evaluated and stored. Think about the types of sensitive data that could be exposed if you use a feature flag system that isn’t designed to protect data. When feature flags are evaluated, here are examples of what could be at risk:
 
@@ -197,15 +197,15 @@ Protecting data is critical within any software tool. It’s a security best pra
 
 This is a potential attack surface area that you wouldn’t want to be the root of data breaches or unauthorized access in your system. That’s why Unleash was built in a way where integrating feature flags into your services won’t be a weak link in your organization’s ability to ship software safely.
 
-With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using backend SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For frontend SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/hosting-options#), or [self-hosting Unleash Edge](/understanding-unleash/hosting-options#unleash-edge-options). Read more on the [Unleash architecture here](/understanding-unleash/unleash-overview).
+With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using backend SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For frontend SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/deploy/hosting-options#), or [self-hosting Unleash Edge](/deploy/hosting-options#unleash-edge-options). Read more on the [Unleash architecture here](/get-started/unleash-overview).
 
 ### Use Unleash Edge for enterprise-grade data privacy
 
 To take scalability, high availability, and resiliency to the next level for large enterprises, we built [Unleash Edge](/reference/unleash-edge)—a lightweight proxy layer that sits between your Unleash API and SDKs. Beyond the performance benefits, Unleash Edge delivers critical enhancements to both security and privacy. 
 
-Deployed within your own infrastructure, Edge ensures that PII and sensitive context data never leave your network, [regardless of which SDKs you use](/understanding-unleash/unleash-overview#unleash-sdks). Each Edge instance can be scoped to specific projects or environments, enforcing least privilege access and tight network segmentation.
+Deployed within your own infrastructure, Edge ensures that PII and sensitive context data never leave your network, [regardless of which SDKs you use](/get-started/unleash-overview#unleash-sdks). Each Edge instance can be scoped to specific projects or environments, enforcing least privilege access and tight network segmentation.
 
-With Edge, you can keep your core Unleash service hidden from the internet while evaluating feature flags at the edge for better performance and scalability. Unleash Enterprise Edge cannot access the [Unleash Admin API](/understanding-unleash/unleash-overview#admin-api), minimizing the impact of compromised clients or credentials. In our cloud-hosted offering, you can also define an [IP allow list](#set-up-ip-allow-lists-for-enhanced-security) for the Unleash instance and Hosted Edge to further reduce the attack surface.
+With Edge, you can keep your core Unleash service hidden from the internet while evaluating feature flags at the edge for better performance and scalability. Unleash Enterprise Edge cannot access the [Unleash Admin API](/get-started/unleash-overview#admin-api), minimizing the impact of compromised clients or credentials. In our cloud-hosted offering, you can also define an [IP allow list](#set-up-ip-allow-lists-for-enhanced-security) for the Unleash instance and Hosted Edge to further reduce the attack surface.
 
 For regulated environments that require continuous availability, you can configure persistent storage—such as Redis or local backup files—to keep feature flag evaluations running, even if the main Unleash server is temporarily unreachable. Learn more about Edge architecture and setup in our [Edge Concepts](/reference/unleash-edge/concepts).
 

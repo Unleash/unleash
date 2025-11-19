@@ -6,7 +6,7 @@ Version 4 of Unleash brings a lot of improvements to Unleash. In this document w
 
 ### Upgrade with ease {#upgrade-with-ease}
 
-Unleash can either be hosted by us or self-hosted. If you have a managed Unleash Enterprise instance you are automatically upgraded to version 4. If you manage Unleash yourself (either Open-Source or Enterprise Self-hosted) we recommend reading the [migration guide](../using-unleash/deploy/upgrading-unleash).
+Unleash can either be hosted by us or self-hosted. If you have a managed Unleash Enterprise instance you are automatically upgraded to version 4. If you manage Unleash yourself (either Open-Source or Enterprise Self-hosted) we recommend reading the [migration guide](/deploy/upgrading-unleash).
 
 **PS! The first time you access Unleash v4 from a self-hosted instance you will need to login with the default admin user:**
 

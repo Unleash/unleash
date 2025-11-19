@@ -287,7 +287,7 @@ Design patterns like the [Strategy pattern](https://www.digitalocean.com/communi
 
 ![Strategy-design-pattern](/img/strategy-pattern.jpg)
 
-The strategy pattern is well-suited for certain [Permission](/what-is-a-feature-flag#permission-flags) flags that grant premium users access to an advanced feature, or for long-term [Kill switches](/what-is-a-feature-flag#kill-switches) that toggle a core system component. For these complex, multi-faceted features with distinct and interchangeable behaviors, the pattern can be a powerful tool for maintaining a clean, scalable, and testable codebase. 
+The strategy pattern is well-suited for certain [Permission](/get-started/what-is-a-feature-flag#permission-flags) flags that grant premium users access to an advanced feature, or for long-term [Kill switches](/get-started/what-is-a-feature-flag#kill-switches) that toggle a core system component. For these complex, multi-faceted features with distinct and interchangeable behaviors, the pattern can be a powerful tool for maintaining a clean, scalable, and testable codebase. 
 
 <Tabs groupId="strategy-pattern">
 <TabItem value="strategy-ts" label="TypeScript">
@@ -412,7 +412,7 @@ public class PaymentController {
 </TabItem>
 </Tabs>
 
-However, the majority of feature flags control small, temporary changes. For most [Release](/what-is-a-feature-flag#release-flags), [Experiment](/what-is-a-feature-flag#experiment-flags), and [Operational](/what-is-a-feature-flag#operational-flags) flags, the strategy pattern introduces unnecessary overhead. It makes the eventual cleanup process far more complex than removing a simple if/else block. Furthermore, because the pattern scales poorly when multiple flags interact, a direct conditional statement is almost always the cleaner and more maintainable choice for these temporary flags.
+However, the majority of feature flags control small, temporary changes. For most [Release](/get-started/what-is-a-feature-flag#release-flags), [Experiment](/get-started/what-is-a-feature-flag#experiment-flags), and [Operational](/get-started/what-is-a-feature-flag#operational-flags) flags, the strategy pattern introduces unnecessary overhead. It makes the eventual cleanup process far more complex than removing a simple if/else block. Furthermore, because the pattern scales poorly when multiple flags interact, a direct conditional statement is almost always the cleaner and more maintainable choice for these temporary flags.
 
 ## Managing flags in microservices
 

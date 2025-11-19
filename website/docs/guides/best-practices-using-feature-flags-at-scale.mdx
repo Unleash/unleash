@@ -160,7 +160,7 @@ A good rule of thumb is that if the data is static (you don't expect it to chang
 
 ### Reusing feature flag names
 
-Feature flag names need to be [globally unique](https://docs.getunleash.io/topics/feature-flags/unique-names). In an ideal world, all flag references would be removed from the codebase as soon as a flag is archived—but in reality, that rarely happens. Using unique names helps protect new features from accidentally linking to old, unused flags that could unintentionally re-enable outdated behavior.
+Feature flag names need to be [globally unique](/guides/feature-flag-best-practices#4-ensure-unique-flag-names). In an ideal world, all flag references would be removed from the codebase as soon as a flag is archived—but in reality, that rarely happens. Using unique names helps protect new features from accidentally linking to old, unused flags that could unintentionally re-enable outdated behavior.
 
 To avoid this risk, enforce a [naming pattern](/reference/feature-toggles#set-a-naming-pattern) at flag creation.
 

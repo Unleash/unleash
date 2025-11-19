@@ -10,7 +10,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 import Tabs from '@theme/Tabs'; import TabItem from '@theme/TabItem';
 
-This guide explains how to configure your self-hosted Unleash instance when running it via [Docker Compose or the Docker CLI](/using-unleash/deploy/getting-started).
+This guide explains how to configure your self-hosted Unleash instance when running it via [Docker Compose or the Docker CLI](/deploy/getting-started).
 
 When running Unleash using Docker, configuration is managed through environment variables.
 
@@ -116,7 +116,7 @@ If you experience intermittent database connection errors or timeouts, particula
 
 ### Back up and restore the database
 
-It is highly recommended to back up your Unleash database, especially before [upgrades](/using-unleash/deploy/upgrading-unleash) or significant changes. When running PostgreSQL within a Docker container, use `docker exec` to run the standard `pg_dump` (backup) and `psql` (restore) commands inside the container.
+It is highly recommended to back up your Unleash database, especially before [upgrades](/deploy/upgrading-unleash) or significant changes. When running PostgreSQL within a Docker container, use `docker exec` to run the standard `pg_dump` (backup) and `psql` (restore) commands inside the container.
 
 1. **Identify container name**: Find your PostgreSQL container's name or ID (for example, using `docker ps`).
 

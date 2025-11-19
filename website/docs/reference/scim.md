@@ -21,7 +21,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 Our implementation supports user and group provisioning, but not password syncing or role mapping. It uses soft-deletes to preserve audit logs when you deprovision users.
 
-See our how-to guides on setting up provisioning for [Okta](../how-to/how-to-setup-provisioning-with-okta.md) or [Entra](../how-to/how-to-setup-provisioning-with-entra.md).
+See our how-to guides on setting up provisioning for [Okta](/provisioning/how-to-setup-provisioning-with-okta) or [Entra](/provisioning/how-to-setup-provisioning-with-entra).
 
 ## Retain admin access
 

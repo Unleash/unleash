@@ -164,7 +164,7 @@ curl https://z5w5lkzlsozutfhaixbjsj27cm0dhnfh.lambda-url.eu-north-1.on.aws
 
 Mastering feature flags in serverless? This guide demonstrated the surprisingly simple use of Unleash SDK. Remember, avoid initializing the SDK multiple times within your serverless function for smooth operation.
 
-Need to scale your AWS Lambda function to thousands of requests per second (RPS)? Consider [Unleash Edge](/understanding-unleash/hosting-options#unleash-edge-options), which uses edge computing to scale your Unleash usage. You can scale in any matter you see fit - either hosted entirely in your infrastructure on your own edge services or fully managed by Unleash.
+Need to scale your AWS Lambda function to thousands of requests per second (RPS)? Consider [Unleash Edge](/deploy/hosting-options#unleash-edge-options), which uses edge computing to scale your Unleash usage. You can scale in any matter you see fit - either hosted entirely in your infrastructure on your own edge services or fully managed by Unleash.
 
 :::note Lambda Latency
 

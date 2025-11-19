@@ -23,7 +23,7 @@
           "value": "www.featureflagbook.com"
         }
       ],
-      "destination": "https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices",
+      "destination": "https://docs.getunleash.io/guides/feature-flag-best-practices",
       "permanent": false
     },
     {
@@ -48,7 +48,27 @@
     },
     {
       "source": "/how-to/how-to-create-api-tokens",
-      "destination": "/reference/api-tokens-and-client-keys#create-an-api-token",
+      "destination": "/guides/how-to-create-api-tokens",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-run-the-unleash-proxy",
+      "destination": "/guides/how-to-run-the-unleash-proxy",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-schedule-feature-releases",
+      "destination": "/guides/how-to-schedule-feature-releases",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-synchronize-unleash-instances",
+      "destination": "/guides/how-to-synchronize-unleash-instances",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/unleash-edge-quickstart",
+      "destination": "/guides/unleash-edge-quickstart",
       "permanent": true
     },
     {
@@ -79,6 +99,11 @@
     {
       "source": "/topics/a-b-testing",
       "destination": "/feature-flag-tutorials/use-cases/a-b-testing",
+      "permanent": true
+    },
+    {
+      "source": "/topics/feature-flags/feature-flag-best-practices",
+      "destination": "/guides/feature-flag-best-practices",
       "permanent": true
     },
     {
@@ -143,7 +168,7 @@
     },
     {
       "source": "/how-to/",
-      "destination": "/what-is-a-feature-flag",
+      "destination": "/get-started/what-is-a-feature-flag",
       "permanent": true
     },
     {
@@ -728,12 +753,12 @@
     },
     {
       "source": "/tutorials/unleash-overview",
-      "destination": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
       "permanent": true
     },
     {
       "source": "/user_guide/unleash_overview",
-      "destination": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
       "permanent": true
     },
     {
@@ -758,17 +783,17 @@
     },
     {
       "source": "/tutorials/the-anatomy-of-unleash",
-      "destination": "/understanding-unleash/the-anatomy-of-unleash",
+      "destination": "/reference/core-concepts",
       "permanent": true
     },
     {
       "source": "/topics/the-anatomy-of-unleash",
-      "destination": "/understanding-unleash/the-anatomy-of-unleash",
+      "destination": "/reference/core-concepts",
       "permanent": true
     },
     {
       "source": "/understanding-unleash",
-      "destination": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
       "permanent": true
     },
     {
@@ -783,42 +808,52 @@
     },
     {
       "source": "/tutorials/proxy-hosting",
-      "destination": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
       "permanent": true
     },
     {
       "source": "/topics/proxy-hosting",
-      "destination": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
+      "permanent": true
+    },
+    {
+      "source": "/topics/feature-flags/best-practices-using-feature-flags-at-scale",
+      "destination": "/guides/best-practices-using-feature-flags-at-scale",
       "permanent": true
     },
     {
       "source": "/using-unleash/deploy",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/using-unleash/deploy/database-backup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/using-unleash/deploy/database-setup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/using-unleash/deploy/email-service",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/using-unleash/troubleshooting/email-service",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/understanding-unleash/proxy-hosting",
-      "destination": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
       "permanent": true
     },
     {
@@ -829,6 +864,11 @@
     {
       "source": "/topics/data-collection",
       "destination": "/understanding-unleash/data-collection",
+      "permanent": true
+    },
+    {
+      "source": "/topics//eature-flag-migration/feature-flag-migration-best-practices",
+      "destination": "/guides/feature-flag-migration-best-practices",
       "permanent": true
     },
     {
@@ -868,7 +908,7 @@
     },
     {
       "source": "/how-to/troubleshooting/https",
-      "destination": "/using-unleash/deploy/https",
+      "destination": "/deploy/https",
       "permanent": true
     },
     {
@@ -923,27 +963,27 @@
     },
     {
       "source": "/reference/deploy",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/reference/deploy/getting-started",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy/getting_started",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/topics",
-      "destination": "/topics/what-is-a-feature-flag",
+      "destination": "/guides-overview",
       "permanent": true
     },
     {
@@ -963,12 +1003,12 @@
     },
     {
       "source": "/reference/deploy/configuring-unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash",
+      "destination": "/deploy/configuring-unleash",
       "permanent": true
     },
     {
       "source": "/deploy/configuring_unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash",
+      "destination": "/deploy/configuring-unleash",
       "permanent": true
     },
     {
@@ -983,87 +1023,157 @@
     },
     {
       "source": "/how-to/sso",
-      "destination": "/how-to/how-to-add-sso-open-id-connect",
+      "destination": "/single-sign-on/how-to-add-sso-open-id-connect",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-open-id-connect",
+      "destination": "/single-sign-on/how-to-add-sso-open-id-connect",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-saml",
+      "destination": "/single-sign-on/how-to-add-sso-saml",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-saml-keycloak",
+      "destination": "/single-sign-on/how-to-add-sso-saml-keycloak",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-azure-saml",
+      "destination": "/single-sign-on/how-to-add-sso-azure-saml",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-setup-sso-keycloak-group-sync",
+      "destination": "/single-sign-on/how-to-setup-sso-keycloak-group-sync",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-google",
+      "destination": "/single-sign-on/how-to-add-sso-google",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-set-up-group-sso-sync",
+      "destination": "/single-sign-on/how-to-set-up-group-sso-sync",
       "permanent": true
     },
     {
       "source": "/how-to/provisioning",
-      "destination": "/how-to/how-to-setup-provisioning-with-okta",
+      "destination": "/provisioning/how-to-setup-provisioning-with-okta",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-setup-provisioning-with-okta",
+      "destination": "/provisioning/how-to-setup-provisioning-with-okta",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-setup-provisioning-with-entra",
+      "destination": "/provisioning/how-to-setup-provisioning-with-entra",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/configuring-unleash",
+      "destination": "/deploy/configuring-unleash",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/upgrading-unleash",
+      "destination": "/deploy/upgrading-unleash",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/license-keys",
+      "destination": "/deploy/license-keys",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/https",
+      "destination": "/deploy/https",
       "permanent": true
     },
     {
       "source": "/reference/deploy/configuring-unleash-v3",
-      "destination": "/using-unleash/deploy/configuring-unleash-v3",
+      "destination": "/deploy/configuring-unleash-v3",
       "permanent": true
     },
     {
       "source": "/deploy/configuring_unleash_v3",
-      "destination": "/using-unleash/deploy/configuring-unleash-v3",
+      "destination": "/deploy/configuring-unleash-v3",
       "permanent": true
     },
     {
       "source": "/reference/deploy/database-setup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/deploy/database-setup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/reference/deploy/database-backup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/deploy/database-backup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/reference/deploy/email-service",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/deploy/email",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/reference/deploy/google-auth-hook",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy/google_auth",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "'/using-unleash/deploy/google-auth-hook",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy/migration_guide",
-      "destination": "/using-unleash/deploy/upgrading-unleash",
+      "destination": "/deploy/upgrading-unleash",
       "permanent": true
     },
     {
       "source": "/reference/deploy/migration-guide",
-      "destination": "/using-unleash/deploy/upgrading-unleash",
+      "destination": "/deploy/upgrading-unleash",
       "permanent": true
     },
     {
       "source": "/reference/deploy/securing-unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash#securing-unleash",
+      "destination": "/deploy/configuring-unleash#securing-unleash",
       "permanent": true
     },
     {
       "source": "/deploy/securing_unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash#securing-unleash",
+      "destination": "/deploy/configuring-unleash#securing-unleash",
       "permanent": true
     },
     {
@@ -1078,12 +1188,27 @@
     },
     {
       "source": "/reference/deploy/environment-import-export",
-      "destination": "/how-to/how-to-environment-import-export",
+      "destination": "/reference/import-export",
       "permanent": true
     },
     {
       "source": "/deploy/environment-import-export",
-      "destination": "/how-to/how-to-environment-import-export",
+      "destination": "/reference/import-export",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-a-feature-flag",
+      "destination": "/get-started/what-is-a-feature-flag",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/the-anatomy-of-unleash",
+      "destination": "/reference/core-concepts",
       "permanent": true
     }
   ]

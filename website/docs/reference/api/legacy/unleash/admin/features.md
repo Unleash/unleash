@@ -13,11 +13,6 @@ Most of this API was removed in Unleash v5 (after being deprecated since Unleash
 :::
 
 
-:::info
-In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an **admin** token](/how-to/how-to-create-api-tokens) and add an Authorization header using the token.
-:::
-
-
 ## Fetching Feature Flags {#fetching-feature-toggles}
 
 :::caution Deprecation notice

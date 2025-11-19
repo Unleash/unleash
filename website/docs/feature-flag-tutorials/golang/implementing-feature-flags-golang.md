@@ -34,7 +34,7 @@ Most importantly, you must:
 
 ![A gradual rollout form can allow you to customize your flag strategy.](/img/go-example-rollout.png)
 
-For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](/topics/feature-flags/feature-flag-best-practices).
+For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](/guides/feature-flag-best-practices).
 
 ## Install a local feature flag provider
 

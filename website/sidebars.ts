@@ -53,12 +53,12 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'doc',
                     label: 'Introduction to feature flags',
-                    id: 'topics/what-is-a-feature-flag',
+                    id: 'get-started/what-is-a-feature-flag',
                 },
                 {
                     type: 'doc',
                     label: 'Unleash architecture overview',
-                    id: 'understanding-unleash/unleash-overview',
+                    id: 'get-started/unleash-overview',
                 },
             ],
         },
@@ -67,7 +67,7 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'understanding-unleash/the-anatomy-of-unleash',
+                id: 'reference/core-concepts',
             },
             items: [
                 {
@@ -181,7 +181,7 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'doc',
                     label: 'Import and export',
-                    id: 'how-to/how-to-environment-import-export',
+                    id: 'reference/import-export',
                 },
             ],
         },
@@ -199,23 +199,23 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'topics/feature-flags/feature-flag-best-practices',
+                        id: 'guides/feature-flag-best-practices',
                     },
                     items: [
                         {
                             type: 'doc',
                             label: 'Building and scaling feature flag systems',
-                            id: 'topics/feature-flags/feature-flag-best-practices',
+                            id: 'guides/feature-flag-best-practices',
                         },
                         {
                             type: 'doc',
                             label: 'Using feature flags at scale',
-                            id: 'topics/feature-flags/best-practices-using-feature-flags-at-scale',
+                            id: 'guides/best-practices-using-feature-flags-at-scale',
                         },
                         {
                             type: 'doc',
                             label: 'Migrating from homegrown feature management solutions',
-                            id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
+                            id: 'guides/feature-flag-migration-best-practices',
                         },
                     ],
                 },
@@ -235,7 +235,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'doc',
                             label: 'Schedule a feature release',
-                            id: 'how-to/how-to-schedule-feature-releases',
+                            id: 'guides/how-to-schedule-feature-releases',
                         },
                         {
                             type: 'doc',
@@ -250,7 +250,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'doc',
                             label: 'Unleash Edge quickstart',
-                            id: 'how-to/unleash-edge-quickstart',
+                            id: 'guides/unleash-edge-quickstart',
                         },
                     ],
                 },
@@ -593,25 +593,25 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'doc',
                     label: 'Unleash hosting options',
-                    id: 'understanding-unleash/hosting-options',
+                    id: 'deploy/hosting-options',
                 },
                 {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'using-unleash/deploy/getting-started',
+                        id: 'deploy/getting-started',
                     },
                     label: 'Self-hosting Unleash',
                     items: [
-                        'using-unleash/deploy/getting-started',
-                        'using-unleash/deploy/configuring-unleash',
-                        'using-unleash/deploy/upgrading-unleash',
-                        'using-unleash/deploy/license-keys',
-                        'using-unleash/deploy/https',
+                        'deploy/getting-started',
+                        'deploy/configuring-unleash',
+                        'deploy/upgrading-unleash',
+                        'deploy/license-keys',
+                        'deploy/https',
                         {
                             type: 'doc',
                             label: 'Synchronize Unleash instances',
-                            id: 'how-to/how-to-synchronize-unleash-instances',
+                            id: 'guides/how-to-synchronize-unleash-instances',
                         },
                     ],
                 },
@@ -620,15 +620,15 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'how-to/how-to-add-sso-open-id-connect',
+                        id: 'single-sign-on/how-to-add-sso-open-id-connect',
                     },
                     items: [
-                        'how-to/how-to-add-sso-open-id-connect',
-                        'how-to/how-to-add-sso-saml',
-                        'how-to/how-to-add-sso-saml-keycloak',
-                        'how-to/how-to-add-sso-azure-saml',
-                        'how-to/how-to-setup-sso-keycloak-group-sync',
-                        'how-to/how-to-set-up-group-sso-sync',
+                        'single-sign-on/how-to-add-sso-open-id-connect',
+                        'single-sign-on/how-to-add-sso-saml',
+                        'single-sign-on/how-to-add-sso-saml-keycloak',
+                        'single-sign-on/how-to-add-sso-azure-saml',
+                        'single-sign-on/how-to-setup-sso-keycloak-group-sync',
+                        'single-sign-on/how-to-set-up-group-sso-sync',
                     ],
                 },
                 {
@@ -636,11 +636,11 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'how-to/how-to-setup-provisioning-with-okta',
+                        id: 'provisioning/how-to-setup-provisioning-with-okta',
                     },
                     items: [
-                        'how-to/how-to-setup-provisioning-with-okta',
-                        'how-to/how-to-setup-provisioning-with-entra',
+                        'provisioning/how-to-setup-provisioning-with-okta',
+                        'provisioning/how-to-setup-provisioning-with-entra',
                     ],
                 },
                 {

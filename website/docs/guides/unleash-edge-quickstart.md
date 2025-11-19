@@ -1,6 +1,6 @@
 ---
 title: Unleash Edge quickstart
-slug: /how-to/unleash-edge-quickstart
+
 ---
 
 import Tabs from '@theme/Tabs';

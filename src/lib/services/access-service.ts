@@ -899,7 +899,7 @@ export class AccessService {
 
         if (invalidPermissions.length > 0) {
             throw new BadDataError(
-                `Invalid permissions supplied. The following roles don't exist: ${invalidPermissions.join(', ')}.`,
+                `Invalid permissions supplied. The following permissions don't exist: ${invalidPermissions.join(', ')}.`,
             );
         }
     }

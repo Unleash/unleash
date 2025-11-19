@@ -54,13 +54,12 @@ export const MilestoneAutomation = ({
         pendingProgressionChange?.action === 'changeMilestoneProgression';
     const hasPendingDelete =
         pendingProgressionChange?.action === 'deleteMilestoneProgression';
-    const isPaused = Boolean(milestone.pausedAt);
 
     const badge = hasPendingDelete ? (
         <Badge color='error'>Deleted in draft</Badge>
     ) : hasPendingChange ? (
         <Badge color='warning'>Modified in draft</Badge>
-    ) : isPaused ? (
+    ) : status?.type === 'paused' ? (
         <Badge color='error' icon={<WarningAmber fontSize='small' />}>
             Paused
         </Badge>

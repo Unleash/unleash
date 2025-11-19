@@ -5,9 +5,14 @@ export const getMilestoneProgressionInfo = (
     intervalMinutes: number,
     sourceMilestoneStartedAt: string | null | undefined,
     locale: string,
+    isPaused: boolean = false,
     currentTime: Date = new Date(),
 ): string | null => {
     if (!sourceMilestoneStartedAt) {
+        return null;
+    }
+
+    if (isPaused) {
         return null;
     }
 

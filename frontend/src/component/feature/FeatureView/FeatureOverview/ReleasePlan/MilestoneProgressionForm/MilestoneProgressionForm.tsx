@@ -26,6 +26,7 @@ interface IMilestoneProgressionFormProps {
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<{ shouldReset?: boolean }>;
     onCancel: () => void;
+    isPaused?: boolean;
 }
 
 export const MilestoneProgressionForm = ({
@@ -35,6 +36,7 @@ export const MilestoneProgressionForm = ({
     status,
     onSubmit,
     onCancel,
+    isPaused = false,
 }: IMilestoneProgressionFormProps) => {
     const form = useMilestoneProgressionForm(
         sourceMilestoneId,
@@ -48,6 +50,7 @@ export const MilestoneProgressionForm = ({
         form.getIntervalMinutes(),
         sourceMilestoneStartedAt,
         status,
+        isPaused,
     );
 
     const handleSubmit = async (event: React.FormEvent) => {

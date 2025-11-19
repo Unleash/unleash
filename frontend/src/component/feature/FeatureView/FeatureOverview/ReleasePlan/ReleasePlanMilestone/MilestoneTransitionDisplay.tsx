@@ -116,6 +116,7 @@ interface IMilestoneTransitionDisplayProps {
     milestoneName: string;
     status?: MilestoneStatus;
     badge?: ReactNode;
+    isPaused?: boolean;
 }
 
 export const ReadonlyMilestoneTransitionDisplay = ({
@@ -152,6 +153,7 @@ export const MilestoneTransitionDisplay = ({
     milestoneName,
     status,
     badge,
+    isPaused = false,
 }: IMilestoneTransitionDisplayProps) => {
     const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
     const form = useMilestoneProgressionForm(
@@ -172,6 +174,7 @@ export const MilestoneTransitionDisplay = ({
         currentIntervalMinutes,
         sourceMilestoneStartedAt ?? null,
         status,
+        isPaused,
     );
 
     useEffect(() => {

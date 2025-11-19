@@ -10,6 +10,7 @@ describe('getMilestoneProgressionInfo', () => {
             30,
             startedAt,
             'en-US',
+            false,
             currentTime,
         );
         expect(res).toBeTruthy();
@@ -22,9 +23,22 @@ describe('getMilestoneProgressionInfo', () => {
             120,
             startedAt,
             'en-US',
+            false,
             currentTime,
         );
         expect(res).toBeTruthy();
         expect(res as string).toMatch(/^Will proceed at .* \(in .*\)\.$/);
+    });
+
+    it('returns null when milestone is paused', () => {
+        const startedAt = '2025-10-31T14:00:00.000Z';
+        const res = getMilestoneProgressionInfo(
+            120,
+            startedAt,
+            'en-US',
+            true,
+            currentTime,
+        );
+        expect(res).toBeNull();
     });
 });

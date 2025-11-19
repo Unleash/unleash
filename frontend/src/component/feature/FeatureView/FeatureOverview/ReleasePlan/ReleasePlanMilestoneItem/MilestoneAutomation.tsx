@@ -76,6 +76,7 @@ export const MilestoneAutomation = ({
                     status={status}
                     onSubmit={onChangeProgression}
                     onCancel={onCloseProgressionForm}
+                    isPaused={isPaused}
                 />
             ) : effectiveTransitionCondition ? (
                 <MilestoneTransitionDisplay
@@ -89,6 +90,7 @@ export const MilestoneAutomation = ({
                     milestoneName={milestone.name}
                     status={status}
                     badge={badge}
+                    isPaused={isPaused}
                 />
             ) : (
                 <StyledActionButton

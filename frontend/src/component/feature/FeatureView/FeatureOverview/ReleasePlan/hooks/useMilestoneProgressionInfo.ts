@@ -6,6 +6,7 @@ export const useMilestoneProgressionInfo = (
     intervalMinutes: number,
     sourceMilestoneStartedAt?: string | null,
     status?: MilestoneStatus,
+    isPaused: boolean = false,
 ) => {
     const { locationSettings } = useLocationSettings();
     if (!status || status.type !== 'active') {
@@ -16,5 +17,6 @@ export const useMilestoneProgressionInfo = (
         intervalMinutes,
         sourceMilestoneStartedAt,
         locationSettings.locale,
+        isPaused,
     );
 };

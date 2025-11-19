@@ -1,11 +1,7 @@
-import { useState, useCallback } from 'react';
-import { isPast, addMinutes } from 'date-fns';
+import { useCallback, useState } from 'react';
+import { addMinutes, isPast } from 'date-fns';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { formatDateYMDHM } from 'utils/formatDate.ts';
-import {
-    isValidPositiveInteger,
-    parsePositiveInteger,
-} from 'utils/numericInputParser.ts';
 
 const MAX_INTERVAL_MINUTES = 525600; // 365 days
 
@@ -116,9 +112,7 @@ export const useMilestoneProgressionForm = (
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
         const inputValue = event.target.value;
-        if (isValidPositiveInteger(inputValue)) {
-            setTimeValue(parsePositiveInteger(inputValue));
-        }
+        setTimeValue(Number(inputValue));
     };
 
     const clearErrors = useCallback(() => {

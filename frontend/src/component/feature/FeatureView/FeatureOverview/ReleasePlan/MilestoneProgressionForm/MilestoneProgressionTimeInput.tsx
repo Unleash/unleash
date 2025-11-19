@@ -75,8 +75,7 @@ export const MilestoneProgressionTimeInput = ({
     return (
         <StyledInputGroup>
             <StyledTextField
-                type='text'
-                inputMode='numeric'
+                type='number'
                 value={timeValue}
                 onChange={onTimeValueChange}
                 onPaste={handleNumericPaste}

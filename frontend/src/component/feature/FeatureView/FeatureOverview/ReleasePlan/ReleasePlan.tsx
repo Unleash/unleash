@@ -1,5 +1,6 @@
 import Delete from '@mui/icons-material/Delete';
-import { Alert, styled } from '@mui/material';
+import { Alert, styled, Link } from '@mui/material';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
@@ -136,8 +137,11 @@ export const ReleasePlan = ({
     );
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
-    const { deleteMilestoneProgression, loading: milestoneProgressionLoading } =
-        useMilestoneProgressionsApi();
+    const {
+        deleteMilestoneProgression,
+        resumeProgressions,
+        loading: milestoneProgressionLoading,
+    } = useMilestoneProgressionsApi();
     const {
         createOrUpdateSafeguard,
         deleteSafeguard,
@@ -389,6 +393,19 @@ export const ReleasePlan = ({
         }
     };
 
+    const onResumeAutomation = async () => {
+        try {
+            await resumeProgressions(projectId, environment, featureName, id);
+            setToastData({
+                type: 'success',
+                text: 'Automation resumed successfully',
+            });
+            refetch();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     const activeIndex = milestones.findIndex(
         (milestone) => milestone.id === activeMilestoneId,
     );
@@ -477,7 +494,36 @@ export const ReleasePlan = ({
             </StyledHeader>
             <StyledBody safeguards={safeguardsEnabled}>
                 {releasePlanAutomationsPaused ? (
-                    <StyledAlert severity='error'>
+                    <StyledAlert
+                        severity='error'
+                        action={
+                            <Link
+                                component='button'
+                                variant='body2'
+                                onClick={onResumeAutomation}
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 0.5,
+                                    textDecoration: 'none',
+                                    cursor: 'pointer',
+                                    color: 'error.main',
+                                }}
+                            >
+                                <ChevronRightIcon
+                                    fontSize='small'
+                                    sx={{
+                                        backgroundColor: 'error.main',
+                                        color: 'white',
+                                        borderRadius: '50%',
+                                        padding: '2px',
+                                        fontSize: '16px',
+                                    }}
+                                />
+                                Resume automation
+                            </Link>
+                        }
+                    >
                         <b>Automation paused by safeguard.</b> Existing users on
                         this release plan can still access the feature.
                     </StyledAlert>

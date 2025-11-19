@@ -46,9 +46,29 @@ export const useMilestoneProgressionsApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const resumeProgressions = async (
+        projectId: string,
+        environment: string,
+        featureName: string,
+        planId: string,
+    ): Promise<void> => {
+        const requestId = 'resumeProgressions';
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/progressions/${planId}/resume`;
+        const req = createRequest(
+            path,
+            {
+                method: 'POST',
+            },
+            requestId,
+        );
+
+        await makeRequest(req.caller, req.id);
+    };
+
     return {
         changeMilestoneProgression,
         deleteMilestoneProgression,
+        resumeProgressions,
         errors,
         loading,
     };

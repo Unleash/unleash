@@ -122,6 +122,26 @@ Segments are only available to [Pro](/availability#plans) and [Enterprise](https
 
 ![An example of segments](/img/anatomy-of-unleash-segments.png)
 
+### Release templates
+
+[Release templates](/reference/release-templates) provide a way to standardize how you roll out features across your application. While activation strategies define who gets a feature, release templates define how that access expands over time.
+
+A release template is a blueprint for a rollout. It consists of sequential stages called milestones. Each milestone contains one or more activation strategies. For example, a template might look like this:
+
+- Milestone 1: Internal users only.
+- Milestone 2: Beta users.
+- Milestone 3: 50% of all users.
+- Milestone 4: 100% of all users.
+
+When you apply a release template to a specific feature flag in an environment, it creates a release plan. This plan lets you progress through the milestones step-by-step. Release templates ensure that your rollouts are consistent and safe, removing the need to manually configure strategies from scratch every time you launch a new feature.
+
+#### Automatic milestone progression and safeguards
+
+You can further automate your release plans using [impact metrics](/reference/impact-metrics). Impact metrics are data points sent from your application (such as error counts, memory usage, or response latency) that act as real-time health indicators for your feature.
+
+By defining safeguards based on these metrics, you can allow Unleash to manage the rollout for you. If metrics remain healthy for a set duration, Unleash automatically advances to the next milestone.
+If a metric crosses a safety threshold (for example, error rate spikes), Unleash immediately pauses the rollout to prevent incidents.
+
 ## Variants and feature flag payloads
 
 By default, a [feature flag](../reference/feature-toggles) in Unleash only tells you whether a feature is enabled or disabled, but you can also add more information to your flags by using [**feature flag variants**](../reference/feature-toggle-variants). Variants also allow you to run [A/B testing experiments](../../feature-flag-tutorials/use-cases/a-b-testing).
@@ -132,19 +152,11 @@ When you create new variants for a feature, they must be given a name and a **we
 
 You can use the variant payload to attach arbitrary data to a variant. Variants can have different kinds of payloads.
 
-A feature flag can have as many variants as you want.
-
-### Variants and environments
-
-Prior to 4.21, variants were independent of [environments](../reference/environments). In other words: if you're on 4.19 or lower, you’ll always have the exact same variants with the exact same weightings and the exact same payloads in all environments.
-
-![Variants prior to Unleash 4.21](/img/anatomy-of-unleash-variants.png)
-
-As of version 4.21, a feature can have different variants in different environments. For instance, a development environment might have no variants, while a production environment has 2 variants. Payloads, weightings, and anything else can also differ between environments.
+A feature can have different variants in different environments. For instance, a development environment might have no variants, while a production environment has 2 variants. Payloads, weightings, and anything else can also differ between environments.
 
 ![Variants after version 4.21](/img/anatomy-of-unleash-variants-environment.png)
 
-## Use case: changing website colors {#use-case}
+## Use case: changing website colors
 
 Using the concepts we have looked at in the previous sections, let’s create a hypothetical case and see how Unleash would solve it.
 

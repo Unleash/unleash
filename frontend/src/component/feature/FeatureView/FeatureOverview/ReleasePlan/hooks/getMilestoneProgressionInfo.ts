@@ -1,18 +1,19 @@
 import { addMinutes, differenceInMinutes, formatDistance } from 'date-fns';
 import { formatDateYMDHM } from 'utils/formatDate.ts';
+import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 
 export const getMilestoneProgressionInfo = (
     intervalMinutes: number,
     sourceMilestoneStartedAt: string | null | undefined,
     locale: string,
-    isPaused: boolean = false,
+    status?: MilestoneStatus,
     currentTime: Date = new Date(),
 ): string | null => {
     if (!sourceMilestoneStartedAt) {
         return null;
     }
 
-    if (isPaused) {
+    if (status?.type === 'paused') {
         return null;
     }
 

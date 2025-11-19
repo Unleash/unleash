@@ -10,7 +10,7 @@ describe('getMilestoneProgressionInfo', () => {
             30,
             startedAt,
             'en-US',
-            false,
+            undefined,
             currentTime,
         );
         expect(res).toBeTruthy();
@@ -23,7 +23,7 @@ describe('getMilestoneProgressionInfo', () => {
             120,
             startedAt,
             'en-US',
-            false,
+            undefined,
             currentTime,
         );
         expect(res).toBeTruthy();
@@ -36,7 +36,7 @@ describe('getMilestoneProgressionInfo', () => {
             120,
             startedAt,
             'en-US',
-            true,
+            { type: 'paused' },
             currentTime,
         );
         expect(res).toBeNull();

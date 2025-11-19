@@ -181,7 +181,7 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'doc',
                     label: 'Import and export',
-                    id: 'how-to/how-to-environment-import-export',
+                    id: 'reference/import-export',
                 },
             ],
         },
@@ -235,7 +235,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'doc',
                             label: 'Schedule a feature release',
-                            id: 'how-to/how-to-schedule-feature-releases',
+                            id: 'guides/how-to-schedule-feature-releases',
                         },
                         {
                             type: 'doc',
@@ -250,7 +250,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'doc',
                             label: 'Unleash Edge quickstart',
-                            id: 'how-to/unleash-edge-quickstart',
+                            id: 'guides/unleash-edge-quickstart',
                         },
                     ],
                 },
@@ -611,7 +611,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'doc',
                             label: 'Synchronize Unleash instances',
-                            id: 'how-to/how-to-synchronize-unleash-instances',
+                            id: 'guides/how-to-synchronize-unleash-instances',
                         },
                     ],
                 },

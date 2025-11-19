@@ -7,8 +7,6 @@ import SearchPriority from '@site/src/components/SearchPriority';
 <SearchPriority level="noindex" />
 
 
-> The context feature is only available as part of Unleash Enterprise. In order to access the API programmatically you need to make sure you [obtain a API token](/how-to/how-to-create-api-tokens) with admin permissions.
-
 ### List context fields defined in Unleash {#list-context-fields-defined-in-unleash}
 
 `GET https://unleash.host.com/api/admin/context`

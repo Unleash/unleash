@@ -48,7 +48,27 @@
     },
     {
       "source": "/how-to/how-to-create-api-tokens",
-      "destination": "/reference/api-tokens-and-client-keys#create-an-api-token",
+      "destination": "/guides/how-to-create-api-tokens",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-run-the-unleash-proxy",
+      "destination": "/guides/how-to-run-the-unleash-proxy",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-schedule-feature-releases",
+      "destination": "/guides/how-to-schedule-feature-releases",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-synchronize-unleash-instances",
+      "destination": "/guides/how-to-synchronize-unleash-instances",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/unleash-edge-quickstart",
+      "destination": "/guides/unleash-edge-quickstart",
       "permanent": true
     },
     {
@@ -1093,12 +1113,12 @@
     },
     {
       "source": "/reference/deploy/environment-import-export",
-      "destination": "/how-to/how-to-environment-import-export",
+      "destination": "/reference/import-export",
       "permanent": true
     },
     {
       "source": "/deploy/environment-import-export",
-      "destination": "/how-to/how-to-environment-import-export",
+      "destination": "/reference/import-export",
       "permanent": true
     },
     {

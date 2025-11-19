@@ -9,11 +9,10 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 :::caution Removal notice
 
-Api admin state is deprecated from version 5 and removed in version 6. We recommend using the new [Environment Import & Export](/how-to/how-to-environment-import-export).
+Api admin state is deprecated from version 5 and removed in version 6. We recommend using the new [Environment Import & Export](/reference/import-export).
 
 :::
 
-> In order to access the admin API endpoints you need to identify yourself. Unless you're using the `none` authentication method, you'll need to [create an ADMIN token](/how-to/how-to-create-api-tokens) and add an Authorization header using the token.
 
 ### Export Feature Flags & Strategies {#export-feature-toggles--strategies}
 

@@ -171,7 +171,7 @@ Consider migrating to [Unleash Enterprise](https://www.getunleash.io/pricing) to
 
 - The Unleash Edge metrics endpoint `/edge/metrics` has been removed. If you use Unleash Edge, ensure your Edge instances are upgraded to **version 19.1.3 or later** before upgrading the Unleash server to v6 to maintain metrics collection. Core flag evaluation will still work with older Edge versions.
 - The legacy feature endpoint `/api/feature`, [deprecated in v4](#legacy-v2-routes-removed), has been removed. Update any integrations still using this endpoint.
-- Deprecated import service: The older file-based import functionality at startup has been removed. Use the current [environment import/export features](/how-to/how-to-environment-import-export) or associated APIs.
+- Deprecated import service: The older file-based import functionality at startup has been removed. Use the current [environment import/export features](/reference/import-export) or associated APIs.
 
 ### Dropped Internet Explorer support
 
@@ -275,7 +275,7 @@ Follow along with our video demonstration on upgrading from v3 to v5 with no dow
 
 In Unleash Open Source v3, client SDKs did not require an API token to connect to the Unleash server. Starting with v4, API token handling, previously an Enterprise feature, was added to the Open Source version. This means that all client SDKs now need to use a client token to connect to Unleash.
 
-Read more in the [API token documentation](../../how-to/how-to-create-api-tokens).
+Read more in the [API token documentation](/guides/how-to-create-api-tokens).
 
 ### Configuring Unleash
 

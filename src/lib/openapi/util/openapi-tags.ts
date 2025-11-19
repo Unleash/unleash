@@ -72,7 +72,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Import/Export',
         description:
-            '[Import and export](https://docs.getunleash.io/how-to/how-to-environment-import-export) the state of your Unleash instance.',
+            '[Import and export](https://docs.getunleash.io/reference/import-export) the state of your Unleash instance.',
     },
     {
         name: 'Instance Admin',

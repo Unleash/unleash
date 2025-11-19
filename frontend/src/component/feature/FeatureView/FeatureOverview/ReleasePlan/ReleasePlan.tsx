@@ -1,6 +1,6 @@
 import Delete from '@mui/icons-material/Delete';
 import { Alert, styled, Link } from '@mui/material';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import PlayCircle from '@mui/icons-material/PlayCircle';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
@@ -105,6 +105,14 @@ const StyledMilestones = styled('div', {
     ...(safeguards && {
         padding: theme.spacing(1.5, 1.5),
     }),
+}));
+
+const StyledResumeAutomation = styled(Link)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    textDecoration: 'none',
+    color: 'inherit',
 }));
 
 interface IReleasePlanProps {
@@ -497,31 +505,13 @@ export const ReleasePlan = ({
                     <StyledAlert
                         severity='error'
                         action={
-                            <Link
-                                component='button'
+                            <StyledResumeAutomation
                                 variant='body2'
                                 onClick={onResumeAutomation}
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 0.5,
-                                    textDecoration: 'none',
-                                    cursor: 'pointer',
-                                    color: 'error.main',
-                                }}
                             >
-                                <ChevronRightIcon
-                                    fontSize='small'
-                                    sx={{
-                                        backgroundColor: 'error.main',
-                                        color: 'white',
-                                        borderRadius: '50%',
-                                        padding: '2px',
-                                        fontSize: '16px',
-                                    }}
-                                />
+                                <PlayCircle />
                                 Resume automation
-                            </Link>
+                            </StyledResumeAutomation>
                         }
                     >
                         <b>Automation paused by safeguard.</b> Existing users on

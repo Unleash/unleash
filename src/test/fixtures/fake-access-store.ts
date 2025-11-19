@@ -112,7 +112,7 @@ export class FakeAccessStore implements IAccessStore {
     }
 
     getAvailablePermissions(): Promise<IPermission[]> {
-        throw new Error('Method not implemented.');
+        return Promise.resolve([]);
     }
 
     getPermissionsForUser(userId: Number): Promise<IUserPermission[]> {

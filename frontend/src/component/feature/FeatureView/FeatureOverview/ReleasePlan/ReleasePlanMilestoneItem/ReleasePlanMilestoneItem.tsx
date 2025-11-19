@@ -122,13 +122,13 @@ export const ReleasePlanMilestoneItem = ({
         }
 
         try {
-            await changeMilestoneProgression(
+            await changeMilestoneProgression({
                 projectId,
                 environment,
                 featureName,
-                milestone.id,
-                payload,
-            );
+                sourceMilestoneId: milestone.id,
+                body: payload,
+            });
             setToastData({
                 type: 'success',
                 text: 'Automation configured successfully',

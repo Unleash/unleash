@@ -383,12 +383,12 @@ export const ReleasePlan = ({
             return;
 
         try {
-            await deleteMilestoneProgression(
+            await deleteMilestoneProgression({
                 projectId,
                 environment,
                 featureName,
-                milestoneToDeleteProgression.id,
-            );
+                sourceMilestoneId: milestoneToDeleteProgression.id,
+            });
             await refetch();
             setMilestoneToDeleteProgression(null);
             setToastData({
@@ -403,12 +403,12 @@ export const ReleasePlan = ({
 
     const onResumeMilestoneProgressions = async () => {
         try {
-            await resumeMilestoneProgressions(
+            await resumeMilestoneProgressions({
                 projectId,
                 environment,
                 featureName,
-                id,
-            );
+                planId: id,
+            });
             setToastData({
                 type: 'success',
                 text: 'Automation resumed successfully',

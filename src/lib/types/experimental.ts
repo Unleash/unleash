@@ -64,7 +64,8 @@ export type IFlagKey =
     | 'milestoneProgression'
     | 'featureReleasePlans'
     | 'plausibleMetrics'
-    | 'safeguards';
+    | 'safeguards'
+    | 'project-admin-cache';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

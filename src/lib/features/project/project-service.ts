@@ -1,4 +1,4 @@
-import { subDays } from 'date-fns';
+import { subDays, secondsToMilliseconds } from 'date-fns';
 import joi from 'joi';
 const { ValidationError } = joi;
 import createSlug from 'slug';
@@ -86,7 +86,31 @@ import { canGrantProjectRole } from './can-grant-project-role.js';
 import { batchExecute } from '../../util/index.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
+import memoizee from 'memoizee';
+import {
+    PROJECT_ACCESS_ADDED,
+    PROJECT_ACCESS_GROUP_ROLES_DELETED,
+    PROJECT_ACCESS_GROUP_ROLES_UPDATED,
+    PROJECT_ACCESS_UPDATED,
+    PROJECT_ACCESS_USER_ROLES_DELETED,
+    PROJECT_ACCESS_USER_ROLES_UPDATED,
+    PROJECT_ARCHIVED,
+    PROJECT_CREATED,
+    PROJECT_DELETED,
+    PROJECT_ENVIRONMENT_ADDED,
+    PROJECT_ENVIRONMENT_REMOVED,
+    PROJECT_FAVORITED,
+    PROJECT_GROUP_ADDED,
+    PROJECT_IMPORT,
+    PROJECT_REVIVED,
+    PROJECT_UNFAVORITED,
+    PROJECT_UPDATED,
+    PROJECT_USER_ADDED,
+    PROJECT_USER_REMOVED,
+    PROJECT_USER_ROLE_CHANGED,
+} from '../../events/index.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import type { Logger } from '../../logger.js';
 
 type Days = number;
 type Count = number;
@@ -126,7 +150,7 @@ export default class ProjectService {
 
     private groupService: GroupService;
 
-    private logger: any;
+    private logger: Logger;
 
     private featureToggleService: FeatureToggleService;
 
@@ -155,6 +179,40 @@ export default class ProjectService {
     private onboardingReadModel: IOnboardingReadModel;
 
     private timer: Function;
+
+    private getProjectsForAdminUiCached: ((
+        query?: IProjectQuery & IProjectsQuery,
+        userId?: number,
+    ) => Promise<ProjectForUi[]>) &
+        memoizee.Memoized<
+            (
+                query?: IProjectQuery & IProjectsQuery,
+                userId?: number,
+            ) => Promise<ProjectForUi[]>
+        >;
+
+    private readonly projectCacheInvalidationEvents = [
+        PROJECT_CREATED,
+        PROJECT_UPDATED,
+        PROJECT_DELETED,
+        PROJECT_ARCHIVED,
+        PROJECT_REVIVED,
+        PROJECT_IMPORT,
+        PROJECT_ENVIRONMENT_ADDED,
+        PROJECT_ENVIRONMENT_REMOVED,
+        PROJECT_USER_ADDED,
+        PROJECT_USER_REMOVED,
+        PROJECT_USER_ROLE_CHANGED,
+        PROJECT_GROUP_ADDED,
+        PROJECT_FAVORITED,
+        PROJECT_UNFAVORITED,
+        PROJECT_ACCESS_ADDED,
+        PROJECT_ACCESS_UPDATED,
+        PROJECT_ACCESS_USER_ROLES_UPDATED,
+        PROJECT_ACCESS_USER_ROLES_DELETED,
+        PROJECT_ACCESS_GROUP_ROLES_UPDATED,
+        PROJECT_ACCESS_GROUP_ROLES_DELETED,
+    ];
 
     constructor(
         {
@@ -221,16 +279,39 @@ export default class ProjectService {
                 className: 'ProjectService',
                 functionName,
             });
+        const cacheTtl = secondsToMilliseconds(60);
+        this.getProjectsForAdminUiCached = memoizee(
+            (
+                projectsQuery?: IProjectQuery & IProjectsQuery,
+                projectsUserId?: number,
+            ) =>
+                this.projectReadModel.getProjectsForAdminUi(
+                    projectsQuery,
+                    projectsUserId,
+                ),
+            {
+                promise: true,
+                maxAge: cacheTtl,
+                normalizer: ([projectsQuery, projectsUserId]) =>
+                    this.buildProjectsCacheKey(
+                        projectsQuery as
+                            | (IProjectQuery & IProjectsQuery)
+                            | undefined,
+                        projectsUserId as number | undefined,
+                    ),
+            },
+        );
+        this.registerProjectCacheInvalidationListeners();
     }
 
     async getProjects(
         query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
-        const projects = await this.projectReadModel.getProjectsForAdminUi(
-            query,
-            userId,
-        );
+        const useCache = this.flagResolver.isEnabled('project-admin-cache');
+        const projects = useCache
+            ? await this.getProjectsForAdminUiCached(query, userId)
+            : await this.projectReadModel.getProjectsForAdminUi(query, userId);
 
         if (userId) {
             const projectAccess =
@@ -247,6 +328,27 @@ export default class ProjectService {
             }
         }
         return projects;
+    }
+
+    private buildProjectsCacheKey(
+        query?: IProjectQuery & IProjectsQuery,
+        userId?: number,
+    ): string {
+        const ids = query?.ids === undefined ? null : [...query.ids].sort();
+        return JSON.stringify({
+            userId: userId ?? null,
+            id: query?.id ?? null,
+            archived:
+                typeof query?.archived === 'undefined' ? null : query.archived,
+            ids,
+        });
+    }
+
+    private registerProjectCacheInvalidationListeners(): void {
+        const invalidate = () => this.getProjectsForAdminUiCached.clear();
+        this.projectCacheInvalidationEvents.forEach((eventName) => {
+            this.eventBus.on(eventName, invalidate);
+        });
     }
 
     async addOwnersToProjects(
@@ -1094,10 +1196,6 @@ export default class ProjectService {
                 },
             }),
         );
-    }
-
-    async getMembers(projectId: string): Promise<number> {
-        return this.projectStore.getMembersCountByProject(projectId);
     }
 
     async getProjectUsers(

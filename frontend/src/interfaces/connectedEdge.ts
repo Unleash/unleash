@@ -5,6 +5,7 @@ export type ConnectedEdge = {
     edgeVersion: string;
     instanceId: string;
     region: string | null;
+    hosting?: 'hosted' | 'enterprise-self-hosted';
     reportedAt: string;
     started: string;
     connectedVia?: string;

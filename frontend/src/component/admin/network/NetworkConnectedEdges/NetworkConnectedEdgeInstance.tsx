@@ -82,14 +82,16 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     padding: theme.spacing(0, 1),
 }));
 
-const getHosting = ({ hosting }: ConnectedEdge) => {
+const getHosting = ({
+    hosting,
+}: ConnectedEdge): 'Cloud' | 'Self-hosted' | 'Unknown' => {
     switch (hosting) {
         case 'hosted':
             return 'Cloud';
         case 'enterprise-self-hosted':
             return 'Self-hosted';
         default:
-            return 'Unknown';
+            return hosting ? `Unknown: ${hosting}` : 'Unknown';
     }
 };
 

@@ -36,7 +36,7 @@ type FormMode = 'create' | 'edit' | 'display';
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
     metricName: safeguard?.impactMetric.metricName || '',
-    appName: safeguard?.impactMetric.labelSelectors.appName[0] || '*',
+    appName: safeguard?.impactMetric.labelSelectors.appName?.[0] || '*',
     aggregationMode: (safeguard?.impactMetric.aggregationMode ||
         'rps') as MetricQuerySchemaAggregationMode,
     operator: (safeguard?.triggerCondition.operator ||

@@ -1,5 +1,6 @@
 import Delete from '@mui/icons-material/Delete';
-import { Alert, styled } from '@mui/material';
+import { Alert, styled, Link } from '@mui/material';
+import PlayCircle from '@mui/icons-material/PlayCircle';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
@@ -106,6 +107,14 @@ const StyledMilestones = styled('div', {
     }),
 }));
 
+const StyledResumeMilestoneProgressions = styled(Link)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    textDecoration: 'none',
+    color: 'inherit',
+}));
+
 interface IReleasePlanProps {
     plan: IReleasePlan;
     environmentIsDisabled?: boolean;
@@ -136,8 +145,11 @@ export const ReleasePlan = ({
     );
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
-    const { deleteMilestoneProgression, loading: milestoneProgressionLoading } =
-        useMilestoneProgressionsApi();
+    const {
+        deleteMilestoneProgression,
+        resumeMilestoneProgressions,
+        loading: milestoneProgressionLoading,
+    } = useMilestoneProgressionsApi();
     const {
         createOrUpdateSafeguard,
         deleteSafeguard,
@@ -389,6 +401,24 @@ export const ReleasePlan = ({
         }
     };
 
+    const onResumeMilestoneProgressions = async () => {
+        try {
+            await resumeMilestoneProgressions(
+                projectId,
+                environment,
+                featureName,
+                id,
+            );
+            setToastData({
+                type: 'success',
+                text: 'Automation resumed successfully',
+            });
+            refetch();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     const activeIndex = milestones.findIndex(
         (milestone) => milestone.id === activeMilestoneId,
     );
@@ -477,7 +507,18 @@ export const ReleasePlan = ({
             </StyledHeader>
             <StyledBody safeguards={safeguardsEnabled}>
                 {releasePlanAutomationsPaused ? (
-                    <StyledAlert severity='error'>
+                    <StyledAlert
+                        severity='error'
+                        action={
+                            <StyledResumeMilestoneProgressions
+                                variant='body2'
+                                onClick={onResumeMilestoneProgressions}
+                            >
+                                <PlayCircle />
+                                Resume automation
+                            </StyledResumeMilestoneProgressions>
+                        }
+                    >
                         <b>Automation paused by safeguard.</b> Existing users on
                         this release plan can still access the feature.
                     </StyledAlert>

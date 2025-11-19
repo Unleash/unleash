@@ -3,6 +3,10 @@ import ShieldIcon from '@mui/icons-material/Shield';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import type { FormEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
+import {
+    isValidPositiveDecimal,
+    parsePositiveDecimal,
+} from 'utils/numericInputParser.ts';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
@@ -288,15 +292,26 @@ export const SafeguardForm = ({
                 <FormControl variant='outlined' size='small'>
                     <TextField
                         sx={{ minWidth: 120 }}
-                        type='number'
+                        type='text'
+                        inputMode='numeric'
                         value={threshold}
-                        onChange={(e) =>
-                            handleThresholdChange(Number(e.target.value))
-                        }
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (isValidPositiveDecimal(value)) {
+                                handleThresholdChange(
+                                    parsePositiveDecimal(value),
+                                );
+                            }
+                        }}
                         placeholder='Value'
                         variant='outlined'
                         size='small'
                         required
+                        inputProps={{
+                            pattern: '[0-9]*\\.?[0-9]*',
+                            'aria-label': 'Threshold value',
+                            'aria-describedby': 'threshold-input',
+                        }}
                     />
                 </FormControl>
 

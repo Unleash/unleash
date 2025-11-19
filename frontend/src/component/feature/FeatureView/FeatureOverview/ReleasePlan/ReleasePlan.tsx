@@ -107,7 +107,7 @@ const StyledMilestones = styled('div', {
     }),
 }));
 
-const StyledResumeAutomation = styled(Link)(({ theme }) => ({
+const StyledResumeMilestoneProgressions = styled(Link)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.5),
@@ -147,7 +147,7 @@ export const ReleasePlan = ({
         useReleasePlansApi();
     const {
         deleteMilestoneProgression,
-        resumeProgressions,
+        resumeMilestoneProgressions,
         loading: milestoneProgressionLoading,
     } = useMilestoneProgressionsApi();
     const {
@@ -401,9 +401,14 @@ export const ReleasePlan = ({
         }
     };
 
-    const onResumeAutomation = async () => {
+    const onResumeMilestoneProgressions = async () => {
         try {
-            await resumeProgressions(projectId, environment, featureName, id);
+            await resumeMilestoneProgressions(
+                projectId,
+                environment,
+                featureName,
+                id,
+            );
             setToastData({
                 type: 'success',
                 text: 'Automation resumed successfully',
@@ -505,13 +510,13 @@ export const ReleasePlan = ({
                     <StyledAlert
                         severity='error'
                         action={
-                            <StyledResumeAutomation
+                            <StyledResumeMilestoneProgressions
                                 variant='body2'
-                                onClick={onResumeAutomation}
+                                onClick={onResumeMilestoneProgressions}
                             >
                                 <PlayCircle />
                                 Resume automation
-                            </StyledResumeAutomation>
+                            </StyledResumeMilestoneProgressions>
                         }
                     >
                         <b>Automation paused by safeguard.</b> Existing users on

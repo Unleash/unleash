@@ -46,7 +46,7 @@ export const useMilestoneProgressionsApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
-    const resumeProgressions = async (
+    const resumeMilestoneProgressions = async (
         projectId: string,
         environment: string,
         featureName: string,
@@ -68,7 +68,7 @@ export const useMilestoneProgressionsApi = () => {
     return {
         changeMilestoneProgression,
         deleteMilestoneProgression,
-        resumeProgressions,
+        resumeMilestoneProgressions,
         errors,
         loading,
     };

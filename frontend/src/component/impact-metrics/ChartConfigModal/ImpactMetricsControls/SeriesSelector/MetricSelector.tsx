@@ -18,9 +18,10 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
     loading = false,
 }) => (
     <Autocomplete
+        disableClearable
         options={options}
         getOptionLabel={(option) => option.displayName}
-        value={options.find((option) => option.name === value) || null}
+        value={options.find((option) => option.name === value)}
         onChange={(_, newValue) => onChange(newValue?.name || '')}
         disabled={loading}
         renderOption={(props, option, { inputValue }) => (

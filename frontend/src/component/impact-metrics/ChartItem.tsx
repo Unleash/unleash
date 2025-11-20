@@ -104,22 +104,24 @@ export const ChartItem: FC<ChartItemProps> = ({
                     {getConfigDescription(config)}
                 </Typography>
             </StyledChartTitle>
-            <StyledChartActions>
-                <PermissionIconButton
-                    onClick={() => onEdit(config)}
-                    permission={permission}
-                    projectId={projectId}
-                >
-                    <Edit />
-                </PermissionIconButton>
-                <PermissionIconButton
-                    onClick={() => onDelete(config.id)}
-                    permission={permission}
-                    projectId={projectId}
-                >
-                    <Delete />
-                </PermissionIconButton>
-            </StyledChartActions>
+            {config.mode !== 'read' && (
+                <StyledChartActions>
+                    <PermissionIconButton
+                        onClick={() => onEdit(config)}
+                        permission={permission}
+                        projectId={projectId}
+                    >
+                        <Edit />
+                    </PermissionIconButton>
+                    <PermissionIconButton
+                        onClick={() => onDelete(config.id)}
+                        permission={permission}
+                        projectId={projectId}
+                    >
+                        <Delete />
+                    </PermissionIconButton>
+                </StyledChartActions>
+            )}
         </StyledHeader>
 
         <StyledChartContent>

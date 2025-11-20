@@ -90,6 +90,7 @@ export type UiFlags = {
     milestoneProgression?: boolean;
     featureReleasePlans?: boolean;
     safeguards?: boolean;
+    oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
 };
 

@@ -36,6 +36,7 @@ const initialState = {
     secret: '',
     acrValues: '',
     idTokenSigningAlgorithm: 'RS256',
+    enablePkce: false,
 };
 
 type State = typeof initialState & {
@@ -47,6 +48,7 @@ export const OidcAuth = () => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { oidcConfiguredThroughEnv } = uiConfig;
+    const oidcPkceSupport = Boolean(uiConfig.flags?.oidcPkceSupport);
     const [data, setData] = useState<State>(initialState);
     const { config } = useAuthSettings('oidc');
     const { updateSettings, errors, loading } = useAuthSettingsApi('oidc');
@@ -253,6 +255,44 @@ export const OidcAuth = () => {
                         />
                     </Grid>
                 </Grid>
+                <ConditionallyRender
+                    condition={oidcPkceSupport}
+                    show={
+                        <Grid container spacing={3} mb={2}>
+                            <Grid item md={5}>
+                                <strong>Enable PKCE</strong>
+                                <p>
+                                    Require Proof Key for Code Exchange (PKCE)
+                                    to add an extra layer of security for the
+                                    authorization code flow.
+                                </p>
+                            </Grid>
+                            <Grid item md={6} style={{ padding: '20px' }}>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            onChange={(event) =>
+                                                setValue(
+                                                    'enablePkce',
+                                                    event.target.checked,
+                                                )
+                                            }
+                                            name='enablePkce'
+                                            checked={Boolean(data.enablePkce)}
+                                            disabled={
+                                                !data.enabled ||
+                                                oidcConfiguredThroughEnv
+                                            }
+                                        />
+                                    }
+                                    label={
+                                        data.enablePkce ? 'Enabled' : 'Disabled'
+                                    }
+                                />
+                            </Grid>
+                        </Grid>
+                    }
+                />
                 <Grid container spacing={3} mb={2}>
                     <Grid item md={5}>
                         <strong>ACR Values</strong>

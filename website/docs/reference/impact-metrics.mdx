@@ -82,13 +82,13 @@ Use counters for cumulative values that only increase, such as the total number 
 
 ```javascript
 // 1. Define the counter
-unleash.impactMetrics.defineCounter(
+unleash.defineCounter(
   'request_count', 
   'Total number of HTTP requests processed'
 );
 
 // 2. Increment the counter
-unleash.impactMetrics.incrementCounter('request_count');
+unleash.incrementCounter('request_count');
 ```
 
 ### Gauges
@@ -97,14 +97,14 @@ Use gauges for values that can go up and down, such as current memory usage or a
 
 ```javascript
 // 1. Define the gauge
-unleash.impactMetrics.defineGauge(
+unleash.defineGauge(
   'heap_memory_total', 
   'Current heap memory usage in bytes'
 );
 
 // 2. Update the gauge value
 const currentHeap = process.memoryUsage().heapUsed;
-unleash.impactMetrics.updateGauge('heap_memory_total', currentHeap);
+unleash.updateGauge('heap_memory_total', currentHeap);
 ```
 
 ### Histograms
@@ -113,14 +113,14 @@ Use histograms to measure the distribution of values, such as request duration o
 
 ```javascript
 // 1. Define the histogram
-unleash.impactMetrics.defineHistogram(
+unleash.defineHistogram(
   'request_time_ms', 
   'Time taken to process a request in milliseconds'
 );
 
 // 2. Record a value
 const duration = 125;
-unleash.impactMetrics.observeHistogram('request_time_ms', duration);
+unleash.observeHistogram('request_time_ms', duration);
 ```
 
 ## Create impact metrics charts

@@ -6,22 +6,26 @@ export type ModeSelectorProps = {
     value: AggregationMode;
     onChange: (mode: AggregationMode) => void;
     metricType: 'counter' | 'gauge' | 'histogram' | 'unknown';
+    label?: string;
 };
 
 export const ModeSelector: FC<ModeSelectorProps> = ({
     value,
     onChange,
     metricType,
+    label = 'Aggregation Mode',
 }) => {
     if (metricType === 'unknown') return null;
     return (
         <FormControl variant='outlined' size='small'>
-            <InputLabel id='mode-select-label'>Mode</InputLabel>
+            {label ? (
+                <InputLabel id='mode-select-label'>{label}</InputLabel>
+            ) : null}
             <Select
                 labelId='mode-select-label'
                 value={value}
                 onChange={(e) => onChange(e.target.value as AggregationMode)}
-                label='Mode'
+                label={label}
             >
                 {metricType === 'counter'
                     ? [

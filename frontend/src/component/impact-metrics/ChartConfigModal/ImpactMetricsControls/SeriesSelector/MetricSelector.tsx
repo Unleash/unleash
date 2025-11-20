@@ -9,6 +9,7 @@ export type SeriesSelectorProps = {
     onChange: (series: string) => void;
     options: SeriesOption[];
     loading?: boolean;
+    label?: string;
 };
 
 export const MetricSelector: FC<SeriesSelectorProps> = ({
@@ -16,12 +17,15 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
     onChange,
     options,
     loading = false,
+    label = 'Metric name',
 }) => (
     <Autocomplete
         options={options}
         getOptionLabel={(option) => option.displayName}
         value={options.find((option) => option.name === value) || null}
-        onChange={(_, newValue) => onChange(newValue?.name || '')}
+        onChange={(_, newValue) =>
+            onChange(newValue?.name || options[0]?.name || '')
+        }
         disabled={loading}
         renderOption={(props, option, { inputValue }) => (
             <Box component='li' {...props} key={option.name}>
@@ -42,7 +46,7 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
         renderInput={(params) => (
             <TextField
                 {...params}
-                label='Data series'
+                label={label}
                 placeholder='Search for a metric…'
                 variant='outlined'
                 size='small'

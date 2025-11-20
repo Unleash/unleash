@@ -46,7 +46,7 @@ Each project must always have **at least one** active environment.
 
 Environments are adjacent to [feature flags](../reference/feature-toggles) in Unleash: neither one contains the other, but they come together to let you define activation strategies.
 
-![Constraints and activation strategies](/img/anatomy-of-unleash-new-feature-rollout.png)
+![Constraints and activation strategies](/img/anatomy-of-unleash-environments.png)
 
 :::info Environments and API keys
 
@@ -64,9 +64,9 @@ When creating a feature flag, you must assign a unique (across your Unleash inst
 
 ## Activation strategies
 
-![An environment containing a feature flag configuration with an activation strategy](/img/anatomy-of-unleash-strategy.png)
-
 [**Activation strategies**](../reference/activation-strategies) (or just **strategies** for short) are the part of feature flags that tell Unleash **who should get a feature**. An activation strategy is assigned to **one **feature flag in **one **environment.
+
+![An environment containing a feature flag configuration with an activation strategy](/img/anatomy-of-unleash-strategy.png)
 
 When you check a [feature flag](../reference/feature-toggles) in an application, the following decides the result:
 
@@ -126,14 +126,20 @@ Segments are only available to [Pro](/availability#plans) and [Enterprise](https
 
 [Release templates](/reference/release-templates) provide a way to standardize how you roll out features across your application. While activation strategies define who gets a feature, release templates define how that access expands over time.
 
-A release template is a blueprint for a rollout. It consists of sequential stages called milestones. Each milestone contains one or more activation strategies. For example, a template might look like this:
+![Illustration showing showing a release template is made up of milestones](/img/anatomy-of-unleash-release-template.png)
+
+A release template is a blueprint for a rollout. It consists of sequential stages called **milestones**. Each milestone contains one or more **activation strategies** or **segments**. For example, a template might look like this:
 
 - Milestone 1: Internal users only.
 - Milestone 2: Beta users.
 - Milestone 3: 50% of all users.
 - Milestone 4: 100% of all users.
 
-When you apply a release template to a specific feature flag in an environment, it creates a release plan. This plan lets you progress through the milestones step-by-step. Release templates ensure that your rollouts are consistent and safe, removing the need to manually configure strategies from scratch every time you launch a new feature.
+![Illustration showing showing that a release template can be applied to a feature flag](/img/anatomy-of-unleash-release-template-apply.png)
+
+When you apply a release template to a specific feature flag in an environment, it creates a **release plan**. This plan lets you progress through the milestones step-by-step. Release templates ensure that your rollouts are consistent and safe, removing the need to manually configure strategies from scratch every time you launch a new feature.
+
+![Illustration showing showing a release template applied to a feature flag in an environment](/img/anatomy-of-unleash-release-template-applied.png)
 
 ### Automatic milestone progression and safeguards
 

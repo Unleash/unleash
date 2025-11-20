@@ -11,9 +11,14 @@ export const useFeatureReleasePlans = (
     const {
         releasePlans: releasePlansFromHook,
         refetch: refetchReleasePlans,
+        loading: releasePlansLoading,
         ...rest
     } = useReleasePlans(projectId, featureId, environmentName);
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
+    const {
+        feature,
+        refetchFeature,
+        loading: featureLoading,
+    } = useFeature(projectId, featureId);
 
     let releasePlans = releasePlansFromHook;
 
@@ -28,5 +33,10 @@ export const useFeatureReleasePlans = (
         ? refetchFeature
         : refetchReleasePlans;
 
-    return { releasePlans, refetch, ...rest };
+    return {
+        releasePlans,
+        refetch,
+        loading: featureLoading || releasePlansLoading,
+        ...rest,
+    };
 };

@@ -137,11 +137,8 @@ export const ReleasePlan = ({
     } = plan;
 
     const projectId = useRequiredPathParam('projectId');
-    const { refetch } = useFeatureReleasePlans(
-        projectId,
-        featureName,
-        environment,
-    );
+    const { refetch, loading: featureReleasePlansLoading } =
+        useFeatureReleasePlans(projectId, featureName, environment);
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
     const {
@@ -532,7 +529,7 @@ export const ReleasePlan = ({
                                 onCancel={() => setSafeguardFormOpen(false)}
                                 onDelete={handleSafeguardDelete}
                             />
-                        ) : safeguardFormOpen ? (
+                        ) : safeguardFormOpen || featureReleasePlansLoading ? (
                             <SafeguardForm
                                 onSubmit={handleSafeguardSubmit}
                                 onCancel={() => setSafeguardFormOpen(false)}
@@ -542,6 +539,7 @@ export const ReleasePlan = ({
                                 onClick={() => setSafeguardFormOpen(true)}
                                 color='primary'
                                 startIcon={<Add />}
+                                sx={{ m: 2 }}
                             >
                                 Add safeguard
                             </StyledActionButton>

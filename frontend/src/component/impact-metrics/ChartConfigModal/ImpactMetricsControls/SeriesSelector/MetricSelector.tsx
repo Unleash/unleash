@@ -9,6 +9,7 @@ export type SeriesSelectorProps = {
     onChange: (series: string) => void;
     options: SeriesOption[];
     loading?: boolean;
+    label?: string;
 };
 
 export const MetricSelector: FC<SeriesSelectorProps> = ({
@@ -16,6 +17,7 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
     onChange,
     options,
     loading = false,
+    label = 'Metric name',
 }) => (
     <Autocomplete
         options={options}
@@ -44,7 +46,7 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
         renderInput={(params) => (
             <TextField
                 {...params}
-                label='Data series'
+                label={label}
                 placeholder='Search for a metric…'
                 variant='outlined'
                 size='small'

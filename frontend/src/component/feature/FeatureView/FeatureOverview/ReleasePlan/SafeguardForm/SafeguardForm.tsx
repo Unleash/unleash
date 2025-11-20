@@ -238,6 +238,7 @@ export const SafeguardForm = ({
                     onChange={handleMetricChange}
                     options={metricOptions}
                     loading={loading}
+                    label=''
                 />
 
                 <StyledTopRow>
@@ -266,6 +267,7 @@ export const SafeguardForm = ({
                         value={aggregationMode}
                         onChange={handleAggregationModeChange}
                         metricType={metricType}
+                        label=''
                     />
                 </StyledTopRow>
             </StyledTopRow>
@@ -313,6 +315,7 @@ export const SafeguardForm = ({
                     <RangeSelector
                         value={timeRange}
                         onChange={handleTimeRangeChange}
+                        label=''
                     />
                 </StyledTopRow>
             </StyledTopRow>

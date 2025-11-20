@@ -1,6 +1,9 @@
 import NameExistsError from '../error/name-exists-error.js';
 import getLogger from '../../test/fixtures/no-logger.js';
-import { createFakeAccessService } from '../features/access/createAccessService.js';
+import {
+    createFakeAccessService,
+    type FakeAccessServiceConfig,
+} from '../features/access/createAccessService.js';
 import {
     AccessService,
     type IRoleCreation,
@@ -29,13 +32,15 @@ import { createFakeAccessReadModel } from '../features/access/createAccessReadMo
 import { ROLE_CREATED } from '../events/index.js';
 import { expect } from 'vitest';
 
-function getSetup() {
+function getSetup(accessServiceConfig?: FakeAccessServiceConfig) {
     const config = createTestConfig({
         getLogger,
     });
 
-    const { accessService, eventStore, accessStore } =
-        createFakeAccessService(config);
+    const { accessService, eventStore, accessStore } = createFakeAccessService(
+        config,
+        accessServiceConfig,
+    );
 
     return {
         accessService,
@@ -213,7 +218,24 @@ test('should be able to validate and cleanup with additional properties', async 
 });
 
 test('user with custom root role should get a user root role', async () => {
-    const { accessService, eventStore } = getSetup();
+    const availablePermissions = [
+        {
+            id: 1,
+            environment: 'development',
+            name: 'fake',
+            displayName: 'fake',
+            type: '',
+        },
+        {
+            id: 2,
+            name: 'root-fake-permission',
+            displayName: '',
+            type: '',
+        },
+    ];
+    const { accessService, eventStore } = getSetup({
+        accessStoreConfig: { availablePermissions },
+    });
     const createRoleInput: IRoleCreation = {
         name: 'custom-root-role',
         description: 'test custom root role',

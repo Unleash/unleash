@@ -150,6 +150,8 @@ export const EventSchemaType = {
     'banner-created': 'banner-created',
     'banner-updated': 'banner-updated',
     'banner-deleted': 'banner-deleted',
+    'safeguard-changed': 'safeguard-changed',
+    'safeguard-deleted': 'safeguard-deleted',
     'project-environment-added': 'project-environment-added',
     'project-environment-removed': 'project-environment-removed',
     'default-strategy-updated': 'default-strategy-updated',

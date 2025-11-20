@@ -18,6 +18,10 @@ import {
 import FakeRoleStore from './fake-role-store.js';
 import type { PermissionRef } from '../../lib/services/access-service.js';
 
+export type FakeAccessStoreConfig = Partial<{
+    availablePermissions: IPermission[];
+}>;
+
 export class FakeAccessStore implements IAccessStore {
     fakeRolesStore: IRoleStore;
 
@@ -25,8 +29,11 @@ export class FakeAccessStore implements IAccessStore {
 
     rolePermissions: Map<number, IPermission[]> = new Map();
 
-    constructor(roleStore?: IRoleStore) {
+    availablePermissions: IPermission[] = [];
+
+    constructor(roleStore?: IRoleStore, config?: FakeAccessStoreConfig) {
         this.fakeRolesStore = roleStore ?? new FakeRoleStore();
+        this.availablePermissions = config?.availablePermissions ?? [];
     }
 
     getProjectUserAndGroupCountsForRole(
@@ -112,7 +119,7 @@ export class FakeAccessStore implements IAccessStore {
     }
 
     getAvailablePermissions(): Promise<IPermission[]> {
-        return Promise.resolve([]);
+        return Promise.resolve(this.availablePermissions);
     }
 
     getPermissionsForUser(userId: Number): Promise<IUserPermission[]> {

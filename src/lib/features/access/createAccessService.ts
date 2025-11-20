@@ -10,7 +10,9 @@ import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
 import { FakeAccountStore } from '../../../test/fixtures/fake-account-store.js';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store.js';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
-import FakeAccessStore from '../../../test/fixtures/fake-access-store.js';
+import FakeAccessStore, {
+    type FakeAccessStoreConfig,
+} from '../../../test/fixtures/fake-access-store.js';
 import type {
     IAccessStore,
     IEventStore,
@@ -45,8 +47,13 @@ export const createAccessService = (
     );
 };
 
+export type FakeAccessServiceConfig = {
+    accessStoreConfig?: FakeAccessStoreConfig;
+};
+
 export const createFakeAccessService = (
     config: IUnleashConfig,
+    { accessStoreConfig }: FakeAccessServiceConfig = {},
 ): {
     accessService: AccessService;
     eventStore: IEventStore;
@@ -59,7 +66,7 @@ export const createFakeAccessService = (
     const accountStore = new FakeAccountStore();
     const roleStore = new FakeRoleStore();
     const environmentStore = new FakeEnvironmentStore();
-    const accessStore = new FakeAccessStore(roleStore);
+    const accessStore = new FakeAccessStore(roleStore, accessStoreConfig);
     const eventService = createFakeEventsService(config, { eventStore });
     const groupService = new GroupService(
         { groupStore, accountStore },

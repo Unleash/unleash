@@ -9,7 +9,7 @@ export type RangeSelectorProps = {
 };
 
 export const RangeSelector: FC<RangeSelectorProps> = ({ value, onChange }) => (
-    <FormControl variant='outlined' size='small' sx={{ minWidth: 200 }}>
+    <FormControl variant='outlined' size='small'>
         <InputLabel id='range-select-label'>Time</InputLabel>
         <Select
             labelId='range-select-label'

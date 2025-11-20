@@ -18,6 +18,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import type { ProjectOverviewSchema } from 'openapi';
+import useProjects from 'hooks/api/getters/useProjects/useProjects.ts';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     minHeight: 0,
@@ -72,7 +73,13 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
     );
 
     const { editProject, loading } = useProjectApi();
-    const { refetch } = useProjectOverview(id);
+    const { refetch: refetchProjectOverview } = useProjectOverview(id);
+    const { refetch: refetchProjects } = useProjects();
+
+    const refetch = () => {
+        refetchProjectOverview();
+        refetchProjects();
+    };
 
     const formatProjectApiCode = () => {
         return `curl --location --request PUT '${

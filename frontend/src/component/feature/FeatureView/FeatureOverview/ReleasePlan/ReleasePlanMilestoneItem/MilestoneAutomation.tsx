@@ -1,4 +1,5 @@
 import Add from '@mui/icons-material/Add';
+import WarningAmber from '@mui/icons-material/WarningAmber';
 import { Badge } from 'component/common/Badge/Badge';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
@@ -58,6 +59,10 @@ export const MilestoneAutomation = ({
         <Badge color='error'>Deleted in draft</Badge>
     ) : hasPendingChange ? (
         <Badge color='warning'>Modified in draft</Badge>
+    ) : status?.type === 'paused' ? (
+        <Badge color='error' icon={<WarningAmber fontSize='small' />}>
+            Paused
+        </Badge>
     ) : undefined;
 
     return (

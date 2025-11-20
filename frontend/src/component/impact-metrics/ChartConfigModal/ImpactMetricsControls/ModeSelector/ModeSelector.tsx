@@ -15,7 +15,7 @@ export const ModeSelector: FC<ModeSelectorProps> = ({
 }) => {
     if (metricType === 'unknown') return null;
     return (
-        <FormControl variant='outlined' size='small' sx={{ minWidth: 200 }}>
+        <FormControl variant='outlined' size='small'>
             <InputLabel id='mode-select-label'>Mode</InputLabel>
             <Select
                 labelId='mode-select-label'

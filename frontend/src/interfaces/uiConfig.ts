@@ -91,6 +91,7 @@ export type UiFlags = {
     featureReleasePlans?: boolean;
     safeguards?: boolean;
     oidcPkceSupport?: boolean;
+    extendedUsageMetrics?: boolean;
 };
 
 export interface IVersionInfo {

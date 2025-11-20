@@ -5,6 +5,8 @@
  */
 
 export type FeatureSchemaLinksItem = {
+    /** The name of the feature this link belongs to */
+    feature?: string;
     /** The id of the link */
     id: string;
     /**

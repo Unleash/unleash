@@ -36,7 +36,7 @@ type FormMode = 'create' | 'edit' | 'display';
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
     metricName: safeguard?.impactMetric.metricName || '',
-    appName: safeguard?.impactMetric.labelSelectors.appName[0] || '*',
+    appName: safeguard?.impactMetric.labelSelectors.appName?.[0] || '*',
     aggregationMode: (safeguard?.impactMetric.aggregationMode ||
         'rps') as MetricQuerySchemaAggregationMode,
     operator: (safeguard?.triggerCondition.operator ||
@@ -244,7 +244,6 @@ export const SafeguardForm = ({
                 <StyledLabel>filtered by</StyledLabel>
                 <FormControl variant='outlined' size='small'>
                     <StyledSelect
-                        sx={{ minWidth: 200 }}
                         value={appName}
                         onChange={(e) =>
                             handleApplicationChange(String(e.target.value))
@@ -287,12 +286,15 @@ export const SafeguardForm = ({
 
                 <FormControl variant='outlined' size='small'>
                     <TextField
-                        sx={{ minWidth: 120 }}
                         type='number'
+                        inputProps={{
+                            step: 0.1,
+                        }}
                         value={threshold}
-                        onChange={(e) =>
-                            handleThresholdChange(Number(e.target.value))
-                        }
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            handleThresholdChange(Number(value));
+                        }}
                         placeholder='Value'
                         variant='outlined'
                         size='small'

@@ -22,6 +22,7 @@ export interface IReleasePlanTemplate {
 }
 
 export interface ISafeguard {
+    id: string;
     impactMetric: {
         aggregationMode: MetricQuerySchemaAggregationMode;
         metricName: string;
@@ -52,6 +53,7 @@ export interface IReleasePlanMilestone {
     releasePlanDefinitionId: string;
     strategies: IReleasePlanMilestoneStrategy[];
     startedAt?: string | null;
+    pausedAt?: string | null;
     transitionCondition?: {
         intervalMinutes: number;
     } | null;

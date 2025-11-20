@@ -1,5 +1,6 @@
 import Delete from '@mui/icons-material/Delete';
-import { styled } from '@mui/material';
+import { Alert, styled, Link } from '@mui/material';
+import PlayCircle from '@mui/icons-material/PlayCircle';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
@@ -34,6 +35,7 @@ import { StyledActionButton } from './ReleasePlanMilestoneItem/StyledActionButto
 import { SafeguardForm } from './SafeguardForm/SafeguardForm.tsx';
 import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguardsApi';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
+import { DeleteSafeguardDialog } from './DeleteSafeguardDialog.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -93,12 +95,24 @@ const StyledAddSafeguard = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5, 2),
 }));
 
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    margin: theme.spacing(1, 2),
+}));
+
 const StyledMilestones = styled('div', {
     shouldForwardProp: (prop) => prop !== 'safeguards',
 })<{ safeguards: boolean }>(({ theme, safeguards }) => ({
     ...(safeguards && {
         padding: theme.spacing(1.5, 1.5),
     }),
+}));
+
+const StyledResumeMilestoneProgressions = styled(Link)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    textDecoration: 'none',
+    color: 'inherit',
 }));
 
 interface IReleasePlanProps {
@@ -131,8 +145,16 @@ export const ReleasePlan = ({
     );
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
-    const { deleteMilestoneProgression } = useMilestoneProgressionsApi();
-    const { createOrUpdateSafeguard, deleteSafeguard } = useSafeguardsApi();
+    const {
+        deleteMilestoneProgression,
+        resumeMilestoneProgressions,
+        loading: milestoneProgressionLoading,
+    } = useMilestoneProgressionsApi();
+    const {
+        createOrUpdateSafeguard,
+        deleteSafeguard,
+        loading: safeguardLoading,
+    } = useSafeguardsApi();
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
 
@@ -154,6 +176,9 @@ export const ReleasePlan = ({
     const { addChange } = useChangeRequestApi();
     const { data: pendingChangeRequests, refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
+    const releasePlanAutomationsPaused = milestones.some((milestone) =>
+        Boolean(milestone.pausedAt),
+    );
 
     // Find progression changes for this feature in pending change requests
     const getPendingProgressionChange = (sourceMilestoneId: string) => {
@@ -198,8 +223,9 @@ export const ReleasePlan = ({
     >(null);
     const [milestoneToDeleteProgression, setMilestoneToDeleteProgression] =
         useState<IReleasePlanMilestone | null>(null);
-    const [isDeletingProgression, setIsDeletingProgression] = useState(false);
     const [safeguardFormOpen, setSafeguardFormOpen] = useState(false);
+    const [safeguardDeleteDialogOpen, setSafeguardDeleteDialogOpen] =
+        useState(false);
 
     const onChangeRequestConfirm = async () => {
         if (!changeRequestAction) return;
@@ -347,22 +373,22 @@ export const ReleasePlan = ({
     };
 
     const handleCloseDeleteDialog = () => {
-        if (!isDeletingProgression) {
+        if (!milestoneProgressionLoading) {
             setMilestoneToDeleteProgression(null);
         }
     };
 
     const onDeleteProgressionConfirm = async () => {
-        if (!milestoneToDeleteProgression || isDeletingProgression) return;
+        if (!milestoneToDeleteProgression || milestoneProgressionLoading)
+            return;
 
-        setIsDeletingProgression(true);
         try {
-            await deleteMilestoneProgression(
+            await deleteMilestoneProgression({
                 projectId,
                 environment,
                 featureName,
-                milestoneToDeleteProgression.id,
-            );
+                sourceMilestoneId: milestoneToDeleteProgression.id,
+            });
             await refetch();
             setMilestoneToDeleteProgression(null);
             setToastData({
@@ -372,8 +398,24 @@ export const ReleasePlan = ({
         } catch (error: unknown) {
             setMilestoneToDeleteProgression(null);
             setToastApiError(formatUnknownError(error));
-        } finally {
-            setIsDeletingProgression(false);
+        }
+    };
+
+    const onResumeMilestoneProgressions = async () => {
+        try {
+            await resumeMilestoneProgressions({
+                projectId,
+                environment,
+                featureName,
+                planId: id,
+            });
+            setToastData({
+                type: 'success',
+                text: 'Automation resumed successfully',
+            });
+            refetch();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
         }
     };
 
@@ -397,16 +439,25 @@ export const ReleasePlan = ({
             refetch();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setSafeguardFormOpen(false);
         }
     };
 
-    const handleSafeguardDelete = async () => {
+    const handleSafeguardDelete = () => {
+        setSafeguardDeleteDialogOpen(true);
+    };
+
+    const onSafeguardDeleteConfirm = async () => {
+        if (safeguards.length === 0 || safeguardLoading) return;
+
         try {
             await deleteSafeguard({
                 projectId,
                 featureName,
                 environment,
                 planId: id,
+                safeguardId: safeguards[0].id,
             });
             setToastData({
                 type: 'success',
@@ -415,6 +466,14 @@ export const ReleasePlan = ({
             refetch();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setSafeguardDeleteDialogOpen(false);
+        }
+    };
+
+    const handleCloseSafeguardDeleteDialog = () => {
+        if (!safeguardLoading) {
+            setSafeguardDeleteDialogOpen(false);
         }
     };
 
@@ -447,6 +506,23 @@ export const ReleasePlan = ({
                 )}
             </StyledHeader>
             <StyledBody safeguards={safeguardsEnabled}>
+                {releasePlanAutomationsPaused ? (
+                    <StyledAlert
+                        severity='error'
+                        action={
+                            <StyledResumeMilestoneProgressions
+                                variant='body2'
+                                onClick={onResumeMilestoneProgressions}
+                            >
+                                <PlayCircle />
+                                Resume automation
+                            </StyledResumeMilestoneProgressions>
+                        }
+                    >
+                        <b>Automation paused by safeguard.</b> Existing users on
+                        this release plan can still access the feature.
+                    </StyledAlert>
+                ) : null}
                 {safeguardsEnabled ? (
                     <StyledAddSafeguard>
                         {safeguards.length > 0 ? (
@@ -458,10 +534,7 @@ export const ReleasePlan = ({
                             />
                         ) : safeguardFormOpen ? (
                             <SafeguardForm
-                                onSubmit={(data) => {
-                                    handleSafeguardSubmit(data);
-                                    setSafeguardFormOpen(false);
-                                }}
+                                onSubmit={handleSafeguardSubmit}
                                 onCancel={() => setSafeguardFormOpen(false)}
                             />
                         ) : (
@@ -529,9 +602,15 @@ export const ReleasePlan = ({
                     onClose={handleCloseDeleteDialog}
                     onConfirm={onDeleteProgressionConfirm}
                     milestoneName={milestoneToDeleteProgression.name}
-                    isDeleting={isDeletingProgression}
+                    isDeleting={milestoneProgressionLoading}
                 />
             )}
+            <DeleteSafeguardDialog
+                open={safeguardDeleteDialogOpen}
+                onClose={handleCloseSafeguardDeleteDialog}
+                onConfirm={onSafeguardDeleteConfirm}
+                isDeleting={safeguardLoading}
+            />
         </StyledContainer>
     );
 };

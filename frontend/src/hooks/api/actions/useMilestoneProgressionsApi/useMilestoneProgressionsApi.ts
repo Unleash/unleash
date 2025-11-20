@@ -6,13 +6,19 @@ export const useMilestoneProgressionsApi = () => {
         propagateErrors: true,
     });
 
-    const changeMilestoneProgression = async (
-        projectId: string,
-        environment: string,
-        featureName: string,
-        sourceMilestoneId: string,
-        body: ChangeMilestoneProgressionSchema,
-    ): Promise<void> => {
+    const changeMilestoneProgression = async ({
+        projectId,
+        environment,
+        featureName,
+        sourceMilestoneId,
+        body,
+    }: {
+        projectId: string;
+        environment: string;
+        featureName: string;
+        sourceMilestoneId: string;
+        body: ChangeMilestoneProgressionSchema;
+    }): Promise<void> => {
         const requestId = 'changeMilestoneProgression';
         const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/progressions/${sourceMilestoneId}`;
         const req = createRequest(
@@ -27,12 +33,17 @@ export const useMilestoneProgressionsApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
-    const deleteMilestoneProgression = async (
-        projectId: string,
-        environment: string,
-        featureName: string,
-        sourceMilestoneId: string,
-    ): Promise<void> => {
+    const deleteMilestoneProgression = async ({
+        projectId,
+        environment,
+        featureName,
+        sourceMilestoneId,
+    }: {
+        projectId: string;
+        environment: string;
+        featureName: string;
+        sourceMilestoneId: string;
+    }): Promise<void> => {
         const requestId = 'deleteMilestoneProgression';
         const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/progressions/${sourceMilestoneId}`;
         const req = createRequest(
@@ -46,9 +57,34 @@ export const useMilestoneProgressionsApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const resumeMilestoneProgressions = async ({
+        projectId,
+        environment,
+        featureName,
+        planId,
+    }: {
+        projectId: string;
+        environment: string;
+        featureName: string;
+        planId: string;
+    }): Promise<void> => {
+        const requestId = 'resumeProgressions';
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/progressions/${planId}/resume`;
+        const req = createRequest(
+            path,
+            {
+                method: 'POST',
+            },
+            requestId,
+        );
+
+        await makeRequest(req.caller, req.id);
+    };
+
     return {
         changeMilestoneProgression,
         deleteMilestoneProgression,
+        resumeMilestoneProgressions,
         errors,
         loading,
     };

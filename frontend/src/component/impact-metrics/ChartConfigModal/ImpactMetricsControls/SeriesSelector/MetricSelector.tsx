@@ -18,11 +18,12 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
     loading = false,
 }) => (
     <Autocomplete
-        disableClearable
         options={options}
         getOptionLabel={(option) => option.displayName}
-        value={options.find((option) => option.name === value)}
-        onChange={(_, newValue) => onChange(newValue?.name || '')}
+        value={options.find((option) => option.name === value) || null}
+        onChange={(_, newValue) =>
+            onChange(newValue?.name || options[0]?.name || '')
+        }
         disabled={loading}
         renderOption={(props, option, { inputValue }) => (
             <Box component='li' {...props} key={option.name}>

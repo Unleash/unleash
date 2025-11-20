@@ -128,6 +128,7 @@ export const SafeguardForm = ({
         setAppName('*');
 
         const metric = metricOptions.find((m) => m.name === value);
+        console.log(metric);
         if (metric?.type) {
             setAggregationMode(
                 getDefaultAggregationMode(metric.type, aggregationMode),

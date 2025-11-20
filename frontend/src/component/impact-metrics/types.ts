@@ -20,6 +20,7 @@ export type AggregationMode =
 export type DisplayChartConfig = ChartConfig & {
     type: 'counter' | 'gauge' | 'histogram' | 'unknown';
     displayName: string; // e.g. my_metric with unleash_counter stripped
+    mode?: 'read' | 'write';
 };
 
 export type LayoutItem = {

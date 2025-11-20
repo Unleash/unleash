@@ -898,8 +898,16 @@ export class AccessService {
         );
 
         if (invalidPermissions.length > 0) {
+            const invalidPermissionList = invalidPermissions
+                .map((permission) =>
+                    'id' in permission
+                        ? `permission with ID: ${permission.id}`
+                        : permission.name,
+                )
+                .join(', ');
+
             throw new BadDataError(
-                `Invalid permissions supplied. The following permissions don't exist: ${invalidPermissions.join(', ')}.`,
+                `Invalid permissions supplied. The following permissions don't exist: ${invalidPermissionList}.`,
             );
         }
     }

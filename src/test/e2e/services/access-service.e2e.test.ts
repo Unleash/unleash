@@ -1862,7 +1862,12 @@ test("creating a role with permissions that don't exist should throw a bad data 
             },
             SYSTEM_USER_AUDIT,
         ),
-    ).rejects.toThrow(BadDataError);
+    ).rejects.toThrow(
+        expect.objectContaining({
+            name: 'BadDataError',
+            message: expect.stringMatching(/BOGUS/),
+        }),
+    );
 });
 
 test("Updating a role with permissions that don't exist should throw a bad data error", async () => {
@@ -1889,5 +1894,10 @@ test("Updating a role with permissions that don't exist should throw a bad data 
             },
             SYSTEM_USER_AUDIT,
         ),
-    ).rejects.toThrow(BadDataError);
+    ).rejects.toThrow(
+        expect.objectContaining({
+            name: 'BadDataError',
+            message: expect.stringMatching(/BOGUS/),
+        }),
+    );
 });

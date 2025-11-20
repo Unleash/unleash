@@ -14,6 +14,7 @@ import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuer
 import type { CreateSafeguardSchemaOperator } from 'openapi/models/createSafeguardSchemaOperator';
 import {
     createStyledIcon,
+    type FormMode,
     StyledButtonGroup,
     StyledFormContainer,
     StyledLabel,
@@ -31,8 +32,6 @@ interface ISafeguardFormProps {
     onDelete?: () => void;
     safeguard?: ISafeguard;
 }
-
-type FormMode = 'create' | 'edit' | 'display';
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
     metricName: safeguard?.impactMetric.metricName || '',
@@ -218,7 +217,7 @@ export const SafeguardForm = ({
     };
 
     return (
-        <StyledFormContainer onSubmit={handleSubmit}>
+        <StyledFormContainer onSubmit={handleSubmit} mode={mode}>
             <StyledTopRow sx={{ mb: 1 }}>
                 <StyledIcon />
                 <StyledLabel>Pause automation when</StyledLabel>

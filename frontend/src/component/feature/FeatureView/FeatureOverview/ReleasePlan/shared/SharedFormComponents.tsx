@@ -1,16 +1,29 @@
 import { styled, Select, MenuItem } from '@mui/material';
 
-export const StyledFormContainer = styled('form')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1.5),
-    padding: theme.spacing(1.5, 2),
-    backgroundColor: theme.palette.background.elevation1,
-    border: `1px solid ${theme.palette.divider}`,
-    width: '100%',
-    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-    position: 'relative',
-}));
+export type FormMode = 'create' | 'edit' | 'display';
+
+interface StyledFormContainerProps {
+    mode?: FormMode;
+}
+
+export const StyledFormContainer = styled('form')<StyledFormContainerProps>(
+    ({ theme, mode }) => ({
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.spacing(1.5),
+        backgroundColor: theme.palette.background.elevation1,
+        padding:
+            mode === 'display' ? theme.spacing(1, 1.5) : theme.spacing(1.5, 2),
+        border:
+            mode === 'display' ? 'none' : `1px solid ${theme.palette.divider}`,
+        transition: theme.transitions.create(['padding'], {
+            duration: theme.transitions.duration.short,
+        }),
+        width: '100%',
+        borderRadius: `${theme.shape.borderRadiusMedium}px`,
+        position: 'relative',
+    }),
+);
 
 export const StyledTopRow = styled('div')(({ theme }) => ({
     display: 'flex',

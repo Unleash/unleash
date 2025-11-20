@@ -85,18 +85,17 @@ const StyledBody = styled('div', {
     ...(safeguards && {
         border: `1px dashed ${theme.palette.neutral.border}`,
         borderRadius: theme.shape.borderRadiusMedium,
-        padding: theme.spacing(0.5, 0),
     }),
 }));
 
 const StyledAddSafeguard = styled('div')(({ theme }) => ({
     display: 'flex',
     borderBottom: `1px dashed ${theme.palette.neutral.border}`,
-    padding: theme.spacing(1.5, 2),
+    padding: theme.spacing(0.25, 0.25),
 }));
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
-    margin: theme.spacing(1, 2),
+    margin: theme.spacing(1, 0),
 }));
 
 const StyledMilestones = styled('div', {
@@ -505,24 +504,25 @@ export const ReleasePlan = ({
                     </PermissionIconButton>
                 )}
             </StyledHeader>
+            {releasePlanAutomationsPaused ? (
+                <StyledAlert
+                    severity='error'
+                    action={
+                        <StyledResumeMilestoneProgressions
+                            variant='body2'
+                            onClick={onResumeMilestoneProgressions}
+                        >
+                            <PlayCircle />
+                            Resume automation
+                        </StyledResumeMilestoneProgressions>
+                    }
+                >
+                    <b>Automation paused by safeguard.</b> Existing users on
+                    this release plan can still access the feature.
+                </StyledAlert>
+            ) : null}
+
             <StyledBody safeguards={safeguardsEnabled}>
-                {releasePlanAutomationsPaused ? (
-                    <StyledAlert
-                        severity='error'
-                        action={
-                            <StyledResumeMilestoneProgressions
-                                variant='body2'
-                                onClick={onResumeMilestoneProgressions}
-                            >
-                                <PlayCircle />
-                                Resume automation
-                            </StyledResumeMilestoneProgressions>
-                        }
-                    >
-                        <b>Automation paused by safeguard.</b> Existing users on
-                        this release plan can still access the feature.
-                    </StyledAlert>
-                ) : null}
                 {safeguardsEnabled ? (
                     <StyledAddSafeguard>
                         {safeguards.length > 0 ? (

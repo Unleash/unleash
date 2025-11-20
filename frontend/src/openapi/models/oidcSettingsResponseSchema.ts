@@ -34,6 +34,8 @@ export interface OidcSettingsResponseSchema {
     enableGroupSyncing?: boolean;
     /** Support Single sign out when user clicks logout in Unleash. If `true` user is signed out of all OpenID Connect sessions against the clientId they may have active */
     enableSingleSignOut?: boolean;
+    /** Enable Proof Key for Code Exchange (PKCE) when performing the OIDC authorization code flow. */
+    enablePkce?: boolean;
     /** Specifies the path in the OIDC token response to read which groups the user belongs to from. */
     groupJsonPath?: string;
     /** The signing algorithm used to sign our token. Refer to the [JWT signatures](https://jwt.io/introduction) documentation for more information. */

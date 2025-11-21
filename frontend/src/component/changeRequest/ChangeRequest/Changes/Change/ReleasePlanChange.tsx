@@ -175,7 +175,11 @@ const AddReleasePlan: FC<{
                         {actions}
                     </ChangeItemInfo>
                 </ChangeItemWrapper>
-                <ReleasePlan plan={planPreview} readonly />
+                <ReleasePlan
+                    plan={planPreview}
+                    onAutomationChange={() => {}}
+                    readonly
+                />
             </>
         );
     }
@@ -194,6 +198,7 @@ const AddReleasePlan: FC<{
                                 >
                                     <ReleasePlan
                                         plan={currentReleasePlan}
+                                        onAutomationChange={() => {}}
                                         readonly
                                     />
                                 </div>
@@ -223,7 +228,11 @@ const AddReleasePlan: FC<{
                 </div>
             </ChangeItemWrapper>
             <TabPanel>
-                <ReleasePlan plan={planPreview} readonly />
+                <ReleasePlan
+                    plan={planPreview}
+                    onAutomationChange={() => {}}
+                    readonly
+                />
             </TabPanel>
             <TabPanel variant='diff'>
                 <EventDiff

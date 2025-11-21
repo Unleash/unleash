@@ -4,7 +4,6 @@ import PlayCircle from '@mui/icons-material/PlayCircle';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
-import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
 import type {
@@ -32,7 +31,10 @@ import { ReleasePlanMilestoneItem } from './ReleasePlanMilestoneItem/ReleasePlan
 import Add from '@mui/icons-material/Add';
 
 import { StyledActionButton } from './ReleasePlanMilestoneItem/StyledActionButton.tsx';
-import { SafeguardForm } from './SafeguardForm/SafeguardForm.tsx';
+import {
+    SafeguardForm,
+    useSafeguardForm,
+} from './SafeguardForm/SafeguardForm.tsx';
 import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguardsApi';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import { DeleteSafeguardDialog } from './DeleteSafeguardDialog.tsx';
@@ -120,12 +122,14 @@ interface IReleasePlanProps {
     plan: IReleasePlan;
     environmentIsDisabled?: boolean;
     readonly?: boolean;
+    onAutomationChange?: () => void;
 }
 
 export const ReleasePlan = ({
     plan,
     environmentIsDisabled,
     readonly,
+    onAutomationChange,
 }: IReleasePlanProps) => {
     const {
         id,
@@ -139,8 +143,6 @@ export const ReleasePlan = ({
     } = plan;
 
     const projectId = useRequiredPathParam('projectId');
-    const { refetch, loading: featureReleasePlansLoading } =
-        useFeatureReleasePlans(projectId, featureName, environment);
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
     const {
@@ -221,9 +223,11 @@ export const ReleasePlan = ({
     >(null);
     const [milestoneToDeleteProgression, setMilestoneToDeleteProgression] =
         useState<IReleasePlanMilestone | null>(null);
-    const [safeguardFormOpen, setSafeguardFormOpen] = useState(false);
+
     const [safeguardDeleteDialogOpen, setSafeguardDeleteDialogOpen] =
         useState(false);
+    const { safeguardFormOpen, setSafeguardFormOpen } =
+        useSafeguardForm(safeguards);
 
     const onChangeRequestConfirm = async () => {
         if (!changeRequestAction) return;
@@ -311,7 +315,7 @@ export const ReleasePlan = ({
                 type: 'success',
             });
 
-            refetch();
+            onAutomationChange?.();
             setRemoveOpen(false);
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -337,7 +341,7 @@ export const ReleasePlan = ({
                     text: `Milestone "${milestone.name}" has started`,
                     type: 'success',
                 });
-                refetch();
+                onAutomationChange?.();
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -387,7 +391,7 @@ export const ReleasePlan = ({
                 featureName,
                 sourceMilestoneId: milestoneToDeleteProgression.id,
             });
-            await refetch();
+            onAutomationChange?.();
             setMilestoneToDeleteProgression(null);
             setToastData({
                 type: 'success',
@@ -411,7 +415,7 @@ export const ReleasePlan = ({
                 type: 'success',
                 text: 'Automation resumed successfully',
             });
-            refetch();
+            onAutomationChange?.();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -434,11 +438,9 @@ export const ReleasePlan = ({
                 type: 'success',
                 text: 'Safeguard added successfully',
             });
-            refetch();
+            onAutomationChange?.();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
-        } finally {
-            setSafeguardFormOpen(false);
         }
     };
 
@@ -461,7 +463,7 @@ export const ReleasePlan = ({
                 type: 'success',
                 text: 'Safeguard deleted successfully',
             });
-            refetch();
+            onAutomationChange?.();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         } finally {
@@ -529,19 +531,14 @@ export const ReleasePlan = ({
             ) : null}
 
             <StyledBody border={safeguardBorder}>
-                {safeguardsEnabled ? (
+                {onAutomationChange && safeguardsEnabled ? (
                     <StyledAddSafeguard border={safeguardBorder}>
-                        {safeguards.length > 0 ? (
+                        {safeguardFormOpen ? (
                             <SafeguardForm
-                                safeguard={safeguards[0]}
+                                safeguard={safeguards?.[0]}
                                 onSubmit={handleSafeguardSubmit}
                                 onCancel={() => setSafeguardFormOpen(false)}
                                 onDelete={handleSafeguardDelete}
-                            />
-                        ) : safeguardFormOpen || featureReleasePlansLoading ? (
-                            <SafeguardForm
-                                onSubmit={handleSafeguardSubmit}
-                                onCancel={() => setSafeguardFormOpen(false)}
                             />
                         ) : (
                             <StyledActionButton
@@ -582,7 +579,7 @@ export const ReleasePlan = ({
                             projectId={projectId}
                             environment={environment}
                             featureName={featureName}
-                            onUpdate={refetch}
+                            onUpdate={onAutomationChange}
                         />
                     ))}
                 </StyledMilestones>

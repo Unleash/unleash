@@ -66,7 +66,7 @@ export const EnvironmentAccordionBody = ({
     const [strategies, setStrategies] = useState(
         featureEnvironment?.strategies || [],
     );
-    const { releasePlans } = useFeatureReleasePlans(
+    const { releasePlans, refetch } = useFeatureReleasePlans(
         projectId,
         featureId,
         featureEnvironment?.name,
@@ -229,6 +229,7 @@ export const EnvironmentAccordionBody = ({
                         <ReleasePlan
                             plan={plan}
                             environmentIsDisabled={isDisabled}
+                            onAutomationChange={refetch}
                         />
                     </StrategyListItem>
                 ))}

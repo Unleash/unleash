@@ -59,7 +59,11 @@ const DeleteReleasePlan: FC<{
                     {actions}
                 </ChangeItemInfo>
             </ChangeItemWrapper>
-            <ReleasePlan plan={releasePlan} readonly />
+            <ReleasePlan
+                plan={releasePlan}
+                onAutomationChange={() => {}}
+                readonly
+            />
         </>
     );
 };

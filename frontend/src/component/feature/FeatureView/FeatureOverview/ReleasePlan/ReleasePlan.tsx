@@ -78,19 +78,21 @@ const StyledHeaderDescription = styled('p')(({ theme }) => ({
 }));
 
 const StyledBody = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'safeguards',
-})<{ safeguards: boolean }>(({ theme, safeguards }) => ({
+    shouldForwardProp: (prop) => prop !== 'border',
+})<{ border: 'solid' | 'dashed' | null }>(({ theme, border }) => ({
     display: 'flex',
     flexDirection: 'column',
-    ...(safeguards && {
-        border: `1px dashed ${theme.palette.neutral.border}`,
+    ...(border && {
+        border: `1px ${border} ${theme.palette.neutral.border}`,
         borderRadius: theme.shape.borderRadiusMedium,
     }),
 }));
 
-const StyledAddSafeguard = styled('div')(({ theme }) => ({
+const StyledAddSafeguard = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'border',
+})<{ border: 'solid' | 'dashed' | null }>(({ theme, border }) => ({
     display: 'flex',
-    borderBottom: `1px dashed ${theme.palette.neutral.border}`,
+    borderBottom: `1px ${border || 'dashed'} ${theme.palette.neutral.border}`,
     padding: theme.spacing(0.25, 0.25),
 }));
 
@@ -473,6 +475,13 @@ export const ReleasePlan = ({
         }
     };
 
+    const safeguardBorder =
+        safeguardsEnabled && safeguards
+            ? safeguards[0]
+                ? 'solid'
+                : 'dashed'
+            : null;
+
     return (
         <StyledContainer>
             <StyledHeader>
@@ -519,9 +528,9 @@ export const ReleasePlan = ({
                 </StyledAlert>
             ) : null}
 
-            <StyledBody safeguards={safeguardsEnabled}>
+            <StyledBody border={safeguardBorder}>
                 {safeguardsEnabled ? (
-                    <StyledAddSafeguard>
+                    <StyledAddSafeguard border={safeguardBorder}>
                         {safeguards.length > 0 ? (
                             <SafeguardForm
                                 safeguard={safeguards[0]}

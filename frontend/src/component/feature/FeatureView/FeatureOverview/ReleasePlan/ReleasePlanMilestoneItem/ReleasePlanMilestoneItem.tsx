@@ -52,7 +52,7 @@ export interface IReleasePlanMilestoneItemProps {
     projectId: string;
     environment: string;
     featureName: string;
-    onUpdate: () => void | Promise<void>;
+    onUpdate: () => void;
 }
 
 const getTimeUnit = (intervalMinutes: number): 'minutes' | 'hours' | 'days' => {

@@ -26,6 +26,20 @@ import type { ISafeguard } from 'interfaces/releasePlans.ts';
 
 const StyledIcon = createStyledIcon(ShieldIcon);
 
+export const useSafeguardForm = (safeguards: ISafeguard[] | undefined) => {
+    const [safeguardFormOpen, setSafeguardFormOpen] = useState(false);
+
+    useEffect(() => {
+        if (safeguards && safeguards.length > 0) {
+            setSafeguardFormOpen(true);
+        } else {
+            setSafeguardFormOpen(false);
+        }
+    }, [JSON.stringify(safeguards)]);
+
+    return { safeguardFormOpen, setSafeguardFormOpen };
+};
+
 interface ISafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
     onCancel: () => void;
@@ -182,7 +196,7 @@ export const SafeguardForm = ({
             threshold: Number(threshold),
         });
 
-        if (mode === 'edit') {
+        if (mode === 'edit' || mode === 'create') {
             setMode('display');
         }
     };

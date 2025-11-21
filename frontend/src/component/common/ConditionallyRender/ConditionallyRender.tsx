@@ -15,6 +15,10 @@ type TargetElement =
 
 type RenderFunc = () => JSX.Element;
 
+/**
+ * @deprecated Use a ternary operator (`condition ? show : elseShow`)
+ * @see https://docs.getunleash.io/contributing/ADRs/front-end/jsx-conditionals
+ */
 export const ConditionallyRender = ({
     condition,
     show,

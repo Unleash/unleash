@@ -185,7 +185,9 @@ export default class ClientInstanceService {
             this.clientApplicationsStore &&
             this.clientInstanceStore
         ) {
-            const uniqueRegistrations = Object.values(this.seenClients);
+            const uniqueRegistrations = Object.values(this.seenClients).filter(
+                (reg) => reg.appName,
+            );
             const uniqueApps: Partial<IClientApplication>[] = Object.values(
                 uniqueRegistrations.reduce((soFar, reg) => {
                     let existingProjects = [];

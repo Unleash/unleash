@@ -239,8 +239,8 @@ export default class ClientMetricsController extends Controller {
         } else {
             const { body, ip: clientIp } = req;
             const { metrics, applications, impactMetrics } = body;
+            const promises: Promise<void>[] = [];
             try {
-                const promises: Promise<void>[] = [];
                 for (const app of applications) {
                     if (
                         app.sdkType === 'frontend' &&
@@ -287,10 +287,31 @@ export default class ClientMetricsController extends Controller {
                     );
                 }
 
-                await Promise.all(promises);
+                const results = await Promise.allSettled(promises);
+                const rejected = results.filter(
+                    (result): result is PromiseRejectedResult =>
+                        result.status === 'rejected',
+                );
+                if (rejected.length) {
+                    this.logger.warn(
+                        'Some bulkMetrics tasks failed',
+                        rejected.map((r) => r.reason?.message || r.reason),
+                    );
+                }
 
                 res.status(202).end();
             } catch (e) {
+                const results = await Promise.allSettled(promises);
+                const rejected = results.filter(
+                    (result): result is PromiseRejectedResult =>
+                        result.status === 'rejected',
+                );
+                if (rejected.length) {
+                    this.logger.warn(
+                        'Some bulkMetrics tasks failed',
+                        rejected.map((r) => r.reason?.message || r.reason),
+                    );
+                }
                 res.status(400).end();
             }
         }

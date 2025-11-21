@@ -297,9 +297,10 @@ export default class ClientMetricsController extends Controller {
                         'Some bulkMetrics tasks failed',
                         rejected.map((r) => r.reason?.message || r.reason),
                     );
+                    res.status(400).end();
+                } else {
+                    res.status(202).end();
                 }
-
-                res.status(202).end();
             } catch (e) {
                 const results = await Promise.allSettled(promises);
                 const rejected = results.filter(

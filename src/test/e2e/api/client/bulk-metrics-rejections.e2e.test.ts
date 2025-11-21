@@ -5,7 +5,6 @@ import {
 } from '../../helpers/test-helper.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import { minutesToMilliseconds } from 'date-fns';
-import ClientMetricsController from '../../../../lib/features/metrics/instance/metrics.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -18,8 +17,6 @@ const postAndFlushBulkMetrics = async (
         .post('/api/client/metrics/bulk')
         .send(body)
         .expect(status);
-    await app.services.clientMetricsServiceV2.registerBulkMetrics(body);
-    new ClientMetricsController(app.services, app.config).bulkMetrics(body);
     // flush metrics to the database
     await app.services.clientMetricsServiceV2.bulkAdd();
     await app.services.clientInstanceService.bulkAdd();

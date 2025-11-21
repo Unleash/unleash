@@ -94,11 +94,7 @@ export const ReleasePlanAddDialog = ({
                 </Alert>
             )}
             <StyledReleasePlanContainer>
-                <ReleasePlan
-                    plan={planPreview}
-                    onAutomationChange={() => {}}
-                    readonly
-                />
+                <ReleasePlan plan={planPreview} readonly />
             </StyledReleasePlanContainer>
             {crProtected && (
                 <Typography sx={{ mt: 4 }}>

@@ -97,11 +97,7 @@ export const ReleasePlanPreview = ({
                     </Box>
                 )}
                 <Box sx={{ px: 2 }}>
-                    <ReleasePlan
-                        plan={planPreview}
-                        onAutomationChange={() => {}}
-                        readonly
-                    />
+                    <ReleasePlan plan={planPreview} readonly />
                 </Box>
                 {crProtected && (
                     <Box sx={{ px: 4, pt: 1 }}>

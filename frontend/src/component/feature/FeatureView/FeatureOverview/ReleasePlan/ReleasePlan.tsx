@@ -122,7 +122,7 @@ interface IReleasePlanProps {
     plan: IReleasePlan;
     environmentIsDisabled?: boolean;
     readonly?: boolean;
-    onAutomationChange: () => void;
+    onAutomationChange?: () => void;
 }
 
 export const ReleasePlan = ({
@@ -315,7 +315,7 @@ export const ReleasePlan = ({
                 type: 'success',
             });
 
-            onAutomationChange();
+            onAutomationChange?.();
             setRemoveOpen(false);
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -341,7 +341,7 @@ export const ReleasePlan = ({
                     text: `Milestone "${milestone.name}" has started`,
                     type: 'success',
                 });
-                onAutomationChange();
+                onAutomationChange?.();
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -391,7 +391,7 @@ export const ReleasePlan = ({
                 featureName,
                 sourceMilestoneId: milestoneToDeleteProgression.id,
             });
-            onAutomationChange();
+            onAutomationChange?.();
             setMilestoneToDeleteProgression(null);
             setToastData({
                 type: 'success',
@@ -415,7 +415,7 @@ export const ReleasePlan = ({
                 type: 'success',
                 text: 'Automation resumed successfully',
             });
-            onAutomationChange();
+            onAutomationChange?.();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -438,7 +438,7 @@ export const ReleasePlan = ({
                 type: 'success',
                 text: 'Safeguard added successfully',
             });
-            onAutomationChange();
+            onAutomationChange?.();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -463,7 +463,7 @@ export const ReleasePlan = ({
                 type: 'success',
                 text: 'Safeguard deleted successfully',
             });
-            onAutomationChange();
+            onAutomationChange?.();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         } finally {

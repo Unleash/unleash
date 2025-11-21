@@ -52,7 +52,7 @@ export interface IReleasePlanMilestoneItemProps {
     projectId: string;
     environment: string;
     featureName: string;
-    onUpdate: () => void;
+    onUpdate?: () => void;
 }
 
 const getTimeUnit = (intervalMinutes: number): 'minutes' | 'hours' | 'days' => {
@@ -134,7 +134,7 @@ export const ReleasePlanMilestoneItem = ({
                 text: 'Automation configured successfully',
             });
             handleCloseProgressionForm();
-            await onUpdate();
+            onUpdate?.();
             return {};
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

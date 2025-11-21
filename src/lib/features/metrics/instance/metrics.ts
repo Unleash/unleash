@@ -150,6 +150,23 @@ export default class ClientMetricsController extends Controller {
         // Note: Custom metrics GET endpoints are now handled by the admin API
     }
 
+    private async processPromiseResults(
+        promises: Promise<void>[],
+    ): Promise<boolean> {
+        const results = await Promise.allSettled(promises);
+        const rejected = results.filter(
+            (result): result is PromiseRejectedResult =>
+                result.status === 'rejected',
+        );
+        if (rejected.length) {
+            this.logger.warn(
+                'Some promise tasks failed',
+                rejected.map((r) => r.reason?.message || r.reason),
+            );
+        }
+        return rejected.length > 0;
+    }
+
     async registerMetrics(
         req: IAuthRequest<void, void, ClientMetricsSchema>,
         res: Response,
@@ -240,6 +257,7 @@ export default class ClientMetricsController extends Controller {
             const { body, ip: clientIp } = req;
             const { metrics, applications, impactMetrics } = body;
             const promises: Promise<void>[] = [];
+
             try {
                 for (const app of applications) {
                     if (
@@ -287,32 +305,15 @@ export default class ClientMetricsController extends Controller {
                     );
                 }
 
-                const results = await Promise.allSettled(promises);
-                const rejected = results.filter(
-                    (result): result is PromiseRejectedResult =>
-                        result.status === 'rejected',
-                );
-                if (rejected.length) {
-                    this.logger.warn(
-                        'Some bulkMetrics tasks failed',
-                        rejected.map((r) => r.reason?.message || r.reason),
-                    );
+                const hasRejections =
+                    await this.processPromiseResults(promises);
+                if (hasRejections) {
                     res.status(400).end();
                 } else {
                     res.status(202).end();
                 }
             } catch (e) {
-                const results = await Promise.allSettled(promises);
-                const rejected = results.filter(
-                    (result): result is PromiseRejectedResult =>
-                        result.status === 'rejected',
-                );
-                if (rejected.length) {
-                    this.logger.warn(
-                        'Some bulkMetrics tasks failed',
-                        rejected.map((r) => r.reason?.message || r.reason),
-                    );
-                }
+                await this.processPromiseResults(promises);
                 res.status(400).end();
             }
         }

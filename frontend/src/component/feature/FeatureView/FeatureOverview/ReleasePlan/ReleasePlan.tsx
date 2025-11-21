@@ -531,7 +531,7 @@ export const ReleasePlan = ({
             ) : null}
 
             <StyledBody border={safeguardBorder}>
-                {safeguardsEnabled ? (
+                {onAutomationChange && safeguardsEnabled ? (
                     <StyledAddSafeguard border={safeguardBorder}>
                         {safeguardFormOpen ? (
                             <SafeguardForm

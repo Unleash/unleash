@@ -92,7 +92,6 @@ export const ReleasePlanMilestoneItem = ({
 
     const isNotLastMilestone = index < milestones.length - 1;
     const isProgressionFormOpen = progressionFormOpenIndex === index;
-    const nextMilestoneId = milestones[index + 1]?.id || '';
     const handleOpenProgressionForm = () =>
         onSetProgressionFormOpenIndex(index);
     const handleCloseProgressionForm = () =>
@@ -166,15 +165,11 @@ export const ReleasePlanMilestoneItem = ({
     const { pendingProgressionChange, effectiveTransitionCondition } =
         getPendingProgressionData(milestone, getPendingProgressionChange);
 
-    const shouldShowAutomation =
-        isNotLastMilestone && milestoneProgressionsEnabled && !readonly;
-
-    const automationSection = shouldShowAutomation ? (
+    const automationSection = (
         <MilestoneAutomation
             milestone={milestone}
+            milestones={milestones}
             status={status}
-            isNotLastMilestone={isNotLastMilestone}
-            nextMilestoneId={nextMilestoneId}
             milestoneProgressionsEnabled={milestoneProgressionsEnabled}
             readonly={readonly}
             isProgressionFormOpen={isProgressionFormOpen}
@@ -185,7 +180,7 @@ export const ReleasePlanMilestoneItem = ({
             onChangeProgression={handleChangeProgression}
             onDeleteProgression={onDeleteProgression}
         />
-    ) : undefined;
+    );
 
     return (
         <div key={milestone.id}>

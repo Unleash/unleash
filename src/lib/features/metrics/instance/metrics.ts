@@ -164,7 +164,7 @@ export default class ClientMetricsController extends Controller {
                 rejected.map((r) => r.reason?.message || r.reason),
             );
         }
-        return rejected.length > 0;
+        return rejected.length === 0;
     }
 
     async registerMetrics(
@@ -305,9 +305,8 @@ export default class ClientMetricsController extends Controller {
                     );
                 }
 
-                const hasRejections =
-                    await this.processPromiseResults(promises);
-                if (hasRejections) {
+                const ok = await this.processPromiseResults(promises);
+                if (!ok) {
                     res.status(400).end();
                 } else {
                     res.status(202).end();

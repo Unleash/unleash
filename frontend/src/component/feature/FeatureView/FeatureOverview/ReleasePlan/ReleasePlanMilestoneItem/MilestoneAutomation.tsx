@@ -64,7 +64,7 @@ export const MilestoneAutomation = ({
         <Badge color='error'>Deleted in draft</Badge>
     ) : hasPendingChange ? (
         <Badge color='warning'>Modified in draft</Badge>
-    ) : status?.type === 'paused' ? (
+    ) : status?.progression === 'paused' ? (
         <Badge color='error' icon={<WarningAmber fontSize='small' />}>
             Paused
         </Badge>

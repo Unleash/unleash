@@ -37,7 +37,10 @@ const MilestoneListRendererCore = ({
     onUpdateAutomation,
     onDeleteAutomation,
 }: MilestoneListRendererCoreProps) => {
-    const status: MilestoneStatus = { type: 'not-started' };
+    const status: MilestoneStatus = {
+        type: 'not-started',
+        progression: 'active',
+    };
 
     return (
         <>

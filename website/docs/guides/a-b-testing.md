@@ -136,7 +136,7 @@ The output from the impression data in your app may look like this code snippet:
 }
 ```
 
-In order to capture impression events in your app, follow our [language and framework-specific tutorials](/feature-flag-tutorials/react).
+In order to capture impression events in your app, follow our [language and framework-specific tutorials](/guides/implement-feature-flags-in-react).
 
 Now that your application is capturing impression events, you can configure the correct data fields and formatting to send to any analytics tool or data warehouse you use.
 

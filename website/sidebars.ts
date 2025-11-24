@@ -338,7 +338,7 @@ const sidebars: SidebarsConfig = {
                     collapsed: true,
                     link: {
                         type: 'doc',
-                        id: 'feature-flag-tutorials/react/implementing-feature-flags',
+                        id: 'guides/language-specific-tutorials/react/implementing-feature-flags',
                     },
                     items: [
                         {
@@ -346,13 +346,13 @@ const sidebars: SidebarsConfig = {
                             label: 'React',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/react/implementing-feature-flags',
+                                id: 'guides/language-specific-tutorials/react/implementing-feature-flags',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Examples',
-                                    id: 'feature-flag-tutorials/react/examples',
+                                    id: 'guides/language-specific-tutorials/react/examples',
                                 },
                             ],
                         },
@@ -361,18 +361,18 @@ const sidebars: SidebarsConfig = {
                             label: 'Java',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/java/implementing-feature-flags',
+                                id: 'guides/language-specific-tutorials/java/implementing-feature-flags',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Spring Boot',
-                                    id: 'feature-flag-tutorials/java/spring-boot-implementing-feature-flags',
+                                    id: 'guides/language-specific-tutorials/java/spring-boot-implementing-feature-flags',
                                 },
                                 {
                                     type: 'doc',
                                     label: 'Spring Boot Examples',
-                                    id: 'feature-flag-tutorials/java/spring-boot-examples',
+                                    id: 'guides/language-specific-tutorials/java/spring-boot-examples',
                                 },
                             ],
                         },
@@ -381,63 +381,63 @@ const sidebars: SidebarsConfig = {
                             label: 'Python',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/python/implementing-feature-flags',
+                                id: 'guides/language-specific-tutorials/python/implementing-feature-flags',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Python Examples',
-                                    id: 'feature-flag-tutorials/python/examples',
+                                    id: 'guides/language-specific-tutorials/python/examples',
                                 },
                                 {
                                     type: 'doc',
                                     label: 'Django Tutorial',
-                                    id: 'feature-flag-tutorials/django/implementing-feature-flags-django',
+                                    id: 'guides/language-specific-tutorials/django/implementing-feature-flags-django',
                                 },
                                 {
                                     type: 'doc',
                                     label: 'Django Examples',
-                                    id: 'feature-flag-tutorials/django/django-examples',
+                                    id: 'guides/language-specific-tutorials/django/django-examples',
                                 },
                             ],
                         },
                         {
                             type: 'doc',
                             label: 'Next.js',
-                            id: 'feature-flag-tutorials/nextjs/implementing-feature-flags-nextjs',
+                            id: 'guides/language-specific-tutorials/nextjs/implementing-feature-flags-nextjs',
                         },
                         {
                             type: 'category',
                             label: 'Go',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/golang/implementing-feature-flags-golang',
+                                id: 'guides/language-specific-tutorials/golang/implementing-feature-flags-golang',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Go Examples',
-                                    id: 'feature-flag-tutorials/golang/golang-examples',
+                                    id: 'guides/language-specific-tutorials/golang/golang-examples',
                                 },
                             ],
                         },
                         {
                             type: 'doc',
                             label: 'JavaScript',
-                            id: 'feature-flag-tutorials/javascript/implementing-feature-flags-js',
+                            id: 'guides/language-specific-tutorials/javascript/implementing-feature-flags-js',
                         },
                         {
                             type: 'category',
                             label: '.NET',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/dotnet/implementing-feature-flags-dotnet',
+                                id: 'guides/language-specific-tutorials/dotnet/implementing-feature-flags-dotnet',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Examples',
-                                    id: 'feature-flag-tutorials/dotnet/dotnet-examples',
+                                    id: 'guides/language-specific-tutorials/dotnet/dotnet-examples',
                                 },
                             ],
                         },
@@ -446,68 +446,68 @@ const sidebars: SidebarsConfig = {
                             label: 'iOS',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/ios/implementing-feature-flags-ios',
+                                id: 'guides/language-specific-tutorials/ios/implementing-feature-flags-ios',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Examples',
-                                    id: 'feature-flag-tutorials/ios/examples',
+                                    id: 'guides/language-specific-tutorials/ios/examples',
                                 },
                             ],
                         },
                         {
                             type: 'doc',
                             label: 'Serverless',
-                            id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
+                            id: 'guides/language-specific-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
                         },
                         {
                             type: 'category',
                             label: 'Rust',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/rust/implementing-feature-flags-rust',
+                                id: 'guides/language-specific-tutorials/rust/implementing-feature-flags-rust',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Examples',
-                                    id: 'feature-flag-tutorials/rust/rust-examples',
+                                    id: 'guides/language-specific-tutorials/rust/rust-examples',
                                 },
                             ],
                         },
                         {
                             type: 'doc',
                             label: 'Flutter',
-                            id: 'feature-flag-tutorials/flutter/a-b-testing',
+                            id: 'guides/language-specific-tutorials/flutter/a-b-testing',
                         },
                         {
                             type: 'doc',
                             label: 'SvelteKit',
-                            id: 'feature-flag-tutorials/sveltekit/implementing-feature-flags-sveltekit',
+                            id: 'guides/language-specific-tutorials/sveltekit/implementing-feature-flags-sveltekit',
                         },
                         {
                             type: 'category',
                             label: 'Ruby',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/ruby/implementing-feature-flags-ruby',
+                                id: 'guides/language-specific-tutorials/ruby/implementing-feature-flags-ruby',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Ruby Examples',
-                                    id: 'feature-flag-tutorials/ruby/ruby-examples',
+                                    id: 'guides/language-specific-tutorials/ruby/ruby-examples',
                                 },
                                 {
                                     type: 'doc',
                                     label: 'Rails Tutorial',
-                                    id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
+                                    id: 'guides/language-specific-tutorials/rails/implementing-feature-flags-rails',
                                 },
                                 {
                                     type: 'doc',
                                     label: 'Rails Examples',
-                                    id: 'feature-flag-tutorials/rails/rails-examples',
+                                    id: 'guides/language-specific-tutorials/rails/rails-examples',
                                 },
                             ],
                         },

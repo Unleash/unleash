@@ -330,11 +330,11 @@ class="header-github-link"
                             },
                             {
                                 label: 'Progressive or gradual rollouts',
-                                to: '/feature-flag-tutorials/use-cases/gradual-rollout',
+                                to: '/guides/gradual-rollout',
                             },
                             {
                                 label: 'Trunk-based development',
-                                to: '/feature-flag-tutorials/use-cases/trunk-based-development',
+                                to: '/guides/trunk-based-development',
                             },
                             {
                                 label: 'Software kill switches',
@@ -342,7 +342,7 @@ class="header-github-link"
                             },
                             {
                                 label: 'A/B testing',
-                                to: '/feature-flag-tutorials/use-cases/a-b-testing',
+                                to: '/guides/a-b-testing',
                             },
                             {
                                 label: 'Feature management',

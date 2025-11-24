@@ -82,6 +82,19 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     padding: theme.spacing(0, 1),
 }));
 
+const getHosting = ({
+    hosting,
+}: ConnectedEdge): 'Cloud' | 'Self-hosted' | 'Unknown' => {
+    switch (hosting) {
+        case 'hosted':
+            return 'Cloud';
+        case 'enterprise-self-hosted':
+            return 'Self-hosted';
+        default:
+            return hosting ? `Unknown: ${hosting}` : 'Unknown';
+    }
+};
+
 const getConnectionStatus = ({
     reportedAt,
 }: ConnectedEdge): InstanceConnectionStatus => {
@@ -177,6 +190,10 @@ export const NetworkConnectedEdgeInstance = ({
                     <StyledDetailRow>
                         <strong>Region</strong>
                         <span>{instance.region || 'Unknown'}</span>
+                    </StyledDetailRow>
+                    <StyledDetailRow>
+                        <strong>Hosting</strong>
+                        <span>{getHosting(instance)}</span>
                     </StyledDetailRow>
                     <StyledDetailRow>
                         <strong>Version</strong>

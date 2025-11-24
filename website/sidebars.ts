@@ -97,7 +97,19 @@ const sidebars: SidebarsConfig = {
                         'reference/segments',
                         'reference/unleash-context',
                         'reference/stickiness',
+                    ],
+                },
+                {
+                    label: 'Release management',
+                    collapsed: true,
+                    type: 'category',
+                    link: {
+                        type: 'doc',
+                        id: 'reference/release-templates',
+                    },
+                    items: [
                         'reference/release-templates',
+                        'reference/impact-metrics',
                     ],
                 },
                 {

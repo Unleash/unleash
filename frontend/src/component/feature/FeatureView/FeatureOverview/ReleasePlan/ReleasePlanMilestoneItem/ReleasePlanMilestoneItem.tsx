@@ -122,13 +122,13 @@ export const ReleasePlanMilestoneItem = ({
         }
 
         try {
-            await changeMilestoneProgression(
+            await changeMilestoneProgression({
                 projectId,
                 environment,
                 featureName,
-                milestone.id,
-                payload,
-            );
+                sourceMilestoneId: milestone.id,
+                body: payload,
+            });
             setToastData({
                 type: 'success',
                 text: 'Automation configured successfully',
@@ -150,6 +150,18 @@ export const ReleasePlanMilestoneItem = ({
         environmentIsDisabled,
         milestones,
     );
+
+    const previousMilestone = index > 0 ? milestones[index - 1] : null;
+    const previousMilestoneStatus = previousMilestone
+        ? calculateMilestoneStatus(
+              previousMilestone,
+              activeMilestoneId,
+              index - 1,
+              activeIndex,
+              environmentIsDisabled,
+              milestones,
+          )
+        : undefined;
 
     const { pendingProgressionChange, effectiveTransitionCondition } =
         getPendingProgressionData(milestone, getPendingProgressionChange);
@@ -183,8 +195,7 @@ export const ReleasePlanMilestoneItem = ({
                 status={status}
                 onStartMilestone={onStartMilestone}
                 automationSection={automationSection}
-                allMilestones={milestones}
-                activeMilestoneId={activeMilestoneId}
+                previousMilestoneStatus={previousMilestoneStatus}
             />
             <ConditionallyRender
                 condition={isNotLastMilestone}

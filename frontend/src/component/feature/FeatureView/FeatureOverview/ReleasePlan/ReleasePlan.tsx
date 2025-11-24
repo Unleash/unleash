@@ -1,5 +1,6 @@
 import Delete from '@mui/icons-material/Delete';
-import { Alert, styled } from '@mui/material';
+import { Alert, styled, Link } from '@mui/material';
+import PlayCircle from '@mui/icons-material/PlayCircle';
 import { DELETE_FEATURE_STRATEGY } from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
@@ -84,18 +85,17 @@ const StyledBody = styled('div', {
     ...(safeguards && {
         border: `1px dashed ${theme.palette.neutral.border}`,
         borderRadius: theme.shape.borderRadiusMedium,
-        padding: theme.spacing(0.5, 0),
     }),
 }));
 
 const StyledAddSafeguard = styled('div')(({ theme }) => ({
     display: 'flex',
     borderBottom: `1px dashed ${theme.palette.neutral.border}`,
-    padding: theme.spacing(1.5, 2),
+    padding: theme.spacing(0.25, 0.25),
 }));
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
-    margin: theme.spacing(1, 2),
+    margin: theme.spacing(1, 0),
 }));
 
 const StyledMilestones = styled('div', {
@@ -104,6 +104,14 @@ const StyledMilestones = styled('div', {
     ...(safeguards && {
         padding: theme.spacing(1.5, 1.5),
     }),
+}));
+
+const StyledResumeMilestoneProgressions = styled(Link)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    textDecoration: 'none',
+    color: 'inherit',
 }));
 
 interface IReleasePlanProps {
@@ -136,8 +144,11 @@ export const ReleasePlan = ({
     );
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
-    const { deleteMilestoneProgression, loading: milestoneProgressionLoading } =
-        useMilestoneProgressionsApi();
+    const {
+        deleteMilestoneProgression,
+        resumeMilestoneProgressions,
+        loading: milestoneProgressionLoading,
+    } = useMilestoneProgressionsApi();
     const {
         createOrUpdateSafeguard,
         deleteSafeguard,
@@ -371,12 +382,12 @@ export const ReleasePlan = ({
             return;
 
         try {
-            await deleteMilestoneProgression(
+            await deleteMilestoneProgression({
                 projectId,
                 environment,
                 featureName,
-                milestoneToDeleteProgression.id,
-            );
+                sourceMilestoneId: milestoneToDeleteProgression.id,
+            });
             await refetch();
             setMilestoneToDeleteProgression(null);
             setToastData({
@@ -385,6 +396,24 @@ export const ReleasePlan = ({
             });
         } catch (error: unknown) {
             setMilestoneToDeleteProgression(null);
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onResumeMilestoneProgressions = async () => {
+        try {
+            await resumeMilestoneProgressions({
+                projectId,
+                environment,
+                featureName,
+                planId: id,
+            });
+            setToastData({
+                type: 'success',
+                text: 'Automation resumed successfully',
+            });
+            refetch();
+        } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
     };
@@ -475,13 +504,25 @@ export const ReleasePlan = ({
                     </PermissionIconButton>
                 )}
             </StyledHeader>
+            {releasePlanAutomationsPaused ? (
+                <StyledAlert
+                    severity='error'
+                    action={
+                        <StyledResumeMilestoneProgressions
+                            variant='body2'
+                            onClick={onResumeMilestoneProgressions}
+                        >
+                            <PlayCircle />
+                            Resume automation
+                        </StyledResumeMilestoneProgressions>
+                    }
+                >
+                    <b>Automation paused by safeguard.</b> Existing users on
+                    this release plan can still access the feature.
+                </StyledAlert>
+            ) : null}
+
             <StyledBody safeguards={safeguardsEnabled}>
-                {releasePlanAutomationsPaused ? (
-                    <StyledAlert severity='error'>
-                        <b>Automation paused by safeguard.</b> Existing users on
-                        this release plan can still access the feature.
-                    </StyledAlert>
-                ) : null}
                 {safeguardsEnabled ? (
                     <StyledAddSafeguard>
                         {safeguards.length > 0 ? (

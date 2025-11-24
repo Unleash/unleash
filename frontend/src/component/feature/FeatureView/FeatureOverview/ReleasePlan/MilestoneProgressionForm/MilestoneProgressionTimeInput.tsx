@@ -15,33 +15,10 @@ const StyledInputGroup = styled('div')(({ theme }) => ({
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
     width: '60px',
-    '& .MuiOutlinedInput-root': {
-        borderRadius: theme.spacing(0.5),
-        '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.primary.main,
-        },
-    },
-    '& input': {
-        textAlign: 'center',
-        padding: theme.spacing(0.75, 1),
-        fontSize: theme.typography.body2.fontSize,
-        fontWeight: theme.typography.fontWeightMedium,
-    },
 }));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
     width: '100px',
-    fontSize: theme.typography.body2.fontSize,
-    borderRadius: theme.spacing(0.5),
-    '& .MuiOutlinedInput-notchedOutline': {
-        borderRadius: theme.spacing(0.5),
-    },
-    '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.primary.main,
-    },
-    '& .MuiSelect-select': {
-        padding: theme.spacing(0.75, 1.25),
-    },
 }));
 
 interface IMilestoneProgressionTimeInputProps {
@@ -75,8 +52,7 @@ export const MilestoneProgressionTimeInput = ({
     return (
         <StyledInputGroup>
             <StyledTextField
-                type='text'
-                inputMode='numeric'
+                type='number'
                 value={timeValue}
                 onChange={onTimeValueChange}
                 onPaste={handleNumericPaste}

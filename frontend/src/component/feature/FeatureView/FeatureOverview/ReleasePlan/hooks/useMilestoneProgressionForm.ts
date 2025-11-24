@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { isPast, addMinutes } from 'date-fns';
+import { useCallback, useState } from 'react';
+import { addMinutes, isPast } from 'date-fns';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { formatDateYMDHM } from 'utils/formatDate.ts';
 
@@ -112,10 +112,7 @@ export const useMilestoneProgressionForm = (
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
         const inputValue = event.target.value;
-        if (inputValue === '' || /^\d+$/.test(inputValue)) {
-            const value = inputValue === '' ? 0 : Number.parseInt(inputValue);
-            setTimeValue(value);
-        }
+        setTimeValue(Number(inputValue));
     };
 
     const clearErrors = useCallback(() => {

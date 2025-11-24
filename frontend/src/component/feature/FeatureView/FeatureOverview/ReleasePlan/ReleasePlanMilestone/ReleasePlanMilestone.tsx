@@ -104,8 +104,7 @@ interface IReleasePlanMilestoneProps {
     onStartMilestone?: (milestone: IReleasePlanMilestone) => void;
     readonly?: boolean;
     automationSection?: React.ReactNode;
-    allMilestones: IReleasePlanMilestone[];
-    activeMilestoneId?: string;
+    previousMilestoneStatus?: MilestoneStatus;
 }
 
 export const ReleasePlanMilestone = ({
@@ -114,11 +113,12 @@ export const ReleasePlanMilestone = ({
     onStartMilestone,
     readonly,
     automationSection,
-    allMilestones,
-    activeMilestoneId,
+    previousMilestoneStatus,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(false);
     const hasAutomation = Boolean(automationSection);
+    const isPreviousMilestonePaused =
+        previousMilestoneStatus?.type === 'paused';
 
     if (!milestone.strategies.length) {
         return (
@@ -136,11 +136,12 @@ export const ReleasePlanMilestone = ({
                             (status.type === 'active' &&
                                 milestone.startedAt) ? (
                                 <StyledStatusRow>
-                                    {!readonly && (
-                                        <MilestoneNextStartTime
-                                            status={status}
-                                        />
-                                    )}
+                                    {!readonly &&
+                                        !isPreviousMilestonePaused && (
+                                            <MilestoneNextStartTime
+                                                status={status}
+                                            />
+                                        )}
                                     {!readonly && onStartMilestone && (
                                         <ReleasePlanMilestoneStatus
                                             status={status}
@@ -187,7 +188,7 @@ export const ReleasePlanMilestone = ({
                         {(!readonly && onStartMilestone) ||
                         (status.type === 'active' && milestone.startedAt) ? (
                             <StyledStatusRow>
-                                {!readonly && (
+                                {!readonly && !isPreviousMilestonePaused && (
                                     <MilestoneNextStartTime status={status} />
                                 )}
                                 {!readonly && onStartMilestone && (

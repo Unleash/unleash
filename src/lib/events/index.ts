@@ -180,6 +180,9 @@ export const BANNER_CREATED = 'banner-created' as const;
 export const BANNER_UPDATED = 'banner-updated' as const;
 export const BANNER_DELETED = 'banner-deleted' as const;
 
+export const SAFEGUARD_CHANGED = 'safeguard-changed' as const;
+export const SAFEGUARD_DELETED = 'safeguard-deleted' as const;
+
 export const SIGNAL_ENDPOINT_CREATED = 'signal-endpoint-created' as const;
 export const SIGNAL_ENDPOINT_UPDATED = 'signal-endpoint-updated' as const;
 export const SIGNAL_ENDPOINT_DELETED = 'signal-endpoint-deleted' as const;
@@ -363,6 +366,8 @@ export const IEventTypes = [
     BANNER_CREATED,
     BANNER_UPDATED,
     BANNER_DELETED,
+    SAFEGUARD_CHANGED,
+    SAFEGUARD_DELETED,
     PROJECT_ENVIRONMENT_ADDED,
     PROJECT_ENVIRONMENT_REMOVED,
     DEFAULT_STRATEGY_UPDATED,

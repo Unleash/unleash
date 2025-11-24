@@ -5,6 +5,7 @@
  */
 import type { ImpactMetricsConfigSchemaAggregationMode } from './impactMetricsConfigSchemaAggregationMode.js';
 import type { ImpactMetricsConfigSchemaLabelSelectors } from './impactMetricsConfigSchemaLabelSelectors.js';
+import type { ImpactMetricsConfigSchemaMode } from './impactMetricsConfigSchemaMode.js';
 import type { ImpactMetricsConfigSchemaTimeRange } from './impactMetricsConfigSchemaTimeRange.js';
 import type { ImpactMetricsConfigSchemaType } from './impactMetricsConfigSchemaType.js';
 import type { ImpactMetricsConfigSchemaYAxisMin } from './impactMetricsConfigSchemaYAxisMin.js';
@@ -23,6 +24,8 @@ export interface ImpactMetricsConfigSchema {
     labelSelectors: ImpactMetricsConfigSchemaLabelSelectors;
     /** The Prometheus metric series to query. It includes both unleash prefix and metric type and display name */
     metricName: string;
+    /** The access mode for this impact metric configuration: "read" when referenced by a safeguard, "write" otherwise. */
+    mode?: ImpactMetricsConfigSchemaMode;
     /** The time range for the metric data. */
     timeRange: ImpactMetricsConfigSchemaTimeRange;
     /**

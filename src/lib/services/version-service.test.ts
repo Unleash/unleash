@@ -2,7 +2,7 @@ import nock from 'nock';
 import createStores from '../../test/fixtures/store.js';
 import version from '../util/version.js';
 import getLogger from '../../test/fixtures/no-logger.js';
-import VersionService from './version-service.js';
+import VersionService, { type IInstanceInfo } from './version-service.js';
 import { randomId } from '../util/random-id.js';
 
 beforeAll(() => {
@@ -346,4 +346,65 @@ test('Counts production changes', async () => {
     await service.checkLatestVersion(() => Promise.resolve(fakeTelemetryData));
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();
+});
+
+describe('instance info reading', () => {
+    test('it sets instance info if the instanceInfoProvider promise returns a truthy value', async () => {
+        const instanceInfo: IInstanceInfo = {
+            customerPlan: 'Test Plan',
+            customerName: 'Test Company',
+            clientId: 'Test Id',
+        };
+
+        const url = `https://${randomId()}.example.com`;
+        const scope = nock(url)
+            .post(
+                '/',
+                (body) =>
+                    body.instanceInfo &&
+                    body.instanceInfo.customerPlan ===
+                        instanceInfo.customerPlan &&
+                    body.instanceInfo.customerName ===
+                        instanceInfo.customerName &&
+                    body.instanceInfo.clientId === instanceInfo.clientId,
+            )
+            .reply(() => [200]);
+
+        const stores = createStores();
+        const service = new VersionService(stores, {
+            getLogger,
+            versionCheck: { url, enable: true },
+            telemetry: true,
+        });
+        await service.checkLatestVersion(
+            () => Promise.resolve(fakeTelemetryData),
+            () => Promise.resolve(instanceInfo),
+        );
+        expect(scope.isDone()).toEqual(true);
+    });
+
+    test.each([
+        ['is undefined', undefined],
+        ['returns undefined', () => Promise.resolve(undefined)],
+    ])(
+        'it does not set instance info if the instanceInfoProvider promise %s',
+        async (_, instanceInfoProvider) => {
+            const url = `https://${randomId()}.example.com`;
+            const scope = nock(url)
+                .post('/', (body) => body.instanceInfo === undefined)
+                .reply(() => [200]);
+
+            const stores = createStores();
+            const service = new VersionService(stores, {
+                getLogger,
+                versionCheck: { url, enable: true },
+                telemetry: true,
+            });
+            await service.checkLatestVersion(
+                () => Promise.resolve(fakeTelemetryData),
+                instanceInfoProvider,
+            );
+            expect(scope.isDone()).toEqual(true);
+        },
+    );
 });

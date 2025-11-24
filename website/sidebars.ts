@@ -241,12 +241,12 @@ const sidebars: SidebarsConfig = {
                     collapsed: true,
                     link: {
                         type: 'doc',
-                        id: 'guides/how-to-create-feature-toggles',
+                        id: 'guides/how-to-create-feature-flags',
                     },
                     items: [
                         {
                             type: 'doc',
-                            id: 'guides/how-to-create-feature-toggles',
+                            id: 'guides/how-to-create-feature-flags',
                         },
                         {
                             type: 'doc',

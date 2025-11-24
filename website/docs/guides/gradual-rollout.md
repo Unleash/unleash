@@ -1,6 +1,5 @@
 ---
 title: How to perform a gradual rollout
-slug: /guides/gradual-rollout
 pagination_next: guides/a-b-testing
 ---
 

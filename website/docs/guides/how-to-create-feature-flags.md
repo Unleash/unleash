@@ -1,7 +1,6 @@
 ---
 title: Create and configure a feature flag
 description: 'This guide shows you how to create feature flags in Unleash and how to add constraints, segments, variants, and more.'
-slug: /how-to-create-feature-flag
 pagination_next: guides/how-to-schedule-feature-releases
 ---
 

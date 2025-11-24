@@ -1,6 +1,5 @@
 ---
 title: Implement trunk-based development using feature flags
-slug: /guides/trunk-based-development
 ---
 
 import SearchPriority from '@site/src/components/SearchPriority';

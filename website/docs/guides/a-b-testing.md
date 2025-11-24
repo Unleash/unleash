@@ -1,6 +1,5 @@
 ---
 title: Implement A/B testing using feature flags
-slug: /guides/a-b-testing
 pagination_next: guides/ai
 ---
 

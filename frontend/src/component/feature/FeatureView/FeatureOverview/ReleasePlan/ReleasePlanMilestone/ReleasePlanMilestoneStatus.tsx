@@ -10,11 +10,11 @@ export type MilestoneStatus =
     | {
           type: 'not-started';
           scheduledAt?: Date;
-          progressions: MilestoneProgressionStatus;
+          progression: MilestoneProgressionStatus;
       }
-    | { type: 'active'; progressions: MilestoneProgressionStatus }
-    | { type: 'paused'; progressions: MilestoneProgressionStatus }
-    | { type: 'completed'; progressions: MilestoneProgressionStatus };
+    | { type: 'active'; progression: MilestoneProgressionStatus }
+    | { type: 'paused'; progression: MilestoneProgressionStatus }
+    | { type: 'completed'; progression: MilestoneProgressionStatus };
 
 const BaseStatusButton = styled('button')<{ disabled?: boolean }>(
     ({ theme, disabled }) => ({

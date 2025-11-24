@@ -11,7 +11,7 @@ export const useMilestoneProgressionInfo = (
     if (
         !status ||
         status.type !== 'active' ||
-        status.progressions === 'paused'
+        status.progression === 'paused'
     ) {
         return null;
     }

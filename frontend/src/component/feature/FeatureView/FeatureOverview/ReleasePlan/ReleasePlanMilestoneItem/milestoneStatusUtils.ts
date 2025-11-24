@@ -13,18 +13,18 @@ export const calculateMilestoneStatus = (
     environmentIsDisabled: boolean | undefined,
     allMilestones: IReleasePlanMilestone[],
 ): MilestoneStatus => {
-    const progressions: MilestoneProgressionStatus = milestone.pausedAt
+    const progression: MilestoneProgressionStatus = milestone.pausedAt
         ? 'paused'
         : 'active';
 
     if (milestone.id === activeMilestoneId) {
         return environmentIsDisabled
-            ? { type: 'paused', progressions }
-            : { type: 'active', progressions };
+            ? { type: 'paused', progression }
+            : { type: 'active', progression };
     }
 
     if (index < activeIndex) {
-        return { type: 'completed', progressions };
+        return { type: 'completed', progression };
     }
 
     const scheduledAt = calculateMilestoneStartTime(
@@ -36,6 +36,6 @@ export const calculateMilestoneStatus = (
     return {
         type: 'not-started',
         scheduledAt: scheduledAt || undefined,
-        progressions,
+        progression,
     };
 };

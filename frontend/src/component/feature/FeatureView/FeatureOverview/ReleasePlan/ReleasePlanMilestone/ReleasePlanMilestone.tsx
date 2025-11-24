@@ -109,7 +109,7 @@ interface IReleasePlanMilestoneProps {
 
 export const ReleasePlanMilestone = ({
     milestone,
-    status = { type: 'not-started', progressions: 'active' },
+    status = { type: 'not-started', progression: 'active' },
     onStartMilestone,
     readonly,
     automationSection,

@@ -39,7 +39,7 @@ const MilestoneListRendererCore = ({
 }: MilestoneListRendererCoreProps) => {
     const status: MilestoneStatus = {
         type: 'not-started',
-        progressions: 'active',
+        progression: 'active',
     };
 
     return (

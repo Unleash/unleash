@@ -58,14 +58,15 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
             stopTimer();
             return [];
         }
+        const baseTime = new Date();
         const result = await this.db('feature_lifecycles')
             .insert(
-                validStages.map((stage) => ({
+                validStages.map((stage, index) => ({
                     feature: stage.feature,
                     stage: stage.stage,
                     status: stage.status,
                     status_value: stage.statusValue,
-                    created_at: new Date(),
+                    created_at: new Date(baseTime.getTime() + index), // prevent identical times for stages in bulk update
                 })),
             )
             .returning('*')

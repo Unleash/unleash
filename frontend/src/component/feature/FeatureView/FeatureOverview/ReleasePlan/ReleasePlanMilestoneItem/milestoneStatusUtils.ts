@@ -1,5 +1,8 @@
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
-import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
+import type {
+    MilestoneStatus,
+    MilestoneProgressionStatus,
+} from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { calculateMilestoneStartTime } from '../utils/calculateMilestoneStartTime.js';
 
 export const calculateMilestoneStatus = (
@@ -10,16 +13,18 @@ export const calculateMilestoneStatus = (
     environmentIsDisabled: boolean | undefined,
     allMilestones: IReleasePlanMilestone[],
 ): MilestoneStatus => {
-    if (milestone.pausedAt) {
-        return { type: 'paused' };
-    }
+    const progression: MilestoneProgressionStatus = milestone.pausedAt
+        ? 'paused'
+        : 'active';
 
     if (milestone.id === activeMilestoneId) {
-        return environmentIsDisabled ? { type: 'paused' } : { type: 'active' };
+        return environmentIsDisabled
+            ? { type: 'paused', progression }
+            : { type: 'active', progression };
     }
 
     if (index < activeIndex) {
-        return { type: 'completed' };
+        return { type: 'completed', progression };
     }
 
     const scheduledAt = calculateMilestoneStartTime(
@@ -31,5 +36,6 @@ export const calculateMilestoneStatus = (
     return {
         type: 'not-started',
         scheduledAt: scheduledAt || undefined,
+        progression,
     };
 };

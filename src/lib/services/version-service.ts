@@ -58,6 +58,12 @@ export interface IFeatureUsageInfo {
     edgeInstanceUsage?: EdgeInstanceUsage;
 }
 
+export type IInstanceInfo = Partial<{
+    customerPlan: string;
+    customerName: string;
+    clientId: string;
+}>;
+
 export default class VersionService {
     private logger: Logger;
 
@@ -131,6 +137,7 @@ export default class VersionService {
 
     async checkLatestVersion(
         telemetryDataProvider: () => Promise<IFeatureUsageInfo>,
+        instanceInfoProvider?: () => Promise<IInstanceInfo | undefined>,
     ): Promise<void> {
         const instanceId = await this.getInstanceId();
         this.logger.debug(
@@ -145,6 +152,10 @@ export default class VersionService {
 
                 if (this.telemetryEnabled) {
                     versionPayload.featureInfo = await telemetryDataProvider();
+                    const instanceInfo = await instanceInfoProvider?.();
+                    if (instanceInfo) {
+                        versionPayload.instanceInfo = instanceInfo;
+                    }
                 }
                 if (this.versionCheckUrl) {
                     const res = await ky.post(this.versionCheckUrl, {

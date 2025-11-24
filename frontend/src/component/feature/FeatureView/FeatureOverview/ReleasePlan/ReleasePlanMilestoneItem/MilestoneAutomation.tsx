@@ -12,9 +12,8 @@ import { StyledActionButton } from './StyledActionButton.tsx';
 
 interface MilestoneAutomationProps {
     milestone: IReleasePlanMilestone;
+    milestones: IReleasePlanMilestone[];
     status: MilestoneStatus;
-    isNotLastMilestone: boolean;
-    nextMilestoneId: string;
     milestoneProgressionsEnabled: boolean;
     readonly: boolean | undefined;
     isProgressionFormOpen: boolean;
@@ -30,9 +29,8 @@ interface MilestoneAutomationProps {
 
 export const MilestoneAutomation = ({
     milestone,
+    milestones,
     status,
-    isNotLastMilestone,
-    nextMilestoneId,
     milestoneProgressionsEnabled,
     readonly,
     isProgressionFormOpen,
@@ -43,6 +41,13 @@ export const MilestoneAutomation = ({
     onChangeProgression,
     onDeleteProgression,
 }: MilestoneAutomationProps) => {
+    const milestoneIndex = milestones.findIndex((m) => m.id === milestone.id);
+    const isNotLastMilestone = milestoneIndex < milestones.length - 1;
+    const nextMilestoneId = milestones[milestoneIndex + 1]?.id || '';
+    const hasAnyPausedMilestone = milestones.some((milestone) =>
+        Boolean(milestone.pausedAt),
+    );
+
     const showAutomation =
         milestoneProgressionsEnabled && isNotLastMilestone && !readonly;
 
@@ -59,7 +64,7 @@ export const MilestoneAutomation = ({
         <Badge color='error'>Deleted in draft</Badge>
     ) : hasPendingChange ? (
         <Badge color='warning'>Modified in draft</Badge>
-    ) : status?.type === 'paused' ? (
+    ) : status?.progression === 'paused' ? (
         <Badge color='error' icon={<WarningAmber fontSize='small' />}>
             Paused
         </Badge>
@@ -89,7 +94,7 @@ export const MilestoneAutomation = ({
                     status={status}
                     badge={badge}
                 />
-            ) : (
+            ) : hasAnyPausedMilestone ? null : (
                 <StyledActionButton
                     onClick={onOpenProgressionForm}
                     color='primary'

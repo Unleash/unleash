@@ -47,7 +47,7 @@ The [Jira server plugin is available in the Atlassian marketplace](https://marke
 
 You'll need to download the plugin and create a license key.
 
-If you have an Unleash enterprise license you're welcome to reach out to us at sales@getunleash.io for a free plugin license, otherwise you'll need to try the plugin for 30 days free or purchase a license through the marketplace.
+If you have an Unleash enterprise license you're welcome to reach out to us at license@getunleash.io for a free plugin license, otherwise you'll need to try the plugin for 30 days free or purchase a license through the marketplace.
 
 Once you've downloaded the plugin artifact, you'll need to follow the Manage apps link in Jira's administration menu.
 

@@ -1,5 +1,8 @@
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
-import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
+import type {
+    MilestoneStatus,
+    MilestoneProgressionStatus,
+} from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { calculateMilestoneStartTime } from '../utils/calculateMilestoneStartTime.js';
 
 export const calculateMilestoneStatus = (
@@ -10,7 +13,7 @@ export const calculateMilestoneStatus = (
     environmentIsDisabled: boolean | undefined,
     allMilestones: IReleasePlanMilestone[],
 ): MilestoneStatus => {
-    const progressions: 'paused' | 'active' = milestone.pausedAt
+    const progressions: MilestoneProgressionStatus = milestone.pausedAt
         ? 'paused'
         : 'active';
 

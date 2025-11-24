@@ -4,15 +4,17 @@ import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import TripOriginIcon from '@mui/icons-material/TripOrigin';
 import { useUiFlag } from 'hooks/useUiFlag';
 
+export type MilestoneProgressionStatus = 'paused' | 'active';
+
 export type MilestoneStatus =
     | {
           type: 'not-started';
           scheduledAt?: Date;
-          progressions: 'paused' | 'active';
+          progressions: MilestoneProgressionStatus;
       }
-    | { type: 'active'; progressions: 'paused' | 'active' }
-    | { type: 'paused'; progressions: 'paused' | 'active' }
-    | { type: 'completed'; progressions: 'paused' | 'active' };
+    | { type: 'active'; progressions: MilestoneProgressionStatus }
+    | { type: 'paused'; progressions: MilestoneProgressionStatus }
+    | { type: 'completed'; progressions: MilestoneProgressionStatus };
 
 const BaseStatusButton = styled('button')<{ disabled?: boolean }>(
     ({ theme, disabled }) => ({

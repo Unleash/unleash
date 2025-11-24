@@ -25,4 +25,4 @@ See our how-to guides on setting up provisioning for [Okta](/provisioning/how-to
 
 ## Retain admin access
 
-When setting up a SCIM integration with Unleash, you must configure a method for role management to avoid being locked out of admin accounts. To do this, either assign the admin role to an IdP group that is synced with Unleash or create a dedicated, non-SCIM managed recovery admin account for emergency use. For full instructions, including what to do if you're already locked out, see our complete [troubleshooting guide](/troubleshooting#got-locked-out-of-an-admin-account-after-configuring-scim).
+When setting up a SCIM integration with Unleash, you must configure a method for role management to avoid being locked out of admin accounts. To do this, either assign the admin role to an IdP group that is synced with Unleash or create a dedicated, non-SCIM managed recovery admin account for emergency use. For full instructions, including what to do if you're already locked out, see our complete [troubleshooting guide](/support/troubleshooting#got-locked-out-of-an-admin-account-after-configuring-scim).

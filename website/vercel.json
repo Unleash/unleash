@@ -742,6 +742,11 @@
       "permanent": true
     },
     {
+      "source": "/client-specification",
+      "destination": "/contributing/client-specification",
+      "permanent": true
+    },
+    {
       "source": "/how-to/how-to-capture-impression-data",
       "destination": "/feature-flag-tutorials/use-cases/how-to-capture-impression-data",
       "permanent": true
@@ -918,22 +923,22 @@
     },
     {
       "source": "/using-unleash/troubleshooting/cors",
-      "destination": "troubleshooting",
+      "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
       "source": "/using-unleash/troubleshooting/flag-abn-unexpected-results",
-      "destination": "troubleshooting",
+      "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
       "source": "/using-unleash/troubleshooting/flag-exposure",
-      "destination": "troubleshooting",
+      "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
       "source": "/using-unleash/troubleshooting/flag-not-returned",
-      "destination": "troubleshooting",
+      "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
@@ -943,7 +948,7 @@
     },
     {
       "source": "/using-unleash/troubleshooting/feature-not-available",
-      "destination": "/availability",
+      "destination": "/support/availability",
       "permanent": true
     },
     {
@@ -1043,12 +1048,27 @@
     },
     {
       "source": "/using-unleash/troubleshooting",
-      "destination": "/using-unleash/troubleshooting/cors",
+      "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
       "source": "/contributing",
       "destination": "/contributing/developer-guide",
+      "permanent": true
+    },
+    {
+      "source": "/availability",
+      "destination": "/support/availability",
+      "permanent": true
+    },
+    {
+      "source": "/troubleshooting",
+      "destination": "/support/troubleshooting",
+      "permanent": true
+    },
+    {
+      "source": "/oss-comparison",
+      "destination": "/support/oss-comparison",
       "permanent": true
     },
     {

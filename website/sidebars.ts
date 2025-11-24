@@ -747,17 +747,17 @@ const sidebars: SidebarsConfig = {
             items: [
                 {
                     type: 'doc',
-                    id: 'troubleshooting',
+                    id: 'support/troubleshooting',
                     label: 'Troubleshooting',
                 },
                 {
                     type: 'doc',
-                    id: 'availability',
+                    id: 'support/availability',
                     label: 'Feature availability and versioning',
                 },
                 {
                     type: 'doc',
-                    id: 'oss-comparison',
+                    id: 'support/oss-comparison',
                     label: 'Compare Unleash OSS and Unleash Enterprise',
                 },
                 {
@@ -770,6 +770,7 @@ const sidebars: SidebarsConfig = {
                     },
                     items: [
                         'contributing/developer-guide',
+                        'contributing/client-specification',
                         'contributing/frontend/overview',
                         'contributing/backend/overview',
                         {

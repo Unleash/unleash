@@ -13,7 +13,7 @@ pagination_next: provisioning/how-to-setup-provisioning-with-entra
 
 :::info
 
-Before you begin, ensure that you have a strategy in place to prevent [being locked out of all admin accounts](/troubleshooting#got-locked-out-of-an-admin-account-after-configuring-scim).
+Before you begin, ensure that you have a strategy in place to prevent [being locked out of all admin accounts](/support/troubleshooting#got-locked-out-of-an-admin-account-after-configuring-scim).
 
 :::
 

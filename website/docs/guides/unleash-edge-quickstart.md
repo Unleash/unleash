@@ -11,7 +11,7 @@ This document helps you get started with [Unleash Edge](https://docs.getunleash.
 ## Why Unleash Edge
 
 Unleash Edge is a lightweight layer between your SDKs and your Unleash instance.
-It exposes the same HTTP interface as the main [Unleash API](/api-overview) but is built for higher throughput and lower latency.
+It exposes the same HTTP interface as the main [Unleash API](/get-started/api-overview) but is built for higher throughput and lower latency.
 
 <Tabs>
 
@@ -39,7 +39,7 @@ It exposes the same HTTP interface as the main [Unleash API](/api-overview) but 
 
 Here's what you need before getting started:
 
-1. An [Unleash instance](https://docs.getunleash.io/quickstart) running locally or remotely (version `4.15` or later)
+1. An [Unleash instance](https://docs.getunleash.io/get-started/quickstart) running locally or remotely (version `4.15` or later)
 2. A valid [API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for your Unleash instance
 3. [Docker](https://www.docker.com/get-started/) installed and running
 4. Your preferred Unleash SDK in a [sample app](https://github.com/Unleash/unleash-sdk-examples)

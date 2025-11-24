@@ -9,7 +9,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 :::caution
 
-These APIs have been deprecared. Wse the [Unleash OpenAPI docs](/api-overview) reference instead.
+These APIs have been deprecared. Wse the [Unleash OpenAPI docs](/get-started/api-overview) reference instead.
 
 :::
 

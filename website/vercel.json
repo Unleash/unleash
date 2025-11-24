@@ -113,12 +113,12 @@
     },
     {
       "source": "/reference/api/unleash",
-      "destination": "/api-overview",
+      "destination": "/get-started/api-overview",
       "permanent": true
     },
     {
       "source": "/api/open_api",
-      "destination": "/api-overview",
+      "destination": "/get-started/api-overview",
       "permanent": true
     },
     {
@@ -548,22 +548,22 @@
     },
     {
       "source": "/user_guide/quickstart",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {
       "source": "/docs/getting_started",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {
       "source": "/tutorials/quickstart",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {
       "source": "/tutorials/getting-started",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {
@@ -773,12 +773,12 @@
     },
     {
       "source": "/how-to/how-to-enable-openapi",
-      "destination": "/api-overview",
+      "destination": "/get-started/api-overview",
       "permanent": true
     },
     {
       "source": "/how-to/api",
-      "destination": "/api-overview",
+      "destination": "/get-started/api-overview",
       "permanent": true
     },
     {
@@ -813,7 +813,7 @@
     },
     {
       "source": "/using-unleash",
-      "destination": "/api-overview",
+      "destination": "/get-started/api-overview",
       "permanent": true
     },
     {
@@ -1018,7 +1018,7 @@
     },
     {
       "source": "/topics",
-      "destination": "/guides-overview",
+      "destination": "/get-started/guides-overview",
       "permanent": true
     },
     {
@@ -1069,6 +1069,21 @@
     {
       "source": "/oss-comparison",
       "destination": "/support/oss-comparison",
+      "permanent": true
+    },
+    {
+      "source": "/api-overview",
+      "destination": "/get-started/api-overview",
+      "permanent": true
+    },
+    {
+      "source": "/guides-overview",
+      "destination": "/get-started/guides-overview",
+      "permanent": true
+    },
+    {
+      "source": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {

@@ -42,13 +42,13 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'quickstart',
+                id: 'get-started/quickstart',
             },
             items: [
                 {
                     type: 'doc',
                     label: 'Quickstart',
-                    id: 'quickstart',
+                    id: 'get-started/quickstart',
                 },
                 {
                     type: 'doc',
@@ -201,7 +201,7 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'guides-overview',
+                id: 'get-started/guides-overview',
             },
             items: [
                 {
@@ -552,7 +552,7 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'api-overview',
+                id: 'get-started/api-overview',
             },
             items: [
                 docsSidebar,

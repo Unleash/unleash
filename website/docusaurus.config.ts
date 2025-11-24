@@ -359,7 +359,7 @@ class="header-github-link"
                         items: [
                             {
                                 label: 'Quickstart',
-                                to: '/quickstart',
+                                to: '/get-started/quickstart',
                             },
                             {
                                 label: 'Unleash architecture',

@@ -38,7 +38,9 @@ beforeAll(async () => {
         db.stores,
         {
             experimental: {
-                flags: {},
+                flags: {
+                    optimizeLifecycle: true,
+                },
             },
         },
         db.rawDatabase,
@@ -178,6 +180,9 @@ test('should return lifecycle stages', async () => {
             enteredStageAt: expect.any(String),
         },
     ]);
+    expect(new Date(body[2].enteredStageAt).getTime()).toBeGreaterThan(
+        new Date(body[1].enteredStageAt).getTime(),
+    );
     await expectFeatureStage('my_feature_a', 'archived');
 
     eventStore.emit(FEATURE_REVIVED, { featureName: 'my_feature_a' });

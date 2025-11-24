@@ -177,7 +177,7 @@ export const NetworkConnectedEdges = () => {
                 <br />
                 <br />
                 Interested in getting started?{' '}
-                <a href={`mailto:sales@getunleash.io?subject=Enterprise Edge`}>
+                <a href='mailto:license@getunleash.io?subject=Enterprise Edge'>
                     Contact us
                 </a>
             </Alert>

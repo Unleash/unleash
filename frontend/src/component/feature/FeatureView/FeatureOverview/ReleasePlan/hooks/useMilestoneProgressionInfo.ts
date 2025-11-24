@@ -10,8 +10,8 @@ export const useMilestoneProgressionInfo = (
     const { locationSettings } = useLocationSettings();
     if (
         !status ||
-        status.progressions === 'paused' ||
-        status.type === 'paused'
+        status.type !== 'active' ||
+        status.progressions === 'paused'
     ) {
         return null;
     }

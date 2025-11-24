@@ -134,7 +134,7 @@ Unique naming has the following advantages:
 
 Making feature flag systems open by default enables engineers, product owners, and support teams to collaborate effectively and make informed decisions. Open access encourages productive discussions about feature releases, experiments, and their impact on the user experience.
 
-[Access control and visibility](../../feature-flag-tutorials/use-cases/user-management-access-controls-auditing) are also key considerations for [security and compliance](https://www.getunleash.io/security-and-performance). Tracking and auditing feature flag changes help maintain data integrity and meet regulatory requirements. While open access is key, it's equally important to integrate with corporate access controls, such as SSO, to ensure security. In some cases, additional controls like feature flag approvals using the [four-eyes principle](/reference/change-requests) are necessary for critical changes.
+[Access control and visibility](../../guides/user-management-access-controls-auditing) are also key considerations for [security and compliance](https://www.getunleash.io/security-and-performance). Tracking and auditing feature flag changes help maintain data integrity and meet regulatory requirements. While open access is key, it's equally important to integrate with corporate access controls, such as SSO, to ensure security. In some cases, additional controls like feature flag approvals using the [four-eyes principle](/reference/change-requests) are necessary for critical changes.
 
 ![Preview of a change request to enable gradual rollout in production.](/img/feature-flag-change-requests-preview.png)
 
@@ -272,7 +272,7 @@ An introduction to Unleash Edge product and its scaling capabilities:
 This FAQ section addresses common questions about using feature flags effectively and managing them at scale.
 
 #### What approaches or patterns can improve code maintainability and readability when adding feature flags?
-Keep flags short-lived and localize the logic. Evaluate a flag once per request and pass the result down instead of re-checking it in multiple places. Use a small wrapper or abstraction layer around your SDK calls, and delete the flag and old code path as soon as the rollout finishes. See [Managing feature flags in code](/feature-flag-tutorials/use-cases/manage-feature-flags-in-code) for more recommendations. 
+Keep flags short-lived and localize the logic. Evaluate a flag once per request and pass the result down instead of re-checking it in multiple places. Use a small wrapper or abstraction layer around your SDK calls, and delete the flag and old code path as soon as the rollout finishes. See [Managing feature flags in code](/guides/manage-feature-flags-in-code) for more recommendations. 
 
 #### What are the benefits of assigning an index to each feature flag and storing it centrally?
 
@@ -282,7 +282,7 @@ Teams sometimes think in terms of assigning numeric IDs or indices to feature fl
 You can store on/off values in a config file, and your app will read them at startup. But that's closer to static configuration than true feature flagging. Real feature flags are evaluated at runtime with SDKs that fetch updates dynamically. Tools like Unleash provide runtime control, instant rollbacks, and gradual rollouts that config files can't.
 
 #### How do you manage feature flags without turning your code into spaghetti?
-Evaluate feature flags once per request and pass the results down, rather than checking the same flag everywhere. Keep the if/else branching simple, use wrappers or helpers to hide SDK details, and remove flags as soon as they're no longer needed. See [Managing feature flags in code](/feature-flag-tutorials/use-cases/manage-feature-flags-in-code) for more recommendations. 
+Evaluate feature flags once per request and pass the results down, rather than checking the same flag everywhere. Keep the if/else branching simple, use wrappers or helpers to hide SDK details, and remove flags as soon as they're no longer needed. See [Managing feature flags in code](/guides/manage-feature-flags-in-code) for more recommendations. 
 
 #### What strategies do you use to avoid cluttering your codebase with feature flags?
 Treat feature flags like technical debt. Give them owners, set expiration dates, and add cleanup tasks to your backlog. Archive old flags after removal so you keep an audit trail. Lifecycle states and other automation in Unleash make the cleanup process much easier.
@@ -294,7 +294,7 @@ Use feature branches to isolate development work before it's ready for productio
 Set an expiration date and assign an owner when you create the flag. Track cleanup like any other piece of technical debt, and use automation and tooling to surface and clean up stale flags.
 
 #### What tools or practices help manage multiple feature flags effectively in a large project?
-Organize flags into [projects and environments](/feature-flag-tutorials/use-cases/organize-feature-flags), enforce unique names, and keep payloads small by using [segments](/reference/segments) instead of large targeting lists. Apply [access control](/reference/rbac) and [change requests](/reference/change-requests) for your production environments and use [audit logs](/reference/events) for visibility. A management platform like Unleash provides these features out of the box, making it easier to scale.
+Organize flags into [projects and environments](/guides/organize-feature-flags), enforce unique names, and keep payloads small by using [segments](/reference/segments) instead of large targeting lists. Apply [access control](/reference/rbac) and [change requests](/reference/change-requests) for your production environments and use [audit logs](/reference/events) for visibility. A management platform like Unleash provides these features out of the box, making it easier to scale.
 
 #### How do you mitigate the risk of introducing bugs or technical debt due to unused or stale feature flags?
 The key is to keep flags short-lived. Test both code paths while the flag is active, and remove the flag and old path once the rollout finishes. Archive stale flags for audit purposes. In Unleash, lifecycle stages help you identify and clean up unused flags.
@@ -315,4 +315,4 @@ Unleash provides a robust [Go SDK](/reference/sdks/go) for implementing feature 
 #### How do you deal with the exponential complexity from multiple feature flags?
 Complexity comes from keeping too many flags active at once and spreading evaluations throughout the code. The best way to manage this is to keep flags short-lived with clear ownership and a planned end date, then remove them once the rollout is complete. Evaluate each flag once at the highest practical level and pass the result down, so behavior stays consistent. In a microservices setup, perform the evaluation at the edge and propagate the result through the request. Centralize flag names and use a wrapper service around the SDK to handle logging, defaults, and consistency. Finally, archive flags after removal to maintain history without adding clutter.
 
-See [Managing feature flags in code](/feature-flag-tutorials/use-cases/manage-feature-flags-in-code) for more recommendations. 
+See [Managing feature flags in code](/guides/manage-feature-flags-in-code) for more recommendations. 

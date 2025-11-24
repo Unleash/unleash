@@ -1,6 +1,6 @@
 ---
 title: Feature flag security and compliance for enterprises
-slug: /feature-flag-tutorials/use-cases/security-and-compliance
+slug: /guides/security-and-compliance
 ---
 
 import SearchPriority from '@site/src/components/SearchPriority';

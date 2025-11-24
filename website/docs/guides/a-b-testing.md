@@ -1,7 +1,7 @@
 ---
 title: Implement A/B testing using feature flags
-slug: /feature-flag-tutorials/use-cases/a-b-testing
-pagination_next: feature-flag-tutorials/use-cases/ai
+slug: /guides/a-b-testing
+pagination_next: guides/ai
 ---
 
 import SearchPriority from '@site/src/components/SearchPriority';

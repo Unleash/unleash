@@ -208,7 +208,7 @@ You should see `Hello GraphQL`, followed by `Country: Norway, Capital: Oslo` in 
 
 ## 5. Add Unleash to your Go app
 
-Now, let's connect our project to Unleash so that you can toggle that feature flag at runtime. If you wanted to, you could also do a [gradual rollout](/feature-flag-tutorials/use-cases/gradual-rollout) or use the flag for [A/B testing](/feature-flag-tutorials/use-cases/a-b-testing).
+Now, let's connect our project to Unleash so that you can toggle that feature flag at runtime. If you wanted to, you could also do a [gradual rollout](/guides/gradual-rollout) or use the flag for [A/B testing](/guides/a-b-testing).
 
 You'll need 2 things:
 

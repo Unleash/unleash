@@ -1,7 +1,7 @@
 ---
 title: How to perform a gradual rollout
-slug: /feature-flag-tutorials/use-cases/gradual-rollout
-pagination_next: feature-flag-tutorials/use-cases/a-b-testing
+slug: /guides/gradual-rollout
+pagination_next: guides/a-b-testing
 ---
 
 import SearchPriority from '@site/src/components/SearchPriority';

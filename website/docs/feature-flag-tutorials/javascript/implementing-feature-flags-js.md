@@ -158,7 +158,7 @@ Refresh your browser again. Our website is now functional.
 
 ## 5. Add Unleash to your website
 
-Now, let's connect our project to Unleash so that you can toggle a feature flag at runtime. If you wanted to, you could also do a [gradual rollout](/feature-flag-tutorials/use-cases/gradual-rollout) or use the flag for [A/B testing](/feature-flag-tutorials/use-cases/a-b-testing).
+Now, let's connect our project to Unleash so that you can toggle a feature flag at runtime. If you wanted to, you could also do a [gradual rollout](/guides/gradual-rollout) or use the flag for [A/B testing](/guides/a-b-testing).
 
 You'll need two things:
 

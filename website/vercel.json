@@ -98,7 +98,7 @@
     },
     {
       "source": "/topics/a-b-testing",
-      "destination": "/feature-flag-tutorials/use-cases/a-b-testing",
+      "destination": "/guides/a-b-testing",
       "permanent": true
     },
     {
@@ -748,7 +748,7 @@
     },
     {
       "source": "/how-to/how-to-capture-impression-data",
-      "destination": "/feature-flag-tutorials/use-cases/how-to-capture-impression-data",
+      "destination": "/guides/how-to-capture-impression-data",
       "permanent": true
     },
     {
@@ -1023,7 +1023,7 @@
     },
     {
       "source": "/use-cases",
-      "destination": "/feature-flag-tutorials/use-cases/gradual-rollout",
+      "destination": "/guides/gradual-rollout",
       "permanent": true
     },
     {
@@ -1033,7 +1033,7 @@
     },
     {
       "source": "/feature-flag-tutorials",
-      "destination": "/feature-flag-tutorials/use-cases/gradual-rollout",
+      "destination": "/guides/gradual-rollout",
       "permanent": true
     },
     {
@@ -1084,6 +1084,61 @@
     {
       "source": "/quickstart",
       "destination": "/get-started/quickstart",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/a-b-testing",
+      "destination": "/guides/a-b-testing",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/ai",
+      "destination": "/guides/ai",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/gradual-rollout",
+      "destination": "/guides/gradual-rollout",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/how-to-capture-impression-data",
+      "destination": "/guides/how-to-capture-impression-data",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/how-to-create-feature-toggles",
+      "destination": "/guides/how-to-create-feature-toggles",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/manage-feature-flags-in-code",
+      "destination": "/guides/manage-feature-flags-in-code",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/organize-feature-flags",
+      "destination": "/guides/organize-feature-flags",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/scaling-unleash",
+      "destination": "/guides/scaling-unleash",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/security-compliance",
+      "destination": "/guides/security-compliance",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/trunk-based-development",
+      "destination": "/guides/trunk-based-development",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/user-management-access-controls",
+      "destination": "/guides/user-management-access-controls",
       "permanent": true
     },
     {

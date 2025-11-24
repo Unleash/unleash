@@ -241,12 +241,12 @@ const sidebars: SidebarsConfig = {
                     collapsed: true,
                     link: {
                         type: 'doc',
-                        id: 'feature-flag-tutorials/use-cases/how-to-create-feature-toggles',
+                        id: 'guides/how-to-create-feature-toggles',
                     },
                     items: [
                         {
                             type: 'doc',
-                            id: 'feature-flag-tutorials/use-cases/how-to-create-feature-toggles',
+                            id: 'guides/how-to-create-feature-toggles',
                         },
                         {
                             type: 'doc',
@@ -256,12 +256,12 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'doc',
                             label: 'Trunk-based development',
-                            id: 'feature-flag-tutorials/use-cases/trunk-based-development',
+                            id: 'guides/trunk-based-development',
                         },
                         {
                             type: 'doc',
                             label: 'Gradual rollout',
-                            id: 'feature-flag-tutorials/use-cases/gradual-rollout',
+                            id: 'guides/gradual-rollout',
                         },
                         {
                             type: 'doc',
@@ -276,33 +276,33 @@ const sidebars: SidebarsConfig = {
                     collapsed: true,
                     link: {
                         type: 'doc',
-                        id: 'feature-flag-tutorials/use-cases/user-management-access-controls',
+                        id: 'guides/user-management-access-controls',
                     },
                     items: [
                         {
                             type: 'doc',
                             label: 'User management, access controls, and auditing',
-                            id: 'feature-flag-tutorials/use-cases/user-management-access-controls',
+                            id: 'guides/user-management-access-controls',
                         },
                         {
                             type: 'doc',
                             label: 'Security and compliance',
-                            id: 'feature-flag-tutorials/use-cases/security-compliance',
+                            id: 'guides/security-compliance',
                         },
                         {
                             type: 'doc',
                             label: 'Scaling Unleash',
-                            id: 'feature-flag-tutorials/use-cases/scaling-unleash',
+                            id: 'guides/scaling-unleash',
                         },
                         {
                             type: 'doc',
                             label: 'Managing feature flags in code',
-                            id: 'feature-flag-tutorials/use-cases/manage-feature-flags-in-code',
+                            id: 'guides/manage-feature-flags-in-code',
                         },
                         {
                             type: 'doc',
                             label: 'Organizing feature flags using projects and environments',
-                            id: 'feature-flag-tutorials/use-cases/organize-feature-flags',
+                            id: 'guides/organize-feature-flags',
                         },
                     ],
                 },
@@ -312,23 +312,23 @@ const sidebars: SidebarsConfig = {
                     collapsed: true,
                     link: {
                         type: 'doc',
-                        id: 'feature-flag-tutorials/use-cases/a-b-testing',
+                        id: 'guides/a-b-testing',
                     },
                     items: [
                         {
                             type: 'doc',
                             label: 'A/B testing',
-                            id: 'feature-flag-tutorials/use-cases/a-b-testing',
+                            id: 'guides/a-b-testing',
                         },
                         {
                             type: 'doc',
                             label: 'Feature flags for AI',
-                            id: 'feature-flag-tutorials/use-cases/ai',
+                            id: 'guides/ai',
                         },
                         {
                             type: 'doc',
                             label: 'Use impression data for analytics',
-                            id: 'feature-flag-tutorials/use-cases/how-to-capture-impression-data',
+                            id: 'guides/how-to-capture-impression-data',
                         },
                     ],
                 },

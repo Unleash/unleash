@@ -227,8 +227,20 @@ export async function createApp(
         createMetricsMonitor,
     },
 ): Promise<IUnleash> {
-    // Database dependencies (stateful)
     const logger = config.getLogger('server-impl.js');
+
+    // Surface unhandled promise rejections to logs so they don't crash the process
+    process.on('unhandledRejection', (reason: unknown) => {
+        if (reason instanceof Error) {
+            logger.error('Unhandled promise rejection detected', reason);
+        } else {
+            logger.error(
+                `Unhandled promise rejection detected: ${String(reason)}`,
+            );
+        }
+    });
+
+    // Database dependencies (stateful)
     const serverVersion = config.enterpriseVersion ?? version;
     const db = fm.createDb(config);
     const stores = fm.createStores(config, db);

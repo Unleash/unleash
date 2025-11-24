@@ -93,7 +93,6 @@ const sidebars: SidebarsConfig = {
                         'reference/feature-toggles',
                         'reference/activation-strategies',
                         'reference/strategy-variants',
-                        'understanding-unleash/managing-constraints',
                         'reference/segments',
                         'reference/unleash-context',
                         'reference/stickiness',
@@ -228,6 +227,11 @@ const sidebars: SidebarsConfig = {
                             type: 'doc',
                             label: 'Migrating from homegrown feature management solutions',
                             id: 'guides/feature-flag-migration-best-practices',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Managing large constraints',
+                            id: 'guides/managing-constraints',
                         },
                     ],
                 },
@@ -702,36 +706,36 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'understanding-unleash/data-collection',
+                id: 'privacy-and-compliance/data-privacy',
             },
             items: [
                 {
                     type: 'doc',
                     label: 'Data collection and privacy',
-                    id: 'understanding-unleash/data-collection',
+                    id: 'privacy-and-compliance/data-privacy',
                 },
                 {
                     type: 'category',
                     label: 'Compliance',
                     link: {
                         type: 'doc',
-                        id: 'using-unleash/compliance/compliance-overview',
+                        id: 'privacy-and-compliance/compliance-overview',
                     },
                     items: [
                         {
                             type: 'doc',
                             label: 'FedRAMP',
-                            id: 'using-unleash/compliance/fedramp',
+                            id: 'privacy-and-compliance/fedramp',
                         },
                         {
                             type: 'doc',
                             label: 'SOC2 type II',
-                            id: 'using-unleash/compliance/soc2',
+                            id: 'privacy-and-compliance/soc2',
                         },
                         {
                             type: 'doc',
                             label: 'ISO27001',
-                            id: 'using-unleash/compliance/iso27001',
+                            id: 'privacy-and-compliance/iso27001',
                         },
                     ],
                 },

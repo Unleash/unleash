@@ -125,7 +125,7 @@ While RBAC allows you to administer Unleash safely, you might need approval proc
 -   **Comprehensive review**: Every proposed feature flag modification goes through a review, reducing the likelihood of unintended consequences.
 -   **Audit trail**: Every change is documented, timestamped, and attributed to specific team members, creating a permanent record of system modifications.
 -   **Four-eyes approval workflows**: Multi-stage approval processes ensure critical changes are thoroughly reviewed and approved by at least 1 other individual before implementation.
--   **Compliance requirements**: For regulated industries like finance and healthcare, Change Requests provide the detailed documentation necessary to meet strict compliance standards. For more details on our compliance standards, read our [compliance overview](/using-unleash/compliance/compliance-overview) documentation.
+-   **Compliance requirements**: For regulated industries like finance and healthcare, Change Requests provide the detailed documentation necessary to meet strict compliance standards. For more details on our compliance standards, read our [compliance overview](/privacy-and-compliance/compliance-overview) documentation.
 
 ![You can view the list of change requests with their relevant metadata.](/img/use-case-user-mgmt-change-requests.png)
 

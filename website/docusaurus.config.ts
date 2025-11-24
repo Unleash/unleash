@@ -326,7 +326,7 @@ class="header-github-link"
                             },
                             {
                                 label: 'FedRAMP, SOC2, ISO2700 compliance',
-                                to: '/using-unleash/compliance/compliance-overview',
+                                to: '/privacy-and-compliance/compliance-overview',
                             },
                             {
                                 label: 'Progressive or gradual rollouts',

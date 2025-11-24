@@ -63,7 +63,7 @@ How you set up Unleash to scale depends significantly on the [hosting option](/d
 <TabItem value="hybrid" label="Hybrid">
 
 - **How it works**: You use the managed Unleash Cloud for the core platform (API server, database, [Admin UI](/get-started/unleash-overview#the-unleash-admin-ui)) but deploy and manage [Unleash Edge](/reference/unleash-edge) instances yourself within your own network perimeter. SDKs connect to your self-hosted Edge.
-- **Ideal for**: Teams needing the operational ease of a managed core platform but requiring absolute control over where end-user context is evaluated (for example, for [data privacy](/understanding-unleash/data-collection), residency [regulations](/using-unleash/compliance/compliance-overview)) by keeping Edge within their network boundaries.
+- **Ideal for**: Teams needing the operational ease of a managed core platform but requiring absolute control over where end-user context is evaluated (for example, for [data privacy](/privacy-and-compliance/data-privacy), residency [regulations](/privacy-and-compliance/compliance-overview)) by keeping Edge within their network boundaries.
 - **Scaling and infrastructure**: Unleash manages the core API/DB scaling and availability. You manage the Edge instance lifecycle, including its deployment, scaling, monitoring, and high-availability setup within your environment.
 - **Key tradeoff**: Provides granular control over Edge data processing and network placement while reducing the operational overhead of managing the core Unleash API and database. Still requires expertise and resources to operate Edge reliably at scale.
 

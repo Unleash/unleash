@@ -763,7 +763,7 @@
     },
     {
       "source": "/tutorials/managing-constraints",
-      "destination": "/understanding-unleash/managing-constraints",
+      "destination": "/guides/managing-constraints",
       "permanent": true
     },
     {
@@ -778,7 +778,12 @@
     },
     {
       "source": "/topics/managing-constraints",
-      "destination": "/understanding-unleash/managing-constraints",
+      "destination": "/guides/managing-constraints",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/managing-constraints",
+      "destination": "/guides/managing-constraints",
       "permanent": true
     },
     {
@@ -858,12 +863,37 @@
     },
     {
       "source": "/tutorials/data-collection",
-      "destination": "/understanding-unleash/data-collection",
+      "destination": "/privacy-and-compliance/data-privacy",
       "permanent": true
     },
     {
       "source": "/topics/data-collection",
-      "destination": "/understanding-unleash/data-collection",
+      "destination": "/privacy-and-compliance/data-privacy",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/data-collection",
+      "destination": "/privacy-and-compliance/data-privacy",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/compliance/compliance-overview",
+      "destination": "/privacy-and-compliance/compliance-overview",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/compliance/fedramp",
+      "destination": "/privacy-and-compliance/fedramp",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/compliance/soc2",
+      "destination": "/privacy-and-compliance/soc2",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/compliance/iso27001",
+      "destination": "/privacy-and-compliance/iso27001",
       "permanent": true
     },
     {

@@ -28,13 +28,13 @@ There are several steps to ensuring your feature flag implementation is audit-pr
 
 Unleash is designed to support critical enterprise compliance standards. In this guide, we reference three frameworks that organizations in highly regulated industries are most likely to be audited against:
 
-[FedRAMP](/using-unleash/compliance/fedramp): A U.S. government program that standardizes how federal agencies assess, authorize, and monitor cloud services. For organizations listing their software on the [FedRAMP](https://www.fedramp.gov) marketplace, Unleash's security controls are designed to meet these rigorous requirements.
+[FedRAMP](/privacy-and-compliance/fedramp): A U.S. government program that standardizes how federal agencies assess, authorize, and monitor cloud services. For organizations listing their software on the [FedRAMP](https://www.fedramp.gov) marketplace, Unleash's security controls are designed to meet these rigorous requirements.
 
-[SOC 2 Type II](/using-unleash/compliance/soc2): A cybersecurity framework that assesses how organizations protect customer data. Our architecture provides the necessary controls and audit trails to meet stringent SOC 2 requirements, ensuring your feature flag management processes are transparent, secure, and verifiable.
+[SOC 2 Type II](/privacy-and-compliance/soc2): A cybersecurity framework that assesses how organizations protect customer data. Our architecture provides the necessary controls and audit trails to meet stringent SOC 2 requirements, ensuring your feature flag management processes are transparent, secure, and verifiable.
 
-[ISO 27001](/using-unleash/compliance/iso27001): A framework from the [International Organization for Standardization (ISO)](https://www.iso.org/standard/27001) for managing information security within an organization. Our security, audit, and change control capabilities align with ISO 27001 standards, providing a structured approach to managing sensitive information and protecting data integrity.
+[ISO 27001](/privacy-and-compliance/iso27001): A framework from the [International Organization for Standardization (ISO)](https://www.iso.org/standard/27001) for managing information security within an organization. Our security, audit, and change control capabilities align with ISO 27001 standards, providing a structured approach to managing sensitive information and protecting data integrity.
 
-Refer to our [security and compliance overview](/using-unleash/compliance/compliance-overview) for more details on how Unleash features measure up against these framework requirements.
+Refer to our [security and compliance overview](/privacy-and-compliance/compliance-overview) for more details on how Unleash features measure up against these framework requirements.
 
 ## Enable authentication controls with SSO and SCIM
 

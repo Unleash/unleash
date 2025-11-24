@@ -5,10 +5,14 @@ import TripOriginIcon from '@mui/icons-material/TripOrigin';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 export type MilestoneStatus =
-    | { type: 'not-started'; scheduledAt?: Date }
-    | { type: 'active' }
-    | { type: 'paused' }
-    | { type: 'completed' };
+    | {
+          type: 'not-started';
+          scheduledAt?: Date;
+          progressions: 'paused' | 'active';
+      }
+    | { type: 'active'; progressions: 'paused' | 'active' }
+    | { type: 'paused'; progressions: 'paused' | 'active' }
+    | { type: 'completed'; progressions: 'paused' | 'active' };
 
 const BaseStatusButton = styled('button')<{ disabled?: boolean }>(
     ({ theme, disabled }) => ({

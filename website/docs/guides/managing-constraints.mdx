@@ -18,7 +18,7 @@ How large is too large? How complex is too complex? It depends. However, smaller
 
 ## The cost of data
 
-First, let's talk a bit about Unleash's architecture: **Your Unleash instance** is where you define all your features, their strategies, and constraints (and a lot more). However, the Unleash instance itself does not do any of the feature evaluation[^1]. That responsibility is delegated to the Unleash SDKs (or [Edge](/reference/unleash-edge) / the [Unleash proxy](/reference/unleash-proxy)).
+First, let's talk a bit about Unleash's architecture: **Your Unleash instance** is where you define all your features, their strategies, and constraints (and a lot more). However, the Unleash instance itself does not do any of the feature evaluation[^1]. That responsibility is delegated to the Unleash SDKs (or [Edge](/reference/unleash-edge)).
 
 For the SDKs (Edge/proxy included) to evaluate a feature, it needs to know everything about that feature in a specific environment. This includes all strategies and their constraints. This means that the Unleash instance must transmit all information about this feature (and all other features) as a response to an API call.
 

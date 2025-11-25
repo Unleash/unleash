@@ -6,7 +6,7 @@ title: Unleash Edge quickstart
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-This document helps you get started with [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) locally.
+This document helps you get started with [Unleash Edge](/reference/unleash-edge) locally.
 
 ## Why Unleash Edge
 
@@ -39,8 +39,8 @@ It exposes the same HTTP interface as the main [Unleash API](/get-started/api-ov
 
 Here's what you need before getting started:
 
-1. An [Unleash instance](https://docs.getunleash.io/get-started/quickstart) running locally or remotely (version `4.15` or later)
-2. A valid [API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for your Unleash instance
+1. An [Unleash instance](/get-started/quickstart) running locally or remotely (version `4.15` or later)
+2. A valid [API token](/reference/api-tokens-and-client-keys) for your Unleash instance
 3. [Docker](https://www.docker.com/get-started/) installed and running
 4. Your preferred Unleash SDK in a [sample app](https://github.com/Unleash/unleash-sdk-examples)
 
@@ -525,8 +525,8 @@ Congratulations, you've successfully set up Unleash Edge locally!
 
 Unleash Edge offers a lot of flexibility and advanced configuration options worth exploring:
 
-1. [Offline mode](https://docs.getunleash.io/reference/unleash-edge/concepts#offline) - Learn how to configure Unleash Edge to work without an Unleash instance, using a local features file.
-2. [Pretrusted tokens](https://docs.getunleash.io/reference/unleash-edge#pretrusted-tokens) - Learn how to explicitly authorize known frontend tokens without upstream validation.
-3. [Security considerations in production](https://docs.getunleash.io/reference/unleash-edge/deploying) - Learn how to run Unleash Edge in production with best practices for CORS, health checks, and sensitive endpoints.
-4. [Persistent cache storage](https://docs.getunleash.io/reference/unleash-edge/cli#unleash-edge-edge) - Learn how to enable persistent cache storage with options such as `--backup-folder` and `--redis-url`.
-5. [Advanced CLI configuration](https://docs.getunleash.io/reference/unleash-edge/cli) - Learn how to customize the CLI behavior with options such as `--base-path`, `--workers`, `--allow-list`, `--edge-request-timeout`, and `--edge-auth-header`.
+1. [Offline mode](/reference/unleash-edge/concepts#offline) - Learn how to configure Unleash Edge to work without an Unleash instance, using a local features file.
+2. [Pretrusted tokens](/reference/unleash-edge#pretrusted-tokens) - Learn how to explicitly authorize known frontend tokens without upstream validation.
+3. [Security considerations in production](/reference/unleash-edge/deploying) - Learn how to run Unleash Edge in production with best practices for CORS, health checks, and sensitive endpoints.
+4. [Persistent cache storage](/reference/unleash-edge/cli#unleash-edge-edge) - Learn how to enable persistent cache storage with options such as `--backup-folder` and `--redis-url`.
+5. [Advanced CLI configuration](/reference/unleash-edge/cli) - Learn how to customize the CLI behavior with options such as `--base-path`, `--workers`, `--allow-list`, `--edge-request-timeout`, and `--edge-auth-header`.

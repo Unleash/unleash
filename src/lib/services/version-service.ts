@@ -58,11 +58,11 @@ export interface IFeatureUsageInfo {
     edgeInstanceUsage?: EdgeInstanceUsage;
 }
 
-export type IInstanceInfo = Partial<{
-    customerPlan: string;
-    customerName: string;
+export interface IInstanceInfo {
+    customerPlan?: string;
+    customerName?: string;
     clientId: string;
-}>;
+}
 
 export default class VersionService {
     private logger: Logger;

@@ -3,6 +3,9 @@ import ShieldIcon from '@mui/icons-material/Shield';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import type { FormEvent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { SafeguardChangeRequestDialog } from './SafeguardChangeRequestDialog.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
@@ -23,6 +26,8 @@ import {
     StyledTopRow,
 } from '../shared/SharedFormComponents.tsx';
 import type { ISafeguard } from 'interfaces/releasePlans.ts';
+import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 
 const StyledIcon = createStyledIcon(ShieldIcon);
 
@@ -45,6 +50,7 @@ interface ISafeguardFormProps {
     onCancel: () => void;
     onDelete?: () => void;
     safeguard?: ISafeguard;
+    environment: string;
 }
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
@@ -80,8 +86,12 @@ export const SafeguardForm = ({
     onCancel,
     onDelete,
     safeguard,
+    environment,
 }: ISafeguardFormProps) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
+    const projectId = useRequiredPathParam('projectId');
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const initialValues = useMemo(
         () => getInitialValues(safeguard),
@@ -176,6 +186,19 @@ export const SafeguardForm = ({
         setTimeRange(value);
     };
 
+    const buildSafeguardData = (): CreateSafeguardSchema => ({
+        impactMetric: {
+            metricName,
+            timeRange,
+            aggregationMode,
+            labelSelectors: {
+                appName: [appName],
+            },
+        },
+        operator,
+        threshold: Number(threshold),
+    });
+
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
 
@@ -183,19 +206,22 @@ export const SafeguardForm = ({
             return;
         }
 
-        onSubmit({
-            impactMetric: {
-                metricName,
-                timeRange,
-                aggregationMode,
-                labelSelectors: {
-                    appName: [appName],
-                },
-            },
-            operator,
-            threshold: Number(threshold),
-        });
+        if (isChangeRequestConfigured(environment)) {
+            setDialogOpen(true);
+            return;
+        }
 
+        onSubmit(buildSafeguardData());
+
+        if (mode === 'edit' || mode === 'create') {
+            setMode('display');
+        }
+    };
+
+    const handleDialogConfirm = () => {
+        const safeguardData = buildSafeguardData();
+        setDialogOpen(false);
+        onSubmit(safeguardData);
         if (mode === 'edit' || mode === 'create') {
             setMode('display');
         }
@@ -342,7 +368,8 @@ export const SafeguardForm = ({
                     >
                         Cancel
                     </Button>
-                    <Button
+                    <PermissionButton
+                        permission={UPDATE_FEATURE_STRATEGY}
                         variant='contained'
                         color='primary'
                         size='small'
@@ -350,9 +377,17 @@ export const SafeguardForm = ({
                         disabled={Number.isNaN(Number(threshold))}
                     >
                         Save
-                    </Button>
+                    </PermissionButton>
                 </StyledButtonGroup>
             )}
+            <SafeguardChangeRequestDialog
+                isOpen={dialogOpen}
+                onConfirm={handleDialogConfirm}
+                onClose={() => setDialogOpen(false)}
+                safeguardData={buildSafeguardData()}
+                environment={environment}
+                mode={mode === 'edit' ? 'edit' : 'create'}
+            />
         </StyledFormContainer>
     );
 };

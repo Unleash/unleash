@@ -11,6 +11,8 @@ import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
+import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 
 const StyledFormWrapper = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasChanged',
@@ -270,14 +272,15 @@ export const MilestoneTransitionDisplay = ({
                     >
                         Cancel
                     </Button>
-                    <Button
+                    <PermissionButton
+                        permission={UPDATE_FEATURE_STRATEGY}
                         variant='contained'
                         color='primary'
                         onClick={handleSave}
                         size='small'
                     >
                         Save
-                    </Button>
+                    </PermissionButton>
                 </StyledButtonGroup>
             )}
         </StyledFormWrapper>

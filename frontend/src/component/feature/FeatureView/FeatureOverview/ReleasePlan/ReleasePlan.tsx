@@ -539,6 +539,7 @@ export const ReleasePlan = ({
                                 onSubmit={handleSafeguardSubmit}
                                 onCancel={() => setSafeguardFormOpen(false)}
                                 onDelete={handleSafeguardDelete}
+                                environment={environment}
                             />
                         ) : (
                             <StyledActionButton

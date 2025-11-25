@@ -14,6 +14,8 @@ import {
     StyledInfoLine,
     createStyledIcon,
 } from '../shared/SharedFormComponents.tsx';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
+import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
 
 const StyledIcon = createStyledIcon(BoltIcon);
 
@@ -83,14 +85,15 @@ export const MilestoneProgressionForm = ({
                 <Button variant='outlined' onClick={onCancel} size='small'>
                     Cancel
                 </Button>
-                <Button
+                <PermissionButton
+                    permission={UPDATE_FEATURE_STRATEGY}
                     variant='contained'
                     color='primary'
                     size='small'
                     type='submit'
                 >
                     Save
-                </Button>
+                </PermissionButton>
             </StyledButtonGroup>
         </StyledFormContainer>
     );

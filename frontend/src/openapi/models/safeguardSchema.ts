@@ -3,16 +3,20 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SafeguardSchemaTriggerCondition } from './safeguardSchemaTriggerCondition.js';
+import type { SafeguardSchemaAction } from './safeguardSchemaAction.js';
+import type { SafeguardSchemaImpactMetric } from './safeguardSchemaImpactMetric.js';
+import type { SafeguardTriggerConditionSchema } from './safeguardTriggerConditionSchema.js';
 
 /**
- * A safeguard configuration for release plan automation
+ * A safeguard configuration for a release plan.
  */
 export interface SafeguardSchema {
+    /** The action to take when the safeguard is triggered. */
+    action: SafeguardSchemaAction;
     /** The unique ULID identifier for this safeguard */
     id: string;
-    /** The impact metric id */
-    impactMetric: string;
-    /** The condition that triggers the safeguard action */
-    triggerCondition: SafeguardSchemaTriggerCondition;
+    /** The metric configuration used to evaluate the safeguard condition. */
+    impactMetric: SafeguardSchemaImpactMetric;
+    /** The condition that triggers the safeguard. */
+    triggerCondition: SafeguardTriggerConditionSchema;
 }

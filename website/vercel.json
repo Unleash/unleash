@@ -1575,26 +1575,6 @@
       "source": "/feature-flag-tutorials/flutter/a-b-testing",
       "destination": "/guides/implement-ab-test-in-flutter",
       "permanent": true
-    },
-    {
-      "source": "/guides/user-management-access-controls-auditing",
-      "destination": "/guides/user-management-access-controls",
-      "permanent": true
-    },
-    {
-      "source": "/guides/how-to-create-feature-flag",
-      "destination": "/guides/how-to-create-feature-flags",
-      "permanent": true
-    },
-    {
-      "source": "/guides/security-and-compliance",
-      "destination": "/guides/security-compliance",
-      "permanent": true
-    },
-    {
-      "source": "/guides/how-to-create-feature-toggles",
-      "destination": "/guides/how-to-create-feature-flags",
-      "permanent": true
     }
   ]
 }

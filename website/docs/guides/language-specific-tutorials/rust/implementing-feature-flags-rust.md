@@ -99,7 +99,7 @@ cargo add image webp
 
 We use the `image` and `webp` crates to convert images to JPEG and WebP, respectively. The `unleash_api_client` crate is used to communicate with the Unleash server. The `tokio` crate will be used to make this connection asynchronous.
 
-Final step before we start coding: Download this image or add an image of your own to your folder. Call it "/img/rust-guide-input.png." Make sure it's in the same folder as the rest of your cargo project.
+Final step before we start coding: Download this image or add an image of your own to your folder. Call it "input.png." Make sure it's in the same folder as the rest of your cargo project.
 
 !["The Great Wave off Kanagawa" by Hokusai. A woodblock print of a cresting wave.](/img/rust-guide-input.png)
 

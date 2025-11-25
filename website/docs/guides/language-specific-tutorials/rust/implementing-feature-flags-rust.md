@@ -118,7 +118,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 fn process_image() -> Result<(), Box<dyn Error>> {
-    let img = ImageReader::open("/img/rust-guide-input.png")?.decode()?;
+    let img = ImageReader::open("input.png")?.decode()?;
     img.save_with_format("output.jpeg", image::ImageFormat::Jpeg)?;
 
     Ok(())
@@ -153,7 +153,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 fn process_image(is_webp: bool) -> Result<(), Box<dyn Error>> {
-    let img = ImageReader::open("/img/rust-guide-input.png")?.decode()?;
+    let img = ImageReader::open("input.png")?.decode()?;
 
     if is_webp {
         let webp_data = Encoder::from_image(&img)?.encode(0.75);
@@ -244,7 +244,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 }
 
 fn process_image(is_webp: bool) -> Result<(), Box<dyn Error + Send + Sync>> {
-    let img = ImageReader::open("/img/rust-guide-input.png")?.decode()?;
+    let img = ImageReader::open("input.png")?.decode()?;
 
     if is_webp {
         let webp_data = Encoder::from_image(&img)?.encode(0.75);

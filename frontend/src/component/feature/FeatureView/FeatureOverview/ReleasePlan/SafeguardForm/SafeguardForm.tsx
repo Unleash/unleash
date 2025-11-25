@@ -50,7 +50,7 @@ interface ISafeguardFormProps {
     onCancel: () => void;
     onDelete?: () => void;
     safeguard?: ISafeguard;
-    environment?: string;
+    environment: string;
 }
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
@@ -206,7 +206,7 @@ export const SafeguardForm = ({
             return;
         }
 
-        if (environment && isChangeRequestConfigured(environment)) {
+        if (isChangeRequestConfigured(environment)) {
             setDialogOpen(true);
             return;
         }
@@ -388,16 +388,14 @@ export const SafeguardForm = ({
                     </StyledButtonGroup>
                 )}
             </StyledFormContainer>
-            {environment && (
-                <SafeguardChangeRequestDialog
-                    isOpen={dialogOpen}
-                    onConfirm={handleDialogConfirm}
-                    onClose={() => setDialogOpen(false)}
-                    safeguardData={buildSafeguardData()}
-                    environment={environment}
-                    mode={mode === 'edit' ? 'edit' : 'create'}
-                />
-            )}
+            <SafeguardChangeRequestDialog
+                isOpen={dialogOpen}
+                onConfirm={handleDialogConfirm}
+                onClose={() => setDialogOpen(false)}
+                safeguardData={buildSafeguardData()}
+                environment={environment}
+                mode={mode === 'edit' ? 'edit' : 'create'}
+            />
         </>
     );
 };

@@ -1,6 +1,6 @@
-import { Dialogue } from '../../../../../common/Dialogue/Dialogue.tsx';
+import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
 import { Button } from '@mui/material';
-import type { CreateSafeguardSchema } from '../../../../../../openapi/models/createSafeguardSchema.ts';
+import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema.ts';
 
 interface ISafeguardChangeRequestDialogProps {
     isOpen: boolean;

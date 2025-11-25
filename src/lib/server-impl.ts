@@ -182,7 +182,10 @@ import { getDbConfig } from '../test/e2e/helpers/database-config.js';
 import { testDbPrefix } from '../test/e2e/helpers/database-init.js';
 import type { RequestHandler } from 'express';
 import { UPDATE_REVISION } from './features/feature-toggle/configuration-revision-service.js';
-import type { IFeatureUsageInfo } from './services/version-service.js';
+import type {
+    IFeatureUsageInfo,
+    IInstanceInfo,
+} from './services/version-service.js';
 import { defineImpactMetrics } from './features/metrics/impact/define-impact-metrics.js';
 import type { IClientInstance } from './types/stores/client-instance-store.js';
 import EnvironmentStore from './features/project-environments/environment-store.js';
@@ -572,6 +575,7 @@ export type {
     QueryOverride,
     IUserPermission,
     IFeatureUsageInfo,
+    IInstanceInfo,
     IClientInstance,
 };
 export * from './openapi/index.js';

@@ -53,7 +53,7 @@ Whenever possible, evaluate your flag in a single place. Centralizing the evalua
 When rolling out complex features, changes often span multiple parts of a system—whether that's modules within a single application or services in a distributed architecture. It might seem convenient to use the same feature flag across all components and evaluate it locally in each one, but this can lead to problems.
 
 As a user request moves through the system, it hits different parts at different times. Even with synchronized flag states, there's a risk that the flag's value changes between evaluations, resulting in inconsistent behavior for the user.
-Particularly in distributed systems, we cannot assume all parts of the system are perfectly synchronized, as networks are unreliable and can experience errors at any time. Most feature flag systems prioritize [availability over consistency]/guides/feature-flag-best-practices#3-prioritize-availability-over-consistency). By only evaluating a feature flag once, we guarantee a consistent experience for our users.
+Particularly in distributed systems, we cannot assume all parts of the system are perfectly synchronized, as networks are unreliable and can experience errors at any time. Most feature flag systems prioritize [availability over consistency](/guides/feature-flag-best-practices#3-prioritize-availability-over-consistency). By only evaluating a feature flag once, we guarantee a consistent experience for our users.
 
 Using the same flag in multiple places fragments the control logic and breaks the single responsibility principle, making code [harder to understand and maintain](https://www.getunleash.io/simplicity).
 
@@ -116,7 +116,7 @@ Our advice: Keep it simple. If you use parent-child structures, avoid overlappin
 
 Both feature flags and configuration settings control an application's behavior. However, it's crucial to distinguish between feature flagging systems and configuration management systems and use each for its intended purpose.
 
-[Feature flags are temporary and dynamic]((/what-is-a-feature-flag). They give you [runtime control]/guides/feature-flag-best-practices#1-enable-runtime-control) to enable or disable functionality in a live environment—perfect for things like [short-lived experiments]/guides/feature-flag-best-practices#2-make-flags-short-lived), such as A/B testing or gradual rollouts.
+[Feature flags are temporary and dynamic]((/what-is-a-feature-flag). They give you [runtime control](/guides/feature-flag-best-practices#1-enable-runtime-control) to enable or disable functionality in a live environment—perfect for things like [short-lived experiments](/guides/feature-flag-best-practices#2-make-flags-short-lived), such as A/B testing or gradual rollouts.
 
 Configurations, on the other hand, are usually static and long-lived. They often contain sensitive data like API keys or access credentials, which need to be encrypted and carefully managed. Using feature flags for configuration can create security vulnerabilities and operational issues. Most flag systems don't encrypt values the way configuration management tools do.
 
@@ -230,7 +230,7 @@ Modern applications are composed of multiple services with many complex dependen
 
 Just because a user doesn't normally work with a flag doesn't mean they won't need to find it. However, you don't need to show every flag by default—especially those outside a user's main scope. What matters is that all flags are [searchable](/reference/api/unleash/search-features). When someone searches for a flag, they should be able to view its configuration and ownership, so they can request access or submit a [change request](/reference/change-requests) if needed.
 
-This is why feature flag systems should be [open by default]/guides/feature-flag-best-practices#5-choose-open-by-default).
+This is why feature flag systems should be [open by default](/guides/feature-flag-best-practices#5-choose-open-by-default).
 
 There are also valid use cases for excluding flags from global search. For example, during sensitive projects, it may be necessary to hide flags that could expose confidential changes. Your system should support private flags in special cases—but those should remain the exception, not the norm.
 
@@ -318,4 +318,4 @@ Feature flags are a powerful tool for delivering software efficiently while main
 
 The key to success at scale? Clear processes, regular maintenance, and a commitment to best practices. With these in place, you can rely on feature flags to drive innovation and improve your software development lifecycle.
 
-This guide focused on using [feature flags at scale](https://www.getunleash.io/blog/feature-management). For advice on building and scaling the flag system itself, check out our [feature flag best practices guide]/guides/feature-flag-best-practices).
+This guide focused on using [feature flags at scale](https://www.getunleash.io/blog/feature-management). For advice on building and scaling the flag system itself, check out our [feature flag best practices guide](/guides/feature-flag-best-practices).

@@ -257,137 +257,129 @@ export const SafeguardForm = ({
     };
 
     return (
-        <>
-            <StyledFormContainer onSubmit={handleSubmit} mode={mode}>
-                <StyledTopRow sx={{ mb: 1 }}>
-                    <StyledIcon />
-                    <StyledLabel>Pause automation when</StyledLabel>
-                    {mode !== 'create' && (
-                        <IconButton
-                            onClick={handleDelete}
+        <StyledFormContainer onSubmit={handleSubmit} mode={mode}>
+            <StyledTopRow sx={{ mb: 1 }}>
+                <StyledIcon />
+                <StyledLabel>Pause automation when</StyledLabel>
+                {mode !== 'create' && (
+                    <IconButton
+                        onClick={handleDelete}
+                        size='small'
+                        aria-label='Delete safeguard'
+                        sx={{ padding: 0.5, marginLeft: 'auto' }}
+                    >
+                        <DeleteOutlineIcon fontSize='small' />
+                    </IconButton>
+                )}
+            </StyledTopRow>
+            <StyledTopRow sx={{ ml: 3 }}>
+                <MetricSelector
+                    value={metricName}
+                    onChange={handleMetricChange}
+                    options={metricOptions}
+                    loading={loading}
+                    label=''
+                />
+
+                <StyledTopRow>
+                    <StyledLabel>filtered by</StyledLabel>
+                    <FormControl variant='outlined' size='small'>
+                        <StyledSelect
+                            value={appName}
+                            onChange={(e) =>
+                                handleApplicationChange(String(e.target.value))
+                            }
+                            variant='outlined'
                             size='small'
-                            aria-label='Delete safeguard'
-                            sx={{ padding: 0.5, marginLeft: 'auto' }}
                         >
-                            <DeleteOutlineIcon fontSize='small' />
-                        </IconButton>
-                    )}
+                            {applicationNames.map((app) => (
+                                <StyledMenuItem key={app} value={app}>
+                                    {app === '*' ? 'All' : app}
+                                </StyledMenuItem>
+                            ))}
+                        </StyledSelect>
+                    </FormControl>
                 </StyledTopRow>
-                <StyledTopRow sx={{ ml: 3 }}>
-                    <MetricSelector
-                        value={metricName}
-                        onChange={handleMetricChange}
-                        options={metricOptions}
-                        loading={loading}
+
+                <StyledTopRow>
+                    <StyledLabel>aggregated by</StyledLabel>
+                    <ModeSelector
+                        value={aggregationMode}
+                        onChange={handleAggregationModeChange}
+                        metricType={metricType}
                         label=''
                     />
-
-                    <StyledTopRow>
-                        <StyledLabel>filtered by</StyledLabel>
-                        <FormControl variant='outlined' size='small'>
-                            <StyledSelect
-                                value={appName}
-                                onChange={(e) =>
-                                    handleApplicationChange(
-                                        String(e.target.value),
-                                    )
-                                }
-                                variant='outlined'
-                                size='small'
-                            >
-                                {applicationNames.map((app) => (
-                                    <StyledMenuItem key={app} value={app}>
-                                        {app === '*' ? 'All' : app}
-                                    </StyledMenuItem>
-                                ))}
-                            </StyledSelect>
-                        </FormControl>
-                    </StyledTopRow>
-
-                    <StyledTopRow>
-                        <StyledLabel>aggregated by</StyledLabel>
-                        <ModeSelector
-                            value={aggregationMode}
-                            onChange={handleAggregationModeChange}
-                            metricType={metricType}
-                            label=''
-                        />
-                    </StyledTopRow>
                 </StyledTopRow>
-                <StyledTopRow sx={{ ml: 0.75 }}>
-                    <StyledTopRow>
-                        <StyledLabel>is</StyledLabel>
-                        <FormControl variant='outlined' size='small'>
-                            <StyledSelect
-                                value={operator}
-                                onChange={(e) =>
-                                    handleOperatorChange(
-                                        e.target
-                                            .value as CreateSafeguardSchemaOperator,
-                                    )
-                                }
-                                variant='outlined'
-                                size='small'
-                            >
-                                <StyledMenuItem value='>'>
-                                    More than
-                                </StyledMenuItem>
-                                <StyledMenuItem value='<'>
-                                    Less than
-                                </StyledMenuItem>
-                            </StyledSelect>
-                        </FormControl>
-
-                        <FormControl variant='outlined' size='small'>
-                            <TextField
-                                type='number'
-                                inputProps={{
-                                    step: 0.1,
-                                }}
-                                value={threshold}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    handleThresholdChange(Number(value));
-                                }}
-                                placeholder='Value'
-                                variant='outlined'
-                                size='small'
-                                required
-                            />
-                        </FormControl>
-                    </StyledTopRow>
-
-                    <StyledTopRow>
-                        <StyledLabel>over</StyledLabel>
-                        <RangeSelector
-                            value={timeRange}
-                            onChange={handleTimeRangeChange}
-                            label=''
-                        />
-                    </StyledTopRow>
-                </StyledTopRow>
-                {showButtons && (
-                    <StyledButtonGroup>
-                        <Button
+            </StyledTopRow>
+            <StyledTopRow sx={{ ml: 0.75 }}>
+                <StyledTopRow>
+                    <StyledLabel>is</StyledLabel>
+                    <FormControl variant='outlined' size='small'>
+                        <StyledSelect
+                            value={operator}
+                            onChange={(e) =>
+                                handleOperatorChange(
+                                    e.target
+                                        .value as CreateSafeguardSchemaOperator,
+                                )
+                            }
                             variant='outlined'
-                            onClick={handleCancel}
                             size='small'
                         >
-                            Cancel
-                        </Button>
-                        <PermissionButton
-                            permission={UPDATE_FEATURE_STRATEGY}
-                            variant='contained'
-                            color='primary'
+                            <StyledMenuItem value='>'>More than</StyledMenuItem>
+                            <StyledMenuItem value='<'>Less than</StyledMenuItem>
+                        </StyledSelect>
+                    </FormControl>
+
+                    <FormControl variant='outlined' size='small'>
+                        <TextField
+                            type='number'
+                            inputProps={{
+                                step: 0.1,
+                            }}
+                            value={threshold}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                handleThresholdChange(Number(value));
+                            }}
+                            placeholder='Value'
+                            variant='outlined'
                             size='small'
-                            type='submit'
-                            disabled={Number.isNaN(Number(threshold))}
-                        >
-                            Save
-                        </PermissionButton>
-                    </StyledButtonGroup>
-                )}
-            </StyledFormContainer>
+                            required
+                        />
+                    </FormControl>
+                </StyledTopRow>
+
+                <StyledTopRow>
+                    <StyledLabel>over</StyledLabel>
+                    <RangeSelector
+                        value={timeRange}
+                        onChange={handleTimeRangeChange}
+                        label=''
+                    />
+                </StyledTopRow>
+            </StyledTopRow>
+            {showButtons && (
+                <StyledButtonGroup>
+                    <Button
+                        variant='outlined'
+                        onClick={handleCancel}
+                        size='small'
+                    >
+                        Cancel
+                    </Button>
+                    <PermissionButton
+                        permission={UPDATE_FEATURE_STRATEGY}
+                        variant='contained'
+                        color='primary'
+                        size='small'
+                        type='submit'
+                        disabled={Number.isNaN(Number(threshold))}
+                    >
+                        Save
+                    </PermissionButton>
+                </StyledButtonGroup>
+            )}
             <SafeguardChangeRequestDialog
                 isOpen={dialogOpen}
                 onConfirm={handleDialogConfirm}
@@ -396,6 +388,6 @@ export const SafeguardForm = ({
                 environment={environment}
                 mode={mode === 'edit' ? 'edit' : 'create'}
             />
-        </>
+        </StyledFormContainer>
     );
 };

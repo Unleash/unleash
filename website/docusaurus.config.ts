@@ -469,7 +469,7 @@ class="header-github-link"
                 '@docusaurus/plugin-client-redirects',
                 {
                     fromExtensions: ['html', 'htm'],
-                    redirects: [].map(addDocsRoutePrefix), // redirects are performed by Vercel
+                    redirects: [], // redirects are performed by Vercel
                     createRedirects: (toPath) => {
                         if (
                             toPath.indexOf('/docs/') === -1 &&

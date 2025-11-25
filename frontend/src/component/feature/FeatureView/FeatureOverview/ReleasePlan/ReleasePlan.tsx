@@ -426,21 +426,41 @@ export const ReleasePlan = ({
     );
 
     const handleSafeguardSubmit = async (data: CreateSafeguardSchema) => {
-        try {
-            await createOrUpdateSafeguard({
-                projectId,
-                featureName,
-                environment,
-                planId: id,
-                body: data,
-            });
-            setToastData({
-                type: 'success',
-                text: 'Safeguard added successfully',
-            });
-            onAutomationChange?.();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
+        if (isChangeRequestConfigured(environment)) {
+            try {
+                await addChange(projectId, environment, {
+                    feature: featureName,
+                    action: 'changeSafeguard' as const,
+                    payload: {
+                        planId: id,
+                        safeguard: data,
+                    },
+                });
+                await refetchChangeRequests();
+                setToastData({
+                    type: 'success',
+                    text: 'Added to draft',
+                });
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
+            }
+        } else {
+            try {
+                await createOrUpdateSafeguard({
+                    projectId,
+                    featureName,
+                    environment,
+                    planId: id,
+                    body: data,
+                });
+                setToastData({
+                    type: 'success',
+                    text: 'Safeguard added successfully',
+                });
+                onAutomationChange?.();
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
+            }
         }
     };
 

@@ -36,7 +36,7 @@ Let's dive deeper into each principle.
 
 A scalable feature management system evaluates flags at runtime. Flags are dynamic, not static. If you need to restart your application to turn on a flag, that's configuration, not a feature flag.
 
-A large-scale feature flag system that enables [runtime control](https://www.getunleash.io/blog/so-what-exactly-is-runtime-control) should have, at minimum, the following components: a [service to manage feature flags](https://www.getunleash.io/blog/feature-management), a database or data store, an [API layer](/get-started/unleash-overview), a [feature flag SDK](../../reference/sdks), and a continuous update mechanism.
+A large-scale feature flag system that enables [runtime control](https://www.getunleash.io/blog/so-what-exactly-is-runtime-control) should have, at minimum, the following components: a [service to manage feature flags](https://www.getunleash.io/blog/feature-management), a database or data store, an [API layer](/get-started/unleash-overview), a [feature flag SDK](/reference/sdks), and a continuous update mechanism.
 
 Let's break down these components.
 
@@ -45,7 +45,7 @@ Let's break down these components.
 - **Feature Flag Control Service**: A [service that acts as the control plane for your feature flags](https://www.getunleash.io/feature-flag-service), managing all flag configurations. The scope of this service should reflect the boundaries of your organization.
 - **Database or data store**: A robust, scalable, and highly available database or data store that stores feature flag configurations reliably. Common options include SQL databases, NoSQL databases, or key-value stores.
 - **API layer**: An API layer that exposes endpoints for your application to interact with the _Feature Flag Control Service_. [This API should allow your application to request feature flag configurations](/get-started/unleash-overview).
-- **Feature flag SDK**: [An easy-to-use interface for fetching flag configurations and evaluating feature flags at runtime](../../reference/sdks). When considering feature flags in your application, the call to the SDK should query the local cache, and the SDK should ask the central service for updates in the background.
+- **Feature flag SDK**: [An easy-to-use interface for fetching flag configurations and evaluating feature flags at runtime](/reference/sdks). When considering feature flags in your application, the call to the SDK should query the local cache, and the SDK should ask the central service for updates in the background.
 - **Continuous update mechanism**: An update mechanism that enables [dynamic updates to feature flag configurations](/get-started/unleash-overview) without requiring application restarts or redeployments. The SDK should handle subscriptions or polling to the _Feature Flag Control Service_ for updates.
 
 ![The SDK holds an in-memory feature flag configuration cache which is continuously synced with the Feature Flag Control Service. You can then use the SDK to check the state of feature flags in your application.](/img/feature-flag-scalable-architecture.png)
@@ -96,7 +96,7 @@ Avoid using feature flags for static application configuration. Application conf
 To succeed with feature flags in a large organization, [follow these strategies](/guides/best-practices-using-feature-flags-at-scale):
 
 - **Set flag expiration dates**: Assign expiration dates to feature flags to track which flags are no longer needed. A good feature flag management tool will alert you to expired flags, making it easier to maintain your codebase.
-- **Treat feature flags like technical debt**: Incorporate tasks to remove outdated feature flags into your sprint or project planning, just as you would with [technical debt](../../reference/technical-debt). Feature flags add complexity to your code by introducing multiple code paths that need context and maintenance. If you don't clean up feature flags in a timely manner, you risk losing the context as time passes or personnel changes, making them harder to manage or remove.
+- **Treat feature flags like technical debt**: Incorporate tasks to remove outdated feature flags into your sprint or project planning, just as you would with [technical debt](/reference/technical-debt). Feature flags add complexity to your code by introducing multiple code paths that need context and maintenance. If you don't clean up feature flags in a timely manner, you risk losing the context as time passes or personnel changes, making them harder to manage or remove.
 - **Archive old flags**: When feature flags are no longer in use, archive them after removing them from the codebase. This archive serves as an important audit log of feature flags and allows you to revive flags if you need to restore an older version of your application.
 
 While most feature flags should be short-lived, there are valid exceptions for long-lived flags, including:
@@ -134,7 +134,7 @@ Unique naming has the following advantages:
 
 Making feature flag systems open by default enables engineers, product owners, and support teams to collaborate effectively and make informed decisions. Open access encourages productive discussions about feature releases, experiments, and their impact on the user experience.
 
-[Access control and visibility](../../guides/user-management-access-controls) are also key considerations for [security and compliance](https://www.getunleash.io/security-and-performance). Tracking and auditing feature flag changes help maintain data integrity and meet regulatory requirements. While open access is key, it's equally important to integrate with corporate access controls, such as SSO, to ensure security. In some cases, additional controls like feature flag approvals using the [four-eyes principle](/reference/change-requests) are necessary for critical changes.
+[Access control and visibility](/guides/user-management-access-controls) are also key considerations for [security and compliance](https://www.getunleash.io/security-and-performance). Tracking and auditing feature flag changes help maintain data integrity and meet regulatory requirements. While open access is key, it's equally important to integrate with corporate access controls, such as SSO, to ensure security. In some cases, additional controls like feature flag approvals using the [four-eyes principle](/reference/change-requests) are necessary for critical changes.
 
 ![Preview of a change request to enable gradual rollout in production.](/img/feature-flag-change-requests-preview.png)
 

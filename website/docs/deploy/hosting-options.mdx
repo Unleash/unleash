@@ -7,7 +7,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 <SearchPriority level="high" />
 
-Unleash provides flexible hosting options for Unleash and [Unleash Edge](../generated/unleash-edge.md), allowing you to meet specific requirements for scaling, privacy, and infrastructure control. This document covers the main hosting models for the Unleash API server and Unleash Edge. Choosing a hosting model is a key architectural decision.
+Unleash provides flexible hosting options for Unleash and [Unleash Edge](/reference/unleash-edge), allowing you to meet specific requirements for scaling, privacy, and infrastructure control. This document covers the main hosting models for the Unleash API server and Unleash Edge. Choosing a hosting model is a key architectural decision.
 
 Before considering hosting options, we recommend that you explore the [Unleash architecture and its key components](/get-started/unleash-overview).
 
@@ -124,14 +124,14 @@ The following table compares the key differences between using the Unleash Enter
 Using Unleash Edge is optional. You can also access the Unleash API directly using the [Frontend or Client API](/get-started/unleash-overview#unleash-apis). This setup comes with the following considerations:
 - **Fair Use Policy:** Sending requests to the Unleash API is subject to limits outlined in the [Fair Use Policy](https://www.getunleash.io/fair-use-policy). While short traffic spikes are accommodated, sustained high traffic might require using Unleash Edge.
 - **Latency:** Although the Unleash architecture is designed for incredibly fast flag evaluations thanks to caching in the SDKs, the central Unleash API server might not be geographically close to all your end users, potentially increasing flag evaluation latency.
-- **Data privacy:** When using the Frontend API to talk to Unleash, any end-user data included in the [Unleash Context](../reference/unleash-context.md) is sent directly to the Unleash server. Evaluate if this meets your privacy requirements. Using Edge avoids sending this context data directly to the central Unleash API server.
+- **Data privacy:** When using the Frontend API to talk to Unleash, any end-user data included in the [Unleash Context](/reference/unleash-context) is sent directly to the Unleash server. Evaluate if this meets your privacy requirements. Using Edge avoids sending this context data directly to the central Unleash API server.
 
 ## Self-hosted Unleash Proxy
 
 :::note
 
-Unleash Proxy has been deprecated, use [Unleash Edge](../reference/unleash-edge) instead.
+Unleash Proxy has been deprecated, use [Unleash Edge](/reference/unleash-edge) instead.
 :::
 
 
-If you are currently self-hosting [Proxy](../reference/unleash-proxy), see our [Edge migration guide](https://github.com/Unleash/unleash-edge/blob/main/docs/migration-guide.md) for a guide on how to migrate.
+If you are currently self-hosting [Proxy](/reference/unleash-proxy), see our [Edge migration guide](https://github.com/Unleash/unleash-edge/blob/main/docs/migration-guide) for a guide on how to migrate.

@@ -9,7 +9,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 # Feature flag management at scale: best practices
 
-You've probably heard someone say, “A feature flag is just an if statement.” And in simple cases, that's true. But when your organization has thousands of developers managing hundreds of [feature flags](https://docs.getunleash.io/what-is-a-feature-flag)—with complex targeting rules, audit trails, and dozens of microservices—those if statements get complicated fast. Especially if you don't [set things up properly from the start](../../guides/user-management-access-controls).
+You've probably heard someone say, “A feature flag is just an if statement.” And in simple cases, that's true. But when your organization has thousands of developers managing hundreds of [feature flags](https://docs.getunleash.io/what-is-a-feature-flag)—with complex targeting rules, audit trails, and dozens of microservices—those if statements get complicated fast. Especially if you don't [set things up properly from the start](/guides/user-management-access-controls).
 
 This guide shares what we've learned from helping teams run some of the largest feature flag deployments in the world, both through [Unleash Open-Source](https://github.com/Unleash/unleash) and [Unleash Enterprise](https://www.getunleash.io/enterprise-feature-management-platform).
 
@@ -65,7 +65,7 @@ Instead, evaluate the flag once—typically at the start of a user request—and
 
 ## Stay on top of technical debt
 
-[Feature flags are powerful](https://www.getunleash.io/blog/feature-ops-is-the-next-frontier)—they increase developer productivity, reduce risk, and support data-driven product decisions. But they also come with a catch: they're a form of [technical debt](../../reference/technical-debt).
+[Feature flags are powerful](https://www.getunleash.io/blog/feature-ops-is-the-next-frontier)—they increase developer productivity, reduce risk, and support data-driven product decisions. But they also come with a catch: they're a form of [technical debt](/reference/technical-debt).
 
 Technical debt builds up when flags stick around long after they've served their purpose. Over time, outdated or unused flags clutter your codebase, making it harder to read, test, and maintain. This slows down development and can even lead to bugs, [security risks](https://www.getunleash.io/security-and-performance), or unexpected behavior—especially if old flags conflict with one another or expose sensitive features.
 
@@ -73,7 +73,7 @@ The simplest way to pay down flag debt? Track your flags and remove them when th
 
 ## Use feature flag lifecycle to optimize your development workflow
 
-Every feature flag follows a [lifecycle](../../reference/feature-toggles#feature-flag-lifecycle)—even if your tooling doesn't make it explicit. Understanding and tracking this lifecycle helps teams reduce technical debt and identify bottlenecks in the development workflow.
+Every feature flag follows a [lifecycle](/reference/feature-toggles#feature-flag-lifecycle)—even if your tooling doesn't make it explicit. Understanding and tracking this lifecycle helps teams reduce technical debt and identify bottlenecks in the development workflow.
 
 Here are the typical stages:
 	- **Define**: The flag is created, but no code has been written yet.
@@ -174,7 +174,7 @@ You can then configure your feature flag system to recognize the attributes that
 This approach helps with:
 - Maintainability: Adding a new user to the beta group is as simple as updating their group membership, without needing to edit the flag configuration.
 - Memory usage: Storing a simple attribute is much more efficient than holding a list of thousands of user IDs in memory.
-- Compliance: Restricting personal data to only the systems that need it makes it easier to [stay compliant](../../privacy-and-compliance/compliance-overview).
+- Compliance: Restricting personal data to only the systems that need it makes it easier to [stay compliant](/privacy-and-compliance/compliance-overview).
 
 ### Defining core business logic in feature flags
 
@@ -228,7 +228,7 @@ Avoid putting all flags into one large group. While it might seem simpler, it qu
 
 Modern applications are composed of multiple services with many complex dependencies. While organizing flags by applications, teams, or business units is a good starting point, real-world services often exist across these organizational boundaries.
 
-Just because a user doesn't normally work with a flag doesn't mean they won't need to find it. However, you don't need to show every flag by default—especially those outside a user's main scope. What matters is that all flags are [searchable](/reference/api/unleash/search-features). When someone searches for a flag, they should be able to view its configuration and ownership, so they can request access or submit a [change request](../../reference/change-requests) if needed.
+Just because a user doesn't normally work with a flag doesn't mean they won't need to find it. However, you don't need to show every flag by default—especially those outside a user's main scope. What matters is that all flags are [searchable](/reference/api/unleash/search-features). When someone searches for a flag, they should be able to view its configuration and ownership, so they can request access or submit a [change request](/reference/change-requests) if needed.
 
 This is why feature flag systems should be [open by default](./feature-flag-best-practices#5-choose-open-by-default).
 
@@ -288,7 +288,7 @@ And in the rare case of malicious behavior, an audit trail can help you pinpoint
 
 Your organization likely already defines user groups, for example by role (such as developers, operations, marketing) or by business unit. Use those existing structures to manage feature flag permissions. This makes it easier to assign the right access levels and keeps your permission model consistent across systems.
 
-Your flag system should integrate with your [single sign-on](../../reference/sso) (SSO) provider. That way, when a user is added to or removed from a group in your central directory, their access to the [flag system updates automatically](../../reference/scim).
+Your flag system should integrate with your [single sign-on](/reference/sso) (SSO) provider. That way, when a user is added to or removed from a group in your central directory, their access to the [flag system updates automatically](/reference/scim).
 
 Managing access is complex—so don't manage it in multiple places. Let your global permissions drive flag access and keep everything in sync.
 
@@ -312,9 +312,9 @@ Even if your organization doesn't require approvals, having an optional review s
 
 These best practices are based on insights from working with some of the world's largest organizations. What we've learned is that careful planning, discipline, and the right systems in place help you stay in control, no matter the size of your organization.
 
-By [aligning feature flags with your organizational structure](#align-feature-flags-with-your-organizational-and-application-structure), and keeping them globally [searchable](../../reference/search-operators), you lay the foundation for a system that's [easy to maintain and scale](https://www.getunleash.io/unleash-enterprise-edge). [Instrumenting your code properly](#organize-your-feature-flag-code-effectively), [addressing technical debt regularly](#stay-on-top-of-technical-debt), and [maintaining a flexible permission system](#enable-secure-collaboration-with-flexible-permissions) ensures strong performance and security over time. And by avoiding common pitfalls—like embedding business logic or managing config through flags—you keep your system clean and manageable.
+By [aligning feature flags with your organizational structure](#align-feature-flags-with-your-organizational-and-application-structure), and keeping them globally [searchable](/reference/search-operators), you lay the foundation for a system that's [easy to maintain and scale](https://www.getunleash.io/unleash-enterprise-edge). [Instrumenting your code properly](#organize-your-feature-flag-code-effectively), [addressing technical debt regularly](#stay-on-top-of-technical-debt), and [maintaining a flexible permission system](#enable-secure-collaboration-with-flexible-permissions) ensures strong performance and security over time. And by avoiding common pitfalls—like embedding business logic or managing config through flags—you keep your system clean and manageable.
 
-Feature flags are a powerful tool for delivering software efficiently while maintaining [security](https://www.getunleash.io/security-and-performance) and [compliance](../../privacy-and-compliance/compliance-overview). For developers working in large organizations, that is the best of both worlds. Following the practices in this guide will help you get the most value from feature flags without getting lost in complexity.
+Feature flags are a powerful tool for delivering software efficiently while maintaining [security](https://www.getunleash.io/security-and-performance) and [compliance](/privacy-and-compliance/compliance-overview). For developers working in large organizations, that is the best of both worlds. Following the practices in this guide will help you get the most value from feature flags without getting lost in complexity.
 
 The key to success at scale? Clear processes, regular maintenance, and a commitment to best practices. With these in place, you can rely on feature flags to drive innovation and improve your software development lifecycle.
 

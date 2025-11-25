@@ -39,7 +39,7 @@ The playground will only evaluate features belonging to the projects you specify
 
 ### The Unleash context
 
-The [Unleash context](../reference/unleash-context) represents a client SDK's configuration and used for evaluating your features. You can construct your own context or use a JSON version of a context from a client.
+The [Unleash context](/reference/unleash-context) represents a client SDK's configuration and used for evaluating your features. You can construct your own context or use a JSON version of a context from a client.
 
 #### Multiple values for a single context field
 
@@ -58,7 +58,7 @@ When you specify multiple values for context field, each value will be used to p
 You can add any fields you want to the context used for the evaluation, and you can also leave out any fields you want. However, there are some fields that will be set for you if don't provide them:
 
 -   **`appName`**: Unleash clients all require an `appName` to start up. If you do not provide an `appName`, the playground will assign a default value to this property instead.
--   **`currentTime`**: The `currentTime` property of the [Unleash context](../reference/unleash-context) gets auto-populated with the current time. You can override this manually by providing a value of your own.
+-   **`currentTime`**: The `currentTime` property of the [Unleash context](/reference/unleash-context) gets auto-populated with the current time. You can override this manually by providing a value of your own.
 
 ## The response
 
@@ -70,11 +70,11 @@ In the UI, the playground displays the features in a table. Each row of the tabl
 
 ![Playground results](/img/playground-results-row.png)
 
-Because you can add multiple values for each context field, each feature-environment cell contains the number of combinations that evaluated to `true` and `false` for the feature in the given environment. This can be expanded into a more detailed overview over what combinations of context fields evaluated to `true` and `false` along with any [variants](../reference/feature-toggle-variants).
+Because you can add multiple values for each context field, each feature-environment cell contains the number of combinations that evaluated to `true` and `false` for the feature in the given environment. This can be expanded into a more detailed overview over what combinations of context fields evaluated to `true` and `false` along with any [variants](/reference/feature-toggle-variants).
 
 ![Playground results in development](/img/playground-results-development.png)
 
-As with all of Unleash's client SDKs, the playground respects [stickiness](../reference/stickiness). The [stickiness algorithm](../reference/stickiness#calculation) guarantees that you'll always get the same variants and the same gradual rollout results if you provide the same context, as long as you provide the context field used for calculating stickiness.
+As with all of Unleash's client SDKs, the playground respects [stickiness](/reference/stickiness). The [stickiness algorithm](/reference/stickiness#calculation) guarantees that you'll always get the same variants and the same gradual rollout results if you provide the same context, as long as you provide the context field used for calculating stickiness.
 
 ### The diff view
 
@@ -110,7 +110,7 @@ There's currently two cases where the playground can't evaluate the strategy:
 1. The [strategy is a custom strategy](#custom-strategies) and the playground doesn't have an implementation for the strategy.
 2. The [strategy is the 'Application Hostname' strategy](#hostname-strategy).
 
-Even if the playground doesn't recognize or otherwise can't evaluate a specific strategy, it _may_ still evaluate the overall strategy result to `false` (and be certain that it is the right result). If a strategy has [constraints](../reference/activation-strategies#constraints) or [segments](segments) that are not satisfied, the playground knows that the strategy result wouldn't be `true`, regardless of the actual strategy implementation. As such, if a strategy can't be evaluated, it can be **either** _unknown_ or _`false`_.
+Even if the playground doesn't recognize or otherwise can't evaluate a specific strategy, it _may_ still evaluate the overall strategy result to `false` (and be certain that it is the right result). If a strategy has [constraints](/reference/activation-strategies#constraints) or [segments](segments) that are not satisfied, the playground knows that the strategy result wouldn't be `true`, regardless of the actual strategy implementation. As such, if a strategy can't be evaluated, it can be **either** _unknown_ or _`false`_.
 
 ### Custom Strategies
 

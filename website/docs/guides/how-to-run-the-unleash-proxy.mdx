@@ -16,7 +16,7 @@ Unleash Proxy is deprecated. Use [Unleash Edge](/reference/unleash-edge) instead
 
 :::
 
-The [Unleash Proxy](../reference/unleash-proxy) provides a way for you to consume feature flags in [front-end clients](../reference/sdks#frontend-sdks), such as the [JavaScript Proxy client](../reference/sdks/javascript-browser) and [React Proxy client](../reference/sdks/react).
+The [Unleash Proxy](/reference/unleash-proxy) provides a way for you to consume feature flags in [front-end clients](/reference/sdks#frontend-sdks), such as the [JavaScript Proxy client](/reference/sdks/javascript-browser) and [React Proxy client](/reference/sdks/react).
 
 Depending on your setup, the Proxy is most easily run in one of two ways, depending on your situation:
 
@@ -30,10 +30,10 @@ If you're using a hosted version of Unleash, we can also run the proxy for you.
 This is what you need before you can run the proxy:
 
 -   A running Unleash server to connect to. You'll need its API path (e.g. `https://app.unleash-hosted.com/demo/api`) to connect the proxy to it.
--   A [backend token](../reference/api-tokens-and-client-keys#backend-tokens) for the proxy to use.
+-   A [backend token](/reference/api-tokens-and-client-keys#backend-tokens) for the proxy to use.
 -   If you're running the Proxy via Docker: [the `docker` command line tool](https://www.docker.com/).
 -   If you're running the Proxy as a Node.js app: [Node.js and its command line tools](https://nodejs.org/).
--   A [Proxy client key](../reference/api-tokens-and-client-keys#proxy-client-keys). This can be any arbitrary string (for instance: `proxy-client-key`). Use this key when connecting a client SDK to the Proxy.
+-   A [Proxy client key](/reference/api-tokens-and-client-keys#proxy-client-keys). This can be any arbitrary string (for instance: `proxy-client-key`). Use this key when connecting a client SDK to the Proxy.
 
 ## How to run the Proxy via Docker {#run-proxy-via-docker}
 
@@ -49,7 +49,7 @@ docker pull unleashorg/unleash-proxy
 
 ### 2. Start the Proxy
 
-When running the Proxy, you'll need to provide it with at least the configuration options listed below. Check the reference docs for the [full list of configuration options](../reference/unleash-proxy#configuration-options).
+When running the Proxy, you'll need to provide it with at least the configuration options listed below. Check the reference docs for the [full list of configuration options](/reference/unleash-proxy#configuration-options).
 
 ```bash title="Run the Unleash Proxy via Docker"
 docker run \
@@ -88,7 +88,7 @@ npm install @unleash/proxy
 
 ### 3. Configure and start the proxy
 
-Import the `createApp` function from `@unleash/proxy` and configure the proxy. You'll need to provide at least the configuration options highlighted below. Check the reference docs for the [full list of configuration options](../reference/unleash-proxy#configuration-options).
+Import the `createApp` function from `@unleash/proxy` and configure the proxy. You'll need to provide at least the configuration options highlighted below. Check the reference docs for the [full list of configuration options](/reference/unleash-proxy#configuration-options).
 
 Here is an example of what running the Proxy as a Node.js app might look like:
 

@@ -902,7 +902,7 @@
       "permanent": true
     },
     {
-      "source": "/topics//eature-flag-migration/feature-flag-migration-best-practices",
+      "source": "/topics/feature-flag-migration/feature-flag-migration-best-practices",
       "destination": "/guides/feature-flag-migration-best-practices",
       "permanent": true
     },
@@ -1337,16 +1337,6 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/django/implementing-feature-flags-django",
-      "destination": "/guides/implement-feature-flags-in-django",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/django/examples",
-      "destination": "/guides/feature-flag-examples-django",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/django/django-examples",
       "destination": "/guides/feature-flag-examples-django",
       "permanent": true
@@ -1357,17 +1347,7 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/dotnet/implementing-feature-flags-dotnet",
-      "destination": "/guides/implement-feature-flags-in-dotnet",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/dotnet/examples",
-      "destination": "/guides/feature-flag-examples-dotnet",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/dotnet/dotnet-examples",
       "destination": "/guides/feature-flag-examples-dotnet",
       "permanent": true
     },
@@ -1377,32 +1357,12 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/golang",
-      "destination": "/guides/implement-feature-flags-in-golang",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/golang/implementing-feature-flags-golang",
-      "destination": "/guides/implement-feature-flags-in-golang",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/golang/examples",
       "destination": "/guides/feature-flag-examples-golang",
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/golang/golang-examples",
-      "destination": "/guides/feature-flag-examples-golang",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/ios",
-      "destination": "/guides/implement-feature-flags-in-ios",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/ios/implementing-feature-flags-ios",
       "destination": "/guides/implement-feature-flags-in-ios",
       "permanent": true
     },
@@ -1417,17 +1377,12 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/java/implementing-feature-flags",
-      "destination": "/guides/implement-feature-flags-in-java",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/java/spring-boot-implementing-feature-flags",
+      "source": "/feature-flag-tutorials/spring-boot",
       "destination": "/guides/implement-feature-flags-in-spring-boot",
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/java/spring-boot-examples",
+      "source": "/feature-flag-tutorials/java/spring-boot/examples",
       "destination": "/guides/feature-flag-examples-spring-boot",
       "permanent": true
     },
@@ -1437,27 +1392,12 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/javascript/implementing-feature-flags-js",
-      "destination": "/guides/implement-feature-flags-in-javascript",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/nextjs",
       "destination": "/guides/implement-feature-flags-in-nextjs",
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/nextjs/implementing-feature-flags-nextjs",
-      "destination": "/guides/implement-feature-flags-in-nextjs",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/python",
-      "destination": "/guides/implement-feature-flags-in-python",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/python/implementing-feature-flags",
       "destination": "/guides/implement-feature-flags-in-python",
       "permanent": true
     },
@@ -1472,27 +1412,12 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/rails/implementing-feature-flags-rails",
-      "destination": "/guides/implement-feature-flags-in-rails",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/rails/examples",
       "destination": "/guides/feature-flag-examples-rails",
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/rails/rails-examples",
-      "destination": "/guides/feature-flag-examples-rails",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/react",
-      "destination": "/guides/implement-feature-flags-in-react",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/react/implementing-feature-flags",
       "destination": "/guides/implement-feature-flags-in-react",
       "permanent": true
     },
@@ -1507,17 +1432,7 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/ruby/implementing-feature-flags-ruby",
-      "destination": "/guides/implement-feature-flags-in-ruby",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/ruby/examples",
-      "destination": "/guides/feature-flag-examples-ruby",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/ruby/ruby-examples",
       "destination": "/guides/feature-flag-examples-ruby",
       "permanent": true
     },
@@ -1527,17 +1442,7 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/rust/implementing-feature-flags-rust",
-      "destination": "/guides/implement-feature-flags-in-rust",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/rust/examples",
-      "destination": "/guides/feature-flag-examples-rust",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/rust/rust-examples",
       "destination": "/guides/feature-flag-examples-rust",
       "permanent": true
     },
@@ -1547,27 +1452,7 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda",
-      "destination": "/guides/implement-feature-flags-in-aws-lambda",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/spring-boot",
-      "destination": "/guides/implement-feature-flags-in-spring-boot",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/spring-boot/examples",
-      "destination": "/guides/feature-flag-examples-spring-boot",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/sveltekit",
-      "destination": "/guides/implement-feature-flags-in-sveltekit",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/sveltekit/implementing-feature-flags-sveltekit",
       "destination": "/guides/implement-feature-flags-in-sveltekit",
       "permanent": true
     },

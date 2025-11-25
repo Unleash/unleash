@@ -1,6 +1,6 @@
 ---
 title: Implement A/B testing using feature flags
-pagination_next: guides/ai
+pagination_next: guides/manage-ai-models-with-feature-flags
 ---
 
 import SearchPriority from '@site/src/components/SearchPriority';

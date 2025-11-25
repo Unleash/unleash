@@ -1093,7 +1093,7 @@
     },
     {
       "source": "/feature-flag-tutorials/use-cases/ai",
-      "destination": "/guides/ai",
+      "destination": "/guides/manage-ai-models-with-feature-flags",
       "permanent": true
     },
     {

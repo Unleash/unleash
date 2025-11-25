@@ -323,7 +323,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'doc',
                             label: 'Feature flags for AI',
-                            id: 'guides/ai',
+                            id: 'guides/manage-ai-models-with-feature-flags',
                         },
                         {
                             type: 'doc',

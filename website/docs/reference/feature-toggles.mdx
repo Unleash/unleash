@@ -11,30 +11,30 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 Feature flags are a core concept of Unleash. They allow you to release, test, and manage features and functionality across your application without changing the source code.
 
-Feature flags exist within a [project](./projects) and have distinct configurations and [activation strategies](./activation-strategies) for each of the project's active [environments](./environments). Activation strategies determine whether a feature flag is enabled in a specific environment.
+Feature flags exist within a [project](/reference/projects) and have distinct configurations and [activation strategies](/reference/activation-strategies) for each of the project's active [environments](/reference/environments). Activation strategies determine whether a feature flag is enabled in a specific environment.
 
 Feature flags have the following properties:
 
 - **Name**: A [URL-friendly](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) string between 1 and 100 characters; must be unique per instance.
 - **Type**: The [feature flag's type](#feature-flag-types); defaults to `Release`.
-- **Project**: The [project](./projects) that contains the feature flag.
+- **Project**: The [project](/reference/projects) that contains the feature flag.
 - **Description**: An optional description of the feature flag's purpose.
 - **Impression data**: Indicates whether impression data is enabled for the flag; disabled by default.
 
 ## Environments and activation strategies
 
-Feature flags have different [activation strategies](./activation-strategies) for each environment, allowing you to manage feature rollouts per environment.
+Feature flags have different [activation strategies](/reference/activation-strategies) for each environment, allowing you to manage feature rollouts per environment.
 
 To activate a feature within an environment, assign at least one activation strategy to it. If you don't specify a strategy, the default is a gradual rollout to 100%.
 
-Activation strategies determine whether a feature flag activates for a specific [Unleash context](./unleash-context), such as a particular user or segment. When multiple strategies are in place, the flag activates if any one of the strategies evaluates to true.
+Activation strategies determine whether a feature flag activates for a specific [Unleash context](/reference/unleash-context), such as a particular user or segment. When multiple strategies are in place, the flag activates if any one of the strategies evaluates to true.
 
 ### Strategy variants
 
-You can enhance your feature flags with [strategy variants](./strategy-variants). Feature flags let you define who gets access to a feature. With variants, you can also determine which version of the feature they see.
+You can enhance your feature flags with [strategy variants](/reference/strategy-variants). Feature flags let you define who gets access to a feature. With variants, you can also determine which version of the feature they see.
 For example, you might use variants to run an A/B testing experiment.
 
-Variants are defined by a name and weight, which determines the likelihood of each variant being shown. [Stickiness](./stickiness) ensures that users consistently see the same variant based on predefined parameters.
+Variants are defined by a name and weight, which determines the likelihood of each variant being shown. [Stickiness](/reference/stickiness) ensures that users consistently see the same variant based on predefined parameters.
 Variants can also include payloads such as JSON, CSV, or strings to provide users with additional context.
 
 
@@ -66,7 +66,7 @@ To learn more, visit [Types of feature flags](/get-started/what-is-a-feature-fla
 
 A feature flag can have one of the following states: _active_, _potentially stale_, or _stale_. Unleash marks all flags as _potentially stale_ automatically once they pass their expected lifetime.
 
-State gives you an indication of when to [clean up a feature flag in code](./technical-debt).
+State gives you an indication of when to [clean up a feature flag in code](/reference/technical-debt).
 
 You can also manually change the state on a feature flag's page by going to **Overview** and clicking **Toggle stale state**.
 
@@ -74,7 +74,7 @@ You can also manually change the state on a feature flag's page by going to **Ov
 
 Marking a flag as stale helps you deprecate a feature flag without removing the active configuration for connected applications.
 
-You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [project status dashboard](./technical-debt#project-status).
+You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [project status dashboard](/reference/technical-debt#project-status).
 
 Marking a flag as stale generates the `feature-stale-on` [event](/reference/events#feature-stale-on). You can use [an integration](/reference/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
 

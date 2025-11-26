@@ -150,9 +150,13 @@ export default class VersionService {
                     instanceId: instanceId,
                 };
 
+                this.logger.info(
+                    `Is telemetry enabled? ${this.telemetryEnabled} against ${this.versionCheckUrl}`,
+                );
                 if (this.telemetryEnabled) {
                     versionPayload.featureInfo = await telemetryDataProvider();
                     const instanceInfo = await instanceInfoProvider?.();
+                    this.logger.info(`Instance info collected ${instanceInfo}`);
                     if (instanceInfo) {
                         versionPayload.instanceInfo = instanceInfo;
                     }
@@ -162,6 +166,9 @@ export default class VersionService {
                         json: versionPayload,
                         headers: { 'Content-Type': 'application/json' },
                     });
+                    this.logger.info(
+                        `Version check response status: ${res.status}`,
+                    );
                     if (res.ok) {
                         const data = (await res.json()) as IVersionResponse;
                         this.latest = {

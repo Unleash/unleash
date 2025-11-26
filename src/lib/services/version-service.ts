@@ -156,7 +156,9 @@ export default class VersionService {
                 if (this.telemetryEnabled) {
                     versionPayload.featureInfo = await telemetryDataProvider();
                     const instanceInfo = await instanceInfoProvider?.();
-                    this.logger.info(`Instance info collected ${instanceInfo}`);
+                    this.logger.info(
+                        `Instance info collected ${instanceInfo} from ${instanceInfoProvider}`,
+                    );
                     if (instanceInfo) {
                         versionPayload.instanceInfo = instanceInfo;
                     }

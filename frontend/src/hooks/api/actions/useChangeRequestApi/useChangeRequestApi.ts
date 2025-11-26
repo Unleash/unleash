@@ -24,7 +24,8 @@ export interface IChangeSchema {
         | 'startMilestone'
         | 'changeMilestoneProgression'
         | 'deleteMilestoneProgression'
-        | 'changeSafeguard';
+        | 'changeSafeguard'
+        | 'deleteSafeguard';
     payload: string | boolean | object | number | undefined;
 }
 

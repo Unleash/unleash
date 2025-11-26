@@ -19,6 +19,8 @@ import type { ChangeRequestOneOrManyCreateSchemaOneOfTwonine } from './changeReq
 import type { ChangeRequestOneOrManyCreateSchemaOneOfThreetwo } from './changeRequestOneOrManyCreateSchemaOneOfThreetwo.js';
 import type { ChangeRequestOneOrManyCreateSchemaOneOfThreefive } from './changeRequestOneOrManyCreateSchemaOneOfThreefive.js';
 import type { ChangeRequestOneOrManyCreateSchemaOneOfThreeeight } from './changeRequestOneOrManyCreateSchemaOneOfThreeeight.js';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFourone } from './changeRequestOneOrManyCreateSchemaOneOfFourone.js';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFourfour } from './changeRequestOneOrManyCreateSchemaOneOfFourfour.js';
 import type { ChangeRequestCreateSchema } from './changeRequestCreateSchema.js';
 
 /**
@@ -41,4 +43,6 @@ export type ChangeRequestOneOrManyCreateSchema =
     | ChangeRequestOneOrManyCreateSchemaOneOfThreetwo
     | ChangeRequestOneOrManyCreateSchemaOneOfThreefive
     | ChangeRequestOneOrManyCreateSchemaOneOfThreeeight
+    | ChangeRequestOneOrManyCreateSchemaOneOfFourone
+    | ChangeRequestOneOrManyCreateSchemaOneOfFourfour
     | ChangeRequestCreateSchema[];

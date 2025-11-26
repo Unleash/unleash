@@ -112,7 +112,7 @@ const getAdmonitions = (sdk) => {
 
 const modifyContent2 = modifyContent({
     getRepoDataFn: getRepoData(SDKS),
-    urlPath: '/reference/sdks',
+    urlPath: '/sdks',
     filePath: (sdk) => `sdks/${sdk.type}`,
     getAdditionalAdmonitions: getAdmonitions,
 });

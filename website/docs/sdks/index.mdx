@@ -1,5 +1,6 @@
 ---
 title: SDK overview
+slug: /sdks
 ---
 
 import SearchPriority from '@site/src/components/SearchPriority';
@@ -21,14 +22,14 @@ Backend SDKs perform the flag evaluation locally, meaning all user data is retai
 
 Unleash offers the following backend SDKs:
 
--   [Go SDK](/reference/sdks/go)
--   [Java SDK](/reference/sdks/java)
--   [Node.js SDK](/reference/sdks/node)
--   [PHP SDK](/reference/sdks/php)
--   [Python SDK](/reference/sdks/python)
--   [Ruby SDK](/reference/sdks/ruby)
--   [Rust SDK](/reference/sdks/rust)
--   [.NET SDK](/reference/sdks/dotnet)
+-   [Go SDK](/sdks/go)
+-   [Java SDK](/sdks/java)
+-   [Node.js SDK](/sdks/node)
+-   [PHP SDK](/sdks/php)
+-   [Python SDK](/sdks/python)
+-   [Ruby SDK](/sdks/ruby)
+-   [Rust SDK](/sdks/rust)
+-   [.NET SDK](/sdks/dotnet)
 
 ### Frontend SDKs
 
@@ -38,14 +39,14 @@ When the SDK initializes, it sets up an in-memory repository and retrieves a lis
 
 Unleash offers the following frontend SDKs:
 
--   [Android SDK](/reference/sdks/android)
--   [Flutter SDK](/reference/sdks/flutter)
--   [iOS SDK](/reference/sdks/ios)
--   [JavaScript SDK](/reference/sdks/javascript-browser)
--   [Next.js](/reference/sdks/next-js)
--   [React SDK](/reference/sdks/react)
--   [Svelte SDK](/reference/sdks/svelte)
--   [Vue SDK](/reference/sdks/vue)
+-   [Android SDK](/sdks/android)
+-   [Flutter SDK](/sdks/flutter)
+-   [iOS SDK](/sdks/ios)
+-   [JavaScript SDK](/sdks/javascript-browser)
+-   [Next.js](/sdks/next-js)
+-   [React SDK](/sdks/react)
+-   [Svelte SDK](/sdks/svelte)
+-   [Vue SDK](/sdks/vue)
 
 ### Feature compatibility in backend SDKs
 
@@ -56,7 +57,7 @@ The following tables show which features are supported by each backend SDK. Some
 ✅ Implemented | ❌ Not supported | ⭕ Not implemented, but under consideration | **N/A** Not applicable to this SDK
 
 #### Initialization
-| Capability | [Java](/reference/sdks/java) | [Node.js](/reference/sdks/node) | [Go](/reference/sdks/go) | [Python](/reference/sdks/python) | [Ruby](/reference/sdks/ruby) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php) | [Rust](/reference/sdks/rust) |
+| Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Async initialization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | Block until synchronized | ✅ | ✅ | ✅ | ⭕ | ⭕ | ✅ | ✅ | ⭕ |
@@ -66,13 +67,13 @@ The following tables show which features are supported by each backend SDK. Some
 | Flag Query: `project_name` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | N/A | ⭕ |
 
 #### Custom headers
-| Capability | [Java](/reference/sdks/java) | [Node.js](/reference/sdks/node) | [Go](/reference/sdks/go) | [Python](/reference/sdks/python) | [Ruby](/reference/sdks/ruby) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php) | [Rust](/reference/sdks/rust) |
+| Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | static | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | function | ✅ | ✅ | ⭕ | ✅ | ✅ (4.3) | ✅ | ✅ | ⭕ |
 
 #### Built-in strategies
-| Capability | [Java](/reference/sdks/java) | [Node.js](/reference/sdks/node) | [Go](/reference/sdks/go) | [Python](/reference/sdks/python) | [Ruby](/reference/sdks/ruby) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php) | [Rust](/reference/sdks/rust) |
+| Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | [Gradual rollout](/reference/activation-strategies) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | [Gradual rollout with custom stickiness](/reference/stickiness#custom-stickiness) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
@@ -85,7 +86,7 @@ All backend SDKs have basic support.
 #### Strategy constraints
 All backend SDKs have support for the basic operators (`IN`, `NOT_IN`).
 
-| Capability | [Java](/reference/sdks/java) | [Node.js](/reference/sdks/node) | [Go](/reference/sdks/go) | [Python](/reference/sdks/python) | [Ruby](/reference/sdks/ruby) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php) | [Rust](/reference/sdks/rust) |
+| Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | [Advanced operators](/reference/activation-strategies#advanced-operators) | ✅ (5.1) | ✅ (3.12) | ✅ (3.3) | ✅ (5.1) | ✅ (4.2) | ✅ (2.1) | ✅ (1.3.1) | ⭕ |
 
@@ -95,31 +96,31 @@ All backend SDKs have support for the basic operators (`IN`, `NOT_IN`).
 Static fields (`environment`, `appName`), defined fields, and custom properties are supported in all backend SDKs.
 
 #### `isEnabled` implementation
-| Capability | [Java](/reference/sdks/java) | [Node.js](/reference/sdks/node) | [Go](/reference/sdks/go) | [Python](/reference/sdks/python) | [Ruby](/reference/sdks/ruby) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php) | [Rust](/reference/sdks/rust) |
+| Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Can take context and override fallback value | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Fallback function | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ⭕ | ⭕ |
 
 #### Strategy variants
 
-| Capability | [Java](/reference/sdks/java) | [Node.js](/reference/sdks/node) | [Go](/reference/sdks/go) | [Python](/reference/sdks/python) | [Ruby](/reference/sdks/ruby) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php) | [Rust](/reference/sdks/rust) |
+| Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | [Strategy variants](/reference/strategy-variants) and [custom stickiness](/reference/stickiness#custom-stickiness) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 
 
 #### Local backup
-| Capability | [Java](/reference/sdks/java) | [Node.js](/reference/sdks/node) | [Go](/reference/sdks/go) | [Python](/reference/sdks/python) | [Ruby](/reference/sdks/ruby) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php) | [Rust](/reference/sdks/rust) |
+| Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | File-based local backup | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 
 #### Metrics and impression data
-| Capability | [Java](/reference/sdks/java) | [Node.js](/reference/sdks/node) | [Go](/reference/sdks/go) | [Python](/reference/sdks/python) | [Ruby](/reference/sdks/ruby) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php) | [Rust](/reference/sdks/rust) |
+| Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Usage metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |    
 | [Impression data](/reference/impression-data) | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅  | ✅ | ⭕ |
 
 #### Bootstrap
-| Capability | [Java](/reference/sdks/java) | [Node.js](/reference/sdks/node) | [Go](/reference/sdks/go) | [Python](/reference/sdks/python) | [Ruby](/reference/sdks/ruby) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php) | [Rust](/reference/sdks/rust) |
+| Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Bootstrap from file or custom implementation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 
@@ -127,13 +128,13 @@ Static fields (`environment`, `appName`), defined fields, and custom properties 
 
 #### Backend SDKs
 
-| Interval | [Java](/reference/sdks/java) | [Node.js](/reference/sdks/node) | [Go](/reference/sdks/go) | [Python](/reference/sdks/python) | [Ruby](/reference/sdks/ruby) | [.NET](/reference/sdks/dotnet) | [PHP](/reference/sdks/php) | [Rust](/reference/sdks/rust) |
+| Interval | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Default refresh interval | 15s | 15s | 15s | 15s | 15s | 15s | 15s | 15s |
 | Default metrics interval | 60s | 60s | 60s | 60s | 60s | 60s | 60s | 15s |
 
 #### Frontend SDKs
-| Interval | [Android](/reference/sdks/android) | [Flutter](/reference/sdks/flutter) | [iOS](/reference/sdks/ios) | [JavaScript](/reference/sdks/javascript-browser) | [Next.js](/reference/sdks/next-js) | [React](/reference/sdks/react) | [Svelte](/reference/sdks/svelte) | [Vue](/reference/sdks/vue) |
+| Interval | [Android](/sdks/android) | [Flutter](/sdks/flutter) | [iOS](/sdks/ios) | [JavaScript](/sdks/javascript-browser) | [Next.js](/sdks/next-js) | [React](/sdks/react) | [Svelte](/sdks/svelte) | [Vue](/sdks/vue) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Default refresh interval | 60s | 30s | 15s | 30s | 30s | 30s | 30s | 30s |
 | Default metrics interval | 60s | 30s | 30s | 60s | 60s | 60s | 60s | 60s |
@@ -178,11 +179,11 @@ By default, all SDKs reach out to the Unleash server at startup to fetch their f
 
 Bootstrapping is also supported by the following frontend SDKs:
 
--   [Android SDK](/reference/sdks/android)
--   [JavaScript SDK](/reference/sdks/javascript-browser)
--   [React SDK](/reference/sdks/react)
--   [Svelte SDK](/reference/sdks/svelte)
--   [Vue SDK](/reference/sdks/vue)
+-   [Android SDK](/sdks/android)
+-   [JavaScript SDK](/sdks/javascript-browser)
+-   [React SDK](/sdks/react)
+-   [Svelte SDK](/sdks/svelte)
+-   [Vue SDK](/sdks/vue)
 
 
 ### SDK identification headers

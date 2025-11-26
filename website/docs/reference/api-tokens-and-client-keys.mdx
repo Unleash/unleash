@@ -9,11 +9,11 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 ## Overview
 
-Unleash uses API keys to facilitate communication between consuming clients such as [SDKs](/reference/sdks), [Unleash Edge](/reference/unleash-edge), or other tools and automation.
+Unleash uses API keys to facilitate communication between consuming clients such as [SDKs](/sdks), [Unleash Edge](/reference/unleash-edge), or other tools and automation.
 
 Unleash supports the following types of API tokens:
-- [Backend tokens](#backend-tokens) for connecting [backend SDKs](/reference/sdks#backend-sdks) or [Unleash Edge](/reference/unleash-edge) to Unleash.
-- [Frontend tokens](#frontend-tokens) for connecting [frontend SDKs](/reference/sdks#frontend-sdks) to Unleash using the [Frontend API](/reference/front-end-api) or [Unleash Edge](/reference/unleash-edge).
+- [Backend tokens](#backend-tokens) for connecting [backend SDKs](/sdks#backend-sdks) or [Unleash Edge](/reference/unleash-edge) to Unleash.
+- [Frontend tokens](#frontend-tokens) for connecting [frontend SDKs](/sdks#frontend-sdks) to Unleash using the [Frontend API](/reference/front-end-api) or [Unleash Edge](/reference/unleash-edge).
 - [Personal access tokens](#personal-access-tokens) for testing and debugging or providing temporary access to an automation tool.
 - [Service account tokens](/reference/service-accounts) for providing API access to integrations or automation tools.
 
@@ -23,7 +23,7 @@ To connect a frontend SDK to Unleash using Unleash Edge, you need both a [backen
 
 ### Backend tokens
 
-Backend tokens are intended for use in [backend SDKs](/reference/sdks#backend-sdks) or [Unleash Edge](/reference/unleash-edge) to grant the permissions to:
+Backend tokens are intended for use in [backend SDKs](/sdks#backend-sdks) or [Unleash Edge](/reference/unleash-edge) to grant the permissions to:
 -   Reading feature flag information
 -   Registering applications with the Unleash server
 -   Sending usage metrics
@@ -34,7 +34,7 @@ Backend tokens cannot be used in frontend SDKs; use [frontend tokens](#frontend-
 
 ### Frontend tokens
 
-Use frontend tokens for connecting [frontend SDKs](/reference/sdks#frontend-sdks) to Unleash using the [Unleash Frontend API](/api) or [Unleash Edge](/reference/unleash-edge). They grant the user permission to:
+Use frontend tokens for connecting [frontend SDKs](/sdks#frontend-sdks) to Unleash using the [Unleash Frontend API](/api) or [Unleash Edge](/reference/unleash-edge). They grant the user permission to:
 -   Reading enabled flags for a given context
 -   Registering applications with the Unleash server
 -   Sending usage metrics
@@ -166,7 +166,7 @@ Unleash Proxy is in maintenance mode. Use [Unleash Edge](/reference/unleash-edge
 
 :::
 
-You can use proxy client keys to connect [frontend SDKs](/reference/sdks#frontend-sdks) to Unleash Proxy. Proxy client keys are not considered a secret and are safe to expose client-side.
+You can use proxy client keys to connect [frontend SDKs](/sdks#frontend-sdks) to Unleash Proxy. Proxy client keys are not considered a secret and are safe to expose client-side.
 
 Proxy client keys are arbitrary strings that you provide the Unleash proxy with on startup. They can be any string you choose, and you create them yourself.
 

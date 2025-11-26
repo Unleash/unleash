@@ -9,7 +9,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 :::note Availability
 
-**Version**: `4.7+`. Requires [SDK compatibility](../reference/sdks#feature-compatibility-in-backend-sdks).
+**Version**: `4.7+`. Requires [SDK compatibility](../sdks#feature-compatibility-in-backend-sdks).
 
 :::
 
@@ -92,7 +92,7 @@ You can enable impression data via the impression data flag in the admin UI's fl
 
 ## Example setup
 
-The exact setup will vary depending on your [client SDK](./sdks). The below example configures the [Unleash Proxy client](/reference/sdks/javascript-browser) to listen for impression events and log them to the console. If "my-feature-flag" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.
+The exact setup will vary depending on your [client SDK](/sdks). The below example configures the [Unleash Proxy client](/sdks/javascript-browser) to listen for impression events and log them to the console. If "my-feature-flag" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.
 
 ```js
 const unleash = new UnleashClient({

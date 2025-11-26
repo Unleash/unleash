@@ -4,7 +4,7 @@ description: "How to use Unleash feature flags with Django."
 slug: /guides/implement-feature-flags-in-django
 ---
 
-Hello! In this tutorial, we’ll show you how to add feature flags to your Django app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Python SDK](/reference/sdks/python). With Unleash, an open-source feature flag service, you can use our tooling to add feature flags to your application and release new features faster.
+Hello! In this tutorial, we’ll show you how to add feature flags to your Django app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Python SDK](/sdks/python). With Unleash, an open-source feature flag service, you can use our tooling to add feature flags to your application and release new features faster.
 
 In a classic tutorial fashion, we’ll add feature flags to a blog app made with Django. We’ll use feature flags to decide how many blog posts to show on the index page.
 
@@ -157,7 +157,7 @@ def post_list(request):
 
 Reload your browser and check that you see three blog posts displayed. Turn off the flag in your Unleash instance and reload the page. You should see all the blog posts again.
 
-See additional use cases in our [Python SDK documentation](/reference/sdks/python).
+See additional use cases in our [Python SDK documentation](/sdks/python).
 
 ## Conclusion
 

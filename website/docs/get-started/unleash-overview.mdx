@@ -29,7 +29,7 @@ A web interface for managing feature flags, defining activation strategies, view
 
 ### Unleash SDKs
 
-Unleash provides both [backend](/reference/sdks#backend-sdks) and [frontend SDKs](/reference/sdks#frontend-sdks) for integrating feature flagging into your applications. SDKs fetch data from the Unleash API to check which feature flags are enabled. Backend SDKs fetch all feature flag configuration data and perform the evaluation locally, while frontend SDKs fetch evaluated feature flags only.
+Unleash provides both [backend](/sdks#backend-sdks) and [frontend SDKs](/sdks#frontend-sdks) for integrating feature flagging into your applications. SDKs fetch data from the Unleash API to check which feature flags are enabled. Backend SDKs fetch all feature flag configuration data and perform the evaluation locally, while frontend SDKs fetch evaluated feature flags only.
 
 #### Backend SDKs
 
@@ -37,7 +37,7 @@ Backend SDKs run in backend applications and retrieve feature flag configuration
 
 Backend SDKs cache all feature flag data in memory, applying activation strategies locally. This makes flag evaluation incredibly fast, as it is a simple function operating on local state, without the need to poll data from the database. This architecture results in a small delay (typically a few seconds, but configurable) when propagating configuration changes to your applications.
 
-Supported languages include: [Node.js](/reference/sdks/node), [Go](/reference/sdks/go), [Java](/reference/sdks/java), [Python](/reference/sdks/python), [.NET](/reference/sdks/dotnet), [PHP](/reference/sdks/php), and more.
+Supported languages include: [Node.js](/sdks/node), [Go](/sdks/go), [Java](/sdks/java), [Python](/sdks/python), [.NET](/sdks/dotnet), [PHP](/sdks/php), and more.
 
 #### Frontend SDKs
 
@@ -45,7 +45,7 @@ Frontend SDKs are used in frontend and mobile applications. They communicate wit
 
 Unlike backend SDKs, frontend SDKs do not perform the flag evaluation locally. Instead, they fetch all enabled feature flags for a given [Unleash Context](/reference/unleash-context). The flag evaluation happens inside [Unleash Edge](#unleash-edge), or within the Unleash server. Frontend SDKs cache evaluated feature flags in memory using a single evaluation call to the server, making flag evaluation secure, fast, and efficient.
 
-Supported platforms include: [JavaScript](/reference/sdks/javascript-browser), [React](/reference/sdks/react), [iOS](/reference/sdks/ios), [Android](/reference/sdks/android), and more.
+Supported platforms include: [JavaScript](/sdks/javascript-browser), [React](/sdks/react), [iOS](/sdks/ios), [Android](/sdks/android), and more.
 
 ### Flag evaluation
 

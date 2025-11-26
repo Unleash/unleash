@@ -4,7 +4,7 @@ description: "How to use Unleash feature flags with .NET."
 slug: /guides/implement-feature-flags-in-dotnet
 ---
 
-Hello! In this tutorial we’ll show you how to add feature flags to your .NET app, using [Unleash](https://www.getunleash.io/) and the official [Unleash .NET SDK](/reference/sdks/dotnet). With Unleash, an open-source feature management service, you can use our tooling to add feature flags to your application and release new features faster.
+Hello! In this tutorial we’ll show you how to add feature flags to your .NET app, using [Unleash](https://www.getunleash.io/) and the official [Unleash .NET SDK](/sdks/dotnet). With Unleash, an open-source feature management service, you can use our tooling to add feature flags to your application and release new features faster.
 
 We’ll keep with the sci-fi theme of our previous tutorials and use the [Rick and Morty API](https://rickandmortyapi.com/documentation/#introduction), with a .NET web API project. We’ll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
@@ -273,7 +273,7 @@ Now, let’s add our client to our project, grab the feature flag from Unleash, 
 
 ```
 
-See additional use cases in our [.NET SDK](/reference/sdks/dotnet) documentation.
+See additional use cases in our [.NET SDK](/sdks/dotnet) documentation.
 
 ## 5. Verify the toggle experience
 

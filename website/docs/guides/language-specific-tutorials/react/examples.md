@@ -227,7 +227,7 @@ import {
 } from "@material-ui/icons";
 ```
 
-Unleash has a built-in React SDK hook called [useVariant](/reference/sdks/react#check-variants) to retrieve variant data and perform different tasks against them.
+Unleash has a built-in React SDK hook called [useVariant](/sdks/react#check-variants) to retrieve variant data and perform different tasks against them.
 
 Next, import the `useVariant` hook from the React SDK:
 
@@ -594,4 +594,4 @@ const flagsStatus = useFlagsStatus();
 
 ## Additional Examples
 
-Many additional use cases exist for React, including [deferring client start](/reference/sdks/react#deferring-client-start), [usage with class components](/reference/sdks/react#usage-with-class-components), [React Native](/reference/sdks/react#react-native), and more, all of which can be found in our [React SDK documentation](/reference/sdks/react).
+Many additional use cases exist for React, including [deferring client start](/sdks/react#deferring-client-start), [usage with class components](/sdks/react#usage-with-class-components), [React Native](/sdks/react#react-native), and more, all of which can be found in our [React SDK documentation](/sdks/react).

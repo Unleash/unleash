@@ -408,4 +408,4 @@ Here’s how this can be done via our API:
 
     Review [API docs on archiving flags](/api/archive-feature).
 
-Learn more about different use cases in our [.NET SDK documentation](/reference/sdks/dotnet).
+Learn more about different use cases in our [.NET SDK documentation](/sdks/dotnet).

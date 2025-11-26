@@ -4,7 +4,7 @@ description: "How to use Unleash feature flags with SvelteKit."
 slug: /guides/implement-feature-flags-in-sveltekit
 ---
 
-Hello and welcome to another tutorial. This is about adding feature flags to an app made with [SvelteKit](https://kit.svelte.dev/), [Unleash](https://www.getunleash.io/) and the official [Unleash Svelte SDK](/reference/sdks/svelte).
+Hello and welcome to another tutorial. This is about adding feature flags to an app made with [SvelteKit](https://kit.svelte.dev/), [Unleash](https://www.getunleash.io/) and the official [Unleash Svelte SDK](/sdks/svelte).
 
 We'll make a paired-down habits app to keep track of your new year's resolutions. The feature flag will be used to change the number of habits a user can add.
 

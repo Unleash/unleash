@@ -66,7 +66,7 @@ These parts turn the constraint into an expression that evaluates to true or fal
 
 #### Constraint operators
 
-Constraint operators help you define the conditional statements that get evaluated as part of the constraint. [Basic operators](#basic-operators) are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](/reference/sdks#feature-compatibility-in-backend-sdks).
+Constraint operators help you define the conditional statements that get evaluated as part of the constraint. [Basic operators](#basic-operators) are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](/sdks#feature-compatibility-in-backend-sdks).
 
 All constraints can be negated. For example: 
 
@@ -156,7 +156,7 @@ To add an activation strategy with a constraint to a feature flag, do the follow
 
 Activation strategies are defined on the server but implemented client-side. The client determines whether a feature should be enabled based on the activation strategies.
 
-All [backend SDKs](../reference/sdks#backend-sdks) and [Unleash Edge](../reference/unleash-edge) implement the default activation strategy. The [frontend SDKs](../reference/sdks#frontend-sdks) do not perform evaluations themselves. Instead, they rely on [Unleash Edge](../reference/unleash-edge) to handle the implementation and evaluation.
+All [backend SDKs](../sdks#backend-sdks) and [Unleash Edge](../reference/unleash-edge) implement the default activation strategy. The [frontend SDKs](../sdks#frontend-sdks) do not perform evaluations themselves. Instead, they rely on [Unleash Edge](../reference/unleash-edge) to handle the implementation and evaluation.
 
 When using strategies with constraints, the client must provide the current [Unleash context](unleash-context) to the flag evaluation function for the evaluation to be done correctly. All official Unleash client SDKs support the option to pass dynamic context values to the `isEnabled()` function (or the SDK's equivalent).
 
@@ -262,6 +262,6 @@ If the strategy isn’t implemented in your backend SDK, all checks using it ret
 
 :::
 
-Custom strategies are defined on the Unleash server, but implemented in your [backend SDK](/reference/sdks#backend-sdks). All official Unleash backend SDKs provide a way to implement custom strategies. When implementing your custom strategy, you have access to both the strategy parameters and the [Unleash context](/reference/unleash-context). See your SDK’s documentation for language-specific examples.
+Custom strategies are defined on the Unleash server, but implemented in your [backend SDK](/sdks#backend-sdks). All official Unleash backend SDKs provide a way to implement custom strategies. When implementing your custom strategy, you have access to both the strategy parameters and the [Unleash context](/reference/unleash-context). See your SDK’s documentation for language-specific examples.
 
 

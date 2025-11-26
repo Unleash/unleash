@@ -30,4 +30,4 @@ Unleash Cloud is a hosted service with continuous delivery. For transparency, we
 
 If you're self-hosting Unleash, see [Upgrading Unleash](/deploy/upgrading-unleash) for how to keep your instance up to date.
 
-[Unleash Edge](https://github.com/Unleash/unleash-edge) and our [SDKs](/reference/sdks) are versioned and released independently of Unleash. We recommend upgrading your SDKs and Unleash Edge to the latest versions to ensure compatibility, optimal performance, and access to the latest features and security updates.
+[Unleash Edge](https://github.com/Unleash/unleash-edge) and our [SDKs](/sdks) are versioned and released independently of Unleash. We recommend upgrading your SDKs and Unleash Edge to the latest versions to ensure compatibility, optimal performance, and access to the latest features and security updates.

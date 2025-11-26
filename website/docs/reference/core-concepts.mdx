@@ -180,9 +180,9 @@ Because you’d like to see the new color scheme while you’re developing it, y
 
 ### In your application
 
-You configure an [Unleash SDK for your server](/reference/sdks) to communicate with Unleash. When rendering the page, you check the state of the new-color-scheme feature and render a different stylesheet based on the results.
+You configure an [Unleash SDK for your server](/sdks) to communicate with Unleash. When rendering the page, you check the state of the new-color-scheme feature and render a different stylesheet based on the results.
 
-In pseudocode (loosely based on the [Node.js SDK](/reference/sdks/node)), that might look like this:
+In pseudocode (loosely based on the [Node.js SDK](/sdks/node)), that might look like this:
 
 ```js
 if (unleash.isEnabled(“new-color-scheme”)) {

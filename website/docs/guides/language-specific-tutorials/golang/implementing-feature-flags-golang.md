@@ -6,7 +6,7 @@ slug: /guides/implement-feature-flags-in-golang
 
 import VideoContent from '@site/src/components/VideoContent.jsx';
 
-Hello! In this tutorial we'll show you how to add feature flags to your Go app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Go SDK](/reference/sdks/go). With Unleash, an open-source feature flag service, you can add feature flags to your application to release new features faster.
+Hello! In this tutorial we'll show you how to add feature flags to your Go app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Go SDK](/sdks/go). With Unleash, an open-source feature flag service, you can add feature flags to your application to release new features faster.
 
 In this tutorial, we'll get information about a country from the [REST Countries API](https://restcountries.com/), and its [GraphQL counterpart](https://countries.trevorblades.com/) using Go. We'll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
@@ -260,7 +260,7 @@ func main() {
 }
 ```
 
-See additional use cases in our [Backend SDK with Go](/reference/sdks/go) documentation.
+See additional use cases in our [Backend SDK with Go](/sdks/go) documentation.
 
 ## 6. Verify the toggle experience
 

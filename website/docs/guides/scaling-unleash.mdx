@@ -24,11 +24,11 @@ Unleash is fundamentally designed for speed and resilience. Understanding the co
 ![Architecture using Enterprise Edge](/img/architecture-enterprise-edge.png)
 
 ### Fast, local feature flag evaluation
-[SDKs](/reference/sdks) embedded in your applications fetch [feature flag](/reference/feature-toggles) configurations from the Unleash server or [Unleash Edge](/reference/unleash-edge).
+[SDKs](/sdks) embedded in your applications fetch [feature flag](/reference/feature-toggles) configurations from the Unleash server or [Unleash Edge](/reference/unleash-edge).
 
-[Backend SDKs](/reference/sdks#backend-sdks) perform flag evaluations locally within the application's memory. This eliminates network latency for each evaluation, resulting in extremely fast checks.
+[Backend SDKs](/sdks#backend-sdks) perform flag evaluations locally within the application's memory. This eliminates network latency for each evaluation, resulting in extremely fast checks.
 
-[Frontend SDKs](/reference/sdks#frontend-sdks) rely on Unleash Edge as a fast, lightweight caching and evaluation layer closer to the end-user.
+[Frontend SDKs](/sdks#frontend-sdks) rely on Unleash Edge as a fast, lightweight caching and evaluation layer closer to the end-user.
 
 ### Resilience through caching
 
@@ -135,7 +135,7 @@ Key benefits:
 <details>
   <summary>Recommended specification</summary>
 
-    The resource requirements for your Unleash server instances depend on factors like the number of connected [SDKs](/reference/sdks), the frequency of flag evaluations, and the overall traffic volume.
+    The resource requirements for your Unleash server instances depend on factors like the number of connected [SDKs](/sdks), the frequency of flag evaluations, and the overall traffic volume.
 
     Our recommended starting point is:
 
@@ -186,7 +186,7 @@ Configure the following:
   3. Scale up compute resources (API servers, Edge instances if applicable) in the new region as needed to handle the full production load.
 
 ## Scaling with Unleash Edge
-For organizations with globally distributed users and a high number of [frontend](/reference/sdks#frontend-sdks) flag evaluations (in web applications and mobile apps), relying solely on the Unleash API server can introduce latency for end-users and place significant read load on the API server and database.
+For organizations with globally distributed users and a high number of [frontend](/sdks#frontend-sdks) flag evaluations (in web applications and mobile apps), relying solely on the Unleash API server can introduce latency for end-users and place significant read load on the API server and database.
 
 [Unleash Edge](/reference/unleash-edge) acts as a lightweight, globally distributed, read-only caching layer for your feature flag configurations. SDKs connect to the nearest Edge instance instead of directly to the Unleash API server.
 
@@ -205,7 +205,7 @@ When you require low-latency flag evaluations for a globally distributed user ba
 
 With Unleash Enterprise Edge Cloud, this complexity is handled for you—you simply configure your SDKs with the provided Edge URL. We ensure that:
 - Edge instances run across multiple global regions with at least two AZs within each region.
-- [SDKs](/reference/sdks) automatically connect to the nearest available region. Traffic fails over to other regions if one region becomes unavailable.
+- [SDKs](/sdks) automatically connect to the nearest available region. Traffic fails over to other regions if one region becomes unavailable.
 - Edge nodes are always up to date due to streaming, SDKs connected to Edge can continue evaluating flags even if the connection to the primary Unleash API server is temporarily lost.
 
 
@@ -229,7 +229,7 @@ A standard approach involves addressing potential single points of failure withi
 
 - **Deploy redundant API instances**: Run multiple Unleash API instances across different Availability Zones (AZs). Place these instances behind a load balancer. The load balancer distributes traffic and routes requests away from failed instances or AZs, maintaining application-level availability.
 - **Use a multi-AZ database**: Configure your managed database service (such as AWS RDS for PostgreSQL) for multi-AZ deployment. This provides data resilience and automatic failover for the database layer.
-- **Configure your SDKs**: Set [SDKs](/reference/sdks) to connect to the Unleash server via the load balancer endpoint. Consider deploying highly-available Unleash Edge instances as intermediaries. Edge caches flags locally, improving performance and resilience.
+- **Configure your SDKs**: Set [SDKs](/sdks) to connect to the Unleash server via the load balancer endpoint. Consider deploying highly-available Unleash Edge instances as intermediaries. Edge caches flags locally, improving performance and resilience.
 
 This configuration mitigates single points of failure for the Unleash API server and its database within a region.
 
@@ -262,7 +262,7 @@ Choosing a [hosting option](/deploy/hosting-options) depends on several factors 
 We generally recommend Unleash Cloud for most enterprises due to reduced operational complexity, built-in high-availability and disaster recovery, and managed scaling by Unleash experts. Choose self-hosted or hybrid if specific control, network isolation (air-gapped), or strict regulatory requirements mandate it.
 
 #### How does Unleash ensure fast feature flag checks without slowing down user experience?
-Unleash achieves speed primarily through how feature flag evaluation works in the [SDKs](/reference/sdks).
+Unleash achieves speed primarily through how feature flag evaluation works in the [SDKs](/sdks).
 
 - **Local evaluation**: Your application integrates an Unleash SDK. This SDK periodically fetches flag configurations from the Unleash API or Unleash Edge. In Backend SDKs, the evaluation of which flags apply to a specific user happens instantly within your application's memory using the fetched rules and the context you provide (like user ID, location, etc.). Frontend SDKs can rely on Unleash Edge for fast feature flag evaluation.
 - **No network calls per flag check**: Because evaluation is local, there's no network latency added for each feature flag check during a user's request processing. This makes flag evaluation extremely fast.
@@ -293,7 +293,7 @@ The main challenges include:
 - **Operational maintenance**: Handling [upgrades](/deploy/upgrading-unleash), security patching, dependency management, and capacity planning requires dedicated SRE/DevOps resources.
 
 #### What happens if the Unleash API goes down? Will my application stop working?
-No, your application will not stop working. The Unleash [SDKs](/reference/sdks) are designed for resilience:
+No, your application will not stop working. The Unleash [SDKs](/sdks) are designed for resilience:
 - **Cached configuration**: The SDK will continue operating using the last successfully fetched set of feature flag rules stored in its cache.
 - **Default values**: You define default values for flags within your code, which the SDK can use if it has no cached configuration or if a specific flag isn't present in the cache.
 - **Unleash Edge**: Using [Unleash Edge](/reference/unleash-edge) provides an additional layer of availability, serving flags even if the Unleash API server is down.
@@ -324,5 +324,5 @@ Unleash is extremely scalable, designed to handle traffic volumes well beyond ty
 
 The exact capacity depends on the evaluation method:
 
-- **Backend SDKs**: Flags are evaluated locally in your application, scaling as your application does. A single small Unleash instance can support 7,500 connected [SDKs](/reference/sdks), enabling a **750 trillion evaluations per day** across those connected applications. You can scale further by adding more Unleash instances.
+- **Backend SDKs**: Flags are evaluated locally in your application, scaling as your application does. A single small Unleash instance can support 7,500 connected [SDKs](/sdks), enabling a **750 trillion evaluations per day** across those connected applications. You can scale further by adding more Unleash instances.
 - **Frontend SDKs with Unleash Edge**: [Unleash Edge](/reference/unleash-edge) handles flag evaluations and scales horizontally. Performance tests showed 5 Edge instances handling over 11,000 requests per second (RPS), and a single instance configuration capable of managing at least 864 million requests daily.

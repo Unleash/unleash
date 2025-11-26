@@ -6,7 +6,7 @@ slug: /guides/implement-feature-flags-in-javascript
 
 import VideoContent from '@site/src/components/VideoContent.jsx';
 
-In this tutorial we'll show you how to add feature flags to a plain JavaScript app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Browser SDK](/reference/sdks/javascript-browser). With Unleash, an open-source feature flag service, you can add feature flags to your application and release new features faster.
+In this tutorial we'll show you how to add feature flags to a plain JavaScript app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Browser SDK](/sdks/javascript-browser). With Unleash, an open-source feature flag service, you can add feature flags to your application and release new features faster.
 
 In this tutorial, we'll make a basic website about Corgis! We'll use the [dog.ceo API 🐶](https://dog.ceo/) with HTML, CSS, JS to retrieve some images of Queen Elizabeth's favorite dogs. We'll use feature flags to decide whether to show some Corgi fun facts alongside the images.
 

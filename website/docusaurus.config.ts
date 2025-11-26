@@ -244,39 +244,39 @@ class="header-github-link"
                         items: [
                             {
                                 label: 'Node.js',
-                                to: '/reference/sdks/node',
+                                to: '/sdks/node',
                             },
                             {
                                 label: 'Java',
-                                to: '/reference/sdks/java',
+                                to: '/sdks/java',
                             },
                             {
                                 label: 'Go',
-                                to: '/reference/sdks/go',
+                                to: '/sdks/go',
                             },
                             {
                                 label: 'Rust',
-                                to: '/reference/sdks/rust',
+                                to: '/sdks/rust',
                             },
                             {
                                 label: 'Ruby',
-                                to: '/reference/sdks/ruby',
+                                to: '/sdks/ruby',
                             },
                             {
                                 label: 'Python',
-                                to: '/reference/sdks/python',
+                                to: '/sdks/python',
                             },
                             {
                                 label: '.NET',
-                                to: '/reference/sdks/dotnet',
+                                to: '/sdks/dotnet',
                             },
                             {
                                 label: 'PHP',
-                                to: '/reference/sdks/php',
+                                to: '/sdks/php',
                             },
                             {
                                 label: 'All SDKs',
-                                to: '/reference/sdks',
+                                to: '/sdks',
                             },
                         ],
                     },
@@ -285,31 +285,31 @@ class="header-github-link"
                         items: [
                             {
                                 label: 'JavaScript',
-                                to: '/reference/sdks/javascript-browser',
+                                to: '/sdks/javascript-browser',
                             },
                             {
                                 label: 'React',
-                                to: '/reference/sdks/react',
+                                to: '/sdks/react',
                             },
                             {
                                 label: 'Next.js',
-                                to: '/reference/sdks/next-js',
+                                to: '/sdks/next-js',
                             },
                             {
                                 label: 'Vue',
-                                to: '/reference/sdks/vue',
+                                to: '/sdks/vue',
                             },
                             {
                                 label: 'iOS',
-                                to: '/reference/sdks/ios',
+                                to: '/sdks/ios',
                             },
                             {
                                 label: 'Android',
-                                to: '/reference/sdks/android',
+                                to: '/sdks/android',
                             },
                             {
                                 label: 'Flutter',
-                                to: '/reference/sdks/flutter',
+                                to: '/sdks/flutter',
                             },
                         ],
                     },

@@ -290,4 +290,4 @@ Response response = client.newCall(request).execute();
 
 Review [API docs on archiving flags](/api/archive-feature).
 
-Learn more about different use cases in our [Spring Boot Starter Kit](https://github.com/Unleash/unleash-spring-boot-starter) and [Java SDK](/reference/sdks/java).
+Learn more about different use cases in our [Spring Boot Starter Kit](https://github.com/Unleash/unleash-spring-boot-starter) and [Java SDK](/sdks/java).

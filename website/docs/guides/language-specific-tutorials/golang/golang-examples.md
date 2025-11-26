@@ -297,4 +297,4 @@ resp, err := client.Do(req)
 
 Review [API docs on archiving flags](/api/archive-feature).
 
-Learn more about different use cases in our [Go SDK documentation](/reference/sdks/go).
+Learn more about different use cases in our [Go SDK documentation](/sdks/go).

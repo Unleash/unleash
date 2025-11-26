@@ -368,102 +368,102 @@
     },
     {
       "source": "/sdks",
-      "destination": "/reference/sdks",
+      "destination": "/sdks",
       "permanent": true
     },
     {
       "source": "/user_guide/client-sdk",
-      "destination": "/reference/sdks",
+      "destination": "/sdks",
       "permanent": true
     },
     {
       "source": "/client-sdk",
-      "destination": "/reference/sdks",
+      "destination": "/sdks",
       "permanent": true
     },
     {
       "source": "/user_guide/connect_sdk",
-      "destination": "/reference/sdks",
+      "destination": "/sdks",
       "permanent": true
     },
     {
       "source": "/sdks/community",
-      "destination": "/reference/sdks",
+      "destination": "/sdks",
       "permanent": true
     },
     {
       "source": "/sdks/go_sdk",
-      "destination": "/reference/sdks/go",
+      "destination": "/sdks/go",
       "permanent": true
     },
     {
       "source": "/sdks/java_sdk",
-      "destination": "/reference/sdks/java",
+      "destination": "/sdks/java",
       "permanent": true
     },
     {
       "source": "/sdks/node_sdk",
-      "destination": "/reference/sdks/node",
+      "destination": "/sdks/node",
       "permanent": true
     },
     {
       "source": "/sdks/php_sdk",
-      "destination": "/reference/sdks/php",
+      "destination": "/sdks/php",
       "permanent": true
     },
     {
       "source": "/sdks/python_sdk",
-      "destination": "/reference/sdks/python",
+      "destination": "/sdks/python",
       "permanent": true
     },
     {
       "source": "/sdks/dot_net_sdk",
-      "destination": "/reference/sdks/dotnet",
+      "destination": "/sdks/dotnet",
       "permanent": true
     },
     {
       "source": "/sdks/ruby_sdk",
-      "destination": "/reference/sdks/ruby",
+      "destination": "/sdks/ruby",
       "permanent": true
     },
     {
       "source": "/sdks/android_proxy_sdk",
-      "destination": "/reference/sdks/android",
+      "destination": "/sdks/android",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-ios",
-      "destination": "/reference/sdks/ios",
+      "destination": "/sdks/ios",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-javascript",
-      "destination": "/reference/sdks/javascript-browser",
+      "destination": "/sdks/javascript-browser",
       "permanent": true
     },
     {
       "source": "/sdks/javascript-browser",
-      "destination": "/reference/sdks/javascript-browser",
+      "destination": "/sdks/javascript-browser",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-react",
-      "destination": "/reference/sdks/react",
+      "destination": "/sdks/react",
       "permanent": true
     },
     {
       "source": "/sdks/react",
-      "destination": "/reference/sdks/react",
+      "destination": "/sdks/react",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-vue",
-      "destination": "/reference/sdks/vue",
+      "destination": "/sdks/vue",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-svelte",
-      "destination": "/reference/sdks/svelte",
+      "destination": "/sdks/svelte",
       "permanent": true
     },
     {
@@ -1399,6 +1399,16 @@
     {
       "source": "/api/unleash/:path*",
       "destination": "/api/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/sdks/:path*",
+      "destination": "/sdks/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/sdks",
+      "destination": "/sdks",
       "permanent": true
     }
   ]

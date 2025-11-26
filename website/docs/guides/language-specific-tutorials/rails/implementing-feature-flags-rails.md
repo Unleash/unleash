@@ -4,7 +4,7 @@ description: "How to use Unleash feature flags with Rails."
 slug: /guides/implement-feature-flags-in-rails
 ---
 
-Hello! In this tutorial, we’ll show you how to add feature flags to your Ruby on Rails app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Ruby SDK](/reference/sdks/ruby). With Unleash, an open-source feature flag service, you can use our tooling to add feature flags to your application and release new features faster.
+Hello! In this tutorial, we’ll show you how to add feature flags to your Ruby on Rails app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Ruby SDK](/sdks/ruby). With Unleash, an open-source feature flag service, you can use our tooling to add feature flags to your application and release new features faster.
 
 In a classic tutorial fashion, we’ll add feature flags to a blog app made with Ruby on Rails. We’ll use feature flags to decide how many blog posts to show on the index page.
 
@@ -197,7 +197,7 @@ class PostsController < ApplicationController
 
 Reload your browser and check that you see three blog posts displayed. Turn off the flag in your Unleash instance and reload the page. You should see all the blog posts again.
 
-See additional use cases in our [Backend SDK with Ruby](/reference/sdks/ruby) documentation.
+See additional use cases in our [Backend SDK with Ruby](/sdks/ruby) documentation.
 
 > **Note:** An update to a feature flag may take 30 seconds to propagate.
 

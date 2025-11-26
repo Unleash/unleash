@@ -518,4 +518,4 @@ Here’s how this can be done via our API:
 
     Review [API docs on archiving flags](/api/archive-feature).
 
-Learn more about different use cases in our [Rust SDK documentation](/reference/sdks/rust).
+Learn more about different use cases in our [Rust SDK documentation](/sdks/rust).

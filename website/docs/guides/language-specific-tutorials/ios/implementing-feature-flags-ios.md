@@ -3,7 +3,7 @@ title: How to Implement Feature Flags in iOS
 slug: /guides/implement-feature-flags-in-ios
 ---
 
-iOS is a mobile operating system developed by Apple for their mostly used mobile device: the iPhone. [Swift](https://www.swift.org/) is a programming language designed for Apple iOS devices. Unleash offers an [iOS SDK](/reference/sdks/ios) for connecting SwiftUI with your iOS application to use feature flags. We will be using the open-source iOS Swift project called [Open Meteo](https://github.com/ighiba/open-meteo)!
+iOS is a mobile operating system developed by Apple for their mostly used mobile device: the iPhone. [Swift](https://www.swift.org/) is a programming language designed for Apple iOS devices. Unleash offers an [iOS SDK](/sdks/ios) for connecting SwiftUI with your iOS application to use feature flags. We will be using the open-source iOS Swift project called [Open Meteo](https://github.com/ighiba/open-meteo)!
 
 Leveraging feature flags allows developers to toggle new features on and off, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in iOS with Swift?
 
@@ -184,7 +184,7 @@ Next, replace the `<client_key>` string in the config object with the API token 
 
 As the application is launching, it will make an authenticated call to the Unleash server so we can begin using the `tempUnit` feature flag we created.
 
-You can check our documentation on [API tokens and client keys](/reference/api-tokens-and-client-keys) for more specifics and see additional use-cases in our [Frontend SDK with iOS](/reference/sdks/ios) documentation.
+You can check our documentation on [API tokens and client keys](/reference/api-tokens-and-client-keys) for more specifics and see additional use-cases in our [Frontend SDK with iOS](/sdks/ios) documentation.
 
 Rebuild and run your app. In your console, you will see the feature flag status defaulted to `false` and then `true` when the data has been updated from making the call to Unleash.
 

@@ -518,7 +518,7 @@ const sidebars: SidebarsConfig = {
         {
             label: 'SDKs',
             type: 'category',
-            link: { type: 'doc', id: 'reference/sdks/index' },
+            link: { type: 'doc', id: 'sdks/index' },
             items: [
                 {
                     type: 'category',
@@ -543,7 +543,7 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'link',
                     label: 'Community SDKs',
-                    href: '/reference/sdks#community-sdks',
+                    href: '/sdks#community-sdks',
                 },
             ],
         },

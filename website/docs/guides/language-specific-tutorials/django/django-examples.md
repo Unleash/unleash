@@ -453,4 +453,4 @@ Here’s how this can be done via our API:
 
     Review [API docs on archiving flags](/api/archive-feature).
 
-Learn more about different use cases in our [Python SDK documentation](/reference/sdks/python).
+Learn more about different use cases in our [Python SDK documentation](/sdks/python).

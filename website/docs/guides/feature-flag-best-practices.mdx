@@ -36,7 +36,7 @@ Let's dive deeper into each principle.
 
 A scalable feature management system evaluates flags at runtime. Flags are dynamic, not static. If you need to restart your application to turn on a flag, that's configuration, not a feature flag.
 
-A large-scale feature flag system that enables [runtime control](https://www.getunleash.io/blog/so-what-exactly-is-runtime-control) should have, at minimum, the following components: a [service to manage feature flags](https://www.getunleash.io/blog/feature-management), a database or data store, an [API layer](/get-started/unleash-overview), a [feature flag SDK](/reference/sdks), and a continuous update mechanism.
+A large-scale feature flag system that enables [runtime control](https://www.getunleash.io/blog/so-what-exactly-is-runtime-control) should have, at minimum, the following components: a [service to manage feature flags](https://www.getunleash.io/blog/feature-management), a database or data store, an [API layer](/get-started/unleash-overview), a [feature flag SDK](/sdks), and a continuous update mechanism.
 
 Let's break down these components.
 
@@ -45,7 +45,7 @@ Let's break down these components.
 - **Feature Flag Control Service**: A [service that acts as the control plane for your feature flags](https://www.getunleash.io/feature-flag-service), managing all flag configurations. The scope of this service should reflect the boundaries of your organization.
 - **Database or data store**: A robust, scalable, and highly available database or data store that stores feature flag configurations reliably. Common options include SQL databases, NoSQL databases, or key-value stores.
 - **API layer**: An API layer that exposes endpoints for your application to interact with the _Feature Flag Control Service_. [This API should allow your application to request feature flag configurations](/get-started/unleash-overview).
-- **Feature flag SDK**: [An easy-to-use interface for fetching flag configurations and evaluating feature flags at runtime](/reference/sdks). When considering feature flags in your application, the call to the SDK should query the local cache, and the SDK should ask the central service for updates in the background.
+- **Feature flag SDK**: [An easy-to-use interface for fetching flag configurations and evaluating feature flags at runtime](/sdks). When considering feature flags in your application, the call to the SDK should query the local cache, and the SDK should ask the central service for updates in the background.
 - **Continuous update mechanism**: An update mechanism that enables [dynamic updates to feature flag configurations](/get-started/unleash-overview) without requiring application restarts or redeployments. The SDK should handle subscriptions or polling to the _Feature Flag Control Service_ for updates.
 
 ![The SDK holds an in-memory feature flag configuration cache which is continuously synced with the Feature Flag Control Service. You can then use the SDK to check the state of feature flags in your application.](/img/feature-flag-scalable-architecture.png)
@@ -170,7 +170,7 @@ In [Principle 1](#1-enable-runtime-control), we proposed a set of architectural 
 
 ### SDKs
 
-[SDKs](/reference/sdks) make it more convenient to work with feature flags. Depending on the context of your infrastructure, you need different types of SDKs to talk to your feature flagging service. Backend SDKs should fetch configurations from the _Feature Flag Control Service_ and evaluate flags locally using the application's context, reducing the need for frequent network calls.
+[SDKs](/sdks) make it more convenient to work with feature flags. Depending on the context of your infrastructure, you need different types of SDKs to talk to your feature flagging service. Backend SDKs should fetch configurations from the _Feature Flag Control Service_ and evaluate flags locally using the application's context, reducing the need for frequent network calls.
 
 For frontend applications, SDKs should send the context to an evaluation server and receive the evaluated results. The evaluated results are then cached in memory in the client-side application, allowing quick lookups without additional network overhead. This provides the performance benefits of local evaluation while minimizing the exposure of sensitive data.
 
@@ -300,7 +300,7 @@ Organize flags into [projects and environments](/guides/organize-feature-flags),
 The key is to keep flags short-lived. Test both code paths while the flag is active, and remove the flag and old path once the rollout finishes. Archive stale flags for audit purposes. In Unleash, lifecycle stages help you identify and clean up unused flags.
 
 #### What are the best feature flag management tools or libraries that support your tech stack?
-Unleash provides [extensive SDK support](/reference/sdks) across diverse tech stacks, including server-side languages like Node.js, Java, Go, PHP, Python, Ruby, Rust, .NET as well as frontend frameworks such as React, JavaScript, Vue, iOS, and Android.
+Unleash provides [extensive SDK support](/sdks) across diverse tech stacks, including server-side languages like Node.js, Java, Go, PHP, Python, Ruby, Rust, .NET as well as frontend frameworks such as React, JavaScript, Vue, iOS, and Android.
 
 In addition, the community maintains SDKs for other languages and frameworks, such as Elixir, Clojure, Dart/Flutter, Haskell, Kotlin, Scala, ColdFusion, and more.
 
@@ -310,7 +310,7 @@ This broad support means you can use the same feature flagging system across bac
 Evaluate feature flags at the highest level and once per request. Keep the branching or conditional logic simple. Use logging for visibility and remove the flag quickly once it's served its purpose. With Unleash SDKs, you also get local caching and server-side evaluation for performance and security.
 
 #### What are good feature flag tools/libraries that support Go?
-Unleash provides a robust [Go SDK](/reference/sdks/go) for implementing feature flags. Other notable open-source options include [Go Feature Flag](https://gofeatureflag.org/), which is written in Go, and [Flagr](https://openflagr.github.io/flagr/#/), also a Go-based microservice for feature flagging.
+Unleash provides a robust [Go SDK](/sdks/go) for implementing feature flags. Other notable open-source options include [Go Feature Flag](https://gofeatureflag.org/), which is written in Go, and [Flagr](https://openflagr.github.io/flagr/#/), also a Go-based microservice for feature flagging.
 
 #### How do you deal with the exponential complexity from multiple feature flags?
 Complexity comes from keeping too many flags active at once and spreading evaluations throughout the code. The best way to manage this is to keep flags short-lived with clear ownership and a planned end date, then remove them once the rollout is complete. Evaluate each flag once at the highest practical level and pass the result down, so behavior stays consistent. In a microservices setup, perform the evaluation at the edge and propagate the result through the request. Centralize flag names and use a wrapper service around the SDK to handle logging, defaults, and consistency. Finally, archive flags after removal to maintain history without adding clutter.

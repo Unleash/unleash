@@ -105,7 +105,7 @@ Next, we’ll explore how to extend access controls in Unleash for network secur
 
 ## Set up access controls for network security
 
-Securing your network layer is non-negotiable for building and using software systems. It’s foundational knowledge and good practice for any organization with engineering teams deploying software. Now that you understand how to set up and manage users at scale in Unleash, you can begin configuring Unleash in your applications and services [using our SDKs](/reference/sdks#official-sdks).
+Securing your network layer is non-negotiable for building and using software systems. It’s foundational knowledge and good practice for any organization with engineering teams deploying software. Now that you understand how to set up and manage users at scale in Unleash, you can begin configuring Unleash in your applications and services [using our SDKs](/sdks#official-sdks).
 
 Using the Admin UI is an easy, direct way to make changes to your feature flags, projects, rollout strategies, and more. But when you’re making calls to our frontend API from your services, you can update cross-origin resource sharing (CORS) settings to control application access to Unleash. To further restrict access, Unleash also supports [IP allow lists](#set-up-ip-allow-lists-for-enhanced-security).
 

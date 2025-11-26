@@ -40,7 +40,7 @@ For more details on creating feature flags, see [How to create a feature flag](/
 
 ## Connect your application to Unleash
 
-Next, use one of the client or backend [SDKs](/reference/sdks) to connect Unleash with your application. 
+Next, use one of the client or backend [SDKs](/sdks) to connect Unleash with your application. 
 
 <details>
   <summary>Need an example application to test with?</summary>
@@ -62,7 +62,7 @@ Next, use one of the client or backend [SDKs](/reference/sdks) to connect Unleas
     
     In your application code, initialize the SDK using your API URL and token.
 
-The following example shows how to use the [JavaScript SDK](/reference/sdks/javascript-browser) to connect to your Unleash instance:
+The following example shows how to use the [JavaScript SDK](/sdks/javascript-browser) to connect to your Unleash instance:
 
 ```javascript title="JavaScript SDK"
 import { UnleashClient } from "unleash-proxy-client";
@@ -96,7 +96,7 @@ unleash.on("synchronized", () => {
 
     In your application code, initialize the SDK using your API URL and token.
 
-The following example shows how to use the [Node.js SDK](/reference/sdks/node) to connect to your Unleash instance:
+The following example shows how to use the [Node.js SDK](/sdks/node) to connect to your Unleash instance:
 
 ```javascript title="Node.js SDK"
 const { initialize } = require("unleash-client");

@@ -407,4 +407,4 @@ Here’s how this can be done via our API:
 
     Review [API docs on archiving flags](/api/archive-feature).
 
-Learn more about different use cases in our [Ruby SDK documentation](/reference/sdks/ruby).
+Learn more about different use cases in our [Ruby SDK documentation](/sdks/ruby).

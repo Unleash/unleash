@@ -25,7 +25,7 @@ const cardsData = [
         description:
             'With over 30 SDKs, we enable fast and secure feature flagging across all major programming languages.',
         icon: <SdksIcon />,
-        href: '/reference/sdks',
+        href: '/sdks',
     },
     {
         title: 'Unleash Academy',

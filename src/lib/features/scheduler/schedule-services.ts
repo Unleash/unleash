@@ -136,10 +136,14 @@ export const scheduleServices = (
     );
 
     schedulerService.schedule(
-        () =>
-            versionService.checkLatestVersion(() =>
+        () => {
+            console.debug(
+                `==== Checking latest version (scheduled task) ${typeof versionService}, ${versionService}`,
+            );
+            return versionService.checkLatestVersion(() =>
                 instanceStatsService.getFeatureUsageInfo(),
-            ),
+            );
+        },
         hoursToMilliseconds(48),
         'checkLatestVersion',
     );

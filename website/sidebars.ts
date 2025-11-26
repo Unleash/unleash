@@ -554,9 +554,7 @@ const sidebars: SidebarsConfig = {
                 type: 'doc',
                 id: 'api/api-overview',
             },
-            items: [
-                docsSidebar,
-            ],
+            items: [docsSidebar],
         },
         {
             type: 'category',

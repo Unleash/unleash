@@ -7,6 +7,7 @@ import type {
     IChangeRequestStartMilestone,
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
+    IChangeRequestChangeSafeguard,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -29,6 +30,7 @@ import useToast from 'hooks/useToast';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ProgressionChange } from './ProgressionChange.tsx';
 import { ConsolidatedProgressionChanges } from './ConsolidatedProgressionChanges.tsx';
+import { SafeguardForm } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -113,6 +115,68 @@ const StartMilestone: FC<{
                     entry={{
                         preData: previousMilestone,
                         data: newMilestone,
+                    }}
+                />
+            </TabPanel>
+        </StyledTabs>
+    );
+};
+
+const ChangeSafeguard: FC<{
+    change: IChangeRequestChangeSafeguard;
+    currentReleasePlan?: IReleasePlan;
+    changeRequestState: ChangeRequestState;
+    environmentName: string;
+    actions?: ReactNode;
+}> = ({
+    change,
+    currentReleasePlan,
+    changeRequestState,
+    environmentName,
+    actions,
+}) => {
+    const releasePlan =
+        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        change.payload.snapshot
+            ? change.payload.snapshot
+            : currentReleasePlan;
+
+    if (!releasePlan) return;
+
+    const safeguard = change.payload.safeguard;
+
+    if (!safeguard) return;
+
+    return (
+        <StyledTabs>
+            <ChangeItemWrapper>
+                <ChangeItemInfo>
+                    <Added>Change safeguard</Added>
+                    <Typography component='span'>
+                        {safeguard.impactMetric.metricName}
+                    </Typography>
+                </ChangeItemInfo>
+                <div>
+                    <TabList>
+                        <Tab>View change</Tab>
+                        <Tab>View diff</Tab>
+                    </TabList>
+                    {actions}
+                </div>
+            </ChangeItemWrapper>
+            <TabPanel>
+                <SafeguardForm
+                    onSubmit={() => {}}
+                    onCancel={() => {}}
+                    safeguard={safeguard}
+                    environment={environmentName}
+                />
+            </TabPanel>
+            <TabPanel variant='diff'>
+                <EventDiff
+                    entry={{
+                        preData: currentReleasePlan?.safeguards?.[0],
+                        data: safeguard,
                     }}
                 />
             </TabPanel>
@@ -240,7 +304,8 @@ export const ReleasePlanChange: FC<{
         | IChangeRequestDeleteReleasePlan
         | IChangeRequestStartMilestone
         | IChangeRequestChangeMilestoneProgression
-        | IChangeRequestDeleteMilestoneProgression;
+        | IChangeRequestDeleteMilestoneProgression
+        | IChangeRequestChangeSafeguard;
     environmentName: string;
     featureName: string;
     projectId: string;
@@ -370,6 +435,15 @@ export const ReleasePlanChange: FC<{
                     change={change}
                     currentReleasePlan={currentReleasePlan}
                     changeRequestState={changeRequestState}
+                    actions={actions}
+                />
+            )}
+            {change.action === 'changeSafeguard' && (
+                <ChangeSafeguard
+                    change={change}
+                    currentReleasePlan={currentReleasePlan}
+                    changeRequestState={changeRequestState}
+                    environmentName={environmentName}
                     actions={actions}
                 />
             )}

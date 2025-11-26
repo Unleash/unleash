@@ -7,6 +7,7 @@ import type {
     IChangeRequestStartMilestone,
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
+    IChangeRequestChangeSafeguard,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -26,9 +27,15 @@ import {
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import useToast from 'hooks/useToast';
-import type { ChangeMilestoneProgressionSchema } from 'openapi';
+import type {
+    ChangeMilestoneProgressionSchema,
+    CreateSafeguardSchema,
+} from 'openapi';
 import { ProgressionChange } from './ProgressionChange.tsx';
 import { ConsolidatedProgressionChanges } from './ConsolidatedProgressionChanges.tsx';
+import { SafeguardForm } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
+import { ReadonlySafeguardDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/ReadonlySafeguardDisplay';
+import { formatUnknownError } from 'utils/formatUnknownError.ts';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -113,6 +120,77 @@ const StartMilestone: FC<{
                     entry={{
                         preData: previousMilestone,
                         data: newMilestone,
+                    }}
+                />
+            </TabPanel>
+        </StyledTabs>
+    );
+};
+
+const ChangeSafeguard: FC<{
+    change: IChangeRequestChangeSafeguard;
+    currentReleasePlan?: IReleasePlan;
+    changeRequestState: ChangeRequestState;
+    environmentName: string;
+    actions?: ReactNode;
+    onSubmit: (data: CreateSafeguardSchema) => void;
+}> = ({
+    change,
+    currentReleasePlan,
+    changeRequestState,
+    environmentName,
+    actions,
+    onSubmit,
+}) => {
+    const releasePlan =
+        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        change.payload.snapshot
+            ? change.payload.snapshot
+            : currentReleasePlan;
+
+    if (!releasePlan) return;
+
+    const safeguard = change.payload.safeguard;
+
+    if (!safeguard) return;
+
+    const readonly =
+        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+
+    return (
+        <StyledTabs>
+            <ChangeItemWrapper>
+                <ChangeItemInfo>
+                    <Added>Change safeguard</Added>
+                    <Typography component='span'>
+                        {safeguard.impactMetric.metricName}
+                    </Typography>
+                </ChangeItemInfo>
+                <div>
+                    <TabList>
+                        <Tab>View change</Tab>
+                        <Tab>View diff</Tab>
+                    </TabList>
+                    {actions}
+                </div>
+            </ChangeItemWrapper>
+            <TabPanel>
+                {readonly ? (
+                    <ReadonlySafeguardDisplay safeguard={safeguard} />
+                ) : (
+                    <SafeguardForm
+                        onSubmit={onSubmit}
+                        onCancel={() => {}}
+                        safeguard={safeguard}
+                        environment={environmentName}
+                    />
+                )}
+            </TabPanel>
+            <TabPanel variant='diff'>
+                <EventDiff
+                    entry={{
+                        preData: releasePlan?.safeguards?.[0],
+                        data: safeguard,
                     }}
                 />
             </TabPanel>
@@ -240,7 +318,8 @@ export const ReleasePlanChange: FC<{
         | IChangeRequestDeleteReleasePlan
         | IChangeRequestStartMilestone
         | IChangeRequestChangeMilestoneProgression
-        | IChangeRequestDeleteMilestoneProgression;
+        | IChangeRequestDeleteMilestoneProgression
+        | IChangeRequestChangeSafeguard;
     environmentName: string;
     featureName: string;
     projectId: string;
@@ -266,7 +345,27 @@ export const ReleasePlanChange: FC<{
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
-    const { setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
+
+    const handleChangeSafeguardSubmit = async (data: CreateSafeguardSchema) => {
+        try {
+            await addChange(projectId, environmentName, {
+                feature: featureName,
+                action: 'changeSafeguard' as const,
+                payload: {
+                    planId: currentReleasePlan.id,
+                    safeguard: data,
+                },
+            });
+            await refetchChangeRequests();
+            setToastData({
+                type: 'success',
+                text: 'Added to draft',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
 
     const handleUpdateChangeRequestSubmit = async (
         sourceMilestoneId: string,
@@ -285,9 +384,7 @@ export const ReleasePlanChange: FC<{
             type: 'success',
             text: 'Added to draft',
         });
-        if (onRefetch) {
-            await onRefetch();
-        }
+        onRefetch?.();
     };
 
     const handleDeleteChangeRequestSubmit = async (
@@ -305,9 +402,7 @@ export const ReleasePlanChange: FC<{
             type: 'success',
             text: 'Added to draft',
         });
-        if (onRefetch) {
-            await onRefetch();
-        }
+        await onRefetch?.();
     };
 
     // If this is a progression change and we have the full feature object,
@@ -370,6 +465,16 @@ export const ReleasePlanChange: FC<{
                     change={change}
                     currentReleasePlan={currentReleasePlan}
                     changeRequestState={changeRequestState}
+                    actions={actions}
+                />
+            )}
+            {change.action === 'changeSafeguard' && (
+                <ChangeSafeguard
+                    change={change}
+                    currentReleasePlan={currentReleasePlan}
+                    changeRequestState={changeRequestState}
+                    environmentName={environmentName}
+                    onSubmit={handleChangeSafeguardSubmit}
                     actions={actions}
                 />
             )}

@@ -47,7 +47,7 @@ export const useSafeguardForm = (safeguards: ISafeguard[] | undefined) => {
 
 interface ISafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
-    onCancel: () => void;
+    onCancel?: () => void;
     onDelete?: () => void;
     safeguard?: ISafeguard;
     environment: string;
@@ -58,7 +58,7 @@ const getInitialValues = (safeguard?: ISafeguard) => ({
     appName: safeguard?.impactMetric.labelSelectors.appName?.[0] || '*',
     aggregationMode: (safeguard?.impactMetric.aggregationMode ||
         'rps') as MetricQuerySchemaAggregationMode,
-    operator: (safeguard?.triggerCondition.operator ||
+    operator: (safeguard?.triggerCondition?.operator ||
         '>') as SafeguardTriggerConditionSchemaOperator,
     threshold: safeguard?.triggerCondition?.threshold || 0,
     timeRange: (safeguard?.impactMetric.timeRange ||
@@ -245,7 +245,7 @@ export const SafeguardForm = ({
 
     const handleCancel = () => {
         if (mode === 'create') {
-            onCancel();
+            onCancel?.();
             return;
         }
 

@@ -347,7 +347,7 @@ export const ReleasePlanChange: FC<{
         usePendingChangeRequests(projectId);
     const { setToastData, setToastApiError } = useToast();
 
-    const handleChangeSafeguardSubmit = async (data: CreateSafeguardSchema) => {
+    const changeSafeguardSubmit = async (data: CreateSafeguardSchema) => {
         try {
             await addChange(projectId, environmentName, {
                 feature: featureName,
@@ -362,47 +362,56 @@ export const ReleasePlanChange: FC<{
                 type: 'success',
                 text: 'Added to draft',
             });
+            onRefetch?.();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
     };
 
-    const handleUpdateChangeRequestSubmit = async (
+    const changeMilestoneProgressionSubmit = async (
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
     ) => {
-        await addChange(projectId, environmentName, {
-            feature: featureName,
-            action: 'changeMilestoneProgression',
-            payload: {
-                sourceMilestone: sourceMilestoneId,
-                ...payload,
-            },
-        });
-        await refetchChangeRequests();
-        setToastData({
-            type: 'success',
-            text: 'Added to draft',
-        });
-        onRefetch?.();
+        try {
+            await addChange(projectId, environmentName, {
+                feature: featureName,
+                action: 'changeMilestoneProgression',
+                payload: {
+                    sourceMilestone: sourceMilestoneId,
+                    ...payload,
+                },
+            });
+            await refetchChangeRequests();
+            setToastData({
+                type: 'success',
+                text: 'Added to draft',
+            });
+            onRefetch?.();
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
-    const handleDeleteChangeRequestSubmit = async (
+    const deleteMilestonProgressionSubmit = async (
         sourceMilestoneId: string,
     ) => {
-        await addChange(projectId, environmentName, {
-            feature: featureName,
-            action: 'deleteMilestoneProgression',
-            payload: {
-                sourceMilestone: sourceMilestoneId,
-            },
-        });
-        await refetchChangeRequests();
-        setToastData({
-            type: 'success',
-            text: 'Added to draft',
-        });
-        await onRefetch?.();
+        try {
+            await addChange(projectId, environmentName, {
+                feature: featureName,
+                action: 'deleteMilestoneProgression',
+                payload: {
+                    sourceMilestone: sourceMilestoneId,
+                },
+            });
+            await refetchChangeRequests();
+            setToastData({
+                type: 'success',
+                text: 'Added to draft',
+            });
+            onRefetch?.();
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
     // If this is a progression change and we have the full feature object,
@@ -435,8 +444,8 @@ export const ReleasePlanChange: FC<{
                 feature={feature}
                 currentReleasePlan={currentReleasePlan}
                 changeRequestState={changeRequestState}
-                onUpdateChangeRequestSubmit={handleUpdateChangeRequestSubmit}
-                onDeleteChangeRequestSubmit={handleDeleteChangeRequestSubmit}
+                onUpdateChangeRequestSubmit={changeMilestoneProgressionSubmit}
+                onDeleteChangeRequestSubmit={deleteMilestonProgressionSubmit}
             />
         );
     }
@@ -474,7 +483,7 @@ export const ReleasePlanChange: FC<{
                     currentReleasePlan={currentReleasePlan}
                     changeRequestState={changeRequestState}
                     environmentName={environmentName}
-                    onSubmit={handleChangeSafeguardSubmit}
+                    onSubmit={changeSafeguardSubmit}
                     actions={actions}
                 />
             )}
@@ -485,10 +494,10 @@ export const ReleasePlanChange: FC<{
                     actions={actions}
                     changeRequestState={changeRequestState}
                     onUpdateChangeRequestSubmit={
-                        handleUpdateChangeRequestSubmit
+                        changeMilestoneProgressionSubmit
                     }
                     onDeleteChangeRequestSubmit={
-                        handleDeleteChangeRequestSubmit
+                        deleteMilestonProgressionSubmit
                     }
                 />
             )}

@@ -138,7 +138,7 @@ export const scheduleServices = (
     schedulerService.schedule(
         () => {
             console.debug(
-                `==== Checking latest version (scheduled task) ${typeof versionService}, ${versionService}`,
+                `==== Checking latest version (scheduled task) ${versionService.constructor.name} ${JSON.stringify(versionService)} ====`,
             );
             return versionService.checkLatestVersion(() =>
                 instanceStatsService.getFeatureUsageInfo(),

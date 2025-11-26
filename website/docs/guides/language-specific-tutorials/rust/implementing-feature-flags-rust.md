@@ -6,7 +6,7 @@ slug: /guides/implement-feature-flags-in-rust
 
 Hello! In this tutorial we’ll show you how to add feature flags to your Rust app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Rust SDK](/sdks/rust). With Unleash, an open-source feature management service, you can add feature flags to your applications and release new features faster.
 
-We love Rust here at Unleash, our own [Unleash Edge](/reference/unleash-edge) is built with Rust and it's a core part of our product.
+We love Rust here at Unleash, our own [Unleash Edge](/unleash-edge) is built with Rust and it's a core part of our product.
 
 -   [Prerequisites](#prerequisites)
 -   [1. Install a local feature flag provider](#1-install-a-local-feature-flag-provider)

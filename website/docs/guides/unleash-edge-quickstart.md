@@ -6,7 +6,7 @@ title: Unleash Edge quickstart
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-This document helps you get started with [Unleash Edge](/reference/unleash-edge) locally.
+This document helps you get started with [Unleash Edge](/unleash-edge) locally.
 
 ## Why Unleash Edge
 
@@ -525,8 +525,8 @@ Congratulations, you've successfully set up Unleash Edge locally!
 
 Unleash Edge offers a lot of flexibility and advanced configuration options worth exploring:
 
-1. [Offline mode](/reference/unleash-edge/concepts#offline) - Learn how to configure Unleash Edge to work without an Unleash instance, using a local features file.
-2. [Pretrusted tokens](/reference/unleash-edge#pretrusted-tokens) - Learn how to explicitly authorize known frontend tokens without upstream validation.
-3. [Security considerations in production](/reference/unleash-edge/deploying) - Learn how to run Unleash Edge in production with best practices for CORS, health checks, and sensitive endpoints.
-4. [Persistent cache storage](/reference/unleash-edge/cli#unleash-edge-edge) - Learn how to enable persistent cache storage with options such as `--backup-folder` and `--redis-url`.
-5. [Advanced CLI configuration](/reference/unleash-edge/cli) - Learn how to customize the CLI behavior with options such as `--base-path`, `--workers`, `--allow-list`, `--edge-request-timeout`, and `--edge-auth-header`.
+1. [Offline mode](/unleash-edge/concepts#offline) - Learn how to configure Unleash Edge to work without an Unleash instance, using a local features file.
+2. [Pretrusted tokens](/unleash-edge#pretrusted-tokens) - Learn how to explicitly authorize known frontend tokens without upstream validation.
+3. [Security considerations in production](/unleash-edge/deploying) - Learn how to run Unleash Edge in production with best practices for CORS, health checks, and sensitive endpoints.
+4. [Persistent cache storage](/unleash-edge/cli#unleash-edge-edge) - Learn how to enable persistent cache storage with options such as `--backup-folder` and `--redis-url`.
+5. [Advanced CLI configuration](/unleash-edge/cli) - Learn how to customize the CLI behavior with options such as `--base-path`, `--workers`, `--allow-list`, `--edge-request-timeout`, and `--edge-auth-header`.

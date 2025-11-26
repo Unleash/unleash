@@ -53,7 +53,7 @@
     },
     {
       "source": "/how-to/how-to-run-the-unleash-proxy",
-      "destination": "/guides/how-to-run-the-unleash-proxy",
+      "destination": "/unleash-edge",
       "permanent": true
     },
     {
@@ -468,17 +468,17 @@
     },
     {
       "source": "/user_guide/native_apps",
-      "destination": "/reference/unleash-proxy",
+      "destination": "/unleash-edge",
       "permanent": true
     },
     {
       "source": "/user_guide/proxy-api",
-      "destination": "/reference/unleash-proxy",
+      "destination": "/unleash-edge",
       "permanent": true
     },
     {
       "source": "/sdks/unleash-proxy",
-      "destination": "/reference/unleash-proxy",
+      "destination": "/unleash-edge",
       "permanent": true
     },
     {
@@ -1409,6 +1409,31 @@
     {
       "source": "/reference/sdks",
       "destination": "/sdks",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-edge/:path*",
+      "destination": "/unleash-edge/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-edge",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-proxy",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/how-to-run-the-unleash-proxy",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/reference/mcp",
+      "destination": "/mcp",
       "permanent": true
     }
   ]

@@ -14,7 +14,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 ## Overview
 
-The Unleash [Frontend API](/api/frontend-api) simplifies connecting client-side applications to Unleash. [Unleash Edge](/reference/unleash-edge) also implements this API allowing you to scale from development environments, low-traffic applications, or internal dashboards to a production-ready scalable solution.
+The Unleash [Frontend API](/api/frontend-api) simplifies connecting client-side applications to Unleash. [Unleash Edge](/unleash-edge) also implements this API allowing you to scale from development environments, low-traffic applications, or internal dashboards to a production-ready scalable solution.
 
 The Frontend API has a straightforward setup, and since it is built directly into Unleash, you don't need to manage it. However, unlike Unleash Edge, it cannot be scaled horizontally and isn’t designed for high request volumes.
 

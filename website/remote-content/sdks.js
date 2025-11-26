@@ -101,7 +101,7 @@ const SDKS = (() => {
 
 const getAdmonitions = (sdk) => {
     const admonitions = {
-        [FRONTEND_SDKS]: `To connect to Unleash from a frontend application, you'll need to use the [Unleash front-end API](/reference/front-end-api) ([how do I create an API token?](/guides/how-to-create-api-tokens.mdx)) or the [Unleash proxy](/reference/unleash-proxy) ([how do I create client keys?](/reference/api-tokens-and-client-keys#proxy-client-keys)).`,
+        [FRONTEND_SDKS]: `To connect to Unleash from a frontend application, you'll need to use the [Unleash front-end API](/reference/front-end-api) ([how do I create an API token?](/guides/how-to-create-api-tokens.mdx)) or [Unleash Edge](/unleash-edge) ([how do I create client keys?](/reference/api-tokens-and-client-keys#proxy-client-keys)).`,
         [BACKEND_SDKS]: `To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [backend API token](/reference/api-tokens-and-client-keys.mdx#backend-tokens) ([how do I create an API token?](/guides/how-to-create-api-tokens.mdx)).`,
     };
 

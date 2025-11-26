@@ -17,7 +17,7 @@ Unleash can provide you with **impression data** about the flags in your applica
 
 :::caution Front-end SDKs and disabled flags
 
-Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](./unleash-proxy) or the [Unleash front-end API](./front-end-api) would **not** emit impression events when a flag is disabled.
+Older versions of the front-end SDKs and other SDKs that connect [Unleash Edge](/unleash-edge) or the [Unleash front-end API](./front-end-api) would **not** emit impression events when a flag is disabled.
 
 This is because impression data is a **per-flag** setting and the Proxy and front-end API only transmit information about flags that are enabled. As such, the SDK will never know that it should emit an impression event if a flag is disabled.
 

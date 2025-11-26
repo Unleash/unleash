@@ -249,7 +249,7 @@ if err != nil {
 defer resp.Body.Close()
 ```
 
-Review our [API docs on flag enablement](/reference/api/unleash/toggle-feature-environment-on).
+Review our [API docs on flag enablement](/api/toggle-feature-environment-on).
 
 2. Update a flag.
 
@@ -276,7 +276,7 @@ req.Header.Add("Authorization", apiKey)
 req.Header.Add("Content-Type", "application/json")
 ```
 
-Review our [API docs on updating feature flags](/reference/api/unleash/update-feature).
+Review our [API docs on updating feature flags](/api/update-feature).
 
 3. Archive a flag.
 
@@ -295,6 +295,6 @@ client := &http.Client{}
 resp, err := client.Do(req)
 ```
 
-Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
+Review [API docs on archiving flags](/api/archive-feature).
 
 Learn more about different use cases in our [Go SDK documentation](/reference/sdks/go).

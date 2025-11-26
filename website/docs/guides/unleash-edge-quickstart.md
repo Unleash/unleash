@@ -11,7 +11,7 @@ This document helps you get started with [Unleash Edge](/reference/unleash-edge)
 ## Why Unleash Edge
 
 Unleash Edge is a lightweight layer between your SDKs and your Unleash instance.
-It exposes the same HTTP interface as the main [Unleash API](/get-started/api-overview) but is built for higher throughput and lower latency.
+It exposes the same HTTP interface as the main [Unleash API](/api) but is built for higher throughput and lower latency.
 
 <Tabs>
 

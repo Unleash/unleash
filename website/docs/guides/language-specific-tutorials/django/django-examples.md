@@ -66,7 +66,7 @@ response = requests.request("POST", url, headers=headers, data=payload)
 print(response.text)
 ```
 
-Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/reference/api/unleash/update-feature-strategy) for your flag.
+Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/api/update-feature-strategy) for your flag.
 
 ## Canary Deployments in Django
 
@@ -176,7 +176,7 @@ print(response.text)
 > If you already have a gradual rollout strategy for your flag, use a PUT request to update it.
 > If you’re creating a new strategy, use a POST request.
 
-Check out our [API docs on updating flag strategies](/reference/api/unleash/update-feature-strategy) to learn more.
+Check out our [API docs on updating flag strategies](/api/update-feature-strategy) to learn more.
 
 Read our documentation for more context on [strategy constraint configurations](/reference/activation-strategies#constraints) and use cases.
 
@@ -318,7 +318,7 @@ response = requests.request("PATCH", url, headers=headers, data=payload)
 print(response.text)
 ```
 
-Take a look at our [API docs](/reference/api/unleash/patch-feature) to learn more about how to change different flag properties right from your code.
+Take a look at our [API docs](/api/patch-feature) to learn more about how to change different flag properties right from your code.
 
 You can use the impression events data from your flag and your strategy variants to send to analytics tools or data warehouses for further use.
 
@@ -337,7 +337,7 @@ Our metrics are great for understanding user traffic. You can get a better sense
 
 Another use case for reviewing metrics is verifying that the right users are being exposed to your feature based on how you’ve configured your strategies and/or variants.
 
-Take a look at our [Metrics API documentation](/reference/api/unleash/metrics) to understand how it works from a code perspective.
+Take a look at our [Metrics API documentation](/api/metrics) to understand how it works from a code perspective.
 
 ## Feature Flag Audit Logs in Django
 
@@ -374,7 +374,7 @@ response = requests.request("GET", url, headers=headers, data=payload)
 print(response.text)
 ```
 
-Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
+Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/api/get-events-for-toggle) to learn more.
 
 ## Flag Automation and Workflow Integration for Django Apps
 
@@ -404,7 +404,7 @@ Here’s how this can be done via our API:
     print(response.text)
     ```
 
-    Review our [API docs on flag enablement](/reference/api/unleash/toggle-feature-environment-on).
+    Review our [API docs on flag enablement](/api/toggle-feature-environment-on).
 
 2. Update a flag.
 
@@ -432,7 +432,7 @@ Here’s how this can be done via our API:
     print(response.text)
     ```
 
-    Review our [API docs on updating feature flags](/reference/api/unleash/update-feature).
+    Review our [API docs on updating feature flags](/api/update-feature).
 
 3. Archive a flag.
 
@@ -451,6 +451,6 @@ Here’s how this can be done via our API:
     print(response.text)
     ```
 
-    Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
+    Review [API docs on archiving flags](/api/archive-feature).
 
 Learn more about different use cases in our [Python SDK documentation](/reference/sdks/python).

@@ -488,7 +488,7 @@ class="header-github-link"
                     config: {
                         server: {
                             specPath: 'docs/generated/openapi.json',
-                            outputDir: 'docs/reference/api/unleash',
+                            outputDir: 'docs/api',
                             sidebarOptions: {
                                 groupPathsBy: 'tag',
                                 categoryLinkSource: 'tag',

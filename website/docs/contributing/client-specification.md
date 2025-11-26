@@ -106,11 +106,11 @@ The client implementation should fetch flags in the background as regular pollin
 
 ## Client registration {#client-registration}
 
-On start-up, the clients should register with the Unleash server. The registration request must include the required fields specified in the [API documentation](/reference/api/legacy/unleash/client/register.md).
+On start-up, the clients should register with the Unleash server. The registration request must include the required fields specified in the [API documentation](/api/register-client-application).
 
 ## Metrics {#metrics}
 
-Clients are expected to send metrics back to Unleash API at regular intervals. The metrics are a list of used flags and how many times they evaluated to yes or no in at the time of requesting the metrics. Read more about how to send metrics in the [Metrics API](/reference/api/legacy/unleash/client/metrics.md) documentation.
+Clients are expected to send metrics back to Unleash API at regular intervals. The metrics are a list of used flags and how many times they evaluated to yes or no in at the time of requesting the metrics. Read more about how to send metrics in the [Metrics API](/api/register-client-metrics) documentation.
 
 ## Backup Feature Flags {#backup-feature-toggles}
 

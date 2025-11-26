@@ -387,7 +387,7 @@ Our metrics are great for understanding user traffic. You can get a better sense
 
 Another use case for reviewing metrics is verifying that the right users are being exposed to your feature based on how you’ve configured your strategies and/or variants.
 
-Take a look at our [Metrics API documentation](/reference/api/unleash/metrics) to understand how it works from a code perspective.
+Take a look at our [Metrics API documentation](/api/metrics) to understand how it works from a code perspective.
 
 ## Feature Flag Audit Logs in React
 
@@ -416,7 +416,7 @@ curl -L -X GET '<your-unleash-url>/api/admin/events/:featureName' \
 -H 'Authorization: <API_KEY_VALUE>'
 ```
 
-Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/reference/api/unleash/events) to learn more.
+Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/api/events) to learn more.
 
 ## Change Management & Feature Flag Approvals in React
 
@@ -452,7 +452,7 @@ Here’s how this can be done via our API:
     -H 'Authorization: <API_KEY_VALUE>'
     ```
 
-    Review our [API docs on flag enablement](/reference/api/unleash/toggle-feature-environment-on).
+    Review our [API docs on flag enablement](/api/toggle-feature-environment-on).
 
 2. Update a flag.
 
@@ -482,7 +482,7 @@ Here’s how this can be done via our API:
     }
     ```
 
-    Review our [API docs on updating feature flags](/reference/api/unleash/update-feature).
+    Review our [API docs on updating feature flags](/api/update-feature).
 
 3. Archive a flag.
 
@@ -491,7 +491,7 @@ Here’s how this can be done via our API:
     -H 'Authorization: <API_KEY_VALUE>'
     ```
 
-    Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
+    Review [API docs on archiving flags](/api/archive-feature).
 
 ## Common Usage Examples of React Feature Flags
 

@@ -112,13 +112,13 @@
       "permanent": true
     },
     {
-      "source": "/reference/api/unleash",
-      "destination": "/get-started/api-overview",
+      "source": "/api/unleash",
+      "destination": "/api",
       "permanent": true
     },
     {
       "source": "/api/open_api",
-      "destination": "/get-started/api-overview",
+      "destination": "/api",
       "permanent": true
     },
     {
@@ -567,108 +567,28 @@
       "permanent": true
     },
     {
+      "source": "/api/legacy/:path*",
+      "destination": "/api",
+      "permanent": true
+    },
+    {
       "source": "/api/basic-auth",
-      "destination": "/reference/api/legacy/unleash/basic-auth",
+      "destination": "/api",
       "permanent": true
     },
     {
-      "source": "/api",
-      "destination": "/reference/api/legacy/unleash",
+      "source": "/api/admin/:path*",
+      "destination": "/api",
       "permanent": true
     },
     {
-      "source": "/api/admin/addons",
-      "destination": "/reference/api/legacy/unleash/admin/addons",
+      "source": "/api/client/:path*",
+      "destination": "/api",
       "permanent": true
     },
     {
-      "source": "/api/admin/context",
-      "destination": "/reference/api/legacy/unleash/admin/context",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/events",
-      "destination": "/reference/api/legacy/unleash/admin/events",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/feature-toggles-v2",
-      "destination": "/reference/api/legacy/unleash/admin/features-v2",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/feature-types",
-      "destination": "/reference/api/legacy/unleash/admin/feature-types",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/features",
-      "destination": "/reference/api/legacy/unleash/admin/features",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/features-archive",
-      "destination": "/reference/api/legacy/unleash/admin/archive",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/metrics",
-      "destination": "/reference/api/legacy/unleash/admin/metrics",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/projects",
-      "destination": "/reference/api/legacy/unleash/admin/projects",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/segments",
-      "destination": "/reference/api/legacy/unleash/admin/segments",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/state",
-      "destination": "/reference/api/legacy/unleash/admin/state",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/strategies",
-      "destination": "/reference/api/legacy/unleash/admin/strategies",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/tags",
-      "destination": "/reference/api/legacy/unleash/admin/tags",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/user-admin",
-      "destination": "/reference/api/legacy/unleash/admin/user-admin",
-      "permanent": true
-    },
-    {
-      "source": "/api/client/features",
-      "destination": "/reference/api/legacy/unleash/client/features",
-      "permanent": true
-    },
-    {
-      "source": "/api/client/metrics",
-      "destination": "/reference/api/legacy/unleash/client/metrics",
-      "permanent": true
-    },
-    {
-      "source": "/api/client/register",
-      "destination": "/reference/api/legacy/unleash/client/register",
-      "permanent": true
-    },
-    {
-      "source": "/api/internal/internal",
-      "destination": "/reference/api/legacy/unleash/internal/prometheus",
-      "permanent": true
-    },
-    {
-      "source": "/api/internal/health",
-      "destination": "/reference/api/legacy/unleash/internal/health",
+      "source": "/api/internal/:path*",
+      "destination": "/api",
       "permanent": true
     },
     {
@@ -773,12 +693,12 @@
     },
     {
       "source": "/how-to/how-to-enable-openapi",
-      "destination": "/get-started/api-overview",
+      "destination": "/api",
       "permanent": true
     },
     {
       "source": "/how-to/api",
-      "destination": "/get-started/api-overview",
+      "destination": "/api",
       "permanent": true
     },
     {
@@ -813,7 +733,7 @@
     },
     {
       "source": "/using-unleash",
-      "destination": "/get-started/api-overview",
+      "destination": "/api",
       "permanent": true
     },
     {
@@ -967,6 +887,11 @@
       "permanent": true
     },
     {
+      "source": "/how-to-create-feature-flag",
+      "destination": "/guides/how-to-create-feature-flags",
+      "permanent": true
+    },
+    {
       "source": "/how-to/how-to-create-and-assign-custom-root-roles",
       "destination": "/reference/rbac#create-and-assign-a-custom-root-role",
       "permanent": true
@@ -1073,7 +998,7 @@
     },
     {
       "source": "/api-overview",
-      "destination": "/get-started/api-overview",
+      "destination": "/api",
       "permanent": true
     },
     {
@@ -1459,6 +1384,21 @@
     {
       "source": "/feature-flag-tutorials/flutter/a-b-testing",
       "destination": "/guides/implement-ab-test-in-flutter",
+      "permanent": true
+    },
+    {
+      "source": "/reference/api/:path*",
+      "destination": "/api/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/get-started/api-overview",
+      "destination": "/api",
+      "permanent": true
+    },
+    {
+      "source": "/api/unleash/:path*",
+      "destination": "/api/:path*",
       "permanent": true
     }
   ]

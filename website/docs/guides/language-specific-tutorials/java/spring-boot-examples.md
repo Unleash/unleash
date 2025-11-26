@@ -49,7 +49,7 @@ Request request = new Request.Builder()
 Response response = client.newCall(request).execute();
 ```
 
-Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/reference/api/unleash/update-feature-strategy) for your flag.
+Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/api/update-feature-strategy) for your flag.
 
 ## Canary Deployments in Java
 
@@ -132,7 +132,7 @@ Response response = client.newCall(request).execute();
 > If you already have a gradual rollout strategy for your flag, use a PUT request to update it.
 > If you’re creating a new strategy, use a POST request.
 
-Check out our [API docs on updating flag strategies](/reference/api/unleash/update-feature-strategy) to learn more.
+Check out our [API docs on updating flag strategies](/api/update-feature-strategy) to learn more.
 
 Read our documentation for more context on [strategy constraint configurations](/reference/activation-strategies#constraints) and use cases.
 
@@ -205,7 +205,7 @@ Our metrics are great for understanding user traffic. You can get a better sense
 
 Another use case for reviewing metrics is verifying that the right users are being exposed to your feature based on how you’ve configured your strategies and/or variants.
 
-Take a look at our [Metrics API documentation](/reference/api/unleash/metrics) to understand how it works from a code perspective.
+Take a look at our [Metrics API documentation](/api/metrics) to understand how it works from a code perspective.
 
 ## Feature Flag Audit Logs in Java
 
@@ -224,7 +224,7 @@ For our Spring Boot app, we can view events in [Event Log](/reference/events#eve
 
 ![Event Log in Unleash tracks every single change made to flags, similar to Git commit history.](/img/spring-boot-events-log.png)
 
-You can also retrieve events by using an API command. Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
+You can also retrieve events by using an API command. Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/api/get-events-for-toggle) to learn more.
 
 ## Flag Automation & Workflow Integration for Java Apps
 
@@ -252,7 +252,7 @@ Request request = new Request.Builder()
 Response response = client.newCall(request).execute();
 ```
 
-Review our [API docs on flag enablement](/reference/api/unleash/toggle-feature-environment-on).
+Review our [API docs on flag enablement](/api/toggle-feature-environment-on).
 
 2. Update a flag
 
@@ -271,7 +271,7 @@ Request request = new Request.Builder()
 Response response = client.newCall(request).execute();
 ```
 
-Review our [API docs on updating feature flags](/reference/api/unleash/update-feature).
+Review our [API docs on updating feature flags](/api/update-feature).
 
 3. Archive a flag
 
@@ -288,6 +288,6 @@ Request request = new Request.Builder()
 Response response = client.newCall(request).execute();
 ```
 
-Review [API docs on archiving flags](/reference/api/unleash/archive-feature).
+Review [API docs on archiving flags](/api/archive-feature).
 
 Learn more about different use cases in our [Spring Boot Starter Kit](https://github.com/Unleash/unleash-spring-boot-starter) and [Java SDK](/reference/sdks/java).

@@ -143,7 +143,7 @@ Read our documentation on how to effectively manage [feature flags at scale](/gu
 
 ### Reviewing application metrics
 
-[Unleash metrics](/reference/api/unleash/metrics) are a great way to understand user traffic. With your application using feature flags, you can review:
+[Unleash metrics](/api/metrics) are a great way to understand user traffic. With your application using feature flags, you can review:
 
 -   How many requests for a specific feature per application environment are being made over periods of time
 -   How much exposure to users a feature has

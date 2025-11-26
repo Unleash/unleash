@@ -386,8 +386,8 @@ You must be an Admin in Unleash to perform these steps.
 The next time a user who belongs to one of the linked SSO groups logs in, they are automatically added to the user group. If they have been removed from the SSO group, their access will be revoked on their next login.
 
 [^1]: The project-level permission is still required for the [**create/overwrite variants
-** (PUT)](/reference/api/unleash/overwrite-feature-variants) and [**update variants
-** (PATCH)](/reference/api/unleash/patch-feature-variants) API endpoints, but it is not used for anything
+** (PUT)](/api/overwrite-feature-variants) and [**update variants
+** (PATCH)](/api/patch-feature-variants) API endpoints, but it is not used for anything
 within the admin UI. The API endpoints have been superseded by the [**create/overwrite environment variants
-** (PUT)](/reference/api/unleash/overwrite-feature-variants-on-environments) and [**update environment
-variants** (PATCH)](/reference/api/unleash/patch-environments-feature-variants) endpoints, respectively.
+** (PUT)](/api/overwrite-feature-variants-on-environments) and [**update environment
+variants** (PATCH)](/api/patch-environments-feature-variants) endpoints, respectively.

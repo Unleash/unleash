@@ -64,7 +64,7 @@ Unleash Webhook integration takes the following parameters.
 
 **Content-Type** Used to set the content-type header used when unleash performs an HTTP POST to the defined endpoint.
 
-**Body template** Used to override the body template used by Unleash when performing the HTTP POST. You may format you message using a [Mustache template](https://mustache.github.io). You will have the [Unleash event format](/reference/api/legacy/unleash/admin/events) available in the rendering context.
+**Body template** Used to override the body template used by Unleash when performing the HTTP POST. You may format you message using a [Mustache template](https://mustache.github.io). You will have the [Unleash event format](/api/get-events) available in the rendering context.
 
 Example:
 
@@ -77,7 +77,7 @@ Example:
 }
 ```
 
-If you don't specify anything Unleash will use the [Unleash event format](/reference/api/legacy/unleash/admin/events).
+If you don't specify anything Unleash will use the [Unleash event format](/api/get-events).
 
 #### Custom SSL certificates {#certificates}
 

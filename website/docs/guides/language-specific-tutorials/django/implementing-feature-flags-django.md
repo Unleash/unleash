@@ -18,7 +18,7 @@ For this tutorial, you'll need the following:
 
 ![architecture diagram for our implementation](/img/rails-guide-diagram.png)
 
-The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. For backend applications or automated scripts, Unleash exposes an [API](/get-started/api-overview) defined by an OpenAPI specification, allowing you to perform these actions programmatically.
+The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. For backend applications or automated scripts, Unleash exposes an [API](/api) defined by an OpenAPI specification, allowing you to perform these actions programmatically.
 
 ## 1. Install a local feature flag provider
 

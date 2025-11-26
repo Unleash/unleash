@@ -33,7 +33,7 @@ When you create a new feature flag via the UI, there's an option at the end of t
 
 ![The create feature flag form. There's a flag at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data.png)
 
-To create a feature flag with impression data enabled, set the `impressionData` option to `true` in the request payload, as seen below. For more options, check the [reference docs on creating features](/reference/api/legacy/unleash/admin/features-v2#create-toggle).
+To create a feature flag with impression data enabled, set the `impressionData` option to `true` in the request payload, as seen below. For more options, check the [reference docs on creating features](/api/create-feature).
 
 <ApiRequest
     verb="post"
@@ -48,7 +48,7 @@ To enable impression data for an existing flag, go to the "Settings" tab of that
 
 ![The create feature flag form. There's a flag at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data-existing-toggle.png)
 
-To enable impression data for an existing flag, use the [API's flag patching functionality](/reference/api/legacy/unleash/admin/features-v2#patch-toggle):
+To enable impression data for an existing flag, use the [API's flag patching functionality](/api/update-feature):
 
 <ApiRequest
     verb="patch"

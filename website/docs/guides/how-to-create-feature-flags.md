@@ -6,7 +6,7 @@ pagination_next: guides/how-to-schedule-feature-releases
 
 [Feature flags](../reference/feature-toggles) are a foundational component of Unleash, enabling you to manage features dynamically. This guide details the process of creating and configuring feature flags within Unleash. You'll learn how to create flags, define activation strategies, enable them, and optionally refine their behavior with constraints, segments, and variants.
 
-This guide focuses on the Unleash Admin UI, but you can also use the [Admin API](/reference/api/unleash/create-feature) to create, update, and manage feature flags.
+This guide focuses on the Unleash Admin UI, but you can also use the [Admin API](/api/create-feature) to create, update, and manage feature flags.
 
 ## Create a feature flag
 

@@ -47,7 +47,7 @@ export const useSafeguardForm = (safeguards: ISafeguard[] | undefined) => {
 
 interface ISafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
-    onCancel: () => void;
+    onCancel?: () => void;
     onDelete?: () => void;
     safeguard?: ISafeguard;
     environment: string;
@@ -245,7 +245,7 @@ export const SafeguardForm = ({
 
     const handleCancel = () => {
         if (mode === 'create') {
-            onCancel();
+            onCancel?.();
             return;
         }
 

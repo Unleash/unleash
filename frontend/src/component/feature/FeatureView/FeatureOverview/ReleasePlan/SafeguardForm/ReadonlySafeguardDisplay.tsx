@@ -1,6 +1,7 @@
 import ShieldIcon from '@mui/icons-material/Shield';
 import { styled } from '@mui/material';
 import type { ISafeguard } from 'interfaces/releasePlans';
+import { createStyledIcon } from '../shared/SharedFormComponents.tsx';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -21,17 +22,10 @@ const StyledContentGroup = styled('div')(({ theme }) => ({
     flexWrap: 'wrap',
 }));
 
-const StyledIcon = styled(ShieldIcon)(({ theme }) => ({
-    color: theme.palette.common.white,
-    fontSize: 18,
-    flexShrink: 0,
-    backgroundColor: theme.palette.warning.main,
-    borderRadius: '50%',
-    padding: theme.spacing(0.25),
-}));
+const StyledIcon = createStyledIcon(ShieldIcon);
 
 const StyledLabel = styled('span')(({ theme }) => ({
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
     fontSize: theme.typography.body2.fontSize,
     flexShrink: 0,
 }));
@@ -39,7 +33,7 @@ const StyledLabel = styled('span')(({ theme }) => ({
 const StyledValue = styled('span')(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.typography.body2.fontSize,
-    fontWeight: theme.typography.fontWeightMedium,
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 interface ReadonlySafeguardDisplayProps {

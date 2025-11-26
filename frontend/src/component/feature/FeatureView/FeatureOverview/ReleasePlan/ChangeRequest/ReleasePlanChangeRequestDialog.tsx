@@ -27,6 +27,10 @@ type ChangeRequestAction =
     | {
           type: 'deleteMilestoneProgression';
           sourceMilestoneId: string;
+      }
+    | {
+          type: 'deleteSafeguard';
+          safeguardId: string;
       };
 
 interface IReleasePlanChangeRequestDialogProps {
@@ -125,6 +129,17 @@ export const ReleasePlanChangeRequestDialog = ({
                     </p>
                 );
             }
+
+            case 'deleteSafeguard':
+                return (
+                    <p>
+                        <StyledBoldSpan>Remove</StyledBoldSpan> safeguard from
+                        release plan{' '}
+                        <StyledBoldSpan>{releasePlan.name}</StyledBoldSpan> for{' '}
+                        <StyledBoldSpan>{featureId}</StyledBoldSpan> in{' '}
+                        <StyledBoldSpan>{environmentId}</StyledBoldSpan>
+                    </p>
+                );
         }
     };
 

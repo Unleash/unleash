@@ -170,6 +170,10 @@ export const ReleasePlan = ({
               type: 'deleteMilestoneProgression';
               sourceMilestoneId: string;
           }
+        | {
+              type: 'deleteSafeguard';
+              safeguardId: string;
+          }
         | null
     >(null);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
@@ -268,6 +272,17 @@ export const ReleasePlan = ({
                     action: 'deleteMilestoneProgression',
                     payload: {
                         sourceMilestone: changeRequestAction.sourceMilestoneId,
+                    },
+                });
+                break;
+
+            case 'deleteSafeguard':
+                await addChange(projectId, environment, {
+                    feature: featureName,
+                    action: 'deleteSafeguard',
+                    payload: {
+                        planId: plan.id,
+                        safeguardId: changeRequestAction.safeguardId,
                     },
                 });
                 break;
@@ -465,7 +480,14 @@ export const ReleasePlan = ({
     };
 
     const handleSafeguardDelete = () => {
-        setSafeguardDeleteDialogOpen(true);
+        if (isChangeRequestConfigured(environment) && safeguards.length > 0) {
+            setChangeRequestAction({
+                type: 'deleteSafeguard',
+                safeguardId: safeguards[0].id,
+            });
+        } else {
+            setSafeguardDeleteDialogOpen(true);
+        }
     };
 
     const onSafeguardDeleteConfirm = async () => {

@@ -3,8 +3,7 @@ import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
 import type { SetStrategySortOrderSchema } from 'openapi';
-import type { IReleasePlan } from 'interfaces/releasePlans';
-import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
+import type { IReleasePlan, ISafeguard } from 'interfaces/releasePlans';
 
 type BaseChangeRequest = {
     id: number;
@@ -315,7 +314,8 @@ type ChangeRequestDeleteMilestoneProgression = {
 
 type ChangeRequestChangeSafeguard = {
     planId: string;
-    safeguard: CreateSafeguardSchema;
+    safeguard: ISafeguard;
+    snapshot?: IReleasePlan;
 };
 
 type ChangeRequestDeleteSafeguard = {

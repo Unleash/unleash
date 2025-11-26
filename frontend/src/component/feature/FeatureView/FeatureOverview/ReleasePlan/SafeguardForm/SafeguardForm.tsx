@@ -58,7 +58,7 @@ const getInitialValues = (safeguard?: ISafeguard) => ({
     appName: safeguard?.impactMetric.labelSelectors.appName?.[0] || '*',
     aggregationMode: (safeguard?.impactMetric.aggregationMode ||
         'rps') as MetricQuerySchemaAggregationMode,
-    operator: (safeguard?.triggerCondition.operator ||
+    operator: (safeguard?.triggerCondition?.operator ||
         '>') as SafeguardTriggerConditionSchemaOperator,
     threshold: safeguard?.triggerCondition?.threshold || 0,
     timeRange: (safeguard?.impactMetric.timeRange ||

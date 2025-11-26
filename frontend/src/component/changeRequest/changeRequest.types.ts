@@ -2,11 +2,9 @@ import type { IFeatureVariant } from 'interfaces/featureToggle';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
-import type {
-    CreateSafeguardSchema,
-    SetStrategySortOrderSchema,
-} from 'openapi';
+import type { SetStrategySortOrderSchema } from 'openapi';
 import type { IReleasePlan } from 'interfaces/releasePlans';
+import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 
 type BaseChangeRequest = {
     id: number;
@@ -137,7 +135,8 @@ type ChangeRequestPayload =
     | ChangeRequestStartMilestone
     | ChangeRequestChangeMilestoneProgression
     | ChangeRequestDeleteMilestoneProgression
-    | CreateSafeguardSchema;
+    | ChangeRequestChangeSafeguard
+    | ChangeRequestDeleteSafeguard;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
     action: 'addStrategy';
@@ -212,6 +211,12 @@ export interface IChangeRequestChangeSafeguard
     payload: ChangeRequestChangeSafeguard;
 }
 
+export interface IChangeRequestDeleteSafeguard
+    extends IChangeRequestChangeBase {
+    action: 'deleteSafeguard';
+    payload: ChangeRequestDeleteSafeguard;
+}
+
 export interface IChangeRequestReorderStrategy
     extends IChangeRequestChangeBase {
     action: 'reorderStrategy';
@@ -262,7 +267,8 @@ export type IFeatureChange =
     | IChangeRequestStartMilestone
     | IChangeRequestChangeMilestoneProgression
     | IChangeRequestDeleteMilestoneProgression
-    | IChangeRequestChangeSafeguard;
+    | IChangeRequestChangeSafeguard
+    | IChangeRequestDeleteSafeguard;
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment
@@ -310,7 +316,11 @@ type ChangeRequestDeleteMilestoneProgression = {
 type ChangeRequestChangeSafeguard = {
     planId: string;
     safeguard: CreateSafeguardSchema;
-    snapshot?: IReleasePlan;
+};
+
+type ChangeRequestDeleteSafeguard = {
+    planId: string;
+    safeguardId: string;
 };
 
 export type ChangeRequestAddStrategy = Pick<
@@ -353,4 +363,5 @@ export type ChangeRequestAction =
     | 'startMilestone'
     | 'changeMilestoneProgression'
     | 'deleteMilestoneProgression'
-    | 'changeSafeguard';
+    | 'changeSafeguard'
+    | 'deleteSafeguard';

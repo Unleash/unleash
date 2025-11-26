@@ -31,6 +31,7 @@ import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ProgressionChange } from './ProgressionChange.tsx';
 import { ConsolidatedProgressionChanges } from './ConsolidatedProgressionChanges.tsx';
 import { SafeguardForm } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
+import { ReadonlySafeguardDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/ReadonlySafeguardDisplay';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -147,6 +148,9 @@ const ChangeSafeguard: FC<{
 
     if (!safeguard) return;
 
+    const readonly =
+        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+
     return (
         <StyledTabs>
             <ChangeItemWrapper>
@@ -165,12 +169,16 @@ const ChangeSafeguard: FC<{
                 </div>
             </ChangeItemWrapper>
             <TabPanel>
-                <SafeguardForm
-                    onSubmit={() => {}}
-                    onCancel={() => {}}
-                    safeguard={safeguard}
-                    environment={environmentName}
-                />
+                {readonly ? (
+                    <ReadonlySafeguardDisplay safeguard={safeguard} />
+                ) : (
+                    <SafeguardForm
+                        onSubmit={() => {}}
+                        onCancel={() => {}}
+                        safeguard={safeguard}
+                        environment={environmentName}
+                    />
+                )}
             </TabPanel>
             <TabPanel variant='diff'>
                 <EventDiff

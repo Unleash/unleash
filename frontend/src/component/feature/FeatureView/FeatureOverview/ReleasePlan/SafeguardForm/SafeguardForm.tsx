@@ -14,7 +14,7 @@ import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/Impact
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
-import type { CreateSafeguardSchemaOperator } from 'openapi/models/createSafeguardSchemaOperator';
+import type { SafeguardTriggerConditionSchemaOperator } from 'openapi/models/safeguardTriggerConditionSchemaOperator';
 import {
     createStyledIcon,
     type FormMode,
@@ -58,8 +58,8 @@ const getInitialValues = (safeguard?: ISafeguard) => ({
     appName: safeguard?.impactMetric.labelSelectors.appName?.[0] || '*',
     aggregationMode: (safeguard?.impactMetric.aggregationMode ||
         'rps') as MetricQuerySchemaAggregationMode,
-    operator: (safeguard?.triggerCondition?.operator ||
-        '>') as CreateSafeguardSchemaOperator,
+    operator: (safeguard?.triggerCondition.operator ||
+        '>') as SafeguardTriggerConditionSchemaOperator,
     threshold: safeguard?.triggerCondition?.threshold || 0,
     timeRange: (safeguard?.impactMetric.timeRange ||
         'day') as MetricQuerySchemaTimeRange,
@@ -104,9 +104,10 @@ export const SafeguardForm = ({
         useState<MetricQuerySchemaAggregationMode>(
             initialValues.aggregationMode,
         );
-    const [operator, setOperator] = useState<CreateSafeguardSchemaOperator>(
-        initialValues.operator,
-    );
+    const [operator, setOperator] =
+        useState<SafeguardTriggerConditionSchemaOperator>(
+            initialValues.operator,
+        );
     const [threshold, setThreshold] = useState(initialValues.threshold);
     const [timeRange, setTimeRange] = useState<MetricQuerySchemaTimeRange>(
         initialValues.timeRange,
@@ -171,7 +172,9 @@ export const SafeguardForm = ({
         setAggregationMode(value);
     };
 
-    const handleOperatorChange = (value: CreateSafeguardSchemaOperator) => {
+    const handleOperatorChange = (
+        value: SafeguardTriggerConditionSchemaOperator,
+    ) => {
         enterEditMode();
         setOperator(value);
     };
@@ -195,8 +198,10 @@ export const SafeguardForm = ({
                 appName: [appName],
             },
         },
-        operator,
-        threshold: Number(threshold),
+        triggerCondition: {
+            operator,
+            threshold: Number(threshold),
+        },
     });
 
     const handleSubmit = (e: FormEvent) => {
@@ -320,7 +325,7 @@ export const SafeguardForm = ({
                             onChange={(e) =>
                                 handleOperatorChange(
                                     e.target
-                                        .value as CreateSafeguardSchemaOperator,
+                                        .value as SafeguardTriggerConditionSchemaOperator,
                                 )
                             }
                             variant='outlined'

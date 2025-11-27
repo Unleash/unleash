@@ -8,6 +8,7 @@ import type {
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
     IChangeRequestChangeSafeguard,
+    IChangeRequestDeleteSafeguard,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -134,6 +135,7 @@ const ChangeSafeguard: FC<{
     environmentName: string;
     actions?: ReactNode;
     onSubmit: (data: CreateSafeguardSchema) => void;
+    onDelete: (safeguardId: string) => void;
 }> = ({
     change,
     currentReleasePlan,
@@ -141,6 +143,7 @@ const ChangeSafeguard: FC<{
     environmentName,
     actions,
     onSubmit,
+    onDelete,
 }) => {
     const releasePlan =
         (changeRequestState === 'Applied' || !currentReleasePlan) &&
@@ -157,14 +160,13 @@ const ChangeSafeguard: FC<{
     const readonly =
         changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
 
+    const safeguardId = releasePlan?.safeguards?.[0]?.id;
+
     return (
         <StyledTabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
                     <Added>Change safeguard</Added>
-                    <Typography component='span'>
-                        {safeguard.impactMetric.metricName}
-                    </Typography>
                 </ChangeItemInfo>
                 <div>
                     <TabList>
@@ -180,6 +182,7 @@ const ChangeSafeguard: FC<{
                 ) : (
                     <SafeguardForm
                         onSubmit={onSubmit}
+                        onDelete={() => safeguardId && onDelete(safeguardId)}
                         onCancel={() => {}}
                         safeguard={safeguard}
                         environment={environmentName}
@@ -191,6 +194,79 @@ const ChangeSafeguard: FC<{
                     entry={{
                         preData: releasePlan?.safeguards?.[0],
                         data: safeguard,
+                    }}
+                />
+            </TabPanel>
+        </StyledTabs>
+    );
+};
+
+const DeleteSafeguard: FC<{
+    change: IChangeRequestDeleteSafeguard;
+    currentReleasePlan?: IReleasePlan;
+    changeRequestState: ChangeRequestState;
+    environmentName: string;
+    actions?: ReactNode;
+    onSubmit: (data: CreateSafeguardSchema) => void;
+    onDelete: (safeguardId: string) => void;
+}> = ({
+    change,
+    currentReleasePlan,
+    changeRequestState,
+    environmentName,
+    actions,
+    onSubmit,
+    onDelete,
+}) => {
+    const releasePlan =
+        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        change.payload.snapshot
+            ? change.payload.snapshot
+            : currentReleasePlan;
+
+    if (!releasePlan) return;
+
+    const safeguard = releasePlan.safeguards?.[0];
+
+    if (!safeguard) return;
+
+    const readonly =
+        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+
+    return (
+        <StyledTabs>
+            <ChangeItemWrapper>
+                <ChangeItemInfo>
+                    <Deleted>Delete safeguard</Deleted>
+                </ChangeItemInfo>
+                <div>
+                    <TabList>
+                        <Tab>View change</Tab>
+                        <Tab>View diff</Tab>
+                    </TabList>
+                    {actions}
+                </div>
+            </ChangeItemWrapper>
+            <TabPanel>
+                {readonly ? (
+                    <ReadonlySafeguardDisplay safeguard={safeguard} />
+                ) : (
+                    <SafeguardForm
+                        onSubmit={onSubmit}
+                        onDelete={() =>
+                            safeguard?.id && onDelete(safeguard?.id)
+                        }
+                        onCancel={() => {}}
+                        safeguard={safeguard}
+                        environment={environmentName}
+                    />
+                )}
+            </TabPanel>
+            <TabPanel variant='diff'>
+                <EventDiff
+                    entry={{
+                        preData: safeguard,
+                        data: {},
                     }}
                 />
             </TabPanel>
@@ -319,7 +395,8 @@ export const ReleasePlanChange: FC<{
         | IChangeRequestStartMilestone
         | IChangeRequestChangeMilestoneProgression
         | IChangeRequestDeleteMilestoneProgression
-        | IChangeRequestChangeSafeguard;
+        | IChangeRequestChangeSafeguard
+        | IChangeRequestDeleteSafeguard;
     environmentName: string;
     featureName: string;
     projectId: string;
@@ -355,6 +432,28 @@ export const ReleasePlanChange: FC<{
                 payload: {
                     planId: currentReleasePlan.id,
                     safeguard: data,
+                },
+            });
+            await refetchChangeRequests();
+            setToastData({
+                type: 'success',
+                text: 'Added to draft',
+            });
+            onRefetch?.();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const deleteSafeguardSubmit = async (safeguardId: string) => {
+        try {
+            console.log('Safeguard', safeguardId);
+            await addChange(projectId, environmentName, {
+                feature: featureName,
+                action: 'deleteSafeguard',
+                payload: {
+                    planId: currentReleasePlan.id,
+                    safeguardId: safeguardId,
                 },
             });
             await refetchChangeRequests();
@@ -484,6 +583,18 @@ export const ReleasePlanChange: FC<{
                     changeRequestState={changeRequestState}
                     environmentName={environmentName}
                     onSubmit={changeSafeguardSubmit}
+                    onDelete={deleteSafeguardSubmit}
+                    actions={actions}
+                />
+            )}
+            {change.action === 'deleteSafeguard' && (
+                <DeleteSafeguard
+                    change={change}
+                    currentReleasePlan={currentReleasePlan}
+                    changeRequestState={changeRequestState}
+                    environmentName={environmentName}
+                    onSubmit={changeSafeguardSubmit}
+                    onDelete={deleteSafeguardSubmit}
                     actions={actions}
                 />
             )}

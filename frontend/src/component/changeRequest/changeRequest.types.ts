@@ -321,6 +321,7 @@ type ChangeRequestChangeSafeguard = {
 type ChangeRequestDeleteSafeguard = {
     planId: string;
     safeguardId: string;
+    snapshot?: IReleasePlan;
 };
 
 export type ChangeRequestAddStrategy = Pick<

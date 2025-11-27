@@ -24,9 +24,8 @@ import { useFlag } from '@unleash/proxy-client-react';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 
 export const StretchContainer = styled(Box, {
-    shouldForwardProp: (propName) =>
-        propName !== 'mode' && propName !== 'admin',
-})<{ mode: string; admin: boolean }>(({ theme, mode, admin }) => ({
+    shouldForwardProp: (propName) => propName !== 'admin',
+})<{ admin: boolean }>(({ theme, admin }) => ({
     backgroundColor: admin
         ? theme.palette.background.application
         : theme.palette.background.paper,
@@ -38,8 +37,7 @@ export const StretchContainer = styled(Box, {
     gap: theme.spacing(2),
     zIndex: 1,
     overflowAnchor: 'none',
-    minWidth: mode === 'full' ? theme.spacing(32) : 'auto',
-    width: mode === 'full' ? theme.spacing(32) : 'auto',
+    width: 'auto',
 }));
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
@@ -94,7 +92,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
     }, [initialPathname]);
 
     return (
-        <StretchContainer mode={mode} admin={showOnlyAdminMenu}>
+        <StretchContainer admin={showOnlyAdminMenu}>
             <ConditionallyRender
                 condition={mode === 'full'}
                 show={

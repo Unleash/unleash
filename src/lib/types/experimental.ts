@@ -65,6 +65,7 @@ export type IFlagKey =
     | 'featureReleasePlans'
     | 'plausibleMetrics'
     | 'safeguards'
+    | 'newInUnleash'
     | 'oidcPkceSupport';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -288,6 +289,10 @@ const flags: IFlags = {
     ),
     oidcPkceSupport: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_OIDC_PKCE_SUPPORT,
+        false,
+    ),
+    newInUnleash: parseEnvVarBooleanOrStringVariant(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_IN_UNLEASH,
         false,
     ),
 };

@@ -15,7 +15,6 @@ import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 import HowToApplyReleaseTemplatesImage from 'assets/img/howToApplyReleaseTemplates.png';
 import HowToApplyReleaseTemplatesDarkImage from 'assets/img/howToApplyReleaseTemplatesDark.png';
-import type { Link as RouterLink } from 'react-router-dom';
 import MenuBook from '@mui/icons-material/MenuBook';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { formatAssetPath } from 'utils/formatPath';

@@ -1,12 +1,13 @@
 import {
     Button,
-    type ButtonProps,
     styled,
     Typography,
     type TypographyProps,
 } from '@mui/material';
+import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
-import { Link } from 'react-router-dom';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Container = styled('article')(({ theme }) => ({
     paddingBlock: theme.spacing(5),
@@ -30,38 +31,38 @@ const Buttons = styled('div')(({ theme }) => ({
     justifyContent: 'center',
 }));
 
-const LinkButton = styled((props: ButtonProps<typeof Link>) => (
-    <Button component={Link} {...props} />
-))({
-    whiteSpace: 'nowrap',
-});
-
 export const EmptyTemplatesListMessage = () => {
+    const navigate = useNavigate();
     return (
         <Container>
             <ReleaseTemplateIcon />
             <CenteredText component='h2' variant='h3'>
                 Get started with release templates
             </CenteredText>
-            <CenteredText component='p' sx={{ color: 'text.secondary' }}>
+            <CenteredText component='p' color='text.secondary'>
                 Control your releases with milestones that can be reused by the
                 entire team.
             </CenteredText>
             <Buttons>
-                <LinkButton
+                <Button
+                    component={Link}
+                    sx={{ whiteSpace: 'nowrap' }}
                     to='https://docs.getunleash.io/reference/release-templates'
                     variant='text'
                     rel='noopener noreferrer'
                     target='_blank'
                 >
                     Read docs
-                </LinkButton>
-                <LinkButton
-                    to='/release-templates/create-template'
-                    variant='contained'
+                </Button>
+                <PermissionButton
+                    sx={{ whiteSpace: 'nowrap' }}
+                    onClick={() => {
+                        navigate('/release-templates/create-template');
+                    }}
+                    permission={RELEASE_PLAN_TEMPLATE_CREATE}
                 >
                     New template
-                </LinkButton>
+                </PermissionButton>
             </Buttons>
         </Container>
     );

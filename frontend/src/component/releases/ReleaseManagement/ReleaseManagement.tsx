@@ -1,11 +1,12 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { Box, Grid, Link, styled } from '@mui/material';
+import { Box, Grid, styled } from '@mui/material';
 import { styles as themeStyles } from 'component/common';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import Add from '@mui/icons-material/Add';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { EmptyTemplatesListMessage } from './EmptyTemplatesListMessage.tsx';
 import { ReleasePlanTemplateList } from './ReleasePlanTemplateList.tsx';
@@ -19,16 +20,18 @@ import MenuBook from '@mui/icons-material/MenuBook';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { formatAssetPath } from 'utils/formatPath';
 
-const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
+const StyledLink = styled(Link)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
     padding: 0,
     color: theme.palette.links,
     fontWeight: theme.fontWeight.medium,
+    textDecoration: 'none',
     '&:hover, &:focus': {
         textDecoration: 'underline',
     },
+    width: 'max-content',
 }));
 
 const StyledMenuBook = styled(MenuBook)(({ theme }) => ({
@@ -117,9 +120,7 @@ export const ReleaseManagement = () => {
                 />
             </CenteredHowTo>
             <StyledLink
-                component='a'
-                href='https://docs.getunleash.io/reference/release-templates'
-                underline='hover'
+                to='https://docs.getunleash.io/reference/release-templates'
                 rel='noopener noreferrer'
                 target='_blank'
             >

@@ -1,38 +1,61 @@
-import { styled } from '@mui/material';
+import { Button, styled, Typography } from '@mui/material';
+import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { Link, useNavigate } from 'react-router-dom';
 
-const NoReleaseTemplatesMessage = styled('div')(({ theme }) => ({
-    textAlign: 'center',
-    padding: theme.spacing(1, 0, 0, 0),
-}));
-
-const TemplatesEasierMessage = styled('div')(({ theme }) => ({
-    textAlign: 'center',
-    padding: theme.spacing(1, 0, 9, 0),
-    color: theme.palette.text.secondary,
-}));
-
-const StyledCenter = styled('div')(({ theme }) => ({
+const Container = styled('article')(({ theme }) => ({
+    paddingBlock: theme.spacing(5),
+    display: 'flex',
+    gap: theme.spacing(2),
+    flexFlow: 'column nowrap',
+    alignItems: 'center',
+    maxWidth: theme.spacing(40),
+    margin: 'auto',
     textAlign: 'center',
 }));
 
-const StyledDiv = styled('div')(({ theme }) => ({
-    paddingTop: theme.spacing(5),
+const Buttons = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row wrap',
+    columnGap: theme.spacing(3),
+    rowGap: theme.spacing(2),
+    justifyContent: 'center',
 }));
+
 export const EmptyTemplatesListMessage = () => {
+    const navigate = useNavigate();
     return (
-        <StyledDiv>
-            <StyledCenter>
-                <ReleaseTemplateIcon />
-            </StyledCenter>
-            <NoReleaseTemplatesMessage>
-                You have no release templates set up
-            </NoReleaseTemplatesMessage>
-            <TemplatesEasierMessage>
-                Make the set up of strategies easier for your
-                <br />
-                teams by creating templates
-            </TemplatesEasierMessage>
-        </StyledDiv>
+        <Container>
+            <ReleaseTemplateIcon />
+            <Typography component='h2' variant='h3'>
+                Get started with release templates
+            </Typography>
+            <Typography component='p' color='text.secondary'>
+                Control your releases with milestones that can be reused by the
+                entire team.
+            </Typography>
+            <Buttons>
+                <Button
+                    component={Link}
+                    sx={{ whiteSpace: 'nowrap' }}
+                    to='https://docs.getunleash.io/reference/release-templates'
+                    variant='text'
+                    rel='noopener noreferrer'
+                    target='_blank'
+                >
+                    Read docs
+                </Button>
+                <PermissionButton
+                    sx={{ whiteSpace: 'nowrap' }}
+                    onClick={() => {
+                        navigate('/release-templates/create-template');
+                    }}
+                    permission={RELEASE_PLAN_TEMPLATE_CREATE}
+                >
+                    New template
+                </PermissionButton>
+            </Buttons>
+        </Container>
     );
 };

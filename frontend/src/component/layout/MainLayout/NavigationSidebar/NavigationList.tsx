@@ -59,7 +59,11 @@ export const PrimaryNavigationList: FC<{
             onClick={() => onClick(href)}
             selected={activeItem === href}
             mode={mode}
-            badge={newRoute?.title === text ? <NewBadge /> : null}
+            badge={
+                newRoute?.title.toLowerCase() === text.toLowerCase() ? (
+                    <NewBadge />
+                ) : null
+            }
         />
     );
 

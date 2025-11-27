@@ -29,21 +29,11 @@ const markRouteIfNew = (
 };
 
 const filterMapRoutes =
-    (
-        uiConfig: IUiConfig,
-        { enterprise, pro, billing }: PlanData,
-        newRouteTitle?: string,
-    ) =>
+    (uiConfig: IUiConfig, planData: PlanData, newRouteTitle?: string) =>
     (routes: INavigationMenuItem[]) => {
         return routes
             .filter(filterByConfig(uiConfig))
-            .filter((route) =>
-                filterRoutesByPlanData(route?.menu, {
-                    enterprise,
-                    pro,
-                    billing,
-                }),
-            )
+            .filter((route) => filterRoutesByPlanData(route?.menu, planData))
             .map((route) => {
                 const normalized = normalizeRoutePath(route);
                 return markRouteIfNew(normalized, newRouteTitle);

@@ -17,10 +17,15 @@ const getMonthRange = async (raw: ITestDb['rawDatabase'], offset: number) => {
         `
         SELECT
             (date_trunc('month', NOW()) - (? * INTERVAL '1 month'))::timestamptz AS start_ts,
-            (date_trunc('month', NOW()) - ((? - 1) * INTERVAL '1 month'))::timestamptz AS end_ts,
+            (
+                CASE
+                    WHEN ? = 0 THEN NOW()
+                    ELSE (date_trunc('month', NOW()) - ((? - 1) * INTERVAL '1 month'))
+                END
+            )::timestamptz AS end_ts,
             to_char((date_trunc('month', NOW()) - (? * INTERVAL '1 month')), 'YYYY-MM') AS key
         `,
-        [offset, offset, offset],
+        [offset, offset, offset, offset],
     );
     return rows[0] as { start_ts: string; end_ts: string; key: string };
 };
@@ -122,11 +127,11 @@ afterAll(async () => {
     await db.destroy();
 });
 
-test('returns 12 months with zeros when no data and keys match exact last-12 range', async () => {
+test('returns 12 months including current month with zeros when no data and keys match exact last-12 range', async () => {
     const res = await getEdgeInstances();
     const keys = Object.keys(res);
     expect(keys.length).toBe(12);
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 0; i < 12; i++) {
         const { key } = await getMonthRange(db.rawDatabase, i);
         expect(keys).toContain(key);
         expect(res[key]).toBe(0);
@@ -178,43 +183,41 @@ test('separates last two months with different loads and at least one non-zero i
     expect(nonZero).toBeGreaterThan(0);
 });
 
-test('ignores current month data; verifies current-month insert happened but key is absent and previous month has non-zero', async () => {
-    const current = await getMonthRange(db.rawDatabase, 0);
-    const m1 = await getMonthRange(db.rawDatabase, 1);
-    const m2 = await getMonthRange(db.rawDatabase, 2);
-    await insertSpreadAcrossMonth(
-        db.rawDatabase,
-        current.start_ts,
-        current.end_ts,
-        1,
-        12,
-    );
-    await insertSpreadAcrossMonth(
-        db.rawDatabase,
-        m1.start_ts,
-        m1.end_ts,
-        5,
-        11,
-    );
-    const currentInserted = await countRowsInWindow(
-        db.rawDatabase,
-        current.start_ts,
-        current.end_ts,
-    );
-    expect(currentInserted).toBeGreaterThan(0);
-    const expectedM1 = await expectedForWindow(
-        db.rawDatabase,
-        m1.start_ts,
-        m1.end_ts,
-    );
-    const expectedM2 = await expectedForWindow(
-        db.rawDatabase,
-        m2.start_ts,
-        m2.end_ts,
-    );
-    const res = await getEdgeInstances();
-    expect(Object.keys(res)).not.toContain(current.key);
-    expect(expectedM1).toBeGreaterThan(0);
-    expect(res[m1.key]).toBe(expectedM1);
-    expect(res[m2.key]).toBe(expectedM2);
+test('includes current month data up to now alongside previous months', async () => {
+    await db.rawDatabase.transaction(async (trx) => {
+        const current = await getMonthRange(trx, 0);
+        const m1 = await getMonthRange(trx, 1);
+        const m2 = await getMonthRange(trx, 2);
+
+        await insertSpreadAcrossMonth(
+            trx,
+            current.start_ts,
+            current.end_ts,
+            2,
+            8,
+        );
+        await insertSpreadAcrossMonth(trx, m1.start_ts, m1.end_ts, 5, 11);
+
+        const currentInserted = await countRowsInWindow(
+            trx,
+            current.start_ts,
+            current.end_ts,
+        );
+        expect(currentInserted).toBeGreaterThan(0);
+
+        const expectedCurrent = await expectedForWindow(
+            trx,
+            current.start_ts,
+            current.end_ts,
+        );
+        const expectedM1 = await expectedForWindow(trx, m1.start_ts, m1.end_ts);
+        const expectedM2 = await expectedForWindow(trx, m2.start_ts, m2.end_ts);
+
+        const getEdgeInstancesWithTrx = createGetEdgeInstances(trx);
+        const res = await getEdgeInstancesWithTrx();
+        expect(res[current.key]).toBe(expectedCurrent);
+        expect(expectedM1).toBeGreaterThan(0);
+        expect(res[m1.key]).toBe(expectedM1);
+        expect(res[m2.key]).toBe(expectedM2);
+    });
 });

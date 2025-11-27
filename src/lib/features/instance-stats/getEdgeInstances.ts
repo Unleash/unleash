@@ -10,19 +10,31 @@ export const createGetEdgeInstances =
     async () => {
         const rows = await db
             .with('months', (qb) =>
-                qb.fromRaw('generate_series(1, 12) AS gs').select(
+                qb.fromRaw('generate_series(0, 11) AS gs').select(
                     db.raw(
                         "(date_trunc('month', NOW()) - (gs * INTERVAL '1 month'))::timestamptz AS mon_start",
                     ),
                     db.raw(
-                        "(date_trunc('month', NOW()) - ((gs - 1) * INTERVAL '1 month'))::timestamptz AS mon_end",
+                        `
+                            (
+                                CASE
+                                    WHEN gs = 0 THEN NOW()
+                                    ELSE (date_trunc('month', NOW()) - ((gs - 1) * INTERVAL '1 month'))
+                                END
+                            )::timestamptz AS mon_end
+                        `,
                     ),
                     db.raw(
                         "to_char((date_trunc('month', NOW()) - (gs * INTERVAL '1 month')),'YYYY-MM') AS key",
                     ),
                     db.raw(`
                             FLOOR(EXTRACT(EPOCH FROM (
-                                (date_trunc('month', NOW()) - ((gs - 1) * INTERVAL '1 month'))
+                                (
+                                    CASE
+                                        WHEN gs = 0 THEN NOW()
+                                        ELSE (date_trunc('month', NOW()) - ((gs - 1) * INTERVAL '1 month'))
+                                    END
+                                )
                                 - (date_trunc('month', NOW()) - (gs * INTERVAL '1 month'))
                             )) / 300)::int AS expected
                         `),

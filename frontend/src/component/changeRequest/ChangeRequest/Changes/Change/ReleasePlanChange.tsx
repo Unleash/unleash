@@ -182,7 +182,11 @@ const ChangeSafeguard: FC<{
                 ) : (
                     <SafeguardForm
                         onSubmit={onSubmit}
-                        onDelete={() => safeguardId && onDelete(safeguardId)}
+                        onDelete={
+                            safeguardId
+                                ? () => onDelete(safeguardId)
+                                : undefined
+                        }
                         onCancel={() => {}}
                         safeguard={safeguard}
                         environment={environmentName}
@@ -253,8 +257,10 @@ const DeleteSafeguard: FC<{
                 ) : (
                     <SafeguardForm
                         onSubmit={onSubmit}
-                        onDelete={() =>
-                            safeguard?.id && onDelete(safeguard?.id)
+                        onDelete={
+                            safeguard?.id
+                                ? () => onDelete(safeguard?.id)
+                                : undefined
                         }
                         onCancel={() => {}}
                         safeguard={safeguard}

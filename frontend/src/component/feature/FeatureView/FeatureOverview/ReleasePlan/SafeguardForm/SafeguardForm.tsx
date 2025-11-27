@@ -266,7 +266,7 @@ export const SafeguardForm = ({
             <StyledTopRow sx={{ mb: 1 }}>
                 <StyledIcon />
                 <StyledLabel>Pause automation when</StyledLabel>
-                {mode !== 'create' && (
+                {mode !== 'create' && onDelete && (
                     <IconButton
                         onClick={handleDelete}
                         size='small'

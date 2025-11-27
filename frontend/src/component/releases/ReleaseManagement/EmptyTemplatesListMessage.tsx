@@ -1,9 +1,4 @@
-import {
-    Button,
-    styled,
-    Typography,
-    type TypographyProps,
-} from '@mui/material';
+import { Button, styled, Typography } from '@mui/material';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -17,11 +12,8 @@ const Container = styled('article')(({ theme }) => ({
     alignItems: 'center',
     maxWidth: theme.spacing(40),
     margin: 'auto',
-}));
-
-const CenteredText = styled(Typography)<TypographyProps>({
     textAlign: 'center',
-});
+}));
 
 const Buttons = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -36,13 +28,13 @@ export const EmptyTemplatesListMessage = () => {
     return (
         <Container>
             <ReleaseTemplateIcon />
-            <CenteredText component='h2' variant='h3'>
+            <Typography component='h2' variant='h3'>
                 Get started with release templates
-            </CenteredText>
-            <CenteredText component='p' color='text.secondary'>
+            </Typography>
+            <Typography component='p' color='text.secondary'>
                 Control your releases with milestones that can be reused by the
                 entire team.
-            </CenteredText>
+            </Typography>
             <Buttons>
                 <Button
                     component={Link}

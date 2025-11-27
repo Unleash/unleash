@@ -1,4 +1,4 @@
-import { omitIfDefined, omitNestedField } from './omitFields';
+import { omitIfDefined, omitNestedField } from './omitFields.ts';
 
 describe('omitIfDefined', () => {
     test('should omit specified keys from object', () => {
@@ -57,7 +57,9 @@ describe('omitNestedField', () => {
                 },
             },
         };
-        expect(omitNestedField(input, 'impactMetric.labelSelectors.environment')).toEqual({
+        expect(
+            omitNestedField(input, 'impactMetric.labelSelectors.environment'),
+        ).toEqual({
             impactMetric: {
                 id: '123',
                 labelSelectors: {
@@ -85,4 +87,3 @@ describe('omitNestedField', () => {
         expect(omitNestedField(input, 'b.c')).toEqual({ a: 1 });
     });
 });
-

@@ -205,18 +205,7 @@ const ChangeSafeguard: FC<{
                             );
                             return result;
                         })(),
-                        data: (() => {
-                            const data = omitIfDefined(safeguard, [
-                                'id',
-                                'action',
-                            ]);
-                            let result = omitNestedField(data, 'impactMetric.id');
-                            result = omitNestedField(
-                                result,
-                                'impactMetric.labelSelectors.environment',
-                            );
-                            return result;
-                        })(),
+                        data: safeguard,
                     }}
                 />
             </TabPanel>

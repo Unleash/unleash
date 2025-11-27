@@ -15,4 +15,3 @@ export const omitNestedField = (obj: any, path: string) => {
         [first]: omitNestedField(obj[first], rest.join('.')),
     };
 };
-

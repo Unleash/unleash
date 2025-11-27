@@ -1,8 +1,5 @@
-import type { IFeatureStrategy } from './strategy.js';
-import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
-import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
-import type { SafeguardTriggerConditionSchemaOperator } from 'openapi/models/safeguardTriggerConditionSchemaOperator';
-import {SafeguardSchema, SafeguardSchemaAction} from "../openapi";
+import type { IFeatureStrategy } from './strategy.ts';
+import type { SafeguardSchema } from '../openapi';
 
 export interface IReleasePlanTemplate {
     id: string;

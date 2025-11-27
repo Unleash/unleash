@@ -1,5 +1,5 @@
 import type { IFeatureStrategy } from './strategy.ts';
-import type { SafeguardSchema } from '../openapi';
+import type { SafeguardSchema } from '../openapi/index.js';
 
 export interface IReleasePlanTemplate {
     id: string;

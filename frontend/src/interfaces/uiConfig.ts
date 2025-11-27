@@ -93,6 +93,7 @@ export type UiFlags = {
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;
+    enterpriseEdgeUI?: boolean;
 };
 
 export interface IVersionInfo {

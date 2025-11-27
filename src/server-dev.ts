@@ -55,6 +55,7 @@ process.nextTick(async () => {
                         milestoneProgression: true,
                         featureReleasePlans: true,
                         safeguards: true,
+                        enterpriseEdgeUI: true,
                     },
                 },
                 authentication: {

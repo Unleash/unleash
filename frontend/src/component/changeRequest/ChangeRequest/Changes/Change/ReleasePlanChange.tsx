@@ -447,7 +447,6 @@ export const ReleasePlanChange: FC<{
 
     const deleteSafeguardSubmit = async (safeguardId: string) => {
         try {
-            console.log('Safeguard', safeguardId);
             await addChange(projectId, environmentName, {
                 feature: featureName,
                 action: 'deleteSafeguard',

@@ -210,6 +210,8 @@ export const MenuListAccordion: FC<{
                         sx={listItemButtonStyle}
                         selected={active && mode === 'mini'}
                         disableRipple
+                        tabIndex={-1}
+                        component='span'
                         role={undefined}
                     >
                         {mode === 'mini' ? (

@@ -5,7 +5,8 @@ import { MenuListItem } from './ListItems.tsx';
 import { List } from '@mui/material';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
-import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
+import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge.tsx';
+import { NewBadge } from 'component/layout/components/NewBadge/NewBadge.tsx';
 
 export const ConfigurationNavigationList: FC<{
     routes: INavigationMenuItem[];
@@ -27,6 +28,8 @@ export const ConfigurationNavigationList: FC<{
                     badge={
                         showBadge(route?.menu?.mode) ? (
                             <EnterprisePlanBadge />
+                        ) : route.isNew ? (
+                            <NewBadge />
                         ) : null
                     }
                     mode={mode}

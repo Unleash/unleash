@@ -13,6 +13,8 @@ import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
 import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { NewBadge } from 'component/layout/components/NewBadge/NewBadge.tsx';
+import { useRoutes } from './useRoutes.ts';
 
 export const OtherLinksList = () => {
     const { uiConfig } = useUiConfig();
@@ -39,10 +41,17 @@ export const PrimaryNavigationList: FC<{
     onClick: (activeItem: string) => void;
     activeItem?: string;
 }> = ({ mode, setMode, onClick, activeItem }) => {
+    const {
+        routes: { primaryRoutes },
+    } = useRoutes();
+    const newRoute = primaryRoutes.find((route) => route.isNew);
     const PrimaryListItem = ({
         href,
         text,
-    }: Pick<ComponentProps<typeof MenuListItem>, 'href' | 'text'>) => (
+        isNew,
+    }: Pick<ComponentProps<typeof MenuListItem>, 'href' | 'text'> & {
+        isNew?: boolean;
+    }) => (
         <MenuListItem
             href={href}
             text={text}
@@ -50,6 +59,7 @@ export const PrimaryNavigationList: FC<{
             onClick={() => onClick(href)}
             selected={activeItem === href}
             mode={mode}
+            badge={newRoute?.title === text ? <NewBadge /> : null}
         />
     );
 

@@ -37,6 +37,7 @@ import { ConsolidatedProgressionChanges } from './ConsolidatedProgressionChanges
 import { SafeguardForm } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
 import { ReadonlySafeguardDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/ReadonlySafeguardDisplay';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
+import { omitIfDefined } from 'utils/omitFields';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -192,7 +193,12 @@ const ChangeSafeguard: FC<{
             <TabPanel variant='diff'>
                 <EventDiff
                     entry={{
-                        preData: releasePlan?.safeguards?.[0],
+                        preData: omitIfDefined(releasePlan?.safeguards?.[0], [
+                            'id',
+                            'action',
+                            'impactMetric.id',
+                            'impactMetric.labelSelectors.environment',
+                        ]),
                         data: safeguard,
                     }}
                 />

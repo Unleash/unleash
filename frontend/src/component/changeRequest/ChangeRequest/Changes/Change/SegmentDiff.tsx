@@ -3,12 +3,9 @@ import type {
     IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
 import type { FC } from 'react';
-import omit from 'lodash.omit';
 import type { ISegment } from 'interfaces/segment';
 import { EventDiff } from 'component/events/EventDiff/EventDiff.tsx';
-
-const omitIfDefined = (obj: any, keys: string[]) =>
-    obj ? omit(obj, keys) : obj;
+import { omitIfDefined } from 'utils/omitFields';
 
 export const SegmentDiff: FC<{
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;

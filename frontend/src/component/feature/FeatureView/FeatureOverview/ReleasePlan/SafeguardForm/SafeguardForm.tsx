@@ -51,6 +51,7 @@ interface ISafeguardFormProps {
     onDelete?: () => void;
     safeguard?: ISafeguard;
     environment: string;
+    skipConfirmation?: boolean;
 }
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
@@ -87,6 +88,7 @@ export const SafeguardForm = ({
     onDelete,
     safeguard,
     environment,
+    skipConfirmation = false,
 }: ISafeguardFormProps) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
     const projectId = useRequiredPathParam('projectId');
@@ -211,7 +213,7 @@ export const SafeguardForm = ({
             return;
         }
 
-        if (isChangeRequestConfigured(environment)) {
+        if (isChangeRequestConfigured(environment) && !skipConfirmation) {
             setDialogOpen(true);
             return;
         }

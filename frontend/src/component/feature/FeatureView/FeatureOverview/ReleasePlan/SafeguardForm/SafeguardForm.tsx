@@ -276,12 +276,11 @@ export const SafeguardForm = ({
     const hasPendingChange =
         pendingSafeguardChange?.action === 'changeSafeguard';
 
-    const badge: ReactNode =
-        hasPendingDelete ? (
-            <Badge color='error'>Deleted in draft</Badge>
-        ) : hasPendingChange ? (
-            <Badge color='warning'>Modified in draft</Badge>
-        ) : undefined;
+    const badge: ReactNode = hasPendingDelete ? (
+        <Badge color='error'>Deleted in draft</Badge>
+    ) : hasPendingChange ? (
+        <Badge color='warning'>Modified in draft</Badge>
+    ) : undefined;
 
     return (
         <StyledFormContainer onSubmit={handleSubmit} mode={mode}>

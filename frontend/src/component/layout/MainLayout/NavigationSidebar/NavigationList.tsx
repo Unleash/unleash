@@ -13,7 +13,7 @@ import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
 import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { NewBadge } from 'component/layout/components/NewBadge/NewBadge.tsx';
+import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
 import { useRoutes } from './useRoutes.ts';
 
 export const OtherLinksList = () => {
@@ -61,7 +61,7 @@ export const PrimaryNavigationList: FC<{
             mode={mode}
             badge={
                 newRoute?.title.toLowerCase() === text.toLowerCase() ? (
-                    <NewBadge />
+                    <NewFeatureBadge />
                 ) : null
             }
         />

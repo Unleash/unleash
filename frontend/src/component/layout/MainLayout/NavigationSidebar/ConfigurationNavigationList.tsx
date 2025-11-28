@@ -6,7 +6,7 @@ import { List } from '@mui/material';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
 import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge.tsx';
-import { NewBadge } from 'component/layout/components/NewBadge/NewBadge.tsx';
+import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
 
 export const ConfigurationNavigationList: FC<{
     routes: INavigationMenuItem[];
@@ -29,7 +29,7 @@ export const ConfigurationNavigationList: FC<{
                         showBadge(route?.menu?.mode) ? (
                             <EnterprisePlanBadge />
                         ) : route.isNew ? (
-                            <NewBadge />
+                            <NewFeatureBadge />
                         ) : null
                     }
                     mode={mode}

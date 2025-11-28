@@ -17,7 +17,7 @@ import SignOutIcon from '@mui/icons-material/ExitToApp';
 import type { Theme } from '@mui/material/styles/createTheme';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { NavigationMode } from './NavigationMode.tsx';
-import { NewBadge } from 'component/layout/components/NewBadge/NewBadge.tsx';
+import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
@@ -244,7 +244,7 @@ export const MenuListAccordion: FC<{
                                         {title}
                                     </CappedText>
                                     {hasNewChild && !expanded ? (
-                                        <NewBadge />
+                                        <NewFeatureBadge />
                                     ) : null}
                                 </StyledListItemText>
                             </>

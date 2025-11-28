@@ -3,6 +3,10 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import TripOriginIcon from '@mui/icons-material/TripOrigin';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
+import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
+import { formatAccessText } from 'utils/formatAccessText';
 
 export type MilestoneProgressionStatus = 'paused' | 'active';
 
@@ -24,7 +28,7 @@ const BaseStatusButton = styled('button')<{ disabled?: boolean }>(
         gap: theme.spacing(1),
         padding: 0,
         paddingRight: theme.spacing(1),
-        cursor: 'pointer',
+        cursor: disabled ? 'default' : 'pointer',
         fontSize: theme.fontSizes.smallerBody,
         lineHeight: theme.fontSizes.smallerBody,
         fontWeight: theme.fontWeight.medium,
@@ -37,9 +41,6 @@ const BaseStatusButton = styled('button')<{ disabled?: boolean }>(
             height: theme.spacing(3),
             width: theme.spacing(3),
         },
-        ...(disabled && {
-            pointerEvents: 'none',
-        }),
     }),
 );
 
@@ -107,6 +108,8 @@ const CompletedStatusButton = styled(BaseStatusButton)(({ theme }) => ({
 interface IReleasePlanMilestoneStatusProps {
     status: MilestoneStatus;
     onStartMilestone: () => void;
+    projectId?: string;
+    environmentId?: string;
 }
 
 const getStatusText = (
@@ -156,28 +159,50 @@ const getStatusButton = (
 export const ReleasePlanMilestoneStatus = ({
     status,
     onStartMilestone,
+    projectId,
+    environmentId,
 }: IReleasePlanMilestoneStatusProps) => {
     const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
+    const hasAccess =
+        projectId && environmentId
+            ? useHasProjectEnvironmentAccess(
+                  UPDATE_FEATURE_STRATEGY,
+                  projectId,
+                  environmentId,
+              )
+            : true;
 
     const StatusButton = getStatusButton(status, milestoneProgressionsEnabled);
     const statusText = getStatusText(status, milestoneProgressionsEnabled);
     const statusIcon = getStatusIcon(status);
-    const disabled = status.type === 'active' || status.type === 'paused';
+    const disabledStatus = status.type === 'active' || status.type === 'paused';
+    const disabled = disabledStatus || !hasAccess;
     const isScheduled =
         milestoneProgressionsEnabled &&
         status.type === 'not-started' &&
         status.scheduledAt;
 
-    return (
-        <StatusButton
-            onClick={(e) => {
-                e.stopPropagation();
-                onStartMilestone();
-            }}
-            disabled={disabled}
-        >
+    const handleClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!disabled) {
+            onStartMilestone();
+        }
+    };
+
+    const button = (
+        <StatusButton onClick={handleClick} disabled={disabled}>
             {!isScheduled && statusIcon}
             {statusText}
         </StatusButton>
     );
+
+    if (!hasAccess && !disabledStatus) {
+        return (
+            <TooltipResolver title={formatAccessText(false)} arrow>
+                {button}
+            </TooltipResolver>
+        );
+    } else {
+        return button;
+    }
 };

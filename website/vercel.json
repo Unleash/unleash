@@ -288,82 +288,82 @@
     },
     {
       "source": "/addons",
-      "destination": "/reference/integrations",
+      "destination": "/integrate",
       "permanent": true
     },
     {
       "source": "/reference/addons",
-      "destination": "/reference/integrations",
+      "destination": "/integrate",
       "permanent": true
     },
     {
       "source": "/addons/datadog",
-      "destination": "/reference/integrations/datadog",
+      "destination": "/integrate/datadog",
       "permanent": true
     },
     {
       "source": "/reference/addons/datadog",
-      "destination": "/reference/integrations/datadog",
+      "destination": "/integrate/datadog",
       "permanent": true
     },
     {
       "source": "/addons/slack",
-      "destination": "/reference/integrations/slack",
+      "destination": "/integrate/slack",
       "permanent": true
     },
     {
       "source": "/reference/addons/slack",
-      "destination": "/reference/integrations/slack",
+      "destination": "/integrate/slack",
       "permanent": true
     },
     {
       "source": "/addons/slack-app",
-      "destination": "/reference/integrations/slack-app",
+      "destination": "/integrate/slack-app",
       "permanent": true
     },
     {
       "source": "/reference/addons/slack-app",
-      "destination": "/reference/integrations/slack-app",
+      "destination": "/integrate/slack-app",
       "permanent": true
     },
     {
       "source": "/addons/teams",
-      "destination": "/reference/integrations/teams",
+      "destination": "/integrate/teams",
       "permanent": true
     },
     {
       "source": "/reference/addons/teams",
-      "destination": "/reference/integrations/teams",
+      "destination": "/integrate/teams",
       "permanent": true
     },
     {
       "source": "/addons/webhook",
-      "destination": "/reference/integrations/webhook",
+      "destination": "/integrate/webhook",
       "permanent": true
     },
     {
       "source": "/reference/addons/webhook",
-      "destination": "/reference/integrations/webhook",
+      "destination": "/integrate/webhook",
       "permanent": true
     },
     {
       "source": "/integrations/integrations",
-      "destination": "/reference/integrations",
+      "destination": "/integrate",
       "permanent": true
     },
     {
       "source": "/integrations",
-      "destination": "/reference/integrations",
+      "destination": "/integrate",
       "permanent": true
     },
     {
       "source": "/integrations/jira_server_plugin_installation",
-      "destination": "/reference/integrations/jira-server-plugin-installation",
+      "destination": "/integrate/jira-server-plugin-installation",
       "permanent": true
     },
     {
       "source": "/integrations/jira_server_plugin_usage",
-      "destination": "/reference/integrations/jira-server-plugin-usage",
+      "destination": "/integrate/jira-server-plugin-usage",
       "permanent": true
     },
     {
@@ -1433,7 +1433,17 @@
     },
     {
       "source": "/reference/mcp",
-      "destination": "/mcp",
+      "destination": "/integrate/mcp",
+      "permanent": true
+    },
+    {
+      "source": "/reference/integrations/:path*",
+      "destination": "/integrate/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/integrations",
+      "destination": "/integrate",
       "permanent": true
     }
   ]

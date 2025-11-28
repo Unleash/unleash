@@ -28,7 +28,7 @@ Alternatively, you can mark one or more flags as stale from the project overview
 
 Marking a flag as stale allows you to deprecate a feature flag without removing the active configuration for connected applications. You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [project status dashboard](#project-status).
 
-Marking a flag as stale generates a `feature-stale-on` [event](/reference/events#feature-stale-on). You can use [an integration](/reference/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
+Marking a flag as stale generates a `feature-stale-on` [event](/reference/events#feature-stale-on). You can use [an integration](/integrate) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
 
 To find stale and potentially stale flags in a project, apply the **State** filter in the **Feature flags** list.
 

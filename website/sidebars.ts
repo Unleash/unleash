@@ -635,29 +635,29 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/integrations/index',
+                        id: 'integrate/index',
                     },
                     items: [
-                        'reference/integrations/datadog',
+                        'integrate/datadog',
                         {
                             type: 'category',
                             label: 'Jira server',
                             items: [
-                                'reference/integrations/jira-server-plugin-installation',
-                                'reference/integrations/jira-server-plugin-usage',
+                                'integrate/jira-server-plugin-installation',
+                                'integrate/jira-server-plugin-usage',
                             ],
                         },
                         {
                             type: 'category',
                             label: 'Jira cloud',
                             items: [
-                                'reference/integrations/jira-cloud-plugin-installation',
-                                'reference/integrations/jira-cloud-plugin-usage',
+                                'integrate/jira-cloud-plugin-installation',
+                                'integrate/jira-cloud-plugin-usage',
                             ],
                         },
-                        'reference/integrations/slack-app',
-                        'reference/integrations/teams',
-                        'reference/integrations/webhook',
+                        'integrate/slack-app',
+                        'integrate/teams',
+                        'integrate/webhook',
                         {
                             type: 'doc',
                             label: 'Terraform',
@@ -666,7 +666,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'doc',
                             label: 'MCP',
-                            id: 'generated/mcp',
+                            id: 'generated/integrate/mcp',
                         },
                     ],
                 },

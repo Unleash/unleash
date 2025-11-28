@@ -8,7 +8,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 :::info Deprecated
 
-The Jira Server plugin is **deprecated**, please use the [Unleash Jira Cloud plugin](/reference/integrations/jira-cloud-plugin-installation) instead
+The Jira Server plugin is **deprecated**, please use the [Unleash Jira Cloud plugin](/integrate/jira-cloud-plugin-installation) instead
 
 :::
 
@@ -74,7 +74,7 @@ server configured for a specific Jira project.
 
 ![A table marked Unleash Server Configuration, listing Unleash server instances.](/img/jira_server_manage_servers.png)
 
-Once you have configured at least one Unleash server, your users should be ready to [use the Jira Server plugin](/reference/integrations/jira-server-plugin-usage)
+Once you have configured at least one Unleash server, your users should be ready to [use the Jira Server plugin](/integrate/jira-server-plugin-usage)
 
 ### Edit existing servers
 

@@ -378,7 +378,7 @@ Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/a
 
 ## Flag Automation and Workflow Integration for Django Apps
 
-An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. Our [Unleash Jira plugin](/reference/integrations/jira-cloud-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
+An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. Our [Unleash Jira plugin](/integrate/jira-cloud-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
 
 It’s common for teams to have a development phase, QA/testing, and then a production release. Let’s say the changes we’ve made in our Django project must go through a typical development workflow.
 

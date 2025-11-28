@@ -128,7 +128,7 @@ You can assign the following root permissions:
 
 | Permission Name     | Description                        |
 |---------------------|------------------------------------|
-| Create integrations | Create [integrations](./integrations). |
+| Create integrations | Create [integrations](/integrate). |
 | Update integrations | Update integrations. |
 | Delete integrations | Delete integrations. |
 

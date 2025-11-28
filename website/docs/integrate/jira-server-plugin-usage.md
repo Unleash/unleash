@@ -8,7 +8,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 :::info Deprecated
 
-The Jira Server plugin is **deprecated**, please use the [Unleash Jira Cloud plugin](/reference/integrations/jira-cloud-plugin-installation) instead
+The Jira Server plugin is **deprecated**, please use the [Unleash Jira Cloud plugin](/integrate/jira-cloud-plugin-installation) instead
 
 :::
 

@@ -339,7 +339,7 @@ Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/a
 
 An advanced use case for leveraging feature flags at scale is automating them as part of your development workflow.
 
-It’s common for teams to have a development phase, then QA/testing, and then a production release. Our [Unleash Jira plugin](/reference/integrations/jira-cloud-plugin-installation) can connect to your Jira server or cloud to create feature flags automatically during the project phases.
+It’s common for teams to have a development phase, then QA/testing, and then a production release. Our [Unleash Jira plugin](/integrate/jira-cloud-plugin-installation) can connect to your Jira server or cloud to create feature flags automatically during the project phases.
 
 As your code progresses through development and Jira tickets are updated, the relevant flag can turn on in a development environment. The next stage could be Canary deployments for testing with certain groups, like a QA team or beta users. The flag could be automatically turned on in QA and/or rolled out to target audiences in production.
 

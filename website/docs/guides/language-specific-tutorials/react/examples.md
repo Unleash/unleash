@@ -434,7 +434,7 @@ Learn more about [how to configure your change requests](/reference/change-reque
 
 ## Flag Automation & Workflow Integration for React Apps
 
-An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. Our [Unleash Jira plugin](/reference/integrations/jira-cloud-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
+An advanced use case for leveraging feature flags at scale is flag automation in your development workflow. Many organizations use tools like Jira for managing projects and tracking releases across teams. Our [Unleash Jira plugin](/integrate/jira-cloud-plugin-installation) helps to manage feature flag lifecycles associated with your projects.
 
 Let’s say the changes we’ve made in our React tutorial project need to go through a typical development workflow.
 

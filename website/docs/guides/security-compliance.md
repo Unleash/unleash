@@ -172,7 +172,7 @@ In the Unleash Admin UI, go to **Admin settings > Event log** to see chronologic
 
 ### Integrate SIEM for advanced audit compliance
 
-For more advanced implementations, integrate Unleash event logs directly into broader Security Information and Event Management (SIEM) systems. This setup enables real-time monitoring and creates a holistic view of system interactions across multiple platforms. By mapping Unleash audit data to other enterprise security logs, organizations can detect subtle patterns and potential security anomalies that might go unnoticed in isolated systems. You can send your logs to tools like [Datadog](/reference/integrations/datadog), [Sentry](https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/integrations/unleash/), Splunk, S3, and Microsoft Sentinel. SIEM integrations take audit logging to the next level to capture more value out of the data that Unleash provides you.
+For more advanced implementations, integrate Unleash event logs directly into broader Security Information and Event Management (SIEM) systems. This setup enables real-time monitoring and creates a holistic view of system interactions across multiple platforms. By mapping Unleash audit data to other enterprise security logs, organizations can detect subtle patterns and potential security anomalies that might go unnoticed in isolated systems. You can send your logs to tools like [Datadog](/integrate/datadog), [Sentry](https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/integrations/unleash/), Splunk, S3, and Microsoft Sentinel. SIEM integrations take audit logging to the next level to capture more value out of the data that Unleash provides you.
 
 ### Leverage access logs for broader auditing
 

@@ -39,7 +39,7 @@ const cardsData = [
         description:
             'Connect Unleash to your existing workflows. Integrate with popular tools like GitHub, Slack, CI/CD pipelines.',
         icon: <IntegrationsIcon />,
-        href: '/reference/integrations',
+        href: '/integrate',
     },
     {
         title: 'Get in touch',

@@ -324,6 +324,12 @@ export function registerPrometheusMetrics(
         fetchValue: () => stores.userStore.count(),
         ttlMs: minutesToMilliseconds(15),
     });
+    const usersReadOnly = createGauge({
+        name: 'users_read_only_total',
+        help: 'Number of read-only users (users with no events or only FEATURE_FAVORITED events)',
+        fetchValue: () => instanceStatsService.getReadOnlyUsers(),
+        ttlMs: hoursToMilliseconds(24),
+    });
     const trafficTotal = createGauge({
         name: 'traffic_total',
         help: 'Traffic used current month',

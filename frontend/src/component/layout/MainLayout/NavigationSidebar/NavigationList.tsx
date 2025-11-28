@@ -81,7 +81,7 @@ export const PrimaryNavigationList: FC<{
                 mode={mode}
                 setMode={setMode}
                 activeItem={activeItem}
-                onClick={() => onClick('configure')}
+                onClick={onClick}
             />
         </List>
     );

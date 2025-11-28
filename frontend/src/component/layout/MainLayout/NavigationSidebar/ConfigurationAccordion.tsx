@@ -10,7 +10,7 @@ type ConfigurationAccordionProps = {
     mode: NavigationMode;
     setMode;
     activeItem?: string;
-    onClick?: () => void;
+    onClick?: (activeItemPath: string) => void;
 };
 
 export const ConfigurationAccordion: FC<ConfigurationAccordionProps> = ({
@@ -46,12 +46,12 @@ export const ConfigurationAccordion: FC<ConfigurationAccordionProps> = ({
         }
     };
 
-    const onItemClick = () => {
+    const onItemClick = (activeItemPath: string) => {
         if (temporarilyExpanded) {
             setTemporarilyExpanded(false);
             setMode('mini');
         }
-        onClick?.();
+        onClick?.(activeItemPath);
     };
 
     return (

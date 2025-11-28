@@ -102,6 +102,7 @@ const MilestoneListRendererCore = ({
                                     milestoneName={milestone.name}
                                     status={status}
                                     badge={badge}
+                                    environment={plan.environment}
                                 />
                             )}
                         </MilestoneAutomationSection>

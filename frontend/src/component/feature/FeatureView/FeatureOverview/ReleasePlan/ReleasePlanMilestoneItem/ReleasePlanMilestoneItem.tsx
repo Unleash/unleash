@@ -182,6 +182,7 @@ export const ReleasePlanMilestoneItem = ({
             onCloseProgressionForm={handleCloseProgressionForm}
             onChangeProgression={handleChangeProgression}
             onDeleteProgression={onDeleteProgression}
+            environment={environment}
         />
     ) : undefined;
 

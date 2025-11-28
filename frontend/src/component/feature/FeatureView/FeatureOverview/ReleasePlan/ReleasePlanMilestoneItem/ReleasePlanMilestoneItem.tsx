@@ -195,6 +195,8 @@ export const ReleasePlanMilestoneItem = ({
                 onStartMilestone={onStartMilestone}
                 automationSection={automationSection}
                 previousMilestoneStatus={previousMilestoneStatus}
+                projectId={projectId}
+                environmentId={environment}
             />
             <ConditionallyRender
                 condition={isNotLastMilestone}

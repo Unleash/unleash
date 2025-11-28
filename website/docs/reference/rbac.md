@@ -23,7 +23,7 @@ Unleash implements role-based access control on two levels:
 ## Predefined roles
 
 Unleash comes with a set of predefined roles. Root roles are available to all Unleash
-users, while the Project roles are only available to [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) users. The following table lists the roles, what they do, and what plans they are available in. Additionally, [Enterprise](https://www.getunleash.io/pricing) users can create their
+users, while the Project roles are only available to [Pro](/support/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) users. The following table lists the roles, what they do, and what plans they are available in. Additionally, [Enterprise](https://www.getunleash.io/pricing) users can create their
 own [custom root roles](#custom-root-roles) and [custom project roles](#custom-project-roles).
 
 | Role       | Scope   | Description                                                                                                                                                                                                                                                                                                                                                         | Availability       |
@@ -31,8 +31,8 @@ own [custom root roles](#custom-root-roles) and [custom project roles](#custom-p
 | **Admin**  | Root    | Users with the root admin role have superuser access to Unleash and can perform any operation within the Unleash platform.                                                                                                                                                                                                                                          | All versions       |
 | **Editor** | Root    | Users with the root editor role have access to most features in Unleash, but they cannot manage users and roles in the root scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects. Users with the editor role will also get access to most permissions on the default project by default. | All versions       |
 | **Viewer** | Root    | Users with the root viewer role can only read root resources in Unleash. Viewers can be added to specific projects as project members. Users with the viewer role may not view API tokens.                                                                                                                                                                          | All versions       |
-| **Owner**  | Project | Users with the project owner role have full control over the project, and can add and manage other users within the project context, manage feature flags within the project, and control advanced project features like archiving and deleting the project.                                                                                                      | [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) |
-| **Member** | Project | Users with the project member role are allowed to view, create, and update feature flags within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project.                                                                                                                               | [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) |
+| **Owner**  | Project | Users with the project owner role have full control over the project, and can add and manage other users within the project context, manage feature flags within the project, and control advanced project features like archiving and deleting the project.                                                                                                      | [Pro](/support/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) |
+| **Member** | Project | Users with the project member role are allowed to view, create, and update feature flags within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project.                                                                                                                               | [Pro](/support/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) |
 
 ## Custom root roles
 
@@ -128,7 +128,7 @@ You can assign the following root permissions:
 
 | Permission Name     | Description                        |
 |---------------------|------------------------------------|
-| Create integrations | Create [integrations](./integrations). |
+| Create integrations | Create [integrations](/integrate). |
 | Update integrations | Update integrations. |
 | Delete integrations | Delete integrations. |
 
@@ -337,7 +337,7 @@ You can’t add a group with a [custom root role](#custom-root-roles) to a proje
 :::
 
 You can integrate user groups with your single sign-on (SSO) provider to automatically manage user assignments.
-Note that this just-in-time process updates groups only when a user logs in, which differs from a full provisioning system like [SCIM](/how-to/how-to-setup-provisioning-with-okta) that syncs all user information proactively.
+Note that this just-in-time process updates groups only when a user logs in, which differs from a full provisioning system like [SCIM](/provisioning/how-to-setup-provisioning-with-okta) that syncs all user information proactively.
 
 When a user logs in through SSO, they are automatically added to or removed from a user group based on their SSO group membership. Manually added users are not affected by the SSO sync.
 
@@ -386,8 +386,8 @@ You must be an Admin in Unleash to perform these steps.
 The next time a user who belongs to one of the linked SSO groups logs in, they are automatically added to the user group. If they have been removed from the SSO group, their access will be revoked on their next login.
 
 [^1]: The project-level permission is still required for the [**create/overwrite variants
-** (PUT)](/reference/api/unleash/overwrite-feature-variants) and [**update variants
-** (PATCH)](/reference/api/unleash/patch-feature-variants) API endpoints, but it is not used for anything
+** (PUT)](/api/overwrite-feature-variants) and [**update variants
+** (PATCH)](/api/patch-feature-variants) API endpoints, but it is not used for anything
 within the admin UI. The API endpoints have been superseded by the [**create/overwrite environment variants
-** (PUT)](/reference/api/unleash/overwrite-feature-variants-on-environments) and [**update environment
-variants** (PATCH)](/reference/api/unleash/patch-environments-feature-variants) endpoints, respectively.
+** (PUT)](/api/overwrite-feature-variants-on-environments) and [**update environment
+variants** (PATCH)](/api/patch-environments-feature-variants) endpoints, respectively.

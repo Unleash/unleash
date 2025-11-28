@@ -25,7 +25,7 @@ const cardsData = [
         description:
             'With over 30 SDKs, we enable fast and secure feature flagging across all major programming languages.',
         icon: <SdksIcon />,
-        href: '/reference/sdks',
+        href: '/sdks',
     },
     {
         title: 'Unleash Academy',
@@ -39,7 +39,7 @@ const cardsData = [
         description:
             'Connect Unleash to your existing workflows. Integrate with popular tools like GitHub, Slack, CI/CD pipelines.',
         icon: <IntegrationsIcon />,
-        href: '/reference/integrations',
+        href: '/integrate',
     },
     {
         title: 'Get in touch',

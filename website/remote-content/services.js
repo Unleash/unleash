@@ -7,10 +7,6 @@ import {
 } from './shared';
 
 const DOCS = mapObject(enrich)({
-    'unleash-proxy': {
-        sidebarName: 'Unleash Proxy',
-        slugName: 'unleash-proxy',
-    },
     'unleash-edge': {
         sidebarName: 'Unleash Edge',
         searchPriority: 'high',
@@ -44,7 +40,7 @@ const DOCS = mapObject(enrich)({
     },
     'unleash-mcp': {
         sidebarName: 'MCP',
-        slugName: 'mcp',
+        slugName: 'integrate/mcp',
     },
 });
 
@@ -56,7 +52,7 @@ const getAdmonitions = (data) => {
 
 const modifyContent2 = modifyContent({
     getRepoDataFn: getRepoData(DOCS),
-    urlPath: '/reference/',
+    urlPath: '/',
     getAdditionalAdmonitions: getAdmonitions,
 });
 

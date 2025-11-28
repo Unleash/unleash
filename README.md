@@ -122,7 +122,7 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 
 📚 [Visit the documentation](https://docs.getunleash.io/) for more in-depth descriptions, how-to guides, and more.
 
-📖 Learn more about the principles of building and scaling [feature flag](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices) solutions.
+📖 Learn more about the principles of building and scaling [feature flag](https://docs.getunleash.io/guides/feature-flag-best-practices) solutions.
 
 <br/>
 
@@ -186,7 +186,7 @@ If you're looking for one of the following features, please take a look at our [
 
 <img src="./website/static/img/unleash-architecture-edge.png" title="Unleash System Overview" />
 
-Read more in the [_system overview_ section of the Unleash documentation](https://docs.getunleash.io/understanding-unleash/unleash-overview#system-overview).
+Read more in the [_system overview_ section of the Unleash documentation](https://docs.getunleash.io/get-started/unleash-overview#system-overview).
 
 <br/>
 

@@ -21,8 +21,8 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 Our implementation supports user and group provisioning, but not password syncing or role mapping. It uses soft-deletes to preserve audit logs when you deprovision users.
 
-See our how-to guides on setting up provisioning for [Okta](../how-to/how-to-setup-provisioning-with-okta.md) or [Entra](../how-to/how-to-setup-provisioning-with-entra.md).
+See our how-to guides on setting up provisioning for [Okta](/provisioning/how-to-setup-provisioning-with-okta) or [Entra](/provisioning/how-to-setup-provisioning-with-entra).
 
 ## Retain admin access
 
-When setting up a SCIM integration with Unleash, you must configure a method for role management to avoid being locked out of admin accounts. To do this, either assign the admin role to an IdP group that is synced with Unleash or create a dedicated, non-SCIM managed recovery admin account for emergency use. For full instructions, including what to do if you're already locked out, see our complete [troubleshooting guide](/troubleshooting#got-locked-out-of-an-admin-account-after-configuring-scim).
+When setting up a SCIM integration with Unleash, you must configure a method for role management to avoid being locked out of admin accounts. To do this, either assign the admin role to an IdP group that is synced with Unleash or create a dedicated, non-SCIM managed recovery admin account for emergency use. For full instructions, including what to do if you're already locked out, see our complete [troubleshooting guide](/support/troubleshooting#got-locked-out-of-an-admin-account-after-configuring-scim).

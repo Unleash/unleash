@@ -24,7 +24,7 @@ For instance: When using the [gradual rollout activation strategy](../reference/
 
 :::note Availability
 
-**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.0+` and [SDK compatibility](../reference/sdks#feature-compatibility-in-backend-sdks).
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.0+` and [SDK compatibility](../sdks#feature-compatibility-in-backend-sdks).
 
 :::
 

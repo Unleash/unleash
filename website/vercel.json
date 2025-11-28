@@ -23,7 +23,7 @@
           "value": "www.featureflagbook.com"
         }
       ],
-      "destination": "https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices",
+      "destination": "https://docs.getunleash.io/guides/feature-flag-best-practices",
       "permanent": false
     },
     {
@@ -48,7 +48,27 @@
     },
     {
       "source": "/how-to/how-to-create-api-tokens",
-      "destination": "/reference/api-tokens-and-client-keys#create-an-api-token",
+      "destination": "/guides/how-to-create-api-tokens",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-run-the-unleash-proxy",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-schedule-feature-releases",
+      "destination": "/guides/how-to-schedule-feature-releases",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-synchronize-unleash-instances",
+      "destination": "/guides/how-to-synchronize-unleash-instances",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/unleash-edge-quickstart",
+      "destination": "/guides/unleash-edge-quickstart",
       "permanent": true
     },
     {
@@ -78,7 +98,12 @@
     },
     {
       "source": "/topics/a-b-testing",
-      "destination": "/feature-flag-tutorials/use-cases/a-b-testing",
+      "destination": "/guides/a-b-testing",
+      "permanent": true
+    },
+    {
+      "source": "/topics/feature-flags/feature-flag-best-practices",
+      "destination": "/guides/feature-flag-best-practices",
       "permanent": true
     },
     {
@@ -87,13 +112,13 @@
       "permanent": true
     },
     {
-      "source": "/reference/api/unleash",
-      "destination": "/api-overview",
+      "source": "/api/unleash",
+      "destination": "/api",
       "permanent": true
     },
     {
       "source": "/api/open_api",
-      "destination": "/api-overview",
+      "destination": "/api",
       "permanent": true
     },
     {
@@ -143,7 +168,7 @@
     },
     {
       "source": "/how-to/",
-      "destination": "/what-is-a-feature-flag",
+      "destination": "/get-started/what-is-a-feature-flag",
       "permanent": true
     },
     {
@@ -263,202 +288,202 @@
     },
     {
       "source": "/addons",
-      "destination": "/reference/integrations",
+      "destination": "/integrate",
       "permanent": true
     },
     {
       "source": "/reference/addons",
-      "destination": "/reference/integrations",
+      "destination": "/integrate",
       "permanent": true
     },
     {
       "source": "/addons/datadog",
-      "destination": "/reference/integrations/datadog",
+      "destination": "/integrate/datadog",
       "permanent": true
     },
     {
       "source": "/reference/addons/datadog",
-      "destination": "/reference/integrations/datadog",
+      "destination": "/integrate/datadog",
       "permanent": true
     },
     {
       "source": "/addons/slack",
-      "destination": "/reference/integrations/slack",
+      "destination": "/integrate/slack",
       "permanent": true
     },
     {
       "source": "/reference/addons/slack",
-      "destination": "/reference/integrations/slack",
+      "destination": "/integrate/slack",
       "permanent": true
     },
     {
       "source": "/addons/slack-app",
-      "destination": "/reference/integrations/slack-app",
+      "destination": "/integrate/slack-app",
       "permanent": true
     },
     {
       "source": "/reference/addons/slack-app",
-      "destination": "/reference/integrations/slack-app",
+      "destination": "/integrate/slack-app",
       "permanent": true
     },
     {
       "source": "/addons/teams",
-      "destination": "/reference/integrations/teams",
+      "destination": "/integrate/teams",
       "permanent": true
     },
     {
       "source": "/reference/addons/teams",
-      "destination": "/reference/integrations/teams",
+      "destination": "/integrate/teams",
       "permanent": true
     },
     {
       "source": "/addons/webhook",
-      "destination": "/reference/integrations/webhook",
+      "destination": "/integrate/webhook",
       "permanent": true
     },
     {
       "source": "/reference/addons/webhook",
-      "destination": "/reference/integrations/webhook",
+      "destination": "/integrate/webhook",
       "permanent": true
     },
     {
       "source": "/integrations/integrations",
-      "destination": "/reference/integrations",
+      "destination": "/integrate",
       "permanent": true
     },
     {
       "source": "/integrations",
-      "destination": "/reference/integrations",
+      "destination": "/integrate",
       "permanent": true
     },
     {
       "source": "/integrations/jira_server_plugin_installation",
-      "destination": "/reference/integrations/jira-server-plugin-installation",
+      "destination": "/integrate/jira-server-plugin-installation",
       "permanent": true
     },
     {
       "source": "/integrations/jira_server_plugin_usage",
-      "destination": "/reference/integrations/jira-server-plugin-usage",
+      "destination": "/integrate/jira-server-plugin-usage",
       "permanent": true
     },
     {
       "source": "/sdks",
-      "destination": "/reference/sdks",
+      "destination": "/sdks",
       "permanent": true
     },
     {
       "source": "/user_guide/client-sdk",
-      "destination": "/reference/sdks",
+      "destination": "/sdks",
       "permanent": true
     },
     {
       "source": "/client-sdk",
-      "destination": "/reference/sdks",
+      "destination": "/sdks",
       "permanent": true
     },
     {
       "source": "/user_guide/connect_sdk",
-      "destination": "/reference/sdks",
+      "destination": "/sdks",
       "permanent": true
     },
     {
       "source": "/sdks/community",
-      "destination": "/reference/sdks",
+      "destination": "/sdks",
       "permanent": true
     },
     {
       "source": "/sdks/go_sdk",
-      "destination": "/reference/sdks/go",
+      "destination": "/sdks/go",
       "permanent": true
     },
     {
       "source": "/sdks/java_sdk",
-      "destination": "/reference/sdks/java",
+      "destination": "/sdks/java",
       "permanent": true
     },
     {
       "source": "/sdks/node_sdk",
-      "destination": "/reference/sdks/node",
+      "destination": "/sdks/node",
       "permanent": true
     },
     {
       "source": "/sdks/php_sdk",
-      "destination": "/reference/sdks/php",
+      "destination": "/sdks/php",
       "permanent": true
     },
     {
       "source": "/sdks/python_sdk",
-      "destination": "/reference/sdks/python",
+      "destination": "/sdks/python",
       "permanent": true
     },
     {
       "source": "/sdks/dot_net_sdk",
-      "destination": "/reference/sdks/dotnet",
+      "destination": "/sdks/dotnet",
       "permanent": true
     },
     {
       "source": "/sdks/ruby_sdk",
-      "destination": "/reference/sdks/ruby",
+      "destination": "/sdks/ruby",
       "permanent": true
     },
     {
       "source": "/sdks/android_proxy_sdk",
-      "destination": "/reference/sdks/android",
+      "destination": "/sdks/android",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-ios",
-      "destination": "/reference/sdks/ios",
+      "destination": "/sdks/ios",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-javascript",
-      "destination": "/reference/sdks/javascript-browser",
+      "destination": "/sdks/javascript-browser",
       "permanent": true
     },
     {
       "source": "/sdks/javascript-browser",
-      "destination": "/reference/sdks/javascript-browser",
+      "destination": "/sdks/javascript-browser",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-react",
-      "destination": "/reference/sdks/react",
+      "destination": "/sdks/react",
       "permanent": true
     },
     {
       "source": "/sdks/react",
-      "destination": "/reference/sdks/react",
+      "destination": "/sdks/react",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-vue",
-      "destination": "/reference/sdks/vue",
+      "destination": "/sdks/vue",
       "permanent": true
     },
     {
       "source": "/sdks/proxy-svelte",
-      "destination": "/reference/sdks/svelte",
+      "destination": "/sdks/svelte",
       "permanent": true
     },
     {
       "source": "/user_guide/native_apps",
-      "destination": "/reference/unleash-proxy",
+      "destination": "/unleash-edge",
       "permanent": true
     },
     {
       "source": "/user_guide/proxy-api",
-      "destination": "/reference/unleash-proxy",
+      "destination": "/unleash-edge",
       "permanent": true
     },
     {
       "source": "/sdks/unleash-proxy",
-      "destination": "/reference/unleash-proxy",
+      "destination": "/unleash-edge",
       "permanent": true
     },
     {
       "source": "/user_guide/create_feature_toggle",
-      "destination": "/how-to-create-feature-flag",
+      "destination": "/guides/how-to-create-feature-flags",
       "permanent": true
     },
     {
@@ -523,127 +548,47 @@
     },
     {
       "source": "/user_guide/quickstart",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {
       "source": "/docs/getting_started",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {
       "source": "/tutorials/quickstart",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
       "permanent": true
     },
     {
       "source": "/tutorials/getting-started",
-      "destination": "/quickstart",
+      "destination": "/get-started/quickstart",
+      "permanent": true
+    },
+    {
+      "source": "/api/legacy/:path*",
+      "destination": "/api",
       "permanent": true
     },
     {
       "source": "/api/basic-auth",
-      "destination": "/reference/api/legacy/unleash/basic-auth",
+      "destination": "/api",
       "permanent": true
     },
     {
-      "source": "/api",
-      "destination": "/reference/api/legacy/unleash",
+      "source": "/api/admin/:path*",
+      "destination": "/api",
       "permanent": true
     },
     {
-      "source": "/api/admin/addons",
-      "destination": "/reference/api/legacy/unleash/admin/addons",
+      "source": "/api/client/:path*",
+      "destination": "/api",
       "permanent": true
     },
     {
-      "source": "/api/admin/context",
-      "destination": "/reference/api/legacy/unleash/admin/context",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/events",
-      "destination": "/reference/api/legacy/unleash/admin/events",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/feature-toggles-v2",
-      "destination": "/reference/api/legacy/unleash/admin/features-v2",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/feature-types",
-      "destination": "/reference/api/legacy/unleash/admin/feature-types",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/features",
-      "destination": "/reference/api/legacy/unleash/admin/features",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/features-archive",
-      "destination": "/reference/api/legacy/unleash/admin/archive",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/metrics",
-      "destination": "/reference/api/legacy/unleash/admin/metrics",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/projects",
-      "destination": "/reference/api/legacy/unleash/admin/projects",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/segments",
-      "destination": "/reference/api/legacy/unleash/admin/segments",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/state",
-      "destination": "/reference/api/legacy/unleash/admin/state",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/strategies",
-      "destination": "/reference/api/legacy/unleash/admin/strategies",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/tags",
-      "destination": "/reference/api/legacy/unleash/admin/tags",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/user-admin",
-      "destination": "/reference/api/legacy/unleash/admin/user-admin",
-      "permanent": true
-    },
-    {
-      "source": "/api/client/features",
-      "destination": "/reference/api/legacy/unleash/client/features",
-      "permanent": true
-    },
-    {
-      "source": "/api/client/metrics",
-      "destination": "/reference/api/legacy/unleash/client/metrics",
-      "permanent": true
-    },
-    {
-      "source": "/api/client/register",
-      "destination": "/reference/api/legacy/unleash/client/register",
-      "permanent": true
-    },
-    {
-      "source": "/api/internal/internal",
-      "destination": "/reference/api/legacy/unleash/internal/prometheus",
-      "permanent": true
-    },
-    {
-      "source": "/api/internal/health",
-      "destination": "/reference/api/legacy/unleash/internal/health",
+      "source": "/api/internal/:path*",
+      "destination": "/api",
       "permanent": true
     },
     {
@@ -717,8 +662,13 @@
       "permanent": true
     },
     {
+      "source": "/client-specification",
+      "destination": "/contributing/client-specification",
+      "permanent": true
+    },
+    {
       "source": "/how-to/how-to-capture-impression-data",
-      "destination": "/feature-flag-tutorials/use-cases/how-to-capture-impression-data",
+      "destination": "/guides/how-to-capture-impression-data",
       "permanent": true
     },
     {
@@ -728,47 +678,52 @@
     },
     {
       "source": "/tutorials/unleash-overview",
-      "destination": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
       "permanent": true
     },
     {
       "source": "/user_guide/unleash_overview",
-      "destination": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
       "permanent": true
     },
     {
       "source": "/tutorials/managing-constraints",
-      "destination": "/understanding-unleash/managing-constraints",
+      "destination": "/guides/managing-constraints",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-enable-openapi",
-      "destination": "/api-overview",
+      "destination": "/api",
       "permanent": true
     },
     {
       "source": "/how-to/api",
-      "destination": "/api-overview",
+      "destination": "/api",
       "permanent": true
     },
     {
       "source": "/topics/managing-constraints",
-      "destination": "/understanding-unleash/managing-constraints",
+      "destination": "/guides/managing-constraints",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/managing-constraints",
+      "destination": "/guides/managing-constraints",
       "permanent": true
     },
     {
       "source": "/tutorials/the-anatomy-of-unleash",
-      "destination": "/understanding-unleash/the-anatomy-of-unleash",
+      "destination": "/reference/core-concepts",
       "permanent": true
     },
     {
       "source": "/topics/the-anatomy-of-unleash",
-      "destination": "/understanding-unleash/the-anatomy-of-unleash",
+      "destination": "/reference/core-concepts",
       "permanent": true
     },
     {
       "source": "/understanding-unleash",
-      "destination": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
       "permanent": true
     },
     {
@@ -778,57 +733,97 @@
     },
     {
       "source": "/using-unleash",
-      "destination": "/api-overview",
+      "destination": "/api",
       "permanent": true
     },
     {
       "source": "/tutorials/proxy-hosting",
-      "destination": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
       "permanent": true
     },
     {
       "source": "/topics/proxy-hosting",
-      "destination": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
+      "permanent": true
+    },
+    {
+      "source": "/topics/feature-flags/best-practices-using-feature-flags-at-scale",
+      "destination": "/guides/best-practices-using-feature-flags-at-scale",
       "permanent": true
     },
     {
       "source": "/using-unleash/deploy",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/using-unleash/deploy/database-backup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/using-unleash/deploy/database-setup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/using-unleash/deploy/email-service",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/using-unleash/troubleshooting/email-service",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/understanding-unleash/proxy-hosting",
-      "destination": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/hosting-options",
+      "destination": "/deploy/hosting-options",
       "permanent": true
     },
     {
       "source": "/tutorials/data-collection",
-      "destination": "/understanding-unleash/data-collection",
+      "destination": "/privacy-and-compliance/data-privacy",
       "permanent": true
     },
     {
       "source": "/topics/data-collection",
-      "destination": "/understanding-unleash/data-collection",
+      "destination": "/privacy-and-compliance/data-privacy",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/data-collection",
+      "destination": "/privacy-and-compliance/data-privacy",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/compliance/compliance-overview",
+      "destination": "/privacy-and-compliance/compliance-overview",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/compliance/fedramp",
+      "destination": "/privacy-and-compliance/fedramp",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/compliance/soc2",
+      "destination": "/privacy-and-compliance/soc2",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/compliance/iso27001",
+      "destination": "/privacy-and-compliance/iso27001",
+      "permanent": true
+    },
+    {
+      "source": "/topics/feature-flag-migration/feature-flag-migration-best-practices",
+      "destination": "/guides/feature-flag-migration-best-practices",
       "permanent": true
     },
     {
@@ -848,32 +843,32 @@
     },
     {
       "source": "/using-unleash/troubleshooting/cors",
-      "destination": "troubleshooting",
+      "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
       "source": "/using-unleash/troubleshooting/flag-abn-unexpected-results",
-      "destination": "troubleshooting",
+      "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
       "source": "/using-unleash/troubleshooting/flag-exposure",
-      "destination": "troubleshooting",
+      "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
       "source": "/using-unleash/troubleshooting/flag-not-returned",
-      "destination": "troubleshooting",
+      "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
       "source": "/how-to/troubleshooting/https",
-      "destination": "/using-unleash/deploy/https",
+      "destination": "/deploy/https",
       "permanent": true
     },
     {
       "source": "/using-unleash/troubleshooting/feature-not-available",
-      "destination": "/availability",
+      "destination": "/support/availability",
       "permanent": true
     },
     {
@@ -888,7 +883,12 @@
     },
     {
       "source": "/how-to/how-to-create-feature-toggles",
-      "destination": "/how-to-create-feature-flag",
+      "destination": "/guides/how-to-create-feature-flags",
+      "permanent": true
+    },
+    {
+      "source": "/how-to-create-feature-flag",
+      "destination": "/guides/how-to-create-feature-flags",
       "permanent": true
     },
     {
@@ -923,32 +923,32 @@
     },
     {
       "source": "/reference/deploy",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/reference/deploy/getting-started",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy/getting_started",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/topics",
-      "destination": "/topics/what-is-a-feature-flag",
+      "destination": "/get-started/guides-overview",
       "permanent": true
     },
     {
       "source": "/use-cases",
-      "destination": "/feature-flag-tutorials/use-cases/gradual-rollout",
+      "destination": "/guides/gradual-rollout",
       "permanent": true
     },
     {
@@ -958,22 +958,22 @@
     },
     {
       "source": "/feature-flag-tutorials",
-      "destination": "/feature-flag-tutorials/use-cases/gradual-rollout",
+      "destination": "/guides/gradual-rollout",
       "permanent": true
     },
     {
       "source": "/reference/deploy/configuring-unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash",
+      "destination": "/deploy/configuring-unleash",
       "permanent": true
     },
     {
       "source": "/deploy/configuring_unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash",
+      "destination": "/deploy/configuring-unleash",
       "permanent": true
     },
     {
       "source": "/using-unleash/troubleshooting",
-      "destination": "/using-unleash/troubleshooting/cors",
+      "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
@@ -982,88 +982,243 @@
       "permanent": true
     },
     {
+      "source": "/availability",
+      "destination": "/support/availability",
+      "permanent": true
+    },
+    {
+      "source": "/troubleshooting",
+      "destination": "/support/troubleshooting",
+      "permanent": true
+    },
+    {
+      "source": "/oss-comparison",
+      "destination": "/support/oss-comparison",
+      "permanent": true
+    },
+    {
+      "source": "/api-overview",
+      "destination": "/api",
+      "permanent": true
+    },
+    {
+      "source": "/guides-overview",
+      "destination": "/get-started/guides-overview",
+      "permanent": true
+    },
+    {
+      "source": "/quickstart",
+      "destination": "/get-started/quickstart",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/a-b-testing",
+      "destination": "/guides/a-b-testing",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/ai",
+      "destination": "/guides/manage-ai-models-with-feature-flags",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/gradual-rollout",
+      "destination": "/guides/gradual-rollout",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/how-to-capture-impression-data",
+      "destination": "/guides/how-to-capture-impression-data",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/how-to-create-feature-toggles",
+      "destination": "/guides/how-to-create-feature-flags",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/manage-feature-flags-in-code",
+      "destination": "/guides/manage-feature-flags-in-code",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/organize-feature-flags",
+      "destination": "/guides/organize-feature-flags",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/scaling-unleash",
+      "destination": "/guides/scaling-unleash",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/security-compliance",
+      "destination": "/guides/security-compliance",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/trunk-based-development",
+      "destination": "/guides/trunk-based-development",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/user-management-access-controls",
+      "destination": "/guides/user-management-access-controls",
+      "permanent": true
+    },
+    {
       "source": "/how-to/sso",
-      "destination": "/how-to/how-to-add-sso-open-id-connect",
+      "destination": "/single-sign-on/how-to-add-sso-open-id-connect",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-open-id-connect",
+      "destination": "/single-sign-on/how-to-add-sso-open-id-connect",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-saml",
+      "destination": "/single-sign-on/how-to-add-sso-saml",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-saml-keycloak",
+      "destination": "/single-sign-on/how-to-add-sso-saml-keycloak",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-azure-saml",
+      "destination": "/single-sign-on/how-to-add-sso-azure-saml",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-setup-sso-keycloak-group-sync",
+      "destination": "/single-sign-on/how-to-setup-sso-keycloak-group-sync",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-sso-google",
+      "destination": "/single-sign-on/how-to-add-sso-google",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-set-up-group-sso-sync",
+      "destination": "/single-sign-on/how-to-set-up-group-sso-sync",
       "permanent": true
     },
     {
       "source": "/how-to/provisioning",
-      "destination": "/how-to/how-to-setup-provisioning-with-okta",
+      "destination": "/provisioning/how-to-setup-provisioning-with-okta",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-setup-provisioning-with-okta",
+      "destination": "/provisioning/how-to-setup-provisioning-with-okta",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-setup-provisioning-with-entra",
+      "destination": "/provisioning/how-to-setup-provisioning-with-entra",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/configuring-unleash",
+      "destination": "/deploy/configuring-unleash",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/upgrading-unleash",
+      "destination": "/deploy/upgrading-unleash",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/license-keys",
+      "destination": "/deploy/license-keys",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/https",
+      "destination": "/deploy/https",
       "permanent": true
     },
     {
       "source": "/reference/deploy/configuring-unleash-v3",
-      "destination": "/using-unleash/deploy/configuring-unleash-v3",
+      "destination": "/deploy/configuring-unleash-v3",
       "permanent": true
     },
     {
       "source": "/deploy/configuring_unleash_v3",
-      "destination": "/using-unleash/deploy/configuring-unleash-v3",
+      "destination": "/deploy/configuring-unleash-v3",
       "permanent": true
     },
     {
       "source": "/reference/deploy/database-setup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/deploy/database-setup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/reference/deploy/database-backup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/deploy/database-backup",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-the-database-connection",
+      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
       "permanent": true
     },
     {
       "source": "/reference/deploy/email-service",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/deploy/email",
-      "destination": "/using-unleash/deploy/configuring-unleash#configure-an-email-server",
+      "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
     },
     {
       "source": "/reference/deploy/google-auth-hook",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy/google_auth",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "'/using-unleash/deploy/google-auth-hook",
-      "destination": "/using-unleash/deploy/getting-started",
+      "destination": "/deploy/getting-started",
       "permanent": true
     },
     {
       "source": "/deploy/migration_guide",
-      "destination": "/using-unleash/deploy/upgrading-unleash",
+      "destination": "/deploy/upgrading-unleash",
       "permanent": true
     },
     {
       "source": "/reference/deploy/migration-guide",
-      "destination": "/using-unleash/deploy/upgrading-unleash",
+      "destination": "/deploy/upgrading-unleash",
       "permanent": true
     },
     {
       "source": "/reference/deploy/securing-unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash#securing-unleash",
+      "destination": "/deploy/configuring-unleash#securing-unleash",
       "permanent": true
     },
     {
       "source": "/deploy/securing_unleash",
-      "destination": "/using-unleash/deploy/configuring-unleash#securing-unleash",
+      "destination": "/deploy/configuring-unleash#securing-unleash",
       "permanent": true
     },
     {
@@ -1078,12 +1233,217 @@
     },
     {
       "source": "/reference/deploy/environment-import-export",
-      "destination": "/how-to/how-to-environment-import-export",
+      "destination": "/reference/import-export",
       "permanent": true
     },
     {
       "source": "/deploy/environment-import-export",
-      "destination": "/how-to/how-to-environment-import-export",
+      "destination": "/reference/import-export",
+      "permanent": true
+    },
+    {
+      "source": "/what-is-a-feature-flag",
+      "destination": "/get-started/what-is-a-feature-flag",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/unleash-overview",
+      "destination": "/get-started/unleash-overview",
+      "permanent": true
+    },
+    {
+      "source": "/understanding-unleash/the-anatomy-of-unleash",
+      "destination": "/reference/core-concepts",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/django",
+      "destination": "/guides/implement-feature-flags-in-django",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/django/django-examples",
+      "destination": "/guides/feature-flag-examples-django",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/dotnet",
+      "destination": "/guides/implement-feature-flags-in-dotnet",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/dotnet/examples",
+      "destination": "/guides/feature-flag-examples-dotnet",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/go",
+      "destination": "/guides/implement-feature-flags-in-golang",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/golang/examples",
+      "destination": "/guides/feature-flag-examples-golang",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/ios",
+      "destination": "/guides/implement-feature-flags-in-ios",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/ios/examples",
+      "destination": "/guides/feature-flag-examples-ios",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/java",
+      "destination": "/guides/implement-feature-flags-in-java",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/spring-boot",
+      "destination": "/guides/implement-feature-flags-in-spring-boot",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/java/spring-boot/examples",
+      "destination": "/guides/feature-flag-examples-spring-boot",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/javascript",
+      "destination": "/guides/implement-feature-flags-in-javascript",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/nextjs",
+      "destination": "/guides/implement-feature-flags-in-nextjs",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/python",
+      "destination": "/guides/implement-feature-flags-in-python",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/python/examples",
+      "destination": "/guides/feature-flag-examples-python",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/rails",
+      "destination": "/guides/implement-feature-flags-in-rails",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/rails/examples",
+      "destination": "/guides/feature-flag-examples-rails",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/react",
+      "destination": "/guides/implement-feature-flags-in-react",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/react/examples",
+      "destination": "/guides/feature-flag-examples-react",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/ruby",
+      "destination": "/guides/implement-feature-flags-in-ruby",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/ruby/examples",
+      "destination": "/guides/feature-flag-examples-ruby",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/rust",
+      "destination": "/guides/implement-feature-flags-in-rust",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/rust/examples",
+      "destination": "/guides/feature-flag-examples-rust",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/serverless/lambda",
+      "destination": "/guides/implement-feature-flags-in-aws-lambda",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/sveltekit",
+      "destination": "/guides/implement-feature-flags-in-sveltekit",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/flutter/a-b-testing",
+      "destination": "/guides/implement-ab-test-in-flutter",
+      "permanent": true
+    },
+    {
+      "source": "/reference/api/:path*",
+      "destination": "/api/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/get-started/api-overview",
+      "destination": "/api",
+      "permanent": true
+    },
+    {
+      "source": "/api/unleash/:path*",
+      "destination": "/api/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/sdks/:path*",
+      "destination": "/sdks/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/sdks",
+      "destination": "/sdks",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-edge/:path*",
+      "destination": "/unleash-edge/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-edge",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-proxy",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/how-to-run-the-unleash-proxy",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/reference/mcp",
+      "destination": "/integrate/mcp",
+      "permanent": true
+    },
+    {
+      "source": "/reference/integrations/:path*",
+      "destination": "/integrate/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/integrations",
+      "destination": "/integrate",
       "permanent": true
     }
   ]

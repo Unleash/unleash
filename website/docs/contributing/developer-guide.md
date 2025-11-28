@@ -1,5 +1,6 @@
 ---
 title: Developer guide
+pagination_next: contributing/client-specification
 ---
 
 ## Introduction {#introduction}

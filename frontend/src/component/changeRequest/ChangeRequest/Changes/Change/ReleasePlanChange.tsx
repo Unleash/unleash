@@ -191,6 +191,7 @@ const ChangeSafeguard: FC<{
                         onCancel={() => {}}
                         safeguard={safeguard}
                         environment={environmentName}
+                        skipConfirmation={true}
                     />
                 )}
             </TabPanel>
@@ -271,6 +272,7 @@ const DeleteSafeguard: FC<{
                         onCancel={() => {}}
                         safeguard={safeguard}
                         environment={environmentName}
+                        skipConfirmation={true}
                     />
                 )}
             </TabPanel>

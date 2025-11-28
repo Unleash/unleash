@@ -1,4 +1,4 @@
-import { Button, FormControl, IconButton, TextField } from '@mui/material';
+import { Button, FormControl, TextField } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import type { FormEvent } from 'react';
@@ -28,6 +28,7 @@ import {
 import type { ISafeguard } from 'interfaces/releasePlans.ts';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
 
 const StyledIcon = createStyledIcon(ShieldIcon);
 
@@ -267,16 +268,19 @@ export const SafeguardForm = ({
         <StyledFormContainer onSubmit={handleSubmit} mode={mode}>
             <StyledTopRow sx={{ mb: 1 }}>
                 <StyledIcon />
-                <StyledLabel>Pause automation when</StyledLabel>
+                <StyledLabel sx={{ mr: 'auto' }}>
+                    Pause automation when
+                </StyledLabel>
                 {mode !== 'create' && onDelete && (
-                    <IconButton
+                    <PermissionIconButton
+                        permission={UPDATE_FEATURE_STRATEGY}
                         onClick={handleDelete}
                         size='small'
                         aria-label='Delete safeguard'
-                        sx={{ padding: 0.5, marginLeft: 'auto' }}
+                        sx={{ padding: 0.5 }}
                     >
                         <DeleteOutlineIcon fontSize='small' />
-                    </IconButton>
+                    </PermissionIconButton>
                 )}
             </StyledTopRow>
             <StyledTopRow sx={{ ml: 3 }}>

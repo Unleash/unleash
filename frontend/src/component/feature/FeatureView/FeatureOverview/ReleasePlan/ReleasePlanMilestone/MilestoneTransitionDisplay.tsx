@@ -1,6 +1,6 @@
 import BoltIcon from '@mui/icons-material/Bolt';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { Button, IconButton, styled } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput.tsx';
 import {
@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
 
 const StyledFormWrapper = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasChanged',
@@ -245,14 +246,15 @@ export const MilestoneTransitionDisplay = ({
                 {!hasChanged && (
                     <StyledButtonGroup hasChanged={false}>
                         {badge}
-                        <IconButton
+                        <PermissionIconButton
+                            permission={UPDATE_FEATURE_STRATEGY}
                             onClick={onDelete}
                             size='small'
                             aria-label={`Delete automation for ${milestoneName}`}
                             sx={{ padding: 0.5 }}
                         >
                             <DeleteOutlineIcon fontSize='small' />
-                        </IconButton>
+                        </PermissionIconButton>
                     </StyledButtonGroup>
                 )}
             </StyledDisplayContainer>

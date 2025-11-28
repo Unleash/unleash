@@ -1,7 +1,7 @@
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { getNavRoutes, getPrimaryRoutes } from 'component/menu/routes';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
-import { filterByConfig, mapRouteLink } from 'component/common/util';
+import { filterByConfig, normalizeRoutePath } from 'component/common/util';
 import {
     filterRoutesByPlanData,
     type PlanData,
@@ -24,7 +24,7 @@ const filterRoutes = (
                 billing,
             }),
         )
-        .map(mapRouteLink);
+        .map(normalizeRoutePath);
 };
 
 export const useRoutes = () => {

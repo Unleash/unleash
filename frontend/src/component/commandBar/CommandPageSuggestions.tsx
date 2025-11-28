@@ -19,7 +19,7 @@ interface IPageSuggestionItem {
 
 const toListItemData = (
     items: string[],
-    routes: Record<string, { path: string; route: string; title: string }>,
+    routes: Record<string, { path: string; title: string }>,
 ): IPageSuggestionItem[] => {
     return items.map((item) => {
         return {
@@ -44,7 +44,7 @@ export const CommandPageSuggestions = ({
     routes,
     onClick,
 }: {
-    routes: Record<string, { path: string; route: string; title: string }>;
+    routes: Record<string, { path: string; title: string }>;
     onClick: () => void;
 }) => {
     const { trackEvent } = usePlausibleTracker();

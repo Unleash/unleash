@@ -2,7 +2,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { adminRoutes } from './adminRoutes.js';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { filterRoutesByPlanData } from './filterRoutesByPlanData.js';
-import { filterByConfig, mapRouteLink } from 'component/common/util';
+import { filterByConfig, normalizeRoutePath } from 'component/common/util';
 
 export const useAdminRoutes = () => {
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
@@ -28,5 +28,5 @@ export const useAdminRoutes = () => {
                 billing: isBilling,
             }),
         )
-        .map(mapRouteLink);
+        .map(normalizeRoutePath);
 };

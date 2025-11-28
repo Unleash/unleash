@@ -5,7 +5,6 @@ import { useMemo } from 'react';
 
 interface IPageRouteInfo {
     path: string;
-    route: string;
     title: string;
     searchText: string;
 }
@@ -37,7 +36,6 @@ export const useCommandBarRoutes = () => {
             const title = getRouteTitle(route);
             allRoutes[route.path] = {
                 path: route.path,
-                route: route.route,
                 title: title,
                 searchText: getSearchText(route, title),
             };

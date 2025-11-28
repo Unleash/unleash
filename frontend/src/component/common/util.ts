@@ -40,10 +40,11 @@ export const scrollToTop = () => {
     window.scrollTo(0, 0);
 };
 
-export const mapRouteLink = (route: INavigationMenuItem) => ({
+export const normalizeRoutePath = (
+    route: INavigationMenuItem,
+): INavigationMenuItem => ({
     ...route,
     path: route.path.replace('/*', ''),
-    route: route.path,
 });
 
 export const trim = (value: string): string => {

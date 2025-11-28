@@ -175,8 +175,9 @@ export const ReleasePlanMilestoneStatus = ({
     const StatusButton = getStatusButton(status, milestoneProgressionsEnabled);
     const statusText = getStatusText(status, milestoneProgressionsEnabled);
     const statusIcon = getStatusIcon(status);
-    const disabledStatus = status.type === 'active' || status.type === 'paused';
-    const disabled = disabledStatus || !hasAccess;
+    const isActionable =
+        status.type === 'not-started' || status.type === 'completed';
+    const disabled = !isActionable || !hasAccess;
     const isScheduled =
         milestoneProgressionsEnabled &&
         status.type === 'not-started' &&
@@ -196,7 +197,7 @@ export const ReleasePlanMilestoneStatus = ({
         </StatusButton>
     );
 
-    if (!hasAccess && !disabledStatus) {
+    if (isActionable && !hasAccess) {
         return (
             <TooltipResolver title={formatAccessText(false)} arrow>
                 {button}

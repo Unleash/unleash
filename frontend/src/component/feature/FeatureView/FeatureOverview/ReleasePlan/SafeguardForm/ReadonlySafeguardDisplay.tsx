@@ -1,5 +1,6 @@
 import ShieldIcon from '@mui/icons-material/Shield';
 import { styled } from '@mui/material';
+import type { ReactNode } from 'react';
 import type { ISafeguard } from 'interfaces/releasePlans';
 import { createStyledIcon } from '../shared/SharedFormComponents.tsx';
 
@@ -38,10 +39,12 @@ const StyledValue = styled('span')(({ theme }) => ({
 
 interface ReadonlySafeguardDisplayProps {
     safeguard: ISafeguard;
+    badge?: ReactNode;
 }
 
 export const ReadonlySafeguardDisplay = ({
     safeguard,
+    badge,
 }: ReadonlySafeguardDisplayProps) => {
     const appName = safeguard.impactMetric.labelSelectors.appName?.[0] || '*';
     const operator =
@@ -72,6 +75,7 @@ export const ReadonlySafeguardDisplay = ({
                 <StyledLabel>over</StyledLabel>
                 <StyledValue>{safeguard.impactMetric.timeRange}</StyledValue>
             </StyledContentGroup>
+            {badge}
         </StyledDisplayContainer>
     );
 };

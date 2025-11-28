@@ -108,6 +108,15 @@ const BasePermissionButton = React.forwardRef<
         const id = useId();
         const endIcon = getEndIcon(access, rest.endIcon, hideLockIcon);
 
+        const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+            if (disableButton) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+            }
+            onClick?.(e);
+        };
+
         return (
             <TooltipResolver
                 {...tooltipProps}
@@ -116,7 +125,7 @@ const BasePermissionButton = React.forwardRef<
             >
                 <StyledButton
                     ref={ref}
-                    onClick={disableButton ? undefined : onClick}
+                    onClick={handleClick}
                     aria-disabled={disableButton || undefined}
                     aria-labelledby={id}
                     variant={variant}

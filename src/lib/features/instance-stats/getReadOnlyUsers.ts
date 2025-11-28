@@ -23,7 +23,8 @@ export const createGetReadOnlyUsers =
     };
 
 export const createFakeGetReadOnlyUsers =
-    (readOnlyUsers: Awaited<ReturnType<GetReadOnlyUsers>> = 0): GetReadOnlyUsers =>
+    (
+        readOnlyUsers: Awaited<ReturnType<GetReadOnlyUsers>> = 0,
+    ): GetReadOnlyUsers =>
     () =>
         Promise.resolve(readOnlyUsers);
-

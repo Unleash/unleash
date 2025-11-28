@@ -366,7 +366,8 @@ test('should collect licensed_users metrics', async () => {
 });
 
 test('should collect users_read_only_total metrics', async () => {
-    const recordedMetric =
-        await prometheusRegister.getSingleMetricAsString('users_read_only_total');
+    const recordedMetric = await prometheusRegister.getSingleMetricAsString(
+        'users_read_only_total',
+    );
     expect(recordedMetric).toMatch(/users_read_only_total 0/);
 });

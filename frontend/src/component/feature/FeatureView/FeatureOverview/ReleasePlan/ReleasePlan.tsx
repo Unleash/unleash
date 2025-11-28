@@ -20,6 +20,8 @@ import { ReleasePlanChangeRequestDialog } from './ChangeRequest/ReleasePlanChang
 import type {
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
+    IChangeRequestChangeSafeguard,
+    IChangeRequestDeleteSafeguard,
 } from 'component/changeRequest/changeRequest.types';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
@@ -220,6 +222,40 @@ export const ReleasePlan = ({
 
         return null;
     };
+
+    const getPendingSafeguardChange = () => {
+        if (!pendingChangeRequests) return null;
+
+        for (const changeRequest of pendingChangeRequests) {
+            if (changeRequest.environment !== environment) continue;
+
+            const featureInChangeRequest = changeRequest.features.find(
+                (featureItem) => featureItem.name === featureName,
+            );
+            if (!featureInChangeRequest) continue;
+
+            const safeguardChange = featureInChangeRequest.changes.find(
+                (
+                    change,
+                ): change is
+                    | IChangeRequestChangeSafeguard
+                    | IChangeRequestDeleteSafeguard =>
+                    change.action === 'changeSafeguard' ||
+                    change.action === 'deleteSafeguard',
+            );
+
+            if (safeguardChange) {
+                return {
+                    action: safeguardChange.action,
+                    payload: safeguardChange.payload,
+                    changeRequestId: changeRequest.id,
+                };
+            }
+        }
+
+        return null;
+    };
+
     const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
     const safeguardsEnabled = useUiFlag('safeguards');
     const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
@@ -582,6 +618,7 @@ export const ReleasePlan = ({
                                 onCancel={() => setSafeguardFormOpen(false)}
                                 onDelete={handleSafeguardDelete}
                                 environment={environment}
+                                pendingSafeguardChange={getPendingSafeguardChange()}
                             />
                         ) : (
                             <StyledActionButton

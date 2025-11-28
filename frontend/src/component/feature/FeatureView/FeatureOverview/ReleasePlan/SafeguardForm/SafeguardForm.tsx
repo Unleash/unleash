@@ -1,7 +1,7 @@
 import { Button, FormControl, TextField } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import type { FormEvent } from 'react';
+import type { FormEvent, ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -29,6 +29,7 @@ import type { ISafeguard } from 'interfaces/releasePlans.ts';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
+import { Badge } from 'component/common/Badge/Badge';
 
 const StyledIcon = createStyledIcon(ShieldIcon);
 
@@ -53,6 +54,11 @@ interface ISafeguardFormProps {
     safeguard?: ISafeguard;
     environment: string;
     skipConfirmation?: boolean;
+    pendingSafeguardChange?: {
+        action: 'changeSafeguard' | 'deleteSafeguard';
+        payload: any;
+        changeRequestId: number;
+    } | null;
 }
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
@@ -90,6 +96,7 @@ export const SafeguardForm = ({
     safeguard,
     environment,
     skipConfirmation = false,
+    pendingSafeguardChange,
 }: ISafeguardFormProps) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
     const projectId = useRequiredPathParam('projectId');
@@ -264,6 +271,18 @@ export const SafeguardForm = ({
         }
     };
 
+    const hasPendingDelete =
+        pendingSafeguardChange?.action === 'deleteSafeguard';
+    const hasPendingChange =
+        pendingSafeguardChange?.action === 'changeSafeguard';
+
+    const badge: ReactNode =
+        hasPendingDelete ? (
+            <Badge color='error'>Deleted in draft</Badge>
+        ) : hasPendingChange ? (
+            <Badge color='warning'>Modified in draft</Badge>
+        ) : undefined;
+
     return (
         <StyledFormContainer onSubmit={handleSubmit} mode={mode}>
             <StyledTopRow sx={{ mb: 1 }}>
@@ -271,6 +290,7 @@ export const SafeguardForm = ({
                 <StyledLabel sx={{ mr: 'auto' }}>
                     Pause automation when
                 </StyledLabel>
+                {mode === 'display' && badge}
                 {mode !== 'create' && onDelete && (
                     <PermissionIconButton
                         permission={UPDATE_FEATURE_STRATEGY}

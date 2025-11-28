@@ -40,6 +40,7 @@ import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init.js';
 import { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store.js';
 import { FeatureLifecycleReadModel } from './features/feature-lifecycle/feature-lifecycle-read-model.js';
 import { createFakeGetLicensedUsers } from './features/instance-stats/getLicensedUsers.js';
+import { createFakeGetReadOnlyUsers } from './features/instance-stats/getReadOnlyUsers.js';
 import { createFakeGetEdgeInstances } from './features/instance-stats/getEdgeInstances.js';
 
 const monitor = createMetricsMonitor();
@@ -80,6 +81,7 @@ beforeAll(async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
         createFakeGetLicensedUsers(),
+        createFakeGetReadOnlyUsers(),
         createFakeGetEdgeInstances(),
     );
 
@@ -361,4 +363,10 @@ test('should collect licensed_users metrics', async () => {
     const recordedMetric =
         await prometheusRegister.getSingleMetricAsString('licensed_users');
     expect(recordedMetric).toMatch(/licensed_users 0/);
+});
+
+test('should collect users_read_only_total metrics', async () => {
+    const recordedMetric =
+        await prometheusRegister.getSingleMetricAsString('users_read_only_total');
+    expect(recordedMetric).toMatch(/users_read_only_total 0/);
 });

@@ -30,6 +30,7 @@ import type { GetProductionChanges } from './getProductionChanges.js';
 import { format, minutesToMilliseconds } from 'date-fns';
 import memoizee from 'memoizee';
 import type { GetLicensedUsers } from './getLicensedUsers.js';
+import type { GetReadOnlyUsers } from './getReadOnlyUsers.js';
 import type { IFeatureUsageInfo } from '../../services/version-service.js';
 import type { ReleasePlanTemplateStore } from '../release-plans/release-plan-template-store.js';
 import type { ReleasePlanStore } from '../release-plans/release-plan-store.js';
@@ -124,6 +125,8 @@ export class InstanceStatsService {
 
     getLicencedUsers: GetLicensedUsers;
 
+    getReadOnlyUsers: GetReadOnlyUsers;
+
     getProductionChanges: GetProductionChanges;
 
     getEdgeInstances: GetEdgeInstances;
@@ -189,6 +192,7 @@ export class InstanceStatsService {
         getActiveUsers: GetActiveUsers,
         getProductionChanges: GetProductionChanges,
         getLicencedUsers: GetLicensedUsers,
+        getReadOnlyUsers: GetReadOnlyUsers,
         getEdgeInstances: GetEdgeInstances,
     ) {
         this.strategyStore = strategyStore;
@@ -209,6 +213,8 @@ export class InstanceStatsService {
             this.memorize('getActiveUsers', getActiveUsers.bind(this));
         this.getLicencedUsers = () =>
             this.memorize('getLicencedUsers', getLicencedUsers.bind(this));
+        this.getReadOnlyUsers = () =>
+            this.memorize('getReadOnlyUsers', getReadOnlyUsers.bind(this));
         this.getProductionChanges = () =>
             this.memorize(
                 'getProductionChanges',

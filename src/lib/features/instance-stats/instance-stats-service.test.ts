@@ -12,6 +12,7 @@ import type {
     IUnleashStores,
 } from '../../types/index.js';
 import { createFakeGetLicensedUsers } from './getLicensedUsers.js';
+import { createFakeGetReadOnlyUsers } from './getReadOnlyUsers.js';
 import { vi } from 'vitest';
 import { DEFAULT_ENV } from '../../server-impl.js';
 import { createFakeGetEdgeInstances } from './getEdgeInstances.js';
@@ -40,6 +41,7 @@ beforeEach(() => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
         createFakeGetLicensedUsers(),
+        createFakeGetReadOnlyUsers(),
         createFakeGetEdgeInstances(),
     );
 

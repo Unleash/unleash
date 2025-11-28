@@ -9,23 +9,36 @@ import {
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { IUiConfig } from 'interfaces/uiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { useVariant } from 'hooks/useVariant';
+import type { Variant } from 'utils/variants';
 
-const filterRoutes = (
-    routes: INavigationMenuItem[],
-    uiConfig: IUiConfig,
-    { enterprise, pro, billing }: PlanData,
-) => {
-    return routes
-        .filter(filterByConfig(uiConfig))
-        .filter((route) =>
-            filterRoutesByPlanData(route?.menu, {
-                enterprise,
-                pro,
-                billing,
-            }),
-        )
-        .map(normalizeRoutePath);
+const useNewRoute = () => {
+    const flag = useUiFlag('newInUnleash');
+    return useVariant(flag as Variant);
 };
+
+const markRouteIfNew = (
+    route: INavigationMenuItem,
+    newRouteTitle?: string,
+): INavigationMenuItem => {
+    if (newRouteTitle?.trim().toLowerCase() === route.title.toLowerCase()) {
+        return { ...route, isNew: true };
+    }
+    return route;
+};
+
+const filterMapRoutes =
+    (uiConfig: IUiConfig, planData: PlanData, newRouteTitle?: string) =>
+    (routes: INavigationMenuItem[]) => {
+        return routes
+            .filter(filterByConfig(uiConfig))
+            .filter((route) => filterRoutesByPlanData(route?.menu, planData))
+            .map((route) => {
+                const normalized = normalizeRoutePath(route);
+                return markRouteIfNew(normalized, newRouteTitle);
+            });
+    };
 
 export const useRoutes = () => {
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
@@ -33,6 +46,7 @@ export const useRoutes = () => {
     const routes = getNavRoutes();
     const adminRoutes = useAdminRoutes();
     const primaryRoutes = getPrimaryRoutes();
+    const newRoute = useNewRoute();
 
     const planData: PlanData = {
         enterprise: isEnterprise(),
@@ -40,10 +54,12 @@ export const useRoutes = () => {
         billing: isBilling,
     };
 
+    const processRoutes = filterMapRoutes(uiConfig, planData, newRoute);
+
     const filteredMainRoutes = {
-        mainNavRoutes: filterRoutes(routes, uiConfig, planData),
+        mainNavRoutes: processRoutes(routes),
         adminRoutes,
-        primaryRoutes: filterRoutes(primaryRoutes, uiConfig, planData),
+        primaryRoutes: processRoutes(primaryRoutes),
     };
 
     return { routes: filteredMainRoutes };

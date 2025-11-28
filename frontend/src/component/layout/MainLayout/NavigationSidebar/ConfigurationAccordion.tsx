@@ -65,6 +65,7 @@ export const ConfigurationAccordion: FC<ConfigurationAccordionProps> = ({
             mode={mode}
             icon={<IconRenderer path='Configure' />}
             active={hasActiveItem}
+            hasNewChild={subRoutes.some((route) => route.isNew)}
         >
             <ConfigurationNavigationList
                 routes={subRoutes}

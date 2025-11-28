@@ -17,6 +17,7 @@ import SignOutIcon from '@mui/icons-material/ExitToApp';
 import type { Theme } from '@mui/material/styles/createTheme';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { NavigationMode } from './NavigationMode.tsx';
+import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
@@ -24,6 +25,7 @@ const listItemButtonStyle = (theme: Theme) => ({
     '&.Mui-selected': {
         borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
     },
+    width: 'max-content',
 });
 
 const CappedText = styled(Typography, {
@@ -32,9 +34,9 @@ const CappedText = styled(Typography, {
     bold?: boolean;
 }>(({ theme, bold }) => ({
     whiteSpace: 'nowrap',
+    display: 'inline',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    width: '100%',
     fontWeight: bold
         ? theme.typography.fontWeightBold
         : theme.typography.fontWeightRegular,
@@ -47,6 +49,12 @@ const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
 
 const StyledListItemText = styled(ListItemText)(({ theme }) => ({
     margin: 0,
+    '.MuiListItemText-primary': {
+        display: 'flex',
+        flexFlow: 'row nowrap',
+        columnGap: '1ch',
+        alignItems: 'center',
+    },
 }));
 
 export const ExternalFullListItem: FC<{
@@ -140,8 +148,8 @@ export const MenuListItem: FC<{
                         <StyledListItemIcon>{icon}</StyledListItemIcon>
                         <StyledListItemText>
                             <CappedText>{text}</CappedText>
+                            {badge}
                         </StyledListItemText>
-                        {badge}
                     </>
                 )}
             </ListItemButton>
@@ -183,8 +191,18 @@ export const MenuListAccordion: FC<{
     children?: ReactNode;
     mode?: NavigationMode;
     icon?: ReactNode;
+    hasNewChild?: boolean;
     active?: boolean;
-}> = ({ title, expanded, mode, icon, onExpandChange, children, active }) => {
+}> = ({
+    title,
+    expanded,
+    mode,
+    icon,
+    onExpandChange,
+    children,
+    active,
+    hasNewChild,
+}) => {
     return (
         <ListItem disablePadding sx={{ display: 'flex' }}>
             <StyledAccordion
@@ -225,6 +243,9 @@ export const MenuListAccordion: FC<{
                                     <CappedText bold={active}>
                                         {title}
                                     </CappedText>
+                                    {hasNewChild && !expanded ? (
+                                        <NewFeatureBadge />
+                                    ) : null}
                                 </StyledListItemText>
                             </>
                         )}

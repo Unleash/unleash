@@ -16,6 +16,66 @@
   ],
   "redirects": [
     {
+      "source": "/reference/integrations/:path*",
+      "destination": "/integrate/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/integrations",
+      "destination": "/integrate",
+      "permanent": true
+    },
+    {
+      "source": "/reference/mcp",
+      "destination": "/integrate/mcp",
+      "permanent": true
+    },
+    {
+      "source": "/reference/sdks/:path*",
+      "destination": "/sdks/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/sdks",
+      "destination": "/sdks",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-edge/:path*",
+      "destination": "/unleash-edge/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-edge",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-proxy",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/reference/:path*",
+      "destination": "/concepts/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/:path*",
+      "destination": "/deploy/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/compliance/:path*",
+      "destination": "/privacy-and-compliance/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/use-cases/:path*",
+      "destination": "/guides/:path*",
+      "permanent": true
+    },
+    {
       "source": "/",
       "has": [
         {
@@ -92,11 +152,6 @@
       "permanent": true
     },
     {
-      "source": "/reference/event-log",
-      "destination": "/concepts/events#event-log",
-      "permanent": true
-    },
-    {
       "source": "/topics/a-b-testing",
       "destination": "/guides/a-b-testing",
       "permanent": true
@@ -104,11 +159,6 @@
     {
       "source": "/topics/feature-flags/feature-flag-best-practices",
       "destination": "/guides/feature-flag-best-practices",
-      "permanent": true
-    },
-    {
-      "source": "/reference/event-types",
-      "destination": "/concepts/events#event-types",
       "permanent": true
     },
     {
@@ -137,28 +187,8 @@
       "permanent": true
     },
     {
-      "source": "/reference/custom-activation-strategies",
-      "destination": "/concepts/activation-strategies#custom-strategies",
-      "permanent": true
-    },
-    {
       "source": "/advanced/feature_toggle_types",
       "destination": "/concepts/feature-flags#feature-flag-types",
-      "permanent": true
-    },
-    {
-      "source": "/reference/feature-toggle-types",
-      "destination": "/concepts/feature-flags#feature-flag-types",
-      "permanent": true
-    },
-    {
-      "source": "/reference/feature-lifecycle",
-      "destination": "/concepts/feature-flags#feature-flag-lifecycle",
-      "permanent": true
-    },
-    {
-      "source": "/reference/feature-flag-naming-patterns",
-      "destination": "/concepts/feature-flags#set-a-naming-pattern",
       "permanent": true
     },
     {
@@ -238,32 +268,27 @@
     },
     {
       "source": "/advanced/sso-google",
-      "destination": "/how-to/how-to-add-sso-google",
-      "permanent": true
-    },
-    {
-      "source": "/reference/archived-toggles",
-      "destination": "/concepts/feature-flags#archive-a-feature-flag",
-      "permanent": true
-    },
-    {
-      "source": "/reference/dependent-features",
-      "destination": "/concepts/feature-flags#feature-flag-dependencies",
+      "destination": "/single-sign-on/how-to-add-sso-google",
       "permanent": true
     },
     {
       "source": "/advanced/sso-open-id-connect",
-      "destination": "/how-to/how-to-add-sso-open-id-connect",
+      "destination": "/single-sign-on/how-to-add-sso-open-id-connect",
       "permanent": true
     },
     {
       "source": "/advanced/sso-saml-keycloak",
-      "destination": "/how-to/how-to-add-sso-saml-keycloak",
+      "destination": "/single-sign-on/how-to-add-sso-saml-keycloak",
       "permanent": true
     },
     {
       "source": "/advanced/sso-saml",
-      "destination": "/how-to/how-to-add-sso-saml",
+      "destination": "/single-sign-on/how-to-add-sso-saml",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/:slug(how-to-add-sso-.*)",
+      "destination": "/single-sign-on/:slug",
       "permanent": true
     },
     {
@@ -277,73 +302,13 @@
       "permanent": true
     },
     {
-      "source": "/reference/tags",
-      "destination": "/concepts/feature-flags#tags",
-      "permanent": true
-    },
-    {
       "source": "/advanced/enterprise-authentication",
       "destination": "/concepts/sso",
       "permanent": true
     },
     {
-      "source": "/addons",
-      "destination": "/integrate",
-      "permanent": true
-    },
-    {
-      "source": "/reference/addons",
-      "destination": "/integrate",
-      "permanent": true
-    },
-    {
-      "source": "/addons/datadog",
-      "destination": "/integrate/datadog",
-      "permanent": true
-    },
-    {
-      "source": "/reference/addons/datadog",
-      "destination": "/integrate/datadog",
-      "permanent": true
-    },
-    {
-      "source": "/addons/slack",
-      "destination": "/integrate/slack",
-      "permanent": true
-    },
-    {
-      "source": "/reference/addons/slack",
-      "destination": "/integrate/slack",
-      "permanent": true
-    },
-    {
-      "source": "/addons/slack-app",
-      "destination": "/integrate/slack-app",
-      "permanent": true
-    },
-    {
-      "source": "/reference/addons/slack-app",
-      "destination": "/integrate/slack-app",
-      "permanent": true
-    },
-    {
-      "source": "/addons/teams",
-      "destination": "/integrate/teams",
-      "permanent": true
-    },
-    {
-      "source": "/reference/addons/teams",
-      "destination": "/integrate/teams",
-      "permanent": true
-    },
-    {
-      "source": "/addons/webhook",
-      "destination": "/integrate/webhook",
-      "permanent": true
-    },
-    {
-      "source": "/reference/addons/webhook",
-      "destination": "/integrate/webhook",
+      "source": "/(reference/)?addons/:path*",
+      "destination": "/integrate/:path*",
       "permanent": true
     },
     {
@@ -367,11 +332,6 @@
       "permanent": true
     },
     {
-      "source": "/sdks",
-      "destination": "/sdks",
-      "permanent": true
-    },
-    {
       "source": "/user_guide/client-sdk",
       "destination": "/sdks",
       "permanent": true
@@ -392,38 +352,13 @@
       "permanent": true
     },
     {
-      "source": "/sdks/go_sdk",
-      "destination": "/sdks/go",
-      "permanent": true
-    },
-    {
-      "source": "/sdks/java_sdk",
-      "destination": "/sdks/java",
-      "permanent": true
-    },
-    {
-      "source": "/sdks/node_sdk",
-      "destination": "/sdks/node",
-      "permanent": true
-    },
-    {
-      "source": "/sdks/php_sdk",
-      "destination": "/sdks/php",
-      "permanent": true
-    },
-    {
-      "source": "/sdks/python_sdk",
-      "destination": "/sdks/python",
-      "permanent": true
-    },
-    {
       "source": "/sdks/dot_net_sdk",
       "destination": "/sdks/dotnet",
       "permanent": true
     },
     {
-      "source": "/sdks/ruby_sdk",
-      "destination": "/sdks/ruby",
+      "source": "/sdks/:lang_sdk",
+      "destination": "/sdks/:lang",
       "permanent": true
     },
     {
@@ -442,17 +377,7 @@
       "permanent": true
     },
     {
-      "source": "/sdks/javascript-browser",
-      "destination": "/sdks/javascript-browser",
-      "permanent": true
-    },
-    {
       "source": "/sdks/proxy-react",
-      "destination": "/sdks/react",
-      "permanent": true
-    },
-    {
-      "source": "/sdks/react",
       "destination": "/sdks/react",
       "permanent": true
     },
@@ -542,11 +467,6 @@
       "permanent": true
     },
     {
-      "source": "/reference/concepts/",
-      "destination": "/concepts",
-      "permanent": true
-    },
-    {
       "source": "/user_guide/quickstart",
       "destination": "/get-started/quickstart",
       "permanent": true
@@ -598,7 +518,7 @@
     },
     {
       "source": "/topics/feature-flags/tutorials",
-      "destination": "/feature-flag-tutorials/react",
+      "destination": "/guides",
       "permanent": true
     },
     {
@@ -608,27 +528,27 @@
     },
     {
       "source": "/feature-flags-tutorials",
-      "destination": "/feature-flag-tutorials/react",
+      "destination": "/guides",
       "permanent": true
     },
     {
       "source": "/tutorials",
-      "destination": "/feature-flag-tutorials/react",
+      "destination": "/guides",
       "permanent": true
     },
     {
       "source": "/topics/feature-flags/tutorials/react/implementing-feature-flags",
-      "destination": "/feature-flag-tutorials/react",
+      "destination": "/guides/implement-feature-flags-in-react",
       "permanent": true
     },
     {
       "source": "/topics/feature-flags/tutorials/flutter/a-b-testing",
-      "destination": "/feature-flag-tutorials/flutter/a-b-testing",
+      "destination": "/guides/implement-ab-test-in-flutter",
       "permanent": true
     },
     {
       "source": "/topics/feature-flags/tutorials/nextjs/implementing-feature-flags",
-      "destination": "/feature-flag-tutorials/nextjs/implementing-feature-flags",
+      "destination": "/guides/implement-feature-flags-in-nextjs",
       "permanent": true
     },
     {
@@ -757,21 +677,6 @@
       "permanent": true
     },
     {
-      "source": "/using-unleash/deploy/database-backup",
-      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/deploy/database-setup",
-      "destination": "/deploy/configuring-unleash#configure-the-database-connection",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/deploy/email-service",
-      "destination": "/deploy/configuring-unleash#configure-an-email-server",
-      "permanent": true
-    },
-    {
       "source": "/using-unleash/troubleshooting/email-service",
       "destination": "/deploy/configuring-unleash#configure-an-email-server",
       "permanent": true
@@ -802,62 +707,22 @@
       "permanent": true
     },
     {
-      "source": "/using-unleash/compliance/compliance-overview",
-      "destination": "/privacy-and-compliance/compliance-overview",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/compliance/fedramp",
-      "destination": "/privacy-and-compliance/fedramp",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/compliance/soc2",
-      "destination": "/privacy-and-compliance/soc2",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/compliance/iso27001",
-      "destination": "/privacy-and-compliance/iso27001",
-      "permanent": true
-    },
-    {
       "source": "/topics/feature-flag-migration/feature-flag-migration-best-practices",
       "destination": "/guides/feature-flag-migration-best-practices",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-troubleshoot-flag-exposure",
-      "destination": "/using-unleash/troubleshooting/flag-exposure",
+      "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-troubleshoot-flag-not-returned",
-      "destination": "/using-unleash/troubleshooting/flag-not-returned",
-      "permanent": true
-    },
-    {
-      "source": "/how-to/how-to-troubleshoot-flag-not-returned",
-      "destination": "/using-unleash/troubleshooting/flag-not-returned",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/troubleshooting/cors",
       "destination": "/support/troubleshooting",
       "permanent": true
     },
     {
-      "source": "/using-unleash/troubleshooting/flag-abn-unexpected-results",
-      "destination": "/support/troubleshooting",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/troubleshooting/flag-exposure",
-      "destination": "/support/troubleshooting",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/troubleshooting/flag-not-returned",
+      "source": "/using-unleash/troubleshooting/(cors|flag-abn-unexpected-results|flag-exposure|flag-not-returned)",
       "destination": "/support/troubleshooting",
       "permanent": true
     },
@@ -877,7 +742,7 @@
       "permanent": true
     },
     {
-      "source": "how-to/how-to-manage-public-invite-tokens",
+      "source": "/how-to/how-to-manage-public-invite-tokens",
       "destination": "/concepts/public-signup",
       "permanent": true
     },
@@ -912,11 +777,6 @@
       "permanent": true
     },
     {
-      "source": "/reference/strategy-constraints",
-      "destination": "/concepts/activation-strategies#constraints",
-      "permanent": true
-    },
-    {
       "source": "/how-to/how-to-define-custom-context-fields",
       "destination": "/concepts/activation-strategies#create-a-custom-context-field",
       "permanent": true
@@ -948,17 +808,17 @@
     },
     {
       "source": "/use-cases",
-      "destination": "/guides/gradual-rollout",
+      "destination": "/guides",
       "permanent": true
     },
     {
       "source": "/languages-and-frameworks",
-      "destination": "/feature-flag-tutorials/react",
+      "destination": "/guides",
       "permanent": true
     },
     {
       "source": "/feature-flag-tutorials",
-      "destination": "/guides/gradual-rollout",
+      "destination": "/guides",
       "permanent": true
     },
     {
@@ -1007,93 +867,8 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/use-cases/a-b-testing",
-      "destination": "/guides/a-b-testing",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/ai",
-      "destination": "/guides/manage-ai-models-with-feature-flags",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/gradual-rollout",
-      "destination": "/guides/gradual-rollout",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/how-to-capture-impression-data",
-      "destination": "/guides/how-to-capture-impression-data",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/how-to-create-feature-toggles",
-      "destination": "/guides/how-to-create-feature-flags",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/manage-feature-flags-in-code",
-      "destination": "/guides/manage-feature-flags-in-code",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/organize-feature-flags",
-      "destination": "/guides/organize-feature-flags",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/scaling-unleash",
-      "destination": "/guides/scaling-unleash",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/security-compliance",
-      "destination": "/guides/security-compliance",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/trunk-based-development",
-      "destination": "/guides/trunk-based-development",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/user-management-access-controls",
-      "destination": "/guides/user-management-access-controls",
-      "permanent": true
-    },
-    {
-      "source": "/how-to/sso",
-      "destination": "/single-sign-on/how-to-add-sso-open-id-connect",
-      "permanent": true
-    },
-    {
-      "source": "/how-to/how-to-add-sso-open-id-connect",
-      "destination": "/single-sign-on/how-to-add-sso-open-id-connect",
-      "permanent": true
-    },
-    {
-      "source": "/how-to/how-to-add-sso-saml",
-      "destination": "/single-sign-on/how-to-add-sso-saml",
-      "permanent": true
-    },
-    {
-      "source": "/how-to/how-to-add-sso-saml-keycloak",
-      "destination": "/single-sign-on/how-to-add-sso-saml-keycloak",
-      "permanent": true
-    },
-    {
-      "source": "/how-to/how-to-add-sso-azure-saml",
-      "destination": "/single-sign-on/how-to-add-sso-azure-saml",
-      "permanent": true
-    },
-    {
       "source": "/how-to/how-to-setup-sso-keycloak-group-sync",
       "destination": "/single-sign-on/how-to-setup-sso-keycloak-group-sync",
-      "permanent": true
-    },
-    {
-      "source": "/how-to/how-to-add-sso-google",
-      "destination": "/single-sign-on/how-to-add-sso-google",
       "permanent": true
     },
     {
@@ -1114,31 +889,6 @@
     {
       "source": "/how-to/how-to-setup-provisioning-with-entra",
       "destination": "/provisioning/how-to-setup-provisioning-with-entra",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/deploy/getting-started",
-      "destination": "/deploy/getting-started",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/deploy/configuring-unleash",
-      "destination": "/deploy/configuring-unleash",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/deploy/upgrading-unleash",
-      "destination": "/deploy/upgrading-unleash",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/deploy/license-keys",
-      "destination": "/deploy/license-keys",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/deploy/https",
-      "destination": "/deploy/https",
       "permanent": true
     },
     {
@@ -1192,7 +942,7 @@
       "permanent": true
     },
     {
-      "source": "'/using-unleash/deploy/google-auth-hook",
+      "source": "/using-unleash/deploy/google-auth-hook",
       "destination": "/deploy/getting-started",
       "permanent": true
     },
@@ -1217,18 +967,8 @@
       "permanent": true
     },
     {
-      "source": "/reference/deploy/import-export",
-      "destination": "/concepts/environment-import-export",
-      "permanent": true
-    },
-    {
       "source": "/deploy/import_export",
       "destination": "/concepts/environment-import-export",
-      "permanent": true
-    },
-    {
-      "source": "/reference/deploy/environment-import-export",
-      "destination": "/concepts/import-export",
       "permanent": true
     },
     {
@@ -1252,28 +992,8 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/django",
-      "destination": "/guides/implement-feature-flags-in-django",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/django/django-examples",
       "destination": "/guides/feature-flag-examples-django",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/dotnet",
-      "destination": "/guides/implement-feature-flags-in-dotnet",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/dotnet/examples",
-      "destination": "/guides/feature-flag-examples-dotnet",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/go",
-      "destination": "/guides/implement-feature-flags-in-golang",
       "permanent": true
     },
     {
@@ -1282,88 +1002,8 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/ios",
-      "destination": "/guides/implement-feature-flags-in-ios",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/ios/examples",
-      "destination": "/guides/feature-flag-examples-ios",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/java",
-      "destination": "/guides/implement-feature-flags-in-java",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/spring-boot",
-      "destination": "/guides/implement-feature-flags-in-spring-boot",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/java/spring-boot/examples",
       "destination": "/guides/feature-flag-examples-spring-boot",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/javascript",
-      "destination": "/guides/implement-feature-flags-in-javascript",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/nextjs",
-      "destination": "/guides/implement-feature-flags-in-nextjs",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/python",
-      "destination": "/guides/implement-feature-flags-in-python",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/python/examples",
-      "destination": "/guides/feature-flag-examples-python",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/rails",
-      "destination": "/guides/implement-feature-flags-in-rails",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/rails/examples",
-      "destination": "/guides/feature-flag-examples-rails",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/react",
-      "destination": "/guides/implement-feature-flags-in-react",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/react/examples",
-      "destination": "/guides/feature-flag-examples-react",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/ruby",
-      "destination": "/guides/implement-feature-flags-in-ruby",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/ruby/examples",
-      "destination": "/guides/feature-flag-examples-ruby",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/rust",
-      "destination": "/guides/implement-feature-flags-in-rust",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/rust/examples",
-      "destination": "/guides/feature-flag-examples-rust",
       "permanent": true
     },
     {
@@ -1372,13 +1012,33 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/sveltekit",
-      "destination": "/guides/implement-feature-flags-in-sveltekit",
+      "source": "/feature-flag-tutorials/flutter/a-b-testing",
+      "destination": "/guides/implement-ab-test-in-flutter",
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/flutter/a-b-testing",
-      "destination": "/guides/implement-ab-test-in-flutter",
+      "source": "/feature-flag-tutorials/go",
+      "destination": "/guides/implement-feature-flags-in-golang",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/spring-boot/examples",
+      "destination": "/guides/feature-flag-examples-spring-boot",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/spring-boot",
+      "destination": "/guides/implement-feature-flags-in-spring-boot",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/:lang(django|dotnet|ios|java|javascript|nextjs|python|rails|react|ruby|rust|sveltekit)/examples",
+      "destination": "/guides/feature-flag-examples-:lang",
+      "permanent": true
+    },
+    {
+      "source": "/feature-flag-tutorials/:lang(django|dotnet|ios|java|javascript|nextjs|python|rails|react|ruby|rust|sveltekit)",
+      "destination": "/guides/implement-feature-flags-in-:lang",
       "permanent": true
     },
     {
@@ -1394,51 +1054,6 @@
     {
       "source": "/api/unleash/:path*",
       "destination": "/api/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/reference/sdks/:path*",
-      "destination": "/sdks/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/reference/sdks",
-      "destination": "/sdks",
-      "permanent": true
-    },
-    {
-      "source": "/reference/unleash-edge/:path*",
-      "destination": "/unleash-edge/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/reference/unleash-edge",
-      "destination": "/unleash-edge",
-      "permanent": true
-    },
-    {
-      "source": "/reference/unleash-proxy",
-      "destination": "/unleash-edge",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/how-to-run-the-unleash-proxy",
-      "destination": "/unleash-edge",
-      "permanent": true
-    },
-    {
-      "source": "/reference/mcp",
-      "destination": "/integrate/mcp",
-      "permanent": true
-    },
-    {
-      "source": "/reference/integrations/:path*",
-      "destination": "/integrate/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/reference/integrations",
-      "destination": "/integrate",
       "permanent": true
     }
   ]

@@ -34,7 +34,7 @@ import type {
 } from 'openapi';
 import { ProgressionChange } from './ProgressionChange.tsx';
 import { ConsolidatedProgressionChanges } from './ConsolidatedProgressionChanges.tsx';
-import { SafeguardForm } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
+import { SafeguardFormChangeRequestView } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
 import { ReadonlySafeguardDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/ReadonlySafeguardDisplay';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
 import { omitIfDefined } from 'utils/omitFields';
@@ -181,7 +181,7 @@ const ChangeSafeguard: FC<{
                 {readonly ? (
                     <ReadonlySafeguardDisplay safeguard={safeguard} />
                 ) : (
-                    <SafeguardForm
+                    <SafeguardFormChangeRequestView
                         onSubmit={onSubmit}
                         onDelete={
                             safeguardId
@@ -191,7 +191,6 @@ const ChangeSafeguard: FC<{
                         onCancel={() => {}}
                         safeguard={safeguard}
                         environment={environmentName}
-                        skipConfirmation={true}
                     />
                 )}
             </TabPanel>
@@ -262,7 +261,7 @@ const DeleteSafeguard: FC<{
                 {readonly ? (
                     <ReadonlySafeguardDisplay safeguard={safeguard} />
                 ) : (
-                    <SafeguardForm
+                    <SafeguardFormChangeRequestView
                         onSubmit={onSubmit}
                         onDelete={
                             safeguard?.id
@@ -272,7 +271,6 @@ const DeleteSafeguard: FC<{
                         onCancel={() => {}}
                         safeguard={safeguard}
                         environment={environmentName}
-                        skipConfirmation={true}
                     />
                 )}
             </TabPanel>

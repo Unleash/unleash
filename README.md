@@ -105,8 +105,8 @@ We provide guides for deploying to services like Heroku and DigitalOcean:
 [![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
 
 For more advanced configurations options, check out our documentation on:
-- [Getting started with self-hosting](https://docs.getunleash.io/concepts/deploy/getting-started)
-- [Unleash configuration options](https://docs.getunleash.io/concepts/deploy/configuring-unleash)
+- [Getting started with self-hosting](https://docs.getunleash.io/deploy/getting-started)
+- [Unleash configuration options](https://docs.getunleash.io/deploy/configuring-unleash)
 
 <br/>
 
@@ -149,10 +149,10 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - Get an overview of all feature flags across all your environments, applications and services
 - Targeted releases using [activation strategies](https://docs.getunleash.io/concepts/activation-strategies) to enable and disable features for certain users or segments without having to redeploy your application.
 - [Canary releases / gradual rollouts](https://docs.getunleash.io/concepts/activation-strategies)
-- [Kill switches](https://docs.getunleash.io/concepts/feature-toggles#feature-flag-types)
+- [Kill switches](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types)
 - [A/B testing](https://docs.getunleash.io/feature-flag-tutorials/use-cases/a-b-testing)
 - 2 [environments](https://docs.getunleash.io/concepts/environments)
-- Organize feature flags using [tags](https://docs.getunleash.io/concepts/feature-toggles#tags)
+- Organize feature flags using [tags](https://docs.getunleash.io/concepts/feature-flags#tags)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
 - [Insights for managing technical debt](https://docs.getunleash.io/concepts/technical-debt) and [stale flags](https://docs.getunleash.io/concepts/technical-debt#stale-and-potentially-stale-flags)
 - API-first: _everything_ can be automated. No exceptions.

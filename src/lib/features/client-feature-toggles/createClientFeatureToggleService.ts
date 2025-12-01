@@ -1,4 +1,4 @@
-import FeatureToggleClientStore from '../client-feature-flags/client-feature-toggle-store.js';
+import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store.js';
 import type { Db } from '../../db/db.js';
 import type { IUnleashConfig } from '../../types/index.js';
 import FakeClientFeatureToggleStore from './fakes/fake-client-feature-toggle-store.js';

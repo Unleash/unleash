@@ -20,7 +20,7 @@ import type { IUserFeedbackStore } from './stores/user-feedback-store.js';
 import type { IFeatureEnvironmentStore } from './stores/feature-environment-store.js';
 import type { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type.js';
 import type { IEnvironmentStore } from '../features/project-environments/environment-store-type.js';
-import type { IFeatureToggleClientStore } from '../features/client-feature-flags/types/client-feature-toggle-store-type.js';
+import type { IFeatureToggleClientStore } from '../features/client-feature-toggles/types/client-feature-toggle-store-type.js';
 import type { IClientMetricsStoreV2 } from '../features/metrics/client-metrics/client-metrics-store-v2-type.js';
 import type { IUserSplashStore } from './stores/user-splash-store.js';
 import type { IRoleStore } from './stores/role-store.js';

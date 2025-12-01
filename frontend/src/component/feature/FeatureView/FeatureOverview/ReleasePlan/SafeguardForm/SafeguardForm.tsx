@@ -32,6 +32,7 @@ import type { ISafeguard } from 'interfaces/releasePlans.ts';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
+import { Badge } from 'component/common/Badge/Badge';
 
 const StyledIcon = createStyledIcon(ShieldIcon);
 
@@ -55,6 +56,11 @@ interface IBaseSafeguardFormProps {
     onDelete?: () => void;
     safeguard?: ISafeguard;
     environment: string;
+    pendingSafeguardChange?: {
+        action: 'changeSafeguard' | 'deleteSafeguard';
+        payload: unknown;
+        changeRequestId: number;
+    } | null;
 }
 
 type MetricOption = { name: string } & ImpactMetricsSeries;
@@ -308,8 +314,21 @@ const SafeguardFormBase: FC<{
     onCancel?: () => void;
     onDelete?: () => void;
     environment: string;
+    pendingSafeguardChange?: {
+        action: 'changeSafeguard' | 'deleteSafeguard';
+        payload: unknown;
+        changeRequestId: number;
+    } | null;
     children?: React.ReactNode;
-}> = ({ formState, onSubmit, onCancel, onDelete, environment, children }) => {
+}> = ({
+    formState,
+    onSubmit,
+    onCancel,
+    onDelete,
+    environment,
+    pendingSafeguardChange,
+    children,
+}) => {
     const {
         metricName,
         appName,
@@ -351,6 +370,17 @@ const SafeguardFormBase: FC<{
 
     const showButtons = mode === 'create' || mode === 'edit';
 
+    const hasPendingDelete =
+        pendingSafeguardChange?.action === 'deleteSafeguard';
+    const hasPendingChange =
+        pendingSafeguardChange?.action === 'changeSafeguard';
+
+    const badge = hasPendingDelete ? (
+        <Badge color='error'>Deleted in draft</Badge>
+    ) : hasPendingChange ? (
+        <Badge color='warning'>Modified in draft</Badge>
+    ) : undefined;
+
     return (
         <StyledFormContainer onSubmit={onSubmit} mode={mode}>
             <StyledTopRow sx={{ mb: 1 }}>
@@ -358,6 +388,7 @@ const SafeguardFormBase: FC<{
                 <StyledLabel sx={{ mr: 'auto' }}>
                     Pause automation when
                 </StyledLabel>
+                {mode === 'display' && badge}
                 {mode !== 'create' && onDelete && (
                     <PermissionIconButton
                         permission={UPDATE_FEATURE_STRATEGY}
@@ -493,6 +524,7 @@ const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     onDelete,
     safeguard,
     environment,
+    pendingSafeguardChange,
 }) => {
     const formState = useSafeguardFormState(safeguard);
     const { mode, setMode, buildSafeguardData, threshold } = formState;
@@ -519,6 +551,7 @@ const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
             onCancel={onCancel}
             onDelete={onDelete}
             environment={environment}
+            pendingSafeguardChange={pendingSafeguardChange}
         />
     );
 };
@@ -529,6 +562,7 @@ const SafeguardFormWithChangeRequests: FC<IBaseSafeguardFormProps> = ({
     onDelete,
     safeguard,
     environment,
+    pendingSafeguardChange,
 }) => {
     const formState = useSafeguardFormState(safeguard);
     const {
@@ -570,6 +604,7 @@ const SafeguardFormWithChangeRequests: FC<IBaseSafeguardFormProps> = ({
             onCancel={onCancel}
             onDelete={onDelete}
             environment={environment}
+            pendingSafeguardChange={pendingSafeguardChange}
         >
             <SafeguardChangeRequestDialog
                 isOpen={dialogOpen}
@@ -589,6 +624,7 @@ export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
     onDelete,
     safeguard,
     environment,
+    pendingSafeguardChange,
 }) => {
     const formState = useSafeguardFormState(safeguard);
     const { mode, setMode, buildSafeguardData, threshold } = formState;
@@ -615,6 +651,7 @@ export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
             onCancel={onCancel}
             onDelete={onDelete}
             environment={environment}
+            pendingSafeguardChange={pendingSafeguardChange}
         />
     );
 };

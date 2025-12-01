@@ -20,6 +20,8 @@ import { ReleasePlanChangeRequestDialog } from './ChangeRequest/ReleasePlanChang
 import type {
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
+    IChangeRequestChangeSafeguard,
+    IChangeRequestDeleteSafeguard,
 } from 'component/changeRequest/changeRequest.types';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
@@ -184,7 +186,41 @@ export const ReleasePlan = ({
         Boolean(milestone.pausedAt),
     );
 
-    // Find progression changes for this feature in pending change requests
+    const getPendingSafeguardChange = () => {
+        if (!pendingChangeRequests) return null;
+
+        for (const changeRequest of pendingChangeRequests) {
+            if (changeRequest.environment !== environment) continue;
+
+            const featureInChangeRequest = changeRequest.features.find(
+                (featureItem) => featureItem.name === featureName,
+            );
+            if (!featureInChangeRequest) continue;
+
+            const safeguardChange = featureInChangeRequest.changes.find(
+                (
+                    change,
+                ): change is
+                    | IChangeRequestChangeSafeguard
+                    | IChangeRequestDeleteSafeguard =>
+                    (change.action === 'changeSafeguard' &&
+                        change.payload.planId === id) ||
+                    (change.action === 'deleteSafeguard' &&
+                        change.payload.planId === id),
+            );
+
+            if (safeguardChange) {
+                return {
+                    action: safeguardChange.action,
+                    payload: safeguardChange.payload,
+                    changeRequestId: changeRequest.id,
+                };
+            }
+        }
+
+        return null;
+    };
+
     const getPendingProgressionChange = (sourceMilestoneId: string) => {
         if (!pendingChangeRequests) return null;
 
@@ -583,6 +619,7 @@ export const ReleasePlan = ({
                                 onCancel={() => setSafeguardFormOpen(false)}
                                 onDelete={handleSafeguardDelete}
                                 environment={environment}
+                                pendingSafeguardChange={getPendingSafeguardChange()}
                             />
                         ) : (
                             <StyledActionButton

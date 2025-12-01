@@ -9,7 +9,7 @@ export const addonsSchema = {
     type: 'object',
     required: ['addons', 'providers'],
     description: `An object containing two things:
-1. A list of all [addons](https://docs.getunleash.io/concepts/addons) defined on this Unleash instance
+1. A list of all [addons](https://docs.getunleash.io/integrate) defined on this Unleash instance
 2. A list of all addon providers defined on this instance`,
     properties: {
         addons: {

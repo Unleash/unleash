@@ -32,6 +32,6 @@ export interface AddonTypeSchema {
     name: string;
     /** The addon provider's parameters. Use these to configure an addon of this provider type. Items with `required: true` must be provided. */
     parameters?: AddonParameterSchema[];
-    /** A list of [Unleash tag types](https://docs.getunleash.io/reference/feature-flags#tags) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created. */
+    /** A list of [Unleash tag types](https://docs.getunleash.io/reference/feature-toggles#tags) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created. */
     tagTypes?: TagTypeSchema[];
 }

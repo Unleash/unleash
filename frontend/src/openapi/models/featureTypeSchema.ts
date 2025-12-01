@@ -5,7 +5,7 @@
  */
 
 /**
- * A [feature flag type](https://docs.getunleash.io/reference/feature-flags#feature-flag-types).
+ * A [feature flag type](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types).
  */
 export interface FeatureTypeSchema {
     /** A description of what this feature flag type is intended to be used for. */

@@ -5,7 +5,7 @@
  */
 
 /**
- * Representation of a [tag](https://docs.getunleash.io/reference/feature-flags#tags)
+ * Representation of a [tag](https://docs.getunleash.io/reference/feature-toggles#tags)
  */
 export interface TagSchema {
     /**
@@ -15,7 +15,7 @@ export interface TagSchema {
      */
     color?: string | null;
     /**
-     * The [type](https://docs.getunleash.io/reference/feature-flags#tags) of the tag
+     * The [type](https://docs.getunleash.io/reference/feature-toggles#tags) of the tag
      * @minLength 2
      * @maxLength 50
      */

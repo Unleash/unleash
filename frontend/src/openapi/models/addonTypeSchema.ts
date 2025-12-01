@@ -22,7 +22,7 @@ export interface AddonTypeSchema {
     displayName: string;
     /** A URL to where you can find more information about using this addon type. */
     documentationUrl: string;
-    /** All the [event types](https://docs.getunleash.io/concepts/api/legacy/unleash/admin/events#feature-toggle-events) that are available for this addon provider. */
+    /** All the [event types](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#feature-toggle-events) that are available for this addon provider. */
     events?: string[];
     /** A long description of how to use this addon type. This will be displayed on the top of configuration page. Can contain markdown. */
     howTo?: string;
@@ -32,6 +32,6 @@ export interface AddonTypeSchema {
     name: string;
     /** The addon provider's parameters. Use these to configure an addon of this provider type. Items with `required: true` must be provided. */
     parameters?: AddonParameterSchema[];
-    /** A list of [Unleash tag types](https://docs.getunleash.io/concepts/feature-flags#tags) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created. */
+    /** A list of [Unleash tag types](https://docs.getunleash.io/reference/feature-flags#tags) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created. */
     tagTypes?: TagTypeSchema[];
 }

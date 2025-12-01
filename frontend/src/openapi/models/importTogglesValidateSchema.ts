@@ -6,7 +6,7 @@
 import type { ImportTogglesValidateItemSchema } from './importTogglesValidateItemSchema.js';
 
 /**
- * An object containing [feature import](https://docs.getunleash.io/concepts/deploy/environment-import-export) validation results.
+ * An object containing [feature import](https://docs.getunleash.io/reference/deploy/environment-import-export) validation results.
  */
 export interface ImportTogglesValidateSchema {
     /** A list of errors that prevent the provided data from being successfully imported. */

@@ -10,8 +10,8 @@ import type { ExportResultSchema } from './exportResultSchema.js';
  */
 export interface ImportTogglesSchema {
     data: ExportResultSchema;
-    /** The exported [environment](https://docs.getunleash.io/concepts/environments) */
+    /** The exported [environment](https://docs.getunleash.io/reference/environments) */
     environment: string;
-    /** The exported [project](https://docs.getunleash.io/concepts/projects) */
+    /** The exported [project](https://docs.getunleash.io/reference/projects) */
     project: string;
 }

@@ -5,7 +5,7 @@
  */
 
 /**
- * A [feature flag type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types).
+ * A [feature flag type](https://docs.getunleash.io/reference/feature-flags#feature-flag-types).
  */
 export interface FeatureTypeSchema {
     /** A description of what this feature flag type is intended to be used for. */
@@ -13,7 +13,7 @@ export interface FeatureTypeSchema {
     /** The identifier of this feature flag type. */
     id: string;
     /**
-     * How many days it takes before a feature flag of this typed is flagged as [potentially stale](https://docs.getunleash.io/concepts/technical-debt#stale-and-potentially-stale-toggles) by Unleash. If this value is `null`, Unleash will never mark it as potentially stale.
+     * How many days it takes before a feature flag of this typed is flagged as [potentially stale](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles) by Unleash. If this value is `null`, Unleash will never mark it as potentially stale.
      * @minimum 0
      * @nullable
      */

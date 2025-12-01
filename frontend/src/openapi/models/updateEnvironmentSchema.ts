@@ -5,7 +5,7 @@
  */
 
 /**
- * Data used to update an [environment](https://docs.getunleash.io/concepts/environments).
+ * Data used to update an [environment](https://docs.getunleash.io/reference/environments).
  */
 export interface UpdateEnvironmentSchema {
     /**

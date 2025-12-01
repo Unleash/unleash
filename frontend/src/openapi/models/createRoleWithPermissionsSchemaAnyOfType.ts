@@ -5,7 +5,7 @@
  */
 
 /**
- * [Custom root roles](https://docs.getunleash.io/concepts/rbac#custom-root-roles) (type=root-custom) are root roles with a custom set of permissions. [Custom project roles](https://docs.getunleash.io/concepts/rbac#custom-project-roles) (type=custom) contain a specific set of permissions for project resources.
+ * [Custom root roles](https://docs.getunleash.io/reference/rbac#custom-root-roles) (type=root-custom) are root roles with a custom set of permissions. [Custom project roles](https://docs.getunleash.io/reference/rbac#custom-project-roles) (type=custom) contain a specific set of permissions for project resources.
  */
 export type CreateRoleWithPermissionsSchemaAnyOfType =
     (typeof CreateRoleWithPermissionsSchemaAnyOfType)[keyof typeof CreateRoleWithPermissionsSchemaAnyOfType];

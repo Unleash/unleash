@@ -7,7 +7,7 @@ import type { FeatureTypeSchema } from './featureTypeSchema.js';
 import type { FeatureTypesSchemaVersion } from './featureTypesSchemaVersion.js';
 
 /**
- * A list of [feature flag types](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types) and the schema version used to represent those feature types.
+ * A list of [feature flag types](https://docs.getunleash.io/reference/feature-flags#feature-flag-types) and the schema version used to represent those feature types.
  */
 export interface FeatureTypesSchema {
     /** The list of feature flag types. */

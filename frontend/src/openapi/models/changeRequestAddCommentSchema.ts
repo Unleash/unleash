@@ -5,7 +5,7 @@
  */
 
 /**
- * Data used to add a comment to a [change request](https://docs.getunleash.io/concepts/change-requests).
+ * Data used to add a comment to a [change request](https://docs.getunleash.io/reference/change-requests).
  */
 export interface ChangeRequestAddCommentSchema {
     /** The content of the comment. */

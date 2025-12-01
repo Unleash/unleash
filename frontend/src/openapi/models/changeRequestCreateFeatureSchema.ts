@@ -19,7 +19,7 @@ import type { ChangeRequestCreateFeatureSchemaOneOfThreezero } from './changeReq
 import type { ChangeRequestCreateFeatureSchemaOneOfThreethree } from './changeRequestCreateFeatureSchemaOneOfThreethree.js';
 
 /**
- * Data used to create a [change request](https://docs.getunleash.io/concepts/change-requests) for a single feature change.
+ * Data used to create a [change request](https://docs.getunleash.io/reference/change-requests) for a single feature change.
  */
 export type ChangeRequestCreateFeatureSchema =
     | ChangeRequestCreateFeatureSchemaOneOf

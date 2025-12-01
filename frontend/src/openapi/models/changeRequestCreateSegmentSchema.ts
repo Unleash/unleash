@@ -7,7 +7,7 @@ import type { ChangeRequestCreateSegmentSchemaOneOf } from './changeRequestCreat
 import type { ChangeRequestCreateSegmentSchemaOneOfThree } from './changeRequestCreateSegmentSchemaOneOfThree.js';
 
 /**
- * Data used to create a [change request](https://docs.getunleash.io/concepts/change-requests) for a single segment change.
+ * Data used to create a [change request](https://docs.getunleash.io/reference/change-requests) for a single segment change.
  */
 export type ChangeRequestCreateSegmentSchema =
     | ChangeRequestCreateSegmentSchemaOneOf

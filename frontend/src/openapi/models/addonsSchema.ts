@@ -8,7 +8,7 @@ import type { AddonTypeSchema } from './addonTypeSchema.js';
 
 /**
  * An object containing two things:
-1. A list of all [addons](https://docs.getunleash.io/concepts/addons) defined on this Unleash instance
+1. A list of all [addons](https://docs.getunleash.io/reference/addons) defined on this Unleash instance
 2. A list of all addon providers defined on this instance
  */
 export interface AddonsSchema {

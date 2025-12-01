@@ -17,7 +17,7 @@ export type OidcSettingsSchemaOneOfFour = {
     autoCreate?: boolean;
     /** The OIDC client ID of this application. */
     clientId?: string;
-    /** [Default role](https://docs.getunleash.io/concepts/rbac#standard-roles) granted to users auto-created from email. Only relevant if autoCreate is `true` */
+    /** [Default role](https://docs.getunleash.io/reference/rbac#standard-roles) granted to users auto-created from email. Only relevant if autoCreate is `true` */
     defaultRootRole?: OidcSettingsSchemaOneOfFourDefaultRootRole;
     /** Assign this root role to auto created users. Should be a role ID and takes precedence over `defaultRootRole`. */
     defaultRootRoleId?: number;

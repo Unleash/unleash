@@ -15,6 +15,6 @@ export interface UpdateContextFieldSchema {
     legalValues?: LegalValueSchema[];
     /** How this context field should be sorted if no other sort order is selected */
     sortOrder?: number;
-    /** `true` if this field should be available for use with [custom stickiness](https://docs.getunleash.io/concepts/stickiness#custom-stickiness), otherwise `false` */
+    /** `true` if this field should be available for use with [custom stickiness](https://docs.getunleash.io/reference/stickiness#custom-stickiness), otherwise `false` */
     stickiness?: boolean;
 }

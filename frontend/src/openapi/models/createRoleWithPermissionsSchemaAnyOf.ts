@@ -13,6 +13,6 @@ export type CreateRoleWithPermissionsSchemaAnyOf = {
     name: string;
     /** A list of permissions assigned to this role */
     permissions?: CreateRoleWithPermissionsSchemaAnyOfPermissionsItem[];
-    /** [Custom root roles](https://docs.getunleash.io/concepts/rbac#custom-root-roles) (type=root-custom) are root roles with a custom set of permissions. [Custom project roles](https://docs.getunleash.io/concepts/rbac#custom-project-roles) (type=custom) contain a specific set of permissions for project resources. */
+    /** [Custom root roles](https://docs.getunleash.io/reference/rbac#custom-root-roles) (type=root-custom) are root roles with a custom set of permissions. [Custom project roles](https://docs.getunleash.io/reference/rbac#custom-project-roles) (type=custom) contain a specific set of permissions for project resources. */
     type?: CreateRoleWithPermissionsSchemaAnyOfType;
 };

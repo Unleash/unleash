@@ -13,7 +13,7 @@ export type ProjectInsightsSchemaHealth = {
     activeCount: number;
     /** The number of potentially stale feature flags. */
     potentiallyStaleCount: number;
-    /** An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100 */
+    /** An indicator of the [project's technical debt](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100 */
     rating: number;
     /** The number of stale feature flags. */
     staleCount: number;

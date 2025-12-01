@@ -5,7 +5,7 @@
  */
 
 /**
- * Data used to update a [change request](https://docs.getunleash.io/concepts/change-requests)'s requested approvers.
+ * Data used to update a [change request](https://docs.getunleash.io/reference/change-requests)'s requested approvers.
  */
 export interface ChangeRequestSetApproversSchema {
     /** An array of user ids to request approval from. This will replace the current approvers. */

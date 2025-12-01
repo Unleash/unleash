@@ -8,7 +8,7 @@ import type { ExportQuerySchemaAnyOfTwo } from './exportQuerySchemaAnyOfTwo.js';
 import type { ExportQuerySchemaAnyOfThree } from './exportQuerySchemaAnyOfThree.js';
 
 /**
- * Available query parameters for  the [deprecated export/import](https://docs.getunleash.io/concepts/deploy/import-export) functionality.
+ * Available query parameters for  the [deprecated export/import](https://docs.getunleash.io/reference/deploy/import-export) functionality.
  */
 export type ExportQuerySchema =
     | ExportQuerySchemaAnyOf

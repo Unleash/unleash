@@ -5,7 +5,7 @@
  */
 
 /**
- * Describes the properties required to create a [personal access token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens), or PAT. PATs are automatically scoped to the authenticated user.
+ * Describes the properties required to create a [personal access token](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens), or PAT. PATs are automatically scoped to the authenticated user.
  */
 export interface CreatePatSchema {
     /** The PAT's description. */

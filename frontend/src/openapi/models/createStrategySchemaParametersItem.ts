@@ -12,6 +12,6 @@ export type CreateStrategySchemaParametersItem = {
     name: string;
     /** Whether this parameter must be configured when using the strategy. Defaults to `false` */
     required?: boolean;
-    /** The [type of the parameter](https://docs.getunleash.io/concepts/activation-strategies#parameters) */
+    /** The [type of the parameter](https://docs.getunleash.io/reference/activation-strategies#parameters) */
     type: CreateStrategySchemaParametersItemType;
 };

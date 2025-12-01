@@ -21,7 +21,7 @@ import type { ChangeRequestCreateSchemaOneOfThreefive } from './changeRequestCre
 import type { ChangeRequestCreateSchemaOneOfThreeeight } from './changeRequestCreateSchemaOneOfThreeeight.js';
 
 /**
- * Data used to create a [change request](https://docs.getunleash.io/concepts/change-requests) for a single feature or segment change.
+ * Data used to create a [change request](https://docs.getunleash.io/reference/change-requests) for a single feature or segment change.
  */
 export type ChangeRequestCreateSchema =
     | ChangeRequestCreateSchemaOneOf

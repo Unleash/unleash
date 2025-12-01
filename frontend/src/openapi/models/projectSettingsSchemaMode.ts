@@ -5,7 +5,7 @@
  */
 
 /**
- * The project's [collaboration mode](https://docs.getunleash.io/concepts/project-collaboration-mode).
+ * The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode).
  * @nullable
  */
 export type ProjectSettingsSchemaMode =

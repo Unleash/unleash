@@ -5,7 +5,7 @@
  */
 
 /**
- * Data used when updating the lifetime of a [feature flag type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types).
+ * Data used when updating the lifetime of a [feature flag type](https://docs.getunleash.io/reference/feature-flags#feature-flag-types).
  */
 export interface UpdateFeatureTypeLifetimeSchema {
     /**

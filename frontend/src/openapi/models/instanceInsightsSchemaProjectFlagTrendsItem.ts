@@ -21,7 +21,7 @@ export type InstanceInsightsSchemaProjectFlagTrendsItem = {
     /** The number of user marked stale flags on a particular day */
     stale: number;
     /**
-     * An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt) on a scale from 0 to 100
+     * An indicator of the [project's technical debt](https://docs.getunleash.io/reference/technical-debt) on a scale from 0 to 100
      * @minimum 0
      * @maximum 100
      */

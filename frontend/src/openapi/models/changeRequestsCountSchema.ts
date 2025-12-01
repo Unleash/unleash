@@ -5,7 +5,7 @@
  */
 
 /**
- * Count of change requests in different stages of the [process](https://docs.getunleash.io/concepts/change-requests#change-request-flow).
+ * Count of change requests in different stages of the [process](https://docs.getunleash.io/reference/change-requests#change-request-flow).
  */
 export interface ChangeRequestsCountSchema {
     /** The number of applied change requests */

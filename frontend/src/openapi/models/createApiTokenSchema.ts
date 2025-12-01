@@ -6,6 +6,6 @@
 import type { CreateApiTokenSchemaOneOf } from './createApiTokenSchemaOneOf.js';
 
 /**
- * The data required to create an [Unleash API token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys).
+ * The data required to create an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).
  */
 export type CreateApiTokenSchema = CreateApiTokenSchemaOneOf;

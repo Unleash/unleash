@@ -6,7 +6,7 @@
 import type { ConstraintSchema } from './constraintSchema.js';
 
 /**
- * A description of a [segment](https://docs.getunleash.io/concepts/segments)
+ * A description of a [segment](https://docs.getunleash.io/reference/segments)
  */
 export interface AdminSegmentSchema {
     /** The list of constraints that are used in this segment */

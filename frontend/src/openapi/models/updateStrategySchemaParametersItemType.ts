@@ -5,7 +5,7 @@
  */
 
 /**
- * The [type of the parameter](https://docs.getunleash.io/concepts/activation-strategies#parameters)
+ * The [type of the parameter](https://docs.getunleash.io/reference/activation-strategies#parameters)
  */
 export type UpdateStrategySchemaParametersItemType =
     (typeof UpdateStrategySchemaParametersItemType)[keyof typeof UpdateStrategySchemaParametersItemType];

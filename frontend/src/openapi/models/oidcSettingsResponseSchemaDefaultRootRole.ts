@@ -5,7 +5,7 @@
  */
 
 /**
- * [Default role](https://docs.getunleash.io/concepts/rbac#standard-roles) granted to users auto-created from email. Only relevant if autoCreate is `true`
+ * [Default role](https://docs.getunleash.io/reference/rbac#standard-roles) granted to users auto-created from email. Only relevant if autoCreate is `true`
  */
 export type OidcSettingsResponseSchemaDefaultRootRole =
     (typeof OidcSettingsResponseSchemaDefaultRootRole)[keyof typeof OidcSettingsResponseSchemaDefaultRootRole];

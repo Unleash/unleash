@@ -5,7 +5,7 @@
  */
 
 /**
- * The [change request](https://docs.getunleash.io/concepts/change-requests) configuration for a specific environment.
+ * The [change request](https://docs.getunleash.io/reference/change-requests) configuration for a specific environment.
  */
 export interface ChangeRequestEnvironmentConfigSchema {
     /** `true` if this environment has change requests enabled, otherwise `false`. */
@@ -17,6 +17,6 @@ export interface ChangeRequestEnvironmentConfigSchema {
      * @nullable
      */
     requiredApprovals: number | null;
-    /** The [type of the environment](https://docs.getunleash.io/concepts/environments#environment-types) listed in `environment`. */
+    /** The [type of the environment](https://docs.getunleash.io/reference/environments#environment-types) listed in `environment`. */
     type: string;
 }

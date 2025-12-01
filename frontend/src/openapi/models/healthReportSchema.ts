@@ -49,7 +49,7 @@ export interface HealthReportSchema {
      * @minimum 0
      */
     members: number;
-    /** The project's [collaboration mode](https://docs.getunleash.io/concepts/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
+    /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
     mode: HealthReportSchemaMode;
     /** The project's name */
     name: string;
@@ -60,7 +60,7 @@ export interface HealthReportSchema {
     /** Project statistics */
     stats?: ProjectStatsSchema;
     /**
-     * An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100
+     * An indicator of the [project's technical debt](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100
      * @minimum 0
      * @maximum 100
      */

@@ -5,7 +5,7 @@
  */
 
 /**
- * What [type](https://docs.getunleash.io/concepts/api/legacy/unleash/admin/events#event-type-description) of event this is
+ * What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is
  */
 export type EventSchemaType =
     (typeof EventSchemaType)[keyof typeof EventSchemaType];

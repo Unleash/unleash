@@ -6,7 +6,7 @@
 import type { GroupSchema } from './groupSchema.js';
 
 /**
- * A list of [user groups](https://docs.getunleash.io/concepts/rbac#user-groups)
+ * A list of [user groups](https://docs.getunleash.io/reference/rbac#user-groups)
  */
 export interface GroupsSchema {
     /** A list of groups */

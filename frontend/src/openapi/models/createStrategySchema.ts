@@ -6,7 +6,7 @@
 import type { CreateStrategySchemaParametersItem } from './createStrategySchemaParametersItem.js';
 
 /**
- * The data required to create a strategy type. Refer to the docs on [custom strategy types](https://docs.getunleash.io/concepts/activation-strategies#custom-strategies) for more information.
+ * The data required to create a strategy type. Refer to the docs on [custom strategy types](https://docs.getunleash.io/reference/activation-strategies#custom-strategies) for more information.
  */
 export interface CreateStrategySchema {
     /** Whether the strategy type is deprecated or not. Defaults to `false`. */

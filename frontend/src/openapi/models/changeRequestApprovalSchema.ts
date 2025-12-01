@@ -6,7 +6,7 @@
 import type { ChangeRequestApprovalSchemaCreatedBy } from './changeRequestApprovalSchemaCreatedBy.js';
 
 /**
- * Information about a [change request](https://docs.getunleash.io/concepts/change-requests) approval.
+ * Information about a [change request](https://docs.getunleash.io/reference/change-requests) approval.
  */
 export interface ChangeRequestApprovalSchema {
     /** When the approval was given. */

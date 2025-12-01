@@ -21,6 +21,6 @@ export interface CreateFeatureSchema {
     name: string;
     /** Tags to add to the feature. */
     tags?: TagSchema[];
-    /** The feature flag's [type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types). One of experiment, kill-switch, release, operational, or permission */
+    /** The feature flag's [type](https://docs.getunleash.io/reference/feature-flags#feature-flag-types). One of experiment, kill-switch, release, operational, or permission */
     type?: CreateFeatureSchemaType;
 }

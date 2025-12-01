@@ -182,6 +182,7 @@ export const ReleasePlanMilestoneItem = ({
             onCloseProgressionForm={handleCloseProgressionForm}
             onChangeProgression={handleChangeProgression}
             onDeleteProgression={onDeleteProgression}
+            environment={environment}
         />
     ) : undefined;
 
@@ -194,6 +195,8 @@ export const ReleasePlanMilestoneItem = ({
                 onStartMilestone={onStartMilestone}
                 automationSection={automationSection}
                 previousMilestoneStatus={previousMilestoneStatus}
+                projectId={projectId}
+                environmentId={environment}
             />
             <ConditionallyRender
                 condition={isNotLastMilestone}

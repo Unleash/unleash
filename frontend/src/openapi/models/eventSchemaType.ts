@@ -152,6 +152,8 @@ export const EventSchemaType = {
     'banner-deleted': 'banner-deleted',
     'safeguard-changed': 'safeguard-changed',
     'safeguard-deleted': 'safeguard-deleted',
+    'safeguard-progressions-resumed': 'safeguard-progressions-resumed',
+    'safeguard-progressions-paused': 'safeguard-progressions-paused',
     'project-environment-added': 'project-environment-added',
     'project-environment-removed': 'project-environment-removed',
     'default-strategy-updated': 'default-strategy-updated',

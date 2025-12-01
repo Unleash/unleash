@@ -274,6 +274,8 @@ export const SafeguardForm = ({
                 {mode !== 'create' && onDelete && (
                     <PermissionIconButton
                         permission={UPDATE_FEATURE_STRATEGY}
+                        projectId={projectId}
+                        environmentId={environment}
                         onClick={handleDelete}
                         size='small'
                         aria-label='Delete safeguard'
@@ -381,6 +383,8 @@ export const SafeguardForm = ({
                     </Button>
                     <PermissionButton
                         permission={UPDATE_FEATURE_STRATEGY}
+                        projectId={projectId}
+                        environmentId={environment}
                         variant='contained'
                         color='primary'
                         size='small'

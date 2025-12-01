@@ -14,6 +14,7 @@ import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInf
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 
 const StyledFormWrapper = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasChanged',
@@ -119,6 +120,7 @@ interface IMilestoneTransitionDisplayProps {
     milestoneName: string;
     status?: MilestoneStatus;
     badge?: ReactNode;
+    environment: string;
 }
 
 export const ReadonlyMilestoneTransitionDisplay = ({
@@ -155,7 +157,9 @@ export const MilestoneTransitionDisplay = ({
     milestoneName,
     status,
     badge,
+    environment,
 }: IMilestoneTransitionDisplayProps) => {
+    const projectId = useRequiredPathParam('projectId');
     const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
     const form = useMilestoneProgressionForm(
         '', // sourceMilestoneId not needed for display
@@ -276,6 +280,8 @@ export const MilestoneTransitionDisplay = ({
                     </Button>
                     <PermissionButton
                         permission={UPDATE_FEATURE_STRATEGY}
+                        projectId={projectId}
+                        environmentId={environment}
                         variant='contained'
                         color='primary'
                         onClick={handleSave}

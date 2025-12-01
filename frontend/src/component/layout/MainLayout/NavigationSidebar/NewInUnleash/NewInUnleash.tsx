@@ -134,7 +134,7 @@ export const NewInUnleash = ({
                 />
             ),
             docsLink:
-                'https://docs.getunleash.io/reference/feature-toggles#feature-flag-lifecycle',
+                'https://docs.getunleash.io/concepts/feature-flags#feature-flag-lifecycle',
             filter: {
                 versionLowerThan: '7.2.0',
             },
@@ -153,7 +153,7 @@ export const NewInUnleash = ({
             icon: <StyledSignalsIcon />,
             preview: <SignalsPreview />,
             onCheckItOut: () => navigate('/integrations/signals'),
-            docsLink: 'https://docs.getunleash.io/reference/signals',
+            docsLink: 'https://docs.getunleash.io/concepts/signals',
             filter: {
                 flag: 'signals',
                 enterpriseOnly: true,
@@ -198,7 +198,7 @@ export const NewInUnleash = ({
                 />
             ),
             onCheckItOut: () => navigate('/release-templates'),
-            docsLink: 'https://docs.getunleash.io/reference/release-templates',
+            docsLink: 'https://docs.getunleash.io/concepts/release-templates',
             filter: {
                 enterpriseOnly: true,
                 versionLowerThan: '7.4.0',

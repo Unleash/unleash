@@ -39,7 +39,7 @@ Refer to our [security and compliance overview](/privacy-and-compliance/complian
 
 The first step to securely administering your feature flag system is to consider the authentication process. When you’re using Unleash, how should your team members access the platform UI? We have multiple ways for users to log into the platform, including traditional, password-based login. But when you’re considering the best approach to using feature flags in your development process, you need to consider how every access point to your projects, data, and development processes could pose a security risk for your organization. To demonstrate that your tools are configured with security and compliance in mind, we recommend you enable enterprise-grade authentication controls as your first line of defense.
 
-Your developers and other stakeholders need to securely access platforms used to build and ship software to production. At Unleash, we support industry-standard authentication methods such as [single sign-on](/reference/sso) with multi-factor authentication and [SCIM](/reference/scim) protocols. These authentication controls are the de facto ways for you to integrate enterprise-grade security measures easily. Let’s take a closer look at each authentication option you can use.
+Your developers and other stakeholders need to securely access platforms used to build and ship software to production. At Unleash, we support industry-standard authentication methods such as [single sign-on](/concepts/sso) with multi-factor authentication and [SCIM](/concepts/scim) protocols. These authentication controls are the de facto ways for you to integrate enterprise-grade security measures easily. Let’s take a closer look at each authentication option you can use.
 
 ### Use SSO authentication for feature flags
 
@@ -61,7 +61,7 @@ User management at scale is difficult without automation. It’s also costly to 
 
 To solve this, Unleash uses [SCIM protocols (System for Cross-domain Identity Management)](https://scim.cloud/) to help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes. You won’t have to consider all the security implications of user accounts as your teams evolve. Unleash handles that for you.
 
-By enabling [SCIM](/reference/scim) in Unleash, you can:
+By enabling [SCIM](/concepts/scim) in Unleash, you can:
 
 -   Provision and de-provision users (team members) as they are joining or leaving your organization.
 -   Automatically create and delete user groups.
@@ -76,7 +76,7 @@ Now that you understand how Unleash handles authentication securely, let’s exp
 
 Consider this scenario: your company is undergoing its annual security audit, and the auditors are specifically examining how feature flags are managed across their software development lifecycle. Without role-based access controls (RBAC), this company would face significant compliance risks and potential security vulnerabilities.
 
-[Role-based access control](/reference/rbac) allows for fine-grained permission management so team members can only access and modify feature flags relevant to their specific roles and responsibilities. During an audit, you'll most likely face questions about your access control systems and security measures. Here’s what auditors will want to see:
+[Role-based access control](/concepts/rbac) allows for fine-grained permission management so team members can only access and modify feature flags relevant to their specific roles and responsibilities. During an audit, you'll most likely face questions about your access control systems and security measures. Here’s what auditors will want to see:
 
 -   Only authorized personnel can modify feature flags in production.
 -   All the access control changes are tracked and documented.
@@ -87,15 +87,15 @@ Unleash is built with many mechanisms in place to handle all of these scenarios.
 
 -   We leave audit trails, automatically [logging every permission change](#audit-manual-and-automated-events-in-unleash) with detailed user information and timestamps.
 -   You can set up [approval guardrails](#use-a-change-management-workflow-for-auditing) for feature flag updates.
--   [Project isolation](/reference/project-collaboration-mode) ensures sensitive projects remain hidden from unauthorized users, while teams can only access projects relevant to their work, maintaining clear boundaries between different business units' feature flags.
+-   [Project isolation](/concepts/project-collaboration-mode) ensures sensitive projects remain hidden from unauthorized users, while teams can only access projects relevant to their work, maintaining clear boundaries between different business units' feature flags.
 
-Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/reference/rbac#predefined-roles) in Unleash for you to get started with. Root roles control permissions to top-level resources, spanning across all projects. Project roles, on the other hand, control permissions for a project, the feature flags, and individual configurations per environment.
+Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/concepts/rbac#predefined-roles) in Unleash for you to get started with. Root roles control permissions to top-level resources, spanning across all projects. Project roles, on the other hand, control permissions for a project, the feature flags, and individual configurations per environment.
 
-The three predefined root roles are: Admin, Editor, and Viewer. The predefined project roles are Owner and Member. In addition to these, you can also create [custom root roles](/reference/rbac#create-and-assign-a-custom-root-role) or [project roles](/reference/rbac#create-and-assign-a-custom-project-role). The following diagram provides a visual overview of how root roles and project roles compare.
+The three predefined root roles are: Admin, Editor, and Viewer. The predefined project roles are Owner and Member. In addition to these, you can also create [custom root roles](/concepts/rbac#create-and-assign-a-custom-root-role) or [project roles](/concepts/rbac#create-and-assign-a-custom-project-role). The following diagram provides a visual overview of how root roles and project roles compare.
 
 ![The diagram showing the relationship between root roles and project roles in Unleash.](/img/root-and-project-roles-comparison.jpg)
 
-One of the key responsibilities of the Admin role is assigning users as project Owners and Members. You can also automate this process within your organization by using [Terraform](/reference/terraform).
+One of the key responsibilities of the Admin role is assigning users as project Owners and Members. You can also automate this process within your organization by using [Terraform](/concepts/terraform).
 
 For security best practices, we recommend following the principle of least privilege by assigning users the Viewer role or a custom root role with minimal permissions. From there, specific project-level permissions can be granted as needed.
 
@@ -131,13 +131,13 @@ Next, we’ll explore change management as an important tool to further enhance 
 
 ## Use a change management workflow for auditing
 
-Engineers typically go through a development workflow where they write code, submit their code changes for review, get explicit approval from other engineers, and merge their approved changes into the main branch. This occurs in a version control system like Git/Github. In the context of feature flag management, this approach is similar to how you can submit [change requests](/reference/change-requests) in Unleash to make updates to resources in your projects across your environments. To get the most out of this functionality, we recommend you use change requests for your production environment to require explicit approval from at least one approver on your team. This is known as the [four-eyes principle](https://www.unido.org/overview-member-states-change-management-faq/what-four-eyes-principle). However, you can add up to 10 approvers to a submitted change request if multiple stakeholders are involved.
+Engineers typically go through a development workflow where they write code, submit their code changes for review, get explicit approval from other engineers, and merge their approved changes into the main branch. This occurs in a version control system like Git/Github. In the context of feature flag management, this approach is similar to how you can submit [change requests](/concepts/change-requests) in Unleash to make updates to resources in your projects across your environments. To get the most out of this functionality, we recommend you use change requests for your production environment to require explicit approval from at least one approver on your team. This is known as the [four-eyes principle](https://www.unido.org/overview-member-states-change-management-faq/what-four-eyes-principle). However, you can add up to 10 approvers to a submitted change request if multiple stakeholders are involved.
 
 Think of change requests as _more_ than just a tool to sign off on what’s happening in your feature flag system. It’s a way to ensure multiple layers of security for your teams.
 
 For large organizations in highly regulated industries, it’s important to have a second pair of eyes validating a change. When your team members are using Unleash, consider that while some users have permission to modify flags, you can still put guardrails in place to approve or deny the changes.
 
-Imagine a developer working at a large banking platform who wants to modify a feature flag controlling a new authentication method. Instead of making a change directly in production, the [change request](/reference/change-requests) workflow could require:
+Imagine a developer working at a large banking platform who wants to modify a feature flag controlling a new authentication method. Instead of making a change directly in production, the [change request](/concepts/change-requests) workflow could require:
 
 1. Initial proposal submission
 2. Security team review
@@ -147,13 +147,13 @@ Imagine a developer working at a large banking platform who wants to modify a fe
 With Unleash, you can create a change request workflow to reflect these exact requirements.
 And from a security perspective, you'll always want an auditable trail of changes that occur in your feature flag system. We record all changes like these in the event logs. These are the configuration management practices required by compliance frameworks like SOC 2, FedRAMP, and ISO 27001. We’ll explore [event logs](#audit-manual-and-automated-events-in-unleash) more in a later section, but it’s important to note throughout this guide since it’s relevant to many features in Unleash that align with security and compliance standards.
 
-Projects in Unleash have an open [collaboration mode](/reference/project-collaboration-mode) by default, which means anyone with access to Unleash can see the project and submit change requests in it. However, only users with specific permissions can approve, apply, or skip them. None of the [predefined roles](/reference/rbac#predefined-roles) have any change request permissions, so you must create [custom project roles](/reference/rbac#predefined-roles). You can adjust the collaboration mode of your project to restrict visibility and limit who can submit change requests.
+Projects in Unleash have an open [collaboration mode](/concepts/project-collaboration-mode) by default, which means anyone with access to Unleash can see the project and submit change requests in it. However, only users with specific permissions can approve, apply, or skip them. None of the [predefined roles](/concepts/rbac#predefined-roles) have any change request permissions, so you must create [custom project roles](/concepts/rbac#predefined-roles). You can adjust the collaboration mode of your project to restrict visibility and limit who can submit change requests.
 
 ![This GIF shows how to quickly make changes to your feature flag, request the change, approve it, and apply the changes.](/img/use-case-user-mgmt-cr.gif)
 
-Let’s say a project owner wants to update a rollout strategy so that a new feature will increase from 50% exposure to 100% of your end user base. The change is approved by other team members, but the project owner will need to hold off applying the update in production until components from another team are ready to be released. This is a great use case for [scheduling change requests](/reference/change-requests#scheduled-change-requests), as it allows teams to plan and queue feature flag modifications with precise timing, giving you more control and predictability in a release process.
+Let’s say a project owner wants to update a rollout strategy so that a new feature will increase from 50% exposure to 100% of your end user base. The change is approved by other team members, but the project owner will need to hold off applying the update in production until components from another team are ready to be released. This is a great use case for [scheduling change requests](/concepts/change-requests#scheduled-change-requests), as it allows teams to plan and queue feature flag modifications with precise timing, giving you more control and predictability in a release process.
 
-You could also schedule changes by using the [date and time operators](/reference/activation-strategies#date-and-time-operators) in [strategy constraints](/reference/activation-strategies#constraints). However, when you have change requests configured in the project, we recommend using the schedule feature in change requests, as it is a faster and simpler approach.
+You could also schedule changes by using the [date and time operators](/concepts/activation-strategies#date-and-time-operators) in [strategy constraints](/concepts/activation-strategies#constraints). However, when you have change requests configured in the project, we recommend using the schedule feature in change requests, as it is a faster and simpler approach.
 
 For more recommendations, read our section on [change management workflow](/guides/best-practices-using-feature-flags-at-scale#implement-flag-approval-workflows-early) from _Using Feature Flags at Scale_.
 
@@ -161,12 +161,12 @@ Now that we covered change requests as a practical tool for both feature managem
 
 ## Audit manual and automated events in Unleash
 
-[Event logs](/reference/events) in Unleash are one of the most critical components of maintaining a secure and compliant feature flag system. Unleash administrators and security reviewers will be able to see a detailed list of events that have occurred in your system. From feature flag configuration updates to role-based access control changes, view your logs to get insight into who has performed each action, when, and what was changed as a result. In highly regulated environments, audit logs are useful for:
+[Event logs](/concepts/events) in Unleash are one of the most critical components of maintaining a secure and compliant feature flag system. Unleash administrators and security reviewers will be able to see a detailed list of events that have occurred in your system. From feature flag configuration updates to role-based access control changes, view your logs to get insight into who has performed each action, when, and what was changed as a result. In highly regulated environments, audit logs are useful for:
 
 -   Tracking change management workflows
 -   Demonstrating organizational compliance
 
-Highly regulated industries like finance and healthcare typically require extensive log preservation, maintaining detailed records for up to seven years. For most enterprise environments, a three-year retention period provides a balance between compliance and operational efficiency. Unleash provides this insight for your teams and security reviewers in a transparent, detailed, and searchable way. You can also track changes using the global [event timeline](/reference/events#event-timeline) to review recent events for up to 48 hours per environment. Event logs also capture API calls that come in from your applications and services.
+Highly regulated industries like finance and healthcare typically require extensive log preservation, maintaining detailed records for up to seven years. For most enterprise environments, a three-year retention period provides a balance between compliance and operational efficiency. Unleash provides this insight for your teams and security reviewers in a transparent, detailed, and searchable way. You can also track changes using the global [event timeline](/concepts/events#event-timeline) to review recent events for up to 48 hours per environment. Event logs also capture API calls that come in from your applications and services.
 
 In the Unleash Admin UI, go to **Admin settings > Event log** to see chronological events with metadata and change diffs. You can use the filter or the search bar to narrow down specific events you may be looking for. And not only are your events visible in Unleash, they’re also reportable. You can export your events as a CSV or JSON file to send to analytics tools.
 

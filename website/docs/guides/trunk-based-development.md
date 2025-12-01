@@ -217,7 +217,7 @@ This approach embodies the core principles of trunk-based development and featur
 
 ### Establish consistent naming conventions
 
-Develop clear and [consistent naming patterns](/reference/feature-toggles#set-a-naming-pattern) for your feature flags. This will help maintain clarity and make it easier to understand the purpose and context of each flag. Some recommended elements to include in your flag names:
+Develop clear and [consistent naming patterns](/concepts/feature-flags#set-a-naming-pattern) for your feature flags. This will help maintain clarity and make it easier to understand the purpose and context of each flag. Some recommended elements to include in your flag names:
 
 -   The feature or functionality the flag is associated with
 -   The environment or user segment the flag is intended for (e.g., "mobile_users")
@@ -225,7 +225,7 @@ Develop clear and [consistent naming patterns](/reference/feature-toggles#set-a-
 
 ### Leverage tagging and flag descriptions
 
-In addition to meaningful names, apply relevant [tags](/reference/feature-toggles#tags) and descriptions to your feature flags in Unleash. This metadata can include information such as:
+In addition to meaningful names, apply relevant [tags](/concepts/feature-flags#tags) and descriptions to your feature flags in Unleash. This metadata can include information such as:
 
 -   The team or product area responsible for the flag
 -   The release timeline or planned retirement date
@@ -248,7 +248,7 @@ The trunk should always be deployable, enabling teams to accelerate release cycl
 
 To keep the trunk in a deployable state, keep the flag off in your production environment. The code for your feature should be wrapped in your flag and, therefore, not executable in production, even though the code will be deployed frequently. This ensures users do not have access to the feature before its official release. Additionally, this promotes collaboration by allowing teams to work independently on different features without interference.
 
-To test your incomplete feature, enable the flag in the development environment in the Unleash Admin UI. In some cases, you may also find it valuable to enable the flag in a testing/QA environment. Unleash environment-specific flag configurations make it easy to manage these different states across your [environments](/reference/environments). You can quickly toggle flags on or off for specific environments, ensuring the trunk remains deployable in production while enabling active development and testing in other contexts. Use the default production environment toggle in Unleash to enable your flag when you’re ready to make your feature available.
+To test your incomplete feature, enable the flag in the development environment in the Unleash Admin UI. In some cases, you may also find it valuable to enable the flag in a testing/QA environment. Unleash environment-specific flag configurations make it easy to manage these different states across your [environments](/concepts/environments). You can quickly toggle flags on or off for specific environments, ensuring the trunk remains deployable in production while enabling active development and testing in other contexts. Use the default production environment toggle in Unleash to enable your flag when you’re ready to make your feature available.
 
 :::note
 Depending on the size and scope of a feature you’re developing, you may need more than one flag. Generally, we recommend creating as few flags as possible per feature, as making too many flags associated with one feature can become more complex to manage over time with trunk-based development. Our documentation on [best practices for feature flags at scale](/guides/best-practices-using-feature-flags-at-scale) provides more concrete details on large-scale feature flag management.
@@ -262,7 +262,7 @@ As your codebase and development processes mature, consider automating key aspec
 -   Integration with your CI/CD pipelines: Automatically create, update, or toggle flags as part of your deployment workflows, ensuring flags stay in sync with the codebase.
 -   Reporting and analytics: Generate regular reports on flag usage, performance, and health to proactively identify opportunities for optimization.
 
-Automation helps maintain a clean, well-organized feature flag landscape, even as your organization scales its trunk-based development practices. Learn more about [feature flag lifecycles](/reference/feature-toggles#feature-flag-lifecycle) and how to implement this process using Unleash into your workflow.
+Automation helps maintain a clean, well-organized feature flag landscape, even as your organization scales its trunk-based development practices. Learn more about [feature flag lifecycles](/concepts/feature-flags#feature-flag-lifecycle) and how to implement this process using Unleash into your workflow.
 
 ## Control feature rollouts
 
@@ -275,13 +275,13 @@ For trunk-based development, you can create a gradual rollout strategy to:
 -   Release on a per-customer basis
 -   Release to the general user base
 
-To target users accordingly, let's create an [activation strategy](/reference/activation-strategies). This Unleash concept defines who will be exposed to a particular flag. With Unleash, you can define a gradual rollout strategy to enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
+To target users accordingly, let's create an [activation strategy](/concepts/activation-strategies). This Unleash concept defines who will be exposed to a particular flag. With Unleash, you can define a gradual rollout strategy to enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
 
 ![Add a strategy to configure a release process for your flag.](/img/use-case-tbd-add-strategy.png)
 
 Next, let's create a new activation strategy and configure the rollout percentage so only a certain portion of your users are targeted. For example, you can adjust the dial so that 35% of all users are targeted. The remaining percentage of users will not experience any variation of the new feature. Adjust the rollout dial to set the percentage of users the feature targets, or keep it at 100% to target all users.
 
-To define more granular conditions for your feature beyond the rollout percentage, you can use [strategy variants](/reference/strategy-variants) and [constraints](/reference/activation-strategies#constraints).
+To define more granular conditions for your feature beyond the rollout percentage, you can use [strategy variants](/concepts/strategy-variants) and [constraints](/concepts/activation-strategies#constraints).
 
 ## Simplify rollbacks
 

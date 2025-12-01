@@ -24,7 +24,7 @@ Unleash is fundamentally designed for speed and resilience. Understanding the co
 ![Architecture using Enterprise Edge](/img/architecture-enterprise-edge.png)
 
 ### Fast, local feature flag evaluation
-[SDKs](/sdks) embedded in your applications fetch [feature flag](/reference/feature-toggles) configurations from the Unleash server or [Unleash Edge](/unleash-edge).
+[SDKs](/sdks) embedded in your applications fetch [feature flag](/concepts/feature-flags) configurations from the Unleash server or [Unleash Edge](/unleash-edge).
 
 [Backend SDKs](/sdks#backend-sdks) perform flag evaluations locally within the application's memory. This eliminates network latency for each evaluation, resulting in extremely fast checks.
 
@@ -239,7 +239,7 @@ Unleash Cloud provides built-in observability dashboards, usage metrics, and sys
 
 Underlying infrastructure monitoring, alerting, and scaling are handled by Unleash SREs.
 
-Use the [Connected Edges dashboard](/reference/network-view#connected-edges) to get observability metrics for Unleash Edge instances, such as ID, region, resource usage, and latency.
+Use the [Connected Edges dashboard](/concepts/network-view#connected-edges) to get observability metrics for Unleash Edge instances, such as ID, region, resource usage, and latency.
 
 <details>
   <summary>Self-hosted observability</summary>

@@ -31,7 +31,7 @@ In the projects view, the Unleash platform shows a list of feature flags that yo
 
 Next, you will create a feature flag on the platform and turn it on for your app.
 
-The feature flag we are creating is considered a ‘Release’ flag type. The project will be ‘Default’ or the named project in which you are working in for the purpose of this tutorial. As the number of feature flags grows, you can organize them in your projects. Read our docs on [Projects](/reference/projects) to learn more about how to configure and manage them for your team/organization. A description of the flag can help properly identify its specific purposes. However, this field is optional.
+The feature flag we are creating is considered a ‘Release’ flag type. The project will be ‘Default’ or the named project in which you are working in for the purpose of this tutorial. As the number of feature flags grows, you can organize them in your projects. Read our docs on [Projects](/concepts/projects) to learn more about how to configure and manage them for your team/organization. A description of the flag can help properly identify its specific purposes. However, this field is optional.
 
 The API Command bar is to the right of the flag form, which gives developers the option to use a curl command to create the flag with all the fields listed in the UI form straight from your terminal on your machine. If you wish to use the API command as an alternative, fill out the form before copying the command, as it is automatically updated with the field inputs.
 
@@ -47,7 +47,7 @@ Next, we will configure the gradual rollout strategy for your new flag.
 
 ## Implementing a gradual rollout activation strategy
 
-An important Unleash concept that enables developers to perform a gradual rollout is an [activation strategy](/reference/activation-strategies). An activation strategy defines who will be exposed to a particular flag or flags. Unleash comes pre-configured with multiple activation strategies that let you enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
+An important Unleash concept that enables developers to perform a gradual rollout is an [activation strategy](/concepts/activation-strategies). An activation strategy defines who will be exposed to a particular flag or flags. Unleash comes pre-configured with multiple activation strategies that let you enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
 
 ![Anatomy of an activation strategy](/img/anatomy-of-unleash-strategy.png)
 
@@ -63,25 +63,25 @@ You can configure your gradual rollout strategy using the following parameters i
     -   **userId** - guaranteed to be sticky on `userId`. If `userId` is not present, the behavior would be `false`
     -   **sessionId** - guaranteed to be sticky on `sessionId`. If `sessionId` not present the behavior would be `false`.
     -   **random** - no stickiness guaranteed. For every `isEnabled` call it will yield a random `true`/`false` based on the selected rollout percentage.
-    -   You can also enable **custom stickiness** by creating a context field for it to use in your gradual rollout. Learn more about [custom stickiness](/reference/stickiness#enabling-custom-stickiness).
+    -   You can also enable **custom stickiness** by creating a context field for it to use in your gradual rollout. Learn more about [custom stickiness](/concepts/stickiness#enabling-custom-stickiness).
     -   **groupId** is used to ensure that different flags will be evaluated differently. The `groupId` defaults to feature flag name, but the user can override it to _correlate rollout_ of multiple feature flags.
 
 ![Image of a gradual rollout form in Unleash](/img/tutorial-grad-rollout-form.png)
 
 There are two more advanced extensions of the gradual rollout strategy that you can customize in the gradual rollout form:
 
--   [Strategy Constraints](/reference/activation-strategies#constraints)
--   [Strategy Variants](/reference/strategy-variants)
+-   [Strategy Constraints](/concepts/activation-strategies#constraints)
+-   [Strategy Variants](/concepts/strategy-variants)
 
 Constraints and variants are not required for a gradual rollout. These additional customizations can be built on top of the overall rollout strategy should you need more granular conditions for your feature beyond the rollout percentage.
 
-[Strategy variants](/reference/strategy-variants) can expose a particular version of a feature to select user bases when a flag is enabled. From there, a way to use the variants is to view the performance metrics and see which is more efficient. We can create several variations of this feature to release to users and gather performance metrics to determine which one yields better results.
+[Strategy variants](/concepts/strategy-variants) can expose a particular version of a feature to select user bases when a flag is enabled. From there, a way to use the variants is to view the performance metrics and see which is more efficient. We can create several variations of this feature to release to users and gather performance metrics to determine which one yields better results.
 
 For gradual rollouts, _strategy constraints_ are most applicable for more granular conditions of a feature release. In the next section, we’ll explore how to apply a strategy constraint on top of a gradual rollout for more advanced use cases.
 
 ## Applying strategy constraints
 
-When utilizing an activation strategy such as a gradual rollout, it may be necessary to further define which subset of users get access to a feature and when the rollout takes place, depending on the complexity of your use case. Unleash provides [strategy constraints](/reference/activation-strategies#constraints) as a way to fine-tune conditions under which a feature flag is evaluated.
+When utilizing an activation strategy such as a gradual rollout, it may be necessary to further define which subset of users get access to a feature and when the rollout takes place, depending on the complexity of your use case. Unleash provides [strategy constraints](/concepts/activation-strategies#constraints) as a way to fine-tune conditions under which a feature flag is evaluated.
 
 ![This diagram breaks down how strategy constraints sit on top activation strategies for flags in Unleash.](/img/tutorial-building-blocks-strategy-constraints.png)
 
@@ -95,16 +95,16 @@ Within a gradual rollout activation strategy, you can use strategy constraints t
 
 ![You can configure your strategy constraints in the gradual rollout form.](/img/tutorial-constraints-form.png)
 
-Add [constraints](/reference/activation-strategies#constraints) to refine the rollout based on user attributes, segments, or conditions.
+Add [constraints](/concepts/activation-strategies#constraints) to refine the rollout based on user attributes, segments, or conditions.
 
 
 ### Define custom context fields for strategy constraints
 
-If you want to create new types of constraints that are not built into Unleash, you can create [custom context fields](/reference/unleash-context#custom-context-fields) to use in your gradual rollout for more advanced use cases.
+If you want to create new types of constraints that are not built into Unleash, you can create [custom context fields](/concepts/unleash-context#custom-context-fields) to use in your gradual rollout for more advanced use cases.
 
 ## Using segments
 
-A [segment](/reference/segments) is a reusable collection of [strategy constraints](/reference/activation-strategies#constraints). Like with strategy constraints, you apply segments to feature flag activation strategies.
+A [segment](/concepts/segments) is a reusable collection of [strategy constraints](/concepts/activation-strategies#constraints). Like with strategy constraints, you apply segments to feature flag activation strategies.
 
 You can apply the same segment to multiple activation strategies. If you update the segment, the changes will affect every strategy that uses that segment.
 
@@ -125,7 +125,7 @@ Because segments stay in sync across strategies, any changes will propagate to a
 -   create events with start and end times and guarantee that features will only be active during that period
     -   target the feature flag to specific segments
 
-You must pass the relevant fields in your context in the SDK in order for gradual rollout to work in a predictable way and for any of your constraints or segments to function the way you expect. Learn more about [configuring Unleash contexts](/reference/unleash-context) correctly for your app in our documentation.
+You must pass the relevant fields in your context in the SDK in order for gradual rollout to work in a predictable way and for any of your constraints or segments to function the way you expect. Learn more about [configuring Unleash contexts](/concepts/unleash-context) correctly for your app in our documentation.
 
 By following these steps and leveraging Unleash's features, you can effectively execute and refine gradual rollouts to minimize risks and optimize feature delivery.
 
@@ -166,13 +166,13 @@ Unleash provides the data to log any change that has happened over time, at the 
 
 ![Events for a feature flag. The Event log tab is highlighted and the UI shows the most recent changes, including a JSON diff and the change details.](/img/unleash-toggle-history.png)
 
-Learn more about [Event Log](/reference/events#event-log) in our documentation.
+Learn more about [Event Log](/concepts/events#event-log) in our documentation.
 
 ### Managing change requests
 
-You can use Unleash's [change request](/reference/change-requests) feature to propose and review modifications to feature flags. This gives developers complete control over your production environment. In large scale organizations and heavily regulated industries, we want to help developers reduce risk of errors in production or making unwanted changes by team members that have not been properly reviewed and approved.
+You can use Unleash's [change request](/concepts/change-requests) feature to propose and review modifications to feature flags. This gives developers complete control over your production environment. In large scale organizations and heavily regulated industries, we want to help developers reduce risk of errors in production or making unwanted changes by team members that have not been properly reviewed and approved.
 
-The [change request](/reference/change-requests) configuration can be set up per project, per environment. This means that you can have different change request configurations for different environments, such as production and development. This is useful because different environments may have different requirements, so you can customize the change request configuration to fit those requirements.
+The [change request](/concepts/change-requests) configuration can be set up per project, per environment. This means that you can have different change request configurations for different environments, such as production and development. This is useful because different environments may have different requirements, so you can customize the change request configuration to fit those requirements.
 
 Currently, there are two configuration options for change requests:
 
@@ -183,6 +183,6 @@ The change request configuration can be set up in the project settings page:
 
 ![Change request configuration page under project settings.](/img/react-ex-project-settings.png)
 
-Learn more about all of the functionality available with [Change Requests](/reference/change-requests) in our documentation.
+Learn more about all of the functionality available with [Change Requests](/concepts/change-requests) in our documentation.
 
 By following these steps and leveraging Unleash's features, you can effectively execute and refine gradual rollouts to minimize risks and optimize feature delivery.

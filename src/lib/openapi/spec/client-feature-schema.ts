@@ -24,7 +24,7 @@ export const clientFeatureSchema = {
         type: {
             type: 'string',
             description:
-                'What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types) for more information',
+                'What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types) for more information',
             example: 'release',
         },
         description: {
@@ -47,7 +47,7 @@ export const clientFeatureSchema = {
         },
         impressionData: {
             description:
-                'Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/reference/impression-data) when this flag is evaluated',
+                'Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/concepts/impression-data) when this flag is evaluated',
             type: 'boolean',
             nullable: true,
             example: false,
@@ -68,7 +68,7 @@ export const clientFeatureSchema = {
         variants: {
             type: 'array',
             description:
-                '[Variants](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) configured for this flag',
+                '[Variants](https://docs.getunleash.io/concepts/feature-flag-variants#what-are-variants) configured for this flag',
             items: {
                 $ref: '#/components/schemas/variantSchema',
             },

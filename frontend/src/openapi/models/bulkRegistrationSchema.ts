@@ -18,7 +18,7 @@ export interface BulkRegistrationSchema {
     connectVia?: BulkRegistrationSchemaConnectViaItem[];
     /** Which environment the application is running in */
     environment: string;
-    /** A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application */
+    /** A [(somewhat) unique identifier](https://docs.getunleash.io/concepts/sdks/node#advanced-usage) for the application */
     instanceId: string;
     /** How often (in seconds) the application refreshes its features */
     interval?: number;
@@ -33,6 +33,6 @@ export interface BulkRegistrationSchema {
     sdkVersion?: string;
     /** The application started at */
     started?: DateSchema;
-    /** Enabled [strategies](https://docs.getunleash.io/reference/activation-strategies) in the application */
+    /** Enabled [strategies](https://docs.getunleash.io/concepts/activation-strategies) in the application */
     strategies?: string[];
 }

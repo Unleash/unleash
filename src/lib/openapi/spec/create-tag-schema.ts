@@ -6,7 +6,7 @@ export const createTagSchema = {
     ...tagSchema,
     $id: '#/components/schemas/createTagSchema',
     description:
-        'Data used to create a new [tag](https://docs.getunleash.io/reference/feature-toggles#tags)',
+        'Data used to create a new [tag](https://docs.getunleash.io/concepts/feature-flags#tags)',
     properties: {
         ...tagSchema.properties,
         value: {

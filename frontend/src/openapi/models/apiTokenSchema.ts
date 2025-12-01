@@ -6,7 +6,7 @@
 import type { ApiTokenSchemaType } from './apiTokenSchemaType.js';
 
 /**
- * An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).
+ * An overview of an [Unleash API token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys).
  */
 export interface ApiTokenSchema {
     /**

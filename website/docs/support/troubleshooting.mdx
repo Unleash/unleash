@@ -12,8 +12,8 @@ If a feature flag isn't being returned by the Frontend API or Edge, or if users 
 ### Initial checks
 
 #### Verify feature configuration
--   Ensure the feature flag has an [activation strategy](/reference/activation-strategies) associated with it that will evaluate to `true` for your given context.
--   Confirm that the feature flag has been **enabled** in the specific environment your client application is using. (ref: [enabling a feature flag](/reference/feature-toggles))
+-   Ensure the feature flag has an [activation strategy](/concepts/activation-strategies) associated with it that will evaluate to `true` for your given context.
+-   Confirm that the feature flag has been **enabled** in the specific environment your client application is using. (ref: [enabling a feature flag](/concepts/feature-flags))
 
 #### SDK `ready` event
 -   Ensure your application, especially frontend clients, waits for the SDK to emit the `ready` event before calling `isEnabled('feature-flag')` or `getVariant('feature-flag')`. Calling these functions too early might mean the client hasn't yet received the latest flag configurations from the server.
@@ -21,7 +21,7 @@ If a feature flag isn't being returned by the Frontend API or Edge, or if users 
 ### Token configuration
 
 #### Check token type
--   To connect to the Frontend API or Edge, you **must** use a [Front-end API token](/reference/api-tokens-and-client-keys#frontend-tokens). Other token types will not work.
+-   To connect to the Frontend API or Edge, you **must** use a [Front-end API token](/concepts/api-tokens-and-client-keys#frontend-tokens). Other token types will not work.
 
 #### Check token access
 -   The token's access configuration is **immutable after creation** and defines which feature flags it can access. The format of the token indicates its scope:
@@ -32,19 +32,19 @@ If a feature flag isn't being returned by the Frontend API or Edge, or if users 
 ### Context and stickiness
 
 #### Gradual rollout strategy and stickiness
--   When using a **gradual rollout** strategy, pay close attention to the [stickiness](/reference/stickiness) configuration.
+-   When using a **gradual rollout** strategy, pay close attention to the [stickiness](/concepts/stickiness) configuration.
 -   If the context provided by your SDK during flag evaluation **does not include the field specified for stickiness** (e.g., `userId`, `sessionId`, or a custom field), the gradual rollout strategy will evaluate to `false`. Consequently, the flag (or the "on" state for that user) will not be returned by the API.
 
 ### Using the Unleash playground
 
-- Feature activation strategies can be combined in complex ways. The [Unleash Playground](/reference/playground) is an invaluable tool. You can use an access token along with various context values (input via the UI) to simulate how a flag will be resolved for different users and scenarios, helping you verify your configuration.
+- Feature activation strategies can be combined in complex ways. The [Unleash Playground](/concepts/playground) is an invaluable tool. You can use an access token along with various context values (input via the UI) to simulate how a flag will be resolved for different users and scenarios, helping you verify your configuration.
 
 ### Alternative: Using variants for disabled/enabled states
 
 If you need to know about a flag regardless of whether it's "on" or "off" for a user (e.g., for analytics or UI rendering logic), consider using variants:
 
 -   First, enable the feature flag itself in the desired environment.
--   Next, configure [strategy variants](/reference/strategy-variants) to represent "enabled" and "disabled" states. You can assign percentages to these variants (e.g., 50% "enabled", 50% "disabled").
+-   Next, configure [strategy variants](/concepts/strategy-variants) to represent "enabled" and "disabled" states. You can assign percentages to these variants (e.g., 50% "enabled", 50% "disabled").
 
     ![Using enabled and disabled variants](/img/enabled-disabled-variants.png)
     *This flag itself is enabled in development and adds a 50%/50% split between disabled/enabled variants. This is essentially the same as a gradual rollout of 50% but using variants.*
@@ -63,15 +63,15 @@ If your A/B tests or experiments are producing unexpected results:
 -   First, ensure the feature flag is being returned correctly by following the guidance in the "[My feature flag is not returned or my users are not exposed](#my-feature-flag-is-not-returned-or-my-users-are-not-exposed)" section above.
 
 #### Verify gradual rollout percentage
--   Check the rollout percentage of your [gradual rollout activation strategy](/reference/activation-strategies). If you intend to include 100% of your user base in the A/B/n test, ensure the rollout percentage is set to 100%.
+-   Check the rollout percentage of your [gradual rollout activation strategy](/concepts/activation-strategies). If you intend to include 100% of your user base in the A/B/n test, ensure the rollout percentage is set to 100%.
 
 #### Check stickiness and context
--   Revisit the [stickiness](/reference/stickiness) configuration.
+-   Revisit the [stickiness](/concepts/stickiness) configuration.
     -   If using default stickiness, confirm that either `userId` or `sessionId` (or both, depending on your setup) is consistently provided in the Unleash context from your application.
     -   If the context provided during flag evaluation does not include the field used for stickiness, the gradual rollout strategy will evaluate to `false`, and the user will not be part of the A/B test population for that flag.
 
 #### Ensure variants are correctly configured
--   Refer to the documentation on [feature flag variants](/reference/feature-toggle-variants).
+-   Refer to the documentation on [feature flag variants](/concepts/feature-flag-variants).
 -   For a simple 50-50 A/B test, your variants should be configured accordingly (e.g., two variants, "A" and "B", with appropriate weighting or rollout distribution if not handled by a parent strategy).
 
     ![An example of variants configured for an A/B test](/img/troubleshooting-flag-abn-test-unexpected-result-variants.png)
@@ -97,7 +97,7 @@ If your A/B tests or experiments are producing unexpected results:
     ```
 
 #### Use the Unleash playground
--   If results are still unexpected, use the [Playground](/reference/playground) to simulate different user contexts and verify that the feature flag and its variants are resolving as intended.
+-   If results are still unexpected, use the [Playground](/concepts/playground) to simulate different user contexts and verify that the feature flag and its variants are resolving as intended.
 
 ## My requests are blocked due to CORS issues
 
@@ -137,7 +137,7 @@ If a documented Unleash feature isn't showing up in your Admin UI, check the fol
 
 ## Got locked out of an Admin account after configuring SCIM
 
-When you integrate Unleash with an identity provider (IdP) like [Okta](/provisioning/how-to-setup-provisioning-with-okta) or [Entra ID](/provisioning/how-to-setup-provisioning-with-entra) via [SCIM](/reference/scim), your IdP becomes the source of truth for user information.
+When you integrate Unleash with an identity provider (IdP) like [Okta](/provisioning/how-to-setup-provisioning-with-okta) or [Entra ID](/provisioning/how-to-setup-provisioning-with-entra) via [SCIM](/concepts/scim), your IdP becomes the source of truth for user information.
 This can have an unintended side effect: users, including the one who set up the integration, might lose their admin permissions.
 
 When your IdP syncs a user with Unleash, it sends over the user's attributes. However, the standard SCIM protocol does not have a field for user roles. If role information isn't specified, Unleash defaults the user to the Viewer role for security reasons.
@@ -147,10 +147,10 @@ This means that even if you manually reassign the Admin role to a user in the Un
 
 #### Manage roles with user groups
 
-By creating a [group](/reference/rbac#user-groups) in Unleash and assigning it an admin role, and then configuring your IdP to push that group and its membership via SCIM, you get fully automated permission management:
+By creating a [group](/concepts/rbac#user-groups) in Unleash and assigning it an admin role, and then configuring your IdP to push that group and its membership via SCIM, you get fully automated permission management:
 
 1. In the Unleash Admin UI, go to **Admin settins > User config > Groups** and create a new group, for example `Unleash Admins`.
-2. Assign the Admin role or your desired [custom-root role](/reference/rbac#custom-root-roles) to this group.
+2. Assign the Admin role or your desired [custom-root role](/concepts/rbac#custom-root-roles) to this group.
 3. In your IdP, ensure you have a corresponding group and configure your SCIM integration.
 4. Once configured, any user you add to the `Unleash Admins` group in your IdP will automatically gain admin privileges in Unleash.
 
@@ -168,7 +168,7 @@ If you've already enabled SCIM and lost all admin access, and you are self-hoste
 
 ## My Network Tab is empty, and I don't see any data.
 
-If you run into an issue when [configuring your Network dashboards](/reference/network-view#configure-a-data-source), verify that you've set up the `PROMETHEUS_API` URL correctly:
+If you run into an issue when [configuring your Network dashboards](/concepts/network-view#configure-a-data-source), verify that you've set up the `PROMETHEUS_API` URL correctly:
 
 - Check the `PROMETHEUS_API` environment variable: Ensure it points to your Prometheus server and not to your Unleash URL. Pointing it back to Unleash (e.g., https://unleash.example.com/internal-backstage/prometheus) is incorrect and will result in an empty dashboard.
 

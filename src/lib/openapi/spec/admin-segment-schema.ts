@@ -6,7 +6,7 @@ export const adminSegmentSchema = {
     type: 'object',
     required: ['id', 'name', 'constraints', 'createdAt'],
     description:
-        'A description of a [segment](https://docs.getunleash.io/reference/segments)',
+        'A description of a [segment](https://docs.getunleash.io/concepts/segments)',
     additionalProperties: false,
     properties: {
         id: {

@@ -25,13 +25,13 @@ If you have any segments or custom strategies defined, you must first manually c
 :::
 
 Feature flags are imported with full configuration, including:
-- [Activation strategies](/reference/activation-strategies)
-- [Context fields](/reference/unleash-context)
-- [Strategy variants](/reference/strategy-variants)
-- [Tags](/reference/feature-toggles#tags)
-- [Feature flag state](/reference/feature-toggles#feature-flag-state)
-- [Feature dependencies](/reference/feature-toggles#feature-flag-dependencies)
-- [Feature flag links](/reference/feature-toggles#external-links)
+- [Activation strategies](/concepts/activation-strategies)
+- [Context fields](/concepts/unleash-context)
+- [Strategy variants](/concepts/strategy-variants)
+- [Tags](/concepts/feature-flags#tags)
+- [Feature flag state](/concepts/feature-flags#feature-flag-state)
+- [Feature dependencies](/concepts/feature-flags#feature-flag-dependencies)
+- [Feature flag links](/concepts/feature-flags#external-links)
 
 If a feature flag already exists in your target instance, it will be overwritten.
 

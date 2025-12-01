@@ -7,7 +7,7 @@ export const createApplicationSchema = {
     properties: {
         strategies: {
             description:
-                'Which [strategies](https://docs.getunleash.io/reference/core-concepts#activation-strategies) the application has loaded. Useful when trying to figure out if your [custom strategy](https://docs.getunleash.io/reference/activation-strategies#custom-strategies) has been loaded in the SDK',
+                'Which [strategies](https://docs.getunleash.io/concepts/core-concepts#activation-strategies) the application has loaded. Useful when trying to figure out if your [custom strategy](https://docs.getunleash.io/concepts/activation-strategies#custom-strategies) has been loaded in the SDK',
             type: 'array',
             items: {
                 type: 'string',

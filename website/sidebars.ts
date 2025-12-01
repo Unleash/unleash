@@ -67,18 +67,18 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'reference/core-concepts',
+                id: 'concepts/core-concepts',
             },
             items: [
                 {
                     label: 'Projects and environments',
                     collapsed: true,
                     type: 'category',
-                    link: { type: 'doc', id: 'reference/projects' },
+                    link: { type: 'doc', id: 'concepts/projects' },
                     items: [
-                        'reference/projects',
-                        'reference/project-collaboration-mode',
-                        'reference/environments',
+                        'concepts/projects',
+                        'concepts/project-collaboration-mode',
+                        'concepts/environments',
                     ],
                 },
                 {
@@ -87,15 +87,15 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/feature-toggles',
+                        id: 'concepts/feature-flags',
                     },
                     items: [
-                        'reference/feature-toggles',
-                        'reference/activation-strategies',
-                        'reference/strategy-variants',
-                        'reference/segments',
-                        'reference/unleash-context',
-                        'reference/stickiness',
+                        'concepts/feature-flags',
+                        'concepts/activation-strategies',
+                        'concepts/strategy-variants',
+                        'concepts/segments',
+                        'concepts/unleash-context',
+                        'concepts/stickiness',
                     ],
                 },
                 {
@@ -104,11 +104,11 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/release-templates',
+                        id: 'concepts/release-templates',
                     },
                     items: [
-                        'reference/release-templates',
-                        'reference/impact-metrics',
+                        'concepts/release-templates',
+                        'concepts/impact-metrics',
                     ],
                 },
                 {
@@ -117,16 +117,16 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/api-tokens-and-client-keys',
+                        id: 'concepts/api-tokens-and-client-keys',
                     },
                     items: [
-                        'reference/api-tokens-and-client-keys',
-                        'reference/front-end-api',
-                        'reference/rbac',
-                        'reference/sso',
-                        'reference/scim',
-                        'reference/change-requests',
-                        'reference/public-signup',
+                        'concepts/api-tokens-and-client-keys',
+                        'concepts/front-end-api',
+                        'concepts/rbac',
+                        'concepts/sso',
+                        'concepts/scim',
+                        'concepts/change-requests',
+                        'concepts/public-signup',
                     ],
                 },
                 {
@@ -135,12 +135,12 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/technical-debt',
+                        id: 'concepts/technical-debt',
                     },
                     items: [
-                        'reference/technical-debt',
-                        'reference/insights',
-                        'reference/resource-limits',
+                        'concepts/technical-debt',
+                        'concepts/insights',
+                        'concepts/resource-limits',
                     ],
                 },
                 {
@@ -149,13 +149,13 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/impression-data',
+                        id: 'concepts/impression-data',
                     },
                     items: [
-                        'reference/impression-data',
-                        'reference/events',
-                        'reference/playground',
-                        'reference/network-view',
+                        'concepts/impression-data',
+                        'concepts/events',
+                        'concepts/playground',
+                        'concepts/network-view',
                     ],
                 },
                 {
@@ -164,13 +164,13 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/applications',
+                        id: 'concepts/applications',
                     },
                     items: [
-                        'reference/applications',
-                        'reference/service-accounts',
-                        'reference/signals',
-                        'reference/actions',
+                        'concepts/applications',
+                        'concepts/service-accounts',
+                        'concepts/signals',
+                        'concepts/actions',
                     ],
                 },
                 {
@@ -179,20 +179,20 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/login-history',
+                        id: 'concepts/login-history',
                     },
                     items: [
-                        'reference/login-history',
-                        'reference/banners',
-                        'reference/command-menu',
-                        'reference/search-operators',
-                        'reference/maintenance-mode',
+                        'concepts/login-history',
+                        'concepts/banners',
+                        'concepts/command-menu',
+                        'concepts/search-operators',
+                        'concepts/maintenance-mode',
                     ],
                 },
                 {
                     type: 'doc',
                     label: 'Import and export',
-                    id: 'reference/import-export',
+                    id: 'concepts/import-export',
                 },
             ],
         },
@@ -661,7 +661,7 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'doc',
                             label: 'Terraform',
-                            id: 'reference/terraform',
+                            id: 'concepts/terraform',
                         },
                         {
                             type: 'doc',

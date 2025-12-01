@@ -61,7 +61,7 @@ User management at scale is difficult without robust automation. When you’re m
 SCIM takes group synchronization to the next level by providing a standardized protocol for user and group management.
 Through SCIM, you can:
 
--   [Provision and de-provision users](/reference/scim) (team members) as they are joining or leaving your organization.
+-   [Provision and de-provision users](/concepts/scim) (team members) as they are joining or leaving your organization.
 -   Automatically create and delete user groups.
 -   Sync group membership in real-time.
 -   Ensure consistent access across multiple platforms.
@@ -76,13 +76,13 @@ This automation creates an access control system that adapts in real-time to org
 
 ## Configure role-based access controls for feature flags
 
-[Role-based access control](/reference/rbac) makes feature flag management a strategic governance tool. Consider a scenario in which a junior developer should never be able to modify critical feature flags in the authentication system within a banking platform. RBAC makes this granular control seamless. We recommend carefully delegating administrative privileges to users based on the needs of their roles within projects and the organization, a concept known as the principle of least privilege.
+[Role-based access control](/concepts/rbac) makes feature flag management a strategic governance tool. Consider a scenario in which a junior developer should never be able to modify critical feature flags in the authentication system within a banking platform. RBAC makes this granular control seamless. We recommend carefully delegating administrative privileges to users based on the needs of their roles within projects and the organization, a concept known as the principle of least privilege.
 
 In the Unleash Admin UI, go to **Admin > User config > Root roles** to view, create, and manage user roles at the root level, or **Project roles** to manage roles at the project level.
 
 ![Manage all user roles in the Unleash Admin UI.](/img/use-case-user-mgmt-root-roles.png)
 
-We have 5 [predefined roles](/reference/rbac#predefined-roles) within our RBAC framework at Unleash.
+We have 5 [predefined roles](/concepts/rbac#predefined-roles) within our RBAC framework at Unleash.
 
 _Root roles_:
 
@@ -103,7 +103,7 @@ Viewers can observe projects and flags, but cannot make changes. When added to a
 
 Project permissions are separated from root permissions to make it even more targeted regarding what permissions someone can and cannot have in Unleash.
 
-For more fine-tuned access controls, create [custom root roles](/reference/rbac#create-and-assign-a-custom-root-role) and [custom project roles](/reference/rbac#create-and-assign-a-custom-project-role), where you can define the privileges and limitations beyond the predefined roles we have built into Unleash.
+For more fine-tuned access controls, create [custom root roles](/concepts/rbac#create-and-assign-a-custom-root-role) and [custom project roles](/concepts/rbac#create-and-assign-a-custom-project-role), where you can define the privileges and limitations beyond the predefined roles we have built into Unleash.
 
 For example, customize root permissions to perform CRUD operations for:
 
@@ -119,7 +119,7 @@ In the Unleash Admin UI, go to **Admin > User config > Root roles** and click **
 
 ### Extend RBAC with a change management workflow
 
-While RBAC allows you to administer Unleash safely, you might need approval processes when changing feature flags or their configuration. When multiple teams are working on complex systems, [change requests](/reference/change-requests) provide a systematic approach to:
+While RBAC allows you to administer Unleash safely, you might need approval processes when changing feature flags or their configuration. When multiple teams are working on complex systems, [change requests](/concepts/change-requests) provide a systematic approach to:
 
 -   **Comprehensive review**: Every proposed feature flag modification goes through a review, reducing the likelihood of unintended consequences.
 -   **Audit trail**: Every change is documented, timestamped, and attributed to specific team members, creating a permanent record of system modifications.
@@ -141,7 +141,7 @@ This process ensures that even minor feature flag changes go through rigorous ev
 
 ## Implement effective auditing in Unleash
 
-For enterprise organizations, auditing is a critical component to various aspects of the software development lifecycle. Audit logs for feature flag management can be part of your overall security and compliance process, which provides a comprehensive view of every action taken within the feature flag management system. Use [Unleash's auditing capabilities](/reference/events) to track critical information for every significant system interaction:
+For enterprise organizations, auditing is a critical component to various aspects of the software development lifecycle. Audit logs for feature flag management can be part of your overall security and compliance process, which provides a comprehensive view of every action taken within the feature flag management system. Use [Unleash's auditing capabilities](/concepts/events) to track critical information for every significant system interaction:
 
 ### Auditing user actions
 

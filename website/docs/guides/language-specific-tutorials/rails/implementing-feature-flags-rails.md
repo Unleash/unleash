@@ -165,7 +165,7 @@ UNLEASH = Unleash::Client.new
 
 ```
 
-You can check our [API tokens and client keys documentation](/reference/api-tokens-and-client-keys) for more information.
+You can check our [API tokens and client keys documentation](/concepts/api-tokens-and-client-keys) for more information.
 
 Then, in `app/controllers/application_controller.rb`, add the following method:
 

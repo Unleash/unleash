@@ -34,7 +34,7 @@ export const ApiTokenDocs = () => {
             <p>
                 Read the{' '}
                 <a
-                    href='https://docs.getunleash.io/reference/sdks'
+                    href='https://docs.getunleash.io/concepts/sdks'
                     target='_blank'
                     rel='noreferrer'
                 >

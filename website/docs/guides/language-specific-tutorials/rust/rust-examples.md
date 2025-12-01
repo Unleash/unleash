@@ -85,7 +85,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 ```
 
-Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/api/update-feature-strategy) for your flags.
+Learn more about [gradual rollouts in our docs](/concepts/activation-strategies). Also, learn more about our [API for creating a new strategy](/api/update-feature-strategy) for your flags.
 
 ## Canary Deployments in Rust
 
@@ -113,11 +113,11 @@ Often, canary deployments are managed at the load balancer level while feature f
 
 Unleash has a few ways to help manage canary deployments for Rust apps:
 
--   Using a [gradual rollout](/reference/activation-strategies) (which we [implemented in a previous section](#gradual-rollouts-for-rust-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
+-   Using a [gradual rollout](/concepts/activation-strategies) (which we [implemented in a previous section](#gradual-rollouts-for-rust-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
--   Using either [constraints](/reference/activation-strategies#constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
+-   Using either [constraints](/concepts/activation-strategies#constraints) or [segments](/concepts/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
 
--   [Strategy variants](/reference/strategy-variants) are used to do the same canary deployment, but can be scaled to more _advanced_ cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use variants to split your population of users and conduct an A/B test with them.
+-   [Strategy variants](/concepts/strategy-variants) are used to do the same canary deployment, but can be scaled to more _advanced_ cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use variants to split your population of users and conduct an A/B test with them.
 
 Let’s walk you through how to use **strategy constraints** with Rust.
 
@@ -209,11 +209,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 Check out our [API docs on updating flag strategies](/api/update-feature-strategy) to learn more.
 
-Read our documentation for more context on [strategy constraint configurations](/reference/activation-strategies#constraints) and use cases.
+Read our documentation for more context on [strategy constraint configurations](/concepts/activation-strategies#constraints) and use cases.
 
 ## Server-side A/B Testing in Rust
 
-A/B testing is a common way for teams to test out how users interact with two or more versions of a new feature that is released. At Unleash, we call these [strategy variants](/reference/strategy-variants).
+A/B testing is a common way for teams to test out how users interact with two or more versions of a new feature that is released. At Unleash, we call these [strategy variants](/concepts/strategy-variants).
 
 When a feature flag is enabled, we can expose a particular version of a feature to a select user base. From there, we can use the variants to view the performance metrics in Unleash and see which is more efficient.
 
@@ -342,7 +342,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 Take a look at our [API docs](/api/patch-feature) to learn more about how to change different flag properties right from your code.
 
-You can find more information in our [impression data docs](/reference/impression-data#impression-event-data).
+You can find more information in our [impression data docs](/concepts/impression-data#impression-event-data).
 
 ## Application Metrics and Monitoring for Rust apps
 
@@ -372,7 +372,7 @@ This is especially true in very regulated environments like health care, insuran
 
 Unleash provides the data to log any change over time at the flag level and at the project level. Logs are useful for downstream data warehouses or data lakes.
 
-You can view events in [Event Log](/reference/events#event-log) to monitor the changes to flag strategies and statuses, like:
+You can view events in [Event Log](/concepts/events#event-log) to monitor the changes to flag strategies and statuses, like:
 
 -   When the flag was created
 -   How the gradual rollout strategy was configured
@@ -406,7 +406,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 ```
 
-Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/api/get-events-for-toggle) to learn more.
+Read our documentation on [Event Log](/concepts/events#event-log) and [APIs](/api/get-events-for-toggle) to learn more.
 
 ## Flag Automation and Workflow Integration for Rust Apps
 

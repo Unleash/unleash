@@ -38,12 +38,12 @@
     },
     {
       "source": "/user_guide/api-token",
-      "destination": "/reference/api-tokens-and-client-keys",
+      "destination": "/concepts/api-tokens-and-client-keys",
       "permanent": true
     },
     {
       "source": "/deploy/user_guide/api-token",
-      "destination": "/reference/api-tokens-and-client-keys",
+      "destination": "/concepts/api-tokens-and-client-keys",
       "permanent": true
     },
     {
@@ -73,27 +73,27 @@
     },
     {
       "source": "/how-to/how-to-create-project-api-tokens",
-      "destination": "/reference/api-tokens-and-client-keys#create-an-api-token",
+      "destination": "/concepts/api-tokens-and-client-keys#create-an-api-token",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-create-personal-access-tokens",
-      "destination": "/reference/api-tokens-and-client-keys#create-an-api-token",
+      "destination": "/concepts/api-tokens-and-client-keys#create-an-api-token",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-create-service-accounts",
-      "destination": "/reference/service-accounts#create-a-service-account",
+      "destination": "/concepts/service-accounts#create-a-service-account",
       "permanent": true
     },
     {
       "source": "/advanced/audit_log",
-      "destination": "/reference/events",
+      "destination": "/concepts/events",
       "permanent": true
     },
     {
       "source": "/reference/event-log",
-      "destination": "/reference/events#event-log",
+      "destination": "/concepts/events#event-log",
       "permanent": true
     },
     {
@@ -108,7 +108,7 @@
     },
     {
       "source": "/reference/event-types",
-      "destination": "/reference/events#event-types",
+      "destination": "/concepts/events#event-types",
       "permanent": true
     },
     {
@@ -123,47 +123,47 @@
     },
     {
       "source": "/advanced/archived_toggles",
-      "destination": "/reference/feature-toggles#archive-a-feature-toggle",
+      "destination": "/concepts/feature-flags#archive-a-feature-toggle",
       "permanent": true
     },
     {
       "source": "/advanced/custom-activation-strategy",
-      "destination": "/reference/activation-strategies#custom-strategies",
+      "destination": "/concepts/activation-strategies#custom-strategies",
       "permanent": true
     },
     {
       "source": "/advanced/custom_activation_strategy",
-      "destination": "/reference/activation-strategies#custom-strategies",
+      "destination": "/concepts/activation-strategies#custom-strategies",
       "permanent": true
     },
     {
       "source": "/reference/custom-activation-strategies",
-      "destination": "/reference/activation-strategies#custom-strategies",
+      "destination": "/concepts/activation-strategies#custom-strategies",
       "permanent": true
     },
     {
       "source": "/advanced/feature_toggle_types",
-      "destination": "/reference/feature-toggles#feature-flag-types",
+      "destination": "/concepts/feature-flags#feature-flag-types",
       "permanent": true
     },
     {
       "source": "/reference/feature-toggle-types",
-      "destination": "/reference/feature-toggles#feature-flag-types",
+      "destination": "/concepts/feature-flags#feature-flag-types",
       "permanent": true
     },
     {
       "source": "/reference/feature-lifecycle",
-      "destination": "/reference/feature-toggles#feature-flag-lifecycle",
+      "destination": "/concepts/feature-flags#feature-flag-lifecycle",
       "permanent": true
     },
     {
       "source": "/reference/feature-flag-naming-patterns",
-      "destination": "/reference/feature-toggles#set-a-naming-pattern",
+      "destination": "/concepts/feature-flags#set-a-naming-pattern",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-add-feature-flag-naming-patterns",
-      "destination": "/reference/feature-toggles#set-a-naming-pattern",
+      "destination": "/concepts/feature-flags#set-a-naming-pattern",
       "permanent": true
     },
     {
@@ -173,67 +173,67 @@
     },
     {
       "source": "/how-to/how-to-add-users-to-unleash",
-      "destination": "/reference/rbac",
+      "destination": "/concepts/rbac",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-import-export",
-      "destination": "/reference/environment-import-export",
+      "destination": "/concepts/environment-import-export",
       "permanent": true
     },
     {
       "source": "/how-to/users-and-permissions",
-      "destination": "/reference/rbac",
+      "destination": "/concepts/rbac",
       "permanent": true
     },
     {
       "source": "/how-to/env",
-      "destination": "/reference/environments",
+      "destination": "/concepts/environments",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-create-and-manage-user-groups",
-      "destination": "/reference/rbac#user-groups",
+      "destination": "/concepts/rbac#user-groups",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-clone-environments",
-      "destination": "/reference/environments#clone-an-environment",
+      "destination": "/concepts/environments#clone-an-environment",
       "permanent": true
     },
     {
       "source": "/how-to-create-and-display-banners",
-      "destination": "/reference/banners",
+      "destination": "/concepts/banners",
       "permanent": true
     },
     {
       "source": "/toggle_variants",
-      "destination": "/reference/feature-toggle-variants",
+      "destination": "/concepts/feature-flag-variants",
       "permanent": true
     },
     {
       "source": "/advanced/feature_toggle_variants",
-      "destination": "/reference/feature-toggle-variants",
+      "destination": "/concepts/feature-flag-variants",
       "permanent": true
     },
     {
       "source": "/advanced/toggle_variants",
-      "destination": "/reference/feature-toggle-variants",
+      "destination": "/concepts/feature-flag-variants",
       "permanent": true
     },
     {
       "source": "/advanced/impression-data",
-      "destination": "/reference/impression-data",
+      "destination": "/concepts/impression-data",
       "permanent": true
     },
     {
       "source": "/advanced/impression_data",
-      "destination": "/reference/impression-data",
+      "destination": "/concepts/impression-data",
       "permanent": true
     },
     {
       "source": "/advanced/stickiness",
-      "destination": "/reference/stickiness",
+      "destination": "/concepts/stickiness",
       "permanent": true
     },
     {
@@ -243,12 +243,12 @@
     },
     {
       "source": "/reference/archived-toggles",
-      "destination": "/reference/feature-toggles#archive-a-feature-flag",
+      "destination": "/concepts/feature-flags#archive-a-feature-flag",
       "permanent": true
     },
     {
       "source": "/reference/dependent-features",
-      "destination": "/reference/feature-toggles#feature-flag-dependencies",
+      "destination": "/concepts/feature-flags#feature-flag-dependencies",
       "permanent": true
     },
     {
@@ -268,22 +268,22 @@
     },
     {
       "source": "/advanced/strategy_constraints",
-      "destination": "/reference/activation-strategies#constraints",
+      "destination": "/concepts/activation-strategies#constraints",
       "permanent": true
     },
     {
       "source": "/advanced/tags",
-      "destination": "/reference/feature-toggles#tags",
+      "destination": "/concepts/feature-flags#tags",
       "permanent": true
     },
     {
       "source": "/reference/tags",
-      "destination": "/reference/feature-toggles#tags",
+      "destination": "/concepts/feature-flags#tags",
       "permanent": true
     },
     {
       "source": "/advanced/enterprise-authentication",
-      "destination": "/reference/sso",
+      "destination": "/concepts/sso",
       "permanent": true
     },
     {
@@ -488,62 +488,62 @@
     },
     {
       "source": "/user_guide/control_rollout",
-      "destination": "/reference/activation-strategies",
+      "destination": "/concepts/activation-strategies",
       "permanent": true
     },
     {
       "source": "/user_guide/activation_strategy",
-      "destination": "/reference/activation-strategies",
+      "destination": "/concepts/activation-strategies",
       "permanent": true
     },
     {
       "source": "/user_guide/environments",
-      "destination": "/reference/environments",
+      "destination": "/concepts/environments",
       "permanent": true
     },
     {
       "source": "/user_guide/projects",
-      "destination": "/reference/projects",
+      "destination": "/concepts/projects",
       "permanent": true
     },
     {
       "source": "/user_guide/rbac",
-      "destination": "/reference/rbac",
+      "destination": "/concepts/rbac",
       "permanent": true
     },
     {
       "source": "/advanced/groups",
-      "destination": "/reference/rbac",
+      "destination": "/concepts/rbac",
       "permanent": true
     },
     {
       "source": "/user_guide/technical_debt",
-      "destination": "/reference/technical-debt",
+      "destination": "/concepts/technical-debt",
       "permanent": true
     },
     {
       "source": "/user_guide/unleash_context",
-      "destination": "/reference/unleash-context",
+      "destination": "/concepts/unleash-context",
       "permanent": true
     },
     {
       "source": "/user_guide/v4-whats-new",
-      "destination": "/reference/whats-new-v4",
+      "destination": "/concepts/whats-new-v4",
       "permanent": true
     },
     {
       "source": "/user_guide/important-concepts",
-      "destination": "/reference",
+      "destination": "/concepts",
       "permanent": true
     },
     {
       "source": "/tutorials/important-concepts",
-      "destination": "/reference",
+      "destination": "/concepts",
       "permanent": true
     },
     {
       "source": "/reference/concepts/",
-      "destination": "/reference",
+      "destination": "/concepts",
       "permanent": true
     },
     {
@@ -603,7 +603,7 @@
     },
     {
       "source": "/reference",
-      "destination": "/reference/projects",
+      "destination": "/concepts/projects",
       "permanent": true
     },
     {
@@ -713,12 +713,12 @@
     },
     {
       "source": "/tutorials/the-anatomy-of-unleash",
-      "destination": "/reference/core-concepts",
+      "destination": "/concepts/core-concepts",
       "permanent": true
     },
     {
       "source": "/topics/the-anatomy-of-unleash",
-      "destination": "/reference/core-concepts",
+      "destination": "/concepts/core-concepts",
       "permanent": true
     },
     {
@@ -728,7 +728,7 @@
     },
     {
       "source": "/reference",
-      "destination": "/reference/projects",
+      "destination": "/concepts/projects",
       "permanent": true
     },
     {
@@ -873,12 +873,12 @@
     },
     {
       "source": "/how-to/how-to-download-login-history",
-      "destination": "/reference/login-history",
+      "destination": "/concepts/login-history",
       "permanent": true
     },
     {
       "source": "how-to/how-to-manage-public-invite-tokens",
-      "destination": "/reference/public-signup",
+      "destination": "/concepts/public-signup",
       "permanent": true
     },
     {
@@ -893,32 +893,32 @@
     },
     {
       "source": "/how-to/how-to-create-and-assign-custom-root-roles",
-      "destination": "/reference/rbac#create-and-assign-a-custom-root-role",
+      "destination": "/concepts/rbac#create-and-assign-a-custom-root-role",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-create-and-assign-custom-project-roles",
-      "destination": "/reference/rbac#create-and-assign-a-custom-project-role",
+      "destination": "/concepts/rbac#create-and-assign-a-custom-project-role",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-add-strategy-constraints",
-      "destination": "/reference/activation-strategies#add-strategy-constraint",
+      "destination": "/concepts/activation-strategies#add-strategy-constraint",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-use-custom-strategies",
-      "destination": "/reference/activation-strategies",
+      "destination": "/concepts/activation-strategies",
       "permanent": true
     },
     {
       "source": "/reference/strategy-constraints",
-      "destination": "/reference/activation-strategies#constraints",
+      "destination": "/concepts/activation-strategies#constraints",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-define-custom-context-fields",
-      "destination": "/reference/activation-strategies#create-a-custom-context-field",
+      "destination": "/concepts/activation-strategies#create-a-custom-context-field",
       "permanent": true
     },
     {
@@ -1223,22 +1223,22 @@
     },
     {
       "source": "/reference/deploy/import-export",
-      "destination": "/reference/environment-import-export",
+      "destination": "/concepts/environment-import-export",
       "permanent": true
     },
     {
       "source": "/deploy/import_export",
-      "destination": "/reference/environment-import-export",
+      "destination": "/concepts/environment-import-export",
       "permanent": true
     },
     {
       "source": "/reference/deploy/environment-import-export",
-      "destination": "/reference/import-export",
+      "destination": "/concepts/import-export",
       "permanent": true
     },
     {
       "source": "/deploy/environment-import-export",
-      "destination": "/reference/import-export",
+      "destination": "/concepts/import-export",
       "permanent": true
     },
     {
@@ -1253,7 +1253,7 @@
     },
     {
       "source": "/understanding-unleash/the-anatomy-of-unleash",
-      "destination": "/reference/core-concepts",
+      "destination": "/concepts/core-concepts",
       "permanent": true
     },
     {

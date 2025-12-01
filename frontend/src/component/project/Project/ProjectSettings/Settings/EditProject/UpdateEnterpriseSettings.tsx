@@ -149,7 +149,7 @@ export const UpdateEnterpriseSettings = ({
                 loading={loading}
                 title='Enterprise Settings'
                 description=''
-                documentationLink='https://docs.getunleash.io/reference/projects'
+                documentationLink='https://docs.getunleash.io/concepts/projects'
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectSettingsApiCode}
                 compactPadding

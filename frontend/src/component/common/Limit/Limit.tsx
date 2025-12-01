@@ -145,7 +145,7 @@ export const Limit: FC<{
                 <LimitExplanation>
                     <Link
                         target='_blank'
-                        to='https://docs.getunleash.io/reference/resource-limits'
+                        to='https://docs.getunleash.io/concepts/resource-limits'
                     >
                         Read more about limits
                     </Link>

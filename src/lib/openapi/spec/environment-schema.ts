@@ -16,7 +16,7 @@ export const environmentSchema = {
             type: 'string',
             example: 'development',
             description:
-                'The [type of environment](https://docs.getunleash.io/reference/environments#environment-types).',
+                'The [type of environment](https://docs.getunleash.io/concepts/environments#environment-types).',
         },
         enabled: {
             type: 'boolean',

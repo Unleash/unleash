@@ -26,7 +26,7 @@ Think of them this way:
 
 ![The password tab has a toggle that you can turn off.](/img/projects-environments.png)
 
-A single [feature flag](/reference/feature-toggles) is defined once within a [project](/reference/projects), but its configuration (its on/off state and activation strategies) can be different in each [environment](/reference/environments). This separation allows you to manage a feature's entire lifecycle safely and efficiently.
+A single [feature flag](/concepts/feature-flags) is defined once within a [project](/concepts/projects), but its configuration (its on/off state and activation strategies) can be different in each [environment](/concepts/environments). This separation allows you to manage a feature's entire lifecycle safely and efficiently.
 
 ## The unified flag model
 
@@ -47,7 +47,7 @@ Every project in Unleash contains a set of environments. You should create a set
 
 When you configure an environment in Unleash, you define two properties:
 - **Name**: A custom, human-readable name of your choice. This should match the environment in your workflow, such as `dev`, `qa`, or `live`.
-- **Type**: One of four predefined options: `development`, `test`, `pre-production`, or `production`. This environment type is important for [flag lifecycle](/reference/feature-toggles#feature-flag-lifecycle), helping you improve your workflows and flag cleanup.
+- **Type**: One of four predefined options: `development`, `test`, `pre-production`, or `production`. This environment type is important for [flag lifecycle](/concepts/feature-flags#feature-flag-lifecycle), helping you improve your workflows and flag cleanup.
 
 | Release phase/name | Purpose                                                | Environment name | Environment type   |
 |--------------------|--------------------------------------------------------|-----------------|--------------------|
@@ -71,9 +71,9 @@ Every feature flag in Unleash must belong to a project. A new Unleash instance i
 
 Projects help you:
 - **Establish clear ownership and context**: By grouping flags into logical containers like `payments-team`, `mobile-app`, or `q3-initiatives`, you immediately provide context and identify responsibility.
-- **Understand technical debt at a glance**: Each project has its own [dashboard](/reference/technical-debt#project-status) that gives you an instant view of its health, including metrics, recent activity within the project, and information on project-specific resources.
-- **Define specific settings**: You can configure settings at the project level, such as a default activation strategy or requiring [approvals for changes](/reference/change-requests) in production environments.
-- **Manage collaboration and visibility**: Projects can be set to [open, protected, or private](/reference/project-collaboration-mode), defining who can access the project or submit change requests.
+- **Understand technical debt at a glance**: Each project has its own [dashboard](/concepts/technical-debt#project-status) that gives you an instant view of its health, including metrics, recent activity within the project, and information on project-specific resources.
+- **Define specific settings**: You can configure settings at the project level, such as a default activation strategy or requiring [approvals for changes](/concepts/change-requests) in production environments.
+- **Manage collaboration and visibility**: Projects can be set to [open, protected, or private](/concepts/project-collaboration-mode), defining who can access the project or submit change requests.
 
 ![Project status dashboard](/img/project-health.png)
 
@@ -135,7 +135,7 @@ A common challenge is managing a single feature that spans multiple services (fo
 - **Use separate, coordinated flags**: If the services are owned by different teams and have different release cadences, it's better to create separate flags in their respective projects. This prevents one team from impacting another's release. The rollout can then be coordinated across teams using release templates.
 
 ## Evolve your structure
-Remember that your initial project and environment structure is not set in stone. Unleash is flexible. You can add new environments, create new projects, and even move flags between them later. For larger migrations, you can use the [Import/Export](/reference/import-export) functionality or the [Admin API](/api).
+Remember that your initial project and environment structure is not set in stone. Unleash is flexible. You can add new environments, create new projects, and even move flags between them later. For larger migrations, you can use the [Import/Export](/concepts/import-export) functionality or the [Admin API](/api).
 
 The system is designed to evolve with your organization, so don't be afraid to start with a simple setup and refactor as your needs change.
 
@@ -150,7 +150,7 @@ This transparency is key to debugging complex, cross-service interactions. Unlea
 
 ## Secure your setup
 
-Once you have a logical structure for your projects and environments, you can secure it using Unleash's [role-based access control](/reference/rbac) (RBAC) framework. RBAC allows you to implement the principle of least privilege, ensuring users only have the access they need.
+Once you have a logical structure for your projects and environments, you can secure it using Unleash's [role-based access control](/concepts/rbac) (RBAC) framework. RBAC allows you to implement the principle of least privilege, ensuring users only have the access they need.
 
 Unleash provides two levels of access control:
 - **Root roles**: These roles (Admin, Editor, Viewer, or custom) grant permissions across the entire Unleash instance for global resources like users, groups, SSO configurations, and instance-wide settings.
@@ -158,7 +158,7 @@ Unleash provides two levels of access control:
 
 ### Environment-specific permissions
 
-A key capability for enterprise governance is the ability to define [custom project roles](/reference/rbac#custom-project-roles) with [environment-specific permissions](/reference/rbac#root-permissions). This allows you to precisely control what actions a user can take in each environment.
+A key capability for enterprise governance is the ability to define [custom project roles](/concepts/rbac#custom-project-roles) with [environment-specific permissions](/concepts/rbac#root-permissions). This allows you to precisely control what actions a user can take in each environment.
 For example, you can create a "Developer" role that allows a team member to freely create and modify activation strategies in the `development` environment but only allows them to submit a change request for the `production` environment.
 This workflow empowers developers to innovate quickly in safe environments while ensuring that all changes to production are subject to a formal review and approval process.
 
@@ -171,15 +171,15 @@ This workflow empowers developers to innovate quickly in safe environments while
 
 ### Automating at scale with SSO and SCIM
 
-For large organizations, manually managing user accounts and permissions isn't scalable. Unleash integrates with your existing identity provider (like Okta, Microsoft Entra ID, or Keycloak) via SAML or OpenID Connect for [single sign-on](/reference/sso) (SSO).
+For large organizations, manually managing user accounts and permissions isn't scalable. Unleash integrates with your existing identity provider (like Okta, Microsoft Entra ID, or Keycloak) via SAML or OpenID Connect for [single sign-on](/concepts/sso) (SSO).
 
-Furthermore, Unleash supports the [SCIM protocol](/reference/scim), which automates the provisioning and de-provisioning of users and the syncing of user groups.
+Furthermore, Unleash supports the [SCIM protocol](/concepts/scim), which automates the provisioning and de-provisioning of users and the syncing of user groups.
 
 This ensures that a user's access to Unleash is always in sync with their status in your central identity management system, significantly improving security and reducing administrative overhead.
 
 ### Security for API tokens
 
-Security is enforced through [API tokens](/reference/api-tokens-and-client-keys) that are scoped to a specific environment and one or more projects. This allows you to apply the principle of least privilege to your applications.
+Security is enforced through [API tokens](/concepts/api-tokens-and-client-keys) that are scoped to a specific environment and one or more projects. This allows you to apply the principle of least privilege to your applications.
 
 For example, your checkout service would use a token valid only for the `production` environment and the `project-checkout`. This token could not fetch configurations from the `development` environment, nor could it access flags from another project like `project-search`.
 This creates a strong security boundary, serving as a critical safeguard against both environment mix-ups and unauthorized cross-project data access.
@@ -191,7 +191,7 @@ As with any API token, proper secret management is essential to prevent misuse.
 With a secure and logical structure in place, you can focus on managing flag configurations efficiently.
 
 ### Strategy variants
-[Strategy variants](/reference/strategy-variants), used for A/B testing, are configured as part of an activation strategy within a specific environment.
+[Strategy variants](/concepts/strategy-variants), used for A/B testing, are configured as part of an activation strategy within a specific environment.
 This powerful scoping means you can run a complex experiment with multiple variants in your production environment while the same feature flag has a simple on/off strategy in your development environment.
 This allows for safe, targeted experimentation without impacting other stages of your lifecycle.
 
@@ -210,7 +210,7 @@ This reduces redundant configuration, minimizes human error, and makes managing 
 
 ### Release templates
 
-To ensure consistency in how you roll out features, you can use [release templates](/reference/release-templates).
+To ensure consistency in how you roll out features, you can use [release templates](/concepts/release-templates).
 A release template is a pre-defined set of milestones for different environments. For instance, you could create a "Gradual Rollout UK" template that automatically configures a new flag to be:
 
 - **On** for everyone in `development`.
@@ -223,7 +223,7 @@ Using release templates saves time, reduces manual errors, and ensures that all 
 
 ### Flag dependencies
 
-Unleash allows you to create [parent-child dependencies](/reference/feature-toggles#feature-flag-dependencies) between flags, ensuring a child flag can only be enabled if its parent is also enabled.
+Unleash allows you to create [parent-child dependencies](/concepts/feature-flags#feature-flag-dependencies) between flags, ensuring a child flag can only be enabled if its parent is also enabled.
 A critical architectural constraint is that dependent flags must belong to the same project.
 
 This constraint is intentional and crucial for preventing architectural fragility. If a flag in `project-search` could depend on a flag in `project-payments`, the Search team could inadvertently break the Payments feature.
@@ -231,7 +231,7 @@ This creates hidden, cross-team dependencies that are difficult to track and deb
 
 ### Cloning environments
 
-Unleash Enterprise allows you to [clone an entire environment](/reference/environments#clone-an-environment), which duplicates the environment along with all its feature flag configurations. This is useful for setting up new environments quickly, but it also enables advanced workflows.
+Unleash Enterprise allows you to [clone an entire environment](/concepts/environments#clone-an-environment), which duplicates the environment along with all its feature flag configurations. This is useful for setting up new environments quickly, but it also enables advanced workflows.
 For a complex launch, you could clone your production environment to create a temporary `release-rehearsal-q4` environment.
 
 In this isolated space, the team can practice the exact release sequence, validating dependencies and system behavior without any risk to live systems.
@@ -245,13 +245,13 @@ A feature flagging system requires good housekeeping to remain effective and avo
 A consistent naming convention is crucial for clarity. A good name should make a flag's purpose immediately obvious.
 Because flag names must be unique across the entire Unleash instance, plan a convention that ensures uniqueness.
 
-To ensure these conventions are followed, Unleash allows you to [enforce a specific naming pattern](/reference/feature-toggles#set-a-naming-pattern) at the project level.
+To ensure these conventions are followed, Unleash allows you to [enforce a specific naming pattern](/concepts/feature-flags#set-a-naming-pattern) at the project level.
 For example, in `project-checkout`, you could require all new flags to follow the pattern `checkout-[feature-name]`. Any attempt to create a flag with a non-compliant name will be rejected.
 This is a key governance tool for preventing a chaotic and inconsistent flag namespace as your organization grows.
 
 ### Use tags for discovery and automation
 
-[Tags](/reference/feature-toggles#tags) are free-form labels that you can apply to feature flags to add flexible, cross-project metadata. 
+[Tags](/concepts/feature-flags#tags) are free-form labels that you can apply to feature flags to add flexible, cross-project metadata. 
 
 You can use tags to:
 - **Filter and search**: "Show me all flags tagged with team:payments."
@@ -262,13 +262,13 @@ Use colors in tags to add further visual distinctions and make flags easy to ide
 
 ### Mandate approvals and audit everything
 
-For critical environments like production, enable [change requests](/reference/change-requests) to enforce a "four-eyes principle", where one user proposes a change and another must approve it. This is essential for compliance and preventing costly mistakes.
+For critical environments like production, enable [change requests](/concepts/change-requests) to enforce a "four-eyes principle", where one user proposes a change and another must approve it. This is essential for compliance and preventing costly mistakes.
 
-Equally important is tracking what happens to your flags. In Unleash, [Event Log](/reference/events) provides accountability, simplifies debugging, and is indispensable for security and compliance.
+Equally important is tracking what happens to your flags. In Unleash, [Event Log](/concepts/events) provides accountability, simplifies debugging, and is indispensable for security and compliance.
 
 ### Archive and clean up stale flags
 
-Ensure that your teams have a clear and [effective process](/guides/manage-feature-flags-in-code#flag-cleanup-best-practices) for cleaning up stale feature flags to avoid accumulating [technical debt](/reference/technical-debt).
+Ensure that your teams have a clear and [effective process](/guides/manage-feature-flags-in-code#flag-cleanup-best-practices) for cleaning up stale feature flags to avoid accumulating [technical debt](/concepts/technical-debt).
 Use [feature flag lifecycle data](https://www.getunleash.io/blog/feature-lifecycle-management) from Unleash to improve your workflows over time.
 
 ## Key takeaways

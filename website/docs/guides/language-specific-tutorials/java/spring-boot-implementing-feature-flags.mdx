@@ -9,7 +9,7 @@ Java [Spring Boot](https://spring.io/projects/spring-boot) is a popular Java fra
 
 Leveraging feature flags allows developers to toggle new features on and off, whether you’re experimenting in your local environment, testing for QA purposes, or rolling out changes to users in production. With Unleash, an open-source feature flag service, you can use our tooling to implement feature flags into your application and release new features faster, strategically, and safely. But how can you do this in Java Spring Boot?
 
-In this tutorial, you will learn how to use a feature flag in a Java Spring Boot app. We will use the [Spring Pet Clinic app](https://github.com/spring-projects/spring-petclinic) and the [Unleash Spring Boot SDK](https://github.com/Unleash/unleash-spring-boot-starter) to control how a [Spring Bean](https://docs.spring.io/spring-framework/reference/core/beans/definition.html) is used for a new page.
+In this tutorial, you will learn how to use a feature flag in a Java Spring Boot app. We will use the [Spring Pet Clinic app](https://github.com/spring-projects/spring-petclinic) and the [Unleash Spring Boot SDK](https://github.com/Unleash/unleash-spring-boot-starter) to control how a [Spring Bean](https://docs.spring.io/spring-framework/concepts/core/beans/definition.html) is used for a new page.
 
 Here are the steps we will cover in this tutorial:
 
@@ -104,7 +104,7 @@ Select the ‘New API token’ button.
 
 ![Create a new API token in the API Access view for your Spring Boot application.](/img/tutorial-create-api-token.png)
 
-Name the API token and select the “Backend SDK” token type since we’ll be doing our flag evaluation on the server using the Spring Boot SDK. You can read more about [Unleash API tokens](/reference/api-tokens-and-client-keys#backend-tokens).
+Name the API token and select the “Backend SDK” token type since we’ll be doing our flag evaluation on the server using the Spring Boot SDK. You can read more about [Unleash API tokens](/concepts/api-tokens-and-client-keys#backend-tokens).
 
 The token should have access to the “development” environment, as shown in the platform screenshot below.
 
@@ -188,7 +188,7 @@ With this configuration setup, we can talk to the Unleash server, illustrated in
 
 Replace the `<API_KEY>` string in the configuration’s `apiKey` with the API token we created in Unleash. Your token will allow your app to communicate with the Unleash API to use the feature flag we created.
 
-For more specifics, see our [API token and client keys documentation](/reference/api-tokens-and-client-keys). Our [Spring Boot Starter Usage documentation](https://github.com/Unleash/unleash-spring-boot-starter?tab=readme-ov-file#usage) includes additional use cases.
+For more specifics, see our [API token and client keys documentation](/concepts/api-tokens-and-client-keys). Our [Spring Boot Starter Usage documentation](https://github.com/Unleash/unleash-spring-boot-starter?tab=readme-ov-file#usage) includes additional use cases.
 
 ## 5. Configure Spring Beans in your app
 

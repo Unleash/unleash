@@ -82,7 +82,7 @@ export class ContextController extends Controller {
                     tags: ['Context'],
                     summary: 'Gets configured context fields',
                     description:
-                        'Returns all configured [Context fields](https://docs.getunleash.io/reference/unleash-context) that have been created.',
+                        'Returns all configured [Context fields](https://docs.getunleash.io/concepts/unleash-context) that have been created.',
                     operationId: 'getContextFields',
                     responses: {
                         200: createResponseSchema('contextFieldsSchema'),
@@ -101,7 +101,7 @@ export class ContextController extends Controller {
                     tags: ['Context'],
                     summary: 'Gets context field',
                     description:
-                        'Returns specific [context field](https://docs.getunleash.io/reference/unleash-context) identified by the name in the path',
+                        'Returns specific [context field](https://docs.getunleash.io/concepts/unleash-context) identified by the name in the path',
                     operationId: 'getContextField',
                     responses: {
                         200: createResponseSchema('contextFieldSchema'),
@@ -143,7 +143,7 @@ export class ContextController extends Controller {
                     operationId: 'createContextField',
                     summary: 'Create a context field',
                     description:
-                        'Endpoint that allows creation of [custom context fields](https://docs.getunleash.io/reference/unleash-context#custom-context-fields)',
+                        'Endpoint that allows creation of [custom context fields](https://docs.getunleash.io/concepts/unleash-context#custom-context-fields)',
                     requestBody: createRequestSchema(
                         'createContextFieldSchema',
                     ),

@@ -42,7 +42,7 @@ export const addonTypeSchema = {
         },
         tagTypes: {
             type: 'array',
-            description: `A list of [Unleash tag types](https://docs.getunleash.io/reference/feature-toggles#tags) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created.`,
+            description: `A list of [Unleash tag types](https://docs.getunleash.io/concepts/feature-flags#tags) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created.`,
             example: [
                 {
                     name: 'slack',
@@ -105,7 +105,7 @@ export const addonTypeSchema = {
         events: {
             type: 'array',
             description:
-                'All the [event types](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#feature-toggle-events) that are available for this addon provider.',
+                'All the [event types](https://docs.getunleash.io/concepts/api/legacy/unleash/admin/events#feature-toggle-events) that are available for this addon provider.',
             items: {
                 type: 'string',
             },

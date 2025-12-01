@@ -109,7 +109,7 @@ export const ScimSettings = () => {
                     <Alert severity='info'>
                         Please read the{' '}
                         <a
-                            href='https://docs.getunleash.io/reference/scim'
+                            href='https://docs.getunleash.io/concepts/scim'
                             target='_blank'
                             rel='noreferrer'
                         >

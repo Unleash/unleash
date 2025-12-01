@@ -43,7 +43,7 @@ export interface InstanceAdminStatsSchema {
      */
     featureImports?: number;
     /**
-     * The number of feature-toggles this instance has
+     * The number of feature-flags this instance has
      * @minimum 0
      */
     featureToggles?: number;

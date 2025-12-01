@@ -131,7 +131,7 @@ export const EnvironmentVariantsCard = ({
                                         ensure consistent traffic allocation
                                         across variants.{' '}
                                         <Link
-                                            href='https://docs.getunleash.io/reference/feature-toggle-variants'
+                                            href='https://docs.getunleash.io/concepts/feature-toggle-variants'
                                             target='_blank'
                                             rel='noreferrer'
                                         >

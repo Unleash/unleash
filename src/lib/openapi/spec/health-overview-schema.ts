@@ -34,7 +34,7 @@ export const healthOverviewSchema = {
         'environments',
         'features',
     ],
-    description: `An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)`,
+    description: `An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/concepts/technical-debt)`,
     properties: {
         version: {
             type: 'integer',
@@ -63,7 +63,7 @@ export const healthOverviewSchema = {
             enum: ['open', 'protected', 'private'],
             example: 'open',
             description:
-                "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+                "The project's [collaboration mode](https://docs.getunleash.io/concepts/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
         },
         featureLimit: {
             type: 'number',
@@ -90,7 +90,7 @@ export const healthOverviewSchema = {
             minimum: 0,
             maximum: 100,
             description:
-                "An indicator of the [project's technical debt](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100",
+                "An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100",
         },
         environments: {
             type: 'array',

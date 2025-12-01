@@ -117,7 +117,7 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                                             feature flag for a subset of your
                                             users. Read more about constraints{' '}
                                             <a
-                                                href='https://docs.getunleash.io/reference/activation-strategies#constraints'
+                                                href='https://docs.getunleash.io/concepts/activation-strategies#constraints'
                                                 target='_blank'
                                                 rel='noopener noreferrer'
                                             >

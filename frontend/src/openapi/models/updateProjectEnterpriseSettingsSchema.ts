@@ -8,7 +8,7 @@ import type { ProjectLinkTemplateSchema } from './projectLinkTemplateSchema.js';
 import type { UpdateProjectEnterpriseSettingsSchemaMode } from './updateProjectEnterpriseSettingsSchemaMode.js';
 
 /**
- * Data used to update a [project](https://docs.getunleash.io/reference/projects) settings
+ * Data used to update a [project](https://docs.getunleash.io/concepts/projects) settings
  */
 export interface UpdateProjectEnterpriseSettingsSchema {
     featureNaming?: CreateFeatureNamingPatternSchema;

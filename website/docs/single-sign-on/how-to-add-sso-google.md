@@ -17,7 +17,7 @@ Single Sign-on via the Google Authenticator provider has been removed in Unleash
 
 ## Introduction {#introduction}
 
-In this guide we will do a deep dive on the Single-Sign-On (SSO) using Google Authentication. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](../reference/sso.md)
+In this guide we will do a deep dive on the Single-Sign-On (SSO) using Google Authentication. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](../concepts/sso.md)
 
 ## Basic configuration
 

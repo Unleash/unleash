@@ -98,8 +98,8 @@ import {
 import {
     createClientFeatureToggleService,
     createFakeClientFeatureToggleService,
-} from '../features/client-feature-toggles/createClientFeatureToggleService.js';
-import { ClientFeatureToggleService } from '../features/client-feature-toggles/client-feature-toggle-service.js';
+} from '../features/client-feature-flags/createClientFeatureToggleService.js';
+import { ClientFeatureToggleService } from '../features/client-feature-flags/client-feature-toggle-service.js';
 import {
     createFakeFeatureSearchService,
     createFeatureSearchService,

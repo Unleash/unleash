@@ -5,7 +5,7 @@ import {
 } from '../../services/index.js';
 import FeatureStrategiesStore from './feature-toggle-strategies-store.js';
 import FeatureToggleStore from './feature-toggle-store.js';
-import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store.js';
+import FeatureToggleClientStore from '../client-feature-flags/client-feature-toggle-store.js';
 import ProjectStore from '../project/project-store.js';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store.js';
 import ContextFieldStore from '../context/context-field-store.js';
@@ -19,7 +19,7 @@ import type { IUnleashConfig } from '../../types/index.js';
 import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
 import FakeFeatureStrategiesStore from './fakes/fake-feature-strategies-store.js';
 import FakeFeatureToggleStore from './fakes/fake-feature-toggle-store.js';
-import FakeClientFeatureToggleStore from '../client-feature-toggles/fakes/fake-client-feature-toggle-store.js';
+import FakeClientFeatureToggleStore from '../client-feature-flags/fakes/fake-client-feature-toggle-store.js';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store.js';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store.js';
 import FakeContextFieldStore from '../context/fake-context-field-store.js';

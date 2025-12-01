@@ -97,7 +97,7 @@ Select the ‘New API token’ button.
 
 ![Image of the API token button in API Access view](/img/tutorial-create-api-token.png)
 
-Name the API token and select the “Frontend SDK” token type, since we’ll be doing our flag evaluation on the client using the iOS SDK. You can read more about [Unleash API tokens in our documentation](/reference/api-tokens-and-client-keys#backend-tokens).
+Name the API token and select the “Frontend SDK” token type, since we’ll be doing our flag evaluation on the client using the iOS SDK. You can read more about [Unleash API tokens in our documentation](/concepts/api-tokens-and-client-keys#backend-tokens).
 
 The token should have access to the “development” environment, as shown in the platform screenshot below.
 
@@ -184,7 +184,7 @@ Next, replace the `<client_key>` string in the config object with the API token 
 
 As the application is launching, it will make an authenticated call to the Unleash server so we can begin using the `tempUnit` feature flag we created.
 
-You can check our documentation on [API tokens and client keys](/reference/api-tokens-and-client-keys) for more specifics and see additional use-cases in our [Frontend SDK with iOS](/sdks/ios) documentation.
+You can check our documentation on [API tokens and client keys](/concepts/api-tokens-and-client-keys) for more specifics and see additional use-cases in our [Frontend SDK with iOS](/sdks/ios) documentation.
 
 Rebuild and run your app. In your console, you will see the feature flag status defaulted to `false` and then `true` when the data has been updated from making the call to Unleash.
 

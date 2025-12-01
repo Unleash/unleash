@@ -26,7 +26,7 @@ import { AccessStore } from './access-store.js';
 import { ResetTokenStore } from './reset-token-store.js';
 import UserFeedbackStore from './user-feedback-store.js';
 import FeatureStrategyStore from '../features/feature-toggle/feature-toggle-strategies-store.js';
-import FeatureToggleClientStore from '../features/client-feature-toggles/client-feature-toggle-store.js';
+import FeatureToggleClientStore from '../features/client-feature-flags/client-feature-toggle-store.js';
 import EnvironmentStore from '../features/project-environments/environment-store.js';
 import FeatureTagStore from './feature-tag-store.js';
 import { FeatureEnvironmentStore } from './feature-environment-store.js';

@@ -53,7 +53,7 @@ curl --location --request PUT 'http://localhost:4242/api/admin/projects/default/
 
 ```
 
-Learn more about [gradual rollouts in our docs](/reference/activation-strategies.md). Also, learn more about our [API for creating a new strategy](/api/update-feature-strategy) for your flag.
+Learn more about [gradual rollouts in our docs](/concepts/activation-strategies.md). Also, learn more about our [API for creating a new strategy](/api/update-feature-strategy) for your flag.
 
 ## Canary Deployments in iOS
 
@@ -81,11 +81,11 @@ Often, canary deployments are managed at the load balancer level while feature f
 
 Unleash has a few ways to help manage canary deployments for iOS apps at scale:
 
--   Using a [gradual rollout](/reference/activation-strategies) (which we [implemented in a previous section](#gradual-rollouts-for-ios-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
+-   Using a [gradual rollout](/concepts/activation-strategies) (which we [implemented in a previous section](#gradual-rollouts-for-ios-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
--   Using either [constraints](/reference/activation-strategies#constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
+-   Using either [constraints](/concepts/activation-strategies#constraints) or [segments](/concepts/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
 
--   [Strategy variants](/reference/strategy-variants) are used to do the same canary deployment, but can be scaled to more _advanced_ cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use variants to split your population of users and conduct an A/B test with them.
+-   [Strategy variants](/concepts/strategy-variants) are used to do the same canary deployment, but can be scaled to more _advanced_ cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use variants to split your population of users and conduct an A/B test with them.
 
 Let’s walk through how to utilize strategy constraints in our iOS app through the Unleash platform.
 
@@ -143,11 +143,11 @@ curl --location --request PUT 'http://localhost:4242/api/admin/projects/default/
 }'
 ```
 
-Read our documentation for more context on the robustness of [strategy constraint configurations](/reference/activation-strategies#constraints) and use cases.
+Read our documentation for more context on the robustness of [strategy constraint configurations](/concepts/activation-strategies#constraints) and use cases.
 
 ## A/B Testing in iOS
 
-A/B testing is a common way for teams to test out how users interact with two or more versions of a new feature that is released. At Unleash, we call these [variants](/reference/feature-toggle-variants).
+A/B testing is a common way for teams to test out how users interact with two or more versions of a new feature that is released. At Unleash, we call these [variants](/concepts/feature-flag-variants).
 
 We can expose a particular version of the feature to select user bases when a flag is enabled. From there, a way to use the variants is to view the performance metrics and see which is more efficient.
 
@@ -155,7 +155,7 @@ We can create several variations of this feature to release to users and gather 
 
 In Unleash, navigate to the feature flag's strategy and edit the strategy.
 
-Note: We won’t use any particular payload from these variants other than their default returned objects. For this example, we can keep the variant at 50% weight for each variant, meaning there is a 50% chance that a user will see one icon versus the other. You can adjust the percentages based on your needs, such as making one icon a majority of users would see by increasing its weight percentage. Learn more about [feature flag variant properties](/reference/feature-toggle-variants).
+Note: We won't use any particular payload from these variants other than their default returned objects. For this example, we can keep the variant at 50% weight for each variant, meaning there is a 50% chance that a user will see one icon versus the other. You can adjust the percentages based on your needs, such as making one icon a majority of users would see by increasing its weight percentage. Learn more about [feature flag variant properties](/concepts/feature-flag-variants).
 
 ![The form allows you to configure your variant.](/img/ios-tutorial-variants-form.png)
 
@@ -246,7 +246,7 @@ Next, let's configure our iOS app to capture impression events that are emitted 
 
 This code snippet starts the Unleash client, checks that our flag is enabled, and then stores impression events for your use.
 
-You can find more information on `isEnabled` and `getVariant` in our [impression data docs](/reference/impression-data#impression-event-data).
+You can find more information on `isEnabled` and `getVariant` in our [impression data docs](/concepts/impression-data#impression-event-data).
 
 Now that the application is capturing impression events, you can configure the correct data fields and formatting to send to any analytics tool or data warehouse you use.
 
@@ -274,7 +274,7 @@ Because a feature flag service controls how an application behaves in production
 
 Unleash provides the data to log any change over time at the flag level and at the project level. Logs are useful for downstream data warehouses or data lakes. Tools like [Splunk](https://www.splunk.com/) can help you combine logs and run advanced queries against them.
 
-For our iOS app, we can view events in [Event Log](/reference/events#event-log) to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
+For our iOS app, we can view events in [Event Log](/concepts/events#event-log) to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
 
 -   When the flag was created
 -   How the gradual rollout strategy was configured
@@ -290,7 +290,7 @@ curl -L -X GET '<your-unleash-url>/api/admin/events/:featureName' \
 -H 'Authorization: <API_KEY_VALUE>'
 ```
 
-Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/api/events) to learn more.
+Read our documentation on [Event Log](/concepts/events#event-log) and [APIs](/api/events) to learn more.
 
 ## Change Management & Feature Flag Approvals in iOS
 
@@ -304,7 +304,7 @@ We have several statuses that indicate the stages a feature flag could be in as 
 
 ![Change request waiting for approval. Disables flag CR-toggle-3.](/img/react-ex-change-requests.png)
 
-Learn more about [how to configure your change requests](/reference/change-requests) and our [project collaboration mode](/reference/project-collaboration-mode).
+Learn more about [how to configure your change requests](/concepts/change-requests) and our [project collaboration mode](/concepts/project-collaboration-mode).
 
 ## Flag Automation & Workflow Integration for iOS Apps
 

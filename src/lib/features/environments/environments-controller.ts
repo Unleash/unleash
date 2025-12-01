@@ -104,7 +104,7 @@ export class EnvironmentsController extends Controller {
                     operationId: 'getProjectEnvironments',
                     summary: 'Get the environments available to a project',
                     description:
-                        'Gets the environments that are available for this project. An environment is available for a project if enabled in the [project configuration](https://docs.getunleash.io/reference/environments#enable-an-environment)',
+                        'Gets the environments that are available for this project. An environment is available for a project if enabled in the [project configuration](https://docs.getunleash.io/concepts/environments#enable-an-environment)',
                     responses: {
                         200: createResponseSchema('environmentsProjectSchema'),
                         ...getStandardResponses(401, 403, 404),

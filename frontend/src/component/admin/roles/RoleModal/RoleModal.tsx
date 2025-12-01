@@ -125,7 +125,7 @@ export const RoleModal = ({
                 modal
                 title={editing ? `Edit ${type} role` : `New ${type} role`}
                 description={`${titleCasedType} roles allow you to control access to ${type} resources. Besides the built-in ${type} roles, you can create and manage custom ${type} roles to fit your needs.`}
-                documentationLink={`https://docs.getunleash.io/reference/rbac${
+                documentationLink={`https://docs.getunleash.io/concepts/rbac${
                     type === ROOT_ROLE_TYPE
                         ? '#custom-root-roles'
                         : '#custom-project-roles'

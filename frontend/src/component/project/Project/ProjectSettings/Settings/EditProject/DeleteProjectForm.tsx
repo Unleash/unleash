@@ -28,7 +28,7 @@ export const DeleteProjectForm = ({ featureCount }: IDeleteProjectForm) => {
                 loading={loading}
                 title='Delete project'
                 description=''
-                documentationLink='https://docs.getunleash.io/reference/projects'
+                documentationLink='https://docs.getunleash.io/concepts/projects'
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectDeleteApiCode}
                 compact

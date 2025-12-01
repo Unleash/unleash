@@ -11,7 +11,7 @@ export const createUserResponseSchema = {
         ...userSchema.properties,
         rootRole: {
             description:
-                'Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned. Usually a numeric role ID, but can be a string when returning newly created user with an explicit string role.',
+                'Which [root role](https://docs.getunleash.io/concepts/rbac#predefined-roles) this user is assigned. Usually a numeric role ID, but can be a string when returning newly created user with an explicit string role.',
             oneOf: [
                 {
                     type: 'integer',

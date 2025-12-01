@@ -25,7 +25,7 @@ This guide assumes that you've got the following:
 
 ## Schedule feature releases with strategy constraints
 
-[Strategy constraints](/reference/activation-strategies#date-and-time-operators) are the easiest way to schedule feature releases ([as long as your SDKs are up to date](/reference/activation-strategies#client-side-implementation)). You can use this approach with _any_ strategy you want. The strategies will work just as they normally do, they just won't become active until the specified time. For example: with the standard strategy, the feature would become available to all your users at the specified time; with a gradual rollout, the rollout would start at the specified time.
+[Strategy constraints](/concepts/activation-strategies#date-and-time-operators) are the easiest way to schedule feature releases ([as long as your SDKs are up to date](/concepts/activation-strategies#client-side-implementation)). You can use this approach with _any_ strategy you want. The strategies will work just as they normally do, they just won't become active until the specified time. For example: with the standard strategy, the feature would become available to all your users at the specified time; with a gradual rollout, the rollout would start at the specified time.
 
 ### Step 1: Add an activation strategy with a date-based constraint
 
@@ -41,7 +41,7 @@ To schedule a feature release via the UI:
 
 To add an activation strategy via the Admin API, use the feature's `strategies` endpoint to add a new strategy (see the [API documentation for adding strategies to feature flags](/api/add-feature-strategy) for more details).
 
-The payload's `"name"` property should contain the name of the strategy to apply (see [activation strategies reference documentation](/reference/activation-strategies) for all built-in strategies' _modeling names_).
+The payload's `"name"` property should contain the name of the strategy to apply (see [activation strategies reference documentation](/concepts/activation-strategies) for all built-in strategies' _modeling names_).
 
 The `"constraint"` object should have the same format as described in the code sample below. The activation date must be in an [RFC 3339-compatible format](https://datatracker.ietf.org/doc/html/rfc3339#section-5.8), e.g. `"1990-12-31T23:59:60Z"`.
 
@@ -56,4 +56,4 @@ The `"constraint"` object should have the same format as described in the code s
       ]
   }} url="api/admin/projects/<project-id>/features/environments/<environment>/strategies" title="Add a feature activation strategy with a scheduled activation time."/>
 
-The `"operator"` property in the code sample can be replaced with [any of the other date and time-based operators](/reference/activation-strategies#date-and-time-operators) according to your needs.
+The `"operator"` property in the code sample can be replaced with [any of the other date and time-based operators](/concepts/activation-strategies#date-and-time-operators) according to your needs.

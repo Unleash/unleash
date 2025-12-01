@@ -64,8 +64,8 @@ class MetricsController extends Controller {
         // deprecated routes
         this.get('/seen-toggles', this.deprecated);
         this.get('/seen-apps', this.deprecated);
-        this.get('/feature-toggles', this.deprecated);
-        this.get('/feature-toggles/:name', this.deprecated);
+        this.get('/feature-flags', this.deprecated);
+        this.get('/feature-flags/:name', this.deprecated);
 
         this.use(
             '/unknown-flags',

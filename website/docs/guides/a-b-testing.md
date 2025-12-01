@@ -50,7 +50,7 @@ With an A/B testing strategy, you’ll be able to:
 -   Determine the percentage of users exposed to the new feature
 -   Determine the percentage of users that get exposed to each version of the feature
 
-To target users accordingly, let's create an [activation strategy](/reference/activation-strategies). This Unleash concept defines who will be exposed to a particular flag. Unleash comes pre-configured with multiple activation strategies that let you enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
+To target users accordingly, let's create an [activation strategy](/concepts/activation-strategies). This Unleash concept defines who will be exposed to a particular flag. Unleash comes pre-configured with multiple activation strategies that let you enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
 
 ![Anatomy of an activation strategy](/img/anatomy-of-unleash-strategy.png)
 
@@ -73,12 +73,12 @@ Next, configure the rollout percentage so only a certain portion of your users a
 
 There are two more advanced extensions of a default strategy that you will see available to customize in the form:
 
--   [Strategy variants](/reference/strategy-variants)
--   [Strategy constraints](/reference/activation-strategies#constraints)
+-   [Strategy variants](/concepts/strategy-variants)
+-   [Strategy constraints](/concepts/activation-strategies#constraints)
 
 With strategy variants and constraints, you can extend your overall strategy. They help you define more granular conditions for your feature beyond the rollout percentage. We recommend using strategy variants to configure an A/B test.
 
-[Strategy variants](/reference/strategy-variants) let you expose a particular version of a feature to select user bases when a flag is enabled. You can then collect data to determine which variant performs better, which we'll cover later in this tutorial.
+[Strategy variants](/concepts/strategy-variants) let you expose a particular version of a feature to select user bases when a flag is enabled. You can then collect data to determine which variant performs better, which we'll cover later in this tutorial.
 
 Using strategy variants in your activation strategy is the canonical way to run A/B tests with Unleash and your application.
 
@@ -87,8 +87,8 @@ Using strategy variants in your activation strategy is the canonical way to run 
 A variant has three components that define it:
 
 -   a name: This must be unique among the strategy's variants. You typically use the name to identify the variant in your client.
--   a weight: The [variant weight](/reference/strategy-variants#variant-weight) is the likelihood of any one user getting this specific variant.
--   an optional payload: A variant can also have an associated [payload](/reference/strategy-variants#variant-payload) to deliver more data or context. Define this if you want to return data in addition to the `enabled`/`disabled` value of the flag. The payload has:
+-   a weight: The [variant weight](/concepts/strategy-variants#variant-weight) is the likelihood of any one user getting this specific variant.
+-   an optional payload: A variant can also have an associated [payload](/concepts/strategy-variants#variant-payload) to deliver more data or context. Define this if you want to return data in addition to the `enabled`/`disabled` value of the flag. The payload has:
     - a type: This defines the data format of the payload and can be one of the following options: `string`, `json`, `csv`, or `number`.
     - a value: The payload data associated with the variant. The format of the data must correspond with the one specified in the type property.
 
@@ -102,11 +102,11 @@ Next, decide the percentage of users to target for each variant, known as the va
 
 Unleash is built to give developers confidence in their ability to run A/B tests effectively. One critical component of implementing A/B testing strategies is maintaining a consistent experience for each user across multiple user sessions.
 
-For example, user `uuid1234` should be the target of `variantA` regardless of their session. The original subset of users that get `variantA` will continue to experience that variation of the feature over time. At Unleash, we call this [stickiness](/reference/stickiness). You can define the parameter of stickiness in the gradual rollout form. By default, stickiness is calculated by `sessionId` and `groupId`.
+For example, user `uuid1234` should be the target of `variantA` regardless of their session. The original subset of users that get `variantA` will continue to experience that variation of the feature over time. At Unleash, we call this [stickiness](/concepts/stickiness). You can define the parameter of stickiness in the gradual rollout form. By default, stickiness is calculated by `sessionId` and `groupId`.
 
 ### Track A/B testing for your key performance metrics
 
-An A/B testing strategy is most useful when you can track the results of a feature rollout to users. When your team has clearly defined the goals for your A/B tests, you can use Unleash to analyze how results tie back to key metrics, like conversion rates or time spent on a page. One way to collect this data is by enabling [impression data](/reference/impression-data) per feature flag. Impression data contains information about a specific feature flag activation check.
+An A/B testing strategy is most useful when you can track the results of a feature rollout to users. When your team has clearly defined the goals for your A/B tests, you can use Unleash to analyze how results tie back to key metrics, like conversion rates or time spent on a page. One way to collect this data is by enabling [impression data](/concepts/impression-data) per feature flag. Impression data contains information about a specific feature flag activation check.
 
 To enable impression data for your rollout, navigate to your feature flag form and turn the toggle on.
 
@@ -214,7 +214,7 @@ After the flag has been available to 100% of users over time, archive the flag a
 
 ## A/B testing with enterprise automation
 
-With Unleash, you can automate feature flags through APIs and even rely on [actions](/reference/actions) and [signals](/reference/signals) to enable and disable flags dynamically. When running A/B tests, you can configure your projects to execute tasks in response to application metrics and thresholds you define. For example, if an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. Similarly, you can use the APIs to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
+With Unleash, you can automate feature flags through APIs and even rely on [actions](/concepts/actions) and [signals](/concepts/signals) to enable and disable flags dynamically. When running A/B tests, you can configure your projects to execute tasks in response to application metrics and thresholds you define. For example, if an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. Similarly, you can use the APIs to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
 
 ### Multi-arm bandit tests to find the winning variant
 

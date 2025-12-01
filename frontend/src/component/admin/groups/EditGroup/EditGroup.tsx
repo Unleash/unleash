@@ -130,7 +130,7 @@ export const EditGroup = ({
             loading={loading}
             title='Edit group'
             description='Groups is the best and easiest way to organize users and then use them in projects to assign a specific role in one go to all the users in a group.'
-            documentationLink='https://docs.getunleash.io/reference/rbac#user-groups'
+            documentationLink='https://docs.getunleash.io/concepts/rbac#user-groups'
             documentationLinkLabel='Groups documentation'
             formatApiCode={formatApiCode}
         >

@@ -75,13 +75,13 @@ export const importTogglesSchema = {
             type: 'string',
             example: 'My awesome project',
             description:
-                'The exported [project](https://docs.getunleash.io/reference/projects)',
+                'The exported [project](https://docs.getunleash.io/concepts/projects)',
         },
         environment: {
             type: 'string',
             example: 'development',
             description:
-                'The exported [environment](https://docs.getunleash.io/reference/environments)',
+                'The exported [environment](https://docs.getunleash.io/concepts/environments)',
         },
         data: {
             $ref: '#/components/schemas/exportResultSchema',

@@ -17,7 +17,7 @@ Unleash provides official SDKs for a number of programming languages. Our commun
 
 ### Backend SDKs
 
-Backend SDKs run in backend services. They communicate with Unleash or [Unleash Edge](/unleash-edge) using the [Client API](/get-started/unleash-overview#client-api) and require a [client token](/reference/api-tokens-and-client-keys#backend-tokens).
+Backend SDKs run in backend services. They communicate with Unleash or [Unleash Edge](/unleash-edge) using the [Client API](/get-started/unleash-overview#client-api) and require a [client token](/concepts/api-tokens-and-client-keys#backend-tokens).
 Backend SDKs perform the flag evaluation locally, meaning all user data is retained within the SDK.
 
 Unleash offers the following backend SDKs:
@@ -33,7 +33,7 @@ Unleash offers the following backend SDKs:
 
 ### Frontend SDKs
 
-Frontend SDKs are used in frontend and mobile applications. They communicate with Unleash or [Unleash Edge](/unleash-edge) through the [Frontend API](/api) and require a [frontend token](/reference/api-tokens-and-client-keys#frontend-tokens). Unlike backend SDKs, frontend SDKs do not perform the flag evaluation locally. Instead, they fetch all enabled feature flags for a given [Unleash Context](/reference/unleash-context). The flag evaluation happens either in [Unleash Edge](/unleash-edge), or in the Unleash server, when using the [Frontend API](/api) directly.
+Frontend SDKs are used in frontend and mobile applications. They communicate with Unleash or [Unleash Edge](/unleash-edge) through the [Frontend API](/api) and require a [frontend token](/concepts/api-tokens-and-client-keys#frontend-tokens). Unlike backend SDKs, frontend SDKs do not perform the flag evaluation locally. Instead, they fetch all enabled feature flags for a given [Unleash Context](/concepts/unleash-context). The flag evaluation happens either in [Unleash Edge](/unleash-edge), or in the Unleash server, when using the [Frontend API](/api) directly.
 
 When the SDK initializes, it sets up an in-memory repository and retrieves a list of all enabled flags and their variants in a single request. Once fetched, the SDK serves flag values from memory, without making additional requests. It periodically refreshes the list of enabled flags to keep the data up to date.
 
@@ -75,10 +75,10 @@ The following tables show which features are supported by each backend SDK. Some
 #### Built-in strategies
 | Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| [Gradual rollout](/reference/activation-strategies) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [Gradual rollout with custom stickiness](/reference/stickiness#custom-stickiness) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
-| [IP](/reference/activation-strategies#ips), [hostname](/reference/activation-strategies#hosts) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| [IP](/reference/activation-strategies#ips) with CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ |
+| [Gradual rollout](/concepts/activation-strategies) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [Gradual rollout with custom stickiness](/concepts/stickiness#custom-stickiness) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
+| [IP](/concepts/activation-strategies#ips), [hostname](/concepts/activation-strategies#hosts) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| [IP](/concepts/activation-strategies#ips) with CIDR syntax | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅ | ✅ |
 
 #### Custom strategies
 All backend SDKs have basic support.
@@ -88,7 +88,7 @@ All backend SDKs have support for the basic operators (`IN`, `NOT_IN`).
 
 | Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| [Advanced operators](/reference/activation-strategies#advanced-operators) | ✅ (5.1) | ✅ (3.12) | ✅ (3.3) | ✅ (5.1) | ✅ (4.2) | ✅ (2.1) | ✅ (1.3.1) | ⭕ |
+| [Advanced operators](/concepts/activation-strategies#advanced-operators) | ✅ (5.1) | ✅ (3.12) | ✅ (3.3) | ✅ (5.1) | ✅ (4.2) | ✅ (2.1) | ✅ (1.3.1) | ⭕ |
 
 
 #### Unleash Context
@@ -105,7 +105,7 @@ Static fields (`environment`, `appName`), defined fields, and custom properties 
 
 | Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| [Strategy variants](/reference/strategy-variants) and [custom stickiness](/reference/stickiness#custom-stickiness) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
+| [Strategy variants](/concepts/strategy-variants) and [custom stickiness](/concepts/stickiness#custom-stickiness) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 
 
 #### Local backup
@@ -117,7 +117,7 @@ Static fields (`environment`, `appName`), defined fields, and custom properties 
 | Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | Usage metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |    
-| [Impression data](/reference/impression-data) | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅  | ✅ | ⭕ |
+| [Impression data](/concepts/impression-data) | ✅ | ✅ | ✅ | ✅ | ⭕ | ✅  | ✅ | ⭕ |
 
 #### Bootstrap
 | Capability | [Java](/sdks/java) | [Node.js](/sdks/node) | [Go](/sdks/go) | [Python](/sdks/python) | [Ruby](/sdks/ruby) | [.NET](/sdks/dotnet) | [PHP](/sdks/php) | [Rust](/sdks/rust) |

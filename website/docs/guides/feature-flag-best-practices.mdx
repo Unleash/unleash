@@ -96,7 +96,7 @@ Avoid using feature flags for static application configuration. Application conf
 To succeed with feature flags in a large organization, [follow these strategies](/guides/best-practices-using-feature-flags-at-scale):
 
 - **Set flag expiration dates**: Assign expiration dates to feature flags to track which flags are no longer needed. A good feature flag management tool will alert you to expired flags, making it easier to maintain your codebase.
-- **Treat feature flags like technical debt**: Incorporate tasks to remove outdated feature flags into your sprint or project planning, just as you would with [technical debt](/reference/technical-debt). Feature flags add complexity to your code by introducing multiple code paths that need context and maintenance. If you don't clean up feature flags in a timely manner, you risk losing the context as time passes or personnel changes, making them harder to manage or remove.
+- **Treat feature flags like technical debt**: Incorporate tasks to remove outdated feature flags into your sprint or project planning, just as you would with [technical debt](/concepts/technical-debt). Feature flags add complexity to your code by introducing multiple code paths that need context and maintenance. If you don't clean up feature flags in a timely manner, you risk losing the context as time passes or personnel changes, making them harder to manage or remove.
 - **Archive old flags**: When feature flags are no longer in use, archive them after removing them from the codebase. This archive serves as an important audit log of feature flags and allows you to revive flags if you need to restore an older version of your application.
 
 While most feature flags should be short-lived, there are valid exceptions for long-lived flags, including:
@@ -134,7 +134,7 @@ Unique naming has the following advantages:
 
 Making feature flag systems open by default enables engineers, product owners, and support teams to collaborate effectively and make informed decisions. Open access encourages productive discussions about feature releases, experiments, and their impact on the user experience.
 
-[Access control and visibility](/guides/user-management-access-controls) are also key considerations for [security and compliance](https://www.getunleash.io/security-and-performance). Tracking and auditing feature flag changes help maintain data integrity and meet regulatory requirements. While open access is key, it's equally important to integrate with corporate access controls, such as SSO, to ensure security. In some cases, additional controls like feature flag approvals using the [four-eyes principle](/reference/change-requests) are necessary for critical changes.
+[Access control and visibility](/guides/user-management-access-controls) are also key considerations for [security and compliance](https://www.getunleash.io/security-and-performance). Tracking and auditing feature flag changes help maintain data integrity and meet regulatory requirements. While open access is key, it's equally important to integrate with corporate access controls, such as SSO, to ensure security. In some cases, additional controls like feature flag approvals using the [four-eyes principle](/concepts/change-requests) are necessary for critical changes.
 
 ![Preview of a change request to enable gradual rollout in production.](/img/feature-flag-change-requests-preview.png)
 
@@ -232,7 +232,7 @@ Feature flagging solutions are indispensable tools in modern software developmen
 ### Strategies for consistency in percentage-based gradual rollouts
 
 - **User hashing**: Assign users to consistent groups using a secure hashing algorithm based on unique identifiers like user IDs or emails. This ensures that the same user consistently falls into the same group.
-- **Segmentation control**: Provide controls within the feature flagging tool to allow developers to [segment](/reference/segments) users logically by criteria like location, subscription type, or other relevant factors, ensuring similar experiences for users within the same segment.
+- **Segmentation control**: Provide controls within the feature flagging tool to allow developers to [segment](/concepts/segments) users logically by criteria like location, subscription type, or other relevant factors, ensuring similar experiences for users within the same segment.
 - **Fallback mechanisms**: Include fallback mechanisms in your architecture. If a user encounters issues or inconsistencies, the system should automatically switch them to a stable version or feature state.
 - **Logging and monitoring**: Implement robust logging and monitoring. Continuously track which users are in which groups and what version of the feature they are experiencing. Monitor for anomalies or deviations and consider building automated processes to disable features that may be misbehaving.
 - **Transparent communication**: Clearly communicate gradual rollouts through in-app notifications, tooltips, or changelogs, so users are informed about changes and know what to expect.
@@ -294,7 +294,7 @@ Use feature branches to isolate development work before it's ready for productio
 Set an expiration date and assign an owner when you create the flag. Track cleanup like any other piece of technical debt, and use automation and tooling to surface and clean up stale flags.
 
 #### What tools or practices help manage multiple feature flags effectively in a large project?
-Organize flags into [projects and environments](/guides/organize-feature-flags), enforce unique names, and keep payloads small by using [segments](/reference/segments) instead of large targeting lists. Apply [access control](/reference/rbac) and [change requests](/reference/change-requests) for your production environments and use [audit logs](/reference/events) for visibility. A management platform like Unleash provides these features out of the box, making it easier to scale.
+Organize flags into [projects and environments](/guides/organize-feature-flags), enforce unique names, and keep payloads small by using [segments](/concepts/segments) instead of large targeting lists. Apply [access control](/concepts/rbac) and [change requests](/concepts/change-requests) for your production environments and use [audit logs](/concepts/events) for visibility. A management platform like Unleash provides these features out of the box, making it easier to scale.
 
 #### How do you mitigate the risk of introducing bugs or technical debt due to unused or stale feature flags?
 The key is to keep flags short-lived. Test both code paths while the flag is active, and remove the flag and old path once the rollout finishes. Archive stale flags for audit purposes. In Unleash, lifecycle stages help you identify and clean up unused flags.

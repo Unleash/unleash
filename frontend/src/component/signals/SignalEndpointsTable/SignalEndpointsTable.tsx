@@ -308,7 +308,7 @@ export const SignalEndpointsTable = () => {
                 <StyledParagraph>
                     Read more about these features in our documentation:{' '}
                     <a
-                        href='https://docs.getunleash.io/reference/signals'
+                        href='https://docs.getunleash.io/concepts/signals'
                         target='_blank'
                         rel='noreferrer'
                     >
@@ -316,7 +316,7 @@ export const SignalEndpointsTable = () => {
                     </a>{' '}
                     and{' '}
                     <a
-                        href='https://docs.getunleash.io/reference/actions'
+                        href='https://docs.getunleash.io/concepts/actions'
                         target='_blank'
                         rel='noreferrer'
                     >

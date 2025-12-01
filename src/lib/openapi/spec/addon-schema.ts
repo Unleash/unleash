@@ -3,7 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 export const addonSchema = {
     $id: '#/components/schemas/addonSchema',
     type: 'object',
-    description: `An [addon](https://docs.getunleash.io/reference/addons) instance description. Contains data about what kind of provider it uses, whether it's enabled or not, what events it listens for, and more.`,
+    description: `An [addon](https://docs.getunleash.io/concepts/addons) instance description. Contains data about what kind of provider it uses, whether it's enabled or not, what events it listens for, and more.`,
     required: [
         'id',
         'description',

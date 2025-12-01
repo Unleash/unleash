@@ -124,7 +124,7 @@ The following table compares the key differences between using the Unleash Enter
 Using Unleash Edge is optional. You can also access the Unleash API directly using the [Frontend or Client API](/get-started/unleash-overview#unleash-apis). This setup comes with the following considerations:
 - **Fair Use Policy:** Sending requests to the Unleash API is subject to limits outlined in the [Fair Use Policy](https://www.getunleash.io/fair-use-policy). While short traffic spikes are accommodated, sustained high traffic might require using Unleash Edge.
 - **Latency:** Although the Unleash architecture is designed for incredibly fast flag evaluations thanks to caching in the SDKs, the central Unleash API server might not be geographically close to all your end users, potentially increasing flag evaluation latency.
-- **Data privacy:** When using the Frontend API to talk to Unleash, any end-user data included in the [Unleash Context](/reference/unleash-context) is sent directly to the Unleash server. Evaluate if this meets your privacy requirements. Using Edge avoids sending this context data directly to the central Unleash API server.
+- **Data privacy:** When using the Frontend API to talk to Unleash, any end-user data included in the [Unleash Context](/concepts/unleash-context) is sent directly to the Unleash server. Evaluate if this meets your privacy requirements. Using Edge avoids sending this context data directly to the central Unleash API server.
 
 ## Self-hosted Unleash Proxy
 

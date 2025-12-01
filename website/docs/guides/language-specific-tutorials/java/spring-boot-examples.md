@@ -49,7 +49,7 @@ Request request = new Request.Builder()
 Response response = client.newCall(request).execute();
 ```
 
-Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/api/update-feature-strategy) for your flag.
+Learn more about [gradual rollouts in our docs](/concepts/activation-strategies). Also, learn more about our [API for creating a new strategy](/api/update-feature-strategy) for your flag.
 
 ## Canary Deployments in Java
 
@@ -77,11 +77,11 @@ Often, canary deployments are managed at the load balancer level while feature f
 
 Unleash has a few ways to help manage canary deployments for Java apps at scale:
 
--   Using a [gradual rollout](/reference/activation-strategies) (which we [implemented in a previous section](#gradual-rollouts-for-java-spring-boot-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
+-   Using a [gradual rollout](/concepts/activation-strategies) (which we [implemented in a previous section](#gradual-rollouts-for-java-spring-boot-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
--   Using either [constraints](/reference/activation-strategies#constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
+-   Using either [constraints](/concepts/activation-strategies#constraints) or [segments](/concepts/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
 
--   [Strategy variants](/reference/strategy-variants) are used to do the same canary deployment, but can be scaled to more _advanced_ cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use variants to split your population of users and conduct an A/B test with them.
+-   [Strategy variants](/concepts/strategy-variants) are used to do the same canary deployment, but can be scaled to more _advanced_ cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use variants to split your population of users and conduct an A/B test with them.
 
 Let’s walk through how to use strategy constraints in our Java app.
 
@@ -134,11 +134,11 @@ Response response = client.newCall(request).execute();
 
 Check out our [API docs on updating flag strategies](/api/update-feature-strategy) to learn more.
 
-Read our documentation for more context on [strategy constraint configurations](/reference/activation-strategies#constraints) and use cases.
+Read our documentation for more context on [strategy constraint configurations](/concepts/activation-strategies#constraints) and use cases.
 
 ## Server-side A/B Testing in Java Spring Boot
 
-A/B testing is a common way for teams to test out how users interact with two or more versions of a new feature that is released. Server-side A/B testing can help with making infrastructure improvements and comparing different versions of server-side methods. At Unleash, we call these strategy [variants](/reference/feature-toggle-variants).
+A/B testing is a common way for teams to test out how users interact with two or more versions of a new feature that is released. Server-side A/B testing can help with making infrastructure improvements and comparing different versions of server-side methods. At Unleash, we call these strategy [variants](/concepts/feature-flag-variants).
 
 When a feature flag is enabled, we can expose a particular version of a feature to select user bases. From there, we can use the variants to view the performance metrics in Unleash and see which is more efficient.
 
@@ -190,7 +190,7 @@ Take a look at our API docs to learn more about how to change different flag pro
 
 You can send the impression events data from your flag and flag variants to analytics tools or data warehouses for further use.
 
-You can find more information in our [impression data docs](/reference/impression-data#impression-event-data).
+You can find more information in our [impression data docs](/concepts/impression-data#impression-event-data).
 
 ## Application Metrics & Monitoring
 
@@ -216,7 +216,7 @@ Because a feature flag service controls how an application behaves in production
 
 Unleash provides the data to log any change over time at the flag level and the project level. Logs are useful for downstream data warehouses or data lakes. Tools like Splunk can help you combine logs and run advanced queries against them.
 
-For our Spring Boot app, we can view events in [Event Log](/reference/events#event-log) to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
+For our Spring Boot app, we can view events in [Event Log](/concepts/events#event-log) to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
 
 -   When the flag was created
 -   How the gradual rollout strategy was configured
@@ -224,7 +224,7 @@ For our Spring Boot app, we can view events in [Event Log](/reference/events#eve
 
 ![Event Log in Unleash tracks every single change made to flags, similar to Git commit history.](/img/spring-boot-events-log.png)
 
-You can also retrieve events by using an API command. Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/api/get-events-for-toggle) to learn more.
+You can also retrieve events by using an API command. Read our documentation on [Event Log](/concepts/events#event-log) and [APIs](/api/get-events-for-toggle) to learn more.
 
 ## Flag Automation & Workflow Integration for Java Apps
 

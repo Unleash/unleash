@@ -21,7 +21,7 @@ export interface ClientFeatureSchema {
     /** Whether the feature flag is enabled for the current API key or not. This is ANDed with the evaluation results of the strategies list, so if this is false, the evaluation result will always be false */
     enabled: boolean;
     /**
-     * Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/reference/impression-data) when this flag is evaluated
+     * Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/concepts/impression-data) when this flag is evaluated
      * @nullable
      */
     impressionData?: boolean | null;
@@ -33,10 +33,10 @@ export interface ClientFeatureSchema {
     stale?: boolean;
     /** Evaluation strategies for this flag. Each entry in this list will be evaluated and ORed together */
     strategies?: FeatureStrategySchema[];
-    /** What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types) for more information */
+    /** What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types) for more information */
     type?: string;
     /**
-     * [Variants](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) configured for this flag
+     * [Variants](https://docs.getunleash.io/concepts/feature-toggle-variants#what-are-variants) configured for this flag
      * @nullable
      */
     variants?: VariantSchema[] | null;

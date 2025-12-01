@@ -5,7 +5,7 @@ import { constraintSchema } from './constraint-schema.js';
 export const segmentsSchema = {
     $id: '#/components/schemas/segmentsSchema',
     description:
-        'Data containing a list of [segments](https://docs.getunleash.io/reference/segments)',
+        'Data containing a list of [segments](https://docs.getunleash.io/concepts/segments)',
     type: 'object',
     properties: {
         segments: {

@@ -63,7 +63,7 @@ const CreateTagType = () => {
             loading={loading}
             title='Create tag type'
             description='Tag types allow you to group tags together in the management UI'
-            documentationLink='https://docs.getunleash.io/reference/feature-toggles#tags'
+            documentationLink='https://docs.getunleash.io/concepts/feature-flags#tags'
             documentationLinkLabel='Tags documentation'
             formatApiCode={formatApiCode}
         >

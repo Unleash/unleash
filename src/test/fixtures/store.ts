@@ -30,7 +30,7 @@ import FakeFeatureEnvironmentStore from './fake-feature-environment-store.js';
 import FakeApiTokenStore from './fake-api-token-store.js';
 import FakeFeatureTypeStore from './fake-feature-type-store.js';
 import FakeResetTokenStore from './fake-reset-token-store.js';
-import FakeClientFeatureToggleStore from '../../lib/features/client-feature-toggles/fakes/fake-client-feature-toggle-store.js';
+import FakeClientFeatureToggleStore from '../../lib/features/client-feature-flags/fakes/fake-client-feature-toggle-store.js';
 import FakeClientMetricsStoreV2 from '../../lib/features/metrics/client-metrics/fake-client-metrics-store-v2.js';
 import FakeUserSplashStore from './fake-user-splash-store.js';
 import FakeRoleStore from './fake-role-store.js';

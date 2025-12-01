@@ -118,7 +118,7 @@ export const ReleaseManagement = () => {
             </CenteredHowTo>
             <StyledLink
                 component='a'
-                href='https://docs.getunleash.io/reference/release-templates'
+                href='https://docs.getunleash.io/concepts/release-templates'
                 underline='hover'
                 rel='noopener noreferrer'
                 target='_blank'

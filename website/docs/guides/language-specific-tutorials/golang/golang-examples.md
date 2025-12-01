@@ -30,7 +30,7 @@ Often, canary deployments are managed at the load balancer level while feature f
 
 ### Configure strategy constraints for canary deployments
 
-Let's update our existing gradual rollout strategy using Go to add [environment-based constraints](/reference/activation-strategies#constraints):
+Let's update our existing gradual rollout strategy using Go to add [environment-based constraints](/concepts/activation-strategies#constraints):
 
 ```go
 payload := map[string]interface{}{
@@ -154,7 +154,7 @@ type ToggleStats struct {
 }
 
 func fetchMetrics(unleashURL, featureName, apiKey string) error {
-    url := fmt.Sprintf("%s/api/admin/metrics/feature-toggles/%s", unleashURL, featureName)
+    url := fmt.Sprintf("%s/api/admin/metrics/feature-flags/%s", unleashURL, featureName)
 
     req, err := http.NewRequest("GET", url, nil)
     if err != nil {

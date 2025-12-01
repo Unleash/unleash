@@ -71,7 +71,7 @@ The body template property is available from **Unleash 5.6** onwards.
 
 :::
 
-- **Body template** - This is an optional property. The template is used to override the body template used by Unleash when performing the HTTP POST. You can format your message using a [Mustache template](https://mustache.github.io). Refer to the [Unleash event types](/reference/events#event-types) reference to find out which event properties you have access to in the template.
+- **Body template** - This is an optional property. The template is used to override the body template used by Unleash when performing the HTTP POST. You can format your message using a [Mustache template](https://mustache.github.io). Refer to the [Unleash event types](/concepts/events#event-types) reference to find out which event properties you have access to in the template.
 
 Example:
 

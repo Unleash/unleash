@@ -39,7 +39,7 @@ import {
     withTransactional,
 } from './db/transaction.js';
 import Controller from './routes/controller.js';
-import { createClientFeatureToggleDelta } from './features/client-feature-toggles/delta/createClientFeatureToggleDelta.js';
+import { createClientFeatureToggleDelta } from './features/client-feature-flags/delta/createClientFeatureToggleDelta.js';
 import { CRUDStore } from './db/crud/crud-store.js';
 import type { CrudStoreConfig } from './db/crud/crud-store.js';
 import { type Logger, LogLevel, type LogProvider } from './logger.js';
@@ -89,7 +89,7 @@ import {
     type ClientFeatureToggleDelta,
     type DeltaEvent,
     UPDATE_DELTA,
-} from './features/client-feature-toggles/delta/client-feature-toggle-delta.js';
+} from './features/client-feature-flags/delta/client-feature-toggle-delta.js';
 import type { IQueryParam } from './features/feature-toggle/types/feature-toggle-strategies-store-type.js';
 import {
     applyGenericQueryParams,
@@ -166,8 +166,8 @@ import TagStore from './db/tag-store.js';
 import FeatureToggleStore from './features/feature-toggle/feature-toggle-store.js';
 import FeatureTagStore from './db/feature-tag-store.js';
 import ExportImportController from './features/export-import-toggles/export-import-controller.js';
-import type { QueryOverride } from './features/client-feature-toggles/client-feature-toggle.controller.js';
-import { DELTA_EVENT_TYPES } from './features/client-feature-toggles/delta/client-feature-toggle-delta-types.js';
+import type { QueryOverride } from './features/client-feature-flags/client-feature-toggle.controller.js';
+import { DELTA_EVENT_TYPES } from './features/client-feature-flags/delta/client-feature-toggle-delta-types.js';
 import type { AdvancedPlaygroundFeatureEvaluationResult } from './features/playground/playground-service.js';
 import { advancedPlaygroundViewModel } from './features/playground/playground-view-model.js';
 import {

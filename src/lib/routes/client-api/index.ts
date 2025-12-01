@@ -1,5 +1,5 @@
 import Controller from '../controller.js';
-import FeatureController from '../../features/client-feature-toggles/client-feature-toggle.controller.js';
+import FeatureController from '../../features/client-feature-flags/client-feature-toggle.controller.js';
 import MetricsController from '../../features/metrics/instance/metrics.js';
 import RegisterController from '../../features/metrics/instance/register.js';
 import type { IUnleashConfig } from '../../types/index.js';

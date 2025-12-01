@@ -43,7 +43,7 @@ export const eventSchema = {
         type: {
             type: 'string',
             description:
-                'What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is',
+                'What [type](https://docs.getunleash.io/concepts/api/legacy/unleash/admin/events#event-type-description) of event this is',
             enum: IEventTypes,
             example: 'feature-created',
         },

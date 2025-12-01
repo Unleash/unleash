@@ -93,7 +93,7 @@ const NetworkTrafficUsage: FC = () => {
                                 </RouterLink>{' '}
                                 for more information. In order to reduce your
                                 traffic consumption, you may configure an{' '}
-                                <RouterLink to='https://docs.getunleash.io/reference/unleash-edge'>
+                                <RouterLink to='https://docs.getunleash.io/concepts/unleash-edge'>
                                     Unleash Edge instance
                                 </RouterLink>{' '}
                                 in your own datacenter.

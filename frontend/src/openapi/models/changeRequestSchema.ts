@@ -7,7 +7,7 @@ import type { ChangeRequestSchemaOneOf } from './changeRequestSchemaOneOf.js';
 import type { ChangeRequestSchemaOneOfFive } from './changeRequestSchemaOneOfFive.js';
 
 /**
- * A [change request](https://docs.getunleash.io/reference/change-requests)
+ * A [change request](https://docs.getunleash.io/concepts/change-requests)
  */
 export type ChangeRequestSchema =
     | ChangeRequestSchemaOneOf

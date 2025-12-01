@@ -94,13 +94,13 @@ function isEnabled(name, unleashContext = {}, defaultValue = false) {
 
 Activation strategies are defined and configured in the unleash-service. It is up to the client to provide the actual implementation of each activation strategy.
 
-Unleash also ships with a few built-in strategies, and expects client SDK's to implement these. Read more about these [activation strategies](reference/activation-strategies.md). For the built-in strategies to work as expected the client should also allow the user to define an [unleash-context](reference/unleash-context.md). The context should be possible to pass in as part of the `isEnabled` call.
+Unleash also ships with a few built-in strategies, and expects client SDK's to implement these. Read more about these [activation strategies](concepts/activation-strategies.md). For the built-in strategies to work as expected the client should also allow the user to define an [unleash-context](concepts/unleash-context.md). The context should be possible to pass in as part of the `isEnabled` call.
 
 ### Extension points {#extension-points}
 
 Client implementation should also provide a defined interface to make it easier for the user to implement their own activation strategies, and register those in the Unleash client.
 
-## Fetching feature flags (polling) {#fetching-feature-toggles-polling}
+## Fetching feature flags (polling) {#fetching-feature-flags-polling}
 
 The client implementation should fetch flags in the background as regular polling. In a thread-based environment, such as Java, this needs to be done in a separate thread. The default poll interval should be **15 seconds**, and it should also be configurable.
 
@@ -112,6 +112,6 @@ On start-up, the clients should register with the Unleash server. The registrati
 
 Clients are expected to send metrics back to Unleash API at regular intervals. The metrics are a list of used flags and how many times they evaluated to yes or no in at the time of requesting the metrics. Read more about how to send metrics in the [Metrics API](/api/register-client-metrics) documentation.
 
-## Backup Feature Flags {#backup-feature-toggles}
+## Backup Feature Flags {#backup-feature-flags}
 
 The SDK also persists the latest known state to a local file on the instance where the client is running. It will store a local copy every time the client receives changes from the API. Having a local backup of the latest known state minimises the consequences of clients not being able to talk to the Unleash API on startup. This is necessary due to network unreliability.

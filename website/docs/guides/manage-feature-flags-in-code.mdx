@@ -6,7 +6,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 How you manage feature flags in code directly impacts the performance, testability, and long-term maintainability of your applications.
-Without the right processes and structure, flags quickly become [tech debt](/reference/technical-debt), making your code harder to understand and risky to change.
+Without the right processes and structure, flags quickly become [tech debt](/concepts/technical-debt), making your code harder to understand and risky to change.
 
 In this guide, we explore hands-on strategies for managing feature flags in your code effectively. We'll give you practical recommendations and code examples to help you build a system that's reliable, scalable, and easy to maintain.
 
@@ -163,9 +163,9 @@ export const featureService = new FeatureService(unleash);
 
 This wrapper is also a good place to validate any feature flag payload you receive from Unleash.
 
-While using [variant payloads](/reference/strategy-variants#variant-payload) for dynamic configuration enables flexibility and rapid iteration, it also introduces risk. Since the variant payload is managed in a UI, a change can have unintended consequences on the application's behavior or appearance, even if the JSON itself is syntactically valid.
+While using [variant payloads](/concepts/strategy-variants#variant-payload) for dynamic configuration enables flexibility and rapid iteration, it also introduces risk. Since the variant payload is managed in a UI, a change can have unintended consequences on the application's behavior or appearance, even if the JSON itself is syntactically valid.
 
-If you decide to use variant payloads, we recommend enforcing a [four-eyes approval](/reference/change-requests) process, so any change must be reviewed and approved by a second team member before it can be saved. In addition, you should test payloads with internal users first before exposing them to real users.
+If you decide to use variant payloads, we recommend enforcing a [four-eyes approval](/concepts/change-requests) process, so any change must be reviewed and approved by a second team member before it can be saved. In addition, you should test payloads with internal users first before exposing them to real users.
 
 Then, implement additional guardrails in your wrapper to validate the payload structure and return a safe default value if the data is invalid.
 
@@ -488,7 +488,7 @@ def handle_request():
 
 ## Minimizing tech debt and managing the flag lifecycle
 
-Let's face it: stale flags are [tech debt](/reference/technical-debt). Without a plan, your codebase will fill up with forgotten and risky flags. The only way to win is with a clear process for managing their entire [lifecycle](/reference/feature-toggles#feature-flag-lifecycle).
+Let's face it: stale flags are [tech debt](/concepts/technical-debt). Without a plan, your codebase will fill up with forgotten and risky flags. The only way to win is with a clear process for managing their entire [lifecycle](/concepts/feature-flags#feature-flag-lifecycle).
 
 ### Naming conventions and flag metadata
 
@@ -501,14 +501,14 @@ The `[team]` prefix is invaluable when multiple teams share a single Unleash pro
 While you can add more information directly to the name, such as an issue number or a full issue name, this is a trade-off. It can make the flag name long and complicated to work with in code.
 
 A better practice is to keep the name clean and use Unleash's built-in metadata features for richer context:
-- **Use external links**: Instead of putting an issue number like JIRA-376 in the name, use the [external links](/reference/feature-toggles#external-links) feature in Unleash to connect the flag directly to the corresponding Jira ticket, GitHub issue, or design document.
+- **Use external links**: Instead of putting an issue number like JIRA-376 in the name, use the [external links](/concepts/feature-flags#external-links) feature in Unleash to connect the flag directly to the corresponding Jira ticket, GitHub issue, or design document.
 - **Write a clear description**: Use the description field to explain what the flag does, what the rollout plan is, and any additional context that may be relevant.
 
-This approach keeps flag names readable in your code while ensuring all the necessary context for lifecycle management is available in the Unleash UI. Once you've identified a naming convention that works, you can [enforce them at the project level](/reference/feature-toggles#set-a-naming-pattern).
+This approach keeps flag names readable in your code while ensuring all the necessary context for lifecycle management is available in the Unleash UI. Once you've identified a naming convention that works, you can [enforce them at the project level](/concepts/feature-flags#set-a-naming-pattern).
 
 ### Flag cleanup best practices
 
-You can use a flag's [lifecycle data](/reference/feature-toggles#feature-flag-lifecycle) and automated reminders to ensure flags are removed from your code once they have served their purpose.
+You can use a flag's [lifecycle data](/concepts/feature-flags#feature-flag-lifecycle) and automated reminders to ensure flags are removed from your code once they have served their purpose.
 
 Here's our recommended workflow for flag cleanup:
 
@@ -586,7 +586,7 @@ Build a wrapper (an abstraction layer). It decouples your app from the SDK, give
 Start with a simple if/else statement. This is the cleanest and easiest-to-maintain solution for most cases. The Strategy pattern should be reserved for complex, long-lived flags like kill switches or permissions, as it can introduce unnecessary complexity for short-lived release flags.
 
 **How do we avoid flag debt?**
-Have a process! Use strict [naming conventions](/reference/feature-toggles#set-a-naming-pattern), link flags to tickets in Unleash, make flag removal part of your "Definition of Done," and automate cleanup reminders.
+Have a process! Use strict [naming conventions](/concepts/feature-flags#set-a-naming-pattern), link flags to tickets in Unleash, make flag removal part of your "Definition of Done," and automate cleanup reminders.
 
 **When and how should I remove a feature flag from the code?**
 Once the flag is stable at 100% rollout (or permanently off). The process is: remove the conditional logic and old code, delete the flag definition, and then archive the flag in the Unleash UI.

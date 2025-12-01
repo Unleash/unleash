@@ -6,7 +6,7 @@
 import type { UpdateProjectSchemaMode } from './updateProjectSchemaMode.js';
 
 /**
- * Data used to update a [project](https://docs.getunleash.io/reference/projects)
+ * Data used to update a [project](https://docs.getunleash.io/concepts/projects)
  */
 export interface UpdateProjectSchema {
     /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */

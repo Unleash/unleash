@@ -5,7 +5,7 @@
  */
 
 /**
- * Used for creating a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)
+ * Used for creating a [public invite link](https://docs.getunleash.io/concepts/public-signup#public-sign-up-tokens)
  */
 export interface PublicSignupTokenCreateSchema {
     /** The token's expiration date. */

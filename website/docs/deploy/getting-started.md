@@ -164,7 +164,7 @@ The first time Unleash starts, it creates this default `admin` user. To use diff
 
 ## Test your server connection
 
-You can quickly test if your server is running and accepting API requests using `curl`. For example, you can attempt creating a feature flag via the [Admin API](/get-started/unleash-overview#admin-api). Replace `<API_TOKEN>` with a valid [API token](/reference/api-tokens-and-client-keys) and adjust the URL `http://localhost:4242` if needed.
+You can quickly test if your server is running and accepting API requests using `curl`. For example, you can attempt creating a feature flag via the [Admin API](/get-started/unleash-overview#admin-api). Replace `<API_TOKEN>` with a valid [API token](/concepts/api-tokens-and-client-keys) and adjust the URL `http://localhost:4242` if needed.
 
 ```shell
 curl --location --request POST 'http://localhost:4242/api/admin/features' \

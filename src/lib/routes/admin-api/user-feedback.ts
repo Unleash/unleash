@@ -50,7 +50,7 @@ class UserFeedbackController extends Controller {
                     operationId: 'createFeedback',
                     summary: 'Send Unleash feedback',
                     description:
-                        'Sends feedback gathered from the Unleash UI to the Unleash server. Must be called with a token with an identifiable user (either from being sent from the UI or from using a [PAT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens)).',
+                        'Sends feedback gathered from the Unleash UI to the Unleash server. Must be called with a token with an identifiable user (either from being sent from the UI or from using a [PAT](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens)).',
                     requestBody: createRequestSchema('feedbackCreateSchema'),
                     responses: {
                         200: createResponseSchema('feedbackResponseSchema'),
@@ -71,7 +71,7 @@ class UserFeedbackController extends Controller {
                     operationId: 'updateFeedback',
                     summary: 'Update Unleash feedback',
                     description:
-                        'Updates the feedback with the provided ID. Only provided fields are updated. Fields left out are left untouched. Must be called with a token with an identifiable user (either from being sent from the UI or from using a [PAT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens)).',
+                        'Updates the feedback with the provided ID. Only provided fields are updated. Fields left out are left untouched. Must be called with a token with an identifiable user (either from being sent from the UI or from using a [PAT](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens)).',
                     requestBody: createRequestSchema('feedbackUpdateSchema'),
                     responses: {
                         200: createResponseSchema('feedbackResponseSchema'),

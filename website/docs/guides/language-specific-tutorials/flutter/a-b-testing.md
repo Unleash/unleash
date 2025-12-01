@@ -18,11 +18,11 @@ Here’s a screenshot of the application:
 
 ## Setup variants in Unleash
 
-In your Unleash instance, create a new feature flag called `likeOptionExperiment`. Choose the flag type called `Experiment` and enable the [impression data](/reference/impression-data). By default, the flag will be set to false.
+In your Unleash instance, create a new feature flag called `likeOptionExperiment`. Choose the flag type called `Experiment` and enable the [impression data](/concepts/impression-data). By default, the flag will be set to false.
 
 ![Set Up Variant in Unleash](/img/variant-setup-1.png)
 
-Now that you have created your feature flag, let’s create two new [variants](/reference/feature-toggle-variants) `gridTile` and `imageDetails` respectively. These variants will help you position your **like image** button.
+Now that you have created your feature flag, let's create two new [variants](/concepts/feature-flag-variants) `gridTile` and `imageDetails` respectively. These variants will help you position your **like image** button.
 
 ![Succesfully setting up variant in Unleash](/img/setup-variant-2.png)
 

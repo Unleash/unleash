@@ -5,7 +5,7 @@ export const addonCreateUpdateSchema = {
     type: 'object',
     required: ['provider', 'enabled', 'parameters', 'events'],
     description:
-        'Data required to create or update an [Unleash addon](https://docs.getunleash.io/reference/addons) instance.',
+        'Data required to create or update an [Unleash addon](https://docs.getunleash.io/concepts/addons) instance.',
     properties: {
         provider: {
             type: 'string',
@@ -14,11 +14,11 @@ export const addonCreateUpdateSchema = {
 
 The list of all supported providers and their parameters for a specific Unleash instance can be found by making a GET request to the \`api/admin/addons\` endpoint: the \`providers\` property of that response will contain all available providers.
 
-The default set of providers can be found in the [addons reference documentation](https://docs.getunleash.io/reference/addons). The default supported options are:
-- \`datadog\` for [Datadog](https://docs.getunleash.io/reference/addons/datadog)
-- \`slack\` for [Slack](https://docs.getunleash.io/reference/addons/slack)
-- \`teams\` for [Microsoft Teams](https://docs.getunleash.io/reference/addons/teams)
-- \`webhook\` for [webhooks](https://docs.getunleash.io/reference/addons/webhook)
+The default set of providers can be found in the [addons reference documentation](https://docs.getunleash.io/concepts/addons). The default supported options are:
+- \`datadog\` for [Datadog](https://docs.getunleash.io/concepts/addons/datadog)
+- \`slack\` for [Slack](https://docs.getunleash.io/concepts/addons/slack)
+- \`teams\` for [Microsoft Teams](https://docs.getunleash.io/concepts/addons/teams)
+- \`webhook\` for [webhooks](https://docs.getunleash.io/concepts/addons/webhook)
 
 The provider you choose for your addon dictates what properties the \`parameters\` object needs. Refer to the documentation for each provider for more information.
 `,

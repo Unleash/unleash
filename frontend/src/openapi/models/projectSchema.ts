@@ -56,7 +56,7 @@ export interface ProjectSchema {
     lastUpdatedAt?: string | null;
     /** The number of members this project has */
     memberCount?: number;
-    /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
+    /** The project's [collaboration mode](https://docs.getunleash.io/concepts/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
     mode?: ProjectSchemaMode;
     /** The name of this project */
     name: string;
@@ -73,7 +73,7 @@ export interface ProjectSchema {
      */
     staleFeatureCount?: number;
     /**
-     * An indicator of the [project's technical debt](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100
+     * An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100
      * @minimum 0
      * @maximum 100
      */

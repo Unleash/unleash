@@ -31,7 +31,7 @@ You should only initialize the Unleash SDK once during the lifespan of a serverl
 
 Why? AWS Lambda is designed to reuse the same instance for multiple invocations, enabling the expensive initialization process to occur only during the Lambda's "cold start." Subsequent "warm" invocations can then leverage the SDK, which has been pre-initialized, with all feature flag configurations cached in memory. This ensures efficient operation by minimizing initialization overhead and enhancing performance.
 
-You’ll also need to provide an [Unleash Server side API Token](/reference/api-tokens-and-client-keys) as an environment variable for the AWS Lambda. This authorizes the SDK to connect to the Unleash API.
+You’ll also need to provide an [Unleash Server side API Token](/concepts/api-tokens-and-client-keys) as an environment variable for the AWS Lambda. This authorizes the SDK to connect to the Unleash API.
 
 ```javascript
 import {

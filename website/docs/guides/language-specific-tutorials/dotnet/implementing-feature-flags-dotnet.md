@@ -65,7 +65,7 @@ Select the ‘New API token’ button.
 
 ![Image of the API token button in API Access view](/img/tutorial-create-api-token.png)
 
-Name the API token and select the “Backend SDK” token type. You can read more about [Unleash API tokens in our documentation](/reference/api-tokens-and-client-keys#backend-tokens).
+Name the API token and select the “Backend SDK” token type. You can read more about [Unleash API tokens in our documentation](/concepts/api-tokens-and-client-keys#backend-tokens).
 
 ![Selecting the API token type](/img/tutorial-api-token-type.png).
 
@@ -258,7 +258,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 ```
 
-You can check our [API token and client keys documentation](/reference/api-tokens-and-client-keys) for more specifics.
+You can check our [API token and client keys documentation](/concepts/api-tokens-and-client-keys) for more specifics.
 
 Now, let’s add our client to our project, grab the feature flag from Unleash, and update our conditional statement. Don't forget to also update the config with your API key.
 

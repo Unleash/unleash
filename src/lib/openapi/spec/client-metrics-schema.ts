@@ -16,7 +16,7 @@ export const clientMetricsSchema = {
         },
         instanceId: {
             description:
-                'A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application',
+                'A [(somewhat) unique identifier](https://docs.getunleash.io/concepts/sdks/node#advanced-usage) for the application',
             type: 'string',
             example: 'application-name-dacb1234',
         },

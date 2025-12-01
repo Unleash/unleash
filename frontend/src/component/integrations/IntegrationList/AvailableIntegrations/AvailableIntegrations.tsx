@@ -126,7 +126,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                         icon='terraform'
                         title='Terraform'
                         description={`Manage Unleash with HashiCorp’s Terraform using infrastructure as code (IaC).`}
-                        link='https://docs.getunleash.io/reference/terraform'
+                        link='https://docs.getunleash.io/concepts/terraform'
                         configureActionText='View documentation'
                         isExternal
                     />
@@ -163,7 +163,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                         need a client SDK (software developer kit) for your
                         programming language and an{' '}
                         <a
-                            href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+                            href='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
                             target='_blank'
                             rel='noopener noreferrer'
                         >
@@ -213,7 +213,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             <Typography variant='body2' color='text.secondary'>
                                 Frontend SDKs can connect to the{' '}
                                 <a
-                                    href='https://docs.getunleash.io/reference/unleash-edge'
+                                    href='https://docs.getunleash.io/concepts/unleash-edge'
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
@@ -221,7 +221,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                 </a>{' '}
                                 or to the{' '}
                                 <a
-                                    href='https://docs.getunleash.io/reference/front-end-api'
+                                    href='https://docs.getunleash.io/concepts/front-end-api'
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
@@ -261,7 +261,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                 </Typography>
                                 <Typography>
                                     <a
-                                        href='https://docs.getunleash.io/reference/sdks#community-sdks'
+                                        href='https://docs.getunleash.io/concepts/sdks#community-sdks'
                                         target='_blank'
                                         rel='noopener noreferrer'
                                     >

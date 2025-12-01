@@ -132,7 +132,7 @@ export const instanceAdminStatsSchema = {
         },
         featureToggles: {
             type: 'integer',
-            description: 'The number of feature-toggles this instance has',
+            description: 'The number of feature-flags this instance has',
             example: 47,
             minimum: 0,
         },

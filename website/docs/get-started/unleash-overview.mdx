@@ -19,7 +19,7 @@ The Unleash system consists of several key components.
 
 ### The Unleash API server
 
-The Unleash API server is the core service for managing feature flags, configurations, and related concepts. It provides SDKs with all the data needed to work with feature flags and their [activation strategies](/reference/activation-strategies).
+The Unleash API server is the core service for managing feature flags, configurations, and related concepts. It provides SDKs with all the data needed to work with feature flags and their [activation strategies](/concepts/activation-strategies).
 
 ### The Unleash Admin UI
 
@@ -43,7 +43,7 @@ Supported languages include: [Node.js](/sdks/node), [Go](/sdks/go), [Java](/sdks
 
 Frontend SDKs are used in frontend and mobile applications. They communicate with Unleash or [Unleash Edge](#unleash-edge) through the [Frontend API](#frontend-api). 
 
-Unlike backend SDKs, frontend SDKs do not perform the flag evaluation locally. Instead, they fetch all enabled feature flags for a given [Unleash Context](/reference/unleash-context). The flag evaluation happens inside [Unleash Edge](#unleash-edge), or within the Unleash server. Frontend SDKs cache evaluated feature flags in memory using a single evaluation call to the server, making flag evaluation secure, fast, and efficient.
+Unlike backend SDKs, frontend SDKs do not perform the flag evaluation locally. Instead, they fetch all enabled feature flags for a given [Unleash Context](/concepts/unleash-context). The flag evaluation happens inside [Unleash Edge](#unleash-edge), or within the Unleash server. Frontend SDKs cache evaluated feature flags in memory using a single evaluation call to the server, making flag evaluation secure, fast, and efficient.
 
 Supported platforms include: [JavaScript](/sdks/javascript-browser), [React](/sdks/react), [iOS](/sdks/ios), [Android](/sdks/android), and more.
 
@@ -58,7 +58,7 @@ The following table outlines where flag evaluation happens with different SDK se
 | Frontend SDK + Unleash      | Performed by the **Unleash server**. |
 | Frontend SDK + Unleash Edge | Performed by **Unleash Edge**. |
 
-Flag evaluation relies on the [Unleash Context](/reference/unleash-context) and may involve user data. Since backend SDKs always perform local evaluation, your user data remains within your application and is never shared with the Unleash server.
+Flag evaluation relies on the [Unleash Context](/concepts/unleash-context) and may involve user data. Since backend SDKs always perform local evaluation, your user data remains within your application and is never shared with the Unleash server.
 
 For frontend SDKs, you can use Unleash Edge for flag evaluation to ensure that user data is not shared with the Unleash server. You have different [hosting options](/deploy/hosting-options) for both Unleash and Unleash Edge allowing you to meet any privacy requirements.
 
@@ -75,7 +75,7 @@ Beyond scalability, Unleash Edge also offers privacy and security benefits for f
 The [Client API](/api) is the API used by backend SDKs to fetch feature flag configurations and send SDK usage metrics to Unleash.
 
 #### Frontend API
-The [Frontend API](/api) is the API used by frontend SDKs to retrieve all enabled feature flags for a given [Unleash Context](/reference/unleash-context) and send SDK usage metrics to Unleash.
+The [Frontend API](/api) is the API used by frontend SDKs to retrieve all enabled feature flags for a given [Unleash Context](/concepts/unleash-context) and send SDK usage metrics to Unleash.
 
 #### Admin API
 The [Admin API](/api) is an API layer for managing all aspects of your Unleash instance, including creating, updating, and deleting resources, such as feature flags, activation strategies, and environments. This API is used by the [Unleash Admin UI](#the-unleash-admin-ui) and other tools and [integrations](/integrate).

@@ -2,11 +2,14 @@ import { Button, FormControl, TextField } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import type { FormEvent } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type FC } from 'react';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { SafeguardChangeRequestDialog } from './SafeguardChangeRequestDialog.tsx';
-import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+import {
+    useImpactMetricsOptions,
+    type ImpactMetricsSeries,
+} from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
@@ -46,14 +49,15 @@ export const useSafeguardForm = (safeguards: ISafeguard[] | undefined) => {
     return { safeguardFormOpen, setSafeguardFormOpen };
 };
 
-interface ISafeguardFormProps {
+interface IBaseSafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
     onCancel?: () => void;
     onDelete?: () => void;
     safeguard?: ISafeguard;
     environment: string;
-    skipConfirmation?: boolean;
 }
+
+type MetricOption = { name: string } & ImpactMetricsSeries;
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
     metricName: safeguard?.impactMetric.metricName || '',
@@ -83,19 +87,7 @@ const getDefaultAggregationMode = (
     }
 };
 
-export const SafeguardForm = ({
-    onSubmit,
-    onCancel,
-    onDelete,
-    safeguard,
-    environment,
-    skipConfirmation = false,
-}: ISafeguardFormProps) => {
-    const { metricOptions, loading } = useImpactMetricsOptions();
-    const projectId = useRequiredPathParam('projectId');
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const [dialogOpen, setDialogOpen] = useState(false);
-
+const useSafeguardFormValues = (safeguard?: ISafeguard) => {
     const initialValues = useMemo(
         () => getInitialValues(safeguard),
         [safeguard],
@@ -116,10 +108,75 @@ export const SafeguardForm = ({
         initialValues.timeRange,
     );
 
+    const resetToOriginalValues = () => {
+        if (!safeguard) return;
+
+        setMetricName(initialValues.metricName);
+        setAppName(initialValues.appName);
+        setAggregationMode(initialValues.aggregationMode);
+        setOperator(initialValues.operator);
+        setThreshold(initialValues.threshold);
+        setTimeRange(initialValues.timeRange);
+    };
+
+    const buildSafeguardData = (): CreateSafeguardSchema => ({
+        impactMetric: {
+            metricName,
+            timeRange,
+            aggregationMode,
+            labelSelectors: {
+                appName: [appName],
+            },
+        },
+        triggerCondition: {
+            operator,
+            threshold: Number(threshold),
+        },
+    });
+
+    return {
+        metricName,
+        setMetricName,
+        appName,
+        setAppName,
+        aggregationMode,
+        setAggregationMode,
+        operator,
+        setOperator,
+        threshold,
+        setThreshold,
+        timeRange,
+        setTimeRange,
+        resetToOriginalValues,
+        buildSafeguardData,
+        initialValues,
+    };
+};
+
+const useSafeguardFormMode = (safeguard?: ISafeguard) => {
     const [mode, setMode] = useState<FormMode>(
         safeguard ? 'display' : 'create',
     );
 
+    const enterEditMode = () => {
+        if (mode === 'display') {
+            setMode('edit');
+        }
+    };
+
+    return {
+        mode,
+        setMode,
+        enterEditMode,
+    };
+};
+
+const useSafeguardMetricsData = (
+    metricName: string,
+    timeRange: MetricQuerySchemaTimeRange,
+    aggregationMode: MetricQuerySchemaAggregationMode,
+) => {
+    const { metricOptions, loading } = useImpactMetricsOptions();
     const { data: metricsData } = useImpactMetricsData(
         metricName
             ? {
@@ -135,20 +192,39 @@ export const SafeguardForm = ({
         return ['*', ...appNames];
     }, [metricsData?.labels?.appName]);
 
-    useEffect(() => {
-        if (metricOptions.length > 0 && !metricName) {
-            setMetricName(metricOptions[0].name);
-        }
-    }, [metricOptions, metricName]);
-
     const selectedMetricData = metricOptions.find((m) => m.name === metricName);
     const metricType = selectedMetricData?.type || 'unknown';
 
-    const enterEditMode = () => {
-        if (mode === 'display') {
-            setMode('edit');
-        }
+    return {
+        metricOptions,
+        loading,
+        applicationNames,
+        metricType,
     };
+};
+
+const useSafeguardFormHandlers = (
+    formValues: ReturnType<typeof useSafeguardFormValues>,
+    formMode: ReturnType<typeof useSafeguardFormMode>,
+    metricOptions: MetricOption[],
+) => {
+    const {
+        setMetricName,
+        setAppName,
+        setAggregationMode,
+        setOperator,
+        setThreshold,
+        setTimeRange,
+        aggregationMode,
+    } = formValues;
+    const { enterEditMode } = formMode;
+
+    // Auto-select first metric when options become available
+    useEffect(() => {
+        if (metricOptions.length > 0 && !formValues.metricName) {
+            setMetricName(metricOptions[0].name);
+        }
+    }, [metricOptions, formValues.metricName, setMetricName]);
 
     const handleMetricChange = (value: string) => {
         enterEditMode();
@@ -192,59 +268,70 @@ export const SafeguardForm = ({
         setTimeRange(value);
     };
 
-    const buildSafeguardData = (): CreateSafeguardSchema => ({
-        impactMetric: {
-            metricName,
-            timeRange,
-            aggregationMode,
-            labelSelectors: {
-                appName: [appName],
-            },
-        },
-        triggerCondition: {
-            operator,
-            threshold: Number(threshold),
-        },
-    });
-
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-
-        if (Number.isNaN(Number(threshold))) {
-            return;
-        }
-
-        if (isChangeRequestConfigured(environment) && !skipConfirmation) {
-            setDialogOpen(true);
-            return;
-        }
-
-        onSubmit(buildSafeguardData());
-
-        if (mode === 'edit' || mode === 'create') {
-            setMode('display');
-        }
+    return {
+        handleMetricChange,
+        handleApplicationChange,
+        handleAggregationModeChange,
+        handleOperatorChange,
+        handleThresholdChange,
+        handleTimeRangeChange,
     };
+};
 
-    const handleDialogConfirm = () => {
-        const safeguardData = buildSafeguardData();
-        setDialogOpen(false);
-        onSubmit(safeguardData);
-        if (mode === 'edit' || mode === 'create') {
-            setMode('display');
-        }
+const useSafeguardFormState = (safeguard?: ISafeguard) => {
+    const projectId = useRequiredPathParam('projectId');
+    const formValues = useSafeguardFormValues(safeguard);
+    const formMode = useSafeguardFormMode(safeguard);
+    const metricsData = useSafeguardMetricsData(
+        formValues.metricName,
+        formValues.timeRange,
+        formValues.aggregationMode,
+    );
+    const handlers = useSafeguardFormHandlers(
+        formValues,
+        formMode,
+        metricsData.metricOptions,
+    );
+
+    return {
+        ...formValues,
+        ...formMode,
+        ...metricsData,
+        ...handlers,
+        projectId,
     };
+};
 
-    const resetToOriginalValues = () => {
-        if (!safeguard) return;
-
-        setMetricName(initialValues.metricName);
-        setAppName(initialValues.appName);
-        setAggregationMode(initialValues.aggregationMode);
-        setOperator(initialValues.operator);
-        setThreshold(initialValues.threshold);
-        setTimeRange(initialValues.timeRange);
-    };
+const SafeguardFormBase: FC<{
+    formState: ReturnType<typeof useSafeguardFormState>;
+    onSubmit: (e: FormEvent) => void;
+    onCancel?: () => void;
+    onDelete?: () => void;
+    environment: string;
+    children?: React.ReactNode;
+}> = ({ formState, onSubmit, onCancel, onDelete, environment, children }) => {
+    const {
+        metricName,
+        appName,
+        aggregationMode,
+        operator,
+        threshold,
+        timeRange,
+        mode,
+        setMode,
+        metricOptions,
+        loading,
+        applicationNames,
+        metricType,
+        projectId,
+        handleMetricChange,
+        handleApplicationChange,
+        handleAggregationModeChange,
+        handleOperatorChange,
+        handleThresholdChange,
+        handleTimeRangeChange,
+        resetToOriginalValues,
+    } = formState;
 
     const handleCancel = () => {
         if (mode === 'create') {
@@ -256,16 +343,16 @@ export const SafeguardForm = ({
         setMode('display');
     };
 
-    const showButtons = mode === 'create' || mode === 'edit';
-
     const handleDelete = () => {
         if (onDelete) {
             onDelete();
         }
     };
 
+    const showButtons = mode === 'create' || mode === 'edit';
+
     return (
-        <StyledFormContainer onSubmit={handleSubmit} mode={mode}>
+        <StyledFormContainer onSubmit={onSubmit} mode={mode}>
             <StyledTopRow sx={{ mb: 1 }}>
                 <StyledIcon />
                 <StyledLabel sx={{ mr: 'auto' }}>
@@ -395,6 +482,95 @@ export const SafeguardForm = ({
                     </PermissionButton>
                 </StyledButtonGroup>
             )}
+            {children}
+        </StyledFormContainer>
+    );
+};
+
+const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
+    onSubmit,
+    onCancel,
+    onDelete,
+    safeguard,
+    environment,
+}) => {
+    const formState = useSafeguardFormState(safeguard);
+    const { mode, setMode, buildSafeguardData, threshold } = formState;
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+
+        if (Number.isNaN(Number(threshold))) {
+            return;
+        }
+
+        onSubmit(buildSafeguardData());
+
+        // Show changes immediately
+        if (mode === 'edit' || mode === 'create') {
+            setMode('display');
+        }
+    };
+
+    return (
+        <SafeguardFormBase
+            formState={formState}
+            onSubmit={handleSubmit}
+            onCancel={onCancel}
+            onDelete={onDelete}
+            environment={environment}
+        />
+    );
+};
+
+const SafeguardFormWithChangeRequests: FC<IBaseSafeguardFormProps> = ({
+    onSubmit,
+    onCancel,
+    onDelete,
+    safeguard,
+    environment,
+}) => {
+    const formState = useSafeguardFormState(safeguard);
+    const {
+        mode,
+        setMode,
+        buildSafeguardData,
+        threshold,
+        resetToOriginalValues,
+    } = formState;
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+
+        if (Number.isNaN(Number(threshold))) {
+            return;
+        }
+
+        setDialogOpen(true);
+    };
+
+    const handleDialogConfirm = () => {
+        const safeguardData = buildSafeguardData();
+        setDialogOpen(false);
+        onSubmit(safeguardData);
+
+        resetToOriginalValues();
+        if (mode === 'create') {
+            onCancel?.();
+        } else {
+            setMode('display');
+        }
+    };
+
+    return (
+        <SafeguardFormBase
+            formState={formState}
+            onSubmit={handleSubmit}
+            onCancel={onCancel}
+            onDelete={onDelete}
+            environment={environment}
+        >
             <SafeguardChangeRequestDialog
                 isOpen={dialogOpen}
                 onConfirm={handleDialogConfirm}
@@ -403,6 +579,53 @@ export const SafeguardForm = ({
                 environment={environment}
                 mode={mode === 'edit' ? 'edit' : 'create'}
             />
-        </StyledFormContainer>
+        </SafeguardFormBase>
     );
+};
+
+export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
+    onSubmit,
+    onCancel,
+    onDelete,
+    safeguard,
+    environment,
+}) => {
+    const formState = useSafeguardFormState(safeguard);
+    const { mode, setMode, buildSafeguardData, threshold } = formState;
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+
+        if (Number.isNaN(Number(threshold))) {
+            return;
+        }
+
+        onSubmit(buildSafeguardData());
+
+        // Keep changes visible in CR view
+        if (mode === 'edit' || mode === 'create') {
+            setMode('display');
+        }
+    };
+
+    return (
+        <SafeguardFormBase
+            formState={formState}
+            onSubmit={handleSubmit}
+            onCancel={onCancel}
+            onDelete={onDelete}
+            environment={environment}
+        />
+    );
+};
+
+export const SafeguardForm: FC<IBaseSafeguardFormProps> = (props) => {
+    const projectId = useRequiredPathParam('projectId');
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+
+    if (isChangeRequestConfigured(props.environment)) {
+        return <SafeguardFormWithChangeRequests {...props} />;
+    }
+
+    return <SafeguardFormDirect {...props} />;
 };

@@ -456,6 +456,7 @@ export const ReleasePlan = ({
                     type: 'success',
                     text: 'Added to draft',
                 });
+                onAutomationChange?.();
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }

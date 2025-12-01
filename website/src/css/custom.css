@@ -68,22 +68,6 @@ html[data-theme="light"] {
     --unleash-color-footer-icon: #657a80;
 }
 
-main:after {
-    background-image: url("/img/mountain-texture.png");
-    position: fixed;
-    display: block;
-    z-index: 0;
-    bottom: 0px;
-    right: 0px;
-    width: 350px;
-    aspect-ratio: 652 / 905;
-    background-size: cover;
-    pointer-events: none;
-    user-select: none;
-    background-repeat: no-repeat;
-    content: "";
-}
-
 html[data-theme="dark"] {
     --ifm-color-primary-lightest: #d1d1ff;
     --ifm-color-primary-lighter: #c9c9ff;

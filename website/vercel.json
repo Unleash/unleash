@@ -357,8 +357,33 @@
       "permanent": true
     },
     {
-      "source": "/sdks/:lang_sdk",
-      "destination": "/sdks/:lang",
+      "source": "/sdks/go_sdk",
+      "destination": "/sdks/go",
+      "permanent": true
+    },
+    {
+      "source": "/sdks/java_sdk",
+      "destination": "/sdks/java",
+      "permanent": true
+    },
+    {
+      "source": "/sdks/node_sdk",
+      "destination": "/sdks/node",
+      "permanent": true
+    },
+    {
+      "source": "/sdks/php_sdk",
+      "destination": "/sdks/php",
+      "permanent": true
+    },
+    {
+      "source": "/sdks/python_sdk",
+      "destination": "/sdks/python",
+      "permanent": true
+    },
+    {
+      "source": "/sdks/ruby_sdk",
+      "destination": "/sdks/ruby",
       "permanent": true
     },
     {
@@ -997,11 +1022,6 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/golang/examples",
-      "destination": "/guides/feature-flag-examples-golang",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/java/spring-boot/examples",
       "destination": "/guides/feature-flag-examples-spring-boot",
       "permanent": true
@@ -1022,22 +1042,12 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/spring-boot/examples",
-      "destination": "/guides/feature-flag-examples-spring-boot",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/spring-boot",
-      "destination": "/guides/implement-feature-flags-in-spring-boot",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/:lang(django|dotnet|ios|java|javascript|nextjs|python|rails|react|ruby|rust|sveltekit)/examples",
+      "source": "/feature-flag-tutorials/:lang(django|dotnet|golang|ios|java|javascript|nextjs|python|rails|react|ruby|rust|spring-boot|sveltekit)/examples",
       "destination": "/guides/feature-flag-examples-:lang",
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/:lang(django|dotnet|ios|java|javascript|nextjs|python|rails|react|ruby|rust|sveltekit)",
+      "source": "/feature-flag-tutorials/:lang(django|dotnet|ios|java|javascript|nextjs|python|rails|react|ruby|rust|spring-boot|sveltekit)",
       "destination": "/guides/implement-feature-flags-in-:lang",
       "permanent": true
     },

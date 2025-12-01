@@ -71,6 +71,11 @@
       "permanent": true
     },
     {
+      "source": "/concepts/core-concepts",
+      "destination": "/concepts",
+      "permanent": true
+    },
+    {
       "source": "/feature-flag-tutorials/use-cases/:path*",
       "destination": "/guides/:path*",
       "permanent": true
@@ -174,6 +179,11 @@
     {
       "source": "/advanced/archived_toggles",
       "destination": "/concepts/feature-flags#archive-a-feature-toggle",
+      "permanent": true
+    },
+    {
+      "source": "/reference/feature-toggle-variants",
+      "destination": "/concepts/feature-flag-variants",
       "permanent": true
     },
     {

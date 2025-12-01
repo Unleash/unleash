@@ -329,7 +329,7 @@ export const EnvironmentVariantsModal = ({
                 modal
                 title=''
                 description='Variants allow you to return a variant object if the feature flag is considered enabled for the current request.'
-                documentationLink='https://docs.getunleash.io/concepts/feature-toggle-variants'
+                documentationLink='https://docs.getunleash.io/concepts/feature-flag-variants'
                 documentationLinkLabel='Feature flag variants documentation'
                 formatApiCode={formatApiCode}
                 loading={!open}
@@ -420,7 +420,7 @@ export const EnvironmentVariantsModal = ({
                                     which parameter is used to ensure consistent
                                     traffic allocation across variants.{' '}
                                     <Link
-                                        href='https://docs.getunleash.io/concepts/feature-toggle-variants'
+                                        href='https://docs.getunleash.io/concepts/feature-flag-variants'
                                         target='_blank'
                                         rel='noreferrer'
                                     >

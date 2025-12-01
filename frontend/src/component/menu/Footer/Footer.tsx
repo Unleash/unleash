@@ -11,7 +11,7 @@ const StyledFooter = styled('footer')(({ theme }) => ({
     padding: theme.spacing(4, 8),
     width: '100%',
     flexGrow: 1,
-    zIndex: 100,
+    position: 'relative',
     backgroundColor: theme.palette.background.paper,
     overflowY: 'hidden',
 }));

@@ -943,7 +943,7 @@
     },
     {
       "source": "/topics",
-      "destination": "/get-started/guides-overview",
+      "destination": "/guides-overview",
       "permanent": true
     },
     {
@@ -999,11 +999,6 @@
     {
       "source": "/api-overview",
       "destination": "/api",
-      "permanent": true
-    },
-    {
-      "source": "/guides-overview",
-      "destination": "/get-started/guides-overview",
       "permanent": true
     },
     {

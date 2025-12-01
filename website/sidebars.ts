@@ -201,7 +201,7 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'get-started/guides-overview',
+                id: 'guides/guides-overview',
             },
             items: [
                 {

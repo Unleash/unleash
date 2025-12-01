@@ -105,7 +105,7 @@ export const addonTypeSchema = {
         events: {
             type: 'array',
             description:
-                'All the [event types](https://docs.getunleash.io/concepts/api/legacy/unleash/admin/events#feature-toggle-events) that are available for this addon provider.',
+                'All the [event types](https://docs.getunleash.io/concepts/events#event-types) that are available for this addon provider.',
             items: {
                 type: 'string',
             },

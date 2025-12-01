@@ -72,7 +72,7 @@ export const addonsSchema = {
   "timestamp": "{{event.data.createdAt}}"
 }`,
                             description:
-                                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/concepts/api/legacy/unleash/admin/events)",
+                                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/api/events)",
                             type: 'textfield',
                             required: false,
                             sensitive: false,

@@ -213,7 +213,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             <Typography variant='body2' color='text.secondary'>
                                 Frontend SDKs can connect to the{' '}
                                 <a
-                                    href='https://docs.getunleash.io/concepts/unleash-edge'
+                                    href='https://docs.getunleash.io/unleash-edge'
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
@@ -261,7 +261,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                 </Typography>
                                 <Typography>
                                     <a
-                                        href='https://docs.getunleash.io/concepts/sdks#community-sdks'
+                                        href='https://docs.getunleash.io/sdks#community-sdks'
                                         target='_blank'
                                         rel='noopener noreferrer'
                                     >

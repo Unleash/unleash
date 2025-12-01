@@ -149,14 +149,14 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - Get an overview of all feature flags across all your environments, applications and services
 - Targeted releases using [activation strategies](https://docs.getunleash.io/concepts/activation-strategies) to enable and disable features for certain users or segments without having to redeploy your application.
 - [Canary releases / gradual rollouts](https://docs.getunleash.io/concepts/activation-strategies)
-- [Kill switches](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types)
+- [Kill switches](https://docs.getunleash.io/concepts/feature-toggles#feature-flag-types)
 - [A/B testing](https://docs.getunleash.io/feature-flag-tutorials/use-cases/a-b-testing)
 - 2 [environments](https://docs.getunleash.io/concepts/environments)
-- Organize feature flags using [tags](https://docs.getunleash.io/concepts/feature-flags#tags)
+- Organize feature flags using [tags](https://docs.getunleash.io/concepts/feature-toggles#tags)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
 - [Insights for managing technical debt](https://docs.getunleash.io/concepts/technical-debt) and [stale flags](https://docs.getunleash.io/concepts/technical-debt#stale-and-potentially-stale-flags)
 - API-first: _everything_ can be automated. No exceptions.
-- [12 official SDKs](https://docs.getunleash.io/concepts/sdks#official-sdks), and 10 [community-contributed SDKs](https://docs.getunleash.io/concepts/sdks#community-sdks)
+- [12 official SDKs](https://docs.getunleash.io/sdks#official-sdks), and 10 [community-contributed SDKs](https://docs.getunleash.io/sdks#community-sdks)
 - Run it via Docker with the [official Docker image](https://hub.docker.com/r/unleashorg/unleash-server) or as a pure Node.js application
 
 ### Security and performance
@@ -165,7 +165,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - [Audit logs](https://docs.getunleash.io/advanced/audit_log)
 - Enforce [OWASP's secure headers](https://owasp.org/www-project-secure-headers/) via the strict HTTPS-only mode
 - Flexible hosting options: host it on premise or in the cloud (_any_ cloud)
-- Scale with [Unleash Edge](https://docs.getunleash.io/concepts/unleash-edge) independently of the Unleash server to support any number of frontend clients without overloading your Unleash instance
+- Scale with [Unleash Edge](https://docs.getunleash.io/unleash-edge) independently of the Unleash server to support any number of frontend clients without overloading your Unleash instance
 
 ### Looking for more features?
 
@@ -196,28 +196,28 @@ To connect your application to Unleash you'll need to use a client SDK for your 
 
 **Official backend SDKs:**
 
-- [Go SDK](https://docs.getunleash.io/concepts/sdks/go)
-- [Java SDK](https://docs.getunleash.io/concepts/sdks/java)
-- [Node.js SDK](https://docs.getunleash.io/concepts/sdks/node)
-- [PHP SDK](https://docs.getunleash.io/concepts/sdks/php)
-- [Python SDK](https://docs.getunleash.io/concepts/sdks/python)
-- [Ruby SDK](https://docs.getunleash.io/concepts/sdks/ruby)
+- [Go SDK](https://docs.getunleash.io/sdks/go)
+- [Java SDK](https://docs.getunleash.io/sdks/java)
+- [Node.js SDK](https://docs.getunleash.io/sdks/node)
+- [PHP SDK](https://docs.getunleash.io/sdks/php)
+- [Python SDK](https://docs.getunleash.io/sdks/python)
+- [Ruby SDK](https://docs.getunleash.io/sdks/ruby)
 - [Rust SDK](https://github.com/unleash/unleash-client-rust)
-- [.NET SDK](https://docs.getunleash.io/concepts/sdks/dotnet)
+- [.NET SDK](https://docs.getunleash.io/sdks/dotnet)
 
 **Official frontend SDKs:**
 
-- [Android Proxy SDK](https://docs.getunleash.io/concepts/sdks/android-proxy)
-- [Flutter Proxy SDK](https://docs.getunleash.io/concepts/sdks/flutter)
-- [iOS Proxy SDK](https://docs.getunleash.io/concepts/sdks/ios-proxy)
-- [JavaScript Proxy SDK](https://docs.getunleash.io/concepts/sdks/javascript-browser)
-- [React Proxy SDK](https://docs.getunleash.io/concepts/sdks/react)
-- [Svelte Proxy SDK](https://docs.getunleash.io/concepts/sdks/svelte)
-- [Vue Proxy SDK](https://docs.getunleash.io/concepts/sdks/vue)
+- [Android Proxy SDK](https://docs.getunleash.io/sdks/android-proxy)
+- [Flutter Proxy SDK](https://docs.getunleash.io/sdks/flutter)
+- [iOS Proxy SDK](https://docs.getunleash.io/sdks/ios-proxy)
+- [JavaScript Proxy SDK](https://docs.getunleash.io/sdks/javascript-browser)
+- [React Proxy SDK](https://docs.getunleash.io/sdks/react)
+- [Svelte Proxy SDK](https://docs.getunleash.io/sdks/svelte)
+- [Vue Proxy SDK](https://docs.getunleash.io/sdks/vue)
 
 **Community SDKs:**
 
-If none of the official SDKs fit your need, there's also a number of [community-developed SDKs](https://docs.getunleash.io/concepts/sdks#community-sdks) where you might find an implementation for your preferred language (such as [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), and more).
+If none of the official SDKs fit your need, there's also a number of [community-developed SDKs](https://docs.getunleash.io/sdks#community-sdks) where you might find an implementation for your preferred language (such as [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), and more).
 
 <br/>
 
@@ -253,4 +253,4 @@ Unleash has evolved significantly over the past few years, and we know how hard 
 - [_FeatureToggle_ by Martin Fowler](http://martinfowler.com/bliki/FeatureToggle.html)
 - [_Feature toggling transient errors in load tests_ — nrkbeta](https://nrkbeta.no/2021/08/23/feature-toggling-transient-errors-in-load-tests/)
 - [_An Interview with Ivar of Unleash_ — Console](https://console.substack.com/p/console-42)
-- [_Unleash your features gradually_](http://ivarconr.github.io/feature-flags-presentation/sch-dev-lunch-2017/#1 ' '), slideshow/presentation by Ivar, the creator of Unleash
+- [_Unleash your features gradually_](http://ivarconr.github.io/feature-toggles-presentation/sch-dev-lunch-2017/#1 ' '), slideshow/presentation by Ivar, the creator of Unleash

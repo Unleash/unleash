@@ -37,7 +37,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Client',
         description:
-            'Endpoints for [Unleash backend clients](https://docs.getunleash.io/concepts/sdks).',
+            'Endpoints for [Unleash backend clients](https://docs.getunleash.io/sdks).',
     },
     {
         name: 'Context',
@@ -153,7 +153,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Unleash Edge',
         description:
-            'Endpoints related to [Unleash Edge](https://docs.getunleash.io/concepts/unleash-edge).',
+            'Endpoints related to [Unleash Edge](https://docs.getunleash.io/unleash-edge).',
     },
     {
         name: 'Unstable',

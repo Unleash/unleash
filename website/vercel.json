@@ -71,11 +71,6 @@
       "permanent": true
     },
     {
-      "source": "/concepts/core-concepts",
-      "destination": "/concepts",
-      "permanent": true
-    },
-    {
       "source": "/feature-flag-tutorials/use-cases/:path*",
       "destination": "/guides/:path*",
       "permanent": true
@@ -668,12 +663,12 @@
     },
     {
       "source": "/tutorials/the-anatomy-of-unleash",
-      "destination": "/concepts/core-concepts",
+      "destination": "/concepts",
       "permanent": true
     },
     {
       "source": "/topics/the-anatomy-of-unleash",
-      "destination": "/concepts/core-concepts",
+      "destination": "/concepts",
       "permanent": true
     },
     {
@@ -1023,7 +1018,7 @@
     },
     {
       "source": "/understanding-unleash/the-anatomy-of-unleash",
-      "destination": "/concepts/core-concepts",
+      "destination": "/concepts",
       "permanent": true
     },
     {

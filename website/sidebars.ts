@@ -67,7 +67,7 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'concepts/core-concepts',
+                id: 'concepts/concepts-overview',
             },
             items: [
                 {

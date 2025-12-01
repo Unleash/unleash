@@ -70,7 +70,6 @@ const MainLayoutContentWrapper = styled('div')(({ theme }) => ({
 const StyledImg = styled('img')(() => ({
     display: 'block',
     position: 'fixed',
-    zIndex: 0,
     bottom: 0,
     right: 0,
     width: 400,

@@ -122,7 +122,8 @@ export const ReleasePlanMilestone = ({
     const [expanded, setExpanded] = useState(false);
     const hasAutomation = Boolean(automationSection);
     const isPreviousMilestonePaused =
-        previousMilestoneStatus?.type === 'paused' || previousMilestoneStatus?.progression === 'paused';
+        previousMilestoneStatus?.type === 'paused' ||
+        previousMilestoneStatus?.progression === 'paused';
 
     if (!milestone.strategies.length) {
         return (

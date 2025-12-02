@@ -17,9 +17,9 @@ The Datadog integration allows Unleash to post Updates to Datadog when a feature
 
 The Datadog integration will perform a single retry if the HTTP POST against the Datadog Webhook URL fails (either a 50x or network error). Duplicate events may happen, and you should never assume events always comes in order.
 
-## Configuration {#configuration}
+## Configuration
 
-#### Events {#events}
+#### Events
 
 You can choose to trigger updates for the following events:
 
@@ -39,7 +39,7 @@ You can choose to trigger updates for the following events:
 - feature-potentially-stale-on
 - feature-updated (deprecated in v4.3)
 
-#### Parameters {#parameters}
+#### Parameters
 
 Unleash Datadog integration takes the following parameters.
 
@@ -92,6 +92,6 @@ Example:
 username created feature flag (featurename)[http://your.url/projects/projectname/features/featurename] in project *projectname*
 ```
 
-#### Tags {#tags}
+#### Tags
 
 Datadog's incoming webhooks are app specific. You will be able to create multiple integrations to support messaging on different apps.

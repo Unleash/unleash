@@ -2,7 +2,7 @@
 title: ADR Overview
 ---
 
-## Introduction {#introduction}
+## Introduction
 
 Architectural decision records are a record of design decisions we have made in the past because we belived they would help our code quality over time. Any ADR can be challenged, but two conditions must be met to change an ADR: 
 1. The proposed solution must provide a tangible benefit in terms of code quality.

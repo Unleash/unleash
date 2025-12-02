@@ -61,7 +61,7 @@ Once you've selected your file and started the upload, Jira will install the plu
 
 ![The successful install screen mentioned in the preceding paragraph.](/img/jira_server_installed_ready_to_go.png)
 
-## Configuring the plugin {#configure-plugin}
+## Configuring the plugin
 
 After the plugin is installed. Jira's Manage Apps page will have a new menu section called "Unleash Admin" with a single
 link - "Configure servers".

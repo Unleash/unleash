@@ -33,8 +33,8 @@ Impression data is **opt-in on a per-flag basis**. Unleash will not emit impress
 
 There's two types of impression events you can listen for:
 
-- [`isEnabled` events](#example-isenabled)
-- [`getVariant` events](#example-getvariant)
+- [`isEnabled` events](#example-isenabled-event)
+- [`getVariant` events](#example-getvariant-event)
 
 The `getVariant` event contains all the information found in an `isEnabled` event in addition to extra data that's only relevant to `getVariant` calls.
 
@@ -49,7 +49,7 @@ This table describes all the properties on the impression events:
 | `featureName` | The name of the feature flag. | All |
 | `variant` | The name of the active variant | `getVariant` events only |
 
-### Example `isEnabled` event {#example-isenabled}
+### Example `isEnabled` event
 
 ```js
 {
@@ -65,7 +65,7 @@ This table describes all the properties on the impression events:
 }
 ```
 
-### Example `getVariant` event {#example-getvariant}
+### Example `getVariant` event
 
 ```js
 {

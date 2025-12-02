@@ -18,9 +18,9 @@ The MicrosoftTeams integration allows Unleash to post Updates when a feature fla
 
 The Microsoft Teams integration will perform a single retry if the HTTP POST against the Microsoft Teams Webhook URL fails (either a 50x or network error). Duplicate events may happen, and you should never assume events always comes in order.
 
-## Configuration {#configuration}
+## Configuration
 
-#### Events {#events}
+#### Events
 
 You can choose to trigger updates for the following events:
 
@@ -38,12 +38,12 @@ You can choose to trigger updates for the following events:
 - feature-environment-disabled
 - feature-updated (deprecated in v4.3)
 
-#### Parameters {#parameters}
+#### Parameters
 
 Unleash Microsoft Teams integration takes the following parameters.
 
 - **Microsoft Teams Webhook URL** - This is the only required property.
 
-#### Tags {#tags}
+#### Tags
 
 Microsoft teams's incoming webhooks are channel specific. You will be able to create multiple integrations to support messaging on multiple channels.

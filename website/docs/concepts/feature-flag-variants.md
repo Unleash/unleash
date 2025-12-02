@@ -129,7 +129,7 @@ This is a fallback variant that Unleash uses to represent the lack of a variant.
 
 Note: The actual representation of the built-in fallback variant in the client SDK will vary slightly, to honor best practices in various languages.
 
-## Backend SDK Support {#client-sdk-support}
+## Backend SDK Support
 
 To make use of flag variants, you need to use a compatible client. Client SDK with variant support:
 

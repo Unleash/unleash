@@ -15,20 +15,20 @@ The steps in this guide assume you have admin access to a running Unleash instan
 
 ## Keycloak Configuration
 
-### Step 1: Navigate to Create Client {#keycloak-step-1}
+### Step 1: Navigate to Create Client
 
 Open the Keycloak admin dashboard, navigate to clients and select "Create Client".
 
 ![The Keycloak Admin UI with the steps highlighted to navigate to client configuration.](/img/setup-keycloak-sync-1.png)
 
 
-### Step 2: Create an Unleash Client {#keycloak-step-2}
+### Step 2: Create an Unleash Client
 
 Select "OpenID Connect" as the client type and give your client a name, then save your configuration.
 
 ![The Keycloak Admin UI with the client configuration open.](/img/setup-keycloak-sync-2.png)
 
-### Step 3: Set a redirect URI {#keycloak-step-3}
+### Step 3: Set a redirect URI
 
 Set the redirect URI to:
 
@@ -42,19 +42,19 @@ Save your configuration.
 
 ![The Keycloak client configuration with redirect URIs highlighted.](/img/setup-keycloak-sync-3.png)
 
-### Step 4: Copy your client secret {#keycloak-step-4}
+### Step 4: Copy your client secret
 
 Navigate to "Credentials" and copy your client secret. You'll need to add this to the Unleash configuration later, so put it somewhere you'll be able to find it.
 
 ![The Keycloak credentials configuration with copy client secret highlighted.](/img/setup-keycloak-sync-4.png)
 
-### Step 5: Copy your OpenID endpoint configuration {#keycloak-step-5}
+### Step 5: Copy your OpenID endpoint configuration
 
 Navigate to your realm settings and copy the link to OpenID endpoint configuration. You'll need to add this to the Unleash configuration later.
 
 ![The Keycloak realm settings the OpenID endpoint configuration link highlighted.](/img/setup-keycloak-sync-5.png)
 
-### Step 6: Create a new Client Scope and Map Groups {#keycloak-step-6}
+### Step 6: Create a new Client Scope and Map Groups
 
 Navigate to the "Client Scopes" page and select "Create Client Scope".
 
@@ -79,19 +79,19 @@ Give your mapper a claim name, this must match the "Group Field JSON Path" in Un
 
 ## Unleash Configuration
 
-### Step 1: Navigate to the Unleash SSO Configuration {#unleash-step-1}
+### Step 1: Navigate to the Unleash SSO Configuration
 
 Log in to Unleash as an admin user and navigate to the SSO configuration. Input your Client Secret (copied in step 3 of the Keycloak configuration), your Discover URL (copied in step 4  of the Keycloak configuration), and the Client ID (from step 2 of the Keycloak configuration).
 
 ![The Unleash SSO configuration screen with Client ID, Client Secret and Discover URL highlighted.](/img/setup-keycloak-sync-11.png)
 
-### Step 2: Enable Group Syncing {#unleash-step-2}
+### Step 2: Enable Group Syncing
 
 Turn on Group Syncing and set a value for "Group Field JSON Path". This must match the value in claim name in Keycloak exactly. Save your configuration.
 
 ![The Unleash SSO configuration screen with the Enable Group Syncing and Group Field JSON Path highlighted.](/img/setup-keycloak-sync-12.png)
 
-### Step 3: Enable Group Syncing for your Group {#unleash-step-3}
+### Step 3: Enable Group Syncing for your Group
 
 Navigate to Groups and select the group that you want to sync.
 

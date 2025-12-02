@@ -162,7 +162,7 @@ You can assign the following root permissions:
 
 | Permission Name | Description                    |
 |-----------------|--------------------------------|
-| Create segments | Create [segments](v/segments). |
+| Create segments | Create [segments](/concepts/segments). |
 | Edit segments   | Edit segments.   |
 | Delete segments | Delete segments. |
 

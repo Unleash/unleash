@@ -9,26 +9,26 @@ description: Set up SSO for Unleash with SAML 2.0 and Keycloak.
 
 :::
 
-## Introduction {#introduction}
+## Introduction
 
 In this guide we will do a deep dive on the Single-Sign-On (SSO) integration with SAML 2.0 and connect it with Keycloak as IdP. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](/concepts/sso.md)
 
 ## Basic configuration
 
-### Step 1: Sign-in to Unleash {#step-1}
+### Step 1: Sign-in to Unleash
 
 In order to configure SSO you will need to log in to the Unleash instance with a user that have "Admin" role. If you are self-hosting Unleash then a default user will be automatically created the first time you start Unleash:
 
 - username: `admin`
 - password: `unleash4all`
 
-### Step 2: Navigate to SSO configuration {#step-2}
+### Step 2: Navigate to SSO configuration
 
 In order to configure SSO with SAML with your Unleash enterprise you should navigate to the Single-Sign-On configuration section and choose the "SAML 2.0" tab.
 
 ![sso-config](/img/sso-configure-saml.png)
 
-### Step 3: Keycloak with SAML 2.0 {#step-3}
+### Step 3: Keycloak with SAML 2.0
 
 Open to the Keycloak dashboard and navigate to “Clients” and click “Add Client” button. Give it a unique clientId (e.g. unleash), use the “saml” protocol and specify the following SAML Endpoint:
 
@@ -48,7 +48,7 @@ Navigate to “Realm Settings” and open the “SAML 2.0 Identity Provider Meta
 
 ![Keycloak: step 3](/img/keykloak_step3-768x235.png)
 
-### Step 4: Configure SAML 2.0 Authentication provider in Unleash {#step-3}
+### Step 4: Configure SAML 2.0 Authentication provider in Unleash
 
 Go back to Unleash Admin Dashboard and navigate to `Admin Menu -> Single-Sign-On -> SAML`. Fill in the values captured in the step 3.
 
@@ -60,7 +60,7 @@ You may also choose to “auto create users”. This will make Unleash automatic
 
 ![Keycloak: step 4](/img/keykloak_step4-768x644.png)
 
-### Step 5: Validate {#step-5}
+### Step 5: Validate
 
 You have now successfully configured Unleash to use SAML 2.0 together with Keycloak as an IdP. Please note that you also must assign users to the application defined in Keycloak to actually be able to log-in to Unleash.
 

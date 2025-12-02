@@ -18,9 +18,9 @@ The Webhook Integration introduces a generic way to post messages from Unleash t
 
 The webhook will perform a single retry if the HTTP POST call fails (either a 50x or network error). Duplicate events may happen, and you should never assume events always comes in order.
 
-## Configuration {#configuration}
+## Configuration
 
-#### Events {#events}
+#### Events
 
 You can choose to trigger updates for the following events (we might add more event types in the future):
 
@@ -56,7 +56,7 @@ You can choose to trigger updates for the following events (we might add more ev
 - feature-potentially-stale-on
 - feature-updated (deprecated in v4.3)
 
-#### Parameters {#parameters}
+#### Parameters
 
 Unleash Webhook integration takes the following parameters.
 
@@ -79,7 +79,7 @@ Example:
 
 If you don't specify anything Unleash will use the [Unleash event format](/api/get-events).
 
-#### Custom SSL certificates {#certificates}
+#### Custom SSL certificates
 
 If your webhook endpoint uses a custom SSL certificate,
 you will need to start Unleash with the `NODE_EXTRA_CA_CERTS` environment variable set.

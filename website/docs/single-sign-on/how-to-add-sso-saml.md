@@ -9,7 +9,7 @@ description: Set up SSO for Unleash with SAML 2.0 and Okta.
 
 :::
 
-## Introduction {#introduction}
+## Introduction
 
 In this guide we will do a deep dive on the Single-Sign-On (SSO) integration with SAML 2.0 and connect it with Okta as
 IdP. Unleash support other identity providers and protocols, have a look
@@ -17,7 +17,7 @@ at [all available Single-Sign-On options](/concepts/sso.md)
 
 ## Basic configuration
 
-### Step 1: Sign-in to Unleash {#step-1}
+### Step 1: Sign-in to Unleash
 
 In order to configure SSO you will need to log in to the Unleash instance with a user that have "Admin" role. If you are
 self-hosting Unleash then a default user will be automatically created the first time you start Unleash:
@@ -25,14 +25,14 @@ self-hosting Unleash then a default user will be automatically created the first
 - username: `admin`
 - password: `unleash4all`
 
-### Step 2: Navigate to SSO configuration {#step-2}
+### Step 2: Navigate to SSO configuration
 
 In order to configure SSO with SAML with your Unleash enterprise you should navigate to the Single-Sign-On configuration
 section and choose the "SAML 2.0" tab.
 
 ![sso-config](/img/sso-configure-saml.png)
 
-### Step 3: Create an application in Okta {#step-3}
+### Step 3: Create an application in Okta
 
 Open a new tab/window in your browser and sign in to your Okta account. We will need to create a new Application which
 will hold the settings we need for Unleash.
@@ -71,7 +71,7 @@ Click the “View Setup Instructions” to get the necessary configuration requi
 
 ![Okta: Setup Instructions](/img/okta_setup-instructions-768x731.png)
 
-### Step 4: Configure SAML 2.0 provider in Unleash {#step-4}
+### Step 4: Configure SAML 2.0 provider in Unleash
 
 Go back to Unleash Admin Dashboard and navigate to `Admin Menu -> Single-Sign-On -> SAML`. Fill in the values captured
 in the _"Get the Okta Setup Instructions"_ step.
@@ -83,7 +83,7 @@ assigned (Editor role will be the default).
 
 ![Unleash: SAML 2.0](/img/sso-saml-unleash.png)
 
-### Step 5: Validate {#step-5}
+### Step 5: Validate
 
 You have now successfully configured Unleash to use SAML 2.0 together with Okta as an IdP. Please note that you also
 must assign users to the application defined in Okta to actually be able to log-in to Unleash.

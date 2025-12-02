@@ -10,26 +10,26 @@ pagination_next: single-sign-on/how-to-add-sso-saml
 
 :::
 
-## Introduction {#introduction}
+## Introduction
 
 In this guide we will do a deep dive on the Single-Sign-On (SSO) using the OpenID Connect protocol and connect it with Okta as IdP. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](/concepts/sso.md)
 
 ## Basic configuration
 
-### Step 1: Sign-in to Unleash {#step-1}
+### Step 1: Sign-in to Unleash
 
 In order to configure SSO you will need to log in to the Unleash instance with a user that have "Admin" role. If you are self-hosting Unleash then a default user will be automatically created the first time you start Unleash:
 
 - username: `admin`
 - password: `unleash4all`
 
-### Step 2: Navigate to SSO configuration {#step-2}
+### Step 2: Navigate to SSO configuration
 
 Unleash enterprise supports multiple authentication providers, and we provide in depth guides for each of them. To find them navigate to "Admin" => "Single-Sign-On" section.
 
 ![admin-authentication](/img/sso-oidc.png)
 
-### Step 3: Okta with OpenID Connect {#step3}
+### Step 3: Okta with OpenID Connect
 
 Open a new tab/window in your browser and sign in to your Okta account. We will need to create a new Application which will hold the settings we need for Unleash.
 
@@ -69,7 +69,7 @@ You may also choose to “Auto-create users”. This will make Unleash automatic
 
 ![Unleash: Configure OpenID Connect](/img/sso-oidc-unleash.png)
 
-### Step 4: Verify {#step-4}
+### Step 4: Verify
 
 Log out of Unleash and sign back in again. You should now be presented with the "Sign in with OpenID Connect" option. Click the button and follow the sign-in flow. If all goes well you should be successfully signed in to Unleash.
 

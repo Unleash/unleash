@@ -15,26 +15,26 @@ Single Sign-on via the Google Authenticator provider has been removed in Unleash
 
 :::
 
-## Introduction {#introduction}
+## Introduction
 
 In this guide we will do a deep dive on the Single-Sign-On (SSO) using Google Authentication. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](/concepts/sso.md)
 
 ## Basic configuration
 
-### Step 1: Sign-in to Unleash {#step-1}
+### Step 1: Sign-in to Unleash
 
 In order to configure SSO you will need to log in to the Unleash instance with a user that have "Admin" role. If you are self-hosting Unleash then a default user will be automatically created the first time you start Unleash:
 
 - username: `admin`
 - password: `unleash4all`
 
-### Step 2: Navigate to SSO configuration {#step-2}
+### Step 2: Navigate to SSO configuration
 
 In order to configure SSO with Google with your Unleash enterprise you should navigate to the Single-Sign-On configuration section and choose the "Google" tab.
 
 ![sso-config](/img/sso-configure.png)
 
-### Step 3: Google Authentication {#step-3n}
+### Step 3: Google Authentication
 
 Navigate to https://console.developers.google.com/apis/credentials
 
@@ -47,7 +47,7 @@ You will then get a `Client ID` and a `Client Secret` that you will need in the 
 
 ![Google OAuth: Secret](/img/sso-google-secret.png)
 
-### Step 4: Configure Unleash {#step-4}
+### Step 4: Configure Unleash
 
 Log in to Unleash and navigate to `Admin menu -> Single-Sign-on -> Google`.
 
@@ -61,7 +61,7 @@ Remember to click “Save” to store your settings.
 
 ![Google OAuth: Secret](/img/google_auth_settings.png)
 
-### Step 5: Verify {#step-5}
+### Step 5: Verify
 
 Log out of Unleash and sign back in again. You should now be presented with the “SSO Authentication Option”. Click the button and follow the sign-in flow. If all goes well you should be successfully signed in to Unleash. If something is not working you can still sign-in with username and password.
 

@@ -7,7 +7,7 @@ title: Client Specification
 
 This document attempts to guide developers in implementing an Unleash Client SDK.
 
-## System Overview {#system-overview}
+## System Overview
 
 Unleash is composed of three parts:
 
@@ -19,7 +19,7 @@ Unleash is composed of three parts:
 
 To be super fast, the client SDK caches all feature flags and their current configuration in memory. The activation strategies are also implemented in the SDK. This makes it really fast to check if a flag is on or off because it is just a simple function operating on local state, without the need to poll data from the database.
 
-## The Basics {#the-basics}
+## The Basics
 
 All client implementations should strive to have a consistent and straightforward user API. It should be a simple method, called isEnabled, to check if a feature flag is enabled or not. The method should return a `boolean` value, true or false.
 
@@ -36,7 +36,7 @@ boolean value = unleash.isEnabled("unknownFeatureFlag", false);
 //value==false because default value was used.
 ```
 
-### Implementation of isEnabled {#implementation-of-isenabled}
+### Implementation of isEnabled
 
 A feature flag is defined as:
 
@@ -90,28 +90,27 @@ function isEnabled(name, unleashContext = {}, defaultValue = false) {
 }
 ```
 
-## Activation Strategies {#activation-strategies}
+## Activation Strategies
 
 Activation strategies are defined and configured in the unleash-service. It is up to the client to provide the actual implementation of each activation strategy.
 
 Unleash also ships with a few built-in strategies, and expects client SDK's to implement these. Read more about these [activation strategies](concepts/activation-strategies.md). For the built-in strategies to work as expected the client should also allow the user to define an [unleash-context](concepts/unleash-context.md). The context should be possible to pass in as part of the `isEnabled` call.
 
-### Extension points {#extension-points}
+### Extension points
 
 Client implementation should also provide a defined interface to make it easier for the user to implement their own activation strategies, and register those in the Unleash client.
 
-## Fetching feature flags (polling) {#fetching-feature-flags-polling}
+## Fetching feature flags (polling)
 
 The client implementation should fetch flags in the background as regular polling. In a thread-based environment, such as Java, this needs to be done in a separate thread. The default poll interval should be **15 seconds**, and it should also be configurable.
 
-## Client registration {#client-registration}
-
+## Client registration
 On start-up, the clients should register with the Unleash server. The registration request must include the required fields specified in the [API documentation](/api/register-client-application).
 
-## Metrics {#metrics}
+## Metrics
 
 Clients are expected to send metrics back to Unleash API at regular intervals. The metrics are a list of used flags and how many times they evaluated to yes or no in at the time of requesting the metrics. Read more about how to send metrics in the [Metrics API](/api/register-client-metrics) documentation.
 
-## Backup Feature Flags {#backup-feature-flags}
+## Backup Feature Flags
 
 The SDK also persists the latest known state to a local file on the instance where the client is running. It will store a local copy every time the client receives changes from the API. Having a local backup of the latest known state minimises the consequences of clients not being able to talk to the Unleash API on startup. This is necessary due to network unreliability.

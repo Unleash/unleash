@@ -8,7 +8,7 @@ title: Set up Entra provisioning
 
 :::
 
-## Unleash Configuration {#unleash-setup}
+## Unleash Configuration
 
 :::info
 
@@ -16,21 +16,21 @@ Before you begin, ensure that you have a strategy in place to prevent being [loc
 
 :::
 
-### Step 1: Navigate to Provisioning configuration {#unleash-setup-step-1}
+### Step 1: Navigate to Provisioning configuration
 
 First you'll need to log in to Unleash as an admin user. Navigate to the Single Sign-On section and select the "SCIM" tab. The SCIM API URL will be shown in this section, you'll need this to configure Entra later.
 
 ![Navigate to the SCIM Config](/img/scim-config-1.png)
 
-### Step 2: Enable Provisioning {#unleash-setup-step-2}
+### Step 2: Enable Provisioning
 
 Enable SCIM by turning on the toggle and keep the token Unleash provides you for the Entra setup below.
 
 ![Enable the SCIM toggle](/img/scim-config-2.png)
 
-## Entra Configuration {#entra-setup}
+## Entra Configuration
 
-### Step 1: Navigate to Provisioning in Entra {#entra-setup-step-1}
+### Step 1: Navigate to Provisioning in Entra
 
 :::info Note
 
@@ -50,25 +50,25 @@ This guide assumes you already have an SSO application setup for Unleash. If you
 
 ![Navigate to the provisioning overview menu item](/img/scim-entra-config-3.png)
 
-### Step 2: Connect Unleash to your Entra Application {#entra-setup-step-2}
+### Step 2: Connect Unleash to your Entra Application
 
 **1) Navigate to the Provisioning overview**
 
 **2) Set the Tenant URL**
 
-This the SCIM API URL provided by the Unleash UI in the [configuring Unleash](how-to-setup-provisioning-with-entra#unleash-setup-step-1) section.**
+This the SCIM API URL provided by the Unleash UI in the [configuring Unleash](how-to-setup-provisioning-with-entra#step-1-navigate-to-provisioning-configuration) section.**
 
 If you plan on deprovisioning users at any point with SCIM, you'll also need to enable the [SCIM compliance flag](https://learn.microsoft.com/en-us/entra/identity/app-provisioning/application-provisioning-config-problem-scim-compatibility#flags-to-alter-the-scim-behavior) on Entra. This can be done by appending `?aadOptscim062020` to your URL.
 
 **3) Set the Secret Token**
 
-This was provided by the Unleash UI in the [configuring Unleash](how-to-setup-provisioning-with-entra#unleash-setup-step-2) section.
+This was provided by the Unleash UI in the [configuring Unleash](how-to-setup-provisioning-with-entra#step-2-enable-provisioning) section.
 
 **4) Save**
 
 ![Setting up SCIM credentials](/img/scim-entra-config-4.png)
 
-### Step 3: Configure Provisioning {#entra-setup-step-3}
+### Step 3: Configure Provisioning
 
 **1) Expand the mappings tab**
 
@@ -76,7 +76,7 @@ This was provided by the Unleash UI in the [configuring Unleash](how-to-setup-pr
 
 ![Navigate to user provisioning setup](/img/scim-entra-config-5.png)
 
-This was provided by the Unleash UI in the [configuring Unleash](how-to-setup-provisioning-with-entra#unleash-setup-step-2) section.
+This was provided by the Unleash UI in the [configuring Unleash](how-to-setup-provisioning-with-entra#step-2-enable-provisioning) section.
 
 ![Connect Unleash](/img/scim-entra-config-5.png)
 
@@ -95,7 +95,7 @@ You should remove all unnecessary properties. This ensures that Entra will reach
 
 **5) Save**
 
-### Step 4: Enable Provisioning {#entra-setup-step-4}
+### Step 4: Enable Provisioning
 
 **1) Enable provisioning**
 

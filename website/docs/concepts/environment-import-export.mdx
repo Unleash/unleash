@@ -30,9 +30,8 @@ All import mechanisms support a `drop` parameter which will clean the database b
 Be careful when using the `drop` parameter in production environments: cleaning the database could lead to unintended loss of data.
 :::
 
-## Runtime import & export {#runtime-import--export}
-
-### State Service {#state-service}
+## Runtime import & export
+### State Service
 
 :::caution Removal notice
 
@@ -59,7 +58,7 @@ If you want the database to be cleaned before import (all strategies and feature
 
 It is also possible to not override existing feature flags (and strategies) by using the `keepExisting` parameter.
 
-### API Export {#api-export}
+### API Export
 
 :::caution Removal notice
 
@@ -83,7 +82,7 @@ For example if you want to download just feature flags as yaml:
 
 <ApiRequest verb="get" url="api/admin/state/export?format=yaml&featureToggles=1&strategies=0&tags=0&projects=0&download=1" title="Export features (and nothing else) as YAML."/>
 
-### API Import {#api-import}
+### API Import
 
 :::caution Removal notice
 
@@ -121,7 +120,7 @@ Example usage:
 
 <ApiRequest verb="post" url="api/admin/state/import" payload={{ "version": 3, "features": [{"name": "a-feature-flag", "enabled": true, "description": "#1 feature-flag"}] }} title="Import data into Unleash."/>
 
-## Startup import {#startup-import}
+## Startup import
 
 :::caution Removal notice
 

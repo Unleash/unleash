@@ -24,9 +24,9 @@ The Slack integration allows Unleash to post Updates when a feature flag is upda
 
 The Slack integration will perform a single retry if the HTTP POST against the Slack Webhook URL fails (either a 50x or network error). Duplicate events may happen. You should never assume events always comes in order.
 
-## Configuration {#configuration}
+## Configuration
 
-#### Events {#events}
+#### Events
 
 You can choose to trigger updates for the following events:
 
@@ -44,7 +44,7 @@ You can choose to trigger updates for the following events:
 - feature-environment-disabled
 - feature-updated (deprecated in v4.3)
 
-#### Parameters {#parameters}
+#### Parameters
 
 Unleash Slack integration takes the following parameters.
 
@@ -57,7 +57,7 @@ Unleash Slack integration takes the following parameters.
 
 - **Unleash URL** - The slack plugin uses the `server.unleashUrl` property to create the link back to Unleash in the posts. This can be set using the **UNLEASH_URL** environment variable or the `server.unleashUrl` property when starting the server from node.
 
-#### Tags {#tags}
+#### Tags
 
 The Slack integration also defined the Tag type "slack". You may use this tag to override which Slack channel Unleash should post updates to for this feature flag.
 

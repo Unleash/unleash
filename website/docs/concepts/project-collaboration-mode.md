@@ -41,7 +41,7 @@ To grant users visibility into private projects through a custom root role, you 
 |-----------|-------------------------------------------------------------------------------------------------|----------------------------|
 | Open      | All users                                                                                       | All users                  |
 | Protected | All users                                                                                       | Project Members and Admins |
-| Private   | Project Members, Admins, Editors, and users with any [custom root role](rbac.md#custom-root-roles) assigned directly (not through a user group) | Project Members and Admins |
+| Private   | Project Members, Admins, Editors, and users with any [custom root role](/concepts/rbac#custom-root-roles) assigned directly (not through a user group) | Project Members and Admins |
 
 ## Set project collaboration mode
 

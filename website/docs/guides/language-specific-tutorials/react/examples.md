@@ -68,7 +68,7 @@ curl --location --request PUT 'http://localhost:4242/api/admin/projects/default/
 
 ```
 
-Learn more about [gradual rollouts in our docs](/concepts/activation-strategies.md).
+Learn more about [gradual rollouts in our docs](/concepts/activation-strategies).
 
 ## Canary Deployments in React
 

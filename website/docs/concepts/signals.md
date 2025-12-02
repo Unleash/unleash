@@ -81,4 +81,4 @@ There are some constraints on the signal endpoints API as a measure to protect t
 Ref: [Unleash Config](https://github.com/Unleash/unleash/blob/859fe098fedc261d646833012d9d408039491075/src/lib/create-config.ts#L577-L604)
 
 ## Reacting to signals
-See [Actions](/concepts/actions.md)
+See [Actions](/concepts/actions)

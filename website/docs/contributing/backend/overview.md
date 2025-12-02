@@ -8,8 +8,8 @@ The backend is written in nodejs/typescript. It's written as a REST API followin
 
 We have created a set of ADRs to help guide the development of the backend:
 
-* [Naming](../ADRs/back-end/naming.md)
-* [Preferred export](../ADRs/back-end/preferred-export.md)
+* [Naming](/contributing/ADRs/back-end/naming)
+* [Preferred export](/contributing/ADRs/back-end/preferred-export)
 
 ## Requirements
 

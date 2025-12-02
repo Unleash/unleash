@@ -78,7 +78,7 @@ First, make sure your Unleash instance is running (locally or remotely) and gene
   </TabItem>
 
   <TabItem value="rust" label="Rust toolchain">
-    If you're comfortable with the Rust toolchain, install the CLI with [cargo binstall](https://github.com/cargo-bins/cargo-binstall?tab=readme-ov-file#installation) (or [from source](https://github.com/Unleash/unleash-edge/blob/main/docs/development-guide.md)):
+    If you're comfortable with the Rust toolchain, install the CLI with [cargo binstall](https://github.com/cargo-bins/cargo-binstall?tab=readme-ov-file#installation) (or [from source](/unleash-edge/development-guide)):
 
     ```shell
     cargo binstall unleash-edge

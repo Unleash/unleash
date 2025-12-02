@@ -94,7 +94,7 @@ function isEnabled(name, unleashContext = {}, defaultValue = false) {
 
 Activation strategies are defined and configured in the unleash-service. It is up to the client to provide the actual implementation of each activation strategy.
 
-Unleash also ships with a few built-in strategies, and expects client SDK's to implement these. Read more about these [activation strategies](concepts/activation-strategies.md). For the built-in strategies to work as expected the client should also allow the user to define an [unleash-context](concepts/unleash-context.md). The context should be possible to pass in as part of the `isEnabled` call.
+Unleash also ships with a few built-in strategies, and expects client SDK's to implement these. Read more about these [activation strategies](/concepts/activation-strategies). For the built-in strategies to work as expected the client should also allow the user to define an [unleash-context](/concepts/unleash-context). The context should be possible to pass in as part of the `isEnabled` call.
 
 ### Extension points
 

@@ -53,7 +53,7 @@ curl --location --request PUT 'http://localhost:4242/api/admin/projects/default/
 
 ```
 
-Learn more about [gradual rollouts in our docs](/concepts/activation-strategies.md). Also, learn more about our [API for creating a new strategy](/api/update-feature-strategy) for your flag.
+Learn more about [gradual rollouts in our docs](/concepts/activation-strategies). Also, learn more about our [API for creating a new strategy](/api/update-feature-strategy) for your flag.
 
 ## Canary Deployments in iOS
 

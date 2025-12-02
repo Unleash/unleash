@@ -12,7 +12,7 @@ pagination_next: single-sign-on/how-to-add-sso-saml
 
 ## Introduction
 
-In this guide we will do a deep dive on the Single-Sign-On (SSO) using the OpenID Connect protocol and connect it with Okta as IdP. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](/concepts/sso.md)
+In this guide we will do a deep dive on the Single-Sign-On (SSO) using the OpenID Connect protocol and connect it with Okta as IdP. Unleash supports other identity providers and protocols, have a look at [all available Single-Sign-On options](/concepts/sso)
 
 ## Basic configuration
 

@@ -9,7 +9,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 :::caution Deprecation notice
 
-This Slack integration is deprecated and will be removed in a future release. We recommend using the new [App for Slack](./slack-app) integration instead.
+This Slack integration is deprecated and will be removed in a future release. We recommend using the new [App for Slack](/integrate/slack-app) integration instead.
 
 :::
 

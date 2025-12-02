@@ -154,7 +154,7 @@ type ToggleStats struct {
 }
 
 func fetchMetrics(unleashURL, featureName, apiKey string) error {
-    url := fmt.Sprintf("%s/api/admin/metrics/feature-flags/%s", unleashURL, featureName)
+    url := fmt.Sprintf("%s/api/admin/metrics/feature-toggles/%s", unleashURL, featureName)
 
     req, err := http.NewRequest("GET", url, nil)
     if err != nil {

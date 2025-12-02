@@ -30,5 +30,5 @@ We don't jump to implementation immediately. We think about the problem at hand,
 The following resources should be read before contributing to the project:
 
 * [Clean code javascript](https://github.com/ryanmcdermott/clean-code-javascript)
-* [frontend overview](./frontend/overview.md)
-* [backend overview](./backend/overview.md)
+* [frontend overview](/contributing/frontend/overview)
+* [backend overview](/contributing/backend/overview)

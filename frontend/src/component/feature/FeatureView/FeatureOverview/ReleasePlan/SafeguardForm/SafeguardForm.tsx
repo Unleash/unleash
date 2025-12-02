@@ -1,7 +1,7 @@
 import { Button, FormControl, TextField } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import type { FormEvent } from 'react';
+import type { FormEvent, ReactNode } from 'react';
 import { useEffect, useMemo, useState, type FC } from 'react';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -32,7 +32,6 @@ import type { ISafeguard } from 'interfaces/releasePlans.ts';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
-import { Badge } from 'component/common/Badge/Badge';
 
 const StyledIcon = createStyledIcon(ShieldIcon);
 
@@ -56,11 +55,7 @@ interface IBaseSafeguardFormProps {
     onDelete?: () => void;
     safeguard?: ISafeguard;
     environment: string;
-    pendingSafeguardChange?: {
-        action: 'changeSafeguard' | 'deleteSafeguard';
-        payload: unknown;
-        changeRequestId: number;
-    } | null;
+    badge?: ReactNode;
 }
 
 type MetricOption = { name: string } & ImpactMetricsSeries;
@@ -314,11 +309,7 @@ const SafeguardFormBase: FC<{
     onCancel?: () => void;
     onDelete?: () => void;
     environment: string;
-    pendingSafeguardChange?: {
-        action: 'changeSafeguard' | 'deleteSafeguard';
-        payload: unknown;
-        changeRequestId: number;
-    } | null;
+    badge?: ReactNode;
     children?: React.ReactNode;
 }> = ({
     formState,
@@ -326,7 +317,7 @@ const SafeguardFormBase: FC<{
     onCancel,
     onDelete,
     environment,
-    pendingSafeguardChange,
+    badge,
     children,
 }) => {
     const {
@@ -369,17 +360,6 @@ const SafeguardFormBase: FC<{
     };
 
     const showButtons = mode === 'create' || mode === 'edit';
-
-    const hasPendingDelete =
-        pendingSafeguardChange?.action === 'deleteSafeguard';
-    const hasPendingChange =
-        pendingSafeguardChange?.action === 'changeSafeguard';
-
-    const badge = hasPendingDelete ? (
-        <Badge color='error'>Deleted in draft</Badge>
-    ) : hasPendingChange ? (
-        <Badge color='warning'>Modified in draft</Badge>
-    ) : undefined;
 
     return (
         <StyledFormContainer onSubmit={onSubmit} mode={mode}>
@@ -524,7 +504,7 @@ const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     onDelete,
     safeguard,
     environment,
-    pendingSafeguardChange,
+    badge,
 }) => {
     const formState = useSafeguardFormState(safeguard);
     const { mode, setMode, buildSafeguardData, threshold } = formState;
@@ -551,7 +531,7 @@ const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
             onCancel={onCancel}
             onDelete={onDelete}
             environment={environment}
-            pendingSafeguardChange={pendingSafeguardChange}
+            badge={badge}
         />
     );
 };
@@ -562,7 +542,7 @@ const SafeguardFormWithChangeRequests: FC<IBaseSafeguardFormProps> = ({
     onDelete,
     safeguard,
     environment,
-    pendingSafeguardChange,
+    badge,
 }) => {
     const formState = useSafeguardFormState(safeguard);
     const {
@@ -604,7 +584,7 @@ const SafeguardFormWithChangeRequests: FC<IBaseSafeguardFormProps> = ({
             onCancel={onCancel}
             onDelete={onDelete}
             environment={environment}
-            pendingSafeguardChange={pendingSafeguardChange}
+            badge={badge}
         >
             <SafeguardChangeRequestDialog
                 isOpen={dialogOpen}
@@ -624,7 +604,7 @@ export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
     onDelete,
     safeguard,
     environment,
-    pendingSafeguardChange,
+    badge,
 }) => {
     const formState = useSafeguardFormState(safeguard);
     const { mode, setMode, buildSafeguardData, threshold } = formState;
@@ -651,7 +631,7 @@ export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
             onCancel={onCancel}
             onDelete={onDelete}
             environment={environment}
-            pendingSafeguardChange={pendingSafeguardChange}
+            badge={badge}
         />
     );
 };

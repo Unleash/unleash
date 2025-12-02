@@ -40,6 +40,7 @@ import {
 import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguardsApi';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import { DeleteSafeguardDialog } from './DeleteSafeguardDialog.tsx';
+import { Badge } from 'component/common/Badge/Badge';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -186,7 +187,10 @@ export const ReleasePlan = ({
         Boolean(milestone.pausedAt),
     );
 
-    const getPendingSafeguardChange = () => {
+    const getPendingSafeguardAction = ():
+        | IChangeRequestChangeSafeguard['action']
+        | IChangeRequestDeleteSafeguard['action']
+        | null => {
         if (!pendingChangeRequests) return null;
 
         for (const changeRequest of pendingChangeRequests) {
@@ -210,11 +214,7 @@ export const ReleasePlan = ({
             );
 
             if (safeguardChange) {
-                return {
-                    action: safeguardChange.action,
-                    payload: safeguardChange.payload,
-                    changeRequestId: changeRequest.id,
-                };
+                return safeguardChange.action;
             }
         }
 
@@ -563,6 +563,14 @@ export const ReleasePlan = ({
                 : 'dashed'
             : null;
 
+    const pendingSafeguardAction = getPendingSafeguardAction();
+    const safeguardBadge =
+        pendingSafeguardAction === 'deleteSafeguard' ? (
+            <Badge color='error'>Deleted in draft</Badge>
+        ) : pendingSafeguardAction === 'changeSafeguard' ? (
+            <Badge color='warning'>Modified in draft</Badge>
+        ) : undefined;
+
     return (
         <StyledContainer>
             <StyledHeader>
@@ -619,7 +627,7 @@ export const ReleasePlan = ({
                                 onCancel={() => setSafeguardFormOpen(false)}
                                 onDelete={handleSafeguardDelete}
                                 environment={environment}
-                                pendingSafeguardChange={getPendingSafeguardChange()}
+                                badge={safeguardBadge}
                             />
                         ) : (
                             <StyledActionButton

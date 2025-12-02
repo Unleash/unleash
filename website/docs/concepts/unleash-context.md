@@ -6,7 +6,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 <SearchPriority level="high" />
 
-The **Unleash context** contains information related to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](/concepts/activation-strategies#constraints) and to calculate [flag stickiness](/concepts/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](../sdks).
+The **Unleash context** contains information related to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](/concepts/activation-strategies#constraints) and to calculate [flag stickiness](/concepts/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](/sdks).
 
 ## Overview
 
@@ -28,7 +28,7 @@ The following table gives an overview of the fields' intended usage, their lifet
 | `sessionId`       | `string`              | dynamic  | The identifier of the current session.                                                                                                               |
 | `remoteAddress`   | `string`              | dynamic  | The application's IP address.                                                                                                                                |
 | `properties`      | `Map<string, string>` | dynamic  | A key-value store for additional data.                                                                                                              |
-| `currentTime` | `DateTime`/`string`   | dynamic  | A `DateTime` (or similar) data class instance or a string in an RFC-3339 format. **Defaults to the current time** if not set by the user; requires [SDK compatibility](../sdks#feature-compatibility-in-backend-sdks). |
+| `currentTime` | `DateTime`/`string`   | dynamic  | A `DateTime` (or similar) data class instance or a string in an RFC-3339 format. **Defaults to the current time** if not set by the user; requires [SDK compatibility](/sdks#feature-compatibility-in-backend-sdks). |
 
 
 ### The `properties` field
@@ -78,7 +78,7 @@ Using a custom context field called _region_ as an example: if you define the fi
 
 :::note SDK compatibility
 
-Custom stickiness is supported by all SDKs except for the Rust SDK. Refer to the [SDK compatibility table](../sdks#feature-compatibility-in-backend-sdks) for more information.
+Custom stickiness is supported by all SDKs except for the Rust SDK. Refer to the [SDK compatibility table](/sdks#feature-compatibility-in-backend-sdks) for more information.
 
 :::
 

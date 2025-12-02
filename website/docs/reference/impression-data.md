@@ -1,6 +1,6 @@
 ---
 title: Impression data
-pagination_next: concepts/events
+pagination_next: reference/events
 ---
 
 import SearchPriority from '@site/src/components/SearchPriority';

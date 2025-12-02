@@ -67,19 +67,19 @@ State API has been removed as of Unleash 6
 
 :::
 
-The api endpoint `/api/admin/state/export` will export feature-flags and strategies as json by default.
+The api endpoint `/api/admin/state/export` will export feature flags and strategies as json by default.
 You can customize the export with query parameters:
 
 | Parameter | Default | Description |
 | --- | --- | --- |
 | format | `json` | Export format, either `json` or `yaml` |
 | download | `false` | If the exported data should be downloaded as a file |
-| featureToggles | `true` | Include feature-flags in the exported data |
+| featureToggles | `true` | Include feature flags in the exported data |
 | strategies | `true` | Include strategies in the exported data |
 | tags | `true` | Include tagtypes, tags and feature_tags in the exported data |
 | projects | `true` | Include projects in the exported data |
 
-For example if you want to download just feature-flags as yaml:
+For example if you want to download just feature flags as yaml:
 
 <ApiRequest verb="get" url="api/admin/state/export?format=yaml&featureToggles=1&strategies=0&tags=0&projects=0&download=1" title="Export features (and nothing else) as YAML."/>
 
@@ -99,7 +99,7 @@ If you import an environment into an instance that already has that environment 
 
 :::
 
-You can import feature-flags and strategies by POSTing to the `/api/admin/state/import` endpoint (keep in mind this will require authentication).\
+You can import feature flags and strategies by POSTing to the `/api/admin/state/import` endpoint (keep in mind this will require authentication).\
 You can either send the data as JSON in the POST-body or send a `file` parameter with `multipart/form-data` (YAML files are also accepted here).
 
 You can customize the import with query parameters:

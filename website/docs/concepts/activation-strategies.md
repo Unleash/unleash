@@ -156,7 +156,7 @@ To add an activation strategy with a constraint to a feature flag, do the follow
 
 Activation strategies are defined on the server but implemented client-side. The client determines whether a feature should be enabled based on the activation strategies.
 
-All [backend SDKs](../sdks#backend-sdks) and [Unleash Edge](../unleash-edge) implement the default activation strategy. The [frontend SDKs](../sdks#frontend-sdks) do not perform evaluations themselves. Instead, they rely on [Unleash Edge](../unleash-edge) to handle the implementation and evaluation.
+All [backend SDKs](/sdks#backend-sdks) and [Unleash Edge](../unleash-edge) implement the default activation strategy. The [frontend SDKs](/sdks#frontend-sdks) do not perform evaluations themselves. Instead, they rely on [Unleash Edge](../unleash-edge) to handle the implementation and evaluation.
 
 When using strategies with constraints, the client must provide the current [Unleash context](unleash-context) to the flag evaluation function for the evaluation to be done correctly. All official Unleash client SDKs support the option to pass dynamic context values to the `isEnabled()` function (or the SDK's equivalent).
 

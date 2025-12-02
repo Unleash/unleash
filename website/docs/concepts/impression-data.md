@@ -17,7 +17,7 @@ Unleash can provide you with **impression data** about the flags in your applica
 
 :::caution Front-end SDKs and disabled flags
 
-Older versions of the front-end SDKs and other SDKs that connect [Unleash Edge](/unleash-edge) or the [Unleash front-end API](./front-end-api) would **not** emit impression events when a flag is disabled.
+Older versions of the front-end SDKs and other SDKs that connect [Unleash Edge](/unleash-edge) or the [Unleash front-end API](/concepts/front-end-api) would **not** emit impression events when a flag is disabled.
 
 This is because impression data is a **per-flag** setting and the Proxy and front-end API only transmit information about flags that are enabled. As such, the SDK will never know that it should emit an impression event if a flag is disabled.
 
@@ -25,7 +25,7 @@ Some of the front-end SDKs now include a include a configuration property that l
 
 :::
 
-Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature flag and the related [Unleash Context](./unleash-context).
+Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature flag and the related [Unleash Context](/concepts/unleash-context).
 
 Impression data is **opt-in on a per-flag basis**. Unleash will not emit impression events for flags not marked as such. Once you've turned impression data on for a flag, you can start listening for impression events in your client SDK.
 
@@ -44,7 +44,7 @@ This table describes all the properties on the impression events:
 | --- | --- | --- |
 | `eventType` | The type of the event: `isEnabled` or `getVariant` | All |
 | `eventId` | A globally unique id (GUID) assigned to this event. | All |
-| `context` | A representation of the current [Unleash Context](./unleash-context). | All |
+| `context` | A representation of the current [Unleash Context](/concepts/unleash-context). | All |
 | `enabled` | Whether the flag was enabled or not at when the client made the request. | All |
 | `featureName` | The name of the feature flag. | All |
 | `variant` | The name of the active variant | `getVariant` events only |

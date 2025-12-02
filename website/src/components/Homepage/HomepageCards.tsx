@@ -11,14 +11,14 @@ const cardsData = [
         title: 'Quickstart',
         description: 'Get up and running with Unleash in less than 5 minutes.',
         icon: <QuickstartIcon />,
-        href: '/quickstart',
+        href: '/get-started/quickstart',
     },
     {
         title: 'Tutorials and Guides',
         description:
             'Explore best practices and step-by-step tutorials to help you integrate Unleash into your stack.',
         icon: <TutorialsIcon />,
-        href: '/guides-overview',
+        href: '/guides',
     },
     {
         title: 'SDKs',

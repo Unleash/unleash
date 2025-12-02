@@ -67,8 +67,7 @@ export const OFFICIAL_SDKS: Sdk[] = [
         name: 'android',
         displayName: 'Android SDK',
         description: 'Official Unleash Client for Android',
-        documentationUrl:
-            'https://docs.getunleash.io/sdks/android-proxy',
+        documentationUrl: 'https://docs.getunleash.io/sdks/android-proxy',
         type: 'client',
     },
     {
@@ -89,8 +88,7 @@ export const OFFICIAL_SDKS: Sdk[] = [
         name: 'javascript',
         displayName: 'Javascript Proxy SDK',
         description: 'Official Unleash Client for Javascript',
-        documentationUrl:
-            'https://docs.getunleash.io/sdks/javascript-browser',
+        documentationUrl: 'https://docs.getunleash.io/sdks/javascript-browser',
         type: 'client',
     },
     {

@@ -24,4 +24,4 @@ To create service accounts in the Unleash Admin UI:
 
 ![Service account tokens](/img/service-account-tokens.png)
 
-When a service account creates or modifies resources, Unleash uses the username of the account as the value for the _Created by_ or _Changed_ by properties of [events](./events).
+When a service account creates or modifies resources, Unleash uses the username of the account as the value for the _Created by_ or _Changed_ by properties of [events](/concepts/events).

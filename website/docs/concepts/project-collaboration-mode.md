@@ -16,9 +16,9 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 Project collaboration modes allow you to manage project visibility and interaction levels, ensuring better control and collaboration within your organization.
 
-The collaboration mode of a [project](./projects) defines who within your Unleash instance can access the project. This setting also determines who can submit [change requests](./change-requests)–a feature that provides controlled and secure updates for feature flags.
+The collaboration mode of a [project](/concepts/projects) defines who within your Unleash instance can access the project. This setting also determines who can submit [change requests](/concepts/change-requests)–a feature that provides controlled and secure updates for feature flags.
 
-Unleash supports three collaboration modes: **open**, **protected**, and **private**. A user's [predefined root and project roles](./rbac#predefined-roles), as well as their [custom root roles](./rbac#custom-root-roles), determine what projects they can access.
+Unleash supports three collaboration modes: **open**, **protected**, and **private**. A user's [predefined root and project roles](/concepts/rbac#predefined-roles), as well as their [custom root roles](/concepts/rbac#custom-root-roles), determine what projects they can access.
 
 ### Open collaboration mode
 
@@ -32,7 +32,7 @@ All users of your Unleash instance can view the project but only project Members
 
 ### Private collaboration mode
 
-Only project Members, Admins, Editors, and users with any [custom root role](./rbac#custom-root-roles) can view the project. Viewers, who are not project Members, can't see the project in the project list. Only project Members and Admins can submit change requests. 
+Only project Members, Admins, Editors, and users with any [custom root role](/concepts/rbac#custom-root-roles) can view the project. Viewers, who are not project Members, can't see the project in the project list. Only project Members and Admins can submit change requests. 
 
 To grant users visibility into private projects through a custom root role, you must assign the role directly to the user rather than through a [user group](/concepts/rbac#user-groups).
 
@@ -45,7 +45,7 @@ To grant users visibility into private projects through a custom root role, you 
 
 ## Set project collaboration mode
 
-To [create a new project](./projects#create-a-project) with a specific collaboration mode, do the following:
+To [create a new project](/concepts/projects#create-a-project) with a specific collaboration mode, do the following:
 1. In the Unleash Admin UI, go to **Projects** > **New project**.
 2. Enter **Project name**.
 3. Click **Open** to choose your collaboration mode.

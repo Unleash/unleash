@@ -28,7 +28,7 @@ For instance: When using the [gradual rollout activation strategy](/concepts/act
 
 :::
 
-When using [the gradual rollout strategy](/concepts/activation-strategies) or [feature flag variants](./feature-flag-variants), you can use parameters other than the user id to calculate stickiness. More specifically, you can use any field, custom or otherwise, of the [Unleash Context](/concepts/unleash-context) as long as you have enabled custom stickiness for these fields.
+When using [the gradual rollout strategy](/concepts/activation-strategies) or [feature flag variants](/concepts/feature-flag-variants), you can use parameters other than the user id to calculate stickiness. More specifically, you can use any field, custom or otherwise, of the [Unleash Context](/concepts/unleash-context) as long as you have enabled custom stickiness for these fields.
 
 
 ### Enabling custom stickiness

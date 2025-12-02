@@ -16,7 +16,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 Unleash implements role-based access control on two levels:
 
 1. **Root level** - affects resources shared across the entire Unleash instance, for example activation strategies, users, integrations.
-2. **Project level** - affects resources specific to a [project](./projects), such as feature flags, change requests, or API tokens.
+2. **Project level** - affects resources specific to a [project](/concepts/projects), such as feature flags, change requests, or API tokens.
 
 ![RBAC overview](/img/rbac.png)
 
@@ -75,11 +75,11 @@ You can assign the following root permissions:
 
 | Permission Name            | Description                               |
 |----------------------------|-------------------------------------------|
-| Read Frontend tokens   | View [Frontend tokens](./api-tokens-and-client-keys#frontend-tokens).   |
+| Read Frontend tokens   | View [Frontend tokens](/concepts/api-tokens-and-client-keys#frontend-tokens).   |
 | Create Frontend tokens | Create Frontend tokens. |
 | Update Frontend tokens | Update Frontend tokens. |
 | Delete Frontend tokens | Delete Frontend tokens. |
-| Read Backend tokens     | View [Backend tokens](./api-tokens-and-client-keys#backend-tokens).     |
+| Read Backend tokens     | View [Backend tokens](/concepts/api-tokens-and-client-keys#backend-tokens).     |
 | Create Backend tokens   | Create Backend tokens.   |
 | Update Backend tokens   | Update Backend tokens.   |
 | Delete Backend tokens   | Delete Backend tokens.   |
@@ -88,7 +88,7 @@ You can assign the following root permissions:
 
 | Permission Name     | Description                        |
 |---------------------|------------------------------------|
-| Update applications | Update [applications](./applications). |
+| Update applications | Update [applications](/concepts/applications). |
 
 #### Authentication permissions
 
@@ -99,13 +99,13 @@ You can assign the following root permissions:
 :::
 | Permission Name     | Description                        |
 |---------------------|------------------------------------|
-| Change authentication settings | Update authentication settings, such as for [single sign-on (SSO)](./sso). |
+| Change authentication settings | Update authentication settings, such as for [single sign-on (SSO)](/concepts/sso). |
 
 #### Context field permissions
 
 | Permission Name       | Description                          |
 |-----------------------|--------------------------------------|
-| Create context fields | Create [context fields](./unleash-context#custom-context-fields). |
+| Create context fields | Create [context fields](/concepts/unleash-context#custom-context-fields). |
 | Update context fields | Update context fields. |
 | Delete context fields | Delete context fields. |
 
@@ -119,10 +119,10 @@ You can assign the following root permissions:
 
 | Permission Name     | Description                        |
 |---------------------|------------------------------------|
-| Change instance banners | Change instance [banners](./banners). |
-| Change maintenance mode state | Change [maintenance mode](./maintenance-mode) state. |
-| Update CORS settings | Update [CORS settings](./front-end-api#configure-cross-origin-resource-sharing-cors). |
-| Read instance logs and login history | Read instance logs and [login history](./login-history). |
+| Change instance banners | Change instance [banners](/concepts/banners). |
+| Change maintenance mode state | Change [maintenance mode](/concepts/maintenance-mode) state. |
+| Update CORS settings | Update [CORS settings](/concepts/front-end-api#configure-cross-origin-resource-sharing-cors). |
+| Read instance logs and login history | Read instance logs and [login history](/concepts/login-history). |
 
 #### Integration permissions
 
@@ -136,7 +136,7 @@ You can assign the following root permissions:
 
 | Permission Name | Description                    |
 |-----------------|--------------------------------|
-| Create projects | Create [projects](./projects). |
+| Create projects | Create [projects](/concepts/projects). |
 
 #### Release template permissions
 
@@ -148,21 +148,21 @@ You can assign the following root permissions:
 
 | Permission Name | Description               |
 |-----------------|---------------------------|
-| Create release plan template      | Create [release template](./release-templates). |
-| Update release plan template      | Update [release template](./release-templates). |
-| Delete release plan template      | Delete [release template](./release-templates). |
+| Create release plan template      | Create [release template](/concepts/release-templates). |
+| Update release plan template      | Update [release template](/concepts/release-templates). |
+| Delete release plan template      | Delete [release template](/concepts/release-templates). |
 
 #### Role permissions
 
 | Permission Name | Description               |
 |-----------------|---------------------------|
-| Read roles      | View [roles](./rbac). |
+| Read roles      | View [roles](/concepts/rbac). |
 
 #### Segment permissions
 
 | Permission Name | Description                    |
 |-----------------|--------------------------------|
-| Create segments | Create [segments](./segments). |
+| Create segments | Create [segments](v/segments). |
 | Edit segments   | Edit segments.   |
 | Delete segments | Delete segments. |
 
@@ -170,7 +170,7 @@ You can assign the following root permissions:
 
 | Permission Name   | Description                      |
 |-------------------|----------------------------------|
-| Create strategies | Create [strategies](./activation-strategies). |
+| Create strategies | Create [strategies](/concepts/activation-strategies). |
 | Update strategies | Update strategies. |
 | Delete strategies | Delete strategies. |
 
@@ -178,7 +178,7 @@ You can assign the following root permissions:
 
 | Permission Name  | Description                     |
 |------------------|---------------------------------|
-| Update tag types | Update [tag types](./feature-flags#tags). |
+| Update tag types | Update [tag types](/concepts/feature-flags#tags). |
 | Delete tag types | Delete tag types. |
 
 ## Custom project roles
@@ -215,37 +215,37 @@ Once you have the role set up, you can assign it to individual users inside a pr
 
 ### Project-level permissions
 
-You can assign the following project-level permissions. These permissions are valid across all of the [project](./projects)'s environments.
+You can assign the following project-level permissions. These permissions are valid across all of the [project](/concepts/projects)'s environments.
 
 #### API tokens
 | Permission Name | Description |
 | --- | --- |
-| Read API token | View [API tokens](./api-tokens-and-client-keys) for a specific project. |
+| Read API token | View [API tokens](/concepts/api-tokens-and-client-keys) for a specific project. |
 | Create API token | Create API tokens for a specific project. |
 | Delete API token | Delete API tokens for a specific project. |
 
 #### Change requests
 | Permission Name | Description |
 | --- | --- |
-| Read change request                      | View [change request](./change-requests) configuration (included in _Update the project_).                                                                                                                                                         |
+| Read change request                      | View [change request](/concepts/change-requests) configuration (included in _Update the project_).                                                                                                                                                         |
 | Write change request                      | Edit change request configuration (included in _Update the project_).                                                                                                                                                      |  
 
 
 #### Features and strategies
 | Permission Name | Description | 
 | --- | --- |
-| Create feature flags | Create [feature flags](./feature-flags) within the project and create feature flag variants. This permission alone does not give access to assigning strategies to a flags. Use the _create activation strategies_ environment permission, if needed. |
+| Create feature flags | Create [feature flags](/concepts/feature-flags) within the project and create feature flag variants. This permission alone does not give access to assigning strategies to a flags. Use the _create activation strategies_ environment permission, if needed. |
 | Update feature flags | Update feature flag descriptions, mark flags as stale, add, update, and remove flag tags, and update flag variants within the project.                                                                          |
 | Update feature flag dependency | Update feature flag dependencies within the project. |
 | Delete feature flags | Archive feature flags within the project.                                                                                                                                                                                         |
 | Change feature flag project            | Move flags to other projects they have access to.                                                                                                                                                                                 |
-| Create/edit variants                      | Create and edit [variants](./strategy-variants) within the project. (Deprecated with v4.21. Use environment-specific permissions for working with variants.)                                                                                    |
-| Create/edit project segment | Create and edit [segments](./segments) within the project. |
+| Create/edit variants                      | Create and edit [variants](/concepts/strategy-variants) within the project. (Deprecated with v4.21. Use environment-specific permissions for working with variants.)                                                                                    |
+| Create/edit project segment | Create and edit [segments](/concepts/segments) within the project. |
 
 #### Projects
 | Permission Name                                   | Description                                                                                                                                                                                                                                       |
 |-----------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Update project                        | Edit all aspects of a [project](./projects), such as enabling or disabling environment or adding new users. |
+| Update project                        | Edit all aspects of a [project](/concepts/projects), such as enabling or disabling environment or adding new users. |
 | User access read                          | View to user access configuration (included in _Update project_).                                                                                                                                                                  |
 | User access write                         | Edit user access configuration (included in _Update project_).                                                                                                                                                                
 | Default strategy read                     | View the default strategy configuration (included in _Update project_).                                                                                                                                                       |
@@ -259,12 +259,12 @@ You can assign the following permissions on a per-environment level within the p
 
 | Permission Name                       | Description                                                                                                                                                                                                                                                                                                                                           |
 |----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Create activation strategies | Assign feature flag [activation strategies](./activation-strategies) within the environment.                                                                                                                                                                                                                                                                       |
+| Create activation strategies | Assign feature flag [activation strategies](/concepts/activation-strategies) within the environment.                                                                                                                                                                                                                                                                       |
 | Update activation strategies | Update feature flag activation strategies within the environment.                                                                                                                                                                                                                                                                       |
 | Delete activation strategies | Delete feature flag activation strategies within the environment.                                                                                                                                                                                                                                                                       |
 | Enable/disable flags         | Enable and disable flags within the environment.                                                                                                                                                                                                                                                                                        |
 | Update variants              | Create, edit, and remove variants within the environment.                                                                                                                                                                                                                                                                                |
-| Approve a change request     | Approve [change requests](./change-requests) in the environment.                                                                                                                                                                                                                                                                       |
+| Approve a change request     | Approve [change requests](/concepts/change-requests) in the environment.                                                                                                                                                                                                                                                                       |
 | Apply a change request       | Apply change requests in the environment.                                                                                                                                                                                                                                                                                               |
 | Skip change requests         | Skip the change request process for a project and environment where change requests are enabled.  |
 

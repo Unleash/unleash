@@ -8,7 +8,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 :::warning
 
-Feature Flag Variants at the environment level are deprecated in favor of the [strategy variants](./strategy-variants). 
+Feature Flag Variants at the environment level are deprecated in favor of the [strategy variants](/concepts/strategy-variants). 
 Only features that have existing feature environment variants will keep them. 
 If you'd like to keep the old variants in your hosted instance [contact us](https://slack.unleash.run) for further assistance.
 
@@ -44,7 +44,7 @@ A variant has four components that define it:
 
 - an optional **override**
 
-    Overrides let you specify that certain users (as identified either by their user ID or by another [custom stickiness](./stickiness) value) will always get this variant, regardless of the variant's weight.
+    Overrides let you specify that certain users (as identified either by their user ID or by another [custom stickiness](/concepts/stickiness) value) will always get this variant, regardless of the variant's weight.
 
 ![A form for adding new variants. It has fields for name, weight, payload, and overrides.](/img/variant-creation-form.png 'Creating a new flag variant')
 
@@ -105,7 +105,7 @@ The variant payload type provides hints to your application about how to parse t
 
 ### Variant stickiness
 
-Variant stickiness is calculated on the received user and context, as described in [the stickiness chapter](./stickiness). This ensures that the same user will consistently see the same variant barring overrides and weight changes. If no context data is provided, the traffic will be spread randomly for each request.
+Variant stickiness is calculated on the received user and context, as described in [the stickiness chapter](/concepts/stickiness). This ensures that the same user will consistently see the same variant barring overrides and weight changes. If no context data is provided, the traffic will be spread randomly for each request.
 
 
 ## How do I configure variants

@@ -17,7 +17,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 Signals represent that something happened somewhere. Signal endpoints allow external systems to let Unleash know about these signals via a simple HTTP API.
 
-You can then configure [actions](./actions) to automatically react to the received signals.
+You can then configure [actions](/concepts/actions) to automatically react to the received signals.
 
 ![Signals from external systems.](/img/signals/signals-input.png)
 
@@ -81,4 +81,4 @@ There are some constraints on the signal endpoints API as a measure to protect t
 Ref: [Unleash Config](https://github.com/Unleash/unleash/blob/859fe098fedc261d646833012d9d408039491075/src/lib/create-config.ts#L577-L604)
 
 ## Reacting to signals
-See [Actions](./actions.md)
+See [Actions](/concepts/actions.md)

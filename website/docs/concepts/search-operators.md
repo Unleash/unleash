@@ -64,4 +64,4 @@ The search functionality supports five filters:
 ## API Support for Search
 
 In addition to the user interface, Search with Operators is also supported through the API. All the filters and operators function identically to their counterparts in the UI, ensuring a consistent experience between the API and user interface.
-Refer to [Search API](../api/search-features) for full details.
+Refer to [Search API](/api/search-features) for full details.

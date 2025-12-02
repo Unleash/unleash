@@ -421,7 +421,6 @@ export class ApiTokenController extends Controller {
 
         const userPermissions =
             await this.accessService.getPermissionsForUser(user);
-        console.log(JSON.stringify(userPermissions));
 
         const accessibleTokens = allTokens.filter((token) =>
             userPermissions.some(

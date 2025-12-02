@@ -8,10 +8,6 @@
     {
       "source": "/helm-charts(/?)",
       "destination": "https://raw.githubusercontent.com/Unleash/helm-charts/gh-pages/README.md"
-    },
-    {
-      "source": "/helm-charts(/?):path(.*)",
-      "destination": "https://gh.getunleash.io/helm-charts/:path"
     }
   ],
   "redirects": [
@@ -85,16 +81,6 @@
       ],
       "destination": "https://docs.getunleash.io/guides/feature-flag-best-practices",
       "permanent": false
-    },
-    {
-      "source": "/unleash-client-python(/?)/:path",
-      "destination": "https://gh.getunleash.io/unleash-client-python/:path",
-      "permanent": true
-    },
-    {
-      "source": "/unleash-python-sdk(/?)/:path",
-      "destination": "https://gh.getunleash.io/unleash-python-sdk/:path",
-      "permanent": true
     },
     {
       "source": "/user_guide/api-token",
@@ -203,7 +189,7 @@
     },
     {
       "source": "/how-to/",
-      "destination": "/get-started/what-is-a-feature-flag",
+      "destination": "/guides",
       "permanent": true
     },
     {
@@ -213,7 +199,7 @@
     },
     {
       "source": "/how-to/how-to-import-export",
-      "destination": "/concepts/environment-import-export",
+      "destination": "/concepts/import-export",
       "permanent": true
     },
     {
@@ -483,7 +469,7 @@
     },
     {
       "source": "/user_guide/v4-whats-new",
-      "destination": "/concepts/whats-new-v4",
+      "destination": "/deploy/upgrading-unleash",
       "permanent": true
     },
     {
@@ -543,7 +529,7 @@
     },
     {
       "source": "/help",
-      "destination": "/",
+      "destination": "/support",
       "permanent": true
     },
     {
@@ -553,7 +539,7 @@
     },
     {
       "source": "/reference",
-      "destination": "/concepts/projects",
+      "destination": "/concepts",
       "permanent": true
     },
     {
@@ -623,7 +609,7 @@
     },
     {
       "source": "/how-to/how-to-use-the-admin-api",
-      "destination": "/api-overview#admin-api",
+      "destination": "/api",
       "permanent": true
     },
     {
@@ -683,7 +669,7 @@
     },
     {
       "source": "/using-unleash",
-      "destination": "/api",
+      "destination": "/concepts",
       "permanent": true
     },
     {
@@ -833,7 +819,7 @@
     },
     {
       "source": "/topics",
-      "destination": "/guides-overview",
+      "destination": "/guides",
       "permanent": true
     },
     {
@@ -923,12 +909,12 @@
     },
     {
       "source": "/reference/deploy/configuring-unleash-v3",
-      "destination": "/deploy/configuring-unleash-v3",
+      "destination": "/deploy/configuring-unleash",
       "permanent": true
     },
     {
       "source": "/deploy/configuring_unleash_v3",
-      "destination": "/deploy/configuring-unleash-v3",
+      "destination": "/deploy/configuring-unleash",
       "permanent": true
     },
     {
@@ -998,7 +984,7 @@
     },
     {
       "source": "/deploy/import_export",
-      "destination": "/concepts/environment-import-export",
+      "destination": "/concepts/import-export",
       "permanent": true
     },
     {
@@ -1047,7 +1033,7 @@
       "permanent": true
     },
     {
-      "source": "/feature-flag-tutorials/:lang(django|dotnet|golang|ios|java|javascript|nextjs|python|rails|react|ruby|rust|spring-boot|sveltekit)/examples",
+      "source": "/feature-flag-tutorials/:lang(django|dotnet|golang|ios|java|javascript|nextjs|python|rails|react|ruby|rust|sveltekit)/examples",
       "destination": "/guides/feature-flag-examples-:lang",
       "permanent": true
     },

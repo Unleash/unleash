@@ -117,6 +117,14 @@ export const adminRoutes: INavigationMenuItem[] = [
         group: 'sso',
     },
 
+    // Enterprise Edge
+    {
+        path: '/admin/enterprise-edge',
+        title: 'Enterprise Edge',
+        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
+        flag: 'enterpriseEdgeUI',
+    },
+
     // Network
     {
         path: '/admin/network',
@@ -136,6 +144,7 @@ export const adminRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'network',
         flag: 'edgeObservability',
+        notFlag: 'enterpriseEdgeUI',
     },
     {
         path: '/admin/network/backend-connections',

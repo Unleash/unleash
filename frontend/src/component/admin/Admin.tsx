@@ -19,6 +19,11 @@ import NotFound from 'component/common/NotFound/NotFound';
 import { Banners } from './banners/Banners.tsx';
 import { License } from './license/License.tsx';
 import { AdminHome } from './AdminHome.tsx';
+import { lazy } from 'react';
+
+const EnterpriseEdge = lazy(
+    () => import('./enterprise-edge/EnterpriseEdge.tsx'),
+);
 
 export const Admin = () => {
     return (
@@ -34,6 +39,7 @@ export const Admin = () => {
                 <Route path='groups/*' element={<GroupsAdmin />} />
                 <Route path='roles/*' element={<Roles />} />
                 <Route path='instance' element={<InstanceAdmin />} />
+                <Route path='enterprise-edge' element={<EnterpriseEdge />} />
                 <Route path='network/*' element={<Network />} />
                 <Route path='maintenance' element={<MaintenanceAdmin />} />
                 <Route path='banners' element={<Banners />} />

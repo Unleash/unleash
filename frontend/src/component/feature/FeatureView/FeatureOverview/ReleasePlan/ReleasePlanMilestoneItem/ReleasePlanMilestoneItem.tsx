@@ -8,7 +8,6 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { calculateMilestoneStatus } from './milestoneStatusUtils.js';
-import { getPendingProgressionData } from './pendingProgressionChanges.js';
 import { MilestoneAutomation } from './MilestoneAutomation.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 
@@ -117,7 +116,7 @@ export const ReleasePlanMilestoneItem = ({
                 },
             });
             handleCloseProgressionForm();
-            return {};
+            return { shouldReset: true };
         }
 
         try {
@@ -162,10 +161,13 @@ export const ReleasePlanMilestoneItem = ({
           )
         : undefined;
 
-    const { pendingProgressionChange, effectiveTransitionCondition } =
-        getPendingProgressionData(milestone, getPendingProgressionChange);
+    const pendingProgressionChange = getPendingProgressionChange(milestone.id);
+    const effectiveTransitionCondition = milestone.transitionCondition;
 
-    const automationSection = (
+    const shouldShowAutomation =
+        isNotLastMilestone && milestoneProgressionsEnabled && !readonly;
+
+    const automationSection = shouldShowAutomation ? (
         <MilestoneAutomation
             milestone={milestone}
             milestones={milestones}
@@ -179,8 +181,9 @@ export const ReleasePlanMilestoneItem = ({
             onCloseProgressionForm={handleCloseProgressionForm}
             onChangeProgression={handleChangeProgression}
             onDeleteProgression={onDeleteProgression}
+            environment={environment}
         />
-    );
+    ) : undefined;
 
     return (
         <div key={milestone.id}>
@@ -191,6 +194,8 @@ export const ReleasePlanMilestoneItem = ({
                 onStartMilestone={onStartMilestone}
                 automationSection={automationSection}
                 previousMilestoneStatus={previousMilestoneStatus}
+                projectId={projectId}
+                environmentId={environment}
             />
             <ConditionallyRender
                 condition={isNotLastMilestone}

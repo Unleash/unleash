@@ -14,6 +14,9 @@ import {
     StyledInfoLine,
     createStyledIcon,
 } from '../shared/SharedFormComponents.tsx';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
+import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 
 const StyledIcon = createStyledIcon(BoltIcon);
 
@@ -26,6 +29,7 @@ interface IMilestoneProgressionFormProps {
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<{ shouldReset?: boolean }>;
     onCancel: () => void;
+    environment: string;
 }
 
 export const MilestoneProgressionForm = ({
@@ -35,7 +39,10 @@ export const MilestoneProgressionForm = ({
     status,
     onSubmit,
     onCancel,
+    environment,
 }: IMilestoneProgressionFormProps) => {
+    const projectId = useRequiredPathParam('projectId');
+
     const form = useMilestoneProgressionForm(
         sourceMilestoneId,
         targetMilestoneId,
@@ -83,14 +90,17 @@ export const MilestoneProgressionForm = ({
                 <Button variant='outlined' onClick={onCancel} size='small'>
                     Cancel
                 </Button>
-                <Button
+                <PermissionButton
+                    permission={UPDATE_FEATURE_STRATEGY}
+                    projectId={projectId}
+                    environmentId={environment}
+                    type='submit'
                     variant='contained'
                     color='primary'
                     size='small'
-                    type='submit'
                 >
                     Save
-                </Button>
+                </PermissionButton>
             </StyledButtonGroup>
         </StyledFormContainer>
     );

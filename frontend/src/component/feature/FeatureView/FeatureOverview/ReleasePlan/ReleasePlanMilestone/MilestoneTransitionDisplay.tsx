@@ -1,16 +1,20 @@
 import BoltIcon from '@mui/icons-material/Bolt';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { Button, IconButton, styled } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput.tsx';
 import {
-    useMilestoneProgressionForm,
     getTimeValueAndUnitFromMinutes,
+    useMilestoneProgressionForm,
 } from '../hooks/useMilestoneProgressionForm.js';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 import { useMilestoneProgressionInfo } from '../hooks/useMilestoneProgressionInfo.ts';
+import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 
 const StyledFormWrapper = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasChanged',
@@ -116,6 +120,7 @@ interface IMilestoneTransitionDisplayProps {
     milestoneName: string;
     status?: MilestoneStatus;
     badge?: ReactNode;
+    environment: string;
 }
 
 export const ReadonlyMilestoneTransitionDisplay = ({
@@ -152,7 +157,9 @@ export const MilestoneTransitionDisplay = ({
     milestoneName,
     status,
     badge,
+    environment,
 }: IMilestoneTransitionDisplayProps) => {
+    const projectId = useRequiredPathParam('projectId');
     const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
     const form = useMilestoneProgressionForm(
         '', // sourceMilestoneId not needed for display
@@ -243,14 +250,15 @@ export const MilestoneTransitionDisplay = ({
                 {!hasChanged && (
                     <StyledButtonGroup hasChanged={false}>
                         {badge}
-                        <IconButton
+                        <PermissionIconButton
+                            permission={UPDATE_FEATURE_STRATEGY}
                             onClick={onDelete}
                             size='small'
                             aria-label={`Delete automation for ${milestoneName}`}
                             sx={{ padding: 0.5 }}
                         >
                             <DeleteOutlineIcon fontSize='small' />
-                        </IconButton>
+                        </PermissionIconButton>
                     </StyledButtonGroup>
                 )}
             </StyledDisplayContainer>
@@ -270,14 +278,17 @@ export const MilestoneTransitionDisplay = ({
                     >
                         Cancel
                     </Button>
-                    <Button
+                    <PermissionButton
+                        permission={UPDATE_FEATURE_STRATEGY}
+                        projectId={projectId}
+                        environmentId={environment}
                         variant='contained'
                         color='primary'
                         onClick={handleSave}
                         size='small'
                     >
                         Save
-                    </Button>
+                    </PermissionButton>
                 </StyledButtonGroup>
             )}
         </StyledFormWrapper>

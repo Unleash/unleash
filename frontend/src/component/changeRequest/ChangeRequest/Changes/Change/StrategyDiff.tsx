@@ -5,8 +5,8 @@ import type {
 } from 'component/changeRequest/changeRequest.types';
 import type { FC } from 'react';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
-import omit from 'lodash.omit';
 import type { IFeatureStrategy } from 'interfaces/strategy';
+import { omitIfDefined } from 'utils/omitFields';
 
 const sortSegments = <T extends { segments?: number[] }>(
     item?: T,
@@ -19,9 +19,6 @@ const sortSegments = <T extends { segments?: number[] }>(
         segments: [...item.segments].sort((a, b) => a - b),
     };
 };
-
-const omitIfDefined = (obj: any, keys: string[]) =>
-    obj ? omit(obj, keys) : obj;
 
 export const StrategyDiff: FC<{
     change:

@@ -100,6 +100,7 @@ import {
     createAccessService,
     createChangeRequestAccessReadModel,
     createContextService,
+    createEnvironmentService,
     createEventsService,
     createFakeInstanceStatsService,
     createFakeProjectService,
@@ -182,7 +183,10 @@ import { getDbConfig } from '../test/e2e/helpers/database-config.js';
 import { testDbPrefix } from '../test/e2e/helpers/database-init.js';
 import type { RequestHandler } from 'express';
 import { UPDATE_REVISION } from './features/feature-toggle/configuration-revision-service.js';
-import type { IFeatureUsageInfo } from './services/version-service.js';
+import type {
+    IFeatureUsageInfo,
+    IInstanceInfo,
+} from './services/version-service.js';
 import { defineImpactMetrics } from './features/metrics/impact/define-impact-metrics.js';
 import type { IClientInstance } from './types/stores/client-instance-store.js';
 import EnvironmentStore from './features/project-environments/environment-store.js';
@@ -227,8 +231,20 @@ export async function createApp(
         createMetricsMonitor,
     },
 ): Promise<IUnleash> {
-    // Database dependencies (stateful)
     const logger = config.getLogger('server-impl.js');
+
+    // Surface unhandled promise rejections to logs so they don't crash the process
+    process.on('unhandledRejection', (reason: unknown) => {
+        if (reason instanceof Error) {
+            logger.error('Unhandled promise rejection detected', reason);
+        } else {
+            logger.error(
+                `Unhandled promise rejection detected: ${String(reason)}`,
+            );
+        }
+    });
+
+    // Database dependencies (stateful)
     const serverVersion = config.enterpriseVersion ?? version;
     const db = fm.createDb(config);
     const stores = fm.createStores(config, db);
@@ -449,6 +465,7 @@ export {
     FakeEventStore,
     fakeImpactMetricsResolver,
     createChangeRequestAccessReadModel,
+    createEnvironmentService,
     createFeatureToggleService,
     createProjectService,
     createFakeProjectService,
@@ -560,6 +577,7 @@ export type {
     QueryOverride,
     IUserPermission,
     IFeatureUsageInfo,
+    IInstanceInfo,
     IClientInstance,
 };
 export * from './openapi/index.js';

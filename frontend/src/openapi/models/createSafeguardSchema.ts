@@ -3,17 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { MetricQuerySchema } from './metricQuerySchema.js';
-import type { CreateSafeguardSchemaOperator } from './createSafeguardSchemaOperator.js';
+import type { CreateSafeguardSchemaImpactMetric } from './createSafeguardSchemaImpactMetric.js';
+import type { SafeguardTriggerConditionSchema } from './safeguardTriggerConditionSchema.js';
 
 /**
  * Request body to create a safeguard with metric-based alert condition.
  */
 export interface CreateSafeguardSchema {
     /** Metric configuration that should be evaluated for the safeguard. */
-    impactMetric: MetricQuerySchema;
-    /** The comparison operator for the threshold check. */
-    operator: CreateSafeguardSchemaOperator;
-    /** The threshold value to compare against. */
-    threshold: number;
+    impactMetric: CreateSafeguardSchemaImpactMetric;
+    /** The condition that triggers the safeguard. */
+    triggerCondition: SafeguardTriggerConditionSchema;
 }

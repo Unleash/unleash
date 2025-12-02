@@ -83,6 +83,10 @@ export default class EnvironmentService {
         return env;
     }
 
+    async exists(name: string): Promise<boolean> {
+        return this.environmentStore.exists(name);
+    }
+
     async getProjectEnvironments(
         projectId: string,
     ): Promise<IProjectsAvailableOnEnvironment[]> {

@@ -1,7 +1,5 @@
-import type { IFeatureStrategy } from './strategy.js';
-import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
-import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
-import type { CreateSafeguardSchemaOperator } from 'openapi/models/createSafeguardSchemaOperator';
+import type { IFeatureStrategy } from './strategy.ts';
+import type { SafeguardSchema } from '../openapi/index.js';
 
 export interface IReleasePlanTemplate {
     id: string;
@@ -21,19 +19,7 @@ export interface IReleasePlanTemplate {
     archivedAt?: string;
 }
 
-export interface ISafeguard {
-    id: string;
-    impactMetric: {
-        aggregationMode: MetricQuerySchemaAggregationMode;
-        metricName: string;
-        timeRange: MetricQuerySchemaTimeRange;
-        labelSelectors: { appName: [string] };
-    };
-    triggerCondition: {
-        operator: CreateSafeguardSchemaOperator;
-        threshold: number;
-    };
-}
+export type ISafeguard = SafeguardSchema;
 export interface IReleasePlan {
     id: string;
     name: string;

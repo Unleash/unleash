@@ -105,6 +105,8 @@ interface IReleasePlanMilestoneProps {
     readonly?: boolean;
     automationSection?: React.ReactNode;
     previousMilestoneStatus?: MilestoneStatus;
+    projectId?: string;
+    environmentId?: string;
 }
 
 export const ReleasePlanMilestone = ({
@@ -114,11 +116,14 @@ export const ReleasePlanMilestone = ({
     readonly,
     automationSection,
     previousMilestoneStatus,
+    projectId,
+    environmentId,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(false);
     const hasAutomation = Boolean(automationSection);
     const isPreviousMilestonePaused =
-        previousMilestoneStatus?.type === 'paused';
+        previousMilestoneStatus?.type === 'paused' ||
+        previousMilestoneStatus?.progression === 'paused';
 
     if (!milestone.strategies.length) {
         return (
@@ -148,6 +153,8 @@ export const ReleasePlanMilestone = ({
                                             onStartMilestone={() =>
                                                 onStartMilestone(milestone)
                                             }
+                                            projectId={projectId}
+                                            environmentId={environmentId}
                                         />
                                     )}
                                     {status.type === 'active' &&
@@ -197,6 +204,8 @@ export const ReleasePlanMilestone = ({
                                         onStartMilestone={() =>
                                             onStartMilestone(milestone)
                                         }
+                                        projectId={projectId}
+                                        environmentId={environmentId}
                                     />
                                 )}
                                 {status.type === 'active' &&

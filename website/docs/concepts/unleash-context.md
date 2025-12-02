@@ -6,7 +6,7 @@ import SearchPriority from '@site/src/components/SearchPriority';
 
 <SearchPriority level="high" />
 
-The **Unleash context** contains information related to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](../concepts/activation-strategies#constraints) and to calculate [flag stickiness](../concepts/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](../sdks).
+The **Unleash context** contains information related to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](/concepts/activation-strategies#constraints) and to calculate [flag stickiness](/concepts/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](../sdks).
 
 ## Overview
 
@@ -33,7 +33,7 @@ The following table gives an overview of the fields' intended usage, their lifet
 
 ### The `properties` field
 
-The `properties` field is different from the others. You can use the `properties` field to provide arbitrary data to [strategy constraints](../concepts/activation-strategies#constraints) and add values for [custom context fields](#custom-context-fields).
+The `properties` field is different from the others. You can use the `properties` field to provide arbitrary data to [strategy constraints](/concepts/activation-strategies#constraints) and add values for [custom context fields](#custom-context-fields).
 
 Some SDK implementations of the Unleash Context allow for the values in the `properties` map to be of other types than a string type. Using non-string types as values may cause issues if you're using the property in a constraint. Because the Unleash Admin UI accepts any string as input for constraint checking, the SDKs must also assume that the value is a string.
 
@@ -49,7 +49,7 @@ For operators that work on non-string types, such as numeric and datetime operat
 
 :::
 
-Custom context fields allow you to extend the Unleash Context with custom data. Each context field definition consists of a name and an optional description. Additionally, you can define a set of [_legal values_](#legal-values "legal values for custom context fields"), and define if the context field can be used in [custom stickiness calculations](../concepts/stickiness#custom-stickiness) for the [gradual rollout strategy](../concepts/activation-strategies) and for [feature flag variants](../concepts/feature-flag-variants).
+Custom context fields allow you to extend the Unleash Context with custom data. Each context field definition consists of a name and an optional description. Additionally, you can define a set of [_legal values_](#legal-values "legal values for custom context fields"), and define if the context field can be used in [custom stickiness calculations](/concepts/stickiness#custom-stickiness) for the [gradual rollout strategy](/concepts/activation-strategies) and for [feature flag variants](/concepts/feature-flag-variants).
 
 When interacting with custom context fields in code, they must be accessed via the Unleash Context's `properties` map, using the context field's name as the key.
 
@@ -70,7 +70,7 @@ Once created, you can modify any aspect of a field’s definition—except its n
 By using the **legal values** option when creating a context field, you can create a set of valid options for a context field's values.
 If a context field has a defined set of legal values, the Unleash Admin UI will only allow users to enter one or more of the specified values. If a context field _doesn't_ have any defined legal values, the user can enter whatever they want.
 
-Using a custom context field called _region_ as an example: if you define the field's legal values as _Africa_, _Asia_, _Europe_, and _North America_, then you would only be allowed to use one or more of those four values when using the custom context field as a [strategy constraint](../concepts/activation-strategies#constraints).
+Using a custom context field called _region_ as an example: if you define the field's legal values as _Africa_, _Asia_, _Europe_, and _North America_, then you would only be allowed to use one or more of those four values when using the custom context field as a [strategy constraint](/concepts/activation-strategies#constraints).
 
 ![A strategy constraint form with a constraint set to "region". The "values" input is a dropdown menu containing the options "Africa", "Asia", "Europe", and "North America", as defined in the preceding paragraph.](/img/constraints_legal_values.png)
 
@@ -82,4 +82,4 @@ Custom stickiness is supported by all SDKs except for the Rust SDK. Refer to the
 
 :::
 
-Any context field _can_ be used to [calculate custom stickiness](../concepts/stickiness#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create a context field or update an existing one. 
+Any context field _can_ be used to [calculate custom stickiness](/concepts/stickiness#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create a context field or update an existing one. 

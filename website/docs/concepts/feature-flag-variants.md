@@ -79,7 +79,7 @@ Overrides are intended to be used for one-off cases and during development and m
 
 The weighting system automatically assigns users to a specific group for you. If you want to make sure that a specific user or group of users receives a certain variant, though, you can use the override functionality to achieve that.
 
-When adding an override, you choose a [field from the Unleash Context](../concepts/unleash-context) and specify that if a context contains one of a given list of values, then the current variant should always activate.
+When adding an override, you choose a [field from the Unleash Context](/concepts/unleash-context) and specify that if a context contains one of a given list of values, then the current variant should always activate.
 
 You can use both standard and custom context fields when creating overrides.
 

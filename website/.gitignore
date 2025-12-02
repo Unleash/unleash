@@ -23,6 +23,7 @@ yarn-error.log*
 docs/api/**/sidebar.ts
 *.api.mdx
 *.tag.mdx
+*.info.mdx
 
 # Yarn (https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored)
 .pnp.*

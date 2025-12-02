@@ -4,7 +4,7 @@ description: 'This guide shows you how to create feature flags in Unleash and ho
 pagination_next: guides/how-to-schedule-feature-releases
 ---
 
-[Feature flags](../concepts/feature-flags) are a foundational component of Unleash, enabling you to manage features dynamically. This guide details the process of creating and configuring feature flags within Unleash. You'll learn how to create flags, define activation strategies, enable them, and optionally refine their behavior with constraints, segments, and variants.
+[Feature flags](/concepts/feature-flags) are a foundational component of Unleash, enabling you to manage features dynamically. This guide details the process of creating and configuring feature flags within Unleash. You'll learn how to create flags, define activation strategies, enable them, and optionally refine their behavior with constraints, segments, and variants.
 
 This guide focuses on the Unleash Admin UI, but you can also use the [Admin API](/api/create-feature) to create, update, and manage feature flags.
 
@@ -30,7 +30,7 @@ To enable the feature flag in an environment, use the main environment toggle to
 
 ## Refine targeting with constraints and segments
 
-[Strategy constraints](/concepts/activation-strategies#constraints) and [segments](../concepts/segments) allow you to apply fine-grained filters to your activation strategies, ensuring they only activate for users and applications matching specific criteria. You can add constraints or segments when creating or editing an existing activation strategy.
+[Strategy constraints](/concepts/activation-strategies#constraints) and [segments](/concepts/segments) allow you to apply fine-grained filters to your activation strategies, ensuring they only activate for users and applications matching specific criteria. You can add constraints or segments when creating or editing an existing activation strategy.
 
 1. Go to the feature flag and the environment containing the strategy you want to modify and click the **Edit strategy**.
 2. In the Targeting Tab, click **Add constraint**.
@@ -41,7 +41,7 @@ To enable the feature flag in an environment, use the main environment toggle to
 
 ### Configure strategy variants
 
-[Variants](../concepts/feature-flag-variants) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing.
+[Variants](/concepts/feature-flag-variants) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing.
 
 1. Go to the feature flag and the environment containing the strategy you want to modify and click the **Edit strategy**.
 2. In the **Variants** tab, click **Add variant**.

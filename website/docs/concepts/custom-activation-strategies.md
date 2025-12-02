@@ -12,7 +12,7 @@ Custom strategies are deprecated and may be removed in a future major version. W
 If you have a use case you can't solve without using custom strategies, please reach out to us.
 :::
 
-**Custom activation strategies** let you define your own activation strategies to use with Unleash. When the [built-in activation strategies](../concepts/activation-strategies.md) aren't enough, custom activation strategies are there to provide you with the flexibility you need.
+**Custom activation strategies** let you define your own activation strategies to use with Unleash. When the [built-in activation strategies](/concepts/activation-strategies.md) aren't enough, custom activation strategies are there to provide you with the flexibility you need.
 
 Custom activation strategies work exactly like the built-in activation strategies when working in the admin UI.
 

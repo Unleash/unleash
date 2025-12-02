@@ -34,7 +34,7 @@ Point your application to the correct API endpoint: `<your-unleash-instance>/api
 
 ### Generate an API token
 
-Your application needs a [frontend token](../concepts/api-tokens-and-client-keys.mdx#frontend-tokens) to interact with the Frontend API.
+Your application needs a [frontend token](/concepts/api-tokens-and-client-keys.mdx#frontend-tokens) to interact with the Frontend API.
 
 ### Configure the refresh interval for tokens
 

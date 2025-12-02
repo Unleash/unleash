@@ -62,7 +62,7 @@ These parts turn the constraint into an expression that evaluates to true or fal
 |-----------------|-----------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
 | `userId`        | `STR_ENDS_WITH` | `@example.com, @mycompany.com` | Evaluates to `true` for users whose user IDs end with `@example.com` or `@mycompany.com`.                                                           |
 | `currentTime`   | `DATE_AFTER`    | `2022-06-05 21:43:22Z`         | Evaluates to `true` if the current time is after `2022-06-05 21:43:22Z`.                                                                            |
-| `plan` | `IN`       | `Premium`, `Plus`                         | Evaluates to `true` if the [custom context field](../concepts/unleash-context#custom-context-fields) `plan` is either 'Premium' or 'Plus'. |
+| `plan` | `IN`       | `Premium`, `Plus`                         | Evaluates to `true` if the [custom context field](/concepts/unleash-context#custom-context-fields) `plan` is either 'Premium' or 'Plus'. |
 
 #### Constraint operators
 

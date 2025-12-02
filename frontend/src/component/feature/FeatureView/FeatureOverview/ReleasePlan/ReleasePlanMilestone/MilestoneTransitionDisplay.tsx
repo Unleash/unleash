@@ -15,7 +15,6 @@ import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/perm
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
 const StyledFormWrapper = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasChanged',
@@ -161,7 +160,6 @@ export const MilestoneTransitionDisplay = ({
     environment,
 }: IMilestoneTransitionDisplayProps) => {
     const projectId = useRequiredPathParam('projectId');
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const initial = getTimeValueAndUnitFromMinutes(intervalMinutes);
     const form = useMilestoneProgressionForm(
         '', // sourceMilestoneId not needed for display

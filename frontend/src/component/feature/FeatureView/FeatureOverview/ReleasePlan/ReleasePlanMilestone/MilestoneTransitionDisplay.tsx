@@ -4,8 +4,8 @@ import { Button, styled } from '@mui/material';
 import type { MilestoneStatus } from './ReleasePlanMilestoneStatus.tsx';
 import { MilestoneProgressionTimeInput } from '../MilestoneProgressionForm/MilestoneProgressionTimeInput.tsx';
 import {
-    useMilestoneProgressionForm,
     getTimeValueAndUnitFromMinutes,
+    useMilestoneProgressionForm,
 } from '../hooks/useMilestoneProgressionForm.js';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import type { ReactNode } from 'react';

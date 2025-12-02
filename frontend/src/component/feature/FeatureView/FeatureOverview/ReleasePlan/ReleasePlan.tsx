@@ -41,6 +41,7 @@ import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguar
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import { DeleteSafeguardDialog } from './DeleteSafeguardDialog.tsx';
 import { Badge } from 'component/common/Badge/Badge';
+import { formatDateYMDHMS } from 'utils/formatDate';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -119,6 +120,7 @@ const StyledResumeMilestoneProgressions = styled(Link)(({ theme }) => ({
     gap: theme.spacing(0.5),
     textDecoration: 'none',
     color: 'inherit',
+    whiteSpace: 'nowrap',
 }));
 
 interface IReleasePlanProps {
@@ -186,6 +188,9 @@ export const ReleasePlan = ({
     const releasePlanAutomationsPaused = milestones.some((milestone) =>
         Boolean(milestone.pausedAt),
     );
+    const pausedAt = milestones.find(
+        (milestone) => milestone.pausedAt,
+    )?.pausedAt;
 
     const getPendingSafeguardAction = ():
         | IChangeRequestChangeSafeguard['action']
@@ -612,8 +617,12 @@ export const ReleasePlan = ({
                         </StyledResumeMilestoneProgressions>
                     }
                 >
-                    <b>Automation paused by safeguard.</b> Existing users on
-                    this release plan can still access the feature.
+                    <b>
+                        Automation paused by safeguard
+                        {pausedAt ? ` at ${formatDateYMDHMS(pausedAt)}` : ''}.
+                    </b>{' '}
+                    Existing users on this release plan can still access the
+                    feature.
                 </StyledAlert>
             ) : null}
 

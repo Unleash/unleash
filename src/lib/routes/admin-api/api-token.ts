@@ -9,6 +9,7 @@ import {
     DELETE_FRONTEND_API_TOKEN,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
+    READ_PROJECT_API_TOKEN,
     UPDATE_CLIENT_API_TOKEN,
     UPDATE_FRONTEND_API_TOKEN,
 } from '../../types/permissions.js';
@@ -80,6 +81,7 @@ const canReadToken = ({ permission }: IUserPermission, type: ApiTokenType) => {
     if (type === ApiTokenType.CLIENT || type === ApiTokenType.BACKEND) {
         return [
             CREATE_CLIENT_API_TOKEN,
+            READ_PROJECT_API_TOKEN,
             READ_CLIENT_API_TOKEN,
             DELETE_CLIENT_API_TOKEN,
             UPDATE_CLIENT_API_TOKEN,
@@ -419,10 +421,15 @@ export class ApiTokenController extends Controller {
 
         const userPermissions =
             await this.accessService.getPermissionsForUser(user);
+        console.log(JSON.stringify(userPermissions));
 
         const accessibleTokens = allTokens.filter((token) =>
-            userPermissions.some((permission) =>
-                canReadToken(permission, token.type),
+            userPermissions.some(
+                (permission) =>
+                    (token.project === permission.project ||
+                        (permission.project &&
+                            token.projects?.includes(permission.project))) &&
+                    canReadToken(permission, token.type),
             ),
         );
         return accessibleTokens;

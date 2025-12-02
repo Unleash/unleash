@@ -20,6 +20,8 @@ import { ReleasePlanChangeRequestDialog } from './ChangeRequest/ReleasePlanChang
 import type {
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
+    IChangeRequestChangeSafeguard,
+    IChangeRequestDeleteSafeguard,
 } from 'component/changeRequest/changeRequest.types';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
@@ -38,6 +40,7 @@ import {
 import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguardsApi';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import { DeleteSafeguardDialog } from './DeleteSafeguardDialog.tsx';
+import { Badge } from 'component/common/Badge/Badge';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -184,7 +187,40 @@ export const ReleasePlan = ({
         Boolean(milestone.pausedAt),
     );
 
-    // Find progression changes for this feature in pending change requests
+    const getPendingSafeguardAction = ():
+        | IChangeRequestChangeSafeguard['action']
+        | IChangeRequestDeleteSafeguard['action']
+        | null => {
+        if (!pendingChangeRequests) return null;
+
+        for (const changeRequest of pendingChangeRequests) {
+            if (changeRequest.environment !== environment) continue;
+
+            const featureInChangeRequest = changeRequest.features.find(
+                (featureItem) => featureItem.name === featureName,
+            );
+            if (!featureInChangeRequest) continue;
+
+            const safeguardChange = featureInChangeRequest.changes.find(
+                (
+                    change,
+                ): change is
+                    | IChangeRequestChangeSafeguard
+                    | IChangeRequestDeleteSafeguard =>
+                    (change.action === 'changeSafeguard' &&
+                        change.payload.planId === id) ||
+                    (change.action === 'deleteSafeguard' &&
+                        change.payload.planId === id),
+            );
+
+            if (safeguardChange) {
+                return safeguardChange.action;
+            }
+        }
+
+        return null;
+    };
+
     const getPendingProgressionChange = (sourceMilestoneId: string) => {
         if (!pendingChangeRequests) return null;
 
@@ -527,6 +563,14 @@ export const ReleasePlan = ({
                 : 'dashed'
             : null;
 
+    const pendingSafeguardAction = getPendingSafeguardAction();
+    const safeguardBadge =
+        pendingSafeguardAction === 'deleteSafeguard' ? (
+            <Badge color='error'>Deleted in draft</Badge>
+        ) : pendingSafeguardAction === 'changeSafeguard' ? (
+            <Badge color='warning'>Modified in draft</Badge>
+        ) : undefined;
+
     return (
         <StyledContainer>
             <StyledHeader>
@@ -583,6 +627,7 @@ export const ReleasePlan = ({
                                 onCancel={() => setSafeguardFormOpen(false)}
                                 onDelete={handleSafeguardDelete}
                                 environment={environment}
+                                badge={safeguardBadge}
                             />
                         ) : (
                             <StyledActionButton

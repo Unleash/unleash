@@ -37,8 +37,8 @@ test('/api/admin/metrics/seen-toggles is deprecated', () => {
     return request.get('/api/admin/metrics/seen-toggles').expect(410);
 });
 
-test('/api/admin/metrics/feature-flags is deprecated', () => {
-    return request.get('/api/admin/metrics/feature-flags').expect(410);
+test('/api/admin/metrics/feature-toggles is deprecated', () => {
+    return request.get('/api/admin/metrics/feature-toggles').expect(410);
 });
 
 test('should return empty list of client applications', () => {

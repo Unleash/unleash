@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 
 import { Tab, Tabs } from '@mui/material';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { TabLink } from 'component/common/TabNav/TabLink';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -62,12 +62,15 @@ export const Network = () => {
     const { pathname } = useLocation();
     const edgeObservabilityEnabled = useUiFlag('edgeObservability');
     const consumptionModelEnabled = useUiFlag('consumptionModelUI');
+    const enterpriseEdgeUIEnabled = useUiFlag('enterpriseEdgeUI');
     const allTabs = consumptionModelEnabled
         ? [...tabs, ...consumptionModelTabs]
         : [...tabs, ...seatModelTabs];
 
     const filteredTabs = allTabs.filter(
-        ({ label }) => label !== 'Connected Edges' || edgeObservabilityEnabled,
+        ({ label }) =>
+            label !== 'Connected Edges' ||
+            (edgeObservabilityEnabled && !enterpriseEdgeUIEnabled),
     );
 
     return (
@@ -103,7 +106,16 @@ export const Network = () => {
                     {edgeObservabilityEnabled && (
                         <Route
                             path='connected-edges'
-                            element={<NetworkConnectedEdges />}
+                            element={
+                                enterpriseEdgeUIEnabled ? (
+                                    <Navigate
+                                        to='/admin/enterprise-edge'
+                                        replace
+                                    />
+                                ) : (
+                                    <NetworkConnectedEdges />
+                                )
+                            }
                         />
                     )}
                     <Route

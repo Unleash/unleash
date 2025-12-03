@@ -1,4 +1,4 @@
-import { Button, FormControl, TextField } from '@mui/material';
+import { Button, FormControl, TextField, Box, styled } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import type { FormEvent, ReactNode } from 'react';
@@ -14,6 +14,7 @@ import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/use
 import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+import { ImpactMetricsChart } from 'component/impact-metrics/ImpactMetricsChart.tsx';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
@@ -34,6 +35,24 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
 
 const StyledIcon = createStyledIcon(ShieldIcon);
+
+const SafeguardFormLayout = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+}));
+
+const SafeguardConfigurationSection = styled(Box)({
+    flex: 1,
+    minWidth: 0,
+});
+
+const SafeguardMetricsPreview = styled(Box)(({ theme }) => ({
+    width: 100,
+    display: 'none',
+    [theme.breakpoints.up('lg')]: {
+        display: 'block',
+    },
+}));
 
 export const useSafeguardForm = (safeguards: ISafeguard[] | undefined) => {
     const [safeguardFormOpen, setSafeguardFormOpen] = useState(false);
@@ -300,6 +319,7 @@ const useSafeguardFormState = (safeguard?: ISafeguard) => {
         ...metricsData,
         ...handlers,
         projectId,
+        safeguard,
     };
 };
 
@@ -361,6 +381,18 @@ const SafeguardFormBase: FC<{
 
     const showButtons = mode === 'create' || mode === 'edit';
 
+    const labelSelectors = useMemo((): Record<string, string[]> => {
+        const selectors: Record<string, string[]> = {
+            environment: [environment],
+        };
+
+        if (appName !== '*') {
+            selectors.appName = [appName];
+        }
+
+        return selectors;
+    }, [appName, environment]);
+
     return (
         <StyledFormContainer onSubmit={onSubmit} mode={mode}>
             <StyledTopRow sx={{ mb: 1 }}>
@@ -383,93 +415,119 @@ const SafeguardFormBase: FC<{
                     </PermissionIconButton>
                 )}
             </StyledTopRow>
-            <StyledTopRow sx={{ ml: 3 }}>
-                <MetricSelector
-                    value={metricName}
-                    onChange={handleMetricChange}
-                    options={metricOptions}
-                    loading={loading}
-                    label=''
-                />
 
-                <StyledTopRow>
-                    <StyledLabel>filtered by</StyledLabel>
-                    <FormControl variant='outlined' size='small'>
-                        <StyledSelect
-                            value={appName}
-                            onChange={(e) =>
-                                handleApplicationChange(String(e.target.value))
-                            }
-                            variant='outlined'
-                            size='small'
-                        >
-                            {applicationNames.map((app) => (
-                                <StyledMenuItem key={app} value={app}>
-                                    {app === '*' ? 'All' : app}
-                                </StyledMenuItem>
-                            ))}
-                        </StyledSelect>
-                    </FormControl>
-                </StyledTopRow>
-
-                <StyledTopRow>
-                    <StyledLabel>aggregated by</StyledLabel>
-                    <ModeSelector
-                        value={aggregationMode}
-                        onChange={handleAggregationModeChange}
-                        metricType={metricType}
-                        label=''
-                    />
-                </StyledTopRow>
-            </StyledTopRow>
-            <StyledTopRow sx={{ ml: 0.75 }}>
-                <StyledTopRow>
-                    <StyledLabel>is</StyledLabel>
-                    <FormControl variant='outlined' size='small'>
-                        <StyledSelect
-                            value={operator}
-                            onChange={(e) =>
-                                handleOperatorChange(
-                                    e.target
-                                        .value as SafeguardTriggerConditionSchemaOperator,
-                                )
-                            }
-                            variant='outlined'
-                            size='small'
-                        >
-                            <StyledMenuItem value='>'>More than</StyledMenuItem>
-                            <StyledMenuItem value='<'>Less than</StyledMenuItem>
-                        </StyledSelect>
-                    </FormControl>
-
-                    <FormControl variant='outlined' size='small'>
-                        <TextField
-                            type='number'
-                            inputProps={{
-                                step: 0.1,
-                            }}
-                            value={threshold}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                handleThresholdChange(Number(value));
-                            }}
-                            placeholder='Value'
-                            variant='outlined'
-                            size='small'
-                            required
+            <SafeguardFormLayout>
+                <SafeguardConfigurationSection>
+                    <StyledTopRow sx={{ ml: 3, mb: 1.5 }}>
+                        <MetricSelector
+                            value={metricName}
+                            onChange={handleMetricChange}
+                            options={metricOptions}
+                            loading={loading}
+                            label=''
                         />
-                    </FormControl>
-                </StyledTopRow>
 
-                <StyledTopRow>
-                    <StyledLabel>over</StyledLabel>
-                    <RangeSelector
-                        value={timeRange}
-                        onChange={handleTimeRangeChange}
-                        label=''
-                    />
-                </StyledTopRow>
-            </StyledTopRow>
+                        <StyledTopRow>
+                            <StyledLabel>filtered by</StyledLabel>
+                            <FormControl variant='outlined' size='small'>
+                                <StyledSelect
+                                    value={appName}
+                                    onChange={(e) =>
+                                        handleApplicationChange(
+                                            String(e.target.value),
+                                        )
+                                    }
+                                    variant='outlined'
+                                    size='small'
+                                >
+                                    {applicationNames.map((app) => (
+                                        <StyledMenuItem key={app} value={app}>
+                                            {app === '*' ? 'All' : app}
+                                        </StyledMenuItem>
+                                    ))}
+                                </StyledSelect>
+                            </FormControl>
+                        </StyledTopRow>
+
+                        <StyledTopRow>
+                            <StyledLabel>aggregated by</StyledLabel>
+                            <ModeSelector
+                                value={aggregationMode}
+                                onChange={handleAggregationModeChange}
+                                metricType={metricType}
+                                label=''
+                            />
+                        </StyledTopRow>
+                    </StyledTopRow>
+                    <StyledTopRow sx={{ ml: 0.75 }}>
+                        <StyledTopRow>
+                            <StyledLabel>is</StyledLabel>
+                            <FormControl variant='outlined' size='small'>
+                                <StyledSelect
+                                    value={operator}
+                                    onChange={(e) =>
+                                        handleOperatorChange(
+                                            e.target
+                                                .value as SafeguardTriggerConditionSchemaOperator,
+                                        )
+                                    }
+                                    variant='outlined'
+                                    size='small'
+                                >
+                                    <StyledMenuItem value='>'>
+                                        More than
+                                    </StyledMenuItem>
+                                    <StyledMenuItem value='<'>
+                                        Less than
+                                    </StyledMenuItem>
+                                </StyledSelect>
+                            </FormControl>
+
+                            <FormControl variant='outlined' size='small'>
+                                <TextField
+                                    type='number'
+                                    inputProps={{
+                                        step: 0.1,
+                                    }}
+                                    value={threshold}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        handleThresholdChange(Number(value));
+                                    }}
+                                    placeholder='Value'
+                                    variant='outlined'
+                                    size='small'
+                                    required
+                                />
+                            </FormControl>
+                        </StyledTopRow>
+
+                        <StyledTopRow>
+                            <StyledLabel>over</StyledLabel>
+                            <RangeSelector
+                                value={timeRange}
+                                onChange={handleTimeRangeChange}
+                                label=''
+                            />
+                        </StyledTopRow>
+                    </StyledTopRow>
+                </SafeguardConfigurationSection>
+
+                <SafeguardMetricsPreview>
+                    {metricName && (
+                        <ImpactMetricsChart
+                            metricName={metricName}
+                            timeRange={timeRange}
+                            labelSelectors={labelSelectors}
+                            yAxisMin='auto'
+                            aggregationMode={aggregationMode}
+                            isPreview={true}
+                            showComponents={[]}
+                        />
+                    )}
+                </SafeguardMetricsPreview>
+            </SafeguardFormLayout>
+
             {showButtons && (
                 <StyledButtonGroup>
                     <Button

@@ -16,6 +16,13 @@ import { fromUnixTime } from 'date-fns';
 import { useChartData } from './hooks/useChartData.ts';
 import type { AggregationMode } from './types.ts';
 
+type ChartComponent =
+    | 'xAxis'
+    | 'yAxis'
+    | 'debugInfo'
+    | 'emptyDataMessage'
+    | 'legend';
+
 type ImpactMetricsChartProps = {
     metricName: string;
     timeRange: 'hour' | 'day' | 'week' | 'month';
@@ -28,6 +35,7 @@ type ImpactMetricsChartProps = {
     emptyDataDescription?: string;
     noSeriesPlaceholder?: ReactNode;
     isPreview?: boolean;
+    showComponents?: ChartComponent[];
 };
 
 export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
@@ -42,7 +50,16 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     emptyDataDescription = 'Send impact metrics using Unleash SDK and select data series to view the chart.',
     noSeriesPlaceholder,
     isPreview,
+    showComponents = [
+        'xAxis',
+        'yAxis',
+        'debugInfo',
+        'emptyDataMessage',
+        'legend',
+    ],
 }) => {
+    const shouldShowComponent = (component: ChartComponent) =>
+        showComponents.includes(component);
     const {
         data: { start, end, series: timeSeriesData, debug },
         loading: dataLoading,
@@ -86,12 +103,22 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     const maxTime = end ? fromUnixTime(Number.parseInt(end, 10)) : undefined;
 
     const placeholder = metricName ? (
-        <NotEnoughData description={emptyDataDescription} />
+        <NotEnoughData
+            description={
+                shouldShowComponent('emptyDataMessage')
+                    ? emptyDataDescription
+                    : ''
+            }
+        />
     ) : noSeriesPlaceholder ? (
         noSeriesPlaceholder
     ) : (
         <NotEnoughData
-            title='Select a metric series to view the chart.'
+            title={
+                shouldShowComponent('emptyDataMessage')
+                    ? 'Select a metric series to view the chart.'
+                    : ''
+            }
             description=''
         />
     );
@@ -105,45 +132,54 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         : {
               ...overrideOptions,
               scales: {
-                  x: {
-                      type: 'time',
-                      min: minTime?.getTime(),
-                      max: maxTime?.getTime(),
-                      time: {
-                          unit: getTimeUnit(timeRange),
-                          displayFormats: {
-                              [getTimeUnit(timeRange)]:
-                                  getDisplayFormat(timeRange),
-                          },
-                          tooltipFormat: 'PPpp',
-                      },
-                      ticks: {
-                          maxRotation: 45,
-                          minRotation: 45,
-                          maxTicksLimit: 8,
-                      },
-                  },
-                  y: {
-                      beginAtZero: yAxisMin === 'zero',
-                      title: {
-                          display: aggregationMode === 'rps',
-                          text:
-                              aggregationMode === 'rps'
-                                  ? 'Rate per second'
-                                  : '',
-                      },
-                      ticks: {
-                          precision: 0,
-                          callback: (value: unknown): string | number =>
-                              typeof value === 'number'
-                                  ? `${formatLargeNumbers(value)}${aggregationMode === 'rps' ? '/s' : ''}`
-                                  : (value as number),
-                      },
-                  },
+                  x: shouldShowComponent('xAxis')
+                      ? {
+                            type: 'time',
+                            min: minTime?.getTime(),
+                            max: maxTime?.getTime(),
+                            time: {
+                                unit: getTimeUnit(timeRange),
+                                displayFormats: {
+                                    [getTimeUnit(timeRange)]:
+                                        getDisplayFormat(timeRange),
+                                },
+                                tooltipFormat: 'PPpp',
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45,
+                                maxTicksLimit: 8,
+                            },
+                        }
+                      : {
+                            display: false,
+                        },
+                  y: shouldShowComponent('yAxis')
+                      ? {
+                            beginAtZero: yAxisMin === 'zero',
+                            title: {
+                                display: aggregationMode === 'rps',
+                                text:
+                                    aggregationMode === 'rps'
+                                        ? 'Rate per second'
+                                        : '',
+                            },
+                            ticks: {
+                                precision: 0,
+                                callback: (value: unknown): string | number =>
+                                    typeof value === 'number'
+                                        ? `${formatLargeNumbers(value)}${aggregationMode === 'rps' ? '/s' : ''}`
+                                        : (value as number),
+                            },
+                        }
+                      : {
+                            display: false,
+                        },
               },
               plugins: {
                   legend: {
                       display:
+                          shouldShowComponent('legend') &&
                           timeSeriesData &&
                           (hasManyLabels || timeSeriesData.length > 1),
                       position: 'bottom' as const,
@@ -189,7 +225,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                     }
                 />
             </Box>
-            {isPreview && debug?.query ? (
+            {shouldShowComponent('debugInfo') && isPreview && debug?.query ? (
                 <Box
                     sx={(theme) => ({
                         margin: theme.spacing(2),
@@ -206,7 +242,9 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                     </Typography>
                 </Box>
             ) : null}
-            {isPreview && debug?.isTruncated ? (
+            {shouldShowComponent('debugInfo') &&
+            isPreview &&
+            debug?.isTruncated ? (
                 <Box
                     sx={(theme) => ({
                         padding: theme.spacing(0, 2),

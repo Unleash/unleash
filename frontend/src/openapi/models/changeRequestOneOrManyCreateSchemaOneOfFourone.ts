@@ -7,7 +7,7 @@ import type { ChangeRequestOneOrManyCreateSchemaOneOfFouroneAction } from './cha
 import type { ChangeRequestOneOrManyCreateSchemaOneOfFouronePayload } from './changeRequestOneOrManyCreateSchemaOneOfFouronePayload.js';
 
 /**
- * Create or update a safeguard for a release plan.
+ * Resume paused milestone progressions for a release plan.
  */
 export type ChangeRequestOneOrManyCreateSchemaOneOfFourone = {
     /** The name of this action. */

@@ -3,10 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateSafeguardSchema } from './createSafeguardSchema.js';
 
 export type ChangeRequestCreateSchemaOneOfFouronePayload = {
-    /** The ID of the release plan. This ID is an ulid */
+    /** The release plan's unique identifier (ULID format) */
     planId: string;
-    safeguard: CreateSafeguardSchema;
 };

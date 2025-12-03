@@ -7,7 +7,7 @@ import type { ChangeRequestCreateFeatureSchemaOneOfThreenineAction } from './cha
 import type { ChangeRequestCreateFeatureSchemaOneOfThreeninePayload } from './changeRequestCreateFeatureSchemaOneOfThreeninePayload.js';
 
 /**
- * Delete a safeguard from a release plan.
+ * Create or update a safeguard for a release plan.
  */
 export type ChangeRequestCreateFeatureSchemaOneOfThreenine = {
     /** The name of this action. */

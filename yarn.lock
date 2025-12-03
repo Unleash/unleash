@@ -1353,10 +1353,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bcryptjs@npm:2.4.6":
-  version: 2.4.6
-  resolution: "@types/bcryptjs@npm:2.4.6"
-  checksum: 10c0/1182663f0c081c5c58760019459cd309335e9b5fc6552780b0fd21b6c5f25661a844709e46218796f4bdbebe6736e11cfc5af0729bc2cdb0160943650aceb3da
+"@types/bcryptjs@npm:3.0.0":
+  version: 3.0.0
+  resolution: "@types/bcryptjs@npm:3.0.0"
+  dependencies:
+    bcryptjs: "npm:*"
+  checksum: 10c0/5d61ce381736f8252627cf32f2bbc17003c0361c6cf63ac23034a651b9c1edfdbf8f786730816e0b5257a927ffa369658562183a68495eb07ca2ddc77fbb171c
   languageName: node
   linkType: hard
 
@@ -2095,10 +2097,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bcryptjs@npm:^2.4.3":
-  version: 2.4.3
-  resolution: "bcryptjs@npm:2.4.3"
-  checksum: 10c0/b969467087ed7a01ff905a1c6a0c45014ec586248a448ea08370c8ed8bb314bda16a870ca23e0961d7d23bdce1a04c76fa70a9d680be814fa9ac7d8fc61870a3
+"bcryptjs@npm:*, bcryptjs@npm:^3.0.0":
+  version: 3.0.3
+  resolution: "bcryptjs@npm:3.0.3"
+  bin:
+    bcrypt: bin/bcrypt
+  checksum: 10c0/127c94699f07eab5fbbb89d600c3f0e36ae6fd001e028139740b41fffb62a23a2743523fb88f442ae3308a27d4843b97ccb9e436d78f5c5899be187d0972c6d5
   languageName: node
   linkType: hard
 
@@ -7590,7 +7594,7 @@ __metadata:
     "@fast-check/vitest": "npm:^0.2.1"
     "@slack/web-api": "npm:^7.10.0"
     "@swc/core": "npm:1.11.31"
-    "@types/bcryptjs": "npm:2.4.6"
+    "@types/bcryptjs": "npm:3.0.0"
     "@types/cors": "npm:2.8.19"
     "@types/express": "npm:4.17.23"
     "@types/express-session": "npm:1.18.2"
@@ -7618,7 +7622,7 @@ __metadata:
     ajv: "npm:^8.17.1"
     ajv-formats: "npm:^3.0.1"
     async: "npm:^3.2.4"
-    bcryptjs: "npm:^2.4.3"
+    bcryptjs: "npm:^3.0.0"
     compression: "npm:^1.8.1"
     concurrently: "npm:^9.0.0"
     connect-session-knex: "npm:^5.0.0"

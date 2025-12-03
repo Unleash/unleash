@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { getSeriesLabel } from '../metricsFormatters.ts';
+import type { SafeguardTriggerConditionSchemaOperator } from 'openapi/models/safeguardTriggerConditionSchemaOperator';
 
 const getColorStartingIndex = (modulo: number, series?: string): number => {
     if (!series || series.length === 0 || modulo <= 0) {
@@ -19,10 +20,42 @@ const getColorStartingIndex = (modulo: number, series?: string): number => {
     return Math.abs(hash) % modulo;
 };
 
-export const useChartData = (
-    timeSeriesData: ImpactMetricsSeries[] | undefined,
-    colorIndexBy?: string,
-) => {
+type ThresholdCondition = {
+    operator: SafeguardTriggerConditionSchemaOperator;
+    threshold: number;
+};
+
+// This is matching backend logic which looks for a single outlier
+const isThresholdConditionMet = (
+    data: (number | null)[],
+    condition?: ThresholdCondition,
+): boolean => {
+    if (!condition) return false;
+
+    return data.some((value) => {
+        if (value === null) return false;
+
+        if (condition.operator === '>') {
+            return value > condition.threshold;
+        } else if (condition.operator === '<') {
+            return value < condition.threshold;
+        }
+
+        return false;
+    });
+};
+
+interface UseChartDataParams {
+    timeSeriesData: ImpactMetricsSeries[] | undefined;
+    colorIndexBy?: string;
+    thresholdCondition?: ThresholdCondition;
+}
+
+export const useChartData = ({
+    timeSeriesData,
+    colorIndexBy,
+    thresholdCondition,
+}: UseChartDataParams) => {
     const theme = useTheme();
     const colors = theme.palette.charts.series;
     const startColorIndex = getColorStartingIndex(colors.length, colorIndexBy);
@@ -48,12 +81,19 @@ export const useChartData = (
             );
             const values = series.data.map(([, value]) => value);
 
+            const hasThresholdExceeded = isThresholdConditionMet(
+                values,
+                thresholdCondition,
+            );
+
             return {
                 labels: timestamps,
                 datasets: [
                     {
                         data: values,
-                        borderColor: theme.palette.primary.main,
+                        borderColor: hasThresholdExceeded
+                            ? theme.palette.error.main
+                            : theme.palette.primary.main,
                         backgroundColor: theme.palette.primary.light,
                         label: getSeriesLabel(series.metric),
                     },
@@ -107,5 +147,10 @@ export const useChartData = (
                 datasets,
             };
         }
-    }, [timeSeriesData, theme]);
+    }, [
+        timeSeriesData,
+        theme,
+        thresholdCondition?.operator,
+        thresholdCondition?.threshold,
+    ]);
 };

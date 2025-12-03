@@ -15,6 +15,7 @@ import {
 import { fromUnixTime } from 'date-fns';
 import { useChartData } from './hooks/useChartData.ts';
 import type { AggregationMode } from './types.ts';
+import type { SafeguardTriggerConditionSchemaOperator } from 'openapi/models/safeguardTriggerConditionSchemaOperator';
 
 type ChartComponent =
     | 'xAxis'
@@ -22,6 +23,11 @@ type ChartComponent =
     | 'debugInfo'
     | 'emptyDataMessage'
     | 'legend';
+
+type ThresholdCondition = {
+    operator: SafeguardTriggerConditionSchemaOperator;
+    threshold: number;
+};
 
 type ImpactMetricsChartProps = {
     metricName: string;
@@ -36,6 +42,7 @@ type ImpactMetricsChartProps = {
     noSeriesPlaceholder?: ReactNode;
     isPreview?: boolean;
     showComponents?: ChartComponent[];
+    thresholdCondition?: ThresholdCondition;
 };
 
 export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
@@ -57,6 +64,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         'emptyDataMessage',
         'legend',
     ],
+    thresholdCondition,
 }) => {
     const shouldShowComponent = (component: ChartComponent) =>
         showComponents.includes(component);
@@ -83,7 +91,11 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         type: 'constant',
     });
 
-    const data = useChartData(timeSeriesData, debug?.query);
+    const data = useChartData({
+        timeSeriesData,
+        colorIndexBy: debug?.query,
+        thresholdCondition,
+    });
 
     const hasError = !!dataError;
     const isLoading = dataLoading;

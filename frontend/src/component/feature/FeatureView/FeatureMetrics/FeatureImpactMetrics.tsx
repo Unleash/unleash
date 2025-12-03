@@ -2,6 +2,7 @@ import { PageContent } from 'component/common/PageContent/PageContent.tsx';
 import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
 import { Box, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
+import { SafeguardHelpIcon } from './Safeguard/SafeguardHelpIcon.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata.ts';
 import { type FC, useMemo, useState } from 'react';
 import { ChartConfigModal } from '../../../impact-metrics/ChartConfigModal/ChartConfigModal.tsx';
@@ -109,6 +110,14 @@ export const FeatureImpactMetrics: FC = () => {
                         onDelete={() => handleDeleteChart(config.id)}
                         permission={UPDATE_FEATURE}
                         projectId={projectId}
+                        icon={
+                            config.mode === 'read' && (
+                                <SafeguardHelpIcon
+                                    projectId={projectId}
+                                    featureName={featureName}
+                                />
+                            )
+                        }
                     />
                 ),
                 w: 6,

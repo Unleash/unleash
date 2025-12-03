@@ -14,6 +14,7 @@ export interface ChartItemProps {
     permission?: string;
     projectId?: string;
     dragHandle?: React.ReactNode;
+    icon?: React.ReactNode;
 }
 
 const getConfigDescription = (config: DisplayChartConfig): string => {
@@ -92,6 +93,7 @@ export const ChartItem: FC<ChartItemProps> = ({
     permission = ADMIN,
     projectId,
     dragHandle,
+    icon,
 }) => (
     <StyledWidget>
         <StyledHeader>
@@ -104,6 +106,7 @@ export const ChartItem: FC<ChartItemProps> = ({
                     {getConfigDescription(config)}
                 </Typography>
             </StyledChartTitle>
+            {icon}
             {config.mode !== 'read' && (
                 <StyledChartActions>
                     <PermissionIconButton

@@ -36,6 +36,7 @@ type ImpactMetricsChartProps = {
     noSeriesPlaceholder?: ReactNode;
     isPreview?: boolean;
     showComponents?: ChartComponent[];
+    threshold?: number;
 };
 
 export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
@@ -57,6 +58,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         'emptyDataMessage',
         'legend',
     ],
+    threshold,
 }) => {
     const shouldShowComponent = (component: ChartComponent) =>
         showComponents.includes(component);
@@ -83,7 +85,11 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         type: 'constant',
     });
 
-    const data = useChartData(timeSeriesData, debug?.query);
+    const data = useChartData({
+        timeSeriesData,
+        colorIndexBy: debug?.query,
+        threshold,
+    });
 
     const hasError = !!dataError;
     const isLoading = dataLoading;

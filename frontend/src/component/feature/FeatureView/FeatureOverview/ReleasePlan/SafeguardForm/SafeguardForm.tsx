@@ -523,6 +523,7 @@ const SafeguardFormBase: FC<{
                             aggregationMode={aggregationMode}
                             isPreview={true}
                             showComponents={[]}
+                            threshold={threshold}
                         />
                     )}
                 </SafeguardMetricsPreview>

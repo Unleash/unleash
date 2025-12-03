@@ -19,10 +19,25 @@ const getColorStartingIndex = (modulo: number, series?: string): number => {
     return Math.abs(hash) % modulo;
 };
 
-export const useChartData = (
-    timeSeriesData: ImpactMetricsSeries[] | undefined,
-    colorIndexBy?: string,
-) => {
+const isThresholdExceeded = (
+    data: (number | null)[],
+    threshold?: number,
+): boolean => {
+    if (threshold === undefined) return false;
+    return data.some((value) => value !== null && value > threshold);
+};
+
+interface UseChartDataParams {
+    timeSeriesData: ImpactMetricsSeries[] | undefined;
+    colorIndexBy?: string;
+    threshold?: number;
+}
+
+export const useChartData = ({
+    timeSeriesData,
+    colorIndexBy,
+    threshold,
+}: UseChartDataParams) => {
     const theme = useTheme();
     const colors = theme.palette.charts.series;
     const startColorIndex = getColorStartingIndex(colors.length, colorIndexBy);
@@ -48,12 +63,16 @@ export const useChartData = (
             );
             const values = series.data.map(([, value]) => value);
 
+            const hasThresholdExceeded = isThresholdExceeded(values, threshold);
+
             return {
                 labels: timestamps,
                 datasets: [
                     {
                         data: values,
-                        borderColor: theme.palette.primary.main,
+                        borderColor: hasThresholdExceeded
+                            ? theme.palette.error.main
+                            : theme.palette.primary.main,
                         backgroundColor: theme.palette.primary.light,
                         label: getSeriesLabel(series.metric),
                     },
@@ -107,5 +126,5 @@ export const useChartData = (
                 datasets,
             };
         }
-    }, [timeSeriesData, theme]);
+    }, [timeSeriesData, theme, threshold]);
 };

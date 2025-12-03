@@ -395,7 +395,7 @@ const SafeguardFormBase: FC<{
 
     return (
         <StyledFormContainer onSubmit={onSubmit} mode={mode}>
-            <StyledTopRow sx={{ mb: 1 }}>
+            <StyledTopRow>
                 <StyledIcon />
                 <StyledLabel sx={{ mr: 'auto' }}>
                     Pause automation when
@@ -523,7 +523,10 @@ const SafeguardFormBase: FC<{
                             aggregationMode={aggregationMode}
                             isPreview={true}
                             showComponents={[]}
-                            threshold={threshold}
+                            thresholdCondition={{
+                                operator,
+                                threshold,
+                            }}
                         />
                     )}
                 </SafeguardMetricsPreview>

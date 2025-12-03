@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { getSeriesLabel } from '../metricsFormatters.ts';
+import type { SafeguardTriggerConditionSchemaOperator } from 'openapi/models/safeguardTriggerConditionSchemaOperator';
 
 const getColorStartingIndex = (modulo: number, series?: string): number => {
     if (!series || series.length === 0 || modulo <= 0) {
@@ -19,24 +20,41 @@ const getColorStartingIndex = (modulo: number, series?: string): number => {
     return Math.abs(hash) % modulo;
 };
 
-const isThresholdExceeded = (
+type ThresholdCondition = {
+    operator: SafeguardTriggerConditionSchemaOperator;
+    threshold: number;
+};
+
+// This is matching backend logic which looks for a single outlier
+const isThresholdConditionMet = (
     data: (number | null)[],
-    threshold?: number,
+    condition?: ThresholdCondition,
 ): boolean => {
-    if (threshold === undefined) return false;
-    return data.some((value) => value !== null && value > threshold);
+    if (!condition) return false;
+
+    return data.some((value) => {
+        if (value === null) return false;
+
+        if (condition.operator === '>') {
+            return value > condition.threshold;
+        } else if (condition.operator === '<') {
+            return value < condition.threshold;
+        }
+
+        return false;
+    });
 };
 
 interface UseChartDataParams {
     timeSeriesData: ImpactMetricsSeries[] | undefined;
     colorIndexBy?: string;
-    threshold?: number;
+    thresholdCondition?: ThresholdCondition;
 }
 
 export const useChartData = ({
     timeSeriesData,
     colorIndexBy,
-    threshold,
+    thresholdCondition,
 }: UseChartDataParams) => {
     const theme = useTheme();
     const colors = theme.palette.charts.series;
@@ -63,7 +81,10 @@ export const useChartData = ({
             );
             const values = series.data.map(([, value]) => value);
 
-            const hasThresholdExceeded = isThresholdExceeded(values, threshold);
+            const hasThresholdExceeded = isThresholdConditionMet(
+                values,
+                thresholdCondition,
+            );
 
             return {
                 labels: timestamps,
@@ -126,5 +147,10 @@ export const useChartData = ({
                 datasets,
             };
         }
-    }, [timeSeriesData, theme, threshold]);
+    }, [
+        timeSeriesData,
+        theme,
+        thresholdCondition?.operator,
+        thresholdCondition?.threshold,
+    ]);
 };

@@ -12,66 +12,6 @@
   ],
   "redirects": [
     {
-      "source": "/reference/integrations/:path*",
-      "destination": "/integrate/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/reference/integrations",
-      "destination": "/integrate",
-      "permanent": true
-    },
-    {
-      "source": "/reference/mcp",
-      "destination": "/integrate/mcp",
-      "permanent": true
-    },
-    {
-      "source": "/reference/sdks/:path*",
-      "destination": "/sdks/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/reference/sdks",
-      "destination": "/sdks",
-      "permanent": true
-    },
-    {
-      "source": "/reference/unleash-edge/:path*",
-      "destination": "/unleash-edge/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/reference/unleash-edge",
-      "destination": "/unleash-edge",
-      "permanent": true
-    },
-    {
-      "source": "/reference/unleash-proxy",
-      "destination": "/unleash-edge",
-      "permanent": true
-    },
-    {
-      "source": "/reference/:path*",
-      "destination": "/concepts/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/deploy/:path*",
-      "destination": "/deploy/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/using-unleash/compliance/:path*",
-      "destination": "/privacy-and-compliance/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/feature-flag-tutorials/use-cases/:path*",
-      "destination": "/guides/:path*",
-      "permanent": true
-    },
-    {
       "source": "/",
       "has": [
         {
@@ -165,6 +105,11 @@
     {
       "source": "/reference/feature-toggle-variants",
       "destination": "/concepts/feature-flag-variants",
+      "permanent": true
+    },
+    {
+      "source": "/reference/feature-toggles",
+      "destination": "/concepts/feature-flags",
       "permanent": true
     },
     {
@@ -295,11 +240,6 @@
     {
       "source": "/advanced/enterprise-authentication",
       "destination": "/concepts/sso",
-      "permanent": true
-    },
-    {
-      "source": "/(reference/)?addons/:path*",
-      "destination": "/integrate/:path*",
       "permanent": true
     },
     {
@@ -503,27 +443,7 @@
       "permanent": true
     },
     {
-      "source": "/api/legacy/:path*",
-      "destination": "/api",
-      "permanent": true
-    },
-    {
       "source": "/api/basic-auth",
-      "destination": "/api",
-      "permanent": true
-    },
-    {
-      "source": "/api/admin/:path*",
-      "destination": "/api",
-      "permanent": true
-    },
-    {
-      "source": "/api/client/:path*",
-      "destination": "/api",
-      "permanent": true
-    },
-    {
-      "source": "/api/internal/:path*",
       "destination": "/api",
       "permanent": true
     },
@@ -660,11 +580,6 @@
     {
       "source": "/understanding-unleash",
       "destination": "/get-started/unleash-overview",
-      "permanent": true
-    },
-    {
-      "source": "/reference",
-      "destination": "/concepts/projects",
       "permanent": true
     },
     {
@@ -1043,8 +958,8 @@
       "permanent": true
     },
     {
-      "source": "/reference/api/:path*",
-      "destination": "/api/:path*",
+      "source": "/feature-flag-tutorials/use-cases/:path*",
+      "destination": "/guides/:path*",
       "permanent": true
     },
     {
@@ -1053,8 +968,103 @@
       "permanent": true
     },
     {
+      "source": "/api/admin/:path*",
+      "destination": "/api",
+      "permanent": true
+    },
+    {
+      "source": "/api/client/:path*",
+      "destination": "/api",
+      "permanent": true
+    },
+    {
+      "source": "/api/internal/:path*",
+      "destination": "/api",
+      "permanent": true
+    },
+    {
       "source": "/api/unleash/:path*",
       "destination": "/api/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/api/legacy/:path*",
+      "destination": "/api",
+      "permanent": true
+    },
+    {
+      "source": "/reference/integrations",
+      "destination": "/integrate",
+      "permanent": true
+    },
+    {
+      "source": "/reference/mcp",
+      "destination": "/integrate/mcp",
+      "permanent": true
+    },
+    {
+      "source": "/reference/sdks",
+      "destination": "/sdks",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-edge",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-proxy",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/reference/sdks/android-proxy",
+      "destination": "/sdks/android",
+      "permanent": true
+    },
+    {
+      "source": "/reference/sdks/ios-proxy",
+      "destination": "/sdks/ios",
+      "permanent": true
+    },
+    {
+      "source": "/reference/api/:path*",
+      "destination": "/api/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/integrations/:path*",
+      "destination": "/integrate/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/sdks/:path*",
+      "destination": "/sdks/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/unleash-edge/:path*",
+      "destination": "/unleash-edge/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/(reference/)?addons/:path*",
+      "destination": "/integrate/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reference/:path*",
+      "destination": "/concepts/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/deploy/:path*",
+      "destination": "/deploy/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/using-unleash/compliance/:path*",
+      "destination": "/privacy-and-compliance/:path*",
       "permanent": true
     }
   ]

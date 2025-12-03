@@ -1485,7 +1485,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:^7.0.15, @types/json-schema@npm:^7.0.9":
+"@types/json-schema@npm:^7.0.15":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
   checksum: 10c0/a996a745e6c5d60292f36731dd41341339d4eeed8180bb09226e5c8d23759067692b1d88e5d91d72ee83dfc00d3aca8e7bd43ea120516c17922cbcb7c3e252db
@@ -4585,14 +4585,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-schema-to-ts@npm:2.12.0":
-  version: 2.12.0
-  resolution: "json-schema-to-ts@npm:2.12.0"
+"json-schema-to-ts@npm:3.1.1":
+  version: 3.1.1
+  resolution: "json-schema-to-ts@npm:3.1.1"
   dependencies:
     "@babel/runtime": "npm:^7.18.3"
-    "@types/json-schema": "npm:^7.0.9"
-    ts-algebra: "npm:^1.2.2"
-  checksum: 10c0/e6aabb8470983e8242ae3120fa2a411f36d0e3cb12e37e838a2955edee9e26a412010a33bc01617e51b0b3df758c7a50a4d9b470070b22bca276f8056b5a8ed4
+    ts-algebra: "npm:^2.0.0"
+  checksum: 10c0/609bae04aa5e860a11b6d30ccf41445fae1c7f66fb600c1d170257cf33aa468aa9d03aa046428c3688aff0ff450c2b0c76584b66fa4a5d0da8e33799e4c439a6
   languageName: node
   linkType: hard
 
@@ -7344,10 +7343,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-algebra@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "ts-algebra@npm:1.2.2"
-  checksum: 10c0/dabfb7fad18b3bb56ed6b14404c2d9d7d41f181df599d50ad6643c6ff1afc459524969d80898183f9e5c66378163799991bfac799790899034ae8cfc99904c74
+"ts-algebra@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "ts-algebra@npm:2.0.0"
+  checksum: 10c0/4ae93bec1bada635bba425854eec323dad50b6ffe86bc04ad2d7f9ce3fb129d673dcf483e19a6e70d07a3a9083e6a0a7f4e004bb8d2164cddc60cc9540ba187f
   languageName: node
   linkType: hard
 
@@ -7651,7 +7650,7 @@ __metadata:
     js-sha256: "npm:^0.11.0"
     js-yaml: "npm:^4.1.0"
     json-diff: "npm:^1.0.6"
-    json-schema-to-ts: "npm:2.12.0"
+    json-schema-to-ts: "npm:3.1.1"
     json2csv: "npm:^5.0.7"
     knex: "npm:^3.1.0"
     ky: "npm:^1.8.1"

@@ -67,8 +67,7 @@ export const Network = () => {
         : [...tabs, ...seatModelTabs];
 
     const filteredTabs = allTabs.filter(
-        ({ label }) =>
-            label !== 'Connected Edges' || !enterpriseEdgeUIEnabled,
+        ({ label }) => label !== 'Connected Edges' || !enterpriseEdgeUIEnabled,
     );
 
     return (

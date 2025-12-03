@@ -54,7 +54,6 @@ export type IFlagKey =
     | 'uniqueSdkTracking'
     | 'consumptionModel'
     | 'consumptionModelUI'
-    | 'edgeObservability'
     | 'customMetrics'
     | 'impactMetrics'
     | 'etagByEnv'
@@ -240,10 +239,6 @@ const flags: IFlags = {
     ),
     consumptionModelUI: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_CONSUMPTION_MODEL_UI,
-        false,
-    ),
-    edgeObservability: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
         false,
     ),
     impactMetrics: parseEnvVarBoolean(

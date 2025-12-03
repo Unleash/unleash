@@ -143,7 +143,6 @@ export const adminRoutes: INavigationMenuItem[] = [
         title: 'Connected edges',
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'network',
-        flag: 'edgeObservability',
         notFlag: 'enterpriseEdgeUI',
     },
     {

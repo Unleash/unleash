@@ -135,7 +135,8 @@ type ChangeRequestPayload =
     | ChangeRequestChangeMilestoneProgression
     | ChangeRequestDeleteMilestoneProgression
     | ChangeRequestChangeSafeguard
-    | ChangeRequestDeleteSafeguard;
+    | ChangeRequestDeleteSafeguard
+    | ChangeRequestResumeMilestoneProgression;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
     action: 'addStrategy';
@@ -216,6 +217,12 @@ export interface IChangeRequestDeleteSafeguard
     payload: ChangeRequestDeleteSafeguard;
 }
 
+export interface IChangeRequestResumeMilestoneProgression
+    extends IChangeRequestChangeBase {
+    action: 'resumeMilestoneProgression';
+    payload: ChangeRequestResumeMilestoneProgression;
+}
+
 export interface IChangeRequestReorderStrategy
     extends IChangeRequestChangeBase {
     action: 'reorderStrategy';
@@ -267,7 +274,8 @@ export type IFeatureChange =
     | IChangeRequestChangeMilestoneProgression
     | IChangeRequestDeleteMilestoneProgression
     | IChangeRequestChangeSafeguard
-    | IChangeRequestDeleteSafeguard;
+    | IChangeRequestDeleteSafeguard
+    | IChangeRequestResumeMilestoneProgression;
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment
@@ -324,6 +332,11 @@ type ChangeRequestDeleteSafeguard = {
     snapshot?: IReleasePlan;
 };
 
+type ChangeRequestResumeMilestoneProgression = {
+    planId: string;
+    snapshot?: IReleasePlan;
+};
+
 export type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,
     | 'parameters'
@@ -365,4 +378,5 @@ export type ChangeRequestAction =
     | 'changeMilestoneProgression'
     | 'deleteMilestoneProgression'
     | 'changeSafeguard'
-    | 'deleteSafeguard';
+    | 'deleteSafeguard'
+    | 'resumeMilestoneProgression';

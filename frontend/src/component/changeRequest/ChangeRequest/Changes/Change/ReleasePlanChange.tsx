@@ -9,6 +9,7 @@ import type {
     IChangeRequestDeleteMilestoneProgression,
     IChangeRequestChangeSafeguard,
     IChangeRequestDeleteSafeguard,
+    IChangeRequestResumeMilestoneProgression,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -70,6 +71,44 @@ const DeleteReleasePlan: FC<{
             </ChangeItemWrapper>
             <ReleasePlan plan={releasePlan} readonly />
         </>
+    );
+};
+
+const ResumeMilestoneProgression: FC<{
+    change: IChangeRequestResumeMilestoneProgression;
+    currentReleasePlan?: IReleasePlan;
+    changeRequestState: ChangeRequestState;
+    environmentName: string;
+    featureName: string;
+    actions?: ReactNode;
+}> = (props) => {
+    const {
+        change,
+        currentReleasePlan,
+        changeRequestState,
+        environmentName,
+        featureName,
+        actions,
+    } = props;
+    const releasePlan =
+        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        change.payload.snapshot
+            ? change.payload.snapshot
+            : currentReleasePlan;
+
+    if (!releasePlan) return;
+
+    return (
+        <ChangeItemWrapper>
+            <ChangeItemInfo>
+                <Added>Resume automation</Added>
+                <Typography component='span'>
+                    Resume automation for release plan {releasePlan.name} for{' '}
+                    {featureName} in {environmentName}
+                </Typography>
+                {actions}
+            </ChangeItemInfo>
+        </ChangeItemWrapper>
     );
 };
 
@@ -408,7 +447,8 @@ export const ReleasePlanChange: FC<{
         | IChangeRequestChangeMilestoneProgression
         | IChangeRequestDeleteMilestoneProgression
         | IChangeRequestChangeSafeguard
-        | IChangeRequestDeleteSafeguard;
+        | IChangeRequestDeleteSafeguard
+        | IChangeRequestResumeMilestoneProgression;
     environmentName: string;
     featureName: string;
     projectId: string;
@@ -576,6 +616,16 @@ export const ReleasePlanChange: FC<{
                     change={change}
                     currentReleasePlan={currentReleasePlan}
                     changeRequestState={changeRequestState}
+                    actions={actions}
+                />
+            )}
+            {change.action === 'resumeMilestoneProgression' && (
+                <ResumeMilestoneProgression
+                    change={change}
+                    currentReleasePlan={currentReleasePlan}
+                    changeRequestState={changeRequestState}
+                    environmentName={environmentName}
+                    featureName={featureName}
                     actions={actions}
                 />
             )}

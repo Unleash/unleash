@@ -210,7 +210,8 @@ export const FeatureChange: FC<{
                     change.action === 'changeMilestoneProgression' ||
                     change.action === 'deleteMilestoneProgression' ||
                     change.action === 'changeSafeguard' ||
-                    change.action === 'deleteSafeguard') && (
+                    change.action === 'deleteSafeguard' ||
+                    change.action === 'resumeMilestoneProgression') && (
                     <ReleasePlanChange
                         actions={actions}
                         change={change}

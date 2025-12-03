@@ -718,9 +718,24 @@
       "permanent": true
     },
     {
+      "source": "/deploy/",
+      "destination": "/deploy/hosting-options",
+      "permanent": false
+    },
+    {
       "source": "/deploy",
       "destination": "/deploy/getting-started",
       "permanent": true
+    },
+    {
+      "source": "/support/",
+      "destination": "/support/troubleshooting",
+      "permanent": false
+    },
+    {
+      "source": "/get-started/",
+      "destination": "/get-started/quickstart",
+      "permanent": false
     },
     {
       "source": "/reference/deploy/getting-started",

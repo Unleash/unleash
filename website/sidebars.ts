@@ -576,6 +576,10 @@ const sidebars: SidebarsConfig = {
         {
             label: 'Integrate and deploy',
             type: 'category',
+            link: {
+                type: 'doc',
+                id: 'deploy/hosting-options',
+            },
             items: [
                 {
                     type: 'doc',
@@ -715,6 +719,10 @@ const sidebars: SidebarsConfig = {
         {
             label: 'Support and community',
             type: 'category',
+            link: {
+                type: 'doc',
+                id: 'support/troubleshooting',
+            },
             items: [
                 {
                     type: 'doc',

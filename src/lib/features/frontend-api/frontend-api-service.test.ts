@@ -19,7 +19,7 @@ test('frontend api service fetching features from global cache', async () => {
                     type: 'release',
                     variants: [],
                     strategies: [
-                        { name: 'default', parameters: [], constraints: [] },
+                        { name: 'default', parameters: {}, constraints: [] },
                     ],
                 },
                 {
@@ -29,7 +29,7 @@ test('frontend api service fetching features from global cache', async () => {
                     type: 'release',
                     variants: [],
                     strategies: [
-                        { name: 'default', parameters: [], constraints: [] },
+                        { name: 'default', parameters: {}, constraints: [] },
                     ],
                 },
             ];

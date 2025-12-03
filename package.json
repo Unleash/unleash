@@ -129,7 +129,7 @@
     "ts-toolbelt": "^9.6.0",
     "type-is": "^2.0.0",
     "ulidx": "^2.4.1",
-    "unleash-client": "^6.8.1"
+    "unleash-client": "^6.8.0"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.1",

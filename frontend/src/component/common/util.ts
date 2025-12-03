@@ -11,15 +11,14 @@ import { formatDateYMD } from '../../utils/formatDate.js';
  */
 export const filterByConfig =
     (config: IUiConfig) => (r: INavigationMenuItem) => {
-        if (r.notFlag) {
-            const flags = config.flags as unknown as Record<string, boolean>;
+        const flags = config.flags as unknown as Record<string, boolean>;
 
-            return !(flags[r.notFlag] === true);
+        if (r.notFlag && flags[r.notFlag] === true) {
+            return false;
         }
 
         if (r.flag) {
             // Check if the route's `flag` is enabled in IUiConfig.flags.
-            const flags = config.flags as unknown as Record<string, boolean>;
             return Boolean(flags[r.flag]);
         }
 

@@ -1,5 +1,13 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { Box, Grid, styled } from '@mui/material';
+import {
+    Alert,
+    Button,
+    type ButtonProps,
+    Collapse,
+    Grid,
+    styled,
+    Typography,
+} from '@mui/material';
 import { styles as themeStyles } from 'component/common';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -13,11 +21,8 @@ import { ReleasePlanTemplateList } from './ReleasePlanTemplateList.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
-import HowToApplyReleaseTemplatesImage from 'assets/img/howToApplyReleaseTemplates.png';
-import HowToApplyReleaseTemplatesDarkImage from 'assets/img/howToApplyReleaseTemplatesDark.png';
 import MenuBook from '@mui/icons-material/MenuBook';
-import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import { formatAssetPath } from 'utils/formatPath';
+import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
 
 const StyledLink = styled(Link)(({ theme }) => ({
     display: 'flex',
@@ -37,25 +42,39 @@ const StyledMenuBook = styled(MenuBook)(({ theme }) => ({
     fontSize: theme.spacing(2.25),
 }));
 
-const StyledImg = styled('img')(() => ({
-    maxWidth: '100%',
+const Container = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    gap: theme.spacing(2),
 }));
 
-const CenteredHowTo = styled(Box)(({ theme }) => ({
-    margin: theme.spacing(3, 0),
-    display: 'flex',
-    borderRadius: theme.shape.borderRadiusLarge,
-    backgroundColor: theme.palette.background.elevation1,
-    boxShadow: 'none',
-    justifyContent: 'center',
-    alignItems: 'center',
-    '> svg': { display: 'block', width: '100%', height: 'auto' },
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    fontSize: theme.typography.body1.fontSize,
+    '& > .MuiAlert-icon': {
+        paddingBlock: '7px',
+    },
+    '& > .MuiAlert-message': {
+        padding: theme.spacing(1),
+        display: 'flex',
+        flexFlow: 'row wrap',
+        justifyContent: 'space-between',
+        width: '100%',
+        gap: theme.spacing(1),
+    },
 }));
+
+const StyledAlertButton = styled(Button)<ButtonProps<typeof Link>>(
+    ({ theme }) => ({ '&&': { color: theme.palette.primary.main } }),
+);
 
 export const ReleaseManagement = () => {
     usePageTitle('Release templates');
     const navigate = useNavigate();
     const data = useReleasePlanTemplates();
+
+    const [infoAlertState, setInfoAlertState] = useLocalStorageState<
+        'open' | 'closed'
+    >('releaseManagementInfoAlert', 'open');
 
     const { isEnterprise } = useUiConfig();
     if (!isEnterprise()) {
@@ -63,7 +82,36 @@ export const ReleaseManagement = () => {
     }
 
     return (
-        <>
+        <Container>
+            <Collapse in={infoAlertState === 'open'}>
+                <StyledAlert
+                    severity='info'
+                    onClose={() => setInfoAlertState('closed')}
+                >
+                    <Typography component='p' display='inline'>
+                        <Typography
+                            fontWeight={'bold'}
+                            display='block'
+                            component='span'
+                        >
+                            Standardize your rollouts with Release templates.
+                        </Typography>
+                        <Typography component='span'>
+                            Define your release process once, then reuse it
+                            across all feature flags with sequential milestones.
+                        </Typography>
+                    </Typography>
+                    <StyledAlertButton
+                        component={Link}
+                        variant='outlined'
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        to='https://docs.getunleash.io/reference/release-templates'
+                    >
+                        Learn about release templates
+                    </StyledAlertButton>
+                </StyledAlert>
+            </Collapse>
             <PageContent
                 header={
                     <PageHeader
@@ -98,26 +146,6 @@ export const ReleaseManagement = () => {
                 )}
             </PageContent>
 
-            <CenteredHowTo>
-                <ThemeMode
-                    darkmode={
-                        <StyledImg
-                            src={formatAssetPath(
-                                HowToApplyReleaseTemplatesDarkImage,
-                            )}
-                            alt='How to setup release templates'
-                        />
-                    }
-                    lightmode={
-                        <StyledImg
-                            src={formatAssetPath(
-                                HowToApplyReleaseTemplatesImage,
-                            )}
-                            alt='How to setup release templates'
-                        />
-                    }
-                />
-            </CenteredHowTo>
             <StyledLink
                 to='https://docs.getunleash.io/reference/release-templates'
                 rel='noopener noreferrer'
@@ -125,6 +153,6 @@ export const ReleaseManagement = () => {
             >
                 <StyledMenuBook /> Read more in our documentation
             </StyledLink>
-        </>
+        </Container>
     );
 };

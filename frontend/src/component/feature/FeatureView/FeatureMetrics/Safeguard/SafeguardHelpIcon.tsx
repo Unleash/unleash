@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Box, Typography, Link, styled } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { HelpIcon } from '../../../../common/HelpIcon/HelpIcon.tsx';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 
 const StyledTooltipContent = styled(Box)(({ theme }) => ({
     margin: theme.spacing(1),

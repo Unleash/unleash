@@ -17,6 +17,7 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { ReleasePlanChangeRequestDialog } from './ChangeRequest/ReleasePlanChangeRequestDialog.tsx';
+import { ResumeAutomationChangeRequestDialog } from './ChangeRequest/ResumeAutomationChangeRequestDialog.tsx';
 import type {
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
@@ -164,6 +165,7 @@ export const ReleasePlan = ({
     const { trackEvent } = usePlausibleTracker();
 
     const [removeOpen, setRemoveOpen] = useState(false);
+    const [resumeDialogOpen, setResumeDialogOpen] = useState(false);
     const [changeRequestAction, setChangeRequestAction] = useState<
         | { type: 'removeReleasePlan'; environmentActive: boolean }
         | { type: 'startMilestone'; milestone: IReleasePlanMilestone }
@@ -460,16 +462,41 @@ export const ReleasePlan = ({
     };
 
     const onResumeMilestoneProgressions = async () => {
+        if (isChangeRequestConfigured(environment)) {
+            setResumeDialogOpen(true);
+        } else {
+            try {
+                await resumeMilestoneProgressions({
+                    projectId,
+                    environment,
+                    featureName,
+                    planId: id,
+                });
+                setToastData({
+                    type: 'success',
+                    text: 'Automation resumed successfully',
+                });
+                onAutomationChange?.();
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
+            }
+        }
+    };
+
+    const handleResumeDialogConfirm = async () => {
+        setResumeDialogOpen(false);
         try {
-            await resumeMilestoneProgressions({
-                projectId,
-                environment,
-                featureName,
-                planId: id,
+            await addChange(projectId, environment, {
+                feature: featureName,
+                action: 'resumeMilestoneProgression',
+                payload: {
+                    planId: id,
+                },
             });
+            await refetchChangeRequests();
             setToastData({
                 type: 'success',
-                text: 'Automation resumed successfully',
+                text: 'Added to draft',
             });
             onAutomationChange?.();
         } catch (error: unknown) {
@@ -712,6 +739,14 @@ export const ReleasePlan = ({
                 onClose={handleCloseSafeguardDeleteDialog}
                 onConfirm={onSafeguardDeleteConfirm}
                 isDeleting={safeguardLoading}
+            />
+            <ResumeAutomationChangeRequestDialog
+                isOpen={resumeDialogOpen}
+                onConfirm={handleResumeDialogConfirm}
+                onClose={() => setResumeDialogOpen(false)}
+                featureId={featureName}
+                environmentId={environment}
+                releasePlanName={name}
             />
         </StyledContainer>
     );

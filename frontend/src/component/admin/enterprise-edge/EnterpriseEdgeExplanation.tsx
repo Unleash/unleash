@@ -70,11 +70,11 @@ export const EnterpriseEdgeExplanation = () => (
     <StyledContainer>
         <Typography variant='h3'>Which version is right for you?</Typography>
         <Typography variant='body2' color='text.secondary'>
-            Unleash Enterprise Edge is a high-performance caching layer
-            engineered for scalability, resilience, and privacy. It acts as a
-            shield between your SDKs and the Unleash API, allowing you to handle
-            thousands of concurrent connections with zero impact on your primary
-            instance. Contact{' '}
+            Unleash Enterprise Edge is a high-performance proxy engineered for
+            scalability, resilience, and privacy. It acts as a shield between
+            your SDKs and the Unleash API, allowing you to handle thousands of
+            concurrent connections with zero impact on your primary instance.
+            Contact{' '}
             <a href='mailto:license@getunleash.io'>license@getunleash.io</a>{' '}
             today to provision your private Enterprise Edge environment.
         </Typography>
@@ -86,7 +86,7 @@ export const EnterpriseEdgeExplanation = () => (
                 bullets={[
                     'Global infrastructure',
                     'No operational burden',
-                    'Instant flag updates world wide',
+                    'Instant flag updates worldwide',
                 ]}
                 docsUrl='https://docs.getunleash.io/unleash-edge'
             />

@@ -14,6 +14,7 @@ import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import { formatAssetPath } from 'utils/formatPath';
 import easyToDeploy from 'assets/img/easyToDeploy.png';
 import { useNavigate } from 'react-router-dom';
+import { EnterpriseEdgeDismissibleAlert } from './enterprise-edge/EnterpriseEdgeDismissibleAlert.tsx';
 
 const UI_SWITCH_WIDGET_RATIO_BREAKPOINT = 1505;
 
@@ -81,14 +82,14 @@ const StyledParagraph = styled(Typography)(({ theme }) => ({
     },
 }));
 
-const StyledParamName = styled('div')(({ theme }) => ({
+const StyledParamName = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
     fontWeight: 'bold',
 }));
 
-const StyledParamValue = styled('div')(({ theme }) => ({
+const StyledParamValue = styled('span')({
     color: 'white',
-}));
+});
 
 const InstanceStatsHeader = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -113,12 +114,12 @@ const StyledGridItem = styled(Grid)(({ theme }) => ({
     backgroundColor: theme.mode === 'light' ? '#F1F0FC' : '#302E42',
 }));
 
-const StyledGridItemContent = styled(Box)(({ theme }) => ({
+const StyledGridItemContent = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-}));
+});
 
 export const StatNumber = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -264,6 +265,7 @@ export const AdminHome = () => {
             : 'Unknown';
     return (
         <StyledContainer>
+            <EnterpriseEdgeDismissibleAlert />
             {stats && !stats.loading && (
                 <Grid container spacing={3}>
                     <Grid

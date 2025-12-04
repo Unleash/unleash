@@ -7,6 +7,7 @@ import { ReactComponent as LogoIconWhite } from 'assets/icons/logoWhiteBg.svg';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import type { ConnectedEdge } from 'interfaces/connectedEdge';
 import { EnterpriseEdgeInstance } from './EnterpriseEdgeInstance/EnterpriseEdgeInstance.tsx';
+import { Badge } from 'component/common/Badge/Badge.tsx';
 
 const UNLEASH = 'Unleash';
 
@@ -42,9 +43,16 @@ const StyledNode = styled('div')(({ theme }) => ({
 
 const StyledGroup = styled(StyledNode)({
     backgroundColor: 'transparent',
+    position: 'relative',
+});
+
+const StyledHostingBadge = styled(Badge)({
+    position: 'absolute',
+    top: -13,
 });
 
 const StyledNodeHeader = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(0.5),
     fontWeight: theme.fontWeight.bold,
 }));
 
@@ -148,6 +156,25 @@ const processEdges = (edges: ConnectedEdge[]): Map<number, AppNameGroup[]> => {
     return computeGroupLevels(groups);
 };
 
+const getGroupHosting = (instances: ConnectedEdge[]) => {
+    if (instances.every((i) => i.hosting === 'hosted')) {
+        return { hostingLabel: 'Cloud', hostingColor: 'secondary' } as const;
+    }
+    if (instances.every((i) => i.hosting === 'enterprise-self-hosted')) {
+        return { hostingLabel: 'Self-hosted', hostingColor: 'info' } as const;
+    }
+    if (
+        instances.every(
+            (i) =>
+                i.hosting === 'hosted' ||
+                i.hosting === 'enterprise-self-hosted',
+        )
+    ) {
+        return { hostingLabel: 'Hybrid', hostingColor: 'warning' } as const;
+    }
+    return { hostingLabel: 'Unknown', hostingColor: 'neutral' } as const;
+};
+
 interface IEnterpriseEdgeInstancesProps {
     connectedEdges: ConnectedEdge[];
 }
@@ -185,39 +212,50 @@ export const EnterpriseEdgeInstances = ({
                 <StyledEdgeLevel key={level}>
                     {edgeLevels
                         .get(level)
-                        ?.map(({ appName, groupTargets, instances }) => (
-                            <ArcherElement
-                                key={appName}
-                                id={appName}
-                                relations={Array.from(groupTargets).map(
-                                    (target) => ({
-                                        targetId: target,
-                                        targetAnchor: 'bottom',
-                                        sourceAnchor: 'top',
-                                        style: {
-                                            strokeColor:
-                                                theme.palette.secondary.border,
-                                        },
-                                    }),
-                                )}
-                            >
-                                <StyledGroup>
-                                    <StyledNodeHeader>
-                                        {unknownify(appName)}
-                                    </StyledNodeHeader>
-                                    <StyledNodeDescription>
-                                        {instances.length} instance
-                                        {instances.length !== 1 && 's'}
-                                    </StyledNodeDescription>
-                                    {instances.map((instance) => (
-                                        <EnterpriseEdgeInstance
-                                            key={instance.instanceId}
-                                            instance={instance}
-                                        />
-                                    ))}
-                                </StyledGroup>
-                            </ArcherElement>
-                        ))}
+                        ?.map(({ appName, groupTargets, instances }) => {
+                            const { hostingLabel, hostingColor } =
+                                getGroupHosting(instances);
+
+                            return (
+                                <ArcherElement
+                                    key={appName}
+                                    id={appName}
+                                    relations={Array.from(groupTargets).map(
+                                        (target) => ({
+                                            targetId: target,
+                                            targetAnchor: 'bottom',
+                                            sourceAnchor: 'top',
+                                            style: {
+                                                strokeColor:
+                                                    theme.palette.secondary
+                                                        .border,
+                                            },
+                                        }),
+                                    )}
+                                >
+                                    <StyledGroup>
+                                        <StyledHostingBadge
+                                            color={hostingColor}
+                                        >
+                                            {hostingLabel}
+                                        </StyledHostingBadge>
+                                        <StyledNodeHeader>
+                                            {unknownify(appName)}
+                                        </StyledNodeHeader>
+                                        <StyledNodeDescription>
+                                            {instances.length} instance
+                                            {instances.length !== 1 && 's'}
+                                        </StyledNodeDescription>
+                                        {instances.map((instance) => (
+                                            <EnterpriseEdgeInstance
+                                                key={instance.instanceId}
+                                                instance={instance}
+                                            />
+                                        ))}
+                                    </StyledGroup>
+                                </ArcherElement>
+                            );
+                        })}
                 </StyledEdgeLevel>
             ))}
         </ArcherContainer>

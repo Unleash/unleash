@@ -125,21 +125,6 @@ export const useChartData = ({
                     };
                 });
 
-            if (threshold !== undefined) {
-                const thresholdData = sortedTimestamps.map(() => threshold);
-                datasets.push({
-                    data: thresholdData,
-                    borderColor: theme.palette.error.main,
-                    backgroundColor: 'transparent',
-                    borderDash: [5, 5],
-                    borderWidth: 2,
-                    label: `Threshold (${threshold})`,
-                    pointRadius: 0,
-                    pointHoverRadius: 0,
-                    fill: false,
-                });
-            }
-
             return {
                 labels,
                 datasets,

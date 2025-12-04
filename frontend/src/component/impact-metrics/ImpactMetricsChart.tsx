@@ -15,19 +15,13 @@ import {
 import { fromUnixTime } from 'date-fns';
 import { useChartData } from './hooks/useChartData.ts';
 import type { AggregationMode } from './types.ts';
-import type { SafeguardTriggerConditionSchemaOperator } from 'openapi/models/safeguardTriggerConditionSchemaOperator';
 
 type ChartComponent =
     | 'xAxis'
     | 'yAxis'
     | 'debugInfo'
-    | 'emptyDataMessage'
-    | 'legend';
-
-type ThresholdCondition = {
-    operator: SafeguardTriggerConditionSchemaOperator;
-    threshold: number;
-};
+    | 'legend'
+    | 'notEnoughDataMessage';
 
 type ImpactMetricsChartProps = {
     metricName: string;
@@ -42,7 +36,7 @@ type ImpactMetricsChartProps = {
     noSeriesPlaceholder?: ReactNode;
     isPreview?: boolean;
     showComponents?: ChartComponent[];
-    thresholdCondition?: ThresholdCondition;
+    threshold?: number;
 };
 
 export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
@@ -61,10 +55,10 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         'xAxis',
         'yAxis',
         'debugInfo',
-        'emptyDataMessage',
         'legend',
+        'notEnoughDataMessage',
     ],
-    thresholdCondition,
+    threshold,
 }) => {
     const shouldShowComponent = (component: ChartComponent) =>
         showComponents.includes(component);
@@ -94,7 +88,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     const data = useChartData({
         timeSeriesData,
         colorIndexBy: debug?.query,
-        thresholdCondition,
+        threshold,
     });
 
     const hasError = !!dataError;
@@ -114,26 +108,28 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         : undefined;
     const maxTime = end ? fromUnixTime(Number.parseInt(end, 10)) : undefined;
 
-    const placeholder = metricName ? (
-        <NotEnoughData
-            description={
-                shouldShowComponent('emptyDataMessage')
-                    ? emptyDataDescription
-                    : ''
-            }
-        />
-    ) : noSeriesPlaceholder ? (
-        noSeriesPlaceholder
-    ) : (
-        <NotEnoughData
-            title={
-                shouldShowComponent('emptyDataMessage')
-                    ? 'Select a metric series to view the chart.'
-                    : ''
-            }
-            description=''
-        />
-    );
+    const getPlaceholder = () => {
+        if (!shouldShowComponent('notEnoughDataMessage')) {
+            return <div />;
+        }
+
+        if (metricName) {
+            return <NotEnoughData description={emptyDataDescription} />;
+        }
+
+        if (noSeriesPlaceholder) {
+            return noSeriesPlaceholder;
+        }
+
+        return (
+            <NotEnoughData
+                title='Select a metric series to view the chart.'
+                description=''
+            />
+        );
+    };
+
+    const placeholder = getPlaceholder();
 
     const hasManyLabels = Object.keys(labelSelectors).length > 0;
 

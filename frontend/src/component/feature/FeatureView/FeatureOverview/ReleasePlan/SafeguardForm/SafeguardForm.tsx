@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState, type FC } from 'react';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { SafeguardChangeRequestDialog } from './SafeguardChangeRequestDialog.tsx';
+import { MiniMetricsChartWithTooltip } from './MiniMetricsChartWithTooltip.tsx';
 import {
     useImpactMetricsOptions,
     type ImpactMetricsSeries,
@@ -14,7 +15,6 @@ import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/use
 import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
-import { ImpactMetricsChart } from 'component/impact-metrics/ImpactMetricsChart.tsx';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
@@ -45,14 +45,6 @@ const SafeguardConfigurationSection = styled(Box)({
     flex: 1,
     minWidth: 0,
 });
-
-const SafeguardMetricsPreview = styled(Box)(({ theme }) => ({
-    width: 100,
-    display: 'none',
-    [theme.breakpoints.up('lg')]: {
-        display: 'block',
-    },
-}));
 
 export const useSafeguardForm = (safeguards: ISafeguard[] | undefined) => {
     const [safeguardFormOpen, setSafeguardFormOpen] = useState(false);
@@ -300,6 +292,7 @@ const useSafeguardFormHandlers = (
 
 const useSafeguardFormState = (safeguard?: ISafeguard) => {
     const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
     const formValues = useSafeguardFormValues(safeguard);
     const formMode = useSafeguardFormMode(safeguard);
     const metricsData = useSafeguardMetricsData(
@@ -319,6 +312,7 @@ const useSafeguardFormState = (safeguard?: ISafeguard) => {
         ...metricsData,
         ...handlers,
         projectId,
+        featureId,
         safeguard,
     };
 };
@@ -354,6 +348,7 @@ const SafeguardFormBase: FC<{
         applicationNames,
         metricType,
         projectId,
+        featureId,
         handleMetricChange,
         handleApplicationChange,
         handleAggregationModeChange,
@@ -401,6 +396,21 @@ const SafeguardFormBase: FC<{
                     Pause automation when
                 </StyledLabel>
                 {mode === 'display' && badge}
+                {metricName && (
+                    <MiniMetricsChartWithTooltip
+                        metricName={metricName}
+                        metricDisplayName={
+                            metricOptions.find((m) => m.name === metricName)
+                                ?.displayName
+                        }
+                        timeRange={timeRange}
+                        labelSelectors={labelSelectors}
+                        aggregationMode={aggregationMode}
+                        threshold={threshold}
+                        projectId={projectId}
+                        featureId={featureId}
+                    />
+                )}
                 {mode !== 'create' && onDelete && (
                     <PermissionIconButton
                         permission={UPDATE_FEATURE_STRATEGY}
@@ -512,24 +522,6 @@ const SafeguardFormBase: FC<{
                         </StyledTopRow>
                     </StyledTopRow>
                 </SafeguardConfigurationSection>
-
-                <SafeguardMetricsPreview>
-                    {metricName && (
-                        <ImpactMetricsChart
-                            metricName={metricName}
-                            timeRange={timeRange}
-                            labelSelectors={labelSelectors}
-                            yAxisMin='auto'
-                            aggregationMode={aggregationMode}
-                            isPreview={true}
-                            showComponents={[]}
-                            thresholdCondition={{
-                                operator,
-                                threshold,
-                            }}
-                        />
-                    )}
-                </SafeguardMetricsPreview>
             </SafeguardFormLayout>
 
             {showButtons && (

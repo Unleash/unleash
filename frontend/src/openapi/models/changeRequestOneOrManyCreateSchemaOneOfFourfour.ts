@@ -7,7 +7,7 @@ import type { ChangeRequestOneOrManyCreateSchemaOneOfFourfourAction } from './ch
 import type { ChangeRequestOneOrManyCreateSchemaOneOfFourfourPayload } from './changeRequestOneOrManyCreateSchemaOneOfFourfourPayload.js';
 
 /**
- * Delete a safeguard from a release plan.
+ * Create or update a safeguard for a release plan.
  */
 export type ChangeRequestOneOrManyCreateSchemaOneOfFourfour = {
     /** The name of this action. */

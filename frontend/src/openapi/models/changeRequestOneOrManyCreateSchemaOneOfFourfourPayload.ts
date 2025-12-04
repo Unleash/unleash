@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { CreateSafeguardSchema } from './createSafeguardSchema.js';
 
 export type ChangeRequestOneOrManyCreateSchemaOneOfFourfourPayload = {
     /** The ID of the release plan. This ID is an ulid */
     planId: string;
-    /** The ID of the safeguard to delete. */
-    safeguardId: string;
+    safeguard: CreateSafeguardSchema;
 };

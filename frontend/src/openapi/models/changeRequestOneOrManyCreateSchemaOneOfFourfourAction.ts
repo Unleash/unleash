@@ -12,5 +12,5 @@ export type ChangeRequestOneOrManyCreateSchemaOneOfFourfourAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestOneOrManyCreateSchemaOneOfFourfourAction = {
-    deleteSafeguard: 'deleteSafeguard',
+    changeSafeguard: 'changeSafeguard',
 } as const;

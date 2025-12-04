@@ -90,19 +90,20 @@ export const EnterpriseEdgeDismissibleAlert = ({
                 <StyledAlertBody>
                     <StyledAlertBodyCol>
                         <Typography variant='h3'>
-                            Want instant flag changes world wide?
+                            Instant flag updates worldwide
                         </Typography>
                         <Typography variant='body2'>
-                            There is no more need of wasting hours waiting for
-                            your SDK to update. With Unleash Edge, flag changes
-                            are instantly made available to your users.
+                            Enterprise Edge is a high-performance proxy between
+                            your SDKs and Unleash, giving you global reach,
+                            minimal latency, and making flag changes instantly
+                            available to your users.
                         </Typography>
                         <StyledButton
                             component={Link}
                             to='/admin/enterprise-edge'
                             variant='contained'
                         >
-                            Check out Unleash Edge
+                            Check out Enterprise Edge
                         </StyledButton>
                     </StyledAlertBodyCol>
                     <StyledAlertBodyCol sx={{ alignItems: 'end' }}>

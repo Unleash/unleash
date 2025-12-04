@@ -19,6 +19,7 @@ const StyledTitleHeader = styled('div')(({ theme }) => ({
 
 const StyledTitle = styled('h1')(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
+    fontWeight: theme.typography.h1.fontWeight,
 }));
 
 const StyledActions = styled('div')(({ theme }) => ({

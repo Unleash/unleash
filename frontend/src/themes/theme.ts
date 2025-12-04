@@ -24,6 +24,7 @@ export const baseTheme = {
         h1: {
             fontSize: '1.5rem',
             lineHeight: 1.875,
+            fontWeight: '700',
         },
         h2: {
             fontSize: `${20 / 16}rem`,
@@ -35,7 +36,7 @@ export const baseTheme = {
         },
         h4: {
             fontSize: `${15 / 16}rem`,
-            fontWeight: '400',
+            fontWeight: '700',
         },
         caption: {
             fontSize: `${12 / 16}rem`,

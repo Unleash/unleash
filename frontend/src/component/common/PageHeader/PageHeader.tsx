@@ -46,7 +46,6 @@ const StyledHeader = styled('div')(({ theme }) => ({
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
-    fontWeight: 'normal',
     lineHeight: theme.spacing(5),
 }));
 

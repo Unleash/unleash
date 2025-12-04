@@ -104,26 +104,24 @@ export const useChartData = ({
                 (timestamp) => new Date(timestamp * 1000),
             );
 
-            const datasets: ChartDataset<'line', (number | null)[]>[] =
-                timeSeriesData.map((series, index) => {
-                    const seriesLabel = getSeriesLabel(series.metric);
-                    const color =
-                        colors[(index + startColorIndex) % colors.length];
+            const datasets = timeSeriesData.map((series, index) => {
+                const seriesLabel = getSeriesLabel(series.metric);
+                const color = colors[(index + startColorIndex) % colors.length];
 
-                    const dataMap = new Map(series.data);
+                const dataMap = new Map(series.data);
 
-                    const data = sortedTimestamps.map(
-                        (timestamp) => dataMap.get(timestamp) ?? null,
-                    );
+                const data = sortedTimestamps.map(
+                    (timestamp) => dataMap.get(timestamp) ?? null,
+                );
 
-                    return {
-                        label: seriesLabel,
-                        data,
-                        borderColor: color,
-                        backgroundColor: color,
-                        fill: false,
-                    };
-                });
+                return {
+                    label: seriesLabel,
+                    data,
+                    borderColor: color,
+                    backgroundColor: color,
+                    fill: false,
+                };
+            });
 
             return {
                 labels,

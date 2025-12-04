@@ -383,13 +383,13 @@ export const EVENT_MAP: Record<string, IEventData> = {
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
     [RELEASE_PLAN_PROGRESSIONS_PAUSED]: {
-        label: 'Release plan progression paused',
-        action: '{{b}}Release plan progression paused{{b}} by safeguard for {{b}}{{feature}}{{b}} in the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
+        label: 'Release plan progressions paused',
+        action: '{{b}}Release plan progressions paused{{b}} by safeguard for {{b}}{{feature}}{{b}} in the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
     [RELEASE_PLAN_PROGRESSIONS_RESUMED]: {
-        label: 'Release plan progression resumed',
-        action: '{{b}}{{user}}{{b}} resumed release plan progression for {{b}}{{feature}}{{b}} in the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
+        label: 'Release plan progressions resumed',
+        action: '{{b}}{{user}}{{b}} resumed release plan progressions for {{b}}{{feature}}{{b}} in the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
 };

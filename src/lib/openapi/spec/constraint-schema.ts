@@ -5,7 +5,7 @@ export const constraintSchemaBase = {
     type: 'object',
     required: ['contextName', 'operator'],
     description:
-        'A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/reference/activation-strategies#constraints)',
+        'A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/concepts/activation-strategies#constraints)',
     properties: {
         contextName: {
             description:
@@ -15,7 +15,7 @@ export const constraintSchemaBase = {
         },
         operator: {
             description:
-                'The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/activation-strategies#constraint-operators).',
+                'The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/concepts/activation-strategies#constraint-operators).',
             type: 'string',
             enum: ALL_OPERATORS,
             example: 'IN',

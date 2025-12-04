@@ -11,21 +11,21 @@ const cardsData = [
         title: 'Quickstart',
         description: 'Get up and running with Unleash in less than 5 minutes.',
         icon: <QuickstartIcon />,
-        href: '/quickstart',
+        href: '/get-started/quickstart',
     },
     {
         title: 'Tutorials and Guides',
         description:
             'Explore best practices and step-by-step tutorials to help you integrate Unleash into your stack.',
         icon: <TutorialsIcon />,
-        href: '/guides-overview',
+        href: '/guides',
     },
     {
         title: 'SDKs',
         description:
             'With over 30 SDKs, we enable fast and secure feature flagging across all major programming languages.',
         icon: <SdksIcon />,
-        href: '/reference/sdks',
+        href: '/sdks',
     },
     {
         title: 'Unleash Academy',
@@ -39,7 +39,7 @@ const cardsData = [
         description:
             'Connect Unleash to your existing workflows. Integrate with popular tools like GitHub, Slack, CI/CD pipelines.',
         icon: <IntegrationsIcon />,
-        href: '/reference/integrations',
+        href: '/integrate',
     },
     {
         title: 'Get in touch',

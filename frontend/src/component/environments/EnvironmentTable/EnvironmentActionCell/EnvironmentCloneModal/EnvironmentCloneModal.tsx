@@ -238,7 +238,7 @@ export const EnvironmentCloneModal = ({
                 modal
                 title={`Clone ${environment.name} environment`}
                 description='Cloning an environment will clone all feature flags and their configuration (activation strategies, segments, status, etc) into a new environment.'
-                documentationLink='https://docs.getunleash.io/reference/environments#clone-an-environment'
+                documentationLink='https://docs.getunleash.io/concepts/environments#clone-an-environment'
                 documentationLinkLabel='Cloning environments documentation'
                 formatApiCode={formatApiCode}
             >
@@ -301,7 +301,7 @@ export const EnvironmentCloneModal = ({
                                 cloned environment, you will also need an API
                                 token.{' '}
                                 <Link
-                                    href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+                                    href='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
                                     target='_blank'
                                     rel='noreferrer'
                                 >

@@ -86,7 +86,7 @@ const EditEnvironment = () => {
             development or test environment without
             enabling the feature flag in the
             production environment.'
-            documentationLink='https://docs.getunleash.io/reference/environments'
+            documentationLink='https://docs.getunleash.io/concepts/environments'
             documentationLinkLabel='Environments documentation'
             formatApiCode={formatApiCode}
         >

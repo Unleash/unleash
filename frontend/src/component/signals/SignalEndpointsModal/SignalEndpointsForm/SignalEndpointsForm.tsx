@@ -145,7 +145,7 @@ export const SignalEndpointsForm = ({
                             In order to connect your newly created signal
                             endpoint, you will also need a token.{' '}
                             <Link
-                                href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+                                href='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
                                 target='_blank'
                                 rel='noreferrer'
                             >

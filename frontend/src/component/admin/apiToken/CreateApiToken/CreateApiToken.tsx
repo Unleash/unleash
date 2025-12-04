@@ -126,7 +126,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
             title={pageTitle}
             modal={modal}
             description='Unleash SDKs use API tokens to authenticate with the Unleash API. An SDK must be configured with a token of the corresponding type, so they can fetch feature flags and post usage metrics.'
-            documentationLink='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+            documentationLink='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
             documentationLinkLabel='API tokens documentation'
             formatApiCode={formatApiCode}
         >

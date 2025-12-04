@@ -181,7 +181,7 @@ export const ProjectActionsModal = ({
                 loading={loading}
                 modal
                 description='Actions allow you to configure automations based on specific signals, like the ones originated from signal endpoints.'
-                documentationLink='https://docs.getunleash.io/reference/actions'
+                documentationLink='https://docs.getunleash.io/concepts/actions'
                 documentationLinkLabel='Actions documentation'
                 formatApiCode={formatApiCode}
             >

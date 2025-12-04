@@ -6,7 +6,7 @@ export const contextFieldSchema = {
     type: 'object',
     additionalProperties: false,
     description:
-        'A representation of a [context field](https://docs.getunleash.io/reference/unleash-context).',
+        'A representation of a [context field](https://docs.getunleash.io/concepts/unleash-context).',
     required: ['name'],
     properties: {
         name: {
@@ -22,7 +22,7 @@ export const contextFieldSchema = {
         },
         stickiness: {
             description:
-                'Does this context field support being used for [stickiness](https://docs.getunleash.io/reference/stickiness) calculations',
+                'Does this context field support being used for [stickiness](https://docs.getunleash.io/concepts/stickiness) calculations',
             type: 'boolean',
             example: true,
         },

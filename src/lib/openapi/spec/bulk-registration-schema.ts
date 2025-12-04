@@ -40,7 +40,7 @@ export const bulkRegistrationSchema = {
         },
         instanceId: {
             description:
-                'A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application',
+                'A [(somewhat) unique identifier](https://docs.getunleash.io/sdks/node#advanced-usage) for the application',
             type: 'string',
             example: 'application-name-dacb1234',
         },
@@ -57,7 +57,7 @@ export const bulkRegistrationSchema = {
         },
         strategies: {
             description:
-                'Enabled [strategies](https://docs.getunleash.io/reference/activation-strategies) in the application',
+                'Enabled [strategies](https://docs.getunleash.io/concepts/activation-strategies) in the application',
             type: 'array',
             example: ['standard', 'gradualRollout'],
             items: {

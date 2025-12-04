@@ -5,7 +5,7 @@ export const patSchema = {
     $id: '#/components/schemas/patSchema',
     type: 'object',
     description:
-        'Describes a [personal access token](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens), or PAT. PATs are automatically scoped to the authenticated user.',
+        'Describes a [personal access token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens), or PAT. PATs are automatically scoped to the authenticated user.',
     required: ['id', 'createdAt', ...createPatSchema.required],
     properties: {
         id: {

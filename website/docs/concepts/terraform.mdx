@@ -1,0 +1,92 @@
+---
+title: Using Unleash through Terraform
+description: "Set up and configure your Unleash instance using infastructure as code."
+---
+
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
+:::note Availability
+
+**Version**: `5.6+`
+
+:::
+
+
+## Overview
+
+The [Unleash Terraform provider](https://github.com/Unleash/terraform-provider-unleash) enables you to manage and configure Unleash programmatically, leveraging infrastructure as code (IaC) for automated and scalable configuration.
+
+This provider is designed to help you with the **initial setup and configuration** of an instance. The provider does not support managing feature flags through Terraform. Since most [feature flags are short-lived](/guides/feature-flag-best-practices#2-make-flags-short-lived), we recommend managing them through the Unleash Admin UI.
+
+For a detailed video tutorial, check out [Managing Unleash through Terraform](https://www.youtube.com/watch?v=B4OIBC1u1ns).
+For more examples of specific resources and data sources, visit the [Terraform registry](https://registry.terraform.io/providers/Unleash/unleash/latest/docs/data-sources/permission).
+
+## Manage Terraform access
+
+The permissions of the API token you use with Terraform and your Unleash [plan](https://www.getunleash.io/pricing) determine which objects Terraform can manage:
+- For [Open Source](https://www.getunleash.io/pricing) and [Pro](/support/availability#plans), use [personal access tokens](/concepts/api-tokens-and-client-keys#personal-access-tokens).
+- For [Enterprise](https://www.getunleash.io/pricing), use [service accounts](/concepts/service-accounts). For larger teams, we recommend multiple service accounts with different permissions and separate Terraform repositories for each team under their respective projects.
+
+## Resources
+
+### API tokens
+
+- `unleash_api_token`: Manage access and maintain secure communication with verified integrations.
+
+Example usage:
+```hcl
+resource "unleash_api_token" "backend_token" {
+  token_name  = "backend_token"
+  type        = "client"
+  expires_at  = "2024-12-31T23:59:59Z"
+  projects    = ["default"]
+  environment = "development"
+}
+```
+
+### Environments
+
+- `unleash_environment`: Create and manage environments.
+
+### Projects
+
+- `unleash_project`: Create and manage projects.
+- `unleash_project_access`: Assign access roles and users to specific project resources.
+- `unleash_project_environment`: Enable environments for projects and configure change requests.
+
+### Users and roles
+
+- `unleash_role`: Define permissions systematically.
+- `unleash_user`: Automate user management. Use `send_email = true` to generate an invitation link.
+
+### Service accounts
+
+- `unleash_service_account`: Define and manage service accounts for secure automated access.
+- `unleash_service_account_token`: Generate tokens associated with service accounts.
+
+### Single sign-on protocols
+
+- `unleash_oidc`: Manage your [OpenID Connect configuration](/single-sign-on/how-to-add-sso-open-id-connect).
+- `unleash_saml`: Manage your [SAML configuration](/single-sign-on/how-to-add-sso-saml).
+
+### Context fields
+
+- `unleash_context_field`: Create and manage context fields.
+
+For example usage and schemas, visit the resources documentation of the [Unleash Terraform provider](https://github.com/Unleash/terraform-provider-unleash/tree/main/docs/resources).
+
+## Data sources
+
+You can use the following data sources to fetch resources from Unleash:
+
+- `unleash_environment`
+- `unleash_project`
+- `unleash_project_environment`
+- `unleash_user`
+- `unleash_role`
+- `unleash_permission`
+- `unleash_context_field`
+
+For example usage and schemas, visit the data sources documentation of the [Unleash Terraform provider](https://github.com/Unleash/terraform-provider-unleash/tree/main/docs/data-sources).

@@ -54,7 +54,7 @@ export const userSchema = {
         },
         rootRole: {
             description:
-                'Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned',
+                'Which [root role](https://docs.getunleash.io/concepts/rbac#predefined-roles) this user is assigned',
             type: 'integer',
             example: 1,
             minimum: 0,

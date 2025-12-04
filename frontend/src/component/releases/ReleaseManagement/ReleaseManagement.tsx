@@ -147,7 +147,7 @@ export const ReleaseManagement = () => {
             </PageContent>
 
             <StyledLink
-                to='https://docs.getunleash.io/reference/release-templates'
+                to='https://docs.getunleash.io/concepts/release-templates'
                 rel='noopener noreferrer'
                 target='_blank'
             >

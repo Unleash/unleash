@@ -1,0 +1,227 @@
+---
+title: Core concepts
+slug: /concepts
+---
+
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
+This guide's purpose is to give you a conceptual overview of how Unleash works. It covers the various components that exist within our system and how they interact with each other and with external applications. The diagrams help you understand the fundamental building blocks, such as [projects](/concepts/projects), [environments](/concepts/environments), [variants](/concepts/strategy-variants) and of course, [feature flags](/concepts/feature-flags).
+
+The end of this guide presents a [short use case, explaining how you might configure Unleash](#use-case-changing-website-colors) to start working with feature flags.
+
+## The root level
+
+Some things in Unleash are configured and defined on the root level. These options apply across the entire Unleash instance. The most important root configuration options for day-to-day operations are:
+
+-   [API access tokens](/concepts/api-tokens-and-client-keys)
+-   [Projects](/concepts/projects)
+-   [Segments](/concepts/segments)
+-   [Strategy types](/concepts/activation-strategies)
+-   [Tag types](/concepts/feature-flags#tags)
+-   [Unleash context](/concepts/unleash-context) fields (including [custom context fields](/concepts/unleash-context#custom-context-fields))
+-   Users, [user groups](/concepts/rbac#user-groups) and [roles](/concepts/rbac)
+
+## Projects
+
+[**Projects**](/concepts/projects) contain [feature flags](/concepts/feature-flags) and their configurations, and a set of active [environments](/concepts/environments).
+
+All Unleash instances must have at least one project at any given time. New instances get a project called “Default”.
+
+[Pro](/support/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) customers can create, rename, and delete projects. [Open Source](https://www.getunleash.io/pricing) users have a single project called 'Default'.
+
+![Unleash projects contain one or more environments](/img/anatomy-of-unleash-environment.png)
+
+## Environments and project environments
+
+![Activating feature flags in environments](/img/anatomy-of-unleash-customer-tiers.png)
+
+[**Environments**](/concepts/environments) in Unleash let you change how a feature flag works in your application’s different environments. For instance, while you are developing a feature, it’s likely that you’ll want it to be available in your development environment, but not in your production environment: environments let you do that. You might also want to enable a feature for only some users in your development environment, but no users in your production environment: environments let you do that.
+
+Environments exist on two different levels within Unleash. The set of **all available environments is defined on the root level**. Additionally, **each project** can choose which of these root environments should be **available on the project level**. The set of environments available to any given project is **always a subset** of the set of all available environments at the root level.
+
+Each project must always have **at least one** active environment.
+
+[Enterprise](https://www.getunleash.io/pricing) users can create and remove environments. [Open Source](https://www.getunleash.io/pricing) and [Pro](/support/availability#plans) customers get access to two environments: **development** and **production.**
+
+Environments are adjacent to [feature flags](/concepts/feature-flags) in Unleash: neither one contains the other, but they come together to let you define activation strategies.
+
+![Constraints and activation strategies](/img/anatomy-of-unleash-environments.png)
+
+:::info Environments and API keys
+
+When connecting an SDK to Unleash, it's the **API key that decides which environment to** fetch features for. For legacy reasons, all Unleash SDKs accept a configuration option called `environment`, but this **does not affect the environment** at all. It is an Unleash context field and a holdover from before Unleash had native environments.
+
+:::
+
+## Features (feature flags)
+
+[**Feature flags**](/concepts/feature-flags) are at the heart of Unleash’s functionality. Feature flags belong to projects and live next to project environments. In and of itself, a feature flag doesn’t do anything. You must assign [**activation strategies**](/concepts/activation-strategies) to it for it to start taking effect.
+
+When creating a feature flag, you must assign a unique (across your Unleash instance) name, a [feature flag type](/concepts/feature-flags#feature-flag-types), a [project](/concepts/projects) it belongs to, and an optional description. Everything except for the name can be changed later.
+
+![A project containing an environment containing a feature flag configuration](/img/anatomy-of-unleash-features.png)
+
+## Activation strategies
+
+[**Activation strategies**](/concepts/activation-strategies) (or just **strategies** for short) are the part of feature flags that tell Unleash **who should get a feature**. An activation strategy is assigned to **one **feature flag in **one **environment.
+
+![An environment containing a feature flag configuration with an activation strategy](/img/anatomy-of-unleash-strategy.png)
+
+When you check a [feature flag](/concepts/feature-flags) in an application, the following decides the result:
+
+1. Is the flag active in the current environment? If not, it will be disabled.
+2. If the flag **is** active in the current environment, the flag’s strategies decide the result. As long as **at least one** of a flag’s strategies resolves to `true` for the current context (user or application), then the flag will be considered enabled. In other words, if you have a hundred strategies and ninety-nine of them resolve to false, but one of them resolves to true, then the flag is enabled.
+
+Activation strategies tie feature flags and [environments](/concepts/environments) together. When you assign an activation strategy to a feature flag, you do so in one environment at a time. You can assign the same strategy to the same flag in different environments, but they will be different instances of the same strategy and do not stay in sync. Unleash also lets you copy strategies from one environment to another.
+
+Unleash comes with a number of [built-in strategies](/concepts/activation-strategies). All strategies can be further augmented by [**strategy constraints**](/concepts/activation-strategies#constraints).
+
+![Feature flags across environments with different activation strategies](/img/anatomy-of-unleash-environments-strategies.png)
+
+![Copying activation strategies](/img/anatomy-of-unleash-environments-strategies2.png)
+
+## Strategy constraints
+
+[**Strategy constraints**](/concepts/activation-strategies#constraints) (or just **constraints**) help you fine-tune your strategies. They are an extra layer of prerequisites that help you narrow the audience of a strategy down. Strategy constraints are applied to [**activation strategies**](/concepts/activation-strategies).
+
+For example, if you wanted to roll a feature out to 50% of users with **a specific email domain **(such as “@mycompany.com”), then strategy constraints would let you target only users with that email domain.
+
+Constraints can also be used for more general purposes, such as timing feature releases or releasing features in specific regions.
+
+An activation strategy can have as many constraints as you want. When an activation strategy has multiple constraints, then **every constraint **must be satisfied for the strategy to be evaluated. So if you have two constraints: one that says users must have an “@mycompany.com” email address and one that says users must have signed up for a beta program, then the strategy would **only be evaluated for users with @mycompany.com emails that have signed up for the program**.
+
+:::tip Strategies and constraints
+
+Feature flag strategies are **permissive**: As long as **one** strategy resolves to true, the feature is considered enabled. On the other hand, constraints are **restrictive**: for a given strategy, **all** constraints must be met for it to resolve to true.
+
+We can exemplify this difference with the logical operators AND and OR:
+
+-   For a feature flag, if Strategy1 OR Strategy2 OR .. OR StrategyN is true, **then the feature is enabled**.
+-   For a strategy, it can be evaluated **if and only if** Constraint1 AND Constraint2 AND .. AND ConstraintN are met.
+
+Note that even if all the constraints are met, the strategy itself might not resolve to true: that will depend on the strategy and the provided context.
+
+:::
+
+You can define constraints on whatever properties you want in your [Unleash context](/concepts/unleash-context).
+
+Constraints are applied to individual strategies and do not stay in sync with each other. When you need to have the same constraints applied to multiple strategies and need those constraints to stay in sync, use [**segments**](/concepts/segments).
+
+![Example of constraints applied to strategies](/img/anatomy-of-unleash-constraint.png)
+
+## Segments
+
+[**Segments**](/concepts/segments) add extra functionality on top of [**strategy constraints**](/concepts/activation-strategies#constraints). A segment is a reusable collection of strategy constraints with a name and an optional description. When you apply a segment to a [strategy](/concepts/activation-strategies), the strategy will be evaluated as if all of the segment's constraints were applied to it.
+
+Segments let you apply a set of constraints to multiple strategies **and** keep the constraints in sync between those strategies. Whenever you apply a segment to a strategy, you essentially create a **reference** to that segment. This means that whenever you change the segment by adding, removing, or changing constraints, this change propagates to all the strategies that reference this segment.
+
+You can apply multiple segments to a strategy. Much like with constraints, **every segment** needs **every constraint** to be satisfied for the strategy to be evaluated. If you also have other constraints on the strategy, then those must also be satisfied.
+
+Segments are only available to [Pro](/support/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) users.
+
+![An example of segments](/img/anatomy-of-unleash-segments.png)
+
+## Release templates
+
+[Release templates](/concepts/release-templates) provide a way to standardize how you roll out features across your application. While activation strategies define who gets a feature, release templates define how that access expands over time.
+
+![Illustration showing showing a release template is made up of milestones](/img/anatomy-of-unleash-release-template.png)
+
+A release template is a blueprint for a rollout. It consists of sequential stages called **milestones**. Each milestone contains one or more **activation strategies** or **segments**. For example, a template might look like this:
+
+- Milestone 1: Internal users only.
+- Milestone 2: Beta users.
+- Milestone 3: 50% of all users.
+- Milestone 4: 100% of all users.
+
+![Illustration showing showing that a release template can be applied to a feature flag](/img/anatomy-of-unleash-release-template-apply.png)
+
+When you apply a release template to a specific feature flag in an environment, it creates a **release plan**. This plan lets you progress through the milestones step-by-step. Release templates ensure that your rollouts are consistent and safe, removing the need to manually configure strategies from scratch every time you launch a new feature.
+
+![Illustration showing showing a release template applied to a feature flag in an environment](/img/anatomy-of-unleash-release-template-applied.png)
+
+### Automatic milestone progression and safeguards
+
+You can further automate your release plans using [impact metrics](/concepts/impact-metrics). Impact metrics are data points sent from your application (such as error counts, memory usage, or response latency) that act as real-time health indicators for your feature.
+
+By defining safeguards based on these metrics, you can allow Unleash to manage the rollout for you. If metrics remain healthy for a set duration, Unleash automatically advances to the next milestone.
+If a metric crosses a safety threshold (for example, error rate spikes), Unleash immediately pauses the rollout to prevent incidents.
+
+## Variants and feature flag payloads
+
+By default, a [feature flag](/concepts/feature-flags) in Unleash only tells you whether a feature is enabled or disabled, but you can also add more information to your flags by using [**variants**](/concepts/strategy-variants). Variants also allow you to run [A/B testing experiments](/guides/a-b-testing).
+
+Feature flags are designed to let you decide which users get access to a feature. Variants are designed to let you decide **which version** of the feature a user gets access to. For instance, if user A is part of your beta testing program and gets access to a new beta feature, then you can use variants to decide whether they should get the red version or the green version of the feature.
+
+When you create new variants for a feature, they must be given a name and a **weighting** indicating how many users should see this particular variant of the feature. They can also be given a **payload**.
+
+You can use the variant payload to attach arbitrary data to a variant. Variants can have different kinds of payloads.
+
+A feature can have different variants in different environments. For instance, a development environment might have no variants, while a production environment has 2 variants. Payloads, weightings, and anything else can also differ between environments.
+
+![Variants after version 4.21](/img/anatomy-of-unleash-variants-environment.png)
+
+## Use case: changing website colors
+
+Using the concepts we have looked at in the previous sections, let’s create a hypothetical case and see how Unleash would solve it.
+
+**Problem statement:** You have an existing website with a **red** color scheme, but you’re feeling a bit adventurous and would like to try and see if changing it to a blue color scheme would be better.
+
+**Current state:** You have an existing website that gets server-side rendered and you have a newly created instance of Unleash.
+
+### Configuring Unleash for development
+
+Assuming you have a brand new Unleash instance, you already have the “Default” project and the “Development” and “Production” environments available. That’s going to be all you need for now.
+
+First things first, in the Default project, you create a new feature flag, called “new-color-scheme” (flag names have to be URL-friendly, so no spaces allowed!).
+
+Because you’d like to see the new color scheme while you’re developing it, you assign a “standard” strategy to the new-color-scheme flag in the development environment and turn it on.
+
+### In your application
+
+You configure an [Unleash SDK for your server](/sdks) to communicate with Unleash. When rendering the page, you check the state of the new-color-scheme feature and render a different stylesheet based on the results.
+
+In pseudocode (loosely based on the [Node.js SDK](/sdks/node)), that might look like this:
+
+```js
+if (unleash.isEnabled(“new-color-scheme”)) {
+  // load stylesheet with the new color scheme
+} else {
+  // load stylesheet with the old color scheme
+}
+```
+
+And with that, the new color scheme is now live in your development environment. Because there aren’t any strategies defined in the production environment yet, the feature is not active, and everything is as it was.
+
+### Rolling out the feature to users
+
+When you’re happy with the new color scheme, you decide to start rolling it out to users. But you want it to go out to only a small number of users at first so that you can get some feedback while rolling out.
+
+You decide to add a _gradual rollout_ strategy to the new-color-scheme feature in the production environment. Because you want to start small, you set the rollout percentage to 5%.
+
+As soon as you enable the production environment, the feature gets rolled out to 5% of your users (assuming you’ve deployed the code to production).
+
+### Adding variants
+
+While you were developing the new color scheme, you also dabbled a bit with other colors in addition to blue: green and purple might be nice too! So you decide to create two extra color schemes that you’re happy with. But you’d like to hear what your users think too, so you need to roll it out to them somehow.
+
+You decide to use feature flag variants to differentiate between the different themes, creating three variants: blue, green, and purple. You want each of them to roll out to the same number of users, so you leave them equally weighted.
+
+```js
+
+const theme = unleash.getVariant(“new-color-scheme”).name;
+
+if (theme === “green”) {
+  // load stylesheet with green color scheme
+} else if (theme === “blue”) {
+  // load stylesheet with blue color scheme
+} else if (theme === “purple”) {
+  // load stylesheet with purple color scheme
+} else {
+  // load stylesheet with old color scheme
+}
+```
+
+Now users that are included in the gradual rollout will get one of the three themes. Users that aren’t included get the old theme.

@@ -111,7 +111,7 @@ export const StrategyParameter = ({
                         Parameters let you provide arguments to your strategy
                         that it can access for evaluation. Read more in the{' '}
                         <Link
-                            href='https://docs.getunleash.io/reference/activation-strategies#paremeters'
+                            href='https://docs.getunleash.io/concepts/activation-strategies#paremeters'
                             target='_blank'
                             rel='noreferrer'
                         >

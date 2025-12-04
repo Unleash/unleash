@@ -88,7 +88,7 @@ const LifecycleTooltip: FC = () => {
                     </TooltipText>
 
                     <TooltipText>
-                        <a href='https://docs.getunleash.io/reference/feature-toggles#feature-flag-lifecycle'>
+                        <a href='https://docs.getunleash.io/concepts/feature-flags#feature-flag-lifecycle'>
                             Read more in our documentation
                         </a>
                     </TooltipText>

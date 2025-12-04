@@ -119,7 +119,7 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
                 description='Use personal API tokens to authenticate to the Unleash API as
                 yourself. A personal API token has the same access privileges as
                 your user.'
-                documentationLink='https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens'
+                documentationLink='https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens'
                 documentationLinkLabel='Personal access tokens documentation'
                 formatApiCode={formatApiCode}
             >

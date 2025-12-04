@@ -58,7 +58,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/node'
+                                                    href='https://docs.getunleash.io/sdks/node'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -71,7 +71,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/java'
+                                                    href='https://docs.getunleash.io/sdks/java'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -84,7 +84,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/go'
+                                                    href='https://docs.getunleash.io/sdks/go'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -97,7 +97,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/rust'
+                                                    href='https://docs.getunleash.io/sdks/rust'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -110,7 +110,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/ruby'
+                                                    href='https://docs.getunleash.io/sdks/ruby'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -123,7 +123,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/python'
+                                                    href='https://docs.getunleash.io/sdks/python'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -136,7 +136,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/dotnet'
+                                                    href='https://docs.getunleash.io/sdks/dotnet'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -149,7 +149,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/php'
+                                                    href='https://docs.getunleash.io/sdks/php'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -162,7 +162,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks'
+                                                    href='https://docs.getunleash.io/sdks'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -182,7 +182,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/javascript-browser'
+                                                    href='https://docs.getunleash.io/sdks/javascript-browser'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -195,7 +195,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/react'
+                                                    href='https://docs.getunleash.io/sdks/react'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -208,7 +208,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/next-js'
+                                                    href='https://docs.getunleash.io/sdks/next-js'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -221,7 +221,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/vue'
+                                                    href='https://docs.getunleash.io/sdks/vue'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -234,7 +234,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/ios-proxy'
+                                                    href='https://docs.getunleash.io/sdks/ios-proxy'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -247,7 +247,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/android-proxy'
+                                                    href='https://docs.getunleash.io/sdks/android-proxy'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >
@@ -260,7 +260,7 @@ export const Footer: VFC = () => {
                                         <ListItemText
                                             primary={
                                                 <a
-                                                    href='https://docs.getunleash.io/reference/sdks/flutter'
+                                                    href='https://docs.getunleash.io/sdks/flutter'
                                                     target='_blank'
                                                     rel='noreferrer'
                                                 >

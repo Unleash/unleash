@@ -20,7 +20,7 @@ export const environmentProjectSchema = {
             type: 'string',
             example: 'production',
             description:
-                'The [type of environment](https://docs.getunleash.io/reference/environments#environment-types).',
+                'The [type of environment](https://docs.getunleash.io/concepts/environments#environment-types).',
         },
         enabled: {
             type: 'boolean',

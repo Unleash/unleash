@@ -202,7 +202,7 @@ export default class UserAdminController extends Controller {
                     tags: ['Users'],
                     operationId: 'getUsers',
                     summary:
-                        'Get all users and [root roles](https://docs.getunleash.io/reference/rbac#predefined-roles)',
+                        'Get all users and [root roles](https://docs.getunleash.io/concepts/rbac#predefined-roles)',
                     description:
                         'Will return all users and all available root roles for the Unleash instance.',
                     responses: {

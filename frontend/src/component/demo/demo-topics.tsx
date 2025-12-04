@@ -55,7 +55,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/feature-toggles'
+                                href='https://docs.getunleash.io/concepts/feature-flags'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -66,7 +66,7 @@ export const TOPICS: ITutorialTopic[] = [
                         <Description sx={{ mt: 1 }}>
                             Feature flags are organized within{' '}
                             <a
-                                href='https://docs.getunleash.io/reference/projects'
+                                href='https://docs.getunleash.io/concepts/projects'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -110,7 +110,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies'
+                                href='https://docs.getunleash.io/concepts/activation-strategies'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -194,7 +194,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies#constraints'
+                                href='https://docs.getunleash.io/concepts/activation-strategies#constraints'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -202,7 +202,7 @@ export const TOPICS: ITutorialTopic[] = [
                             </a>{' '}
                             are conditions that must be satisfied for an{' '}
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies'
+                                href='https://docs.getunleash.io/concepts/activation-strategies'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -224,7 +224,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/unleash-context'
+                                href='https://docs.getunleash.io/concepts/unleash-context'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -378,7 +378,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies'
+                                href='https://docs.getunleash.io/concepts/activation-strategies'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -386,7 +386,7 @@ export const TOPICS: ITutorialTopic[] = [
                             </a>{' '}
                             is one of the available{' '}
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies'
+                                href='https://docs.getunleash.io/concepts/activation-strategies'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -511,7 +511,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/strategy-variants'
+                                href='https://docs.getunleash.io/concepts/strategy-variants'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -595,7 +595,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies#constraints'
+                                href='https://docs.getunleash.io/concepts/activation-strategies#constraints'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -603,7 +603,7 @@ export const TOPICS: ITutorialTopic[] = [
                             </a>{' '}
                             are conditions that must be satisfied for an{' '}
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies'
+                                href='https://docs.getunleash.io/concepts/activation-strategies'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -625,7 +625,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/unleash-context'
+                                href='https://docs.getunleash.io/concepts/unleash-context'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -744,7 +744,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/strategy-variants'
+                                href='https://docs.getunleash.io/concepts/strategy-variants'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -752,7 +752,7 @@ export const TOPICS: ITutorialTopic[] = [
                             </a>{' '}
                             allow to attach one or more values to your{' '}
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies'
+                                href='https://docs.getunleash.io/concepts/activation-strategies'
                                 target='_blank'
                                 rel='noreferrer'
                             >

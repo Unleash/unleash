@@ -71,7 +71,7 @@ export const MilestoneStrategySegment = ({
                                 on the global or the project level. Read more
                                 about segments{' '}
                                 <a
-                                    href='https://docs.getunleash.io/reference/segments'
+                                    href='https://docs.getunleash.io/concepts/segments'
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >

@@ -34,7 +34,7 @@ export const clientFeaturesSchema = {
         },
         segments: {
             description:
-                'A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance',
+                'A list of [Segments](https://docs.getunleash.io/concepts/segments) configured for this Unleash instance',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/clientSegmentSchema',

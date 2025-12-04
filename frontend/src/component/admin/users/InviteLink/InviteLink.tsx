@@ -135,7 +135,7 @@ export const InviteLink: FC<IInviteLinkProps> = () => {
             loading={loading || isSending}
             title={isUpdating ? 'Update invite link' : 'Create invite link'}
             description='When you send an invite link to someone, they will be able to create an account and get access to Unleash. This new user will only have read access, until you change their assigned role.'
-            documentationLink='https://docs.getunleash.io/reference/public-signup'
+            documentationLink='https://docs.getunleash.io/concepts/public-signup'
             documentationLinkLabel='Invite link documentation'
             formatApiCode={formatApiCode}
         >

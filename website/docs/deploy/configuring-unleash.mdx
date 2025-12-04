@@ -1,0 +1,309 @@
+---
+title: Configure Unleash
+description: "Steps and options for configuring your self-hosted Unleash instance."
+toc_max_heading_level: 3
+---
+
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="high" />
+
+import Tabs from '@theme/Tabs'; import TabItem from '@theme/TabItem';
+
+This guide explains how to configure your self-hosted Unleash instance when running it via [Docker Compose or the Docker CLI](/deploy/getting-started).
+
+When running Unleash using Docker, configuration is managed through environment variables.
+
+## Configuration method
+### Docker Compose
+
+<Tabs groupId="setup-method">
+<TabItem value="docker-compose-enterprise" label="Enterprise">
+Update the `environment:` section of your `docker-compose-enterprise.yml` file. For example:
+```yaml
+services:
+  unleash:
+    image: unleashorg/unleash-enterprise
+    environment:
+      - DATABASE_HOST=mydbhost
+      - DATABASE_SSL=false
+      # ... other service config
+```
+
+</TabItem>
+
+<TabItem value="docker-compose-oss" label="Open Source">
+Update the `environment:` section of your `docker-compose.yml` file. For example:
+```yaml
+services:
+  unleash:
+    image: unleashorg/unleash-server
+    environment:
+      - DATABASE_HOST=mydbhost
+      - DATABASE_SSL=false
+      # ... other service config
+```
+
+</TabItem>
+</Tabs>
+
+### Docker CLI
+<Tabs groupId="setup-method">
+
+<TabItem value="docker-cli-enterprise" label="Enterprise">
+
+Use the `-e` flag in your `docker run` command. For example:
+
+```shell
+docker run -e DATABASE_HOST=mydbhost -e DATABASE_SSL=false ... unleashorg/unleash-enterprise
+```
+</TabItem>
+
+
+<TabItem value="docker-cli-oss" label="Open Source">
+
+Use the `-e` flag in your `docker run` command. For example:
+
+```shell
+docker run -e DATABASE_HOST=mydbhost -e DATABASE_SSL=false ... unleashorg/unleash-server
+```
+</TabItem>
+
+</Tabs>
+
+## Configure the database
+
+Unleash requires a PostgreSQL database to store its data. You must provide connection details using environment variables.
+
+### Database environment variables
+
+| Environment Variable                  | Default Value      | Description                                                                                                                                 |
+| :------------------------------------ | :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
+| `DATABASE_HOST`                       | `localhost`        | Database hostname or IP address.                                                                                                        |
+| `DATABASE_PORT`                       | `5432`             | Database port.                                                                                                                          |
+| `DATABASE_NAME`                       | `unleash`          | Name of the database Unleash should use.                                                                                                |
+| `DATABASE_USERNAME`                   | `unleash_user`     | Database username.                                                                                                                      |
+| `DATABASE_PASSWORD`                   | `password`         | Database password.                                                                                                                      |
+| `DATABASE_SCHEMA`                     | `public`           | Database schema Unleash should use.                                                                                                     |
+| `DATABASE_SSL`                     | `false`          | Enables/configures SSL. Expects a stringified JSON object with SSL options.  |
+| `DATABASE_SSL_CA_CONFIG`           | N/A           | Alternative SSL config via JSON string. Requires `rejectUnauthorized`, `ca`, `cert`, `key` properties, where `ca`, `cert`, `key` values contain the certificate strings directly. |
+| `DATABASE_SSL_REJECT_UNAUTHORIZED`    | (varies)           | Set to `false` only if using self-signed certificates. Defaults to `true` if `DATABASE_SSL_CA_FILE` is set.        |
+| `DATABASE_SSL_CA_FILE`                | N/A                | Path within the container to a valid SSL CA file in PEM format.                                                                           |
+| `DATABASE_SSL_CERT_FILE`              | N/A                | Path within the container to a valid SSL Cert file in PEM format.                                                                         |
+| `DATABASE_SSL_KEY_FILE`               | N/A                | Path within the container to a valid SSL key file in PEM format.                                                                          |
+| `DATABASE_POOL_MIN`                   | `0`                | Minimum number of connections in the database pool.                                                                                         |
+| `DATABASE_POOL_MAX`                   | `4`                | Maximum number of connections in the database pool.                                                                                         |
+| `DATABASE_POOL_IDLE_TIMEOUT_MS`       | `30000`            | Time (ms) a connection can be idle before being eligible for eviction.                                                                      |
+| `DATABASE_APPLICATION_NAME`           | `unleash`          | Application name reported to the database.                                                                                                  |
+| `DATABASE_DISABLE_MIGRATION`          | `false`            | Set to `true` to disable automatic database migrations on startup.                                                                          |
+| `DATABASE_URL`                        | N/A                | Alternatively, provide the full database connection string (e.g., `postgres://USER:PASS@HOST:PORT/DB`). Overrides individual components. |
+| `DATABASE_URL_FILE`                   | N/A                | Path within the container to a file containing the full `DATABASE_URL` string.                                                            |
+
+For detailed PostgreSQL SSL configuration options via environment variables, refer to the [node-postgres documentation on SSL](https://node-postgres.com/features/ssl). Ensure file paths for certificates (`DATABASE_SSL_*_FILE`) are accessible inside the running container (for example, via Docker volumes).
+
+<details>
+  <summary>Troubleshooting</summary>
+
+### Database connection issues
+
+If you experience intermittent database connection errors or timeouts, particularly after periods of inactivity, a network component (like a firewall or load balancer) between the Unleash server and the PostgreSQL database may be closing idle TCP connections. If the network component's idle timeout is shorter than the connection pool's idle timeout (`DATABASE_POOL_IDLE_TIMEOUT_MS`), the pool may try to use a connection that the network device has already terminated.
+
+**Solution:**
+1.  Determine the idle connection timeout value configured on any relevant network devices (firewalls, load balancers) between Unleash and its database.
+2.  Ensure the Unleash database pool idle timeout, set via the `DATABASE_POOL_IDLE_TIMEOUT_MS` environment variable (default: `30000` ms), is configured to be less than the network device's idle timeout setting. For instance, if your firewall closes idle connections after 60 seconds, consider keeping or setting `DATABASE_POOL_IDLE_TIMEOUT_MS` to `30000` (30 seconds).
+
+</details>
+
+### Back up and restore the database
+
+It is highly recommended to back up your Unleash database, especially before [upgrades](/deploy/upgrading-unleash) or significant changes. When running PostgreSQL within a Docker container, use `docker exec` to run the standard `pg_dump` (backup) and `psql` (restore) commands inside the container.
+
+1. **Identify container name**: Find your PostgreSQL container's name or ID (for example, using `docker ps`).
+
+2. **Create a backup**: Run the following command on your host machine. It executes `pg_dump` inside the container and saves the output to a `.dump` file on your host.
+
+    ```shell
+    docker exec -t <your_postgres_container_name> pg_dump --clean -U <your_db_user> -d <your_db_name> > unleash-db-$(date +%Y%m%d_%H%M%S).dump
+    ```
+
+3. **Restore from backup**: Run the following command on your host machine. It executes `psql` inside the container, reading the specified backup file from your host.
+
+    ```shell
+    docker exec -i <your_postgres_container_name> psql -U <your_db_user> -d <your_db_name> < <your_backup_file.dump>
+    ```
+
+### Migrate an instance
+
+If you are moving an instance (for example, to a new cloud provider or cluster) and need full fidelity, use a database [dump and restore](#back-up-and-restore-the-database) instead of API export/import.
+
+This is the safest way to keep data parity. Use export/import primarily for ongoing synchronization of feature flags, not full migrations.
+
+
+### Enable self-signed certificates
+
+To connect to a PostgreSQL database using a self-signed certificate, you need to:
+- Set the `DATABASE_SSL_REJECT_UNAUTHORIZED` environment variable to `false`. Disabling this check bypasses validation that the server certificate is signed by a trusted CA; only use this when you fully trust the network path and the server identity.
+-  Provide the self-signed certificate itself as the Certificate Authority (CA) for Unleash to trust. Use either the `DATABASE_SSL_CA_FILE` variable (pointing to the certificate file mounted inside the container) or include the certificate string within the JSON object passed to `DATABASE_SSL_CA_CONFIG`.
+
+## Configure the Unleash instance URL
+
+Set the public URL where your Unleash instance can be accessed using the environment variable `UNLEASH_URL`. For example, `https://unleash.mycompany.com` or `https://app.mycompany.com/unleash`. This URL is used for creating password reset links, signup links for new users, and links within integrations, such as Slack or Datadog.
+
+## Configure an email server
+
+Configure an SMTP server to enable password resets and user welcome emails. If not configured, self-service password resets will not be available.
+
+| Environment variable | Default value                  | Description                                                                        |
+| :------------------- | :----------------------------- | :--------------------------------------------------------------------------------- |
+| `EMAIL_HOST`         | N/A                            | Your SMTP server address.                                                          |
+| `EMAIL_PORT`         | `587`                          | Your SMTP server port.                                                             |
+| `EMAIL_SECURE`       | `false`                        | Set to `true` to use SMTPS (SSL).                                                  |
+| `EMAIL_USER`         | N/A                            | The username to authenticate against your SMTP server.                             |
+| `EMAIL_PASSWORD`     | N/A                            | The password for your SMTP user.                                                   |
+| `EMAIL_SENDER`       | `noreply@unleash-hosted.com` | The email address used as the sender. Must be updated to your own address to work correctly. |
+
+
+<details>
+  <summary>Troubleshooting</summary>
+
+If emails fail to send or contain errors:
+
+- **Verify configuration:** Double-check all `EMAIL_*` environment variables are correctly set for your SMTP provider.
+- **Check email links:** Ensure `UNLEASH_URL` is the complete public URL for your instance, including the `http://` or `https://` protocol prefix.
+- **Fix SSL/TLS errors:**
+    * Confirm `EMAIL_PORT` and `EMAIL_SECURE` match your SMTP server's requirements (for example, port 587 or 465 often requires `EMAIL_SECURE=true`).
+- **Custom CA certificates for SMTP:** If using a custom SMTP CA certificate with `EMAIL_SECURE=true`, ensure it's trusted by mounting the PEM file into the container and setting the `NODE_EXTRA_CA_CERTS` environment variable to its path inside the container.
+
+</details>
+
+## Other configuration options
+
+### Authentication and authorization
+
+| Environment Variable            | Default Value   | Description                                                                                                                      |
+| :------------------------------ | :-------------- | :------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_TYPE`                     | `open-source`   | Authentication type. `open-source`: sign in with username and password, `demo`: sign in with email only, `custom`: sign in using custom authentication hook.                                                             |
+| `AUTH_ENABLE_API_TOKEN`         | `true`          | Whether API endpoints require tokens. Setting to `false` is highly discouraged.                                                    |
+| `AUTH_DEMO_ALLOW_ADMIN_LOGIN`   | `false`         | Allows logging in as `admin` (using email field) when `AUTH_TYPE` is `demo`.                                                       |
+
+### Initial setup
+
+| Environment Variable               | Default Value   | Description                                                                                                |
+| :--------------------------------- | :-------------- | :--------------------------------------------------------------------------------------------------------- |
+| `UNLEASH_DEFAULT_ADMIN_USERNAME` | `admin`         | Sets the username for the initial admin user created on first startup.                                     |
+| `UNLEASH_DEFAULT_ADMIN_PASSWORD` | `unleash4all`   | Sets the password for the initial admin user. **Change this for any non-local setup.** |
+| `INIT_CLIENT_API_TOKENS`         | N/A             | Deprecated, use `INIT_BACKEND_API_TOKENS` instead.                   |
+| `INIT_BACKEND_API_TOKENS`        | N/A             | Comma-separated list of [Backend tokens](/concepts/api-tokens-and-client-keys#backend-tokens) to create on first startup (if no tokens exist in the database).                   |
+| `INIT_FRONTEND_API_TOKENS`       | N/A             | Comma-separated list of [Frontend tokens](/concepts/api-tokens-and-client-keys#frontend-tokens) to create on first startup (if no tokens exist in the database).                 |
+
+### Server behavior
+
+| Environment Variable             | Default Value | Description                                                                                    |
+| :------------------------------- | :------------ | :--------------------------------------------------------------------------------------------- |
+| `HTTP_PORT`                      | `4242`        | Port the Unleash server listens on inside the container.                                     |
+| `HTTP_HOST`                      | `0.0.0.0`     | Host the Unleash server binds to inside the container.                                       |
+| `BASE_URI_PATH`                  | `/`           | Sets a base path for all Unleash routes (e.g., `/unleash`). Must start with `/` if not root. |
+| `CDN_PREFIX` |	N/A |	URL prefix for static UI assets, enabling serving from a CDN. Example: https://mycdn.com/unleash-assets. |
+| `SERVER_KEEPALIVE_TIMEOUT`       | `15`          | Connection keepalive timeout in seconds.                                                       |
+| `SERVER_DISABLE_COMPRESSION`     | `false`       | Set to `true` to disable response compression, useful when configuring the application in a serverless environment.                                                  |
+| `GRACEFUL_SHUTDOWN_ENABLE`       | `true`        | Enables graceful shutdown on receiving `SIGINT` or `SIGTERM`.                                  |
+| `GRACEFUL_SHUTDOWN_TIMEOUT`      | `1000`        | Timeout in milliseconds for graceful shutdown before forceful exit.                            |
+| `ENABLE_SCHEDULED_CREATED_BY_MIGRATION` | `false`       | Set to `true` to enable gradual backfilling of historical `created_by_user_id` data. Only needed up until Unleash v5.8. |
+
+### Security and sessions
+
+| Environment Variable                  | Default Value       | Description                                                                                                      |
+| :------------------------------------ | :------------------ | :--------------------------------------------------------------------------------------------------------------- |
+| `SECURE_HEADERS`                      | `false`             | Set to `true` to enable security headers like HSTS, CSP (recommended if serving over HTTPS).                       |
+| `CSP_ALLOWED_*`                       | N/A                 | Comma-separated lists for specific [CSP directives](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy#directives) when `SECURE_HEADERS` is true. For example: `CSP_ALLOWED_SCRIPT` for `script-src`.     |
+| `SESSION_TTL_HOURS`                   | `48`                | User session duration in hours.                                                                                    |
+| `SESSION_CLEAR_SITE_DATA_ON_LOGOUT` | `true`              | Whether to send `Clear-Site-Data` header on logout.                                                              |                                                                            |
+| `MAX_PARALLEL_SESSIONS`             | N/A                 | Maximum number of parallel user sessions allowed with password-based login.                                                                |
+| `UNLEASH_FRONTEND_API_ORIGINS` |	`*` |	Comma-separated list of allowed origins (CORS) for the Frontend API. Use * with caution. Example: https://app.mycompany.com,https://*.yourdomain.net.|
+
+
+### Logging and monitoring
+
+| Environment Variable                              | Default Value | Description                                                                                                              |
+| :------------------------------------------------ | :------------ | :----------------------------------------------------------------------------------------------------------------------- |
+| `LOG_LEVEL`                                       | `info`        | The minimum log level (`debug`, `info`, `warn`, `error`, `fatal`).                                                           |
+| `REQUEST_LOGGER_ENABLE`                           | `false`       | Set to `true` to enable logging of incoming request URLs and response codes.                                             |
+| `UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH` | `false`       | Set to `true` to disable including the `appName` property in response time metrics (reduces cardinality if `appName` is variable). |
+| `DAILY_METRICS_STORAGE_DAYS` | `91` | Number of days to retain aggregated daily metrics data. |
+
+### Feature and API behavior
+
+| Environment Variable                     | Default Value               | Description                                                                                              |
+| :--------------------------------------- | :-------------------------- | :------------------------------------------------------------------------------------------------------- |
+| `CHECK_VERSION`                          | `true`                      | If the automatic check for new Unleash versions is enabled. Set to `false` to disable.                         |
+| `UNLEASH_VERSION_URL`                    | `https://version.unleash.run` | Overrides the URL used for version checks.                                                               |
+| `CLIENT_FEATURE_CACHING_ENABLED`         | `true`                      | Toggles server-side memoization for `/api/client/features`.                                                |
+| `CLIENT_FEATURE_CACHING_MAXAGE`          | `600`                       | Cache duration in milliseconds for `/api/client/features` memoization.                                     |
+| `FRONTEND_API_REFRESH_INTERVAL_MS`       | N/A                         | Default refresh interval in milliseconds for frontend SDKs to refresh their data from the cache.                                                       |
+| `ACCESS_CONTROL_MAX_AGE`                 | `86400`                     | Configures the `Access-Control-Max-Age` CORS header in seconds.                                          |
+| `ENABLED_ENVIRONMENTS`                 | N/A                         | Comma-separated list of environment names to force enable at startup, overriding the database state. Use with caution; does not disable environments not listed. |
+
+### Rate limiting
+
+Controls requests per minute per IP for specific API endpoints.
+
+| Environment Variable                        | Default Value | Target Endpoint            |
+| :------------------------------------------ | :------------ | :------------------------- |
+| `REGISTER_CLIENT_RATE_LIMIT_PER_MINUTE`   | `6000`        | POST `/api/client/register`  |
+| `CLIENT_METRICS_RATE_LIMIT_PER_MINUTE`    | `6000`        | POST `/api/client/metrics`   |
+| `REGISTER_FRONTEND_RATE_LIMIT_PER_MINUTE` | `6000`        | POST `/api/frontend/register`|
+| `FRONTEND_METRICS_RATE_LIMIT_PER_MINUTE`  | `6000`        | POST `/api/frontend/metrics` |
+| `SIMPLE_LOGIN_LIMIT_PER_MINUTE`           | `10`          | POST `/auth/simple`        |
+| `CREATE_USER_RATE_LIMIT_PER_MINUTE`       | `20`          | POST `/api/admin/user-admin` |
+
+
+### HTTP proxy support
+
+If your Unleash server needs to make outgoing requests (for example, for integrations, webhooks, version checks) through an HTTP/HTTPS proxy, you can configure this using standard proxy environment variables.
+
+- `HTTP_PROXY`: URL of the HTTP proxy (for example, `http://proxy.mycompany.com:8080`).
+- `HTTPS_PROXY`: URL of the HTTPS proxy (for example, `http://secureproxy.mycompany.com:8081`).
+- `NO_PROXY`: Comma-separated list of hosts or domains that should bypass the proxy.
+
+Set these environment variables when starting your Unleash container.
+
+
+## Resource recommendations
+
+While specific minimums depend heavily on usage patterns (number of flags, frequency of requests, number of connected SDKs), a general starting point for the Unleash server container could be:
+
+- **CPU:** 0.5 - 1 vCPU
+- **Memory:** 512 MiB - 1 GiB RAM
+
+For the PostgreSQL database, consider:
+
+- **CPU:** At least 1 vCPU
+- **Memory:** At least 1 GiB RAM
+- **Storage:** At least 5 GiB SSD storage
+
+For example, you might consider some of the following managed PostgreSQL services and machine types:
+
+- **AWS RDS for PostgreSQL:** `db.t4g.small` (2 vCPU / 2 GiB RAM).
+- **Azure Database for PostgreSQL (Flexible Server):** `B2s` (Burstable, 2 vCPU / 4 GiB RAM).
+- **GCP Cloud SQL for PostgreSQL:** `db-n1-standard-1` (1 vCPU / 3.75 GiB RAM) as the starting point.
+
+Monitor resource usage and adjust based on your specific load.
+
+## Next steps
+
+### Securing Unleash
+
+### Password requirements
+By default, Unleash uses password-based login. When using passwords, Unleash enforces strong passwords:
+- Minimum 10 characters long
+- Contains at least one uppercase letter
+- Contains at least one number
+- Contains at least one special character
+
+### Configure SSO and access controls
+To learn more about managing users, [implementing single sign-on](/concepts/sso) instead of passwords, setting up access controls, and using audit logs, read the [User Management, Access Controls and Auditing guide](/guides/user-management-access-controls).
+
+### Scaling Unleash
+
+As your feature flag usage grows, ensuring your Unleash setup can handle the load is crucial. To learn how to implement high availability, improve resilience, and apply other scaling strategies, read the [Scaling Unleash guide](/guides/scaling-unleash).
+

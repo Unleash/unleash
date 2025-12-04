@@ -9,7 +9,7 @@ export const addonsSchema = {
     type: 'object',
     required: ['addons', 'providers'],
     description: `An object containing two things:
-1. A list of all [addons](https://docs.getunleash.io/reference/addons) defined on this Unleash instance
+1. A list of all [addons](https://docs.getunleash.io/integrate) defined on this Unleash instance
 2. A list of all addon providers defined on this instance`,
     properties: {
         addons: {
@@ -72,7 +72,7 @@ export const addonsSchema = {
   "timestamp": "{{event.data.createdAt}}"
 }`,
                             description:
-                                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/reference/api/legacy/unleash/admin/events)",
+                                "(Optional) You may format the body using a mustache template. If you don't specify anything, the format will similar to the events format (https://docs.getunleash.io/api/events)",
                             type: 'textfield',
                             required: false,
                             sensitive: false,

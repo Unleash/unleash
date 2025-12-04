@@ -22,7 +22,7 @@ export const updateFeatureStrategySchema = {
                 $ref: '#/components/schemas/constraintSchema',
             },
             description:
-                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/activation-strategies#constraints',
+                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/concepts/activation-strategies#constraints',
         },
         title: {
             type: 'string',

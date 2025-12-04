@@ -11,7 +11,7 @@
 
 import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
-import docsSidebar from './docs/reference/api/unleash/sidebar.ts';
+import docsSidebar from './docs/api/sidebar.ts';
 
 const sidebars: SidebarsConfig = {
     academy: [
@@ -42,23 +42,23 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'quickstart',
+                id: 'get-started/quickstart',
             },
             items: [
                 {
                     type: 'doc',
                     label: 'Quickstart',
-                    id: 'quickstart',
+                    id: 'get-started/quickstart',
                 },
                 {
                     type: 'doc',
                     label: 'Introduction to feature flags',
-                    id: 'topics/what-is-a-feature-flag',
+                    id: 'get-started/what-is-a-feature-flag',
                 },
                 {
                     type: 'doc',
                     label: 'Unleash architecture overview',
-                    id: 'understanding-unleash/unleash-overview',
+                    id: 'get-started/unleash-overview',
                 },
             ],
         },
@@ -67,18 +67,18 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'understanding-unleash/the-anatomy-of-unleash',
+                id: 'concepts/concepts-overview',
             },
             items: [
                 {
                     label: 'Projects and environments',
                     collapsed: true,
                     type: 'category',
-                    link: { type: 'doc', id: 'reference/projects' },
+                    link: { type: 'doc', id: 'concepts/projects' },
                     items: [
-                        'reference/projects',
-                        'reference/project-collaboration-mode',
-                        'reference/environments',
+                        'concepts/projects',
+                        'concepts/project-collaboration-mode',
+                        'concepts/environments',
                     ],
                 },
                 {
@@ -87,16 +87,15 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/feature-toggles',
+                        id: 'concepts/feature-flags',
                     },
                     items: [
-                        'reference/feature-toggles',
-                        'reference/activation-strategies',
-                        'reference/strategy-variants',
-                        'understanding-unleash/managing-constraints',
-                        'reference/segments',
-                        'reference/unleash-context',
-                        'reference/stickiness',
+                        'concepts/feature-flags',
+                        'concepts/activation-strategies',
+                        'concepts/strategy-variants',
+                        'concepts/segments',
+                        'concepts/unleash-context',
+                        'concepts/stickiness',
                     ],
                 },
                 {
@@ -105,11 +104,11 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/release-templates',
+                        id: 'concepts/release-templates',
                     },
                     items: [
-                        'reference/release-templates',
-                        'reference/impact-metrics',
+                        'concepts/release-templates',
+                        'concepts/impact-metrics',
                     ],
                 },
                 {
@@ -118,16 +117,16 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/api-tokens-and-client-keys',
+                        id: 'concepts/api-tokens-and-client-keys',
                     },
                     items: [
-                        'reference/api-tokens-and-client-keys',
-                        'reference/front-end-api',
-                        'reference/rbac',
-                        'reference/sso',
-                        'reference/scim',
-                        'reference/change-requests',
-                        'reference/public-signup',
+                        'concepts/api-tokens-and-client-keys',
+                        'concepts/front-end-api',
+                        'concepts/rbac',
+                        'concepts/sso',
+                        'concepts/scim',
+                        'concepts/change-requests',
+                        'concepts/public-signup',
                     ],
                 },
                 {
@@ -136,12 +135,12 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/technical-debt',
+                        id: 'concepts/technical-debt',
                     },
                     items: [
-                        'reference/technical-debt',
-                        'reference/insights',
-                        'reference/resource-limits',
+                        'concepts/technical-debt',
+                        'concepts/insights',
+                        'concepts/resource-limits',
                     ],
                 },
                 {
@@ -150,13 +149,13 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/impression-data',
+                        id: 'concepts/impression-data',
                     },
                     items: [
-                        'reference/impression-data',
-                        'reference/events',
-                        'reference/playground',
-                        'reference/network-view',
+                        'concepts/impression-data',
+                        'concepts/events',
+                        'concepts/playground',
+                        'concepts/network-view',
                     ],
                 },
                 {
@@ -165,13 +164,13 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/applications',
+                        id: 'concepts/applications',
                     },
                     items: [
-                        'reference/applications',
-                        'reference/service-accounts',
-                        'reference/signals',
-                        'reference/actions',
+                        'concepts/applications',
+                        'concepts/service-accounts',
+                        'concepts/signals',
+                        'concepts/actions',
                     ],
                 },
                 {
@@ -180,20 +179,20 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/login-history',
+                        id: 'concepts/login-history',
                     },
                     items: [
-                        'reference/login-history',
-                        'reference/banners',
-                        'reference/command-menu',
-                        'reference/search-operators',
-                        'reference/maintenance-mode',
+                        'concepts/login-history',
+                        'concepts/banners',
+                        'concepts/command-menu',
+                        'concepts/search-operators',
+                        'concepts/maintenance-mode',
                     ],
                 },
                 {
                     type: 'doc',
                     label: 'Import and export',
-                    id: 'how-to/how-to-environment-import-export',
+                    id: 'concepts/import-export',
                 },
             ],
         },
@@ -202,7 +201,7 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'guides-overview',
+                id: 'guides/guides-overview',
             },
             items: [
                 {
@@ -211,23 +210,28 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'topics/feature-flags/feature-flag-best-practices',
+                        id: 'guides/feature-flag-best-practices',
                     },
                     items: [
                         {
                             type: 'doc',
                             label: 'Building and scaling feature flag systems',
-                            id: 'topics/feature-flags/feature-flag-best-practices',
+                            id: 'guides/feature-flag-best-practices',
                         },
                         {
                             type: 'doc',
                             label: 'Using feature flags at scale',
-                            id: 'topics/feature-flags/best-practices-using-feature-flags-at-scale',
+                            id: 'guides/best-practices-using-feature-flags-at-scale',
                         },
                         {
                             type: 'doc',
                             label: 'Migrating from homegrown feature management solutions',
-                            id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
+                            id: 'guides/feature-flag-migration-best-practices',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Managing large constraints',
+                            id: 'guides/managing-constraints',
                         },
                     ],
                 },
@@ -237,32 +241,32 @@ const sidebars: SidebarsConfig = {
                     collapsed: true,
                     link: {
                         type: 'doc',
-                        id: 'feature-flag-tutorials/use-cases/how-to-create-feature-toggles',
+                        id: 'guides/how-to-create-feature-flags',
                     },
                     items: [
                         {
                             type: 'doc',
-                            id: 'feature-flag-tutorials/use-cases/how-to-create-feature-toggles',
+                            id: 'guides/how-to-create-feature-flags',
                         },
                         {
                             type: 'doc',
                             label: 'Schedule a feature release',
-                            id: 'how-to/how-to-schedule-feature-releases',
+                            id: 'guides/how-to-schedule-feature-releases',
                         },
                         {
                             type: 'doc',
                             label: 'Trunk-based development',
-                            id: 'feature-flag-tutorials/use-cases/trunk-based-development',
+                            id: 'guides/trunk-based-development',
                         },
                         {
                             type: 'doc',
                             label: 'Gradual rollout',
-                            id: 'feature-flag-tutorials/use-cases/gradual-rollout',
+                            id: 'guides/gradual-rollout',
                         },
                         {
                             type: 'doc',
                             label: 'Unleash Edge quickstart',
-                            id: 'how-to/unleash-edge-quickstart',
+                            id: 'guides/unleash-edge-quickstart',
                         },
                     ],
                 },
@@ -272,33 +276,33 @@ const sidebars: SidebarsConfig = {
                     collapsed: true,
                     link: {
                         type: 'doc',
-                        id: 'feature-flag-tutorials/use-cases/user-management-access-controls',
+                        id: 'guides/user-management-access-controls',
                     },
                     items: [
                         {
                             type: 'doc',
                             label: 'User management, access controls, and auditing',
-                            id: 'feature-flag-tutorials/use-cases/user-management-access-controls',
+                            id: 'guides/user-management-access-controls',
                         },
                         {
                             type: 'doc',
                             label: 'Security and compliance',
-                            id: 'feature-flag-tutorials/use-cases/security-compliance',
+                            id: 'guides/security-compliance',
                         },
                         {
                             type: 'doc',
                             label: 'Scaling Unleash',
-                            id: 'feature-flag-tutorials/use-cases/scaling-unleash',
+                            id: 'guides/scaling-unleash',
                         },
                         {
                             type: 'doc',
                             label: 'Managing feature flags in code',
-                            id: 'feature-flag-tutorials/use-cases/manage-feature-flags-in-code',
+                            id: 'guides/manage-feature-flags-in-code',
                         },
                         {
                             type: 'doc',
                             label: 'Organizing feature flags using projects and environments',
-                            id: 'feature-flag-tutorials/use-cases/organize-feature-flags',
+                            id: 'guides/organize-feature-flags',
                         },
                     ],
                 },
@@ -308,23 +312,23 @@ const sidebars: SidebarsConfig = {
                     collapsed: true,
                     link: {
                         type: 'doc',
-                        id: 'feature-flag-tutorials/use-cases/a-b-testing',
+                        id: 'guides/a-b-testing',
                     },
                     items: [
                         {
                             type: 'doc',
                             label: 'A/B testing',
-                            id: 'feature-flag-tutorials/use-cases/a-b-testing',
+                            id: 'guides/a-b-testing',
                         },
                         {
                             type: 'doc',
                             label: 'Feature flags for AI',
-                            id: 'feature-flag-tutorials/use-cases/ai',
+                            id: 'guides/manage-ai-models-with-feature-flags',
                         },
                         {
                             type: 'doc',
                             label: 'Use impression data for analytics',
-                            id: 'feature-flag-tutorials/use-cases/how-to-capture-impression-data',
+                            id: 'guides/how-to-capture-impression-data',
                         },
                     ],
                 },
@@ -334,7 +338,7 @@ const sidebars: SidebarsConfig = {
                     collapsed: true,
                     link: {
                         type: 'doc',
-                        id: 'feature-flag-tutorials/react/implementing-feature-flags',
+                        id: 'guides/language-specific-tutorials/react/implementing-feature-flags',
                     },
                     items: [
                         {
@@ -342,13 +346,13 @@ const sidebars: SidebarsConfig = {
                             label: 'React',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/react/implementing-feature-flags',
+                                id: 'guides/language-specific-tutorials/react/implementing-feature-flags',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Examples',
-                                    id: 'feature-flag-tutorials/react/examples',
+                                    id: 'guides/language-specific-tutorials/react/examples',
                                 },
                             ],
                         },
@@ -357,18 +361,18 @@ const sidebars: SidebarsConfig = {
                             label: 'Java',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/java/implementing-feature-flags',
+                                id: 'guides/language-specific-tutorials/java/implementing-feature-flags',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Spring Boot',
-                                    id: 'feature-flag-tutorials/java/spring-boot-implementing-feature-flags',
+                                    id: 'guides/language-specific-tutorials/java/spring-boot-implementing-feature-flags',
                                 },
                                 {
                                     type: 'doc',
                                     label: 'Spring Boot Examples',
-                                    id: 'feature-flag-tutorials/java/spring-boot-examples',
+                                    id: 'guides/language-specific-tutorials/java/spring-boot-examples',
                                 },
                             ],
                         },
@@ -377,63 +381,63 @@ const sidebars: SidebarsConfig = {
                             label: 'Python',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/python/implementing-feature-flags',
+                                id: 'guides/language-specific-tutorials/python/implementing-feature-flags',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Python Examples',
-                                    id: 'feature-flag-tutorials/python/examples',
+                                    id: 'guides/language-specific-tutorials/python/examples',
                                 },
                                 {
                                     type: 'doc',
                                     label: 'Django Tutorial',
-                                    id: 'feature-flag-tutorials/django/implementing-feature-flags-django',
+                                    id: 'guides/language-specific-tutorials/django/implementing-feature-flags-django',
                                 },
                                 {
                                     type: 'doc',
                                     label: 'Django Examples',
-                                    id: 'feature-flag-tutorials/django/django-examples',
+                                    id: 'guides/language-specific-tutorials/django/django-examples',
                                 },
                             ],
                         },
                         {
                             type: 'doc',
                             label: 'Next.js',
-                            id: 'feature-flag-tutorials/nextjs/implementing-feature-flags-nextjs',
+                            id: 'guides/language-specific-tutorials/nextjs/implementing-feature-flags-nextjs',
                         },
                         {
                             type: 'category',
                             label: 'Go',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/golang/implementing-feature-flags-golang',
+                                id: 'guides/language-specific-tutorials/golang/implementing-feature-flags-golang',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Go Examples',
-                                    id: 'feature-flag-tutorials/golang/golang-examples',
+                                    id: 'guides/language-specific-tutorials/golang/golang-examples',
                                 },
                             ],
                         },
                         {
                             type: 'doc',
                             label: 'JavaScript',
-                            id: 'feature-flag-tutorials/javascript/implementing-feature-flags-js',
+                            id: 'guides/language-specific-tutorials/javascript/implementing-feature-flags-js',
                         },
                         {
                             type: 'category',
                             label: '.NET',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/dotnet/implementing-feature-flags-dotnet',
+                                id: 'guides/language-specific-tutorials/dotnet/implementing-feature-flags-dotnet',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Examples',
-                                    id: 'feature-flag-tutorials/dotnet/dotnet-examples',
+                                    id: 'guides/language-specific-tutorials/dotnet/dotnet-examples',
                                 },
                             ],
                         },
@@ -442,68 +446,68 @@ const sidebars: SidebarsConfig = {
                             label: 'iOS',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/ios/implementing-feature-flags-ios',
+                                id: 'guides/language-specific-tutorials/ios/implementing-feature-flags-ios',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Examples',
-                                    id: 'feature-flag-tutorials/ios/examples',
+                                    id: 'guides/language-specific-tutorials/ios/examples',
                                 },
                             ],
                         },
                         {
                             type: 'doc',
                             label: 'Serverless',
-                            id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
+                            id: 'guides/language-specific-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
                         },
                         {
                             type: 'category',
                             label: 'Rust',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/rust/implementing-feature-flags-rust',
+                                id: 'guides/language-specific-tutorials/rust/implementing-feature-flags-rust',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Examples',
-                                    id: 'feature-flag-tutorials/rust/rust-examples',
+                                    id: 'guides/language-specific-tutorials/rust/rust-examples',
                                 },
                             ],
                         },
                         {
                             type: 'doc',
                             label: 'Flutter',
-                            id: 'feature-flag-tutorials/flutter/a-b-testing',
+                            id: 'guides/language-specific-tutorials/flutter/a-b-testing',
                         },
                         {
                             type: 'doc',
                             label: 'SvelteKit',
-                            id: 'feature-flag-tutorials/sveltekit/implementing-feature-flags-sveltekit',
+                            id: 'guides/language-specific-tutorials/sveltekit/implementing-feature-flags-sveltekit',
                         },
                         {
                             type: 'category',
                             label: 'Ruby',
                             link: {
                                 type: 'doc',
-                                id: 'feature-flag-tutorials/ruby/implementing-feature-flags-ruby',
+                                id: 'guides/language-specific-tutorials/ruby/implementing-feature-flags-ruby',
                             },
                             items: [
                                 {
                                     type: 'doc',
                                     label: 'Ruby Examples',
-                                    id: 'feature-flag-tutorials/ruby/ruby-examples',
+                                    id: 'guides/language-specific-tutorials/ruby/ruby-examples',
                                 },
                                 {
                                     type: 'doc',
                                     label: 'Rails Tutorial',
-                                    id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
+                                    id: 'guides/language-specific-tutorials/rails/implementing-feature-flags-rails',
                                 },
                                 {
                                     type: 'doc',
                                     label: 'Rails Examples',
-                                    id: 'feature-flag-tutorials/rails/rails-examples',
+                                    id: 'guides/language-specific-tutorials/rails/rails-examples',
                                 },
                             ],
                         },
@@ -514,7 +518,7 @@ const sidebars: SidebarsConfig = {
         {
             label: 'SDKs',
             type: 'category',
-            link: { type: 'doc', id: 'reference/sdks/index' },
+            link: { type: 'doc', id: 'sdks/index' },
             items: [
                 {
                     type: 'category',
@@ -539,7 +543,7 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'link',
                     label: 'Community SDKs',
-                    href: '/reference/sdks#community-sdks',
+                    href: '/sdks#community-sdks',
                 },
             ],
         },
@@ -548,38 +552,9 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'api-overview',
+                id: 'api/api-overview',
             },
-            items: [
-                docsSidebar,
-                {
-                    'System API': [
-                        'reference/api/legacy/unleash/internal/prometheus',
-                        'reference/api/legacy/unleash/internal/health',
-                    ],
-                    '(Legacy Docs) Admin API': [
-                        'reference/api/legacy/unleash/admin/addons',
-                        'reference/api/legacy/unleash/admin/context',
-                        'reference/api/legacy/unleash/admin/events',
-                        'reference/api/legacy/unleash/admin/features-v2',
-                        'reference/api/legacy/unleash/admin/feature-types',
-                        'reference/api/legacy/unleash/admin/features',
-                        'reference/api/legacy/unleash/admin/archive',
-                        'reference/api/legacy/unleash/admin/metrics',
-                        'reference/api/legacy/unleash/admin/projects',
-                        'reference/api/legacy/unleash/admin/segments',
-                        'reference/api/legacy/unleash/admin/state',
-                        'reference/api/legacy/unleash/admin/strategies',
-                        'reference/api/legacy/unleash/admin/tags',
-                        'reference/api/legacy/unleash/admin/user-admin',
-                    ],
-                    '(Legacy Docs) Client API': [
-                        'reference/api/legacy/unleash/client/features',
-                        'reference/api/legacy/unleash/client/metrics',
-                        'reference/api/legacy/unleash/client/register',
-                    ],
-                },
-            ],
+            items: [docsSidebar],
         },
         {
             type: 'category',
@@ -601,29 +576,33 @@ const sidebars: SidebarsConfig = {
         {
             label: 'Integrate and deploy',
             type: 'category',
+            link: {
+                type: 'doc',
+                id: 'deploy/hosting-options',
+            },
             items: [
                 {
                     type: 'doc',
                     label: 'Unleash hosting options',
-                    id: 'understanding-unleash/hosting-options',
+                    id: 'deploy/hosting-options',
                 },
                 {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'using-unleash/deploy/getting-started',
+                        id: 'deploy/getting-started',
                     },
                     label: 'Self-hosting Unleash',
                     items: [
-                        'using-unleash/deploy/getting-started',
-                        'using-unleash/deploy/configuring-unleash',
-                        'using-unleash/deploy/upgrading-unleash',
-                        'using-unleash/deploy/license-keys',
-                        'using-unleash/deploy/https',
+                        'deploy/getting-started',
+                        'deploy/configuring-unleash',
+                        'deploy/upgrading-unleash',
+                        'deploy/license-keys',
+                        'deploy/https',
                         {
                             type: 'doc',
                             label: 'Synchronize Unleash instances',
-                            id: 'how-to/how-to-synchronize-unleash-instances',
+                            id: 'guides/how-to-synchronize-unleash-instances',
                         },
                     ],
                 },
@@ -632,15 +611,15 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'how-to/how-to-add-sso-open-id-connect',
+                        id: 'single-sign-on/how-to-add-sso-open-id-connect',
                     },
                     items: [
-                        'how-to/how-to-add-sso-open-id-connect',
-                        'how-to/how-to-add-sso-saml',
-                        'how-to/how-to-add-sso-saml-keycloak',
-                        'how-to/how-to-add-sso-azure-saml',
-                        'how-to/how-to-setup-sso-keycloak-group-sync',
-                        'how-to/how-to-set-up-group-sso-sync',
+                        'single-sign-on/how-to-add-sso-open-id-connect',
+                        'single-sign-on/how-to-add-sso-saml',
+                        'single-sign-on/how-to-add-sso-saml-keycloak',
+                        'single-sign-on/how-to-add-sso-azure-saml',
+                        'single-sign-on/how-to-setup-sso-keycloak-group-sync',
+                        'single-sign-on/how-to-set-up-group-sso-sync',
                     ],
                 },
                 {
@@ -648,11 +627,11 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'how-to/how-to-setup-provisioning-with-okta',
+                        id: 'provisioning/how-to-setup-provisioning-with-okta',
                     },
                     items: [
-                        'how-to/how-to-setup-provisioning-with-okta',
-                        'how-to/how-to-setup-provisioning-with-entra',
+                        'provisioning/how-to-setup-provisioning-with-okta',
+                        'provisioning/how-to-setup-provisioning-with-entra',
                     ],
                 },
                 {
@@ -660,38 +639,38 @@ const sidebars: SidebarsConfig = {
                     type: 'category',
                     link: {
                         type: 'doc',
-                        id: 'reference/integrations/index',
+                        id: 'integrate/index',
                     },
                     items: [
-                        'reference/integrations/datadog',
+                        'integrate/datadog',
                         {
                             type: 'category',
                             label: 'Jira server',
                             items: [
-                                'reference/integrations/jira-server-plugin-installation',
-                                'reference/integrations/jira-server-plugin-usage',
+                                'integrate/jira-server-plugin-installation',
+                                'integrate/jira-server-plugin-usage',
                             ],
                         },
                         {
                             type: 'category',
                             label: 'Jira cloud',
                             items: [
-                                'reference/integrations/jira-cloud-plugin-installation',
-                                'reference/integrations/jira-cloud-plugin-usage',
+                                'integrate/jira-cloud-plugin-installation',
+                                'integrate/jira-cloud-plugin-usage',
                             ],
                         },
-                        'reference/integrations/slack-app',
-                        'reference/integrations/teams',
-                        'reference/integrations/webhook',
+                        'integrate/slack-app',
+                        'integrate/teams',
+                        'integrate/webhook',
                         {
                             type: 'doc',
                             label: 'Terraform',
-                            id: 'reference/terraform',
+                            id: 'concepts/terraform',
                         },
                         {
                             type: 'doc',
                             label: 'MCP',
-                            id: 'generated/mcp',
+                            id: 'generated/integrate/mcp',
                         },
                     ],
                 },
@@ -702,36 +681,36 @@ const sidebars: SidebarsConfig = {
             type: 'category',
             link: {
                 type: 'doc',
-                id: 'understanding-unleash/data-collection',
+                id: 'privacy-and-compliance/data-privacy',
             },
             items: [
                 {
                     type: 'doc',
                     label: 'Data collection and privacy',
-                    id: 'understanding-unleash/data-collection',
+                    id: 'privacy-and-compliance/data-privacy',
                 },
                 {
                     type: 'category',
                     label: 'Compliance',
                     link: {
                         type: 'doc',
-                        id: 'using-unleash/compliance/compliance-overview',
+                        id: 'privacy-and-compliance/compliance-overview',
                     },
                     items: [
                         {
                             type: 'doc',
                             label: 'FedRAMP',
-                            id: 'using-unleash/compliance/fedramp',
+                            id: 'privacy-and-compliance/fedramp',
                         },
                         {
                             type: 'doc',
                             label: 'SOC2 type II',
-                            id: 'using-unleash/compliance/soc2',
+                            id: 'privacy-and-compliance/soc2',
                         },
                         {
                             type: 'doc',
                             label: 'ISO27001',
-                            id: 'using-unleash/compliance/iso27001',
+                            id: 'privacy-and-compliance/iso27001',
                         },
                     ],
                 },
@@ -740,20 +719,24 @@ const sidebars: SidebarsConfig = {
         {
             label: 'Support and community',
             type: 'category',
+            link: {
+                type: 'doc',
+                id: 'support/troubleshooting',
+            },
             items: [
                 {
                     type: 'doc',
-                    id: 'troubleshooting',
+                    id: 'support/troubleshooting',
                     label: 'Troubleshooting',
                 },
                 {
                     type: 'doc',
-                    id: 'availability',
+                    id: 'support/availability',
                     label: 'Feature availability and versioning',
                 },
                 {
                     type: 'doc',
-                    id: 'oss-comparison',
+                    id: 'support/oss-comparison',
                     label: 'Compare Unleash OSS and Unleash Enterprise',
                 },
                 {
@@ -766,6 +749,7 @@ const sidebars: SidebarsConfig = {
                     },
                     items: [
                         'contributing/developer-guide',
+                        'contributing/client-specification',
                         'contributing/frontend/overview',
                         'contributing/backend/overview',
                         {

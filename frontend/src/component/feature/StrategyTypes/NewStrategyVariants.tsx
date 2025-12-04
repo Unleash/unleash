@@ -137,7 +137,7 @@ export const NewStrategyVariants: FC<{
                                 optimize different aspects of your features.
                                 Read more about variants{' '}
                                 <a
-                                    href='https://docs.getunleash.io/reference/strategy-variants'
+                                    href='https://docs.getunleash.io/concepts/strategy-variants'
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >

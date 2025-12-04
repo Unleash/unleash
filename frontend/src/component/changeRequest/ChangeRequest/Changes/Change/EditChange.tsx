@@ -222,6 +222,6 @@ export const featureStrategyHelp = `
 `;
 
 export const featureStrategyDocsLink =
-    'https://docs.getunleash.io/reference/activation-strategies';
+    'https://docs.getunleash.io/concepts/activation-strategies';
 
 export const featureStrategyDocsLinkLabel = 'Strategies documentation';

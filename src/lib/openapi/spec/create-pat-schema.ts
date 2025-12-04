@@ -3,7 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 export const createPatSchema = {
     $id: '#/components/schemas/createPatSchema',
     description:
-        'Describes the properties required to create a [personal access token](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens), or PAT. PATs are automatically scoped to the authenticated user.',
+        'Describes the properties required to create a [personal access token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens), or PAT. PATs are automatically scoped to the authenticated user.',
     type: 'object',
     required: ['description', 'expiresAt'],
     properties: {

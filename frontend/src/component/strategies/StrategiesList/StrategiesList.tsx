@@ -96,7 +96,7 @@ const RecommendationAlert = () => (
     <Alert severity='info' sx={{ mb: 2 }}>
         We recommend using gradual rollout. You can customize it with{' '}
         <Link
-            href='https://docs.getunleash.io/reference/activation-strategies#constraints'
+            href='https://docs.getunleash.io/concepts/activation-strategies#constraints'
             target='_blank'
             rel='noopener noreferrer'
         >
@@ -104,7 +104,7 @@ const RecommendationAlert = () => (
         </Link>{' '}
         and{' '}
         <Link
-            href='https://docs.getunleash.io/reference/activation-strategies#variants'
+            href='https://docs.getunleash.io/concepts/activation-strategies#variants'
             target='_blank'
             rel='noopener noreferrer'
         >
@@ -417,7 +417,7 @@ export const StrategiesList = () => {
                         <Title
                             title='Standard strategies'
                             description='Standard strategies let you enable a feature only for a specified audience. Select a starting setup, then customize your strategy with targeting and variants.'
-                            link='https://docs.getunleash.io/reference/activation-strategies'
+                            link='https://docs.getunleash.io/concepts/activation-strategies'
                         />
                     </PageHeader>
                 }
@@ -479,7 +479,7 @@ export const StrategiesList = () => {
                         <Title
                             title='Advanced and custom strategies'
                             description='Advanced strategies let you target based on specific properties. Custom activation strategies let you define your own activation strategies to use with Unleash.'
-                            link='https://docs.getunleash.io/reference/activation-strategies#custom-strategies'
+                            link='https://docs.getunleash.io/concepts/activation-strategies#custom-strategies'
                         />
                     </PageHeader>
                 }

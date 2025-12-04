@@ -8,8 +8,8 @@ The backend is written in nodejs/typescript. It's written as a REST API followin
 
 We have created a set of ADRs to help guide the development of the backend:
 
-* [Naming](../ADRs/back-end/naming.md)
-* [Preferred export](../ADRs/back-end/preferred-export.md)
+* [Naming](/contributing/ADRs/back-end/naming)
+* [Preferred export](/contributing/ADRs/back-end/preferred-export)
 
 ## Requirements
 
@@ -24,7 +24,7 @@ yarn install
 yarn dev
 ```
 
-## PostgreSQL {#postgresql}
+## PostgreSQL
 
 To run and develop Unleash, you need to have PostgreSQL 14.0+ locally.
 
@@ -63,11 +63,11 @@ export DATABASE_URL=postgres://unleash_user:password@localhost:5432/unleash
 export TEST_DATABASE_URL=postgres://unleash_user:password@localhost:5432/unleash_test
 ```
 
-## PostgreSQL with docker {#postgresql-with-docker}
+## PostgreSQL with docker
 
 If you don't want to install PostgreSQL locally, you can spin up an Docker instance. We have created a script to ease this process: `scripts/docker-postgres.sh`
 
-## Start the application {#start-the-application}
+## Start the application
 
 In order to start the application you will need Node.js v22.x or newer installed locally.
 
@@ -88,11 +88,11 @@ http://localhost:3000/api/
 yarn test
 ```
 
-## Database changes {#database-changes}
+## Database changes
 
 We use database migrations to track database changes. Never change a migration that has been merged to main. If you need to change a migration, create a new migration that reverts the old one and then creates the new one.
 
-### Making a schema change {#making-a-schema-change}
+### Making a schema change
 
 To run migrations, you will set the environment variable for DATABASE_URL
 
@@ -135,7 +135,7 @@ Test your migrations:
 > yarn run db-migrate down
 ```
 
-## Publishing / Releasing new packages {#publishing--releasing-new-packages}
+## Publishing / Releasing new packages
 
 Please run `yarn test` checks before publishing.
 

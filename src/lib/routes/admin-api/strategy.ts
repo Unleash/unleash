@@ -63,7 +63,7 @@ class StrategyController extends Controller {
                 openApiService.validPath({
                     summary: 'Get all strategies',
                     description:
-                        'Retrieves all strategy types ([predefined](https://docs.getunleash.io/reference/activation-strategies "predefined strategies") and [custom strategies](https://docs.getunleash.io/reference/activation-strategies#custom-strategies)) that are defined on this Unleash instance.',
+                        'Retrieves all strategy types ([predefined](https://docs.getunleash.io/concepts/activation-strategies "predefined strategies") and [custom strategies](https://docs.getunleash.io/concepts/activation-strategies#custom-strategies)) that are defined on this Unleash instance.',
                     tags: ['Strategies'],
                     operationId: 'getAllStrategies',
                     responses: {

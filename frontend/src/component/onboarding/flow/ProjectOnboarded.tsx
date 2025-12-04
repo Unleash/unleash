@@ -109,7 +109,7 @@ export const ProjectOnboarded = ({
                         your feature flag by leveraging{' '}
                         <Link
                             className='unleash-action-button'
-                            to={`https://docs.getunleash.io/reference/activation-strategies`}
+                            to={`https://docs.getunleash.io/concepts/activation-strategies`}
                             target='_blank'
                             rel='noopener noreferrer'
                         >

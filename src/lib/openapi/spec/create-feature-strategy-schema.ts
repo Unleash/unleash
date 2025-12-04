@@ -35,7 +35,7 @@ export const createFeatureStrategySchema = {
         constraints: {
             type: 'array',
             description:
-                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/activation-strategies#constraints',
+                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/concepts/activation-strategies#constraints',
             example: [
                 {
                     values: ['1', '2'],

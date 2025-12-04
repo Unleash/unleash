@@ -163,7 +163,13 @@ const getGroupHosting = (instances: ConnectedEdge[]) => {
     if (instances.every((i) => i.hosting === 'enterprise-self-hosted')) {
         return { hostingLabel: 'Self-hosted', hostingColor: 'info' } as const;
     }
-    if (new Set(instances.map((i) => i.hosting)).size > 1) {
+    if (
+        instances.every(
+            (i) =>
+                i.hosting === 'hosted' ||
+                i.hosting === 'enterprise-self-hosted',
+        )
+    ) {
         return { hostingLabel: 'Hybrid', hostingColor: 'warning' } as const;
     }
     return { hostingLabel: 'Unknown', hostingColor: 'neutral' } as const;

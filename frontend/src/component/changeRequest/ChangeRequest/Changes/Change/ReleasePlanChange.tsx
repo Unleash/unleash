@@ -173,6 +173,7 @@ const ChangeSafeguard: FC<{
     currentReleasePlan?: IReleasePlan;
     changeRequestState: ChangeRequestState;
     environmentName: string;
+    featureName: string;
     actions?: ReactNode;
     onSubmit: (data: CreateSafeguardSchema) => void;
     onDelete: (safeguardId: string) => void;
@@ -181,6 +182,7 @@ const ChangeSafeguard: FC<{
     currentReleasePlan,
     changeRequestState,
     environmentName,
+    featureName,
     actions,
     onSubmit,
     onDelete,
@@ -230,6 +232,7 @@ const ChangeSafeguard: FC<{
                         onCancel={() => {}}
                         safeguard={safeguard}
                         environment={environmentName}
+                        featureId={featureName}
                     />
                 )}
             </TabPanel>
@@ -255,6 +258,7 @@ const DeleteSafeguard: FC<{
     currentReleasePlan?: IReleasePlan;
     changeRequestState: ChangeRequestState;
     environmentName: string;
+    featureName: string;
     actions?: ReactNode;
     onSubmit: (data: CreateSafeguardSchema) => void;
     onDelete: (safeguardId: string) => void;
@@ -263,6 +267,7 @@ const DeleteSafeguard: FC<{
     currentReleasePlan,
     changeRequestState,
     environmentName,
+    featureName,
     actions,
     onSubmit,
     onDelete,
@@ -310,6 +315,7 @@ const DeleteSafeguard: FC<{
                         onCancel={() => {}}
                         safeguard={safeguard}
                         environment={environmentName}
+                        featureId={featureName}
                     />
                 )}
             </TabPanel>
@@ -643,6 +649,7 @@ export const ReleasePlanChange: FC<{
                     currentReleasePlan={currentReleasePlan}
                     changeRequestState={changeRequestState}
                     environmentName={environmentName}
+                    featureName={featureName}
                     onSubmit={changeSafeguardSubmit}
                     onDelete={deleteSafeguardSubmit}
                     actions={actions}
@@ -654,6 +661,7 @@ export const ReleasePlanChange: FC<{
                     currentReleasePlan={currentReleasePlan}
                     changeRequestState={changeRequestState}
                     environmentName={environmentName}
+                    featureName={featureName}
                     onSubmit={changeSafeguardSubmit}
                     onDelete={deleteSafeguardSubmit}
                     actions={actions}

@@ -663,6 +663,7 @@ export const ReleasePlan = ({
                                 onCancel={() => setSafeguardFormOpen(false)}
                                 onDelete={handleSafeguardDelete}
                                 environment={environment}
+                                featureId={featureName}
                                 badge={safeguardBadge}
                             />
                         ) : (

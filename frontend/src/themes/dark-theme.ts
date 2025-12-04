@@ -407,7 +407,7 @@ export const darkTheme = createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     color: theme.palette.text.primary,
-                    fontSize: theme.typography.body1.fontSize,
+                    fontSize: theme.typography.body2.fontSize,
                     textTransform: 'none',
                     fontWeight: theme.typography.fontWeightMedium,
                     lineHeight: '1',

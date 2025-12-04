@@ -3,16 +3,16 @@ import {
     Badge,
     Box,
     Button,
+    type ButtonProps,
     ClickAwayListener,
     Dialog,
     IconButton,
-    Link,
     styled,
     Tooltip,
     Typography,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import type { FC, ReactNode } from 'react';
 import Close from '@mui/icons-material/Close';
 
@@ -46,13 +46,14 @@ const StyledMainTitle = styled('div')(({ theme }) => ({
     lineHeight: 1.2,
 }));
 
-const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
+const StyledLink = styled(Link)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
     padding: 0,
     color: theme.palette.links,
     fontWeight: theme.typography.fontWeightBold,
+    textDecoration: 'none',
     '&:hover, &:focus': {
         textDecoration: 'underline',
     },
@@ -85,7 +86,9 @@ const ReadMore = styled(Box)(({ theme }) => ({
     paddingBottom: theme.spacing(1),
 }));
 
-const StyledCheckItOutButton = styled(Button)(({ theme }) => ({
+const StyledCheckItOutButton = styled(Button)<
+    ButtonProps | ButtonProps<typeof Link>
+>(({ theme }) => ({
     marginTop: theme.spacing(2),
 }));
 
@@ -128,24 +131,57 @@ const StyledItemButtonClose = styled(IconButton)(({ theme }) => ({
     padding: theme.spacing(0.25),
 }));
 
-export const NewInUnleashDialog: FC<{
+type CheckItOutProps = { onCheckItOut: () => void } | { appLink: string } | {};
+
+type NewInUnleashDialogProps = {
     title: string;
     longDescription: ReactNode;
     docsLink?: string;
-    onCheckItOut?: () => void;
     open: boolean;
     preview?: ReactNode;
     onClose: () => void;
     beta: boolean;
-}> = ({
+} & CheckItOutProps;
+
+const CheckItOutButton = ({
+    onClose,
+    ...props
+}: { onClose: () => void } & CheckItOutProps) => {
+    const { appLink, onCheckItOut } = props as {
+        appLink?: string;
+        onCheckItOut?: () => void;
+    };
+    if (!appLink && !onCheckItOut) {
+        return null;
+    }
+
+    const extraProps = appLink ? { component: Link, to: appLink } : {};
+
+    return (
+        <StyledCheckItOutButton
+            variant='contained'
+            color='primary'
+            onClick={(event) => {
+                event.stopPropagation();
+                onClose();
+                onCheckItOut?.();
+            }}
+            {...extraProps}
+        >
+            Get Started
+        </StyledCheckItOutButton>
+    );
+};
+
+export const NewInUnleashDialog: FC<NewInUnleashDialogProps> = ({
     title,
     longDescription,
-    onCheckItOut,
     docsLink,
     preview,
     open,
     onClose,
     beta,
+    ...rest
 }) => (
     <StyledDialog open={open} onClose={onClose} maxWidth='lg' fullWidth>
         <ClickAwayListener onClickAway={onClose}>
@@ -181,40 +217,19 @@ export const NewInUnleashDialog: FC<{
                 />
 
                 <BottomActions>
-                    <ConditionallyRender
-                        condition={Boolean(docsLink)}
-                        show={
-                            <ReadMore>
-                                <StyledLink
-                                    component='a'
-                                    href={docsLink}
-                                    underline='hover'
-                                    rel='noopener noreferrer'
-                                    target='_blank'
-                                >
-                                    <StyledOpenInNew />
-                                    Read more in our documentation
-                                </StyledLink>
-                            </ReadMore>
-                        }
-                    />
-
-                    <ConditionallyRender
-                        condition={Boolean(onCheckItOut)}
-                        show={
-                            <StyledCheckItOutButton
-                                variant='contained'
-                                color='primary'
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    onClose();
-                                    onCheckItOut?.();
-                                }}
+                    {docsLink ? (
+                        <ReadMore>
+                            <StyledLink
+                                to={docsLink}
+                                rel='noopener noreferrer'
+                                target='_blank'
                             >
-                                Get Started
-                            </StyledCheckItOutButton>
-                        }
-                    />
+                                <StyledOpenInNew />
+                                Read more in our documentation
+                            </StyledLink>
+                        </ReadMore>
+                    ) : null}
+                    <CheckItOutButton onClose={onClose} {...rest} />
                 </BottomActions>
             </DialogCard>
         </ClickAwayListener>

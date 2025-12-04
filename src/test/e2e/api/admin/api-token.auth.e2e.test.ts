@@ -221,6 +221,7 @@ describe('Fine grained API token permissions', () => {
         test('READ_CLIENT_API_TOKEN should be able to see CLIENT and BACKEND tokens', async () => {
             await setupUser('read_client_token@example.com', RoleName.VIEWER, [
                 { name: READ_CLIENT_API_TOKEN },
+                { name: READ_PROJECT_API_TOKEN },
             ]);
             await app.login({ email: 'read_client_token@example.com' });
 

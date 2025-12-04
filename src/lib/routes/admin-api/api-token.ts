@@ -45,7 +45,6 @@ import {
 import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service.js';
 import { OperationDeniedError } from '../../error/index.js';
 import type { CreateApiTokenSchema } from '../../internals.js';
-import type { IUserPermission } from '../../server-impl.js';
 
 interface TokenParam {
     token: string;
@@ -53,6 +52,14 @@ interface TokenParam {
 interface TokenNameParam {
     name: string;
 }
+
+interface ITokenPermissions {
+    frontend: boolean;
+    backend: boolean;
+    admin: boolean;
+    projects: string[];
+}
+
 export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
     (tokenType) => {
         switch (tokenType) {
@@ -67,40 +74,20 @@ export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
     };
 
 const canReadToken = (
-    { permission, project }: IUserPermission,
+    { frontend, backend, admin, projects }: ITokenPermissions,
     token: IApiToken,
 ) => {
-    if (permission === ADMIN) {
+    if (admin) {
         return true;
     }
     if (token.type === ApiTokenType.FRONTEND) {
-        return (
-            [
-                CREATE_FRONTEND_API_TOKEN,
-                READ_FRONTEND_API_TOKEN,
-                READ_PROJECT_API_TOKEN,
-                DELETE_FRONTEND_API_TOKEN,
-                UPDATE_FRONTEND_API_TOKEN,
-            ].includes(permission) &&
-            project &&
-            (project === token.project || token.projects.includes(project))
-        );
+        return frontend && ((token.project && projects.includes(token.project)) || token.projects.some((p) => projects.includes(p)));
     }
     if (
         token.type === ApiTokenType.CLIENT ||
         token.type === ApiTokenType.BACKEND
     ) {
-        return (
-            [
-                CREATE_CLIENT_API_TOKEN,
-                READ_PROJECT_API_TOKEN,
-                READ_CLIENT_API_TOKEN,
-                DELETE_CLIENT_API_TOKEN,
-                UPDATE_CLIENT_API_TOKEN,
-            ].includes(permission) &&
-            project &&
-            (project === token.project || token.projects.includes(project))
-        );
+        return backend && ((token.project && projects.includes(token.project)) || token.projects.some((p) => projects.includes(p)));
     }
     return false;
 };
@@ -437,9 +424,45 @@ export class ApiTokenController extends Controller {
         const userPermissions =
             await this.accessService.getPermissionsForUser(user);
 
+        let hasRootFrontendReadPermission = false;
+        let hasRootBackendReadPermission = false;
+        let hasAdminPermission = false;
+        const projects: string[] = [];
+
+        for (const permissionIndex in userPermissions) {
+            const { permission, project } = userPermissions[permissionIndex];
+
+            hasRootFrontendReadPermission = [
+                CREATE_FRONTEND_API_TOKEN,
+                READ_FRONTEND_API_TOKEN,
+                DELETE_FRONTEND_API_TOKEN,
+                UPDATE_FRONTEND_API_TOKEN,
+            ].includes(permission) ? true :
+                hasRootFrontendReadPermission;
+
+            hasRootBackendReadPermission = [
+                CREATE_CLIENT_API_TOKEN,
+                READ_CLIENT_API_TOKEN,
+                DELETE_CLIENT_API_TOKEN,
+                UPDATE_CLIENT_API_TOKEN,
+            ].includes(permission) ?
+                true : hasRootBackendReadPermission;
+
+            hasAdminPermission = permission === ADMIN ? true : hasAdminPermission;
+
+            if (permission === READ_PROJECT_API_TOKEN && project && !projects.includes(project)) {
+                projects.push(project);
+            }
+        }
+
         const accessibleTokens = allTokens.filter((token) =>
             userPermissions.some((permission) => {
-                const canRead = canReadToken(permission, token);
+                const canRead = canReadToken({
+                    frontend: hasRootFrontendReadPermission,
+                    backend: hasRootBackendReadPermission,
+                    admin: hasAdminPermission,
+                    projects
+                }, token);
                 return canRead;
             }),
         );

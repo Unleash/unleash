@@ -40,7 +40,7 @@ afterEach(async () => {
     await db.stores.apiTokenStore.deleteAll();
 });
 
-test('finds tokens and stuff', async () => {
+test('Filters tokens based on project access. Private/protected project api tokens shouldnt be returned unless explicit access', async () => {
     const tokenSecret = 'random-secret';
     const tokenSecretNotShown = 'other-random-secret';
 

@@ -14,6 +14,7 @@ import {
     type IUnleashStores,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
+    READ_PROJECT_API_TOKEN,
     SYSTEM_USER_AUDIT,
     SYSTEM_USER_ID,
     UPDATE_CLIENT_API_TOKEN,
@@ -70,7 +71,7 @@ beforeAll(async () => {
     // insert initial tokens
     clientToken = await stores.apiTokenStore.insert({
         environment: '',
-        projects: [],
+        projects: ['default'],
 
         tokenName: 'client',
         secret: '*:environment.client_secret',
@@ -78,7 +79,7 @@ beforeAll(async () => {
     });
     backendToken = await stores.apiTokenStore.insert({
         environment: '',
-        projects: [],
+        projects: ['default'],
 
         tokenName: 'backend',
         secret: '*:environment.backend_secret',
@@ -93,7 +94,7 @@ beforeAll(async () => {
     });
     frontendToken = await stores.apiTokenStore.insert({
         environment: '',
-        projects: [],
+        projects: ['default'],
         tokenName: 'frontender',
         secret: '*:environment:sdfsdf2dfrontend_Secret',
         type: ApiTokenType.FRONTEND,
@@ -110,6 +111,7 @@ test('editor users should only get client, backend or frontend tokens', async ()
     await setupUser('editor@example.com', RoleName.EDITOR, [
         { name: READ_CLIENT_API_TOKEN },
         { name: READ_FRONTEND_API_TOKEN },
+        { name: READ_PROJECT_API_TOKEN },
     ]);
     await app.login({ email: 'editor@example.com' });
 
@@ -120,8 +122,8 @@ test('editor users should only get client, backend or frontend tokens', async ()
         .expect((res) => {
             expect(res.body.tokens.length).toBe(3);
             expect(res.body.tokens[0].type).toBe(ApiTokenType.CLIENT);
-            expect(res.body.tokens[1].type).toBe(ApiTokenType.FRONTEND);
-            expect(res.body.tokens[2].type).toBe(ApiTokenType.CLIENT);
+            expect(res.body.tokens[1].type).toBe(ApiTokenType.CLIENT);
+            expect(res.body.tokens[2].type).toBe(ApiTokenType.FRONTEND);
         });
 });
 
@@ -256,6 +258,11 @@ describe('Fine grained API token permissions', () => {
             await setupUser(
                 'standard-editor-reads-tokens@example.com',
                 RoleName.EDITOR,
+                [
+                    { name: READ_CLIENT_API_TOKEN },
+                    { name: READ_FRONTEND_API_TOKEN },
+                    { name: READ_PROJECT_API_TOKEN },
+                ],
             );
             await app.login({
                 email: 'standard-editor-reads-tokens@example.com',

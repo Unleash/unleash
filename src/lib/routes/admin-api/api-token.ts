@@ -66,26 +66,41 @@ export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
         }
     };
 
-const canReadToken = ({ permission }: IUserPermission, type: ApiTokenType) => {
+const canReadToken = (
+    { permission, project }: IUserPermission,
+    token: IApiToken,
+) => {
     if (permission === ADMIN) {
         return true;
     }
-    if (type === ApiTokenType.FRONTEND) {
-        return [
-            CREATE_FRONTEND_API_TOKEN,
-            READ_FRONTEND_API_TOKEN,
-            DELETE_FRONTEND_API_TOKEN,
-            UPDATE_FRONTEND_API_TOKEN,
-        ].includes(permission);
+    if (token.type === ApiTokenType.FRONTEND) {
+        return (
+            [
+                CREATE_FRONTEND_API_TOKEN,
+                READ_FRONTEND_API_TOKEN,
+                READ_PROJECT_API_TOKEN,
+                DELETE_FRONTEND_API_TOKEN,
+                UPDATE_FRONTEND_API_TOKEN,
+            ].includes(permission) &&
+            project &&
+            (project === token.project || token.projects.includes(project))
+        );
     }
-    if (type === ApiTokenType.CLIENT || type === ApiTokenType.BACKEND) {
-        return [
-            CREATE_CLIENT_API_TOKEN,
-            READ_PROJECT_API_TOKEN,
-            READ_CLIENT_API_TOKEN,
-            DELETE_CLIENT_API_TOKEN,
-            UPDATE_CLIENT_API_TOKEN,
-        ].includes(permission);
+    if (
+        token.type === ApiTokenType.CLIENT ||
+        token.type === ApiTokenType.BACKEND
+    ) {
+        return (
+            [
+                CREATE_CLIENT_API_TOKEN,
+                READ_PROJECT_API_TOKEN,
+                READ_CLIENT_API_TOKEN,
+                DELETE_CLIENT_API_TOKEN,
+                UPDATE_CLIENT_API_TOKEN,
+            ].includes(permission) &&
+            project &&
+            (project === token.project || token.projects.includes(project))
+        );
     }
     return false;
 };
@@ -423,13 +438,10 @@ export class ApiTokenController extends Controller {
             await this.accessService.getPermissionsForUser(user);
 
         const accessibleTokens = allTokens.filter((token) =>
-            userPermissions.some(
-                (permission) =>
-                    (token.project === permission.project ||
-                        (permission.project &&
-                            token.projects?.includes(permission.project))) &&
-                    canReadToken(permission, token.type),
-            ),
+            userPermissions.some((permission) => {
+                const canRead = canReadToken(permission, token);
+                return canRead;
+            }),
         );
         return accessibleTokens;
     }

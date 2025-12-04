@@ -61,8 +61,8 @@ import {
     RELEASE_PLAN_ADDED,
     RELEASE_PLAN_REMOVED,
     RELEASE_PLAN_MILESTONE_STARTED,
-    SAFEGUARD_PROGRESSIONS_PAUSED,
-    SAFEGUARD_PROGRESSIONS_RESUMED,
+    RELEASE_PLAN_PROGRESSIONS_PAUSED,
+    RELEASE_PLAN_PROGRESSIONS_RESUMED,
 } from '../events/index.js';
 
 interface IEventData {
@@ -382,12 +382,12 @@ export const EVENT_MAP: Record<string, IEventData> = {
         action: '{{b}}{{user}}{{b}} started milestone {{b}}{{event.data.milestoneName}}{{b}} in release plan {{b}}{{event.data.name}}{{b}} for {{b}}{{feature}}{{b}} for the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
-    [SAFEGUARD_PROGRESSIONS_PAUSED]: {
+    [RELEASE_PLAN_PROGRESSIONS_PAUSED]: {
         label: 'Milestone progression paused',
         action: '{{b}}Milestone progression paused{{b}} by safeguard for {{b}}{{feature}}{{b}} in the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
-    [SAFEGUARD_PROGRESSIONS_RESUMED]: {
+    [RELEASE_PLAN_PROGRESSIONS_RESUMED]: {
         label: 'Milestone progression resumed',
         action: '{{b}}{{user}}{{b}} resumed milestone progression for {{b}}{{feature}}{{b}} in the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
         path: '/projects/{{event.project}}/features/{{event.featureName}}',

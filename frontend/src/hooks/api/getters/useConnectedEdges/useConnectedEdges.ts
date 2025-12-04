@@ -1,19 +1,14 @@
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
+import useSWR from 'swr';
 import type { ConnectedEdge } from 'interfaces/connectedEdge';
 import type { SWRConfiguration } from 'swr';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const DEFAULT_DATA: ConnectedEdge[] = [];
 
 export const useConnectedEdges = (options?: SWRConfiguration) => {
-    const edgeObservabilityEnabled = useUiFlag('edgeObservability');
-
-    const { data, error, mutate } = useConditionalSWR<ConnectedEdge[]>(
-        edgeObservabilityEnabled,
-        DEFAULT_DATA,
+    const { data, error, mutate } = useSWR<ConnectedEdge[]>(
         formatApiPath('api/admin/metrics/edges'),
         fetcher,
         options,
@@ -21,7 +16,7 @@ export const useConnectedEdges = (options?: SWRConfiguration) => {
 
     return useMemo(
         () => ({
-            connectedEdges: data ?? [],
+            connectedEdges: data ?? DEFAULT_DATA,
             loading: !error && !data,
             refetch: () => mutate(),
             error,

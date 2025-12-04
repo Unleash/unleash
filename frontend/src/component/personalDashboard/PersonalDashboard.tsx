@@ -106,7 +106,7 @@ const AccordionSummaryText = styled('div')(({ theme }) => ({
 const AccordionSummaryHeader = styled('h3')(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.typography.body1.fontSize,
-    fontWeight: theme.typography.body2.fontWeight,
+    fontWeight: theme.typography.fontWeightBold,
     margin: 0,
 }));
 

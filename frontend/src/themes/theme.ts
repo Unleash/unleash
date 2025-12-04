@@ -323,6 +323,7 @@ export const lightTheme = createTheme({
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
+                    fontWeight: theme.typography.fontWeightBold,
                 }),
             },
         },
@@ -472,7 +473,7 @@ export const lightTheme = createTheme({
                     color: theme.palette.text.primary,
                     fontSize: theme.typography.body1.fontSize,
                     textTransform: 'none',
-                    fontWeight: 400,
+                    fontWeight: theme.typography.fontWeightMedium,
                     lineHeight: '1',
                     minHeight: '62px',
                     '&:hover': {

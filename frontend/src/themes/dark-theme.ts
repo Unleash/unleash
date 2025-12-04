@@ -409,7 +409,7 @@ export const darkTheme = createTheme({
                     color: theme.palette.text.primary,
                     fontSize: theme.typography.body1.fontSize,
                     textTransform: 'none',
-                    fontWeight: 400,
+                    fontWeight: theme.typography.fontWeightMedium,
                     lineHeight: '1',
                     minHeight: '62px',
                     '&:hover': {
@@ -520,6 +520,7 @@ export const darkTheme = createTheme({
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
+                    fontWeight: theme.typography.fontWeightBold,
                     '&:not(.Mui-disabled).MuiButton-containedPrimary': {
                         backgroundColor: theme.palette.background.alternative,
                         '&:hover': {

@@ -93,6 +93,7 @@ const LinkToggle = styled('button')(({ theme }) => ({
     color: theme.palette.primary.main,
     textDecoration: 'underline',
     font: 'inherit',
+    fontWeight: theme.typography.fontWeightMedium,
     display: 'inline-flex',
     alignItems: 'center',
     '&:hover': {

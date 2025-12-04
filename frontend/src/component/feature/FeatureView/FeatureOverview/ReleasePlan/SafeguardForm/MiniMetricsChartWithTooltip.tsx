@@ -25,6 +25,22 @@ const StyledMiniChartWrapper = styled(Box)(({ theme }) => ({
     cursor: 'pointer',
 }));
 
+const StyledViewLink = styled(Link)<{ component?: any; to?: string }>(
+    ({ theme }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        gap: theme.spacing(0.25),
+        whiteSpace: 'nowrap',
+        textDecoration: 'none',
+        fontWeight: theme.fontWeight.bold,
+        fontSize: theme.typography.body2.fontSize,
+        color: theme.palette.primary.main,
+        '&:hover': {
+            textDecoration: 'none',
+        },
+    }),
+);
+
 interface MiniMetricsChartWithTooltipProps {
     metricName: string;
     metricDisplayName?: string;
@@ -56,26 +72,13 @@ export const MiniMetricsChartWithTooltip: FC<
                         <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                             {metricDisplayName || metricName}
                         </Typography>
-                        <Link
+                        <StyledViewLink
                             component={RouterLink}
                             to={`/projects/${projectId}/features/${featureId}/metrics`}
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 0.25,
-                                whiteSpace: 'nowrap',
-                                textDecoration: 'none',
-                                fontWeight: 'bold',
-                                fontSize: 'body2.fontSize',
-                                color: 'primary.main',
-                                '&:hover': {
-                                    textDecoration: 'none',
-                                },
-                            }}
                         >
                             View
                             <ArrowForwardIcon sx={{ fontSize: 16 }} />
-                        </Link>
+                        </StyledViewLink>
                     </StyledTooltipHeader>
                     <Divider />
                     <StyledChartContainer>

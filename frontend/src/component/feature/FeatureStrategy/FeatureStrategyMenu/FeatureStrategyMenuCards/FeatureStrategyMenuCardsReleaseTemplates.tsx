@@ -131,7 +131,7 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                             in the side menu to make your rollouts more
                             efficient and streamlined. Read more in our{' '}
                             <StyledLink
-                                to='https://docs.getunleash.io/reference/release-templates'
+                                to='https://docs.getunleash.io/concepts/release-templates'
                                 target='_blank'
                                 rel='noreferrer'
                             >

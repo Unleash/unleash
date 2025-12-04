@@ -6,7 +6,7 @@ export const featureTypesSchema = {
     type: 'object',
     additionalProperties: false,
     description:
-        'A list of [feature flag types](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types) and the schema version used to represent those feature types.',
+        'A list of [feature flag types](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types) and the schema version used to represent those feature types.',
     required: ['version', 'types'],
     properties: {
         version: {

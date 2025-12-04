@@ -60,7 +60,7 @@ export const EDGE_INFO = {
     name: 'unleash',
     displayName: 'Unleash Edge',
     description: 'Unleash Edge is the successor to the Unleash Proxy.',
-    documentationUrl: 'https://docs.getunleash.io/reference/unleash-edge',
+    documentationUrl: 'https://docs.getunleash.io/unleash-edge',
     howTo: `Unleash Edge sits between the Unleash API and your SDKs and provides a cached read-replica of your Unleash instance. This means you can scale up your Unleash instance to thousands of connected SDKs without increasing the number of requests you make to your Unleash instance.
 Unleash Edge offers two important features:
   - **Performance:** Unleash Edge caches in memory and can run close to your end-users. A single instance can handle tens to hundreds of thousands of requests per second.
@@ -125,7 +125,7 @@ export const EdgeIntegration = () => {
                             <ul>
                                 <li>
                                     <a
-                                        href='https://docs.getunleash.io/reference/unleash-edge#edge'
+                                        href='https://docs.getunleash.io/unleash-edge#edge'
                                         target='_blank'
                                         rel='noopener noreferrer'
                                     >
@@ -138,7 +138,7 @@ export const EdgeIntegration = () => {
                                 </li>
                                 <li>
                                     <a
-                                        href='https://docs.getunleash.io/reference/unleash-edge#offline'
+                                        href='https://docs.getunleash.io/unleash-edge#offline'
                                         target='_blank'
                                         rel='noopener noreferrer'
                                     >

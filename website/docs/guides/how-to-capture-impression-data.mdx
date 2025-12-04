@@ -1,0 +1,92 @@
+---
+title: Send impression data to analytics tools
+---
+
+import ApiRequest from "@site/src/components/ApiRequest";
+import VideoContent from "@site/src/components/VideoContent.jsx";
+
+
+Unleash allows you to gather [impression data](/concepts/impression-data) from your feature flags, giving you complete visibility into who checked what flags and when. What you do with this data is entirely up to you, but a common use case is to send it off to an aggregation and analytics service such as [Posthog](https://posthog.com/) or [Google Analytics](https://analytics.google.com/), either just for monitoring purposes or to facilitate [A/B testing](/guides/a-b-testing).
+
+This guide will take you through everything you need to do in Unleash to facilitate such a workflow. It will show you how to send data to Posthog as an example sink, but the exact same principles will apply to any other service of the same kind.
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/bxYdeMb9ffw"]} />
+
+## Prerequisites
+
+We will assume that you have the necessary details for your third-party service:
+
+-   **where to send the data to**. We'll refer to this in the code samples below as **`<sink-url>`**.
+-   **what format the data needs to be in**. This will determine how you transform the event data before you send it.
+
+In addition, you'll need to have a flag to record impression data for and an [Unleash client SDK](/sdks) that supports impression data. This guide will use the [JavaScript proxy SDK](/sdks/javascript-browser).
+
+When you have those things sorted, follow the below steps.
+
+## Enable impression data for your feature flag
+
+Because impression data is an **opt-in feature**, the first step is to enable it for the feature you want to gather data from. You can use both the UI and the API.
+
+### Enable impression data for new feature flags
+
+When you create a new feature flag via the UI, there's an option at the end of the form that you must enable:
+
+![The create feature flag form. There's a flag at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data.png)
+
+To create a feature flag with impression data enabled, set the `impressionData` option to `true` in the request payload, as seen below. For more options, check the [reference docs on creating features](/api/create-feature).
+
+<ApiRequest
+    verb="post"
+    payload={{ name: "<feature-flag-name>", impressionData: true }}
+    url="api/admin/projects/<project-id>/features"
+    title="Create a feature flag with impression data enabled."
+/>
+
+### Enable impression data for existing feature flags
+
+To enable impression data for an existing flag, go to the "Settings" tab of that feature flag and use the "edit" button near the Feature information title in the admin UI. It will take you to a form that looks like the flag creation form. Use the "Enable impression data" flag to enable it, the same way you would when [enabling impression data for a new feature flag](#enable-impression-data-for-new-feature-flags).
+
+![The create feature flag form. There's a flag at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data-existing-toggle.png)
+
+To enable impression data for an existing flag, use the [API's flag patching functionality](/api/update-feature):
+
+<ApiRequest
+    verb="patch"
+    payload={[{ op: "replace", path: "/impressionData", value: true }]}
+    url="api/admin/projects/<project-id>/features/<feature-flag-name>"
+    title="Enable impression data on an existing flag."
+/>
+
+## Capture impression events in your client
+
+In your client SDK, initialize the library for the third-party service you're using.
+For the full details on setting up a Posthog client, see [the official Posthog JavaScript client docs](https://posthog.com/docs/integrate/client/js).
+The steps below will use extracts from said documentation.
+
+After initializing the library, you'll probably also want to identify the current user, so that events can be correlated properly:
+
+```js title="Identify the user."
+posthog.identify(userId);
+```
+
+### Capture and transform the event
+
+Attach an event listener to Unleash that listens for `"impression"` events. Inside the listener, transform the event data to the format you want and send it to your analytics service.
+
+```js title="Capture, transform, and send impression data."
+// listen for impression events
+unleash.on("impression", (event) => {
+    // capture and transform events
+    posthog.capture(event.eventType, {
+        ...event.context,
+        distinct_id: event.context?.userId,
+        featureName: event.featureName,
+        enabled: event.enabled,
+        variant: event.variant,
+    });
+});
+```
+
+Posthog expects an object with a `distinct_id` property that it uses to correlate data.
+Additionally, you can add whatever properties you want, such as the feature flag name, its state and/or variant, or the whole Unleash context.
+The `posthog.capture` method sends the event data to your Posthog instance.

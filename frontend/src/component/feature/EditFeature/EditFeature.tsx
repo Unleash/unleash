@@ -81,7 +81,7 @@ const EditFeature = () => {
             title='Edit Feature flag'
             description='Feature flags support different use cases, each with their own specific needs such as simple static routing or more complex routing.
             The feature flag is disabled when created and you decide when to enable'
-            documentationLink='https://docs.getunleash.io/reference/feature-toggles#feature-flag-types'
+            documentationLink='https://docs.getunleash.io/concepts/feature-flags#feature-flag-types'
             documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >

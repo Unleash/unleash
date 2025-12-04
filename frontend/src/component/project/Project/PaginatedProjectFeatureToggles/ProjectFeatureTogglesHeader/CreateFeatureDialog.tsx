@@ -142,7 +142,7 @@ const CreateFeatureDialogContent = ({
         icon: <FlagIcon />,
         text: 'Feature flags are at the core of Unleash. Use them to control your feature rollouts.',
         link: {
-            url: 'https://docs.getunleash.io/reference/feature-toggles',
+            url: 'https://docs.getunleash.io/concepts/feature-flags',
             label: 'Feature flags documentation',
         },
     };

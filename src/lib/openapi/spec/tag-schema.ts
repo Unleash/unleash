@@ -5,7 +5,7 @@ export const tagSchema = {
     $id: '#/components/schemas/tagSchema',
     type: 'object',
     description:
-        'Representation of a [tag](https://docs.getunleash.io/reference/feature-toggles#tags)',
+        'Representation of a [tag](https://docs.getunleash.io/concepts/feature-flags#tags)',
     additionalProperties: false,
     required: ['value', 'type'],
     properties: {
@@ -21,7 +21,7 @@ export const tagSchema = {
             minLength: TAG_MIN_LENGTH,
             maxLength: TAG_MAX_LENGTH,
             description:
-                'The [type](https://docs.getunleash.io/reference/feature-toggles#tags) of the tag',
+                'The [type](https://docs.getunleash.io/concepts/feature-flags#tags) of the tag',
             example: 'simple',
         },
         color: {

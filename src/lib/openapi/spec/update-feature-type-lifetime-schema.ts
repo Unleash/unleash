@@ -5,7 +5,7 @@ export const updateFeatureTypeLifetimeSchema = {
     type: 'object',
     required: ['lifetimeDays'],
     description:
-        'Data used when updating the lifetime of a [feature flag type](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types).',
+        'Data used when updating the lifetime of a [feature flag type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types).',
     properties: {
         lifetimeDays: {
             description:

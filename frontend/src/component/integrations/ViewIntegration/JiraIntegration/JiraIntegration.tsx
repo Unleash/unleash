@@ -36,7 +36,7 @@ export const JIRA_INFO = {
     description:
         'Create, connect, manage, and approve Unleash feature flags directly from Jira.',
     documentationUrl:
-        'https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation',
+        'https://docs.getunleash.io/integrate/jira-cloud-plugin-installation',
     howTo: `  - Create a new feature flag directly within Jira, or connect existing flags to any Jira issue.
   - Keep track of your flag status for each environment.
   - Activate/deactivate feature flags directly within Jira.

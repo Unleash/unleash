@@ -78,7 +78,7 @@ const EditUser = () => {
             loading={loading}
             title='Edit user'
             description='In order for a user to get access to Unleash, they need to be assigned a root role, such as Viewer, Editor, or Admin.'
-            documentationLink='https://docs.getunleash.io/reference/rbac#predefined-roles'
+            documentationLink='https://docs.getunleash.io/concepts/rbac#predefined-roles'
             documentationLinkLabel='User management documentation'
             formatApiCode={formatApiCode}
         >

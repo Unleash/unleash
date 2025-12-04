@@ -139,7 +139,7 @@ export const SplashPageOperators = () => {
                 <StyledFooter>
                     <p>
                         <StyledLink
-                            href='https://docs.getunleash.io/reference/activation-strategies#numeric-operators'
+                            href='https://docs.getunleash.io/concepts/activation-strategies#numeric-operators'
                             target='_blank'
                             rel='noreferrer'
                         >

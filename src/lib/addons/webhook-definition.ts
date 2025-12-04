@@ -30,8 +30,8 @@ import {
     CHANGE_REQUEST_SCHEDULED,
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
     FEATURE_COMPLETED,
-    SAFEGUARD_PROGRESSIONS_PAUSED,
-    SAFEGUARD_PROGRESSIONS_RESUMED,
+    RELEASE_PLAN_PROGRESSIONS_PAUSED,
+    RELEASE_PLAN_PROGRESSIONS_RESUMED,
 } from '../events/index.js';
 import type { IAddonDefinition } from '../types/model.js';
 
@@ -93,7 +93,7 @@ const webhookDefinition: IAddonDefinition = {
   "json": {{{eventJson}}}
 }`,
             description:
-                '(Optional) You may format the body using a mustache template. If you don\'t specify anything, the format will be similar to the [events format](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events). You can use `{{{eventJson}}}` to include the entire serialized event, or `"{{eventMarkdown}}"` for the formatted description.',
+                '(Optional) You may format the body using a mustache template. If you don\'t specify anything, the format will be similar to the [events format](https://docs.getunleash.io/api/events). You can use `{{{eventJson}}}` to include the entire serialized event, or `"{{eventMarkdown}}"` for the formatted description.',
             type: 'textfield',
             required: false,
             sensitive: false,
@@ -131,8 +131,8 @@ const webhookDefinition: IAddonDefinition = {
         CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
         CHANGE_REQUEST_SCHEDULE_SUSPENDED,
         FEATURE_POTENTIALLY_STALE_ON,
-        SAFEGUARD_PROGRESSIONS_PAUSED,
-        SAFEGUARD_PROGRESSIONS_RESUMED,
+        RELEASE_PLAN_PROGRESSIONS_PAUSED,
+        RELEASE_PLAN_PROGRESSIONS_RESUMED,
     ],
 };
 

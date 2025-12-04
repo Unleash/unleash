@@ -75,7 +75,7 @@ export class FeatureTypeController extends Controller {
                     tags: ['Feature Types'],
                     operationId: 'updateFeatureTypeLifetime',
                     summary: 'Update feature type lifetime',
-                    description: `Updates the lifetime configuration for the specified [feature flag type](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types). The expected lifetime is an integer representing the number of days before Unleash marks a feature flag of that type as potentially stale. If set to \`null\` or \`0\`, then feature flags of that particular type will never be marked as potentially stale.
+                    description: `Updates the lifetime configuration for the specified [feature flag type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types). The expected lifetime is an integer representing the number of days before Unleash marks a feature flag of that type as potentially stale. If set to \`null\` or \`0\`, then feature flags of that particular type will never be marked as potentially stale.
 
 When a feature flag type's expected lifetime is changed, this will also cause any feature flags of this type to be reevaluated for potential staleness.`,
                     responses: {

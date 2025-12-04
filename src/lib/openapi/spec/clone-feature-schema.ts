@@ -15,7 +15,7 @@ export const cloneFeatureSchema = {
             type: 'boolean',
             example: true,
             description:
-                'Whether to use the new feature name as its group ID or not. Group ID is used for calculating [stickiness](https://docs.getunleash.io/reference/stickiness#calculation). Defaults to true.',
+                'Whether to use the new feature name as its group ID or not. Group ID is used for calculating [stickiness](https://docs.getunleash.io/concepts/stickiness#calculation). Defaults to true.',
         },
     },
     components: {},

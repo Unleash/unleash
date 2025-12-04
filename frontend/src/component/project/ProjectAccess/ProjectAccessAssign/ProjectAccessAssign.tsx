@@ -366,7 +366,7 @@ export const ProjectAccessAssign = ({
                 modal
                 title={`${!edit ? 'Assign' : 'Edit'} ${entityType} access`}
                 description='Custom project roles allow you to fine-tune access rights and permissions within your projects.'
-                documentationLink='https://docs.getunleash.io/reference/rbac#create-and-assign-a-custom-project-role'
+                documentationLink='https://docs.getunleash.io/concepts/rbac#create-and-assign-a-custom-project-role'
                 documentationLinkLabel='Project access documentation'
                 formatApiCode={formatApiCode}
             >

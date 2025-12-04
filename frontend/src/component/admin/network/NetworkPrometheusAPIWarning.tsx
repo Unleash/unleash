@@ -12,7 +12,7 @@ export const NetworkPrometheusAPIWarning = () => {
             This view requires the <strong>PROMETHEUS_API</strong> environment
             variable to be set. Refer to our{' '}
             <a
-                href='https://docs.getunleash.io/reference/network-view#data-source'
+                href='https://docs.getunleash.io/concepts/network-view#data-source'
                 target='_blank'
                 rel='noreferrer'
             >

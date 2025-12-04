@@ -14,7 +14,7 @@ export const updateContextFieldSchema = {
         stickiness: {
             type: 'boolean',
             description:
-                '`true` if this field should be available for use with [custom stickiness](https://docs.getunleash.io/reference/stickiness#custom-stickiness), otherwise `false`',
+                '`true` if this field should be available for use with [custom stickiness](https://docs.getunleash.io/concepts/stickiness#custom-stickiness), otherwise `false`',
             example: false,
         },
         sortOrder: {

@@ -65,7 +65,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/node"
+                        href="https://docs.getunleash.io/sdks/node"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -85,7 +85,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/java"
+                        href="https://docs.getunleash.io/sdks/java"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -105,7 +105,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/go"
+                        href="https://docs.getunleash.io/sdks/go"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -126,7 +126,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/rust"
+                        href="https://docs.getunleash.io/sdks/rust"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -147,7 +147,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/ruby"
+                        href="https://docs.getunleash.io/sdks/ruby"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -168,7 +168,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/python"
+                        href="https://docs.getunleash.io/sdks/python"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -188,7 +188,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/dotnet"
+                        href="https://docs.getunleash.io/sdks/dotnet"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -208,7 +208,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/php"
+                        href="https://docs.getunleash.io/sdks/php"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -228,7 +228,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks"
+                        href="https://docs.getunleash.io/sdks"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -265,7 +265,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/javascript-browser"
+                        href="https://docs.getunleash.io/sdks/javascript-browser"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -285,7 +285,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/react"
+                        href="https://docs.getunleash.io/sdks/react"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -305,7 +305,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/next-js"
+                        href="https://docs.getunleash.io/sdks/next-js"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -325,7 +325,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/vue"
+                        href="https://docs.getunleash.io/sdks/vue"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -345,7 +345,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/ios-proxy"
+                        href="https://docs.getunleash.io/sdks/ios-proxy"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -365,7 +365,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/android-proxy"
+                        href="https://docs.getunleash.io/sdks/android-proxy"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -385,7 +385,7 @@ exports[`should render DrawerMenu 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/flutter"
+                        href="https://docs.getunleash.io/sdks/flutter"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -591,7 +591,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/node"
+                        href="https://docs.getunleash.io/sdks/node"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -611,7 +611,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/java"
+                        href="https://docs.getunleash.io/sdks/java"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -631,7 +631,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/go"
+                        href="https://docs.getunleash.io/sdks/go"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -652,7 +652,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/rust"
+                        href="https://docs.getunleash.io/sdks/rust"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -673,7 +673,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/ruby"
+                        href="https://docs.getunleash.io/sdks/ruby"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -694,7 +694,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/python"
+                        href="https://docs.getunleash.io/sdks/python"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -714,7 +714,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/dotnet"
+                        href="https://docs.getunleash.io/sdks/dotnet"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -734,7 +734,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/php"
+                        href="https://docs.getunleash.io/sdks/php"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -754,7 +754,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks"
+                        href="https://docs.getunleash.io/sdks"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -791,7 +791,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/javascript-browser"
+                        href="https://docs.getunleash.io/sdks/javascript-browser"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -811,7 +811,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/react"
+                        href="https://docs.getunleash.io/sdks/react"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -831,7 +831,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/next-js"
+                        href="https://docs.getunleash.io/sdks/next-js"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -851,7 +851,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/vue"
+                        href="https://docs.getunleash.io/sdks/vue"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -871,7 +871,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/ios-proxy"
+                        href="https://docs.getunleash.io/sdks/ios-proxy"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -891,7 +891,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/android-proxy"
+                        href="https://docs.getunleash.io/sdks/android-proxy"
                         rel="noreferrer"
                         target="_blank"
                       >
@@ -911,7 +911,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                       className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
-                        href="https://docs.getunleash.io/reference/sdks/flutter"
+                        href="https://docs.getunleash.io/sdks/flutter"
                         rel="noreferrer"
                         target="_blank"
                       >

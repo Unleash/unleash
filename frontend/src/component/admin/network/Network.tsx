@@ -60,7 +60,6 @@ const consumptionModelTabs = [
 
 export const Network = () => {
     const { pathname } = useLocation();
-    const edgeObservabilityEnabled = useUiFlag('edgeObservability');
     const consumptionModelEnabled = useUiFlag('consumptionModelUI');
     const enterpriseEdgeUIEnabled = useUiFlag('enterpriseEdgeUI');
     const allTabs = consumptionModelEnabled
@@ -68,9 +67,7 @@ export const Network = () => {
         : [...tabs, ...seatModelTabs];
 
     const filteredTabs = allTabs.filter(
-        ({ label }) =>
-            label !== 'Connected Edges' ||
-            (edgeObservabilityEnabled && !enterpriseEdgeUIEnabled),
+        ({ label }) => label !== 'Connected Edges' || !enterpriseEdgeUIEnabled,
     );
 
     return (
@@ -103,21 +100,16 @@ export const Network = () => {
                 <Routes>
                     <Route path='*' element={<NetworkOverview />} />
                     <Route path='traffic' element={<NetworkTraffic />} />
-                    {edgeObservabilityEnabled && (
-                        <Route
-                            path='connected-edges'
-                            element={
-                                enterpriseEdgeUIEnabled ? (
-                                    <Navigate
-                                        to='/admin/enterprise-edge'
-                                        replace
-                                    />
-                                ) : (
-                                    <NetworkConnectedEdges />
-                                )
-                            }
-                        />
-                    )}
+                    <Route
+                        path='connected-edges'
+                        element={
+                            enterpriseEdgeUIEnabled ? (
+                                <Navigate to='/admin/enterprise-edge' replace />
+                            ) : (
+                                <NetworkConnectedEdges />
+                            )
+                        }
+                    />
                     <Route
                         path='data-usage'
                         element={<NetworkTrafficUsage />}

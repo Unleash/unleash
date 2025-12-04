@@ -247,7 +247,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                     context field. PS! Not all client SDK's support this feature
                     yet!{' '}
                     <Link
-                        href='https://docs.getunleash.io/reference/stickiness'
+                        href='https://docs.getunleash.io/concepts/stickiness'
                         target='_blank'
                         rel='noreferrer'
                     >

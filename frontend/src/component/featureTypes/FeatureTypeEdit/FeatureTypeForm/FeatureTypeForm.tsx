@@ -125,7 +125,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                     : `Edit flag type: ${featureType?.name}`
             }
             description={featureType?.description || ''}
-            documentationLink='https://docs.getunleash.io/reference/feature-toggles#feature-flag-types'
+            documentationLink='https://docs.getunleash.io/concepts/feature-flags#feature-flag-types'
             documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >
@@ -151,7 +151,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                                 </p>
                                 <br />
                                 <a
-                                    href='https://docs.getunleash.io/reference/feature-toggles#feature-flag-types'
+                                    href='https://docs.getunleash.io/concepts/feature-flags#feature-flag-types'
                                     target='_blank'
                                     rel='noreferrer'
                                 >

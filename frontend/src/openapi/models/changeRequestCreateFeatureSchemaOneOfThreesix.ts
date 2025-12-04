@@ -7,7 +7,7 @@ import type { ChangeRequestCreateFeatureSchemaOneOfThreesixAction } from './chan
 import type { ChangeRequestCreateFeatureSchemaOneOfThreesixPayload } from './changeRequestCreateFeatureSchemaOneOfThreesixPayload.js';
 
 /**
- * Create or update a safeguard for a release plan.
+ * Resume paused milestone progressions for a release plan.
  */
 export type ChangeRequestCreateFeatureSchemaOneOfThreesix = {
     /** The name of this action. */

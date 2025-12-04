@@ -12,5 +12,5 @@ export type ChangeRequestCreateSchemaOneOfFouroneAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateSchemaOneOfFouroneAction = {
-    changeSafeguard: 'changeSafeguard',
+    resumeMilestoneProgression: 'resumeMilestoneProgression',
 } as const;

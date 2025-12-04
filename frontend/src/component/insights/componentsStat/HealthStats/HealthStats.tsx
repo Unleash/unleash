@@ -101,7 +101,7 @@ export const HealthStats: FC<IHealthStatsProps> = ({
                 </StyledStatsRow>
                 <ExplanationRow>
                     <Link
-                        href='https://docs.getunleash.io/reference/insights#health'
+                        href='https://docs.getunleash.io/concepts/insights#health'
                         target='_blank'
                         rel='noreferrer'
                     >

@@ -31,7 +31,7 @@ To get started with Unleash, you can either explore [Unleash Enterprise](#unleas
 
 #### Unleash Enterprise
 
-To start with Unleash Enterprise, [request a free trial](https://www.getunleash.io/plans/enterprise-payg?utm_source=oss&utm_medium=readme&utm_content=unleash-enterprise-start). This gives you access to a hosted instance with unlimited projects and environments and features such as [role-based access control](https://docs.getunleash.io/reference/rbac), [change requests](https://docs.getunleash.io/reference/change-requests), [single sign-on](https://docs.getunleash.io/reference/sso), and [SCIM](https://docs.getunleash.io/reference/scim) for automatic user provisioning.
+To start with Unleash Enterprise, [request a free trial](https://www.getunleash.io/plans/enterprise-payg?utm_source=oss&utm_medium=readme&utm_content=unleash-enterprise-start). This gives you access to a hosted instance with unlimited projects and environments and features such as [role-based access control](https://docs.getunleash.io/concepts/rbac), [change requests](https://docs.getunleash.io/concepts/change-requests), [single sign-on](https://docs.getunleash.io/concepts/sso), and [SCIM](https://docs.getunleash.io/concepts/scim) for automatic user provisioning.
 
 #### Unleash Open Source
 
@@ -105,8 +105,8 @@ We provide guides for deploying to services like Heroku and DigitalOcean:
 [![Deploy to Heroku](./.github/deploy-heroku-20.png)](https://www.heroku.com/deploy/?template=https://github.com/Unleash/unleash) [![Deploy to DigitalOcean](./.github/deploy-digital.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/Unleash/unleash/tree/main&refcode=0e1d75187044)
 
 For more advanced configurations options, check out our documentation on:
-- [Getting started with self-hosting](https://docs.getunleash.io/reference/deploy/getting-started)
-- [Unleash configuration options](https://docs.getunleash.io/reference/deploy/configuring-unleash)
+- [Getting started with self-hosting](https://docs.getunleash.io/deploy/getting-started)
+- [Unleash configuration options](https://docs.getunleash.io/deploy/configuring-unleash)
 
 <br/>
 
@@ -122,7 +122,7 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 
 📚 [Visit the documentation](https://docs.getunleash.io/) for more in-depth descriptions, how-to guides, and more.
 
-📖 Learn more about the principles of building and scaling [feature flag](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices) solutions.
+📖 Learn more about the principles of building and scaling [feature flag](https://docs.getunleash.io/guides/feature-flag-best-practices) solutions.
 
 <br/>
 
@@ -147,16 +147,16 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 ### Flexibility and adaptability
 
 - Get an overview of all feature flags across all your environments, applications and services
-- Targeted releases using [activation strategies](https://docs.getunleash.io/reference/activation-strategies) to enable and disable features for certain users or segments without having to redeploy your application.
-- [Canary releases / gradual rollouts](https://docs.getunleash.io/reference/activation-strategies)
-- [Kill switches](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types)
+- Targeted releases using [activation strategies](https://docs.getunleash.io/concepts/activation-strategies) to enable and disable features for certain users or segments without having to redeploy your application.
+- [Canary releases / gradual rollouts](https://docs.getunleash.io/concepts/activation-strategies)
+- [Kill switches](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types)
 - [A/B testing](https://docs.getunleash.io/feature-flag-tutorials/use-cases/a-b-testing)
-- 2 [environments](https://docs.getunleash.io/reference/environments)
-- Organize feature flags using [tags](https://docs.getunleash.io/reference/feature-toggles#tags)
+- 2 [environments](https://docs.getunleash.io/concepts/environments)
+- Organize feature flags using [tags](https://docs.getunleash.io/concepts/feature-flags#tags)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
-- [Insights for managing technical debt](https://docs.getunleash.io/reference/technical-debt) and [stale flags](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-flags)
+- [Insights for managing technical debt](https://docs.getunleash.io/concepts/technical-debt) and [stale flags](https://docs.getunleash.io/concepts/technical-debt#stale-and-potentially-stale-flags)
 - API-first: _everything_ can be automated. No exceptions.
-- [12 official SDKs](https://docs.getunleash.io/reference/sdks#official-sdks), and 10 [community-contributed SDKs](https://docs.getunleash.io/reference/sdks#community-sdks)
+- [12 official SDKs](https://docs.getunleash.io/sdks#official-sdks), and 10 [community-contributed SDKs](https://docs.getunleash.io/sdks#community-sdks)
 - Run it via Docker with the [official Docker image](https://hub.docker.com/r/unleashorg/unleash-server) or as a pure Node.js application
 
 ### Security and performance
@@ -165,18 +165,18 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - [Audit logs](https://docs.getunleash.io/advanced/audit_log)
 - Enforce [OWASP's secure headers](https://owasp.org/www-project-secure-headers/) via the strict HTTPS-only mode
 - Flexible hosting options: host it on premise or in the cloud (_any_ cloud)
-- Scale with [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) independently of the Unleash server to support any number of frontend clients without overloading your Unleash instance
+- Scale with [Unleash Edge](https://docs.getunleash.io/unleash-edge) independently of the Unleash server to support any number of frontend clients without overloading your Unleash instance
 
 ### Looking for more features?
 
 If you're looking for one of the following features, please take a look at our [Pro and Enterprise plans](https://www.getunleash.io/plans):
 
-- [role-based access control (RBAC)](https://docs.getunleash.io/reference/rbac)
-- [single sign-on (SSO)](https://docs.getunleash.io/reference/sso)
+- [role-based access control (RBAC)](https://docs.getunleash.io/concepts/rbac)
+- [single sign-on (SSO)](https://docs.getunleash.io/concepts/sso)
 - more environments
-- [feature flags project support](https://docs.getunleash.io/reference/projects)
-- [advanced segmentation](https://docs.getunleash.io/reference/segments)
-- [additional strategy constraints](https://docs.getunleash.io/reference/activation-strategies#constraints)
+- [feature flags project support](https://docs.getunleash.io/concepts/projects)
+- [advanced segmentation](https://docs.getunleash.io/concepts/segments)
+- [additional strategy constraints](https://docs.getunleash.io/concepts/activation-strategies#constraints)
 - tighter security
 - more hosting options (we can even host it for you!)
 
@@ -186,7 +186,7 @@ If you're looking for one of the following features, please take a look at our [
 
 <img src="./website/static/img/unleash-architecture-edge.png" title="Unleash System Overview" />
 
-Read more in the [_system overview_ section of the Unleash documentation](https://docs.getunleash.io/understanding-unleash/unleash-overview#system-overview).
+Read more in the [_system overview_ section of the Unleash documentation](https://docs.getunleash.io/get-started/unleash-overview#system-overview).
 
 <br/>
 
@@ -196,28 +196,28 @@ To connect your application to Unleash you'll need to use a client SDK for your 
 
 **Official backend SDKs:**
 
-- [Go SDK](https://docs.getunleash.io/reference/sdks/go)
-- [Java SDK](https://docs.getunleash.io/reference/sdks/java)
-- [Node.js SDK](https://docs.getunleash.io/reference/sdks/node)
-- [PHP SDK](https://docs.getunleash.io/reference/sdks/php)
-- [Python SDK](https://docs.getunleash.io/reference/sdks/python)
-- [Ruby SDK](https://docs.getunleash.io/reference/sdks/ruby)
+- [Go SDK](https://docs.getunleash.io/sdks/go)
+- [Java SDK](https://docs.getunleash.io/sdks/java)
+- [Node.js SDK](https://docs.getunleash.io/sdks/node)
+- [PHP SDK](https://docs.getunleash.io/sdks/php)
+- [Python SDK](https://docs.getunleash.io/sdks/python)
+- [Ruby SDK](https://docs.getunleash.io/sdks/ruby)
 - [Rust SDK](https://github.com/unleash/unleash-client-rust)
-- [.NET SDK](https://docs.getunleash.io/reference/sdks/dotnet)
+- [.NET SDK](https://docs.getunleash.io/sdks/dotnet)
 
 **Official frontend SDKs:**
 
-- [Android Proxy SDK](https://docs.getunleash.io/reference/sdks/android-proxy)
-- [Flutter Proxy SDK](https://docs.getunleash.io/reference/sdks/flutter)
-- [iOS Proxy SDK](https://docs.getunleash.io/reference/sdks/ios-proxy)
-- [JavaScript Proxy SDK](https://docs.getunleash.io/reference/sdks/javascript-browser)
-- [React Proxy SDK](https://docs.getunleash.io/reference/sdks/react)
-- [Svelte Proxy SDK](https://docs.getunleash.io/reference/sdks/svelte)
-- [Vue Proxy SDK](https://docs.getunleash.io/reference/sdks/vue)
+- [Android Proxy SDK](https://docs.getunleash.io/sdks/android-proxy)
+- [Flutter Proxy SDK](https://docs.getunleash.io/sdks/flutter)
+- [iOS Proxy SDK](https://docs.getunleash.io/sdks/ios-proxy)
+- [JavaScript Proxy SDK](https://docs.getunleash.io/sdks/javascript-browser)
+- [React Proxy SDK](https://docs.getunleash.io/sdks/react)
+- [Svelte Proxy SDK](https://docs.getunleash.io/sdks/svelte)
+- [Vue Proxy SDK](https://docs.getunleash.io/sdks/vue)
 
 **Community SDKs:**
 
-If none of the official SDKs fit your need, there's also a number of [community-developed SDKs](https://docs.getunleash.io/reference/sdks#community-sdks) where you might find an implementation for your preferred language (such as [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), and more).
+If none of the official SDKs fit your need, there's also a number of [community-developed SDKs](https://docs.getunleash.io/sdks#community-sdks) where you might find an implementation for your preferred language (such as [Elixir](https://gitlab.com/afontaine/unleash_ex), [Dart](https://pub.dev/packages/unleash), [Clojure](https://github.com/AppsFlyer/unleash-client-clojure), and more).
 
 <br/>
 

@@ -21,7 +21,7 @@ export const StrategyVariantsPreferredAlert = () => {
 const DocsSdkSupportLink = () => {
     return (
         <a
-            href='https://docs.getunleash.io/reference/strategy-variants#client-sdk-support'
+            href='https://docs.getunleash.io/concepts/strategy-variants#client-sdk-support'
             target='_blank'
             rel='noreferrer'
         >
@@ -33,7 +33,7 @@ const DocsSdkSupportLink = () => {
 const DocsLink = () => {
     return (
         <a
-            href='https://docs.getunleash.io/reference/strategy-variants'
+            href='https://docs.getunleash.io/concepts/strategy-variants'
             target='_blank'
             rel='noreferrer'
         >

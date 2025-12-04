@@ -19,7 +19,7 @@ export const baseTheme = {
         fontWeightRegular: '400',
         allVariants: { lineHeight: 1.4 },
         button: {
-            fontSize: `${15 / 16}rem`,
+            fontSize: `${14 / 16}rem`,
             lineHeight: 1.75,
         },
         h1: {

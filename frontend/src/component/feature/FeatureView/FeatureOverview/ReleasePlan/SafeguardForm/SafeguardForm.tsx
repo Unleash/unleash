@@ -66,6 +66,7 @@ interface IBaseSafeguardFormProps {
     onDelete?: () => void;
     safeguard?: ISafeguard;
     environment: string;
+    featureId: string;
     badge?: ReactNode;
 }
 
@@ -290,9 +291,11 @@ const useSafeguardFormHandlers = (
     };
 };
 
-const useSafeguardFormState = (safeguard?: ISafeguard) => {
+const useSafeguardFormState = (
+    safeguard: ISafeguard | undefined,
+    featureId: string,
+) => {
     const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
     const formValues = useSafeguardFormValues(safeguard);
     const formMode = useSafeguardFormMode(safeguard);
     const metricsData = useSafeguardMetricsData(
@@ -561,9 +564,10 @@ const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     onDelete,
     safeguard,
     environment,
+    featureId,
     badge,
 }) => {
-    const formState = useSafeguardFormState(safeguard);
+    const formState = useSafeguardFormState(safeguard, featureId);
     const { mode, setMode, buildSafeguardData, threshold } = formState;
 
     const handleSubmit = (e: FormEvent) => {
@@ -599,9 +603,10 @@ const SafeguardFormWithChangeRequests: FC<IBaseSafeguardFormProps> = ({
     onDelete,
     safeguard,
     environment,
+    featureId,
     badge,
 }) => {
-    const formState = useSafeguardFormState(safeguard);
+    const formState = useSafeguardFormState(safeguard, featureId);
     const {
         mode,
         setMode,
@@ -661,9 +666,10 @@ export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
     onDelete,
     safeguard,
     environment,
+    featureId,
     badge,
 }) => {
-    const formState = useSafeguardFormState(safeguard);
+    const formState = useSafeguardFormState(safeguard, featureId);
     const { mode, setMode, buildSafeguardData, threshold } = formState;
 
     const handleSubmit = (e: FormEvent) => {

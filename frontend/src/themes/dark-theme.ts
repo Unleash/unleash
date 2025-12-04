@@ -254,6 +254,7 @@ export const darkTheme = createTheme({
                 },
                 a: {
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                 },
                 '.dropdown-outline, .MuiAutocomplete-popper': {
                     // used for user dropdown, autocomplete, and change request primary button dropdown, notifications dropdown
@@ -268,6 +269,7 @@ export const darkTheme = createTheme({
                 root: ({ theme }) => ({
                     ...focusable(theme),
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                     '&:hover': {
                         textDecoration: 'none',
                     },

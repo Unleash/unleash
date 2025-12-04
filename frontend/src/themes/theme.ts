@@ -15,7 +15,7 @@ export const baseTheme = {
     typography: {
         fontFamily: 'Sen, Roboto, sans-serif',
         fontWeightBold: '700',
-        fontWeightMedium: '700',
+        fontWeightMedium: '500',
         allVariants: { lineHeight: 1.4 },
         button: {
             fontSize: `${15 / 16}rem`,
@@ -59,7 +59,7 @@ export const baseTheme = {
     },
     fontWeight: {
         thin: 300,
-        medium: 400,
+        medium: 500,
         semi: 700,
         bold: 700,
     },
@@ -312,6 +312,7 @@ export const lightTheme = createTheme({
 
                 a: {
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                 },
             },
         },
@@ -332,6 +333,7 @@ export const lightTheme = createTheme({
                 root: ({ theme }) => ({
                     ...focusable(theme),
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                     '&:hover': {
                         textDecoration: 'none',
                     },

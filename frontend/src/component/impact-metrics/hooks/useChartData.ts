@@ -72,7 +72,7 @@ export const useChartData = ({
                     borderColor: theme.palette.error.main,
                     backgroundColor: 'transparent',
                     borderDash: [4, 3],
-                    label: `Threshold`,
+                    label: 'Threshold',
                 });
             }
 

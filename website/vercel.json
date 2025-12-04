@@ -1033,6 +1033,36 @@
       "permanent": true
     },
     {
+      "source": "/unleash-edge/concepts",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
+      "source": "/unleash-edge/benchmarking",
+      "destination": "/unleash-edge/deploy",
+      "permanent": true
+    },
+    {
+      "source": "/unleash-edge/cli",
+      "destination": "/unleash-edge/configure",
+      "permanent": true
+    },
+    {
+      "source": "/unleash-edge/deploying",
+      "destination": "/unleash-edge/deploy",
+      "permanent": true
+    },
+    {
+      "source": "/unleash-edge/migration-guide",
+      "destination": "/unleash-edge/migrate-from-proxy",
+      "permanent": true
+    },
+    {
+      "source": "/unleash-edge/development-guide",
+      "destination": "/unleash-edge",
+      "permanent": true
+    },
+    {
       "source": "/reference/sdks/android-proxy",
       "destination": "/sdks/android",
       "permanent": true

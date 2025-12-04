@@ -562,15 +562,18 @@ const sidebars: SidebarsConfig = {
             collapsed: true,
             link: {
                 type: 'doc',
-                id: 'generated/unleash-edge',
+                id: 'unleash-edge/unleash-edge-overview',
             },
             items: [
-                'generated/unleash-edge/concepts',
-                'generated/unleash-edge/deploying',
-                'generated/unleash-edge/benchmarking',
-                'generated/unleash-edge/cli',
-                'generated/unleash-edge/development-guide',
-                'generated/unleash-edge/migration-guide',
+                {
+                    type: 'category',
+                    label: 'Self-host Unleash Edge',
+                    items: [
+                        'unleash-edge/deploy',
+                        'unleash-edge/configure',
+                        'unleash-edge/migrate-from-proxy',
+                    ],
+                },
             ],
         },
         {

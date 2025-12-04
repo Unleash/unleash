@@ -16,6 +16,7 @@ export const baseTheme = {
         fontFamily: 'Sen, Roboto, sans-serif',
         fontWeightBold: '700',
         fontWeightMedium: '500',
+        fontWeightRegular: '400',
         allVariants: { lineHeight: 1.4 },
         button: {
             fontSize: `${15 / 16}rem`,

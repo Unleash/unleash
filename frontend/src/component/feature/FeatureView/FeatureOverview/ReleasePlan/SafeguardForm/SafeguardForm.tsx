@@ -317,7 +317,7 @@ const useSafeguardFormState = (safeguard?: ISafeguard) => {
     };
 };
 
-const SafeguardFormBase: FC<{
+interface SafeguardFormBaseProps {
     formState: ReturnType<typeof useSafeguardFormState>;
     onSubmit: (e: FormEvent) => void;
     onCancel?: () => void;
@@ -325,7 +325,9 @@ const SafeguardFormBase: FC<{
     environment: string;
     badge?: ReactNode;
     children?: React.ReactNode;
-}> = ({
+}
+
+const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     formState,
     onSubmit,
     onCancel,
@@ -388,6 +390,10 @@ const SafeguardFormBase: FC<{
         return selectors;
     }, [appName, environment]);
 
+    const miniChartMetricDisplayName = metricOptions.find(
+        (m) => m.name === metricName,
+    )?.displayName;
+
     return (
         <StyledFormContainer onSubmit={onSubmit} mode={mode}>
             <StyledTopRow>
@@ -399,10 +405,7 @@ const SafeguardFormBase: FC<{
                 {metricName && (
                     <MiniMetricsChartWithTooltip
                         metricName={metricName}
-                        metricDisplayName={
-                            metricOptions.find((m) => m.name === metricName)
-                                ?.displayName
-                        }
+                        metricDisplayName={miniChartMetricDisplayName}
                         timeRange={timeRange}
                         labelSelectors={labelSelectors}
                         aggregationMode={aggregationMode}

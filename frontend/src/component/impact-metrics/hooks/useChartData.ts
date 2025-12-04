@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { getSeriesLabel } from '../metricsFormatters.ts';
-import type { SafeguardTriggerConditionSchemaOperator } from 'openapi/models/safeguardTriggerConditionSchemaOperator';
+import type { ChartDataset } from 'chart.js';
 
 const getColorStartingIndex = (modulo: number, series?: string): number => {
     if (!series || series.length === 0 || modulo <= 0) {
@@ -20,41 +20,16 @@ const getColorStartingIndex = (modulo: number, series?: string): number => {
     return Math.abs(hash) % modulo;
 };
 
-type ThresholdCondition = {
-    operator: SafeguardTriggerConditionSchemaOperator;
-    threshold: number;
-};
-
-// This is matching backend logic which looks for a single outlier
-const isThresholdConditionMet = (
-    data: (number | null)[],
-    condition?: ThresholdCondition,
-): boolean => {
-    if (!condition) return false;
-
-    return data.some((value) => {
-        if (value === null) return false;
-
-        if (condition.operator === '>') {
-            return value > condition.threshold;
-        } else if (condition.operator === '<') {
-            return value < condition.threshold;
-        }
-
-        return false;
-    });
-};
-
 interface UseChartDataParams {
     timeSeriesData: ImpactMetricsSeries[] | undefined;
     colorIndexBy?: string;
-    thresholdCondition?: ThresholdCondition;
+    threshold?: number;
 }
 
 export const useChartData = ({
     timeSeriesData,
     colorIndexBy,
-    thresholdCondition,
+    threshold,
 }: UseChartDataParams) => {
     const theme = useTheme();
     const colors = theme.palette.charts.series;
@@ -81,23 +56,29 @@ export const useChartData = ({
             );
             const values = series.data.map(([, value]) => value);
 
-            const hasThresholdExceeded = isThresholdConditionMet(
-                values,
-                thresholdCondition,
-            );
+            const datasets: ChartDataset<'line', (number | null)[]>[] = [
+                {
+                    data: values,
+                    borderColor: theme.palette.primary.main,
+                    backgroundColor: theme.palette.primary.light,
+                    label: getSeriesLabel(series.metric),
+                },
+            ];
+
+            if (threshold !== undefined) {
+                const thresholdData = timestamps.map(() => threshold);
+                datasets.push({
+                    data: thresholdData,
+                    borderColor: theme.palette.error.main,
+                    backgroundColor: 'transparent',
+                    borderDash: [4, 3],
+                    label: 'Threshold',
+                });
+            }
 
             return {
                 labels: timestamps,
-                datasets: [
-                    {
-                        data: values,
-                        borderColor: hasThresholdExceeded
-                            ? theme.palette.error.main
-                            : theme.palette.primary.main,
-                        backgroundColor: theme.palette.primary.light,
-                        label: getSeriesLabel(series.metric),
-                    },
-                ],
+                datasets,
             };
         } else {
             // Create a comprehensive timestamp range for consistent X-axis
@@ -147,10 +128,5 @@ export const useChartData = ({
                 datasets,
             };
         }
-    }, [
-        timeSeriesData,
-        theme,
-        thresholdCondition?.operator,
-        thresholdCondition?.threshold,
-    ]);
+    }, [timeSeriesData, theme, threshold, startColorIndex]);
 };

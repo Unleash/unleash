@@ -39,7 +39,7 @@ export const getSeriesLabel = (metric: Record<string, string>): string => {
         .join(', ');
 
     if (!__name__ && !labelParts) {
-        return 'Series';
+        return 'Value';
     }
 
     if (!__name__) {

@@ -128,13 +128,20 @@ export const AdminSettingsNavigation: FC<{
         onClick(activeItem);
     };
 
-    return <AdminSettingsLink mode={mode} onClick={setFullModeOnClick} />;
+    return (
+        <AdminSettingsLink
+            mode={mode}
+            onClick={setFullModeOnClick}
+            activeItem={activeItem}
+        />
+    );
 };
 
 export const AdminSettingsLink: FC<{
     mode: NavigationMode;
     onClick: (activeItem: string) => void;
-}> = ({ mode, onClick }) => (
+    activeItem: string;
+}> = ({ mode, onClick, activeItem }) => (
     <Box>
         <List>
             <MenuListItem
@@ -143,6 +150,7 @@ export const AdminSettingsLink: FC<{
                 onClick={() => onClick('/admin')}
                 mode={mode}
                 icon={<IconRenderer path='/admin' />}
+                selected={activeItem === '/admin'}
             />
         </List>
     </Box>

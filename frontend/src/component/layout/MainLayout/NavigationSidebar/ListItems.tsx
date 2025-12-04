@@ -147,7 +147,7 @@ export const MenuListItem: FC<{
                     <>
                         <StyledListItemIcon>{icon}</StyledListItemIcon>
                         <StyledListItemText>
-                            <CappedText>{text}</CappedText>
+                            <CappedText bold={selected}>{text}</CappedText>
                             {badge}
                         </StyledListItemText>
                     </>

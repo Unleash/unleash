@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 import { formatAssetPath } from 'utils/formatPath';
 import ReleaseTemplatePreviewImage from 'assets/img/releaseTemplatePreview.png';
+import type { Flag } from 'hooks/useUiFlag.ts';
 
 const StyledImg = styled('img')(() => ({
     maxWidth: '100%',
@@ -12,7 +13,7 @@ export type NewInUnleashItem = {
     longDescription?: string;
     preview: React.ReactNode;
     filter: {
-        flag?: string;
+        flag?: Flag;
         enterpriseOnly?: boolean;
         versionLowerThan: string;
     };
@@ -37,6 +38,7 @@ export const newInUnleashItems: NewInUnleashItem[] = [
         filter: {
             enterpriseOnly: true,
             versionLowerThan: '7.4.0',
+            flag: 'automatedActions',
         },
         beta: false,
         modal: true,

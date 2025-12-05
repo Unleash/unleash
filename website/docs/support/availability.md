@@ -18,6 +18,11 @@ This is an example of a feature that is only available to Enterprise customers w
 - [Enterprise](https://www.getunleash.io/pricing) - Available as pay-as-you-go or as an annual contract, either as cloud-hosted or self-hosted.
 - Pro - Currently not offered.
 
+# Unleash Edge
+
+- Open Source - Deprecated in favor of the Enterprise edition. Long-term support starts December 10, 2025. End-of-life is December 31, 2026.
+- Enterprise - Available as cloud-hosted or self-hosted. Requires Unleash v7.3+.
+
 ## Beta features
 
 Some new Unleash features are tagged as `BETA` in the documentation. This means that the feature may be subject to change or discontinuation. Unleash may decide to enable such features for a select number of customers only. If you're interested in trying out a beta feature, please reach out to Customer Success at beta@getunleash.io.

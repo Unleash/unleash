@@ -206,7 +206,7 @@ Deployed within your own infrastructure, Edge ensures that PII and sensitive con
 
 With Edge, you can keep your core Unleash service hidden from the internet while evaluating feature flags at the edge for better performance and scalability. Unleash Enterprise Edge cannot access the [Unleash Admin API](/get-started/unleash-overview#admin-api), minimizing the impact of compromised clients or credentials. In our cloud-hosted offering, you can also define an [IP allow list](#set-up-ip-allow-lists-for-enhanced-security) for the Unleash instance and Hosted Edge to further reduce the attack surface.
 
-For regulated environments that require continuous availability, you can configure persistent storage—such as Redis or local backup files—to keep feature flag evaluations running, even if the main Unleash server is temporarily unreachable. Learn more about Edge architecture and setup in our [Edge Concepts](/unleash-edge/concepts).
+For regulated environments that require continuous availability, you can configure persistent storage—such as Redis or local backup files—to keep feature flag evaluations running, even if the main Unleash server is temporarily unreachable. Learn more about Edge architecture and setup in our [Edge overview](/unleash-edge).
 
 The guide so far has focused on how you can use the features of Unleash to improve your application's security posture, making sure that feature flags are not the weak link. But what about Unleash itself, as a company and SaaS service? You might be asking…
 

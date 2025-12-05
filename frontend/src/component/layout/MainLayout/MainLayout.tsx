@@ -16,7 +16,7 @@ import { DraftBanner } from './DraftBanner/DraftBanner.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
-import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
+import { LegacyNewInUnleash } from './NavigationSidebar/NewInUnleash/LegacyNewInUnleash.tsx';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -120,7 +120,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 condition={!isSmallScreen}
                                 show={
                                     <NavigationSidebar
-                                        NewInUnleash={NewInUnleash}
+                                        NewInUnleash={LegacyNewInUnleash}
                                     />
                                 }
                             />

@@ -12,4 +12,7 @@ export const useDelayedUiFlagEvaluation = (): (<K extends Flag>(
     return (flag) => uiConfig?.flags?.[flag] || false;
 };
 
-export const useUiFlag = useDelayedUiFlagEvaluation();
+export const useUiFlag = <K extends Flag>(flag: K): boolean | Variant => {
+    const evaluate = useDelayedUiFlagEvaluation();
+    return evaluate(flag);
+};

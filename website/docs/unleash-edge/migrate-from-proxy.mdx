@@ -2,7 +2,7 @@
 title: Migrate from Unleash Proxy
 ---
 
-Unleash Edge is the successor of the now deprecated Unleash Proxy. It functions as a lightweight read-replica of your Unleash instance, designed to scale your feature flag infrastructure significantly.
+Unleash Edge is the successor of the now-deprecated Unleash Proxy. It functions as a lightweight read replica of your Unleash instance, designed to scale your feature flag infrastructure significantly.
 
 While Edge maintains the same security and privacy guarantees as the Proxy, it offers fundamental improvements in performance and architecture. This guide details the differences between the two services and provides steps to migrate your existing setup.
 
@@ -11,16 +11,16 @@ While Edge maintains the same security and privacy guarantees as the Proxy, it o
 | Feature | Unleash Proxy | Unleash Edge |
 | :---- | :---- | :---- |
 | **Performance** | Handles hundreds of requests per second (RPS). | Handles tens of thousands of RPS with lower memory usage. |
-| **Environments** | Supports a single environment per instance. Requires separate instances for Development and Production. | Supports multiple environments in a single instance. Dynamically routes requests based on the API token. |
+| **Environments** | Supports a single [environment](/concepts/environments) per instance. Requires separate instances for Development and Production. | Supports multiple [environments](/concepts/environments) in a single instance. Dynamically routes requests based on the API token. |
 | **Upstream URL** | Requires the /api suffix (https://unleash-instance.com/api). | No `/api` suffix (https://unleash-instance.com). |
-| **Backend SDKs** | Requires experimental flags and specific configuration. | Supported out of the box. |
+| **[Backend SDKs](/sdks#backend-sdks)** | Requires experimental flags and specific configuration. | Supported out of the box. |
 | **Language** | Node.js | Rust (Single binary, no runtime dependencies). |
 
 ## Migration path: Hosted Edge
 
-If you are an **Unleash Hosted** customer moving to the managed Enterprise Edge, you do not need to deploy any infrastructure.
+If you migrating to Enterprise Edge hosted, you do not need to deploy any infrastructure.
 
-1. **Request Enterprise Edge**: Contact your customer success reprentative to request Enterprise Edge.
+1. **Request Enterprise Edge**: Contact your customer success representative to request Enterprise Edge.
 2. **Get your Edge URL**: Note the specific regional URL provided in the Admin UI (for example, `https://<region>.unleash-edge.com`).
 3. **Update SDKs**: Update your frontend and backend SDKs to point to this new Edge URL instead of your old Proxy URL.
 
@@ -40,7 +40,7 @@ The most common configuration error during migration is the URL format used to c
 ### 2. Consolidate instances
 
 If you previously ran separate Proxy instances for development and production, you can now replace them with a single Edge instance.
-Edge dynamically routes requests to the correct environment based on the API token provided by the SDK.
+Edge dynamically routes requests to the correct [environment](/concepts/environments) based on the API token provided by the SDK.
 
 Deploy a single Edge container. Provide a startup token that has access to both environments (or use a wildcard token).
 Edge will automatically route incoming SDK requests to the correct environment based on the token the SDK provides.
@@ -49,7 +49,7 @@ Edge will automatically route incoming SDK requests to the correct environment b
 
 Edge handles tokens differently than the Proxy. Unlike the Proxy, where you could define arbitrary secrets, Edge requires valid Unleash tokens to fetch data. All tokens used by clients must be valid tokens generated in the Unleash Admin UI.
 
-To serve any traffic (even for frontend clients), Edge must have the feature data in its cache. You must start Edge with at least one backend token that covers the projects and environments you intend to serve.
+To serve any traffic (even for frontend clients), Edge must have the feature data in its cache. You must start Edge with at least one [backend token](/concepts/api-tokens-and-client-keys#backend-tokens) that covers the [projects](/concepts/projects) and [environments](/concepts/environments) you intend to serve.
 
 ### 4. Deploy and update networking
 
@@ -57,7 +57,7 @@ Deploy the Edge container (listening on port `3063` by default) in place of your
 
 ### 5. Verify SDK connections
 
-Ensure your [frontend](/sdks#frontend-sdks) and [backend SDKs](/sdks#backend-sdks) are pointing to the Edge URL. No code changes are required in the SDKs themselves; they use the standard Client and Frontend [APIs](/api).
+Ensure your [frontend](/sdks#frontend-sdks) and [backend SDKs](/sdks#backend-sdks) are pointing to the Edge URL. No code changes are required in the SDKs themselves; they use the standard client and frontend [APIs](/api).
 
 ## Advanced concepts
 
@@ -70,14 +70,16 @@ You can chain Edge instances to create complex topologies. For example, a centra
 - **Configuration**: Point the downstream Edge's `UPSTREAM_URL` to the upstream Edge instance.
 - **Metrics**: Metrics propagate up the chain from the `SDK -> Regional Edge -> Central Edge -> Unleash`.
 
+For more information, see [Daisy chaining](/unleash-edge/deploy#daisy-chaining).
+
 ### Offline mode
 
-Edge supports a dedicated [Offline mode](/unleash-edge/configure#offline-mode) for local development or air-gapped environments. This replaces the need to run a local Proxy with a mock config.
+Edge supports a dedicated [Offline mode](/unleash-edge/configure#offline-mode) for local development or air-gapped environments. This replaces the need to run a local Proxy with a mock config. See [Offline mode configuration](/unleash-edge/configure#offline-mode-configuration) for details.
 
 ## Unsupported features in Edge
 
 Edge is designed for scale and efficiency, which necessitates dropping support for some legacy features:
 
-- **Custom strategies:** Edge does not support custom activation strategies. You must migrate these to standard [strategy constraints].
+- **Custom strategies:** Edge does not support [custom activation strategies](/concepts/custom-activation-strategies). You must migrate these to standard [strategy constraints](/concepts/activation-strategies#constraints).
 - **Context enrichers:** The Proxy's experimental context enrichers are not supported in Edge.
 - **Custom JS integration:** Since Edge is written in Rust, you cannot wrap it in custom JavaScript code like the Node.js Proxy.

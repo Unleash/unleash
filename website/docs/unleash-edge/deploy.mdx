@@ -1,5 +1,7 @@
 ---
 title: Deploy Unleash Edge
+toc_max_heading_level: 2
+pagination_next: unleash-edge/configure
 ---
 
 :::note Availability
@@ -16,7 +18,7 @@ This guide covers deploying Enterprise Edge self-hosted on your infrastructure.
 
 To self-host Enterprise Edge, you need a license key. Contact your customer success representative to obtain or upgrade your license.
 
-### Infrastructure requirements
+## Infrastructure requirements
 
 Edge runs as a single binary or container. Minimum requirements per instance:
 
@@ -33,7 +35,7 @@ Unleash Edge supports two distinct modes of operation:
 - **Edge mode**: Connects to an upstream node (Unleash instance or another Edge). It synchronizes feature flags and streams metrics back to the upstream server. This is the standard operating mode.
 - **Offline mode**: Runs without a connection to an upstream Unleash instance. It loads feature flags from a local file (bootstrap file). This is primarily used for local development or strictly air-gapped testing.
 
-See [Operating modes](/unleash-edge/configure#operating-modes) for configuration options.
+See [Configure the operating mode](/unleash-edge/configure#configure-the-operating-mode) for configuration options.
 
 ```mermaid
 graph LR
@@ -48,12 +50,14 @@ graph LR
 
 Daisy chaining allows you to connect an Edge instance to another upstream Edge instance rather than directly to the Unleash API. This architecture is useful for multi-cloud deployments or extreme scale scenarios where a central Edge node bridges the gap between regional nodes and the main Unleash instance.
 
+```mermaid
 graph LR
   A(Client 1) -->|Fetch toggles| C((Edge 1))
   B(Client 2) -->|Fetch toggles| D((Edge 2))
   C-->|Fetch toggles| E((Edge 3))
   D-->|Fetch toggles| E
   E-->|Fetch toggles| F((Unleash))
+```
 
 To configure daisy chaining, point the downstream Edge's `UPSTREAM_URL` to the upstream Edge instance instead of Unleash. Metrics propagate upstream through the chain automatically.
 
@@ -61,13 +65,13 @@ To configure daisy chaining, point the downstream Edge's `UPSTREAM_URL` to the u
 
 Unleash Edge is distributed as a Docker image.
 
-To pull the image from Docket Hub, run:
+To pull the image from Docker Hub, run:
 
 ```shell
 docker pull unleashorg/unleash-edge-enterprise:latest
 ```
 
-To run Edge in a container, provide your upstream URL and a client token for bootstrapping.
+To run Edge in a container, provide your upstream URL and a backend token for bootstrapping.
 
 ```
 docker run -it -p 3063:3063 \
@@ -78,8 +82,8 @@ docker run -it -p 3063:3063 \
 
 Once Edge is running, connect your SDKs by pointing them to `http://localhost:3063/api`:
 
-```javascriptconst
-unleash = initialize({
+```javascript
+const unleash = initialize({
   url: 'http://localhost:3063/api',
   appName: 'my-app',
   customHeaders: { Authorization: '<your_client_token>' },
@@ -121,14 +125,13 @@ Without persistence, a restarted Edge node must contact the upstream Unleash ins
 
 We recommend that you use Redis for production environments, especially with multiple Edge replicas.
 
-### Persistence options
+#### Persistence options
 
 | Option | Env var / CLI flag | Use case |
 | ----- | ----- | ----- |
 | **Redis** | `REDIS_URL --redis-url` | Recommended for production. Persists snapshots to a shared Redis cluster. Ideal for multi-replica setups. |
 | **Amazon S3** | `S3_BUCKET_NAME --s3-bucket-name` | Edge writes periodic snapshot files to S3. Suitable when a Redis service is not available but durable storage is required. |
-| **Local File** | `BACKUP_FOLDER --backup-folder` | Intended for **development only**. Not recommended for production or multi-replica environments. |
-
+| **Local file** | `BACKUP_FOLDER --backup-folder` | Intended for **development only**. Not recommended for production or multi-replica environments. |
 
 ## Configuration
 
@@ -139,12 +142,12 @@ Unleash Edge is configured primarily via environment variables. See [Configure s
 | Environment Variable | CLI Argument | Description |
 | ----- | ----- | ----- |
 | `UPSTREAM_URL` | `--upstream-url` | The URL of your Unleash instance. Note: Do not include the `/api` suffix. |
-| `TOKENS` | `--tokens` | Comma-separated list of client tokens used to bootstrap the cache. |
+| `TOKENS` | `--tokens` | Comma-separated list of backend tokens used to bootstrap the cache. |
 | `STREAMING` | `--streaming` | Set to `true` to enable real-time updates. |
 | `PORT` | `--port` | The HTTP port Edge listens on (Default: `3063`). |
 | `RUST_LOG` | N/A | Log level configuration (e.g., `warn,unleash_edge=debug`). |
 
-For the complete list of environment variables including TLS, CORS, and observability options, see [Environment variables](/unleash-edge/configure#environment-variables).
+For the complete list of environment variables including TLS, CORS, and observability options, see [Configure](/unleash-edge/configure).
 
 ## Performance and sizing
 
@@ -167,37 +170,37 @@ Based on internal benchmarks, you can estimate capacity requirements using the f
 
 Edge relies on Unleash API tokens to validate access and sync configuration. The specific token configuration depends on your operating mode.
 
-## Startup tokens (Edge mode)
+### Startup tokens (Edge mode)
 
-When running in [Edge mode](#modes-of-operation), the instance requires at least one valid [backend token](/concepts/api-tokens-and-client-keys#backend-token) at startup to connect to the upstream Unleash instance.
+When running in [Edge mode](#modes-of-operation), the instance requires at least one valid [backend token](/concepts/api-tokens-and-client-keys#backend-tokens) at startup to connect to the upstream Unleash instance.
 This token serves two purposes: bootstrapping the cache and defining the maximum access scope for the Edge instance.
 
-Providing startup tokens, allows Edge to hydrate its data ahead of time. This ensures Edge can respond to frontend API requests immediately without needing to fetch data on demand.
+Providing startup tokens allows Edge to hydrate its data ahead of time. This ensures Edge can respond to frontend API requests immediately without needing to fetch data on demand.
 If you are running Edge behind a load balancer and using the frontend API, setting startup tokens is necessary to ensure predictable responses.
 
 - Environment variable: `TOKENS`
 - CLI flag: `--tokens`
 
-## Scope validation and narrowing
+### Scope validation and narrowing
 
-Edge enforces strict scope validation based on the startup token. It refuses requests from SDKs that attempt to access projects or environments outside the scope of the startup token.
+Edge enforces strict scope validation based on the startup token. It refuses requests from SDKs that attempt to access [projects](/concepts/projects) or [environments](/concepts/environments) outside the scope of the startup token.
 
-Incoming requests must match the environment and project access specified in the initial tokens. For example, if your startup token grants access to `project-a` and `project-b` in development, an SDK request for `project-c` in development or any projects in production will be rejected.
+Incoming requests must match the environment and project access specified in the initial tokens. For example, if your startup token grants access to `project-a` and `project-b` in development, an SDK request for `project-c` in development or any [projects](/concepts/projects) in production will be rejected.
 
 If you start Edge with a wildcard token (for example, `*:development`), clients can use narrower tokens (such as, `project-a:development`). Edge filters the feature list to grant access only to the specific project requested by the client.
 
-## Offline tokens
+### Offline tokens
 
 When running in [Offline mode](#modes-of-operation), there is no upstream instance to validate tokens against. You must explicitly configure which tokens are valid for backend and frontend access.
 
-- **Backend SDKs**: Use `CLIENT_TOKENS` (or `--client-tokens`). These tokens grant access to the `/api/client/features` endpoint.
-- **Frontend SDKs**: Use `FRONTEND_TOKENS` (or `--frontend-tokens`). These tokens grant access to the `/api/frontend` and `/api/proxy` endpoints.
+- **[Backend SDKs](/sdks#backend-sdks)**: Use `CLIENT_TOKENS` (or `--client-tokens`). These tokens grant access to the `/api/client/features` endpoint.
+- **[Frontend SDKs](/sdks#frontend-sdks)**: Use `FRONTEND_TOKENS` (or `--frontend-tokens`). These tokens grant access to the `/api/frontend` and `/api/proxy` endpoints.
 
-## Pre-trusted tokens
+### Pre-trusted tokens
 
 :::note Availability
 
-Edge version**: `19.10+`
+**Edge version**: `19.10+`
 
 :::
 
@@ -210,15 +213,15 @@ Supported formats:
 - Standard Unleash token: A valid Unleash frontend token (e.g.,` *:development.969e...`).
 - Legacy Proxy token: A token in the format `some-secret@environment`. Note: When using legacy-style tokens, you must also configure at least one standard backend token via the `TOKENS` variable that covers the specified environment. This ensures Edge can fetch the actual feature data for that environment from the upstream server.
 
-## Frontend token limitations
+### Frontend token limitations
 
 Frontend tokens can be used with the `/api/frontend` and `/api/proxy` endpoints, but they cannot be used to fetch feature updates from the upstream Unleash instance.
 
 To ensure frontend tokens return correct data, the features they access must already be present in the Edge cache. You must pass at least one backend token (using `TOKENS`) at startup that covers the same environment and projects as your frontend tokens.
 
-If a frontend token requests data that is not currently cached, Edge returns `HTTP 511 Network Authentication Required`. The response body will indicate which project and environment requires a valid client token to hydrate the cache.
+If a frontend token requests data that is not currently cached, Edge returns `HTTP 511 Network Authentication Required`. The response body will indicate which project and environment requires a valid backend token to hydrate the cache.
 
-### Health and readiness
+## Health and readiness
 
 Edge exposes internal endpoints to verify the state of the application. These are useful for load balancer health checks and Kubernetes probes.
 
@@ -227,11 +230,11 @@ Edge exposes internal endpoints to verify the state of the application. These ar
 - **Ready check**: `GET /internal-backstage/ready`
   - Returns `200 OK` only when Edge has successfully synced with the upstream and the cache is populated.
 
-### Metrics
+## Metrics
 
 :::note Availability
 
-Edge version**: `19+` | Unleash version `5.9+`
+**Edge version**: `19+` | Unleash version `5.9+`
 
 :::
 
@@ -276,7 +279,7 @@ location /internal-backstage/ {
 
 **Edge returns 511 for frontend requests**
 
-Frontend token doesn't have cached data. Ensure a client token is configured that covers the same project and environment.
+Frontend token doesn't have cached data. Ensure a backend token is configured that covers the same project and environment.
 
 **Edge won't start**
 

@@ -525,8 +525,8 @@ Congratulations, you've successfully set up Unleash Edge locally!
 
 Unleash Edge offers a lot of flexibility and advanced configuration options worth exploring:
 
-1. [Offline mode](/unleash-edge#modes-of-operation) - Learn how to configure Unleash Edge to work without an Unleash instance, using a local features file.
-2. [Pretrusted tokens](/unleash-edge/configure#pre-trusted-tokens) - Learn how to explicitly authorize known frontend tokens without upstream validation.
-3. [Security considerations in production](/unleash-edge/deploy) - Learn how to run Unleash Edge in production with best practices for CORS, health checks, and sensitive endpoints.
-4. [Persistent cache storage](/unleash-edge/configure#persistence-options) - Learn how to enable persistent cache storage with options such as `--backup-folder` and `--redis-url`.
+1. [Offline mode](/unleash-edge/deploy#modes-of-operation) - Learn how to configure Unleash Edge to work without an Unleash instance, using a local features file.
+2. [Pretrusted tokens](/unleash-edge/deploy#pre-trusted-tokens) - Learn how to explicitly authorize known frontend tokens without upstream validation.
+3. [Security considerations in production](/unleash-edge/configure#security) - Learn how to run Unleash Edge in production with best practices for CORS, health checks, and sensitive endpoints.
+4. [Persistent cache storage](/unleash-edge/deploy#reliability-and-persistence) - Learn how to enable persistent cache storage with options such as `--backup-folder` and `--redis-url`.
 5. [Advanced CLI configuration](/unleash-edge/configure) - Learn how to customize the CLI behavior with options such as `--base-path`, `--workers`, `--allow-list`, `--edge-request-timeout`, and `--edge-auth-header`.

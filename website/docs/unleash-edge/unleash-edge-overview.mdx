@@ -15,10 +15,10 @@ Beyond scalability, Unleash Edge offers significant privacy and security benefit
 
 Unleash Edge supports streaming, a persistent connection between Edge and Unleash where configuration changes in Unleash are pushed to Edge nodes immediately, ensuring your feature flags are always up to date without the network overhead of frequent polling.
 
-Edge supports both [frontend](/sdks#frontend-sdks) and [backend SDKs](/sdks#backend-sdks) and has multi-environment and project awareness. You can daisy-chain Edge instances to support more complex setups, such as multi-cloud deployments.
+Edge supports both [frontend SDKs](/sdks#frontend-sdks) and [backend SDKs](/sdks#backend-sdks) and has multi-environment and project awareness. You can [daisy-chain](/unleash-edge/deploy#daisy-chaining) Edge instances to support more complex setups, such as multi-cloud deployments.
 
 Key features:
-- **Performance**: Edge uses in-memory caching and can run close to your end-users. A single instance can handle tens to hundreds of thousands of requests per second. Feature flag configuration updates are prograged to Edge instances instantly through streaming.
+- **Performance**: Edge uses in-memory caching and can run close to your end-users. A single instance can handle tens to hundreds of thousands of requests per second. Feature flag configuration updates are propagated to Edge instances instantly through streaming.
 - **Resilience**: Edge is designed to survive restarts and maintain functionality even if you lose connection to your Unleash server.
 - **Security**: Edge supports frontend applications without exposing sensitive data to end-users or to Unleash.
 
@@ -26,11 +26,17 @@ Unleash Edge Enterprise is available as [hosted](#enterprise-edge-hosted) or [se
 
 ## How Edge works
 
-Edge sits between your SDKs and Unleash, serving flag data from an in-memory cache with sub-millisecond latency. The cache stays synchronized with Unleash either through periodic polling or real-time [streaming](#real-time-updates-with-streaming). Edge also aggregates usage metrics from connected SDKs and sends them upstream to Unleash.
+Edge sits between your SDKs and Unleash, serving flag data from an in-memory cache with sub-millisecond latency. The cache stays synchronized with Unleash either through periodic polling or real-time [streaming](#real-time-updates-with-streaming).
+
+Edge evaluates feature flags locally. This means user data (PII) used for targeting rules (like user IDs, emails, or IPs) is processed within the Edge node and never sent to the Unleash Cloud or your upstream instance.
+
+Edge also aggregates usage metrics from connected SDKs and sends them upstream to Unleash.
+
+![Edge observability dashboard](/img/unleash-enterprise-edge.png)
 
 ### Backend SDKs
 
-[Backend SDKs](/sdks#backend-sdks) fetch the full feature flag configuration from Edge and evaluate flags locally.
+[Backend SDKs](/sdks#backend-sdks) fetch the full feature flag configuration from Edge and evaluate flags locally using [activation strategies](/concepts/activation-strategies).
 
 ### Frontend SDKs
 
@@ -42,9 +48,9 @@ Enterprise Edge supports streaming mode, which pushes configuration changes from
 
 ## Enterprise Edge hosted
 
-Enterprise Edge hosted is a fully managed service hosted by Unleash. It is ideal for teams requiring globally low latency and high-resilience without the added operational overhead.
+Enterprise Edge hosted is a fully managed service operated by Unleash. It is ideal for teams requiring globally low latency and high resilience without the added operational overhead.
 
-Enterprise Edge Hosted is available in the following data centers:
+Enterprise Edge hosted is available in the following data centers:
 
 **US:**
 - us-east-1 (Virginia)
@@ -74,7 +80,7 @@ Enterprise Edge Hosted is available in the following data centers:
 - sa-east-1 (São Paulo)
 
 
-### Enterprise Edge self-hosted
+## Enterprise Edge self-hosted
 
 :::note Availability
 
@@ -84,7 +90,7 @@ Enterprise Edge Hosted is available in the following data centers:
 
 Enterprise Edge self-hosted is hosted and operated by you within your own infrastructure. It is designed for environments requiring strict control, such as air-gapped networks or privacy-sensitive setups.
 
-For more information on how to configure and deploy self-hosted Unleash Edge, go to [Self-host Unleash Edge](/unleash-edge/self-host).
+For more information on how to configure and deploy self-hosted Unleash Edge, go to [Deploy Unleash Edge](/unleash-edge/deploy).
 
 ## How to get Enterprise Edge
 
@@ -97,7 +103,7 @@ See:
 - [Deploy self-hosted Edge](/unleash-edge/deploy) for deployment guides.
 - [Configure self-hosted Edge](/unleash-edge/configure) for configuration reference.
 
-### Observability
+## Observability
 
 Unleash provides deep visibility into the health and performance of your Unleash Edge nodes directly within the Admin UI.
 
@@ -109,7 +115,7 @@ The dashboard reports the following metrics for each Edge node:
 
 **Instance health:**
 
-- **Status**: Current connection state (such as, `Connected`).
+- **Status**: Current connection state (such as `Connected`).
 - **Version**: The running version of the Edge binary.
 - **Resources**: Real-time CPU and Memory usage.
 
@@ -117,7 +123,7 @@ The dashboard reports the following metrics for each Edge node:
 
 - **Stream clients**: Number of SDKs currently maintaining a streaming connection.
 - **Upstream latency**: Time taken to fetch updates from the upstream Unleash server (broken down by Client Features, Metrics, and Edge sync).
-- **Downstream latency**: Time taken to serve requests to connected SDKs (broken down by Client Features and Frontend evaluations).
+- **Downstream latency**: Time taken to serve requests to connected SDKs (broken down by frontend and backend evaluations).
 
 These metrics help you identify bottlenecks, verify regional deployments, and ensure your Edge nodes are properly synced.
 

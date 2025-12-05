@@ -130,8 +130,7 @@ export const FeatureImpactMetrics: FC = () => {
     );
 
     const maxChartsReached = impactMetrics.configs.length >= 20;
-    const isDisabled =
-        metadataLoading || !!metadataError || maxChartsReached;
+    const isDisabled = metadataLoading || !!metadataError || maxChartsReached;
 
     return (
         <PageContent>

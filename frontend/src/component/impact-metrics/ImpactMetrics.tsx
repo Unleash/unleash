@@ -1,6 +1,6 @@
 import { type FC, useMemo } from 'react';
 import { useState, useCallback } from 'react';
-import { Typography, Button, Paper, styled, Box, Tooltip } from '@mui/material';
+import { Typography, Button, Paper, styled, Box } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';

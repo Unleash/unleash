@@ -93,6 +93,7 @@ export type UiFlags = {
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;
     enterpriseEdgeUI?: boolean;
+    gtmReleaseManagement?: boolean;
 };
 
 export interface IVersionInfo {

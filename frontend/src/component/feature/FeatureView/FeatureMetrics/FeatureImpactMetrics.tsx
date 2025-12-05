@@ -129,6 +129,10 @@ export const FeatureImpactMetrics: FC = () => {
         [impactMetrics.configs, projectId],
     );
 
+    const maxChartsReached = impactMetrics.configs.length >= 20;
+    const isDisabled =
+        metadataLoading || !!metadataError || maxChartsReached;
+
     return (
         <PageContent>
             <PageHeader
@@ -140,9 +144,17 @@ export const FeatureImpactMetrics: FC = () => {
                         variant='contained'
                         startIcon={<Add />}
                         onClick={handleAddChart}
-                        disabled={metadataLoading || !!metadataError}
+                        disabled={isDisabled}
                         permission={UPDATE_FEATURE}
                         projectId={projectId}
+                        tooltipProps={
+                            maxChartsReached
+                                ? {
+                                      title: 'Maximum of 20 impact metrics charts allowed',
+                                      arrow: true,
+                                  }
+                                : undefined
+                        }
                     >
                         Add Chart
                     </PermissionButton>

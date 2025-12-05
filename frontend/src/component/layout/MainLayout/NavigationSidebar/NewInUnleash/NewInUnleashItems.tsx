@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 import { formatAssetPath } from 'utils/formatPath';
 import ReleaseTemplatePreviewImage from 'assets/img/releaseTemplatePreview.png';
+import type { Flag } from 'hooks/useUiFlag.ts';
 
 const StyledImg = styled('img')(() => ({
     maxWidth: '100%',
@@ -12,13 +13,13 @@ export type NewInUnleashItem = {
     longDescription?: string;
     preview: React.ReactNode;
     filter: {
-        flag?: string;
+        flag?: Flag;
         enterpriseOnly?: boolean;
         versionLowerThan: string;
     };
     appLink?: string;
     docsLink?: string;
-    beta: boolean;
+    beta?: boolean;
     modal?: boolean;
 };
 
@@ -36,7 +37,7 @@ export const newInUnleashItems: NewInUnleashItem[] = [
         docsLink: 'https://docs.getunleash.io/reference/release-templates',
         filter: {
             enterpriseOnly: true,
-            versionLowerThan: '7.4.0',
+            versionLowerThan: '7.5.0',
         },
         beta: false,
         modal: true,

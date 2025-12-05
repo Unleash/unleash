@@ -73,6 +73,20 @@ export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
         }
     };
 
+const frontendPermissions = [
+    CREATE_FRONTEND_API_TOKEN,
+    READ_FRONTEND_API_TOKEN,
+    DELETE_FRONTEND_API_TOKEN,
+    UPDATE_FRONTEND_API_TOKEN,
+];
+
+const backendPermissions = [
+    CREATE_CLIENT_API_TOKEN,
+    READ_CLIENT_API_TOKEN,
+    DELETE_CLIENT_API_TOKEN,
+    UPDATE_CLIENT_API_TOKEN,
+];
+
 const canReadToken = (
     { frontend, backend, admin, projects }: ITokenPermissions,
     token: IApiToken,
@@ -81,13 +95,21 @@ const canReadToken = (
         return true;
     }
     if (token.type === ApiTokenType.FRONTEND) {
-        return frontend && ((token.project && projects.includes(token.project)) || token.projects.some((p) => projects.includes(p)));
+        return (
+            frontend &&
+            ((token.project && projects.includes(token.project)) ||
+                token.projects.some((p) => projects.includes(p)))
+        );
     }
     if (
         token.type === ApiTokenType.CLIENT ||
         token.type === ApiTokenType.BACKEND
     ) {
-        return backend && ((token.project && projects.includes(token.project)) || token.projects.some((p) => projects.includes(p)));
+        return (
+            backend &&
+            ((token.project && projects.includes(token.project)) ||
+                token.projects.some((p) => projects.includes(p)))
+        );
     }
     return false;
 };
@@ -432,37 +454,43 @@ export class ApiTokenController extends Controller {
         for (const permissionIndex in userPermissions) {
             const { permission, project } = userPermissions[permissionIndex];
 
-            hasRootFrontendReadPermission = [
-                CREATE_FRONTEND_API_TOKEN,
-                READ_FRONTEND_API_TOKEN,
-                DELETE_FRONTEND_API_TOKEN,
-                UPDATE_FRONTEND_API_TOKEN,
-            ].includes(permission) ? true :
-                hasRootFrontendReadPermission;
+            // Root permissions don't have project set
+            hasRootFrontendReadPermission = frontendPermissions.includes(
+                permission,
+            )
+                ? true
+                : hasRootFrontendReadPermission;
 
-            hasRootBackendReadPermission = [
-                CREATE_CLIENT_API_TOKEN,
-                READ_CLIENT_API_TOKEN,
-                DELETE_CLIENT_API_TOKEN,
-                UPDATE_CLIENT_API_TOKEN,
-            ].includes(permission) ?
-                true : hasRootBackendReadPermission;
+            // Root permissions don't have project set
+            hasRootBackendReadPermission = backendPermissions.includes(
+                permission,
+            )
+                ? true
+                : hasRootBackendReadPermission;
 
-            hasAdminPermission = permission === ADMIN ? true : hasAdminPermission;
+            hasAdminPermission =
+                permission === ADMIN ? true : hasAdminPermission;
 
-            if (permission === READ_PROJECT_API_TOKEN && project && !projects.includes(project)) {
+            if (
+                permission === READ_PROJECT_API_TOKEN &&
+                project &&
+                !projects.includes(project)
+            ) {
                 projects.push(project);
             }
         }
 
         const accessibleTokens = allTokens.filter((token) =>
             userPermissions.some((permission) => {
-                const canRead = canReadToken({
-                    frontend: hasRootFrontendReadPermission,
-                    backend: hasRootBackendReadPermission,
-                    admin: hasAdminPermission,
-                    projects
-                }, token);
+                const canRead = canReadToken(
+                    {
+                        frontend: hasRootFrontendReadPermission,
+                        backend: hasRootBackendReadPermission,
+                        admin: hasAdminPermission,
+                        projects,
+                    },
+                    token,
+                );
                 return canRead;
             }),
         );

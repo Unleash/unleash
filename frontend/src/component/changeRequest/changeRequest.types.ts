@@ -281,6 +281,22 @@ export type ISegmentChange =
     | IChangeRequestUpdateSegment
     | IChangeRequestDeleteSegment;
 
+export type ConsolidatedProgressionChangeData = {
+    type: 'consolidatedProgression';
+    changes: Array<
+        | IChangeRequestChangeMilestoneProgression
+        | IChangeRequestDeleteMilestoneProgression
+    >;
+};
+
+export type DisplayFeatureChange =
+    | Exclude<
+          IFeatureChange,
+          | IChangeRequestChangeMilestoneProgression
+          | IChangeRequestDeleteMilestoneProgression
+      >
+    | ConsolidatedProgressionChangeData;
+
 type ChangeRequestVariantPatch = {
     variants: IFeatureVariant[];
     snapshot?: IFeatureVariant[];

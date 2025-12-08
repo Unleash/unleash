@@ -31,7 +31,7 @@ interface ProgressionChangeProps {
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
-    onDeleteChangeRequestSubmit: (sourceMilestoneId: string) => void;
+    onDeleteChangeRequestSubmit: (sourceMilestoneId: string) => Promise<void>;
 }
 
 export const ProgressionChange: FC<ProgressionChangeProps> = ({

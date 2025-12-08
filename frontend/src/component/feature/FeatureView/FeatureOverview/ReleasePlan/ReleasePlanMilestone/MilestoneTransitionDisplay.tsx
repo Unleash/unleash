@@ -116,7 +116,7 @@ interface IMilestoneTransitionDisplayProps {
     onSave: (
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<{ shouldReset?: boolean }>;
-    onDelete: () => void;
+    onDelete: () => Promise<void>;
     milestoneName: string;
     status?: MilestoneStatus;
     badge?: ReactNode;

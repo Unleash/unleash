@@ -5,11 +5,10 @@ import type {
     IChangeRequestAddReleasePlan,
     IChangeRequestDeleteReleasePlan,
     IChangeRequestStartMilestone,
-    IChangeRequestChangeMilestoneProgression,
-    IChangeRequestDeleteMilestoneProgression,
     IChangeRequestChangeSafeguard,
     IChangeRequestDeleteSafeguard,
     IChangeRequestResumeMilestoneProgression,
+    ConsolidatedProgressionChangeData,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -33,7 +32,6 @@ import type {
     ChangeMilestoneProgressionSchema,
     CreateSafeguardSchema,
 } from 'openapi';
-import { ProgressionChange } from './ProgressionChange.tsx';
 import { ConsolidatedProgressionChanges } from './ConsolidatedProgressionChanges.tsx';
 import { SafeguardFormChangeRequestView } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
 import { ReadonlySafeguardDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/ReadonlySafeguardDisplay';
@@ -450,16 +448,14 @@ export const ReleasePlanChange: FC<{
         | IChangeRequestAddReleasePlan
         | IChangeRequestDeleteReleasePlan
         | IChangeRequestStartMilestone
-        | IChangeRequestChangeMilestoneProgression
-        | IChangeRequestDeleteMilestoneProgression
         | IChangeRequestChangeSafeguard
         | IChangeRequestDeleteSafeguard
-        | IChangeRequestResumeMilestoneProgression;
+        | IChangeRequestResumeMilestoneProgression
+        | ConsolidatedProgressionChangeData;
     environmentName: string;
     featureName: string;
     projectId: string;
     changeRequestState: ChangeRequestState;
-    feature?: any; // Optional feature object for consolidated progression changes
     onRefetch?: () => void;
 }> = ({
     actions,
@@ -468,7 +464,6 @@ export const ReleasePlanChange: FC<{
     environmentName,
     projectId,
     changeRequestState,
-    feature,
     onRefetch,
 }) => {
     const { releasePlans, refetch } = useFeatureReleasePlans(
@@ -570,34 +565,11 @@ export const ReleasePlanChange: FC<{
         }
     };
 
-    // If this is a progression change and we have the full feature object,
-    // check if we should consolidate with other progression changes
-    if (
-        feature &&
-        (change.action === 'changeMilestoneProgression' ||
-            change.action === 'deleteMilestoneProgression')
-    ) {
-        const progressionChanges = feature.changes.filter(
-            (
-                change,
-            ): change is
-                | IChangeRequestChangeMilestoneProgression
-                | IChangeRequestDeleteMilestoneProgression =>
-                change.action === 'changeMilestoneProgression' ||
-                change.action === 'deleteMilestoneProgression',
-        );
-
-        // Only render if this is the first progression change
-        const isFirstProgression =
-            progressionChanges.length > 0 && progressionChanges[0] === change;
-
-        if (!isFirstProgression) {
-            return null; // Skip rendering, will be handled by the first one
-        }
-
+    // If change is a ConsolidatedProgressionChangeData, render the consolidated view
+    if ('type' in change && change.type === 'consolidatedProgression') {
         return (
             <ConsolidatedProgressionChanges
-                feature={feature}
+                progressionChanges={change.changes}
                 currentReleasePlan={currentReleasePlan}
                 changeRequestState={changeRequestState}
                 onUpdateChangeRequestSubmit={changeMilestoneProgressionSubmit}
@@ -608,7 +580,7 @@ export const ReleasePlanChange: FC<{
 
     return (
         <>
-            {change.action === 'addReleasePlan' && (
+            {'action' in change && change.action === 'addReleasePlan' && (
                 <AddReleasePlan
                     change={change}
                     currentReleasePlan={currentReleasePlan}
@@ -617,7 +589,7 @@ export const ReleasePlanChange: FC<{
                     actions={actions}
                 />
             )}
-            {change.action === 'deleteReleasePlan' && (
+            {'action' in change && change.action === 'deleteReleasePlan' && (
                 <DeleteReleasePlan
                     change={change}
                     currentReleasePlan={currentReleasePlan}
@@ -625,17 +597,18 @@ export const ReleasePlanChange: FC<{
                     actions={actions}
                 />
             )}
-            {change.action === 'resumeMilestoneProgression' && (
-                <ResumeMilestoneProgression
-                    change={change}
-                    currentReleasePlan={currentReleasePlan}
-                    changeRequestState={changeRequestState}
-                    environmentName={environmentName}
-                    featureName={featureName}
-                    actions={actions}
-                />
-            )}
-            {change.action === 'startMilestone' && (
+            {'action' in change &&
+                change.action === 'resumeMilestoneProgression' && (
+                    <ResumeMilestoneProgression
+                        change={change}
+                        currentReleasePlan={currentReleasePlan}
+                        changeRequestState={changeRequestState}
+                        environmentName={environmentName}
+                        featureName={featureName}
+                        actions={actions}
+                    />
+                )}
+            {'action' in change && change.action === 'startMilestone' && (
                 <StartMilestone
                     change={change}
                     currentReleasePlan={currentReleasePlan}
@@ -643,7 +616,7 @@ export const ReleasePlanChange: FC<{
                     actions={actions}
                 />
             )}
-            {change.action === 'changeSafeguard' && (
+            {'action' in change && change.action === 'changeSafeguard' && (
                 <ChangeSafeguard
                     change={change}
                     currentReleasePlan={currentReleasePlan}
@@ -655,7 +628,7 @@ export const ReleasePlanChange: FC<{
                     actions={actions}
                 />
             )}
-            {change.action === 'deleteSafeguard' && (
+            {'action' in change && change.action === 'deleteSafeguard' && (
                 <DeleteSafeguard
                     change={change}
                     currentReleasePlan={currentReleasePlan}
@@ -665,20 +638,6 @@ export const ReleasePlanChange: FC<{
                     onSubmit={changeSafeguardSubmit}
                     onDelete={deleteSafeguardSubmit}
                     actions={actions}
-                />
-            )}
-            {change.action === 'changeMilestoneProgression' && (
-                <ProgressionChange
-                    change={change}
-                    currentReleasePlan={currentReleasePlan}
-                    actions={actions}
-                    changeRequestState={changeRequestState}
-                    onUpdateChangeRequestSubmit={
-                        changeMilestoneProgressionSubmit
-                    }
-                    onDeleteChangeRequestSubmit={
-                        deleteMilestonProgressionSubmit
-                    }
                 />
             )}
         </>

@@ -26,7 +26,7 @@ interface MilestoneListRendererCoreProps {
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
-    onDeleteAutomation: (sourceMilestoneId: string) => void;
+    onDeleteAutomation: (sourceMilestoneId: string) => Promise<void>;
 }
 
 const MilestoneListRendererCore = ({
@@ -96,8 +96,8 @@ const MilestoneListRendererCore = ({
                                         );
                                         return { shouldReset: true };
                                     }}
-                                    onDelete={() =>
-                                        onDeleteAutomation(milestone.id)
+                                    onDelete={async () =>
+                                        await onDeleteAutomation(milestone.id)
                                     }
                                     milestoneName={milestone.name}
                                     status={status}
@@ -141,7 +141,7 @@ export const ReadonlyMilestoneListRenderer = ({
             milestonesWithAutomation={milestonesWithAutomation}
             milestonesWithDeletedAutomation={milestonesWithDeletedAutomation}
             onUpdateAutomation={async () => {}}
-            onDeleteAutomation={() => {}}
+            onDeleteAutomation={async () => {}}
         />
     );
 };
@@ -154,7 +154,7 @@ interface EditableMilestoneListRendererProps {
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
-    onDeleteAutomation: (sourceMilestoneId: string) => void;
+    onDeleteAutomation: (sourceMilestoneId: string) => Promise<void>;
 }
 
 export const EditableMilestoneListRenderer = ({

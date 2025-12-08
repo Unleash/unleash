@@ -4,7 +4,6 @@ import type {
     ChangeRequestState,
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
-    IChangeRequestFeature,
 } from 'component/changeRequest/changeRequest.types';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
@@ -72,7 +71,10 @@ const getChangeDescriptions = (
 };
 
 export const ConsolidatedProgressionChanges: FC<{
-    feature: IChangeRequestFeature;
+    progressionChanges: Array<
+        | IChangeRequestChangeMilestoneProgression
+        | IChangeRequestDeleteMilestoneProgression
+    >;
     currentReleasePlan?: IReleasePlan;
     changeRequestState: ChangeRequestState;
     onUpdateChangeRequestSubmit: (
@@ -81,23 +83,12 @@ export const ConsolidatedProgressionChanges: FC<{
     ) => Promise<void>;
     onDeleteChangeRequestSubmit: (sourceMilestoneId: string) => Promise<void>;
 }> = ({
-    feature,
+    progressionChanges,
     currentReleasePlan,
     changeRequestState,
     onUpdateChangeRequestSubmit,
     onDeleteChangeRequestSubmit,
 }) => {
-    // Get all progression changes for this feature
-    const progressionChanges = feature.changes.filter(
-        (
-            change,
-        ): change is
-            | IChangeRequestChangeMilestoneProgression
-            | IChangeRequestDeleteMilestoneProgression =>
-            change.action === 'changeMilestoneProgression' ||
-            change.action === 'deleteMilestoneProgression',
-    );
-
     if (progressionChanges.length === 0) return null;
 
     const firstChange = progressionChanges[0];

@@ -70,6 +70,9 @@ const InlineList = styled('ul')(({ theme }) => ({
 
 const ChangeInnerBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
+    '&:empty': {
+        display: 'none',
+    },
 }));
 
 export const FeatureChange: FC<{

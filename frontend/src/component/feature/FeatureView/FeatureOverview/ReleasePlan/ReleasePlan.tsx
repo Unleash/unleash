@@ -112,11 +112,6 @@ const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
     paddingRight: theme.spacing(2),
 }));
 
-const StyledAddSafeguardButton = styled(StyledActionButton)(({ theme }) => ({
-    margin: theme.spacing(2),
-    marginRight: theme.spacing(1),
-}));
-
 const StyledAlert = styled(Alert)(({ theme }) => ({
     margin: theme.spacing(1, 0),
 }));
@@ -682,13 +677,14 @@ export const ReleasePlan = ({
                             />
                         ) : (
                             <StyledAddSafeguardContent>
-                                <StyledAddSafeguardButton
+                                <StyledActionButton
                                     onClick={() => setSafeguardFormOpen(true)}
                                     color='primary'
                                     startIcon={<Add />}
+                                    sx={{ m: 2 }}
                                 >
                                     Add safeguard
-                                </StyledAddSafeguardButton>
+                                </StyledActionButton>
                                 {safeguardBadge}
                             </StyledAddSafeguardContent>
                         )}

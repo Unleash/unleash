@@ -140,7 +140,7 @@ type NewInUnleashDialogProps = {
     open: boolean;
     preview?: ReactNode;
     onClose: () => void;
-    beta: boolean;
+    beta?: boolean;
 } & CheckItOutProps;
 
 const CheckItOutButton = ({
@@ -203,10 +203,7 @@ export const NewInUnleashDialog: FC<NewInUnleashDialogProps> = ({
 
                 <StyledMainTitle>
                     <StyledLargeHeader>{title}</StyledLargeHeader>
-                    <ConditionallyRender
-                        condition={beta}
-                        show={<Badge color='secondary'>Beta</Badge>}
-                    />
+                    {beta ? <Badge color='secondary'>Beta</Badge> : null}
                 </StyledMainTitle>
 
                 <LongDescription>{longDescription}</LongDescription>

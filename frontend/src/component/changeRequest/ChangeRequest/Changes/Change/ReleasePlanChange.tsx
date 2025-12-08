@@ -1,15 +1,14 @@
-import { useRef, useState, type FC, type ReactNode } from 'react';
+import { type FC, type ReactNode, useRef, useState } from 'react';
 import { styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
     IChangeRequestAddReleasePlan,
-    IChangeRequestDeleteReleasePlan,
-    IChangeRequestStartMilestone,
-    IChangeRequestChangeMilestoneProgression,
-    IChangeRequestDeleteMilestoneProgression,
     IChangeRequestChangeSafeguard,
+    IChangeRequestConsolidatedProgressionChange,
+    IChangeRequestDeleteReleasePlan,
     IChangeRequestDeleteSafeguard,
     IChangeRequestResumeMilestoneProgression,
+    IChangeRequestStartMilestone,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -33,7 +32,6 @@ import type {
     ChangeMilestoneProgressionSchema,
     CreateSafeguardSchema,
 } from 'openapi';
-import { ProgressionChange } from './ProgressionChange.tsx';
 import { ConsolidatedProgressionChanges } from './ConsolidatedProgressionChanges.tsx';
 import { SafeguardFormChangeRequestView } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
 import { ReadonlySafeguardDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/ReadonlySafeguardDisplay';
@@ -450,8 +448,7 @@ export const ReleasePlanChange: FC<{
         | IChangeRequestAddReleasePlan
         | IChangeRequestDeleteReleasePlan
         | IChangeRequestStartMilestone
-        | IChangeRequestChangeMilestoneProgression
-        | IChangeRequestDeleteMilestoneProgression
+        | IChangeRequestConsolidatedProgressionChange
         | IChangeRequestChangeSafeguard
         | IChangeRequestDeleteSafeguard
         | IChangeRequestResumeMilestoneProgression;
@@ -459,7 +456,6 @@ export const ReleasePlanChange: FC<{
     featureName: string;
     projectId: string;
     changeRequestState: ChangeRequestState;
-    feature?: any; // Optional feature object for consolidated progression changes
     onRefetch?: () => void;
 }> = ({
     actions,
@@ -468,7 +464,6 @@ export const ReleasePlanChange: FC<{
     environmentName,
     projectId,
     changeRequestState,
-    feature,
     onRefetch,
 }) => {
     const { releasePlans, refetch } = useFeatureReleasePlans(
@@ -570,34 +565,10 @@ export const ReleasePlanChange: FC<{
         }
     };
 
-    // If this is a progression change and we have the full feature object,
-    // check if we should consolidate with other progression changes
-    if (
-        feature &&
-        (change.action === 'changeMilestoneProgression' ||
-            change.action === 'deleteMilestoneProgression')
-    ) {
-        const progressionChanges = feature.changes.filter(
-            (
-                change,
-            ): change is
-                | IChangeRequestChangeMilestoneProgression
-                | IChangeRequestDeleteMilestoneProgression =>
-                change.action === 'changeMilestoneProgression' ||
-                change.action === 'deleteMilestoneProgression',
-        );
-
-        // Only render if this is the first progression change
-        const isFirstProgression =
-            progressionChanges.length > 0 && progressionChanges[0] === change;
-
-        if (!isFirstProgression) {
-            return null; // Skip rendering, will be handled by the first one
-        }
-
+    if (change.action === 'consolidatedProgression') {
         return (
             <ConsolidatedProgressionChanges
-                feature={feature}
+                progressionChanges={change.changes}
                 currentReleasePlan={currentReleasePlan}
                 changeRequestState={changeRequestState}
                 onUpdateChangeRequestSubmit={changeMilestoneProgressionSubmit}
@@ -665,20 +636,6 @@ export const ReleasePlanChange: FC<{
                     onSubmit={changeSafeguardSubmit}
                     onDelete={deleteSafeguardSubmit}
                     actions={actions}
-                />
-            )}
-            {change.action === 'changeMilestoneProgression' && (
-                <ProgressionChange
-                    change={change}
-                    currentReleasePlan={currentReleasePlan}
-                    actions={actions}
-                    changeRequestState={changeRequestState}
-                    onUpdateChangeRequestSubmit={
-                        changeMilestoneProgressionSubmit
-                    }
-                    onDeleteChangeRequestSubmit={
-                        deleteMilestonProgressionSubmit
-                    }
                 />
             )}
         </>

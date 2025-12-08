@@ -256,7 +256,7 @@ export interface IChangeRequestDeleteSegment {
     };
 }
 
-export type IChange = IFeatureChange | ISegmentChange;
+export type IChange = IDisplayFeatureChange | ISegmentChange;
 
 export type IFeatureChange =
     | IChangeRequestAddStrategy
@@ -276,6 +276,27 @@ export type IFeatureChange =
     | IChangeRequestChangeSafeguard
     | IChangeRequestDeleteSafeguard
     | IChangeRequestResumeMilestoneProgression;
+
+export type IDisplayFeatureChange =
+    | Exclude<
+          IFeatureChange,
+          | IChangeRequestChangeMilestoneProgression
+          | IChangeRequestDeleteMilestoneProgression
+      >
+    | IChangeRequestConsolidatedProgressionChange;
+
+export type IChangeRequestConsolidatedProgressionChange = {
+    action: 'consolidatedProgression';
+    changes: Array<
+        | IChangeRequestChangeMilestoneProgression
+        | IChangeRequestDeleteMilestoneProgression
+    >;
+    conflict?: string;
+    scheduleConflicts?: {
+        changeRequests: { id: number; title?: string }[];
+    };
+    id: number;
+};
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment

@@ -1,6 +1,13 @@
 import type { VFC } from 'react';
 import { Box, Typography } from '@mui/material';
-import type { ChangeRequestType } from '../changeRequest.types';
+import type {
+    ChangeRequestType,
+    IChangeRequestChangeMilestoneProgression,
+    IChangeRequestConsolidatedProgressionChange,
+    IChangeRequestDeleteMilestoneProgression,
+    IDisplayFeatureChange,
+    IFeatureChange,
+} from '../changeRequest.types';
 import { FeatureToggleChanges } from './Changes/FeatureToggleChanges.tsx';
 import { FeatureChange } from './Changes/Change/FeatureChange.tsx';
 import { ChangeActions } from './Changes/Change/ChangeActions.tsx';
@@ -12,6 +19,46 @@ interface IChangeRequestProps {
     onRefetch?: () => void;
     onNavigate?: () => void;
 }
+
+const toDisplayFeatureChanges = (
+    changes: IFeatureChange[],
+): IDisplayFeatureChange[] => {
+    const consolidatedChange: IChangeRequestConsolidatedProgressionChange = {
+        action: 'consolidatedProgression',
+        changes: [],
+        id: 0,
+    };
+    const regularChanges: Exclude<
+        IFeatureChange,
+        | IChangeRequestChangeMilestoneProgression
+        | IChangeRequestDeleteMilestoneProgression
+    >[] = [];
+
+    changes.forEach((change) => {
+        if (
+            change.action === 'changeMilestoneProgression' ||
+            change.action === 'deleteMilestoneProgression'
+        ) {
+            consolidatedChange.changes.push(change);
+            if (change.id && !consolidatedChange.id) {
+                consolidatedChange.id = change.id;
+            }
+            if (change.conflict && !consolidatedChange.conflict) {
+                consolidatedChange.conflict = change.conflict;
+            }
+            if (
+                change.scheduleConflicts &&
+                !consolidatedChange.scheduleConflicts
+            ) {
+                consolidatedChange.scheduleConflicts = change.scheduleConflicts;
+            }
+        } else {
+            regularChanges.push(change);
+        }
+    });
+
+    return [consolidatedChange, ...regularChanges];
+};
 
 export const ChangeRequest: VFC<IChangeRequestProps> = ({
     changeRequest,
@@ -61,25 +108,27 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     onNavigate={onNavigate}
                     conflict={feature.conflict}
                 >
-                    {feature.changes.map((change, index) => (
-                        <FeatureChange
-                            key={index}
-                            actions={
-                                <ChangeActions
-                                    changeRequest={changeRequest}
-                                    feature={feature.name}
-                                    change={change}
-                                    onRefetch={onRefetch}
-                                />
-                            }
-                            index={index}
-                            changeRequest={changeRequest}
-                            change={change}
-                            feature={feature}
-                            onNavigate={onNavigate}
-                            onRefetch={onRefetch}
-                        />
-                    ))}
+                    {toDisplayFeatureChanges(feature.changes).map(
+                        (change, index) => (
+                            <FeatureChange
+                                key={index}
+                                actions={
+                                    <ChangeActions
+                                        changeRequest={changeRequest}
+                                        feature={feature.name}
+                                        change={change}
+                                        onRefetch={onRefetch}
+                                    />
+                                }
+                                index={index}
+                                changeRequest={changeRequest}
+                                change={change}
+                                feature={feature}
+                                onNavigate={onNavigate}
+                                onRefetch={onRefetch}
+                            />
+                        ),
+                    )}
                     {feature.defaultChange ? (
                         <FeatureChange
                             isDefaultChange

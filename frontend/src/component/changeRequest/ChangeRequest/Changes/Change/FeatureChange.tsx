@@ -1,8 +1,8 @@
 import type { FC, ReactNode } from 'react';
 import type {
-    IFeatureChange,
     ChangeRequestType,
     IChangeRequestFeature,
+    IDisplayFeatureChange,
 } from '../../../changeRequest.types';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -76,7 +76,7 @@ export const FeatureChange: FC<{
     actions?: ReactNode;
     index: number;
     changeRequest: ChangeRequestType;
-    change: IFeatureChange;
+    change: IDisplayFeatureChange;
     feature: IChangeRequestFeature;
     onNavigate?: () => void;
     isDefaultChange?: boolean;
@@ -207,8 +207,7 @@ export const FeatureChange: FC<{
                 {(change.action === 'addReleasePlan' ||
                     change.action === 'deleteReleasePlan' ||
                     change.action === 'startMilestone' ||
-                    change.action === 'changeMilestoneProgression' ||
-                    change.action === 'deleteMilestoneProgression' ||
+                    change.action === 'consolidatedProgression' ||
                     change.action === 'changeSafeguard' ||
                     change.action === 'deleteSafeguard' ||
                     change.action === 'resumeMilestoneProgression') && (
@@ -219,7 +218,6 @@ export const FeatureChange: FC<{
                         environmentName={changeRequest.environment}
                         projectId={changeRequest.project}
                         changeRequestState={changeRequest.state}
-                        feature={feature}
                         onRefetch={onRefetch}
                     />
                 )}

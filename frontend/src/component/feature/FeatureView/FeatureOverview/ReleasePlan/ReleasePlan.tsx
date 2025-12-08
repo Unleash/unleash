@@ -103,6 +103,15 @@ const StyledAddSafeguard = styled('div', {
     padding: theme.spacing(0.25, 0.25),
 }));
 
+const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingRight: theme.spacing(2),
+}));
+
 const StyledAlert = styled(Alert)(({ theme }) => ({
     margin: theme.spacing(1, 0),
 }));
@@ -667,14 +676,17 @@ export const ReleasePlan = ({
                                 badge={safeguardBadge}
                             />
                         ) : (
-                            <StyledActionButton
-                                onClick={() => setSafeguardFormOpen(true)}
-                                color='primary'
-                                startIcon={<Add />}
-                                sx={{ m: 2 }}
-                            >
-                                Add safeguard
-                            </StyledActionButton>
+                            <StyledAddSafeguardContent>
+                                <StyledActionButton
+                                    onClick={() => setSafeguardFormOpen(true)}
+                                    color='primary'
+                                    startIcon={<Add />}
+                                    sx={{ m: 2 }}
+                                >
+                                    Add safeguard
+                                </StyledActionButton>
+                                {safeguardBadge}
+                            </StyledAddSafeguardContent>
                         )}
                     </StyledAddSafeguard>
                 ) : null}

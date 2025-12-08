@@ -9,7 +9,7 @@ import {
     AdminSettingsNavigation,
 } from './NavigationList.tsx';
 import { useInitialPathname } from './useInitialPathname.ts';
-import type { NewInUnleash } from './NewInUnleash/NewInUnleash.tsx';
+import type { LegacyNewInUnleash } from './NewInUnleash/LegacyNewInUnleash.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow, focusable } from 'themes/themeStyles';
@@ -74,9 +74,9 @@ const StickyContainer = styled(Box, {
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
-    NewInUnleash,
-}) => {
+export const NavigationSidebar: FC<{
+    NewInUnleash?: typeof LegacyNewInUnleash;
+}> = ({ NewInUnleash }) => {
     const { routes } = useRoutes();
     const celebrateUnleashFrontend = useFlag('celebrateUnleashFrontend');
     const { showOnlyAdminMenu } = useNewAdminMenu();

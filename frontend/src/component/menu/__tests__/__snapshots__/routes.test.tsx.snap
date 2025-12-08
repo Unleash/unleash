@@ -111,7 +111,6 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "enterprise": true,
-    "flag": "globalChangeRequestList",
     "menu": {
       "primary": true,
     },

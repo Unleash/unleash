@@ -85,7 +85,6 @@ export type UiFlags = {
     customMetrics?: boolean;
     impactMetrics?: boolean;
     plausibleMetrics?: boolean;
-    globalChangeRequestList?: boolean;
     milestoneProgression?: boolean;
     featureReleasePlans?: boolean;
     safeguards?: boolean;

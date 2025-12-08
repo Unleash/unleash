@@ -59,7 +59,6 @@ export type IFlagKey =
     | 'etagByEnv'
     | 'fetchMode'
     | 'optimizeLifecycle'
-    | 'globalChangeRequestList'
     | 'milestoneProgression'
     | 'featureReleasePlans'
     | 'plausibleMetrics'
@@ -263,10 +262,6 @@ const flags: IFlags = {
             false,
         ),
     },
-    globalChangeRequestList: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_LIST,
-        false,
-    ),
     milestoneProgression: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MILESTONE_PROGRESSION,
         false,

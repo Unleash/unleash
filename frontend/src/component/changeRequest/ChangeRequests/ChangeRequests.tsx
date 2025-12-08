@@ -10,7 +10,6 @@ import { AvatarCell } from 'component/changeRequest/ProjectChangeRequests/Change
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { GlobalChangeRequestTitleCell } from './GlobalChangeRequestTitleCell.js';
 import { FeaturesCell } from '../ProjectChangeRequests/ChangeRequestsTabs/FeaturesCell.js';
-import { useUiFlag } from 'hooks/useUiFlag.js';
 import { withTableState } from 'utils/withTableState';
 import {
     useChangeRequestSearch,
@@ -192,13 +191,6 @@ const ChangeRequestsInner = ({ user }: { user: IUser }) => {
 
 export const ChangeRequests = () => {
     const { user } = useAuthUser();
-    if (!useUiFlag('globalChangeRequestList')) {
-        return (
-            <PageContent header={<PageHeader title='Change requests' />}>
-                <p>Nothing to see here. Move along.</p>
-            </PageContent>
-        );
-    }
 
     if (!user) {
         return (

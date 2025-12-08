@@ -183,6 +183,7 @@ export const MilestoneTransitionDisplay = ({
 
     useEffect(() => {
         const newInitial = getTimeValueAndUnitFromMinutes(intervalMinutes);
+        console.log('resetting', newInitial.value);
         form.setTimeValue(newInitial.value);
         form.setTimeUnit(newInitial.unit);
     }, [intervalMinutes]);

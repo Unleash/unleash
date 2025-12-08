@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react';
 import type {
     ChangeRequestType,
     IChangeRequestFeature,
-    IDisplayFeatureChange,
+    IFeatureChange,
 } from '../../../changeRequest.types';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -76,11 +76,13 @@ export const FeatureChange: FC<{
     actions?: ReactNode;
     index: number;
     changeRequest: ChangeRequestType;
-    change: IDisplayFeatureChange;
+    change: IFeatureChange;
     feature: IChangeRequestFeature;
     onNavigate?: () => void;
     isDefaultChange?: boolean;
     onRefetch?: () => void;
+    isLast?: boolean;
+    isAfterWarning?: boolean;
 }> = ({
     index,
     change,
@@ -90,21 +92,16 @@ export const FeatureChange: FC<{
     onNavigate,
     isDefaultChange,
     onRefetch,
+    isLast = false,
+    isAfterWarning = false,
 }) => {
-    const lastIndex = feature.defaultChange
-        ? feature.changes.length + 1
-        : feature.changes.length;
-
     return (
         <StyledSingleChangeBox
             key={objectId(change)}
             $hasConflict={Boolean(change.conflict || change.scheduleConflicts)}
             $isInConflictFeature={Boolean(feature.conflict)}
-            $isAfterWarning={Boolean(
-                feature.changes[index - 1]?.conflict ||
-                    feature.changes[index - 1]?.scheduleConflicts,
-            )}
-            $isLast={index + 1 === lastIndex}
+            $isAfterWarning={isAfterWarning}
+            $isLast={isLast}
         >
             <ConditionallyRender
                 condition={Boolean(change.conflict) && !feature.conflict}

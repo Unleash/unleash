@@ -5,7 +5,6 @@ import type {
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestConsolidatedProgressionChange,
     IChangeRequestDeleteMilestoneProgression,
-    IDisplayFeatureChange,
     IFeatureChange,
 } from '../changeRequest.types';
 import { FeatureToggleChanges } from './Changes/FeatureToggleChanges.tsx';
@@ -22,7 +21,7 @@ interface IChangeRequestProps {
 
 const toDisplayFeatureChanges = (
     changes: IFeatureChange[],
-): IDisplayFeatureChange[] => {
+): IFeatureChange[] => {
     const consolidatedChange: IChangeRequestConsolidatedProgressionChange = {
         action: 'consolidatedProgression',
         changes: [],
@@ -100,18 +99,20 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     </Typography>
                 }
             />
-            {changeRequest.features?.map((feature) => (
-                <FeatureToggleChanges
-                    key={feature.name}
-                    featureName={feature.name}
-                    projectId={changeRequest.project}
-                    onNavigate={onNavigate}
-                    conflict={feature.conflict}
-                >
-                    {toDisplayFeatureChanges(feature.changes).map(
-                        (change, index) => (
+            {changeRequest.features?.map((feature) => {
+                const displayChanges = toDisplayFeatureChanges(feature.changes);
+
+                return (
+                    <FeatureToggleChanges
+                        key={feature.name}
+                        featureName={feature.name}
+                        projectId={changeRequest.project}
+                        onNavigate={onNavigate}
+                        conflict={feature.conflict}
+                    >
+                        {displayChanges.map((change, index) => (
                             <FeatureChange
-                                key={index}
+                                key={change.id}
                                 actions={
                                     <ChangeActions
                                         changeRequest={changeRequest}
@@ -126,20 +127,44 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                                 feature={feature}
                                 onNavigate={onNavigate}
                                 onRefetch={onRefetch}
+                                isLast={
+                                    !feature.defaultChange &&
+                                    index === displayChanges.length - 1
+                                }
+                                isAfterWarning={
+                                    index > 0 &&
+                                    Boolean(
+                                        displayChanges[index - 1]?.conflict ||
+                                            displayChanges[index - 1]
+                                                ?.scheduleConflicts,
+                                    )
+                                }
                             />
-                        ),
-                    )}
-                    {feature.defaultChange ? (
-                        <FeatureChange
-                            isDefaultChange
-                            index={feature.changes.length}
-                            changeRequest={changeRequest}
-                            change={feature.defaultChange}
-                            feature={feature}
-                        />
-                    ) : null}
-                </FeatureToggleChanges>
-            ))}
+                        ))}
+                        {feature.defaultChange ? (
+                            <FeatureChange
+                                isDefaultChange
+                                index={displayChanges.length}
+                                changeRequest={changeRequest}
+                                change={feature.defaultChange}
+                                feature={feature}
+                                isLast={true}
+                                isAfterWarning={
+                                    displayChanges.length > 0 &&
+                                    Boolean(
+                                        displayChanges[
+                                            displayChanges.length - 1
+                                        ]?.conflict ||
+                                            displayChanges[
+                                                displayChanges.length - 1
+                                            ]?.scheduleConflicts,
+                                    )
+                                }
+                            />
+                        ) : null}
+                    </FeatureToggleChanges>
+                );
+            })}
         </Box>
     );
 };

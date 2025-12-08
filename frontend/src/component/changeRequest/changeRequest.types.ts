@@ -256,7 +256,7 @@ export interface IChangeRequestDeleteSegment {
     };
 }
 
-export type IChange = IDisplayFeatureChange | ISegmentChange;
+export type IChange = IFeatureChange | ISegmentChange;
 
 export type IFeatureChange =
     | IChangeRequestAddStrategy
@@ -273,6 +273,7 @@ export type IFeatureChange =
     | IChangeRequestStartMilestone
     | IChangeRequestChangeMilestoneProgression
     | IChangeRequestDeleteMilestoneProgression
+    | IChangeRequestConsolidatedProgressionChange
     | IChangeRequestChangeSafeguard
     | IChangeRequestDeleteSafeguard
     | IChangeRequestResumeMilestoneProgression;

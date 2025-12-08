@@ -19,6 +19,10 @@ exports[`order of items in navigation > menu for enterprise plan 1`] = `
     "text": "Flags overview",
   },
   {
+    "icon": "MergeTypeIcon",
+    "text": "Change requests",
+  },
+  {
     "icon": "AutoFixNormalIcon",
     "text": "Playground",
   },

@@ -149,7 +149,6 @@ export const routes: IRoute[] = [
         component: ChangeRequests,
         type: 'protected',
         menu: { primary: true },
-        flag: 'globalChangeRequestList',
         enterprise: true,
     },
 

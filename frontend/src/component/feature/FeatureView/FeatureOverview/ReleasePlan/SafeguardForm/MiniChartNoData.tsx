@@ -6,15 +6,12 @@ import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchem
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
 
 const StyledMiniChartWrapper = styled(Box)(({ theme }) => ({
-    width: 80,
     marginRight: theme.spacing(1),
-    cursor: 'pointer',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(0.75),
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
     gap: theme.spacing(0.5),
 }));
 
@@ -27,7 +24,6 @@ const StyledQuestionMarkIcon = styled(Box)(({ theme }) => ({
     borderRadius: '50%',
     backgroundColor: theme.palette.secondary.main,
     color: theme.palette.common.white,
-    flexShrink: 0,
     '& svg': {
         fontSize: '14px',
     },

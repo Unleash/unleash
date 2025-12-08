@@ -405,7 +405,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                     Pause automation when
                 </StyledLabel>
                 {mode === 'display' && badge}
-                {metricName && (
+                {metricName ? (
                     <MiniMetricsChartWithTooltip
                         metricName={metricName}
                         metricDisplayName={miniChartMetricDisplayName}
@@ -416,7 +416,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         projectId={projectId}
                         featureId={featureId}
                     />
-                )}
+                ) : null}
                 {mode !== 'create' && onDelete && (
                     <PermissionIconButton
                         permission={UPDATE_FEATURE_STRATEGY}

@@ -17,6 +17,8 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { LegacyNewInUnleash } from './NavigationSidebar/NewInUnleash/LegacyNewInUnleash.tsx';
+import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -96,6 +98,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         );
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
+        const useNewNewInUnleash = useUiFlag('gtmReleaseManagement');
 
         return (
             <EventTimelineProvider>
@@ -120,7 +123,11 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 condition={!isSmallScreen}
                                 show={
                                     <NavigationSidebar
-                                        NewInUnleash={LegacyNewInUnleash}
+                                        NewInUnleash={
+                                            useNewNewInUnleash
+                                                ? undefined
+                                                : LegacyNewInUnleash
+                                        }
                                     />
                                 }
                             />
@@ -164,6 +171,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                     </MainLayoutContentWrapper>
                     <Footer />
                 </MainLayoutContainer>
+                {useNewNewInUnleash && <NewInUnleash />}
             </EventTimelineProvider>
         );
     },

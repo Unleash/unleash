@@ -753,6 +753,11 @@
       "permanent": true
     },
     {
+      "source": "/use-cases/user-management-access-controls-auditing",
+      "destination": "/guides/user-management-access-controls",
+      "permanent": true
+    },
+    {
       "source": "/use-cases",
       "destination": "/guides",
       "permanent": true

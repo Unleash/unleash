@@ -40,11 +40,9 @@ The most common configuration error during migration is the URL format used to c
 ### 2. Consolidate instances
 
 If you previously ran separate Proxy instances for development and production, you can now replace them with a single Edge instance.
-Edge determines the correct [environment](/concepts/environments)
- from the API token provided by the SDK and serves responses from its local cache accordingly.
+Edge determines the correct [environment](/concepts/environments)from the API token provided by the SDK and serves responses from its local cache accordingly.
 
 Deploy a single Edge container. Provide a startup token that has access to both environments (or use a wildcard token).
-Edge will automatically route incoming SDK requests to the correct environment based on the token the SDK provides.
 
 ### 3. Configure tokens
 

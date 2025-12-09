@@ -16,7 +16,38 @@ This guide covers deploying Enterprise Edge self-hosted on your infrastructure.
 
 ## License
 
-To self-host Enterprise Edge, you need a license key. Contact your customer success representative to obtain or upgrade your license.
+To self-host Enterprise Edge, you need an Unleash Enterprise instance and a license key that includes Enterprise Edge. Contact your customer success representative to obtain or upgrade your license.
+
+## Quickstart with Docker
+
+Unleash Edge is distributed as a Docker image.
+
+To pull the image from Docker Hub, run:
+
+```shell
+docker pull unleashorg/unleash-edge-enterprise:latest
+```
+
+To run Edge in a container, provide your upstream URL and a backend token for bootstrapping.
+
+```
+docker run -it -p 3063:3063 \
+  -e UPSTREAM_URL=https://<your-unleash-instance>.com \
+  -e TOKENS=<your_client_token> \
+  unleashorg/unleash-edge-enterprise:<version> edge
+```
+
+Once Edge is running, connect your SDKs by pointing them to `http://localhost:3063/api`:
+
+```javascript
+const unleash = initialize({
+  url: 'http://localhost:3063/api',
+  appName: 'my-app',
+  customHeaders: { Authorization: '<your_client_token>' },
+});
+```
+
+For a more hands-on guide on setting up Edge locally and connecting an SDK, follow our [Unleash Edge](/guides/unleash-edge-quickstart) quickstart guide.
 
 ## Infrastructure requirements
 
@@ -61,44 +92,25 @@ graph LR
 
 To configure daisy chaining, point the downstream Edge's `UPSTREAM_URL` to the upstream Edge instance instead of Unleash. Metrics propagate upstream through the chain automatically.
 
-## Quickstart with Docker
-
-Unleash Edge is distributed as a Docker image.
-
-To pull the image from Docker Hub, run:
-
-```shell
-docker pull unleashorg/unleash-edge-enterprise:latest
-```
-
-To run Edge in a container, provide your upstream URL and a backend token for bootstrapping.
-
-```
-docker run -it -p 3063:3063 \
-  -e UPSTREAM_URL=https://<your-unleash-instance>.com \
-  -e TOKENS=<your_client_token> \
-  unleashorg/unleash-edge-enterprise:<version> edge
-```
-
-Once Edge is running, connect your SDKs by pointing them to `http://localhost:3063/api`:
-
-```javascript
-const unleash = initialize({
-  url: 'http://localhost:3063/api',
-  appName: 'my-app',
-  customHeaders: { Authorization: '<your_client_token>' },
-});
-```
-
-For a more hands-on guide on setting up Edge locally and connecting an SDK, follow our [Unleash Edge](/guides/unleash-edge-quickstart) quickstart guide.
-
 ## Production deployment
 
 For production setups, we recommend deploying a minimum of two Edge instances behind a load balancer. This ensures high availability during updates or unexpected failures.
 
-If running multiple replicas, you must configure a shared persistence layer so all instances share the same cold-start data. See [Reliability and persistence](#reliability-and-persistence) for details.
+Unleash Edge runs evaluations from memory for speed, but it requires a persistence layer to survive restarts when the upstream is unavailable. To guarantee the resilience benefits of Edge, you must configure a persistence layer.
 
-Add persistence and resource limits:
+If an Edge node restarts and cannot contact the upstream Unleash server, it will fail to start unless it can load valid data from a persistence layer.
+
+When running multiple Edge replicas, you must configure a shared persistence layer, such as Redis, so all instances share the same cold-start data.
+
+#### Persistence options
+
+| Option | Env var / CLI flag | Use case |
+| ----- | ----- | ----- |
+| **Redis** | `REDIS_URL --redis-url` | Recommended for production. Persists snapshots to a shared Redis cluster. Ideal for multi-replica setups. |
+| **Amazon S3** | `S3_BUCKET_NAME --s3-bucket-name` | Edge writes periodic snapshot files to S3. Suitable when a Redis service is not available but durable storage is required. |
+| **Local file** | `BACKUP_FOLDER --backup-folder` | Intended for **development only**. Not recommended for production or multi-replica environments. |
+
+#### Deployment example
 
 ```shell
 docker run -d \
@@ -115,23 +127,6 @@ docker run -d \
 ### Kubernetes
 
 For Kubernetes deployments, we recommend using the official [Helm charts](https://github.com/Unleash/helm-charts). Ensure you update the `image.repository` in your `values.yaml` to point to the Enterprise image tag.
-
-### Reliability and persistence
-
-Enterprise Edge serves feature flag evaluations from in-memory state to ensure low latency. However, you should configure a persistence layer to ensure reliability during restarts.
-
-Persistence stores validated license, token, and feature data. If the upstream Unleash instance is unavailable when Edge restarts (for example, during a network partition), Edge can restore its state from the persistence layer and immediately begin serving traffic.
-Without persistence, a restarted Edge node must contact the upstream Unleash instance before it can serve any traffic.
-
-We recommend that you use Redis for production environments, especially with multiple Edge replicas.
-
-#### Persistence options
-
-| Option | Env var / CLI flag | Use case |
-| ----- | ----- | ----- |
-| **Redis** | `REDIS_URL --redis-url` | Recommended for production. Persists snapshots to a shared Redis cluster. Ideal for multi-replica setups. |
-| **Amazon S3** | `S3_BUCKET_NAME --s3-bucket-name` | Edge writes periodic snapshot files to S3. Suitable when a Redis service is not available but durable storage is required. |
-| **Local file** | `BACKUP_FOLDER --backup-folder` | Intended for **development only**. Not recommended for production or multi-replica environments. |
 
 ## Configuration
 
@@ -170,56 +165,42 @@ Based on internal benchmarks, you can estimate capacity requirements using the f
 
 Edge relies on Unleash API tokens to validate access and sync configuration. The specific token configuration depends on your operating mode.
 
-### Startup tokens (Edge mode)
+### Edge mode
 
-When running in [Edge mode](#modes-of-operation), the instance requires at least one valid [backend token](/concepts/api-tokens-and-client-keys#backend-tokens) at startup to connect to the upstream Unleash instance.
-This token serves two purposes: bootstrapping the cache and defining the maximum access scope for the Edge instance.
+When running in [Edge mode](#modes-of-operation), you must provide at least one valid [backend token](/concepts/api-tokens-and-client-keys#backend-tokens) at startup using the `TOKENS` variable. This token serves two critical functions:
 
-Providing startup tokens allows Edge to hydrate its data ahead of time. This ensures Edge can respond to frontend API requests immediately without needing to fetch data on demand.
-If you are running Edge behind a load balancer and using the frontend API, setting startup tokens is necessary to ensure predictable responses.
+- **Authentication**: Validates the Edge instance against the upstream Unleash server or the persistence layer.
+- **Scope definition**: Defines the maximum set of data the Edge instance can access.
+
+Edge enforces strict scoping based on this token. It will only sync flags for the [projects](/concepts/projects) and [environments](/concepts/environments) included in the startup token.
+
+For example:
+- **Broader access startup token**: If a client connects with a token that is a subset of the startup token (for example, the startup token has `*:development`, and the client has `project-a:development`), the request is accepted. Edge filters the response to show only `project-a`.
+- **Narrower or different access startup token**: If a client requests data outside the startup token's scope (for example, requesting production data when Edge only has development, or requesting `*` when Edge only has `project-a`), the request is rejected with `403 Forbidden` or `511 Network Authentication Required`.
+
+:::tip Recommendation
+Bootstrap Edge with a wildcard token for the specific environment (for example, `*:development.some-secret`). This ensures the Edge instance has all data for that environment, allowing it to serve any client request for that environment instantly.
+:::
 
 - Environment variable: `TOKENS`
 - CLI flag: `--tokens`
 
-### Scope validation and narrowing
+### Offline mode
 
-Edge enforces strict scope validation based on the startup token. It refuses requests from SDKs that attempt to access [projects](/concepts/projects) or [environments](/concepts/environments) outside the scope of the startup token.
+When running in [Offline mode](#modes-of-operation), there is no upstream instance to validate tokens. You must explicitly configure which tokens are valid:
 
-Incoming requests must match the environment and project access specified in the initial tokens. For example, if your startup token grants access to `project-a` and `project-b` in development, an SDK request for `project-c` in development or any [projects](/concepts/projects) in production will be rejected.
-
-If you start Edge with a wildcard token (for example, `*:development`), clients can use narrower tokens (such as, `project-a:development`). Edge filters the feature list to grant access only to the specific project requested by the client.
-
-### Offline tokens
-
-When running in [Offline mode](#modes-of-operation), there is no upstream instance to validate tokens against. You must explicitly configure which tokens are valid for backend and frontend access.
-
-- **[Backend SDKs](/sdks#backend-sdks)**: Use `CLIENT_TOKENS` (or `--client-tokens`). These tokens grant access to the `/api/client/features` endpoint.
-- **[Frontend SDKs](/sdks#frontend-sdks)**: Use `FRONTEND_TOKENS` (or `--frontend-tokens`). These tokens grant access to the `/api/frontend` and `/api/proxy` endpoints.
+- **[Backend SDKs](/sdks#backend-sdks)**: Use `CLIENT_TOKENS` (or `--client-tokens`). Grants access to `/api/client/features`.
+- **[Frontend SDKs](/sdks#frontend-sdks)**: Use `FRONTEND_TOKENS` (or `--frontend-tokens`). Grants access to `/api/frontend` and `/api/proxy`.
 
 ### Pre-trusted tokens
 
 :::note Availability
-
-**Edge version**: `19.10+`
-
+Edge version: `19.10+`
 :::
 
-Pre-trusted tokens allow you to bypass upstream validation for specific frontend tokens. This is useful for migrating off the old Unleash Proxy.
+If migrating from the legacy Unleash Proxy, you can use `PRETRUSTED_TOKENS` to support legacy secrets (for example, `secret-123@development`) without updating your frontend clients.
 
-- Environment variable: `PRETRUSTED_TOKENS`
-- CLI flag: `--pretrusted-tokens`
-
-Supported formats:
-- Standard Unleash token: A valid Unleash frontend token (e.g.,` *:development.969e...`).
-- Legacy Proxy token: A token in the format `some-secret@environment`. Note: When using legacy-style tokens, you must also configure at least one standard backend token via the `TOKENS` variable that covers the specified environment. This ensures Edge can fetch the actual feature data for that environment from the upstream server.
-
-### Frontend token limitations
-
-Frontend tokens can be used with the `/api/frontend` and `/api/proxy` endpoints, but they cannot be used to fetch feature updates from the upstream Unleash instance.
-
-To ensure frontend tokens return correct data, the features they access must already be present in the Edge cache. You must pass at least one backend token (using `TOKENS`) at startup that covers the same environment and projects as your frontend tokens.
-
-If a frontend token requests data that is not currently cached, Edge returns `HTTP 511 Network Authentication Required`. The response body will indicate which project and environment requires a valid backend token to hydrate the cache.
+Note: You must still provide a standard backend token via `TOKENS` that covers the same environment. This ensures Edge can fetch the feature data required by the legacy token.
 
 ## Health and readiness
 

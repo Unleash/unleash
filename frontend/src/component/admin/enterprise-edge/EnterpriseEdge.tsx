@@ -20,17 +20,18 @@ const StyledSeparator = styled('hr')(({ theme }) => ({
     height: '1px',
     background: theme.palette.divider,
     width: '100%',
-    margin: theme.spacing(5, 0),
+    margin: theme.spacing(2, 0),
 }));
 
 export const EnterpriseEdge = () => {
     usePageTitle('Enterprise Edge');
 
     const { connectedEdges } = useConnectedEdges({ refreshInterval: 30_000 });
+    const hasConnectedEdges = connectedEdges.length > 0;
 
     return (
         <StyledPageContent header='Enterprise Edge'>
-            {connectedEdges.length > 0 && (
+            {hasConnectedEdges && (
                 <>
                     <StyledPageContentSection>
                         <EnterpriseEdgeInstances
@@ -40,7 +41,7 @@ export const EnterpriseEdge = () => {
                     <StyledSeparator />
                 </>
             )}
-            <StyledPageContentSection>
+            <StyledPageContentSection sx={{ pb: hasConnectedEdges ? 6 : 4 }}>
                 <EnterpriseEdgeExplanation />
             </StyledPageContentSection>
         </StyledPageContent>

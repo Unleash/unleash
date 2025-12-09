@@ -1,5 +1,5 @@
 import { ArcherContainer, ArcherElement } from 'react-archer';
-import { Typography, styled, useTheme } from '@mui/material';
+import { Typography, alpha, styled, useTheme } from '@mui/material';
 import { unknownify } from 'utils/unknownify';
 import { useMemo } from 'react';
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
@@ -41,10 +41,10 @@ const StyledNode = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledGroup = styled(StyledNode)({
-    backgroundColor: 'transparent',
+const StyledGroup = styled(StyledNode)(({ theme }) => ({
+    backgroundColor: alpha(theme.palette.background.paper, 0.75),
     position: 'relative',
-});
+}));
 
 const StyledHostingBadge = styled(Badge)({
     position: 'absolute',

@@ -38,8 +38,8 @@ export const StretchContainer = styled(Box, {
     gap: theme.spacing(2),
     zIndex: 1,
     overflowAnchor: 'none',
-    minWidth: mode === 'full' ? theme.spacing(32) : 'auto',
-    width: mode === 'full' ? theme.spacing(32) : 'auto',
+    minWidth: mode === 'full' ? theme.spacing(34) : 'auto',
+    width: mode === 'full' ? theme.spacing(34) : 'auto',
 }));
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));

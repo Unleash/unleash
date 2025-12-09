@@ -105,22 +105,29 @@ See:
 
 ## Observability
 
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `7.4+`
+
+:::
+
 Unleash provides deep visibility into the health and performance of your Unleash Edge nodes directly within the Admin UI.
 
 ![Edge observability dashboard](/img/edge-observability.png)
 
-Go to **Network > Connected Edges** to visualize your Edge topology. This view allows you to monitor the real-time state of every connected Edge instance.
+Go to **Admin settings > Enterprise Edge** to visualize your Edge topology. This view allows you to monitor the real-time state of every connected Edge instance.
 
 The dashboard reports the following metrics for each Edge node:
 
-**Instance health:**
+**Instance details**: Region, instance ID, upstream server, and hosting type (hosted or self-hosted).
 
+**Instance health:**
+- **Hosting type**: Hosted or self-hosted.
 - **Status**: Current connection state (such as `Connected`).
 - **Version**: The running version of the Edge binary.
 - **Resources**: Real-time CPU and Memory usage.
 
 **Traffic and performance:**
-
 - **Stream clients**: Number of SDKs currently maintaining a streaming connection.
 - **Upstream latency**: Time taken to fetch updates from the upstream Unleash server (broken down by Client Features, Metrics, and Edge sync).
 - **Downstream latency**: Time taken to serve requests to connected SDKs (broken down by frontend and backend evaluations).

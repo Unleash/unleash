@@ -22,6 +22,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 import { FeatureStrategyMenuCardsDefaultStrategy } from './FeatureStrategyMenuCardsDefaultStrategy.tsx';
 import type { IStrategy } from 'interfaces/strategy.ts';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
+import { ReleaseTemplatesBanner } from 'component/common/ReleaseTemplatesBanner/ReleaseTemplatesBanner';
 
 const FILTERS = [
     { label: 'All', value: null },
@@ -210,6 +211,7 @@ export const FeatureStrategyMenuCards = ({
                 />
             </StyledFiltersContainer>
             <StyledScrollableContent>
+                <ReleaseTemplatesBanner />
                 {shouldRender('default') && (
                     <FeatureStrategyMenuCardsSection
                         title={

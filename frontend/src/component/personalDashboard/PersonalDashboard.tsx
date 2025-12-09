@@ -26,6 +26,7 @@ import { InfoSection } from './InfoSection.tsx';
 import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
 import { Link } from 'react-router-dom';
+import { ReleaseTemplatesBanner } from 'component/common/ReleaseTemplatesBanner/ReleaseTemplatesBanner';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -296,6 +297,7 @@ export const PersonalDashboard = () => {
 
     return (
         <MainContent>
+            <ReleaseTemplatesBanner />
             {isOss() ? <InfoSection /> : null}
 
             <WelcomeSection>

@@ -568,10 +568,10 @@ const sidebars: SidebarsConfig = {
                 {
                     type: 'category',
                     label: 'Self-host Unleash Edge',
-                                link: {
-                type: 'doc',
-                id: 'unleash-edge/deploy',
-            },
+                    link: {
+                        type: 'doc',
+                        id: 'unleash-edge/deploy',
+                    },
                     items: [
                         'unleash-edge/deploy',
                         'unleash-edge/configure',

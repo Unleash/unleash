@@ -21,7 +21,7 @@ This is an example of a feature that is only available to Enterprise customers w
 # Unleash Edge
 
 - Open Source - Deprecated in favor of the Enterprise edition. Long-term support starts December 10, 2025. End-of-life is December 31, 2026.
-- Enterprise - Available as cloud-hosted or self-hosted. Requires Unleash v7.3+.
+- Enterprise - Available as cloud-hosted or self-hosted. Requires Unleash Enterprise v7.3+.
 
 ## Beta features
 

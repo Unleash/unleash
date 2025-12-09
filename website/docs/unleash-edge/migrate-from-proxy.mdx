@@ -18,7 +18,7 @@ While Edge maintains the same security and privacy guarantees as the Proxy, it o
 
 ## Migration path: Hosted Edge
 
-If you migrating to Enterprise Edge hosted, you do not need to deploy any infrastructure.
+If you are migrating to Enterprise Edge hosted, you do not need to deploy any infrastructure.
 
 1. **Request Enterprise Edge**: Contact your customer success representative to request Enterprise Edge.
 2. **Get your Edge URL**: Note the specific regional URL provided in the Admin UI (for example, `https://<region>.unleash-edge.com`).
@@ -40,7 +40,8 @@ The most common configuration error during migration is the URL format used to c
 ### 2. Consolidate instances
 
 If you previously ran separate Proxy instances for development and production, you can now replace them with a single Edge instance.
-Edge dynamically routes requests to the correct [environment](/concepts/environments) based on the API token provided by the SDK.
+Edge determines the correct [environment](/concepts/environments)
+ from the API token provided by the SDK and serves responses from its local cache accordingly.
 
 Deploy a single Edge container. Provide a startup token that has access to both environments (or use a wildcard token).
 Edge will automatically route incoming SDK requests to the correct environment based on the token the SDK provides.

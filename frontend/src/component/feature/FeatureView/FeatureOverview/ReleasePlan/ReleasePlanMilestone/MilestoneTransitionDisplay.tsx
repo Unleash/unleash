@@ -252,6 +252,8 @@ export const MilestoneTransitionDisplay = ({
                         {badge}
                         <PermissionIconButton
                             permission={UPDATE_FEATURE_STRATEGY}
+                            projectId={projectId}
+                            environmentId={environment}
                             onClick={onDelete}
                             size='small'
                             aria-label={`Remove automation for ${milestoneName}`}

@@ -252,9 +252,14 @@ export const MilestoneTransitionDisplay = ({
                         {badge}
                         <PermissionIconButton
                             permission={UPDATE_FEATURE_STRATEGY}
+                            projectId={projectId}
+                            environmentId={environment}
                             onClick={onDelete}
                             size='small'
-                            aria-label={`Delete automation for ${milestoneName}`}
+                            aria-label={`Remove automation for ${milestoneName}`}
+                            tooltipProps={{
+                                title: `Remove automation for ${milestoneName}`,
+                            }}
                             sx={{ padding: 0.5 }}
                         >
                             <DeleteOutlineIcon fontSize='small' />

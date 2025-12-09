@@ -424,7 +424,10 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         environmentId={environment}
                         onClick={handleDelete}
                         size='small'
-                        aria-label='Delete safeguard'
+                        aria-label='Remove safeguard'
+                        tooltipProps={{
+                            title: 'Remove safeguard',
+                        }}
                         sx={{ padding: 0.5 }}
                     >
                         <DeleteOutlineIcon fontSize='small' />

@@ -6,6 +6,7 @@ import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchem
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
 
 const StyledMiniChartWrapper = styled(Box)(({ theme }) => ({
+    width: 80,
     marginRight: theme.spacing(1),
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,

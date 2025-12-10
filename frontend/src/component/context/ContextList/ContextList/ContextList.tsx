@@ -1,4 +1,4 @@
-import { useMemo, useState, type VFC } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import {
     Table,
@@ -28,7 +28,7 @@ import { UsedInCell } from '../UsedInCell.tsx';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 
-const ContextList: VFC = () => {
+const ContextList: FC = () => {
     const projectId = useOptionalPathParam('projectId');
     const projectContextFieldsEnabled = useUiFlag('projectContextFields');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
@@ -49,7 +49,7 @@ const ContextList: VFC = () => {
             projectId && projectContextFieldsEnabled
                 ? // @ts-expect-error project doesn't exist yet; todo: fix with flag projectContextFields
                   context.filter((c) => c.project === projectId)
-                : context
+                : context;
 
         return filteredContextFields
             .map(

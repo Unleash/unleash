@@ -35,6 +35,7 @@ export const ProjectSettings = () => {
     const navigate = useNavigate();
 
     const actionsEnabled = useUiFlag('automatedActions');
+    const contextFieldsEnabled = useUiFlag('projectContextFields');
 
     const paidTabs = (...tabs: ITab[]) =>
         isPro() || isEnterprise() ? tabs : [];
@@ -54,10 +55,14 @@ export const ProjectSettings = () => {
             id: 'api-access',
             label: 'API access',
         },
-        {
-            id: 'context-fields',
-            label: 'Context fields',
-        },
+        ...(contextFieldsEnabled
+            ? [
+                  {
+                      id: 'context-fields',
+                      label: 'Context fields',
+                  },
+              ]
+            : []),
         {
             id: 'segments',
             label: 'Segments',
@@ -115,10 +120,12 @@ export const ProjectSettings = () => {
                     element={<ProjectEnvironmentList />}
                 />
                 <Route path='access/*' element={<ProjectAccess />} />
-                <Route
-                    path='context-fields/*'
-                    element={<ProjectContextFields />}
-                />
+                {contextFieldsEnabled && (
+                    <Route
+                        path='context-fields/*'
+                        element={<ProjectContextFields />}
+                    />
+                )}
                 <Route path='segments/*' element={<ProjectSegments />} />
                 <Route
                     path='change-requests/*'

@@ -428,7 +428,6 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
 
     const handleThresholdKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            e.preventDefault();
             handleThresholdInputBlur();
         }
     };

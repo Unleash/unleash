@@ -232,8 +232,7 @@ const ContextList: VFC = () => {
                         }
                         elseShow={
                             <TablePlaceholder>
-                                No contexts available. Get started by adding
-                                one.
+                                change this text
                             </TablePlaceholder>
                         }
                     />

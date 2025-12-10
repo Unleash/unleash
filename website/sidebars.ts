@@ -156,6 +156,7 @@ const sidebars: SidebarsConfig = {
                         'concepts/events',
                         'concepts/playground',
                         'concepts/network-view',
+                        'concepts/enterprise-edge-observability',
                     ],
                 },
                 {
@@ -558,7 +559,7 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
-            label: 'Unleash Edge',
+            label: 'Unleas Enterprise Edge',
             collapsed: true,
             link: {
                 type: 'doc',
@@ -566,8 +567,13 @@ const sidebars: SidebarsConfig = {
             },
             items: [
                 {
+                    type: 'doc',
+                    label: 'Enterprise Edge overview',
+                    id: 'unleash-edge/unleash-edge-overview',
+                },
+                {
                     type: 'category',
-                    label: 'Self-host Unleash Edge',
+                    label: 'Self-host Enterprise Edge',
                     link: {
                         type: 'doc',
                         id: 'unleash-edge/deploy',

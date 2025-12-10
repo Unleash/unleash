@@ -148,6 +148,11 @@ declare module '@mui/material/styles' {
             E1: string;
             series: string[];
         };
+
+        inverse: {
+            main: string;
+            contrastText: string;
+        };
     }
     interface Theme extends CustomTheme {}
     interface ThemeOptions extends CustomTheme {}

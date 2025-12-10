@@ -36,8 +36,8 @@ const StyledIcon = styled(NewReleases)(({ theme }) => ({
 }));
 
 const NewInUnleashBody = styled('article')(({ theme }) => ({
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: theme.palette.inverse.main,
+    color: theme.palette.inverse.contrastText,
     padding: theme.spacing(1.5),
     borderRadius: theme.shape.borderRadiusLarge,
     position: 'relative',

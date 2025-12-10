@@ -566,7 +566,7 @@ const sidebars: SidebarsConfig = {
                 id: 'unleash-edge/unleash-edge-overview',
             },
             items: [
-                                {
+                {
                     type: 'doc',
                     label: 'Enterprise Edge overview',
                     id: 'unleash-edge/unleash-edge-overview',

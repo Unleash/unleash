@@ -88,7 +88,7 @@ export const EnterpriseEdgeExplanation = () => (
                     'No operational burden',
                     'Instant flag updates worldwide',
                 ]}
-                docsUrl='https://docs.getunleash.io/unleash-edge'
+                docsUrl='https://docs.getunleash.io/deploy/hosting-options#cloud-hosted'
             />
             <EdgeVersionCard
                 image={<EnterpriseEdgeSelfHosted />}
@@ -99,7 +99,7 @@ export const EnterpriseEdgeExplanation = () => (
                     'Optimized for minimal latency',
                     'Improved security',
                 ]}
-                docsUrl='https://docs.getunleash.io/unleash-edge'
+                docsUrl='https://docs.getunleash.io/deploy/hosting-options#self-hosted'
             />
         </StyledCardsContainer>
     </StyledContainer>

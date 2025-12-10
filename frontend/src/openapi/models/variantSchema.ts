@@ -8,7 +8,7 @@ import type { VariantSchemaPayload } from './variantSchemaPayload.js';
 import type { VariantSchemaWeightType } from './variantSchemaWeightType.js';
 
 /**
- * A variant allows for further separation of users into segments. See [our excellent documentation](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) for a more detailed description
+ * A variant allows for further separation of users into segments. See [our excellent documentation](https://docs.getunleash.io/concepts/feature-flag-variants#what-are-variants) for a more detailed description
  */
 export interface VariantSchema {
     /** The variants name. Is unique for this feature flag */
@@ -17,10 +17,10 @@ export interface VariantSchema {
     overrides?: OverrideSchema[];
     /** Extra data configured for this variant */
     payload?: VariantSchemaPayload;
-    /** [Stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) is how Unleash guarantees that the same user gets the same variant every time */
+    /** [Stickiness](https://docs.getunleash.io/concepts/feature-flag-variants#variant-stickiness) is how Unleash guarantees that the same user gets the same variant every time */
     stickiness?: string;
     /**
-     * The weight is the likelihood of any one user getting this variant. It is a number between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight) for more information
+     * The weight is the likelihood of any one user getting this variant. It is a number between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/concepts/feature-flag-variants#variant-weight) for more information
      * @minimum 0
      * @maximum 1000
      */

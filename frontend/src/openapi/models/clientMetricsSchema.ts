@@ -18,7 +18,7 @@ export interface ClientMetricsSchema {
      * @deprecated
      */
     environment?: string;
-    /** A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application */
+    /** A [(somewhat) unique identifier](https://docs.getunleash.io/sdks/node#advanced-usage) for the application */
     instanceId?: string;
     /** The platform the application is running on. For languages that compile to binaries, this can be omitted */
     platformName?: string;

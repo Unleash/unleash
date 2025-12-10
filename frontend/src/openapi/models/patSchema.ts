@@ -5,7 +5,7 @@
  */
 
 /**
- * Describes a [personal access token](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens), or PAT. PATs are automatically scoped to the authenticated user.
+ * Describes a [personal access token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens), or PAT. PATs are automatically scoped to the authenticated user.
  */
 export interface PatSchema {
     /** The date and time of when the PAT was created. */

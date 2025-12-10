@@ -43,7 +43,7 @@ export interface UserSchema {
     /** Deprecated */
     permissions?: string[];
     /**
-     * Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned
+     * Which [root role](https://docs.getunleash.io/concepts/rbac#predefined-roles) this user is assigned
      * @minimum 0
      */
     rootRole?: number;

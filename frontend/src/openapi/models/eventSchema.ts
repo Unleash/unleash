@@ -75,6 +75,6 @@ export interface EventSchema {
      * @nullable
      */
     tags?: TagSchema[] | null;
-    /** What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is */
+    /** What [type](https://docs.getunleash.io/concepts/events#event-types) of event this is */
     type: EventSchemaType;
 }

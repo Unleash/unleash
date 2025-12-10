@@ -11,12 +11,12 @@ import type { ProjectSettingsSchemaMode } from './projectSettingsSchemaMode.js';
  */
 export interface ProjectSettingsSchema {
     /**
-     * The [default stickiness for this project](https://docs.getunleash.io/reference/stickiness#project-default-stickiness)
+     * The [default stickiness for this project](https://docs.getunleash.io/concepts/stickiness#project-default-stickiness)
      * @nullable
      */
     defaultStickiness: ProjectSettingsSchemaDefaultStickiness;
     /**
-     * The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode).
+     * The project's [collaboration mode](https://docs.getunleash.io/concepts/project-collaboration-mode).
      * @nullable
      */
     mode: ProjectSettingsSchemaMode;

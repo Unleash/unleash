@@ -10,6 +10,6 @@
 export interface CloneFeatureSchema {
     /** The name of the new feature */
     name: string;
-    /** Whether to use the new feature name as its group ID or not. Group ID is used for calculating [stickiness](https://docs.getunleash.io/reference/stickiness#calculation). Defaults to true. */
+    /** Whether to use the new feature name as its group ID or not. Group ID is used for calculating [stickiness](https://docs.getunleash.io/concepts/stickiness#calculation). Defaults to true. */
     replaceGroupId?: boolean;
 }

@@ -6,7 +6,7 @@
 import type { ChangeRequestCommentSchemaCreatedBy } from './changeRequestCommentSchemaCreatedBy.js';
 
 /**
- * A comment belonging to a [change request](https://docs.getunleash.io/reference/change-requests).
+ * A comment belonging to a [change request](https://docs.getunleash.io/concepts/change-requests).
  */
 export interface ChangeRequestCommentSchema {
     /** When the comment was made. */

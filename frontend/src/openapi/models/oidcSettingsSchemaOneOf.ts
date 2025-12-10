@@ -17,7 +17,7 @@ export type OidcSettingsSchemaOneOf = {
     autoCreate?: boolean;
     /** The OIDC client ID of this application. */
     clientId: string;
-    /** [Default role](https://docs.getunleash.io/reference/rbac#standard-roles) granted to users auto-created from email. Only relevant if autoCreate is `true` */
+    /** [Default role](https://docs.getunleash.io/concepts/rbac#standard-roles) granted to users auto-created from email. Only relevant if autoCreate is `true` */
     defaultRootRole?: OidcSettingsSchemaOneOfDefaultRootRole;
     /** Assign this root role to auto created users. Should be a role ID and takes precedence over `defaultRootRole`. */
     defaultRootRoleId?: number;
@@ -27,7 +27,7 @@ export type OidcSettingsSchemaOneOf = {
     emailDomains?: string;
     /** Whether to enable or disable OpenID Connect for this instance */
     enabled: boolean;
-    /** Should we enable group syncing. Refer to the documentation [Group syncing](https://docs.getunleash.io/how-to/how-to-set-up-group-sso-sync) */
+    /** Should we enable group syncing. Refer to the documentation [Group syncing](https://docs.getunleash.io/guides/how-to-set-up-group-sso-sync) */
     enableGroupSyncing?: boolean;
     /** Enable PKCE (Proof Key for Code Exchange) for enhanced security. Recommended for public clients and provides additional protection against authorization code interception attacks. */
     enablePkce?: boolean;

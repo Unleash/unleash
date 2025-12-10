@@ -5,7 +5,7 @@
  */
 
 /**
- * What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is
+ * What [type](https://docs.getunleash.io/concepts/events#event-types) of event this is
  */
 export type EventSchemaType =
     (typeof EventSchemaType)[keyof typeof EventSchemaType];
@@ -152,8 +152,8 @@ export const EventSchemaType = {
     'banner-deleted': 'banner-deleted',
     'safeguard-changed': 'safeguard-changed',
     'safeguard-deleted': 'safeguard-deleted',
-    'safeguard-progressions-resumed': 'safeguard-progressions-resumed',
-    'safeguard-progressions-paused': 'safeguard-progressions-paused',
+    'release-plan-progressions-resumed': 'release-plan-progressions-resumed',
+    'release-plan-progressions-paused': 'release-plan-progressions-paused',
     'project-environment-added': 'project-environment-added',
     'project-environment-removed': 'project-environment-removed',
     'default-strategy-updated': 'default-strategy-updated',

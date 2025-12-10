@@ -18,7 +18,7 @@ export type SamlSettingsSchemaOneOf = {
     emailDomains?: string;
     /** Whether to enable or disable SAML 2.0 for this instance */
     enabled?: boolean;
-    /** Should we enable group syncing. Refer to the documentation [Group syncing](https://docs.getunleash.io/how-to/how-to-set-up-group-sso-sync) */
+    /** Should we enable group syncing. Refer to the documentation [Group syncing](https://docs.getunleash.io/guides/how-to-set-up-group-sso-sync) */
     enableGroupSyncing?: boolean;
     /** The SAML 2.0 entity ID */
     entityId: string;

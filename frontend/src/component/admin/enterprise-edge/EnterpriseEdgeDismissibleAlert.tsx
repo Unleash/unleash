@@ -26,11 +26,8 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     },
     '&.MuiPaper-root': {
         backgroundColor: theme.palette.secondary.light,
-        color: theme.palette.secondary.dark,
+        color: theme.palette.text.primary,
         border: `1px solid ${theme.palette.secondary.border}`,
-        '& .MuiAlert-icon': {
-            color: theme.palette.secondary.main,
-        },
     },
 }));
 
@@ -92,7 +89,7 @@ export const EnterpriseEdgeDismissibleAlert = ({
                         <Typography variant='h3'>
                             Instant flag updates worldwide
                         </Typography>
-                        <Typography variant='body2'>
+                        <Typography variant='body2' color='text.secondary'>
                             Enterprise Edge is a high-performance proxy between
                             your SDKs and Unleash, giving you global reach,
                             minimal latency, and making flag changes instantly

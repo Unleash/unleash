@@ -156,6 +156,7 @@ const sidebars: SidebarsConfig = {
                         'concepts/events',
                         'concepts/playground',
                         'concepts/network-view',
+                        'concepts/enterprise-edge-observability',
                     ],
                 },
                 {

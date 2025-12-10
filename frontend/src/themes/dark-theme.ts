@@ -230,6 +230,11 @@ const theme = {
             E1: '#68A611',
             series: colors.chartSeries,
         },
+
+        inverse: {
+            main: '#EEEEFC',
+            contrastText: colors.grey[900],
+        },
     },
 } as const;
 

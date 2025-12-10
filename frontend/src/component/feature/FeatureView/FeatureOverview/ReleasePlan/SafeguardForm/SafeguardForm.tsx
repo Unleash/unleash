@@ -1,10 +1,11 @@
 import { Button, FormControl, TextField, Box, styled } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/Shield';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import type { ChangeEvent, FormEvent, KeyboardEvent, ReactNode } from 'react';
+import type { FormEvent, ReactNode } from 'react';
 import { useEffect, useMemo, useState, type FC } from 'react';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useNumericStringInput } from 'hooks/useNumericStringInput';
 import { SafeguardChangeRequestDialog } from './SafeguardChangeRequestDialog.tsx';
 import { MiniMetricsChartWithTooltip } from './MiniMetricsChartWithTooltip.tsx';
 import {
@@ -398,39 +399,15 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
         (m) => m.name === metricName,
     )?.displayName;
 
-    const [thresholdInputValue, setThresholdInputValue] = useState(
-        threshold.toString(),
-    );
-
-    useEffect(() => {
-        setThresholdInputValue(threshold.toString());
-    }, [threshold]);
-
-    const handleThresholdInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setThresholdInputValue(value);
-        enterEditMode();
-    };
-
-    const handleThresholdInputBlur = () => {
-        if (thresholdInputValue === '') {
-            setThresholdInputValue(threshold.toString());
-            return;
-        }
-
-        const numValue = Number.parseFloat(thresholdInputValue);
-        if (!Number.isNaN(numValue)) {
-            handleThresholdChange(numValue);
-        } else {
-            setThresholdInputValue(threshold.toString());
-        }
-    };
-
-    const handleThresholdKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            handleThresholdInputBlur();
-        }
-    };
+    const {
+        inputValue: thresholdInputValue,
+        handleInputChange: handleThresholdInputChange,
+        handleInputBlur: handleThresholdInputBlur,
+        handleKeyDown: handleThresholdKeyDown,
+        handleFocus: handleThresholdFocus,
+    } = useNumericStringInput(threshold, handleThresholdChange, {
+        onEditStart: enterEditMode,
+    });
 
     return (
         <StyledFormContainer onSubmit={onSubmit} mode={mode}>
@@ -545,7 +522,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                     }}
                                     value={thresholdInputValue}
                                     onChange={handleThresholdInputChange}
-                                    onFocus={enterEditMode}
+                                    onFocus={handleThresholdFocus}
                                     onBlur={handleThresholdInputBlur}
                                     onKeyDown={handleThresholdKeyDown}
                                     placeholder='Value'

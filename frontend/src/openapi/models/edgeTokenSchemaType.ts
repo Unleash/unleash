@@ -5,7 +5,7 @@
  */
 
 /**
- * The [API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys)'s **type**. Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/reference/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#backend-tokens), [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#frontend-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with
+ * The [API token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys)'s **type**. Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#backend-tokens), [FRONTEND](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#frontend-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with
  */
 export type EdgeTokenSchemaType =
     (typeof EdgeTokenSchemaType)[keyof typeof EdgeTokenSchemaType];

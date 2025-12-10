@@ -7,7 +7,7 @@ import type { CreateProjectSchemaChangeRequestEnvironmentsItem } from './createP
 import type { CreateProjectSchemaMode } from './createProjectSchemaMode.js';
 
 /**
- * Data used to create a new [project](https://docs.getunleash.io/reference/projects).
+ * Data used to create a new [project](https://docs.getunleash.io/concepts/projects).
  */
 export interface CreateProjectSchema {
     /** A list of environments that should have change requests enabled. If the list includes environments not in the `environments` list, they will still have change requests enabled. */

@@ -6,7 +6,7 @@
 import type { PatSchema } from './patSchema.js';
 
 /**
- * Represents a [service account](https://docs.getunleash.io/reference/service-accounts). Service accounts are used to let systems interact with the Unleash API.
+ * Represents a [service account](https://docs.getunleash.io/concepts/service-accounts). Service accounts are used to let systems interact with the Unleash API.
  */
 export interface ServiceAccountSchema {
     /** The service account creation date */

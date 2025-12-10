@@ -6,6 +6,6 @@
 import type { NotificationsSchemaItem } from './notificationsSchemaItem.js';
 
 /**
- * A list of [notifications](https://docs.getunleash.io/reference/notifications)
+ * A list of [notifications](https://docs.getunleash.io/concepts/notifications)
  */
 export type NotificationsSchema = NotificationsSchemaItem[];

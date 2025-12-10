@@ -5,7 +5,7 @@
  */
 
 /**
- * Data used to create a new [tag](https://docs.getunleash.io/reference/feature-toggles#tags)
+ * Data used to create a new [tag](https://docs.getunleash.io/concepts/feature-flags#tags)
  */
 export interface CreateTagSchema {
     /**
@@ -15,7 +15,7 @@ export interface CreateTagSchema {
      */
     color?: string | null;
     /**
-     * The [type](https://docs.getunleash.io/reference/feature-toggles#tags) of the tag
+     * The [type](https://docs.getunleash.io/concepts/feature-flags#tags) of the tag
      * @minLength 2
      * @maxLength 50
      */

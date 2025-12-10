@@ -1,5 +1,11 @@
 import type { FC } from 'react';
-import { Box, Typography, FormControlLabel, Checkbox } from '@mui/material';
+import {
+    Box,
+    Typography,
+    FormControlLabel,
+    Checkbox,
+    MenuItem,
+} from '@mui/material';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { MetricSelector } from './SeriesSelector/MetricSelector.tsx';
 import { RangeSelector } from './RangeSelector/RangeSelector.tsx';
@@ -54,7 +60,12 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                     <RangeSelector
                         value={formData.timeRange}
                         onChange={actions.setTimeRange}
-                    />
+                    >
+                        <MenuItem value='hour'>Last hour</MenuItem>
+                        <MenuItem value='day'>Last 24 hours</MenuItem>
+                        <MenuItem value='week'>Last 7 days</MenuItem>
+                        <MenuItem value='month'>Last 30 days</MenuItem>
+                    </RangeSelector>
                     <ModeSelector
                         value={formData.aggregationMode}
                         onChange={actions.setAggregationMode}

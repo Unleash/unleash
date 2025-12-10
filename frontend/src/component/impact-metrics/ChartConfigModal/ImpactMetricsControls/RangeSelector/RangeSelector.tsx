@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { FormControl, InputLabel, Select } from '@mui/material';
 
 export type TimeRange = 'hour' | 'day' | 'week' | 'month';
 
@@ -7,12 +7,14 @@ export type RangeSelectorProps = {
     value: TimeRange;
     onChange: (range: TimeRange) => void;
     label?: string;
+    children: React.ReactNode;
 };
 
 export const RangeSelector: FC<RangeSelectorProps> = ({
     value,
     onChange,
     label = 'Time',
+    children,
 }) => (
     <FormControl variant='outlined' size='small'>
         {label ? (
@@ -24,10 +26,7 @@ export const RangeSelector: FC<RangeSelectorProps> = ({
             onChange={(e) => onChange(e.target.value as TimeRange)}
             label={label}
         >
-            <MenuItem value='hour'>Last hour</MenuItem>
-            <MenuItem value='day'>Last 24 hours</MenuItem>
-            <MenuItem value='week'>Last 7 days</MenuItem>
-            <MenuItem value='month'>Last 30 days</MenuItem>
+            {children}
         </Select>
     </FormControl>
 );

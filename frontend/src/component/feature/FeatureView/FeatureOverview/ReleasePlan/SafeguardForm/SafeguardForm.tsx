@@ -1,4 +1,11 @@
-import { Button, FormControl, TextField, Box, styled } from '@mui/material';
+import {
+    Button,
+    FormControl,
+    TextField,
+    Box,
+    styled,
+    MenuItem,
+} from '@mui/material';
 import ShieldIcon from '@mui/icons-material/ShieldOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import type { FormEvent, ReactNode } from 'react';
@@ -480,7 +487,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                     </StyledTopRow>
                     <StyledTopRow sx={{ ml: 0.75 }}>
                         <StyledTopRow>
-                            <StyledLabel sx={{ ml: 2 }}>is</StyledLabel>
+                            <StyledLabel sx={{ ml: 2.5 }}>is</StyledLabel>
                             <FormControl variant='outlined' size='small'>
                                 <StyledSelect
                                     value={operator}
@@ -523,11 +530,17 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
 
                         <StyledTopRow>
                             <StyledLabel>over</StyledLabel>
+                            {/* Every range has an alert observation window equal to its step. Backend implies the step from the range */}
                             <RangeSelector
                                 value={timeRange}
                                 onChange={handleTimeRangeChange}
                                 label=''
-                            />
+                            >
+                                <MenuItem value='hour'>Last minute</MenuItem>
+                                <MenuItem value='day'>Last 15 minutes</MenuItem>
+                                <MenuItem value='week'>Last 3 hours</MenuItem>
+                                <MenuItem value='month'>Last day</MenuItem>
+                            </RangeSelector>
                         </StyledTopRow>
                     </StyledTopRow>
                 </SafeguardConfigurationSection>

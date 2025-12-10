@@ -21,6 +21,7 @@ import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadg
 import { Box, styled } from '@mui/material';
 import { ProjectActions } from './ProjectActions/ProjectActions.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectContextFields } from './ProjectContextFields.tsx';
 
 const StyledBadgeContainer = styled(Box)({
     marginLeft: 'auto',
@@ -52,6 +53,10 @@ export const ProjectSettings = () => {
         {
             id: 'api-access',
             label: 'API access',
+        },
+        {
+            id: 'context-fields',
+            label: 'Context fields',
         },
         {
             id: 'segments',
@@ -110,6 +115,10 @@ export const ProjectSettings = () => {
                     element={<ProjectEnvironmentList />}
                 />
                 <Route path='access/*' element={<ProjectAccess />} />
+                <Route
+                    path='context-fields/*'
+                    element={<ProjectContextFields />}
+                />
                 <Route path='segments/*' element={<ProjectSegments />} />
                 <Route
                     path='change-requests/*'

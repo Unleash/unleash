@@ -1,5 +1,5 @@
 import { Button, FormControl, TextField, Box, styled } from '@mui/material';
-import ShieldIcon from '@mui/icons-material/Shield';
+import ShieldIcon from '@mui/icons-material/ShieldOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import type { FormEvent, ReactNode } from 'react';
 import { useEffect, useMemo, useState, type FC } from 'react';
@@ -480,7 +480,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                     </StyledTopRow>
                     <StyledTopRow sx={{ ml: 0.75 }}>
                         <StyledTopRow>
-                            <StyledLabel>is</StyledLabel>
+                            <StyledLabel sx={{ ml: 2 }}>is</StyledLabel>
                             <FormControl variant='outlined' size='small'>
                                 <StyledSelect
                                     value={operator}

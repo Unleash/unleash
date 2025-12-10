@@ -7,9 +7,12 @@ import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchem
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
 
 const StyledMiniChartWrapper = styled(Box)(({ theme }) => ({
-    width: 80,
+    width: 60,
     marginRight: theme.spacing(1),
     cursor: 'pointer',
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(0.75),
 }));
 
 const StyledTooltipHeader = styled(Box)(({ theme }) => ({
@@ -21,7 +24,8 @@ const StyledTooltipHeader = styled(Box)(({ theme }) => ({
 
 const StyledChartContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
-    paddingBottom: theme.spacing(5),
+    paddingBottom: theme.spacing(7),
+    overflow: 'hidden',
 }));
 
 const StyledViewLink = styled(Link)<{ component?: any; to?: string }>(

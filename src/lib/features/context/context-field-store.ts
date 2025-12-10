@@ -16,6 +16,7 @@ const COLUMNS = [
     'sort_order',
     'legal_values',
     'created_at',
+    'project',
 ];
 const T = {
     contextFields: 'context_fields',
@@ -32,6 +33,7 @@ type ContextFieldDB = {
     used_in_features?: number;
     legal_values: ILegalValue[];
     created_at: Date;
+    project?: string;
 };
 
 const mapRow = (row: ContextFieldDB): IContextField => ({
@@ -46,6 +48,9 @@ const mapRow = (row: ContextFieldDB): IContextField => ({
     }),
     ...(row.used_in_features && {
         usedInFeatures: Number(row.used_in_features),
+    }),
+    ...(row.project && {
+        project: row.project,
     }),
 });
 

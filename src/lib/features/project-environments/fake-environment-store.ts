@@ -105,18 +105,18 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
 
     async connectProject(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: string,
+        _environment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
+        _projectId: string,
     ): Promise<void> {
         return Promise.reject(new Error('Not implemented'));
     }
 
     async connectFeatures(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: string,
+        _environment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
+        _projectId: string,
     ): Promise<void> {
         return Promise.reject(new Error('Not implemented'));
     }
@@ -159,7 +159,7 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
 
     async getProjectEnvironments(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
+        _projectId: string,
     ): Promise<IProjectsAvailableOnEnvironment[]> {
         return Promise.reject(new Error('Not implemented'));
     }

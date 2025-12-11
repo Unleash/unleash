@@ -91,7 +91,7 @@ export const MarkCompletedDialogue = ({
                     aria-label='selected-value'
                     name='selected'
                     sx={{ gap: (theme) => theme.spacing(0.5) }}
-                    onChange={(e, value) => {
+                    onChange={(_e, value) => {
                         setStatus(value as Status);
                     }}
                 >

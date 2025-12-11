@@ -10,7 +10,7 @@ export const useFeatureCreatedFeedback = () => {
             'flagsCreated',
             '0',
         );
-        const flagsCount = Number.parseInt(value) + 1;
+        const flagsCount = Number.parseInt(value, 10) + 1;
 
         setValue(`${flagsCount}`);
 

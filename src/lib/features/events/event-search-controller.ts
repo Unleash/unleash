@@ -26,7 +26,7 @@ import {
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
-const version = 1 as const;
+const _version = 1 as const;
 export default class EventSearchController extends Controller {
     private eventService: EventService;
 

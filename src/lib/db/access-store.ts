@@ -1,7 +1,6 @@
 import type { EventEmitter } from 'events';
 import metricsHelper from '../util/metrics-helper.js';
 import { DB_TIME } from '../metric-events.js';
-import type { Logger } from '../logger.js';
 import type {
     IAccessStore,
     IProjectRoleUsage,
@@ -55,15 +54,12 @@ interface IPermissionRow {
 type NameAndIdPermission = NamePermissionRef & IdPermissionRef;
 
 export class AccessStore implements IAccessStore {
-    private logger: Logger;
-
     private timer: Function;
 
     private db: Db;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: Function) {
+    constructor(db: Db, eventBus: EventEmitter, _getLogger: Function) {
         this.db = db;
-        this.logger = getLogger('access-store.ts');
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'access-store',
@@ -256,7 +252,7 @@ export class AccessStore implements IAccessStore {
     }
 
     mapUserPermission(row: IPermissionRow): IUserPermission {
-        let project: string | undefined = undefined;
+        let project: string | undefined;
         // Since the editor should have access to the default project,
         // we map the project to the project and environment specific
         // permissions that are connected to the editor role.

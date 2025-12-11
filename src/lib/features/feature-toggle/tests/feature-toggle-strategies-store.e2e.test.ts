@@ -16,7 +16,7 @@ let stores: IUnleashStores;
 let db: ITestDb;
 let featureStrategiesStore: IFeatureStrategiesStore;
 let featureToggleStore: IFeatureToggleStore;
-let projectStore: IProjectStore;
+let _projectStore: IProjectStore;
 let featureStrategiesReadModel: IFeatureStrategiesReadModel;
 
 const featureName = 'test-strategies-move-project';
@@ -26,7 +26,7 @@ beforeAll(async () => {
     stores = db.stores;
     featureStrategiesStore = stores.featureStrategiesStore;
     featureToggleStore = stores.featureToggleStore;
-    projectStore = stores.projectStore;
+    _projectStore = stores.projectStore;
     featureStrategiesReadModel = stores.featureStrategiesReadModel;
     await featureToggleStore.create('default', {
         name: featureName,

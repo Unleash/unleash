@@ -19,7 +19,7 @@ const formatVariantEntry = (
 
 export const createChartOptions = (
     theme: Theme,
-    metrics: IFeatureMetricsRaw[],
+    _metrics: IFeatureMetricsRaw[],
     hoursBack: number,
     locationSettings: ILocationSettings,
 ): ChartOptions<'line'> => {

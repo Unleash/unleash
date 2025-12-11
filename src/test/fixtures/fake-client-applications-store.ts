@@ -13,8 +13,10 @@ export default class FakeClientApplicationsStore
     apps: IClientApplication[] = [];
 
     async bulkUpsert(details: Partial<IClientApplication>[]): Promise<void> {
-        // @ts-expect-error
-        details.forEach((d) => this.apps.push(d));
+        details.forEach((d) => {
+            // @ts-expect-error
+            this.apps.push(d);
+        });
     }
 
     async delete(key: string): Promise<void> {
@@ -57,7 +59,7 @@ export default class FakeClientApplicationsStore
     }
 
     async getApplications(
-        query: IClientApplicationsSearchParams,
+        _query: IClientApplicationsSearchParams,
     ): Promise<IClientApplications> {
         return {
             applications: this.apps,
@@ -79,7 +81,7 @@ export default class FakeClientApplicationsStore
         return this.bulkUpsert([details]);
     }
 
-    getApplicationOverview(appName: string): Promise<IApplicationOverview> {
+    getApplicationOverview(_appName: string): Promise<IApplicationOverview> {
         throw new Error('Method not implemented.');
     }
 

@@ -85,5 +85,6 @@ export const releasePlanTemplateSchema = {
 } as const;
 
 export type ReleasePlanTemplateSchema = FromSchema<
-    typeof releasePlanTemplateSchema
+    typeof releasePlanTemplateSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

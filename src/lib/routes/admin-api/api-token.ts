@@ -345,7 +345,7 @@ export class ApiTokenController extends Controller {
         let tokenToUpdate: IApiToken | undefined;
         try {
             tokenToUpdate = await this.apiTokenService.getToken(token);
-        } catch (error) {}
+        } catch (_error) {}
         if (!tokenToUpdate) {
             res.status(200).end();
             return;
@@ -380,7 +380,7 @@ export class ApiTokenController extends Controller {
         let tokenToUpdate: IApiToken | undefined;
         try {
             tokenToUpdate = await this.apiTokenService.getToken(token);
-        } catch (error) {}
+        } catch (_error) {}
         if (!tokenToUpdate) {
             res.status(200).end();
             return;

@@ -23,7 +23,7 @@ export const useDefaultColumnVisibility = (allColumnIds: string[]) => {
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
     const showEnvironments = useCallback(
-        (environmentsToShow: number = 0) =>
+        (_environmentsToShow: number = 0) =>
             allColumnIds.filter((id) => id.startsWith('environment:')),
         [allColumnIds],
     );

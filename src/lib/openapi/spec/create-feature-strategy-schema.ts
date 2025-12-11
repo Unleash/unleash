@@ -84,5 +84,6 @@ export const createFeatureStrategySchema = {
 } as const;
 
 export type CreateFeatureStrategySchema = FromSchema<
-    typeof createFeatureStrategySchema
+    typeof createFeatureStrategySchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

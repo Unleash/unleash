@@ -151,32 +151,29 @@ test.each([
     ['Rejected', false],
     ['Cancelled', false],
     ['Applied', false],
-])(
-    'addStrategy events in %s CRs should show up only if the CR is active',
-    async (state, isActiveCr) => {
-        await createCR(state);
+])('addStrategy events in %s CRs should show up only if the CR is active', async (state, isActiveCr) => {
+    await createCR(state);
 
-        const segmentId = 3;
+    const segmentId = 3;
 
-        await addStrategyToCr(segmentId, FLAG_NAME);
+    await addStrategyToCr(segmentId, FLAG_NAME);
 
-        const result =
-            await readModel.getStrategiesUsedInActiveChangeRequests(segmentId);
-        if (isActiveCr) {
-            expect(result).toStrictEqual([
-                {
-                    projectId: 'default',
-                    strategyName: 'flexibleRollout',
-                    environment: DEFAULT_ENV,
-                    featureName: FLAG_NAME,
-                    changeRequest: { id: CR_ID, title: CR_TITLE },
-                },
-            ]);
-        } else {
-            expect(result).toStrictEqual([]);
-        }
-    },
-);
+    const result =
+        await readModel.getStrategiesUsedInActiveChangeRequests(segmentId);
+    if (isActiveCr) {
+        expect(result).toStrictEqual([
+            {
+                projectId: 'default',
+                strategyName: 'flexibleRollout',
+                environment: DEFAULT_ENV,
+                featureName: FLAG_NAME,
+                changeRequest: { id: CR_ID, title: CR_TITLE },
+            },
+        ]);
+    } else {
+        expect(result).toStrictEqual([]);
+    }
+});
 
 test.each([
     ['Draft', true],
@@ -186,35 +183,32 @@ test.each([
     ['Rejected', false],
     ['Cancelled', false],
     ['Applied', false],
-])(
-    `updateStrategy events in %s CRs should show up only if the CR is active`,
-    async (state, isActiveCr) => {
-        await createCR(state);
+])(`updateStrategy events in %s CRs should show up only if the CR is active`, async (state, isActiveCr) => {
+    await createCR(state);
 
-        const segmentId = 3;
+    const segmentId = 3;
 
-        const strategyId = randomId();
-        await updateStrategyInCr(strategyId, segmentId, FLAG_NAME);
+    const strategyId = randomId();
+    await updateStrategyInCr(strategyId, segmentId, FLAG_NAME);
 
-        const result =
-            await readModel.getStrategiesUsedInActiveChangeRequests(segmentId);
+    const result =
+        await readModel.getStrategiesUsedInActiveChangeRequests(segmentId);
 
-        if (isActiveCr) {
-            expect(result).toMatchObject([
-                {
-                    id: strategyId,
-                    projectId: 'default',
-                    strategyName: 'flexibleRollout',
-                    environment: DEFAULT_ENV,
-                    featureName: FLAG_NAME,
-                    changeRequest: { id: CR_ID, title: CR_TITLE },
-                },
-            ]);
-        } else {
-            expect(result).toStrictEqual([]);
-        }
-    },
-);
+    if (isActiveCr) {
+        expect(result).toMatchObject([
+            {
+                id: strategyId,
+                projectId: 'default',
+                strategyName: 'flexibleRollout',
+                environment: DEFAULT_ENV,
+                featureName: FLAG_NAME,
+                changeRequest: { id: CR_ID, title: CR_TITLE },
+            },
+        ]);
+    } else {
+        expect(result).toStrictEqual([]);
+    }
+});
 
 test(`If the same strategy appears in multiple CRs with the same segment, each segment should be listed as its own entry`, async () => {
     await createCR('In review', CR_ID, CR_TITLE);

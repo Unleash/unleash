@@ -39,9 +39,9 @@ test('should add checkRbac to request', () => {
 
     func(req, undefined, cb);
 
-    // @ts-ignore
+    // @ts-expect-error
     expect(req.checkRbac).toBeTruthy();
-    // @ts-ignore
+    // @ts-expect-error
     expect(typeof req.checkRbac).toBe('function');
 });
 
@@ -134,39 +134,40 @@ describe('ADMIN tokens should have user id -1337 when only passed through rbac-m
     });
 });
 
-test.each([ApiTokenType.BACKEND, ApiTokenType.CLIENT, ApiTokenType.FRONTEND])(
-    'should not give api-user ADMIN permission to token %s',
-    async (tokenType) => {
-        const accessService = {
-            hasPermission: vi.fn(),
-        } as PermissionChecker;
+test.each([
+    ApiTokenType.BACKEND,
+    ApiTokenType.CLIENT,
+    ApiTokenType.FRONTEND,
+])('should not give api-user ADMIN permission to token %s', async (tokenType) => {
+    const accessService = {
+        hasPermission: vi.fn(),
+    } as PermissionChecker;
 
-        const func = rbacMiddleware(
-            config,
-            { featureToggleStore, segmentStore },
-            accessService,
-        );
+    const func = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        accessService,
+    );
 
-        const cb = vi.fn();
-        const req: any = {
-            user: new ApiUser({
-                tokenName: `api_${tokenType}`,
-                permissions: [perms.CLIENT],
-                project: '*',
-                environment: '*',
-                type: tokenType,
-                secret: 'a',
-            }),
-        };
+    const cb = vi.fn();
+    const req: any = {
+        user: new ApiUser({
+            tokenName: `api_${tokenType}`,
+            permissions: [perms.CLIENT],
+            project: '*',
+            environment: '*',
+            type: tokenType,
+            secret: 'a',
+        }),
+    };
 
-        func(req, undefined, cb);
+    func(req, undefined, cb);
 
-        const hasAccess = await req.checkRbac(perms.ADMIN);
+    const hasAccess = await req.checkRbac(perms.ADMIN);
 
-        expect(hasAccess).toBe(false);
-        expect(accessService.hasPermission).toHaveBeenCalledTimes(0);
-    },
-);
+    expect(hasAccess).toBe(false);
+    expect(accessService.hasPermission).toHaveBeenCalledTimes(0);
+});
 
 test('should not allow user to miss userId', async () => {
     vi.spyOn(global.console, 'error').mockImplementation(() => vi.fn());

@@ -8,7 +8,6 @@ test('clientRegisterSchema should allow empty ("") instanceId', () => {
         started: Date.now(),
         interval: 100,
     });
-    //@ts-ignore
     expect(value.instanceId).toBe('default');
 });
 

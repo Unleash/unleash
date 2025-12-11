@@ -607,7 +607,7 @@ describe('User Admin API without email', () => {
             email: 'really-boring@example.com',
         });
 
-        const scimUser = (
+        const _scimUser = (
             await db
                 .rawDatabase('users')
                 .insert({

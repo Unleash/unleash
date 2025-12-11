@@ -65,7 +65,7 @@ const FlexibleStrategy = ({
 
     const isDefaultStrategyEdit = pathname.includes('default-strategy');
 
-    const updateRollout = (e: Event, value: number | number[]) => {
+    const updateRollout = (_e: Event, value: number | number[]) => {
         updateParameter('rollout', value.toString());
     };
 

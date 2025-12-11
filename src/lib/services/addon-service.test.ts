@@ -57,7 +57,7 @@ function getSetup() {
             stores,
             {
                 getLogger,
-                // @ts-ignore
+                // @ts-expect-error
                 server: { unleashUrl: 'http://test' },
             },
             tagTypeService,

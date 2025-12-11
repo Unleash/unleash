@@ -39,7 +39,7 @@ export const LabelFilterItem: FC<LabelFilterItemProps> = ({
             getOptionLabel={(option) =>
                 option === METRIC_LABELS_SELECT_ALL ? '(Select all)' : option
             }
-            onChange={(_, newValues, reason, details) => {
+            onChange={(_, newValues, _reason, details) => {
                 if (details?.option === METRIC_LABELS_SELECT_ALL) {
                     onChange(isAllSelected ? [] : [METRIC_LABELS_SELECT_ALL]);
                     return;

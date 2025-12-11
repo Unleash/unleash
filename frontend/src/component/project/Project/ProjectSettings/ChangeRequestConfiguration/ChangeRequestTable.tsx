@@ -206,7 +206,7 @@ export const ChangeRequestTable: FC = () => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable(
             {
-                // @ts-ignore
+                // @ts-expect-error
                 columns,
                 data,
                 sortTypes,

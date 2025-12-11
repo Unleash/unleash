@@ -3,7 +3,6 @@ import {
     type IUnleashConfig,
     type IUnleashStores,
 } from '../../types/index.js';
-import type { Logger } from '../../logger.js';
 import type { IAuditUser } from '../../types/user.js';
 import type {
     IUserUnsubscribeStore,
@@ -19,8 +18,6 @@ export class UserSubscriptionsService {
 
     private eventService: EventService;
 
-    private logger: Logger;
-
     constructor(
         {
             userUnsubscribeStore,
@@ -29,13 +26,12 @@ export class UserSubscriptionsService {
             IUnleashStores,
             'userUnsubscribeStore' | 'userSubscriptionsReadModel'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        { getLogger: _getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         eventService: EventService,
     ) {
         this.userUnsubscribeStore = userUnsubscribeStore;
         this.userSubscriptionsReadModel = userSubscriptionsReadModel;
         this.eventService = eventService;
-        this.logger = getLogger('services/user-subscription-service.ts');
     }
 
     async getUserSubscriptions(userId: number) {

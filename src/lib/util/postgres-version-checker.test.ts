@@ -28,28 +28,34 @@ beforeEach(() => {
                 error: (message: string) => {
                     errorMessages.push(message);
                 },
-                warn: (message: string) => {},
-                debug: (message: string) => {},
-                fatal(message: any, ...args) {},
+                warn: (_message: string) => {},
+                debug: (_message: string) => {},
+                fatal(_message: any, ..._args) {},
             };
         },
     });
 });
-test.each(['13.9.2', '12.1.7', '12.1', '11.1', '10.1', '9.6'])(
-    'Postgres version %s yields error message',
-    async (version) => {
-        settingStore = fakeSettingStore(version);
-        await compareAndLogPostgresVersion(config, settingStore);
-        expect(errorMessages).toHaveLength(1);
-        expect(infoMessages).toHaveLength(0);
-    },
-);
-test.each(['14.9', '15.9', '16.2', '17'])(
-    'Postgres version %s yields an info message',
-    async (version) => {
-        settingStore = fakeSettingStore(version);
-        await compareAndLogPostgresVersion(config, settingStore);
-        expect(errorMessages).toHaveLength(0);
-        expect(infoMessages).toHaveLength(1);
-    },
-);
+test.each([
+    '13.9.2',
+    '12.1.7',
+    '12.1',
+    '11.1',
+    '10.1',
+    '9.6',
+])('Postgres version %s yields error message', async (version) => {
+    settingStore = fakeSettingStore(version);
+    await compareAndLogPostgresVersion(config, settingStore);
+    expect(errorMessages).toHaveLength(1);
+    expect(infoMessages).toHaveLength(0);
+});
+test.each([
+    '14.9',
+    '15.9',
+    '16.2',
+    '17',
+])('Postgres version %s yields an info message', async (version) => {
+    settingStore = fakeSettingStore(version);
+    await compareAndLogPostgresVersion(config, settingStore);
+    expect(errorMessages).toHaveLength(0);
+    expect(infoMessages).toHaveLength(1);
+});

@@ -52,7 +52,7 @@ export default class FeatureLinkService {
     private normalize(url: string) {
         try {
             return normalizeUrl(url, { defaultProtocol: 'https' });
-        } catch (e) {
+        } catch (_e) {
             throw new BadDataError(`Invalid URL: ${url}`);
         }
     }

@@ -56,7 +56,7 @@ export default class ProjectController extends Controller {
 
     private flagResolver: IFlagResolver;
 
-    constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
+    constructor(config: IUnleashConfig, services: IUnleashServices, _db: Db) {
         super(config);
         this.projectService = services.projectService;
         this.clientInstanceService = services.clientInstanceService;

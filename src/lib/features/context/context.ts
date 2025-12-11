@@ -11,7 +11,6 @@ import {
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import type ContextService from './context-service.js';
-import type { Logger } from '../../logger.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 
 import type { OpenApiService } from '../../services/openapi-service.js';
@@ -55,8 +54,6 @@ export class ContextController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private logger: Logger;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -69,7 +66,6 @@ export class ContextController extends Controller {
     ) {
         super(config);
         this.openApiService = openApiService;
-        this.logger = config.getLogger('/admin-api/context.ts');
         this.transactionalContextService = transactionalContextService;
 
         this.route({
@@ -257,7 +253,7 @@ export class ContextController extends Controller {
     }
 
     async getContextFields(
-        req: Request,
+        _req: Request,
         res: Response<ContextFieldsSchema>,
     ): Promise<void> {
         res.status(200)
@@ -281,7 +277,7 @@ export class ContextController extends Controller {
                 contextFieldSchema.$id,
                 serializeDates(contextField),
             );
-        } catch (err) {
+        } catch (_err) {
             throw new NotFoundError('Could not find context field');
         }
     }

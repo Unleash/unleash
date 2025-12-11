@@ -112,7 +112,7 @@ export const ChangeRequestTimeline: FC<ISuggestChangeTimelineProps> = ({
         default:
             data = steps;
     }
-    const activeIndex = data.findIndex((item) => item === state);
+    const activeIndex = data.indexOf(state);
 
     return (
         <StyledPaper elevation={0}>

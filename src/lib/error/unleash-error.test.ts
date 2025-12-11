@@ -101,41 +101,41 @@ describe('OpenAPI error conversion', () => {
         expect(result.message).toContain(JSON.stringify(parameterValue));
     });
 
-    it.each(['/body', '/body/subObject'])(
-        'Gives useful error messages for oneOf errors in %s',
-        (instancePath) => {
-            const error = {
-                keyword: 'oneOf',
-                instancePath,
-                schemaPath: '#/components/schemas/createApiTokenSchema/oneOf',
-                params: {
-                    passingSchemas: null,
-                },
-                message: 'should match exactly one schema in oneOf',
-            };
+    it.each([
+        '/body',
+        '/body/subObject',
+    ])('Gives useful error messages for oneOf errors in %s', (instancePath) => {
+        const error = {
+            keyword: 'oneOf',
+            instancePath,
+            schemaPath: '#/components/schemas/createApiTokenSchema/oneOf',
+            params: {
+                passingSchemas: null,
+            },
+            message: 'should match exactly one schema in oneOf',
+        };
 
-            const result = fromOpenApiValidationError({
-                body: {
-                    secret: 'blah',
-                    username: 'string2',
-                    type: 'admin',
-                },
-                query: {},
-            })(error);
+        const result = fromOpenApiValidationError({
+            body: {
+                secret: 'blah',
+                username: 'string2',
+                type: 'admin',
+            },
+            query: {},
+        })(error);
 
-            expect(result).toMatchObject({
-                message:
-                    // it provides the message
-                    expect.stringContaining(error.message),
-                path: instancePath,
-            });
+        expect(result).toMatchObject({
+            message:
+                // it provides the message
+                expect.stringContaining(error.message),
+            path: instancePath,
+        });
 
-            // it tells the user what happened
-            expect(result.message).toContain('matches more than one option');
-            // it tells the user what part of the request body this pertains to
-            expect(result.message).toContain(`"${instancePath}" property`);
-        },
-    );
+        // it tells the user what happened
+        expect(result.message).toContain('matches more than one option');
+        // it tells the user what part of the request body this pertains to
+        expect(result.message).toContain(`"${instancePath}" property`);
+    });
 
     it('Gives useful pattern error messages', () => {
         const error = {

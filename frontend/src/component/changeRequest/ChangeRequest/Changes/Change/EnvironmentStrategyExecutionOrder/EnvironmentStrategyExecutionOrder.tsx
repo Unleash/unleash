@@ -22,7 +22,7 @@ const ChangeContent = styled(ChangeItemInfo)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const StyledChangeHeader = styled(Box)(({ theme }) => ({
+const _StyledChangeHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row',

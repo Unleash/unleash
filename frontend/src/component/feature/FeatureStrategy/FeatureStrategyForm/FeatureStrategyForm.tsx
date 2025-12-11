@@ -304,7 +304,7 @@ export const FeatureStrategyForm = ({
         }
     };
 
-    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
         setTab(newValue);
     };
 

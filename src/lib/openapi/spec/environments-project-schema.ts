@@ -37,5 +37,6 @@ export const environmentsProjectSchema = {
 } as const;
 
 export type EnvironmentsProjectSchema = FromSchema<
-    typeof environmentsProjectSchema
+    typeof environmentsProjectSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

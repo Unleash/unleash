@@ -7,7 +7,7 @@ import type {
 
 export default class FakeUserFeedbackStore implements IUserFeedbackStore {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    delete(key: IUserFeedbackKey): Promise<void> {
+    delete(_key: IUserFeedbackKey): Promise<void> {
         return Promise.resolve(undefined);
     }
 
@@ -18,12 +18,12 @@ export default class FakeUserFeedbackStore implements IUserFeedbackStore {
     destroy(): void {}
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    exists(key: IUserFeedbackKey): Promise<boolean> {
+    exists(_key: IUserFeedbackKey): Promise<boolean> {
         return Promise.resolve(false);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    get(key: IUserFeedbackKey): Promise<IUserFeedback> {
+    get(_key: IUserFeedbackKey): Promise<IUserFeedback> {
         throw new NotImplementedError('This is not implemented yet');
     }
 
@@ -32,17 +32,17 @@ export default class FakeUserFeedbackStore implements IUserFeedbackStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getAllUserFeedback(userId: number): Promise<IUserFeedback[]> {
+    getAllUserFeedback(_userId: number): Promise<IUserFeedback[]> {
         return Promise.resolve([]);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getFeedback(userId: number, feedbackId: string): Promise<IUserFeedback> {
+    getFeedback(_userId: number, _feedbackId: string): Promise<IUserFeedback> {
         throw new NotImplementedError('This is not implemented yet');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    updateFeedback(feedback: IUserFeedback): Promise<IUserFeedback> {
+    updateFeedback(_feedback: IUserFeedback): Promise<IUserFeedback> {
         throw new NotImplementedError('This is not implemented yet');
     }
 }

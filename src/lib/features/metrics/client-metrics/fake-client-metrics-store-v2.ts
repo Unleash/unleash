@@ -23,15 +23,15 @@ export default class FakeClientMetricsStoreV2
     }
 
     getSeenTogglesForApp(
-        appName: string,
-        hoursBack?: number,
+        _appName: string,
+        _hoursBack?: number,
     ): Promise<string[]> {
         throw new Error('Method not implemented.');
     }
-    clearMetrics(hoursBack: number): Promise<void> {
+    clearMetrics(_hoursBack: number): Promise<void> {
         return Promise.resolve();
     }
-    clearDailyMetrics(daysBack: number): Promise<void> {
+    clearDailyMetrics(_daysBack: number): Promise<void> {
         return Promise.resolve();
     }
     countPreviousDayHourlyMetricsBuckets(): Promise<{
@@ -50,37 +50,39 @@ export default class FakeClientMetricsStoreV2
         return Promise.resolve();
     }
     getSeenAppsForFeatureToggle(
-        featureName: string,
-        hoursBack?: number,
+        _featureName: string,
+        _hoursBack?: number,
     ): Promise<string[]> {
         throw new Error('Method not implemented.');
     }
     getMetricsForFeatureToggle(
-        featureName: string,
-        hoursBack?: number,
+        _featureName: string,
+        _hoursBack?: number,
     ): Promise<IClientMetricsEnv[]> {
         throw new Error('Method not implemented.');
     }
     getMetricsForFeatureToggleV2(
-        featureName: string,
-        hoursBack?: number,
+        _featureName: string,
+        _hoursBack?: number,
     ): Promise<IClientMetricsEnv[]> {
         throw new Error('Method not implemented.');
     }
     batchInsertMetrics(metrics: IClientMetricsEnv[]): Promise<void> {
-        metrics.forEach((m) => this.metrics.push(m));
+        metrics.forEach((m) => {
+            this.metrics.push(m);
+        });
         return Promise.resolve();
     }
-    get(key: IClientMetricsEnvKey): Promise<IClientMetricsEnv> {
+    get(_key: IClientMetricsEnvKey): Promise<IClientMetricsEnv> {
         throw new Error('Method not implemented.');
     }
-    getAll(query?: Object): Promise<IClientMetricsEnv[]> {
+    getAll(_query?: Object): Promise<IClientMetricsEnv[]> {
         throw new Error('Method not implemented.');
     }
-    exists(key: IClientMetricsEnvKey): Promise<boolean> {
+    exists(_key: IClientMetricsEnvKey): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
-    delete(key: IClientMetricsEnvKey): Promise<void> {
+    delete(_key: IClientMetricsEnvKey): Promise<void> {
         throw new Error('Method not implemented.');
     }
 

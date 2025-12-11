@@ -166,7 +166,7 @@ export const ChangeRequestTable = (props: TableProps) => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable(
             {
-                // @ts-ignore
+                // @ts-expect-error
                 columns,
                 data: props.environments.map((env) => {
                     return {

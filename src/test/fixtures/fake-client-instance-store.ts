@@ -46,7 +46,7 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
     }
 
     async groupApplicationsBySdkAndProject(
-        projectId: string,
+        _projectId: string,
     ): Promise<{ sdkVersion: string; applications: string[] }[]> {
         throw new Error('Not implemented in mock');
     }
@@ -100,7 +100,9 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
 
     async getDistinctApplications(): Promise<string[]> {
         const apps = new Set<string>();
-        this.instances.forEach((i) => apps.add(i.appName));
+        this.instances.forEach((i) => {
+            apps.add(i.appName);
+        });
         return Array.from(apps.values());
     }
 

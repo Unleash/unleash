@@ -91,4 +91,7 @@ export const releasePlanSchema = {
     },
 } as const;
 
-export type ReleasePlanSchema = FromSchema<typeof releasePlanSchema>;
+export type ReleasePlanSchema = FromSchema<
+    typeof releasePlanSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

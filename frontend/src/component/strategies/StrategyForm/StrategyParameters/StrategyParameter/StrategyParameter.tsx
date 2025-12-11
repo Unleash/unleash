@@ -133,7 +133,7 @@ export const StrategyParameter = ({
                 <Tooltip title='Remove parameter' arrow>
                     <IconButton
                         onClick={() => {
-                            setParams(params.filter((e, i) => i !== index));
+                            setParams(params.filter((_e, i) => i !== index));
                         }}
                         size='large'
                     >

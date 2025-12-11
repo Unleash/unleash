@@ -18,7 +18,7 @@ import { vi } from 'vitest';
 let db: ITestDb;
 let stores: IUnleashStores;
 let addonService: AddonService;
-const TEST_USER_ID = -9999;
+const _TEST_USER_ID = -9999;
 
 beforeAll(async () => {
     const config = createTestConfig({

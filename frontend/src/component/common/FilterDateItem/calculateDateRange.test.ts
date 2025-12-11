@@ -10,14 +10,11 @@ describe('calculateDateRange', () => {
         ['previousQuarter', '2024-01-01', '2024-03-31'],
         ['thisYear', '2024-01-01', '2024-12-31'],
         ['previousYear', '2023-01-01', '2023-12-31'],
-    ])(
-        'should return correct range for %s',
-        (rangeType, expectedStart, expectedEnd) => {
-            const [start, end] = calculateDateRange(rangeType, fixedDate);
-            expect(start).toBe(expectedStart);
-            expect(end).toBe(expectedEnd);
-        },
-    );
+    ])('should return correct range for %s', (rangeType, expectedStart, expectedEnd) => {
+        const [start, end] = calculateDateRange(rangeType, fixedDate);
+        expect(start).toBe(expectedStart);
+        expect(end).toBe(expectedEnd);
+    });
 
     test('should default to previousMonth if rangeType is invalid', () => {
         const [start, end] = calculateDateRange(

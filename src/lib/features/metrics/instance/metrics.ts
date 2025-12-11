@@ -197,11 +197,11 @@ export default class ClientMetricsController extends Controller {
                     );
                 }
 
-                res.getHeaderNames().forEach((header) =>
-                    res.removeHeader(header),
-                );
+                res.getHeaderNames().forEach((header) => {
+                    res.removeHeader(header);
+                });
                 res.status(202).end();
-            } catch (e) {
+            } catch (_e) {
                 res.status(400).end();
             }
         }
@@ -311,7 +311,7 @@ export default class ClientMetricsController extends Controller {
                 } else {
                     res.status(202).end();
                 }
-            } catch (e) {
+            } catch (_e) {
                 await this.processPromiseResults(promises);
                 res.status(400).end();
             }

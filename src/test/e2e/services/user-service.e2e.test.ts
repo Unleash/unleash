@@ -262,7 +262,7 @@ test('should not be able to login without password_hash on user', async () => {
         TEST_AUDIT_USER,
     );
 
-    /*@ts-ignore: we are testing for null on purpose! */
+    /*@ts-expect-error: we are testing for null on purpose! */
     await userStore.setPasswordHash(user.id, null);
 
     await expect(

@@ -24,7 +24,7 @@ const StyledEmptyState = styled(Paper)(({ theme }) => ({
     boxShadow: 'none',
 }));
 
-const StyledDragHandle = styled(Box)(({ theme }) => ({
+const _StyledDragHandle = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     cursor: 'move',
@@ -106,7 +106,7 @@ export const ImpactMetrics: FC = () => {
             items.push(plausibleChartItem);
         }
 
-        const impactMetricsItems: GridItem[] = charts.map((config, index) => {
+        const impactMetricsItems: GridItem[] = charts.map((config, _index) => {
             const existingLayout = layout?.find((item) => item.i === config.id);
             return {
                 id: config.id,

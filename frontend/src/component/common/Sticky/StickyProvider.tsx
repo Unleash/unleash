@@ -82,7 +82,7 @@ export const StickyProvider = ({ children }: IStickyProviderProps) => {
             }
             const stickyItemsUpToOurItem = stickyItems.slice(
                 0,
-                stickyItems.findIndex((item) => item === ref),
+                stickyItems.indexOf(ref),
             );
             return stickyItemsUpToOurItem.reduce((acc, item) => {
                 if (item === ref) {

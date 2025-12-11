@@ -69,7 +69,7 @@ export const FeatureImpactMetrics: FC = () => {
 
     const handleSaveChart = async (data: Omit<ChartConfig, 'id'>) => {
         try {
-            let configId: string | undefined = undefined;
+            let configId: string | undefined;
             if (modalState.type === 'editing') {
                 configId = modalState.config.id;
             }

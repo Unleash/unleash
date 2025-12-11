@@ -4,7 +4,7 @@ export class FakeProjectFlagCreatorsReadModel
     implements IProjectFlagCreatorsReadModel
 {
     async getFlagCreators(
-        project: string,
+        _project: string,
     ): Promise<{ id: number; name: string }[]> {
         return [];
     }

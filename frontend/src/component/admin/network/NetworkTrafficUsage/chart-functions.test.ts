@@ -162,7 +162,7 @@ describe('toConnectionChartData', () => {
         connections,
     });
 
-    const fromEndpointInfo = (endpoint: keyof typeof endpointsInfo) => {
+    const _fromEndpointInfo = (endpoint: keyof typeof endpointsInfo) => {
         const info = endpointsInfo[endpoint];
         return {
             backgroundColor: info.color,

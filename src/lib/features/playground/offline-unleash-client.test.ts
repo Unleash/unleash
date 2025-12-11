@@ -349,11 +349,11 @@ describe('offline client', () => {
 
         const result = client.isEnabled(name, context);
 
-        result.strategies.forEach((strategy) =>
+        result.strategies.forEach((strategy) => {
             expect(strategy.result.enabled).toEqual(
                 playgroundStrategyEvaluation.unknownResult,
-            ),
-        );
+            );
+        });
         expect(result.result).toEqual(
             playgroundStrategyEvaluation.unknownResult,
         );
@@ -386,11 +386,11 @@ describe('offline client', () => {
 
         const result = client.isEnabled(name, context);
 
-        result.strategies.forEach((strategy) =>
+        result.strategies.forEach((strategy) => {
             expect(strategy.result.enabled).toEqual(
                 playgroundStrategyEvaluation.unknownResult,
-            ),
-        );
+            );
+        });
         expect(result.result).toEqual(
             playgroundStrategyEvaluation.unknownResult,
         );

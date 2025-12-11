@@ -5,7 +5,7 @@ import { type Mock, vi } from 'vitest';
 vi.mock('compression', () => ({
     default: vi.fn().mockImplementation(() => {
         // This is the actual middleware function Express would use
-        return (req, res, next) => {
+        return (_req, _res, next) => {
             next();
         };
     }),
@@ -95,18 +95,16 @@ describe('compression middleware', () => {
             disableCompression: undefined,
             expectCompressionEnabled: true,
         },
-    ])(
-        `should expect the compression middleware to be $expectCompressionEnabled when configInput.server.disableCompression is $disableCompression`,
-        async ({ disableCompression, expectCompressionEnabled }) => {
-            const config = createTestConfig({
-                server: {
-                    disableCompression: disableCompression as any,
-                },
-            });
-            await getApp(config, {}, { openApiService });
-            expect(compression).toHaveBeenCalledTimes(
-                +expectCompressionEnabled,
-            );
-        },
-    );
+    ])(`should expect the compression middleware to be $expectCompressionEnabled when configInput.server.disableCompression is $disableCompression`, async ({
+        disableCompression,
+        expectCompressionEnabled,
+    }) => {
+        const config = createTestConfig({
+            server: {
+                disableCompression: disableCompression as any,
+            },
+        });
+        await getApp(config, {}, { openApiService });
+        expect(compression).toHaveBeenCalledTimes(+expectCompressionEnabled);
+    });
 });

@@ -14,12 +14,12 @@ class FakeEventStore implements IEventStore {
         this.eventEmitter.setMaxListeners(0);
         this.events = [];
     }
-    getRevisionRange(start: number, end: number): Promise<IEvent[]> {
+    getRevisionRange(_start: number, _end: number): Promise<IEvent[]> {
         throw new Error('Method not implemented.');
     }
 
     getProjectRecentEventActivity(
-        project: string,
+        _project: string,
     ): Promise<ProjectActivitySchema> {
         throw new Error('Method not implemented.');
     }
@@ -132,7 +132,7 @@ class FakeEventStore implements IEventStore {
         throw new Error('Method not implemented.');
     }
 
-    setCreatedByUserId(batchSize: number): Promise<number | undefined> {
+    setCreatedByUserId(_batchSize: number): Promise<number | undefined> {
         throw new Error('Method not implemented.');
     }
 }

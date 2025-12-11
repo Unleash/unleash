@@ -150,7 +150,7 @@ test('should call destroy on session', async () => {
     };
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
-    app.use((req: IAuthRequest, res, next) => {
+    app.use((req: IAuthRequest, _res, next) => {
         req.session = fakeSession;
         next();
     });
@@ -174,7 +174,7 @@ test('should handle req.logout with callback function', async () => {
     const logoutFunction = vi.fn((cb: (err?: any) => void) => cb());
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
-    app.use((req: IAuthRequest, res, next) => {
+    app.use((req: IAuthRequest, _res, next) => {
         req.logout = logoutFunction;
         next();
     });
@@ -199,7 +199,7 @@ test('should handle req.logout without callback function', async () => {
     const logoutFunction = vi.fn();
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
-    app.use((req: IAuthRequest, res, next) => {
+    app.use((req: IAuthRequest, _res, next) => {
         req.logout = logoutFunction;
         next();
     });
@@ -225,7 +225,7 @@ test('should redirect to alternative logoutUrl', async () => {
     };
     const app = express();
     const config = createTestConfig();
-    app.use((req: IAuthRequest, res, next) => {
+    app.use((req: IAuthRequest, _res, next) => {
         req.session = fakeSession;
         next();
     });
@@ -253,7 +253,7 @@ test('Should destroy sessions for user', async () => {
             id: 1,
         },
     };
-    app.use((req: IAuthRequest, res, next) => {
+    app.use((req: IAuthRequest, _res, next) => {
         req.session = fakeSession;
         next();
     });

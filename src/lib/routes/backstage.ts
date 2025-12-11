@@ -27,7 +27,7 @@ class BackstageController extends Controller {
         this.customMetricsService = customMetricsService;
 
         if (config.server.serverMetrics) {
-            this.get('/prometheus', async (req, res) => {
+            this.get('/prometheus', async (_req, res) => {
                 res.set('Content-Type', prometheusRegister.contentType);
 
                 let metricsOutput = await prometheusRegister.metrics();
@@ -43,7 +43,7 @@ class BackstageController extends Controller {
                 res.end(metricsOutput);
             });
 
-            this.get('/impact/metrics', async (req, res) => {
+            this.get('/impact/metrics', async (_req, res) => {
                 res.set('Content-Type', impactRegister.contentType);
 
                 const metricsOutput = await impactRegister.metrics();
@@ -53,7 +53,7 @@ class BackstageController extends Controller {
         }
 
         if (config.server.enableHeapSnapshotEnpoint) {
-            this.get('/heap-snapshot', async (req, res) => {
+            this.get('/heap-snapshot', async (_req, res) => {
                 const fileName = join(
                     tmpdir(),
                     `unleash-${Date.now()}.heapsnapshot`,

@@ -180,7 +180,7 @@ const filterFeaturesByOperators = async (
         .expect(expectedCode);
 };
 
-const filterFeaturesByCreated = async (
+const _filterFeaturesByCreated = async (
     createdAt: string,
     expectedCode = 200,
 ) => {
@@ -1600,7 +1600,11 @@ const createMilestone = async ({
     name,
     order,
     planId,
-}: { name: string; order: number; planId: string }) => {
+}: {
+    name: string;
+    order: number;
+    planId: string;
+}) => {
     return db.stores.releasePlanMilestoneStore.insert({
         name,
         sortOrder: order,
@@ -1611,7 +1615,10 @@ const createMilestone = async ({
 const activateMilestone = async ({
     planId,
     milestoneId,
-}: { planId: string; milestoneId: string }) => {
+}: {
+    planId: string;
+    milestoneId: string;
+}) => {
     await db.stores.releasePlanStore.update(planId, {
         activeMilestoneId: milestoneId,
     });

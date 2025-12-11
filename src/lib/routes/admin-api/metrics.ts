@@ -3,7 +3,6 @@ import Controller from '../controller.js';
 import { NONE, UPDATE_APPLICATION } from '../../types/permissions.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
-import type { Logger } from '../../logger.js';
 import type ClientInstanceService from '../../features/metrics/instance/instance-service.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
@@ -35,8 +34,6 @@ import {
 import UnknownFlagsController from '../../features/metrics/unknown-flags/unknown-flags-controller.js';
 
 class MetricsController extends Controller {
-    private logger: Logger;
-
     private clientInstanceService: ClientInstanceService;
 
     private flagResolver: IFlagResolver;
@@ -55,7 +52,6 @@ class MetricsController extends Controller {
         >,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/metrics.ts');
 
         this.clientInstanceService = clientInstanceService;
         this.openApiService = openApiService;
@@ -214,7 +210,7 @@ class MetricsController extends Controller {
         });
     }
 
-    async deprecated(req: Request, res: Response): Promise<void> {
+    async deprecated(_req: Request, res: Response): Promise<void> {
         res.status(410).json({
             lastHour: {},
             lastMinute: {},
@@ -311,7 +307,7 @@ class MetricsController extends Controller {
         );
     }
 
-    async getOutdatedSdks(req: Request, res: Response<OutdatedSdksSchema>) {
+    async getOutdatedSdks(_req: Request, res: Response<OutdatedSdksSchema>) {
         const outdatedSdks = await this.clientInstanceService.getOutdatedSdks();
 
         this.openApiService.respondWithValidation(

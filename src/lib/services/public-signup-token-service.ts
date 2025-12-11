@@ -1,5 +1,4 @@
 import crypto from 'node:crypto';
-import type { Logger } from '../logger.js';
 import {
     type IAuditUser,
     type IUnleashConfig,
@@ -34,8 +33,6 @@ export class PublicSignupTokenService {
 
     private eventService: EventService;
 
-    private logger: Logger;
-
     private readonly unleashBase: string;
 
     constructor(
@@ -51,9 +48,6 @@ export class PublicSignupTokenService {
         this.userService = userService;
         this.eventService = eventService;
         this.roleStore = roleStore;
-        this.logger = config.getLogger(
-            '/services/public-signup-token-service.ts',
-        );
         this.unleashBase = config.server.unleashUrl;
     }
 

@@ -28,20 +28,20 @@ test('If `caseInsensitive` is true, all operators except for `IN` and `NOT_IN` a
     ).toBe(true);
 });
 
-test.each([false, undefined])(
-    'If `caseInsensitive` is %s, only string (and in) operators are considered case sensitive',
-    (caseInsensitive) => {
-        const stringResults = stringOperators.map((operator) =>
-            isCaseSensitive(operator, caseInsensitive),
-        );
-        const nonStringResults = allOperators
-            .filter(
-                (operator) =>
-                    !(isStringOperator(operator) || isInOperator(operator)),
-            )
-            .map((operator) => isCaseSensitive(operator, caseInsensitive));
+test.each([
+    false,
+    undefined,
+])('If `caseInsensitive` is %s, only string (and in) operators are considered case sensitive', (caseInsensitive) => {
+    const stringResults = stringOperators.map((operator) =>
+        isCaseSensitive(operator, caseInsensitive),
+    );
+    const nonStringResults = allOperators
+        .filter(
+            (operator) =>
+                !(isStringOperator(operator) || isInOperator(operator)),
+        )
+        .map((operator) => isCaseSensitive(operator, caseInsensitive));
 
-        expect(stringResults.every((result) => result === true)).toBe(true);
-        expect(nonStringResults.every((result) => result === false)).toBe(true);
-    },
-);
+    expect(stringResults.every((result) => result === true)).toBe(true);
+    expect(nonStringResults.every((result) => result === false)).toBe(true);
+});

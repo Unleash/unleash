@@ -1,4 +1,3 @@
-import {} from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { OidcAuth } from './OidcAuth/OidcAuth.tsx';

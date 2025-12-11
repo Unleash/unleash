@@ -26,7 +26,7 @@ let eventService: EventService;
 const TEST_USER_ID = -9999;
 const config: IUnleashConfig = createTestConfig();
 
-const insertHealthScore = (id: string, health: number) => {
+const _insertHealthScore = (id: string, health: number) => {
     const irrelevantFlagTrendDetails = {
         total_flags: 10,
         stale_flags: 10,

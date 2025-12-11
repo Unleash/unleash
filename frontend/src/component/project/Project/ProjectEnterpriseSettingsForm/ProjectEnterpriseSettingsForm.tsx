@@ -202,7 +202,7 @@ const ProjectEnterpriseSettingsForm: React.FC<
             try {
                 new RegExp(regex);
                 delete errors.featureNamingPattern;
-            } catch (e) {
+            } catch (_e) {
                 errors.featureNamingPattern = 'Invalid regular expression';
             }
         }

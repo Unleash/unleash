@@ -9,17 +9,17 @@ export class FakePersonalDashboardReadModel
     implements IPersonalDashboardReadModel
 {
     async getLatestHealthScores(
-        project: string,
-        count: number,
+        _project: string,
+        _count: number,
     ): Promise<number[]> {
         return [];
     }
 
-    async getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {
+    async getPersonalFeatures(_userId: number): Promise<PersonalFeature[]> {
         return [];
     }
 
-    async getPersonalProjects(userId: number): Promise<BasePersonalProject[]> {
+    async getPersonalProjects(_userId: number): Promise<BasePersonalProject[]> {
         return [];
     }
 

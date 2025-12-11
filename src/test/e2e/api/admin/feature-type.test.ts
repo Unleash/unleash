@@ -62,17 +62,17 @@ test('Should get all defined feature types', async () => {
 });
 
 describe('updating lifetimes', () => {
-    test.each([null, 5])(
-        'it updates to the lifetime correctly: `%s`',
-        async (lifetimeDays) => {
-            const { body } = await app.request
-                .put('/api/admin/feature-types/release/lifetime')
-                .send({ lifetimeDays })
-                .expect(200);
+    test.each([
+        null,
+        5,
+    ])('it updates to the lifetime correctly: `%s`', async (lifetimeDays) => {
+        const { body } = await app.request
+            .put('/api/admin/feature-types/release/lifetime')
+            .send({ lifetimeDays })
+            .expect(200);
 
-            expect(body.lifetimeDays).toEqual(lifetimeDays);
-        },
-    );
+        expect(body.lifetimeDays).toEqual(lifetimeDays);
+    });
     test("if the feature type doesn't exist, you get a 404", async () => {
         await app.request
             .put('/api/admin/feature-types/bogus-feature-type/lifetime')

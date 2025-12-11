@@ -6,6 +6,8 @@ test('constraintSchema', () => {
         contextName: 'a',
         operator: 'NUM_LTE',
         value: '1',
+        caseInsensitive: false,
+        inverted: false,
     };
 
     expect(

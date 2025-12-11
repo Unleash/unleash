@@ -68,7 +68,7 @@ export const LinkField: FC<ILinkFieldProps> = ({
                 .catch(() => {
                     setError();
                 });
-        } catch (e) {
+        } catch (_e) {
             setError();
         }
     };

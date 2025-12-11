@@ -50,7 +50,7 @@ export const TagTypeColorPicker: FC<ITagTypeColorPickerProps> = ({
     selectedColor,
     onChange,
 }) => {
-    const theme = useTheme();
+    const _theme = useTheme();
 
     const getColorWithFallback = (color: string | undefined): string =>
         color || '#FFFFFF';

@@ -110,11 +110,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async count(
-        query: {
-            archived?: boolean;
-            project?: string;
-            stale?: boolean;
-        } = { archived: false },
+        query: { archived?: boolean; project?: string; stale?: boolean } = {
+            archived: false,
+        },
     ): Promise<number> {
         const { archived, ...rest } = query;
         return this.db
@@ -242,11 +240,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getAll(
-        query: {
-            archived?: boolean;
-            project?: string;
-            stale?: boolean;
-        } = { archived: false },
+        query: { archived?: boolean; project?: string; stale?: boolean } = {
+            archived: false,
+        },
     ): Promise<FeatureToggle[]> {
         const { archived, ...rest } = query;
         const rows = await this.db
@@ -314,7 +310,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         }
 
         const queryResult = await query.first();
-        return Number.parseInt(queryResult.count || 0);
+        return Number.parseInt(queryResult.count || 0, 10);
     }
 
     /**

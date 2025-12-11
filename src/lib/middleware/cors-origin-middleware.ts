@@ -20,7 +20,7 @@ export const corsOriginMiddleware = (
     { frontendApiService }: Pick<IUnleashServices, 'frontendApiService'>,
     config: IUnleashConfig,
 ): RequestHandler => {
-    const corsFunc = cors(async (req, callback) => {
+    const corsFunc = cors(async (_req, callback) => {
         try {
             const { frontendApiOrigins = [] } =
                 await frontendApiService.getFrontendSettings();

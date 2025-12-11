@@ -80,7 +80,7 @@ const getApiClientResponse = (project = 'default') => [
     },
 ];
 
-const cleanup = async (db: ITestDb, app: IUnleashTest) => {
+const cleanup = async (db: ITestDb, _app: IUnleashTest) => {
     const all =
         await db.stores.projectStore.getEnvironmentsForProject('default');
     await Promise.all(

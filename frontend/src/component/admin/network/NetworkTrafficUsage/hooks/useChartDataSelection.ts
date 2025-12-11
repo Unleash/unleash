@@ -25,7 +25,7 @@ export const useChartDataSelection = (includedTraffic?: number) => {
                     const tooltipDate = new Date(
                         periodItem.year,
                         periodItem.month,
-                        Number.parseInt(tooltipItems[0].label),
+                        Number.parseInt(tooltipItems[0].label, 10),
                     );
                     return tooltipDate.toLocaleDateString(
                         locationSettings?.locale ?? 'en-US',

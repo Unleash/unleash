@@ -5,7 +5,10 @@ import type { ImpactMetricsConfigListSchema } from 'openapi';
 export const useFeatureImpactMetrics = ({
     projectId,
     featureName,
-}: { projectId: string; featureName: string }) => {
+}: {
+    projectId: string;
+    featureName: string;
+}) => {
     const PATH = `api/admin/projects/${projectId}/features/${featureName}/impact-metrics/config`;
     const { data, refetch, loading, error } =
         useApiGetter<ImpactMetricsConfigListSchema>(formatApiPath(PATH), () =>

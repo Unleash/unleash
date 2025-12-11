@@ -46,4 +46,7 @@ export const searchFeaturesSchema = {
     },
 } as const;
 
-export type SearchFeaturesSchema = FromSchema<typeof searchFeaturesSchema>;
+export type SearchFeaturesSchema = FromSchema<
+    typeof searchFeaturesSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

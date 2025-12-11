@@ -63,4 +63,7 @@ export const clientFeaturesSchema = {
     },
 } as const;
 
-export type ClientFeaturesSchema = FromSchema<typeof clientFeaturesSchema>;
+export type ClientFeaturesSchema = FromSchema<
+    typeof clientFeaturesSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

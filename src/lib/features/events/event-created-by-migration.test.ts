@@ -12,7 +12,7 @@ import { DEFAULT_ENV } from '../../server-impl.js';
 
 let db: ITestDb;
 
-const config: IUnleashConfig = createTestConfig();
+const _config: IUnleashConfig = createTestConfig();
 
 beforeAll(async () => {
     db = await dbInit('events_test', getLogger);
@@ -126,9 +126,9 @@ test('sets created_by_user_id on a mix of events and created_bys', async () => {
 });
 
 test('emits events with details on amount of updated rows', async () => {
-    const store = new EventStore(db.rawDatabase, getLogger);
+    const _store = new EventStore(db.rawDatabase, getLogger);
 
-    const eventBus = new EventEmitter();
+    const _eventBus = new EventEmitter();
     const config = createTestConfig();
     const service = createEventsService(db.rawDatabase, config);
     let triggered = false;

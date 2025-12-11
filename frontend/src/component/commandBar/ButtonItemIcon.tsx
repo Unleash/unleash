@@ -3,11 +3,7 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 
-export const ButtonItemIcon = ({
-    path,
-}: {
-    path: string;
-}) => {
+export const ButtonItemIcon = ({ path }: { path: string }) => {
     if (path === '/projects') {
         return <ProjectIcon />;
     }

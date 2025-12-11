@@ -3,7 +3,6 @@ import Controller from '../../routes/controller.js';
 import type { IUnleashServices } from '../../services/index.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type EnvironmentService from '../project-environments/environment-service.js';
-import type { Logger } from '../../logger.js';
 import { ADMIN, NONE } from '../../types/permissions.js';
 import type { OpenApiService } from '../../services/openapi-service.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
@@ -35,8 +34,6 @@ interface ProjectParam {
 }
 
 export class EnvironmentsController extends Controller {
-    private logger: Logger;
-
     private openApiService: OpenApiService;
 
     private service: EnvironmentService;
@@ -49,7 +46,6 @@ export class EnvironmentsController extends Controller {
         }: Pick<IUnleashServices, 'environmentService' | 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('admin-api/environments-controller.ts');
         this.openApiService = openApiService;
         this.service = environmentService;
 
@@ -178,7 +174,7 @@ export class EnvironmentsController extends Controller {
     }
 
     async getAllEnvironments(
-        req: Request,
+        _req: Request,
         res: Response<EnvironmentsSchema>,
     ): Promise<void> {
         this.openApiService.respondWithValidation(

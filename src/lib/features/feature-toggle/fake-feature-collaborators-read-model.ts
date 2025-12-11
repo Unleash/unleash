@@ -7,7 +7,7 @@ export class FakeFeatureCollaboratorsReadModel
     implements IFeatureCollaboratorsReadModel
 {
     async getFeatureCollaborators(
-        feature: string,
+        _feature: string,
     ): Promise<Array<Collaborator>> {
         return [];
     }

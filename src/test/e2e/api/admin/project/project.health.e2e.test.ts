@@ -252,7 +252,7 @@ test('Update update_at when setHealth runs', async () => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect((res) => {
-            const now = new Date().getTime();
+            const now = Date.now();
             const updatedAt = new Date(res.body.updatedAt).getTime();
             expect(now - updatedAt).toBeLessThan(5000);
         });

@@ -323,4 +323,7 @@ export const featureSchema = {
     },
 } as const;
 
-export type FeatureSchema = FromSchema<typeof featureSchema>;
+export type FeatureSchema = FromSchema<
+    typeof featureSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

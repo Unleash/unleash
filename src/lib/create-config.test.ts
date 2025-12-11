@@ -176,40 +176,40 @@ test('should merge initApiToken from options and env vars', async () => {
     expect(config.authentication.initApiTokens).toHaveLength(4);
 });
 
-test.each([ApiTokenType.BACKEND, ApiTokenType.CLIENT])(
-    'should add initApiToken for %s token from env var',
-    async (tokenType) => {
-        process.env[`INIT_${tokenType.toUpperCase()}_API_TOKENS`] =
-            'default:development.some-token1, default:development.some-token2';
+test.each([
+    ApiTokenType.BACKEND,
+    ApiTokenType.CLIENT,
+])('should add initApiToken for %s token from env var', async (tokenType) => {
+    process.env[`INIT_${tokenType.toUpperCase()}_API_TOKENS`] =
+        'default:development.some-token1, default:development.some-token2';
 
-        const config = createConfig({
-            db: {
-                host: 'localhost',
-                port: 4242,
-                user: 'unleash',
-                password: 'password',
-                database: 'unleash_db',
-            },
-            server: {
-                port: 4242,
-            },
-        });
+    const config = createConfig({
+        db: {
+            host: 'localhost',
+            port: 4242,
+            user: 'unleash',
+            password: 'password',
+            database: 'unleash_db',
+        },
+        server: {
+            port: 4242,
+        },
+    });
 
-        expect(config.authentication.initApiTokens).toHaveLength(2);
-        expect(config.authentication.initApiTokens[0].environment).toBe(
-            'development',
-        );
-        expect(config.authentication.initApiTokens[0].projects).toMatchObject([
-            'default',
-        ]);
-        expect(config.authentication.initApiTokens[0].type).toBe(
-            ApiTokenType.BACKEND,
-        );
-        expect(config.authentication.initApiTokens[0].secret).toBe(
-            'default:development.some-token1',
-        );
-    },
-);
+    expect(config.authentication.initApiTokens).toHaveLength(2);
+    expect(config.authentication.initApiTokens[0].environment).toBe(
+        'development',
+    );
+    expect(config.authentication.initApiTokens[0].projects).toMatchObject([
+        'default',
+    ]);
+    expect(config.authentication.initApiTokens[0].type).toBe(
+        ApiTokenType.BACKEND,
+    );
+    expect(config.authentication.initApiTokens[0].secret).toBe(
+        'default:development.some-token1',
+    );
+});
 
 test('should handle cases where no env var specified for tokens', async () => {
     const token = {
@@ -342,22 +342,19 @@ test.each([
     ['CSP_ALLOWED_SCRIPT', 'googlefonts.com', 'scriptSrc'],
     ['CSP_ALLOWED_IMG', 'googlefonts.com', 'imgSrc'],
     ['CSP_ALLOWED_CONNECT', 'googlefonts.com', 'connectSrc'],
-])(
-    'When %s is set to %s. %s should include passed in domain',
-    (env, domain, key) => {
-        process.env[env] = domain;
-        const config = createConfig({});
-        expect(config.additionalCspAllowedDomains[key][0]).toBe(domain);
-        Object.keys(config.additionalCspAllowedDomains)
-            .filter((objKey) => objKey !== key)
-            .forEach((otherKey) => {
-                expect(
-                    config.additionalCspAllowedDomains[otherKey],
-                ).toStrictEqual([]);
-            });
-        delete process.env[env];
-    },
-);
+])('When %s is set to %s. %s should include passed in domain', (env, domain, key) => {
+    process.env[env] = domain;
+    const config = createConfig({});
+    expect(config.additionalCspAllowedDomains[key][0]).toBe(domain);
+    Object.keys(config.additionalCspAllowedDomains)
+        .filter((objKey) => objKey !== key)
+        .forEach((otherKey) => {
+            expect(config.additionalCspAllowedDomains[otherKey]).toStrictEqual(
+                [],
+            );
+        });
+    delete process.env[env];
+});
 
 test('When multiple CSP environment variables are set, respects them all', () => {
     process.env.CSP_ALLOWED_DEFAULT = 'googlefonts.com';
@@ -477,17 +474,18 @@ test('environment variable takes precedence over configured variable', async () 
     delete process.env.BASE_URI_PATH;
 });
 
-test.each(['demo', '/demo', '/demo/'])(
-    'Trailing and leading slashes gets normalized for base path %s',
-    async (path) => {
-        const config = createConfig({
-            server: {
-                baseUriPath: path,
-            },
-        });
-        expect(config.server.baseUriPath).toBe('/demo');
-    },
-);
+test.each([
+    'demo',
+    '/demo',
+    '/demo/',
+])('Trailing and leading slashes gets normalized for base path %s', async (path) => {
+    const config = createConfig({
+        server: {
+            baseUriPath: path,
+        },
+    });
+    expect(config.server.baseUriPath).toBe('/demo');
+});
 
 test('Config with enterpriseVersion set and pro environment should set isEnterprise to false', async () => {
     const config = createConfig({

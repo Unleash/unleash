@@ -1,4 +1,3 @@
-import type { Logger } from '../logger.js';
 import type { IUser } from '../types/user.js';
 import type { IUnleashConfig } from '../types/option.js';
 import type { IAccountStore, IUnleashStores } from '../types/stores.js';
@@ -6,6 +5,7 @@ import type { AccessService } from './access-service.js';
 import { RoleName } from '../types/model.js';
 import type { IAdminCount } from '../types/stores/account-store.js';
 import { NotFoundError } from '../error/index.js';
+import type { Logger } from '../logger.js';
 
 interface IUserWithRole extends IUser {
     rootRole: number;
@@ -33,6 +33,7 @@ export class AccountService {
     }
 
     async getAll(): Promise<IUserWithRole[]> {
+        this.logger.debug('getAll');
         const accounts = await this.store.getAll();
         const defaultRole = await this.accessService.getPredefinedRole(
             RoleName.VIEWER,

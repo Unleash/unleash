@@ -77,7 +77,7 @@ export default class Repository extends EventEmitter {
             if (content && this.notEmpty(content)) {
                 await this.save(content);
             }
-        } catch (err: any) {
+        } catch (_err: any) {
             // intentionally left empty
         }
     }

@@ -91,7 +91,7 @@ export const FeatureStrategyMenu = ({
         setReleasePlanPreview(false);
     }, [isStrategyMenuDialogOpen]);
 
-    const openMoreStrategies = (event: React.SyntheticEvent) => {
+    const openMoreStrategies = (_event: React.SyntheticEvent) => {
         setIsStrategyMenuDialogOpen(true);
     };
 

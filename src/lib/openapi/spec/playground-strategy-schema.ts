@@ -202,5 +202,6 @@ export const playgroundStrategySchema = {
 } as const;
 
 export type PlaygroundStrategySchema = FromSchema<
-    typeof playgroundStrategySchema
+    typeof playgroundStrategySchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

@@ -16,10 +16,8 @@ describe('anonymiseKeys', () => {
         123,
         [1, 2, 3],
         { test: 'test' },
-    ])(
-        'A parameter without keys (non-object, non-array) should return the same value',
-        (obj) => expect(anonymiseKeys(obj!, [])).toStrictEqual(obj),
-    );
+    ])('A parameter without keys (non-object, non-array) should return the same value', (obj) =>
+        expect(anonymiseKeys(obj!, [])).toStrictEqual(obj));
 
     test('An object should anonymise the specified keys', () => {
         expect(

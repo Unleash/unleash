@@ -386,25 +386,22 @@ describe('instance info reading', () => {
     test.each([
         ['is undefined', undefined],
         ['returns undefined', () => Promise.resolve(undefined)],
-    ])(
-        'it does not set instance info if the instanceInfoProvider promise %s',
-        async (_, instanceInfoProvider) => {
-            const url = `https://${randomId()}.example.com`;
-            const scope = nock(url)
-                .post('/', (body) => body.instanceInfo === undefined)
-                .reply(() => [200]);
+    ])('it does not set instance info if the instanceInfoProvider promise %s', async (_, instanceInfoProvider) => {
+        const url = `https://${randomId()}.example.com`;
+        const scope = nock(url)
+            .post('/', (body) => body.instanceInfo === undefined)
+            .reply(() => [200]);
 
-            const stores = createStores();
-            const service = new VersionService(stores, {
-                getLogger,
-                versionCheck: { url, enable: true },
-                telemetry: true,
-            });
-            await service.checkLatestVersion(
-                () => Promise.resolve(fakeTelemetryData),
-                instanceInfoProvider,
-            );
-            expect(scope.isDone()).toEqual(true);
-        },
-    );
+        const stores = createStores();
+        const service = new VersionService(stores, {
+            getLogger,
+            versionCheck: { url, enable: true },
+            telemetry: true,
+        });
+        await service.checkLatestVersion(
+            () => Promise.resolve(fakeTelemetryData),
+            instanceInfoProvider,
+        );
+        expect(scope.isDone()).toEqual(true);
+    });
 });

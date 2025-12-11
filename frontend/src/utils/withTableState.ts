@@ -47,10 +47,7 @@ const createOnPaginationChange =
             limit: number;
             offset: number;
         },
-        setTableState: (newState: {
-            limit?: number;
-            offset?: number;
-        }) => void,
+        setTableState: (newState: { limit?: number; offset?: number }) => void,
     ): OnChangeFn<PaginationState> =>
     (newPagination) => {
         if (typeof newPagination === 'function') {
@@ -81,9 +78,7 @@ const createOnColumnVisibilityChange =
         tableState: {
             columns?: TableStateColumns;
         },
-        setTableState: (newState: {
-            columns?: TableStateColumns;
-        }) => void,
+        setTableState: (newState: { columns?: TableStateColumns }) => void,
     ): OnChangeFn<VisibilityState> =>
     (newVisibility) => {
         const columnsObject = tableState.columns?.reduce(

@@ -1,5 +1,4 @@
 import type { IUnleashConfig } from '../types/option.js';
-import type { Logger } from '../logger.js';
 import type { Request } from 'express';
 import semver, { type SemVer } from 'semver';
 import BadDataError from '../error/bad-data-error.js';
@@ -8,8 +7,6 @@ import { mustParseStrictSemVer, parseStrictSemVer } from '../util/semver.js';
 export type ClientSpecFeature = 'segments' | 'deltaApi';
 
 export class ClientSpecService {
-    private readonly logger: Logger;
-
     private readonly clientSpecHeader = 'Unleash-Client-Spec';
 
     private readonly clientSpecFeatures: Record<ClientSpecFeature, SemVer> = {
@@ -17,9 +14,7 @@ export class ClientSpecService {
         deltaApi: mustParseStrictSemVer('5.2.0'),
     };
 
-    constructor(config: Pick<IUnleashConfig, 'getLogger'>) {
-        this.logger = config.getLogger('services/capability-service.ts');
-    }
+    constructor(_config: Pick<IUnleashConfig, 'getLogger'>) {}
 
     requestSupportsSpec(request: Request, feature: ClientSpecFeature): boolean {
         return this.versionSupportsSpec(

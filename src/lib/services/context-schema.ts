@@ -20,5 +20,6 @@ export const contextSchema = joi
             .optional()
             .items(legalValueSchema),
         stickiness: joi.boolean().optional().default(false),
+        project: joi.string().allow(null).optional(),
     })
     .options({ allowUnknown: false, stripUnknown: true });

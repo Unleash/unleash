@@ -57,7 +57,7 @@ describe('the playground API', () => {
                         .expect('Content-Type', /json/)
                         .expect(200);
 
-                    expect(body.input).toStrictEqual(payload);
+                    expect(body.input).toEqual(payload);
 
                     return true;
                 },

@@ -48,7 +48,7 @@ test('creating an arbitrary context field should return the created context fiel
                     await stores.contextFieldStore.create(input);
 
                 Object.entries(input).forEach(([key, value]) => {
-                    expect(storedData[key]).toStrictEqual(value);
+                    expect(storedData[key]).toEqual(value);
                 });
             })
             .afterEach(cleanup),

@@ -122,7 +122,6 @@ export const adminRoutes: INavigationMenuItem[] = [
         path: '/admin/enterprise-edge',
         title: 'Enterprise Edge',
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
-        flag: 'enterpriseEdgeUI',
     },
 
     // Network
@@ -137,13 +136,6 @@ export const adminRoutes: INavigationMenuItem[] = [
         title: 'Traffic',
         menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
         group: 'network',
-    },
-    {
-        path: '/admin/network/connected-edges',
-        title: 'Connected edges',
-        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
-        group: 'network',
-        notFlag: 'enterpriseEdgeUI',
     },
     {
         path: '/admin/network/backend-connections',

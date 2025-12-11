@@ -63,12 +63,11 @@ export const contextFieldSchema = {
                 $ref: '#/components/schemas/legalValueSchema',
             },
         },
-        // todo: `projectContextFields`: uncomment this to make it an official part of the schema
-        // project: {
-        //     description: 'The id of the project this context field belongs to',
-        //     type: 'string',
-        //     example: 'project123',
-        // }
+        project: {
+            description: 'The id of the project this context field belongs to',
+            type: 'string',
+            example: 'project123',
+        },
     },
     components: {
         schemas: {

@@ -17,7 +17,7 @@ exports.up = function (db, callback) {
                -1337
         WHERE NOT EXISTS (
             SELECT 1 FROM release_plan_definitions
-            WHERE discriminator = 'template' AND name = '${TEMPLATE_NAME}'
+            WHERE discriminator = 'template'
         );
 
         INSERT INTO milestones (id, name, sort_order, release_plan_definition_id)
@@ -28,8 +28,8 @@ exports.up = function (db, callback) {
             ('${milestoneIds[2]}', 'Rollout 75%', 2),
             ('${milestoneIds[3]}', 'Rollout 100%', 3)
         ) AS v(id, name, sort_order)
-        WHERE NOT EXISTS (
-            SELECT 1 FROM milestones m WHERE m.release_plan_definition_id = '${templateId}'
+        WHERE EXISTS (
+            SELECT 1 FROM release_plan_definitions WHERE id = '${templateId}'
         );
 
         INSERT INTO milestone_strategies (id, milestone_id, sort_order, title, strategy_name, parameters, constraints)
@@ -40,8 +40,8 @@ exports.up = function (db, callback) {
             ('${strategyIds[2]}', '${milestoneIds[2]}', '{"rollout":"75","stickiness":"default","groupId":"{{featureName}}"}'),
             ('${strategyIds[3]}', '${milestoneIds[3]}', '{"rollout":"100","stickiness":"default","groupId":"{{featureName}}"}')
         ) AS v(strategy_id, milestone_id, params)
-        WHERE NOT EXISTS (
-            SELECT 1 FROM milestone_strategies ms WHERE ms.milestone_id = v.milestone_id
+        WHERE EXISTS (
+            SELECT 1 FROM milestones WHERE id = v.milestone_id
         );
         `,
         callback,

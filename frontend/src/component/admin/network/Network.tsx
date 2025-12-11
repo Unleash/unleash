@@ -61,13 +61,12 @@ const consumptionModelTabs = [
 export const Network = () => {
     const { pathname } = useLocation();
     const consumptionModelEnabled = useUiFlag('consumptionModelUI');
-    const enterpriseEdgeUIEnabled = useUiFlag('enterpriseEdgeUI');
     const allTabs = consumptionModelEnabled
         ? [...tabs, ...consumptionModelTabs]
         : [...tabs, ...seatModelTabs];
 
     const filteredTabs = allTabs.filter(
-        ({ label }) => label !== 'Connected Edges' || !enterpriseEdgeUIEnabled,
+        ({ label }) => label !== 'Connected Edges',
     );
 
     return (
@@ -103,11 +102,7 @@ export const Network = () => {
                     <Route
                         path='connected-edges'
                         element={
-                            enterpriseEdgeUIEnabled ? (
-                                <Navigate to='/admin/enterprise-edge' replace />
-                            ) : (
-                                <NetworkConnectedEdges />
-                            )
+                            <Navigate to='/admin/enterprise-edge' replace />
                         }
                     />
                     <Route

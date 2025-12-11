@@ -91,7 +91,6 @@ export type UiFlags = {
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;
-    enterpriseEdgeUI?: boolean;
     gtmReleaseManagement?: boolean;
     projectContextFields?: boolean;
 };

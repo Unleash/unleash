@@ -1,5 +1,6 @@
 import type { FC } from 'react';
-import { Box, Typography, styled, Paper } from '@mui/material';
+import ShieldIcon from '@mui/icons-material/ShieldOutlined';
+import { Box, Paper, styled, Typography } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
 import { ImpactMetricsChart } from './ImpactMetricsChart.tsx';
@@ -64,7 +65,7 @@ const StyledImpactChartContainer = styled(Box)(({ theme }) => ({
 
 const StyledHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(2),
+    gap: theme.spacing(1),
     alignItems: 'center',
     padding: theme.spacing(1.5, 2),
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -86,6 +87,12 @@ const StyledChartActions = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
+const StyledShieldIcon = styled(ShieldIcon)(({ theme }) => ({
+    alignSelf: 'start',
+    color: theme.palette.primary.main,
+    marginTop: theme.spacing(0.25),
+}));
+
 export const ChartItem: FC<ChartItemProps> = ({
     config,
     onEdit,
@@ -98,6 +105,7 @@ export const ChartItem: FC<ChartItemProps> = ({
     <StyledWidget>
         <StyledHeader>
             {dragHandle}
+            {config.mode === 'read' ? <StyledShieldIcon /> : null}
             <StyledChartTitle>
                 {config.title && (
                     <Typography variant='h6'>{config.title}</Typography>
@@ -113,6 +121,9 @@ export const ChartItem: FC<ChartItemProps> = ({
                         onClick={() => onEdit(config)}
                         permission={permission}
                         projectId={projectId}
+                        tooltipProps={{
+                            title: 'Edit chart',
+                        }}
                     >
                         <Edit />
                     </PermissionIconButton>
@@ -120,6 +131,9 @@ export const ChartItem: FC<ChartItemProps> = ({
                         onClick={() => onDelete(config.id)}
                         permission={permission}
                         projectId={projectId}
+                        tooltipProps={{
+                            title: 'Remove chart',
+                        }}
                     >
                         <Delete />
                     </PermissionIconButton>

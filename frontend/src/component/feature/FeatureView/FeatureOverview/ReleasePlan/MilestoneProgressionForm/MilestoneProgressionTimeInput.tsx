@@ -59,6 +59,7 @@ export const MilestoneProgressionTimeInput = ({
                 }}
                 sx={{
                     width: `max(60px, ${String(timeValue).length + 8}ch)`,
+                    maxWidth: '300px',
                 }}
                 size='small'
                 disabled={disabled}

@@ -37,7 +37,7 @@ test('Should login user', async () => {
 
     const app = express();
     app.use(express.json());
-    app.use((req, res, next) => {
+    app.use((req, _res, next) => {
         // @ts-expect-error
         req.session = {};
         next();
@@ -77,7 +77,7 @@ test('Should not login user with wrong password', async () => {
 
     const app = express();
     app.use(express.json());
-    app.use((req, res, next) => {
+    app.use((req, _res, next) => {
         // @ts-expect-error
         req.session = {};
         next();

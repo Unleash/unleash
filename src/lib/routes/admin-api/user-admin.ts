@@ -491,7 +491,7 @@ export default class UserAdminController extends Controller {
         );
     }
 
-    async getUsers(req: Request, res: Response<UsersSchema>): Promise<void> {
+    async getUsers(_req: Request, res: Response<UsersSchema>): Promise<void> {
         const users = await this.userService.getAll();
         const rootRoles = await this.accessService.getRootRoles();
         const inviteLinks = await this.resetTokenService.getActiveInvitations();
@@ -539,7 +539,7 @@ export default class UserAdminController extends Controller {
     }
 
     async getBaseUsersAndGroups(
-        req: Request,
+        _req: Request,
         res: Response<UsersGroupsBaseSchema>,
     ): Promise<void> {
         const allUsers = await this.accountService.getAll();
@@ -720,7 +720,7 @@ export default class UserAdminController extends Controller {
     }
 
     async getAdminCount(
-        req: Request,
+        _req: Request,
         res: Response<AdminCountSchema>,
     ): Promise<void> {
         const adminCount = await this.accountService.getAdminCount();

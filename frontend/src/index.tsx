@@ -18,7 +18,7 @@ import { UIProviderContainer } from 'component/providers/UIProvider/UIProviderCo
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 import { PlausibleProvider } from 'component/providers/PlausibleProvider/PlausibleProvider';
-import { Error as LayoutError } from './component/layout/Error/Error.tsx';
+import { LayoutError } from './component/layout/Error/LayoutError.tsx';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRecordUiErrorApi';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
@@ -31,14 +31,14 @@ const ApplicationRoot = () => {
 
     const sendErrorToApi = async (
         error: Error,
-        info: { componentStack: string },
+        _info: { componentStack: string },
     ) => {
         try {
             await recordUiError({
                 errorMessage: error.message,
                 errorStack: error.stack || '',
             });
-        } catch (e) {
+        } catch (_e) {
             console.error('Unable to log error');
         }
     };

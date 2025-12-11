@@ -1,7 +1,7 @@
 import type { EventEmitter } from 'events';
 import metricsHelper from '../util/metrics-helper.js';
 import { DB_TIME } from '../metric-events.js';
-import type { Logger, LogProvider } from '../logger.js';
+import type { LogProvider } from '../logger.js';
 import NotFoundError from '../error/notfound-error.js';
 import type { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema.js';
 import type { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store.js';
@@ -87,15 +87,12 @@ const toTokens = (rows: any[]): PublicSignupTokenSchema[] => {
 };
 
 export class PublicSignupTokenStore implements IPublicSignupTokenStore {
-    private logger: Logger;
-
     private timer: Function;
 
     private db: Db;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, _getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('public-signup-tokens.js');
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'public-signup-tokens',

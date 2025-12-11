@@ -20,9 +20,9 @@ describe('groups', () => {
     });
 
     after(() => {
-        userIds.forEach((id) =>
-            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`),
-        );
+        userIds.forEach((id) => {
+            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`);
+        });
     });
 
     beforeEach(() => {

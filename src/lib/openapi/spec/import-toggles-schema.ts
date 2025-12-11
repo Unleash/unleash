@@ -124,5 +124,6 @@ export type ImportTogglesSchema = FromSchema<
                 safeguardTriggerConditionSchema: typeof safeguardTriggerConditionSchema;
             };
         };
-    }
+    },
+    { keepDefaultedPropertiesOptional: true }
 >;

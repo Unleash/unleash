@@ -6,7 +6,7 @@ import type {
 import cartesian from 'cartesian';
 
 const generateFeature = (
-    context: Record<string, string>,
+    _context: Record<string, string>,
 ): AdvancedPlaygroundEnvironmentFeatureSchema => ({
     isEnabled: false,
     isEnabledInCurrentEnvironment: true,

@@ -194,7 +194,7 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
                     value.inputValue &&
                     value.title.startsWith('Create new value')
                 ) {
-                    return createNewTagOnTheFly(value.inputValue, tagType.name);
+                    createNewTagOnTheFly(value.inputValue, tagType.name);
                 }
 
                 setSelectedTags(newValue as TagOption[]);

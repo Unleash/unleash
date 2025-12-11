@@ -1,5 +1,4 @@
-import type { Logger } from '../../logger.js';
-import type { IFlagResolver, IUnleashConfig } from '../../types/index.js';
+import type { IUnleashConfig } from '../../types/index.js';
 import type {
     IntegrationEventsStore,
     IntegrationEventWriteModel,
@@ -7,22 +6,15 @@ import type {
 import type { IntegrationEventSchema } from '../../openapi/spec/integration-event-schema.js';
 
 export class IntegrationEventsService {
-    private readonly logger: Logger;
     private integrationEventsStore: IntegrationEventsStore;
-    private flagResolver: IFlagResolver;
 
     constructor(
         {
             integrationEventsStore,
         }: { integrationEventsStore: IntegrationEventsStore },
-        {
-            getLogger,
-            flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        _config: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     ) {
         this.integrationEventsStore = integrationEventsStore;
-        this.flagResolver = flagResolver;
-        this.logger = getLogger('integration-events-service');
     }
 
     async getPaginatedEvents(

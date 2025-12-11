@@ -76,7 +76,7 @@ export default class CustomMetricsController extends Controller {
         });
     }
 
-    async getCustomMetrics(req: IAuthRequest, res: Response): Promise<void> {
+    async getCustomMetrics(_req: IAuthRequest, res: Response): Promise<void> {
         try {
             const allMetrics = this.customMetricsService.getMetrics();
 
@@ -92,7 +92,7 @@ export default class CustomMetricsController extends Controller {
     }
 
     async getPrometheusMetrics(
-        req: IAuthRequest,
+        _req: IAuthRequest,
         res: Response,
     ): Promise<void> {
         try {

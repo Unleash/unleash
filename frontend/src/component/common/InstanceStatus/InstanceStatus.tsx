@@ -33,7 +33,7 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
     const expired = trialHasExpired(instanceStatus);
     const [dialogOpen, setDialogOpen] = useState(expired);
 
-    const onClose = (event: React.SyntheticEvent, muiCloseReason?: string) => {
+    const onClose = (_event: React.SyntheticEvent, muiCloseReason?: string) => {
         if (!muiCloseReason) {
             setDialogOpen(false);
             if (canExtendTrial(instanceStatus)) {

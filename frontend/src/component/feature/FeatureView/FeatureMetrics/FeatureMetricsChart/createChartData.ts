@@ -65,7 +65,7 @@ export const createChartData = (
 
 const createChartPoints = (
     metrics: IFeatureMetricsRaw[],
-    locationSettings: ILocationSettings,
+    _locationSettings: ILocationSettings,
     y: (m: IFeatureMetricsRaw) => number,
 ): IPoint[] => {
     return metrics.map((metric) => ({

@@ -91,7 +91,7 @@ export default class MaintenanceController extends Controller {
         res.status(204).end();
     }
 
-    async getMaintenance(req: Request, res: Response): Promise<void> {
+    async getMaintenance(_req: Request, res: Response): Promise<void> {
         const settings = await this.maintenanceService.getMaintenanceSetting();
         this.openApiService.respondWithValidation(
             200,

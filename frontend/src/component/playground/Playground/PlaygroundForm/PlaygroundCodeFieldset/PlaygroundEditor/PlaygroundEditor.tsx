@@ -108,7 +108,7 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
                     condition={Boolean(error)}
                     show={
                         <Box
-                            sx={(theme) => ({
+                            sx={(_theme) => ({
                                 display: 'flex',
                                 alignItems: 'center',
                             })}

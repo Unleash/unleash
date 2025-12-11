@@ -1,7 +1,7 @@
 const adminUser = (): { hook: (app: any) => void } => {
     return {
         hook(app) {
-            app.use((req, res, next) => {
+            app.use((req, _res, next) => {
                 req.user = {
                     isAPI: true,
                     id: 1,

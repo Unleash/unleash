@@ -21,7 +21,7 @@ export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
     children,
 }) => {
     const { data } = useProjectStatus(projectId);
-    const theme = useTheme();
+    const _theme = useTheme();
     const lifecycleSummary = Object.entries(
         data?.lifecycleSummary || {},
     ).reduce(

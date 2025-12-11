@@ -156,19 +156,16 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                 <StyledSectionLabel>Access</StyledSectionLabel>
                 <StyledAccess>
                     <Box sx={{ width: '50%' }}>
-                        <ConditionallyRender
-                            condition={Boolean(profile?.rootRole)}
-                            show={() => (
-                                <>
-                                    <Typography variant='body2'>
-                                        Your root role
-                                    </Typography>
-                                    <RoleBadge roleId={profile?.rootRole.id!}>
-                                        {profile?.rootRole.name}
-                                    </RoleBadge>
-                                </>
-                            )}
-                        />
+                        {profile?.rootRole && (
+                            <>
+                                <Typography variant='body2'>
+                                    Your root role
+                                </Typography>
+                                <RoleBadge roleId={profile.rootRole.id}>
+                                    {profile.rootRole.name}
+                                </RoleBadge>
+                            </>
+                        )}
                     </Box>
                     <Box>
                         <Typography variant='body2'>Projects</Typography>

@@ -13,7 +13,7 @@ import {
 } from '../../types/index.js';
 import { TEST_AUDIT_USER } from '../../types/index.js';
 
-const TEST_USER_ID = -9999;
+const _TEST_USER_ID = -9999;
 async function getSetup(anonymise: boolean = false) {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const stores = createStores();

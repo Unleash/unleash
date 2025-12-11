@@ -9,7 +9,7 @@ import getLogger from '../../../test/fixtures/no-logger.js';
 
 let db: ITestDb;
 let getReadOnlyUsers: GetReadOnlyUsers;
-let viewerRoleId: number;
+let _viewerRoleId: number;
 
 beforeAll(async () => {
     db = await dbInit('read_only_users_serial', getLogger);

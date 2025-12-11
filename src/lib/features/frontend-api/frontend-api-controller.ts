@@ -189,7 +189,7 @@ export default class FrontendAPIController extends Controller {
     }
 
     private static async endpointNotImplemented(
-        req: ApiUserRequest,
+        _req: ApiUserRequest,
         res: Response,
     ) {
         const error = new NotImplementedError(
@@ -238,7 +238,7 @@ export default class FrontendAPIController extends Controller {
     }
 
     private async registerFrontendApiClient(
-        req: ApiUserRequest<unknown, unknown, FrontendApiClientSchema>,
+        _req: ApiUserRequest<unknown, unknown, FrontendApiClientSchema>,
         res: Response<string>,
     ) {
         // Client registration is not yet supported by @unleash/proxy,

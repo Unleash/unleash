@@ -14,7 +14,6 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-// @ts-ignore
 import './commands.js';
 
 // Alternatively you can use CommonJS syntax:

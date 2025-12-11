@@ -105,7 +105,7 @@ export const UpdatesPerEnvironmentTypeChart: VFC<
             InstanceInsightsSchemaEnvironmentTypeTrendsItem[]
         > = {};
 
-        Object.entries(groupedByDate).forEach(([date, trends]) => {
+        Object.entries(groupedByDate).forEach(([_date, trends]) => {
             trends.forEach((trend) => {
                 if (!aggregatedByType[trend.environmentType]) {
                     aggregatedByType[trend.environmentType] = [];

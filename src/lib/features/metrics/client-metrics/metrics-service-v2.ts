@@ -105,8 +105,8 @@ export default class ClientMetricsServiceV2 {
 
             const limit =
                 payload?.value &&
-                Number.isInteger(Number.parseInt(payload?.value))
-                    ? Number.parseInt(payload?.value)
+                Number.isInteger(Number.parseInt(payload?.value, 10))
+                    ? Number.parseInt(payload?.value, 10)
                     : 3600000;
 
             const totalHourlyCount = hourlyEnabledCount + hourlyVariantCount;
@@ -265,7 +265,7 @@ export default class ClientMetricsServiceV2 {
 
     async registerClientMetrics(
         data: ClientMetricsSchema,
-        clientIp: string,
+        _clientIp: string,
     ): Promise<void> {
         const value = await clientMetricsSchema.validateAsync(data);
 

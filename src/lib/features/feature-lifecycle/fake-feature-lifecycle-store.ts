@@ -32,7 +32,7 @@ export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
         if (await this.stageExists(featureLifecycleStage)) {
             return false;
         }
-        const newStages: NewStage[] = [];
+        const _newStages: NewStage[] = [];
         const existingStages = await this.get(featureLifecycleStage.feature);
         this.lifecycles[featureLifecycleStage.feature] = [
             ...existingStages,

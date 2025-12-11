@@ -3,7 +3,7 @@ import requireContentType from './content_type_checker.js';
 import { type Mock, vi } from 'vitest';
 
 const mockRequest: (contentType: string) => Request = (contentType) => ({
-    // @ts-ignore
+    // @ts-expect-error
     header: (name) => {
         if (name === 'Content-Type') {
             return contentType;
@@ -13,12 +13,11 @@ const mockRequest: (contentType: string) => Request = (contentType) => ({
 });
 
 const returns415: (t: Mock) => Response = (t) => ({
-    // @ts-ignore
+    // @ts-expect-error
     status: (code) => {
         expect(415).toBe(code);
         return {
             json: () => ({
-                // @ts-ignore
                 end: t,
             }),
         };
@@ -26,11 +25,9 @@ const returns415: (t: Mock) => Response = (t) => ({
 });
 
 const expectNoCall: (t: Mock) => Response = (t) => ({
-    // @ts-ignore
     status: () => ({
-        // @ts-ignore
         json: () => ({
-            // @ts-ignore
+            // @ts-expect-error
             end: () => expect(t).toHaveBeenCalledTimes(0),
         }),
     }),

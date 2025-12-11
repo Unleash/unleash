@@ -75,7 +75,7 @@ const StyledBackButton = styled(Button)({
     minWidth: 0,
 });
 
-// @ts-ignore
+// @ts-expect-error
 export interface IDemoStepTooltipProps extends TooltipRenderProps {
     step: ITutorialTopicStep;
     topic: number;

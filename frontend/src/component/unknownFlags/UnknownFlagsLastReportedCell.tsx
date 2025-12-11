@@ -33,7 +33,10 @@ interface IUnknownFlagsLastReportedCellProps {
 const UnknownFlagsLastReportedCellTooltip = ({
     unknownFlag,
     searchQuery,
-}: { unknownFlag: UnknownFlag; searchQuery: string }) => {
+}: {
+    unknownFlag: UnknownFlag;
+    searchQuery: string;
+}) => {
     const { locationSettings } = useLocationSettings();
     const lastReported = formatDateYMDHMS(
         unknownFlag.lastSeenAt,

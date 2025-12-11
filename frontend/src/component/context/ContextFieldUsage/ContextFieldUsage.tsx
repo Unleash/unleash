@@ -42,7 +42,6 @@ export const ContextFieldUsage = ({ contextName }: IContextFieldUsageProps) => {
     const projectList = (
         <StyledUl>
             {projectsUsed.map((projectId) => (
-                // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
                 <li key={projectId} onClick={trackClick}>
                     <Link
                         to={`/projects/${projectId}`}

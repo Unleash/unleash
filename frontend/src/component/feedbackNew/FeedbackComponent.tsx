@@ -256,7 +256,7 @@ export const FeedbackComponent = ({
                 toastTitle = 'Feedback sent';
                 toastType = 'success';
                 setHasSubmittedFeedback(true);
-            } catch (e) {}
+            } catch (_e) {}
         }
 
         setToastData({

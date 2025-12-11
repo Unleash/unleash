@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import type EventEmitter from 'events';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
-import type { Logger, LogProvider } from '../../logger.js';
+import type { LogProvider } from '../../logger.js';
 import type {
     FeatureSearchEnvironment,
     IFeatureSearchOverview,
@@ -41,21 +41,15 @@ const sortEnvironments = (overview: IFeatureSearchOverview[]) => {
 class FeatureSearchStore implements IFeatureSearchStore {
     private db: Db;
 
-    private logger: Logger;
-
     private readonly timer: Function;
-
-    private flagResolver: IFlagResolver;
 
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        getLogger: LogProvider,
-        flagResolver: IFlagResolver,
+        _getLogger: LogProvider,
+        _flagResolver: IFlagResolver,
     ) {
         this.db = db;
-        this.logger = getLogger('feature-search-store.ts');
-        this.flagResolver = flagResolver;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-search',

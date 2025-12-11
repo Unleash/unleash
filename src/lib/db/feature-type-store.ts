@@ -1,4 +1,4 @@
-import type { Logger, LogProvider } from '../logger.js';
+import type { LogProvider } from '../logger.js';
 import type {
     IFeatureType,
     IFeatureTypeStore,
@@ -18,11 +18,8 @@ interface IFeatureTypeRow {
 class FeatureTypeStore implements IFeatureTypeStore {
     private db: Db;
 
-    private logger: Logger;
-
-    constructor(db: Db, getLogger: LogProvider) {
+    constructor(db: Db, _getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('feature-type-store.ts');
     }
 
     async getAll(): Promise<IFeatureType[]> {

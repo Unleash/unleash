@@ -184,7 +184,7 @@ export const ReleasePlanMilestone = ({
             <StyledAccordion
                 status={status}
                 hasAutomation={hasAutomation}
-                onChange={(evt, expanded) => setExpanded(expanded)}
+                onChange={(_evt, expanded) => setExpanded(expanded)}
             >
                 <StyledAccordionSummary expandIcon={<ExpandMore />}>
                     <StyledTitleContainer>

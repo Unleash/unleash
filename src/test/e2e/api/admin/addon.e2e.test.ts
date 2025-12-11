@@ -278,22 +278,22 @@ describe('missing descriptions', () => {
             });
     });
 
-    test.each(['', null])(
-        'sending a description value of "%s", sets a `null` sets the description to an empty string',
-        async (description) => {
-            const { body } = await app.request
-                .post('/api/admin/addons')
-                .send(addonWithoutDescription);
+    test.each([
+        '',
+        null,
+    ])('sending a description value of "%s", sets a `null` sets the description to an empty string', async (description) => {
+        const { body } = await app.request
+            .post('/api/admin/addons')
+            .send(addonWithoutDescription);
 
-            await app.request
-                .put(`/api/admin/addons/${body.id}`)
-                .send({
-                    ...addonWithoutDescription,
-                    description,
-                })
-                .expect((res) => {
-                    expect(res.body.description).toStrictEqual('');
-                });
-        },
-    );
+        await app.request
+            .put(`/api/admin/addons/${body.id}`)
+            .send({
+                ...addonWithoutDescription,
+                description,
+            })
+            .expect((res) => {
+                expect(res.body.description).toStrictEqual('');
+            });
+    });
 });

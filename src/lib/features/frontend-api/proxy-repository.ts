@@ -98,7 +98,7 @@ export class ProxyRepository
     }
 
     getToggle(name: string): FeatureInterface {
-        //@ts-ignore (we must update the node SDK to allow undefined)
+        //@ts-expect-error (we must update the node SDK to allow undefined)
         return this.features.find((feature) => feature.name === name);
     }
 

@@ -103,9 +103,9 @@ export class MetricsTranslator {
         allLabelNames.add('unleash_origin');
         for (const sample of metric.samples) {
             if (sample.labels) {
-                Object.keys(sample.labels).forEach((label) =>
-                    allLabelNames.add(`unleash_${label}`),
-                );
+                Object.keys(sample.labels).forEach((label) => {
+                    allLabelNames.add(`unleash_${label}`);
+                });
             }
         }
         const labelNames = Array.from(allLabelNames).map((labelName) =>

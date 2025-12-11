@@ -21,8 +21,8 @@ let stores: IUnleashStores;
 let db: ITestDb;
 let service: FeatureToggleService;
 let eventBus: EventEmitter;
-let eventService: EventService;
-let unleashConfig: IUnleashConfig;
+let _eventService: EventService;
+let _unleashConfig: IUnleashConfig;
 
 beforeAll(async () => {
     const config = createTestConfig();
@@ -31,12 +31,12 @@ beforeAll(async () => {
         'features_created_by_user_id_migration',
         config.getLogger,
     );
-    unleashConfig = config;
+    _unleashConfig = config;
     stores = db.stores;
 
     service = createFeatureToggleService(db.rawDatabase, config);
 
-    eventService = createEventsService(db.rawDatabase, config);
+    _eventService = createEventsService(db.rawDatabase, config);
 });
 
 afterAll(async () => {

@@ -22,7 +22,7 @@ afterAll(async () => {
 test('should require authenticated user', async () => {
     expect.assertions(0);
     const preHook = (app) => {
-        app.use('/api/admin/', (req, res) =>
+        app.use('/api/admin/', (_req, res) =>
             res
                 .status(401)
                 .json(
@@ -44,8 +44,8 @@ test('creates new feature flag with createdBy', async () => {
     expect.assertions(1);
     const email = 'custom-user@mail.com';
 
-    const preHook = (app, config, { userService }) => {
-        app.use('/api/admin/', async (req, res, next) => {
+    const preHook = (app, _config, { userService }) => {
+        app.use('/api/admin/', async (req, _res, next) => {
             req.user = await userService.loginUserWithoutPassword(email, true);
             next();
         });

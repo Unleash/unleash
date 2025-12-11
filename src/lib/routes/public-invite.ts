@@ -2,7 +2,6 @@ import type { Response } from 'express';
 
 import Controller from './controller.js';
 import { NONE } from '../types/permissions.js';
-import type { Logger } from '../logger.js';
 import type { IAuthRequest } from './unleash-types.js';
 import type { IUnleashConfig } from '../types/index.js';
 import type { OpenApiService } from '../services/openapi-service.js';
@@ -27,8 +26,6 @@ export class PublicInviteController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private logger: Logger;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -42,7 +39,6 @@ export class PublicInviteController extends Controller {
         super(config);
         this.publicSignupTokenService = publicSignupTokenService;
         this.openApiService = openApiService;
-        this.logger = config.getLogger('validate-invite-token-controller.js');
 
         this.route({
             method: 'get',

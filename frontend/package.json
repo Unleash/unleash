@@ -36,7 +36,7 @@
     "gen:api:clean": "yarn gen:api && rm -rf src/openapi/apis && sed -i.bak '1q' src/openapi/index.ts && rm src/openapi/index.ts.bak"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.3.8",
     "@codemirror/lang-json": "6.0.2",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.5",
@@ -158,7 +158,7 @@
       "last 1 safari version"
     ]
   },
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "yarn@4.12.0",
   "dependencies": {
     "chartjs-plugin-datalabels": "^2.2.0",
     "json-2-csv": "^5.5.5",

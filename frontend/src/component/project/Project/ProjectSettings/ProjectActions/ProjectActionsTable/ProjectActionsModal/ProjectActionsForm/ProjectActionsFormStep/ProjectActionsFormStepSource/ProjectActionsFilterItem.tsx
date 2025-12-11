@@ -76,7 +76,7 @@ const StyledInputContainer = styled('div')({
     flex: 1,
 });
 
-const StyledInput = styled(Input)({
+const _StyledInput = styled(Input)({
     width: '100%',
 });
 

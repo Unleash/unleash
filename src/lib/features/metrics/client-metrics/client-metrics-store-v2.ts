@@ -1,4 +1,4 @@
-import type { Logger, LogProvider } from '../../../logger.js';
+import type { LogProvider } from '../../../logger.js';
 import type {
     IClientMetricsEnv,
     IClientMetricsEnvKey,
@@ -136,21 +136,15 @@ const variantRowReducerV2 = (acc, tokenRow) => {
 export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     private db: Db;
 
-    private logger: Logger;
-
-    private flagResolver: IFlagResolver;
-
     private metricTimer: Function;
 
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        getLogger: LogProvider,
-        flagResolver: IFlagResolver,
+        _getLogger: LogProvider,
+        _flagResolver: IFlagResolver,
     ) {
         this.db = db;
-        this.logger = getLogger('client-metrics-store-v2.js');
-        this.flagResolver = flagResolver;
         this.metricTimer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'client-metrics',
@@ -189,7 +183,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         try {
             await this.get(key);
             return true;
-        } catch (e) {
+        } catch (_e) {
             return false;
         }
     }

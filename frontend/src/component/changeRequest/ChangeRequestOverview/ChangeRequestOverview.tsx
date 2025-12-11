@@ -164,7 +164,7 @@ export const ChangeRequestOverview: FC = () => {
         useChangeRequestsEnabled(projectId);
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
-    const theme = useTheme();
+    const _theme = useTheme();
 
     if (!changeRequest) {
         return null;

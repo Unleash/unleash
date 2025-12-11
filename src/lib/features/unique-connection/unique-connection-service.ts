@@ -1,6 +1,5 @@
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IFlagResolver, IUnleashStores } from '../../types/index.js';
-import type { Logger } from '../../logger.js';
 import type {
     BucketId,
     IUniqueConnectionStore,
@@ -11,8 +10,6 @@ import { SDK_CONNECTION_ID_RECEIVED } from '../../metric-events.js';
 import { REGISTERS_EXPONENT } from './hyperloglog-config.js';
 
 export class UniqueConnectionService {
-    private logger: Logger;
-
     private uniqueConnectionStore: IUniqueConnectionStore;
 
     private flagResolver: IFlagResolver;
@@ -34,7 +31,6 @@ export class UniqueConnectionService {
         config: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>,
     ) {
         this.uniqueConnectionStore = uniqueConnectionStore;
-        this.logger = config.getLogger('services/unique-connection-service.ts');
         this.flagResolver = config.flagResolver;
         this.eventBus = config.eventBus;
         this.activeHour = new Date().getHours();
@@ -47,7 +43,10 @@ export class UniqueConnectionService {
     count({
         connectionId,
         type,
-    }: { connectionId: string; type: 'frontend' | 'backend' }) {
+    }: {
+        connectionId: string;
+        type: 'frontend' | 'backend';
+    }) {
         if (!this.flagResolver.isEnabled('uniqueSdkTracking')) return;
         const value = HyperLogLog.hash(connectionId);
         this.hll.add(value);

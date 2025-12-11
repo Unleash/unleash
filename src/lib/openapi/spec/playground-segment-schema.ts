@@ -35,5 +35,6 @@ export const playgroundSegmentSchema = {
 } as const;
 
 export type PlaygroundSegmentSchema = FromSchema<
-    typeof playgroundSegmentSchema
+    typeof playgroundSegmentSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

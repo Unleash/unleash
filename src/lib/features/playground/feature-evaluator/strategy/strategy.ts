@@ -88,7 +88,7 @@ export class Strategy {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isEnabled(parameters: unknown, context: Context): boolean {
+    isEnabled(_parameters: unknown, _context: Context): boolean {
         return this.returnValue;
     }
 

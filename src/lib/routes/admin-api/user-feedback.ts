@@ -1,6 +1,5 @@
 import type { Response } from 'express';
 import Controller from '../controller.js';
-import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import type UserFeedbackService from '../../services/user-feedback-service.js';
@@ -21,8 +20,6 @@ import {
 } from '../../openapi/index.js';
 
 class UserFeedbackController extends Controller {
-    private logger: Logger;
-
     private userFeedbackService: UserFeedbackService;
 
     private openApiService: OpenApiService;
@@ -35,7 +32,6 @@ class UserFeedbackController extends Controller {
         }: Pick<IUnleashServices, 'userFeedbackService' | 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('feedback-controller.ts');
         this.userFeedbackService = userFeedbackService;
         this.openApiService = openApiService;
 

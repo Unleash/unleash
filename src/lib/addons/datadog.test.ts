@@ -25,7 +25,7 @@ const ARGS: IAddonConfig = {
     integrationEventsService: {
         registerEvent: vi.fn(),
     } as unknown as IntegrationEventsService,
-    flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
+    flagResolver: { isEnabled: (_expName: IFlagKey) => false } as IFlagResolver,
     eventBus: <any>{ emit: vi.fn() },
 };
 
@@ -65,7 +65,7 @@ describe('Datadog integration', () => {
             .post('/api/v1/events')
             .matchHeader('Content-Type', 'application/json')
             .matchHeader('dd-api-key', 'fakeKey')
-            .reply(200, (uri, requestBody) => {
+            .reply(200, (_uri, requestBody) => {
                 body = requestBody;
                 return {
                     status: 'ok',
@@ -101,7 +101,7 @@ describe('Datadog integration', () => {
             .post('/api/v1/events')
             .matchHeader('Content-Type', 'application/json')
             .matchHeader('dd-api-key', 'fakeKey')
-            .reply(200, (uri, requestBody) => {
+            .reply(200, (_uri, requestBody) => {
                 body = requestBody;
                 return {
                     status: 'ok',
@@ -138,7 +138,7 @@ describe('Datadog integration', () => {
             .post('/api/v1/events')
             .matchHeader('Content-Type', 'application/json')
             .matchHeader('dd-api-key', 'fakeKey')
-            .reply(200, (uri, requestBody) => {
+            .reply(200, (_uri, requestBody) => {
                 body = requestBody;
                 return {
                     status: 'ok',
@@ -176,7 +176,7 @@ describe('Datadog integration', () => {
             .post('/api/v1/events')
             .matchHeader('Content-Type', 'application/json')
             .matchHeader('dd-api-key', 'fakeKey')
-            .reply(200, (uri, requestBody) => {
+            .reply(200, (_uri, requestBody) => {
                 reqBody = requestBody;
                 return {
                     status: 'ok',
@@ -217,7 +217,7 @@ describe('Datadog integration', () => {
             .matchHeader('Content-Type', 'application/json')
             .matchHeader('dd-api-key', 'fakeKey')
             .matchHeader('MY_CUSTOM_HEADER', 'MY_CUSTOM_VALUE')
-            .reply(200, (uri, requestBody) => {
+            .reply(200, (_uri, requestBody) => {
                 body = requestBody;
                 return {
                     status: 'ok',
@@ -257,7 +257,7 @@ describe('Datadog integration', () => {
             .post('/api/v1/events')
             .matchHeader('Content-Type', 'application/json')
             .matchHeader('dd-api-key', 'fakeKey')
-            .reply(200, (uri, requestBody) => {
+            .reply(200, (_uri, requestBody) => {
                 body = requestBody;
                 return {
                     status: 'ok',
@@ -301,7 +301,7 @@ describe('Datadog integration', () => {
             .post('/api/v1/events')
             .matchHeader('Content-Type', 'application/json')
             .matchHeader('dd-api-key', 'fakeKey')
-            .reply(200, (uri, requestBody) => {
+            .reply(200, (_uri, requestBody) => {
                 body = requestBody;
                 return {
                     status: 'ok',
@@ -349,13 +349,13 @@ describe('Datadog integration', () => {
                 '{\n  "event": "{{event.type}}",\n  "createdBy": "{{event.createdBy}}"\n}',
         };
 
-        let body: any;
+        let _body: any;
         nock('http://api.datadoghq.com')
             .post('/api/v1/events')
             .matchHeader('Content-Type', 'application/json')
             .matchHeader('dd-api-key', 'fakeKey')
-            .reply(200, (uri, requestBody) => {
-                body = requestBody;
+            .reply(200, (_uri, requestBody) => {
+                _body = requestBody;
                 return {
                     status: 'ok',
                     status_code: '200',

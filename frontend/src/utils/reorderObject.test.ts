@@ -34,7 +34,7 @@ describe('reorderObject', () => {
     it('does not modify the original object', () => {
         const myObj = { a: 1, b: 2, c: 3 };
         const order = ['b', 'a'];
-        const result = reorderObject(myObj, order);
+        const _result = reorderObject(myObj, order);
         expect(myObj).toEqual({ a: 1, b: 2, c: 3 }); // myObj should remain unchanged
     });
 });

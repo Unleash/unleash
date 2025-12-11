@@ -85,7 +85,7 @@ export default class ArchiveController extends Controller {
         res: Response<void>,
     ): Promise<void> {
         const { featureName } = req.params;
-        const user = extractUsername(req);
+        const _user = extractUsername(req);
         await this.featureService.deleteFeature(featureName, req.audit);
         res.status(200).end();
     }

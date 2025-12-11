@@ -77,4 +77,7 @@ export const adminSegmentSchema = {
     },
 } as const;
 
-export type AdminSegmentSchema = FromSchema<typeof adminSegmentSchema>;
+export type AdminSegmentSchema = FromSchema<
+    typeof adminSegmentSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

@@ -184,7 +184,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         return null;
     }
 
-    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
         setActiveTab(newValue);
     };
 
@@ -195,7 +195,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         return constraintCount + segmentCount;
     };
 
-    const validateParameter = (key: string, value: string) => true;
+    const validateParameter = (_key: string, _value: string) => true;
     const updateParameter = (name: string, value: string) => {
         setCurrentStrategy(
             produce((draft) => {

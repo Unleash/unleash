@@ -64,117 +64,112 @@ describe('validators', () => {
         ).toBe(true);
     };
 
-    test.each(numOperators)(
-        'picks the right validator for num operator: %s',
-        (operator) => {
-            const initial: IConstraint = {
-                contextName: 'context-field',
-                operator: operator,
-                value: '',
-            };
+    test.each(
+        numOperators,
+    )('picks the right validator for num operator: %s', (operator) => {
+        const initial: IConstraint = {
+            contextName: 'context-field',
+            operator: operator,
+            value: '',
+        };
 
-            const { result } = renderHook(() =>
-                useEditableConstraint(initial, () => {}),
-            );
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
 
-            checkValidator(result.current.validator, [
-                ['5', true],
-                ['5.6', true],
-                ['5,6', false],
-                ['not a number', false],
-                ['1.2.6', false],
-                ['2025-05-13T07:39:23.053Z', false],
-            ]);
-        },
-    );
-    test.each(semVerOperators)(
-        'picks the right validator for semVer operator: %s',
-        (operator) => {
-            const initial: IConstraint = {
-                contextName: 'context-field',
-                operator: operator,
-                value: '',
-            };
+        checkValidator(result.current.validator, [
+            ['5', true],
+            ['5.6', true],
+            ['5,6', false],
+            ['not a number', false],
+            ['1.2.6', false],
+            ['2025-05-13T07:39:23.053Z', false],
+        ]);
+    });
+    test.each(
+        semVerOperators,
+    )('picks the right validator for semVer operator: %s', (operator) => {
+        const initial: IConstraint = {
+            contextName: 'context-field',
+            operator: operator,
+            value: '',
+        };
 
-            const { result } = renderHook(() =>
-                useEditableConstraint(initial, () => {}),
-            );
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
 
-            checkValidator(result.current.validator, [
-                ['5', false],
-                ['5.6', false],
-                ['5,6', false],
-                ['not a number', false],
-                ['1.2.6', true],
-                ['2025-05-13T07:39:23.053Z', false],
-            ]);
-        },
-    );
-    test.each(dateOperators)(
-        'picks the right validator for date operator: %s',
-        (operator) => {
-            const initial: IConstraint = {
-                contextName: 'context-field',
-                operator: operator,
-                value: '',
-            };
+        checkValidator(result.current.validator, [
+            ['5', false],
+            ['5.6', false],
+            ['5,6', false],
+            ['not a number', false],
+            ['1.2.6', true],
+            ['2025-05-13T07:39:23.053Z', false],
+        ]);
+    });
+    test.each(
+        dateOperators,
+    )('picks the right validator for date operator: %s', (operator) => {
+        const initial: IConstraint = {
+            contextName: 'context-field',
+            operator: operator,
+            value: '',
+        };
 
-            const { result } = renderHook(() =>
-                useEditableConstraint(initial, () => {}),
-            );
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
 
-            checkValidator(result.current.validator, [
-                ['5', false],
-                ['5.6', false],
-                ['5,6', false],
-                ['not a number', false],
-                ['1.2.6', false],
-                ['2025-05-13T07:39:23.053Z', true],
-            ]);
-        },
-    );
-    test.each(multipleValueOperators)(
-        'picks the right value for multi-value operator: %s',
-        (operator) => {
-            const initial: IConstraint = {
-                contextName: 'context-field',
-                operator: operator,
-                values: [],
-            };
+        checkValidator(result.current.validator, [
+            ['5', false],
+            ['5.6', false],
+            ['5,6', false],
+            ['not a number', false],
+            ['1.2.6', false],
+            ['2025-05-13T07:39:23.053Z', true],
+        ]);
+    });
+    test.each(
+        multipleValueOperators,
+    )('picks the right value for multi-value operator: %s', (operator) => {
+        const initial: IConstraint = {
+            contextName: 'context-field',
+            operator: operator,
+            values: [],
+        };
 
-            const { result } = renderHook(() =>
-                useEditableConstraint(initial, () => {}),
-            );
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
 
-            checkValidator(result.current.validator, [
-                ['5', true],
-                [['hey'], true],
-                // @ts-expect-error
-                [[5, 6], false],
-            ]);
-        },
-    );
+        checkValidator(result.current.validator, [
+            ['5', true],
+            [['hey'], true],
+            // @ts-expect-error
+            [[5, 6], false],
+        ]);
+    });
 
-    test.each(multipleValueOperators)(
-        'multi-value operator %s should reject fully duplicate inputs and accept new values',
-        (operator) => {
-            const initial: IConstraint = {
-                contextName: 'context-field',
-                operator: operator,
-                values: ['a', 'b'],
-            };
+    test.each(
+        multipleValueOperators,
+    )('multi-value operator %s should reject fully duplicate inputs and accept new values', (operator) => {
+        const initial: IConstraint = {
+            contextName: 'context-field',
+            operator: operator,
+            values: ['a', 'b'],
+        };
 
-            const { result } = renderHook(() =>
-                useEditableConstraint(initial, () => {}),
-            );
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
 
-            checkValidator(result.current.validator, [
-                ['a', false],
-                [['a', 'c'], true],
-                [['a', 'b'], false],
-            ]);
-        },
-    );
+        checkValidator(result.current.validator, [
+            ['a', false],
+            [['a', 'c'], true],
+            [['a', 'b'], false],
+        ]);
+    });
 });
 
 describe('legal values', () => {

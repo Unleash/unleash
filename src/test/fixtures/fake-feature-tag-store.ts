@@ -26,10 +26,7 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
     }
 
     async delete(key: IFeatureTag): Promise<void> {
-        this.featureTags.splice(
-            this.featureTags.findIndex((t) => t === key),
-            1,
-        );
+        this.featureTags.splice(this.featureTags.indexOf(key), 1);
     }
 
     destroy(): void {}
@@ -107,7 +104,7 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    untagFeatures(featureTags: IFeatureTag[]): Promise<void> {
+    untagFeatures(_featureTags: IFeatureTag[]): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }

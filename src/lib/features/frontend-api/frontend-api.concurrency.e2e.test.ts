@@ -64,7 +64,7 @@ test('multiple parallel calls to api/frontend should not create multiple instanc
     const address = app.server.address();
     expect(address).not.toBeNull();
     expect(address).toHaveProperty('port');
-    // @ts-ignore - We've just checked that we have this property
+    // @ts-expect-error - We've just checked that we have this property
     const serverUrl = `http://localhost:${address.port}/api/frontend`;
     await Promise.all(
         Array.from(Array(10).keys()).map(() =>

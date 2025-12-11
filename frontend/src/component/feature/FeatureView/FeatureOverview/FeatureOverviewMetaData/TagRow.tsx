@@ -38,7 +38,7 @@ const StyledTagContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(0.75),
 }));
 
-const StyledTag = styled(Chip)(({ theme }) => ({
+const _StyledTag = styled(Chip)(({ theme }) => ({
     overflowWrap: 'anywhere',
     lineHeight: theme.typography.body1.lineHeight,
     backgroundColor: theme.palette.neutral.light,
@@ -47,7 +47,7 @@ const StyledTag = styled(Chip)(({ theme }) => ({
     height: theme.spacing(3.5),
 }));
 
-const StyledEllipsis = styled('span')(({ theme }) => ({
+const _StyledEllipsis = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 

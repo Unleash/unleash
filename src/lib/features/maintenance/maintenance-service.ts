@@ -54,7 +54,7 @@ export default class MaintenanceService implements IMaintenanceStatus {
         setting: MaintenanceSchema,
         auditUser: IAuditUser,
     ): Promise<void> {
-        //@ts-ignore
+        //@ts-expect-error
         this.resolveMaintenance.clear();
         return this.settingService.insert(
             maintenanceSettingsKey,

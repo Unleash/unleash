@@ -78,7 +78,7 @@ export const ActionsCell: VFC<IActionsCellProps> = ({
                 handleClose();
                 setIsFeatureNameCopied(false);
             }, 1000);
-        } catch (error: unknown) {
+        } catch (_error: unknown) {
             setToastData({
                 type: 'error',
                 text: 'Could not copy feature name',

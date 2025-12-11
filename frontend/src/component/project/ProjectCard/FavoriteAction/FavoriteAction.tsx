@@ -20,7 +20,7 @@ export const FavoriteAction: FC<FavoriteActionProps> = ({ id, isFavorite }) => {
                 await favorite(id);
             }
             refetch();
-        } catch (error) {
+        } catch (_error) {
             setToastApiError('Something went wrong, could not update favorite');
         }
     };

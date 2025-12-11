@@ -8,7 +8,7 @@ import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProj
 import type { ITestDb } from '../../../../test/e2e/helpers/database-init.js';
 import dbInit from '../../../../test/e2e/helpers/database-init.js';
 import { noLoggerProvider as getLogger } from '../../../../test/fixtures/no-logger.js';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 let stores: IUnleashStores;
 let db: ITestDb;
 let clientInstanceService: ClientInstanceService;
@@ -17,8 +17,8 @@ beforeAll(async () => {
     db = await dbInit('client_metrics_service_serial', getLogger);
     stores = db.stores;
     config = createTestConfig({});
-    const bulkInterval = secondsToMilliseconds(0.5);
-    const announcementInterval = secondsToMilliseconds(2);
+    const _bulkInterval = secondsToMilliseconds(0.5);
+    const _announcementInterval = secondsToMilliseconds(2);
 
     clientInstanceService = new ClientInstanceService(
         stores,
@@ -34,23 +34,23 @@ test('Apps registered should be announced', async () => {
     expect.assertions(3);
     const clientRegistration: IClientApp = {
         appName: faker.internet.domainName(),
-        instanceId: faker.datatype.uuid(),
+        instanceId: faker.string.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        interval: faker.datatype.number(),
+        interval: faker.number.int(),
         icon: '',
         description: faker.company.catchPhrase(),
-        color: faker.internet.color(),
+        color: faker.color.rgb(),
     };
     const differentClient = {
-        appName: faker.datatype.uuid(),
-        instanceId: faker.datatype.uuid(),
+        appName: faker.string.uuid(),
+        instanceId: faker.string.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        interval: faker.datatype.number(),
+        interval: faker.number.int(),
         icon: '',
         description: faker.company.catchPhrase(),
-        color: faker.internet.color(),
+        color: faker.color.rgb(),
     };
     await clientInstanceService.registerBackendClient(
         clientRegistration,

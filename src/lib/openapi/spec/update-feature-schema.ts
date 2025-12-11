@@ -49,4 +49,7 @@ export const updateFeatureSchema = {
     },
 } as const;
 
-export type UpdateFeatureSchema = FromSchema<typeof updateFeatureSchema>;
+export type UpdateFeatureSchema = FromSchema<
+    typeof updateFeatureSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

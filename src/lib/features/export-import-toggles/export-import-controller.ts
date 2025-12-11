@@ -1,6 +1,5 @@
 import type { Response } from 'express';
 import Controller from '../../routes/controller.js';
-import type { Logger } from '../../logger.js';
 import type {
     IExportService,
     IImportService,
@@ -28,8 +27,6 @@ import { BadDataError } from '../../error/index.js';
 import ApiUser from '../../types/api-user.js';
 
 class ExportImportController extends Controller {
-    private logger: Logger;
-
     private exportService: IExportService;
 
     private importService: WithTransactional<IImportService>;
@@ -48,7 +45,6 @@ class ExportImportController extends Controller {
         >,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/export-import.ts');
         this.exportService = exportService;
         this.importService = importService;
         this.openApiService = openApiService;
@@ -119,7 +115,7 @@ class ExportImportController extends Controller {
         res: Response,
     ): Promise<void> {
         const query = req.body;
-        const userName = extractUsername(req);
+        const _userName = extractUsername(req);
 
         const data = await this.exportService.export(query, req.audit);
 

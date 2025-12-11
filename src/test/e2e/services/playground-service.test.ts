@@ -869,7 +869,7 @@ describe('the playground service (e2e)', () => {
                             },
                         );
 
-                        serviceFeatures.forEach((feature) =>
+                        serviceFeatures.forEach((feature) => {
                             feature.strategies.data.forEach((strategy) => {
                                 expect(strategy.result.evaluationStatus).toBe(
                                     playgroundStrategyEvaluation.evaluationIncomplete,
@@ -877,8 +877,8 @@ describe('the playground service (e2e)', () => {
                                 expect(strategy.result.enabled).toBe(
                                     playgroundStrategyEvaluation.unknownResult,
                                 );
-                            }),
-                        );
+                            });
+                        });
 
                         ctx.log(JSON.stringify(serviceFeatures));
                         serviceFeatures.forEach((feature) => {
@@ -935,14 +935,14 @@ describe('the playground service (e2e)', () => {
                             },
                         );
 
-                        serviceFeatures.forEach((feature) =>
+                        serviceFeatures.forEach((feature) => {
                             feature.strategies.data.forEach((strategy) => {
                                 expect(strategy.result.evaluationStatus).toBe(
                                     playgroundStrategyEvaluation.evaluationIncomplete,
                                 );
                                 expect(strategy.result.enabled).toBe(false);
-                            }),
-                        );
+                            });
+                        });
 
                         ctx.log(JSON.stringify(serviceFeatures));
 
@@ -1041,14 +1041,14 @@ describe('the playground service (e2e)', () => {
                             },
                         );
 
-                        serviceFeatures.forEach((feature) =>
+                        serviceFeatures.forEach((feature) => {
                             feature.strategies.data.forEach((strategy) => {
                                 expect(strategy.result.evaluationStatus).toBe(
                                     playgroundStrategyEvaluation.evaluationComplete,
                                 );
                                 expect(strategy.result.enabled).toBe(true);
-                            }),
-                        );
+                            });
+                        });
 
                         ctx.log(JSON.stringify(serviceFeatures));
                         serviceFeatures.forEach((feature) => {

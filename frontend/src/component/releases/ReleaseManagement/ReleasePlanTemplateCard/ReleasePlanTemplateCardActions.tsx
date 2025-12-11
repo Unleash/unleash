@@ -39,7 +39,9 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 
 export const ReleasePlanTemplateCardActions = ({
     template,
-}: { template: IReleasePlanTemplate }) => {
+}: {
+    template: IReleasePlanTemplate;
+}) => {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const { archiveReleasePlanTemplate } = useReleasePlanTemplatesApi();
     const { refetch } = useReleasePlanTemplates();

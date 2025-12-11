@@ -29,21 +29,21 @@ beforeEach(async () => {
     await app.services.clientInstanceService.createApplication({
         appName: 'demo-app-1',
         strategies: ['default'],
-        //@ts-ignore
+        //@ts-expect-error
         announced: true,
     });
     await app.services.clientInstanceService.createApplication({
         appName: 'demo-app-2',
         strategies: ['default', 'extra'],
         description: 'hello',
-        //@ts-ignore
+        //@ts-expect-error
         announced: true,
     });
     await app.services.clientInstanceService.createApplication({
         appName: 'deletable-app',
         strategies: ['default'],
         description: 'Some desc',
-        //@ts-ignore
+        //@ts-expect-error
         announced: true,
     });
 

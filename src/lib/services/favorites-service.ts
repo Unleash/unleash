@@ -3,7 +3,6 @@ import type {
     IFavoriteProjectsStore,
     IUnleashStores,
 } from '../types/stores.js';
-import type { Logger } from '../logger.js';
 import type { IFavoriteFeaturesStore } from '../types/stores/favorite-features.js';
 import type { IFavoriteFeature, IFavoriteProject } from '../types/favorites.js';
 import {
@@ -29,10 +28,6 @@ export interface IFavoriteProjectProps {
 }
 
 export class FavoritesService {
-    private config: IUnleashConfig;
-
-    private logger: Logger;
-
     private favoriteFeaturesStore: IFavoriteFeaturesStore;
 
     private favoriteProjectsStore: IFavoriteProjectsStore;
@@ -47,11 +42,9 @@ export class FavoritesService {
             IUnleashStores,
             'favoriteFeaturesStore' | 'favoriteProjectsStore'
         >,
-        config: IUnleashConfig,
+        _config: IUnleashConfig,
         eventService: EventService,
     ) {
-        this.config = config;
-        this.logger = config.getLogger('services/favorites-service.ts');
         this.favoriteFeaturesStore = favoriteFeaturesStore;
         this.favoriteProjectsStore = favoriteProjectsStore;
         this.eventService = eventService;
@@ -129,7 +122,7 @@ export class FavoritesService {
         { project, user }: IFavoriteProjectProps,
         auditUser: IAuditUser,
     ): Promise<void> {
-        const data = await this.favoriteProjectsStore.delete({
+        const _data = await this.favoriteProjectsStore.delete({
             project: project,
             userId: user.id,
         });

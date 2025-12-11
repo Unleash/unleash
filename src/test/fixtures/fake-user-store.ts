@@ -182,12 +182,12 @@ class UserStoreMock implements IUserStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getUserByPersonalAccessToken(secret: string): Promise<IUser> {
+    getUserByPersonalAccessToken(_secret: string): Promise<IUser> {
         throw new Error('Not implemented');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async markSeenAt(secrets: string[]): Promise<void> {
+    async markSeenAt(_secrets: string[]): Promise<void> {
         throw new Error('Not implemented');
     }
 }

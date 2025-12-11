@@ -4,7 +4,7 @@ import { GridCol } from 'component/common/GridCol/GridCol';
 import LaunchIcon from '@mui/icons-material/Launch';
 import { formatApiPath } from 'utils/formatPath';
 
-const StyledInfoLabel = styled(Typography)(({ theme }) => ({
+const _StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
 }));

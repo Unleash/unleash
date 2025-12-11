@@ -1,6 +1,6 @@
 import type EventEmitter from 'events';
 import type { IFavoriteFeaturesStore } from '../types/index.js';
-import type { Logger, LogProvider } from '../logger.js';
+import type { LogProvider } from '../logger.js';
 import type { IFavoriteFeatureKey } from '../types/stores/favorite-features.js';
 import type { IFavoriteFeature } from '../types/favorites.js';
 import type { Db } from './db.js';
@@ -24,16 +24,10 @@ const rowToFavorite = (row: IFavoriteFeatureRow) => {
 };
 
 export class FavoriteFeaturesStore implements IFavoriteFeaturesStore {
-    private logger: Logger;
-
-    private eventBus: EventEmitter;
-
     private db: Db;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, _eventBus: EventEmitter, _getLogger: LogProvider) {
         this.db = db;
-        this.eventBus = eventBus;
-        this.logger = getLogger('lib/db/favorites-store.ts');
     }
 
     async addFavoriteFeature({

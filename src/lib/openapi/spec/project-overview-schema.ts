@@ -218,4 +218,7 @@ export const projectOverviewSchema = {
     },
 } as const;
 
-export type ProjectOverviewSchema = FromSchema<typeof projectOverviewSchema>;
+export type ProjectOverviewSchema = FromSchema<
+    typeof projectOverviewSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

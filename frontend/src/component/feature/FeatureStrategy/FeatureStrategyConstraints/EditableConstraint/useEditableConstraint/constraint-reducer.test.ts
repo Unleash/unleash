@@ -67,18 +67,15 @@ describe('changing context field', () => {
         ['multi-value', multiValueConstraint],
         ['single-value', singleValueConstraint],
         ['date', dateConstraint],
-    ])(
-        'changing context field to the same field is a no-op for %s constraints',
-        (_, constraint) => {
-            const input = constraint;
-            expect(
-                constraintReducer(input, {
-                    type: 'set context field',
-                    payload: input.contextName,
-                }),
-            ).toStrictEqual(input);
-        },
-    );
+    ])('changing context field to the same field is a no-op for %s constraints', (_, constraint) => {
+        const input = constraint;
+        expect(
+            constraintReducer(input, {
+                type: 'set context field',
+                payload: input.contextName,
+            }),
+        ).toStrictEqual(input);
+    });
     test('changing context field for a single-value constraint clears the `value` prop', () => {
         const input = { ...singleValueConstraint, contextName: 'field-a' };
         const result = constraintReducer(input, {
@@ -108,30 +105,23 @@ describe('changing context field', () => {
     test.each([
         ['multi-value', multiValueConstraint],
         ['single-value', singleValueConstraint],
-    ])(
-        'changing context field to currentTime from a %s constraint sets the current time as the value',
-        (_, constraint) => {
-            const now = new Date();
-            const input = { ...constraint, contextName: 'field-a' };
-            const { value, ...result } = constraintReducer(input, {
-                type: 'set context field',
-                payload: 'currentTime',
-            }) as Extractable;
-            const {
-                values: _vs,
-                value: _v,
-                ...inputBody
-            } = input as Extractable;
-            expect(result).toStrictEqual({
-                ...inputBody,
-                contextName: 'currentTime',
-                operator: DATE_AFTER,
-            });
-            expect(new Date(value as string).getTime()).toBeGreaterThanOrEqual(
-                now.getTime(),
-            );
-        },
-    );
+    ])('changing context field to currentTime from a %s constraint sets the current time as the value', (_, constraint) => {
+        const now = new Date();
+        const input = { ...constraint, contextName: 'field-a' };
+        const { value, ...result } = constraintReducer(input, {
+            type: 'set context field',
+            payload: 'currentTime',
+        }) as Extractable;
+        const { values: _vs, value: _v, ...inputBody } = input as Extractable;
+        expect(result).toStrictEqual({
+            ...inputBody,
+            contextName: 'currentTime',
+            operator: DATE_AFTER,
+        });
+        expect(new Date(value as string).getTime()).toBeGreaterThanOrEqual(
+            now.getTime(),
+        );
+    });
     test('changing context field from currentTime to something else sets a default operator', () => {
         const input = dateConstraint;
         const result = constraintReducer(input, {
@@ -148,70 +138,67 @@ describe('changing context field', () => {
     });
 });
 describe('changing operator', () => {
-    test.each(allOperators)(
-        'changing operator to the same operator (%s) is a no-op',
-        (operator) => {
-            const constraint = getConstraintForOperator(operator);
-            expect(
-                constraintReducer(constraint, {
-                    type: 'set operator',
-                    payload: operator,
-                }),
-            ).toStrictEqual(constraint);
-        },
-    );
+    test.each(
+        allOperators,
+    )('changing operator to the same operator (%s) is a no-op', (operator) => {
+        const constraint = getConstraintForOperator(operator);
+        expect(
+            constraintReducer(constraint, {
+                type: 'set operator',
+                payload: operator,
+            }),
+        ).toStrictEqual(constraint);
+    });
 
     const nonDateOperators = allOperators.filter((op) => !isDateOperator(op));
     const allCombinations = nonDateOperators
         .flatMap((a) => nonDateOperators.map((b) => [a, b]))
         .filter(([a, b]) => a !== b);
 
-    test.each(allCombinations)(
-        "changing the operator to anything that isn't date based clears the value: %s -> %s",
-        (operatorA, operatorB) => {
-            const constraint = getConstraintForOperator(operatorA);
-            const { value, values, ...result } = constraintReducer(constraint, {
-                type: 'set operator',
-                payload: operatorB,
-            }) as Extractable;
-            const {
-                value: _v,
-                values: _values,
-                ...inputConstraint
-            } = constraint as Extractable;
-            expect(result).toStrictEqual({
-                ...inputConstraint,
-                operator: operatorB,
-            });
+    test.each(
+        allCombinations,
+    )("changing the operator to anything that isn't date based clears the value: %s -> %s", (operatorA, operatorB) => {
+        const constraint = getConstraintForOperator(operatorA);
+        const { value, values, ...result } = constraintReducer(constraint, {
+            type: 'set operator',
+            payload: operatorB,
+        }) as Extractable;
+        const {
+            value: _v,
+            values: _values,
+            ...inputConstraint
+        } = constraint as Extractable;
+        expect(result).toStrictEqual({
+            ...inputConstraint,
+            operator: operatorB,
+        });
 
-            if (isMultiValueOperator(operatorB)) {
-                expect(values).toStrictEqual(new Set());
-            } else if (isSingleValueOperator(operatorB)) {
-                expect(value).toBe('');
-            }
-        },
-    );
+        if (isMultiValueOperator(operatorB)) {
+            expect(values).toStrictEqual(new Set());
+        } else if (isSingleValueOperator(operatorB)) {
+            expect(value).toBe('');
+        }
+    });
 
     const dateTransititons = [
         [DATE_BEFORE, DATE_AFTER],
         [DATE_AFTER, DATE_BEFORE],
     ] as const;
-    test.each(dateTransititons)(
-        'changing the operator from one date operator to another date operator leaves the value untouched: %s -> %s',
-        (operatorA, operatorB) => {
-            const input: EditableDateConstraint = {
-                ...dateConstraint,
-                operator: operatorA,
-            };
-            const output = constraintReducer(input, {
-                type: 'set operator',
-                payload: operatorB,
-            });
-            expect(input.value).toBe(
-                (output as EditableSingleValueConstraint).value,
-            );
-        },
-    );
+    test.each(
+        dateTransititons,
+    )('changing the operator from one date operator to another date operator leaves the value untouched: %s -> %s', (operatorA, operatorB) => {
+        const input: EditableDateConstraint = {
+            ...dateConstraint,
+            operator: operatorA,
+        };
+        const output = constraintReducer(input, {
+            type: 'set operator',
+            payload: operatorB,
+        });
+        expect(input.value).toBe(
+            (output as EditableSingleValueConstraint).value,
+        );
+    });
 });
 describe('adding values', () => {
     describe('single-value constraints', () => {
@@ -500,23 +487,22 @@ describe('toggle options', () => {
         [true, false],
         [false, true],
     ];
-    test.each(stateTransitions)(
-        'toggle case sensitivity: %s -> %s',
-        (from, to) => {
-            const input = {
-                ...multiValueConstraint,
-                caseInsensitive: from,
-            };
-            expect(
-                constraintReducer(input, {
-                    type: 'toggle case sensitivity',
-                }),
-            ).toStrictEqual({
-                ...input,
-                caseInsensitive: to,
-            });
-        },
-    );
+    test.each(
+        stateTransitions,
+    )('toggle case sensitivity: %s -> %s', (from, to) => {
+        const input = {
+            ...multiValueConstraint,
+            caseInsensitive: from,
+        };
+        expect(
+            constraintReducer(input, {
+                type: 'toggle case sensitivity',
+            }),
+        ).toStrictEqual({
+            ...input,
+            caseInsensitive: to,
+        });
+    });
     test.each(stateTransitions)('match inversion: %s -> %s', (from, to) => {
         const input = {
             ...multiValueConstraint,

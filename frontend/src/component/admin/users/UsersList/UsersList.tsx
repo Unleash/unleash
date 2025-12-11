@@ -206,7 +206,9 @@ const UsersList = () => {
                 align: 'center',
                 Cell: ({
                     row: { original: user },
-                }: { row: { original: IUser } }) => (
+                }: {
+                    row: { original: IUser };
+                }) => (
                     <UsersActionsCell
                         onEdit={() => {
                             navigate(`/admin/users/${user.id}/edit`);

@@ -6,12 +6,12 @@ export default class FakeFavoriteProjectsStore
     implements IFavoriteProjectsStore
 {
     addFavoriteProject(
-        favorite: IFavoriteProjectKey,
+        _favorite: IFavoriteProjectKey,
     ): Promise<IFavoriteProject | undefined> {
         return Promise.resolve(undefined);
     }
 
-    delete(key: IFavoriteProjectKey): Promise<void> {
+    delete(_key: IFavoriteProjectKey): Promise<void> {
         return Promise.resolve(undefined);
     }
 
@@ -21,15 +21,15 @@ export default class FakeFavoriteProjectsStore
 
     destroy(): void {}
 
-    exists(key: IFavoriteProjectKey): Promise<boolean> {
+    exists(_key: IFavoriteProjectKey): Promise<boolean> {
         return Promise.resolve(false);
     }
 
-    get(key: IFavoriteProjectKey): Promise<IFavoriteProject | undefined> {
+    get(_key: IFavoriteProjectKey): Promise<IFavoriteProject | undefined> {
         return Promise.resolve(undefined);
     }
 
-    getAll(query?: Object): Promise<IFavoriteProject[]> {
+    getAll(_query?: Object): Promise<IFavoriteProject[]> {
         return Promise.resolve([]);
     }
 }

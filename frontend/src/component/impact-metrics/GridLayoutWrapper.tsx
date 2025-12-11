@@ -130,8 +130,8 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
                 cols={isMobileBreakpoint ? cols.xs : cols.lg}
                 rowHeight={rowHeight}
                 margin={[
-                    Number.parseInt(theme.spacing(2)),
-                    Number.parseInt(theme.spacing(2)),
+                    Number.parseInt(theme.spacing(2), 10),
+                    Number.parseInt(theme.spacing(2), 10),
                 ]}
                 containerPadding={[0, 0]}
                 isDraggable={false}

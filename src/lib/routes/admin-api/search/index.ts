@@ -5,7 +5,7 @@ import type { Db, IUnleashConfig } from '../../../types/index.js';
 import Controller from '../../controller.js';
 
 export class SearchApi extends Controller {
-    constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
+    constructor(config: IUnleashConfig, services: IUnleashServices, _db: Db) {
         super(config);
 
         this.app.use(

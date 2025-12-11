@@ -34,7 +34,7 @@ const StyledRingContent = styled(Box)(({ theme }) => ({
     border: `10px solid ${theme.palette.background.paper}`,
 }));
 
-const StyledInsightsContainer = styled(Box)(({ theme }) => ({
+const _StyledInsightsContainer = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(4),
     padding: theme.spacing(1.5, 2),
     background: theme.palette.background.elevation2,
@@ -43,24 +43,24 @@ const StyledInsightsContainer = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
-const StyledHeaderContainer = styled(Box)(({ theme }) => ({
+const _StyledHeaderContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     marginBottom: theme.spacing(0.5),
 }));
 
-const StyledTextContainer = styled(Box)(({ theme }) => ({
+const _StyledTextContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
 }));
 
-const StyledFlagCountPerUser = styled(Typography)(({ theme }) => ({
+const _StyledFlagCountPerUser = styled(Typography)(({ theme }) => ({
     marginLeft: 'auto',
     fontSize: theme.fontSizes.mainHeader,
 }));
 
-const StyledIcon = styled(Icon)(({ theme }) => ({
+const _StyledIcon = styled(Icon)(({ theme }) => ({
     color: theme.palette.primary.main,
     width: '15px',
     height: '15px',

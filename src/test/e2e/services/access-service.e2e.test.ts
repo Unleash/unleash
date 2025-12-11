@@ -181,7 +181,7 @@ beforeAll(async () => {
     // projectStore = stores.projectStore;
     const config = createTestConfig({
         getLogger,
-        // @ts-ignore
+        // @ts-expect-error
         experimental: { environments: { enabled: true } },
     });
     accessService = createAccessService(db.rawDatabase, config);
@@ -370,7 +370,7 @@ test('should create default roles to project', async () => {
 
 test('should require name when create default roles to project', async () => {
     await expect(async () => {
-        // @ts-ignore
+        // @ts-expect-error
         await accessService.createDefaultProjectRoles(editorUser);
     }).rejects.toThrow(new Error('ProjectId cannot be empty'));
 });

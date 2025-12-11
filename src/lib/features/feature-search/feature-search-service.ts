@@ -1,4 +1,3 @@
-import type { Logger } from '../../logger.js';
 import type {
     IFeatureSearchStore,
     IUnleashConfig,
@@ -12,13 +11,11 @@ import { parseSearchOperatorValue } from './search-utils.js';
 
 export class FeatureSearchService {
     private featureSearchStore: IFeatureSearchStore;
-    private logger: Logger;
     constructor(
         { featureSearchStore }: Pick<IUnleashStores, 'featureSearchStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        _config: Pick<IUnleashConfig, 'getLogger'>,
     ) {
         this.featureSearchStore = featureSearchStore;
-        this.logger = getLogger('services/feature-search-service.ts');
     }
 
     async search(params: IFeatureSearchParams) {

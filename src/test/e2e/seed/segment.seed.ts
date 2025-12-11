@@ -81,7 +81,7 @@ const seedConstraints = (spec: ISeedSegmentSpec): IConstraint[] => {
 };
 
 const seedSegments = (spec: ISeedSegmentSpec): UpsertSegmentSchema[] => {
-    return Array.from({ length: spec.segmentsPerFeature }).map((v, i) => {
+    return Array.from({ length: spec.segmentsPerFeature }).map((_v, i) => {
         return {
             name: `${seedSchema}_segment_${i}`,
             constraints: seedConstraints(spec),
@@ -92,7 +92,7 @@ const seedSegments = (spec: ISeedSegmentSpec): UpsertSegmentSchema[] => {
 const seedFeatures = (
     spec: ISeedSegmentSpec,
 ): Partial<IFeatureToggleClient>[] => {
-    return Array.from({ length: spec.featuresCount }).map((v, i) => {
+    return Array.from({ length: spec.featuresCount }).map((_v, i) => {
         return mockFeatureToggle({
             name: `${seedSchema}_feature_${i}`,
         });

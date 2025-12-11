@@ -109,8 +109,9 @@ export class PlaygroundService {
         // used for runtime control, do not remove
         const { payload } = this.flagResolver.getVariant('advancedPlayground');
         const limit =
-            payload?.value && Number.isInteger(Number.parseInt(payload?.value))
-                ? Number.parseInt(payload?.value)
+            payload?.value &&
+            Number.isInteger(Number.parseInt(payload?.value, 10))
+                ? Number.parseInt(payload?.value, 10)
                 : 15000;
 
         const segments = await this.segmentReadModel.getActive();

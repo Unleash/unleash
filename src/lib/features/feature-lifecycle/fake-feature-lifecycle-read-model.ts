@@ -21,7 +21,7 @@ export class FakeFeatureLifecycleReadModel
         return Promise.resolve([]);
     }
     findCurrentStage(
-        feature: string,
+        _feature: string,
     ): Promise<IFeatureLifecycleStage | undefined> {
         return Promise.resolve(undefined);
     }

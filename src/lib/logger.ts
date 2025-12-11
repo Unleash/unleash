@@ -27,7 +27,7 @@ export function getDefaultLogProvider(
             console: { type: 'console' },
         },
         categories: {
-            DEBUG: { appenders: ['console'], level: logLevel },
+            default: { appenders: ['console'], level: logLevel },
         },
     });
 

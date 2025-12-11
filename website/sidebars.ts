@@ -559,7 +559,7 @@ const sidebars: SidebarsConfig = {
         },
         {
             type: 'category',
-            label: 'Unleas Enterprise Edge',
+            label: 'Unleash Enterprise Edge',
             collapsed: true,
             link: {
                 type: 'doc',

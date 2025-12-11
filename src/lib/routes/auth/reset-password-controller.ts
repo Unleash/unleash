@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express';
 import Controller from '../controller.js';
 import type UserService from '../../services/user-service.js';
-import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import { NONE } from '../../types/permissions.js';
@@ -39,8 +38,6 @@ class ResetPasswordController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private logger: Logger;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -49,9 +46,6 @@ class ResetPasswordController extends Controller {
         }: Pick<IUnleashServices, 'userService' | 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger(
-            'lib/routes/auth/reset-password-controller.ts',
-        );
         this.openApiService = openApiService;
         this.userService = userService;
         this.route({

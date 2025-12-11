@@ -47,7 +47,7 @@ export const addonParameterSchema = {
         sensitive: {
             type: 'boolean',
             example: false,
-            description: `Indicates whether this parameter is **sensitive** or not. Unleash will not return sensitive parameters to API requests. It will instead use a number of asterisks to indicate that a value is set, e.g. "******". The number of asterisks does not correlate to the parameter\'s value.`,
+            description: `Indicates whether this parameter is **sensitive** or not. Unleash will not return sensitive parameters to API requests. It will instead use a number of asterisks to indicate that a value is set, e.g. "******". The number of asterisks does not correlate to the parameter's value.`,
         },
     },
     components: {},

@@ -280,7 +280,9 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
 
 const ScheduledFailed = ({
     schedule,
-}: { schedule: ChangeRequestScheduleFailed }) => {
+}: {
+    schedule: ChangeRequestScheduleFailed;
+}) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
@@ -305,7 +307,9 @@ const ScheduledFailed = ({
 };
 const ScheduledSuspended = ({
     schedule,
-}: { schedule: ChangeRequestScheduleSuspended }) => {
+}: {
+    schedule: ChangeRequestScheduleSuspended;
+}) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
@@ -334,7 +338,9 @@ const ScheduledSuspended = ({
 
 const ScheduledPending = ({
     schedule,
-}: { schedule: ChangeRequestSchedulePending }) => {
+}: {
+    schedule: ChangeRequestSchedulePending;
+}) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();

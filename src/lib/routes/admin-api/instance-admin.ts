@@ -9,7 +9,6 @@ import type {
     InstanceStatsService,
     InstanceStatsSigned,
 } from '../../features/instance-stats/instance-stats-service.js';
-import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     createCsvResponseSchema,
     createResponseSchema,
@@ -20,8 +19,6 @@ import { serializeDates } from '../../types/index.js';
 class InstanceAdminController extends Controller {
     private instanceStatsService: InstanceStatsService;
 
-    private openApiService: OpenApiService;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -31,7 +28,6 @@ class InstanceAdminController extends Controller {
     ) {
         super(config);
         const jsonCsvParser = new Parser();
-        this.openApiService = openApiService;
         this.instanceStatsService = instanceStatsService;
 
         this.route({

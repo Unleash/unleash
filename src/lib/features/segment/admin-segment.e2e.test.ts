@@ -296,7 +296,6 @@ test('should not delete segments used by strategies', async () => {
     );
     const [feature] = await fetchFeatures();
     const [strategy] = await fetchFeatureStrategies(feature.name);
-    //@ts-ignore
     await addSegmentsToStrategy([segment.id], strategy.id);
     const segments = await fetchSegments();
     expect(segments.length).toEqual(1);
@@ -325,7 +324,6 @@ test('should delete segments used by strategies in archived feature flags', asyn
     );
     const [feature] = await fetchFeatures();
     const [strategy] = await fetchFeatureStrategies(feature.name);
-    //@ts-ignore
     await addSegmentsToStrategy([segment.id], strategy.id);
     const segments = await fetchSegments();
     expect(segments.length).toEqual(1);
@@ -387,15 +385,12 @@ test('should list strategies by segment', async () => {
 
     await addSegmentsToStrategy(
         [segment1.id, segment2.id, segment3.id],
-        //@ts-ignore
         feature1Strategies[0].id,
     );
     await addSegmentsToStrategy(
         [segment2.id, segment3.id],
-        //@ts-ignore
         feature2Strategies[0].id,
     );
-    //@ts-ignore
     await addSegmentsToStrategy([segment3.id], feature3Strategies[0].id);
 
     const segmentStrategies1 = await fetchSegmentStrategies(segment1.id);
@@ -467,27 +462,21 @@ test('should list segments by strategy', async () => {
 
     await addSegmentsToStrategy(
         [segment1.id, segment2.id, segment3.id],
-        //@ts-ignore
         feature1Strategy.id,
     );
     await addSegmentsToStrategy(
         [segment2.id, segment3.id],
-        //@ts-ignore
         feature2Strategy.id,
     );
-    //@ts-ignore
     await addSegmentsToStrategy([segment3.id], feature3Strategy.id);
 
     const strategySegments1 = await fetchSegmentsByStrategy(
-        //@ts-ignore
         feature1Strategy.id,
     );
     const strategySegments2 = await fetchSegmentsByStrategy(
-        //@ts-ignore
         feature2Strategy.id,
     );
     const strategySegments3 = await fetchSegmentsByStrategy(
-        //@ts-ignore
         feature3Strategy.id,
     );
 

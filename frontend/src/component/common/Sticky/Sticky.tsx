@@ -51,6 +51,7 @@ export const Sticky = ({ children, ...props }: IStickyProps) => {
             setInitialTopOffset(
                 Number.parseInt(
                     getComputedStyle(ref.current).getPropertyValue('top'),
+                    10,
                 ),
             );
         }

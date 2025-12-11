@@ -8,7 +8,6 @@ import {
     SegmentUpdatedEvent,
     SKIP_CHANGE_REQUEST,
 } from '../../types/index.js';
-import type { Logger } from '../../logger.js';
 import NameExistsError from '../../error/name-exists-error.js';
 import type { ISegmentStore } from './segment-store-type.js';
 import type { ISegment } from '../../types/model.js';
@@ -30,8 +29,6 @@ import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 
 export class SegmentService implements ISegmentService {
-    private logger: Logger;
-
     private segmentStore: ISegmentStore;
 
     private featureStrategiesStore: IFeatureStrategiesStore;
@@ -69,7 +66,6 @@ export class SegmentService implements ISegmentService {
         this.changeRequestSegmentUsageReadModel =
             changeRequestSegmentUsageReadModel;
         this.privateProjectChecker = privateProjectChecker;
-        this.logger = config.getLogger('services/segment-service.ts');
         this.flagResolver = config.flagResolver;
         this.resourceLimitsService = resourceLimitsService;
         this.config = config;

@@ -114,6 +114,7 @@ export function updateWeight(variants: IFeatureVariant[], totalWeight: number) {
 
     const percentage = Number.parseInt(
         String(remainingPercentage / variableVariantCount),
+        10,
     );
 
     return variants.map((variant) => {

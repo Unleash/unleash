@@ -26,7 +26,7 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { DraftChangeRequestActions } from '../DraftChangeRequestActions/DraftChangeRequestActions.tsx';
 import type { AvailableReviewerSchema } from 'hooks/api/getters/useAvailableChangeRequestReviewers/useAvailableChangeRequestReviewers.ts';
 
-const SubmitChangeRequestButton: FC<{
+const _SubmitChangeRequestButton: FC<{
     onClick: () => void;
     count: number;
     disabled?: boolean;
@@ -91,7 +91,7 @@ export const EnvironmentChangeRequest: FC<{
                     reviewers.map((reviewer) => reviewer.id),
                 );
             }
-        } catch (e) {
+        } catch (_e) {
             setDisabled(false);
         }
     };

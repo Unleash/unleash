@@ -27,7 +27,7 @@ export class FakeDependentFeaturesReadModel
         return Promise.resolve(false);
     }
 
-    getOrphanParents(parentsAndChildren: string[]): Promise<string[]> {
+    getOrphanParents(_parentsAndChildren: string[]): Promise<string[]> {
         return Promise.resolve([]);
     }
 

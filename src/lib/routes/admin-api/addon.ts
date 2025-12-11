@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express';
 import Controller from '../controller.js';
 import type { IFlagResolver, IUnleashConfig } from '../../types/index.js';
-import type { Logger } from '../../logger.js';
 import type AddonService from '../../services/addon-service.js';
 
 import {
@@ -51,8 +50,6 @@ type AddonServices = Pick<
 const PATH = '/';
 
 class AddonController extends Controller {
-    private logger: Logger;
-
     private addonService: AddonService;
 
     private openApiService: OpenApiService;
@@ -70,7 +67,6 @@ class AddonController extends Controller {
         }: AddonServices,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/addon.ts');
         this.addonService = addonService;
         this.openApiService = openApiService;
         this.integrationEventsService = integrationEventsService;
@@ -203,7 +199,7 @@ Note: passing \`null\` as a value for the description property will set it to an
         });
     }
 
-    async getAddons(req: Request, res: Response<AddonsSchema>): Promise<void> {
+    async getAddons(_req: Request, res: Response<AddonsSchema>): Promise<void> {
         const addons = await this.addonService.getAddons();
         const providers = this.addonService.getProviderDefinitions();
 

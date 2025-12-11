@@ -32,7 +32,7 @@ import { BadDataError, NotFoundError } from '../error/index.js';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
 import type { IEvent } from '../events/index.js';
 
-const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
+const SUPPORTED_EVENTS = Object.values(events);
 
 const MASKED_VALUE = '*****';
 
@@ -59,7 +59,7 @@ export default class AddonService {
     fetchAddonConfigs: (() => Promise<IAddon[]>) &
         memoizee.Memoized<() => Promise<IAddon[]>>;
 
-    private eventHandlers: Map<string, (event: IEvent) => void>;
+    private eventHandlers: Map<string, (event: IEvent) => Promise<void>>;
 
     constructor(
         {
@@ -134,37 +134,39 @@ export default class AddonService {
         });
     }
 
-    handleEvent(eventName: string): (event: IEvent) => void {
+    handleEvent(eventName: string): (event: IEvent) => Promise<void> {
         const { addonProviders } = this;
-        return (event) => {
-            this.fetchAddonConfigs().then((addonInstances) => {
-                addonInstances
-                    .filter((addon) => addon.events.includes(eventName))
-                    .filter(
-                        (addon) =>
-                            !event.project ||
-                            !addon.projects ||
-                            addon.projects.length === 0 ||
-                            addon.projects[0] === WILDCARD_OPTION ||
-                            addon.projects.includes(event.project),
-                    )
-                    .filter(
-                        (addon) =>
-                            !event.environment ||
-                            !addon.environments ||
-                            addon.environments.length === 0 ||
-                            addon.environments[0] === WILDCARD_OPTION ||
-                            addon.environments.includes(event.environment),
-                    )
-                    .filter((addon) => addonProviders[addon.provider])
-                    .forEach((addon) =>
-                        addonProviders[addon.provider].handleEvent(
-                            event,
-                            addon.parameters,
-                            addon.id,
-                        ),
-                    );
-            });
+
+        return async (event) => {
+            this.logger.warn(`Configuring handler for ${event}`);
+            const addonInstances = await this.fetchAddonConfigs();
+            const promises = addonInstances
+                .filter((addon) => addon.events.includes(eventName))
+                .filter(
+                    (addon) =>
+                        !event.project ||
+                        !addon.projects ||
+                        addon.projects.length === 0 ||
+                        addon.projects[0] === WILDCARD_OPTION ||
+                        addon.projects.includes(event.project),
+                )
+                .filter(
+                    (addon) =>
+                        !event.environment ||
+                        !addon.environments ||
+                        addon.environments.length === 0 ||
+                        addon.environments[0] === WILDCARD_OPTION ||
+                        addon.environments.includes(event.environment),
+                )
+                .filter((addon) => addonProviders[addon.provider])
+                .map((addon) =>
+                    addonProviders[addon.provider].handleEvent(
+                        event,
+                        addon.parameters,
+                        addon.id,
+                    ),
+                );
+            await Promise.all(promises);
         };
     }
 
@@ -366,8 +368,8 @@ export default class AddonService {
         });
         this.eventHandlers.clear();
 
-        Object.values(this.addonProviders).forEach((addon) =>
-            addon.destroy?.(),
-        );
+        Object.values(this.addonProviders).forEach((addon) => {
+            addon.destroy?.();
+        });
     }
 }

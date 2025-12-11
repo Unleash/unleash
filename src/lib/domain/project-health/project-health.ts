@@ -19,7 +19,7 @@ const getPotentiallyStaleCount = (
     features: IPartialFeatures,
     featureTypes: IFeatureType[],
 ) => {
-    const today = new Date().valueOf();
+    const today = Date.now();
 
     return features.filter((feature) => {
         const diff = feature.createdAt

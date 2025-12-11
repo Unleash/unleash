@@ -22,7 +22,7 @@ async function getSetup() {
 
     const config = createTestConfig({
         preHook: (a) => {
-            a.use((req, res, next) => {
+            a.use((req, _res, next) => {
                 req.user = currentUser;
                 next();
             });
@@ -82,7 +82,7 @@ test('should allow user to change password', async () => {
         })
         .expect(200);
     const updated = await userStore.get(currentUser.id);
-    // @ts-ignore
+    // @ts-expect-error
     expect(updated.passwordHash).toBeTruthy();
 });
 

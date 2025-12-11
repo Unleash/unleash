@@ -17,8 +17,8 @@ beforeAll(async () => {
     db = await dbInit('client_metrics_service_serial', getLogger);
     stores = db.stores;
     config = createTestConfig({});
-    const bulkInterval = secondsToMilliseconds(0.5);
-    const announcementInterval = secondsToMilliseconds(2);
+    const _bulkInterval = secondsToMilliseconds(0.5);
+    const _announcementInterval = secondsToMilliseconds(2);
 
     clientInstanceService = new ClientInstanceService(
         stores,

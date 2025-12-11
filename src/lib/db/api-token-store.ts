@@ -90,13 +90,11 @@ export class ApiTokenStore implements IApiTokenStore {
 
     private db: Db;
 
-    private readonly flagResolver: IFlagResolver;
-
     constructor(
         db: Db,
         eventBus: EventEmitter,
         getLogger: LogProvider,
-        flagResolver: IFlagResolver,
+        _flagResolver: IFlagResolver,
     ) {
         this.db = db;
         this.logger = getLogger('api-tokens.js');
@@ -105,7 +103,6 @@ export class ApiTokenStore implements IApiTokenStore {
                 store: 'api-tokens',
                 action,
             });
-        this.flagResolver = flagResolver;
     }
 
     // helper function that we can move to utils

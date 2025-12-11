@@ -1,6 +1,5 @@
 import type { Response } from 'express';
 import Controller from '../controller.js';
-import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import type UserSplashService from '../../services/user-splash-service.js';
@@ -13,8 +12,6 @@ import { getStandardResponses } from '../../openapi/index.js';
 import type { SplashResponseSchema } from '../../openapi/spec/splash-response-schema.js';
 
 class UserSplashController extends Controller {
-    private logger: Logger;
-
     private userSplashService: UserSplashService;
 
     private openApiService: OpenApiService;
@@ -27,7 +24,6 @@ class UserSplashController extends Controller {
         }: Pick<IUnleashServices, 'userSplashService' | 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('splash-controller.ts');
         this.userSplashService = userSplashService;
         this.openApiService = openApiService;
 

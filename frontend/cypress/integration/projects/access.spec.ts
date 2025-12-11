@@ -8,7 +8,7 @@ import {
     PA_ROLE_ID,
     PA_USERS_GROUPS_ID,
     PA_USERS_GROUPS_TITLE_ID,
-    //@ts-ignore
+    //@ts-expect-error
 } from '../../../src/utils/testIds.js';
 
 describe('project-access', () => {
@@ -50,12 +50,12 @@ describe('project-access', () => {
     });
 
     after(() => {
-        userIds.forEach((id) =>
-            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`),
-        );
-        groupIds.forEach((id) =>
-            cy.request('DELETE', `${baseUrl}/api/admin/groups/${id}`),
-        );
+        userIds.forEach((id) => {
+            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`);
+        });
+        groupIds.forEach((id) => {
+            cy.request('DELETE', `${baseUrl}/api/admin/groups/${id}`);
+        });
 
         cy.request(
             'DELETE',

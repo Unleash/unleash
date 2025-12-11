@@ -1,5 +1,4 @@
 import { sha256 } from 'js-sha256';
-import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type {
     IClientInstanceStore,
@@ -85,8 +84,6 @@ export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
 };
 
 export class InstanceStatsService {
-    private logger: Logger;
-
     private strategyStore: IStrategyStore;
 
     private userStore: IUserStore;
@@ -184,10 +181,7 @@ export class InstanceStatsService {
             | 'releasePlanTemplateStore'
             | 'releasePlanStore'
         >,
-        {
-            getLogger,
-            flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        { flagResolver }: Pick<IUnleashConfig, 'flagResolver'>,
         versionService: VersionService,
         getActiveUsers: GetActiveUsers,
         getProductionChanges: GetProductionChanges,
@@ -208,7 +202,6 @@ export class InstanceStatsService {
         this.settingStore = settingStore;
         this.eventStore = eventStore;
         this.clientInstanceStore = clientInstanceStore;
-        this.logger = getLogger('services/stats-service.js');
         this.getActiveUsers = () =>
             this.memorize('getActiveUsers', getActiveUsers.bind(this));
         this.getLicencedUsers = () =>

@@ -114,49 +114,49 @@ test('should add user if known token', async () => {
     expect(req.user).toBe(apiUser);
 });
 
-test.each([ApiTokenType.CLIENT, ApiTokenType.BACKEND])(
-    'should not add user if not /api/client with token type %s',
-    async (type) => {
-        expect.assertions(5);
+test.each([
+    ApiTokenType.CLIENT,
+    ApiTokenType.BACKEND,
+])('should not add user if not /api/client with token type %s', async (type) => {
+    expect.assertions(5);
 
-        const apiUser = new ApiUser({
-            tokenName: 'default',
-            permissions: [CLIENT],
-            project: ALL,
-            environment: ALL,
-            type,
-            secret: 'a',
-        });
+    const apiUser = new ApiUser({
+        tokenName: 'default',
+        permissions: [CLIENT],
+        project: ALL,
+        environment: ALL,
+        type,
+        secret: 'a',
+    });
 
-        const apiTokenService = {
-            getUserForToken: vi.fn().mockReturnValue(apiUser),
-        } as unknown as ApiTokenService;
+    const apiTokenService = {
+        getUserForToken: vi.fn().mockReturnValue(apiUser),
+    } as unknown as ApiTokenService;
 
-        const func = apiTokenMiddleware(config, { apiTokenService });
-        const cb = vi.fn();
+    const func = apiTokenMiddleware(config, { apiTokenService });
+    const cb = vi.fn();
 
-        const res = {
-            status: (code: unknown) => ({
-                send: (data: unknown) => {
-                    expect(code).toEqual(403);
-                    expect(data).toEqual({ message: TOKEN_TYPE_ERROR_MESSAGE });
-                },
-            }),
-        };
+    const res = {
+        status: (code: unknown) => ({
+            send: (data: unknown) => {
+                expect(code).toEqual(403);
+                expect(data).toEqual({ message: TOKEN_TYPE_ERROR_MESSAGE });
+            },
+        }),
+    };
 
-        const req = {
-            header: vi.fn().mockReturnValue('some-known-token'),
-            user: undefined,
-            path: '/api/admin',
-        };
+    const req = {
+        header: vi.fn().mockReturnValue('some-known-token'),
+        user: undefined,
+        path: '/api/admin',
+    };
 
-        await func(req, res, cb);
+    await func(req, res, cb);
 
-        expect(cb).not.toHaveBeenCalled();
-        expect(req.header).toHaveBeenCalled();
-        expect(req.user).toBeUndefined();
-    },
-);
+    expect(cb).not.toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
+    expect(req.user).toBeUndefined();
+});
 
 test('should not add user if disabled', async () => {
     const apiUser = new ApiUser({

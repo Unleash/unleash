@@ -61,11 +61,11 @@ export default class NewRelicAddon extends Addon {
             event,
         };
 
-        let text: string;
+        let _text: string;
         if (typeof bodyTemplate === 'string' && bodyTemplate.length > 1) {
-            text = Mustache.render(bodyTemplate, context);
+            _text = Mustache.render(bodyTemplate, context);
         } else {
-            text = `%%% \n ${this.msgFormatter.format(event).text} \n %%% `;
+            _text = `%%% \n ${this.msgFormatter.format(event).text} \n %%% `;
         }
 
         const body: INewRelicRequestBody = {
@@ -83,7 +83,7 @@ export default class NewRelicAddon extends Addon {
         if (typeof customHeaders === 'string' && customHeaders.length > 1) {
             try {
                 extraHeaders = JSON.parse(customHeaders);
-            } catch (e) {
+            } catch (_e) {
                 state = 'successWithErrors';
                 const badHeadersMessage =
                     'Could not parse the JSON in the customHeaders parameter.';

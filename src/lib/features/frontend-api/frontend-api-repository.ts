@@ -8,7 +8,6 @@ import type {
 import type { IApiUser } from '../../types/api-user.js';
 import type { IUnleashConfig } from '../../types/index.js';
 import { UnleashEvents } from 'unleash-client';
-import type { Logger } from '../../logger.js';
 import type { GlobalFrontendApiCache } from './global-frontend-api-cache.js';
 
 type Config = Pick<IUnleashConfig, 'getLogger'>;
@@ -17,10 +16,6 @@ export class FrontendApiRepository
     extends EventEmitter
     implements RepositoryInterface
 {
-    private readonly config: Config;
-
-    private readonly logger: Logger;
-
     private readonly token: IApiUser;
 
     private globalFrontendApiCache: GlobalFrontendApiCache;
@@ -28,13 +23,11 @@ export class FrontendApiRepository
     private running: boolean;
 
     constructor(
-        config: Config,
+        _config: Config,
         globalFrontendApiCache: GlobalFrontendApiCache,
         token: IApiUser,
     ) {
         super();
-        this.config = config;
-        this.logger = config.getLogger('frontend-api-repository.ts');
         this.token = token;
         this.globalFrontendApiCache = globalFrontendApiCache;
     }
@@ -57,10 +50,12 @@ export class FrontendApiRepository
     }
 
     async start(): Promise<void> {
-        this.running = true;
+        if (!this.running) {
+            this.running = true;
 
-        this.emit(UnleashEvents.Ready);
-        this.emit(UnleashEvents.Changed);
+            this.emit(UnleashEvents.Ready);
+            this.emit(UnleashEvents.Changed);
+        }
     }
 
     stop(): void {

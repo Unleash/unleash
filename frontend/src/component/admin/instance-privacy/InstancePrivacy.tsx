@@ -102,7 +102,7 @@ export const InstancePrivacy = () => {
         ? featureCollectionActivenessManagementTexts.enabled
         : featureCollectionActivenessManagementTexts.disabled;
 
-    let dependsOnFeatureCollection: undefined | string = undefined;
+    let dependsOnFeatureCollection: undefined | string;
     if (!settings?.versionInfoCollectionEnabled)
         dependsOnFeatureCollection = settings?.featureInfoCollectionEnabled
             ? 'Note: Feature usage collection is enabled, but for it to be active you must also enable version info collection'

@@ -100,7 +100,9 @@ export const SignalEndpointsTable = () => {
                 accessor: 'name',
                 Cell: ({
                     row: { original: signalEndpoint },
-                }: { row: { original: ISignalEndpoint } }) => (
+                }: {
+                    row: { original: ISignalEndpoint };
+                }) => (
                     <LinkCell
                         title={signalEndpoint.name}
                         onClick={() => {
@@ -154,7 +156,9 @@ export const SignalEndpointsTable = () => {
                 accessor: 'enabled',
                 Cell: ({
                     row: { original: signalEndpoint },
-                }: { row: { original: ISignalEndpoint } }) => (
+                }: {
+                    row: { original: ISignalEndpoint };
+                }) => (
                     <ToggleCell
                         checked={signalEndpoint.enabled}
                         setChecked={(enabled) =>
@@ -172,7 +176,9 @@ export const SignalEndpointsTable = () => {
                 align: 'center',
                 Cell: ({
                     row: { original: signalEndpoint },
-                }: { row: { original: ISignalEndpoint } }) => (
+                }: {
+                    row: { original: ISignalEndpoint };
+                }) => (
                     <SignalEndpointsActionsCell
                         signalEndpointId={signalEndpoint.id}
                         onCopyToClipboard={() => {

@@ -142,7 +142,10 @@ export const AdminMenuNavigation = ({ onClick }: { onClick: () => void }) => {
 export const AdminNavigationItems = ({
     onClick,
     staticExpanded,
-}: { onClick: () => void; staticExpanded?: true | undefined }) => {
+}: {
+    onClick: () => void;
+    staticExpanded?: true | undefined;
+}) => {
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const { isBilling } = useInstanceStatus();
     const location = useLocation();

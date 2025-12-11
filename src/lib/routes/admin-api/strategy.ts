@@ -1,7 +1,6 @@
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import type StrategyService from '../../services/strategy-service.js';
-import type { Logger } from '../../logger.js';
 import Controller from '../controller.js';
 import { extractUsername } from '../../util/extract-user.js';
 import {
@@ -36,8 +35,6 @@ import type { UpdateStrategySchema } from '../../openapi/spec/update-strategy-sc
 const version = 1;
 
 class StrategyController extends Controller {
-    private logger: Logger;
-
     private strategyService: StrategyService;
 
     private openApiService: OpenApiService;
@@ -50,7 +47,6 @@ class StrategyController extends Controller {
         }: Pick<IUnleashServices, 'strategyService' | 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/strategy.js');
         this.strategyService = strategyService;
         this.openApiService = openApiService;
 
@@ -200,7 +196,7 @@ class StrategyController extends Controller {
     }
 
     async getAllStrategies(
-        req: Request,
+        _req: Request,
         res: Response<StrategiesSchema>,
     ): Promise<void> {
         const strategies = await this.strategyService.getStrategies();
@@ -231,7 +227,7 @@ class StrategyController extends Controller {
 
     async removeStrategy(req: IAuthRequest, res: Response): Promise<void> {
         const strategyName = req.params.name;
-        const userName = extractUsername(req);
+        const _userName = extractUsername(req);
 
         await this.strategyService.removeStrategy(strategyName, req.audit);
         res.status(200).end();
@@ -241,7 +237,7 @@ class StrategyController extends Controller {
         req: IAuthRequest<unknown, unknown, CreateStrategySchema>,
         res: Response<StrategySchema>,
     ): Promise<void> {
-        const userName = extractUsername(req);
+        const _userName = extractUsername(req);
 
         const strategy = await this.strategyService.createStrategy(
             req.body,
@@ -260,7 +256,7 @@ class StrategyController extends Controller {
         req: IAuthRequest<{ name: string }, UpdateStrategySchema>,
         res: Response<void>,
     ): Promise<void> {
-        const userName = extractUsername(req);
+        const _userName = extractUsername(req);
 
         await this.strategyService.updateStrategy(
             { ...req.body, name: req.params.name },
@@ -273,7 +269,7 @@ class StrategyController extends Controller {
         req: IAuthRequest,
         res: Response<void>,
     ): Promise<void> {
-        const userName = extractUsername(req);
+        const _userName = extractUsername(req);
         const { strategyName } = req.params;
 
         await this.strategyService.deprecateStrategy(strategyName, req.audit);
@@ -284,7 +280,7 @@ class StrategyController extends Controller {
         req: IAuthRequest,
         res: Response<void>,
     ): Promise<void> {
-        const userName = extractUsername(req);
+        const _userName = extractUsername(req);
         const { strategyName } = req.params;
 
         await this.strategyService.reactivateStrategy(strategyName, req.audit);

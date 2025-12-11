@@ -58,7 +58,7 @@ const StyledElementDescription = styled(Typography)(({ theme }) => ({
 
 const isRecent = (value: ResultValue) => {
     const threshold = 600000; // ten minutes
-    return value[0] * 1000 > new Date().getTime() - threshold;
+    return value[0] * 1000 > Date.now() - threshold;
 };
 
 type ResultValue = [number, string];

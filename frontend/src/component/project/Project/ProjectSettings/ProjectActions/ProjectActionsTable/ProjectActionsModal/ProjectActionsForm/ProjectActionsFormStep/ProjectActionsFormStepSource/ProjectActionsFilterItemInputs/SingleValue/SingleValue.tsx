@@ -10,7 +10,7 @@ interface ISingleValueProps {
     setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = makeStyles()((_theme) => ({
     singleValueContainer: { maxWidth: '300px', marginTop: '-1rem' },
     singleValueInput: {
         width: '100%',

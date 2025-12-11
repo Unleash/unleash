@@ -61,18 +61,19 @@ describe('validate incoming feature naming data', () => {
         }
     });
 
-    test.each([' ', '\\t', '\\n'])(
-        'patterns with illegal characters (%s) are invalid',
-        (string) => {
-            const pattern = `-${string}[0-9]+`;
+    test.each([
+        ' ',
+        '\\t',
+        '\\n',
+    ])('patterns with illegal characters (%s) are invalid', (string) => {
+        const pattern = `-${string}[0-9]+`;
 
-            expect(
-                checkFeatureNamingData({
-                    pattern,
-                }),
-            ).toMatchObject({ state: 'invalid' });
-        },
-    );
+        expect(
+            checkFeatureNamingData({
+                pattern,
+            }),
+        ).toMatchObject({ state: 'invalid' });
+    });
 
     test('feature naming data with a non-empty example but an empty pattern is invalid', () => {
         expect(
@@ -134,21 +135,22 @@ describe('validate feature flag names against a pattern', () => {
         expect(validResult).toMatchObject({ state: 'valid' });
     });
 
-    test.each([null, undefined, ''])(
-        'should not validate names if the pattern is %s',
-        (pattern) => {
-            const featureNaming = {
-                pattern,
-            };
-            const features = ['a', 'b'];
-            const result = checkFeatureFlagNamesAgainstPattern(
-                features,
-                featureNaming.pattern,
-            );
+    test.each([
+        null,
+        undefined,
+        '',
+    ])('should not validate names if the pattern is %s', (pattern) => {
+        const featureNaming = {
+            pattern,
+        };
+        const features = ['a', 'b'];
+        const result = checkFeatureFlagNamesAgainstPattern(
+            features,
+            featureNaming.pattern,
+        );
 
-            expect(result).toMatchObject({ state: 'valid' });
-        },
-    );
+        expect(result).toMatchObject({ state: 'valid' });
+    });
 
     test('should validate names as if the pattern is surrounded by ^ and $.', async () => {
         const pattern = '-[0-9]+';

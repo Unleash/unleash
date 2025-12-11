@@ -38,7 +38,7 @@ test('Actual config values takes precedence over environment variables', () => {
 test('should validate getLogger', () => {
     const getLogger = () => {};
     expect(() => {
-        // @ts-ignore
+        // @ts-expect-error
         createConfig({ getLogger });
     }).toThrow();
 });
@@ -90,7 +90,7 @@ test('can convert both upper and lowercase string to enum', () => {
 test('Can set auth type programmatically with a string', () => {
     const config = createConfig({
         authentication: {
-            // @ts-ignore
+            // @ts-expect-error
             type: 'demo',
         },
     });

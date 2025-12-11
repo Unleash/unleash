@@ -3,11 +3,11 @@ import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-mode
 export class FakeUserSubscriptionsReadModel
     implements IUserSubscriptionsReadModel
 {
-    async getSubscribedUsers(subscription: string) {
+    async getSubscribedUsers(_subscription: string) {
         return [];
     }
 
-    async getUnsubscribedUsers(subscription: string) {
+    async getUnsubscribedUsers(_subscription: string) {
         return [];
     }
 

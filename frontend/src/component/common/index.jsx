@@ -117,7 +117,7 @@ IconLink.propTypes = {
 };
 
 export const MenuItemWithIcon = React.forwardRef(
-    ({ icon: IconComponent, label, disabled, ...menuItemProps }, ref) => (
+    ({ icon: IconComponent, label, disabled, ...menuItemProps }, _ref) => (
         <MenuItem
             disabled={disabled}
             style={{ display: 'flex', alignItems: 'center' }}
@@ -152,13 +152,11 @@ export function calc(value, total, decimal) {
         return 0;
     }
 
-    badNumbers.forEach((number) => {
-        if ([value, total, decimal].indexOf(number) > -1) {
-            return number;
-        }
-    });
-
-    return ((value / total) * 100).toFixed(decimal);
+    const badNumber = badNumbers.find(
+        (number) => [value, total, decimal].indexOf(number) > -1,
+    );
+    if (badNumber !== undefined)
+        return ((value / total) * 100).toFixed(decimal);
 }
 
 export const selectStyles = {

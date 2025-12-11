@@ -1,7 +1,7 @@
 import Ajv, { type Schema } from 'ajv';
 import { schemas } from './index.js';
 
-// @ts-ignore: Mismatch between expected export and actual Ajv when running in ESM
+// @ts-expect-error: Mismatch between expected export and actual Ajv when running in ESM
 const ajv = new Ajv();
 
 type SchemaNames = keyof typeof schemas;

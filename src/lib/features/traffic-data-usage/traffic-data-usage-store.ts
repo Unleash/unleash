@@ -1,6 +1,6 @@
 import { endOfDay, endOfMonth, startOfDay, startOfMonth } from 'date-fns';
 import type { Db } from '../../db/db.js';
-import type { Logger, LogProvider } from '../../logger.js';
+import type { LogProvider } from '../../logger.js';
 import type {
     IStatMonthlyTrafficUsage,
     IStatTrafficUsage,
@@ -25,18 +25,15 @@ const mapRow = (row: any): IStatTrafficUsage => {
         day: row.day,
         trafficGroup: row.traffic_group,
         statusCodeSeries: row.status_code_series,
-        count: Number.parseInt(row.count),
+        count: Number.parseInt(row.count, 10),
     };
 };
 
 export class TrafficDataUsageStore implements ITrafficDataUsageStore {
     private db: Db;
 
-    private logger: Logger;
-
-    constructor(db: Db, getLogger: LogProvider) {
+    constructor(db: Db, _getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('traffic-data-usage-store.ts');
     }
     async get(key: IStatTrafficUsageKey): Promise<IStatTrafficUsage> {
         const row = await this.db
@@ -128,7 +125,7 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
                 trafficGroup: traffic_group,
                 statusCodeSeries: status_code_series,
                 month,
-                count: Number.parseInt(count),
+                count: Number.parseInt(count, 10),
             }),
         );
     }

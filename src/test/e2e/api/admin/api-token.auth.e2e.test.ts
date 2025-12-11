@@ -27,7 +27,7 @@ let app: IUnleashTest;
 let adminToken: IApiToken;
 let frontendToken: IApiToken;
 let clientToken: IApiToken;
-let backendToken: IApiToken;
+let _backendToken: IApiToken;
 
 const setupUser = async (
     email: string,
@@ -76,7 +76,7 @@ beforeAll(async () => {
         secret: '*:environment.client_secret',
         type: ApiTokenType.CLIENT,
     });
-    backendToken = await stores.apiTokenStore.insert({
+    _backendToken = await stores.apiTokenStore.insert({
         environment: '',
         projects: [],
 
@@ -134,30 +134,30 @@ test('viewer users should not be allowed to fetch tokens', async () => {
         .expect(403);
 });
 
-test.each(['client', 'backend'])(
-    'A role with only CREATE_PROJECT_API_TOKEN can create project %s token',
-    async (type) => {
-        await setupUser(
-            `powerpuffgirls_viewer_${type}@example.com`,
-            RoleName.VIEWER,
-            [{ name: CREATE_PROJECT_API_TOKEN }],
-        );
+test.each([
+    'client',
+    'backend',
+])('A role with only CREATE_PROJECT_API_TOKEN can create project %s token', async (type) => {
+    await setupUser(
+        `powerpuffgirls_viewer_${type}@example.com`,
+        RoleName.VIEWER,
+        [{ name: CREATE_PROJECT_API_TOKEN }],
+    );
 
-        await app.login({ email: `powerpuffgirls_viewer_${type}@example.com` });
-        const { body, status } = await app.request
-            .post('/api/admin/projects/default/api-tokens')
-            .send({
-                tokenName: `${type}-token-maker`,
-                type,
-                projects: ['default'],
-            })
-            .set('Content-Type', 'application/json');
+    await app.login({ email: `powerpuffgirls_viewer_${type}@example.com` });
+    const { body, status } = await app.request
+        .post('/api/admin/projects/default/api-tokens')
+        .send({
+            tokenName: `${type}-token-maker`,
+            type,
+            projects: ['default'],
+        })
+        .set('Content-Type', 'application/json');
 
-        expect(status).toBe(201);
-        // clean up
-        await stores.apiTokenStore.delete(body.secret);
-    },
-);
+    expect(status).toBe(201);
+    // clean up
+    await stores.apiTokenStore.delete(body.secret);
+});
 
 describe('Fine grained API token permissions', () => {
     describe('A role with access to CREATE_CLIENT_API_TOKEN', () => {

@@ -269,7 +269,7 @@ export const createServices = (
     });
 
     const versionService = new VersionService(stores, config);
-    const healthService = new HealthService(stores, config);
+    const healthService = new HealthService(stores);
     const userFeedbackService = new UserFeedbackService(stores, config);
     const changeRequestAccessReadModel = db
         ? createChangeRequestAccessReadModel(db, config)

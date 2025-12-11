@@ -38,10 +38,8 @@ export default class FakeStrategiesStore implements IStrategyStore {
             params = update.parameters;
         }
         this.strategies.push({
-            // @ts-ignore: Always overwritten editable
             editable: true,
             deprecated: false,
-            // @ts-ignore: Always overwritten description
             description: '',
             displayName: update.name,
             ...update,

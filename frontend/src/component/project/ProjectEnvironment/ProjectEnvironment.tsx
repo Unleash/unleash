@@ -124,7 +124,7 @@ const ProjectEnvironmentList = () => {
                     text: 'Environment set as visible',
                     type: 'success',
                 });
-            } catch (error) {
+            } catch (_error) {
                 setToastApiError(errorMsg(true));
             }
         }
@@ -142,7 +142,7 @@ const ProjectEnvironmentList = () => {
                     text: 'Environment hidden',
                     type: 'success',
                 });
-            } catch (e) {
+            } catch (_e) {
                 setToastApiError(errorMsg(false));
             } finally {
                 setHideDialog(false);

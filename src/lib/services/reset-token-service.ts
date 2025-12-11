@@ -38,7 +38,7 @@ export default class ResetTokenService {
             await this.isValid(token.token);
             await this.store.useToken(token);
             return true;
-        } catch (e) {
+        } catch (_e) {
             return false;
         }
     }
@@ -56,7 +56,7 @@ export default class ResetTokenService {
             }, {});
 
             return links;
-        } catch (e) {
+        } catch (_e) {
             return {};
         }
     }
@@ -72,7 +72,7 @@ export default class ResetTokenService {
             if (!t.usedAt) {
                 return t;
             }
-        } catch (e) {
+        } catch (_e) {
             throw new InvalidTokenError();
         }
         throw new UsedTokenError(t.usedAt);

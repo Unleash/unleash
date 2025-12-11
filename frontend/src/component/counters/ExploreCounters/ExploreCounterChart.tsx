@@ -44,8 +44,8 @@ ChartJS.register(
 
 export const createChartOptions = (
     theme: Theme,
-    metrics: IMetricsCount[],
-    hoursBack: number,
+    _metrics: IMetricsCount[],
+    _hoursBack: number,
     locationSettings: ILocationSettings,
 ): ChartOptions<'line'> => {
     return {
@@ -123,12 +123,12 @@ class ItemPicker<T> {
 
 const toValues = (
     metrics: IMetricsCount[],
-    selectedLabels: string[],
-    selectedValues: string[],
+    _selectedLabels: string[],
+    _selectedValues: string[],
 ) => {
     return metrics.reduce(
         (acc, metric) => {
-            for (const [key, value] of Object.entries(metric.labels)) {
+            for (const [_key, _value] of Object.entries(metric.labels)) {
                 const labelKey = buildMetricKey(metric);
                 if (!acc[labelKey]) {
                     acc[labelKey] = [];
@@ -149,7 +149,7 @@ export const createChartData = (
     metrics: IMetricsCount[],
     selectedLabels: string[],
     selectedLabelValues: string[],
-    locationSettings: ILocationSettings,
+    _locationSettings: ILocationSettings,
 ): ChartDatasetType[] => {
     const colorPicker = new ItemPicker([
         theme.palette.success,

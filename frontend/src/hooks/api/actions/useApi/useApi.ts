@@ -248,8 +248,8 @@ const useAPI = ({
     const makeLightRequest = useCallback(
         async (
             apiCaller: () => Promise<Response>,
-            requestId: string,
-            loadingOn: boolean = true,
+            _requestId: string,
+            _loadingOn: boolean = true,
         ): Promise<Response> => {
             try {
                 const res = await apiCaller();
@@ -259,7 +259,7 @@ const useAPI = ({
                 }
 
                 return res;
-            } catch (e) {
+            } catch (_e) {
                 throw new Error('Could not make request | makeLightRequest');
             }
         },

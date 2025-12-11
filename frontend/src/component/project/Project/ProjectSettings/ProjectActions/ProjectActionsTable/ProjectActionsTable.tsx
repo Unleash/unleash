@@ -93,7 +93,9 @@ export const ProjectActionsTable = ({
                 minWidth: 60,
                 Cell: ({
                     row: { original: action },
-                }: { row: { original: IActionSet } }) => (
+                }: {
+                    row: { original: IActionSet };
+                }) => (
                     <LinkCell
                         title={action.name}
                         subtitle={action.description}
@@ -109,7 +111,9 @@ export const ProjectActionsTable = ({
                 Header: 'Source',
                 Cell: ({
                     row: { original: action },
-                }: { row: { original: IActionSet } }) => (
+                }: {
+                    row: { original: IActionSet };
+                }) => (
                     <ProjectActionsSourceCell
                         action={action}
                         signalEndpoints={signalEndpoints}
@@ -164,7 +168,9 @@ export const ProjectActionsTable = ({
                 accessor: 'enabled',
                 Cell: ({
                     row: { original: action },
-                }: { row: { original: IActionSet } }) => (
+                }: {
+                    row: { original: IActionSet };
+                }) => (
                     <ToggleCell
                         checked={action.enabled}
                         setChecked={(enabled) =>
@@ -182,7 +188,9 @@ export const ProjectActionsTable = ({
                 align: 'center',
                 Cell: ({
                     row: { original: action },
-                }: { row: { original: IActionSet } }) => (
+                }: {
+                    row: { original: IActionSet };
+                }) => (
                     <ProjectActionsTableActionsCell
                         actionId={action.id}
                         onOpenEvents={() => {

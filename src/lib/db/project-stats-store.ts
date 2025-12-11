@@ -1,4 +1,4 @@
-import type { Logger, LogProvider } from '../logger.js';
+import type { LogProvider } from '../logger.js';
 
 import metricsHelper from '../util/metrics-helper.js';
 import { DB_TIME } from '../metric-events.js';
@@ -39,13 +39,10 @@ interface IProjectStatsRow {
 class ProjectStatsStore implements IProjectStatsStore {
     private db: Db;
 
-    private logger: Logger;
-
     private timer: Function;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, _getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('project-stats-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'project_stats',

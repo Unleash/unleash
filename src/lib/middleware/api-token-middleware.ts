@@ -44,7 +44,7 @@ export const apiAccessMiddleware = (
     logger.debug('Enabling api-token middleware');
 
     if (!authentication.enableApiToken) {
-        return (req, res, next) => next();
+        return (_req, _res, next) => next();
     }
 
     return async (req: IAuthRequest | IApiRequest, res, next) => {

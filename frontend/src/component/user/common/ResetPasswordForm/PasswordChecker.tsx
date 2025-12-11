@@ -140,7 +140,7 @@ const PasswordChecker = ({
                 setRepeatingCharError(false);
                 callback(true);
             }
-        } catch (e) {
+        } catch (_e) {
             // ResetPasswordForm handles errors related to submitting the form.
             console.log('An exception was caught and handled');
         }

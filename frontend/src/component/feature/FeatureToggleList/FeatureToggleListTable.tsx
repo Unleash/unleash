@@ -105,7 +105,7 @@ export const FeatureToggleListTable: FC = () => {
                     await favorite(feature.project!, feature.name);
                 }
                 refetchFeatures();
-            } catch (error) {
+            } catch (_error) {
                 setToastApiError(
                     'Something went wrong, could not update favorite',
                 );

@@ -264,7 +264,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                 mode={getEnvironmentMode(environment)}
                                 key={environment.name}
                                 sx={{ cursor: 'pointer' }}
-                                onClick={(e) => {
+                                onClick={(_e) => {
                                     trackClick();
                                     navigate(
                                         `/applications/${applicationName}/instances?environment=${environment.name}`,

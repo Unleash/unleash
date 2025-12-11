@@ -40,7 +40,6 @@ import {
 
 import { anonymiseKeys, extractUserIdFromUser } from '../../util/index.js';
 import { BadDataError } from '../../error/index.js';
-import type { Logger } from '../../logger.js';
 
 type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
     {},
@@ -49,8 +48,6 @@ type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
 >;
 
 export class SegmentsController extends Controller {
-    private logger: Logger;
-
     private segmentService: ISegmentService;
 
     private accessService: AccessService;
@@ -73,7 +70,6 @@ export class SegmentsController extends Controller {
         super(config);
         this.flagResolver = config.flagResolver;
         this.config = config;
-        this.logger = config.getLogger('/admin-api/segments.ts');
         this.segmentService = segmentService;
         this.accessService = accessService;
         this.openApiService = openApiService;
@@ -493,7 +489,7 @@ export class SegmentsController extends Controller {
     }
 
     async getSegments(
-        req: IAuthRequest,
+        _req: IAuthRequest,
         res: Response<SegmentsSchema>,
     ): Promise<void> {
         const segments = await this.segmentService.getAll();

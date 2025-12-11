@@ -163,7 +163,7 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                                     <Typography variant='body2'>
                                         Your root role
                                     </Typography>
-                                    <RoleBadge roleId={profile?.rootRole.id!}>
+                                    <RoleBadge roleId={profile?.rootRole.id}>
                                         {profile?.rootRole.name}
                                     </RoleBadge>
                                 </>

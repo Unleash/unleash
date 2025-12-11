@@ -10,10 +10,7 @@ import type FeatureTagService from '../../../services/feature-tag-service.js';
 import type { IAuthRequest } from '../../../routes/unleash-types.js';
 import type { TagSchema } from '../../../openapi/spec/tag-schema.js';
 import type { TagsSchema } from '../../../openapi/spec/tags-schema.js';
-import type {
-    IUnleashServices,
-    OpenApiService,
-} from '../../../services/index.js';
+import type { IUnleashServices } from '../../../services/index.js';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
@@ -31,8 +28,6 @@ const version = 1;
 class FeatureController extends Controller {
     private tagService: FeatureTagService;
 
-    private openApiService: OpenApiService;
-
     private service: FeatureToggleService;
 
     constructor(
@@ -48,7 +43,6 @@ class FeatureController extends Controller {
     ) {
         super(config);
         this.tagService = featureTagService;
-        this.openApiService = openApiService;
         this.service = featureToggleService;
 
         this.route({

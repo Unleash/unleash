@@ -76,7 +76,7 @@ export default async function getApp(
 
     app.use(cookieParser());
 
-    app.use((req, res, next) => {
+    app.use((req, _res, next) => {
         req.url = req.url.replace(/\/+/g, '/');
         next();
     });
@@ -201,7 +201,7 @@ export default async function getApp(
         app.use(catchAllErrorHandler(config.getLogger));
     }
 
-    app.get(`${baseUriPath}`, (req, res) => {
+    app.get(`${baseUriPath}`, (_req, res) => {
         res.set('Content-Type', 'text/html');
         res.send(indexHTML);
     });

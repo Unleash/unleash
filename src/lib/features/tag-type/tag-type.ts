@@ -10,7 +10,6 @@ import {
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import type TagTypeService from './tag-type-service.js';
-import type { Logger } from '../../logger.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
@@ -34,8 +33,6 @@ import type { WithTransactional } from '../../db/transaction.js';
 const version = 1;
 
 class TagTypeController extends Controller {
-    private logger: Logger;
-
     private tagTypeService: WithTransactional<TagTypeService>;
 
     private openApiService: OpenApiService;
@@ -51,7 +48,6 @@ class TagTypeController extends Controller {
         >,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/tag-type.js');
         this.tagTypeService = transactionalTagTypeService;
         this.openApiService = openApiService;
         this.route({
@@ -172,7 +168,7 @@ class TagTypeController extends Controller {
     }
 
     async getTagTypes(
-        req: Request,
+        _req: Request,
         res: Response<TagTypesSchema>,
     ): Promise<void> {
         const tagTypes = await this.tagTypeService.getAll();

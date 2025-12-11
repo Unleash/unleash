@@ -7,7 +7,7 @@ function isFunction(value: any): boolean {
     return typeof value === 'function';
 }
 
-function serializer(key: string, value: any): any {
+function serializer(_key: string, value: any): any {
     if (isFunction(value)) {
         console.warn('Unable to store function.');
         return undefined;
@@ -20,7 +20,7 @@ function serializer(key: string, value: any): any {
     return value;
 }
 
-function deserializer(key: string, value: any): any {
+function deserializer(_key: string, value: any): any {
     if (value && value.dataType === 'Map') {
         return new Map(value.value);
     } else if (value && value.dataType === 'Set') {
@@ -44,7 +44,7 @@ export function getLocalStorageItem<T>(key: string): T | undefined {
         }
 
         const item: Expirable<T> | undefined = parseStoredItem(itemStr);
-        if (item?.expiry && new Date().getTime() > item.expiry) {
+        if (item?.expiry && Date.now() > item.expiry) {
             window.localStorage.removeItem(key);
             return undefined;
         }
@@ -65,10 +65,7 @@ export function setLocalStorageItem<T>(
     try {
         const item: Expirable<T> = {
             value,
-            expiry:
-                timeToLive !== undefined
-                    ? new Date().getTime() + timeToLive
-                    : null,
+            expiry: timeToLive !== undefined ? Date.now() + timeToLive : null,
         };
         window.localStorage.setItem(key, JSON.stringify(item, customReplacer));
     } catch (err: unknown) {
@@ -85,10 +82,7 @@ export function setSessionStorageItem<T>(
     try {
         const item: Expirable<T> = {
             value,
-            expiry:
-                timeToLive !== undefined
-                    ? new Date().getTime() + timeToLive
-                    : null,
+            expiry: timeToLive !== undefined ? Date.now() + timeToLive : null,
         };
         window.sessionStorage.setItem(
             key,
@@ -108,7 +102,7 @@ export function getSessionStorageItem<T>(key: string): T | undefined {
         }
 
         const item: Expirable<T> | undefined = parseStoredItem(itemStr);
-        if (item?.expiry && new Date().getTime() > item.expiry) {
+        if (item?.expiry && Date.now() > item.expiry) {
             window.sessionStorage.removeItem(key);
             return undefined;
         }

@@ -35,7 +35,7 @@ type DBTestOptions = {
 };
 
 export default async function init(
-    databaseSchema = 'test',
+    _databaseSchema = 'test',
     getLogger: LogProvider = noLoggerProvider,
     configOverride: Partial<IUnleashOptions & DBTestOptions> = {},
 ): Promise<ITestDb> {

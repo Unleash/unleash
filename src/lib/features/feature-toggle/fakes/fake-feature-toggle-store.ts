@@ -73,7 +73,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return features;
     }
 
-    disableAllEnvironmentsForFeatures(names: string[]): Promise<void> {
+    disableAllEnvironmentsForFeatures(_names: string[]): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
@@ -171,15 +171,15 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getFeatureToggleList(
-        query?: IFeatureToggleQuery,
-        userId?: number,
+        _query?: IFeatureToggleQuery,
+        _userId?: number,
         archived = false,
     ): Promise<FeatureToggle[]> {
         return this.features.filter((feature) => feature.archived !== archived);
     }
 
     async getPlaygroundFeatures(
-        query?: IFeatureToggleQuery,
+        _query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
         return this.features.filter(
             (feature) => feature,
@@ -244,7 +244,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
 
     async getVariantsForEnv(
         featureName: string,
-        environment_name: string,
+        _environment_name: string,
     ): Promise<IVariant[]> {
         const feature = await this.get(featureName);
         // there's no way to filter by environment in the fake store
@@ -252,7 +252,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     }
 
     async saveVariants(
-        project: string,
+        _project: string,
         featureName: string,
         newVariants: IVariant[],
     ): Promise<FeatureToggle> {
@@ -263,7 +263,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
 
     async saveVariantsOnEnv(
         featureName: string,
-        environment: string,
+        _environment: string,
         newVariants: IVariant[],
     ): Promise<IVariant[]> {
         await this.saveVariants('default', featureName, newVariants);
@@ -297,13 +297,11 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
             const featureDate = new Date(
                 feature[queryModifiers.dateAccessor],
             ).getTime();
-            if (
+            return !!(
                 queryModifiers.range &&
                 featureDate >= new Date(queryModifiers.range[0]).getTime() &&
                 featureDate <= new Date(queryModifiers.range[1]).getTime()
-            ) {
-                return true;
-            }
+            );
         }).length;
     }
 
@@ -325,7 +323,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getFeatureTypeCounts(
-        params: IFeatureProjectUserParams,
+        _params: IFeatureProjectUserParams,
     ): Promise<IFeatureTypeCount[]> {
         const typeCounts = this.features.reduce(
             (acc, feature) => {
@@ -346,7 +344,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return Object.values(typeCounts);
     }
 
-    setCreatedByUserId(batchSize: number): Promise<number | undefined> {
+    setCreatedByUserId(_batchSize: number): Promise<number | undefined> {
         throw new Error('Method not implemented.');
     }
 }

@@ -83,7 +83,9 @@ test('Trying to do operations on a non-existing feature yields 404', async () =>
         },
     ];
     await app.request
-        .put('/api/admin/projects/default/features/${featureName}/variants')
+        .put(
+            '/api/admin/projects/default/features/non-existing-feature/variants',
+        )
         .send(variants)
         .expect(404);
 
@@ -97,7 +99,9 @@ test('Trying to do operations on a non-existing feature yields 404', async () =>
     });
     const patch = jsonpatch.generate(observer);
     await app.request
-        .patch('/api/admin/projects/default/features/${featureName}/variants')
+        .patch(
+            '/api/admin/projects/default/features/non-existing-feature/variants',
+        )
         .send(patch)
         .expect(404);
 });

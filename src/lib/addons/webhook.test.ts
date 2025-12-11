@@ -36,7 +36,7 @@ const setup = () => {
             registerEvent: registerEventMock,
         } as unknown as IntegrationEventsService,
         flagResolver: {
-            isEnabled: (expName: IFlagKey) => false,
+            isEnabled: (_expName: IFlagKey) => false,
         } as IFlagResolver,
         eventBus: new EventEmitter(),
     };
@@ -71,7 +71,7 @@ describe('Webhook integration', () => {
         nock('http://test.webhook.com')
             .post('/')
             .matchHeader('Content-Type', 'application/json')
-            .reply(200, (uri, body) => {
+            .reply(200, (_uri, body) => {
                 callCount++;
                 callBody = body;
                 return { ok: true, status: 200 };
@@ -141,7 +141,7 @@ describe('Webhook integration', () => {
         nock('http://test.webhook.com')
             .post('/plain')
             .matchHeader('Content-Type', 'text/plain')
-            .reply(200, (uri, body) => {
+            .reply(200, (_uri, body) => {
                 callBody = body;
                 return {
                     status: 200,

@@ -135,7 +135,7 @@ export const PaginatedApplicationList = () => {
         }),
     );
 
-    const { offset, limit, query, sortBy, sortOrder, ...filterState } =
+    const { offset, limit, query, sortBy, sortOrder, ..._filterState } =
         tableState;
 
     const setSearchValue = (query = '') => {

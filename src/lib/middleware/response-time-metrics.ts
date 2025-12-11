@@ -51,7 +51,7 @@ export function responseTimeMetrics(
             const statusCode = res.statusCode;
 
             // — derive pathname —
-            let pathname: string | undefined = undefined;
+            let pathname: string | undefined;
             if (res.locals.route) {
                 pathname = res.locals.route;
             } else if (req.route) {

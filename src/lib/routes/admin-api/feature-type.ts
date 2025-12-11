@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express';
 import type { IUnleashServices } from '../../services/index.js';
 import type FeatureTypeService from '../../services/feature-type-service.js';
-import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { OpenApiService } from '../../services/openapi-service.js';
 import { ADMIN, NONE } from '../../types/permissions.js';
@@ -28,8 +27,6 @@ export class FeatureTypeController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private logger: Logger;
-
     private flagResolver: IFlagResolver;
 
     constructor(
@@ -43,7 +40,6 @@ export class FeatureTypeController extends Controller {
         this.featureTypeService = featureTypeService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
-        this.logger = config.getLogger('/admin-api/feature-type.js');
 
         this.route({
             method: 'get',
@@ -91,7 +87,7 @@ When a feature flag type's expected lifetime is changed, this will also cause an
     }
 
     async getAllFeatureTypes(
-        req: Request,
+        _req: Request,
         res: Response<FeatureTypesSchema>,
     ): Promise<void> {
         this.openApiService.respondWithValidation(

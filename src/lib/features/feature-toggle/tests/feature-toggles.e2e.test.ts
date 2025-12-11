@@ -245,7 +245,7 @@ test('should not allow to change project with dependencies', async () => {
         app.services.projectService.changeProject(
             'default',
             child,
-            // @ts-ignore
+            // @ts-expect-error
             user,
             'default',
             TEST_AUDIT_USER,
@@ -2182,7 +2182,7 @@ test('Should not allow changing project to target project without the same enabl
         app.services.projectService.changeProject(
             targetProject,
             featureName,
-            //@ts-ignore
+            //@ts-expect-error
             user,
             'default',
             TEST_AUDIT_USER,
@@ -2263,7 +2263,7 @@ test('Should allow changing project to target project with the same enabled envi
         app.services.projectService.changeProject(
             targetProject,
             featureName,
-            //@ts-ignore
+            //@ts-expect-error
             user,
             'default',
             TEST_AUDIT_USER,

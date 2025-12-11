@@ -46,7 +46,7 @@ describe('User subscription read model', () => {
             name: 'User Two',
         });
         // never seen
-        const user3 = await userStore.insert({
+        const _user3 = await userStore.insert({
             email: 'user3@example.com',
             name: 'User Three',
         });

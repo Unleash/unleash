@@ -27,7 +27,7 @@ const Event = styled('li')(({ theme }) => ({
     },
 }));
 
-const TitleContainer = styled('div')(({ theme }) => ({
+const _TitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     gap: theme.spacing(2),

@@ -644,7 +644,7 @@ export class AccessService {
     }
 
     async removeDefaultProjectRoles(
-        owner: IUser,
+        _owner: IUser,
         projectId: string,
     ): Promise<void> {
         this.logger.info(`Removing project roles for ${projectId}`);

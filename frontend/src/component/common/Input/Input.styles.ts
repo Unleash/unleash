@@ -1,6 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles()((theme) => ({
+export const useStyles = makeStyles()((_theme) => ({
     helperText: {
         position: 'absolute',
         bottom: '-1rem',

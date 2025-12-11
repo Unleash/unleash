@@ -19,7 +19,7 @@ async function getSetup(preRouterHook) {
         preRouterHook: (_app) => {
             preRouterHook(_app);
             ossAuth(_app, getLogger, base);
-            _app.get(`${base}/api/protectedResource`, (req, res) => {
+            _app.get(`${base}/api/protectedResource`, (_req, res) => {
                 res.status(200).json({ message: 'OK' }).end();
             });
         },
@@ -46,7 +46,7 @@ test('should return 200 when user exists', async () => {
     expect.assertions(0);
     const user = new User({ id: 1, email: 'some@mail.com' });
     const { base, request } = await getSetup((app) =>
-        app.use((req, res, next) => {
+        app.use((req, _res, next) => {
             req.user = user;
             next();
         }),

@@ -3,7 +3,6 @@ import type { Logger } from '../../logger.js';
 import NotFoundError from '../../error/notfound-error.js';
 import type {
     IEnvironment,
-    IFlagResolver,
     IProject,
     IProjectApplication,
     IProjectApplications,
@@ -70,20 +69,14 @@ class ProjectStore implements IProjectStore {
 
     private logger: Logger;
 
-    private flagResolver: IFlagResolver;
+    private isOss: boolean;
 
     private timer: Function;
-
-    private isOss: boolean;
 
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        {
-            getLogger,
-            flagResolver,
-            isOss,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'isOss'>,
+        { getLogger, isOss }: Pick<IUnleashConfig, 'getLogger' | 'isOss'>,
     ) {
         this.db = db;
         this.logger = getLogger('project-store.ts');
@@ -92,7 +85,6 @@ class ProjectStore implements IProjectStore {
                 store: 'project',
                 action,
             });
-        this.flagResolver = flagResolver;
         this.isOss = isOss;
     }
 
@@ -108,6 +100,7 @@ class ProjectStore implements IProjectStore {
     destroy(): void {}
 
     async isFeatureLimitReached(id: string): Promise<boolean> {
+        const stop = this.timer('isFeatureLimitReached');
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1
                            FROM project_settings
@@ -118,21 +111,24 @@ class ProjectStore implements IProjectStore {
                            HAVING project_settings.feature_limit <= COUNT(features.project)) AS present`,
             [id],
         );
+        stop();
         const { present } = result.rows[0];
         return present;
     }
 
     async getProjectLinkTemplates(id: string): Promise<IProjectLinkTemplate[]> {
+        const stop = this.timer('getProjectLinkTemplates');
         const result = await this.db
             .select('link_templates')
             .from(SETTINGS_TABLE)
             .where({ project: id })
             .first();
-
+        stop();
         return result?.link_templates || [];
     }
 
     async getAll(query: IProjectQuery = {}): Promise<IProject[]> {
+        const stop = this.timer('getAll');
         let projects = this.db
             .select(COLUMNS)
             .from(TABLE)
@@ -145,14 +141,15 @@ class ProjectStore implements IProjectStore {
         }
 
         const rows = await projects;
-
+        stop();
         return rows.map(this.mapRow.bind(this));
     }
 
     async get(id: string): Promise<IProject> {
+        const stop = this.timer('getProject');
         const extraColumns: string[] = ['archived_at'];
 
-        return this.db
+        const project = await this.db
             .first([...COLUMNS, ...SETTINGS_COLUMNS, ...extraColumns])
             .from(TABLE)
             .leftJoin(
@@ -162,43 +159,54 @@ class ProjectStore implements IProjectStore {
             )
             .where({ id })
             .then(this.mapRow.bind(this));
+        stop();
+        return project;
     }
 
     async exists(id: string): Promise<boolean> {
+        const stop = this.timer('exists');
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
             [id],
         );
         const { present } = result.rows[0];
+        stop();
         return present;
     }
 
     async hasProject(id: string): Promise<boolean> {
+        const stop = this.timer('hasProject');
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ?) AS present`,
             [id],
         );
         const { present } = result.rows[0];
+        stop();
         return present;
     }
 
     async hasActiveProject(id: string): Promise<boolean> {
+        const stop = this.timer('hasActiveProject');
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE id = ? and archived_at IS NULL) AS present`,
             [id],
         );
         const { present } = result.rows[0];
+        stop();
         return present;
     }
 
     async updateHealth(healthUpdate: IProjectHealthUpdate): Promise<void> {
+        const stop = this.timer('updateHealth');
         await this.db(TABLE).where({ id: healthUpdate.id }).update({
             health: healthUpdate.health,
             updated_at: new Date(),
         });
+        stop();
     }
 
     async create(project: IProjectInsert): Promise<IProject> {
+        const stop = this.timer('create');
         const row = await this.db(TABLE)
             .insert({ ...this.fieldToRow(project), created_at: new Date() })
             .returning('*');
@@ -210,19 +218,23 @@ class ProjectStore implements IProjectStore {
                 project_mode: project.mode,
             })
             .returning('*');
+        stop();
         return this.mapRow({ ...row[0], ...settingsRow[0] });
     }
 
     private async hasProjectSettings(projectId: string): Promise<boolean> {
+        const stop = this.timer('hasProjectSettings');
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${SETTINGS_TABLE} WHERE project = ?) AS present`,
             [projectId],
         );
         const { present } = result.rows[0];
+        stop();
         return present;
     }
 
     async update(data: IProjectUpdate): Promise<void> {
+        const stop = this.timer('update');
         try {
             await this.db(TABLE)
                 .where({ id: data.id })
@@ -250,12 +262,15 @@ class ProjectStore implements IProjectStore {
             }
         } catch (err) {
             this.logger.error('Could not update project, error: ', err);
+        } finally {
+            stop();
         }
     }
 
     async updateProjectEnterpriseSettings(
         data: IProjectEnterpriseSettingsUpdate,
     ): Promise<void> {
+        const stop = this.timer('updateProjectEnterpriseSettings');
         try {
             const link_templates = JSON.stringify(
                 data.linkTemplates ? data.linkTemplates : [],
@@ -287,6 +302,8 @@ class ProjectStore implements IProjectStore {
                 'Could not update project settings, error: ',
                 err,
             );
+        } finally {
+            stop();
         }
     }
 
@@ -294,11 +311,13 @@ class ProjectStore implements IProjectStore {
         projects: IProjectInsert[],
         environments?: IEnvironment[],
     ): Promise<IProject[]> {
+        const stop = this.timer('importProjects');
         const rows = await this.db(TABLE)
             .insert(projects.map(this.fieldToRow))
             .returning(COLUMNS)
             .onConflict('id')
             .ignore();
+        stop();
         if (environments && rows.length > 0) {
             environments.forEach((env) => {
                 projects.forEach(async (project) => {
@@ -322,24 +341,33 @@ class ProjectStore implements IProjectStore {
     }
 
     async deleteAll(): Promise<void> {
+        const stop = this.timer('deleteAll');
         await this.db(TABLE).del();
+        stop();
     }
 
     async delete(id: string): Promise<void> {
+        const stop = this.timer('deleteAll');
         try {
             await this.db(TABLE).where({ id }).del();
         } catch (err) {
             this.logger.error('Could not delete project, error: ', err);
+        } finally {
+            stop();
         }
     }
 
     async archive(id: string): Promise<void> {
+        const stop = this.timer('archive');
         const now = new Date();
         await this.db(TABLE).where({ id }).update({ archived_at: now });
+        stop();
     }
 
     async revive(id: string): Promise<void> {
+        const stop = this.timer('revive');
         await this.db(TABLE).where({ id }).update({ archived_at: null });
+        stop();
     }
 
     async getProjectLinksForEnvironments(

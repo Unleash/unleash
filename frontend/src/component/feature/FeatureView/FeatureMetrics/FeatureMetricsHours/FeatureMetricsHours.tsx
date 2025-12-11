@@ -22,7 +22,7 @@ export const FeatureMetricsHours = ({
     const { trackEvent } = usePlausibleTracker();
 
     const onChange: IGeneralSelectProps['onChange'] = (key) => {
-        setHoursBack(Number.parseInt(key));
+        setHoursBack(Number.parseInt(key, 10));
         trackEvent('feature-metrics', {
             props: {
                 eventType: 'change-period',

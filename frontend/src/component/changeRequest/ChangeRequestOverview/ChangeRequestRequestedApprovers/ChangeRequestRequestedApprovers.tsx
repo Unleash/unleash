@@ -363,6 +363,8 @@ export const ChangeRequestRequestedApprovers: FC<{
                         return <ChangeRequestRejector key={key} {...props} />;
                     case 'pending':
                         return <ChangeRequestPending key={key} {...props} />;
+                    default:
+                        return null;
                 }
             })}
         </Paper>

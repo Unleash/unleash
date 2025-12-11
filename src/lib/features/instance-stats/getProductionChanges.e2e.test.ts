@@ -35,7 +35,7 @@ const mockRawEventDaysAgo = (
     };
 };
 
-const noEnvironmentEvent = (days: number) => {
+const noEnvironmentEvent = (_days: number) => {
     return {
         type: 'FEATURE_UPDATED',
         created_by: 'testrunner',

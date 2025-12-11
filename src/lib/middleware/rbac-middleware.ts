@@ -43,7 +43,7 @@ const rbacMiddleware = (
     const logger = config.getLogger('/middleware/rbac-middleware.ts');
     logger.debug('Enabling RBAC middleware');
 
-    return (req, res, next) => {
+    return (req, _res, next) => {
         req.checkRbac = async (permissions: string | string[]) => {
             const permissionsArray = Array.isArray(permissions)
                 ? permissions

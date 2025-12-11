@@ -279,7 +279,7 @@ export default class EnvironmentService {
         projectId: string,
         auditUser: IAuditUser,
     ): Promise<void> {
-        const projectEnvs =
+        const _projectEnvs =
             await this.projectStore.getEnvironmentsForProject(projectId);
 
         await this.forceRemoveEnvironmentFromProject(environment, projectId);

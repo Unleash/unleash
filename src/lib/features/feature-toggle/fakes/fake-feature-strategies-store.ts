@@ -140,7 +140,7 @@ export default class FakeFeatureStrategiesStore
     async getFeatureToggleForEnvironment(
         featureName: string,
         // eslint-disable-next-line
-        environment: string,
+        _environment: string,
     ): Promise<FeatureToggleWithEnvironment> {
         const toggle = this.featureToggles.find((f) => f.name === featureName);
         if (toggle) {
@@ -153,7 +153,7 @@ export default class FakeFeatureStrategiesStore
 
     async getFeatureToggleWithEnvs(
         featureName: string,
-        userId?: number,
+        _userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {
         const toggle = this.featureToggles.find(
@@ -278,9 +278,9 @@ export default class FakeFeatureStrategiesStore
 
     async deleteConfigurationsForProjectAndEnvironment(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: String,
+        _projectId: String,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: String,
+        _environment: String,
     ): Promise<void> {
         return Promise.resolve();
     }
@@ -310,8 +310,8 @@ export default class FakeFeatureStrategiesStore
     }
 
     async setEnvironmentEnabledStatus(
-        environment: string,
-        featureName: string,
+        _environment: string,
+        _featureName: string,
         enabled: boolean,
     ): Promise<boolean> {
         return Promise.resolve(enabled);
@@ -323,7 +323,7 @@ export default class FakeFeatureStrategiesStore
 
     getFeatureOverview(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        params: IFeatureProjectUserParams,
+        _params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]> {
         return Promise.resolve([]);
     }

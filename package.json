@@ -132,7 +132,7 @@
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "12.1.0",
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "^2.3.8",
     "@cyclonedx/yarn-plugin-cyclonedx": "^3.2.1",
     "@faker-js/faker": "^10.1.0",
     "@fast-check/vitest": "^0.2.4",

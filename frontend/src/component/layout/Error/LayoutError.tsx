@@ -17,8 +17,7 @@ const ZendeskButton = () => {
     return <Button onClick={openZendeskSupport}>Open a ticket</Button>;
 };
 
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-export const Error: VFC<IErrorProps> = ({ error }) => {
+export const LayoutError: VFC<IErrorProps> = ({ error }) => {
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const { isOss } = useUiConfig();

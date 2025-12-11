@@ -292,7 +292,7 @@ export class EventStore implements IEventStore {
 
             const rows = await query;
             return rows.map(this.rowToEvent);
-        } catch (e) {
+        } catch (_e) {
             return [];
         } finally {
             stopTimer();
@@ -323,8 +323,8 @@ export class EventStore implements IEventStore {
             });
 
             const queryResult = await query.first();
-            return Number.parseInt(queryResult.count || 0);
-        } catch (e) {
+            return Number.parseInt(queryResult.count || 0, 10);
+        } catch (_e) {
             return 0;
         } finally {
             stopTimer();
@@ -398,7 +398,7 @@ export class EventStore implements IEventStore {
             }
             const rows = await qB;
             return rows.map(this.rowToEvent);
-        } catch (err) {
+        } catch (_err) {
             return [];
         } finally {
             stopTimer();
@@ -426,7 +426,7 @@ export class EventStore implements IEventStore {
                     ? { ...this.rowToEvent(row), ip: row.ip }
                     : this.rowToEvent(row),
             );
-        } catch (err) {
+        } catch (_err) {
             return [];
         } finally {
             stopTimer();
@@ -581,7 +581,9 @@ export class EventStore implements IEventStore {
     async publishUnannouncedEvents(): Promise<void> {
         const events = await this.setUnannouncedToAnnounced();
 
-        events.forEach((e) => this.eventEmitter.emit(e.type, e));
+        events.forEach((e) => {
+            this.eventEmitter.emit(e.type, e);
+        });
     }
 
     async setCreatedByUserId(batchSize: number): Promise<number | undefined> {

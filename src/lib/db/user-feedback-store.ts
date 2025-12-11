@@ -36,7 +36,7 @@ export default class UserFeedbackStore implements IUserFeedbackStore {
 
     private logger: Logger;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, _eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('user-feedback-store.ts');
     }

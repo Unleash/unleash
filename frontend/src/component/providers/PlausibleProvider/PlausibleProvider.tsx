@@ -24,7 +24,7 @@ export const PlausibleProvider: FC<{ children?: React.ReactNode }> = ({
                     ) as HTMLMetaElement
                 )?.content || '{}';
             return JSON.parse(decodeURI(uiFlagsStr));
-        } catch (e) {
+        } catch (_e) {
             return {};
         }
     };

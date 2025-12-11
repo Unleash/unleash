@@ -23,7 +23,7 @@ export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
             return () => {
                 clearTimeout(timeout);
             };
-        } catch (error: unknown) {
+        } catch (_error: unknown) {
             setToastData({
                 type: 'error',
                 text: 'Could not copy feature name',

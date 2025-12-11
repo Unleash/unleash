@@ -412,7 +412,7 @@ export const MilestoneCard = ({
                 <MilestoneCardDragHandle dragItemRef={dragItemRef} />
                 <StyledAccordion
                     expanded={expanded}
-                    onChange={(e, change) => setExpanded(change)}
+                    onChange={(_e, change) => setExpanded(change)}
                 >
                     <StyledAccordionSummary
                         expandIcon={

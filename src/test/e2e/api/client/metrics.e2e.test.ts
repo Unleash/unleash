@@ -128,8 +128,8 @@ test('should emit response time metrics data in the correct path', async () => {
         ...metricsExample,
         bucket: { ...metricsExample.bucket, stop: null },
     };
-
-    let timeInfo = undefined;
+    // biome-ignore lint/suspicious/noImplicitAnyLet: data is unknown here
+    let timeInfo;
     app.config.eventBus.on(REQUEST_TIME, (data) => {
         timeInfo = data;
     });

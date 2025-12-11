@@ -243,7 +243,7 @@ describe('RevisionCache', () => {
             },
         };
         deltaCache.addEvents([updatedFeatureEvent]);
-        // @ts-ignore
+        // @ts-expect-error
         expect(deltaCache.events[1]).toStrictEqual(initialFeatureEvent);
     });
 });

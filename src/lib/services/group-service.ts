@@ -15,7 +15,6 @@ import {
     type IUnleashStores,
 } from '../types/index.js';
 import type { IGroupStore } from '../types/stores/group-store.js';
-import type { Logger } from '../logger.js';
 import BadDataError from '../error/bad-data-error.js';
 import { GROUP_CREATED, type IBaseEvent } from '../events/index.js';
 import {
@@ -30,6 +29,7 @@ import type EventService from '../features/events/event-service.js';
 import { SSO_SYNC_USER } from '../db/group-store.js';
 import type { IGroupWithProjectRoles } from '../types/stores/access-store.js';
 import { NotFoundError } from '../error/index.js';
+import type { Logger } from '../logger.js';
 
 const setsAreEqual = (firstSet, secondSet) =>
     firstSet.size === secondSet.size &&
@@ -56,6 +56,7 @@ export class GroupService {
     }
 
     async getAll(): Promise<IGroupModel[]> {
+        this.logger.debug('Getting all groups');
         const groups = await this.groupStore.getAll();
         const allGroupUsers = await this.groupStore.getAllUsersByGroups(
             groups.map((g) => g.id),
@@ -274,8 +275,8 @@ export class GroupService {
     async syncExternalGroups(
         userId: number,
         externalGroups: string[],
-        createdBy?: string, // deprecated
-        createdByUserId?: number, // deprecated
+        _createdBy?: string, // deprecated
+        _createdByUserId?: number, // deprecated
     ): Promise<void> {
         if (Array.isArray(externalGroups)) {
             const newGroups = await this.groupStore.getNewGroupsForExternalUser(

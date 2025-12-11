@@ -12,7 +12,7 @@ import {
 } from '../../openapi/util/standard-responses.js';
 import { createRequestSchema } from '../../openapi/index.js';
 
-const version = 1;
+const _version = 1;
 
 export class UiObservabilityController extends Controller {
     private logger: Logger;

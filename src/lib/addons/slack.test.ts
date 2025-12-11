@@ -29,7 +29,7 @@ const ARGS: IAddonConfig = {
     integrationEventsService: {
         registerEvent: registerEventMock,
     } as unknown as IntegrationEventsService,
-    flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
+    flagResolver: { isEnabled: (_expName: IFlagKey) => false } as IFlagResolver,
     eventBus: {
         emit: vi.fn(),
     } as any,

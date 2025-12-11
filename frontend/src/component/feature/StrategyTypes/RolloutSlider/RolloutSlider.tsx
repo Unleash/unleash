@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { ROLLOUT_SLIDER_ID } from 'utils/testIds';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { useState, useEffect } from 'react';
+import { useNumericStringInput } from 'hooks/useNumericStringInput';
 
 const StyledSlider = withStyles(Slider, (theme) => ({
     root: {
@@ -117,34 +117,20 @@ const RolloutSlider = ({
     onChange,
     disabled = false,
 }: IRolloutSliderProps) => {
-    const [inputValue, setInputValue] = useState(value.toString());
-
-    useEffect(() => {
-        setInputValue(value.toString());
-    }, [value]);
-
-    const valuetext = (value: number) => `${value}%`;
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-    };
-
-    const handleInputBlur = () => {
-        const numValue = Number.parseInt(inputValue, 10);
-        if (!Number.isNaN(numValue) && numValue >= 0 && numValue <= 100) {
+    // Bounds validation stays in component - hook only handles parsing
+    const handleValueChange = (numValue: number) => {
+        if (numValue >= 0 && numValue <= 100) {
             const event = new Event('input', { bubbles: true });
             onChange(event, numValue);
-        } else {
-            setInputValue(value.toString());
         }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            handleInputBlur();
-        }
-    };
+    const { inputValue, handleInputChange, handleInputBlur, handleKeyDown } =
+        useNumericStringInput(value, handleValueChange, {
+            parseMode: 'integer',
+        });
+
+    const valuetext = (value: number) => `${value}%`;
 
     return (
         <SliderWrapper>

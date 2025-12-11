@@ -5,6 +5,7 @@ import type { FormEvent, ReactNode } from 'react';
 import { useEffect, useMemo, useState, type FC } from 'react';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useNumericStringInput } from 'hooks/useNumericStringInput';
 import { SafeguardChangeRequestDialog } from './SafeguardChangeRequestDialog.tsx';
 import { MiniMetricsChartWithTooltip } from './MiniMetricsChartWithTooltip.tsx';
 import {
@@ -361,6 +362,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
         handleThresholdChange,
         handleTimeRangeChange,
         resetToOriginalValues,
+        enterEditMode,
     } = formState;
 
     const handleCancel = () => {
@@ -396,6 +398,16 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     const miniChartMetricDisplayName = metricOptions.find(
         (m) => m.name === metricName,
     )?.displayName;
+
+    const {
+        inputValue: thresholdInputValue,
+        handleInputChange: handleThresholdInputChange,
+        handleInputBlur: handleThresholdInputBlur,
+        handleKeyDown: handleThresholdKeyDown,
+        handleFocus: handleThresholdFocus,
+    } = useNumericStringInput(threshold, handleThresholdChange, {
+        onEditStart: enterEditMode,
+    });
 
     return (
         <StyledFormContainer onSubmit={onSubmit} mode={mode}>
@@ -508,11 +520,11 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                     inputProps={{
                                         step: 0.1,
                                     }}
-                                    value={threshold}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        handleThresholdChange(Number(value));
-                                    }}
+                                    value={thresholdInputValue}
+                                    onChange={handleThresholdInputChange}
+                                    onFocus={handleThresholdFocus}
+                                    onBlur={handleThresholdInputBlur}
+                                    onKeyDown={handleThresholdKeyDown}
                                     placeholder='Value'
                                     variant='outlined'
                                     size='small'

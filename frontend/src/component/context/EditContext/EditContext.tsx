@@ -5,7 +5,7 @@ import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useContext from 'hooks/api/getters/useContext/useContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
-import { useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -13,14 +13,20 @@ import { ContextForm } from '../ContextForm/ContextForm.tsx';
 import { useContextForm } from '../hooks/useContextForm.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
-export const EditContext = () => {
+type EditContextProps = {
+    modal?: boolean;
+};
+
+export const EditContext: FC<EditContextProps> = ({ modal }) => {
     useEffect(() => {
         scrollToTop();
     }, []);
 
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
+    const projectId = useOptionalPathParam('projectId');
     const name = useRequiredPathParam('name');
     const { context, refetch } = useContext(name);
     const { updateContext, loading } = useContextsApi();
@@ -38,12 +44,13 @@ export const EditContext = () => {
         clearErrors,
         setErrors,
         errors,
-    } = useContextForm(
-        context?.name,
-        context?.description,
-        context?.legalValues,
-        context?.stickiness,
-    );
+    } = useContextForm({
+        initialContextName: context?.name,
+        initialContextDesc: context?.description,
+        initialLegalValues: context?.legalValues,
+        initialStickiness: context?.stickiness,
+        initialProject: projectId,
+    });
 
     const formatApiCode = () => {
         return `curl --location --request PUT '${
@@ -57,11 +64,14 @@ export const EditContext = () => {
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         const payload = getContextPayload();
+        const navigationTarget = payload.project
+            ? `/projects/${payload.project}/settings/context-fields`
+            : '/context';
 
         try {
             await updateContext(payload);
             refetch();
-            navigate('/context');
+            navigate(navigationTarget);
             setToastData({
                 text: 'Context information updated',
                 type: 'success',
@@ -77,6 +87,7 @@ export const EditContext = () => {
 
     return (
         <FormTemplate
+            modal={modal}
             loading={loading}
             title='Edit context'
             description='Context fields are a basic building block used in Unleash to control roll-out.

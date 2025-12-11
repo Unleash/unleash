@@ -49,7 +49,8 @@ const ContextList: FC = () => {
             projectId && projectContextFieldsEnabled
                 ? // @ts-expect-error project doesn't exist yet; todo: fix with flag projectContextFields
                   context.filter((c) => c.project === projectId)
-                : context;
+                : // @ts-expect-error project doesn't exist yet; todo: fix with flag projectContextFields
+                  context.filter((c) => !c.project);
 
         return filteredContextFields
             .map(

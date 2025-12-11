@@ -8,6 +8,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
 interface ICreateContextProps {
     onSubmit: () => void;
@@ -22,6 +23,7 @@ export const CreateUnleashContext = ({
 }: ICreateContextProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
+    const projectId = useOptionalPathParam('projectId');
     const {
         contextName,
         contextDesc,
@@ -36,7 +38,7 @@ export const CreateUnleashContext = ({
         clearErrors,
         setErrors,
         errors,
-    } = useContextForm();
+    } = useContextForm({ initialProject: projectId });
     const { createContext, loading } = useContextsApi();
     const { refetchUnleashContext } = useUnleashContext();
 

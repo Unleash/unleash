@@ -1,25 +1,26 @@
-import type { VFC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import type { FC } from 'react';
+import { useDynamicContextActionParams } from './useDynamicContextActionParams.ts';
 
 type IAddContextButtonProps = {};
 
-export const AddContextButton: VFC<IAddContextButtonProps> = () => {
+export const AddContextButton: FC<IAddContextButtonProps> = () => {
     const smallScreen = useMediaQuery('(max-width:700px)');
     const navigate = useNavigate();
+    const { permissions, locations } = useDynamicContextActionParams();
 
     return (
         <ConditionallyRender
             condition={smallScreen}
             show={
                 <PermissionIconButton
-                    permission={CREATE_CONTEXT_FIELD}
-                    onClick={() => navigate('/context/create')}
+                    permission={permissions.create}
+                    onClick={() => navigate(locations.create)}
                     size='large'
                     tooltipProps={{ title: 'Add context type' }}
                 >
@@ -28,8 +29,8 @@ export const AddContextButton: VFC<IAddContextButtonProps> = () => {
             }
             elseShow={
                 <PermissionButton
-                    onClick={() => navigate('/context/create')}
-                    permission={CREATE_CONTEXT_FIELD}
+                    onClick={() => navigate(locations.create)}
+                    permission={permissions.create}
                     color='primary'
                     variant='contained'
                 >

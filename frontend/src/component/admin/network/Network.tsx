@@ -9,9 +9,6 @@ import { useUiFlag } from 'hooks/useUiFlag';
 const NetworkOverview = lazy(
     () => import('./NetworkOverview/NetworkOverview.tsx'),
 );
-const NetworkConnectedEdges = lazy(
-    () => import('./NetworkConnectedEdges/NetworkConnectedEdges.tsx'),
-);
 const NetworkTraffic = lazy(
     () => import('./NetworkTraffic/NetworkTraffic.tsx'),
 );
@@ -33,10 +30,6 @@ const tabs = [
     {
         label: 'Traffic',
         path: '/admin/network/traffic',
-    },
-    {
-        label: 'Connected Edges',
-        path: '/admin/network/connected-edges',
     },
 ];
 
@@ -65,10 +58,6 @@ export const Network = () => {
         ? [...tabs, ...consumptionModelTabs]
         : [...tabs, ...seatModelTabs];
 
-    const filteredTabs = allTabs.filter(
-        ({ label }) => label !== 'Connected Edges',
-    );
-
     return (
         <div>
             <PageContent
@@ -81,7 +70,7 @@ export const Network = () => {
                         variant='scrollable'
                         allowScrollButtonsMobile
                     >
-                        {filteredTabs.map(({ label, path }) => (
+                        {allTabs.map(({ label, path }) => (
                             <Tab
                                 key={label}
                                 value={path}

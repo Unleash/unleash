@@ -56,6 +56,7 @@ process.nextTick(async () => {
                         safeguards: true,
                         enterpriseEdgeUI: true,
                         gtmReleaseManagement: true,
+                        projectContextFields: true,
                     },
                 },
                 authentication: {

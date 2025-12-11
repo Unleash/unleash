@@ -1,9 +1,15 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Datadog integration > Should call datadog webhook  for archived toggle 1`] = `undefined`;
+exports[`Datadog integration > Should call datadog webhook  for archived toggle 1`] = `"{"text":"%%% \\n *some@user.com* archived *some-toggle* in project ** \\n %%% ","title":"Unleash notification update"}"`;
 
-exports[`Datadog integration > Should call datadog webhook  for archived toggle with project info 1`] = `undefined`;
+exports[`Datadog integration > Should call datadog webhook  for archived toggle with project info 1`] = `"{"text":"%%% \\n *some@user.com* archived *some-toggle* in project *[some-project](http://some-url.com/projects/some-project)* \\n %%% ","title":"Unleash notification update"}"`;
 
-exports[`Datadog integration > Should call datadog webhook 1`] = `undefined`;
+exports[`Datadog integration > Should call datadog webhook 1`] = `"{"text":"%%% \\n *some@user.com* created *[some-toggle](http://some-url.com/projects//features/some-toggle)* in project ** \\n %%% ","title":"Unleash notification update"}"`;
 
-exports[`Datadog integration > Should call datadog webhook with JSON when template set 1`] = `undefined`;
+exports[`Datadog integration > Should call datadog webhook for toggled environment 1`] = `"{"text":"%%% \\n *some@user.com* disabled *[some-toggle](http://some-url.com/projects/default/features/some-toggle)* for the *development* environment in project *[default](http://some-url.com/projects/default)* \\n %%% ","title":"Unleash notification update"}"`;
+
+exports[`Datadog integration > Should call datadog webhook with JSON when template set 1`] = `"{"text":"{\\n  \\"event\\": \\"feature-created\\",\\n  \\"createdBy\\": \\"some@user.com\\"\\n}","title":"Unleash notification update"}"`;
+
+exports[`Datadog integration > Should include customHeaders in headers when calling service 1`] = `"{"text":"%%% \\n *some@user.com* disabled *[some-toggle](http://some-url.com/projects/default/features/some-toggle)* for the *development* environment in project *[default](http://some-url.com/projects/default)* \\n %%% ","title":"Unleash notification update"}"`;
+
+exports[`Datadog integration > Should not include source_type_name when included in the config 1`] = `"{"text":"%%% \\n *some@user.com* disabled *[some-toggle](http://some-url.com/projects/default/features/some-toggle)* for the *development* environment in project *[default](http://some-url.com/projects/default)* \\n %%% ","title":"Unleash notification update","source_type_name":"my-custom-source-type"}"`;

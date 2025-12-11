@@ -5739,13 +5739,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:^15.0.0":
-  version: 15.0.0
-  resolution: "nock@npm:15.0.0"
+"nock@npm:^14.0.10":
+  version: 14.0.10
+  resolution: "nock@npm:14.0.10"
   dependencies:
     "@mswjs/interceptors": "npm:^0.39.5"
     json-stringify-safe: "npm:^5.0.1"
-  checksum: 10c0/e11294749dbbdbe74f21808950ab7051bf9fb5bea67732845c1d16d8f16273f02898d9b607fe6affe7ceb3b3b20d0c045eb9bb9f3d2c4bb78a7b4dbda82fa727
+    propagate: "npm:^2.0.0"
+  checksum: 10c0/4868ce7c3e6a51ee83b496a1305eb821ad89427eb9e09c3c431344d91fd49974717e214fe97548be7d5f9a8039fefc3602ffbaad036f3508dd2c143726e3cfb8
   languageName: node
   linkType: hard
 
@@ -6346,6 +6347,13 @@ __metadata:
   resolution: "prompt@link:./node_modules/.cache/null::locator=unleash-server%40workspace%3A."
   languageName: node
   linkType: soft
+
+"propagate@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "propagate@npm:2.0.1"
+  checksum: 10c0/01e1023b60ae4050d1a2783f976d7db702022dbdb70dba797cceedad8cfc01b3939c41e77032f8c32aa9d93192fe937ebba1345e8604e5ce61fd3b62ee3003b8
+  languageName: node
+  linkType: hard
 
 "proxy-addr@npm:~2.0.7":
   version: 2.0.7
@@ -7856,7 +7864,7 @@ __metadata:
     mime: "npm:^4.1.0"
     murmurhash3js: "npm:^3.0.1"
     mustache: "npm:^4.2.0"
-    nock: "npm:^15.0.0"
+    nock: "npm:^14.0.10"
     nodemailer: "npm:^7.0.11"
     normalize-url: "npm:^8.0.0"
     openapi-enforcer: "npm:1.23.0"

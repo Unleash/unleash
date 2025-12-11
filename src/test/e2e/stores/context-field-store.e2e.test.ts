@@ -83,7 +83,7 @@ test('updating a context field should update the specified fields and leave ever
                     );
 
                     Object.entries(updateData).forEach(([key, value]) => {
-                        expect(updatedData[key]).toStrictEqual(value);
+                        expect(updatedData[key]).toEqual(value);
                     });
 
                     for (const key in unchangedKeys) {

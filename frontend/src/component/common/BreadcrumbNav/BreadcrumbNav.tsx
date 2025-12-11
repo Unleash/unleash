@@ -22,6 +22,11 @@ const StyledBreadcrumbs = styled(Breadcrumbs)({
 
 const StyledParagraph = styled('p')(textTruncated);
 
+const StyledCurrentPage = styled('p')(({ theme }) => ({
+    ...textTruncated,
+    fontWeight: theme.typography.fontWeightBold,
+}));
+
 const StyledLink = styled(Link)(({ theme }) => ({
     '& > *': {
         maxWidth: theme.spacing(25),
@@ -82,9 +87,9 @@ const BreadcrumbNav = () => {
                                     const lastItem = index === paths.length - 1;
                                     if (lastItem) {
                                         return (
-                                            <StyledParagraph key={path}>
+                                            <StyledCurrentPage key={path}>
                                                 {path}
-                                            </StyledParagraph>
+                                            </StyledCurrentPage>
                                         );
                                     }
 

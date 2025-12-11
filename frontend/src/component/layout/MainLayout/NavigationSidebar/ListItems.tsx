@@ -39,7 +39,8 @@ const CappedText = styled(Typography, {
     textOverflow: 'ellipsis',
     fontWeight: bold
         ? theme.typography.fontWeightBold
-        : theme.typography.fontWeightRegular,
+        : theme.typography.fontWeightMedium,
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
@@ -147,7 +148,7 @@ export const MenuListItem: FC<{
                     <>
                         <StyledListItemIcon>{icon}</StyledListItemIcon>
                         <StyledListItemText>
-                            <CappedText>{text}</CappedText>
+                            <CappedText bold={selected}>{text}</CappedText>
                             {badge}
                         </StyledListItemText>
                     </>

@@ -13,6 +13,7 @@ const StyledChip = styled(Chip, {
     padding: theme.spacing(0.5),
     fontSize: theme.typography.body2.fontSize,
     height: 'auto',
+    fontWeight: theme.typography.fontWeightMedium,
     ...(isActive && {
         backgroundColor: theme.palette.secondary.light,
         fontWeight: 'bold',

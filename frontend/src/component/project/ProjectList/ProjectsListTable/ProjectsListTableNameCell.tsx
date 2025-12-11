@@ -13,12 +13,13 @@ const StyledCellContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 2),
 }));
 
-const StyledFeatureLink = styled(Link)({
+const StyledFeatureLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
+    fontWeight: theme.typography.fontWeightBold,
     '&:hover, &:focus': {
         textDecoration: 'underline',
     },
-});
+}));
 
 type ProjectsListTableNameCellProps = {
     row: {

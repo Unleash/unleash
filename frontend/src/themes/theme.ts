@@ -15,15 +15,17 @@ export const baseTheme = {
     typography: {
         fontFamily: 'Sen, Roboto, sans-serif',
         fontWeightBold: '700',
-        fontWeightMedium: '700',
+        fontWeightMedium: '500',
+        fontWeightRegular: '400',
         allVariants: { lineHeight: 1.4 },
         button: {
-            fontSize: `${15 / 16}rem`,
+            fontSize: `${14 / 16}rem`,
             lineHeight: 1.75,
         },
         h1: {
             fontSize: '1.5rem',
             lineHeight: 1.875,
+            fontWeight: '700',
         },
         h2: {
             fontSize: `${20 / 16}rem`,
@@ -35,7 +37,7 @@ export const baseTheme = {
         },
         h4: {
             fontSize: `${15 / 16}rem`,
-            fontWeight: '400',
+            fontWeight: '700',
         },
         caption: {
             fontSize: `${12 / 16}rem`,
@@ -58,7 +60,7 @@ export const baseTheme = {
     },
     fontWeight: {
         thin: 300,
-        medium: 400,
+        medium: 500,
         semi: 700,
         bold: 700,
     },
@@ -316,6 +318,7 @@ export const lightTheme = createTheme({
 
                 a: {
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                 },
             },
         },
@@ -326,6 +329,7 @@ export const lightTheme = createTheme({
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
+                    fontWeight: theme.typography.fontWeightBold,
                 }),
             },
         },
@@ -336,6 +340,7 @@ export const lightTheme = createTheme({
                 root: ({ theme }) => ({
                     ...focusable(theme),
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                     '&:hover': {
                         textDecoration: 'none',
                     },
@@ -472,9 +477,9 @@ export const lightTheme = createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     color: theme.palette.text.primary,
-                    fontSize: theme.typography.body1.fontSize,
+                    fontSize: theme.typography.body2.fontSize,
                     textTransform: 'none',
-                    fontWeight: 400,
+                    fontWeight: theme.typography.fontWeightMedium,
                     lineHeight: '1',
                     minHeight: '62px',
                     '&:hover': {

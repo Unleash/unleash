@@ -115,7 +115,7 @@ const StyledTabs = styled(Tabs)({
 const StyledTabButton = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
     width: 'auto',
-    fontSize: theme.fontSizes.bodySize,
+    fontSize: theme.typography.body2.fontSize,
     padding: '0 !important',
     ...onWideHeader(theme, {
         minWidth: 100,

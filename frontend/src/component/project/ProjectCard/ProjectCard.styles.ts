@@ -49,7 +49,7 @@ export const StyledProjectCardTitleContainer = styled('div')(({ theme }) => ({
 export const StyledProjectCardTitle = styled('h3')(({ theme }) => ({
     margin: 0,
     marginRight: 'auto',
-    fontWeight: theme.typography.fontWeightRegular,
+    fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.typography.body1.fontSize,
     lineHeight: '1.2',
 }));

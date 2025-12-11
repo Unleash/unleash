@@ -25,9 +25,9 @@ interface IUserProfileProps {
 }
 
 const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
-    width: theme.spacing(4.75),
-    height: theme.spacing(4.75),
-    marginRight: theme.spacing(1.5),
+    width: theme.spacing(3.5),
+    height: theme.spacing(3.5),
+    marginRight: theme.spacing(1),
 }));
 
 const StyledSubtitle = styled(Typography)(({ theme }) => ({
@@ -56,8 +56,8 @@ const UserProfile = ({ profile }: IUserProfileProps) => {
                         user={profile}
                         data-testid={HEADER_USER_AVATAR}
                     />
-                    <Box sx={{ mr: 3 }}>
-                        <Typography>
+                    <Box sx={{ mr: 0.5 }}>
+                        <Typography variant='body2' fontWeight='medium'>
                             {profile.name || profile.username}
                         </Typography>
                         <StyledSubtitle variant='body2' title={profile.email}>

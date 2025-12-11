@@ -50,7 +50,7 @@ const StyledTabContainer = styled('div')({
 const StyledTabButton = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
     width: 'auto',
-    fontSize: theme.fontSizes.bodySize,
+    fontSize: theme.typography.body2.fontSize,
     [theme.breakpoints.up('md')]: {
         minWidth: 160,
     },

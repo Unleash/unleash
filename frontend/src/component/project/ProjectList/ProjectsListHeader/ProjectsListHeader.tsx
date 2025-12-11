@@ -22,7 +22,8 @@ const StyledHeaderContainer = styled('div')(({ theme }) => ({
 
 const StyledHeaderTitle = styled('div')(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(1),
+    gap: theme.spacing(0.5),
+    fontWeight: theme.typography.fontWeightBold,
     flexGrow: 0,
 }));
 

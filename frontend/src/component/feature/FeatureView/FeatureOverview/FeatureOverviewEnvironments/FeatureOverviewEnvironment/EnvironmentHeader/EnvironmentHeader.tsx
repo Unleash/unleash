@@ -78,7 +78,7 @@ const StyledHeaderTitleLabel = styled('p')(({ theme }) => ({
 
 const StyledTruncator = styled(Truncator)(({ theme }) => ({
     fontSize: theme.typography.h2.fontSize,
-    fontWeight: theme.typography.fontWeightMedium,
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 const StyledStrategyCount = styled('p')(({ theme }) => ({

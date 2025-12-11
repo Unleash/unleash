@@ -2,7 +2,6 @@ import memoizee from 'memoizee';
 import joi from 'joi';
 const { ValidationError } = joi;
 import { getAddons, type IAddonProviders } from '../addons/index.js';
-import * as events from '../events/index.js';
 import {
     AddonConfigCreatedEvent,
     AddonConfigDeletedEvent,
@@ -30,10 +29,7 @@ import type EventService from '../features/events/event-service.js';
 import { omitKeys } from '../util/index.js';
 import { BadDataError, NotFoundError } from '../error/index.js';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
-import type { IEvent } from '../events/index.js';
-
-const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
-
+import { type IEvent, type IEventType, IEventTypes } from '../events/index.js';
 const MASKED_VALUE = '*****';
 
 const WILDCARD_OPTION = '*';
@@ -59,7 +55,7 @@ export default class AddonService {
     fetchAddonConfigs: (() => Promise<IAddon[]>) &
         memoizee.Memoized<() => Promise<IAddon[]>>;
 
-    private eventHandlers: Map<string, (event: IEvent) => void>;
+    private eventHandlers: Map<IEventType, (event: IEvent) => Promise<void>>;
 
     constructor(
         {
@@ -127,44 +123,44 @@ export default class AddonService {
     }
 
     registerEventHandler(): void {
-        SUPPORTED_EVENTS.forEach((eventName) => {
+        IEventTypes.forEach((eventName) => {
             const handler = this.handleEvent(eventName);
             this.eventHandlers.set(eventName, handler);
             this.eventService.onEvent(eventName, handler);
         });
     }
 
-    handleEvent(eventName: string): (event: IEvent) => void {
+    handleEvent(eventName: string): (event: IEvent) => Promise<void> {
         const { addonProviders } = this;
-        return (event) => {
-            this.fetchAddonConfigs().then((addonInstances) => {
-                addonInstances
-                    .filter((addon) => addon.events.includes(eventName))
-                    .filter(
-                        (addon) =>
-                            !event.project ||
-                            !addon.projects ||
-                            addon.projects.length === 0 ||
-                            addon.projects[0] === WILDCARD_OPTION ||
-                            addon.projects.includes(event.project),
-                    )
-                    .filter(
-                        (addon) =>
-                            !event.environment ||
-                            !addon.environments ||
-                            addon.environments.length === 0 ||
-                            addon.environments[0] === WILDCARD_OPTION ||
-                            addon.environments.includes(event.environment),
-                    )
-                    .filter((addon) => addonProviders[addon.provider])
-                    .forEach((addon) => {
-                        addonProviders[addon.provider].handleEvent(
-                            event,
-                            addon.parameters,
-                            addon.id,
-                        );
-                    });
-            });
+        return async (event) => {
+            const addonInstances = await this.fetchAddonConfigs();
+            const tasks = addonInstances
+                .filter((addon) => addon.events.includes(eventName))
+                .filter(
+                    (addon) =>
+                        !event.project ||
+                        !addon.projects ||
+                        addon.projects.length === 0 ||
+                        addon.projects[0] === WILDCARD_OPTION ||
+                        addon.projects.includes(event.project),
+                )
+                .filter(
+                    (addon) =>
+                        !event.environment ||
+                        !addon.environments ||
+                        addon.environments.length === 0 ||
+                        addon.environments[0] === WILDCARD_OPTION ||
+                        addon.environments.includes(event.environment),
+                )
+                .filter((addon) => addonProviders[addon.provider])
+                .map((addon) =>
+                    addonProviders[addon.provider].handleEvent(
+                        event,
+                        addon.parameters,
+                        addon.id,
+                    ),
+                );
+            await Promise.all(tasks);
         };
     }
 

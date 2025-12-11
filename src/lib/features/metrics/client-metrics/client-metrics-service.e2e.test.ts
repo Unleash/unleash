@@ -8,7 +8,7 @@ import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProj
 import type { ITestDb } from '../../../../test/e2e/helpers/database-init.js';
 import dbInit from '../../../../test/e2e/helpers/database-init.js';
 import { noLoggerProvider as getLogger } from '../../../../test/fixtures/no-logger.js';
-import { faker } from '@faker-js/faker'
+import { faker } from '@faker-js/faker';
 let stores: IUnleashStores;
 let db: ITestDb;
 let clientInstanceService: ClientInstanceService;

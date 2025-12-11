@@ -347,7 +347,7 @@ class ProjectStore implements IProjectStore {
     }
 
     async delete(id: string): Promise<void> {
-        const stop = this.timer('deleteAll');
+        const stop = this.timer('delete');
         try {
             await this.db(TABLE).where({ id }).del();
         } catch (err) {

@@ -161,4 +161,7 @@ export const healthOverviewSchema = {
     },
 } as const;
 
-export type HealthOverviewSchema = FromSchema<typeof healthOverviewSchema>;
+export type HealthOverviewSchema = FromSchema<
+    typeof healthOverviewSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

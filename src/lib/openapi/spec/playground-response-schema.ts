@@ -46,5 +46,6 @@ export const playgroundResponseSchema = {
 } as const;
 
 export type PlaygroundResponseSchema = FromSchema<
-    typeof playgroundResponseSchema
+    typeof playgroundResponseSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

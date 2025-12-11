@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker'
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import type {
@@ -24,7 +24,7 @@ afterAll(async () => {
 test('Upserting an application keeps values not provided intact', async () => {
     const clientInstance: INewClientInstance = {
         appName: faker.internet.domainName(),
-        instanceId: faker.datatype.uuid(),
+        instanceId: faker.string.uuid(),
         environment: 'development',
         sdkVersion: 'unleash-client-node:6.6.0',
         sdkType: 'backend',

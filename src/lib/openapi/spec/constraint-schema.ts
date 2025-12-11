@@ -57,4 +57,7 @@ export const constraintSchema = {
     ...constraintSchemaBase,
 } as const;
 
-export type ConstraintSchema = FromSchema<typeof constraintSchema>;
+export type ConstraintSchema = FromSchema<
+    typeof constraintSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

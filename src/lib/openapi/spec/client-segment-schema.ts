@@ -34,4 +34,7 @@ export const clientSegmentSchema = {
     },
 } as const;
 
-export type ClientSegmentSchema = FromSchema<typeof clientSegmentSchema>;
+export type ClientSegmentSchema = FromSchema<
+    typeof clientSegmentSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

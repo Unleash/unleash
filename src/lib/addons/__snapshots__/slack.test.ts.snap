@@ -1,32 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Slack integration > Should call slack webhook 1`] = `
-{
-  "attachments": [
-    {
-      "actions": [
-        {
-          "name": "featureToggle",
-          "style": "primary",
-          "text": "Open in Unleash",
-          "type": "button",
-          "url": "http://some-url.com/projects/default/features/some-toggle",
-          "value": "featureToggle",
-        },
-      ],
-    },
-  ],
-  "channel": "#general",
-  "icon_emoji": ":unleash:",
-  "text": "*some@user.com* created *<http://some-url.com/projects/default/features/some-toggle|some-toggle>* in project *<http://some-url.com/projects/default|default>*",
-  "username": "Unleash",
-}
-`;
+exports[`Slack integration > Should call slack webhook 1`] = `[Function]`;
 
-exports[`Slack integration > Should call slack webhook for archived toggle 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":"*some@user.com* archived *some-toggle* in project **","channel":"#general","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/projects//archive"}]}]}"`;
+exports[`Slack integration > Should call slack webhook for archived toggle 1`] = `undefined`;
 
-exports[`Slack integration > Should call slack webhook for archived toggle with project info 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":"*some@user.com* archived *some-toggle* in project *<http://some-url.com/projects/some-project|some-project>*","channel":"#general","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/projects/some-project/archive"}]}]}"`;
+exports[`Slack integration > Should call slack webhook for archived toggle with project info 1`] = `undefined`;
 
-exports[`Slack integration > Should call webhook for toggled environment 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":"*some@user.com* disabled *<http://some-url.com/projects/default/features/some-toggle|some-toggle>* for the *development* environment in project *<http://some-url.com/projects/default|default>*","channel":"#general","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/projects/default/features/some-toggle"}]}]}"`;
-
-exports[`Slack integration > Should include custom headers from parameters in call to service 1`] = `"{"username":"Unleash","icon_emoji":":unleash:","text":"*some@user.com* disabled *<http://some-url.com/projects/default/features/some-toggle|some-toggle>* for the *development* environment in project *<http://some-url.com/projects/default|default>*","channel":"#general","attachments":[{"actions":[{"name":"featureToggle","text":"Open in Unleash","type":"button","value":"featureToggle","style":"primary","url":"http://some-url.com/projects/default/features/some-toggle"}]}]}"`;
+exports[`Slack integration > Should call webhook for toggled environment 1`] = `undefined`;

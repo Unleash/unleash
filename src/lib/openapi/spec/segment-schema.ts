@@ -43,4 +43,7 @@ export const segmentSchema = {
     },
 } as const;
 
-export type SegmentSchema = FromSchema<typeof segmentSchema>;
+export type SegmentSchema = FromSchema<
+    typeof segmentSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

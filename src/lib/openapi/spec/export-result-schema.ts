@@ -229,4 +229,7 @@ export const exportResultSchema = {
     },
 } as const;
 
-export type ExportResultSchema = FromSchema<typeof exportResultSchema>;
+export type ExportResultSchema = FromSchema<
+    typeof exportResultSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

@@ -214,5 +214,6 @@ export const featureSearchResponseSchema = {
 } as const;
 
 export type FeatureSearchResponseSchema = FromSchema<
-    typeof featureSearchResponseSchema
+    typeof featureSearchResponseSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

@@ -32,4 +32,7 @@ export const healthReportSchema = {
     },
 } as const;
 
-export type HealthReportSchema = FromSchema<typeof healthReportSchema>;
+export type HealthReportSchema = FromSchema<
+    typeof healthReportSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

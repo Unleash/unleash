@@ -16,5 +16,6 @@ export const playgroundConstraintSchema = {
 } as const;
 
 export type PlaygroundConstraintSchema = FromSchema<
-    typeof playgroundConstraintSchema
+    typeof playgroundConstraintSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

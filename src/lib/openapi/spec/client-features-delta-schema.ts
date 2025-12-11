@@ -104,5 +104,6 @@ export const clientFeaturesDeltaSchema = {
 } as const;
 
 export type ClientFeaturesDeltaSchema = FromSchema<
-    typeof clientFeaturesDeltaSchema
+    typeof clientFeaturesDeltaSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

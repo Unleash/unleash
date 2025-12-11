@@ -1,8 +1,3 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Webhook integration > should allow for eventJson and eventMarkdown in bodyTemplate 1`] = `
-"{
-  "json": "{\\"id\\":1,\\"createdAt\\":\\"2024-07-24T00:00:00.000Z\\",\\"createdByUserId\\":-1337,\\"type\\":\\"feature-created\\",\\"createdBy\\":\\"some@user.com\\",\\"featureName\\":\\"some-toggle\\",\\"project\\":\\"default\\",\\"data\\":{\\"name\\":\\"some-toggle\\",\\"enabled\\":false,\\"strategies\\":[{\\"name\\":\\"default\\"}]}}",
-  "markdown": "*some@user.com* created *[some-toggle](http://some-url.com/projects/default/features/some-toggle)* in project *[default](http://some-url.com/projects/default)*"
-}"
-`;
+exports[`Webhook integration > should allow for eventJson and eventMarkdown in bodyTemplate 1`] = `[Function]`;

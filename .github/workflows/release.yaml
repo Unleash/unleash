@@ -16,17 +16,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-
     steps:
       - uses: actions/checkout@v4
         with:
           ref: v${{ inputs.version }} # tag that should be created by the caller workflow
       - name: Setup to npm
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22.x
           registry-url: 'https://registry.npmjs.org'
@@ -37,6 +32,8 @@ jobs:
         run: |
           yarn install --immutable
       - name: Publish to npm
+        env:
+          NPM_CONFIG_PROVENANCE: true
         run: |
           LATEST=$(npm show unleash-server version)
           TAG=$(node scripts/npm-tag.js $LATEST)

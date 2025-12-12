@@ -75,6 +75,7 @@ export type CustomEvents =
     | 'project-navigation'
     | 'productivity-report'
     | 'release-management'
+    | 'release-templates-banner'
     | 'feature-links'
     | 'project-cleanup'
     | 'project-list-view-toggle';

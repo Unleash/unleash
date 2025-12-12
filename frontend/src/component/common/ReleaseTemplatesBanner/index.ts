@@ -1,1 +1,0 @@
-export { ReleaseTemplatesBanner } from './ReleaseTemplatesBanner';

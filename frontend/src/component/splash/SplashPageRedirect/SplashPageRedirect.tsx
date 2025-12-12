@@ -33,6 +33,14 @@ export const SplashPageRedirect = () => {
         return !hasSeenSplashId(splashId, splash);
     });
 
+    // Debug logging
+    console.log('SplashPageRedirect debug:', {
+        activeSplashIds,
+        splash,
+        showSplashId,
+        pathname,
+    });
+
     if (!showSplashId) {
         return null;
     }

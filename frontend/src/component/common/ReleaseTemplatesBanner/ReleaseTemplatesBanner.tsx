@@ -62,7 +62,7 @@ const StyledIllustration = styled('div')(({ theme }) => ({
 
 export const ReleaseTemplatesBanner: FC = () => {
     const { isEnterprise } = useUiConfig();
-    const newInUnleashEnabled = useUiFlag('newInUnleash');
+    const gtmReleaseManagementEnabled = useUiFlag('gtmReleaseManagement');
     const { trackEvent } = usePlausibleTracker();
     const navigate = useNavigate();
 
@@ -72,7 +72,7 @@ export const ReleaseTemplatesBanner: FC = () => {
     );
 
     useEffect(() => {
-        if (isEnterprise() && newInUnleashEnabled && bannerState === 'open') {
+        if (isEnterprise() && gtmReleaseManagementEnabled && bannerState === 'open') {
             trackEvent('release-templates-banner', {
                 props: {
                     eventType: 'seen',
@@ -81,7 +81,7 @@ export const ReleaseTemplatesBanner: FC = () => {
         }
     }, []);
 
-    if (!isEnterprise() || !newInUnleashEnabled) {
+    if (!isEnterprise() || !gtmReleaseManagementEnabled) {
         return null;
     }
 

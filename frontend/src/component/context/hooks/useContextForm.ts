@@ -3,16 +3,26 @@ import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import type { ILegalValue } from 'interfaces/context';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
-export const useContextForm = (
+type UseContextFormProps = {
+    initialContextName?: string;
+    initialContextDesc?: string;
+    initialLegalValues?: ILegalValue[];
+    initialStickiness?: boolean;
+    initialProject?: string;
+};
+
+export const useContextForm = ({
     initialContextName = '',
     initialContextDesc = '',
     initialLegalValues = [] as ILegalValue[],
     initialStickiness = false,
-) => {
+    initialProject = undefined,
+}: UseContextFormProps = {}) => {
     const [contextName, setContextName] = useState(initialContextName);
     const [contextDesc, setContextDesc] = useState(initialContextDesc);
     const [legalValues, setLegalValues] = useState(initialLegalValues);
     const [stickiness, setStickiness] = useState(initialStickiness);
+    const [project, setProject] = useState(initialProject);
     const [errors, setErrors] = useState({});
     const { validateContextName } = useContextsApi();
 
@@ -39,6 +49,7 @@ export const useContextForm = (
             description: contextDesc,
             legalValues,
             stickiness,
+            project,
         };
     };
 
@@ -73,6 +84,7 @@ export const useContextForm = (
         setContextDesc,
         setLegalValues,
         setStickiness,
+        setProject,
         getContextPayload,
         validateContext,
         setErrors,

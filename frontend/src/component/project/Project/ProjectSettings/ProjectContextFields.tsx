@@ -1,12 +1,12 @@
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
-import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { GO_BACK } from 'constants/navigate';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import ContextList from 'component/context/ContextList/ContextList/ContextList';
+import { CreateUnleashContext } from 'component/context/CreateUnleashContext/CreateUnleashContext';
+import { EditContext } from 'component/context/EditContext/EditContext';
 
 export const ProjectContextFields = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -25,19 +25,23 @@ export const ProjectContextFields = () => {
                         onClose={() => navigate(GO_BACK)}
                         label='Create segment'
                     >
-                        <CreateSegment modal />
+                        <CreateUnleashContext
+                            modal
+                            onSubmit={() => navigate(GO_BACK)}
+                            onCancel={() => navigate(GO_BACK)}
+                        />
                     </SidebarModal>
                 }
             />
             <Route
-                path='edit/:segmentId'
+                path='edit/:name'
                 element={
                     <SidebarModal
                         open
                         onClose={() => navigate(GO_BACK)}
-                        label='Edit segment'
+                        label='Edit context field'
                     >
-                        <EditSegment modal />
+                        <EditContext modal />
                     </SidebarModal>
                 }
             />

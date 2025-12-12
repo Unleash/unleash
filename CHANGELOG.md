@@ -71,6 +71,340 @@ All notable changes to this project will be documented in this file.
 
 - Update CHANGELOG.md
 
+- Update CHANGELOG.md
+
+
+### Features
+
+- Add safeguard button and borders ([#10943](https://github.com/Unleash/unleash/issues/10943))
+
+- Milestone progression keyboard navigation ([#10950](https://github.com/Unleash/unleash/issues/10950))
+
+- Safeguard form draft ([#10954](https://github.com/Unleash/unleash/issues/10954))
+
+- Safeguard form reads real data ([#10957](https://github.com/Unleash/unleash/issues/10957))
+
+- Safeguards api frontend ([#10959](https://github.com/Unleash/unleash/issues/10959))
+
+- Safeguards form edit and display ([#10967](https://github.com/Unleash/unleash/issues/10967))
+
+- Adjust safeguard form elements size ([#10973](https://github.com/Unleash/unleash/issues/10973))
+
+- Add safeguards schema to oss ([#10972](https://github.com/Unleash/unleash/issues/10972))
+
+- Delete safeguard button ([#10974](https://github.com/Unleash/unleash/issues/10974))
+
+- Add paused state to release plan milestone progression ([#10983](https://github.com/Unleash/unleash/issues/10983))
+
+- Release plan automations paused alert ([#10991](https://github.com/Unleash/unleash/issues/10991))
+
+- Delete safeguard confirmation ([#10993](https://github.com/Unleash/unleash/issues/10993))
+
+- Add safeguard events ([#10994](https://github.com/Unleash/unleash/issues/10994))
+
+- Hide milestone progression on paused state ([#10998](https://github.com/Unleash/unleash/issues/10998))
+
+- Resume milestone progressions ([#10999](https://github.com/Unleash/unleash/issues/10999))
+
+- Extend milestone status ([#11000](https://github.com/Unleash/unleash/issues/11000))
+
+- Improve safeguard threshold field ([#11004](https://github.com/Unleash/unleash/issues/11004))
+
+- Frontend for pkce ([#11005](https://github.com/Unleash/unleash/issues/11005))
+
+- Now safeguard impact metrics are not editable or deletable ([#11006](https://github.com/Unleash/unleash/issues/11006))
+
+- Improve safeguard form styling ([#11007](https://github.com/Unleash/unleash/issues/11007))
+
+- Safeguard UI tweaks ([#11008](https://github.com/Unleash/unleash/issues/11008))
+
+- Safeguard border dynamic line ([#11011](https://github.com/Unleash/unleash/issues/11011))
+
+- Remove milestone progression adding when paused ([#11012](https://github.com/Unleash/unleash/issues/11012))
+
+- Split milestone paused with progression paused ([#11015](https://github.com/Unleash/unleash/issues/11015))
+
+- Allow 'instanceInfo' to be added to the version checker hook ([#11018](https://github.com/Unleash/unleash/issues/11018))
+
+- Change safeguard change request dialog ([#11021](https://github.com/Unleash/unleash/issues/11021))
+
+- Connect change safeguard api ([#11023](https://github.com/Unleash/unleash/issues/11023))
+
+- Add exists method for environment service ([#11024](https://github.com/Unleash/unleash/issues/11024))
+
+- Safeguard change request schema update ([#11028](https://github.com/Unleash/unleash/issues/11028))
+
+- Show cr in shopping card change safeguard ([#11026](https://github.com/Unleash/unleash/issues/11026))
+
+- Add error handling to release plan changes ([#11030](https://github.com/Unleash/unleash/issues/11030))
+
+- Delete safeguard cr trigger ([#11031](https://github.com/Unleash/unleash/issues/11031))
+
+- Delete safeguard change requests ([#11033](https://github.com/Unleash/unleash/issues/11033))
+
+- Omit some fields from safeguard cr ([#11034](https://github.com/Unleash/unleash/issues/11034))
+
+- Conditional safeguard delete button ([#11035](https://github.com/Unleash/unleash/issues/11035))
+
+- Skip safeguard cr confirmation dialogue ([#11040](https://github.com/Unleash/unleash/issues/11040))
+
+- Start tracking readonly users ([#11043](https://github.com/Unleash/unleash/issues/11043))
+
+- Permissions checks on safeguards and automations ([#11044](https://github.com/Unleash/unleash/issues/11044))
+
+- Add safeguard progressions resumed/paused events ([#11049](https://github.com/Unleash/unleash/issues/11049))
+
+- Safeguard form 3 variants ([#11050](https://github.com/Unleash/unleash/issues/11050))
+
+- Now next text is not visible for progression ([#11051](https://github.com/Unleash/unleash/issues/11051))
+
+- Now read only user is only counted when it has root role viewer ([#11060](https://github.com/Unleash/unleash/issues/11060))
+
+- Safeguard CR badges ([#11053](https://github.com/Unleash/unleash/issues/11053))
+
+- Milestone progression changes only in change view ([#11061](https://github.com/Unleash/unleash/issues/11061))
+
+- Automation paused date time ([#11064](https://github.com/Unleash/unleash/issues/11064))
+
+- Change request dialog for resuming progressions ([#11067](https://github.com/Unleash/unleash/issues/11067))
+
+- Update cart visuals for resume milestone progression CR ([#11069](https://github.com/Unleash/unleash/issues/11069))
+
+- Safeguard impact metric mini chart ([#11070](https://github.com/Unleash/unleash/issues/11070))
+
+- Notify users via integrations for milestone progressions paused ([#11071](https://github.com/Unleash/unleash/issues/11071))
+
+- Color indicator safeguard threshold exceeded ([#11072](https://github.com/Unleash/unleash/issues/11072))
+
+- Safeguard link from impact metrics ([#11076](https://github.com/Unleash/unleash/issues/11076))
+
+- Mini charts for safeguards ([#11082](https://github.com/Unleash/unleash/issues/11082))
+
+- Now impact metrics charts are limited to 20 ([#11090](https://github.com/Unleash/unleash/issues/11090))
+
+- For adding safeguards, add modified in draft ([#11095](https://github.com/Unleash/unleash/issues/11095))
+
+- Mini metrics chart with no data ([#11099](https://github.com/Unleash/unleash/issues/11099))
+
+- Add tooltip for remove safeguard and automation ([#11107](https://github.com/Unleash/unleash/issues/11107))
+
+- Improve styling of safeguards ([#11120](https://github.com/Unleash/unleash/issues/11120))
+
+- Safeguard threshold input ux ([#11117](https://github.com/Unleash/unleash/issues/11117))
+
+- Dynamic text field length milestone time ([#11129](https://github.com/Unleash/unleash/issues/11129))
+
+- Shield icon impact metrics for safeguards ([#11130](https://github.com/Unleash/unleash/issues/11130))
+
+- Setup initial release template ([#11113](https://github.com/Unleash/unleash/issues/11113))
+
+- Add project-specific edit and create modal forms ([#11127](https://github.com/Unleash/unleash/issues/11127))
+
+
+### Miscellaneous Tasks
+
+- Upgrade swagger-parser ([#10946](https://github.com/Unleash/unleash/issues/10946))
+
+- TrafficBillingDisplay flag cleanup ([#10949](https://github.com/Unleash/unleash/issues/10949))
+
+- Replace deprecated `getDefaultVariant` with `defaultVariant` ([#10944](https://github.com/Unleash/unleash/issues/10944))
+
+- Decrease log level of acquire job lock ([#10952](https://github.com/Unleash/unleash/issues/10952))
+
+- Remove release plans from getFeature endpoint ([#10955](https://github.com/Unleash/unleash/issues/10955))
+
+- Move delta diffing to a different feature flag ([#10962](https://github.com/Unleash/unleash/issues/10962))
+
+- Configure the 'maintenanceMode' flag to accept variants ([#10956](https://github.com/Unleash/unleash/issues/10956))
+
+- Allow custom messages in maintenance mode banner (UI) ([#10961](https://github.com/Unleash/unleash/issues/10961))
+
+- Slightly simpler quick start setup ([#10933](https://github.com/Unleash/unleash/issues/10933))
+
+- Information message when you have no connected edge enterprise instances ([#10969](https://github.com/Unleash/unleash/issues/10969))
+
+- Start validating getFeature endpoint ([#10975](https://github.com/Unleash/unleash/issues/10975))
+
+- Change release_plans to release-plans in endpoints/hooks ([#10978](https://github.com/Unleash/unleash/issues/10978))
+
+- Update schema to match reality ([#10979](https://github.com/Unleash/unleash/issues/10979))
+
+- Fix transitionCondition ([#10981](https://github.com/Unleash/unleash/issues/10981))
+
+- Unique project names validation on creation ([#10970](https://github.com/Unleash/unleash/issues/10970))
+
+- Fix safeguards schema ([#10982](https://github.com/Unleash/unleash/issues/10982))
+
+- Generate orval ([#10980](https://github.com/Unleash/unleash/issues/10980))
+
+- Export default metrics register ([#10989](https://github.com/Unleash/unleash/issues/10989))
+
+- Show hosting in connected edges ([#10995](https://github.com/Unleash/unleash/issues/10995))
+
+- Show connected edges for pro customers ([#11009](https://github.com/Unleash/unleash/issues/11009))
+
+- Use license address instead of sales ([#11016](https://github.com/Unleash/unleash/issues/11016))
+
+- Handle unawaited promises and tests ([#11014](https://github.com/Unleash/unleash/issues/11014))
+
+- Update orval types ([#11019](https://github.com/Unleash/unleash/issues/11019))
+
+- Export IInstanceInfo so that it can be used in enterprise ([#11020](https://github.com/Unleash/unleash/issues/11020))
+
+- Export create environment service ([#11025](https://github.com/Unleash/unleash/issues/11025))
+
+- Include current month in edgeInstanceUsage ([#11029](https://github.com/Unleash/unleash/issues/11029))
+
+- Improve release template empty state ([#11022](https://github.com/Unleash/unleash/issues/11022))
+
+- Add flag enterpriseEdgeUI ([#11042](https://github.com/Unleash/unleash/issues/11042))
+
+- Remove unused `route.route` property + rename function ([#11039](https://github.com/Unleash/unleash/issues/11039))
+
+- Removes an unused `after` image ([#11054](https://github.com/Unleash/unleash/issues/11054))
+
+- Don't use z-index hacking to hide mountain image ([#11055](https://github.com/Unleash/unleash/issues/11055))
+
+- Add enterprise edge page ([#11063](https://github.com/Unleash/unleash/issues/11063))
+
+- Add Enterprise Edge explanation ([#11073](https://github.com/Unleash/unleash/issues/11073))
+
+- Bump unleash client version ([#11074](https://github.com/Unleash/unleash/issues/11074))
+
+- Update orval ([#11075](https://github.com/Unleash/unleash/issues/11075))
+
+- Align vocabulary, we are not pausing safeguards progressions ([#11081](https://github.com/Unleash/unleash/issues/11081))
+
+- EdgeObservability flag cleanup ([#11079](https://github.com/Unleash/unleash/issues/11079))
+
+- Add Enterprise Edge group hosting badges ([#11089](https://github.com/Unleash/unleash/issues/11089))
+
+- Add dismissible alert about Edge ([#11085](https://github.com/Unleash/unleash/issues/11085))
+
+- Add new NewInUnleashItems file ([#11086](https://github.com/Unleash/unleash/issues/11086))
+
+- Remove global change request list flag ([#11097](https://github.com/Unleash/unleash/issues/11097))
+
+- Add a delayed evaluation of UI flags ([#11091](https://github.com/Unleash/unleash/issues/11091))
+
+- Move old NewInUnleash to legacy file ([#11100](https://github.com/Unleash/unleash/issues/11100))
+
+- Add new `NewInUnleash` component. ([#11092](https://github.com/Unleash/unleash/issues/11092))
+
+- Add gtmReleaseManagement flag to Unleash ([#11093](https://github.com/Unleash/unleash/issues/11093))
+
+- Small UX adjustments in Enterprise Edge UI ([#11104](https://github.com/Unleash/unleash/issues/11104))
+
+- Fix edge dismissible alert text color ([#11112](https://github.com/Unleash/unleash/issues/11112))
+
+- Generate orval ([#11111](https://github.com/Unleash/unleash/issues/11111))
+
+- Update read docs links in edge explanation ([#11110](https://github.com/Unleash/unleash/issues/11110))
+
+- Update colors for new in Unleah toast / add palette.inverse ([#11109](https://github.com/Unleash/unleash/issues/11109))
+
+- EnterpriseEdgeUI flag cleanup ([#11124](https://github.com/Unleash/unleash/issues/11124))
+
+- Security upgrades server ([#11125](https://github.com/Unleash/unleash/issues/11125))
+
+- Use id-token write and npm_config_provenance in npm publish ([#11134](https://github.com/Unleash/unleash/issues/11134))
+
+- Revert back to 7.3.0 ([#11135](https://github.com/Unleash/unleash/issues/11135))
+
+- Add step for installing npm@latest before publishing ([#11137](https://github.com/Unleash/unleash/issues/11137))
+
+- Adjust help icon size ([#11138](https://github.com/Unleash/unleash/issues/11138))
+
+- Set repository.url to what is reported from github ([#11139](https://github.com/Unleash/unleash/issues/11139))
+
+
+### Refactor
+
+- Delete safeguard api update ([#10992](https://github.com/Unleash/unleash/issues/10992))
+
+- Milestone progression methods ([#11002](https://github.com/Unleash/unleash/issues/11002))
+
+- Simplify safeguard form management ([#11013](https://github.com/Unleash/unleash/issues/11013))
+
+- Pass feature to safeguard form ([#11088](https://github.com/Unleash/unleash/issues/11088))
+
+- Clean up legacy edge components ([#11126](https://github.com/Unleash/unleash/issues/11126))
+
+
+### Testing
+
+- Add extra test to ensure we don't return a disabled variant ([#10968](https://github.com/Unleash/unleash/issues/10968))
+
+
+## [7.4.0] - 2025-12-12
+
+### Bug Fixes
+
+- When adding new milestone progression, prevent default form submit ([#10960](https://github.com/Unleash/unleash/issues/10960))
+
+- Allow external flag resolver to override false experiments with variants in getAll ([#10966](https://github.com/Unleash/unleash/issues/10966))
+
+- Add missing nested types ([#10976](https://github.com/Unleash/unleash/issues/10976))
+
+- Remove old archived flags tooltip ([#10977](https://github.com/Unleash/unleash/issues/10977))
+
+- Use extendedUsageMetrics flag in metrics UI ([#10987](https://github.com/Unleash/unleash/issues/10987))
+
+- Handle no app name impact metric ([#10997](https://github.com/Unleash/unleash/issues/10997))
+
+- Handle invalid permissions in role creation ([#11003](https://github.com/Unleash/unleash/issues/11003))
+
+- Invalid metrics should not crash ([#11010](https://github.com/Unleash/unleash/issues/11010))
+
+- Prevent duplicate lifecycle timing ([#11017](https://github.com/Unleash/unleash/issues/11017))
+
+- Missing border in milestone items ([#11027](https://github.com/Unleash/unleash/issues/11027))
+
+- Remove unusable button from navigation sidebar accordion ([#11036](https://github.com/Unleash/unleash/issues/11036))
+
+- Sidebar overflow when displaying badges ([#11037](https://github.com/Unleash/unleash/issues/11037))
+
+- Don't unselect selected path in configure menu when clicking it again ([#11046](https://github.com/Unleash/unleash/issues/11046))
+
+- Permission button in forms ([#11047](https://github.com/Unleash/unleash/issues/11047))
+
+- Permissions checks start milestone ([#11045](https://github.com/Unleash/unleash/issues/11045))
+
+- NotFlag logic in route ([#11077](https://github.com/Unleash/unleash/issues/11077))
+
+- Hide change request items that are already consolidated ([#11101](https://github.com/Unleash/unleash/issues/11101))
+
+- Make sidebar fixed width again ([#11102](https://github.com/Unleash/unleash/issues/11102))
+
+- Safeguard minichart correct width ([#11105](https://github.com/Unleash/unleash/issues/11105))
+
+- Sidebars linting ([#11106](https://github.com/Unleash/unleash/issues/11106))
+
+- Translate alert observation window to metric range ([#11121](https://github.com/Unleash/unleash/issues/11121))
+
+- Cap progression input ([#11136](https://github.com/Unleash/unleash/issues/11136))
+
+
+### Documentation
+
+- Add auto-generated MCP docs ([#10984](https://github.com/Unleash/unleash/issues/10984))
+
+- Impact metrics ([#11001](https://github.com/Unleash/unleash/issues/11001))
+
+- URL and image cleanup ([#10840](https://github.com/Unleash/unleash/issues/10840))
+
+- Enterprise edge ([#11083](https://github.com/Unleash/unleash/issues/11083))
+
+- Update LTS date for OSS edge ([#11108](https://github.com/Unleash/unleash/issues/11108))
+
+- 7.4 update ([#11114](https://github.com/Unleash/unleash/issues/11114))
+
+- Fix typo ([#11122](https://github.com/Unleash/unleash/issues/11122))
+
+- Update CHANGELOG.md
+
+- Update CHANGELOG.md
+
 
 ### Features
 

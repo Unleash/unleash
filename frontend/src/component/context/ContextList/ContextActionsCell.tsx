@@ -4,7 +4,12 @@ import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { useDynamicContextActionParams } from './useDynamicContextActionParams.ts';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import {
+    DELETE_CONTEXT_FIELD,
+    UPDATE_CONTEXT_FIELD,
+    UPDATE_PROJECT,
+} from '@server/types/permissions.ts';
 
 interface IContextActionsCellProps {
     name: string;
@@ -18,13 +23,17 @@ export const ContextActionsCell: FC<IContextActionsCellProps> = ({
     allowDelete,
 }) => {
     const navigate = useNavigate();
-    const { permissions, locations } = useDynamicContextActionParams();
+    const projectId = useOptionalPathParam('projectId');
+    const updateLocation = projectId
+        ? `/projects/${projectId}/settings/context-fields/edit/${name}`
+        : `/context/edit/${name}`;
 
     return (
         <ActionCell>
             <PermissionIconButton
-                permission={permissions.update}
-                onClick={() => navigate(locations.update(name))}
+                permission={[UPDATE_CONTEXT_FIELD, UPDATE_PROJECT]}
+                projectId={projectId}
+                onClick={() => navigate(updateLocation)}
                 data-loading
                 aria-label='edit'
                 tooltipProps={{
@@ -34,7 +43,8 @@ export const ContextActionsCell: FC<IContextActionsCellProps> = ({
                 <Edit />
             </PermissionIconButton>
             <PermissionIconButton
-                permission={permissions.delete}
+                permission={[DELETE_CONTEXT_FIELD, UPDATE_PROJECT]}
+                projectId={projectId}
                 onClick={onDelete}
                 data-loading
                 disabled={!allowDelete}

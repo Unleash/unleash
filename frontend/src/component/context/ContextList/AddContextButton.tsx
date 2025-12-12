@@ -5,22 +5,31 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import type { FC } from 'react';
-import { useDynamicContextActionParams } from './useDynamicContextActionParams.ts';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import {
+    CREATE_CONTEXT_FIELD,
+    UPDATE_PROJECT,
+} from '@server/types/permissions.ts';
 
 type IAddContextButtonProps = {};
 
 export const AddContextButton: FC<IAddContextButtonProps> = () => {
     const smallScreen = useMediaQuery('(max-width:700px)');
     const navigate = useNavigate();
-    const { permissions, locations } = useDynamicContextActionParams();
+    const projectId = useOptionalPathParam('projectId');
+
+    const createLocation = projectId
+        ? `/projects/${projectId}/settings/context-fields/create`
+        : '/context/create';
 
     return (
         <ConditionallyRender
             condition={smallScreen}
             show={
                 <PermissionIconButton
-                    permission={permissions.create}
-                    onClick={() => navigate(locations.create)}
+                    permission={[CREATE_CONTEXT_FIELD, UPDATE_PROJECT]}
+                    projectId={projectId}
+                    onClick={() => navigate(createLocation)}
                     size='large'
                     tooltipProps={{ title: 'Add context type' }}
                 >
@@ -29,8 +38,9 @@ export const AddContextButton: FC<IAddContextButtonProps> = () => {
             }
             elseShow={
                 <PermissionButton
-                    onClick={() => navigate(locations.create)}
-                    permission={permissions.create}
+                    permission={[CREATE_CONTEXT_FIELD, UPDATE_PROJECT]}
+                    projectId={projectId}
+                    onClick={() => navigate(createLocation)}
                     color='primary'
                     variant='contained'
                 >

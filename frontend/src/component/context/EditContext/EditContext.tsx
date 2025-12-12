@@ -14,6 +14,7 @@ import { useContextForm } from '../hooks/useContextForm.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import { UPDATE_PROJECT } from '@server/types/permissions.ts';
 
 type EditContextProps = {
     modal?: boolean;
@@ -112,7 +113,10 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
                 setErrors={setErrors}
                 clearErrors={clearErrors}
             >
-                <UpdateButton permission={UPDATE_CONTEXT_FIELD} />
+                <UpdateButton
+                    permission={[UPDATE_CONTEXT_FIELD, UPDATE_PROJECT]}
+                    projectId={projectId}
+                />
             </ContextForm>
         </FormTemplate>
     );

@@ -9,6 +9,7 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import { UPDATE_PROJECT } from '@server/types/permissions.ts';
 
 interface ICreateContextProps {
     onSubmit: () => void;
@@ -100,7 +101,8 @@ export const CreateUnleashContext = ({
             >
                 <CreateButton
                     name='context'
-                    permission={CREATE_CONTEXT_FIELD}
+                    permission={[CREATE_CONTEXT_FIELD, UPDATE_PROJECT]}
+                    projectId={projectId}
                 />
             </ContextForm>
         </FormTemplate>

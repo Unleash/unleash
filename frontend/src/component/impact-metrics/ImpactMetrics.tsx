@@ -15,7 +15,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import { ADMIN } from '../providers/AccessProvider/permissions.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { usePlausibleTracker } from '../../hooks/usePlausibleTracker.ts';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 
 const StyledEmptyState = styled(Paper)(({ theme }) => ({
     textAlign: 'center',

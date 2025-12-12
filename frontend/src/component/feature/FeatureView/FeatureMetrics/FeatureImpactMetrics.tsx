@@ -19,7 +19,7 @@ import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions.t
 import useToast from 'hooks/useToast.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
 import type { ChartConfig } from '../../../impact-metrics/types.ts';
-import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker.ts';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,

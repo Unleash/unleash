@@ -3992,10 +3992,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsconfig/docusaurus@npm:2.0.3":
-  version: 2.0.3
-  resolution: "@tsconfig/docusaurus@npm:2.0.3"
-  checksum: 10c0/6e3d2739f34d479a0e3ffe3499b2fd21e955f56dca7b0226aa03e0ce24fd3f0d65a85f15586b83c1d049d9724966c3c065a1d6e778379906ae280189c5fe823b
+"@tsconfig/docusaurus@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@tsconfig/docusaurus@npm:2.0.7"
+  checksum: 10c0/021278dc513a3c20f3d7f2fef145508a43a6ac34348475a54aba907dbd0517ab337416710754a2c4314720b367df81e13d45d5f999b00c858323857595ad7905
   languageName: node
   linkType: hard
 
@@ -17817,7 +17817,7 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
     "@docusaurus/utils": "npm:^3.7.0"
     "@docusaurus/utils-validation": "npm:^3.7.0"
     "@mdx-js/react": "npm:^3.1.0"
-    "@tsconfig/docusaurus": "npm:2.0.3"
+    "@tsconfig/docusaurus": "npm:2.0.7"
     "@types/react": "npm:^18.3.12"
     docusaurus-plugin-openapi-docs: "npm:4.3.4"
     docusaurus-plugin-remote-content: "npm:^4.0.0"

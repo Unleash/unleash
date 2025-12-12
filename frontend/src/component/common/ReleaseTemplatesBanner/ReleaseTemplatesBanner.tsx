@@ -9,8 +9,6 @@ import {
 import type { FC } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -68,8 +66,6 @@ const StyledIllustration = styled(Box)(({ theme }) => ({
 }));
 
 export const ReleaseTemplatesBanner: FC = () => {
-    const { isEnterprise } = useUiConfig();
-    const gtmReleaseManagementEnabled = useUiFlag('gtmReleaseManagement');
     const { trackEvent } = usePlausibleTracker();
     const navigate = useNavigate();
 
@@ -78,11 +74,7 @@ export const ReleaseTemplatesBanner: FC = () => {
     >('release-templates-banner:v1', 'open');
 
     useEffect(() => {
-        if (
-            isEnterprise() &&
-            gtmReleaseManagementEnabled &&
-            bannerState === 'open'
-        ) {
+        if (bannerState === 'open') {
             trackEvent('release-templates-banner', {
                 props: {
                     eventType: 'seen',
@@ -90,10 +82,6 @@ export const ReleaseTemplatesBanner: FC = () => {
             });
         }
     }, []);
-
-    if (!isEnterprise() || !gtmReleaseManagementEnabled) {
-        return null;
-    }
 
     if (bannerState === 'closed') {
         return null;

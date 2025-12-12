@@ -3,7 +3,7 @@ import { addMinutes, isPast } from 'date-fns';
 import type { MilestoneStatus } from '../ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { formatDateYMDHM } from 'utils/formatDate.ts';
 
-const MAX_INTERVAL_MINUTES = 525600; // 365 days
+const MAX_VALUE = 10000;
 
 export type TimeUnit = 'minutes' | 'hours' | 'days';
 
@@ -79,8 +79,8 @@ export const useMilestoneProgressionForm = (
 
         if (total === 0) {
             newErrors.time = 'Time cannot be zero';
-        } else if (total > MAX_INTERVAL_MINUTES) {
-            newErrors.time = 'Time interval cannot exceed 365 days';
+        } else if (timeValue > MAX_VALUE) {
+            newErrors.time = `Value cannot exceed ${MAX_VALUE}`;
         }
 
         // Only validate against current time for active/paused milestones
@@ -112,7 +112,8 @@ export const useMilestoneProgressionForm = (
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
         const inputValue = event.target.value;
-        setTimeValue(Number(inputValue));
+        const newValue = Number(inputValue);
+        setTimeValue(Math.min(newValue, MAX_VALUE));
     };
 
     const clearErrors = useCallback(() => {

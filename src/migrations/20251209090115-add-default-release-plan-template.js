@@ -1,18 +1,16 @@
 'use strict';
 
-const { ulid } = require('ulidx');
-
 const TEMPLATE_NAME = 'Unleash Release Template';
+const TEMPLATE_ID = '01KC6TD3HASJWRPMKT1ACY8M3A';
 
 exports.up = function (db, callback) {
-    const templateId = ulid();
-    const milestoneIds = [ulid(), ulid(), ulid(), ulid()];
-    const strategyIds = [ulid(), ulid(), ulid(), ulid()];
+    const milestoneIds = ['01KC6VHE9VYKDN12C5VASZ5GQY', '01KC6VHE9VB6YX6B3QVJ6J8M7D', '01KC6VHE9V0JFJSTHY5AYMSF0G', '01KC6VHE9VJSFWF0RJDYCVMWBC'];
+    const strategyIds = ['01KC6VJDDYAYBRCZT92YFF1H5Q', '01KC6VJDDYMA9W74KJ4TJ9EEK6', '01KC6VJDDYD4VX407YX4QA3AVJ', '01KC6VJDDYVR43TJTWY1BZ2SYF'];
 
     db.runSql(
         `
         INSERT INTO release_plan_definitions (id, discriminator, name, description, created_by_user_id)
-        SELECT '${templateId}', 'template', '${TEMPLATE_NAME}',
+        SELECT '${TEMPLATE_ID}', 'template', '${TEMPLATE_NAME}',
                'A built-in progressive rollout template with 25%, 50%, 75%, and 100% milestones.',
                -1337
         WHERE NOT EXISTS (
@@ -21,7 +19,7 @@ exports.up = function (db, callback) {
         );
 
         INSERT INTO milestones (id, name, sort_order, release_plan_definition_id)
-        SELECT v.id, v.name, v.sort_order, '${templateId}'
+        SELECT v.id, v.name, v.sort_order, '${TEMPLATE_ID}'
         FROM (VALUES
             ('${milestoneIds[0]}', 'Rollout 25%', 0),
             ('${milestoneIds[1]}', 'Rollout 50%', 1),
@@ -29,7 +27,7 @@ exports.up = function (db, callback) {
             ('${milestoneIds[3]}', 'Rollout 100%', 3)
         ) AS v(id, name, sort_order)
         WHERE EXISTS (
-            SELECT 1 FROM release_plan_definitions WHERE id = '${templateId}'
+            SELECT 1 FROM release_plan_definitions WHERE id = '${TEMPLATE_ID}'
         );
 
         INSERT INTO milestone_strategies (id, milestone_id, sort_order, title, strategy_name, parameters, constraints)
@@ -50,8 +48,7 @@ exports.up = function (db, callback) {
 
 exports.down = function (db, callback) {
     db.runSql(
-        `DELETE FROM release_plan_definitions
-         WHERE discriminator = 'template' AND name = '${TEMPLATE_NAME}'`,
+        `DELETE FROM release_plan_definitions WHERE id = '${TEMPLATE_ID}'`,
         callback,
     );
 };

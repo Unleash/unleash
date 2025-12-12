@@ -245,7 +245,7 @@ export const FeatureStrategyMenuCards = ({
                         {standardStrategies.map(renderStrategy)}
                     </FeatureStrategyMenuCardsSection>
                 )}
-  
+
                 {shouldRender('advanced') && advancedStrategies.length > 0 && (
                     <FeatureStrategyMenuCardsSection title='Advanced strategies'>
                         {advancedStrategies.map(renderStrategy)}

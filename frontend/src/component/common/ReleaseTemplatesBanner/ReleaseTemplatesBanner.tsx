@@ -1,4 +1,11 @@
-import { IconButton, styled, Tooltip, Typography, Button, Box } from '@mui/material';
+import {
+    IconButton,
+    styled,
+    Tooltip,
+    Typography,
+    Button,
+    Box,
+} from '@mui/material';
 import type { FC } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
@@ -66,13 +73,16 @@ export const ReleaseTemplatesBanner: FC = () => {
     const { trackEvent } = usePlausibleTracker();
     const navigate = useNavigate();
 
-    const [bannerState, setBannerState] = useLocalStorageState<'open' | 'closed'>(
-        'release-templates-banner:v1',
-        'open',
-    );
+    const [bannerState, setBannerState] = useLocalStorageState<
+        'open' | 'closed'
+    >('release-templates-banner:v1', 'open');
 
     useEffect(() => {
-        if (isEnterprise() && gtmReleaseManagementEnabled && bannerState === 'open') {
+        if (
+            isEnterprise() &&
+            gtmReleaseManagementEnabled &&
+            bannerState === 'open'
+        ) {
             trackEvent('release-templates-banner', {
                 props: {
                     eventType: 'seen',
@@ -120,7 +130,9 @@ export const ReleaseTemplatesBanner: FC = () => {
             </Tooltip>
             <StyledContent>
                 <StyledText>
-                    <StyledTitle variant='h2'>Get started with release templates</StyledTitle>
+                    <StyledTitle variant='h2'>
+                        Get started with release templates
+                    </StyledTitle>
                     <Typography color='text.secondary'>
                         Control your releases with milestones that can be
                         automatically enabled or paused.
@@ -132,10 +144,7 @@ export const ReleaseTemplatesBanner: FC = () => {
                     </StyledButtonContainer>
                 </StyledText>
                 <StyledIllustration>
-                    <img
-                        src={bannerProgressionSvg}
-                        alt='Release progression'
-                    />
+                    <img src={bannerProgressionSvg} alt='Release progression' />
                 </StyledIllustration>
             </StyledContent>
         </StyledContainer>

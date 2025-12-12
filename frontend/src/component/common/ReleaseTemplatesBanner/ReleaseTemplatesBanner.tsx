@@ -1,4 +1,4 @@
-import { IconButton, styled, Tooltip, Typography, Button } from '@mui/material';
+import { IconButton, styled, Tooltip, Typography, Button, Box } from '@mui/material';
 import type { FC } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bannerProgressionSvg from 'assets/img/banner-progression.svg';
 
-const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexFlow: 'column nowrap',
     gap: theme.spacing(2),
@@ -21,26 +21,26 @@ const StyledContainer = styled('div')(({ theme }) => ({
     position: 'relative',
 }));
 
-const StyledContent = styled('div')(({ theme }) => ({
+const StyledContent = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(2),
     alignItems: 'center',
     justifyContent: 'space-between',
 }));
 
-const StyledText = styled('div')(() => ({
+const StyledText = styled(Box)(() => ({
     display: 'flex',
     flexFlow: 'column nowrap',
 }));
 
-const StyledTitle = styled('h2')(({ theme }) => ({
+const StyledTitle = styled(Typography)(({ theme }) => ({
     margin: 0,
     marginBottom: theme.spacing(0.5),
     fontSize: theme.typography.body1.fontSize,
     fontWeight: theme.typography.fontWeightBold,
 }));
 
-const StyledButtonContainer = styled('div')(({ theme }) => ({
+const StyledButtonContainer = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(2),
 }));
 
@@ -50,7 +50,7 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
     right: theme.spacing(1),
 }));
 
-const StyledIllustration = styled('div')(({ theme }) => ({
+const StyledIllustration = styled(Box)(({ theme }) => ({
     flexShrink: 0,
     display: 'flex',
     alignItems: 'center',
@@ -104,7 +104,7 @@ export const ReleaseTemplatesBanner: FC = () => {
                 eventType: 'create-clicked',
             },
         });
-        navigate('/release-templates/create');
+        navigate('/release-templates/create-template');
     };
 
     return (
@@ -120,7 +120,7 @@ export const ReleaseTemplatesBanner: FC = () => {
             </Tooltip>
             <StyledContent>
                 <StyledText>
-                    <StyledTitle>Get started with release templates</StyledTitle>
+                    <StyledTitle variant='h2'>Get started with release templates</StyledTitle>
                     <Typography color='text.secondary'>
                         Control your releases with milestones that can be
                         automatically enabled or paused.

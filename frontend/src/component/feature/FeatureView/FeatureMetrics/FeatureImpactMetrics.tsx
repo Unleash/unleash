@@ -19,6 +19,7 @@ import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions.t
 import useToast from 'hooks/useToast.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
 import type { ChartConfig } from '../../../impact-metrics/types.ts';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -48,6 +49,7 @@ export const FeatureImpactMetrics: FC = () => {
         featureName,
     });
     const { setToastApiError } = useToast();
+    const { trackEvent } = usePlausibleTracker();
 
     const {
         metricOptions,
@@ -57,6 +59,11 @@ export const FeatureImpactMetrics: FC = () => {
 
     const handleAddChart = () => {
         setModalState({ type: 'creating' });
+        trackEvent('impact-metrics', {
+            props: {
+                eventType: 'project chart modal open',
+            },
+        });
     };
 
     const handleEditChart = (config: ChartConfig) => {

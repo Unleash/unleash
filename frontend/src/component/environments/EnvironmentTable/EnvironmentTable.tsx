@@ -75,7 +75,9 @@ export const EnvironmentTable = () => {
                           width: '1%',
                           Cell: ({
                               row: { original },
-                          }: { row: { original: IEnvironment } }) => (
+                          }: {
+                              row: { original: IEnvironment };
+                          }) => (
                               <EnvironmentActionCell environment={original} />
                           ),
                           disableGlobalFilter: true,

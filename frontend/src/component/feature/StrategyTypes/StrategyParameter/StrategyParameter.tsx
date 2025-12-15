@@ -42,11 +42,11 @@ export const StrategyParameter = ({
         updateParameter(name, parseParameterString(event.target.value));
     };
 
-    const onChangePercentage = (event: Event, next: number | number[]) => {
+    const onChangePercentage = (_event: Event, next: number | number[]) => {
         updateParameter(name, next.toString());
     };
 
-    const onChangeBoolean = (event: React.ChangeEvent, checked: boolean) => {
+    const onChangeBoolean = (_event: React.ChangeEvent, checked: boolean) => {
         updateParameter(name, String(checked));
     };
 

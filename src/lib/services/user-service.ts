@@ -193,7 +193,7 @@ export class UserService {
                     user.id,
                     RoleName.ADMIN,
                 );
-            } catch (e) {
+            } catch (_e) {
                 this.logger.error(
                     `Unable to create default user '${username}'`,
                 );
@@ -448,7 +448,7 @@ export class UserService {
         try {
             user = await this.store.getByQuery(idQuery);
             passwordHash = await this.store.getPasswordHash(user.id);
-        } catch (error) {}
+        } catch (_error) {}
         if (user && passwordHash) {
             const match = await bcrypt.compare(password, passwordHash);
             if (match) {

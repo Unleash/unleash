@@ -43,7 +43,7 @@ import { createFakeGetLicensedUsers } from './features/instance-stats/getLicense
 import { createFakeGetReadOnlyUsers } from './features/instance-stats/getReadOnlyUsers.js';
 import { createFakeGetEdgeInstances } from './features/instance-stats/getEdgeInstances.js';
 
-const monitor = createMetricsMonitor();
+const _monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
 const prometheusRegister = register;
 let eventStore: IEventStore;
@@ -259,10 +259,10 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"\,platform_name=\"not-set\",platform_version=\"not-set\",yggdrasil_version=\"not-set\",spec_version=\"not-set\"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 3/,
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0"\,platform_name=\"not-set\",platform_version=\"not-set\",yggdrasil_version=\"not-set\",spec_version=\"not-set\"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 3/,
     );
     eventStore.emit(CLIENT_REGISTER, {
         sdkName: 'unleash-client-node',
@@ -272,7 +272,7 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(newmetrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"\,platform_name=\"not-set\",platform_version=\"not-set\",yggdrasil_version=\"not-set\",spec_version=\"not-set\"} 4/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 4/,
     );
 });
 
@@ -287,7 +287,7 @@ test('Should register intervals when client registered', async () => {
         'client_registration_total',
     );
     expect(metrics).toMatch(
-        /client_registration_total{appName=\"unleash-client-node\",environment=\"development\",interval=\"15\"} 1/,
+        /client_registration_total{appName="unleash-client-node",environment="development",interval="15"} 1/,
     );
 });
 
@@ -312,7 +312,7 @@ test('should collect metrics for project disabled numbers', async () => {
         'project_environments_disabled',
     );
     expect(recordedMetric).toMatch(
-        /project_environments_disabled{project_id=\"default\"} 1/,
+        /project_environments_disabled{project_id="default"} 1/,
     );
 });
 
@@ -349,7 +349,7 @@ test('should collect limit exceeded metrics', async () => {
         'exceeds_limit_error',
     );
     expect(recordedMetric).toMatch(
-        /exceeds_limit_error{resource=\"feature flags\",limit=\"5000\"} 1/,
+        /exceeds_limit_error{resource="feature flags",limit="5000"} 1/,
     );
 });
 

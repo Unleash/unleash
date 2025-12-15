@@ -1,4 +1,4 @@
-import { useMemo, useState, type VFC } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import {
     Table,
@@ -25,8 +25,12 @@ import Adjust from '@mui/icons-material/Adjust';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
 import { UsedInCell } from '../UsedInCell.tsx';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
-const ContextList: VFC = () => {
+const ContextList: FC = () => {
+    const projectId = useOptionalPathParam('projectId');
+    const projectContextFieldsEnabled = useUiFlag('projectContextFields');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [name, setName] = useState<string>();
     const { context, refetchUnleashContext, loading } = useUnleashContext();
@@ -41,7 +45,14 @@ const ContextList: VFC = () => {
             });
         }
 
-        return context
+        const filteredContextFields =
+            projectId && projectContextFieldsEnabled
+                ? // @ts-expect-error project doesn't exist yet; todo: fix with flag projectContextFields
+                  context.filter((c) => c.project === projectId)
+                : // @ts-expect-error project doesn't exist yet; todo: fix with flag projectContextFields
+                  context.filter((c) => !c.project);
+
+        return filteredContextFields
             .map(
                 ({
                     name,
@@ -232,8 +243,8 @@ const ContextList: VFC = () => {
                         }
                         elseShow={
                             <TablePlaceholder>
-                                No contexts available. Get started by adding
-                                one.
+                                No context fields available. Get started by
+                                adding one.
                             </TablePlaceholder>
                         }
                     />

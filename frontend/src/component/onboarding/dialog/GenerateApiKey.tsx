@@ -100,7 +100,11 @@ const TokenExplanation = ({
     project,
     environment,
     secret,
-}: { project: string; environment: string; secret: string }) => {
+}: {
+    project: string;
+    environment: string;
+    secret: string;
+}) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 

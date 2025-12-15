@@ -6,7 +6,9 @@ export default class FakeTagStore implements ITagStore {
     tags: ITag[] = [];
 
     async bulkImport(tags: ITag[]): Promise<ITag[]> {
-        tags.forEach((t) => this.tags.push(t));
+        tags.forEach((t) => {
+            this.tags.push(t);
+        });
         return tags;
     }
 
@@ -15,7 +17,7 @@ export default class FakeTagStore implements ITagStore {
     }
 
     async delete(key: ITag): Promise<void> {
-        this.tags.splice(this.tags.findIndex((t) => t === key));
+        this.tags.splice(this.tags.indexOf(key));
     }
 
     async deleteAll(): Promise<void> {

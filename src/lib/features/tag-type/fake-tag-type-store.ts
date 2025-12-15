@@ -6,7 +6,9 @@ export default class FakeTagTypeStore implements ITagTypeStore {
     tagTypes: ITagType[] = [];
 
     async bulkImport(tagTypes: ITagType[]): Promise<ITagType[]> {
-        tagTypes.forEach((tT) => this.tagTypes.push(tT));
+        tagTypes.forEach((tT) => {
+            this.tagTypes.push(tT);
+        });
         return tagTypes;
     }
 

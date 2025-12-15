@@ -32,7 +32,7 @@ export const EnvironmentsField: FC<IEnvironmentsFieldProps> = ({
 
     const onEnvironmentsChange: ComponentProps<
         typeof Autocomplete
-    >['onChange'] = (event, value, reason) => {
+    >['onChange'] = (_event, value, reason) => {
         const newEnvironments = value as IOption | IOption[];
         if (reason === 'clear' || newEnvironments === null) {
             return setEnvironments([]);

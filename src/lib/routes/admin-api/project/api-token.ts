@@ -29,7 +29,6 @@ import type {
 } from '../../../services/index.js';
 import type { IAuthRequest } from '../../unleash-types.js';
 import Controller from '../../controller.js';
-import type { Logger } from '../../../logger.js';
 import type { Response } from 'express';
 import { timingSafeEqual } from 'crypto';
 import { OperationDeniedError } from '../../../error/index.js';
@@ -54,8 +53,6 @@ export class ProjectApiTokenController extends Controller {
 
     private projectService: ProjectService;
 
-    private logger: Logger;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -79,7 +76,6 @@ export class ProjectApiTokenController extends Controller {
         this.frontendApiService = frontendApiService;
         this.openApiService = openApiService;
         this.projectService = projectService;
-        this.logger = config.getLogger('project-api-token-controller.js');
 
         this.route({
             method: 'get',
@@ -152,7 +148,7 @@ export class ProjectApiTokenController extends Controller {
         const { user } = req;
         const { projectId } = req.params;
 
-        const project = await this.projectService.getProject(projectId); // Validates that the project exists
+        const _project = await this.projectService.getProject(projectId); // Validates that the project exists
         const projectTokens = await this.accessibleTokens(user, projectId);
         this.openApiService.respondWithValidation(
             200,

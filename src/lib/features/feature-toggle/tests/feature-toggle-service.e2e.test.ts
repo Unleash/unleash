@@ -290,7 +290,7 @@ test('adding and removing an environment preserves variants when variants per en
             // @ts-expect-error - incomplete flag resolver definition
             flagResolver: {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                isEnabled: (flagName: string) => false,
+                isEnabled: (_flagName: string) => false,
             },
         },
         eventService,
@@ -776,71 +776,70 @@ test.each([
     ['different rollout', { rollout: '25' }],
     ['empty parameters', {}],
     ['extra parameters are preserved', { extra: 'value', rollout: '100' }],
-])(
-    'Should use default parameters when creating a flexibleRollout strategy with %s',
-    async (description, parameters: { [key: string]: any }) => {
-        const strategy = {
-            name: 'flexibleRollout',
-            parameters,
-            constraints: [],
-        };
-        const feature = {
-            name: `test-feature-create-${description.replaceAll(' ', '-')}`,
-        };
-        const projectId = 'default';
-        const defaultStickiness = `not-default-${description.replaceAll(' ', '-')}`;
-        const expectedStickiness =
-            parameters?.stickiness === ''
-                ? defaultStickiness
-                : (parameters?.stickiness ?? defaultStickiness);
-        const expectedParameters = {
-            ...parameters, // expect extra parameters to be preserved
-            groupId: parameters?.groupId ?? feature.name,
-            stickiness: expectedStickiness,
-            rollout: parameters?.rollout ?? '100', // default rollout
-        };
-        await stores.projectStore.update({
-            id: projectId,
-            name: 'stickiness-project-test',
-            defaultStickiness,
-        });
-        const context = {
-            projectId,
-            featureName: feature.name,
-            environment: DEFAULT_ENV,
-        };
+])('Should use default parameters when creating a flexibleRollout strategy with %s', async (description, parameters: {
+    [key: string]: any;
+}) => {
+    const strategy = {
+        name: 'flexibleRollout',
+        parameters,
+        constraints: [],
+    };
+    const feature = {
+        name: `test-feature-create-${description.replaceAll(' ', '-')}`,
+    };
+    const projectId = 'default';
+    const defaultStickiness = `not-default-${description.replaceAll(' ', '-')}`;
+    const expectedStickiness =
+        parameters?.stickiness === ''
+            ? defaultStickiness
+            : (parameters?.stickiness ?? defaultStickiness);
+    const expectedParameters = {
+        ...parameters, // expect extra parameters to be preserved
+        groupId: parameters?.groupId ?? feature.name,
+        stickiness: expectedStickiness,
+        rollout: parameters?.rollout ?? '100', // default rollout
+    };
+    await stores.projectStore.update({
+        id: projectId,
+        name: 'stickiness-project-test',
+        defaultStickiness,
+    });
+    const context = {
+        projectId,
+        featureName: feature.name,
+        environment: DEFAULT_ENV,
+    };
 
-        await service.createFeatureToggle(projectId, feature, TEST_AUDIT_USER);
-        const createdStrategy = await service.createStrategy(
-            strategy,
-            context,
-            TEST_AUDIT_USER,
-        );
+    await service.createFeatureToggle(projectId, feature, TEST_AUDIT_USER);
+    const createdStrategy = await service.createStrategy(
+        strategy,
+        context,
+        TEST_AUDIT_USER,
+    );
 
-        const featureDB = await service.getFeature({
-            featureName: feature.name,
-        });
+    const featureDB = await service.getFeature({
+        featureName: feature.name,
+    });
 
-        expect(
-            featureDB.environments[0].strategies[0].parameters,
-        ).toStrictEqual(expectedParameters);
+    expect(featureDB.environments[0].strategies[0].parameters).toStrictEqual(
+        expectedParameters,
+    );
 
-        // Verify that updating the strategy with same data is idempotent
-        await service.updateStrategy(
-            createdStrategy.id,
-            strategy,
-            context,
-            TEST_AUDIT_USER,
-        );
-        const featureDBAfterUpdate = await service.getFeature({
-            featureName: feature.name,
-        });
+    // Verify that updating the strategy with same data is idempotent
+    await service.updateStrategy(
+        createdStrategy.id,
+        strategy,
+        context,
+        TEST_AUDIT_USER,
+    );
+    const featureDBAfterUpdate = await service.getFeature({
+        featureName: feature.name,
+    });
 
-        expect(
-            featureDBAfterUpdate.environments[0].strategies[0].parameters,
-        ).toStrictEqual(expectedParameters);
-    },
-);
+    expect(
+        featureDBAfterUpdate.environments[0].strategies[0].parameters,
+    ).toStrictEqual(expectedParameters);
+});
 
 test('Should not allow to add flags to archived projects', async () => {
     const project = await stores.projectStore.create({

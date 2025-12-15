@@ -36,5 +36,5 @@ test('Pass query params to server and return total', async () => {
     render(<TestComponent query='value' />);
 
     await screen.findByText('default (0)');
-    const element = await screen.findByText('resultvalue (10)');
+    const _element = await screen.findByText('resultvalue (10)');
 });

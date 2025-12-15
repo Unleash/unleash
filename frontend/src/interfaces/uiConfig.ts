@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Variant } from 'utils/variants';
 import type { ResourceLimitsSchema } from 'openapi';
-import {} from '@unleash/proxy-client-react/dist/FlagContext';
 import type { IMutableContext } from 'unleash-proxy-client';
 
 export interface IUiConfig {
@@ -91,8 +90,8 @@ export type UiFlags = {
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;
-    enterpriseEdgeUI?: boolean;
     gtmReleaseManagement?: boolean;
+    projectContextFields?: boolean;
 };
 
 export interface IVersionInfo {

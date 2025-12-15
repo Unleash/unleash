@@ -1,4 +1,3 @@
-import type { Logger } from '../../../logger.js';
 import type {
     IUnknownFlagsStore,
     IUnleashConfig,
@@ -11,20 +10,15 @@ import type {
 } from './unknown-flags-store.js';
 
 export class UnknownFlagsService {
-    private logger: Logger;
-
     private unknownFlagsStore: IUnknownFlagsStore;
 
     private unknownFlagsCache: Map<string, UnknownFlagReport>;
 
     constructor(
         { unknownFlagsStore }: Pick<IUnleashStores, 'unknownFlagsStore'>,
-        config: IUnleashConfig,
+        _config: IUnleashConfig,
     ) {
         this.unknownFlagsStore = unknownFlagsStore;
-        this.logger = config.getLogger(
-            '/features/metrics/unknown-flags/unknown-flags-service.ts',
-        );
         this.unknownFlagsCache = new Map<string, UnknownFlagReport>();
     }
 

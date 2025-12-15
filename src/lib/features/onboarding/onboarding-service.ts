@@ -1,11 +1,9 @@
 import type {
-    IFlagResolver,
     IProjectReadModel,
     IUnleashConfig,
     IUserStore,
 } from '../../types/index.js';
 import type EventEmitter from 'events';
-import type { Logger } from '../../logger.js';
 import { STAGE_ENTERED, USER_LOGIN } from '../../metric-events.js';
 import type { NewStage } from '../feature-lifecycle/feature-lifecycle-store-type.js';
 import type {
@@ -18,11 +16,7 @@ import { isBefore, millisecondsToSeconds } from 'date-fns';
 const START_ONBOARDING_TRACKING_DATE = new Date(2024, 8, 3);
 
 export class OnboardingService {
-    private flagResolver: IFlagResolver;
-
     private eventBus: EventEmitter;
-
-    private logger: Logger;
 
     private onboardingStore: IOnboardingStore;
 
@@ -40,18 +34,12 @@ export class OnboardingService {
             projectReadModel: IProjectReadModel;
             userStore: IUserStore;
         },
-        {
-            flagResolver,
-            eventBus,
-            getLogger,
-        }: Pick<IUnleashConfig, 'flagResolver' | 'eventBus' | 'getLogger'>,
+        { eventBus }: Pick<IUnleashConfig, 'eventBus'>,
     ) {
         this.onboardingStore = onboardingStore;
         this.projectReadModel = projectReadModel;
         this.userStore = userStore;
-        this.flagResolver = flagResolver;
         this.eventBus = eventBus;
-        this.logger = getLogger('onboarding/onboarding-service.ts');
     }
 
     listen() {
@@ -115,7 +103,7 @@ export class OnboardingService {
         if (!firstInstanceUserDate) return;
 
         const timeToEvent = millisecondsToSeconds(
-            new Date().getTime() - firstInstanceUserDate.getTime(),
+            Date.now() - firstInstanceUserDate.getTime(),
         );
         await this.onboardingStore.insertInstanceEvent({
             type: event.type,

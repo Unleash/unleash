@@ -210,6 +210,14 @@ export const FeatureStrategyMenuCards = ({
                 />
             </StyledFiltersContainer>
             <StyledScrollableContent>
+                {shouldRender('releaseTemplates') && (
+                    <FeatureStrategyMenuCardsReleaseTemplates
+                        onAddReleasePlan={onAddReleasePlan}
+                        onReviewReleasePlan={onReviewReleasePlan}
+                        filter={filter}
+                        setFilter={setFilter}
+                    />
+                )}
                 {shouldRender('default') && (
                     <FeatureStrategyMenuCardsSection
                         title={
@@ -237,14 +245,7 @@ export const FeatureStrategyMenuCards = ({
                         {standardStrategies.map(renderStrategy)}
                     </FeatureStrategyMenuCardsSection>
                 )}
-                {shouldRender('releaseTemplates') && (
-                    <FeatureStrategyMenuCardsReleaseTemplates
-                        onAddReleasePlan={onAddReleasePlan}
-                        onReviewReleasePlan={onReviewReleasePlan}
-                        filter={filter}
-                        setFilter={setFilter}
-                    />
-                )}
+
                 {shouldRender('advanced') && advancedStrategies.length > 0 && (
                     <FeatureStrategyMenuCardsSection title='Advanced strategies'>
                         {advancedStrategies.map(renderStrategy)}

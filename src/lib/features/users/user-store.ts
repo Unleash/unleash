@@ -1,4 +1,4 @@
-import type { Logger, LogProvider } from '../../logger.js';
+import type { LogProvider } from '../../logger.js';
 import User from '../../types/user.js';
 
 import NotFoundError from '../../error/notfound-error.js';
@@ -65,11 +65,8 @@ const rowToUser = (row) => {
 export class UserStore implements IUserStore {
     private db: Db;
 
-    private logger: Logger;
-
-    constructor(db: Db, getLogger: LogProvider) {
+    constructor(db: Db, _getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('user-store.ts');
     }
 
     async getPasswordsPreviouslyUsed(userId: number): Promise<string[]> {

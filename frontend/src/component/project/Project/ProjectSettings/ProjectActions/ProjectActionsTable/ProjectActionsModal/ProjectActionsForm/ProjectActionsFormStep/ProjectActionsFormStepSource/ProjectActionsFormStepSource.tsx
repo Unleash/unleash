@@ -107,7 +107,7 @@ export const ProjectActionsFormStepSource = ({
                 value={`${sourceId}`}
                 onChange={(v) => {
                     validateSourceId(Number(v));
-                    setSourceId(Number.parseInt(v));
+                    setSourceId(Number.parseInt(v, 10));
                 }}
             />
             <ConditionallyRender

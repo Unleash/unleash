@@ -135,7 +135,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
             }
         };
     }
-    return (req, res, next) => {
+    return (_req, _res, next) => {
         next();
     };
 };

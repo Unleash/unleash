@@ -5,10 +5,10 @@ import type {
 } from './onboarding-store-type.js';
 
 export class FakeOnboardingStore implements IOnboardingStore {
-    insertProjectEvent(event: ProjectEvent): Promise<void> {
+    insertProjectEvent(_event: ProjectEvent): Promise<void> {
         throw new Error('Method not implemented.');
     }
-    async insertInstanceEvent(event: InstanceEvent): Promise<void> {
+    async insertInstanceEvent(_event: InstanceEvent): Promise<void> {
         throw new Error('Method not implemented.');
     }
     async deleteAll(): Promise<void> {

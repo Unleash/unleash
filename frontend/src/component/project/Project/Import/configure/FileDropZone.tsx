@@ -20,7 +20,7 @@ const onFileDropped =
             try {
                 const json = formatJSON(contents);
                 onSuccess(json);
-            } catch (e) {
+            } catch (_e) {
                 onError('Cannot format as valid JSON');
             }
         } else {

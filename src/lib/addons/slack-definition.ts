@@ -14,6 +14,8 @@ import {
     FEATURE_PROJECT_CHANGE,
     FEATURE_VARIANTS_UPDATED,
     FEATURE_POTENTIALLY_STALE_ON,
+    RELEASE_PLAN_PROGRESSIONS_PAUSED,
+    RELEASE_PLAN_PROGRESSIONS_RESUMED,
 } from '../events/index.js';
 import type { IAddonDefinition } from '../types/model.js';
 
@@ -97,6 +99,8 @@ const slackDefinition: IAddonDefinition = {
         FEATURE_VARIANTS_UPDATED,
         FEATURE_PROJECT_CHANGE,
         FEATURE_POTENTIALLY_STALE_ON,
+        RELEASE_PLAN_PROGRESSIONS_PAUSED,
+        RELEASE_PLAN_PROGRESSIONS_RESUMED,
     ],
     tagTypes: [
         {

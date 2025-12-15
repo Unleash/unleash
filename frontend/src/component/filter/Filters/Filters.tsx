@@ -63,11 +63,10 @@ const StyledIcon = styled(Icon)(({ theme }) => ({
     },
 }));
 
-type RangeChangeHandler = (filter: IDateFilterItem) =>
-    | ((value: {
-          from: FilterItemParams;
-          to: FilterItemParams;
-      }) => void)
+type RangeChangeHandler = (
+    filter: IDateFilterItem,
+) =>
+    | ((value: { from: FilterItemParams; to: FilterItemParams }) => void)
     | undefined;
 
 type RenderFilterProps = {

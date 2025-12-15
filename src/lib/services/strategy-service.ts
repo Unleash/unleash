@@ -1,4 +1,3 @@
-import type { Logger } from '../logger.js';
 import type { IUnleashConfig } from '../types/option.js';
 import type { IUnleashStores } from '../types/stores.js';
 import type {
@@ -20,8 +19,6 @@ import strategySchema from './strategy-schema.js';
 import { NameExistsError, OperationDeniedError } from '../error/index.js';
 
 class StrategyService {
-    private logger: Logger;
-
     private strategyStore: IStrategyStore;
 
     private eventService: EventService;
@@ -30,16 +27,12 @@ class StrategyService {
 
     constructor(
         { strategyStore }: Pick<IUnleashStores, 'strategyStore'>,
-        {
-            getLogger,
-            customStrategySettings,
-        }: Pick<IUnleashConfig, 'getLogger' | 'customStrategySettings'>,
+        config: Pick<IUnleashConfig, 'getLogger' | 'customStrategySettings'>,
         eventService: EventService,
     ) {
         this.strategyStore = strategyStore;
         this.eventService = eventService;
-        this.logger = getLogger('services/strategy-service.js');
-        this.customStrategySettings = customStrategySettings;
+        this.customStrategySettings = config.customStrategySettings;
     }
 
     async getStrategies(): Promise<IStrategy[]> {

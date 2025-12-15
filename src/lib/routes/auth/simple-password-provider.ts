@@ -1,6 +1,5 @@
 import type { Response } from 'express';
 import type { OpenApiService } from '../../services/openapi-service.js';
-import type { Logger } from '../../logger.js';
 import type { IUnleashConfig } from '../../types/index.js';
 import type UserService from '../../services/user-service.js';
 import type { IUnleashServices } from '../../services/index.js';
@@ -15,8 +14,6 @@ import { serializeDates } from '../../types/serialize-dates.js';
 import { getStandardResponses } from '../../openapi/index.js';
 
 export class SimplePasswordProvider extends Controller {
-    private logger: Logger;
-
     private openApiService: OpenApiService;
 
     private userService: UserService;
@@ -29,7 +26,6 @@ export class SimplePasswordProvider extends Controller {
         }: Pick<IUnleashServices, 'userService' | 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('/auth/password-provider.js');
         this.openApiService = openApiService;
         this.userService = userService;
 

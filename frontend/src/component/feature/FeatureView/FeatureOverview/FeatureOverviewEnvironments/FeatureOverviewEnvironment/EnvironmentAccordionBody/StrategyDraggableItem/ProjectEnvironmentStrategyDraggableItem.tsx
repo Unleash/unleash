@@ -45,7 +45,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
 }: ProjectEnvironmentStrategyDraggableItemProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const ref = useRef<HTMLDivElement>(null);
+    const _ref = useRef<HTMLDivElement>(null);
     const strategyChangesFromRequest = useStrategyChangesFromRequest(
         projectId,
         featureId,

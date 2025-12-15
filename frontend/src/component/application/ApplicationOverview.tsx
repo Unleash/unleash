@@ -74,7 +74,7 @@ const ApplicationOverview = () => {
     usePageTitle('Applications - Overview');
     useTracking();
     const applicationName = useRequiredPathParam('name');
-    const navigate = useNavigate();
+    const _navigate = useNavigate();
     const { data, loading } = useApplicationOverview(applicationName);
 
     const { openFeedback } = useFeedback('applicationOverview', 'automatic');

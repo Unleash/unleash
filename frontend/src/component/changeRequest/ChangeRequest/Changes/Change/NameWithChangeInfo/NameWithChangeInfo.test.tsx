@@ -2,47 +2,39 @@ import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { NameWithChangeInfo } from './NameWithChangeInfo.tsx';
 
-test.each(['', undefined])(
-    'Should render only the new name if the previous name was %s',
-    async (previousName) => {
-        const newName = 'new name';
-        render(
-            <NameWithChangeInfo
-                newName={newName}
-                previousName={previousName}
-            />,
-        );
+test.each([
+    '',
+    undefined,
+])('Should render only the new name if the previous name was %s', async (previousName) => {
+    const newName = 'new name';
+    render(
+        <NameWithChangeInfo newName={newName} previousName={previousName} />,
+    );
 
-        // expect no del elements
-        expect(
-            screen.queryByText(previousName || '', { selector: 'del' }),
-        ).toBeNull();
+    // expect no del elements
+    expect(
+        screen.queryByText(previousName || '', { selector: 'del' }),
+    ).toBeNull();
 
-        // expect ins element with new strategy name
-        await screen.findByText(newName, { selector: 'ins' });
-    },
-);
+    // expect ins element with new strategy name
+    await screen.findByText(newName, { selector: 'ins' });
+});
 
-test.each(['', undefined])(
-    'Should render the old name as deleted and no new name if there was a previous name and the new one is %s',
-    async (newName) => {
-        const previousName = 'previous name';
-        render(
-            <NameWithChangeInfo
-                newName={newName}
-                previousName={previousName}
-            />,
-        );
+test.each([
+    '',
+    undefined,
+])('Should render the old name as deleted and no new name if there was a previous name and the new one is %s', async (newName) => {
+    const previousName = 'previous name';
+    render(
+        <NameWithChangeInfo newName={newName} previousName={previousName} />,
+    );
 
-        // expect no ins elements
-        expect(
-            screen.queryByText(newName || '', { selector: 'ins' }),
-        ).toBeNull();
+    // expect no ins elements
+    expect(screen.queryByText(newName || '', { selector: 'ins' })).toBeNull();
 
-        // expect del element with old strategy name
-        await screen.findByText(previousName, { selector: 'del' });
-    },
-);
+    // expect del element with old strategy name
+    await screen.findByText(previousName, { selector: 'del' });
+});
 
 test('Should render the old name as deleted and the new name as inserted if the previous name was different', async () => {
     const newName = 'new name';

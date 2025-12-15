@@ -3,7 +3,6 @@ import type {
     FeatureEnvironmentKey,
     IFeatureEnvironmentStore,
 } from '../types/stores/feature-environment-store.js';
-import type { Logger } from '../logger.js';
 import metricsHelper from '../util/metrics-helper.js';
 import { DB_TIME } from '../metric-events.js';
 import type { IFeatureEnvironment, IVariant } from '../types/model.js';
@@ -33,18 +32,15 @@ interface ISegmentRow {
 export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     private db: Db;
 
-    private logger: Logger;
-
     private readonly timer: Function;
 
     private readonly isOss: boolean;
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        { getLogger, isOss }: Pick<IUnleashConfig, 'getLogger' | 'isOss'>,
+        { isOss }: Pick<IUnleashConfig, 'isOss'>,
     ) {
         this.db = db;
-        this.logger = getLogger('feature-environment-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-environments',

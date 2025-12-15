@@ -28,7 +28,7 @@ export const PlaygroundEnvironmentDiffTable = ({
 
     const data = useMemo(
         () =>
-            firstEnvFeatures.map((item, index) => ({
+            firstEnvFeatures.map((_item, index) => ({
                 ...Object.fromEntries(
                     environments.map((env) => [env, features[env][index]]),
                 ),

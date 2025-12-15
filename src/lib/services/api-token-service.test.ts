@@ -239,7 +239,7 @@ test('normalizes api token type casing to lowercase', async () => {
     await apiTokenService.createApiTokenWithProjects(
         {
             environment: DEFAULT_ENV,
-            // @ts-ignore
+            // @ts-expect-error
             type: 'CLIENT',
             projects: [],
             tokenName: 'uppercase-token',
@@ -250,7 +250,7 @@ test('normalizes api token type casing to lowercase', async () => {
     await apiTokenService.createApiTokenWithProjects(
         {
             environment: DEFAULT_ENV,
-            // @ts-ignore
+            // @ts-expect-error
             type: 'client',
             projects: [],
             tokenName: 'lowercase-token',

@@ -18,6 +18,7 @@ import type { ChartConfig } from '../types.ts';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { LabelsFilter } from './LabelFilter/LabelsFilter.tsx';
 import { ImpactMetricsChart } from '../ImpactMetricsChart.tsx';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 
 export const StyledConfigPanel = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -68,11 +69,17 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
         });
     const theme = useTheme();
     const screenBreakpoint = useMediaQuery(theme.breakpoints.down('lg'));
+    const { trackEvent } = usePlausibleTracker();
 
     const handleSave = () => {
         if (!isValid) return;
 
         onSave(actions.getConfigToSave());
+        trackEvent('impact-metrics', {
+            props: {
+                eventType: 'chart added',
+            },
+        });
         onClose();
     };
 

@@ -261,7 +261,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                 await favorite(projectId, feature.name);
             }
             refetchFeature();
-        } catch (error) {
+        } catch (_error) {
             setToastApiError('Something went wrong, could not update favorite');
         }
     };

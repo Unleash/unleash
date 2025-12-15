@@ -13,11 +13,7 @@ import { sortStrategies } from '../../../util/sortStrategies.js';
 import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type.js';
 
 export class FeatureToggleRowConverter {
-    private flagResolver: IFlagResolver;
-
-    constructor(flagResolver: IFlagResolver) {
-        this.flagResolver = flagResolver;
-    }
+    constructor(_flagResolver: IFlagResolver) {}
 
     isUnseenStrategyRow = (
         feature: PartialDeep<IFeatureToggleClient>,
@@ -171,7 +167,7 @@ export class FeatureToggleRowConverter {
     buildFeatureToggleListFromRows = (
         rows: any[],
         featureQuery?: IFeatureToggleQuery,
-        includeDisabledStrategies?: boolean,
+        _includeDisabledStrategies?: boolean,
     ): IFeatureToggleListItem[] => {
         const result = rows.reduce((acc, r) => {
             let feature: PartialDeep<IFeatureToggleListItem> = acc[r.name] ?? {

@@ -9,13 +9,13 @@ let stores: IUnleashStores;
 
 const preHook = (
     app,
-    config,
+    _config,
     {
         userService,
         accessService,
     }: Pick<IUnleashServices, 'userService' | 'accessService'>,
 ) => {
-    app.use('/api/admin/', async (req, res, next) => {
+    app.use('/api/admin/', async (req, _res, next) => {
         const role = await accessService.getPredefinedRole(RoleName.EDITOR);
         req.user = await userService.createUser({
             email: 'editor2@example.com',

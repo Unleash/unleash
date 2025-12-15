@@ -389,7 +389,7 @@ describe('Playground API E2E', () => {
                                 (acc, next) => ({
                                     ...acc,
                                     [next.name]:
-                                        // @ts-ignore
+                                        // @ts-expect-error
                                         next.strategies[0].constraints[0]
                                             .values[0] === req.context.appName,
                                 }),

@@ -2,7 +2,6 @@ import type { Request, Response } from 'express';
 import Controller from '../../../routes/controller.js';
 import type { IUnleashConfig } from '../../../types/option.js';
 import type { IFlagResolver } from '../../../types/index.js';
-import type { Logger } from '../../../logger.js';
 import type ClientMetricsServiceV2 from './metrics-service-v2.js';
 import { NONE } from '../../../types/permissions.js';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema.js';
@@ -28,8 +27,6 @@ interface IHoursBack {
 }
 
 class ClientMetricsController extends Controller {
-    private logger: Logger;
-
     private metrics: ClientMetricsServiceV2;
 
     private openApiService: OpenApiService;
@@ -50,7 +47,6 @@ class ClientMetricsController extends Controller {
         }: Pick<IUnleashServices, 'clientMetricsServiceV2' | 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/client-metrics.ts');
 
         this.metrics = clientMetricsServiceV2;
         this.openApiService = openApiService;

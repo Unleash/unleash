@@ -25,6 +25,7 @@ export default defineConfig({
             'website/**',
             'frontend/**',
             'docker/index.js',
+            'dist/**',
         ],
         environment: 'node',
         coverage: {

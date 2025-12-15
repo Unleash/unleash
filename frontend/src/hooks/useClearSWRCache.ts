@@ -27,7 +27,9 @@ export const clearCacheEntries = ({
             ? filteredKeys
             : filteredKeys.slice(0, -entriesToKeep);
 
-    keysToDelete.forEach((key) => cache.delete(key));
+    keysToDelete.forEach((key) => {
+        cache.delete(key);
+    });
 };
 
 type UseClearSWRCacheProps = {

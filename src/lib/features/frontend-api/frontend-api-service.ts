@@ -198,7 +198,9 @@ export class FrontendApiService {
     }
 
     stopAll(): void {
-        this.clients.forEach((promise) => promise.then((c) => c.destroy()));
+        this.clients.forEach((promise) => {
+            promise.then((c) => c.destroy());
+        });
     }
 
     refreshData(): Promise<void> {

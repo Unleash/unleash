@@ -79,7 +79,7 @@ export const createUser_API = (userName: string, role: number) => {
         .then((response) => {
             const id = response.body.id;
             updateUserPassword_API(id).then(() => {
-                addUserToProject_API(id, PROJECT_MEMBER).then((value) => {
+                addUserToProject_API(id, PROJECT_MEMBER).then((_value) => {
                     userIds.push(id);
                     userCredentials.push({ email, password });
                 });

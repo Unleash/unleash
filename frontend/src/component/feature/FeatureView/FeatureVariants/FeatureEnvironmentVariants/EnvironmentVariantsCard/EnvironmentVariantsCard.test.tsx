@@ -12,7 +12,7 @@ import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 
 const server = testServerSetup();
 
-const strategy = {
+const _strategy = {
     name: 'flexibleRollout',
     constraints: [],
     variants: [],

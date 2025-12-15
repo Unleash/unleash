@@ -3,10 +3,7 @@ import type { TooltipState } from './ChartTooltip/ChartTooltip.jsx';
 
 export const createTooltip =
     (setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>) =>
-    (context: {
-        chart: Chart;
-        tooltip: TooltipModel<any>;
-    }) => {
+    (context: { chart: Chart; tooltip: TooltipModel<any> }) => {
         const tooltip = context.tooltip;
         if (tooltip.opacity === 0) {
             setTooltip(null);

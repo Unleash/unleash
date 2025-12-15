@@ -43,7 +43,9 @@ const LineChartComponent: FC<{
     overrideOptions?: ChartOptions<'line'>;
     TooltipComponent?: ({
         tooltip,
-    }: { tooltip: TooltipState | null }) => ReturnType<FC>;
+    }: {
+        tooltip: TooltipState | null;
+    }) => ReturnType<FC>;
 }> = ({
     data,
     aspectRatio = 2.5,

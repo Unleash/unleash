@@ -97,7 +97,9 @@ export const BannersTable = () => {
                 accessor: 'enabled',
                 Cell: ({
                     row: { original: banner },
-                }: { row: { original: IInternalBanner } }) => (
+                }: {
+                    row: { original: IInternalBanner };
+                }) => (
                     <ToggleCell
                         checked={banner.enabled}
                         setChecked={(enabled) =>

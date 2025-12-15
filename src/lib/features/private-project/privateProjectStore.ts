@@ -1,5 +1,5 @@
 import type { Db } from '../../db/db.js';
-import type { Logger, LogProvider } from '../../logger.js';
+import type { LogProvider } from '../../logger.js';
 import type { IPrivateProjectStore } from './privateProjectStoreType.js';
 import { ADMIN_TOKEN_USER } from '../../types/index.js';
 
@@ -19,11 +19,8 @@ export const ALL_PROJECT_ACCESS: ProjectAccess = {
 class PrivateProjectStore implements IPrivateProjectStore {
     private db: Db;
 
-    private logger: Logger;
-
-    constructor(db: Db, getLogger: LogProvider) {
+    constructor(db: Db, _getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('project-permission-store.ts');
     }
 
     destroy(): void {}

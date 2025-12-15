@@ -1,5 +1,4 @@
 import NotFoundError from '../error/notfound-error.js';
-import type { Logger } from '../logger.js';
 import {
     FEATURE_TAGGED,
     FEATURE_UNTAGGED,
@@ -24,6 +23,7 @@ import {
 import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error/index.js';
 import type EventService from '../features/events/event-service.js';
 import type { ITag } from '../tags/index.js';
+import type { Logger } from '../logger.js';
 
 class FeatureTagService {
     private tagStore: ITagStore;
@@ -69,6 +69,7 @@ class FeatureTagService {
         tag: ITag,
         auditUser: IAuditUser,
     ): Promise<ITag> {
+        this.logger.debug(`Adding tag ${tag} to {featureName}`);
         const featureToggle = await this.featureToggleStore.get(featureName);
         if (featureToggle === undefined) {
             throw new NotFoundError();

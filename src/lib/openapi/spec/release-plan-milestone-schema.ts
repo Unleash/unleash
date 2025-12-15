@@ -89,5 +89,6 @@ export const releasePlanMilestoneSchema = {
 } as const;
 
 export type ReleasePlanMilestoneSchema = FromSchema<
-    typeof releasePlanMilestoneSchema
+    typeof releasePlanMilestoneSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

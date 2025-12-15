@@ -250,7 +250,7 @@ export const Project = () => {
                 await favorite(projectId);
             }
             refetch();
-        } catch (error) {
+        } catch (_error) {
             setToastApiError('Something went wrong, could not update favorite');
         }
     };

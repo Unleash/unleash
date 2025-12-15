@@ -8,7 +8,7 @@ function registerGracefulShutdown(unleash: IUnleash, logger: Logger): void {
             await unleash.stop();
             logger.info('Unleash has been successfully stopped.');
             process.exit(0);
-        } catch (e) {
+        } catch (_e) {
             console.log('Exiting with code 1');
             logger.error('Unable to shutdown Unleash. Hard exit!');
             process.exit(1);

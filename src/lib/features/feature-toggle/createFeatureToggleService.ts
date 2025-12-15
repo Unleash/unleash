@@ -38,10 +38,6 @@ import {
 } from '../segment/createSegmentService.js';
 import StrategyStore from '../../db/strategy-store.js';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store.js';
-import {
-    createFakePrivateProjectChecker,
-    createPrivateProjectChecker,
-} from '../private-project/createPrivateProjectChecker.js';
 import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model.js';
 import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model.js';
 import FeatureTagStore from '../../db/feature-tag-store.js';
@@ -125,8 +121,6 @@ export const createFeatureToggleService = (
         config,
     );
 
-    const privateProjectChecker = createPrivateProjectChecker(db, config);
-
     const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
     const featureLifecycleReadModel = new FeatureLifecycleReadModel(db);
@@ -158,7 +152,6 @@ export const createFeatureToggleService = (
             accessService,
             eventService,
             changeRequestAccessReadModel,
-            privateProjectChecker,
             dependentFeaturesReadModel,
             dependentFeaturesService,
             featureLifecycleReadModel,
@@ -173,7 +166,7 @@ export const createFeatureToggleService = (
 
 export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     const { getLogger, flagResolver } = config;
-    const eventStore = new FakeEventStore();
+    const _eventStore = new FakeEventStore();
     const strategyStore = new FakeStrategiesStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const featureToggleStore = new FakeFeatureToggleStore();
@@ -201,7 +194,6 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     );
     const segmentService = createFakeSegmentService(config);
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
-    const fakePrivateProjectChecker = createFakePrivateProjectChecker();
     const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
     const dependentFeaturesService = createFakeDependentFeaturesService(config);
     const featureLifecycleReadModel = new FakeFeatureLifecycleReadModel();
@@ -233,7 +225,6 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             accessService,
             eventService,
             changeRequestAccessReadModel,
-            privateProjectChecker: fakePrivateProjectChecker,
             dependentFeaturesReadModel,
             dependentFeaturesService,
             featureLifecycleReadModel,

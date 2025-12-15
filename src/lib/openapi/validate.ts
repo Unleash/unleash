@@ -33,7 +33,7 @@ export const addAjvSchema = (schemaObjects: any[]): any => {
     return ajv.addSchema(newSchemas);
 };
 
-export const validateSchema = <S = SchemaId>(
+export const validateSchema = <_S = SchemaId>(
     schema: SchemaId,
     data: unknown,
 ): ISchemaValidationErrors<SchemaId> | undefined => {
@@ -45,7 +45,7 @@ export const validateSchema = <S = SchemaId>(
     }
 };
 
-export const throwOnInvalidSchema = <S = SchemaId>(
+export const throwOnInvalidSchema = <_S = SchemaId>(
     schema: SchemaId,
     data: object,
 ): void => {

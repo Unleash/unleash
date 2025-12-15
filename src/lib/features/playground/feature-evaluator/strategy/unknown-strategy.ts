@@ -14,7 +14,7 @@ export default class UnknownStrategy extends Strategy {
     }
 
     isEnabledWithConstraints(
-        parameters: unknown,
+        _parameters: unknown,
         context: Context,
         constraints: Iterable<Constraint>,
         segments: SegmentForEvaluation[],

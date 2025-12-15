@@ -35,7 +35,7 @@ const InfoLine = ({
     </Typography>
 );
 
-const InfoSummary = ({ data }: { data: { key: string; value: number }[] }) => (
+const _InfoSummary = ({ data }: { data: { key: string; value: number }[] }) => (
     <Typography variant={'body1'} component={'p'}>
         <Box display={'flex'} flexDirection={'row'}>
             {data.map(({ key, value }) => (

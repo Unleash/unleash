@@ -50,5 +50,6 @@ export const updateFeatureStrategySchema = {
 } as const;
 
 export type UpdateFeatureStrategySchema = FromSchema<
-    typeof updateFeatureStrategySchema
+    typeof updateFeatureStrategySchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

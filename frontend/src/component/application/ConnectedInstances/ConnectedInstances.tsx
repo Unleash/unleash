@@ -100,7 +100,7 @@ export const ConnectedInstances: FC = () => {
                             color='primary'
                             value={currentEnvironment}
                             exclusive
-                            onChange={(event, value) => {
+                            onChange={(_event, value) => {
                                 if (value !== null) {
                                     trackEnvironmentChange();
                                     setCurrentEnvironment(value);

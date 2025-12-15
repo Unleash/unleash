@@ -36,13 +36,13 @@ async function getSetup() {
 
 let request: TestAgent<Test>;
 let base: string;
-let stores: IUnleashStores;
+let _stores: IUnleashStores;
 
 beforeEach(async () => {
     const setup = await getSetup();
     request = setup.request;
     base = setup.base;
-    stores = setup.stores;
+    _stores = setup.stores;
 });
 
 test('should get ui config', async () => {

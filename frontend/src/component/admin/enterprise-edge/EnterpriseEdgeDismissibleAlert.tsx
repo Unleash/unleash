@@ -7,7 +7,6 @@ import {
     Typography,
 } from '@mui/material';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { Link } from 'react-router-dom';
 import { ReactComponent as EnterpriseEdgeCloud } from 'assets/img/enterpriseEdgeCloud.svg';
 
@@ -73,9 +72,6 @@ export const EnterpriseEdgeDismissibleAlert = ({
         'enterpriseEdgeUIDismissibleAlert',
         'open',
     );
-    const enterpriseEdgeUIEnabled = useUiFlag('enterpriseEdgeUI');
-
-    if (!enterpriseEdgeUIEnabled) return null;
 
     return (
         <Collapse in={alertState === 'open'}>

@@ -4,7 +4,7 @@ import type {
 } from './types/last-seen-read-model-type.js';
 
 export class FakeLastSeenReadModel implements ILastSeenReadModel {
-    getForFeature(features: string[]): Promise<IFeatureLastSeenResults> {
+    getForFeature(_features: string[]): Promise<IFeatureLastSeenResults> {
         return Promise.resolve({});
     }
 }

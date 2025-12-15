@@ -23,7 +23,7 @@ export default class RemoteAddressStrategy extends Strategy {
                             context.remoteAddress || '',
                         );
                         return remoteAddress.isInSubnet(subnetRange);
-                    } catch (err) {
+                    } catch (_err) {
                         return false;
                     }
                 }

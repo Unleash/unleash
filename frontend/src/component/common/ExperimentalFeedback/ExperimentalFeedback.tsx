@@ -97,7 +97,7 @@ export const ExperimentalFeedback: React.FC<IExperimentalFeedbackProps> = ({
             if (!metrics.sent) {
                 setMetrics({ sent: true });
             }
-        } catch (e) {
+        } catch (_e) {
             console.error('error sending metrics');
         }
     };

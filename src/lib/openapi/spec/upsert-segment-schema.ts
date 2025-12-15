@@ -39,4 +39,7 @@ export const upsertSegmentSchema = {
     },
 } as const;
 
-export type UpsertSegmentSchema = FromSchema<typeof upsertSegmentSchema>;
+export type UpsertSegmentSchema = FromSchema<
+    typeof upsertSegmentSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

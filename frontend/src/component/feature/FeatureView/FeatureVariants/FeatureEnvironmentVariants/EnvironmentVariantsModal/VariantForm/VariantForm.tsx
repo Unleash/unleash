@@ -297,7 +297,7 @@ export const VariantForm = ({
                 return !Number.isNaN(Number(payload.value));
             }
             return true;
-        } catch (e: unknown) {
+        } catch (_e: unknown) {
             return false;
         }
     };

@@ -40,6 +40,6 @@ export const SafeguardHelpIcon: FC<SafeguardHelpIconProps> = ({
                 </StyledSafeguardLink>
             </StyledTooltipContent>
         }
-        size='1.2rem'
+        size='1.5rem'
     />
 );

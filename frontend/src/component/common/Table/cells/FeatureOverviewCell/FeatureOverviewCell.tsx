@@ -54,7 +54,7 @@ const CustomTagButton = styled('button')(({ theme }) => ({
     color: 'inherit',
 }));
 
-const StyledTag = styled(Chip)(({ theme }) => ({
+const _StyledTag = styled(Chip)(({ theme }) => ({
     overflowWrap: 'anywhere',
     lineHeight: theme.typography.body1.lineHeight,
     backgroundColor: theme.palette.background.paper,

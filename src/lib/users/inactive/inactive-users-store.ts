@@ -4,7 +4,7 @@ import type {
 } from './types/inactive-users-store-type.js';
 import type { Db } from '../../db/db.js';
 import type EventEmitter from 'events';
-import type { Logger, LogProvider } from '../../logger.js';
+import type { LogProvider } from '../../logger.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
 
@@ -12,16 +12,10 @@ const TABLE = 'users';
 export class InactiveUsersStore implements IInactiveUsersStore {
     private db: Db;
 
-    private readonly logger: Logger;
-
     private timer: Function;
 
-    private eventEmitter: EventEmitter;
-
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, _getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('users/inactive/inactive-users-store.ts');
-        this.eventEmitter = eventBus;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'inactive_users',

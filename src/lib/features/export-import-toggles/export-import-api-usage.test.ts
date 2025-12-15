@@ -40,7 +40,7 @@ const defaultImportPayload: ImportTogglesSchema = {
 
 test('reject API imports with admin tokens', async () => {
     const preHook = (app: any) => {
-        app.use('/api/admin/', async (req, res, next) => {
+        app.use('/api/admin/', async (req, _res, next) => {
             const user = new ApiUser({
                 permissions: ['ADMIN'],
                 environment: '*',

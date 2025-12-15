@@ -74,7 +74,7 @@ export const ProjectSelect: VFC<IProjectSelectProps> = forwardRef(
 
         const onProjectsChange: ComponentProps<
             typeof Autocomplete
-        >['onChange'] = (event, value, reason) => {
+        >['onChange'] = (_event, value, reason) => {
             const newProjects = value as IOption | IOption[];
             if (reason === 'clear' || newProjects === null) {
                 return onChange([allOption.id]);

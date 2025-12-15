@@ -1,4 +1,3 @@
-import type { Logger } from '../../logger.js';
 import type {
     IContextField,
     IContextFieldDto,
@@ -10,11 +9,7 @@ import type {
 } from '../../types/stores.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { ContextFieldStrategiesSchema } from '../../openapi/spec/context-field-strategies-schema.js';
-import type {
-    IAuditUser,
-    IFeatureStrategy,
-    IFlagResolver,
-} from '../../types/index.js';
+import type { IAuditUser, IFeatureStrategy } from '../../types/index.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type EventService from '../events/event-service.js';
 import {
@@ -38,10 +33,6 @@ class ContextService {
 
     private featureStrategiesStore: IFeatureStrategiesStore;
 
-    private logger: Logger;
-
-    private flagResolver: IFlagResolver;
-
     private privateProjectChecker: IPrivateProjectChecker;
 
     constructor(
@@ -49,19 +40,14 @@ class ContextService {
             contextFieldStore,
             featureStrategiesStore,
         }: Pick<IUnleashStores, 'contextFieldStore' | 'featureStrategiesStore'>,
-        {
-            getLogger,
-            flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        _config: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.privateProjectChecker = privateProjectChecker;
         this.eventService = eventService;
-        this.flagResolver = flagResolver;
         this.contextFieldStore = contextFieldStore;
         this.featureStrategiesStore = featureStrategiesStore;
-        this.logger = getLogger('services/context-service.js');
     }
 
     async getAll(): Promise<IContextField[]> {
@@ -267,7 +253,7 @@ class ContextService {
         try {
             await this.contextFieldStore.get(name);
             msg = 'A context field with that name already exist';
-        } catch (error) {
+        } catch (_error) {
             // No conflict, everything ok!
             return;
         }

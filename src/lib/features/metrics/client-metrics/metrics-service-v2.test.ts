@@ -130,8 +130,8 @@ test('get daily client metrics for a toggle', async () => {
     };
     const clientMetricsStoreV2 = {
         getMetricsForFeatureToggleV2(
-            featureName: string,
-            hoursBack?: number,
+            _featureName: string,
+            _hoursBack?: number,
         ): Promise<IClientMetricsEnv[]> {
             return Promise.resolve([
                 {
@@ -188,8 +188,8 @@ test('get hourly client metrics for a toggle', async () => {
     };
     const clientMetricsStoreV2 = {
         getMetricsForFeatureToggleV2(
-            featureName: string,
-            hoursBack?: number,
+            _featureName: string,
+            _hoursBack?: number,
         ): Promise<IClientMetricsEnv[]> {
             return Promise.resolve([
                 {

@@ -12,7 +12,7 @@ export const useOnBlur = (
                 containerRef.current?.contains(event.target as Node) || false;
         };
 
-        const handleBlur = (event: FocusEvent) => {
+        const handleBlur = (_event: FocusEvent) => {
             setTimeout(() => {
                 if (
                     !mouseDownInside &&

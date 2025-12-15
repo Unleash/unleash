@@ -373,6 +373,7 @@ export default class ClientInstanceService {
                     instanceUsedSemver < semver
                 );
             }
+            return false;
         });
     }
 }

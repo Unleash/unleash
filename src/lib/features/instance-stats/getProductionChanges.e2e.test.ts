@@ -6,7 +6,7 @@ import {
     createGetProductionChanges,
     type GetProductionChanges,
 } from './getProductionChanges.js';
-import subDays from 'date-fns/subDays';
+import { subDays } from 'date-fns/subDays';
 let db: ITestDb;
 let getProductionChanges: GetProductionChanges;
 
@@ -35,7 +35,7 @@ const mockRawEventDaysAgo = (
     };
 };
 
-const noEnvironmentEvent = (days: number) => {
+const noEnvironmentEvent = (_days: number) => {
     return {
         type: 'FEATURE_UPDATED',
         created_by: 'testrunner',

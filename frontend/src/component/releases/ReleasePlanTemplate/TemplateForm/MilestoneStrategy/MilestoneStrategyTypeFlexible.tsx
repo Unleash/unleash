@@ -58,7 +58,7 @@ export const MilestoneStrategyTypeFlexible = ({
     editable,
     errors,
 }: IMilestoneStrategyTypeFlexibleProps) => {
-    const updateRollout = (e: Event, value: number | number[]) => {
+    const updateRollout = (_e: Event, value: number | number[]) => {
         updateParameter('rollout', value.toString());
     };
 

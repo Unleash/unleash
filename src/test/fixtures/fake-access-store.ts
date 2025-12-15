@@ -37,73 +37,73 @@ export class FakeAccessStore implements IAccessStore {
     }
 
     getProjectUserAndGroupCountsForRole(
-        roleId: number,
+        _roleId: number,
     ): Promise<IProjectRoleUsage[]> {
         throw new Error('Method not implemented.');
     }
 
     getAllProjectRolesForUser(
-        userId: number,
-        project: string,
+        _userId: number,
+        _project: string,
     ): Promise<IRoleWithProject[]> {
         throw new Error('Method not implemented.');
     }
 
     addAccessToProject(
-        roles: number[],
-        groups: number[],
-        users: number[],
-        projectId: string,
-        createdBy: string,
+        _roles: number[],
+        _groups: number[],
+        _users: number[],
+        _projectId: string,
+        _createdBy: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
     addGroupToRole(
-        groupId: number,
-        roleId: number,
-        created_by: string,
-        projectId?: string,
+        _groupId: number,
+        _roleId: number,
+        _created_by: string,
+        _projectId?: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
     updateUserProjectRole(
-        userId: number,
-        roleId: number,
-        projectId: string,
+        _userId: number,
+        _roleId: number,
+        _projectId: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
     removeUserFromRole(
-        userId: number,
-        roleId: number,
-        projectId: string,
+        _userId: number,
+        _roleId: number,
+        _projectId: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    wipePermissionsFromRole(role_id: number): Promise<void> {
+    wipePermissionsFromRole(_role_id: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    unlinkUserRoles(userId: number): Promise<void> {
+    unlinkUserRoles(_userId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    getRoleByName(name: string): Promise<IRole> {
+    getRoleByName(_name: string): Promise<IRole> {
         throw new Error('Method not implemented.');
     }
 
     getProjectUsersForRole(
-        roleId: number,
-        projectId?: string,
+        _roleId: number,
+        _projectId?: string,
     ): Promise<IUserRole[]> {
         throw new Error('Method not implemented.');
     }
 
-    getProjectUsers(projectId?: string): Promise<IUserWithProjectRoles[]> {
+    getProjectUsers(_projectId?: string): Promise<IUserWithProjectRoles[]> {
         throw new Error('Method not implemented.');
     }
 
@@ -112,8 +112,8 @@ export class FakeAccessStore implements IAccessStore {
     }
 
     addEnvironmentPermissionsToRole(
-        role_id: number,
-        permissions: PermissionRef[],
+        _role_id: number,
+        _permissions: PermissionRef[],
     ): Promise<void> {
         return Promise.resolve(undefined);
     }
@@ -122,7 +122,7 @@ export class FakeAccessStore implements IAccessStore {
         return Promise.resolve(this.availablePermissions);
     }
 
-    getPermissionsForUser(userId: Number): Promise<IUserPermission[]> {
+    getPermissionsForUser(_userId: Number): Promise<IUserPermission[]> {
         return Promise.resolve([]);
     }
 
@@ -135,15 +135,15 @@ export class FakeAccessStore implements IAccessStore {
         return Promise.resolve([]);
     }
 
-    getRoleWithId(id: number): Promise<IRole> {
+    getRoleWithId(_id: number): Promise<IRole> {
         throw new Error('Method not implemented.');
     }
 
-    getRolesForProject(projectId: string): Promise<IRole[]> {
+    getRolesForProject(_projectId: string): Promise<IRole[]> {
         throw new Error('Method not implemented.');
     }
 
-    removeRolesForProject(projectId: string): Promise<void> {
+    removeRolesForProject(_projectId: string): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
@@ -160,11 +160,14 @@ export class FakeAccessStore implements IAccessStore {
         }
     }
 
-    getUserIdsForRole(roleId: number, projectId: string): Promise<number[]> {
+    getUserIdsForRole(_roleId: number, _projectId: string): Promise<number[]> {
         throw new Error('Method not implemented.');
     }
 
-    getGroupIdsForRole(roleId: number, projectId?: string): Promise<number[]> {
+    getGroupIdsForRole(
+        _roleId: number,
+        _projectId?: string,
+    ): Promise<number[]> {
         throw new Error('Method not implemented.');
     }
 
@@ -188,9 +191,9 @@ export class FakeAccessStore implements IAccessStore {
     }
 
     removePermissionFromRole(
-        roleId: number,
-        permission: string,
-        projectId?: string,
+        _roleId: number,
+        _permission: string,
+        _projectId?: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
@@ -199,7 +202,7 @@ export class FakeAccessStore implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
-    delete(key: number): Promise<void> {
+    delete(_key: number): Promise<void> {
         return Promise.resolve(undefined);
     }
 
@@ -209,11 +212,11 @@ export class FakeAccessStore implements IAccessStore {
 
     destroy(): void {}
 
-    exists(key: number): Promise<boolean> {
+    exists(_key: number): Promise<boolean> {
         return Promise.resolve(false);
     }
 
-    get(key: number): Promise<IRole> {
+    get(_key: number): Promise<IRole> {
         throw new Error('Not implemented yet');
     }
 
@@ -226,67 +229,67 @@ export class FakeAccessStore implements IAccessStore {
     }
 
     removeRolesOfTypeForUser(
-        userId: number,
-        roleTypes: string[],
+        _userId: number,
+        _roleTypes: string[],
     ): Promise<void> {
         return Promise.resolve(undefined);
     }
 
     cloneEnvironmentPermissions(
-        sourceEnvironment: string,
-        destinationEnvironment: string,
+        _sourceEnvironment: string,
+        _destinationEnvironment: string,
     ): Promise<void> {
         return Promise.resolve(undefined);
     }
 
-    clearUserPersonalAccessTokens(userId: number): Promise<void> {
+    clearUserPersonalAccessTokens(_userId: number): Promise<void> {
         return Promise.resolve(undefined);
     }
 
-    unlinkUserGroups(userId: number): Promise<void> {
+    unlinkUserGroups(_userId: number): Promise<void> {
         return Promise.resolve(undefined);
     }
 
-    clearPublicSignupUserTokens(userId: number): Promise<void> {
+    clearPublicSignupUserTokens(_userId: number): Promise<void> {
         return Promise.resolve(undefined);
     }
 
     getProjectRolesForGroup(
-        projectId: string,
-        groupId: number,
+        _projectId: string,
+        _groupId: number,
     ): Promise<number[]> {
         throw new Error('Method not implemented.');
     }
 
     getProjectRolesForUser(
-        projectId: string,
-        userId: number,
+        _projectId: string,
+        _userId: number,
     ): Promise<number[]> {
         throw new Error('Method not implemented.');
     }
 
     setProjectRolesForGroup(
-        projectId: string,
-        groupId: number,
-        roles: number[],
-        createdBy: string,
+        _projectId: string,
+        _groupId: number,
+        _roles: number[],
+        _createdBy: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
     setProjectRolesForUser(
-        projectId: string,
-        userId: number,
-        roles: number[],
+        _projectId: string,
+        _userId: number,
+        _roles: number[],
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    removeUserAccess(projectId: string, userId: number): Promise<void> {
+    removeUserAccess(_projectId: string, _userId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    removeGroupAccess(projectId: string, groupId: number): Promise<void> {
+    removeGroupAccess(_projectId: string, _groupId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 

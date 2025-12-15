@@ -22,10 +22,12 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData.ts';
 import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { InfoSection } from './InfoSection.tsx';
 import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
 import { Link } from 'react-router-dom';
+import { ReleaseTemplatesBanner } from 'component/common/ReleaseTemplatesBanner/ReleaseTemplatesBanner';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -274,7 +276,8 @@ export const PersonalDashboard = () => {
     const { trackEvent } = usePlausibleTracker();
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
-    const { isOss } = useUiConfig();
+    const { isOss, isEnterprise } = useUiConfig();
+    const gtmReleaseManagementEnabled = useUiFlag('gtmReleaseManagement');
     const name = user?.name || '';
 
     usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
@@ -296,6 +299,9 @@ export const PersonalDashboard = () => {
 
     return (
         <MainContent>
+            {isEnterprise() && gtmReleaseManagementEnabled ? (
+                <ReleaseTemplatesBanner />
+            ) : null}
             {isOss() ? <InfoSection /> : null}
 
             <WelcomeSection>

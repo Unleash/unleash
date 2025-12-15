@@ -8,7 +8,7 @@ test('should require custom logger to implement info', () => {
     };
     const provider = () => loggerImpl;
     expect(() => {
-        // @ts-ignore:next-line
+        // @ts-expect-error:next-line
         return logger.validateLogProvider(provider);
     }).toThrowError(new TypeError('Logger must implement info'));
 });
@@ -21,7 +21,7 @@ test('should require custom logger to implement error', () => {
     };
     const provider = () => loggerImpl;
     expect(() => {
-        // @ts-ignore:next-line
+        // @ts-expect-error:next-line
         return logger.validateLogProvider(provider);
     }).toThrowError(new TypeError('Logger must implement error'));
 });

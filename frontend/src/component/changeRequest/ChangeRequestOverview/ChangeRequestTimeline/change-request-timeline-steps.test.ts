@@ -1,14 +1,14 @@
 import { stepsFromTimestamps } from './change-request-timeline-steps.ts';
 
 describe('stepsFromTimestamps', () => {
-    test.each(['Rejected', 'Cancelled'])(
-        "always includes 'Draft' and 'In review' and the current stage (%s)",
-        (state) => {
-            expect(
-                stepsFromTimestamps({}, state as 'Rejected' | 'Cancelled'),
-            ).toStrictEqual(['Draft', 'In review', state]);
-        },
-    );
+    test.each([
+        'Rejected',
+        'Cancelled',
+    ])("always includes 'Draft' and 'In review' and the current stage (%s)", (state) => {
+        expect(
+            stepsFromTimestamps({}, state as 'Rejected' | 'Cancelled'),
+        ).toStrictEqual(['Draft', 'In review', state]);
+    });
 
     test('Includes all steps in the timestamps object', () => {
         expect(

@@ -37,7 +37,7 @@ export default class FakePublicSignupStore implements IPublicSignupTokenStore {
     }
 
     // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
-    async delete(secret: string): Promise<void> {
+    async delete(_secret: string): Promise<void> {
         return Promise.resolve(undefined);
     }
 
@@ -100,7 +100,7 @@ export default class FakePublicSignupStore implements IPublicSignupTokenStore {
     }
 
     // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
-    async getAll(query?: Object): Promise<PublicSignupTokenSchema[]> {
+    async getAll(_query?: Object): Promise<PublicSignupTokenSchema[]> {
         return Promise.resolve(this.tokens);
     }
 }

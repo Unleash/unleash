@@ -153,5 +153,6 @@ export const featureEnvironmentSchema = {
 } as const;
 
 export type FeatureEnvironmentSchema = FromSchema<
-    typeof featureEnvironmentSchema
+    typeof featureEnvironmentSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

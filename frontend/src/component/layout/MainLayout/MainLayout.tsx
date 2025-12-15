@@ -114,7 +114,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         />
 
                         <Box
-                            sx={(theme) => ({
+                            sx={(_theme) => ({
                                 display: 'flex',
                                 mt: 0,
                             })}

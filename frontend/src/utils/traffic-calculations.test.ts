@@ -90,7 +90,7 @@ describe('traffic overage calculation', () => {
 
     it('doesnt estimate when having less than 5 days worth of data', () => {
         const now = new Date();
-        const period = toSelectablePeriod(now);
+        const _period = toSelectablePeriod(now);
         const testNow = new Date(now.getFullYear(), now.getMonth(), 4);
         const includedTraffic = 53_000_000;
         const rawData = trafficData4Days(now);
@@ -161,7 +161,7 @@ describe('traffic overage calculation', () => {
         testData[1].data.push(22_500_000);
         testData[2].data.push(22_500_000);
         const now = new Date();
-        const period = toSelectablePeriod(now);
+        const _period = toSelectablePeriod(now);
         const testNow = new Date(now.getFullYear(), now.getMonth(), 5);
         const includedTraffic = 53_000_000;
         const trafficUnitSize = 500_000;

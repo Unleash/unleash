@@ -29,9 +29,9 @@ class AccessServiceMock extends AccessService {
     }
 
     hasPermission(
-        user: User,
-        permission: string,
-        projectId?: string,
+        _user: User,
+        _permission: string,
+        _projectId?: string,
     ): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
@@ -40,26 +40,26 @@ class AccessServiceMock extends AccessService {
         throw new Error('Method not implemented.');
     }
 
-    addUserToRole(userId: number, roleId: number): Promise<void> {
+    addUserToRole(_userId: number, _roleId: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    setUserRootRole(userId: number, roleId: number): Promise<void> {
+    setUserRootRole(_userId: number, _roleId: number): Promise<void> {
         return Promise.resolve();
     }
 
     addPermissionToRole(
-        roleId: number,
-        permission: string,
-        projectId?: string,
+        _roleId: number,
+        _permission: string,
+        _projectId?: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
     removePermissionFromRole(
-        roleId: number,
-        permission: string,
-        projectId?: string,
+        _roleId: number,
+        _permission: string,
+        _projectId?: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
@@ -68,31 +68,31 @@ class AccessServiceMock extends AccessService {
         throw new Error('Method not implemented.');
     }
 
-    getRolesForProject(projectId: string): Promise<IRole[]> {
+    getRolesForProject(_projectId: string): Promise<IRole[]> {
         throw new Error('Method not implemented.');
     }
 
-    getRolesForUser(userId: number): Promise<IRole[]> {
+    getRolesForUser(_userId: number): Promise<IRole[]> {
         return Promise.resolve([{ id: 1, name: 'Admin', type: 'root' }]);
     }
 
-    getUserRootRoles(userId: number): Promise<IRole[]> {
+    getUserRootRoles(_userId: number): Promise<IRole[]> {
         return Promise.resolve([{ id: 1, name: 'Admin', type: 'root' }]);
     }
 
-    getUsersForRole(roleId: any): Promise<User[]> {
+    getUsersForRole(_roleId: any): Promise<User[]> {
         throw new Error('Method not implemented.');
     }
 
-    getProjectRoleAccess(projectId: string): Promise<AccessWithRoles> {
+    getProjectRoleAccess(_projectId: string): Promise<AccessWithRoles> {
         throw new Error('Method not implemented.');
     }
 
-    createDefaultProjectRoles(owner: User, projectId: string): Promise<void> {
+    createDefaultProjectRoles(_owner: User, _projectId: string): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    removeDefaultProjectRoles(owner: User, projectId: string): Promise<void> {
+    removeDefaultProjectRoles(_owner: User, _projectId: string): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
@@ -100,7 +100,7 @@ class AccessServiceMock extends AccessService {
         return Promise.resolve({ id: 1, name: roleName, type: 'root' });
     }
 
-    getRootRoleForUser(userId: number): Promise<IRole> {
+    getRootRoleForUser(_userId: number): Promise<IRole> {
         return Promise.resolve({ id: 1, name: RoleName.VIEWER, type: 'root' });
     }
 }

@@ -6,8 +6,8 @@ export class FakeFeaturesReadModel implements IFeaturesReadModel {
     }
 
     featuresInTheSameProject(
-        featureA: string,
-        featureB: string,
+        _featureA: string,
+        _featureB: string,
     ): Promise<boolean> {
         return Promise.resolve(true);
     }

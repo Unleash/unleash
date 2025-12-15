@@ -9,7 +9,7 @@ export default defineConfig({
     video: false,
     e2e: {
         specPattern: '**/*.spec.ts',
-        setupNodeEvents(on, config) {
+        setupNodeEvents(on, _config) {
             on(
                 'file:preprocessor',
                 vitePreprocessor({

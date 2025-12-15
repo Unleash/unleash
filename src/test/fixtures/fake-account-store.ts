@@ -86,13 +86,13 @@ export class FakeAccountStore implements IAccountStore {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getAccountByPersonalAccessToken(
-        secret: string,
+        _secret: string,
     ): Promise<IUser | undefined> {
         return Promise.resolve(undefined);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async markSeenAt(secrets: string[]): Promise<void> {
+    async markSeenAt(_secrets: string[]): Promise<void> {
         throw new Error('Not implemented');
     }
 

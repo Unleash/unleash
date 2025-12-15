@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import type {
@@ -25,14 +25,14 @@ afterAll(async () => {
 test("Should be able to keep track of what we've announced", async () => {
     const clientRegistration = {
         appName: faker.internet.domainName(),
-        instanceId: faker.datatype.uuid(),
+        instanceId: faker.string.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        interval: faker.datatype.number(),
+        interval: faker.number.int(),
         sdkVersion: '3.11.2',
         icon: '',
         description: faker.company.catchPhrase(),
-        color: faker.internet.color(),
+        color: faker.color.rgb(),
     };
     await clientApplicationsStore.upsert(clientRegistration);
     let unannounced = await clientApplicationsStore.getUnannounced();
@@ -46,14 +46,14 @@ test("Should be able to keep track of what we've announced", async () => {
 test('Multiple instances should still only announce once per app', async () => {
     const clientRegistration = {
         appName: faker.internet.domainName(),
-        instanceId: faker.datatype.uuid(),
+        instanceId: faker.string.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        interval: faker.datatype.number(),
+        interval: faker.number.int(),
         sdkVersion: '3.11.2',
         icon: '',
         description: faker.company.catchPhrase(),
-        color: faker.internet.color(),
+        color: faker.color.rgb(),
     };
     const clientReg2 = { ...clientRegistration, instanceId: 'someotherid' };
     await clientApplicationsStore.upsert(clientRegistration);
@@ -74,14 +74,14 @@ test('Multiple applications should also be possible to announce', async () => {
     while (clients.length < 10) {
         const clientRegistration = {
             appName: `${faker.internet.domainName()}_${clients.length}`,
-            instanceId: faker.datatype.uuid(),
+            instanceId: faker.string.uuid(),
             strategies: ['default'],
             started: Date.now(),
-            interval: faker.datatype.number(),
+            interval: faker.number.int(),
             sdkVersion: '3.11.2',
             icon: '',
             description: faker.company.catchPhrase(),
-            color: faker.internet.color(),
+            color: faker.color.rgb(),
             createdBy: 'test',
             createdByUserId: -1337,
         };
@@ -99,14 +99,14 @@ test('Multiple applications should also be possible to announce', async () => {
 test('Same application registered multiple times should still only be announced once', async () => {
     const clientRegistration = {
         appName: faker.internet.domainName(),
-        instanceId: faker.datatype.uuid(),
+        instanceId: faker.string.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        interval: faker.datatype.number(),
+        interval: faker.number.int(),
         sdkVersion: '3.11.2',
         icon: '',
         description: faker.company.catchPhrase(),
-        color: faker.internet.color(),
+        color: faker.color.rgb(),
     };
     await clientApplicationsStore.upsert(clientRegistration);
     let unannounced = await clientApplicationsStore.getUnannounced();
@@ -124,12 +124,12 @@ test('Same application registered multiple times should still only be announced 
 test('Merge keeps value for single row in database', async () => {
     const clientRegistration = {
         appName: faker.internet.domainName(),
-        instanceId: faker.datatype.uuid(),
+        instanceId: faker.string.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        icon: faker.internet.color(),
+        icon: faker.color.rgb(),
         description: faker.company.catchPhrase(),
-        color: faker.internet.color(),
+        color: faker.color.rgb(),
     };
     await clientApplicationsStore.upsert(clientRegistration);
     await clientApplicationsStore.upsert({
@@ -151,12 +151,12 @@ test('Multi row merge also works', async () => {
     while (clients.length < 10) {
         const clientRegistration = {
             appName: `${faker.internet.domainName()}_${clients.length}`,
-            instanceId: faker.datatype.uuid(),
+            instanceId: faker.string.uuid(),
             strategies: ['default'],
             started: Date.now(),
-            icon: faker.internet.color(),
+            icon: faker.color.rgb(),
             description: faker.company.catchPhrase(),
-            color: faker.internet.color(),
+            color: faker.color.rgb(),
             createdBy: 'test-user',
             createdByUserId: -1337,
         };
@@ -179,14 +179,14 @@ test('Multi row merge also works', async () => {
 test('Remove inactive applications', async () => {
     const clientRegistration = {
         appName: faker.internet.domainName(),
-        instanceId: faker.datatype.uuid(),
+        instanceId: faker.string.uuid(),
         strategies: ['default'],
         started: Date.now(),
-        interval: faker.datatype.number(),
+        interval: faker.number.int(),
         sdkVersion: '3.11.2',
         icon: '',
         description: faker.company.catchPhrase(),
-        color: faker.internet.color(),
+        color: faker.color.rgb(),
     };
 
     await clientApplicationsStore.upsert({

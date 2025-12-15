@@ -48,7 +48,7 @@ export function parseEnvVarJSON(
     if (envVar) {
         try {
             return JSON.parse(envVar);
-        } catch (e) {
+        } catch (_e) {
             return defaultVal;
         }
     }

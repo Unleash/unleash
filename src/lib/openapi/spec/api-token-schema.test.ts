@@ -14,16 +14,17 @@ const defaultData: ApiTokenSchema = {
     project: '',
 };
 
-test.each([ApiTokenType.CLIENT, ApiTokenType.BACKEND, ApiTokenType.FRONTEND])(
-    'apiTokenSchema %s',
-    (tokenType) => {
-        const data: ApiTokenSchema = { ...defaultData, type: tokenType };
+test.each([
+    ApiTokenType.CLIENT,
+    ApiTokenType.BACKEND,
+    ApiTokenType.FRONTEND,
+])('apiTokenSchema %s', (tokenType) => {
+    const data: ApiTokenSchema = { ...defaultData, type: tokenType };
 
-        expect(
-            validateSchema('#/components/schemas/apiTokenSchema', data),
-        ).toBeUndefined();
-    },
-);
+    expect(
+        validateSchema('#/components/schemas/apiTokenSchema', data),
+    ).toBeUndefined();
+});
 
 test('apiTokenSchema empty', () => {
     expect(

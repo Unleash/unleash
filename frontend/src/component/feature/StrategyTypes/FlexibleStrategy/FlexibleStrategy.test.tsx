@@ -108,8 +108,8 @@ test('displays groupId error', async () => {
                             stickiness: 'default',
                         }}
                         updateParameter={(
-                            parameter: string,
-                            value: string,
+                            _parameter: string,
+                            _value: string,
                         ) => {}}
                         context={{}}
                         editable={true}

@@ -13,7 +13,7 @@ import { TEST_AUDIT_USER } from '../../../lib/types/index.js';
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: SettingService;
-const TEST_USER_ID = -9999;
+const _TEST_USER_ID = -9999;
 
 beforeAll(async () => {
     const config = createTestConfig();
@@ -83,7 +83,7 @@ test('Sentitive SSO settings are redacted in event log', async () => {
     await service.insert(property, someData, TEST_AUDIT_USER);
 
     await service.insert(property, { password: 'changed' }, TEST_AUDIT_USER);
-    const actual = await service.get(property);
+    const _actual = await service.get(property);
     const { eventStore } = stores;
 
     const updatedEvents = await eventStore.searchEvents(

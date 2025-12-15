@@ -101,7 +101,6 @@ import { unique } from '../../util/unique.js';
 import type { ISegmentService } from '../segment/segment-service-interface.js';
 import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model.js';
 import { checkFeatureFlagNamesAgainstPattern } from '../feature-naming-pattern/feature-naming-validation.js';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type.js';
 import type EventService from '../events/event-service.js';
 import type { DependentFeaturesService } from '../dependent-features/dependent-features-service.js';
@@ -169,7 +168,6 @@ export type ServicesAndReadModels = {
     accessService: AccessService;
     eventService: EventService;
     changeRequestAccessReadModel: IChangeRequestAccessReadModel;
-    privateProjectChecker: IPrivateProjectChecker;
     dependentFeaturesReadModel: IDependentFeaturesReadModel;
     dependentFeaturesService: DependentFeaturesService;
     featureLifecycleReadModel: IFeatureLifecycleReadModel;
@@ -208,8 +206,6 @@ export class FeatureToggleService {
 
     private changeRequestAccessReadModel: IChangeRequestAccessReadModel;
 
-    private privateProjectChecker: IPrivateProjectChecker;
-
     private dependentFeaturesReadModel: IDependentFeaturesReadModel;
 
     private featureLifecycleReadModel: IFeatureLifecycleReadModel;
@@ -243,7 +239,6 @@ export class FeatureToggleService {
             accessService,
             eventService,
             changeRequestAccessReadModel,
-            privateProjectChecker,
             dependentFeaturesReadModel,
             dependentFeaturesService,
             featureLifecycleReadModel,
@@ -267,7 +262,6 @@ export class FeatureToggleService {
         this.eventService = eventService;
         this.flagResolver = flagResolver;
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
-        this.privateProjectChecker = privateProjectChecker;
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
         this.dependentFeaturesService = dependentFeaturesService;
         this.featureLifecycleReadModel = featureLifecycleReadModel;
@@ -318,7 +312,7 @@ export class FeatureToggleService {
 
     async validateFeatureIsNotArchived(
         featureName: string,
-        project: string,
+        _project: string,
     ): Promise<void> {
         const toggle = await this.featureToggleStore.get(featureName);
         if (toggle === undefined) {
@@ -381,15 +375,17 @@ export class FeatureToggleService {
                 segmentIds.map((segmentId) =>
                     this.segmentService.get(segmentId),
                 ),
-            ).then((segments) =>
-                segments.map((segment) => {
-                    if (segment.project && segment.project !== projectId) {
-                        throw new BadDataError(
-                            `The segment "${segment.name}" with id ${segment.id} does not belong to project "${projectId}".`,
-                        );
-                    }
-                }),
-            );
+            ).then((segments) => {
+                const mismatchedSegments = segments.filter(
+                    (segment) =>
+                        segment?.project && segment.project !== projectId,
+                );
+                if (mismatchedSegments.length > 0) {
+                    throw new BadDataError(
+                        `The segments ${mismatchedSegments.map((s) => `${s.name} with id ${s.id}`).join(',')} does not belong to project "${projectId}"`,
+                    );
+                }
+            });
         }
     }
 
@@ -1130,7 +1126,7 @@ export class FeatureToggleService {
 
         let dependencies: IDependency[] = [];
         let children: string[] = [];
-        let lifecycle: IFeatureLifecycleStage | undefined = undefined;
+        let lifecycle: IFeatureLifecycleStage | undefined;
         let collaborators: Collaborator[] = [];
         let links: IFeatureLink[] = [];
         [dependencies, children, lifecycle, collaborators, links] =
@@ -1673,7 +1669,7 @@ export class FeatureToggleService {
             msg = feature.archived
                 ? 'An archived flag with that name already exists'
                 : 'A flag with that name already exists';
-        } catch (error) {
+        } catch (_error) {
             return;
         }
         throw new NameExistsError(msg);
@@ -2398,7 +2394,7 @@ export class FeatureToggleService {
         featureName: string,
         environments: string[],
         newVariants: IVariant[],
-        user: IUser,
+        _user: IUser,
         auditUser: IAuditUser,
     ): Promise<IVariant[]> {
         for (const env of environments) {

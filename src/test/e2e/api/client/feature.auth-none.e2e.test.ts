@@ -11,7 +11,7 @@ import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
-const testUser = { name: 'test', id: -9999 } as User;
+const _testUser = { name: 'test', id: -9999 } as User;
 let clientSecret: string;
 let frontendSecret: string;
 

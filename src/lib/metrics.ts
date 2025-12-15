@@ -324,7 +324,7 @@ export function registerPrometheusMetrics(
         fetchValue: () => stores.userStore.count(),
         ttlMs: minutesToMilliseconds(15),
     });
-    const usersReadOnly = createGauge({
+    const _usersReadOnly = createGauge({
         name: 'users_read_only_total',
         help: 'Number of read-only users (users with no events or only FEATURE_FAVORITED events)',
         fetchValue: () => instanceStatsService.getReadOnlyUsers(),
@@ -1250,7 +1250,7 @@ export function registerPrometheusMetrics(
                     await stores.unknownFlagsStore.count({ unique: true });
                 unknownFlagsUniqueNamesGauge.reset();
                 unknownFlagsUniqueNamesGauge.set(unknownFlagsUniqueNames);
-            } catch (e) {}
+            } catch (_e) {}
         },
     };
 }
@@ -1310,7 +1310,7 @@ export default class MetricsMonitor {
                 pendingAcquires: pool.numPendingAcquires(),
             });
             // eslint-disable-next-line no-empty
-        } catch (e) {}
+        } catch (_e) {}
     }
 }
 

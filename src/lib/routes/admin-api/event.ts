@@ -194,7 +194,7 @@ export default class EventController extends Controller {
     }
 
     async getEventCreators(
-        req: IAuthRequest,
+        _req: IAuthRequest,
         res: Response<ProjectFlagCreatorsSchema>,
     ): Promise<void> {
         const flagCreators = await this.eventService.getEventCreators();

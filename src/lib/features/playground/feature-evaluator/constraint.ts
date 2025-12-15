@@ -91,7 +91,7 @@ const SemverOperator = (constraint: Constraint, context: Context) => {
         if (operator === Operator.SEMVER_GT) {
             return semverGt(contextValue, value);
         }
-    } catch (e) {
+    } catch (_e) {
         return false;
     }
     return false;

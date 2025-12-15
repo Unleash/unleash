@@ -156,5 +156,6 @@ export const playgroundFeatureSchema = {
 } as const;
 
 export type PlaygroundFeatureSchema = FromSchema<
-    typeof playgroundFeatureSchema
+    typeof playgroundFeatureSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

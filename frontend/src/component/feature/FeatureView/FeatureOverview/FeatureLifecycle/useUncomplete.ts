@@ -7,7 +7,11 @@ export const useUncomplete = ({
     feature,
     project,
     onChange,
-}: { feature: string; project: string; onChange?: () => void }) => {
+}: {
+    feature: string;
+    project: string;
+    onChange?: () => void;
+}) => {
     const { trackEvent } = usePlausibleTracker();
     const { setToastApiError } = useToast();
     const { markFeatureUncompleted, loading } = useFeatureLifecycleApi();

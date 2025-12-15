@@ -42,7 +42,7 @@ class TelemetryController extends Controller {
     }
 
     async getTelemetrySettings(
-        req: IAuthRequest,
+        _req: IAuthRequest,
         res: Response<TelemetrySettingsSchema>,
     ): Promise<void> {
         this.openApiService.respondWithValidation(

@@ -54,5 +54,6 @@ export const featureSearchEnvironmentSchema = {
 } as const;
 
 export type FeatureSearchEnvironmentSchema = FromSchema<
-    typeof featureSearchEnvironmentSchema
+    typeof featureSearchEnvironmentSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

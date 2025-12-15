@@ -42,13 +42,13 @@ export class OpenApiService {
         const { baseUriPath = '' } = this.config.server ?? {};
         const openapiStaticAssets = `${baseUriPath}/openapi-static`;
         const betaBadge = beta
-            ? `![Beta](${openapiStaticAssets}/Beta.svg) This is a beta endpoint and it may change or be removed in the future. 
-            
+            ? `![Beta](${openapiStaticAssets}/Beta.svg) This is a beta endpoint and it may change or be removed in the future.
+
             `
             : '';
         const enterpriseBadge = enterpriseOnly
             ? `![Unleash Enterprise](${openapiStaticAssets}/Enterprise.svg) **Enterprise feature**
-            
+
             `
             : '';
 
@@ -56,7 +56,7 @@ export class OpenApiService {
             (op.deprecated ?? false) && process.env.NODE_ENV === 'development';
 
         if (failDeprecated) {
-            return (req, res, next) => {
+            return (req, res, _next) => {
                 this.logger.warn(
                     `Deprecated endpoint: ${op.operationId} at ${req.path}`,
                 );
@@ -112,9 +112,9 @@ export class OpenApiService {
             }
         }
 
-        Object.entries(headers).forEach(([header, value]) =>
-            res.header(header, value),
-        );
+        Object.entries(headers).forEach(([header, value]) => {
+            res.header(header, value);
+        });
 
         res.status(status).json(data);
     }

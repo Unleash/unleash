@@ -118,7 +118,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
     };
 
     const changeContextValue = (
-        e: FormEvent,
+        _e: FormEvent,
         newValue: string | (string | string[])[] | null,
     ) => {
         if (!isStringOrStringArray(newValue)) return;

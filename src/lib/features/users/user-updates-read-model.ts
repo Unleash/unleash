@@ -1,4 +1,4 @@
-import type { Logger, LogProvider } from '../../logger.js';
+import type { LogProvider } from '../../logger.js';
 
 import type { Db } from '../../db/db.js';
 import { USER_COLUMNS_PUBLIC, USERS_TABLE } from './user-store.js';
@@ -31,11 +31,8 @@ const toResponse = (row: Row<UpdatedUser>): UpdatedUser => {
 export class UserUpdatesReadModel {
     private db: Db;
 
-    private logger: Logger;
-
-    constructor(db: Db, getLogger: LogProvider) {
+    constructor(db: Db, _getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('user-updates-read-model.ts');
     }
 
     async getLastUpdatedAt(): Promise<{

@@ -1,5 +1,5 @@
 import type { Db } from '../../db/db.js';
-import type { Logger, LogProvider } from '../../logger.js';
+import type { LogProvider } from '../../logger.js';
 import type {
     IContextField,
     IContextFieldDto,
@@ -66,14 +66,8 @@ interface ICreateContextField {
 class ContextFieldStore implements IContextFieldStore {
     private db: Db;
 
-    private logger: Logger;
-
-    private flagResolver: IFlagResolver;
-
-    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
+    constructor(db: Db, _getLogger: LogProvider, _flagResolver: IFlagResolver) {
         this.db = db;
-        this.flagResolver = flagResolver;
-        this.logger = getLogger('context-field-store.ts');
     }
 
     prefixColumns(columns: string[] = COLUMNS): string[] {

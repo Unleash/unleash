@@ -33,7 +33,7 @@ export default class UserSplashStore implements IUserSplashStore {
 
     private logger: Logger;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, _eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('user-splash-store.ts');
     }

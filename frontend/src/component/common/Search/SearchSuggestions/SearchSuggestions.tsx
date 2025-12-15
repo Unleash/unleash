@@ -24,7 +24,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const StyledHistory = styled(History)(({ theme }) => ({
+const _StyledHistory = styled(History)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 

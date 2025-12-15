@@ -9,7 +9,10 @@ const server = testServerSetup();
 const setupApi = ({
     limit,
     environments,
-}: { limit: number; environments: number }) => {
+}: {
+    limit: number;
+    environments: number;
+}) => {
     testServerRoute(server, '/api/admin/ui-config', {
         resourceLimits: {
             environments: limit,

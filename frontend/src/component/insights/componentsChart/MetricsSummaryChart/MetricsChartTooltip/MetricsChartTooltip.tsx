@@ -38,7 +38,9 @@ const InfoLine = ({
 
 export const InfoSummary = ({
     data,
-}: { data: { key: string; value: string | number }[] }) => (
+}: {
+    data: { key: string; value: string | number }[];
+}) => (
     <Box display={'flex'} flexDirection={'row'}>
         {data.map(({ key, value }) => (
             <div style={{ flex: 1, flexDirection: 'column' }} key={key}>

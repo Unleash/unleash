@@ -66,7 +66,7 @@ export type IFlagKey =
     | 'newInUnleash'
     | 'oidcPkceSupport'
     | 'gtmReleaseManagement'
-    | 'enterpriseEdgeUI';
+    | 'projectContextFields';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -287,12 +287,12 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_NEW_IN_UNLEASH,
         false,
     ),
-    enterpriseEdgeUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_EDGE_UI,
-        false,
-    ),
     gtmReleaseManagement: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GTM_RELEASE_MANAGEMENT,
+        false,
+    ),
+    projectContextFields: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_CONTEXT_FIELDS,
         false,
     ),
 };

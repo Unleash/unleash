@@ -52,16 +52,13 @@ export class ProjectReadModel implements IProjectReadModel {
 
     private timer: Function;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(db: Db, eventBus: EventEmitter, flagResolver: IFlagResolver) {
+    constructor(db: Db, eventBus: EventEmitter, _flagResolver: IFlagResolver) {
         this.db = db;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'project',
                 action,
             });
-        this.flagResolver = flagResolver;
     }
 
     async getFeatureProject(

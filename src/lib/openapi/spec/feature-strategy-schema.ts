@@ -80,4 +80,7 @@ export const featureStrategySchema = {
     },
 } as const;
 
-export type FeatureStrategySchema = FromSchema<typeof featureStrategySchema>;
+export type FeatureStrategySchema = FromSchema<
+    typeof featureStrategySchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

@@ -21,6 +21,7 @@ export class FakeInactiveUsersStore implements IInactiveUsersStore {
                             user.createdAt < subDays(new Date(), daysInactive)
                         );
                     }
+                    return false;
                 })
                 .map((user) => {
                     return {

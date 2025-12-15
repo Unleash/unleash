@@ -284,7 +284,7 @@ test('should fail creation of PAT when PAT limit has been reached', async () => 
     const address = setup.server.address();
     expect(address).not.toBeNull();
     expect(address).toHaveProperty('port');
-    // @ts-ignore We just checked that we do indeed have the port
+    // @ts-expect-error We just checked that we do indeed have the port
     const baseUrl = `http://localhost:${address.port}`;
 
     const tokenCreations: Promise<any>[] = [];

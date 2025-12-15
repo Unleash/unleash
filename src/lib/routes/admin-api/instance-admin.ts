@@ -1,4 +1,4 @@
-import { Parser } from 'json2csv';
+import { Parser } from '@json2csv/plainjs';
 import type { Response } from 'express';
 import type { AuthedRequest } from '../../types/core.js';
 import type { IUnleashServices } from '../../services/index.js';
@@ -9,7 +9,6 @@ import type {
     InstanceStatsService,
     InstanceStatsSigned,
 } from '../../features/instance-stats/instance-stats-service.js';
-import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     createCsvResponseSchema,
     createResponseSchema,
@@ -20,10 +19,6 @@ import { serializeDates } from '../../types/index.js';
 class InstanceAdminController extends Controller {
     private instanceStatsService: InstanceStatsService;
 
-    private openApiService: OpenApiService;
-
-    private jsonCsvParser: Parser;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -32,8 +27,7 @@ class InstanceAdminController extends Controller {
         }: Pick<IUnleashServices, 'instanceStatsService' | 'openApiService'>,
     ) {
         super(config);
-        this.jsonCsvParser = new Parser();
-        this.openApiService = openApiService;
+        const jsonCsvParser = new Parser();
         this.instanceStatsService = instanceStatsService;
 
         this.route({
@@ -51,9 +45,7 @@ class InstanceAdminController extends Controller {
                     responses: {
                         200: createCsvResponseSchema(
                             'instanceAdminStatsSchemaCsv',
-                            this.jsonCsvParser.parse(
-                                this.instanceStatsExample(),
-                            ),
+                            jsonCsvParser.parse(this.instanceStatsExample()),
                         ),
                     },
                 }),
@@ -163,7 +155,7 @@ class InstanceAdminController extends Controller {
 
     async getStatisticsCSV(
         _: AuthedRequest,
-        res: Response<InstanceAdminStatsSchema>,
+        res: Response<string>,
     ): Promise<void> {
         const instanceStats = await this.instanceStatsService.getSignedStats();
         const fileName = `unleash-${

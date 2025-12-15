@@ -97,7 +97,7 @@ export const ProjectActionsFormStepActions = ({
                 value={`${actorId}`}
                 onChange={(v) => {
                     validateActorId(Number(v));
-                    setActorId(Number.parseInt(v));
+                    setActorId(Number.parseInt(v, 10));
                 }}
             />
             <StyledDivider />

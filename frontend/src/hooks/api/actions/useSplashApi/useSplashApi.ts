@@ -14,7 +14,7 @@ const useSplashApi = () => {
         try {
             const res = await makeRequest(req.caller, req.id);
             return res;
-        } catch (e) {
+        } catch (_e) {
             console.log('An exception was caught and handled.');
         }
     };

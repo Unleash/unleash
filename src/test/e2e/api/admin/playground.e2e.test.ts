@@ -205,18 +205,17 @@ describe('Playground API E2E', () => {
                             request,
                         );
 
-                        switch (projects) {
-                            case ALL:
-                                // no features have been filtered out
-                                return body.features.length === features.length;
-                            case []:
-                                // no feature should be without a project
-                                return body.features.length === 0;
-                            default:
-                                // every feature should be in one of the prescribed projects
-                                return body.features.every((feature) =>
-                                    projects.includes(feature.projectId),
-                                );
+                        if (projects === ALL) {
+                            // no features have been filtered out
+                            return body.features.length === features.length;
+                        } else if (projects.length === 0) {
+                            // no feature should be without a project
+                            return body.features.length === 0;
+                        } else {
+                            // every feature should be in one of the prescribed projects
+                            return body.features.every((feature) =>
+                                projects.includes(feature.projectId),
+                            );
                         }
                     },
                 )

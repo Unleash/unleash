@@ -90,7 +90,7 @@ class ContextFieldStore implements IContextFieldStore {
             stickiness: data.stickiness || false,
             sort_order: data.sortOrder || 0,
             legal_values: JSON.stringify(data.legalValues || []),
-            project: data.project,
+            ...(data.project && { project: data.project }),
         };
     }
 

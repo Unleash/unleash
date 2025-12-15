@@ -32,15 +32,7 @@ export const SplashPageRedirect = () => {
     const showSplashId = activeSplashIds.find((splashId) => {
         return !hasSeenSplashId(splashId, splash);
     });
-
-    // Debug logging
-    console.log('SplashPageRedirect debug:', {
-        activeSplashIds,
-        splash,
-        showSplashId,
-        pathname,
-    });
-
+    
     if (!showSplashId) {
         return null;
     }

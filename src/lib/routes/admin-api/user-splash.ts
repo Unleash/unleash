@@ -62,11 +62,13 @@ class UserSplashController extends Controller {
             seen: true,
         };
 
+        const updatedSplash = await this.userSplashService.updateSplash(splash);
+
         this.openApiService.respondWithValidation(
             200,
             res,
             splashRequestSchema.$id,
-            await this.userSplashService.updateSplash(splash),
+            updatedSplash,
         );
     }
 }

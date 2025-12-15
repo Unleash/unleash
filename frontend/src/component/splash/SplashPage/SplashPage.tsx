@@ -33,8 +33,6 @@ export const SplashPage = () => {
     switch (splashId) {
         case 'operators':
             return <SplashPageOperators />;
-        case 'release-management':
-            return <SplashPageReleaseManagement />;
         default:
             return <Navigate to='/' replace />;
     }

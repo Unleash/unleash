@@ -1,5 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, IconButton, styled, Tooltip, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    IconButton,
+    styled,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ArticleIcon from '@mui/icons-material/Article';

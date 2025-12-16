@@ -41,6 +41,7 @@ import type { CreateContextFieldSchema } from '../../openapi/spec/create-context
 import { extractUserIdFromUser } from '../../util/index.js';
 import type { LegalValueSchema } from '../../openapi/index.js';
 import type { WithTransactional } from '../../db/transaction.js';
+import type { IFlagResolver } from '../../types/index.js';
 
 interface ContextParam {
     contextField: string;
@@ -58,6 +59,8 @@ export class ContextController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -74,6 +77,7 @@ export class ContextController extends Controller {
         this.transactionalContextService = transactionalContextService;
         const prefix = mode === 'global' ? '' : '/:projectId/context';
         const beta = mode === 'project';
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'get',
@@ -281,14 +285,27 @@ export class ContextController extends Controller {
     }
 
     async getContextFields(
-        _req: Request,
+        req: Request<{ projectId?: string }>,
         res: Response<ContextFieldsSchema>,
     ): Promise<void> {
-        res.status(200)
-            .json(
-                serializeDates(await this.transactionalContextService.getAll()),
-            )
-            .end();
+        if (this.flagResolver.isEnabled('projectContextFields')) {
+            const { projectId } = req.params;
+            const getContextFields = projectId
+                ? this.transactionalContextService.getAllForProject(projectId)
+                : this.transactionalContextService.getAllWithoutProject();
+
+            res.status(200)
+                .json(serializeDates(await getContextFields))
+                .end();
+        } else {
+            res.status(200)
+                .json(
+                    serializeDates(
+                        await this.transactionalContextService.getAll(),
+                    ),
+                )
+                .end();
+        }
     }
 
     async getContextField(

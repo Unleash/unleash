@@ -350,7 +350,7 @@ export class ContextController extends Controller {
             res,
             contextFieldSchema.$id,
             serializeDates(result),
-            { location: `context/${result.name}` },
+            { location: `context/${result.name}` }, // todo: this will also be incorrect if it's project based (easy to fix) 
         );
     }
 

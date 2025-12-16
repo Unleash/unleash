@@ -72,7 +72,7 @@ export class ContextController extends Controller {
 
         this.route({
             method: 'get',
-            path: '',
+            path: prefix,
             handler: this.getContextFields,
             permission: NONE,
             middleware: [
@@ -91,7 +91,7 @@ export class ContextController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/:contextField',
+            path: `${prefix}/:contextField`,
             handler: this.getContextField,
             permission: NONE,
             middleware: [
@@ -110,7 +110,7 @@ export class ContextController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/:contextField/strategies',
+            path: `${prefix}/:contextField/strategies`,
             handler: this.getStrategiesByContextField,
             permission: NONE,
             middleware: [
@@ -156,7 +156,7 @@ export class ContextController extends Controller {
 
         this.route({
             method: 'put',
-            path: '/:contextField',
+            path: `${prefix}/:contextField`,
             handler: this.updateContextField,
             permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
             middleware: [
@@ -177,7 +177,7 @@ export class ContextController extends Controller {
 
         this.route({
             method: 'post',
-            path: '/:contextField/legal-values',
+            path: `${prefix}/:contextField/legal-values`,
             handler: this.updateLegalValue,
             permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
             middleware: [
@@ -196,7 +196,7 @@ export class ContextController extends Controller {
 
         this.route({
             method: 'delete',
-            path: '/:contextField/legal-values/:legalValue',
+            path: `${prefix}/:contextField/legal-values/:legalValue`,
             handler: this.deleteLegalValue,
             acceptAnyContentType: true,
             permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
@@ -215,7 +215,7 @@ export class ContextController extends Controller {
 
         this.route({
             method: 'delete',
-            path: '/:contextField',
+            path: `${prefix}/:contextField`,
             handler: this.deleteContextField,
             acceptAnyContentType: true,
             permission: [DELETE_CONTEXT_FIELD, UPDATE_PROJECT],
@@ -235,7 +235,7 @@ export class ContextController extends Controller {
 
         this.route({
             method: 'post',
-            path: '/validate',
+            path: `${prefix}/validate`,
             handler: this.validate,
             permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
             middleware: [

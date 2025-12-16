@@ -214,7 +214,7 @@ export default class ProjectController extends Controller {
 
         this.use(
             '/',
-            new ContextController(config, services, '/:projectId/context/')
+            new ContextController(config, services, '/:projectId/context')
                 .router,
         );
     }

@@ -8,6 +8,7 @@ export interface IContextFieldDto {
     usedInProjects?: number | null;
     usedInFeatures?: number | null;
     legalValues?: ILegalValue[];
+    project?: string;
 }
 
 export interface ILegalValue {

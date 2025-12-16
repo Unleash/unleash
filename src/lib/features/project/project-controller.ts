@@ -46,6 +46,7 @@ import {
 } from '../../openapi/spec/project-flag-creators-schema.js';
 import ProjectStatusController from '../project-status/project-status-controller.js';
 import FeatureLinkController from '../feature-links/feature-link-controller.js';
+import { ContextController } from '../context/context.js';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -210,6 +211,12 @@ export default class ProjectController extends Controller {
         this.use('/', new ProjectStatusController(config, services).router);
         this.use('/', new FeatureLifecycleController(config, services).router);
         this.use('/', new FeatureLinkController(config, services).router);
+
+        this.use(
+            '/',
+            new ContextController(config, services, '/:projectId/context/')
+                .router,
+        );
     }
 
     async getProjects(

@@ -7,6 +7,7 @@ import {
     UPDATE_CONTEXT_FIELD,
     DELETE_CONTEXT_FIELD,
     NONE,
+    UPDATE_PROJECT,
 } from '../../types/permissions.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
@@ -63,6 +64,7 @@ export class ContextController extends Controller {
             IUnleashServices,
             'transactionalContextService' | 'openApiService'
         >,
+        prefix = '',
     ) {
         super(config);
         this.openApiService = openApiService;
@@ -130,9 +132,9 @@ export class ContextController extends Controller {
 
         this.route({
             method: 'post',
-            path: '',
+            path: prefix,
             handler: this.createContextField,
-            permission: CREATE_CONTEXT_FIELD,
+            permission: [CREATE_CONTEXT_FIELD, UPDATE_PROJECT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -156,7 +158,7 @@ export class ContextController extends Controller {
             method: 'put',
             path: '/:contextField',
             handler: this.updateContextField,
-            permission: UPDATE_CONTEXT_FIELD,
+            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -177,7 +179,7 @@ export class ContextController extends Controller {
             method: 'post',
             path: '/:contextField/legal-values',
             handler: this.updateLegalValue,
-            permission: UPDATE_CONTEXT_FIELD,
+            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -197,7 +199,7 @@ export class ContextController extends Controller {
             path: '/:contextField/legal-values/:legalValue',
             handler: this.deleteLegalValue,
             acceptAnyContentType: true,
-            permission: UPDATE_CONTEXT_FIELD,
+            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -216,7 +218,7 @@ export class ContextController extends Controller {
             path: '/:contextField',
             handler: this.deleteContextField,
             acceptAnyContentType: true,
-            permission: DELETE_CONTEXT_FIELD,
+            permission: [DELETE_CONTEXT_FIELD, UPDATE_PROJECT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -235,7 +237,7 @@ export class ContextController extends Controller {
             method: 'post',
             path: '/validate',
             handler: this.validate,
-            permission: UPDATE_CONTEXT_FIELD,
+            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -283,13 +285,21 @@ export class ContextController extends Controller {
     }
 
     async createContextField(
-        req: IAuthRequest<void, void, CreateContextFieldSchema>,
+        req: IAuthRequest<
+            { projectId?: string },
+            void,
+            CreateContextFieldSchema
+        >,
         res: Response<ContextFieldSchema>,
     ): Promise<void> {
         const value = req.body;
 
         const result = await this.transactionalContextService.transactional(
-            (service) => service.createContextField(value, req.audit),
+            (service) =>
+                service.createContextField(
+                    { ...value, project: req.params.projectId },
+                    req.audit,
+                ),
         );
 
         this.openApiService.respondWithValidation(

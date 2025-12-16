@@ -262,7 +262,7 @@ export class ContextController extends Controller {
         this.route({
             method: 'post',
             path: `${prefix}/validate`,
-            handler: this.validate,
+            handler: this.validateContextFieldName,
             permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
             middleware: [
                 openApiService.validPath({
@@ -272,7 +272,7 @@ export class ContextController extends Controller {
                     description:
                         'Check whether the provided data can be used to create a context field. If the data is not valid, returns a 400 status code with the reason why it is not valid.',
                     operationId: resolveOperationId(
-                        'validateContextField',
+                        'validateContextFieldName',
                         mode,
                     ),
                     requestBody: createRequestSchema('nameSchema'),
@@ -405,7 +405,7 @@ export class ContextController extends Controller {
         res.status(200).end();
     }
 
-    async validate(
+    async validateContextFieldName(
         req: Request<void, void, NameSchema>,
         res: Response,
     ): Promise<void> {

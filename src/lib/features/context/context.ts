@@ -50,6 +50,9 @@ interface DeleteLegalValueParam extends ContextParam {
     legalValue: string;
 }
 
+const prefixOperationId = (operationId: string, mode: 'global' | 'project') =>
+    mode === 'project' ? `${operationId}ForProject` : operationId;
+
 export class ContextController extends Controller {
     private transactionalContextService: WithTransactional<ContextService>;
 
@@ -64,11 +67,13 @@ export class ContextController extends Controller {
             IUnleashServices,
             'transactionalContextService' | 'openApiService'
         >,
-        prefix = '',
+        mode: 'global' | 'project' = 'global',
     ) {
         super(config);
         this.openApiService = openApiService;
         this.transactionalContextService = transactionalContextService;
+        const prefix = mode === 'global' ? '' : '/:projectId/context';
+        const beta = mode === 'project';
 
         this.route({
             method: 'get',
@@ -78,11 +83,11 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta: Boolean(prefix),
+                    beta,
                     summary: 'Gets configured context fields',
                     description:
                         'Returns all configured [Context fields](https://docs.getunleash.io/concepts/unleash-context) that have been created.',
-                    operationId: 'getContextFields',
+                    operationId: prefixOperationId('getContextFields', mode),
                     responses: {
                         200: createResponseSchema('contextFieldsSchema'),
                     },
@@ -98,11 +103,11 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta: Boolean(prefix),
+                    beta,
                     summary: 'Gets context field',
                     description:
                         'Returns specific [context field](https://docs.getunleash.io/concepts/unleash-context) identified by the name in the path',
-                    operationId: 'getContextField',
+                    operationId: prefixOperationId('getContextField', mode),
                     responses: {
                         200: createResponseSchema('contextFieldSchema'),
                     },
@@ -118,8 +123,11 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Strategies'],
-                    beta: Boolean(prefix),
-                    operationId: 'getStrategiesByContextField',
+                    beta,
+                    operationId: prefixOperationId(
+                        'getStrategiesByContextField',
+                        mode,
+                    ),
                     summary: 'Get strategies that use a context field',
                     description:
                         "Retrieves a list of all strategies that use the specified context field. If the context field doesn't exist, returns an empty list of strategies",
@@ -141,8 +149,8 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta: Boolean(prefix),
-                    operationId: 'createContextField',
+                    beta,
+                    operationId: prefixOperationId('createContextField', mode),
                     summary: 'Create a context field',
                     description:
                         'Endpoint that allows creation of [custom context fields](https://docs.getunleash.io/concepts/unleash-context#custom-context-fields)',
@@ -166,10 +174,10 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta: Boolean(prefix),
+                    beta,
                     summary: 'Update an existing context field',
                     description: `Endpoint that allows updating a custom context field. Used to toggle stickiness and add/remove legal values for this context field`,
-                    operationId: 'updateContextField',
+                    operationId: prefixOperationId('updateContextField', mode),
                     requestBody: createRequestSchema(
                         'updateContextFieldSchema',
                     ),
@@ -188,10 +196,13 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta: Boolean(prefix),
+                    beta,
                     summary: 'Add or update legal value for the context field',
                     description: `Endpoint that allows adding or updating a single custom context field legal value. If the legal value already exists, it will be updated with the new description`,
-                    operationId: 'updateContextFieldLegalValue',
+                    operationId: prefixOperationId(
+                        'updateContextFieldLegalValue',
+                        mode,
+                    ),
                     requestBody: createRequestSchema('legalValueSchema'),
                     responses: {
                         200: emptyResponse,
@@ -209,10 +220,13 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta: Boolean(prefix),
+                    beta,
                     summary: 'Delete legal value for the context field',
                     description: `Removes the specified custom context field legal value. Does not validate that the legal value is not in use and does not remove usage from constraints that use it.`,
-                    operationId: 'deleteContextFieldLegalValue',
+                    operationId: prefixOperationId(
+                        'deleteContextFieldLegalValue',
+                        mode,
+                    ),
                     responses: {
                         200: emptyResponse,
                     },
@@ -229,11 +243,11 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta: Boolean(prefix),
+                    beta,
                     summary: 'Delete an existing context field',
                     description:
                         'Endpoint that allows deletion of a custom context field. Does not validate that context field is not in use, but since context field configuration is stored in a json blob for the strategy, existing strategies are safe.',
-                    operationId: 'deleteContextField',
+                    operationId: prefixOperationId('deleteContextField', mode),
                     responses: {
                         200: emptyResponse,
                     },
@@ -249,11 +263,14 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta: Boolean(prefix),
+                    beta,
                     summary: 'Validate a context field',
                     description:
                         'Check whether the provided data can be used to create a context field. If the data is not valid, returns a 400 status code with the reason why it is not valid.',
-                    operationId: 'validate',
+                    operationId: prefixOperationId(
+                        'validateContextField',
+                        mode,
+                    ),
                     requestBody: createRequestSchema('nameSchema'),
                     responses: {
                         200: emptyResponse,

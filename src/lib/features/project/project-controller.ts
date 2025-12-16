@@ -212,11 +212,12 @@ export default class ProjectController extends Controller {
         this.use('/', new FeatureLifecycleController(config, services).router);
         this.use('/', new FeatureLinkController(config, services).router);
 
+        // if(this.flagResolver.isEnabled('projectContextFields')) {
         this.use(
             '/',
-            new ContextController(config, services, '/:projectId/context')
-                .router,
+            new ContextController(config, services, 'project').router,
         );
+        // }
     }
 
     async getProjects(

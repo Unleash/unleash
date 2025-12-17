@@ -499,6 +499,7 @@ export default class ExportImportService
                         description: contextField.description,
                         legalValues: contextField.legalValues,
                         stickiness: contextField.stickiness,
+                        project: contextField.project ? dto.project : undefined,
                     },
                     auditUser,
                 ),

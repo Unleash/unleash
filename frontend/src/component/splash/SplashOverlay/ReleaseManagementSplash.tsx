@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import {
     Box,
     Button,
@@ -12,8 +13,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
+import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 
-const YOUTUBE_VIDEO_ID = '40IUj67e9Ew';
+const VIDEO_URL = 'https://cdn.getunleash.io/impact-metrics.mp4';
 const DOCS_URL = 'https://docs.getunleash.io/concepts/impact-metrics';
 
 const DialogCard = styled(Box)(({ theme }) => ({
@@ -44,6 +47,10 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const StyledLogo = styled(UnleashLogo)(({ theme }) => ({
+    height: theme.spacing(6),
+}));
+
+const StyledLogoWhite = styled(UnleashLogoWhite)(({ theme }) => ({
     height: theme.spacing(6),
 }));
 
@@ -92,17 +99,9 @@ const VideoContainer = styled(Box)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     overflow: 'hidden',
     backgroundColor: theme.palette.background.elevation1,
-    '& iframe': {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        border: 0,
-    },
 }));
 
-const VideoThumbnail = styled('img')({
+const StyledVideo = styled('video')({
     position: 'absolute',
     top: 0,
     left: 0,
@@ -165,7 +164,17 @@ export const ReleaseManagementSplash = ({
     onClose,
 }: ReleaseManagementSplashProps) => {
     const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
+    const videoRef = useRef<HTMLVideoElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
+
+    useEffect(() => {
+        trackEvent('release-management-splash', {
+            props: {
+                eventType: 'displayed',
+            },
+        });
+    }, []);
 
     const handleGetStarted = () => {
         onClose();
@@ -173,13 +182,22 @@ export const ReleaseManagementSplash = ({
     };
 
     const handlePlayClick = () => {
+        trackEvent('release-management-splash', {
+            props: {
+                eventType: 'play-video',
+            },
+        });
         setIsPlaying(true);
+        videoRef.current?.play();
     };
 
     return (
         <DialogCard>
             <HeaderRow>
-                <StyledLogo aria-label='Unleash' />
+                <ThemeMode
+                    darkmode={<StyledLogoWhite aria-label='Unleash' />}
+                    lightmode={<StyledLogo aria-label='Unleash' />}
+                />
                 <Tooltip title='Close' arrow>
                     <StyledCloseButton
                         onClick={onClose}
@@ -215,29 +233,22 @@ export const ReleaseManagementSplash = ({
                 </LinksRow>
 
                 <VideoContainer>
-                    {isPlaying ? (
-                        <iframe
-                            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1`}
-                            title='Release management introduction video'
-                            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                            allowFullScreen
-                        />
-                    ) : (
-                        <>
-                            <VideoThumbnail
-                                src={`https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`}
-                                alt='Video thumbnail'
-                            />
-                            <PlayOverlay
-                                onClick={handlePlayClick}
-                                aria-label='Play video'
-                                type='button'
-                            >
-                                <PlayButton>
-                                    <PlayArrowIcon />
-                                </PlayButton>
-                            </PlayOverlay>
-                        </>
+                    <StyledVideo
+                        ref={videoRef}
+                        src={VIDEO_URL}
+                        controls={isPlaying}
+                        preload='metadata'
+                    />
+                    {!isPlaying && (
+                        <PlayOverlay
+                            onClick={handlePlayClick}
+                            aria-label='Play video'
+                            type='button'
+                        >
+                            <PlayButton>
+                                <PlayArrowIcon />
+                            </PlayButton>
+                        </PlayOverlay>
                     )}
                 </VideoContainer>
 

@@ -79,7 +79,8 @@ export type CustomEvents =
     | 'feature-links'
     | 'project-cleanup'
     | 'project-list-view-toggle'
-    | 'impact-metrics';
+    | 'impact-metrics'
+    | 'release-management-splash';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

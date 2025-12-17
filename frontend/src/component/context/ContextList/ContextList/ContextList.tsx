@@ -33,15 +33,9 @@ const ContextList: FC = () => {
     const projectContextFieldsEnabled = useUiFlag('projectContextFields');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [name, setName] = useState<string>();
-    const { context, refetchUnleashContext, loading } = useUnleashContext(
-        undefined,
-        projectId,
-    );
-    const { removeContext } = useContextsApi(projectId);
+    const { context, refetchUnleashContext, loading } = useUnleashContext();
+    const { removeContext } = useContextsApi();
     const { setToastData, setToastApiError } = useToast();
-    const editUrl = projectId
-        ? `/projects/${projectId}/context/${name}`
-        : `/context/edit/${name}`;
 
     const data = useMemo(() => {
         if (loading) {
@@ -51,7 +45,14 @@ const ContextList: FC = () => {
             });
         }
 
-        return context
+        const filteredContextFields =
+            projectId && projectContextFieldsEnabled
+                ? // @ts-expect-error project doesn't exist yet; todo: fix with flag projectContextFields
+                  context.filter((c) => c.project === projectId)
+                : // @ts-expect-error project doesn't exist yet; todo: fix with flag projectContextFields
+                  context.filter((c) => !c.project);
+
+        return filteredContextFields
             .map(
                 ({
                     name,
@@ -88,7 +89,7 @@ const ContextList: FC = () => {
                 }: any) => (
                     <LinkCell
                         title={name}
-                        to={editUrl}
+                        to={`/context/edit/${name}`}
                         subtitle={description}
                     />
                 ),

@@ -637,7 +637,9 @@ export class InstanceStatsService {
 
     projectContextFieldCount(): Promise<number> {
         return this.memorize('projectContextFieldCount', () =>
-            this.contextFieldStore.countProjectFields(),
+            this.flagResolver.isEnabled('projectContextFields')
+                ? this.contextFieldStore.countProjectFields()
+                : Promise.resolve(0),
         );
     }
 

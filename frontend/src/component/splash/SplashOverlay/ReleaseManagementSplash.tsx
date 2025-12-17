@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Box,
@@ -9,12 +10,11 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import ArticleIcon from '@mui/icons-material/Article';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
+import splashVideo from 'assets/img/impact-metrics-video.mp4';
 
-const YOUTUBE_VIDEO_ID = 'PLACEHOLDER_VIDEO_ID';
-const DOCS_URL = 'https://docs.getunleash.io/reference/release-plans';
-const RELEASE_NOTES_URL = 'https://docs.getunleash.io/release-notes';
+const DOCS_URL = 'https://docs.getunleash.io/concepts/impact-metrics';
 
 const DialogCard = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -35,7 +35,7 @@ const HeaderRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: theme.spacing(2, 3),
+    padding: theme.spacing(1, 3),
     borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
@@ -44,19 +44,18 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const StyledLogo = styled(UnleashLogo)(({ theme }) => ({
-    height: theme.spacing(5),
+    height: theme.spacing(6),
 }));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(3),
+    padding: `${theme.spacing(3)} ${theme.spacing(3)} ${theme.spacing(3.5)} ${theme.spacing(3)}`,
     overflowY: 'auto',
     flex: 1,
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
-    fontFamily: theme.typography.fontFamily,
     fontSize: theme.typography.h1.fontSize,
-    fontWeight: theme.typography.fontWeightLight,
+    fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.primary,
     marginBottom: theme.spacing(1),
 }));
@@ -69,7 +68,7 @@ const StyledDescription = styled(Typography)(({ theme }) => ({
 const LinksRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(3),
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(4),
 }));
 
 const StyledLink = styled('a')(({ theme }) => ({
@@ -85,21 +84,49 @@ const StyledLink = styled('a')(({ theme }) => ({
     },
 }));
 
-const YouTubeContainer = styled(Box)(({ theme }) => ({
+const VideoContainer = styled(Box)(({ theme }) => ({
     position: 'relative',
     width: '100%',
-    paddingBottom: '56.25%',
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(4),
     borderRadius: theme.shape.borderRadiusLarge,
     overflow: 'hidden',
     backgroundColor: theme.palette.background.elevation1,
-    '& iframe': {
-        position: 'absolute',
-        top: 0,
-        left: 0,
+    '& video': {
         width: '100%',
-        height: '100%',
-        border: 0,
+        height: 'auto',
+        display: 'block',
+    },
+}));
+
+const PlayOverlay = styled(Box)({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+});
+
+const PlayButton = styled(Box)(({ theme }) => ({
+    width: theme.spacing(10),
+    height: theme.spacing(10),
+    borderRadius: '50%',
+    backgroundColor: theme.palette.primary.main,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: theme.shadows[4],
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+    '&:hover': {
+        transform: 'scale(1.05)',
+        boxShadow: theme.shadows[8],
+    },
+    '& svg': {
+        fontSize: theme.spacing(5),
+        color: theme.palette.common.white,
     },
 }));
 
@@ -117,10 +144,19 @@ export const ReleaseManagementSplash = ({
     onClose,
 }: ReleaseManagementSplashProps) => {
     const navigate = useNavigate();
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const handleGetStarted = () => {
         onClose();
         navigate('/release-templates');
+    };
+
+    const handlePlayClick = () => {
+        if (videoRef.current) {
+            videoRef.current.play();
+            setIsPlaying(true);
+        }
     };
 
     return (
@@ -159,24 +195,24 @@ export const ReleaseManagementSplash = ({
                         <OpenInNewIcon fontSize='small' />
                         View documentation
                     </StyledLink>
-                    <StyledLink
-                        href={RELEASE_NOTES_URL}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                    >
-                        <ArticleIcon fontSize='small' />
-                        Release notes
-                    </StyledLink>
                 </LinksRow>
 
-                <YouTubeContainer>
-                    <iframe
-                        src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
+                <VideoContainer>
+                    <video
+                        ref={videoRef}
+                        src={splashVideo}
+                        controls={isPlaying}
+                        playsInline
                         title='Release management introduction video'
-                        allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                        allowFullScreen
                     />
-                </YouTubeContainer>
+                    {!isPlaying && (
+                        <PlayOverlay onClick={handlePlayClick}>
+                            <PlayButton>
+                                <PlayArrowIcon />
+                            </PlayButton>
+                        </PlayOverlay>
+                    )}
+                </VideoContainer>
 
                 <ActionsRow>
                     <Button
@@ -184,7 +220,7 @@ export const ReleaseManagementSplash = ({
                         color='primary'
                         onClick={handleGetStarted}
                     >
-                        Get started with release management
+                        View the getting started guide
                     </Button>
                     <Button variant='text' onClick={onClose}>
                         Cancel

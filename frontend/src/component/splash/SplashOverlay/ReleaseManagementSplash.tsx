@@ -111,7 +111,7 @@ const VideoThumbnail = styled('img')({
     objectFit: 'cover',
 });
 
-const PlayOverlay = styled(Box)({
+const PlayOverlay = styled('button')({
     position: 'absolute',
     top: 0,
     left: 0,
@@ -121,6 +121,14 @@ const PlayOverlay = styled(Box)({
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
+    border: 'none',
+    background: 'transparent',
+    padding: 0,
+    outline: 'none',
+    '&:focus-visible > div': {
+        outline: '2px solid white',
+        outlineOffset: '2px',
+    },
 });
 
 const PlayButton = styled(Box)(({ theme }) => ({
@@ -220,7 +228,11 @@ export const ReleaseManagementSplash = ({
                                 src={`https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`}
                                 alt='Video thumbnail'
                             />
-                            <PlayOverlay onClick={handlePlayClick}>
+                            <PlayOverlay
+                                onClick={handlePlayClick}
+                                aria-label='Play video'
+                                type='button'
+                            >
                                 <PlayButton>
                                     <PlayArrowIcon />
                                 </PlayButton>

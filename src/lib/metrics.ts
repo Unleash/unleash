@@ -428,6 +428,13 @@ export function registerPrometheusMetrics(
     });
 
     dbMetrics.registerGaugeDbMetric({
+        name: 'project_context_total',
+        help: 'Number of project context fields',
+        query: () => instanceStatsService.projectContextFieldCount(),
+        map: (result) => ({ value: result }),
+    });
+
+    dbMetrics.registerGaugeDbMetric({
         name: 'strategies_total',
         help: 'Number of strategies',
         query: () => instanceStatsService.strategiesCount(),

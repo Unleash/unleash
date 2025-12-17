@@ -7,7 +7,13 @@ import NotFoundError from '../../error/notfound-error.js';
 
 export default class FakeContextFieldStore implements IContextFieldStore {
     count(): Promise<number> {
-        return Promise.resolve(0);
+        return Promise.resolve(this.contextFields.length);
+    }
+
+    countProjectFields(): Promise<number> {
+        return Promise.resolve(
+            this.contextFields.filter((field) => field.project).length,
+        );
     }
 
     defaultContextFields: IContextField[] = [

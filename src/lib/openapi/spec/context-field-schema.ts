@@ -63,6 +63,12 @@ export const contextFieldSchema = {
                 $ref: '#/components/schemas/legalValueSchema',
             },
         },
+        project: {
+            description:
+                'The project this context field belongs to (if it is project-specific)',
+            type: 'string',
+            example: 'my-project',
+        },
     },
     components: {
         schemas: {

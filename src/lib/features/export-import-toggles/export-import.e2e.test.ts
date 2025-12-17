@@ -201,8 +201,8 @@ afterAll(async () => {
     await db.destroy();
 });
 
-describe('import-export for project-specific segments', () => {
-    test('exports features with project-specific-segments', async () => {
+describe('import-export for project specific segments', () => {
+    test('exports features with project specific segments and context fields', async () => {
         const segmentName = 'my-segment';
         const project = 'with-segments';
         await createProjects([project]);
@@ -210,6 +210,10 @@ describe('import-export for project-specific segments', () => {
             name: segmentName,
             project,
             constraints: [],
+        });
+        await app.createContextField({
+            name: 'projectAppName',
+            project,
         });
         const strategy = {
             name: 'default',
@@ -219,7 +223,7 @@ describe('import-export for project-specific segments', () => {
             },
             constraints: [
                 {
-                    contextName: 'appName',
+                    contextName: 'projectAppName',
                     values: ['test'],
                     operator: 'IN' as const,
                 },
@@ -265,6 +269,7 @@ describe('import-export for project-specific segments', () => {
                     name: segmentName,
                 },
             ],
+            contextFields: [{ name: 'projectAppName', project }],
         });
     });
 });

@@ -170,7 +170,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     featureLinks: true,
-                    projectContextFields: true,
                 },
             },
         },

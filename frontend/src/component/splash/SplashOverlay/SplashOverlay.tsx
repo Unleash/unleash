@@ -1,16 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Modal, Backdrop, styled } from '@mui/material';
 import Fade from '@mui/material/Fade';
+import { useFlag } from '@unleash/proxy-client-react';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
-import {
-    activeSplashIds,
-    splashIds,
-    type SplashId,
-} from 'component/splash/splash';
-import type { IAuthSplash } from 'hooks/api/getters/useAuth/useAuthEndpoint';
+import { splashIds, type SplashId } from 'component/splash/splash';
 import { ReleaseManagementSplash } from './ReleaseManagementSplash';
 
 const TRANSITION_DURATION = 250;
@@ -27,10 +23,6 @@ const ModalContent = styled('div')({
     outline: 'none',
 });
 
-const hasSeenSplashId = (splashId: SplashId, splash: IAuthSplash): boolean => {
-    return Boolean(splash[splashId]);
-};
-
 const isKnownSplashId = (value: string): value is SplashId => {
     return (splashIds as Readonly<string[]>).includes(value);
 };
@@ -41,43 +33,55 @@ export const SplashOverlay = () => {
     const { splash, refetchSplash } = useAuthSplash();
     const { setSplashSeen } = useSplashApi();
 
+    const [closedSplash, setClosedSplash] = useState(false);
+
+    const releaseManagementV3Enabled = useFlag('releaseManagementV3Splash');
+
     const splashId = searchParams.get('splash');
     const isKnownId = splashId ? isKnownSplashId(splashId) : false;
 
     useEffect(() => {
-        if (!user || !splash || splashId) return;
+        if (!user || !splash || splashId || user.isAPI || closedSplash) return;
 
-        if (user.isAPI) return;
-
-        const unseenSplashId = activeSplashIds.find(
-            (id) => !hasSeenSplashId(id, splash),
+        const hasSeenReleaseManagementV3 = Boolean(
+            splash['release-management-v3'],
         );
 
-        if (unseenSplashId) {
-            searchParams.set('splash', unseenSplashId);
+        if (releaseManagementV3Enabled && !hasSeenReleaseManagementV3) {
+            searchParams.set('splash', 'release-management-v3');
             setSearchParams(searchParams, { replace: true });
         }
-    }, [user, splash, splashId, searchParams, setSearchParams]);
+    }, [
+        user,
+        splash,
+        splashId,
+        searchParams,
+        setSearchParams,
+        releaseManagementV3Enabled,
+        closedSplash,
+    ]);
 
-    useEffect(() => {
-        if (splashId && isKnownId) {
-            setSplashSeen(splashId)
+    const handleClose = () => {
+        const currentSplashId = splashId;
+        const currentIsKnownId = isKnownId;
+
+        setClosedSplash(true);
+
+        searchParams.delete('splash');
+        setSearchParams(searchParams, { replace: true });
+
+        if (currentSplashId && currentIsKnownId) {
+            setSplashSeen(currentSplashId)
                 .then(() => refetchSplash())
                 .catch(console.warn);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps refetch and setSplashSeen are not stable references
-    }, [splashId, isKnownId]);
-
-    const handleClose = () => {
-        searchParams.delete('splash');
-        setSearchParams(searchParams, { replace: true });
     };
 
     if (!splashId) return null;
 
     const getSplashContent = () => {
         switch (splashId) {
-            case 'release-management':
+            case 'release-management-v3':
                 return <ReleaseManagementSplash onClose={handleClose} />;
             default:
                 return null;

@@ -11,7 +11,7 @@ import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import { routes } from 'component/menu/routes';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
-import { SplashPageRedirect } from 'component/splash/SplashPageRedirect/SplashPageRedirect';
+import { SplashOverlay } from 'component/splash/SplashOverlay/SplashOverlay';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 import { MaintenanceBanner } from './maintenance/MaintenanceBanner.tsx';
@@ -113,7 +113,7 @@ export const App = () => {
 
                                     <FeedbackNPS openUrl='http://feedback.unleash.run' />
 
-                                    <SplashPageRedirect />
+                                    <SplashOverlay />
                                 </StyledContainer>
                             </>
                         </Demo>

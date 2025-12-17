@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Box,
@@ -9,12 +10,11 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import ArticleIcon from '@mui/icons-material/Article';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 
-const YOUTUBE_VIDEO_ID = 'PLACEHOLDER_VIDEO_ID';
-const DOCS_URL = 'https://docs.getunleash.io/reference/release-plans';
-const RELEASE_NOTES_URL = 'https://docs.getunleash.io/release-notes';
+const YOUTUBE_VIDEO_ID = '40IUj67e9Ew';
+const DOCS_URL = 'https://docs.getunleash.io/concepts/impact-metrics';
 
 const DialogCard = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -35,7 +35,7 @@ const HeaderRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: theme.spacing(2, 3),
+    padding: theme.spacing(1, 3),
     borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
@@ -44,19 +44,18 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const StyledLogo = styled(UnleashLogo)(({ theme }) => ({
-    height: theme.spacing(5),
+    height: theme.spacing(6),
 }));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(3),
+    padding: `${theme.spacing(3)} ${theme.spacing(3)} ${theme.spacing(3.5)} ${theme.spacing(3)}`,
     overflowY: 'auto',
     flex: 1,
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
-    fontFamily: theme.typography.fontFamily,
     fontSize: theme.typography.h1.fontSize,
-    fontWeight: theme.typography.fontWeightLight,
+    fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.primary,
     marginBottom: theme.spacing(1),
 }));
@@ -69,7 +68,7 @@ const StyledDescription = styled(Typography)(({ theme }) => ({
 const LinksRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(3),
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(4),
 }));
 
 const StyledLink = styled('a')(({ theme }) => ({
@@ -85,11 +84,11 @@ const StyledLink = styled('a')(({ theme }) => ({
     },
 }));
 
-const YouTubeContainer = styled(Box)(({ theme }) => ({
+const VideoContainer = styled(Box)(({ theme }) => ({
     position: 'relative',
     width: '100%',
     paddingBottom: '56.25%',
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(4),
     borderRadius: theme.shape.borderRadiusLarge,
     overflow: 'hidden',
     backgroundColor: theme.palette.background.elevation1,
@@ -100,6 +99,55 @@ const YouTubeContainer = styled(Box)(({ theme }) => ({
         width: '100%',
         height: '100%',
         border: 0,
+    },
+}));
+
+const VideoThumbnail = styled('img')({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+});
+
+const PlayOverlay = styled('button')({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    border: 'none',
+    background: 'transparent',
+    padding: 0,
+    outline: 'none',
+    '&:focus-visible > div': {
+        outline: '2px solid white',
+        outlineOffset: '2px',
+    },
+});
+
+const PlayButton = styled(Box)(({ theme }) => ({
+    width: theme.spacing(10),
+    height: theme.spacing(10),
+    borderRadius: '50%',
+    backgroundColor: theme.palette.primary.main,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: theme.shadows[4],
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+    '&:hover': {
+        transform: 'scale(1.05)',
+        boxShadow: theme.shadows[8],
+    },
+    '& svg': {
+        fontSize: theme.spacing(5),
+        color: theme.palette.common.white,
     },
 }));
 
@@ -117,10 +165,15 @@ export const ReleaseManagementSplash = ({
     onClose,
 }: ReleaseManagementSplashProps) => {
     const navigate = useNavigate();
+    const [isPlaying, setIsPlaying] = useState(false);
 
     const handleGetStarted = () => {
         onClose();
         navigate('/release-templates');
+    };
+
+    const handlePlayClick = () => {
+        setIsPlaying(true);
     };
 
     return (
@@ -159,24 +212,34 @@ export const ReleaseManagementSplash = ({
                         <OpenInNewIcon fontSize='small' />
                         View documentation
                     </StyledLink>
-                    <StyledLink
-                        href={RELEASE_NOTES_URL}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                    >
-                        <ArticleIcon fontSize='small' />
-                        Release notes
-                    </StyledLink>
                 </LinksRow>
 
-                <YouTubeContainer>
-                    <iframe
-                        src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}`}
-                        title='Release management introduction video'
-                        allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                        allowFullScreen
-                    />
-                </YouTubeContainer>
+                <VideoContainer>
+                    {isPlaying ? (
+                        <iframe
+                            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1`}
+                            title='Release management introduction video'
+                            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                            allowFullScreen
+                        />
+                    ) : (
+                        <>
+                            <VideoThumbnail
+                                src={`https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`}
+                                alt='Video thumbnail'
+                            />
+                            <PlayOverlay
+                                onClick={handlePlayClick}
+                                aria-label='Play video'
+                                type='button'
+                            >
+                                <PlayButton>
+                                    <PlayArrowIcon />
+                                </PlayButton>
+                            </PlayOverlay>
+                        </>
+                    )}
+                </VideoContainer>
 
                 <ActionsRow>
                     <Button
@@ -184,7 +247,7 @@ export const ReleaseManagementSplash = ({
                         color='primary'
                         onClick={handleGetStarted}
                     >
-                        Get started with release management
+                        View the getting started guide
                     </Button>
                     <Button variant='text' onClick={onClose}>
                         Cancel

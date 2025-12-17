@@ -19,8 +19,8 @@ const useUnleashContext = (
     projectId?: string,
 ): IUnleashContextOutput => {
     const uri = projectId
-        ? formatApiPath(`api/admin/projects/${projectId}/context`)
-        : formatApiPath(`api/admin/context`);
+        ? `api/admin/projects/${projectId}/context`
+        : `api/admin/context`;
 
     const fetcher = () => {
         const path = formatApiPath(uri);

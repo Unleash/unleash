@@ -13,6 +13,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
+import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 
 const VIDEO_URL = 'https://cdn.getunleash.io/impact-metrics.mp4';
 const DOCS_URL = 'https://docs.getunleash.io/concepts/impact-metrics';
@@ -45,6 +47,10 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const StyledLogo = styled(UnleashLogo)(({ theme }) => ({
+    height: theme.spacing(6),
+}));
+
+const StyledLogoWhite = styled(UnleashLogoWhite)(({ theme }) => ({
     height: theme.spacing(6),
 }));
 
@@ -188,7 +194,10 @@ export const ReleaseManagementSplash = ({
     return (
         <DialogCard>
             <HeaderRow>
-                <StyledLogo aria-label='Unleash' />
+                <ThemeMode
+                    darkmode={<StyledLogoWhite aria-label='Unleash' />}
+                    lightmode={<StyledLogo aria-label='Unleash' />}
+                />
                 <Tooltip title='Close' arrow>
                     <StyledCloseButton
                         onClick={onClose}

@@ -340,7 +340,10 @@ export class ContextController extends Controller {
         const result = await this.transactionalContextService.transactional(
             (service) =>
                 service.createContextField(
-                    { ...value, project: req.params.projectId },
+                    {
+                        ...value,
+                        project: req.params.projectId || value.project,
+                    },
                     req.audit,
                 ),
         );

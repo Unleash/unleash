@@ -16,9 +16,14 @@ const useUnleashContext = (
         revalidateOnReconnect: true,
         revalidateIfStale: true,
     },
+    projectId?: string,
 ): IUnleashContextOutput => {
+    const uri = projectId
+        ? `api/admin/projects/${projectId}/context`
+        : `api/admin/context`;
+
     const fetcher = () => {
-        const path = formatApiPath(`api/admin/context`);
+        const path = formatApiPath(uri);
         return fetch(path, {
             method: 'GET',
         })
@@ -26,7 +31,7 @@ const useUnleashContext = (
             .then((res) => res.json());
     };
 
-    const CONTEXT_CACHE_KEY = 'api/admin/context';
+    const CONTEXT_CACHE_KEY = uri;
 
     const { data, mutate, error, isValidating } = useSWR(
         CONTEXT_CACHE_KEY,

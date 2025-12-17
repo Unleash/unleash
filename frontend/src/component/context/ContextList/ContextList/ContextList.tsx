@@ -26,15 +26,16 @@ import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
 import { UsedInCell } from '../UsedInCell.tsx';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const ContextList: FC = () => {
     const projectId = useOptionalPathParam('projectId');
-    const projectContextFieldsEnabled = useUiFlag('projectContextFields');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
-    const [name, setName] = useState<string>();
-    const { context, refetchUnleashContext, loading } = useUnleashContext();
-    const { removeContext } = useContextsApi();
+    const [contextFieldToDelete, setContextFieldToDelete] = useState<string>();
+    const { context, refetchUnleashContext, loading } = useUnleashContext(
+        undefined,
+        projectId,
+    );
+    const { removeContext } = useContextsApi(projectId);
     const { setToastData, setToastApiError } = useToast();
 
     const data = useMemo(() => {
@@ -45,14 +46,7 @@ const ContextList: FC = () => {
             });
         }
 
-        const filteredContextFields =
-            projectId && projectContextFieldsEnabled
-                ? // @ts-expect-error project doesn't exist yet; todo: fix with flag projectContextFields
-                  context.filter((c) => c.project === projectId)
-                : // @ts-expect-error project doesn't exist yet; todo: fix with flag projectContextFields
-                  context.filter((c) => !c.project);
-
-        return filteredContextFields
+        return context
             .map(
                 ({
                     name,
@@ -86,13 +80,19 @@ const ContextList: FC = () => {
                     row: {
                         original: { name, description },
                     },
-                }: any) => (
-                    <LinkCell
-                        title={name}
-                        to={`/context/edit/${name}`}
-                        subtitle={description}
-                    />
-                ),
+                }: any) => {
+                    const editUrl = projectId
+                        ? `/projects/${projectId}/context/${name}`
+                        : `/context/edit/${name}`;
+
+                    return (
+                        <LinkCell
+                            title={name}
+                            to={editUrl}
+                            subtitle={description}
+                        />
+                    );
+                },
                 sortType: 'alphanumeric',
             },
             {
@@ -114,7 +114,7 @@ const ContextList: FC = () => {
                     <ContextActionsCell
                         name={name}
                         onDelete={() => {
-                            setName(name);
+                            setContextFieldToDelete(name);
                             setShowDelDialogue(true);
                         }}
                         allowDelete={usedInFeatures === 0}
@@ -147,10 +147,10 @@ const ContextList: FC = () => {
 
     const onDeleteContext = async () => {
         try {
-            if (name === undefined) {
+            if (contextFieldToDelete === undefined) {
                 throw new Error();
             }
-            await removeContext(name);
+            await removeContext(contextFieldToDelete);
             refetchUnleashContext();
             setToastData({
                 type: 'success',
@@ -159,7 +159,7 @@ const ContextList: FC = () => {
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }
-        setName(undefined);
+        setContextFieldToDelete(undefined);
         setShowDelDialogue(false);
     };
 
@@ -254,7 +254,7 @@ const ContextList: FC = () => {
                 open={showDelDialogue}
                 onClick={onDeleteContext}
                 onClose={() => {
-                    setName(undefined);
+                    setContextFieldToDelete(undefined);
                     setShowDelDialogue(false);
                 }}
                 title='Really delete context field'

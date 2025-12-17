@@ -24,7 +24,7 @@ export const useContextForm = ({
     const [stickiness, setStickiness] = useState(initialStickiness);
     const [project, setProject] = useState(initialProject);
     const [errors, setErrors] = useState({});
-    const { validateContextName } = useContextsApi();
+    const { validateContextName } = useContextsApi(project);
 
     useEffect(() => {
         setContextName(initialContextName);
@@ -49,7 +49,6 @@ export const useContextForm = ({
             description: contextDesc,
             legalValues,
             stickiness,
-            project,
         };
     };
 

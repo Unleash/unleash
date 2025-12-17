@@ -29,8 +29,8 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
     const { setToastData, setToastApiError } = useToast();
     const projectId = useOptionalPathParam('projectId');
     const name = useRequiredPathParam('name');
-    const { context, refetch } = useContext(name);
-    const { updateContext, loading } = useContextsApi();
+    const { context, refetch } = useContext({ name, project: projectId });
+    const { updateContext, loading } = useContextsApi(projectId);
     const navigate = useNavigate();
     const {
         contextName,
@@ -53,10 +53,13 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
         initialProject: projectId,
     });
 
+    const apiUrl = projectId
+        ? `/projects/${projectId}/api/admin/context/${name}`
+        : `/api/admin/context/${name}`;
     const formatApiCode = () => {
         return `curl --location --request PUT '${
             uiConfig.unleashUrl
-        }/api/admin/context/${name}' \\
+        }${apiUrl}' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getContextPayload(), undefined, 2)}'`;
@@ -65,8 +68,8 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         const payload = getContextPayload();
-        const navigationTarget = payload.project
-            ? `/projects/${payload.project}/settings/context-fields`
+        const navigationTarget = projectId
+            ? `/projects/${projectId}/settings/context-fields`
             : '/context';
 
         try {

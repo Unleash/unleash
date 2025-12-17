@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Box,
@@ -12,8 +12,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
-import splashVideo from 'assets/img/impact-metrics-video.mp4';
 
+const YOUTUBE_VIDEO_ID = '40IUj67e9Ew';
 const DOCS_URL = 'https://docs.getunleash.io/concepts/impact-metrics';
 
 const DialogCard = styled(Box)(({ theme }) => ({
@@ -87,16 +87,29 @@ const StyledLink = styled('a')(({ theme }) => ({
 const VideoContainer = styled(Box)(({ theme }) => ({
     position: 'relative',
     width: '100%',
+    paddingBottom: '56.25%',
     marginBottom: theme.spacing(4),
     borderRadius: theme.shape.borderRadiusLarge,
     overflow: 'hidden',
     backgroundColor: theme.palette.background.elevation1,
-    '& video': {
+    '& iframe': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
         width: '100%',
-        height: 'auto',
-        display: 'block',
+        height: '100%',
+        border: 0,
     },
 }));
+
+const VideoThumbnail = styled('img')({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+});
 
 const PlayOverlay = styled(Box)({
     position: 'absolute',
@@ -144,7 +157,6 @@ export const ReleaseManagementSplash = ({
     onClose,
 }: ReleaseManagementSplashProps) => {
     const navigate = useNavigate();
-    const videoRef = useRef<HTMLVideoElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
 
     const handleGetStarted = () => {
@@ -153,10 +165,7 @@ export const ReleaseManagementSplash = ({
     };
 
     const handlePlayClick = () => {
-        if (videoRef.current) {
-            videoRef.current.play();
-            setIsPlaying(true);
-        }
+        setIsPlaying(true);
     };
 
     return (
@@ -198,19 +207,25 @@ export const ReleaseManagementSplash = ({
                 </LinksRow>
 
                 <VideoContainer>
-                    <video
-                        ref={videoRef}
-                        src={splashVideo}
-                        controls={isPlaying}
-                        playsInline
-                        title='Release management introduction video'
-                    />
-                    {!isPlaying && (
-                        <PlayOverlay onClick={handlePlayClick}>
-                            <PlayButton>
-                                <PlayArrowIcon />
-                            </PlayButton>
-                        </PlayOverlay>
+                    {isPlaying ? (
+                        <iframe
+                            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1`}
+                            title='Release management introduction video'
+                            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                            allowFullScreen
+                        />
+                    ) : (
+                        <>
+                            <VideoThumbnail
+                                src={`https://img.youtube.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`}
+                                alt='Video thumbnail'
+                            />
+                            <PlayOverlay onClick={handlePlayClick}>
+                                <PlayButton>
+                                    <PlayArrowIcon />
+                                </PlayButton>
+                            </PlayOverlay>
+                        </>
                     )}
                 </VideoContainer>
 

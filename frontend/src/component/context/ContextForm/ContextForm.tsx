@@ -262,9 +262,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                     />
                     <Typography>{stickiness ? 'On' : 'Off'}</Typography>
                 </StyledSwitchContainer>
-                {mode === 'Edit' ? (
-                    <ContextFieldUsage contextName={contextName} />
-                ) : null}
+                <ContextFieldUsage contextName={contextName} />
             </div>
             <StyledButtonContainer>
                 {children}

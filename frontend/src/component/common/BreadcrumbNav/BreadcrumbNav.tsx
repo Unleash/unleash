@@ -20,9 +20,7 @@ const StyledBreadcrumbs = styled(Breadcrumbs)({
     },
 });
 
-const StyledParagraph = styled('p')(textTruncated);
-
-const StyledCurrentPage = styled('p')(({ theme }) => ({
+const StyledCurrentPage = styled('span')(({ theme }) => ({
     ...textTruncated,
     fontWeight: theme.typography.fontWeightBold,
 }));
@@ -105,9 +103,7 @@ const BreadcrumbNav = () => {
 
                                     return (
                                         <StyledLink key={path} to={link}>
-                                            <StyledParagraph>
                                                 {path}
-                                            </StyledParagraph>
                                         </StyledLink>
                                     );
                                 })}

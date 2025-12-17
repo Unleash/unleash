@@ -54,16 +54,6 @@ class ContextService {
         return this.contextFieldStore.getAll();
     }
 
-    async getAllWithoutProject(): Promise<IContextField[]> {
-        const allFields = await this.contextFieldStore.getAll();
-        return allFields.filter((field) => !field.project);
-    }
-
-    async getAllForProject(projectId: string): Promise<IContextField[]> {
-        const allFields = await this.contextFieldStore.getAll();
-        return allFields.filter((field) => field.project === projectId);
-    }
-
     async getContextField(name: string): Promise<IContextField> {
         const field = await this.contextFieldStore.get(name);
         if (field === undefined) {

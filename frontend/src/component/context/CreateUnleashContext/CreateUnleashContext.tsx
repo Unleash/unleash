@@ -40,8 +40,8 @@ export const CreateUnleashContext = ({
         setErrors,
         errors,
     } = useContextForm({ initialProject: projectId });
-    const { createContext, loading } = useContextsApi(projectId);
-    const { refetchUnleashContext } = useUnleashContext(undefined, projectId);
+    const { createContext, loading } = useContextsApi();
+    const { refetchUnleashContext } = useUnleashContext();
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -64,12 +64,8 @@ export const CreateUnleashContext = ({
         }
     };
 
-    const postTarget = projectId
-        ? `/api/admin/projects/${projectId}/context`
-        : '/api/admin/context';
-
     const formatApiCode = () => {
-        return `curl --location --request POST '${uiConfig.unleashUrl}${postTarget}' \\
+        return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/context' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getContextPayload(), undefined, 2)}'`;

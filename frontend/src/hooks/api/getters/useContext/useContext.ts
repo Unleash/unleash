@@ -3,21 +3,9 @@ import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 
-type ContextInfo = {
-    name: string;
-    project?: string;
-};
-
-const useContext = (
-    { name, project }: ContextInfo,
-    options: SWRConfiguration = {},
-) => {
-    const uri = project
-        ? `api/admin/projects/${project}/context/${name}`
-        : `api/admin/context/${name}`;
-
+const useContext = (name: string, options: SWRConfiguration = {}) => {
     const fetcher = async () => {
-        const path = formatApiPath(uri);
+        const path = formatApiPath(`api/admin/context/${name}`);
         return fetch(path, {
             method: 'GET',
         })
@@ -25,7 +13,7 @@ const useContext = (
             .then((res) => res.json());
     };
 
-    const FEATURE_CACHE_KEY = uri;
+    const FEATURE_CACHE_KEY = `api/admin/context/${name}`;
 
     const { data, error } = useSWR(FEATURE_CACHE_KEY, fetcher, {
         ...options,

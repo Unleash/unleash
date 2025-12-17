@@ -1,0 +1,457 @@
+{
+  "root": [
+    {
+      "id": 1,
+      "name": "ADMIN",
+      "displayName": "Admin",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 3,
+      "name": "CREATE_STRATEGY",
+      "displayName": "Create activation strategies",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 4,
+      "name": "CREATE_ADDON",
+      "displayName": "Create addons",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 5,
+      "name": "DELETE_ADDON",
+      "displayName": "Delete addons",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 6,
+      "name": "UPDATE_ADDON",
+      "displayName": "Update addons",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 9,
+      "name": "UPDATE_APPLICATION",
+      "displayName": "Update applications",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 10,
+      "name": "UPDATE_TAG_TYPE",
+      "displayName": "Update tag types",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 11,
+      "name": "DELETE_TAG_TYPE",
+      "displayName": "Delete tag types",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 12,
+      "name": "CREATE_PROJECT",
+      "displayName": "Create projects",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 15,
+      "name": "UPDATE_STRATEGY",
+      "displayName": "Update strategies",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 16,
+      "name": "DELETE_STRATEGY",
+      "displayName": "Delete strategies",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 17,
+      "name": "UPDATE_CONTEXT_FIELD",
+      "displayName": "Update context fields",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 18,
+      "name": "CREATE_CONTEXT_FIELD",
+      "displayName": "Create context fields",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 19,
+      "name": "DELETE_CONTEXT_FIELD",
+      "displayName": "Delete context fields",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 20,
+      "name": "READ_ROLE",
+      "displayName": "Read roles",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 31,
+      "name": "CREATE_SEGMENT",
+      "displayName": "Create segments",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 32,
+      "name": "UPDATE_SEGMENT",
+      "displayName": "Edit segments",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 33,
+      "name": "DELETE_SEGMENT",
+      "displayName": "Delete segments",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 59,
+      "name": "CREATE_TAG_TYPE",
+      "displayName": "Create tag types",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 70,
+      "name": "RELEASE_PLAN_TEMPLATE_CREATE",
+      "displayName": "Create release plan template",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 71,
+      "name": "RELEASE_PLAN_TEMPLATE_UPDATE",
+      "displayName": "Update release plan template",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 72,
+      "name": "RELEASE_PLAN_TEMPLATE_DELETE",
+      "displayName": "Delete release plan template",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 73,
+      "name": "UPDATE_MAINTENANCE_MODE",
+      "displayName": "Change maintenance mode state",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 74,
+      "name": "UPDATE_INSTANCE_BANNERS",
+      "displayName": "Change instance banners",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 75,
+      "name": "UPDATE_AUTH_CONFIGURATION",
+      "displayName": "Change authentication settings (SSO)",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 76,
+      "name": "READ_LOGS",
+      "displayName": "Read instance logs and login history",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 77,
+      "name": "UPDATE_CORS",
+      "displayName": "Update CORS settings",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 50,
+      "name": "CREATE_CLIENT_API_TOKEN",
+      "displayName": "Create Backend tokens",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 51,
+      "name": "UPDATE_CLIENT_API_TOKEN",
+      "displayName": "Update Backend tokens",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 52,
+      "name": "DELETE_CLIENT_API_TOKEN",
+      "displayName": "Delete Backend tokens",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 53,
+      "name": "READ_CLIENT_API_TOKEN",
+      "displayName": "Read Backend tokens",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 54,
+      "name": "CREATE_FRONTEND_API_TOKEN",
+      "displayName": "Create Frontend tokens",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 55,
+      "name": "UPDATE_FRONTEND_API_TOKEN",
+      "displayName": "Update Frontend tokens",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 56,
+      "name": "DELETE_FRONTEND_API_TOKEN",
+      "displayName": "Delete Frontend tokens",
+      "type": "root",
+      "hasPermission": true
+    },
+    {
+      "id": 57,
+      "name": "READ_FRONTEND_API_TOKEN",
+      "displayName": "Read Frontend tokens",
+      "type": "root",
+      "hasPermission": true
+    }
+  ],
+  "project": [
+    {
+      "id": 13,
+      "name": "UPDATE_PROJECT",
+      "displayName": "Update project",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 14,
+      "name": "DELETE_PROJECT",
+      "displayName": "Delete project",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 29,
+      "name": "UPDATE_FEATURE_VARIANTS",
+      "displayName": "Create/edit variants",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 42,
+      "name": "READ_PROJECT_API_TOKEN",
+      "displayName": "Read api tokens for a specific project",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 43,
+      "name": "CREATE_PROJECT_API_TOKEN",
+      "displayName": "Create api tokens for a specific project",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 44,
+      "name": "DELETE_PROJECT_API_TOKEN",
+      "displayName": "Delete api tokens for a specific project",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 45,
+      "name": "UPDATE_PROJECT_SEGMENT",
+      "displayName": "Create/edit project segment",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 2,
+      "name": "CREATE_FEATURE",
+      "displayName": "Create feature flags",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 7,
+      "name": "UPDATE_FEATURE",
+      "displayName": "Update feature flags",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 8,
+      "name": "DELETE_FEATURE",
+      "displayName": "Delete feature flags",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 30,
+      "name": "MOVE_FEATURE_TOGGLE",
+      "displayName": "Change feature flag project",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 58,
+      "name": "UPDATE_FEATURE_DEPENDENCY",
+      "displayName": "Update feature dependency",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 60,
+      "name": "PROJECT_USER_ACCESS_READ",
+      "displayName": "View only access to Project User Access",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 61,
+      "name": "PROJECT_DEFAULT_STRATEGY_READ",
+      "displayName": "View only access to default strategy configuration for project",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 62,
+      "name": "PROJECT_CHANGE_REQUEST_READ",
+      "displayName": "View only access to change request configuration for project",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 63,
+      "name": "PROJECT_SETTINGS_READ",
+      "displayName": "View only access to project settings",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 64,
+      "name": "PROJECT_USER_ACCESS_WRITE",
+      "displayName": "Write access to Project User Access",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 65,
+      "name": "PROJECT_DEFAULT_STRATEGY_WRITE",
+      "displayName": "Write access to default strategy configuration for project",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 66,
+      "name": "PROJECT_CHANGE_REQUEST_WRITE",
+      "displayName": "Write access to change request configuration for project",
+      "type": "project",
+      "hasPermission": true
+    },
+    {
+      "id": 67,
+      "name": "PROJECT_SETTINGS_WRITE",
+      "displayName": "Write access to project settings",
+      "type": "project",
+      "hasPermission": true
+    }
+  ],
+  "environment": [
+    {
+      "environment": "production",
+      "id": 25,
+      "name": "CREATE_FEATURE_STRATEGY",
+      "displayName": "Create activation strategies",
+      "type": "environment",
+      "hasPermission": true
+    },
+    {
+      "environment": "production",
+      "id": 26,
+      "name": "UPDATE_FEATURE_STRATEGY",
+      "displayName": "Update activation strategies",
+      "type": "environment",
+      "hasPermission": true
+    },
+    {
+      "environment": "production",
+      "id": 27,
+      "name": "DELETE_FEATURE_STRATEGY",
+      "displayName": "Delete activation strategies",
+      "type": "environment",
+      "hasPermission": true
+    },
+    {
+      "environment": "production",
+      "id": 37,
+      "name": "UPDATE_FEATURE_ENVIRONMENT_VARIANTS",
+      "displayName": "Update variants",
+      "type": "environment",
+      "hasPermission": true
+    },
+    {
+      "environment": "production",
+      "id": 36,
+      "name": "APPLY_CHANGE_REQUEST",
+      "displayName": "Apply change requests",
+      "type": "environment",
+      "hasPermission": true
+    },
+    {
+      "environment": "production",
+      "id": 38,
+      "name": "SKIP_CHANGE_REQUEST",
+      "displayName": "Skip change request process",
+      "type": "environment",
+      "hasPermission": true
+    },
+    {
+      "environment": "production",
+      "id": 35,
+      "name": "APPROVE_CHANGE_REQUEST",
+      "displayName": "Approve/Reject change requests",
+      "type": "environment",
+      "hasPermission": true
+    },
+    {
+      "environment": "production",
+      "id": 28,
+      "name": "UPDATE_FEATURE_ENVIRONMENT",
+      "displayName": "Enable/disable flags",
+      "type": "environment",
+      "hasPermission": true
+    }
+  ]
+}

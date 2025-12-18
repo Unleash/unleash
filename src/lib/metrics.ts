@@ -776,7 +776,7 @@ export function registerPrometheusMetrics(
     });
 
     dbMetrics.registerGaugeDbMetric({
-        name: 'users_read_only_total',
+        name: 'read_only_users',
         help: 'Number of read-only users (viewers with no permissions or write events).',
         query: () => {
             if (flagResolver.isEnabled('readOnlyUsers')) {

@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import useSWR, { type SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 import type { IPublicSignupTokens } from 'interfaces/publicSignupTokens';
 
 export const url = 'api/admin/invite-link/tokens';
 
-const fetcher = () => {
-    const path = formatApiPath(url);
-    return fetch(path, {
-        method: 'GET',
-    }).then((res) => res.json());
-};
+const fetcher = createFetcher({
+    url: formatApiPath(url),
+    errorTarget: 'Invite tokens',
+});
 
 export const useInviteTokens = (options: SWRConfiguration = {}) => {
     const { data, error } = useSWR<IPublicSignupTokens>(url, fetcher, options);

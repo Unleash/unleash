@@ -2,7 +2,7 @@ import useSWR, { mutate } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import type { IStrategy } from 'interfaces/strategy';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 
 interface IUseStrategiesOutput {
     strategies: IStrategy[];
@@ -35,11 +35,10 @@ export const useStrategies = (): IUseStrategiesOutput => {
     };
 };
 
-const fetcher = (): Promise<{ strategies: IStrategy[] }> => {
-    return fetch(STRATEGIES_PATH)
-        .then(handleErrorResponses('Strategy types'))
-        .then((res) => res.json());
-};
+const fetcher = createFetcher({
+    url: STRATEGIES_PATH,
+    errorTarget: 'Strategy types',
+});
 
 const flexibleRollout: IStrategy = {
     deprecated: false,

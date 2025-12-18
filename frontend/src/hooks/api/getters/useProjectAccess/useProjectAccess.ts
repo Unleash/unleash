@@ -1,7 +1,7 @@
 import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect, useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 import type { IRole } from 'interfaces/role';
 import type { IGroup } from 'interfaces/group';
 import type { IUser } from 'interfaces/user';
@@ -41,13 +41,10 @@ const useProjectAccess = (
     options: SWRConfiguration = {},
 ) => {
     const path = formatApiPath(`api/admin/projects/${projectId}/access`);
-    const fetcher = () => {
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('project access'))
-            .then((res) => res.json());
-    };
+    const fetcher = createFetcher({
+        url: path,
+        errorTarget: 'project access',
+    });
 
     const CACHE_KEY = `api/admin/projects/${projectId}/users`;
 

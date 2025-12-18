@@ -1,7 +1,7 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 import type {
     SearchChangeRequestsParams,
     ChangeRequestSearchResponseSchema,
@@ -121,14 +121,10 @@ const getChangeRequestSearchFetcher = (params: SearchChangeRequestsInput) => {
         ),
     ).toString();
     const KEY = `${PATH}${urlSearchParams}`;
-    const fetcher = () => {
-        const path = formatApiPath(KEY);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Change request search'))
-            .then((res) => res.json());
-    };
+    const fetcher = createFetcher({
+        url: formatApiPath(KEY),
+        errorTarget: 'Change request search',
+    });
 
     return {
         fetcher,

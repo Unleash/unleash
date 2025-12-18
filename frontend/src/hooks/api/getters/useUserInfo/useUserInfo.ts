@@ -1,17 +1,13 @@
 import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 
 const useUserInfo = (id: string, options: SWRConfiguration = {}) => {
-    const fetcher = () => {
-        const path = formatApiPath(`api/admin/user-admin/${id}`);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Users'))
-            .then((res) => res.json());
-    };
+    const fetcher = createFetcher({
+        url: formatApiPath(`api/admin/user-admin/${id}`),
+        errorTarget: 'Users',
+    });
 
     const { data, error } = useSWR(
         `api/admin/user-admin/${id}`,

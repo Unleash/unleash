@@ -1,7 +1,7 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 import type { SearchFeaturesParams, SearchFeaturesSchema } from 'openapi';
 import { useClearSWRCache } from 'hooks/useClearSWRCache';
 
@@ -114,14 +114,10 @@ export const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
         ),
     ).toString();
     const KEY = `${PATH}${urlSearchParams}`;
-    const fetcher = () => {
-        const path = formatApiPath(KEY);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Feature search'))
-            .then((res) => res.json());
-    };
+    const fetcher = createFetcher({
+        url: formatApiPath(KEY),
+        errorTarget: 'Feature search',
+    });
 
     return {
         fetcher,

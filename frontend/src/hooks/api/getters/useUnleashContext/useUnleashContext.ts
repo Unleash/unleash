@@ -1,6 +1,6 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 import type { IUnleashContextDefinition } from 'interfaces/context';
 
 interface IUnleashContextOutput {
@@ -22,14 +22,10 @@ const useUnleashContext = (
         ? `api/admin/projects/${projectId}/context`
         : `api/admin/context`;
 
-    const fetcher = () => {
-        const path = formatApiPath(uri);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Context variables'))
-            .then((res) => res.json());
-    };
+    const fetcher = createFetcher({
+        url: formatApiPath(uri),
+        errorTarget: 'Context variables',
+    });
 
     const CONTEXT_CACHE_KEY = uri;
 

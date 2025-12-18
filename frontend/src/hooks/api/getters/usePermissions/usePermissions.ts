@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 
 import type { IPermissions } from 'interfaces/permissions';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 
 interface IUsePermissions {
     permissions: IPermissions;
@@ -13,14 +13,10 @@ interface IUsePermissions {
 }
 
 const usePermissions = (options: SWRConfiguration = {}): IUsePermissions => {
-    const fetcher = () => {
-        const path = formatApiPath(`api/admin/permissions`);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Project permissions'))
-            .then((res) => res.json());
-    };
+    const fetcher = createFetcher({
+        url: formatApiPath(`api/admin/permissions`),
+        errorTarget: 'Project permissions',
+    });
 
     const KEY = `api/admin/permissions`;
 

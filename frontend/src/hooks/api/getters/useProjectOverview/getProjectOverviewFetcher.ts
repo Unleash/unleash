@@ -1,15 +1,11 @@
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 
 export const getProjectOverviewFetcher = (id: string) => {
-    const fetcher = () => {
-        const path = formatApiPath(`api/admin/projects/${id}/overview`);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Project overview'))
-            .then((res) => res.json());
-    };
+    const fetcher = createFetcher({
+        url: formatApiPath(`api/admin/projects/${id}/overview`),
+        errorTarget: 'Project overview',
+    });
 
     const KEY = `api/admin/projects/${id}/overview`;
 

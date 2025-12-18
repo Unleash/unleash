@@ -1,7 +1,7 @@
 import type { SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 import { useClearSWRCache } from 'hooks/useClearSWRCache';
 import type { ISignalQuerySignal } from 'interfaces/signal';
 import useUiConfig from '../useUiConfig/useUiConfig.js';
@@ -109,14 +109,10 @@ const getSignalQueryFetcher = (params: SignalQueryParams) => {
         ),
     ).toString();
     const KEY = `${PATH}${urlSearchParams}`;
-    const fetcher = () => {
-        const path = formatApiPath(KEY);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Signal query'))
-            .then((res) => res.json());
-    };
+    const fetcher = createFetcher({
+        url: formatApiPath(KEY),
+        errorTarget: 'Signal query',
+    });
 
     return {
         fetcher,

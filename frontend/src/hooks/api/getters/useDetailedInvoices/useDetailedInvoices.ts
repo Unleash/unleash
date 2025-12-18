@@ -1,17 +1,17 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 import type { DetailedInvoicesSchema } from 'openapi';
 
 const KEY = `api/admin/invoices/list`;
 const path = formatApiPath(KEY);
 
 export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
-    const fetcher = () =>
-        fetch(path, { method: 'GET' })
-            .then(handleErrorResponses('Detailed invoices'))
-            .then((res) => res.json());
+    const fetcher = createFetcher({
+        url: path,
+        errorTarget: 'Detailed invoices',
+    });
 
     const { data, error, isLoading } = useSWR<DetailedInvoicesSchema>(
         KEY,

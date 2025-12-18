@@ -1,15 +1,11 @@
 import { formatApiPath } from '../../../../utils/formatPath.js';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 
 export const getUserProjectRolesFetcher = (id: string) => {
-    const fetcher = () => {
-        const path = formatApiPath(`api/admin/user/roles?projectId=${id}`);
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('User Project roles'))
-            .then((res) => res.json());
-    };
+    const fetcher = createFetcher({
+        url: formatApiPath(`api/admin/user/roles?projectId=${id}`),
+        errorTarget: 'User Project roles',
+    });
 
     const KEY = `api/admin/projects/${id}/roles`;
 

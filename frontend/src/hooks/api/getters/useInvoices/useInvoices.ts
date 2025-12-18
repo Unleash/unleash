@@ -1,19 +1,16 @@
 import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { createFetcher } from '../useApiGetter/useApiGetter.js';
 
 const KEY = `api/admin/invoices`;
 const path = formatApiPath(KEY);
 
 const useInvoices = (options: SWRConfiguration = {}) => {
-    const fetcher = () => {
-        return fetch(path, {
-            method: 'GET',
-        })
-            .then(handleErrorResponses('Invoices'))
-            .then((res) => res.json());
-    };
+    const fetcher = createFetcher({
+        url: path,
+        errorTarget: 'Invoices',
+    });
 
     const { data, error } = useSWR(KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);

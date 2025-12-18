@@ -514,6 +514,7 @@ export enum RoleName {
     VIEWER = 'Viewer',
     OWNER = 'Owner',
     MEMBER = 'Member',
+    READER = 'Reader',
 }
 
 export enum RoleType {

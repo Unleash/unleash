@@ -12,7 +12,7 @@ import {
     UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+
 import type { IConstraint, IConstraintWithId } from 'interfaces/strategy';
 import { useNavigate } from 'react-router-dom';
 import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
@@ -30,6 +30,8 @@ import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValues
 import AccessContext from 'contexts/AccessContext';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { GO_BACK } from 'constants/navigate';
+import { useCombinedGlobalAndProjectContext } from 'hooks/api/getters/useUnleashContext/useCombinedGlobalAndProjectContext.ts';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
 interface ISegmentFormPartTwoProps {
     project?: string;
@@ -112,7 +114,10 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     const constraintsAccordionListRef = useRef<IEditableConstraintsListRef>();
     const navigate = useNavigate();
     const { hasAccess } = useContext(AccessContext);
-    const { context = [] } = useUnleashContext();
+    const projectIdFromPath = useOptionalPathParam('projectId');
+    const { context = [] } = useCombinedGlobalAndProjectContext(
+        project ?? projectIdFromPath,
+    );
     const [open, setOpen] = useState(false);
     const segmentValuesCount = useSegmentValuesCount(constraints);
     const modePermission =

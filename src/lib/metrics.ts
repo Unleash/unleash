@@ -324,12 +324,6 @@ export function registerPrometheusMetrics(
         fetchValue: () => stores.userStore.count(),
         ttlMs: minutesToMilliseconds(15),
     });
-    const _usersReadOnly = createGauge({
-        name: 'users_read_only_total',
-        help: 'Number of read-only users (users with no events or only FEATURE_FAVORITED events)',
-        fetchValue: () => instanceStatsService.getReadOnlyUsers(),
-        ttlMs: hoursToMilliseconds(24),
-    });
     const trafficTotal = createGauge({
         name: 'traffic_total',
         help: 'Traffic used current month',
@@ -779,6 +773,18 @@ export function registerPrometheusMetrics(
     const unknownFlagsUniqueNamesGauge = createGauge({
         name: 'unknown_flags_unique_names',
         help: 'Number of unique unknown flag names reported in the last 24 hours, if any.',
+    });
+
+    dbMetrics.registerGaugeDbMetric({
+        name: 'users_read_only_total',
+        help: 'Number of read-only users (viewers with no permissions or write events).',
+        query: () => {
+            if (flagResolver.isEnabled('readOnlyUsers')) {
+                return instanceStatsService.getReadOnlyUsers();
+            }
+            return Promise.resolve(0);
+        },
+        map: (result) => ({ value: result }),
     });
 
     // register event listeners

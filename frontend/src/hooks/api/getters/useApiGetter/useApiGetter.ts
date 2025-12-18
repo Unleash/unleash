@@ -33,3 +33,8 @@ export const fetcher = (path: string, errorTarget: string) => {
         .then(handleErrorResponses(errorTarget))
         .then((res) => res.json());
 };
+
+export const createFetcher =
+    ({ url, errorTarget }: { url: string; errorTarget: string }) =>
+    () =>
+        fetcher(url, errorTarget);

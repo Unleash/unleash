@@ -661,17 +661,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const prometheusApi = options.prometheusApi || process.env.PROMETHEUS_API;
 
-    const isEnterprise =
-        Boolean(options.enterpriseVersion) &&
-        ui.environment?.toLowerCase() !== 'pro';
+    const isEnterprise = true;
 
     const isTest = process.env.NODE_ENV === 'test';
-    const isOss = resolveIsOss(
-        isEnterprise,
-        options.isOss,
-        ui.environment,
-        isTest,
-    );
+    const isOss = false;
 
     const session: ISessionOption = mergeAll([
         defaultSessionOption(isEnterprise),
@@ -716,13 +709,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             process.env.UNLEASH_SIGNAL_TOKENS_PER_ENDPOINT_LIMIT,
             5,
         ),
-        featureEnvironmentStrategies: Math.max(
-            1,
-            parseEnvVarNumber(
-                process.env.UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT,
-                options?.resourceLimits?.featureEnvironmentStrategies ?? 30,
-            ),
-        ),
+        featureEnvironmentStrategies: 5000,
         constraintValues: Math.max(
             1,
             parseEnvVarNumber(

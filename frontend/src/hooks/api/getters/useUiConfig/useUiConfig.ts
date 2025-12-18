@@ -20,18 +20,15 @@ const useUiConfig = (): IUseUIConfigOutput => {
     const { data, error, mutate } = useSWR<IUiConfig>(path, fetcher);
 
     const isOss = useCallback(() => {
-        return !data?.versionInfo?.current?.enterprise;
+        return false;
     }, [data]);
 
     const isPro = useCallback(() => {
-        return data?.environment?.toLowerCase() === 'pro';
+        return false;
     }, [data]);
 
     const isEnterprise = useCallback(() => {
-        return (
-            data?.environment?.toLowerCase() !== 'pro' &&
-            Boolean(data?.versionInfo?.current?.enterprise)
-        );
+        return true;
     }, [data]);
 
     const uiConfig: IUiConfig = useMemo(() => {

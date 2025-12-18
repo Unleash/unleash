@@ -1,7 +1,5 @@
-import { useState } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Alert } from '@mui/material';
-import { Checkbox, FormControlLabel } from '@mui/material';
 import { PRODUCTION } from 'constants/environmentTypes';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { createLocalStorage } from 'utils/createLocalStorage';
@@ -25,14 +23,16 @@ export const FeatureStrategyProdGuard = ({
     label,
     loading,
 }: IFeatureStrategyProdGuardProps) => {
-    const { value: settings, setValue: setSettings } =
-        getFeatureStrategyProdGuardSettings();
-    const [hide, setHide] = useState(settings.hide);
+    // Плашка Dont Show Again должна отображаться всегда
 
-    const toggleHideSetting = () => {
-        setSettings((prev) => ({ hide: !prev.hide }));
-        setHide((prev) => !prev);
-    };
+    // const { value: settings, setValue: setSettings } =
+    //     getFeatureStrategyProdGuardSettings();
+    // const [hide, setHide] = useState(settings.hide);
+
+    // const toggleHideSetting = () => {
+    //     setSettings((prev) => ({ hide: !prev.hide }));
+    //     setHide((prev) => !prev);
+    // };
 
     return (
         <Dialogue
@@ -51,12 +51,12 @@ export const FeatureStrategyProdGuard = ({
             <p style={{ marginTop: '1rem' }}>
                 Are you sure you want to proceed?
             </p>
-            <FormControlLabel
-                label="Don't show again"
-                control={
-                    <Checkbox checked={hide} onChange={toggleHideSetting} />
-                }
-            />
+            {/*<FormControlLabel*/}
+            {/*    label="Don't show again"*/}
+            {/*    control={*/}
+            {/*        <Checkbox checked={hide} onChange={toggleHideSetting} />*/}
+            {/*    }*/}
+            {/*/>*/}
         </Dialogue>
     );
 };

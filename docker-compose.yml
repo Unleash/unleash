@@ -16,7 +16,7 @@ services:
   # The Unleash server contains the Unleash configuration and
   # communicates with client SDKs and Unleash Edge
   web:
-    image: unleashorg/unleash-server:latest
+    image: my-unleash-server:latest
     ports:
       - "4242:4242"
     environment:

@@ -38,8 +38,6 @@ const CreateEnvironment = () => {
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         clearErrors();
-        const validName = await validateEnvironmentName();
-        if (validName) {
             const payload = getEnvPayload();
             try {
                 await createEnvironment(payload);
@@ -52,7 +50,6 @@ const CreateEnvironment = () => {
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
-        }
     };
 
     const formatApiCode = () => {

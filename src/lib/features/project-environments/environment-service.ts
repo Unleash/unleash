@@ -2,6 +2,7 @@ import {
     DefaultStrategyUpdatedEvent,
     type IAuditUser,
     type IEnvironment,
+    IEnvironmentCreate,
     type IEnvironmentStore,
     type IFeatureEnvironmentStore,
     type IFeatureStrategiesStore,
@@ -117,6 +118,22 @@ export default class EnvironmentService {
                 return this.environmentStore.updateSortOrder(key, value);
             }),
         );
+    }
+
+    async updateEnvironment(data: Pick<IEnvironment, "type" | "protected" | "requiredApprovals">, name: string): Promise<IEnvironment> {
+        const exists = await this.environmentStore.exists(name);
+        if (exists) {
+            return this.environmentStore.update(data, name);
+        }
+        throw new NotFoundError(`Could not update environment, not find ${name}`);
+    }
+
+    async createEnvironment(data: IEnvironmentCreate): Promise<IEnvironment> {
+        const exists = await this.environmentStore.exists(data.name);
+        if (!exists) {
+            return this.environmentStore.create(data);
+        }
+        throw new NotFoundError(`Could not create environment, same already exist ${data.name}`);
     }
 
     async toggleEnvironment(name: string, value: boolean): Promise<void> {

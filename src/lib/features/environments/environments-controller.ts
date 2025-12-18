@@ -131,6 +131,48 @@ export class EnvironmentsController extends Controller {
         });
 
         this.route({
+            method: 'put',
+            path: '/update/:name',
+            acceptAnyContentType: true,
+            handler: this.updateEnvironment,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Environments'],
+                    summary: 'Toggle the environment with `name` on',
+                    description:
+                        'Makes it possible to enable this environment for a project. An environment must first be globally enabled using this endpoint before it can be enabled for a project',
+                    operationId: 'toggleEnvironmentOn',
+                    responses: {
+                        204: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '',
+            acceptAnyContentType: true,
+            handler: this.createEnvironment,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Environments'],
+                    summary: 'Toggle the environment with `name` on',
+                    description:
+                        'Makes it possible to enable this environment for a project. An environment must first be globally enabled using this endpoint before it can be enabled for a project',
+                    operationId: 'toggleEnvironmentOn',
+                    responses: {
+                        204: emptyResponse,
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
             method: 'post',
             path: '/:name/on',
             acceptAnyContentType: true,
@@ -183,6 +225,23 @@ export class EnvironmentsController extends Controller {
             environmentsSchema.$id,
             { version: 1, environments: await this.service.getAll() },
         );
+    }
+
+    async createEnvironment(
+        req: Request<unknown, unknown, EnvironmentSchema>,
+        res: Response,
+    ): Promise<void> {
+        await this.service.createEnvironment(req.body);
+        res.status(200).end();
+    }
+
+
+    async updateEnvironment(
+        req: Request<EnvironmentParam, unknown, EnvironmentSchema>,
+        res: Response,
+    ): Promise<void> {
+        await this.service.updateEnvironment(req.body, req.params.name);
+        res.status(200).end();
     }
 
     async updateSortOrder(

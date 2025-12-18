@@ -1,7 +1,6 @@
 import { Suspense, useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
 import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';
 import Loader from 'component/common/Loader/Loader';
 import NotFound from 'component/common/NotFound/NotFound';
@@ -111,7 +110,7 @@ export const App = () => {
                                         />
                                     </Routes>
 
-                                    <FeedbackNPS openUrl='http://feedback.unleash.run' />
+                                    {/*<FeedbackNPS openUrl='http://feedback.unleash.run' />*/}
 
                                     <SplashOverlay />
                                 </StyledContainer>

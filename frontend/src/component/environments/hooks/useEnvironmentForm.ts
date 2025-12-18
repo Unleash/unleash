@@ -45,13 +45,7 @@ const useEnvironmentForm = (
             return false;
         }
 
-        try {
-            await validateEnvName(name);
-            return true;
-        } catch (error: unknown) {
-            setErrors((prev) => ({ ...prev, name: formatUnknownError(error) }));
-            return false;
-        }
+        return true;
     };
 
     const clearErrors = () => {

@@ -1,6 +1,7 @@
 import type { Response } from 'express';
 import Controller from '../../routes/controller.js';
 import {
+    CreateProject,
     type IArchivedQuery,
     type IFlagResolver,
     type IProjectParam,
@@ -20,6 +21,8 @@ import {
     type ProjectDoraMetricsSchema,
     projectDoraMetricsSchema,
     projectOverviewSchema,
+    ProjectSchema,
+    projectSchema,
     type ProjectsSchema,
     projectsSchema,
 } from '../../openapi/index.js';
@@ -63,6 +66,26 @@ export default class ProjectController extends Controller {
         this.clientInstanceService = services.clientInstanceService;
         this.openApiService = services.openApiService;
         this.flagResolver = config.flagResolver;
+
+        this.route({
+            path: '',
+            method: 'post',
+            handler: this.createProject,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Projects'],
+                    operationId: 'createProject',
+                    summary: 'Get a list of all projects.',
+                    description:
+                        'This endpoint returns an list of all the projects in the Unleash instance.',
+                    responses: {
+                        200: createResponseSchema('projectSchema'),
+                        ...getStandardResponses(401, 403),
+                    },
+                }),
+            ],
+        });
 
         this.route({
             path: '',
@@ -220,15 +243,47 @@ export default class ProjectController extends Controller {
         }
     }
 
+    async createProject(
+        req: IAuthRequest<unknown, unknown, CreateProject>,
+        res: Response<ProjectSchema>,
+    ): Promise<void> {
+        const { user, audit } = req;
+
+        console.log(user, audit);
+
+        const project = await this.projectService.createProject(
+            req.body,
+            user,
+            audit
+        );
+
+        console.log(project);
+
+        const response = {
+            id: project.id,
+            name: project.name,
+            defaultStickiness: project.defaultStickiness,
+            description: project.description,
+            mode: project.mode,
+        }
+
+
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            projectSchema.$id,
+            response,
+        );
+    }
+
     async getProjects(
         req: IAuthRequest,
         res: Response<ProjectsSchema>,
     ): Promise<void> {
         const { user } = req;
         const projects = await this.projectService.getProjects(
-            {
-                id: 'default',
-            },
+            {},
             user.id,
         );
 

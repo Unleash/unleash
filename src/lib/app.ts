@@ -30,7 +30,6 @@ import type { Knex } from 'knex';
 import maintenanceMiddleware from './features/maintenance/maintenance-middleware.js';
 import { unless } from './middleware/unless-middleware.js';
 import { catchAllErrorHandler } from './middleware/catch-all-error-handler.js';
-import NotFoundError from './error/notfound-error.js';
 import { bearerTokenMiddleware } from './middleware/bearer-token-middleware.js';
 import { auditAccessMiddleware } from './middleware/index.js';
 import { originMiddleware } from './middleware/origin-middleware.js';
@@ -206,14 +205,14 @@ export default async function getApp(
         res.send(indexHTML);
     });
 
-    // handle all API 404s
-    app.use(`${baseUriPath}/api`, (req, res) => {
-        const error = new NotFoundError(
-            `The path you were looking for (${baseUriPath}/api${req.path}) is not available.`,
-        );
-        res.status(error.statusCode).send(error);
-        return;
-    });
+    // // handle all API 404s
+    // app.use(`${baseUriPath}/api`, (req, res) => {
+    //     const error = new NotFoundError(
+    //         `The path you were looking for (${baseUriPath}/api${req.path}) is not available.`,
+    //     );
+    //     res.status(error.statusCode).send(error);
+    //     return;
+    // });
 
     app.get(`${baseUriPath}/*`, (req, res) => {
         res.set('Content-Type', 'text/html');

@@ -21,7 +21,14 @@ export const createUserResponseSchema = {
                 {
                     type: 'string',
                     example: 'Admin',
-                    enum: ['Admin', 'Editor', 'Viewer', 'Owner', 'Member'],
+                    enum: [
+                        'Admin',
+                        'Editor',
+                        'Viewer',
+                        'Owner',
+                        'Member',
+                        'Reader',
+                    ],
                 },
             ],
         },

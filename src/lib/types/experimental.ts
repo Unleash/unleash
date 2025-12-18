@@ -66,7 +66,8 @@ export type IFlagKey =
     | 'newInUnleash'
     | 'oidcPkceSupport'
     | 'gtmReleaseManagement'
-    | 'projectContextFields';
+    | 'projectContextFields'
+    | 'readOnlyUsers';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -293,6 +294,10 @@ const flags: IFlags = {
     ),
     projectContextFields: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_CONTEXT_FIELDS,
+        false,
+    ),
+    readOnlyUsers: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS,
         false,
     ),
 };

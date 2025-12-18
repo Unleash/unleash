@@ -818,11 +818,22 @@ export default class ExportImportService
 
     private async getUnsupportedContextFields(dto: ImportTogglesSchema) {
         const availableContextFields = await this.contextService.getAll();
+        const targetProject = dto.project;
 
-        return dto.data.contextFields?.filter(
-            (contextField) =>
-                !isValidField(contextField, availableContextFields),
-        );
+        return dto.data.contextFields?.filter((importingField) => {
+            if (!isValidField(importingField, availableContextFields)) {
+                return true;
+            }
+
+            const existingField = availableContextFields.find(
+                (field) => field.name === importingField.name,
+            );
+
+            return (
+                existingField?.project &&
+                existingField.project !== targetProject
+            );
+        });
     }
 
     private async getArchivedFeatures(dto: ImportTogglesSchema) {

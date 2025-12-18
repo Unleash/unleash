@@ -175,7 +175,13 @@ export class ApiTokenService {
                         /^([^.]*)\.(.{8}).*$/,
                         '$1.$2...',
                     )} rate limited until: ${this.queryAfter.get(secret)}`,
-                );
+if (Math.random() < 0.1) {
+    this.logger.debug(
+                    `Token ${secret.replace(
+                        /^([^.]*)\.(.{8}).*$/,
+                        '$1.$2...',
+                    )} rate limited until: ${this.queryAfter.get(secret)}`,
+}
             }
         }
         return token;

@@ -365,9 +365,8 @@ test('should collect licensed_users metrics', async () => {
     expect(recordedMetric).toMatch(/licensed_users 0/);
 });
 
-test('should collect users_read_only_total metrics', async () => {
-    const recordedMetric = await prometheusRegister.getSingleMetricAsString(
-        'users_read_only_total',
-    );
-    expect(recordedMetric).toMatch(/users_read_only_total 0/);
+test('should collect read_only_users metrics', async () => {
+    const recordedMetric =
+        await prometheusRegister.getSingleMetricAsString('read_only_users');
+    expect(recordedMetric).toMatch(/read_only_users 0/);
 });

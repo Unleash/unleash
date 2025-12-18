@@ -64,6 +64,8 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         ...config.additionalCspAllowedDomains.connectSrc,
                     ],
                     mediaSrc: [
+                        "'self'",
+                        'cdn.getunleash.io',
                         '*.youtube.com',
                         '*.youtube-nocookie.com',
                         ...config.additionalCspAllowedDomains.mediaSrc,

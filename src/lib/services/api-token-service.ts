@@ -170,7 +170,7 @@ export class ApiTokenService {
                 }
                 stopCacheTimer();
             } else {
-                this.logger.info(
+                this.logger.debug(
                     `Token ${secret.replace(
                         /^([^.]*)\.(.{8}).*$/,
                         '$1.$2...',

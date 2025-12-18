@@ -263,10 +263,10 @@ export const FeatureToggleListTable: FC = () => {
                                 component={RouterLink}
                                 to='/unknown-flags'
                                 underline='always'
-                                sx={{ 
-                                    marginRight: 2, 
+                                sx={{
+                                    marginRight: 2,
                                     fontSize: theme.typography.body2.fontSize,
-                                    ...focusable(theme) 
+                                    ...focusable(theme),
                                 }}
                             >
                                 Unknown flags
@@ -275,10 +275,10 @@ export const FeatureToggleListTable: FC = () => {
                                 component={RouterLink}
                                 to='/archive'
                                 underline='always'
-                                sx={{ 
-                                    marginRight: 2, 
+                                sx={{
+                                    marginRight: 2,
                                     fontSize: theme.typography.body2.fontSize,
-                                    ...focusable(theme) 
+                                    ...focusable(theme),
                                 }}
                                 onClick={() => {
                                     trackEvent('search-feature-buttons', {

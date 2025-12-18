@@ -103,7 +103,7 @@ const BreadcrumbNav = () => {
 
                                     return (
                                         <StyledLink key={path} to={link}>
-                                                {path}
+                                            {path}
                                         </StyledLink>
                                     );
                                 })}

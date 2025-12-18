@@ -9,7 +9,7 @@ const path = formatApiPath(KEY);
 
 export const useDetailedInvoices = (options: SWRConfiguration = {}) => {
     const fetcher = createFetcher({
-        url: path,
+        path,
         errorTarget: 'Detailed invoices',
     });
 

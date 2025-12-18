@@ -14,7 +14,7 @@ interface IUsePermissions {
 
 const usePermissions = (options: SWRConfiguration = {}): IUsePermissions => {
     const fetcher = createFetcher({
-        url: formatApiPath(`api/admin/permissions`),
+        path: formatApiPath(`api/admin/permissions`),
         errorTarget: 'Project permissions',
     });
 

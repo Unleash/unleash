@@ -115,7 +115,7 @@ export const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
     ).toString();
     const KEY = `${PATH}${urlSearchParams}`;
     const fetcher = createFetcher({
-        url: formatApiPath(KEY),
+        path: formatApiPath(KEY),
         errorTarget: 'Feature search',
     });
 

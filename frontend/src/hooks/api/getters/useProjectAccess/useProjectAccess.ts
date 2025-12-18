@@ -42,7 +42,7 @@ const useProjectAccess = (
 ) => {
     const path = formatApiPath(`api/admin/projects/${projectId}/access`);
     const fetcher = createFetcher({
-        url: path,
+        path,
         errorTarget: 'project access',
     });
 

@@ -35,6 +35,6 @@ export const fetcher = (path: string, errorTarget: string) => {
 };
 
 export const createFetcher =
-    ({ url, errorTarget }: { url: string; errorTarget: string }) =>
+    ({ path, errorTarget }: { path: string; errorTarget: string }) =>
     () =>
-        fetcher(url, errorTarget);
+        fetcher(path, errorTarget);

@@ -7,7 +7,7 @@ import type { IPublicSignupTokens } from 'interfaces/publicSignupTokens';
 export const url = 'api/admin/invite-link/tokens';
 
 const fetcher = createFetcher({
-    url: formatApiPath(url),
+    path: formatApiPath(url),
     errorTarget: 'Invite tokens',
 });
 

@@ -11,6 +11,7 @@ interface IUseStrategiesOutput {
     error?: Error;
 }
 
+const STRATEGIES_PATH = formatApiPath(`api/admin/strategies`);
 const STANDARD_STRATEGIES = ['flexibleRollout', 'default'];
 const mapAdvancedStrategies = (strategies: IStrategy[]): IStrategy[] =>
     strategies.map((strategy) => ({
@@ -36,7 +37,7 @@ export const useStrategies = (): IUseStrategiesOutput => {
 };
 
 const fetcher = createFetcher({
-    url: STRATEGIES_PATH,
+    path: STRATEGIES_PATH,
     errorTarget: 'Strategy types',
 });
 
@@ -70,5 +71,3 @@ const flexibleRollout: IStrategy = {
 };
 
 const defaultStrategies: IStrategy[] = [flexibleRollout];
-
-const STRATEGIES_PATH = formatApiPath(`api/admin/strategies`);

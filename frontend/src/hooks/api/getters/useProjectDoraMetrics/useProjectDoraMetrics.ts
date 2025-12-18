@@ -19,7 +19,7 @@ export const useProjectDoraMetrics = (
     const path = formatApiPath(KEY);
 
     const fetcher = createFetcher({
-        url: path,
+        path,
         errorTarget: 'Dora metrics',
     });
 

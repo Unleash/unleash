@@ -23,7 +23,7 @@ const useUnleashContext = (
         : `api/admin/context`;
 
     const fetcher = createFetcher({
-        url: formatApiPath(uri),
+        path: formatApiPath(uri),
         errorTarget: 'Context variables',
     });
 

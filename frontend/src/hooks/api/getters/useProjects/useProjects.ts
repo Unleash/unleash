@@ -9,7 +9,7 @@ const useProjects = (options: SWRConfiguration & GetProjectsParams = {}) => {
     const KEY = `api/admin/projects${options.archived ? '?archived=true' : ''}`;
 
     const fetcher = createFetcher({
-        url: formatApiPath(KEY),
+        path: formatApiPath(KEY),
         errorTarget: 'Projects',
     });
 

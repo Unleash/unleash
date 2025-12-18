@@ -3,7 +3,7 @@ import { createFetcher } from '../useApiGetter/useApiGetter.js';
 
 export const getUserProjectRolesFetcher = (id: string) => {
     const fetcher = createFetcher({
-        url: formatApiPath(`api/admin/user/roles?projectId=${id}`),
+        path: formatApiPath(`api/admin/user/roles?projectId=${id}`),
         errorTarget: 'User Project roles',
     });
 

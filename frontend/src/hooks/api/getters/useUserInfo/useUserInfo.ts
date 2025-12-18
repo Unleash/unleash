@@ -5,7 +5,7 @@ import { createFetcher } from '../useApiGetter/useApiGetter.js';
 
 const useUserInfo = (id: string, options: SWRConfiguration = {}) => {
     const fetcher = createFetcher({
-        url: formatApiPath(`api/admin/user-admin/${id}`),
+        path: formatApiPath(`api/admin/user-admin/${id}`),
         errorTarget: 'Users',
     });
 

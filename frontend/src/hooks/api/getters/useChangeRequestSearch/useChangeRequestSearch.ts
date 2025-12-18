@@ -122,7 +122,7 @@ const getChangeRequestSearchFetcher = (params: SearchChangeRequestsInput) => {
     ).toString();
     const KEY = `${PATH}${urlSearchParams}`;
     const fetcher = createFetcher({
-        url: formatApiPath(KEY),
+        path: formatApiPath(KEY),
         errorTarget: 'Change request search',
     });
 

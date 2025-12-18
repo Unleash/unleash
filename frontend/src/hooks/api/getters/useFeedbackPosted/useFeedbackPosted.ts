@@ -9,7 +9,7 @@ const path = formatApiPath(KEY);
 
 const useFeedbackPosted = (options: SWRConfiguration = {}) => {
     const fetcher = createFetcher({
-        url: path,
+        path,
         errorTarget: 'FeedbackPosted',
     });
 

@@ -111,7 +111,7 @@ const getEventSearchFetcher = (params: SearchEventsParams) => {
     ).toString();
     const KEY = `${PATH}${urlSearchParams}`;
     const fetcher = createFetcher({
-        url: formatApiPath(KEY),
+        path: formatApiPath(KEY),
         errorTarget: 'Event search',
     });
 

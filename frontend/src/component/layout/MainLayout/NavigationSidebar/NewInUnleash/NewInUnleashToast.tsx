@@ -7,6 +7,7 @@ import {
     type TypographyProps,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NewReleases from '@mui/icons-material/NewReleases';
 import Close from '@mui/icons-material/Close';
 import { NewInUnleashDialog } from './NewInUnleashDialog.tsx';
@@ -96,6 +97,7 @@ const StyledButton = styled('button')(({ theme }) => ({
 }));
 
 export const NewInUnleashToast = ({ item }: { item: NewInUnleashItem }) => {
+    const navigate = useNavigate();
     const [seenItems, setSeenItems] = useLocalStorageState(
         `new-in-unleash-seen:v2`,
         new Set(),
@@ -113,6 +115,14 @@ export const NewInUnleashToast = ({ item }: { item: NewInUnleashItem }) => {
         }, 500);
         return () => clearTimeout(timeout);
     }, []);
+
+    const handleClick = () => {
+        if (item.modal === false && item.appLink) {
+            navigate(item.appLink);
+        } else {
+            setModalOpen(true);
+        }
+    };
 
     return (
         <>
@@ -138,9 +148,7 @@ export const NewInUnleashToast = ({ item }: { item: NewInUnleashItem }) => {
                         <Typography
                             className='read-more'
                             component={StyledButton}
-                            onClick={() => {
-                                setModalOpen(true);
-                            }}
+                            onClick={handleClick}
                             variant='body2'
                             fontWeight='bold'
                         >

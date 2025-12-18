@@ -33,13 +33,13 @@ export const newInUnleashItems: NewInUnleashItem[] = [
                 alt='Release templates preview'
             />
         ),
-        appLink: '/release-templates',
+        appLink: '?splash=release-management-v3',
         docsLink: 'https://docs.getunleash.io/reference/release-templates',
         filter: {
             enterpriseOnly: true,
             versionLowerThan: '7.5.0',
         },
         beta: false,
-        modal: true,
+        modal: false,
     },
 ];

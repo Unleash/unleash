@@ -74,7 +74,6 @@ export const StyledTabContainer = styled('div')(({ theme }) => ({
 
 export const StyledTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
-    fontSize: theme.fontSizes.bodySize,
     flexBasis: 0,
     [theme.breakpoints.down('md')]: {
         paddingLeft: theme.spacing(1),

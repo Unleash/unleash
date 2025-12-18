@@ -259,6 +259,7 @@ export const darkTheme = createTheme({
                 },
                 a: {
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                 },
                 '.dropdown-outline, .MuiAutocomplete-popper': {
                     // used for user dropdown, autocomplete, and change request primary button dropdown, notifications dropdown
@@ -273,6 +274,7 @@ export const darkTheme = createTheme({
                 root: ({ theme }) => ({
                     ...focusable(theme),
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                     '&:hover': {
                         textDecoration: 'none',
                     },
@@ -410,9 +412,9 @@ export const darkTheme = createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     color: theme.palette.text.primary,
-                    fontSize: theme.typography.body1.fontSize,
+                    fontSize: theme.typography.body2.fontSize,
                     textTransform: 'none',
-                    fontWeight: 400,
+                    fontWeight: theme.typography.fontWeightMedium,
                     lineHeight: '1',
                     minHeight: '62px',
                     '&:hover': {
@@ -523,6 +525,7 @@ export const darkTheme = createTheme({
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
+                    fontWeight: theme.typography.fontWeightBold,
                     '&:not(.Mui-disabled).MuiButton-containedPrimary': {
                         backgroundColor: theme.palette.background.alternative,
                         '&:hover': {

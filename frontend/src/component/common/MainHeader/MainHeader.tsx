@@ -1,4 +1,4 @@
-import { Paper, styled } from '@mui/material';
+import { Paper, styled, Typography } from '@mui/material';
 import { usePageTitle } from 'hooks/usePageTitle';
 import type { ReactNode } from 'react';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
@@ -15,10 +15,6 @@ const StyledTitleHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-}));
-
-const StyledTitle = styled('h1')(({ theme }) => ({
-    fontSize: theme.fontSizes.mainHeader,
 }));
 
 const StyledActions = styled('div')(({ theme }) => ({
@@ -47,7 +43,9 @@ export const MainHeader = ({
     return (
         <StyledMainHeader>
             <StyledTitleHeader>
-                <StyledTitle>{title}</StyledTitle>
+                <Typography variant='h1' component='h1'>
+                    {title}
+                </Typography>
                 <StyledActions>{actions}</StyledActions>
             </StyledTitleHeader>
             <ConditionallyRender

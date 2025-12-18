@@ -55,7 +55,6 @@ const Separator = styled('div')(({ theme }) => ({
 
 const StyledTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
-    fontSize: theme.fontSizes.bodySize,
     flexGrow: 1,
     flexBasis: 0,
     [theme.breakpoints.down('md')]: {

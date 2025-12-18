@@ -32,12 +32,13 @@ interface IFeatureNameCellProps {
     };
 }
 
-const StyledFeatureLink = styled(Link)({
+const StyledFeatureLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
+    fontWeight: theme.typography.fontWeightBold,
     '&:hover, &:focus': {
         textDecoration: 'underline',
     },
-});
+}));
 
 const CustomTagButton = styled('button')(({ theme }) => ({
     marginRight: theme.spacing(0.5),

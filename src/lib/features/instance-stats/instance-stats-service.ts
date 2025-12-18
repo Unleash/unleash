@@ -635,6 +635,14 @@ export class InstanceStatsService {
         );
     }
 
+    projectContextFieldCount(): Promise<number> {
+        return this.memorize('projectContextFieldCount', () =>
+            this.flagResolver.isEnabled('projectContextFields')
+                ? this.contextFieldStore.countProjectFields()
+                : Promise.resolve(0),
+        );
+    }
+
     strategiesCount(): Promise<number> {
         return this.memorize('strategiesCount', () =>
             this.strategyStore.count(),

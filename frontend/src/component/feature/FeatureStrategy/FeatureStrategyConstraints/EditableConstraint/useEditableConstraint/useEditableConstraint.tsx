@@ -24,6 +24,8 @@ import {
     getDeletedLegalValues,
     getInvalidLegalValues,
 } from './legal-value-functions.ts';
+import { useEffectiveProjectContext } from 'hooks/api/getters/useUnleashContext/useEffectiveProjectContext.ts';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
 const resolveContextDefinition = (
     context: IUnleashContextDefinition[],
@@ -70,7 +72,8 @@ export const useEditableConstraint = (
         onUpdate(toIConstraint(localConstraint));
     }, [constraintState]);
 
-    const { context } = useUnleashContext();
+    const projectId = useOptionalPathParam('projectId');
+    const { context } = useEffectiveProjectContext(projectId);
 
     const contextDefinition = useMemo(
         () => resolveContextDefinition(context, localConstraint.contextName),

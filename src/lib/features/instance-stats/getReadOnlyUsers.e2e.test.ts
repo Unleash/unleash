@@ -203,6 +203,15 @@ test('ignores viewers with permissions inherited from group root roles', async (
     await expect(getReadOnlyUsers()).resolves.toEqual(1);
 });
 
+test('counts viewers with no permissions inherited from group root roles', async () => {
+    await createViewer();
+    const userWithGroupRootPermissions = await createViewer();
+    const group = await createGroup({ root_role_id: viewerRootRoleId });
+    await addUserToGroup(userWithGroupRootPermissions.id, group.id);
+
+    await expect(getReadOnlyUsers()).resolves.toEqual(2);
+});
+
 test('ignores viewers with write events', async () => {
     await createViewer();
     const userWithWriteEvent = await createViewer();

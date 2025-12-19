@@ -3,7 +3,7 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { IUnleashContextDefinition } from 'interfaces/context';
 
-interface IUnleashContextOutput {
+export interface IUnleashContextOutput {
     context: IUnleashContextDefinition[];
     refetchUnleashContext: () => void;
     loading: boolean;

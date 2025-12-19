@@ -1,7 +1,6 @@
 import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { isStringOperator, type Operator } from 'constants/operators';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { useCallback, useRef, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
@@ -30,6 +29,8 @@ import {
     isSemVerConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
+import { useEffectiveProjectContext } from 'hooks/api/getters/useUnleashContext/useEffectiveProjectContext.ts';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -250,7 +251,9 @@ export const EditableConstraint: FC<Props> = ({
         [updateConstraint],
     );
 
-    const { context } = useUnleashContext();
+    const projectId = useOptionalPathParam('projectId');
+    const { context } = useEffectiveProjectContext(projectId);
+
     const { contextName, operator } = localConstraint;
     const showCaseSensitiveButton = isStringOperator(operator);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);

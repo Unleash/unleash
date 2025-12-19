@@ -331,7 +331,7 @@ useEffect(() => {
 
 This code snippet starts the Unleash client, checks that our flag is enabled, and then stores impression events for your use.
 
-> **Note:** We are passing in unleashClient into the dependency array in useEffect to prevent the app from [unnecessarily mounting the component](https://react.dev/concepts/react/useEffect#parameters) if the state of the data it holds has not changed.
+> **Note:** We are passing in unleashClient into the dependency array in useEffect to prevent the app from [unnecessarily mounting the component](https://react.dev/reference/react/useEffect#parameters) if the state of the data it holds has not changed.
 
 Our flag impression data is now being logged!
 

@@ -140,8 +140,6 @@ export const ImpactMetrics: FC = () => {
     const maxChartsReached = charts.length >= 20;
     const isDisabled = isLoading || !!hasError || maxChartsReached;
 
-    console.log(charts, isLoading, hasError);
-
     const showEmptyState = charts.length === 0 && !isLoading;
 
     return (

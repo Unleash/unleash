@@ -15,7 +15,7 @@ jobs:
     name: build # temporary solution to trick branch protection rules
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build docs
         env:
           UNLEASH_FEEDBACK_TARGET_URL: ${{ secrets.DOCS_FEEDBACK_TARGET_URL }}

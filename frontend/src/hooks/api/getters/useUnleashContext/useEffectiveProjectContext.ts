@@ -4,11 +4,13 @@ import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 import type { IUnleashContextOutput } from './useUnleashContext.js';
 import useUnleashContext from './useUnleashContext.js';
 import { fetcher } from '../useApiGetter/useApiGetter.js';
+import { useUiFlag } from 'hooks/useUiFlag.js';
 
 const useConditionalProjectContext = (
     projectId: string | undefined,
     options: SWRConfiguration,
 ): IUnleashContextOutput => {
+    const flagEnabled = useUiFlag('projectContextFields');
     const path = formatApiPath(`api/admin/projects/${projectId}/context`);
 
     const getFetcher = () => fetcher(path, 'Project Context variables');
@@ -16,7 +18,7 @@ const useConditionalProjectContext = (
     const CONTEXT_CACHE_KEY = path;
 
     const { data, mutate, error, isValidating } = useConditionalSWR(
-        !!projectId,
+        !!projectId && flagEnabled,
         [],
         CONTEXT_CACHE_KEY,
         getFetcher,

@@ -25,7 +25,7 @@ export const ContextActionsCell: FC<IContextActionsCellProps> = ({
     const navigate = useNavigate();
     const projectId = useOptionalPathParam('projectId');
     const updateLocation = projectId
-        ? `/projects/${projectId}/settings/context-fields/edit/${name}`
+        ? `/projects/${projectId}/settings/context/edit/${name}`
         : `/context/edit/${name}`;
 
     return (

@@ -82,7 +82,7 @@ const ContextList: FC = () => {
                     },
                 }: any) => {
                     const editUrl = projectId
-                        ? `/projects/${projectId}/settings/context-fields/edit/${name}`
+                        ? `/projects/${projectId}/settings/context/edit/${name}`
                         : `/context/edit/${name}`;
 
                     return (

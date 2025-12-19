@@ -19,7 +19,7 @@ export const AddContextButton: FC<IAddContextButtonProps> = () => {
     const projectId = useOptionalPathParam('projectId');
 
     const createLocation = projectId
-        ? `/projects/${projectId}/settings/context-fields/create`
+        ? `/projects/${projectId}/settings/context/create`
         : '/context/create';
 
     return (

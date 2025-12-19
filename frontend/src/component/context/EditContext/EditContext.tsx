@@ -69,7 +69,7 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
         e.preventDefault();
         const payload = getContextPayload();
         const navigationTarget = projectId
-            ? `/projects/${projectId}/settings/context-fields`
+            ? `/projects/${projectId}/settings/context`
             : '/context';
 
         try {

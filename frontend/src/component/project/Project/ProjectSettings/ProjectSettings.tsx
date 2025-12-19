@@ -58,7 +58,7 @@ export const ProjectSettings = () => {
         ...(contextFieldsEnabled
             ? [
                   {
-                      id: 'context-fields',
+                      id: 'context',
                       label: 'Context fields',
                   },
               ]
@@ -122,7 +122,7 @@ export const ProjectSettings = () => {
                 <Route path='access/*' element={<ProjectAccess />} />
                 {contextFieldsEnabled && (
                     <Route
-                        path='context-fields/*'
+                        path='context/*'
                         element={<ProjectContextFields />}
                     />
                 )}

@@ -4,7 +4,7 @@ title: Permission mapper proposal
 
 ## Why
 
-- ADR-XXX (“Generic Permission Model…”) introduces `(resourceName, scope, action)` permissions while today’s API and database use opaque strings.
+- ADR-XXX (“Generic Permission Model…”) introduces a structured permission model (resource/action + resource scope, with assignment qualifiers) while today’s API and database use opaque strings.
 - We must avoid breaking external APIs, SDKs, and stored roles that expect the legacy strings.
 - A mapper lets the domain adopt the new model internally while keeping the legacy contract at the boundary.
 
@@ -18,7 +18,7 @@ title: Permission mapper proposal
 ## Proposed domain types
 
 ```ts
-type Scope = 'root' | 'project' | 'environment';
+type ResourceScope = 'root' | 'project' | 'environment';
 
 type Action =
     | 'create'
@@ -59,24 +59,36 @@ type ResourceName =
     | 'release_plan_template'
     | 'user_pat';
 
+type ResourceDefinition = {
+    name: ResourceName;
+    resourceScope: ResourceScope;
+};
+
 type Permission = {
     resource: ResourceName;
     action: Action;
-    scope: Scope;
-    qualifiers?: Record<string, string>; // e.g. environment (optional)
+};
+
+type PermissionAssignment = {
+    permission: Permission;
+    qualifiers?: Record<string, string | undefined>; // e.g. projectId, environment
 };
 ```
 
-`ADMIN` remains a superuser sentinel; we can still express it as `{ resource: '*', action: '*', scope: 'root' }` for internal consistency while keeping special-case handling.
+`ADMIN` remains a superuser sentinel; we can still express it as `{ resource: '*', action: '*', resourceScope: 'root' }` for internal consistency while keeping special-case handling.
+
+Permissions inherit `resourceScope` from the resource catalog; the mapping table below is the source of truth for each resource’s scope.
+
+Qualifiers define the reachable universe (global vs project/environment-specific) and further narrow access within that universe.
 
 ## Mapper (ports/adapters)
 
 Create a dedicated adapter (hexagonal style) so that:
 
-- Inbound port: `fromLegacy(id: string, assignmentScope: Scope, ctx)` → `Permission[]`.
+- Inbound port: `fromLegacy(id: string, ctx)` → `PermissionAssignment[]`.
   - Looks up static metadata for the legacy id.
-  - Uses `permissions.type` (root/project/environment) and assignment context (projectId/environment) to set `scope`.
-  - Environment/project on the assignment may be `undefined`/`null`, which today means “all environments/all projects” (broadest scope). Preserve that meaning explicitly in the structured permission (e.g. `qualifiers.environment = undefined` and/or a flag).
+  - Uses `permissions.type` (root/project/environment) to set the resource scope, and assignment context (projectId/environment) to set qualifiers on the assignment.
+  - Environment/project on the assignment may be `undefined`/`null`, which today means “all environments/all projects” (broadest reach). Preserve that meaning explicitly in the **assignment qualifiers** (e.g. `qualifiers.environment = undefined` and/or a flag).
   - Returns `ADMIN` as a special-case Permission-like value (or short-circuits to “allow all”).
 - Because some legacy ids expand to multiple structured permissions, the reverse mapping is lossy; we will carry both payloads at the edge (legacy + structured) and mark the legacy payload as deprecated rather than attempting a perfect inverse.
 
@@ -84,7 +96,7 @@ The mapping table lives in one place (e.g. `src/lib/features/rbac/permission-map
 
 ## Exhaustive mapping table
 
-| Legacy string | Resource | Action | Scope (from `permissions.type`) | Notes |
+| Legacy string | Resource | Action | Resource scope (from `permissions.type`) | Notes |
 | --- | --- | --- | --- | --- |
 | `ADMIN` | `*` | `*` | root | Superuser sentinel; bypasses normal checks |
 | `CREATE_ADDON` | addon | create | root |  |
@@ -121,26 +133,26 @@ The mapping table lives in one place (e.g. `src/lib/features/rbac/permission-map
 | `RELEASE_PLAN_TEMPLATE_CREATE` | release_plan_template | create | root |  |
 | `RELEASE_PLAN_TEMPLATE_UPDATE` | release_plan_template | update | root |  |
 | `RELEASE_PLAN_TEMPLATE_DELETE` | release_plan_template | delete | root |  |
-| `UPDATE_PROJECT` | project | update | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `DELETE_PROJECT` | project | delete | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `CREATE_FEATURE` | feature | create | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `UPDATE_FEATURE` | feature | update | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `DELETE_FEATURE` | feature | delete | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `UPDATE_FEATURE_VARIANTS` | feature_variant | update | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `MOVE_FEATURE_TOGGLE` | feature | move | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `READ_PROJECT_API_TOKEN` | client_api_token + frontend_api_token | read | project | Expands to both client and frontend project tokens; legacy string is scope-agnostic |
-| `CREATE_PROJECT_API_TOKEN` | client_api_token + frontend_api_token | create | project | Expands to both client and frontend project tokens; legacy string is scope-agnostic |
-| `DELETE_PROJECT_API_TOKEN` | client_api_token + frontend_api_token | delete | project | Expands to both client and frontend project tokens; legacy string is scope-agnostic |
-| `UPDATE_FEATURE_DEPENDENCY` | feature_dependency | update | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `UPDATE_PROJECT_SEGMENT` | segment | update | project | Same resource as segments; project-scoped link/edit. Legacy string is scope-agnostic |
-| `PROJECT_USER_ACCESS_READ` | project_user_access | read | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `PROJECT_USER_ACCESS_WRITE` | project_user_access | update | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `PROJECT_DEFAULT_STRATEGY_READ` | project_default_strategy | read | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `PROJECT_DEFAULT_STRATEGY_WRITE` | project_default_strategy | update | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `PROJECT_CHANGE_REQUEST_READ` | project_settings | read | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `PROJECT_CHANGE_REQUEST_WRITE` | project_settings | update | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `PROJECT_SETTINGS_READ` | project_settings | read | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
-| `PROJECT_SETTINGS_WRITE` | project_settings | update | project | Scope comes from assignment (single project vs all projects); legacy string is scope-agnostic |
+| `UPDATE_PROJECT` | project | update | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `DELETE_PROJECT` | project | delete | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `CREATE_FEATURE` | feature | create | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `UPDATE_FEATURE` | feature | update | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `DELETE_FEATURE` | feature | delete | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `UPDATE_FEATURE_VARIANTS` | feature_variant | update | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `MOVE_FEATURE_TOGGLE` | feature | move | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `READ_PROJECT_API_TOKEN` | client_api_token + frontend_api_token | read | project | Expands to both client and frontend project tokens; legacy string is level-agnostic |
+| `CREATE_PROJECT_API_TOKEN` | client_api_token + frontend_api_token | create | project | Expands to both client and frontend project tokens; legacy string is level-agnostic |
+| `DELETE_PROJECT_API_TOKEN` | client_api_token + frontend_api_token | delete | project | Expands to both client and frontend project tokens; legacy string is level-agnostic |
+| `UPDATE_FEATURE_DEPENDENCY` | feature_dependency | update | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `UPDATE_PROJECT_SEGMENT` | segment | update | project | Same resource as segments; project-level link/edit. Legacy string is level-agnostic |
+| `PROJECT_USER_ACCESS_READ` | project_user_access | read | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `PROJECT_USER_ACCESS_WRITE` | project_user_access | update | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `PROJECT_DEFAULT_STRATEGY_READ` | project_default_strategy | read | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `PROJECT_DEFAULT_STRATEGY_WRITE` | project_default_strategy | update | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `PROJECT_CHANGE_REQUEST_READ` | project_settings | read | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `PROJECT_CHANGE_REQUEST_WRITE` | project_settings | update | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `PROJECT_SETTINGS_READ` | project_settings | read | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
+| `PROJECT_SETTINGS_WRITE` | project_settings | update | project | Assignment qualifiers determine project coverage; legacy string is level-agnostic |
 | `CREATE_FEATURE_STRATEGY` | feature_strategy | create | environment | Environment optional → all envs if unset |
 | `UPDATE_FEATURE_STRATEGY` | feature_strategy | update | environment | Environment optional → all envs if unset |
 | `DELETE_FEATURE_STRATEGY` | feature_strategy | delete | environment | Environment optional → all envs if unset |
@@ -154,8 +166,8 @@ The mapping table lives in one place (e.g. `src/lib/features/rbac/permission-map
 
 - Every legacy string currently has a single `permissions.type` (root/project/environment); there are no duplicate strings with different types in migrations.
 - **One-to-many mapping:** some legacy permissions expand to multiple structured permissions. Example: `CREATE_PROJECT_API_TOKEN` maps to both `(client_api_token, create, project)` and `(frontend_api_token, create, project)`; the adapter should return the union.
-- **Shared resources across scopes:** some pairs are the same resource at different scopes, e.g. `UPDATE_PROJECT_SEGMENT` and `CREATE/UPDATE/DELETE_SEGMENT` all operate on `segment` (project vs root). Treat them as a single `resource` with scope differences.
-- **Assignment scoping semantics:** current behavior treats an empty project/environment on an assignment as “all projects/all environments,” which is broader than least-permission defaults. The structured form should preserve this (e.g., `scope=environment` with `environment` unset meaning all envs) to stay faithful to existing semantics while we evolve the model and enable explicit grants at any scope (project, environment, project+environment, or unscoped).
+- **Shared resources across levels:** some pairs are the same resource at different levels, e.g. `UPDATE_PROJECT_SEGMENT` and `CREATE/UPDATE/DELETE_SEGMENT` all operate on `segment` (project vs root). Treat them as a single `resource` with level differences.
+- **Assignment qualifier semantics:** current behavior treats an empty project/environment on an assignment as “all projects/all environments,” which is broader than least-permission defaults. The structured form should preserve this (e.g., `resourceScope=environment` with `environment` unset meaning all envs) to stay faithful to existing semantics while we evolve the model and enable explicit grants at any level (project, environment, project+environment, or unscoped).
 - `ADMIN` bypasses the normal model; treat as superuser outside the mapping.
 - **Backward compatibility:** carry both legacy strings (deprecated) and structured permissions. Internal code should consume structured permissions.
 
@@ -169,5 +181,5 @@ The mapping table lives in one place (e.g. `src/lib/features/rbac/permission-map
 ## Decisions
 
 - Tokens: keep token resources as plain strings (no dedicated `TokenResource` union), so adding a new token type does not require changing a shared enum. The mapping table lists the currently known ones from the `permissions` table.
-- ADMIN: keep special handling but modelable as `{ resource: '*', action: '*', scope: 'root' }` to align with the structured shape.
+- ADMIN: keep special handling but modelable as `{ resource: '*', action: '*', resourceScope: 'root' }` to align with the structured shape.
 - Transition output: plan to emit both legacy string and structured permission in responses until clients migrate; mark the structured piece as beta/experimental where appropriate.

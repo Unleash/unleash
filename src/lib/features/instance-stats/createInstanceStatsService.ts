@@ -58,6 +58,7 @@ import {
     createFakeGetEdgeInstances,
     createGetEdgeInstances,
 } from './getEdgeInstances.js';
+import { createAccessService } from '../../server-impl.js';
 
 export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     const { eventBus, getLogger, flagResolver } = config;
@@ -138,11 +139,12 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         releasePlanTemplateStore,
         releasePlanStore,
     };
+    const accessService = createAccessService(db, config);
     const versionServiceStores = { settingStore };
     const getActiveUsers = createGetActiveUsers(db);
     const getProductionChanges = createGetProductionChanges(db);
     const getLicencedUsers = createGetLicensedUsers(db);
-    const getReadOnlyUsers = createGetReadOnlyUsers(db);
+    const getReadOnlyUsers = createGetReadOnlyUsers(accessService, db);
     const getEdgeInstances = createGetEdgeInstances(db);
     const versionService = new VersionService(versionServiceStores, config);
 

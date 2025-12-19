@@ -33,6 +33,8 @@ const useConditionalProjectContext = (
     };
 };
 
+// todo (projectContextFields): move this to its own API endpoint instead of
+// merging on the front end after better learning the shape of the problem
 export const useEffectiveProjectContext = (
     projectId: string | undefined,
     options: SWRConfiguration = {

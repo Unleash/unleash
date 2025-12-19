@@ -7,6 +7,7 @@ import {
 } from '../../events/index.js';
 import { RoleName } from '../../types/model.js';
 import { ROOT_ROLE_TYPE } from '../../util/constants.js';
+import type { AccessService } from '../../server-impl.js';
 
 const READONLY_EVENTS = [
     FEATURE_FAVORITED,
@@ -18,10 +19,10 @@ const READONLY_EVENTS = [
 export type GetReadOnlyUsers = () => Promise<number>;
 
 export const createGetReadOnlyUsers =
-    (db: Db): GetReadOnlyUsers =>
+    (accessService: AccessService, db: Db): GetReadOnlyUsers =>
     async () => {
-        const result = await db('users')
-            .countDistinct('users.id as readOnlyCount')
+        const userIds = await db('users')
+            .select('users.id as userId')
             .join('role_user', 'role_user.user_id', 'users.id')
             .join('roles', 'roles.id', 'role_user.role_id')
             // Ensure valid user
@@ -31,54 +32,25 @@ export const createGetReadOnlyUsers =
             // Ensure Viewer root role
             .where('roles.name', RoleName.VIEWER)
             .where('roles.type', ROOT_ROLE_TYPE)
-            // Ensure no permissions across all roles and groups
-            .whereNotExists(function () {
-                // Ensure no permissions across root and project roles
-                this.select(1)
-                    .from('role_permission as rp')
-                    .join('role_user as ur', 'ur.role_id', 'rp.role_id')
-                    .whereRaw('ur.user_id = users.id')
-                    // Ensure no permissions from group project roles
-                    .union(function () {
-                        this.select(db.raw('1'))
-                            .from('group_user as gu')
-                            .join('groups as g', 'g.id', 'gu.group_id')
-                            .join(
-                                'group_role as gr',
-                                'gr.group_id',
-                                'gu.group_id',
-                            )
-                            .join(
-                                'role_permission as rp',
-                                'rp.role_id',
-                                'gr.role_id',
-                            )
-                            .whereRaw('gu.user_id = users.id');
-                    })
-                    // Ensure no permissions from group root roles
-                    .union(function () {
-                        this.select(db.raw('1'))
-                            .from('group_user as gu')
-                            .join('groups as g', 'g.id', 'gu.group_id')
-                            .join(
-                                'role_permission as rp',
-                                'rp.role_id',
-                                'g.root_role_id',
-                            )
-                            .whereNotNull('g.root_role_id')
-                            .whereRaw('gu.user_id = users.id');
-                    });
-            })
             // Ensure no write events
             .whereNotExists(function () {
                 this.select(1)
                     .from('events')
                     .whereRaw('events.created_by_user_id = users.id')
                     .whereNotIn('events.type', READONLY_EVENTS);
-            })
-            .first();
+            });
+        // Ensure no permissions across all roles and groups
+        // Ensure no permissions across root and project roles
+        // Ensure no permissions from group project roles
+        const result = userIds.filter(async ({ userId }) => {
+            const allPermissions =
+                await accessService.getPermissionsForUser(userId);
+            return (
+                allPermissions.filter((p) => Boolean(p.project)).length === 0
+            );
+        });
 
-        return Number(result?.readOnlyCount ?? 0);
+        return result.length;
     };
 
 export const createFakeGetReadOnlyUsers =

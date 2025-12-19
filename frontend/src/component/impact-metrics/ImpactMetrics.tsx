@@ -1,7 +1,6 @@
 import { type FC, useMemo } from 'react';
 import { useState, useCallback } from 'react';
-import { Typography, Button, Paper, styled, Box } from '@mui/material';
-import Add from '@mui/icons-material/Add';
+import { Typography, styled, Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { ChartConfigModal } from './ChartConfigModal/ChartConfigModal.tsx';
@@ -9,6 +8,7 @@ import { ChartItem } from './ChartItem.tsx';
 import { PlausibleChartItem } from './PlausibleChartItem.tsx';
 import { GridLayoutWrapper, type GridItem } from './GridLayoutWrapper.tsx';
 import { useImpactMetricsState } from './hooks/useImpactMetricsState.ts';
+import { ImpactMetricsEmptyState } from './ImpactMetricsEmptyState.tsx';
 import type { ChartConfig } from './types.ts';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -16,14 +16,6 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { ADMIN } from '../providers/AccessProvider/permissions.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
-
-const StyledEmptyState = styled(Paper)(({ theme }) => ({
-    textAlign: 'center',
-    padding: theme.spacing(8),
-    backgroundColor: theme.palette.background.default,
-    borderRadius: `${theme.shape.borderRadiusMedium}px`,
-    boxShadow: 'none',
-}));
 
 const _StyledDragHandle = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -44,7 +36,6 @@ export const ImpactMetrics: FC = () => {
     const { setToastApiError } = useToast();
     const plausibleMetricsEnabled = useUiFlag('plausibleMetrics');
     const { trackEvent } = usePlausibleTracker();
-
     const {
         charts,
         layout,
@@ -149,61 +140,45 @@ export const ImpactMetrics: FC = () => {
     const maxChartsReached = charts.length >= 20;
     const isDisabled = isLoading || !!hasError || maxChartsReached;
 
+    const showEmptyState = charts.length === 0 && !isLoading;
+
     return (
         <>
-            <PageHeader
-                title='Impact Metrics'
-                titleElement={
-                    <Typography variant='h1' component='span'>
-                        Impact Metrics
-                    </Typography>
-                }
-                actions={
-                    <PermissionButton
-                        variant='contained'
-                        startIcon={<Add />}
-                        onClick={handleAddChart}
-                        disabled={isDisabled}
-                        permission={ADMIN}
-                        tooltipProps={
-                            maxChartsReached
-                                ? {
-                                      title: 'Maximum of 20 impact metrics charts allowed',
-                                      arrow: true,
-                                  }
-                                : undefined
+            {showEmptyState ? (
+                <ImpactMetricsEmptyState onAddChart={handleAddChart} />
+            ) : (
+                <>
+                    <PageHeader
+                        title='Impact metrics'
+                        titleElement={
+                            <Typography variant='h1' component='span'>
+                                Impact metrics
+                            </Typography>
                         }
-                    >
-                        Add Chart
-                    </PermissionButton>
-                }
-            />
-
-            {charts.length === 0 && !isLoading && !hasError ? (
-                <StyledEmptyState>
-                    <Typography variant='h6' gutterBottom>
-                        No impact metrics charts configured
-                    </Typography>
-                    <Typography
-                        variant='body2'
-                        color='text.secondary'
-                        sx={{ mb: 3 }}
-                    >
-                        Add your first impact metrics chart to start tracking
-                        performance with a beautiful drag-and-drop grid layout
-                    </Typography>
-                    <Button
-                        variant='contained'
-                        startIcon={<Add />}
-                        onClick={handleAddChart}
-                        disabled={isLoading || !!hasError}
-                    >
-                        Add Chart
-                    </Button>
-                </StyledEmptyState>
-            ) : gridItems.length > 0 ? (
-                <GridLayoutWrapper items={gridItems} />
-            ) : null}
+                        actions={
+                            <PermissionButton
+                                variant='contained'
+                                onClick={handleAddChart}
+                                disabled={isDisabled}
+                                permission={ADMIN}
+                                tooltipProps={
+                                    maxChartsReached
+                                        ? {
+                                              title: 'Maximum of 20 impact metrics charts allowed',
+                                              arrow: true,
+                                          }
+                                        : undefined
+                                }
+                            >
+                                New chart
+                            </PermissionButton>
+                        }
+                    />
+                    {gridItems.length > 0 && (
+                        <GridLayoutWrapper items={gridItems} />
+                    )}
+                </>
+            )}
 
             <ChartConfigModal
                 open={modalOpen}

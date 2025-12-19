@@ -219,3 +219,14 @@ test('ignores viewers with write events', async () => {
 
     await expect(getReadOnlyUsers()).resolves.toEqual(1);
 });
+
+test('counts viewer with project reader role', async () => {
+    const readerProjectRoleId = await getRoleId(
+        RoleName.READER,
+        PROJECT_ROLE_TYPE,
+    );
+    const viewer = await createViewer();
+    await assignRoleToUser(viewer.id, readerProjectRoleId, 'default');
+
+    await expect(getReadOnlyUsers()).resolves.toEqual(1);
+});

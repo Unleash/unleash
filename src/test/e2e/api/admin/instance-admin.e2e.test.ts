@@ -124,7 +124,7 @@ test('should return signed instance statistics', async () => {
         .expect((res) => {
             expect(res.body.instanceId).toBe('test-static');
             expect(res.body.sum).toBe(
-                'd9bac94bba7afa20d98f0a9d54a84b79a6668f8103b8f89db85d05d38e84f519',
+                '13399adbb553c360f4c9ac1ea889cd2b89804e5ac498da8b4e3de2ef90649dd9',
             );
         });
 });

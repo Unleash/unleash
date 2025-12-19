@@ -30,7 +30,7 @@ import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValues
 import AccessContext from 'contexts/AccessContext';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { GO_BACK } from 'constants/navigate';
-import { useCombinedGlobalAndProjectContext } from 'hooks/api/getters/useUnleashContext/useCombinedGlobalAndProjectContext.ts';
+import { useEffectiveProjectContext } from 'hooks/api/getters/useUnleashContext/useEffectiveProjectContext.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
 interface ISegmentFormPartTwoProps {
@@ -115,7 +115,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     const navigate = useNavigate();
     const { hasAccess } = useContext(AccessContext);
     const projectIdFromPath = useOptionalPathParam('projectId');
-    const { context = [] } = useCombinedGlobalAndProjectContext(
+    const { context = [] } = useEffectiveProjectContext(
         project ?? projectIdFromPath,
     );
     const [open, setOpen] = useState(false);

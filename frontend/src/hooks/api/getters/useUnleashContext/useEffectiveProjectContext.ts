@@ -1,8 +1,8 @@
 import type { SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
-import type { IUnleashContextOutput } from './useUnleashContext';
-import useUnleashContext from './useUnleashContext';
+import type { IUnleashContextOutput } from './useUnleashContext.js';
+import useUnleashContext from './useUnleashContext.js';
 import { fetcher } from '../useApiGetter/useApiGetter.js';
 
 const useConditionalProjectContext = (
@@ -31,7 +31,7 @@ const useConditionalProjectContext = (
     };
 };
 
-export const useCombinedGlobalAndProjectContext = (
+export const useEffectiveProjectContext = (
     projectId: string | undefined,
     options: SWRConfiguration = {
         revalidateOnFocus: true,

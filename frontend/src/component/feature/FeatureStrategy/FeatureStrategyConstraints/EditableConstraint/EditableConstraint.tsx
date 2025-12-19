@@ -29,7 +29,7 @@ import {
     isSemVerConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
-import { useCombinedGlobalAndProjectContext } from 'hooks/api/getters/useUnleashContext/useCombinedGlobalAndProjectContext.ts';
+import { useEffectiveProjectContext } from 'hooks/api/getters/useUnleashContext/useEffectiveProjectContext.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
 const Container = styled('article')(({ theme }) => ({
@@ -252,7 +252,7 @@ export const EditableConstraint: FC<Props> = ({
     );
 
     const projectId = useOptionalPathParam('projectId');
-    const { context } = useCombinedGlobalAndProjectContext(projectId);
+    const { context } = useEffectiveProjectContext(projectId);
 
     const { contextName, operator } = localConstraint;
     const showCaseSensitiveButton = isStringOperator(operator);

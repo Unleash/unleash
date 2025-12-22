@@ -132,6 +132,7 @@ export default class EnvironmentService {
         projectId: string,
         auditUser: IAuditUser,
     ): Promise<void> {
+        await this.get(environment);
         try {
             await this.featureEnvironmentStore.connectProject(
                 environment,

@@ -132,6 +132,10 @@ export default class EnvironmentService {
         projectId: string,
         auditUser: IAuditUser,
     ): Promise<void> {
+        const exists = await this.exists(environment);
+        if (!exists) {
+            throw new BadDataError(`Environment ${environment} does not exist`);
+        }
         try {
             await this.featureEnvironmentStore.connectProject(
                 environment,

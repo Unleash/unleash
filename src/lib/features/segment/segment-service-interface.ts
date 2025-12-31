@@ -38,7 +38,7 @@ export interface ISegmentService {
 
     validateName(name: string): Promise<void>;
 
-    getAll(): Promise<ISegment[]>;
+    getAll(userId?: number): Promise<ISegment[]>;
 
     create(data: UpsertSegmentSchema, auditUser: IAuditUser): Promise<ISegment>;
 

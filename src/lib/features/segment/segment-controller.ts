@@ -489,10 +489,11 @@ export class SegmentsController extends Controller {
     }
 
     async getSegments(
-        _req: IAuthRequest,
+        req: IAuthRequest,
         res: Response<SegmentsSchema>,
     ): Promise<void> {
-        const segments = await this.segmentService.getAll();
+        const userId = extractUserIdFromUser(req.user);
+        const segments = await this.segmentService.getAll(userId);
 
         const response = {
             segments: this.flagResolver.isEnabled('anonymiseEventLog')

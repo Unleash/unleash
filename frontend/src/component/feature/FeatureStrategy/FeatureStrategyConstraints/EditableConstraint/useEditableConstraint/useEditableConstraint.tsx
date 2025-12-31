@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useReducer } from 'react';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint,

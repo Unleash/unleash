@@ -80,7 +80,9 @@ export class SegmentService implements ISegmentService {
     }
 
     async getAll(userId?: number): Promise<ISegment[]> {
-        const segments = await this.segmentStore.getAll(this.config.isEnterprise);
+        const segments = await this.segmentStore.getAll(
+            this.config.isEnterprise,
+        );
 
         if (!userId) {
             return segments;

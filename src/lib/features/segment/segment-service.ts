@@ -79,8 +79,28 @@ export class SegmentService implements ISegmentService {
         return segment;
     }
 
-    async getAll(): Promise<ISegment[]> {
-        return this.segmentStore.getAll(this.config.isEnterprise);
+    async getAll(userId?: number): Promise<ISegment[]> {
+        const segments = await this.segmentStore.getAll(
+            this.config.isEnterprise,
+        );
+
+        if (!userId) {
+            return segments;
+        }
+
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+
+        if (accessibleProjects.mode === 'all') {
+            return segments;
+        }
+
+        return segments.filter((segment) => {
+            if (!segment.project) {
+                return true;
+            }
+            return accessibleProjects.projects.includes(segment.project);
+        });
     }
 
     async getByStrategy(strategyId: string): Promise<ISegment[]> {

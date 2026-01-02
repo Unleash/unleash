@@ -27,11 +27,13 @@ export const calculateMilestoneStatus = (
         return { type: 'completed', progression };
     }
 
-    const scheduledAt = calculateMilestoneStartTime(
-        allMilestones,
-        milestone.id,
-        activeMilestoneId,
-    );
+    const scheduledAt = environmentIsDisabled
+        ? null
+        : calculateMilestoneStartTime(
+              allMilestones,
+              milestone.id,
+              activeMilestoneId,
+          );
 
     return {
         type: 'not-started',

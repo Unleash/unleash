@@ -44,10 +44,7 @@ import {
     parseEnvVarNumber,
     parseEnvVarStrings,
 } from './util/parseEnvVar.js';
-import {
-    defaultExperimentalOptions,
-    type IExperimentalOptions,
-} from './types/experimental.js';
+import { defaultExperimentalOptions } from './types/experimental.js';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
@@ -73,16 +70,18 @@ function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter((i) => i));
 }
 
-function loadExperimental(options: IUnleashOptions): IExperimentalOptions {
-    return {
-        ...defaultExperimentalOptions,
-        ...options.experimental,
+export const mergeExperimentalOptions =
+    (envOptions: typeof defaultExperimentalOptions) =>
+    (argOptions: IUnleashOptions) => ({
+        ...argOptions.experimental,
+        ...envOptions,
         flags: {
-            ...defaultExperimentalOptions.flags,
-            ...options.experimental?.flags,
+            ...argOptions.experimental?.flags,
+            ...envOptions.flags,
         },
-    };
-}
+    });
+
+const loadExperimental = mergeExperimentalOptions(defaultExperimentalOptions);
 
 const defaultClientCachingOptions: IClientCachingOption = {
     enabled: true,

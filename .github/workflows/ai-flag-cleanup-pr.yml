@@ -57,7 +57,7 @@ jobs:
 
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref:                 ${{ github.ref }}
           token:               ${{ steps.app_token.outputs.token }}
@@ -140,7 +140,7 @@ jobs:
             return branchName;
 
       - name: Check out new branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref:                 ${{ steps.create_branch.outputs.result }}
           token:               ${{ steps.app_token.outputs.token }}

@@ -71,11 +71,14 @@ export class SegmentService implements ISegmentService {
         this.config = config;
     }
 
-    async get(id: number): Promise<ISegment> {
+    async get(id: number, userId?: number): Promise<ISegment> {
         const segment = await this.segmentStore.get(id);
         if (segment === undefined) {
-            throw new NotFoundError(`Could find segment with id ${id}`);
+            throw new NotFoundError(`Could not find segment with id ${id}`);
         }
+
+        await this.verifySegmentAccess(segment, id, userId);
+
         return segment;
     }
 
@@ -111,6 +114,13 @@ export class SegmentService implements ISegmentService {
         id: number,
         userId: number,
     ): Promise<StrategiesUsingSegment> {
+        const segment = await this.segmentStore.get(id);
+        if (segment === undefined) {
+            throw new NotFoundError(`Could not find segment with id ${id}`);
+        }
+
+        await this.verifySegmentAccess(segment, id, userId);
+
         const allStrategies = await this.getAllStrategies(id);
         const accessibleProjects =
             await this.privateProjectChecker.getUserAccessibleProjects(userId);
@@ -124,6 +134,23 @@ export class SegmentService implements ISegmentService {
                 changeRequestStrategies:
                     allStrategies.changeRequestStrategies.filter(filter),
             };
+        }
+    }
+
+    private async verifySegmentAccess(
+        segment: ISegment,
+        id: number,
+        userId?: number,
+    ): Promise<void> {
+        if (segment.project && userId) {
+            const hasAccess =
+                await this.privateProjectChecker.hasAccessToProject(
+                    userId,
+                    segment.project,
+                );
+            if (!hasAccess) {
+                throw new NotFoundError(`Could not find segment with id ${id}`);
+            }
         }
     }
 

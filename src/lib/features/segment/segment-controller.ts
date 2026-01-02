@@ -391,8 +391,6 @@ export class SegmentsController extends Controller {
         const id = req.params.id;
         const { user } = req;
         const userId = extractUserIdFromUser(user);
-        await this.segmentService.get(id, userId);
-
         const strategies = await this.segmentService.getVisibleStrategies(
             id,
             userId,

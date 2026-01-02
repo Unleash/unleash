@@ -3914,7 +3914,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express@npm:^4.21.2":
+"express@npm:^4.22.1":
   version: 4.22.1
   resolution: "express@npm:4.22.1"
   dependencies:
@@ -5066,10 +5066,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ky@npm:^1.8.1":
-  version: 1.8.1
-  resolution: "ky@npm:1.8.1"
-  checksum: 10c0/48ab4b348dd7d8c6aa0f82df76fa32e99ade3c5513d50f58b0db5b945146deb6d8c18b2a61a0655b08385efa04b3bf1ed4098fff0329e3bd6c670c8a88668d9f
+"ky@npm:^1.14.1":
+  version: 1.14.2
+  resolution: "ky@npm:1.14.2"
+  checksum: 10c0/ea5f08660ec8574ad6b116338059d1f2bac42ee917d56df268758405edfb3d17d5baa78913ee289eb6de976f648b1ff7798d5f8a7732c61e85e59d8f10f16795
   languageName: node
   linkType: hard
 
@@ -6820,12 +6820,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.6.2":
-  version: 7.7.2
-  resolution: "semver@npm:7.7.2"
+"semver@npm:^7.7.3":
+  version: 7.7.3
+  resolution: "semver@npm:7.7.3"
   bin:
     semver: bin/semver.js
-  checksum: 10c0/aca305edfbf2383c22571cb7714f48cadc7ac95371b4b52362fb8eeffdfbc0de0669368b82b2b15978f8848f01d7114da65697e56cd8c37b0dab8c58e543f9ea
+  checksum: 10c0/4afe5c986567db82f44c8c6faef8fe9df2a9b1d98098fc1721f57c696c4c21cebd572f297fc21002f81889492345b8470473bc6f4aff5fb032a6ea59ea2bc45e
   languageName: node
   linkType: hard
 
@@ -7769,9 +7769,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unleash-client@npm:^6.8.0":
-  version: 6.8.1
-  resolution: "unleash-client@npm:6.8.1"
+"unleash-client@npm:^6.9.0":
+  version: 6.9.0
+  resolution: "unleash-client@npm:6.9.0"
   dependencies:
     http-proxy-agent: "npm:^7.0.2"
     https-proxy-agent: "npm:^7.0.5"
@@ -7781,7 +7781,7 @@ __metadata:
     murmurhash3js: "npm:^3.0.1"
     proxy-from-env: "npm:^1.1.0"
     semver: "npm:^7.7.3"
-  checksum: 10c0/b0c60e4867becb1d2e062d1bd8a70774682fd7818088e12925b10df1cdf9a5640091a5274005380fa2ea2217a1df13910e845200b1feddc58282b81153af9eed
+  checksum: 10c0/e3b9a36b6fd6c0d578d56214bf9b066fd4f5bd405a2fbd58f419e94edd5c799a232b1311dea648835d621e89ec6abf6c56c3a71e9826f0ed75c36c6d7545933f
   languageName: node
   linkType: hard
 
@@ -7837,7 +7837,7 @@ __metadata:
     deepmerge: "npm:^4.3.1"
     del-cli: "npm:6.0.0"
     errorhandler: "npm:^1.5.1"
-    express: "npm:^4.21.2"
+    express: "npm:^4.22.1"
     express-rate-limit: "npm:^8.2.1"
     express-session: "npm:^1.18.2"
     fast-check: "npm:4.4.0"
@@ -7855,7 +7855,7 @@ __metadata:
     json-diff: "npm:^1.0.6"
     json-schema-to-ts: "npm:3.1.1"
     knex: "npm:^3.1.0"
-    ky: "npm:^1.8.1"
+    ky: "npm:^1.14.1"
     lint-staged: "npm:16.2.7"
     lodash.groupby: "npm:^4.6.0"
     lodash.sortby: "npm:^4.7.0"
@@ -7877,7 +7877,7 @@ __metadata:
     prom-client: "npm:^15.0.0"
     proxyquire: "npm:2.1.3"
     sanitize-filename: "npm:^1.6.3"
-    semver: "npm:^7.6.3"
+    semver: "npm:^7.7.3"
     serve-favicon: "npm:^2.5.0"
     slug: "npm:^11.0.0"
     source-map-support: "npm:0.5.21"
@@ -7891,7 +7891,7 @@ __metadata:
     type-is: "npm:^2.0.0"
     typescript: "npm:5.9.3"
     ulidx: "npm:^2.4.1"
-    unleash-client: "npm:^6.8.0"
+    unleash-client: "npm:^6.9.0"
     vite-node: "npm:^5.2.0"
     vitest: "npm:^4.0.15"
     wait-on: "npm:^8.0.0"

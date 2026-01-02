@@ -71,11 +71,23 @@ export class SegmentService implements ISegmentService {
         this.config = config;
     }
 
-    async get(id: number): Promise<ISegment> {
+    async get(id: number, userId?: number): Promise<ISegment> {
         const segment = await this.segmentStore.get(id);
         if (segment === undefined) {
             throw new NotFoundError(`Could find segment with id ${id}`);
         }
+
+        if (segment.project && userId) {
+            const hasAccess =
+                await this.privateProjectChecker.hasAccessToProject(
+                    userId,
+                    segment.project,
+                );
+            if (!hasAccess) {
+                throw new NotFoundError(`Could not find segment with id ${id}`);
+            }
+        }
+
         return segment;
     }
 

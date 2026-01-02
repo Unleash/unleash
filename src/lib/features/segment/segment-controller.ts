@@ -390,9 +390,12 @@ export class SegmentsController extends Controller {
     ): Promise<void> {
         const id = req.params.id;
         const { user } = req;
+        const userId = extractUserIdFromUser(user);
+        await this.segmentService.get(id, userId);
+
         const strategies = await this.segmentService.getVisibleStrategies(
             id,
-            extractUserIdFromUser(user),
+            userId,
         );
 
         const segmentStrategies = strategies.strategies.map((strategy) => ({
@@ -458,11 +461,13 @@ export class SegmentsController extends Controller {
     }
 
     async getSegment(
-        req: Request<{ id: number }>,
+        req: IAuthRequest<{ id: number }>,
         res: Response,
     ): Promise<void> {
         const id = req.params.id;
-        const segment = await this.segmentService.get(id);
+        const userId = extractUserIdFromUser(req.user);
+        const segment = await this.segmentService.get(id, userId);
+
         if (this.flagResolver.isEnabled('anonymiseEventLog')) {
             res.json(anonymiseKeys(segment, ['createdBy']));
         } else {

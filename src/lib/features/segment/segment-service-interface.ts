@@ -22,7 +22,7 @@ export interface ISegmentService {
 
     getByStrategy(strategyId: string): Promise<ISegment[]>;
 
-    get(id: number): Promise<ISegment>;
+    get(id: number, userId?: number): Promise<ISegment>;
 
     /**
      * Gets all strategies for a segment

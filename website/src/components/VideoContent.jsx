@@ -11,7 +11,7 @@ const extractVideoId = (url) => {
     return match ? match[1] : null;
 };
 
-const LazyVideo = ({ url, title = 'YouTube video player', thumbnailQuality = 'hqdefault' }) => {
+const LazyVideo = ({ url, title = 'YouTube video player' }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const videoId = extractVideoId(url);
 
@@ -25,8 +25,6 @@ const LazyVideo = ({ url, title = 'YouTube video player', thumbnailQuality = 'hq
         );
     }
 
-    const thumbnailSrc = `https://img.youtube.com/vi/${videoId}/${thumbnailQuality}.jpg`;
-
     if (!isLoaded) {
         return (
             <div
@@ -39,7 +37,7 @@ const LazyVideo = ({ url, title = 'YouTube video player', thumbnailQuality = 'hq
             >
                 <img
                     className={styles.thumbnailImage}
-                    src={thumbnailSrc}
+                    src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
                     alt={`${title} thumbnail`}
                     fetchpriority='high'
                 />
@@ -74,7 +72,7 @@ const LazyVideo = ({ url, title = 'YouTube video player', thumbnailQuality = 'hq
     );
 };
 
-const VideoContent = ({ videoUrls, thumbnailQuality }) => {
+const VideoContent = ({ videoUrls }) => {
     if (!videoUrls || videoUrls.length === 0) {
         return (
             <Admonition type='danger'>
@@ -91,7 +89,6 @@ const VideoContent = ({ videoUrls, thumbnailQuality }) => {
                     key={url}
                     url={url}
                     title={`YouTube video player ${index + 1}`}
-                    thumbnailQuality={thumbnailQuality}
                 />
             ))}
         </article>

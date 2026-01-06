@@ -107,6 +107,7 @@ const sidebars: SidebarsConfig = {
                         id: 'concepts/release-templates',
                     },
                     items: [
+                        'concepts/getting-started-release-management',
                         'concepts/release-templates',
                         'concepts/impact-metrics',
                     ],

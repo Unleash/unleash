@@ -266,6 +266,11 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             type: 'doc',
+                            label: 'Getting started with release management',
+                            id: 'guides/getting-started-release-management',
+                        },
+                        {
+                            type: 'doc',
                             label: 'Unleash Edge quickstart',
                             id: 'guides/unleash-edge-quickstart',
                         },

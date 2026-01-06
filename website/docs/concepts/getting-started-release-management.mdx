@@ -146,8 +146,9 @@ Feature-specific error counters are more actionable than global error rates. The
 With metrics flowing into Unleash, you can now create a safeguard that pauses the automated progression when something goes wrong.
 
 First, verify your metric is available by selecting Add safeguard and checking that your
-impact metric exists in the dropdown list. Alternatively you can go to Impact metrics in the global menu
-and setup a chart for your impact metric.
+impact metric exists in the dropdown list. It may take some time for the impact metric to appear 
+after starting your process, because it is sent to Unleash when the client reports metrics, which 
+happens by default on a 60s interval.
 
 Then, add a safeguard to your release plan:
 
@@ -166,7 +167,7 @@ When the metric exceeds the threshold, Unleash will pause the automated progress
 When a safeguard is triggered:
 
 - The automation pauses at the current milestone
-- Feature will still be enabled for existing users
+- The feature will still be enabled for existing users
 - No further milestone transitions occur automatically
 
 To continue the rollout after investigating the issue:

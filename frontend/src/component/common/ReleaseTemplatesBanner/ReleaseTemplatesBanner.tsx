@@ -13,6 +13,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bannerProgressionSvg from 'assets/img/banner-progression.svg';
+import { formatAssetPath } from 'utils/formatPath';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -132,7 +133,10 @@ export const ReleaseTemplatesBanner: FC = () => {
                     </StyledButtonContainer>
                 </StyledText>
                 <StyledIllustration>
-                    <img src={bannerProgressionSvg} alt='Release progression' />
+                    <img
+                        src={formatAssetPath(bannerProgressionSvg)}
+                        alt='Release progression'
+                    />
                 </StyledIllustration>
             </StyledContent>
         </StyledContainer>

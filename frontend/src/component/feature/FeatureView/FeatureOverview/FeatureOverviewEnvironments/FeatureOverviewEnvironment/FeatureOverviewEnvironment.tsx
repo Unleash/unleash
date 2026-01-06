@@ -18,7 +18,6 @@ import { useState } from 'react';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { EnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
 import { Box } from '@mui/material';
-import { ReleaseTemplatesFeedback } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/ReleaseTemplatesFeedback/ReleaseTemplatesFeedback';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -131,7 +130,6 @@ export const FeatureOverviewEnvironment = ({
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
                         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                            <ReleaseTemplatesFeedback />
                             <Box ml='auto'>
                                 <FeatureStrategyMenu
                                     label='Add strategy'

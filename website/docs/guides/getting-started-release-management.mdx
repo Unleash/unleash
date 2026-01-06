@@ -7,7 +7,7 @@ import VideoContent from '@site/src/components/VideoContent.jsx';
 
 <SearchPriority level="high" />
 
-<VideoContent videoUrls={["https://www.youtube.com/embed/rjEuzFKpkB0"]}/>
+<VideoContent videoUrls={["https://www.youtube.com/embed/rjEuzFKpkB0"]} thumbnailUrl="https://img.youtube.com/vi/rjEuzFKpkB0/maxresdefault.jpg"/>
 
 :::note Availability
 
@@ -19,10 +19,11 @@ import VideoContent from '@site/src/components/VideoContent.jsx';
 
 This guide walks you through using Unleash's release management features to automate and safeguard your feature rollouts. You'll learn how to:
 
-- Apply a [release template](/concepts/release-templates) to a feature flag
-- Configure automated progressions between milestones
-- Set up [impact metrics](/concepts/impact-metrics) to monitor your feature
-- Create safeguards that pause the rollout when something goes wrong
+- [Apply a release template to a feature flag](#step-1-add-a-release-template-to-your-feature-flag)
+- [Configure automated progressions between milestones](#step-2-configure-automated-progressions)
+- [Set up impact metrics to monitor your feature](#step-3-set-up-impact-metrics-in-your-application)
+- [Create safeguards that pause the rollout when something goes wrong](#step-4-configure-a-safeguard)
+- [Observe safeguard behavior](#step-5-observe-safeguard-behavior)
 
 By the end of this guide, you'll have a fully automated release pipeline that can detect issues and stop the rollout before they affect more users.
 

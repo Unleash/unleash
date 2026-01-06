@@ -89,7 +89,6 @@ const unleash = new Unleash({
   customHeaders: {
     Authorization: process.env.UNLEASH_API_TOKEN || 'UNLEASH_API_TOKEN',
   },
-  metricsInterval: 2000,
 });
 
 unleash.on('ready', console.log.bind(console, 'Unleash client is ready'));

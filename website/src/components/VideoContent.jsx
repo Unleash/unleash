@@ -11,7 +11,7 @@ const extractVideoId = (url) => {
     return match ? match[1] : null;
 };
 
-const LazyVideo = ({ url, title = 'YouTube video player', thumbnailUrl }) => {
+const LazyVideo = ({ url, title = 'YouTube video player', thumbnailQuality = 'hqdefault' }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const videoId = extractVideoId(url);
 
@@ -25,7 +25,7 @@ const LazyVideo = ({ url, title = 'YouTube video player', thumbnailUrl }) => {
         );
     }
 
-    const thumbnailSrc = thumbnailUrl || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    const thumbnailSrc = `https://img.youtube.com/vi/${videoId}/${thumbnailQuality}.jpg`;
 
     if (!isLoaded) {
         return (
@@ -74,7 +74,7 @@ const LazyVideo = ({ url, title = 'YouTube video player', thumbnailUrl }) => {
     );
 };
 
-const VideoContent = ({ videoUrls, thumbnailUrl }) => {
+const VideoContent = ({ videoUrls, thumbnailQuality }) => {
     if (!videoUrls || videoUrls.length === 0) {
         return (
             <Admonition type='danger'>
@@ -91,7 +91,7 @@ const VideoContent = ({ videoUrls, thumbnailUrl }) => {
                     key={url}
                     url={url}
                     title={`YouTube video player ${index + 1}`}
-                    thumbnailUrl={thumbnailUrl}
+                    thumbnailQuality={thumbnailQuality}
                 />
             ))}
         </article>

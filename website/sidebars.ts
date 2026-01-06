@@ -107,6 +107,7 @@ const sidebars: SidebarsConfig = {
                         id: 'concepts/release-templates',
                     },
                     items: [
+                        'guides/getting-started-release-management',
                         'concepts/release-templates',
                         'concepts/impact-metrics',
                     ],
@@ -263,11 +264,6 @@ const sidebars: SidebarsConfig = {
                             type: 'doc',
                             label: 'Gradual rollout',
                             id: 'guides/gradual-rollout',
-                        },
-                        {
-                            type: 'doc',
-                            label: 'Getting started with release management',
-                            id: 'guides/getting-started-release-management',
                         },
                         {
                             type: 'doc',

@@ -32,7 +32,7 @@ Before you begin, make sure you have:
 
 - An Unleash Enterprise instance
 - A feature flag to work with
-- The [Node SDK](/generated/sdks/backend/node) configured in your application (for impact metrics)
+- The [Node SDK](/sdks/node) configured in your application (for impact metrics)
 
 ## Step 1: Add a release template to your feature flag
 
@@ -53,7 +53,7 @@ Each milestone has its own strategy configuration, giving you full control over 
 
 ## Step 2: Configure automated progressions
 
-Instead of manually advancing through each milestone, you can automate the progression based on time intervals.
+Instead of manually starting each milestone, you can automate the progression based on time intervals.
 
 1. On a milestone, click **Add automation**.
 2. Set the time interval. For example, "proceed to the next milestone after 5 hours."
@@ -75,7 +75,59 @@ Automated rollouts are powerful, but you want to make sure you can stop them if 
 In your application code, define and record metrics using the Unleash SDK:
 
 ```javascript
-// YOUR CODE EXAMPLE GOES HERE
+import express from 'express';
+import { Unleash } from 'unleash-client';
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Setup Unleash
+const unleash = new Unleash({
+  url: process.env.UNLEASH_URL || 'UNLEASH_URL',
+  appName: 'YOUR_APP_NAME',
+  customHeaders: {
+    Authorization: process.env.UNLEASH_API_TOKEN || 'UNLEASH_API_TOKEN',
+  },
+  metricsInterval: 2000,
+});
+
+unleash.on('ready', console.log.bind(console, 'Unleash client is ready'));
+unleash.on('error', console.error);
+
+// Define your impact metric
+unleash.impactMetrics.defineCounter('analyze_feature_error', "Counts the number of errors during feature analysis");
+
+// Example usage
+const AnalyzeService = () => {
+  return () => {
+    try {
+      throw new Error("Simulated analysis error");
+    } catch(error) {
+
+      unleash.impactMetrics.incrementCounter('analyze_feature_error');
+    }
+  }
+}
+
+const analyze = AnalyzeService();
+
+app.get('/api/analytics', (req, res) => {
+  const userId = 3;
+  const context = { userId };
+
+  if (unleash.isEnabled('ai-analytics', context)) {
+    analyze();
+  } else {
+    console.log("AI Insights feature is disabled for user:", userId);
+  }
+
+  res.send().status(200);
+  res.end();
+});
+
+app.listen(PORT, () => {
+  console.log(`\n🚀 Acme API running on http://localhost:${PORT}\n`)
+});
 ```
 
 The key pattern is:
@@ -95,22 +147,19 @@ Feature-specific error counters are more actionable than global error rates. The
 
 With metrics flowing into Unleash, you can now create a safeguard that pauses the automated progression when something goes wrong.
 
-First, verify your metric is available:
-
-1. Go to **Impact Metrics** in the sidebar.
-2. Click **New Chart**.
-3. Search for your metric name and confirm it appears in the list.
+First, verify your metric is available by selecting Add safeguard and checking that your
+impact metric exists in the dropdown list. Alternatively you can go to Impact metrics in the global menu
+and setup a chart for your impact metric.
 
 Then, add a safeguard to your release plan:
 
-1. Return to your feature flag and the release plan.
-2. On a milestone with automation, click **Add safeguard**.
-3. Select your impact metric from the dropdown.
-4. Configure the threshold. For example:
+1. Select Add safeguard on your release plan
+2. Select your impact metric from the dropdown.
+3. Configure the threshold. For example:
    - Metric: `analyze_feature_error`
    - Aggregation: Count
    - Condition: More than 10 in the last 15 minutes
-5. Save the safeguard.
+4. Save the safeguard.
 
 When the metric exceeds the threshold, Unleash will pause the automated progression.
 
@@ -119,8 +168,7 @@ When the metric exceeds the threshold, Unleash will pause the automated progress
 When a safeguard is triggered:
 
 - The automation pauses at the current milestone
-- A notification appears indicating "Automation is paused by safeguard"
-- The feature remains enabled for users who are already exposed
+- Feature will still be enabled for existing users
 - No further milestone transitions occur automatically
 
 To continue the rollout after investigating the issue:

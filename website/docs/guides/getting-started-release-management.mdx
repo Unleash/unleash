@@ -122,8 +122,7 @@ app.get('/api/analytics', (req, res) => {
     console.log("AI Insights feature is disabled for user:", userId);
   }
 
-  res.send().status(200);
-  res.end();
+  res.status(200).send();
 });
 
 app.listen(PORT, () => {

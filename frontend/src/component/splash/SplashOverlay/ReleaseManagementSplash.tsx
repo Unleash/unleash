@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import {
     Box,
@@ -10,14 +9,14 @@ import {
     Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 
 const VIDEO_URL = 'https://cdn.getunleash.io/impact-metrics.mp4';
-const DOCS_URL = 'https://docs.getunleash.io/concepts/impact-metrics';
+const GETTING_STARTED_DOCS_URL =
+    'https://docs.getunleash.io/concepts/getting-started-release-management';
 
 const DialogCard = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -70,25 +69,6 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
 const StyledDescription = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
     marginBottom: theme.spacing(2),
-}));
-
-const LinksRow = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(3),
-    marginBottom: theme.spacing(4),
-}));
-
-const StyledLink = styled('a')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
-    color: theme.palette.primary.main,
-    fontWeight: theme.typography.fontWeightBold,
-    textDecoration: 'none',
-    fontSize: theme.fontSizes.smallBody,
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
 }));
 
 const VideoContainer = styled(Box)(({ theme }) => ({
@@ -163,7 +143,6 @@ interface ReleaseManagementSplashProps {
 export const ReleaseManagementSplash = ({
     onClose,
 }: ReleaseManagementSplashProps) => {
-    const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -177,8 +156,13 @@ export const ReleaseManagementSplash = ({
     }, []);
 
     const handleGetStarted = () => {
+        trackEvent('release-management-splash', {
+            props: {
+                eventType: 'getting-started-click',
+            },
+        });
+        window.open(GETTING_STARTED_DOCS_URL, '_blank', 'noopener,noreferrer');
         onClose();
-        navigate('/release-templates');
     };
 
     const handlePlayClick = () => {
@@ -220,17 +204,6 @@ export const ReleaseManagementSplash = ({
                     protect your deployments and roll out features with
                     confidence.
                 </StyledDescription>
-
-                <LinksRow>
-                    <StyledLink
-                        href={DOCS_URL}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                    >
-                        <OpenInNewIcon fontSize='small' />
-                        View documentation
-                    </StyledLink>
-                </LinksRow>
 
                 <VideoContainer>
                     <StyledVideo

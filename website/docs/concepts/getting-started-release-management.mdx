@@ -89,7 +89,6 @@ const unleash = new Unleash({
   customHeaders: {
     Authorization: process.env.UNLEASH_API_TOKEN || 'UNLEASH_API_TOKEN',
   },
-  metricsInterval: 2000,
 });
 
 unleash.on('ready', console.log.bind(console, 'Unleash client is ready'));
@@ -104,7 +103,6 @@ const AnalyzeService = () => {
     try {
       throw new Error("Simulated analysis error");
     } catch(error) {
-
       unleash.impactMetrics.incrementCounter('analyze_feature_error');
     }
   }
@@ -122,8 +120,7 @@ app.get('/api/analytics', (req, res) => {
     console.log("AI Insights feature is disabled for user:", userId);
   }
 
-  res.send().status(200);
-  res.end();
+  res.status(200).send();
 });
 
 app.listen(PORT, () => {

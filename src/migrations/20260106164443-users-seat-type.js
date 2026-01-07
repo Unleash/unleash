@@ -1,6 +1,6 @@
 exports.up = function (db, cb) {
     db.runSql(
-        `ALTER TABLE users ADD COLUMN IF NOT EXISTS seat_type TEXT NOT NULL DEFAULT 'Regular';`,
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS seat_type TEXT;`,
         cb,
     );
 };

@@ -87,8 +87,12 @@ const BreadcrumbNav = () => {
                         show={
                             <StyledBreadcrumbs aria-label='Breadcrumbs'>
                                 {paths.map((path, index) => {
-                                    const isProjectPath = path === projectId && project.name !== '';
-                                    const pathName = isProjectPath ? project.name : path;
+                                    const isProjectPath =
+                                        path === projectId &&
+                                        project.name !== '';
+                                    const pathName = isProjectPath
+                                        ? project.name
+                                        : path;
                                     const lastItem = index === paths.length - 1;
                                     if (lastItem) {
                                         return (

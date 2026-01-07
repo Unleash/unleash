@@ -28,7 +28,7 @@ test('decode URI encoded path in breadcrumbs nav', async () => {
         </Routes>,
         {
             route: '/applications/my%20app/my%20instance',
-        }
+        },
     );
 
     await screen.findByText('applications');
@@ -43,7 +43,7 @@ test('use project name when in a project path', async () => {
         </Routes>,
         {
             route: '/projects/my-project',
-        }
+        },
     );
 
     await screen.findByText('My Test Project');

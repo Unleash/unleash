@@ -38,9 +38,9 @@ jobs:
 
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Use Node.js 20
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22.x
           cache: 'yarn'
@@ -55,4 +55,4 @@ jobs:
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres 
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres

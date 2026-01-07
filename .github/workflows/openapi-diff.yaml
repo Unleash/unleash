@@ -21,7 +21,7 @@ jobs:
     name: Generate OpenAPI (stable)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Start Unleash test instance
         run: |
           docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
@@ -67,9 +67,9 @@ jobs:
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22.x
       - name: Install dependencies

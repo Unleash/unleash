@@ -28,7 +28,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { usePageTitle } from 'hooks/usePageTitle';
 import { unknownify } from 'utils/unknownify';
 import type { Theme } from '@mui/material/styles/createTheme';
-import { NetworkPrometheusAPIWarning } from '../NetworkPrometheusAPIWarning';
+import { NetworkPrometheusAPIWarning } from '../NetworkPrometheusAPIWarning.tsx';
 
 const pointStyles = ['circle', 'rect', 'rectRounded', 'rectRot', 'triangle'];
 

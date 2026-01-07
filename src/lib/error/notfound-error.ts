@@ -1,4 +1,4 @@
-import { UnleashError } from './unleash-error';
+import { UnleashError } from './unleash-error.js';
 
 class NotFoundError extends UnleashError {
     statusCode = 404;
@@ -8,4 +8,3 @@ class NotFoundError extends UnleashError {
     }
 }
 export default NotFoundError;
-module.exports = NotFoundError;

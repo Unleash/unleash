@@ -2,12 +2,12 @@ import type {
     IClientSegment,
     IFeatureStrategySegment,
     ISegment,
-} from '../../types';
-import type { ISegmentReadModel } from './segment-read-model-type';
+} from '../../types/index.js';
+import type { ISegmentReadModel } from './segment-read-model-type.js';
 
 export class FakeSegmentReadModel implements ISegmentReadModel {
     constructor(private segments: ISegment[] = []) {}
-    async getAll(ids?: number[]): Promise<ISegment[]> {
+    async getAll(_ids?: number[]): Promise<ISegment[]> {
         return this.segments;
     }
 
@@ -23,7 +23,7 @@ export class FakeSegmentReadModel implements ISegmentReadModel {
         return [];
     }
 
-    async getAllForClientIds(ids?: number[]): Promise<IClientSegment[]> {
+    async getAllForClientIds(_ids?: number[]): Promise<IClientSegment[]> {
         return [];
     }
 }

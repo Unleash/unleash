@@ -1,4 +1,4 @@
-import { createLocalStorage } from '../utils/createLocalStorage';
+import { createLocalStorage } from '../utils/createLocalStorage.js';
 
 export type IFeedbackCategory =
     | 'search'

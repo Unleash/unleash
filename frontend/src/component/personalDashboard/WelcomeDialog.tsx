@@ -2,9 +2,9 @@ import { Box, Button, Dialog, styled, Typography } from '@mui/material';
 import type { FC } from 'react';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
-import { ThemeMode } from '../common/ThemeMode/ThemeMode';
+import { ThemeMode } from '../common/ThemeMode/ThemeMode.tsx';
 import onboardingConcepts from 'assets/img/onboardingConcepts.png';
-import { ScreenReaderOnly } from '../common/ScreenReaderOnly/ScreenReaderOnly';
+import { ScreenReaderOnly } from '../common/ScreenReaderOnly/ScreenReaderOnly.tsx';
 import { formatAssetPath } from 'utils/formatPath';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({

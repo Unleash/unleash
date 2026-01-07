@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`should create default config 1`] = `
 {
@@ -24,9 +24,14 @@ exports[`should create default config 1`] = `
     "type": "open-source",
   },
   "buildDate": undefined,
+  "checkDbOnReady": false,
   "clientFeatureCaching": {
     "enabled": true,
     "maxAge": 3600000,
+  },
+  "customStrategySettings": {
+    "disableCreation": false,
+    "disableEditing": false,
   },
   "dailyMetricsStorageDays": 91,
   "db": {
@@ -101,6 +106,7 @@ exports[`should create default config 1`] = `
   "preHook": undefined,
   "preRouterHook": undefined,
   "prometheusApi": undefined,
+  "prometheusImpactMetricsApi": undefined,
   "publicFolder": undefined,
   "rateLimiting": {
     "callSignalEndpointMaxPerSecond": 1,
@@ -120,6 +126,7 @@ exports[`should create default config 1`] = `
     "featureEnvironmentStrategies": 30,
     "featureFlags": 5000,
     "projects": 500,
+    "releaseTemplates": 5,
     "segmentValues": 1000,
     "segments": 300,
     "signalEndpoints": 5,
@@ -158,6 +165,7 @@ exports[`should create default config 1`] = `
   "ui": {
     "environment": "Open Source",
   },
+  "unleashFrontendToken": undefined,
   "userInactivityThresholdInDays": 180,
   "versionCheck": {
     "enable": true,

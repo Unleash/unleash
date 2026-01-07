@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { projectSchema } from './project-schema';
-import { projectOverviewSchema } from './project-overview-schema';
+import { projectSchema } from './project-schema.js';
+import { projectOverviewSchema } from './project-overview-schema.js';
 
 export const personalDashboardProjectDetailsSchema = {
     $id: '#/components/schemas/personalDashboardProjectDetailsSchema',
@@ -28,6 +28,7 @@ export const personalDashboardProjectDetailsSchema = {
                 'staleFlags',
                 'potentiallyStaleFlags',
                 'health',
+                'technicalDebt',
             ],
             properties: {
                 avgHealthCurrentWindow: {
@@ -76,8 +77,17 @@ export const personalDashboardProjectDetailsSchema = {
                 health: {
                     type: 'integer',
                     minimum: 0,
-                    description: "The project's current health score",
+                    description: 'Use `technicalDebt` instead.',
                     example: 80,
+                    deprecated: true,
+                },
+                technicalDebt: {
+                    type: 'integer',
+                    example: 25,
+                    minimum: 0,
+                    maximum: 100,
+                    description:
+                        "An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100",
                 },
             },
         },

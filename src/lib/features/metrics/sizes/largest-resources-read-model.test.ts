@@ -1,11 +1,12 @@
-import type { ILargestResourcesReadModel } from './largest-resources-read-model-type';
+import type { ILargestResourcesReadModel } from './largest-resources-read-model-type.js';
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
-import type { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type';
-import getLogger from '../../../../test/fixtures/no-logger';
-import type { IFeatureStrategiesStore } from '../../feature-toggle/types/feature-toggle-strategies-store-type';
-import type { IFeatureStrategy } from '../../../types';
+} from '../../../../test/e2e/helpers/database-init.js';
+import type { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
+import type { IFeatureStrategiesStore } from '../../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import type { IFeatureStrategy } from '../../../types/index.js';
+import { DEFAULT_ENV } from '../../../server-impl.js';
 
 let db: ITestDb;
 let largestResourcesReadModel: ILargestResourcesReadModel;
@@ -41,7 +42,7 @@ const createFeature = async (config: FeatureConfig) => {
     await featureStrategiesStore.createStrategyFeatureEnv({
         strategyName: 'flexibleRollout',
         projectId: 'default',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         featureName: config.featureName,
         constraints: config.constraints,
         parameters: config.parameters,
@@ -78,7 +79,11 @@ test('can calculate resource size', async () => {
 
     await createFeature({
         featureName: 'featureB',
-        parameters: {},
+        parameters: {
+            groupId: 'featureB',
+            rollout: '100',
+            stickiness: 'default',
+        },
         constraints: [],
         variants: [],
     });

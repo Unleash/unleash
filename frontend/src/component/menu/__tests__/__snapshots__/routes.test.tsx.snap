@@ -13,7 +13,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "mobile": true,
+      "primary": true,
     },
     "path": "/personal",
     "title": "Dashboard",
@@ -33,14 +33,6 @@ exports[`returns all baseRoutes 1`] = `
     "parent": "/projects",
     "path": "/projects/create",
     "title": "Create",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "menu": {},
-    "parent": "/archive",
-    "path": "/projects/:projectId/archived",
-    "title": ":projectId",
     "type": "protected",
   },
   {
@@ -93,7 +85,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "mobile": true,
+      "primary": true,
     },
     "path": "/projects",
     "title": "Projects",
@@ -101,6 +93,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "enterprise": true,
     "menu": {},
     "path": "/projects-archive",
     "title": "Projects archive",
@@ -109,10 +102,20 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "mobile": true,
+      "primary": true,
     },
     "path": "/search",
-    "title": "Search",
+    "title": "Flags overview",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "enterprise": true,
+    "menu": {
+      "primary": true,
+    },
+    "path": "/change-requests",
+    "title": "Change Requests",
     "type": "protected",
   },
   {
@@ -126,7 +129,7 @@ exports[`returns all baseRoutes 1`] = `
     },
     "hidden": false,
     "menu": {
-      "mobile": true,
+      "primary": true,
     },
     "path": "/playground",
     "title": "Playground",
@@ -136,10 +139,28 @@ exports[`returns all baseRoutes 1`] = `
     "component": [Function],
     "enterprise": true,
     "menu": {
-      "mobile": true,
+      "primary": true,
     },
     "path": "/insights",
-    "title": "Insights",
+    "title": "Analytics",
+    "type": "protected",
+  },
+  {
+    "component": {
+      "$$typeof": Symbol(react.lazy),
+      "_init": [Function],
+      "_payload": {
+        "_result": [Function],
+        "_status": -1,
+      },
+    },
+    "enterprise": true,
+    "flag": "impactMetrics",
+    "menu": {
+      "primary": true,
+    },
+    "path": "/impact-metrics",
+    "title": "Impact metrics",
     "type": "protected",
   },
   {
@@ -153,11 +174,20 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/applications",
     "title": "Applications",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "flag": "customMetrics",
+    "menu": {
+      "main": true,
+    },
+    "path": "/custom-metrics",
+    "title": "Custom metrics",
     "type": "protected",
   },
   {
@@ -179,8 +209,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/context",
     "title": "Context fields",
@@ -189,8 +218,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/feature-toggle-type/*",
     "title": "Feature flag types",
@@ -223,8 +251,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/strategies",
     "title": "Strategy types",
@@ -249,8 +276,7 @@ exports[`returns all baseRoutes 1`] = `
     "component": [Function],
     "enterprise": true,
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/environments",
     "title": "Environments",
@@ -266,43 +292,40 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "releasePlans",
     "menu": {
-      "advanced": true,
+      "main": true,
       "mode": [
         "enterprise",
       ],
     },
-    "path": "/release-management",
-    "title": "Release management",
+    "path": "/release-templates",
+    "title": "Release templates",
     "type": "protected",
   },
   {
     "component": [Function],
     "enterprise": true,
-    "flag": "releasePlans",
     "menu": {
       "mode": [
         "enterprise",
       ],
     },
-    "parent": "/release-management",
-    "path": "/release-management/create-template",
-    "title": "Create release plan template",
+    "parent": "/release-templates",
+    "path": "/release-templates/create-template",
+    "title": "Create release template",
     "type": "protected",
   },
   {
     "component": [Function],
     "enterprise": true,
-    "flag": "releasePlans",
     "menu": {
       "mode": [
         "enterprise",
       ],
     },
-    "parent": "/release-management",
-    "path": "/release-management/edit/:templateId",
-    "title": "Edit release plan template",
+    "parent": "/release-templates",
+    "path": "/release-templates/edit/:templateId",
+    "title": "Edit release template",
     "type": "protected",
   },
   {
@@ -324,8 +347,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/tag-types",
     "title": "Tag types",
@@ -383,8 +405,7 @@ exports[`returns all baseRoutes 1`] = `
     "component": [Function],
     "hidden": false,
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/integrations",
     "title": "Integrations",
@@ -412,8 +433,7 @@ exports[`returns all baseRoutes 1`] = `
     "component": [Function],
     "hidden": false,
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/segments",
     "title": "Segments",
@@ -442,6 +462,13 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {},
     "path": "/archive",
     "title": "Archived flags",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "menu": {},
+    "path": "/unknown-flags",
+    "title": "Unknown flags",
     "type": "protected",
   },
   {

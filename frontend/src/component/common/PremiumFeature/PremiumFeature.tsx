@@ -2,10 +2,10 @@ import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-featu
 import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
 import { Box, Button, Link, styled, Typography } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
-import { ThemeMode } from '../ThemeMode/ThemeMode';
-import { PageContent } from '../PageContent/PageContent';
-import { PageHeader } from '../PageHeader/PageHeader';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
+import { ThemeMode } from '../ThemeMode/ThemeMode.tsx';
+import { PageContent } from '../PageContent/PageContent.tsx';
+import { PageHeader } from '../PageHeader/PageHeader.tsx';
 
 const PremiumFeatureWrapper = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'tooltip',
@@ -60,57 +60,57 @@ const PremiumFeatures = {
     },
     access: {
         plan: FeaturePlan.PRO,
-        url: 'https://docs.getunleash.io/reference/rbac',
+        url: 'https://docs.getunleash.io/concepts/rbac',
         label: 'Access',
     },
     'change-requests': {
         plan: FeaturePlan.ENTERPRISE,
-        url: 'https://docs.getunleash.io/reference/change-requests',
+        url: 'https://docs.getunleash.io/concepts/change-requests',
         label: 'Change Requests',
     },
     'service-accounts': {
         plan: FeaturePlan.ENTERPRISE,
-        url: 'https://docs.getunleash.io/reference/service-accounts',
+        url: 'https://docs.getunleash.io/concepts/service-accounts',
         label: 'Service Accounts',
     },
     'project-roles': {
         plan: FeaturePlan.ENTERPRISE,
-        url: 'https://docs.getunleash.io/reference/rbac#custom-project-roles',
+        url: 'https://docs.getunleash.io/concepts/rbac#custom-project-roles',
         label: 'Project Roles',
     },
     'login-history': {
         plan: FeaturePlan.ENTERPRISE,
-        url: 'https://docs.getunleash.io/reference/login-history',
+        url: 'https://docs.getunleash.io/concepts/login-history',
         label: 'Login history',
     },
     groups: {
         plan: FeaturePlan.ENTERPRISE,
-        url: 'https://docs.getunleash.io/reference/rbac#user-groups',
+        url: 'https://docs.getunleash.io/concepts/rbac#user-groups',
         label: 'User groups',
     },
     sso: {
         plan: FeaturePlan.ENTERPRISE,
-        url: 'https://docs.getunleash.io/reference/rbac#user-group-sso-integration',
+        url: 'https://docs.getunleash.io/concepts/rbac#user-group-sso-integration',
         label: 'Single Sign-On',
     },
     'project-settings': {
         plan: FeaturePlan.PRO,
-        url: 'https://docs.getunleash.io/reference/projects',
+        url: 'https://docs.getunleash.io/concepts/projects',
         label: 'Project settings',
     },
     banners: {
         plan: FeaturePlan.ENTERPRISE,
-        url: 'https://docs.getunleash.io/reference/banners',
+        url: 'https://docs.getunleash.io/concepts/banners',
         label: 'Banners',
     },
     signals: {
         plan: FeaturePlan.ENTERPRISE,
-        url: 'https://docs.getunleash.io/reference/signals',
+        url: 'https://docs.getunleash.io/concepts/signals',
         label: 'Signals',
     },
     actions: {
         plan: FeaturePlan.ENTERPRISE,
-        url: 'https://docs.getunleash.io/reference/actions',
+        url: 'https://docs.getunleash.io/concepts/actions',
         label: 'Actions',
     },
     dashboard: {
@@ -125,20 +125,20 @@ const PremiumFeatures = {
     },
     environments: {
         plan: FeaturePlan.ENTERPRISE,
-        url: 'https://docs.getunleash.io/reference/environments',
+        url: 'https://docs.getunleash.io/concepts/environments',
         label: 'Environments management',
     },
     releaseManagement: {
         plan: FeaturePlan.ENTERPRISE,
         url: '',
-        label: 'Release management',
+        label: 'Release templates',
     },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;
 
 const PLANS_URL = 'https://www.getunleash.io/plans';
-const UPGRADE_URL = 'https://www.getunleash.io/upgrade_unleash';
+const UPGRADE_URL = 'https://www.getunleash.io/upgrade-unleash';
 
 export interface PremiumFeatureProps {
     feature: PremiumFeatureType;

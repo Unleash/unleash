@@ -1,4 +1,4 @@
-import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender.tsx';
 import {
     Box,
     IconButton,
@@ -7,13 +7,13 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { flexRow } from '../../../../../themes/themeStyles';
-import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
+import { flexRow } from '../../../../../themes/themeStyles.ts';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import type React from 'react';
 import { useState } from 'react';
 import type { AdvancedPlaygroundEnvironmentFeatureSchema } from 'openapi';
-import { PlaygroundEnvironmentTable } from '../../PlaygroundEnvironmentTable/PlaygroundEnvironmentTable';
+import { PlaygroundEnvironmentTable } from '../../PlaygroundEnvironmentTable/PlaygroundEnvironmentTable.tsx';
+import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip.tsx';
 
 const StyledContainer = styled(
     'div',

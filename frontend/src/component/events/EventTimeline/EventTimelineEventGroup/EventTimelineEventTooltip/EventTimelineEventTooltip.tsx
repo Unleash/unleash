@@ -7,8 +7,8 @@ import {
     formatDateYMDHMS,
     formatDateYMD,
 } from 'utils/formatDate';
-import type { TimelineEventGroup } from '../../EventTimeline';
-import { EventTimelineEventCircle } from '../EventTimelineEventCircle';
+import type { TimelineEventGroup } from '../../EventTimeline.tsx';
+import { EventTimelineEventCircle } from '../EventTimelineEventCircle.tsx';
 
 const StyledTooltipHeader = styled('div')(({ theme }) => ({
     display: 'flex',

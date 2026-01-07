@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdminPermissionSchema } from './adminPermissionSchema';
+import type { AdminPermissionSchema } from './adminPermissionSchema.js';
 
 export type AdminPermissionsSchemaPermissionsEnvironmentsItem = {
     /** The name of the environment */

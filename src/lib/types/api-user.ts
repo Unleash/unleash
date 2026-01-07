@@ -1,7 +1,8 @@
-import type { ApiTokenType } from './models/api-token';
-import { ValidationError } from 'joi';
+import type { ApiTokenType } from './model.js';
+import pkg from 'joi';
+const { ValidationError } = pkg;
 
-import { CLIENT } from './permissions';
+import { CLIENT } from './permissions.js';
 
 export interface IApiUserData {
     permissions?: string[];
@@ -23,7 +24,7 @@ export interface IApiUser {
     secret: string;
 }
 
-export default class ApiUser implements IApiUser {
+export class ApiUser implements IApiUser {
     readonly isAPI: boolean = true;
 
     readonly permissions: string[];
@@ -62,3 +63,5 @@ export default class ApiUser implements IApiUser {
         }
     }
 }
+
+export default ApiUser;

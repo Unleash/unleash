@@ -2,9 +2,8 @@ import type {
     FeatureToggle,
     IFeatureToggleClient,
     IFeatureToggleQuery,
-} from '../../../types/model';
-import type { IFeatureToggleClientStore } from '../types/client-feature-toggle-store-type';
-import type { IGetAdminFeatures } from '../client-feature-toggle-store';
+} from '../../../types/model.js';
+import type { IFeatureToggleClientStore } from '../types/client-feature-toggle-store-type.js';
 
 export default class FakeClientFeatureToggleStore
     implements IFeatureToggleClientStore
@@ -16,7 +15,7 @@ export default class FakeClientFeatureToggleStore
         archived: boolean = false,
     ): Promise<IFeatureToggleClient[]> {
         const rows = this.featureToggles.filter((toggle) => {
-            if (featureQuery.namePrefix) {
+            if (featureQuery?.namePrefix) {
                 if (featureQuery.project) {
                     return (
                         toggle.name.startsWith(featureQuery.namePrefix) &&
@@ -27,7 +26,7 @@ export default class FakeClientFeatureToggleStore
                 }
                 return toggle.name.startsWith(featureQuery.namePrefix);
             }
-            if (featureQuery.project) {
+            if (featureQuery?.project) {
                 return featureQuery.project.some((project) =>
                     project.includes(toggle.project),
                 );
@@ -39,7 +38,7 @@ export default class FakeClientFeatureToggleStore
             ...t,
             enabled: true,
             strategies: [],
-            description: t.description || '',
+            description: t.description,
             type: t.type || 'Release',
             stale: t.stale || false,
             variants: [],
@@ -71,13 +70,6 @@ export default class FakeClientFeatureToggleStore
                 id: `strategy#${index}`,
             })),
         }));
-    }
-
-    async getAdmin({
-        featureQuery: query,
-        archived,
-    }: IGetAdminFeatures): Promise<IFeatureToggleClient[]> {
-        return this.getFeatures(query, archived);
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

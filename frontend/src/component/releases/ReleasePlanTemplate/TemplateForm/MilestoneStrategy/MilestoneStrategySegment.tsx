@@ -8,7 +8,7 @@ import {
     AutocompleteBox,
     type IAutocompleteBoxOption,
 } from 'component/common/AutocompleteBox/AutocompleteBox';
-import { MilestoneStrategySegmentList } from './MilestoneStrategySegmentList';
+import { MilestoneStrategySegmentList } from './MilestoneStrategySegmentList.tsx';
 
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -71,7 +71,7 @@ export const MilestoneStrategySegment = ({
                                 on the global or the project level. Read more
                                 about segments{' '}
                                 <a
-                                    href='https://docs.getunleash.io/reference/segments'
+                                    href='https://docs.getunleash.io/concepts/segments'
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
@@ -88,6 +88,8 @@ export const MilestoneStrategySegment = ({
                 options={autocompleteOptions}
                 onChange={onChange}
                 disabled={atStrategySegmentsLimit}
+                icon={null}
+                width={'175px'}
             />
             <MilestoneStrategySegmentList
                 segments={selectedSegments}

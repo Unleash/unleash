@@ -4,8 +4,8 @@ import type {
     InstanceInsightsSchema,
     InstanceInsightsSchemaMetricsSummaryTrendsItem,
 } from 'openapi';
-import { useProjectColor } from './useProjectColor';
-import type { GroupedDataByProject } from './useGroupedProjectTrends';
+import { useProjectColor } from './useProjectColor.js';
+import type { GroupedDataByProject } from './useGroupedProjectTrends.js';
 import { format } from 'date-fns';
 
 type MetricsSummaryTrends = InstanceInsightsSchema['metricsSummaryTrends'];

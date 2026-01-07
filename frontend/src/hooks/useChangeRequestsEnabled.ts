@@ -1,7 +1,7 @@
 import { SKIP_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
 import React from 'react';
-import { useChangeRequestConfig } from './api/getters/useChangeRequestConfig/useChangeRequestConfig';
-import { useCheckProjectPermissions } from './useHasAccess';
+import { useChangeRequestConfig } from './api/getters/useChangeRequestConfig/useChangeRequestConfig.js';
+import { useCheckProjectPermissions } from './useHasAccess.js';
 
 export const useChangeRequestsEnabled = (projectId: string) => {
     const { data } = useChangeRequestConfig(projectId);

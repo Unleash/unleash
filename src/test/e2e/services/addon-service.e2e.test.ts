@@ -1,21 +1,24 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import { createTestConfig } from '../../config/test-config';
-import AddonService from '../../../lib/services/addon-service';
-import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import { createTestConfig } from '../../config/test-config.js';
+import AddonService from '../../../lib/services/addon-service.js';
+import {
+    type IUnleashStores,
+    TEST_AUDIT_USER,
+} from '../../../lib/types/index.js';
 
-import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon';
-import TagTypeService from '../../../lib/features/tag-type/tag-type-service';
-import { FEATURE_CREATED } from '../../../lib/types/events';
-import { IntegrationEventsService } from '../../../lib/services';
-import { createEventsService } from '../../../lib/features';
+import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon.js';
+import TagTypeService from '../../../lib/features/tag-type/tag-type-service.js';
+import { FEATURE_CREATED } from '../../../lib/events/index.js';
+import { IntegrationEventsService } from '../../../lib/services/index.js';
+import { createEventsService } from '../../../lib/features/index.js';
 
-const addonProvider = { simple: new SimpleAddon() };
+import { vi } from 'vitest';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let addonService: AddonService;
-const TEST_USER_ID = -9999;
+const _TEST_USER_ID = -9999;
 
 beforeAll(async () => {
     const config = createTestConfig({
@@ -29,6 +32,15 @@ beforeAll(async () => {
         stores,
         config,
     );
+    const addonProvider = {
+        simple: new SimpleAddon({
+            getLogger,
+            unleashUrl: 'http://test',
+            integrationEventsService,
+            flagResolver: config.flagResolver,
+            eventBus: config.eventBus,
+        }),
+    };
     addonService = new AddonService(
         stores,
         config,
@@ -51,7 +63,7 @@ afterEach(async () => {
 });
 
 test('should only return active addons', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const config = {
         provider: 'simple',
         enabled: false,
@@ -88,7 +100,7 @@ test('should only return active addons', async () => {
     await addonService.createAddon(config2, TEST_AUDIT_USER);
     await addonService.createAddon(config3, TEST_AUDIT_USER);
 
-    jest.advanceTimersByTime(61_000);
+    vi.advanceTimersByTime(61_000);
 
     const activeAddons = await addonService.fetchAddonConfigs();
     const allAddons = await addonService.getAddons();
@@ -96,5 +108,5 @@ test('should only return active addons', async () => {
     expect(activeAddons.length).toBe(2);
     expect(allAddons.length).toBe(3);
 
-    jest.useRealTimers();
+    vi.useRealTimers();
 });

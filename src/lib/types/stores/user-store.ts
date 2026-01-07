@@ -1,5 +1,5 @@
-import type { IUser } from '../user';
-import type { Store } from './store';
+import type { IUser } from '../user.js';
+import type { Store } from './store.js';
 
 export interface ICreateUser {
     name?: string;
@@ -25,6 +25,12 @@ export interface IUserStore extends Store<IUser, number> {
     upsert(user: ICreateUser): Promise<IUser>;
     hasUser(idQuery: IUserLookup): Promise<number | undefined>;
     search(query: string): Promise<IUser[]>;
+    getAll(params?: {
+        limit: number;
+        offset: number;
+        sortBy?: string;
+        sortOrder?: 'asc' | 'desc';
+    }): Promise<IUser[]>;
     getAllWithId(userIdList: number[]): Promise<IUser[]>;
     getByQuery(idQuery: IUserLookup): Promise<IUser>;
     getPasswordHash(userId: number): Promise<string>;
@@ -40,5 +46,5 @@ export interface IUserStore extends Store<IUser, number> {
     count(): Promise<number>;
     countRecentlyDeleted(): Promise<number>;
     countServiceAccounts(): Promise<number>;
-    deleteScimUsers(): Promise<void>;
+    deleteScimUsers(): Promise<IUser[]>;
 }

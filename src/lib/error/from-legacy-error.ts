@@ -1,11 +1,12 @@
-import { fromJoiError } from './bad-data-error';
-import { ValidationError as JoiValidationError } from 'joi';
+import { fromJoiError } from './bad-data-error.js';
+import pkg from 'joi';
+const { ValidationError: JoiValidationError } = pkg;
 import {
     GenericUnleashError,
     type UnleashApiErrorName,
     UnleashApiErrorTypes,
     UnleashError,
-} from './unleash-error';
+} from './unleash-error.js';
 
 const getStatusCode = (errorName: string): number => {
     switch (errorName) {
@@ -18,8 +19,6 @@ const getStatusCode = (errorName: string): number => {
         case 'OwaspValidationError':
             return 400;
         case 'PasswordUndefinedError':
-            return 400;
-        case 'MinimumOneEnvironmentError':
             return 400;
         case 'InvalidTokenError':
             return 401;

@@ -12,7 +12,7 @@ export const SegmentDocsValuesInfo = () => {
         <Alert severity='info'>
             A segment can have{' '}
             <a
-                href='https://docs.getunleash.io/reference/segments#segment-limits'
+                href='https://docs.getunleash.io/concepts/segments#segment-limits'
                 target='_blank'
                 rel='noreferrer'
             >
@@ -35,7 +35,7 @@ export const SegmentDocsValuesError = (props: { values: number }) => {
         <Alert severity='error'>
             A segment can have{' '}
             <a
-                href='https://docs.getunleash.io/reference/segments#segment-limits'
+                href='https://docs.getunleash.io/concepts/segments#segment-limits'
                 target='_blank'
                 rel='noreferrer'
             >
@@ -77,4 +77,4 @@ const SegmentLimitsLink = () => {
     );
 };
 
-export const segmentsDocsLink = 'https://docs.getunleash.io/reference/segments';
+export const segmentsDocsLink = 'https://docs.getunleash.io/concepts/segments';

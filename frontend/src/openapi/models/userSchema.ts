@@ -3,13 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { UserSchemaAccountType } from './userSchemaAccountType.js';
 
 /**
  * An Unleash user
  */
 export interface UserSchema {
     /** A user is either an actual User or a Service Account */
-    accountType?: string;
+    accountType?: UserSchemaAccountType;
     /**
      * Count of active browser sessions for this user
      * @nullable
@@ -30,11 +31,6 @@ export interface UserSchema {
     /** If the user is actively inviting other users, this is the link that can be shared with other users */
     inviteLink?: string;
     /**
-     * Deprecated in v5. Used internally to know which operations the user should be allowed to perform
-     * @deprecated
-     */
-    isAPI?: boolean;
-    /**
      * How many unsuccessful attempts at logging in has the user made
      * @minimum 0
      */
@@ -47,7 +43,7 @@ export interface UserSchema {
     /** Deprecated */
     permissions?: string[];
     /**
-     * Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned
+     * Which [root role](https://docs.getunleash.io/concepts/rbac#predefined-roles) this user is assigned
      * @minimum 0
      */
     rootRole?: number;

@@ -1,9 +1,9 @@
 import type EventEmitter from 'events';
-import type { Logger, LogProvider } from '../logger';
-import NotFoundError from '../error/notfound-error';
-import type { ISession, ISessionStore } from '../types/stores/session-store';
+import type { Logger, LogProvider } from '../logger.js';
+import NotFoundError from '../error/notfound-error.js';
+import type { ISession, ISessionStore } from '../types/stores/session-store.js';
 import { addDays } from 'date-fns';
-import type { Db } from './db';
+import type { Db } from './db.js';
 
 const TABLE = 'unleash_session';
 
@@ -132,5 +132,3 @@ export default class SessionStore implements ISessionStore {
         return result ? Number(result.count) : 0;
     }
 }
-
-module.exports = SessionStore;

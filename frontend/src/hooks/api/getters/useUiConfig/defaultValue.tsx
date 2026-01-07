@@ -2,7 +2,7 @@ import type { IUiConfig } from 'interfaces/uiConfig';
 
 export const defaultValue: IUiConfig = {
     name: 'Unleash',
-    version: '5.x',
+    version: '7.3.0',
     slogan: 'The enterprise ready feature flag service.',
     flags: {
         P: false,
@@ -45,5 +45,6 @@ export const defaultValue: IUiConfig = {
         segments: 300,
         apiTokens: 2000,
         featureFlags: 5000,
+        releaseTemplates: 5,
     },
 };

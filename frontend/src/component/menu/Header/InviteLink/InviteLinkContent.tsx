@@ -12,7 +12,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     boxShadow: theme.boxShadows.popup,
     position: 'absolute',
-    zIndex: 5000,
+    zIndex: theme.zIndex.snackbar,
     right: -255,
     minWidth: theme.spacing(80),
     [theme.breakpoints.down('md')]: {

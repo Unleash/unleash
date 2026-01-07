@@ -3,15 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema';
-import type { ParametersSchema } from './parametersSchema';
-import type { StrategyVariantSchema } from './strategyVariantSchema';
+import type { ConstraintSchema } from './constraintSchema.js';
+import type { ParametersSchema } from './parametersSchema.js';
+import type { StrategyVariantSchema } from './strategyVariantSchema.js';
 
 /**
  * A single activation strategy configuration schema for a feature
  */
 export interface FeatureStrategySchema {
-    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints */
+    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/concepts/activation-strategies#constraints */
     constraints?: ConstraintSchema[];
     /**
      * A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs

@@ -1,14 +1,14 @@
 import supertest from 'supertest';
-import { createServices } from '../services';
-import { createTestConfig } from '../../test/config/test-config';
+import { createServices } from '../services/index.js';
+import { createTestConfig } from '../../test/config/test-config.js';
 
-import createStores from '../../test/fixtures/store';
-import ossAuth from './oss-authentication';
-import getApp from '../app';
-import User from '../types/user';
-import sessionDb from './session-db';
+import createStores from '../../test/fixtures/store.js';
+import ossAuth from './oss-authentication.js';
+import getApp from '../app.js';
+import User from '../types/user.js';
+import sessionDb from './session-db.js';
 import type { Knex } from 'knex';
-import type { LogProvider } from '../logger';
+import type { LogProvider } from '../logger.js';
 
 const getLogger = (() => ({ debug() {} })) as unknown as LogProvider;
 
@@ -19,7 +19,7 @@ async function getSetup(preRouterHook) {
         preRouterHook: (_app) => {
             preRouterHook(_app);
             ossAuth(_app, getLogger, base);
-            _app.get(`${base}/api/protectedResource`, (req, res) => {
+            _app.get(`${base}/api/protectedResource`, (_req, res) => {
                 res.status(200).json({ message: 'OK' }).end();
             });
         },
@@ -46,7 +46,7 @@ test('should return 200 when user exists', async () => {
     expect.assertions(0);
     const user = new User({ id: 1, email: 'some@mail.com' });
     const { base, request } = await getSetup((app) =>
-        app.use((req, res, next) => {
+        app.use((req, _res, next) => {
             req.user = user;
             next();
         }),

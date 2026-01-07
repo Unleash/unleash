@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { DisableEnableStrategyDialog } from './DisableEnableStrategyDialog';
+import { DisableEnableStrategyDialog } from './DisableEnableStrategyDialog.tsx';
 
 const server = testServerSetup();
 

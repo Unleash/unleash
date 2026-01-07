@@ -1,33 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { RoleSchema } from '../../lib/openapi';
-import type { ICustomRole } from '../../lib/types/model';
-import type { IRole, IUserRole } from '../../lib/types/stores/access-store';
+import type { RoleSchema } from '../../lib/openapi/index.js';
+import type { ICustomRole } from '../../lib/types/model.js';
+import type { IRole, IUserRole } from '../../lib/types/stores/access-store.js';
 import type {
     ICustomRoleInsert,
     ICustomRoleUpdate,
     IRoleStore,
-} from '../../lib/types/stores/role-store';
+} from '../../lib/types/stores/role-store.js';
 
 export default class FakeRoleStore implements IRoleStore {
     count(): Promise<number> {
         return Promise.resolve(0);
     }
 
-    filteredCount(search: Partial<RoleSchema>): Promise<number> {
+    filteredCount(_search: Partial<RoleSchema>): Promise<number> {
         return Promise.resolve(0);
     }
 
-    filteredCountInUse(search: Partial<RoleSchema>): Promise<number> {
+    filteredCountInUse(_search: Partial<RoleSchema>): Promise<number> {
         return Promise.resolve(0);
     }
 
     roles: ICustomRole[] = [];
 
-    getGroupRolesForProject(projectId: string): Promise<IRole[]> {
+    getGroupRolesForProject(_projectId: string): Promise<IRole[]> {
         throw new Error('Method not implemented.');
     }
 
-    nameInUse(name: string, existingId?: number): Promise<boolean> {
+    nameInUse(name: string, _existingId?: number): Promise<boolean> {
         return Promise.resolve(
             this.roles.find((r) => r.name === name) !== undefined,
         );
@@ -48,11 +48,11 @@ export default class FakeRoleStore implements IRoleStore {
         return Promise.resolve(roleCreated);
     }
 
-    update(role: ICustomRoleUpdate): Promise<ICustomRole> {
+    update(_role: ICustomRoleUpdate): Promise<ICustomRole> {
         throw new Error('Method not implemented.');
     }
 
-    delete(id: number): Promise<void> {
+    delete(_id: number): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
@@ -64,11 +64,11 @@ export default class FakeRoleStore implements IRoleStore {
         return this.roles.find((r) => r.name === name) as IRole;
     }
 
-    getRolesForProject(projectId: string): Promise<IRole[]> {
+    getRolesForProject(_projectId: string): Promise<IRole[]> {
         throw new Error('Method not implemented.');
     }
 
-    removeRolesForProject(projectId: string): Promise<void> {
+    removeRolesForProject(_projectId: string): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
@@ -93,7 +93,7 @@ export default class FakeRoleStore implements IRoleStore {
         return Promise.resolve(found);
     }
 
-    exists(key: number): Promise<boolean> {
+    exists(_key: number): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 

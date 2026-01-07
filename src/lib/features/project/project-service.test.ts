@@ -1,22 +1,34 @@
-import { createTestConfig } from '../../../test/config/test-config';
-import { BadDataError } from '../../error';
-import { type IBaseEvent, RoleName, TEST_AUDIT_USER } from '../../types';
-import { createFakeProjectService } from './createProjectService';
-import ProjectService from './project-service';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { BadDataError } from '../../error/index.js';
+import {
+    type IFlagResolver,
+    type ProjectCreated,
+    RoleName,
+    TEST_AUDIT_USER,
+} from '../../types/index.js';
+import { createFakeProjectService } from './createProjectService.js';
+
+import { vi } from 'vitest';
 
 describe('enterprise extension: enable change requests', () => {
-    const createService = () => {
+    const createService = (mode: 'oss' | 'enterprise' = 'enterprise') => {
         const config = createTestConfig();
-        const service = createFakeProjectService(config);
-        // @ts-expect-error: we're setting this up to test the change request
-        service.flagResolver = {
-            isEnabled: () => true,
-        };
-        // @ts-expect-error: we're setting this up to test the change request
-        service.isEnterprise = true;
+        config.isEnterprise = mode === 'enterprise';
+        const alwaysOnFlagResolver = {
+            isEnabled() {
+                return true;
+            },
+        } as unknown as IFlagResolver;
+        config.flagResolver = alwaysOnFlagResolver;
+        const {
+            projectService,
+            accessService,
+            environmentStore,
+            eventService,
+            projectStore,
+        } = createFakeProjectService(config);
 
-        // @ts-expect-error: if we don't set this up, the tests will fail due to a missing role.
-        service.accessService.createRole(
+        accessService.createRole(
             {
                 name: RoleName.OWNER,
                 description: 'Project owner',
@@ -25,12 +37,17 @@ describe('enterprise extension: enable change requests', () => {
             TEST_AUDIT_USER,
         );
 
-        return service;
+        return {
+            service: projectService,
+            environmentStore,
+            eventService,
+            projectStore,
+        };
     };
 
     test('it calls the change request enablement function on enterprise after creating the project', async () => {
         expect.assertions(1);
-        const service = createService();
+        const { service, projectStore } = createService();
 
         const projectId = 'fake-project-id';
         await service.createProject(
@@ -46,9 +63,7 @@ describe('enterprise extension: enable change requests', () => {
             },
             TEST_AUDIT_USER,
             async () => {
-                // @ts-expect-error: we want to verify that the project /has/
-                // been created when calling the function.
-                const project = await service.projectStore.get(projectId);
+                const project = await projectStore.get(projectId);
 
                 expect(project).toBeTruthy();
 
@@ -58,11 +73,11 @@ describe('enterprise extension: enable change requests', () => {
     });
 
     test("it does not call the change request enablement function if we're not enterprise", async () => {
-        const service = createService();
-        // @ts-expect-error
-        service.isEnterprise = false;
+        const { service } = createService('oss');
 
-        const fn = jest.fn();
+        const fn = vi.fn() as () => Promise<
+            { name: string; requiredApprovals: number }[] | undefined
+        >;
 
         const projectId = 'fake-project-id';
         await service.createProject(
@@ -84,14 +99,7 @@ describe('enterprise extension: enable change requests', () => {
 
     test('the emitted event contains an empty list of changeRequestEnvironments if the input had none', async () => {
         expect.assertions(1);
-        const service = createService();
-
-        const storeEvent = async (e: IBaseEvent) => {
-            expect(e.data.changeRequestEnvironments).toStrictEqual([]);
-        };
-
-        // @ts-expect-error: for testing purposes
-        service.eventService.storeEvent = storeEvent;
+        const { service, eventService } = createService();
 
         const projectId = 'fake-project-id';
         await service.createProject(
@@ -106,20 +114,18 @@ describe('enterprise extension: enable change requests', () => {
             },
             TEST_AUDIT_USER,
         );
+
+        const { events } = await eventService.getEvents();
+        expect(events).toMatchObject([
+            {
+                type: 'project-created',
+                data: { changeRequestEnvironments: [] },
+            },
+        ]);
     });
 
     test('the emitted event contains no changeRequestEnvironments if we are not on enterprise', async () => {
-        expect.assertions(1);
-        const service = createService();
-        // @ts-expect-error
-        service.isEnterprise = false;
-
-        const storeEvent = async (e: IBaseEvent) => {
-            expect('changeRequestEnvironments' in e.data).toBeFalsy();
-        };
-
-        // @ts-expect-error: for testing purposes
-        service.eventService.storeEvent = storeEvent;
+        const { service, eventService } = createService('oss');
 
         const projectId = 'fake-project-id';
         await service.createProject(
@@ -135,23 +141,22 @@ describe('enterprise extension: enable change requests', () => {
             TEST_AUDIT_USER,
             async () => [],
         );
+
+        const { events } = await eventService.getEvents();
+        expect(events[0].data.changeRequestEnvironments).toBeUndefined();
     });
 
     test('the emitted event contains the list of change request envs returned from the extension function, *not* what was passed in', async () => {
-        expect.assertions(1);
-        const service = createService();
-
-        // @ts-expect-error: we want this to pass to test the functionality
-        service.environmentStore.exists = () => true;
+        const { service, environmentStore, eventService } = createService();
+        await environmentStore.create({
+            name: 'dev',
+            type: 'production',
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+        });
 
         const crEnvs = [{ name: 'prod', requiredApprovals: 10 }];
-
-        const storeEvent = async (e: IBaseEvent) => {
-            expect(e.data.changeRequestEnvironments).toMatchObject(crEnvs);
-        };
-
-        // @ts-expect-error: for testing purposes
-        service.eventService.storeEvent = storeEvent;
 
         const projectId = 'fake-project-id';
         await service.createProject(
@@ -170,15 +175,92 @@ describe('enterprise extension: enable change requests', () => {
             TEST_AUDIT_USER,
             async () => crEnvs,
         );
+
+        const { events } = await eventService.getEvents();
+        expect(events).toMatchObject([
+            {
+                type: 'project-created',
+                data: {
+                    changeRequestEnvironments: [
+                        { name: 'prod', requiredApprovals: 10 },
+                    ],
+                },
+            },
+        ]);
+    });
+
+    test('prefer env approval settings over explicit user approvals', async () => {
+        const { service, environmentStore, eventService } = createService();
+        await environmentStore.create({
+            name: 'dev',
+            type: 'production',
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+        });
+        await environmentStore.create({
+            name: 'stage',
+            type: 'production',
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+            requiredApprovals: 2,
+        });
+        await environmentStore.create({
+            name: 'prod',
+            type: 'production',
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+            requiredApprovals: 3,
+        });
+
+        const projectId = 'fake-project-id';
+        await service.createProject(
+            {
+                id: projectId,
+                name: 'fake-project-name',
+                environments: ['prod', 'stage'], // stage selected but no approvals set by user
+                changeRequestEnvironments: [
+                    { name: 'dev', requiredApprovals: 1 },
+                    { name: 'prod', requiredApprovals: 10 }, // ignored in favor of env config
+                ],
+            },
+            {
+                id: 5,
+                permissions: [],
+                isAPI: false,
+            },
+            TEST_AUDIT_USER,
+            async (envs) => envs as ProjectCreated['changeRequestEnvironments'],
+        );
+
+        const { events } = await eventService.getEvents();
+        expect(events).toMatchObject([
+            {
+                type: 'project-created',
+                data: {
+                    changeRequestEnvironments: [
+                        { name: 'dev', requiredApprovals: 1 },
+                        { name: 'stage', requiredApprovals: 2 },
+                        { name: 'prod', requiredApprovals: 3 },
+                    ],
+                },
+            },
+        ]);
     });
 
     test('the create project function returns the list of change request envs returned from the extension function, *not* what was passed in', async () => {
-        const service = createService();
+        const { service, environmentStore } = createService();
+        await environmentStore.create({
+            name: 'dev',
+            type: 'production',
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+        });
 
         const crEnvs = [{ name: 'prod', requiredApprovals: 10 }];
-
-        // @ts-expect-error: we want this to pass to test the functionality
-        service.environmentStore.exists = () => true;
 
         const projectId = 'fake-project-id';
         const result = await service.createProject(
@@ -202,7 +284,7 @@ describe('enterprise extension: enable change requests', () => {
     });
 
     test('the create project function defaults to returning an empty list if the input had no cr envs', async () => {
-        const service = createService();
+        const { service } = createService();
 
         const projectId = 'fake-project-id';
         const result = await service.createProject(
@@ -223,9 +305,7 @@ describe('enterprise extension: enable change requests', () => {
     });
 
     test('the create project function does not return a list of change request envs if we are not on enterprise', async () => {
-        const service = createService();
-        // @ts-expect-error
-        service.isEnterprise = false;
+        const { service } = createService('oss');
 
         const crEnvs = [{ name: 'prod', requiredApprovals: 10 }];
 
@@ -251,12 +331,10 @@ describe('enterprise extension: enable change requests', () => {
     });
 
     test("it throws an error if you provide it with environments that don't exist", async () => {
-        const service = createService();
-        // @ts-expect-error
-        service.environmentStore.exists = () => false;
+        const { service } = createService();
 
         const projectId = 'fake-project-id';
-        expect(
+        await expect(
             service.createProject(
                 {
                     id: projectId,
@@ -276,14 +354,10 @@ describe('enterprise extension: enable change requests', () => {
     });
 
     test("it does not throw if an error if you provide it with environments that don't exist but aren't on enterprise", async () => {
-        const service = createService();
-        // @ts-expect-error
-        service.isEnterprise = false;
-        // @ts-expect-error
-        service.environmentStore.exists = () => false;
+        const { service } = createService('oss');
 
         const projectId = 'fake-project-id';
-        expect(
+        await expect(
             service.createProject(
                 {
                     id: projectId,
@@ -300,45 +374,5 @@ describe('enterprise extension: enable change requests', () => {
                 TEST_AUDIT_USER,
             ),
         ).resolves.toBeTruthy();
-    });
-
-    test('has at least one owner after deletion when group has the role and a project user for role exists', async () => {
-        const config = createTestConfig();
-        const projectId = 'fake-project-id';
-        const service = new ProjectService(
-            {
-                projectStore: {} as any,
-                projectOwnersReadModel: {} as any,
-                projectFlagCreatorsReadModel: {} as any,
-                eventStore: {} as any,
-                featureToggleStore: {} as any,
-                environmentStore: {} as any,
-                featureEnvironmentStore: {} as any,
-                accountStore: {} as any,
-                projectStatsStore: {} as any,
-                projectReadModel: {} as any,
-                onboardingReadModel: {} as any,
-            },
-            config,
-            {
-                getProjectUsersForRole: async () =>
-                    Promise.resolve([{ id: 1 } as any]),
-            } as any,
-            {} as any,
-            {
-                getProjectGroups: async () =>
-                    Promise.resolve([{ roles: [2, 5] } as any]),
-            } as any,
-            {} as any,
-            {} as any,
-            {} as any,
-            {} as any,
-        );
-
-        await service.validateAtLeastOneOwner(projectId, {
-            id: 5,
-            name: 'Owner',
-            type: 'Owner',
-        });
     });
 });

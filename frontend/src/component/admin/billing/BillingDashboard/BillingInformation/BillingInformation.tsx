@@ -1,15 +1,15 @@
-import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
-import { BillingInformationButton } from './BillingInformationButton/BillingInformationButton';
+import { Alert, Divider, Grid, Paper, styled, Typography } from '@mui/material';
+import { BillingInformationButton } from './BillingInformationButton/BillingInformationButton.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { InstanceState } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
-const StyledInfoBox = styled('aside')(({ theme }) => ({
+const StyledInfoBox = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(4),
     height: '100%',
     borderRadius: theme.shape.borderRadiusLarge,
-    backgroundColor: theme.palette.background.elevation2,
+    backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({

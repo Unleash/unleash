@@ -3,11 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { BulkRegistrationSchemaConnectViaItem } from './bulkRegistrationSchemaConnectViaItem';
-import type { DateSchema } from './dateSchema';
+import type { BulkRegistrationSchemaConnectViaItem } from './bulkRegistrationSchemaConnectViaItem.js';
+import type { BulkRegistrationSchemaSdkType } from './bulkRegistrationSchemaSdkType.js';
+import type { DateSchema } from './dateSchema.js';
 
 /**
- * An application registration. Defines the format POSTed by our server-side SDKs when they're starting up
+ * An application registration. Defines the format POSTed by our backend SDKs when they're starting up
  */
 export interface BulkRegistrationSchema {
     /** The name of the application that is evaluating toggles */
@@ -17,14 +18,21 @@ export interface BulkRegistrationSchema {
     connectVia?: BulkRegistrationSchemaConnectViaItem[];
     /** Which environment the application is running in */
     environment: string;
-    /** A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application */
+    /** A [(somewhat) unique identifier](https://docs.getunleash.io/sdks/node#advanced-usage) for the application */
     instanceId: string;
     /** How often (in seconds) the application refreshes its features */
     interval?: number;
+    /** The list of projects used in the application */
+    projects?: string[];
+    /**
+     * The sdk type
+     * @nullable
+     */
+    sdkType?: BulkRegistrationSchemaSdkType;
     /** The version the sdk is running. Typically <client>:<version> */
     sdkVersion?: string;
     /** The application started at */
     started?: DateSchema;
-    /** Enabled [strategies](https://docs.getunleash.io/reference/activation-strategies) in the application */
+    /** Enabled [strategies](https://docs.getunleash.io/concepts/activation-strategies) in the application */
     strategies?: string[];
 }

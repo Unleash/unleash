@@ -2,17 +2,17 @@ import { Link } from 'react-router-dom';
 import { Divider, Grid, styled, Typography } from '@mui/material';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
-import { GridColLink } from './GridColLink/GridColLink';
+import { GridColLink } from './GridColLink/GridColLink.tsx';
 import type { IInstanceStatus } from 'interfaces/instance';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import {
     BILLING_INCLUDED_REQUESTS,
     BILLING_PAYG_DEFAULT_MINIMUM_SEATS,
-    BILLING_PAYG_USER_PRICE,
-    BILLING_TRAFFIC_BUNDLE_PRICE,
-} from './BillingPlan';
+    BILLING_PAYG_SEAT_PRICE,
+    BILLING_TRAFFIC_PRICE,
+} from './BillingPlan.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useOverageCost } from './useOverageCost';
+import { useOverageCost } from './useOverageCost.ts';
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -34,14 +34,18 @@ export const BillingDetailsPAYG = ({
 
     const eligibleUsers = users.filter((user) => user.email);
 
+    const seatPrice =
+        instanceStatus.prices?.payg?.seat ?? BILLING_PAYG_SEAT_PRICE;
+    const trafficPrice =
+        instanceStatus.prices?.payg?.traffic ?? BILLING_TRAFFIC_PRICE;
+
     const minSeats =
         instanceStatus.minSeats ?? BILLING_PAYG_DEFAULT_MINIMUM_SEATS;
 
     const billableUsers = Math.max(eligibleUsers.length, minSeats);
-    const usersCost = BILLING_PAYG_USER_PRICE * billableUsers;
+    const usersCost = seatPrice * billableUsers;
 
-    const includedTraffic = BILLING_INCLUDED_REQUESTS;
-    const overageCost = useOverageCost(includedTraffic);
+    const overageCost = useOverageCost(BILLING_INCLUDED_REQUESTS);
 
     const totalCost = usersCost + overageCost;
 
@@ -66,7 +70,7 @@ export const BillingDetailsPAYG = ({
                             </GridColLink>
                         </Typography>
                         <StyledInfoLabel>
-                            ${BILLING_PAYG_USER_PRICE}/month per paid member
+                            ${seatPrice}/month per paid member
                         </StyledInfoLabel>
                     </GridCol>
                     <GridCol>
@@ -93,8 +97,8 @@ export const BillingDetailsPAYG = ({
                                     </GridColLink>
                                 </Typography>
                                 <StyledInfoLabel>
-                                    ${BILLING_TRAFFIC_BUNDLE_PRICE} per 1
-                                    million started above included data
+                                    ${trafficPrice} per 1 million started above
+                                    included data
                                 </StyledInfoLabel>
                             </GridCol>
                             <GridCol>

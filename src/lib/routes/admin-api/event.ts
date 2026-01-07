@@ -1,31 +1,30 @@
-import type { Request, Response } from 'express';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import type EventService from '../../features/events/event-service';
-import { ADMIN, NONE } from '../../types/permissions';
-import type { IEvent, IEventList } from '../../types/events';
-import Controller from '../controller';
-import { anonymiseKeys } from '../../util/anonymise';
-import type { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import type { Response } from 'express';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import type EventService from '../../features/events/event-service.js';
+import { ADMIN, NONE } from '../../types/permissions.js';
+import type { IEvent, IEventList } from '../../events/index.js';
+import Controller from '../controller.js';
+import { anonymiseKeys } from '../../util/anonymise.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
 import {
     eventsSchema,
     type EventsSchema,
-} from '../../../lib/openapi/spec/events-schema';
-import { serializeDates } from '../../../lib/types/serialize-dates';
+} from '../../../lib/openapi/spec/events-schema.js';
+import { serializeDates } from '../../../lib/types/serialize-dates.js';
 import {
     featureEventsSchema,
     type FeatureEventsSchema,
-} from '../../../lib/openapi/spec/feature-events-schema';
-import { getStandardResponses } from '../../../lib/openapi/util/standard-responses';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import type { DeprecatedSearchEventsSchema } from '../../openapi/spec/deprecated-search-events-schema';
-import type { IFlagResolver } from '../../types/experimental';
-import type { IAuthRequest } from '../unleash-types';
+} from '../../../lib/openapi/spec/feature-events-schema.js';
+import { getStandardResponses } from '../../../lib/openapi/util/standard-responses.js';
+import type { IFlagResolver } from '../../types/experimental.js';
+import type { IAuthRequest } from '../unleash-types.js';
 import {
     eventCreatorsSchema,
     type ProjectFlagCreatorsSchema,
-} from '../../openapi';
+} from '../../openapi/index.js';
+import { extractUserIdFromUser } from '../../util/index.js';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;
@@ -55,6 +54,7 @@ export default class EventController extends Controller {
             permission: ADMIN,
             middleware: [
                 openApiService.validPath({
+                    deprecated: true,
                     operationId: 'getEvents',
                     tags: ['Events'],
                     responses: {
@@ -86,6 +86,7 @@ export default class EventController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    deprecated: true,
                     operationId: 'getEventsForToggle',
                     tags: ['Events'],
                     responses: {
@@ -96,27 +97,6 @@ export default class EventController extends Controller {
                         'Returns all events related to the specified feature flag. If the feature flag does not exist, the list of events will be empty.',
                     summary:
                         'Get all events related to a specific feature flag.',
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'post',
-            path: '/events/search',
-            handler: this.deprecatedSearchEvents,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    operationId: 'deprecatedSearchEvents',
-                    tags: ['Events'],
-                    deprecated: true,
-                    summary: 'Search for events (deprecated)',
-                    description:
-                        'Allows searching for events matching the search criteria in the request body',
-                    requestBody: createRequestSchema(
-                        'deprecatedSearchEventsSchema',
-                    ),
-                    responses: { 200: createResponseSchema('eventsSchema') },
                 }),
             ],
         });
@@ -150,15 +130,21 @@ export default class EventController extends Controller {
     }
 
     async getEvents(
-        req: Request<any, any, any, { project?: string }>,
+        req: IAuthRequest<any, any, any, { project?: string }>,
         res: Response<EventsSchema>,
     ): Promise<void> {
-        const { project } = req.query;
+        const { user, query } = req;
+        const { project } = query;
         let eventList: IEventList;
         if (project) {
-            eventList = await this.eventService.deprecatedSearchEvents({
-                project,
-            });
+            eventList = await this.eventService.searchEvents(
+                {
+                    project: `IS:${project}`,
+                    offset: 0,
+                    limit: 50,
+                },
+                extractUserIdFromUser(user),
+            );
         } else {
             eventList = await this.eventService.getEvents();
         }
@@ -178,39 +164,23 @@ export default class EventController extends Controller {
     }
 
     async getEventsForToggle(
-        req: Request<{ featureName: string }>,
+        req: IAuthRequest<{ featureName: string }>,
         res: Response<FeatureEventsSchema>,
     ): Promise<void> {
-        const feature = req.params.featureName;
-        const eventList = await this.eventService.deprecatedSearchEvents({
-            feature,
-        });
-
-        const response = {
-            version,
-            toggleName: feature,
-            events: serializeDates(this.maybeAnonymiseEvents(eventList.events)),
-            totalEvents: eventList.totalEvents,
-        };
-
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            featureEventsSchema.$id,
-            response,
-        );
-    }
-
-    async deprecatedSearchEvents(
-        req: Request<unknown, unknown, DeprecatedSearchEventsSchema>,
-        res: Response<EventsSchema>,
-    ): Promise<void> {
-        const eventList = await this.eventService.deprecatedSearchEvents(
-            req.body,
+        const { user, params } = req;
+        const { featureName } = params;
+        const eventList = await this.eventService.searchEvents(
+            {
+                feature: `IS:${featureName}`,
+                offset: 0,
+                limit: 50,
+            },
+            extractUserIdFromUser(user),
         );
 
         const response = {
             version,
+            toggleName: featureName,
             events: serializeDates(this.maybeAnonymiseEvents(eventList.events)),
             totalEvents: eventList.totalEvents,
         };
@@ -224,7 +194,7 @@ export default class EventController extends Controller {
     }
 
     async getEventCreators(
-        req: IAuthRequest,
+        _req: IAuthRequest,
         res: Response<ProjectFlagCreatorsSchema>,
     ): Promise<void> {
         const flagCreators = await this.eventService.getEventCreators();

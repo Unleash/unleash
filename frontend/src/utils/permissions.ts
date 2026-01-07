@@ -125,7 +125,7 @@ export const getCategorizedProjectPermissions = (
         ({ type }) => type === ENVIRONMENT_PERMISSION_TYPE,
     );
 
-    const categories = [];
+    const categories: IPermissionCategory[] = [];
 
     if (projectPermissions.length) {
         categories.push({

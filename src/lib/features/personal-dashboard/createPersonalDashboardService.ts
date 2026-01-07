@@ -1,23 +1,23 @@
-import type { Db } from '../../db/db';
-import type { IUnleashConfig, IUnleashStores } from '../../types';
-import { PersonalDashboardService } from './personal-dashboard-service';
-import { PersonalDashboardReadModel } from './personal-dashboard-read-model';
-import { FakePersonalDashboardReadModel } from './fake-personal-dashboard-read-model';
-import { ProjectOwnersReadModel } from '../project/project-owners-read-model';
-import { FakeProjectOwnersReadModel } from '../project/fake-project-owners-read-model';
-import { ProjectReadModel } from '../project/project-read-model';
-import { FakeProjectReadModel } from '../project/fake-project-read-model';
-import EventStore from '../../db/event-store';
-import { FeatureEventFormatterMd } from '../../addons/feature-event-formatter-md';
-import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import { FakePrivateProjectChecker } from '../private-project/fakePrivateProjectChecker';
-import { PrivateProjectChecker } from '../private-project/privateProjectChecker';
-import { AccountStore } from '../../db/account-store';
-import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
-import { OnboardingReadModel } from '../onboarding/onboarding-read-model';
-import { FakeOnboardingReadModel } from '../onboarding/fake-onboarding-read-model';
-import { AccessStore } from '../../db/access-store';
-import FakeAccessStore from '../../../test/fixtures/fake-access-store';
+import type { Db } from '../../db/db.js';
+import type { IUnleashConfig, IUnleashStores } from '../../types/index.js';
+import { PersonalDashboardService } from './personal-dashboard-service.js';
+import { PersonalDashboardReadModel } from './personal-dashboard-read-model.js';
+import { FakePersonalDashboardReadModel } from './fake-personal-dashboard-read-model.js';
+import { ProjectOwnersReadModel } from '../project/project-owners-read-model.js';
+import { FakeProjectOwnersReadModel } from '../project/fake-project-owners-read-model.js';
+import { ProjectReadModel } from '../project/project-read-model.js';
+import { FakeProjectReadModel } from '../project/fake-project-read-model.js';
+import { EventStore } from '../../db/event-store.js';
+import { FeatureEventFormatterMd } from '../../addons/feature-event-formatter-md.js';
+import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
+import { FakePrivateProjectChecker } from '../private-project/fakePrivateProjectChecker.js';
+import { PrivateProjectChecker } from '../private-project/privateProjectChecker.js';
+import { AccountStore } from '../../db/account-store.js';
+import { FakeAccountStore } from '../../../test/fixtures/fake-account-store.js';
+import { OnboardingReadModel } from '../onboarding/onboarding-read-model.js';
+import { FakeOnboardingReadModel } from '../onboarding/fake-onboarding-read-model.js';
+import { AccessStore } from '../../db/access-store.js';
+import FakeAccessStore from '../../../test/fixtures/fake-access-store.js';
 
 export const createPersonalDashboardService = (
     db: Db,

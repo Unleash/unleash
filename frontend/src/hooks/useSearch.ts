@@ -13,7 +13,7 @@ type IUseSearchOutput<T> = {
 };
 
 // https://stackoverflow.com/questions/9577930/regular-expression-to-select-all-whitespace-that-isnt-in-quotes
-const SPACES_WITHOUT_QUOTES = /\s+(?=(?:[^\'"]*[\'"][^\'"]*[\'"])*[^\'"]*$)/g;
+const SPACES_WITHOUT_QUOTES = /\s+(?=(?:[^'"]*['"][^'"]*['"])*[^'"]*$)/g;
 
 const normalizeSearchValue = (value: string) =>
     value.replaceAll(/\s*,\s*/g, ',');

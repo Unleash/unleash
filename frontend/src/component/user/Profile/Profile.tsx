@@ -7,9 +7,9 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { PasswordTab } from './PasswordTab/PasswordTab';
-import { PersonalAPITokensTab } from './PersonalAPITokensTab/PersonalAPITokensTab';
-import { ProfileTab } from './ProfileTab/ProfileTab';
+import { PasswordTab } from './PasswordTab/PasswordTab.tsx';
+import { PersonalAPITokensTab } from './PersonalAPITokensTab/PersonalAPITokensTab.tsx';
+import { ProfileTab } from './ProfileTab/ProfileTab.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const Profile = () => {

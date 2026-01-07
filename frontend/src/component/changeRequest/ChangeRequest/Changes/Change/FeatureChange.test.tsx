@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { FeatureChange } from './FeatureChange';
+import { FeatureChange } from './FeatureChange.tsx';
 import type {
     ChangeRequestState,
     ChangeRequestType,
@@ -75,79 +75,82 @@ describe('Schedule conflicts', () => {
             };
         };
 
-    it.each(['Draft', 'Scheduled', 'In review', 'Approved'])(
-        'should show schedule conflicts (when they exist) for change request in the %s state',
-        async (changeRequestState) => {
-            const flag = feature(change);
-            render(
-                <FeatureChange
-                    actions={null}
-                    index={0}
-                    changeRequest={changeRequest(flag)(
-                        changeRequestState as ChangeRequestState,
-                    )}
-                    change={change}
-                    feature={flag}
-                />,
-            );
+    it.each([
+        'Draft',
+        'Scheduled',
+        'In review',
+        'Approved',
+    ])('should show schedule conflicts (when they exist) for change request in the %s state', async (changeRequestState) => {
+        const flag = feature(change);
+        render(
+            <FeatureChange
+                actions={null}
+                index={0}
+                changeRequest={changeRequest(flag)(
+                    changeRequestState as ChangeRequestState,
+                )}
+                change={change}
+                feature={flag}
+            />,
+        );
 
-            const alert = await screen.findByRole('alert');
+        const alert = await screen.findByRole('alert');
 
-            expect(
-                alert.textContent!.startsWith('Potential conflict'),
-            ).toBeTruthy();
+        expect(
+            alert.textContent!.startsWith('Potential conflict'),
+        ).toBeTruthy();
 
-            const links = await screen.findAllByRole('link');
+        const links = await screen.findAllByRole('link');
 
-            expect(links).toHaveLength(
-                change.scheduleConflicts.changeRequests.length,
-            );
+        expect(links).toHaveLength(
+            change.scheduleConflicts.changeRequests.length,
+        );
 
-            const [link1, link2] = links;
+        const [link1, link2] = links;
 
-            expect(link1).toHaveTextContent('#73');
-            expect(link1).toHaveAccessibleDescription('Change request 73');
-            expect(link1).toHaveAttribute(
-                'href',
-                `/projects/default/change-requests/73`,
-            );
+        expect(link1).toHaveTextContent('#73');
+        expect(link1).toHaveAccessibleDescription('Change request 73');
+        expect(link1).toHaveAttribute(
+            'href',
+            `/projects/default/change-requests/73`,
+        );
 
-            expect(link2).toHaveTextContent('#80 (Adjust rollout percentage)');
-            expect(link2).toHaveAccessibleDescription('Change request 80');
-            expect(link2).toHaveAttribute(
-                'href',
-                `/projects/default/change-requests/80`,
-            );
-        },
-    );
+        expect(link2).toHaveTextContent('#80 (Adjust rollout percentage)');
+        expect(link2).toHaveAccessibleDescription('Change request 80');
+        expect(link2).toHaveAttribute(
+            'href',
+            `/projects/default/change-requests/80`,
+        );
+    });
 
-    it.each(['Draft', 'Scheduled', 'In review', 'Approved'])(
-        'should not show schedule conflicts when they do not exist for change request in the %s state',
-        async (changeRequestState) => {
-            const { scheduleConflicts, ...changeWithNoScheduleConflicts } =
-                change;
+    it.each([
+        'Draft',
+        'Scheduled',
+        'In review',
+        'Approved',
+    ])('should not show schedule conflicts when they do not exist for change request in the %s state', async (changeRequestState) => {
+        const { scheduleConflicts, ...changeWithNoScheduleConflicts } = change;
 
-            const flag = feature(changeWithNoScheduleConflicts);
+        const flag = feature(changeWithNoScheduleConflicts);
 
-            render(
-                <FeatureChange
-                    actions={null}
-                    index={0}
-                    changeRequest={changeRequest(flag)(
-                        changeRequestState as ChangeRequestState,
-                    )}
-                    change={changeWithNoScheduleConflicts}
-                    feature={flag}
-                />,
-            );
+        render(
+            <FeatureChange
+                actions={null}
+                index={0}
+                changeRequest={changeRequest(flag)(
+                    changeRequestState as ChangeRequestState,
+                )}
+                change={changeWithNoScheduleConflicts}
+                feature={flag}
+            />,
+        );
 
-            const links = screen.queryByRole('link');
+        const links = screen.queryByRole('link');
 
-            expect(links).toBe(null);
+        expect(links).toBe(null);
 
-            const alert = screen.queryByRole('alert');
+        const alert = screen.queryByRole('alert');
 
-            expect(alert).toBe(null);
-        },
-    );
+        expect(alert).toBe(null);
+    });
 });

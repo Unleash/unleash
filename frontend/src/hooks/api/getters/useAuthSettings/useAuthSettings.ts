@@ -1,8 +1,8 @@
 import { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR.js';
 
 const useAuthSettings = (id: string, options: SWRConfiguration = {}) => {
     const fetcher = async () => {

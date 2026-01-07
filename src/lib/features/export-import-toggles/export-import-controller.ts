@@ -1,15 +1,16 @@
 import type { Response } from 'express';
-import Controller from '../../routes/controller';
-import type { Logger } from '../../logger';
-import type { IExportService, IImportService } from './export-import-service';
-import type { OpenApiService } from '../../services';
-import type { WithTransactional } from '../../db/transaction';
+import Controller from '../../routes/controller.js';
+import type {
+    IExportService,
+    IImportService,
+} from './export-import-service.js';
+import type { OpenApiService, IUnleashServices } from '../../services/index.js';
+import type { WithTransactional } from '../../db/transaction.js';
 import {
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
-} from '../../types';
+} from '../../types/index.js';
 import {
     createRequestSchema,
     createResponseSchema,
@@ -19,15 +20,13 @@ import {
     getStandardResponses,
     type ImportTogglesSchema,
     importTogglesValidateSchema,
-} from '../../openapi';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import { extractUsername } from '../../util';
-import { BadDataError } from '../../error';
-import ApiUser from '../../types/api-user';
+} from '../../openapi/index.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import { extractUsername } from '../../util/index.js';
+import { BadDataError } from '../../error/index.js';
+import ApiUser from '../../types/api-user.js';
 
 class ExportImportController extends Controller {
-    private logger: Logger;
-
     private exportService: IExportService;
 
     private importService: WithTransactional<IImportService>;
@@ -46,7 +45,6 @@ class ExportImportController extends Controller {
         >,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/export-import.ts');
         this.exportService = exportService;
         this.importService = importService;
         this.openApiService = openApiService;
@@ -65,7 +63,7 @@ class ExportImportController extends Controller {
                         ...getStandardResponses(404),
                     },
                     description:
-                        "Exports all features listed in the `features` property from the environment specified in the request body. If set to `true`, the `downloadFile` property will let you download a file with the exported data. Otherwise, the export data is returned directly as JSON. Refer to the documentation for more information about [Unleash's export functionality](https://docs.getunleash.io/reference/deploy/environment-import-export#export).",
+                        "Exports all features listed in the `features` property from the environment specified in the request body. If set to `true`, the `downloadFile` property will let you download a file with the exported data. Otherwise, the export data is returned directly as JSON. Refer to the documentation for more information about [Unleash's export functionality](https://docs.getunleash.io/concepts/import-export#export-feature-flags).",
                     summary: 'Export feature flags from an environment',
                 }),
             ],
@@ -87,7 +85,7 @@ class ExportImportController extends Controller {
                         ...getStandardResponses(404),
                     },
                     summary: 'Validate feature import data',
-                    description: `Validates a feature flag data set. Checks whether the data can be imported into the specified project and environment. The returned value is an object that contains errors, warnings, and permissions required to perform the import, as described in the [import documentation](https://docs.getunleash.io/reference/deploy/environment-import-export#import).`,
+                    description: `Validates a feature flag data set. Checks whether the data can be imported into the specified project and environment. The returned value is an object that contains errors, warnings, and permissions required to perform the import, as described in the [import documentation](https://docs.getunleash.io/concepts/import-export#import-feature-flags).`,
                 }),
             ],
         });
@@ -106,7 +104,7 @@ class ExportImportController extends Controller {
                         ...getStandardResponses(404),
                     },
                     summary: 'Import feature flags',
-                    description: `[Import feature flags](https://docs.getunleash.io/reference/deploy/environment-import-export#import) into a specific project and environment.`,
+                    description: `[Import feature flags](https://docs.getunleash.io/concepts/import-export#import-feature-flags) into a specific project and environment.`,
                 }),
             ],
         });
@@ -117,7 +115,7 @@ class ExportImportController extends Controller {
         res: Response,
     ): Promise<void> {
         const query = req.body;
-        const userName = extractUsername(req);
+        const _userName = extractUsername(req);
 
         const data = await this.exportService.export(query, req.audit);
 
@@ -156,7 +154,7 @@ class ExportImportController extends Controller {
 
         if (user instanceof ApiUser && user.type === 'admin') {
             throw new BadDataError(
-                `You can't use an admin token to import features. Please use either a personal access token (https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens) or a service account (https://docs.getunleash.io/reference/service-accounts).`,
+                `You can't use an admin token to import features. Please use either a personal access token (https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens) or a service account (https://docs.getunleash.io/concepts/service-accounts).`,
             );
         }
 

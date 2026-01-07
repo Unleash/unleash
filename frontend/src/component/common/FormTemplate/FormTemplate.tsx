@@ -1,5 +1,5 @@
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import Codebox from '../Codebox/Codebox';
+import Codebox from '../Codebox/Codebox.tsx';
 import {
     Collapse,
     IconButton,
@@ -11,7 +11,7 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import FileCopy from '@mui/icons-material/FileCopy';
 import Info from '@mui/icons-material/Info';
-import Loader from '../Loader/Loader';
+import Loader from '../Loader/Loader.tsx';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import React from 'react';
@@ -94,26 +94,38 @@ const StyledFormContent = styled('div', {
         return !['disablePadding', 'compactPadding'].includes(prop.toString());
     },
 })<{ disablePadding?: boolean; compactPadding?: boolean }>(
-    ({ theme, disablePadding, compactPadding }) => ({
-        backgroundColor: theme.palette.background.paper,
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 1,
-        padding: disablePadding
+    ({ theme, disablePadding, compactPadding }) => {
+        const padding = disablePadding
             ? 0
             : compactPadding
               ? theme.spacing(4)
-              : theme.spacing(6),
-        [theme.breakpoints.down('lg')]: {
-            padding: disablePadding ? 0 : theme.spacing(4),
-        },
-        [theme.breakpoints.down(1100)]: {
-            width: '100%',
-        },
-        [theme.breakpoints.down(500)]: {
-            padding: disablePadding ? 0 : theme.spacing(4, 2),
-        },
-    }),
+              : theme.spacing(6);
+
+        const paddingLgDown = disablePadding ? 0 : theme.spacing(4);
+        const padding500DownInline = disablePadding ? 0 : theme.spacing(2);
+        const padding500DownBlock = disablePadding ? 0 : theme.spacing(4);
+
+        return {
+            '--form-content-padding': padding,
+            backgroundColor: theme.palette.background.paper,
+            display: 'flex',
+            flexDirection: 'column',
+            flexGrow: 1,
+            padding,
+            [theme.breakpoints.down('lg')]: {
+                padding: paddingLgDown,
+                '--form-content-padding': paddingLgDown,
+            },
+            [theme.breakpoints.down(1100)]: {
+                width: '100%',
+            },
+            [theme.breakpoints.down(500)]: {
+                paddingInline: padding500DownInline,
+                paddingBlock: padding500DownBlock,
+                '--form-content-padding': padding500DownInline,
+            },
+        };
+    },
 );
 
 const StyledFooter = styled('div')(({ theme }) => ({

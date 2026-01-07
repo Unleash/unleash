@@ -1,11 +1,11 @@
-import type { Logger, LogProvider } from '../logger';
-import User from '../types/user';
+import type { Logger, LogProvider } from '../logger.js';
+import User from '../types/user.js';
 
-import NotFoundError from '../error/notfound-error';
-import type { IUserLookup } from '../types/stores/user-store';
-import type { IAdminCount } from '../types/stores/account-store';
-import type { IAccountStore, MinimalUser } from '../types';
-import type { Db } from './db';
+import NotFoundError from '../error/notfound-error.js';
+import type { IUserLookup } from '../types/stores/user-store.js';
+import type { IAdminCount } from '../types/stores/account-store.js';
+import type { IAccountStore, MinimalUser } from '../types/index.js';
+import type { Db } from './db.js';
 
 const TABLE = 'users';
 

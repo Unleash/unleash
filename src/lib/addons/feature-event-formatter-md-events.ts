@@ -61,7 +61,9 @@ import {
     RELEASE_PLAN_ADDED,
     RELEASE_PLAN_REMOVED,
     RELEASE_PLAN_MILESTONE_STARTED,
-} from '../types';
+    RELEASE_PLAN_PROGRESSIONS_PAUSED,
+    RELEASE_PLAN_PROGRESSIONS_RESUMED,
+} from '../events/index.js';
 
 interface IEventData {
     label: string;
@@ -378,6 +380,16 @@ export const EVENT_MAP: Record<string, IEventData> = {
     [RELEASE_PLAN_MILESTONE_STARTED]: {
         label: 'Release plan milestone started',
         action: '{{b}}{{user}}{{b}} started milestone {{b}}{{event.data.milestoneName}}{{b}} in release plan {{b}}{{event.data.name}}{{b}} for {{b}}{{feature}}{{b}} for the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
+        path: '/projects/{{event.project}}/features/{{event.featureName}}',
+    },
+    [RELEASE_PLAN_PROGRESSIONS_PAUSED]: {
+        label: 'Release plan progressions paused',
+        action: '{{b}}Release plan progressions paused{{b}} by safeguard for {{b}}{{feature}}{{b}} in the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
+        path: '/projects/{{event.project}}/features/{{event.featureName}}',
+    },
+    [RELEASE_PLAN_PROGRESSIONS_RESUMED]: {
+        label: 'Release plan progressions resumed',
+        action: '{{b}}{{user}}{{b}} resumed release plan progressions for {{b}}{{feature}}{{b}} in the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
 };

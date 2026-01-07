@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestScheduleSchemaOneOfThreeStatus } from './changeRequestScheduleSchemaOneOfThreeStatus';
+import type { ChangeRequestScheduleSchemaOneOfThreeStatus } from './changeRequestScheduleSchemaOneOfThreeStatus.js';
 
 /**
  * A failed schedule for a change request.

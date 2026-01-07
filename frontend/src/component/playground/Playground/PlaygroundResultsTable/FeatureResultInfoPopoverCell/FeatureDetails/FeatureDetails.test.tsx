@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FeatureDetails } from './FeatureDetails';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
+import { FeatureDetails } from './FeatureDetails.tsx';
 
 const testCases = [
     {
@@ -10,7 +10,7 @@ const testCases = [
             hasUnsatisfiedDependency: true,
             isEnabledInCurrentEnvironment: false,
         } as PlaygroundFeatureSchema,
-        expectedText1: 'This feature flag is False in development because',
+        expectedText1: /This feature flag is False in development because/,
         expectedText2:
             'parent dependency is not satisfied and the environment is disabled',
     },
@@ -20,7 +20,7 @@ const testCases = [
             hasUnsatisfiedDependency: true,
             isEnabledInCurrentEnvironment: true,
         } as PlaygroundFeatureSchema,
-        expectedText1: 'This feature flag is False in development because',
+        expectedText1: /This feature flag is False in development because/,
         expectedText2: 'parent dependency is not satisfied',
     },
     {
@@ -29,7 +29,7 @@ const testCases = [
             hasUnsatisfiedDependency: false,
             isEnabledInCurrentEnvironment: false,
         } as PlaygroundFeatureSchema,
-        expectedText1: 'This feature flag is False in development because',
+        expectedText1: /This feature flag is False in development because/,
         expectedText2: 'the environment is disabled',
     },
     {
@@ -37,7 +37,7 @@ const testCases = [
         feature: {
             isEnabled: true,
         } as PlaygroundFeatureSchema,
-        expectedText1: 'This feature flag is True in development because',
+        expectedText1: /This feature flag is True in development because/,
         expectedText2: 'at least one strategy is True',
     },
     {
@@ -48,7 +48,7 @@ const testCases = [
                 data: [{ name: 'custom' }],
             },
         } as PlaygroundFeatureSchema,
-        expectedText1: 'This feature flag is Unknown in development because',
+        expectedText1: /This feature flag is Unknown in development because/,
         expectedText2: 'no strategies could be fully evaluated',
     },
     {
@@ -59,7 +59,7 @@ const testCases = [
                 data: [{ name: 'custom' }, { name: 'default' }],
             },
         } as PlaygroundFeatureSchema,
-        expectedText1: 'This feature flag is Unknown in development because',
+        expectedText1: /This feature flag is Unknown in development because/,
         expectedText2: 'not all strategies could be fully evaluated',
     },
     {
@@ -70,11 +70,28 @@ const testCases = [
                 data: [{ name: 'default' }],
             },
         } as PlaygroundFeatureSchema,
-        expectedText1: 'This feature flag is False in development because',
+        expectedText1: /This feature flag is False in development because/,
         expectedText2:
             'all strategies are either False or could not be fully evaluated',
     },
 ];
+
+testCases.forEach(({ name, feature, expectedText1, expectedText2 }) => {
+    test(`${name} (legacy)`, async () => {
+        render(
+            <FeatureDetails
+                feature={feature}
+                input={
+                    { environment: 'development' } as PlaygroundRequestSchema
+                }
+                onClose={() => {}}
+            />,
+        );
+
+        await screen.findByText(expectedText1);
+        await screen.findByText(expectedText2);
+    });
+});
 
 testCases.forEach(({ name, feature, expectedText1, expectedText2 }) => {
     test(name, async () => {

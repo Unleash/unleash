@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { useStrategyForm } from '../hooks/useStrategyForm';
-import { StrategyForm } from '../StrategyForm/StrategyForm';
+import { useStrategyForm } from '../hooks/useStrategyForm.ts';
+import { StrategyForm } from '../StrategyForm/StrategyForm.tsx';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
@@ -78,7 +78,7 @@ export const EditStrategy = () => {
             title='Edit strategy type'
             description="The strategy type and the parameters will be selectable when adding an activation strategy to a toggle in the environments.
             The parameter defines the type of activation strategy. E.g. you can create a type 'Teams' and add a parameter 'List'. Then it's easy to add team names to the activation strategy"
-            documentationLink='https://docs.getunleash.io/reference/custom-activation-strategies'
+            documentationLink='https://docs.getunleash.io/concepts/activation-strategies#custom-strategies'
             documentationLinkLabel='Custom strategies documentation'
             formatApiCode={formatApiCode}
         >

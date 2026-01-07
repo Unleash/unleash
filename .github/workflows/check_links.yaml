@@ -15,7 +15,7 @@ jobs:
       issue-lookup-label: automated-link-issue
       issue-content: ./lychee-out.md
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore lychee cache
         uses: actions/cache@v4
         with:
@@ -24,10 +24,10 @@ jobs:
           restore-keys: cache-lychee-
       - name: Link Checker
         id: lychee
-        uses: lycheeverse/lychee-action@v1.10.0
+        uses: lycheeverse/lychee-action@v2
         with:
           fail: true
-          args: '"./website/docs/**/*.md" "./website/docs/**/*.mdx" "./src/mailtemplates/*.mustache" --scheme http --scheme https --cache --max-cache-age 7d --exclude-mail --verbose' # other excludes are in .lycheeignore
+          args: '"./website/docs/**/*.md" "./website/docs/**/*.mdx" "./src/mailtemplates/*.mustache" --scheme http --scheme https --cache --max-cache-age 7d --verbose --accept 100..=103,200..=299,429' # other excludes are in .lycheeignore
           output: ${{ env.issue-content }}
 
       # Permissions (issues: read)

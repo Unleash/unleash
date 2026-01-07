@@ -1,14 +1,17 @@
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { SegmentFormStepOne } from './SegmentFormStepOne';
+import { SegmentFormStepOne } from './SegmentFormStepOne.tsx';
 
 const server = testServerSetup();
 
 const setupRoutes = ({
     limit,
     segments,
-}: { limit: number; segments: number }) => {
+}: {
+    limit: number;
+    segments: number;
+}) => {
     testServerRoute(server, 'api/admin/segments', {
         segments: [...Array(segments).keys()].map((i) => ({
             name: `segment${i}`,

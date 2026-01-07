@@ -1,9 +1,10 @@
-import type { Store } from '../../types/stores/store';
+import type { Store } from '../../types/stores/store.js';
 
 export interface ITagType {
     name: string;
     description?: string;
     icon?: string | null;
+    color?: string | null;
 }
 
 export interface ITagTypeStore extends Store<ITagType, string> {

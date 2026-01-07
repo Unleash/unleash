@@ -23,7 +23,7 @@ exports[`renders an empty list correctly 1`] = `
               data-loading={true}
             >
               <h1
-                className="MuiTypography-root MuiTypography-h1  css-1jqnoga-MuiTypography-root"
+                className="MuiTypography-root MuiTypography-h1  css-1bsc9a5-MuiTypography-root"
               >
                 Tag types (5)
               </h1>
@@ -75,7 +75,7 @@ exports[`renders an empty list correctly 1`] = `
               />
               <button
                 aria-labelledby="useId-0"
-                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1ind840-MuiButtonBase-root-MuiButton-root"
+                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-rkhgas-MuiButtonBase-root-MuiButton-root"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -119,7 +119,7 @@ exports[`renders an empty list correctly 1`] = `
               role="row"
             >
               <th
-                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1hlljex-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1jpcb9q-MuiTableCell-root"
                 scope="col"
                 style={
                   {
@@ -135,7 +135,7 @@ exports[`renders an empty list correctly 1`] = `
               </th>
               <th
                 aria-sort="ascending"
-                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-qdv5ig-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1tdt0jv-MuiTableCell-root"
                 scope="col"
                 style={
                   {
@@ -148,7 +148,7 @@ exports[`renders an empty list correctly 1`] = `
                 <button
                   aria-label=""
                   aria-labelledby={null}
-                  className=" css-sskrcd"
+                  className=" css-abwubk"
                   data-mui-internal-clone-element={true}
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -207,7 +207,7 @@ exports[`renders an empty list correctly 1`] = `
                 </button>
               </th>
               <th
-                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1hlljex-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1jpcb9q-MuiTableCell-root"
                 scope="col"
                 style={
                   {
@@ -266,29 +266,38 @@ exports[`renders an empty list correctly 1`] = `
                 role="cell"
               >
                 <div
-                  className="css-1prhjm6"
+                  className="MuiBox-root css-70qvj9"
                 >
                   <div
-                    className="css-u8cmsa"
+                    className="css-1prhjm6"
                   >
-                    <span
-                      className="css-697v50"
-                      data-loading={true}
-                      style={
-                        {
-                          "WebkitLineClamp": 1,
-                          "lineClamp": 1,
-                        }
-                      }
+                    <div
+                      className="css-u8cmsa"
                     >
-                      Tag type name
-                    </span>
-                    <span
-                      className="css-1121jr7"
-                      data-loading={true}
-                    >
-                      Tag type description when loading
-                    </span>
+                      <span
+                        aria-label=""
+                        aria-labelledby={null}
+                        className=" MuiBox-root css-gzore8"
+                        data-loading={true}
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
+                      >
+                        <span>
+                          Tag type name
+                        </span>
+                      </span>
+                      <span
+                        className="css-1ui83sq"
+                        data-loading={true}
+                      >
+                        Tag type description when loading
+                      </span>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -436,29 +445,38 @@ exports[`renders an empty list correctly 1`] = `
                 role="cell"
               >
                 <div
-                  className="css-1prhjm6"
+                  className="MuiBox-root css-70qvj9"
                 >
                   <div
-                    className="css-u8cmsa"
+                    className="css-1prhjm6"
                   >
-                    <span
-                      className="css-697v50"
-                      data-loading={true}
-                      style={
-                        {
-                          "WebkitLineClamp": 1,
-                          "lineClamp": 1,
-                        }
-                      }
+                    <div
+                      className="css-u8cmsa"
                     >
-                      Tag type name
-                    </span>
-                    <span
-                      className="css-1121jr7"
-                      data-loading={true}
-                    >
-                      Tag type description when loading
-                    </span>
+                      <span
+                        aria-label=""
+                        aria-labelledby={null}
+                        className=" MuiBox-root css-gzore8"
+                        data-loading={true}
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
+                      >
+                        <span>
+                          Tag type name
+                        </span>
+                      </span>
+                      <span
+                        className="css-1ui83sq"
+                        data-loading={true}
+                      >
+                        Tag type description when loading
+                      </span>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -606,29 +624,38 @@ exports[`renders an empty list correctly 1`] = `
                 role="cell"
               >
                 <div
-                  className="css-1prhjm6"
+                  className="MuiBox-root css-70qvj9"
                 >
                   <div
-                    className="css-u8cmsa"
+                    className="css-1prhjm6"
                   >
-                    <span
-                      className="css-697v50"
-                      data-loading={true}
-                      style={
-                        {
-                          "WebkitLineClamp": 1,
-                          "lineClamp": 1,
-                        }
-                      }
+                    <div
+                      className="css-u8cmsa"
                     >
-                      Tag type name
-                    </span>
-                    <span
-                      className="css-1121jr7"
-                      data-loading={true}
-                    >
-                      Tag type description when loading
-                    </span>
+                      <span
+                        aria-label=""
+                        aria-labelledby={null}
+                        className=" MuiBox-root css-gzore8"
+                        data-loading={true}
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
+                      >
+                        <span>
+                          Tag type name
+                        </span>
+                      </span>
+                      <span
+                        className="css-1ui83sq"
+                        data-loading={true}
+                      >
+                        Tag type description when loading
+                      </span>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -776,29 +803,38 @@ exports[`renders an empty list correctly 1`] = `
                 role="cell"
               >
                 <div
-                  className="css-1prhjm6"
+                  className="MuiBox-root css-70qvj9"
                 >
                   <div
-                    className="css-u8cmsa"
+                    className="css-1prhjm6"
                   >
-                    <span
-                      className="css-697v50"
-                      data-loading={true}
-                      style={
-                        {
-                          "WebkitLineClamp": 1,
-                          "lineClamp": 1,
-                        }
-                      }
+                    <div
+                      className="css-u8cmsa"
                     >
-                      Tag type name
-                    </span>
-                    <span
-                      className="css-1121jr7"
-                      data-loading={true}
-                    >
-                      Tag type description when loading
-                    </span>
+                      <span
+                        aria-label=""
+                        aria-labelledby={null}
+                        className=" MuiBox-root css-gzore8"
+                        data-loading={true}
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
+                      >
+                        <span>
+                          Tag type name
+                        </span>
+                      </span>
+                      <span
+                        className="css-1ui83sq"
+                        data-loading={true}
+                      >
+                        Tag type description when loading
+                      </span>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -946,29 +982,38 @@ exports[`renders an empty list correctly 1`] = `
                 role="cell"
               >
                 <div
-                  className="css-1prhjm6"
+                  className="MuiBox-root css-70qvj9"
                 >
                   <div
-                    className="css-u8cmsa"
+                    className="css-1prhjm6"
                   >
-                    <span
-                      className="css-697v50"
-                      data-loading={true}
-                      style={
-                        {
-                          "WebkitLineClamp": 1,
-                          "lineClamp": 1,
-                        }
-                      }
+                    <div
+                      className="css-u8cmsa"
                     >
-                      Tag type name
-                    </span>
-                    <span
-                      className="css-1121jr7"
-                      data-loading={true}
-                    >
-                      Tag type description when loading
-                    </span>
+                      <span
+                        aria-label=""
+                        aria-labelledby={null}
+                        className=" MuiBox-root css-gzore8"
+                        data-loading={true}
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
+                      >
+                        <span>
+                          Tag type name
+                        </span>
+                      </span>
+                      <span
+                        className="css-1ui83sq"
+                        data-loading={true}
+                      >
+                        Tag type description when loading
+                      </span>
+                    </div>
                   </div>
                 </div>
               </td>

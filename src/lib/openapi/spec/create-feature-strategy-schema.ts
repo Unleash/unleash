@@ -1,7 +1,7 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { parametersSchema } from './parameters-schema';
-import { constraintSchema } from './constraint-schema';
-import { createStrategyVariantSchema } from './create-strategy-variant-schema';
+import { parametersSchema } from './parameters-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 
 export const createFeatureStrategySchema = {
     $id: '#/components/schemas/createFeatureStrategySchema',
@@ -35,7 +35,7 @@ export const createFeatureStrategySchema = {
         constraints: {
             type: 'array',
             description:
-                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/activation-strategies#constraints',
+                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/concepts/activation-strategies#constraints',
             example: [
                 {
                     values: ['1', '2'],
@@ -84,5 +84,6 @@ export const createFeatureStrategySchema = {
 } as const;
 
 export type CreateFeatureStrategySchema = FromSchema<
-    typeof createFeatureStrategySchema
+    typeof createFeatureStrategySchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

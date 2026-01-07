@@ -1,6 +1,6 @@
 import type React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { useLastViewedProject } from './useLastViewedProject';
+import { useLastViewedProject } from './useLastViewedProject.ts';
 
 const TestComponent: React.FC<{ testId: string; buttonLabel: string }> = ({
     testId,

@@ -7,8 +7,8 @@ import { SidePanelList } from 'component/common/SidePanelList/SidePanelList';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IntegrationEventsStateIcon } from './IntegrationEventsStateIcon';
-import { IntegrationEventsDetails } from './IntegrationEventsDetails/IntegrationEventsDetails';
+import { IntegrationEventsStateIcon } from './IntegrationEventsStateIcon.tsx';
+import { IntegrationEventsDetails } from './IntegrationEventsDetails/IntegrationEventsDetails.tsx';
 import { useNavigate } from 'react-router-dom';
 
 const StyledHeader = styled('div')(({ theme }) => ({

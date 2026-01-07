@@ -1,66 +1,49 @@
-import type { Logger } from '../logger';
-
 import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_ENVIRONMENT_DISABLED,
     type IEvent,
-} from '../types/events';
+} from '../events/index.js';
 
-import TeamsAddon from './teams';
+import TeamsAddon from './teams.js';
 
-import noLogger from '../../test/fixtures/no-logger';
+import noLogger from '../../test/fixtures/no-logger.js';
 import {
     type IAddonConfig,
     type IFlagKey,
     type IFlagResolver,
     serializeDates,
     SYSTEM_USER_ID,
-} from '../types';
-import type { IntegrationEventsService } from '../services';
+} from '../types/index.js';
+import type { IntegrationEventsService } from '../services/index.js';
 
-let fetchRetryCalls: any[];
-const registerEventMock = jest.fn();
+import { vi } from 'vitest';
+import nock from 'nock';
+
+const registerEventMock = vi.fn();
 
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
     getLogger: noLogger,
     unleashUrl: 'http://some-url.com',
-    integrationEventsService: {} as IntegrationEventsService,
-    flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
-    eventBus: {} as any,
+    integrationEventsService: {
+        registerEvent: registerEventMock,
+    } as unknown as IntegrationEventsService,
+    flagResolver: { isEnabled: (_expName: IFlagKey) => false } as IFlagResolver,
+    eventBus: {
+        emit: vi.fn(),
+    } as any,
 };
-
-jest.mock(
-    './addon',
-    () =>
-        class Addon {
-            logger: Logger;
-
-            constructor(definition, { getLogger }) {
-                this.logger = getLogger('addon/test');
-                fetchRetryCalls = [];
-            }
-
-            async fetchRetry(url, options, retries, backoff) {
-                fetchRetryCalls.push({
-                    url,
-                    options,
-                    retries,
-                    backoff,
-                });
-                return Promise.resolve({ ok: true, status: 200 });
-            }
-
-            async registerEvent(event) {
-                return registerEventMock(event);
-            }
-        },
-);
 
 describe('Teams integration', () => {
     beforeEach(() => {
         registerEventMock.mockClear();
+        nock.disableNetConnect();
+        nock.cleanAll();
+    });
+
+    afterAll(() => {
+        nock.enableNetConnect();
     });
 
     test('Should call teams webhook', async () => {
@@ -83,10 +66,18 @@ describe('Teams integration', () => {
             url: 'http://hooks.office.com',
         };
 
+        let body: any;
+        nock('http://hooks.office.com')
+            .post('/')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+
+        expect(JSON.stringify(body)).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should call teams webhook for archived toggle', async () => {
@@ -107,10 +98,17 @@ describe('Teams integration', () => {
             url: 'http://hooks.office.com',
         };
 
+        let body: any;
+        nock('http://hooks.office.com')
+            .post('/')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+
+        expect(JSON.stringify(body)).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should call teams webhook for archived toggle with project info', async () => {
@@ -132,10 +130,16 @@ describe('Teams integration', () => {
             url: 'http://hooks.office.com',
         };
 
+        let body: any;
+        nock('http://hooks.office.com')
+            .post('/')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        expect(JSON.stringify(body)).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test(`Should call teams webhook for toggled environment`, async () => {
@@ -157,12 +161,19 @@ describe('Teams integration', () => {
         const parameters = {
             url: 'http://hooks.slack.com',
         };
+        let body: any;
+        nock('http://hooks.slack.com')
+            .post('/')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
 
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls).toHaveLength(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        const stringifiedBody = JSON.stringify(body);
+        expect(stringifiedBody).toMatch(/disabled/);
+        expect(stringifiedBody).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should include custom headers in call to teams', async () => {
@@ -186,12 +197,20 @@ describe('Teams integration', () => {
             customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
         };
 
+        let body: any;
+        nock('http://hooks.slack.com')
+            .post('/')
+            .matchHeader('MY_CUSTOM_HEADER', 'MY_CUSTOM_VALUE')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls).toHaveLength(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
-        expect(fetchRetryCalls[0].options.headers).toMatchSnapshot();
+        const stringifiedBody = JSON.stringify(body);
+        expect(stringifiedBody).toMatch(/disabled/);
+        expect(stringifiedBody).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should call registerEvent', async () => {
@@ -215,8 +234,14 @@ describe('Teams integration', () => {
             customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
         };
 
+        nock('http://hooks.teams.com')
+            .post('/')
+            .matchHeader('MY_CUSTOM_HEADER', 'MY_CUSTOM_VALUE')
+            .reply(200);
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
 
+        expect(nock.isDone()).toBe(true);
         expect(registerEventMock).toHaveBeenCalledTimes(1);
         expect(registerEventMock).toHaveBeenCalledWith({
             integrationId: INTEGRATION_ID,

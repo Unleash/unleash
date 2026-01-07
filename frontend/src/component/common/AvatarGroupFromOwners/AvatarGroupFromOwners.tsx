@@ -3,7 +3,7 @@ import type { ProjectSchemaOwners } from 'openapi';
 import {
     type AvatarComponentType,
     AvatarGroup,
-} from '../AvatarGroup/AvatarGroup';
+} from '../AvatarGroup/AvatarGroup.tsx';
 
 type Props = {
     users: ProjectSchemaOwners;

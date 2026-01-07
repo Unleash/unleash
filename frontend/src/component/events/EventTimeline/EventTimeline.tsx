@@ -2,13 +2,13 @@ import { styled } from '@mui/material';
 import type { EventSchema, EventSchemaType } from 'openapi';
 import { startOfDay, sub } from 'date-fns';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
-import { EventTimelineEventGroup } from './EventTimelineEventGroup/EventTimelineEventGroup';
-import { EventTimelineHeader } from './EventTimelineHeader/EventTimelineHeader';
+import { EventTimelineEventGroup } from './EventTimelineEventGroup/EventTimelineEventGroup.tsx';
+import { EventTimelineHeader } from './EventTimelineHeader/EventTimelineHeader.tsx';
 import { useMemo } from 'react';
 import { useSignalQuery } from 'hooks/api/getters/useSignalQuery/useSignalQuery';
 import type { ISignalQuerySignal } from 'interfaces/signal';
 import type { IEnvironment } from 'interfaces/environments';
-import { useEventTimelineContext } from './EventTimelineContext';
+import { useEventTimelineContext } from './EventTimelineContext.tsx';
 
 export type TimelineEventType = 'signal' | EventSchemaType;
 

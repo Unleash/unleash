@@ -1,7 +1,7 @@
 import type {
     FeatureDependency,
     FeatureDependencyId,
-} from './dependent-features';
+} from './dependent-features.js';
 
 export interface IDependentFeaturesStore {
     upsert(featureDependency: FeatureDependency): Promise<void>;

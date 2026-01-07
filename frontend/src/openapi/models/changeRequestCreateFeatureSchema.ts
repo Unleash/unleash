@@ -3,18 +3,26 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOf } from './changeRequestCreateFeatureSchemaOneOf';
-import type { ChangeRequestCreateFeatureSchemaOneOfFour } from './changeRequestCreateFeatureSchemaOneOfFour';
-import type { ChangeRequestCreateFeatureSchemaOneOfSix } from './changeRequestCreateFeatureSchemaOneOfSix';
-import type { ChangeRequestCreateFeatureSchemaOneOfEight } from './changeRequestCreateFeatureSchemaOneOfEight';
-import type { ChangeRequestCreateFeatureSchemaOneOfOneone } from './changeRequestCreateFeatureSchemaOneOfOneone';
-import type { ChangeRequestCreateFeatureSchemaOneOfOnethree } from './changeRequestCreateFeatureSchemaOneOfOnethree';
-import type { ChangeRequestCreateFeatureSchemaOneOfOnesix } from './changeRequestCreateFeatureSchemaOneOfOnesix';
-import type { ChangeRequestCreateFeatureSchemaOneOfOneeight } from './changeRequestCreateFeatureSchemaOneOfOneeight';
-import type { ChangeRequestCreateFeatureSchemaOneOfTwozero } from './changeRequestCreateFeatureSchemaOneOfTwozero';
+import type { ChangeRequestCreateFeatureSchemaOneOf } from './changeRequestCreateFeatureSchemaOneOf.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfFour } from './changeRequestCreateFeatureSchemaOneOfFour.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfSix } from './changeRequestCreateFeatureSchemaOneOfSix.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfEight } from './changeRequestCreateFeatureSchemaOneOfEight.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfOneone } from './changeRequestCreateFeatureSchemaOneOfOneone.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfOnethree } from './changeRequestCreateFeatureSchemaOneOfOnethree.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfOnesix } from './changeRequestCreateFeatureSchemaOneOfOnesix.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfOneeight } from './changeRequestCreateFeatureSchemaOneOfOneeight.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwozero } from './changeRequestCreateFeatureSchemaOneOfTwozero.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwotwo } from './changeRequestCreateFeatureSchemaOneOfTwotwo.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwofour } from './changeRequestCreateFeatureSchemaOneOfTwofour.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwoseven } from './changeRequestCreateFeatureSchemaOneOfTwoseven.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreezero } from './changeRequestCreateFeatureSchemaOneOfThreezero.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreethree } from './changeRequestCreateFeatureSchemaOneOfThreethree.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreesix } from './changeRequestCreateFeatureSchemaOneOfThreesix.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreenine } from './changeRequestCreateFeatureSchemaOneOfThreenine.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfFourtwo } from './changeRequestCreateFeatureSchemaOneOfFourtwo.js';
 
 /**
- * Data used to create a [change request](https://docs.getunleash.io/reference/change-requests) for a single feature change.
+ * Data used to create a [change request](https://docs.getunleash.io/concepts/change-requests) for a single feature change.
  */
 export type ChangeRequestCreateFeatureSchema =
     | ChangeRequestCreateFeatureSchemaOneOf
@@ -25,4 +33,12 @@ export type ChangeRequestCreateFeatureSchema =
     | ChangeRequestCreateFeatureSchemaOneOfOnethree
     | ChangeRequestCreateFeatureSchemaOneOfOnesix
     | ChangeRequestCreateFeatureSchemaOneOfOneeight
-    | ChangeRequestCreateFeatureSchemaOneOfTwozero;
+    | ChangeRequestCreateFeatureSchemaOneOfTwozero
+    | ChangeRequestCreateFeatureSchemaOneOfTwotwo
+    | ChangeRequestCreateFeatureSchemaOneOfTwofour
+    | ChangeRequestCreateFeatureSchemaOneOfTwoseven
+    | ChangeRequestCreateFeatureSchemaOneOfThreezero
+    | ChangeRequestCreateFeatureSchemaOneOfThreethree
+    | ChangeRequestCreateFeatureSchemaOneOfThreesix
+    | ChangeRequestCreateFeatureSchemaOneOfThreenine
+    | ChangeRequestCreateFeatureSchemaOneOfFourtwo;

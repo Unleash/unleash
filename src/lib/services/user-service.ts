@@ -3,51 +3,57 @@ import owasp from 'owasp-password-strength-test';
 import Joi from 'joi';
 
 import type { URL } from 'url';
-import type { Logger } from '../logger';
+import type { Logger } from '../logger.js';
 import User, {
     type IAuditUser,
     type IUser,
     type IUserWithRootRole,
-} from '../types/user';
-import isEmail from '../util/is-email';
-import type { AccessService } from './access-service';
-import type ResetTokenService from './reset-token-service';
-import NotFoundError from '../error/notfound-error';
-import OwaspValidationError from '../error/owasp-validation-error';
-import type { EmailService } from './email-service';
+} from '../types/user.js';
+import isEmail from '../util/is-email.js';
+import type { AccessService } from './access-service.js';
+import type ResetTokenService from './reset-token-service.js';
+import NotFoundError from '../error/notfound-error.js';
+import OwaspValidationError from '../error/owasp-validation-error.js';
+import type { EmailService } from './email-service.js';
 import type {
     IAuthOption,
     IUnleashConfig,
     UsernameAdminUser,
-} from '../types/option';
-import type SessionService from './session-service';
-import type { IUnleashStores } from '../types/stores';
-import PasswordUndefinedError from '../error/password-undefined';
+} from '../types/option.js';
+import type SessionService from './session-service.js';
+import type { IUnleashStores } from '../types/stores.js';
+import PasswordUndefinedError from '../error/password-undefined.js';
 import {
     ScimUsersDeleted,
     UserCreatedEvent,
     UserDeletedEvent,
     UserUpdatedEvent,
-} from '../types/events';
-import type { IUserStore } from '../types/stores/user-store';
-import { RoleName } from '../types/model';
-import type SettingService from './setting-service';
-import type { SimpleAuthSettings } from '../server-impl';
-import { simpleAuthSettingsKey } from '../types/settings/simple-auth-settings';
-import DisabledError from '../error/disabled-error';
-import BadDataError from '../error/bad-data-error';
-import { isDefined } from '../util/isDefined';
-import type { TokenUserSchema } from '../openapi/spec/token-user-schema';
-import PasswordMismatch from '../error/password-mismatch';
-import type EventService from '../features/events/event-service';
+} from '../types/index.js';
+import type { IUserStore } from '../types/index.js';
+import { RoleName } from '../types/model.js';
+import type SettingService from './setting-service.js';
+import {
+    type SimpleAuthSettings,
+    simpleAuthSettingsKey,
+} from '../types/settings/simple-auth-settings.js';
+import DisabledError from '../error/disabled-error.js';
+import BadDataError from '../error/bad-data-error.js';
+import { isDefined } from '../util/index.js';
+import type { TokenUserSchema } from '../openapi/index.js';
+import PasswordMismatch from '../error/password-mismatch.js';
+import type EventService from '../features/events/event-service.js';
 
-import { type IFlagResolver, SYSTEM_USER, SYSTEM_USER_AUDIT } from '../types';
-import { PasswordPreviouslyUsedError } from '../error/password-previously-used';
-import { RateLimitError } from '../error/rate-limit-error';
+import {
+    type IFlagResolver,
+    SYSTEM_USER,
+    SYSTEM_USER_AUDIT,
+} from '../types/index.js';
+import { PasswordPreviouslyUsedError } from '../error/password-previously-used.js';
+import { RateLimitError } from '../error/rate-limit-error.js';
 import type EventEmitter from 'events';
-import { USER_LOGIN } from '../metric-events';
+import { USER_LOGIN } from '../metric-events.js';
 
-export interface ICreateUser {
+export interface ICreateUserWithRole {
     name?: string;
     email?: string;
     username?: string;
@@ -72,7 +78,7 @@ export interface ILoginUserRequest {
 const saltRounds = 10;
 const disallowNPreviousPasswords = 5;
 
-class UserService {
+export class UserService {
     private logger: Logger;
 
     private store: IUserStore;
@@ -106,18 +112,12 @@ class UserService {
         {
             server,
             getLogger,
-            authentication,
             eventBus,
             flagResolver,
             session,
         }: Pick<
             IUnleashConfig,
-            | 'getLogger'
-            | 'authentication'
-            | 'server'
-            | 'eventBus'
-            | 'flagResolver'
-            | 'session'
+            'getLogger' | 'server' | 'eventBus' | 'flagResolver' | 'session'
         >,
         services: {
             accessService: AccessService;
@@ -139,9 +139,6 @@ class UserService {
         this.settingService = services.settingService;
         this.flagResolver = flagResolver;
         this.maxParallelSessions = session.maxParallelSessions;
-
-        process.nextTick(() => this.initAdminUser(authentication));
-
         this.baseUriPath = server.baseUriPath || '';
         this.unleashUrl = server.unleashUrl;
     }
@@ -196,7 +193,7 @@ class UserService {
                     user.id,
                     RoleName.ADMIN,
                 );
-            } catch (e) {
+            } catch (_e) {
                 this.logger.error(
                     `Unable to create default user '${username}'`,
                 );
@@ -229,8 +226,11 @@ class UserService {
 
     async getUser(id: number): Promise<IUserWithRootRole> {
         const user = await this.store.get(id);
+        if (user === undefined) {
+            throw new NotFoundError(`Could not find user with id ${id}`);
+        }
         const rootRole = await this.accessService.getRootRoleForUser(id);
-        return { ...user, rootRole: rootRole.id };
+        return { ...user, id, rootRole: rootRole.id };
     }
 
     async search(query: string): Promise<IUser[]> {
@@ -255,7 +255,7 @@ class UserService {
     }
 
     async createUser(
-        { username, email, name, password, rootRole }: ICreateUser,
+        { username, email, name, password, rootRole }: ICreateUserWithRole,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IUserWithRootRole> {
         if (!username && !email) {
@@ -301,7 +301,7 @@ class UserService {
     }
 
     async newUserInviteLink(
-        user: IUserWithRootRole,
+        { id: userId }: Pick<IUserWithRootRole, 'id'>,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<string> {
         const passwordAuthSettings =
@@ -313,7 +313,7 @@ class UserService {
         let inviteLink = this.unleashUrl;
         if (!passwordAuthSettings.disabled) {
             const inviteUrl = await this.resetTokenService.createNewUserUrl(
-                user.id,
+                userId,
                 auditUser.username,
             );
             inviteLink = inviteUrl.toString();
@@ -403,20 +403,32 @@ class UserService {
     }
 
     async deleteScimUsers(auditUser: IAuditUser): Promise<void> {
-        await this.store.deleteScimUsers();
-
-        await this.eventService.storeEvent(
-            new ScimUsersDeleted({
-                data: null,
-                auditUser,
-            }),
+        const users = await this.store.deleteScimUsers();
+        // Note: after deletion we can't get the role for the user. This is a simplification
+        const viewerRole = await this.accessService.getPredefinedRole(
+            RoleName.VIEWER,
         );
+        if (users.length > 0) {
+            const deletions = users.map((user) => {
+                return new UserDeletedEvent({
+                    deletedUser: { ...user, rootRole: viewerRole.id },
+                    auditUser,
+                });
+            });
+            await this.eventService.storeEvents([
+                ...deletions,
+                new ScimUsersDeleted({
+                    data: null,
+                    auditUser,
+                }),
+            ]);
+        }
     }
 
     async loginUser(
         usernameOrEmail: string,
         password: string,
-        device?: { userAgent: string; ip: string },
+        device?: { userAgent?: string; ip: string },
     ): Promise<IUser> {
         const settings = await this.settingService.get<SimpleAuthSettings>(
             simpleAuthSettingsKey,
@@ -436,7 +448,7 @@ class UserService {
         try {
             user = await this.store.getByQuery(idQuery);
             passwordHash = await this.store.getPasswordHash(user.id);
-        } catch (error) {}
+        } catch (_error) {}
         if (user && passwordHash) {
             const match = await bcrypt.compare(password, passwordHash);
             if (match) {
@@ -494,9 +506,30 @@ class UserService {
 
         try {
             user = await this.store.getByQuery({ email });
-            // Update user if autCreate is enabled.
-            if (name && user.name !== name) {
-                user = await this.store.update(user.id, { name, email });
+            // Update user if not managed by scim
+            if (name && user.name !== name && !user.scimId) {
+                const currentRole = await this.accessService.getRootRoleForUser(
+                    user.id,
+                );
+                const updatedUser = await this.store.update(user.id, {
+                    name,
+                    email,
+                });
+
+                await this.eventService.storeEvent(
+                    new UserUpdatedEvent({
+                        auditUser: SYSTEM_USER_AUDIT,
+                        preUser: {
+                            ...user,
+                            rootRole: currentRole.id,
+                        },
+                        postUser: {
+                            ...updatedUser,
+                            rootRole: currentRole.id,
+                        },
+                    }),
+                );
+                user = { ...user, ...updatedUser };
             }
         } catch (e) {
             // User does not exists. Create if 'autoCreate' is enabled
@@ -581,7 +614,7 @@ class UserService {
         return {
             token,
             createdBy,
-            email: user.email,
+            email: user.email!,
             name: user.name,
             id: user.id,
             role: {
@@ -632,7 +665,7 @@ class UserService {
 
         const resetLink = await this.resetTokenService.createResetPasswordUrl(
             receiver.id,
-            user.username || user.email,
+            user.username || user.email || SYSTEM_USER_AUDIT.username,
         );
 
         this.passwordResetTimeouts[receiver.id] = setTimeout(() => {
@@ -640,8 +673,8 @@ class UserService {
         }, 1000 * 60); // 1 minute
 
         await this.emailService.sendResetMail(
-            receiver.name,
-            receiver.email,
+            receiver.name!,
+            receiverEmail,
             resetLink.toString(),
         );
         return resetLink;

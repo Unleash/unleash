@@ -1,12 +1,13 @@
 import { TableBody, TableRow, TableHead } from '@mui/material';
+import { useRef } from 'react';
 import { Table } from 'component/common/Table/Table/Table';
 import {
     type Header,
     type Table as TableType,
     flexRender,
 } from '@tanstack/react-table';
-import { TableCell } from '../TableCell/TableCell';
-import { CellSortable } from '../SortableTableHeader/CellSortable/CellSortable';
+import { TableCell } from '../TableCell/TableCell.tsx';
+import { CellSortable } from '../SortableTableHeader/CellSortable/CellSortable.tsx';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
@@ -52,18 +53,32 @@ const TableContainer = styled('div')(({ theme }) => ({
  * Use with react-table v8
  */
 export const PaginatedTable = <T extends object>({
+    className,
     totalItems,
     tableInstance,
 }: {
+    className?: string;
     tableInstance: TableType<T>;
     totalItems?: number;
 }) => {
     const { pagination } = tableInstance.getState();
+    const tableRef = useRef<HTMLDivElement>(null);
+
+    const scrollToTopIfNeeded = () => {
+        if (!tableRef.current) return;
+
+        const rect = tableRef.current.getBoundingClientRect();
+        const isTableTopVisible = rect.top >= 0;
+
+        if (!isTableTopVisible) {
+            tableRef.current.scrollIntoView({ block: 'start' });
+        }
+    };
 
     return (
         <>
-            <TableContainer>
-                <Table>
+            <TableContainer ref={tableRef}>
+                <Table className={className}>
                     <TableHead>
                         {tableInstance.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
@@ -110,24 +125,35 @@ export const PaginatedTable = <T extends object>({
                         totalItems={totalItems}
                         pageIndex={pagination.pageIndex}
                         pageSize={pagination.pageSize}
-                        fetchNextPage={() =>
+                        fetchNextPage={() => {
                             tableInstance.setPagination({
                                 pageIndex: pagination.pageIndex + 1,
                                 pageSize: pagination.pageSize,
-                            })
-                        }
-                        fetchPrevPage={() =>
+                            });
+                            scrollToTopIfNeeded();
+                        }}
+                        fetchPrevPage={() => {
                             tableInstance.setPagination({
                                 pageIndex: pagination.pageIndex - 1,
                                 pageSize: pagination.pageSize,
-                            })
-                        }
-                        setPageLimit={(pageSize) =>
+                            });
+                            scrollToTopIfNeeded();
+                        }}
+                        setPageLimit={(pageSize) => {
                             tableInstance.setPagination({
                                 pageIndex: 0,
                                 pageSize,
-                            })
-                        }
+                            });
+
+                            if (
+                                pagination.pageIndex > 0 ||
+                                pagination.pageSize > pageSize
+                            ) {
+                                // scroll to table top unless you are on the
+                                // first page and increasing the page size.
+                                scrollToTopIfNeeded();
+                            }
+                        }}
                     />
                 }
             />

@@ -11,7 +11,8 @@ export type PersonalDashboardSchemaProjectsItem = {
      */
     featureCount: number;
     /**
-     * An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100
+     * Use `technicalDebt` instead.
+     * @deprecated
      * @minimum 0
      */
     health: number;
@@ -24,4 +25,10 @@ export type PersonalDashboardSchemaProjectsItem = {
     memberCount: number;
     /** The name of the project */
     name: string;
+    /**
+     * An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100
+     * @minimum 0
+     * @maximum 100
+     */
+    technicalDebt: number;
 };

@@ -1,4 +1,4 @@
-import type { SdkContextSchema } from '../../openapi';
+import type { SdkContextSchema } from '../../openapi/index.js';
 
 export const cleanContext = (
     context: SdkContextSchema,

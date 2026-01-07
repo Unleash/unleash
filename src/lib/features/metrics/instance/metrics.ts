@@ -1,27 +1,36 @@
 import type { Response } from 'express';
-import Controller from '../../../routes/controller';
-import {
-    CLIENT_METRICS,
-    type IFlagResolver,
-    type IUnleashConfig,
-    type IUnleashServices,
-} from '../../../types';
-import type ClientInstanceService from './instance-service';
-import type { Logger } from '../../../logger';
-import type { IAuthRequest } from '../../../routes/unleash-types';
-import type ClientMetricsServiceV2 from '../client-metrics/metrics-service-v2';
-import { NONE } from '../../../types/permissions';
-import type { OpenApiService } from '../../../services/openapi-service';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
+import Controller from '../../../routes/controller.js';
+import type { IFlagResolver, IUnleashConfig } from '../../../types/index.js';
+import type ClientInstanceService from './instance-service.js';
+import type { Logger } from '../../../logger.js';
+import type { IAuthRequest } from '../../../routes/unleash-types.js';
+import type ClientMetricsServiceV2 from '../client-metrics/metrics-service-v2.js';
+import { NONE } from '../../../types/permissions.js';
+import type {
+    IUnleashServices,
+    OpenApiService,
+} from '../../../services/index.js';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../../openapi/util/standard-responses';
+} from '../../../openapi/util/standard-responses.js';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
-import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema';
-import { clientMetricsEnvBulkSchema } from '../shared/schema';
-import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type';
+import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema.js';
+import {
+    clientMetricsEnvBulkSchema,
+    customMetricsSchema,
+} from '../shared/schema.js';
+import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
+import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-schema.js';
+import type { StoredCustomMetric } from '../custom/custom-metrics-store.js';
+import type { CustomMetricsService } from '../custom/custom-metrics-service.js';
+import type {
+    Metric,
+    MetricsTranslator,
+} from '../impact/metrics-translator.js';
+import type { ClientMetricsSchema } from '../../../server-impl.js';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -32,6 +41,10 @@ export default class ClientMetricsController extends Controller {
 
     metricsV2: ClientMetricsServiceV2;
 
+    customMetricsService: CustomMetricsService;
+
+    metricsTranslator: MetricsTranslator;
+
     flagResolver: IFlagResolver;
 
     constructor(
@@ -39,11 +52,13 @@ export default class ClientMetricsController extends Controller {
             clientInstanceService,
             clientMetricsServiceV2,
             openApiService,
+            customMetricsService,
         }: Pick<
             IUnleashServices,
             | 'clientInstanceService'
             | 'clientMetricsServiceV2'
             | 'openApiService'
+            | 'customMetricsService'
         >,
         config: IUnleashConfig,
     ) {
@@ -54,6 +69,7 @@ export default class ClientMetricsController extends Controller {
         this.clientInstanceService = clientInstanceService;
         this.openApiService = openApiService;
         this.metricsV2 = clientMetricsServiceV2;
+        this.customMetricsService = customMetricsService;
         this.flagResolver = config.flagResolver;
 
         this.route({
@@ -91,7 +107,7 @@ export default class ClientMetricsController extends Controller {
             permission: NONE,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['Edge'],
+                    tags: ['Unleash Edge'],
                     summary: 'Send metrics in bulk',
                     description: `This operation accepts batched metrics from any client. Metrics will be inserted into Unleash's metrics storage`,
                     operationId: 'clientBulkMetrics',
@@ -103,29 +119,129 @@ export default class ClientMetricsController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'post',
+            path: '/custom',
+            handler: this.customMetrics,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Client'],
+                    summary: 'Send custom metrics',
+                    description: `This operation accepts custom metrics from clients. These metrics will be exposed via Prometheus in Unleash.`,
+                    operationId: 'clientCustomMetrics',
+                    requestBody: createRequestSchema('customMetricsSchema'),
+                    responses: {
+                        202: emptyResponse,
+                        ...getStandardResponses(400),
+                    },
+                }),
+                rateLimit({
+                    windowMs: minutesToMilliseconds(1),
+                    max: config.metricsRateLimiting.clientMetricsMaxPerMinute,
+                    validate: false,
+                    standardHeaders: true,
+                    legacyHeaders: false,
+                }),
+            ],
+        });
+
+        // Note: Custom metrics GET endpoints are now handled by the admin API
     }
 
-    async registerMetrics(req: IAuthRequest, res: Response): Promise<void> {
+    private async processPromiseResults(
+        promises: Promise<void>[],
+    ): Promise<boolean> {
+        const results = await Promise.allSettled(promises);
+        const rejected = results.filter(
+            (result): result is PromiseRejectedResult =>
+                result.status === 'rejected',
+        );
+        if (rejected.length) {
+            this.logger.warn(
+                'Some promise tasks failed',
+                rejected.map((r) => r.reason?.message || r.reason),
+            );
+        }
+        return rejected.length === 0;
+    }
+
+    async registerMetrics(
+        req: IAuthRequest<void, void, ClientMetricsSchema>,
+        res: Response,
+    ): Promise<void> {
         if (this.config.flagResolver.isEnabled('disableMetrics')) {
             res.status(204).end();
         } else {
             try {
                 const { body: data, ip: clientIp, user } = req;
-                data.environment = this.metricsV2.resolveMetricsEnvironment(
-                    user,
-                    data,
-                );
+                const { impactMetrics, ...metricsData } = data;
+                metricsData.environment =
+                    this.metricsV2.resolveMetricsEnvironment(user, metricsData);
                 await this.clientInstanceService.registerInstance(
-                    data,
+                    metricsData,
                     clientIp,
                 );
 
-                await this.metricsV2.registerClientMetrics(data, clientIp);
-                res.getHeaderNames().forEach((header) =>
-                    res.removeHeader(header),
+                await this.metricsV2.registerClientMetrics(
+                    metricsData,
+                    clientIp,
                 );
+                if (
+                    this.flagResolver.isEnabled('impactMetrics') &&
+                    impactMetrics
+                ) {
+                    await this.metricsV2.registerImpactMetrics(
+                        impactMetrics as Metric[],
+                    );
+                }
+
+                res.getHeaderNames().forEach((header) => {
+                    res.removeHeader(header);
+                });
+                res.status(202).end();
+            } catch (_e) {
+                res.status(400).end();
+            }
+        }
+    }
+
+    async customMetrics(
+        req: IAuthRequest<void, void, CustomMetricsSchema>,
+        res: Response<void>,
+    ): Promise<void> {
+        if (this.config.flagResolver.isEnabled('disableMetrics')) {
+            res.status(204).end();
+        } else {
+            try {
+                const { body } = req;
+
+                // Use Joi validation for custom metrics
+                await customMetricsSchema.validateAsync(body);
+
+                // Process and store custom metrics
+                if (body.metrics && Array.isArray(body.metrics)) {
+                    const validMetrics = body.metrics.filter(
+                        (metric) =>
+                            typeof metric.name === 'string' &&
+                            typeof metric.value === 'number',
+                    );
+
+                    if (validMetrics.length < body.metrics.length) {
+                        this.logger.warn(
+                            'Some invalid metric types found, skipping',
+                        );
+                    }
+
+                    this.customMetricsService.addMetrics(
+                        validMetrics as Omit<StoredCustomMetric, 'timestamp'>[],
+                    );
+                }
+
                 res.status(202).end();
             } catch (e) {
+                this.logger.error('Failed to process custom metrics', e);
                 res.status(400).end();
             }
         }
@@ -139,16 +255,31 @@ export default class ClientMetricsController extends Controller {
             res.status(204).end();
         } else {
             const { body, ip: clientIp } = req;
-            const { metrics, applications } = body;
+            const { metrics, applications, impactMetrics } = body;
+            const promises: Promise<void>[] = [];
+
             try {
-                const promises: Promise<void>[] = [];
                 for (const app of applications) {
-                    promises.push(
-                        this.clientInstanceService.registerClient(
-                            app,
-                            clientIp,
-                        ),
-                    );
+                    if (
+                        app.sdkType === 'frontend' &&
+                        typeof app.sdkVersion === 'string'
+                    ) {
+                        this.clientInstanceService.registerFrontendClient({
+                            appName: app.appName,
+                            instanceId: app.instanceId,
+                            environment: app.environment,
+                            sdkType: app.sdkType,
+                            sdkVersion: app.sdkVersion,
+                            projects: app.projects,
+                        });
+                    } else {
+                        promises.push(
+                            this.clientInstanceService.registerBackendClient(
+                                app,
+                                clientIp,
+                            ),
+                        );
+                    }
                 }
                 if (metrics && metrics.length > 0) {
                     const data: IClientMetricsEnv[] =
@@ -162,12 +293,26 @@ export default class ClientMetricsController extends Controller {
                     promises.push(
                         this.metricsV2.registerBulkMetrics(filteredData),
                     );
-                    this.config.eventBus.emit(CLIENT_METRICS, data);
                 }
-                await Promise.all(promises);
 
-                res.status(202).end();
-            } catch (e) {
+                if (
+                    this.flagResolver.isEnabled('impactMetrics') &&
+                    impactMetrics &&
+                    impactMetrics.length > 0
+                ) {
+                    promises.push(
+                        this.metricsV2.registerImpactMetrics(impactMetrics),
+                    );
+                }
+
+                const ok = await this.processPromiseResults(promises);
+                if (!ok) {
+                    res.status(400).end();
+                } else {
+                    res.status(202).end();
+                }
+            } catch (_e) {
+                await this.processPromiseResults(promises);
                 res.status(400).end();
             }
         }

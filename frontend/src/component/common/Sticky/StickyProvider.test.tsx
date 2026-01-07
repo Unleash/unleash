@@ -1,6 +1,6 @@
 import { render, cleanup } from '@testing-library/react';
-import { StickyProvider } from './StickyProvider';
-import { type IStickyContext, StickyContext } from './StickyContext';
+import { StickyProvider } from './StickyProvider.tsx';
+import { type IStickyContext, StickyContext } from './StickyContext.tsx';
 import { expect } from 'vitest';
 import { act } from 'react';
 
@@ -20,7 +20,7 @@ describe('StickyProvider component', () => {
     afterEach(cleanup);
 
     it('provides the sticky context with expected functions', () => {
-        let receivedContext = null;
+        let receivedContext: IStickyContext | undefined | null = null;
         render(
             <StickyProvider>
                 <StickyContext.Consumer>

@@ -1,23 +1,27 @@
 import type { ChartDataset } from 'chart.js';
-import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
-import { endpointsInfo } from './endpoint-info';
+import type {
+    MeteredConnectionsSchema,
+    MeteredRequestsSchema,
+    TrafficUsageDataSegmentedCombinedSchema,
+} from 'openapi';
+import { endpointsInfo } from './endpoint-info.js';
 import {
     addDays,
     addMonths,
     differenceInCalendarDays,
     differenceInCalendarMonths,
-    getDaysInMonth,
-    parseISO,
 } from 'date-fns';
-import { formatDay, formatMonth } from './dates';
-import type { ChartDataSelection } from './chart-data-selection';
+import { formatDay, formatMonth, parseDateString } from './dates.js';
+import type { ChartDataSelection } from './chart-data-selection.js';
 export type ChartDatasetType = ChartDataset<'bar'>;
 
 export const toTrafficUsageChartData = (
     traffic: TrafficUsageDataSegmentedCombinedSchema,
+    filter?: string,
 ): { datasets: ChartDatasetType[]; labels: string[] } => {
     const { newRecord, labels } = getLabelsAndRecords(traffic);
     const datasets = traffic.apiData
+        .filter((apiData) => (filter ? apiData.apiPath === filter : true))
         .sort(
             (item1, item2) =>
                 endpointsInfo[item1.apiPath].order -
@@ -43,55 +47,70 @@ export const toTrafficUsageChartData = (
 };
 
 export const toConnectionChartData = (
-    traffic: TrafficUsageDataSegmentedCombinedSchema,
+    traffic: MeteredConnectionsSchema,
 ): { datasets: ChartDatasetType[]; labels: string[] } => {
     const { newRecord, labels } = getLabelsAndRecords(traffic);
-    const datasets = traffic.apiData
-        .filter((apiData) => apiData.apiPath === '/api/client')
-        .sort(
-            (item1, item2) =>
-                endpointsInfo[item1.apiPath].order -
-                endpointsInfo[item2.apiPath].order,
-        )
-        .map((item) => {
-            const record = newRecord();
-            for (const dataPoint of Object.values(item.dataPoints)) {
-                const date = parseISO(dataPoint.period);
-                const requestCount = dataPoint.trafficTypes[0].count;
+    const datasets = traffic.apiData.map((item) => {
+        const record = newRecord();
+        for (const dataPoint of Object.values(item.dataPoints)) {
+            const requestCount = dataPoint.connections;
+            record[dataPoint.period] = requestCount;
+        }
 
-                if (traffic.grouping === 'monthly') {
-                    // 1 connections = 7200 * days in month requests per day
-                    const daysInMonth = getDaysInMonth(date);
-                    record[dataPoint.period] = Number(
-                        (requestCount / (daysInMonth * 7200)).toFixed(1),
-                    );
-                } else {
-                    // 1 connection = 7200 requests per day
-                    record[dataPoint.period] = Number(
-                        (requestCount / 7200).toFixed(1),
-                    );
-                }
-            }
+        const epInfo = {
+            label: 'Connections',
+            color: '#6D66D9',
+            order: 1,
+        };
 
-            const epInfo = endpointsInfo[item.apiPath];
+        return {
+            label: epInfo.label,
+            data: Object.values(record),
+            backgroundColor: epInfo.color,
+            hoverBackgroundColor: epInfo.color,
+        };
+    });
 
-            return {
-                label: epInfo.label,
-                data: Object.values(record),
-                backgroundColor: epInfo.color,
-                hoverBackgroundColor: epInfo.color,
-            };
-        });
+    return { datasets, labels };
+};
+
+export const toRequestChartData = (
+    traffic: MeteredRequestsSchema,
+): { datasets: ChartDatasetType[]; labels: string[] } => {
+    const { newRecord, labels } = getLabelsAndRecords(traffic);
+    const datasets = traffic.apiData.map((item) => {
+        const record = newRecord();
+        for (const dataPoint of Object.values(item.dataPoints)) {
+            const requestCount = dataPoint.requests;
+            record[dataPoint.period] = requestCount;
+        }
+
+        const epInfo = {
+            label: 'Frontend requests',
+            color: '#A39EFF',
+            order: 1,
+        };
+
+        return {
+            label: epInfo.label,
+            data: Object.values(record),
+            backgroundColor: epInfo.color,
+            hoverBackgroundColor: epInfo.color,
+        };
+    });
 
     return { datasets, labels };
 };
 
 const getLabelsAndRecords = (
-    traffic: TrafficUsageDataSegmentedCombinedSchema,
+    traffic: Pick<
+        TrafficUsageDataSegmentedCombinedSchema,
+        'dateRange' | 'grouping'
+    >,
 ) => {
     if (traffic.grouping === 'monthly') {
-        const from = new Date(traffic.dateRange.from);
-        const to = new Date(traffic.dateRange.to);
+        const from = parseDateString(traffic.dateRange.from);
+        const to = parseDateString(traffic.dateRange.to);
         const numMonths = Math.abs(differenceInCalendarMonths(to, from)) + 1;
         const monthsRec: { [month: string]: number } = {};
         for (let i = 0; i < numMonths; i++) {
@@ -105,8 +124,8 @@ const getLabelsAndRecords = (
         );
         return { newRecord: () => ({ ...monthsRec }), labels };
     } else {
-        const from = new Date(traffic.dateRange.from);
-        const to = new Date(traffic.dateRange.to);
+        const from = parseDateString(traffic.dateRange.from);
+        const to = parseDateString(traffic.dateRange.to);
         const numDays = Math.abs(differenceInCalendarDays(to, from)) + 1;
         const daysRec: { [day: string]: number } = {};
         for (let i = 0; i < numDays; i++) {

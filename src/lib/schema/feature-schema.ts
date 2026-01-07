@@ -1,7 +1,7 @@
 import joi from 'joi';
-import { ALL_OPERATORS } from '../util/constants';
-import { nameType } from '../routes/util';
-import { validateJsonString } from '../util/validateJsonString';
+import { ALL_OPERATORS } from '../util/constants.js';
+import { nameType } from '../routes/util.js';
+import { validateJsonString } from '../util/validateJsonString.js';
 
 export const nameSchema = joi
     .object()

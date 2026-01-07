@@ -1,11 +1,11 @@
 import type { VFC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Link, styled, Tooltip, Typography } from '@mui/material';
-import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon';
+import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Badge } from 'component/common/Badge/Badge';
-import { IntegrationCardMenu } from './IntegrationCardMenu/IntegrationCardMenu';
+import { IntegrationCardMenu } from './IntegrationCardMenu/IntegrationCardMenu.tsx';
 import type { AddonSchema } from 'openapi';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

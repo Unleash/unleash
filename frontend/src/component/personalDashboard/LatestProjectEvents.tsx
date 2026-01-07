@@ -1,11 +1,11 @@
 import type { FC, HTMLAttributes } from 'react';
-import { Markdown } from '../common/Markdown/Markdown';
-import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
-import { UserAvatar } from '../common/UserAvatar/UserAvatar';
+import { Markdown } from '../common/Markdown/Markdown.tsx';
+import type { PersonalDashboardProjectDetailsSchema } from 'openapi';
+import { UserAvatar } from '../common/UserAvatar/UserAvatar.tsx';
 import { Typography, styled } from '@mui/material';
 import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { ActionBox } from './ActionBox';
+import { ActionBox } from './ActionBox.tsx';
 
 const Events = styled('ul')(({ theme }) => ({
     padding: 0,
@@ -27,7 +27,7 @@ const Event = styled('li')(({ theme }) => ({
     },
 }));
 
-const TitleContainer = styled('div')(({ theme }) => ({
+const _TitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     gap: theme.spacing(2),

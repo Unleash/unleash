@@ -1,8 +1,8 @@
-import dbInit from '../../test/e2e/helpers/database-init';
-import { IAuthType } from '../server-impl';
-import { setupAppWithCustomAuth } from '../../test/e2e/helpers/test-helper';
-import type { ITestDb } from '../../test/e2e/helpers/database-init';
-import type { IUnleashStores } from '../types';
+import dbInit from '../../test/e2e/helpers/database-init.js';
+import { IAuthType } from '../types/index.js';
+import { setupAppWithCustomAuth } from '../../test/e2e/helpers/test-helper.js';
+import type { ITestDb } from '../../test/e2e/helpers/database-init.js';
+import type { IUnleashStores } from '../types/index.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;

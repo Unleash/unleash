@@ -1,12 +1,20 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { applicationEnvironmentIssuesSchema } from './application-environment-issues-schema';
+import { applicationEnvironmentIssuesSchema } from './application-environment-issues-schema.js';
 
 export const applicationOverviewEnvironmentSchema = {
     $id: '#/components/schemas/applicationOverviewEnvironmentSchema',
     type: 'object',
     description: 'Data about an application environment',
     additionalProperties: false,
-    required: ['name', 'instanceCount', 'sdks', 'lastSeen', 'issues'],
+    required: [
+        'name',
+        'instanceCount',
+        'sdks',
+        'frontendSdks',
+        'backendSdks',
+        'lastSeen',
+        'issues',
+    ],
     properties: {
         name: {
             description: 'Name of the application environment',
@@ -26,6 +34,22 @@ export const applicationOverviewEnvironmentSchema = {
                 type: 'string',
             },
             example: ['unleash-client-node:5.4.0', 'unleash-client-node:5.3.0'],
+        },
+        frontendSdks: {
+            description: 'Frontend SDKs used in the application environment',
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+            example: ['unleash-client-js:3.7.5'],
+        },
+        backendSdks: {
+            description: 'Backend SDKs used in the application environment',
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+            example: ['unleash-client-node:5.4.0'],
         },
         lastSeen: {
             type: 'string',

@@ -1,4 +1,4 @@
-import { sortStrategiesByFeature } from './sort-strategies';
+import { sortStrategiesByFeature } from './sort-strategies.js';
 
 describe('sorting strategies by feature', () => {
     test('strategies with the same id are sorted: existing first, then change requests', () => {

@@ -5,7 +5,7 @@ import {
     type RefObject,
     useEffect,
 } from 'react';
-import { StickyContext } from './StickyContext';
+import { StickyContext } from './StickyContext.tsx';
 
 interface IStickyProviderProps {
     children: ReactNode;
@@ -82,7 +82,7 @@ export const StickyProvider = ({ children }: IStickyProviderProps) => {
             }
             const stickyItemsUpToOurItem = stickyItems.slice(
                 0,
-                stickyItems.findIndex((item) => item === ref),
+                stickyItems.indexOf(ref),
             );
             return stickyItemsUpToOurItem.reduce((acc, item) => {
                 if (item === ref) {

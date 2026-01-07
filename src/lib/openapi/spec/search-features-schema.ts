@@ -1,13 +1,13 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { parametersSchema } from './parameters-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { constraintSchema } from './constraint-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { tagSchema } from './tag-schema';
-import { featureSearchResponseSchema } from './feature-search-response-schema';
-import { featureSearchEnvironmentSchema } from './feature-search-environment-schema';
+import { parametersSchema } from './parameters-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { tagSchema } from './tag-schema.js';
+import { featureSearchResponseSchema } from './feature-search-response-schema.js';
+import { featureSearchEnvironmentSchema } from './feature-search-environment-schema.js';
 
 export const searchFeaturesSchema = {
     $id: '#/components/schemas/searchFeaturesSchema',
@@ -46,4 +46,7 @@ export const searchFeaturesSchema = {
     },
 } as const;
 
-export type SearchFeaturesSchema = FromSchema<typeof searchFeaturesSchema>;
+export type SearchFeaturesSchema = FromSchema<
+    typeof searchFeaturesSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

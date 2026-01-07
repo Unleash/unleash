@@ -1,27 +1,29 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import type FeatureToggleService from '../../../lib/features/feature-toggle/feature-toggle-service';
-import type ProjectService from '../../../lib/features/project/project-service';
-import { createTestConfig } from '../../../test/config/test-config';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { FeatureToggleService } from '../../../lib/features/feature-toggle/feature-toggle-service.js';
+import type ProjectService from '../../../lib/features/project/project-service.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
 import type {
     EventService,
     ProjectInsightsService,
-} from '../../../lib/services';
-import { FeatureEnvironmentEvent } from '../../../lib/types/events';
+} from '../../../lib/services/index.js';
+import { FeatureEnvironmentEvent } from '../../types/index.js';
 import { subDays } from 'date-fns';
 import {
     createEventsService,
     createFeatureToggleService,
     createProjectService,
-} from '../../../lib/features';
+} from '../../../lib/features/index.js';
 import {
     type IUnleashStores,
     type IUser,
     TEST_AUDIT_USER,
-} from '../../../lib/types';
-import type { User } from '../../../lib/server-impl';
-import { createProjectInsightsService } from './createProjectInsightsService';
-import { extractAuditInfoFromUser } from '../../util';
+} from '../../types/index.js';
+import type { User } from '../../types/user.js';
+import { createProjectInsightsService } from './createProjectInsightsService.js';
+import { extractAuditInfoFromUser } from '../../util/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -36,7 +38,7 @@ let opsUser: IUser;
 beforeAll(async () => {
     db = await dbInit('project_service_serial', getLogger);
     stores = db.stores;
-    // @ts-ignore return type IUser type missing generateImageUrl
+    // @ts-expect-error return type IUser type missing generateImageUrl
     user = await stores.userStore.insert({
         name: 'Some Name',
         email: 'test@getunleash.io',
@@ -114,7 +116,7 @@ test('should return average time to production per toggle', async () => {
                     enabled: true,
                     project: project.id,
                     featureName: toggle.name,
-                    environment: 'default',
+                    environment: 'production',
                     auditUser: TEST_AUDIT_USER,
                 }),
             );
@@ -200,7 +202,7 @@ test('should return average time to production per toggle for a specific project
                     enabled: true,
                     project: project1.id,
                     featureName: toggle.name,
-                    environment: 'default',
+                    environment: 'production',
                     auditUser: TEST_AUDIT_USER,
                 }),
             );
@@ -214,7 +216,7 @@ test('should return average time to production per toggle for a specific project
                     enabled: true,
                     project: project2.id,
                     featureName: toggle.name,
-                    environment: 'default',
+                    environment: 'production',
                     auditUser: TEST_AUDIT_USER,
                 }),
             );
@@ -285,7 +287,7 @@ test('should return average time to production per toggle and include archived t
                     enabled: true,
                     project: project1.id,
                     featureName: toggle.name,
-                    environment: 'default',
+                    environment: 'production',
                     auditUser: TEST_AUDIT_USER,
                 }),
             );

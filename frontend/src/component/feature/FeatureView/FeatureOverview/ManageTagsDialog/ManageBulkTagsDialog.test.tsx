@@ -1,4 +1,4 @@
-import { payloadReducer } from './ManageBulkTagsDialog';
+import { payloadReducer } from './ManageBulkTagsDialog.tsx';
 
 describe('payloadReducer', () => {
     it('should add a tag to addedTags and remove it from removedTags', () => {

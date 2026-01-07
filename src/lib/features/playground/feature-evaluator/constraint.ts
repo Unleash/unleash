@@ -1,6 +1,6 @@
 import { gt as semverGt, lt as semverLt, eq as semverEq } from 'semver';
-import type { Context } from './context';
-import { resolveContextValue } from './helpers';
+import type { Context } from './context.js';
+import { resolveContextValue } from './helpers.js';
 
 export interface Constraint {
     contextName: string;
@@ -91,7 +91,7 @@ const SemverOperator = (constraint: Constraint, context: Context) => {
         if (operator === Operator.SEMVER_GT) {
             return semverGt(contextValue, value);
         }
-    } catch (e) {
+    } catch (_e) {
         return false;
     }
     return false;

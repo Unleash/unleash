@@ -1,9 +1,9 @@
-import { auditAccessMiddleware } from './audit-middleware';
-import { createTestConfig } from '../../test/config/test-config';
+import { auditAccessMiddleware } from './audit-middleware.js';
+import { createTestConfig } from '../../test/config/test-config.js';
 import express from 'express';
-import noAuthentication from './no-authentication';
-import type { IAuthRequest } from '../routes/unleash-types';
-import type { IAuditUser } from '../types';
+import noAuthentication from './no-authentication.js';
+import type { IAuthRequest } from '../routes/unleash-types.js';
+import type { IAuditUser } from '../types/index.js';
 import supertest from 'supertest';
 
 const config = createTestConfig();

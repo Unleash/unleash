@@ -1,10 +1,12 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import { UserSubscriptionsReadModel } from './user-subscriptions-read-model';
-import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type';
-import { SUBSCRIPTION_TYPES } from './user-subscriptions-read-model-type';
-import type { IUnleashStores, IUserStore } from '../../types';
-import type { IUserUnsubscribeStore } from './user-unsubscribe-store-type';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { UserSubscriptionsReadModel } from './user-subscriptions-read-model.js';
+import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type.js';
+import { SUBSCRIPTION_TYPES } from './user-subscriptions-read-model-type.js';
+import type { IUnleashStores, IUserStore } from '../../types/index.js';
+import type { IUserUnsubscribeStore } from './user-unsubscribe-store-type.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -44,7 +46,7 @@ describe('User subscription read model', () => {
             name: 'User Two',
         });
         // never seen
-        const user3 = await userStore.insert({
+        const _user3 = await userStore.insert({
             email: 'user3@example.com',
             name: 'User Three',
         });

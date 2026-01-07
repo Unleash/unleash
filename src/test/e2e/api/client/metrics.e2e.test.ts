@@ -1,11 +1,13 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import metricsExample from '../../../examples/client-metrics.json';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { REQUEST_TIME } from '../../../../lib/metric-events';
+} from '../../helpers/test-helper.js';
+import metricsExample from '../../../examples/client-metrics.json' with {
+    type: 'json',
+};
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { REQUEST_TIME } from '../../../../lib/metric-events.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -22,6 +24,7 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
+    await app.services.clientInstanceService.bulkAdd(); // flush
     await Promise.all([
         db.stores.clientMetricsStoreV2.deleteAll(),
         db.stores.clientInstanceStore.deleteAll(),
@@ -71,8 +74,53 @@ test('should create instance if does not exist', async () => {
         .post('/api/client/metrics')
         .send(metricsExample)
         .expect(202);
+    await app.services.clientInstanceService.bulkAdd();
     const finalInstances = await db.stores.clientInstanceStore.getAll();
     expect(finalInstances.length).toBe(1);
+});
+
+test('should accept custom metrics', async () => {
+    const customMetricsExample = {
+        metrics: [
+            {
+                name: 'http_responses_total',
+                value: 1,
+                labels: {
+                    status: '200',
+                    method: 'GET',
+                },
+            },
+            {
+                name: 'http_responses_total',
+                value: 1,
+                labels: {
+                    status: '304',
+                    method: 'GET',
+                },
+            },
+        ],
+    };
+
+    return app.request
+        .post('/api/client/metrics/custom')
+        .send(customMetricsExample)
+        .expect(202);
+});
+
+test('should reject invalid custom metrics', async () => {
+    const invalidCustomMetrics = {
+        data: [
+            {
+                name: 'http_responses_total',
+                value: 1,
+            },
+        ],
+    };
+
+    return app.request
+        .post('/api/client/metrics/custom')
+        .send(invalidCustomMetrics)
+        .expect(400);
 });
 
 test('should emit response time metrics data in the correct path', async () => {
@@ -80,8 +128,8 @@ test('should emit response time metrics data in the correct path', async () => {
         ...metricsExample,
         bucket: { ...metricsExample.bucket, stop: null },
     };
-
-    let timeInfo = undefined;
+    // biome-ignore lint/suspicious/noImplicitAnyLet: data is unknown here
+    let timeInfo;
     app.config.eventBus.on(REQUEST_TIME, (data) => {
         timeInfo = data;
     });

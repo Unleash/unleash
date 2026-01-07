@@ -1,6 +1,6 @@
-import type { Db } from '../../db/db';
-import type { IUniqueConnectionStore } from '../../types';
-import type { UniqueConnections } from './unique-connection-store-type';
+import type { Db } from '../../db/db.js';
+import type { IUniqueConnectionStore } from '../../types/index.js';
+import type { UniqueConnections } from './unique-connection-store-type.js';
 import type { Knex } from 'knex';
 
 export class UniqueConnectionStore implements IUniqueConnectionStore {

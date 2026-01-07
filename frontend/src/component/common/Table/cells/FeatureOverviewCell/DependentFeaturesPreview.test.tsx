@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { PrimaryFeatureInfo } from './FeatureOverviewCell';
+import { PrimaryFeatureInfo } from './FeatureOverviewCell.tsx';
 import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 

@@ -2,11 +2,11 @@ import { type FC, useState } from 'react';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { Box } from '@mui/material';
-import { FeatureEnvironmentSeen } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
-import { FeatureLifecycle } from './FeatureLifecycle';
+import { FeatureEnvironmentSeen } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen.tsx';
+import { FeatureLifecycle } from './FeatureLifecycle.tsx';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { MarkCompletedDialogue } from './MarkCompletedDialogue';
+import { MarkCompletedDialogue } from './MarkCompletedDialogue.tsx';
 
 export const FlagExposure: FC<{
     project: string;

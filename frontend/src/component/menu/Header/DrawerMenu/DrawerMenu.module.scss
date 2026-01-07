@@ -39,20 +39,6 @@
     color: inherit;
 }
 
-.navigationLink {
-    text-decoration: none;
-    color: var(--drawer-link-inactive);
-    padding: var(--drawer-padding);
-    display: flex;
-    align-items: centre;
-}
-
-.navigationLinkActive {
-    background-color: var(--drawer-link-active-bg);
-    color: var(--drawer-link-active);
-    width: 100%;
-}
-
 .navigationIcon {
     margin-right: 16px;
     fill: #635dc5;

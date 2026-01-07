@@ -3,8 +3,8 @@ import {
     StyledWidgetTitle,
 } from './ProjectInfo.styles';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { StatusBox } from '../ProjectStats/StatusBox';
-import { WidgetFooterLink } from './WidgetFooterLink';
+import { StatusBox } from '../ProjectStats/StatusBox.tsx';
+import { WidgetFooterLink } from './WidgetFooterLink.tsx';
 import { Box } from '@mui/material';
 
 interface IProjectMembersWidgetProps {

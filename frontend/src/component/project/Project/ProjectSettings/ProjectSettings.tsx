@@ -11,16 +11,17 @@ import {
 } from 'component/common/VerticalTabs/VerticalTabs';
 import { ProjectAccess } from 'component/project/ProjectAccess/ProjectAccess';
 import ProjectEnvironmentList from 'component/project/ProjectEnvironment/ProjectEnvironment';
-import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeRequestConfiguration';
+import { ChangeRequestConfiguration } from './ChangeRequestConfiguration/ChangeRequestConfiguration.tsx';
 import { ProjectApiAccess } from 'component/project/Project/ProjectSettings/ProjectApiAccess/ProjectApiAccess';
-import { ProjectSegments } from './ProjectSegments/ProjectSegments';
-import { ProjectDefaultStrategySettings } from './ProjectDefaultStrategySettings/ProjectDefaultStrategySettings';
-import { Settings } from './Settings/Settings';
+import { ProjectSegments } from './ProjectSegments/ProjectSegments.tsx';
+import { ProjectDefaultStrategySettings } from './ProjectDefaultStrategySettings/ProjectDefaultStrategySettings.tsx';
+import { Settings } from './Settings/Settings.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { Box, styled } from '@mui/material';
-import { ProjectActions } from './ProjectActions/ProjectActions';
+import { ProjectActions } from './ProjectActions/ProjectActions.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectContextFields } from './ProjectContextFields.tsx';
 
 const StyledBadgeContainer = styled(Box)({
     marginLeft: 'auto',
@@ -34,6 +35,7 @@ export const ProjectSettings = () => {
     const navigate = useNavigate();
 
     const actionsEnabled = useUiFlag('automatedActions');
+    const contextFieldsEnabled = useUiFlag('projectContextFields');
 
     const paidTabs = (...tabs: ITab[]) =>
         isPro() || isEnterprise() ? tabs : [];
@@ -53,6 +55,14 @@ export const ProjectSettings = () => {
             id: 'api-access',
             label: 'API access',
         },
+        ...(contextFieldsEnabled
+            ? [
+                  {
+                      id: 'context',
+                      label: 'Context fields',
+                  },
+              ]
+            : []),
         {
             id: 'segments',
             label: 'Segments',
@@ -110,6 +120,12 @@ export const ProjectSettings = () => {
                     element={<ProjectEnvironmentList />}
                 />
                 <Route path='access/*' element={<ProjectAccess />} />
+                {contextFieldsEnabled && (
+                    <Route
+                        path='context/*'
+                        element={<ProjectContextFields />}
+                    />
+                )}
                 <Route path='segments/*' element={<ProjectSegments />} />
                 <Route
                     path='change-requests/*'

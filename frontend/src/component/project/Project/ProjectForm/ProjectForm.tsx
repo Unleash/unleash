@@ -4,10 +4,10 @@ import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrate
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box, styled, TextField } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip';
-import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
+import { FeatureTogglesLimitTooltip } from './FeatureTogglesLimitTooltip.tsx';
+import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { CollaborationModeTooltip } from '../ProjectEnterpriseSettingsForm/CollaborationModeTooltip';
+import { CollaborationModeTooltip } from '../ProjectEnterpriseSettingsForm/CollaborationModeTooltip.tsx';
 import Select from 'component/common/select';
 
 interface IProjectForm {

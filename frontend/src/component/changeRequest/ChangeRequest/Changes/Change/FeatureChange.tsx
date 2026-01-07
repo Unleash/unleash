@@ -7,14 +7,14 @@ import type {
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert, Box, styled } from '@mui/material';
-import { ToggleStatusChange } from './ToggleStatusChange';
-import { StrategyChange } from './StrategyChange';
-import { VariantPatch } from './VariantPatch/VariantPatch';
-import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder';
-import { ArchiveFeatureChange } from './ArchiveFeatureChange';
-import { DependencyChange } from './DependencyChange';
+import { ToggleStatusChange } from './ToggleStatusChange.tsx';
+import { VariantPatch } from './VariantPatch/VariantPatch.tsx';
+import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder.tsx';
+import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
+import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
-import { ReleasePlanChange } from './ReleasePlanChange';
+import { ReleasePlanChange } from './ReleasePlanChange.tsx';
+import { StrategyChange } from './StrategyChange.tsx';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
@@ -31,6 +31,7 @@ const StyledSingleChangeBox = styled(Box, {
         $isAfterWarning,
         $isLast,
     }) => ({
+        overflow: 'hidden',
         borderLeft: '1px solid',
         borderRight: '1px solid',
         borderTop: '1px solid',
@@ -69,19 +70,30 @@ const InlineList = styled('ul')(({ theme }) => ({
 
 const ChangeInnerBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
-    '&:has(.delete-strategy-information-wrapper)': {
-        backgroundColor: theme.palette.error.light,
+    '&:empty': {
+        display: 'none',
     },
 }));
 
 export const FeatureChange: FC<{
-    actions: ReactNode;
+    actions?: ReactNode;
     index: number;
     changeRequest: ChangeRequestType;
     change: IFeatureChange;
     feature: IChangeRequestFeature;
     onNavigate?: () => void;
-}> = ({ index, change, feature, changeRequest, actions, onNavigate }) => {
+    isDefaultChange?: boolean;
+    onRefetch?: () => void;
+}> = ({
+    index,
+    change,
+    feature,
+    changeRequest,
+    actions,
+    onNavigate,
+    isDefaultChange,
+    onRefetch,
+}) => {
     const lastIndex = feature.defaultChange
         ? feature.changes.length + 1
         : feature.changes.length;
@@ -154,6 +166,7 @@ export const FeatureChange: FC<{
                 )}
                 {change.action === 'updateEnabled' && (
                     <ToggleStatusChange
+                        isDefaultChange={isDefaultChange}
                         enabled={change.payload.enabled}
                         actions={actions}
                     />
@@ -167,6 +180,7 @@ export const FeatureChange: FC<{
                 change.action === 'updateStrategy' ? (
                     <StrategyChange
                         actions={actions}
+                        isDefaultChange={isDefaultChange}
                         change={change}
                         featureName={feature.name}
                         environmentName={changeRequest.environment}
@@ -195,7 +209,12 @@ export const FeatureChange: FC<{
                 )}
                 {(change.action === 'addReleasePlan' ||
                     change.action === 'deleteReleasePlan' ||
-                    change.action === 'startMilestone') && (
+                    change.action === 'startMilestone' ||
+                    change.action === 'changeMilestoneProgression' ||
+                    change.action === 'deleteMilestoneProgression' ||
+                    change.action === 'changeSafeguard' ||
+                    change.action === 'deleteSafeguard' ||
+                    change.action === 'resumeMilestoneProgression') && (
                     <ReleasePlanChange
                         actions={actions}
                         change={change}
@@ -203,6 +222,8 @@ export const FeatureChange: FC<{
                         environmentName={changeRequest.environment}
                         projectId={changeRequest.project}
                         changeRequestState={changeRequest.state}
+                        feature={feature}
+                        onRefetch={onRefetch}
                     />
                 )}
             </ChangeInnerBox>

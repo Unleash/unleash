@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectActivitySchemaItem } from './projectActivitySchemaItem';
+import type { ProjectActivitySchemaItem } from './projectActivitySchemaItem.js';
 
 /**
  * An array of project activity information. Each item contains a date and the total number of activities for that date.

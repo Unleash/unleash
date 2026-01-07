@@ -3,63 +3,46 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_ENVIRONMENT_DISABLED,
     type IEvent,
-} from '../types/events';
-import type { Logger } from '../logger';
+} from '../events/index.js';
 
-import SlackAddon from './slack';
+import SlackAddon from './slack.js';
 
-import noLogger from '../../test/fixtures/no-logger';
+import noLogger from '../../test/fixtures/no-logger.js';
 import {
     type IAddonConfig,
     type IFlagKey,
     type IFlagResolver,
     serializeDates,
     SYSTEM_USER_ID,
-} from '../types';
-import type { IntegrationEventsService } from '../services';
+} from '../types/index.js';
+import type { IntegrationEventsService } from '../services/index.js';
 
-let fetchRetryCalls: any[] = [];
-const registerEventMock = jest.fn();
+import { vi } from 'vitest';
+import nock from 'nock';
+
+const registerEventMock = vi.fn();
 
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
     getLogger: noLogger,
     unleashUrl: 'http://some-url.com',
-    integrationEventsService: {} as IntegrationEventsService,
-    flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
-    eventBus: {} as any,
+    integrationEventsService: {
+        registerEvent: registerEventMock,
+    } as unknown as IntegrationEventsService,
+    flagResolver: { isEnabled: (_expName: IFlagKey) => false } as IFlagResolver,
+    eventBus: {
+        emit: vi.fn(),
+    } as any,
 };
-
-jest.mock(
-    './addon',
-    () =>
-        class Addon {
-            logger: Logger;
-
-            constructor(definition, { getLogger }) {
-                this.logger = getLogger('addon/test');
-                fetchRetryCalls = [];
-            }
-
-            async fetchRetry(url, options, retries, backoff) {
-                fetchRetryCalls.push({
-                    url,
-                    options,
-                    retries,
-                    backoff,
-                });
-                return Promise.resolve({ ok: true, status: 200 });
-            }
-
-            async registerEvent(event) {
-                return registerEventMock(event);
-            }
-        },
-);
-
 describe('Slack integration', () => {
     beforeEach(() => {
         registerEventMock.mockClear();
+        nock.disableNetConnect();
+        nock.cleanAll();
+    });
+
+    afterAll(() => {
+        nock.enableNetConnect();
     });
 
     test('Should call slack webhook', async () => {
@@ -85,10 +68,16 @@ describe('Slack integration', () => {
             defaultChannel: 'general',
         };
 
+        let body: any;
+        nock('http://hooks.slack.com')
+            .post('/')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        expect(body).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should call slack webhook for archived toggle', async () => {
@@ -110,10 +99,17 @@ describe('Slack integration', () => {
             defaultChannel: 'general',
         };
 
+        let body: any;
+        nock('http://hooks.slack.com')
+            .post('/')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
+        expect(JSON.stringify(body)).toMatchSnapshot();
     });
 
     test('Should call slack webhook for archived toggle with project info', async () => {
@@ -136,10 +132,17 @@ describe('Slack integration', () => {
             defaultChannel: 'general',
         };
 
+        let body: any;
+        nock('http://hooks.slack.com')
+            .post('/')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
+        expect(JSON.stringify(body)).toMatchSnapshot();
     });
 
     test(`Should call webhook for toggled environment`, async () => {
@@ -163,11 +166,19 @@ describe('Slack integration', () => {
             defaultChannel: 'general',
         };
 
+        let body: any;
+        nock('http://hooks.slack.com')
+            .post('/')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls).toHaveLength(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
+        const stringifiedBody = JSON.stringify(body);
+        expect(stringifiedBody).toMatchSnapshot();
+        expect(stringifiedBody).toMatch(/disabled/);
     });
 
     test('Should use default channel', async () => {
@@ -191,11 +202,17 @@ describe('Slack integration', () => {
             defaultChannel: 'some-channel',
         };
 
+        let body: any;
+        nock('http://hooks.slack.com')
+            .post('/')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
 
-        const req = JSON.parse(fetchRetryCalls[0].options.body);
-
-        expect(req.channel).toBe('#some-channel');
+        expect(body.channel).toBe('#some-channel');
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should override default channel with data from tag', async () => {
@@ -225,11 +242,18 @@ describe('Slack integration', () => {
             defaultChannel: 'some-channel',
         };
 
+        let body: any;
+        nock('http://hooks.slack.com')
+            .post('/')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
 
-        const req = JSON.parse(fetchRetryCalls[0].options.body);
-
-        expect(req.channel).toBe('#another-channel');
+        expect(body.channel).toBe('#another-channel');
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should post to all channels in tags', async () => {
@@ -263,14 +287,24 @@ describe('Slack integration', () => {
             defaultChannel: 'some-channel',
         };
 
+        const bodies: any[] = [];
+        nock('http://hooks.slack.com')
+            .post('/')
+            .times(2)
+            .reply(200, (_, reqBody) => {
+                bodies.push(reqBody);
+                return { ok: true };
+            });
+
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
 
-        const req1 = JSON.parse(fetchRetryCalls[0].options.body);
-        const req2 = JSON.parse(fetchRetryCalls[1].options.body);
+        const req1 = bodies[0];
+        const req2 = bodies[1];
 
-        expect(fetchRetryCalls).toHaveLength(2);
+        expect(bodies).toHaveLength(2);
         expect(req1.channel).toBe('#another-channel-1');
         expect(req2.channel).toBe('#another-channel-2');
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should include custom headers from parameters in call to service', async () => {
@@ -295,12 +329,19 @@ describe('Slack integration', () => {
             customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
         };
 
+        let body: any;
+        nock('http://hooks.slack.com')
+            .post('/')
+            .matchHeader('MY_CUSTOM_HEADER', 'MY_CUSTOM_VALUE')
+            .reply(200, (_, reqBody) => {
+                body = reqBody;
+                return { ok: true };
+            });
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls).toHaveLength(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toMatch(/disabled/);
-        expect(fetchRetryCalls[0].options.body).toMatchSnapshot();
-        expect(fetchRetryCalls[0].options.headers).toMatchSnapshot();
+        const stringifiedBody = JSON.stringify(body);
+        expect(stringifiedBody).toMatch(/disabled/);
+        expect(stringifiedBody).toMatchSnapshot();
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should call registerEvent', async () => {
@@ -324,6 +365,13 @@ describe('Slack integration', () => {
             defaultChannel: 'general',
             customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
         };
+
+        nock('http://hooks.slack.com')
+            .post('/')
+            .matchHeader('MY_CUSTOM_HEADER', 'MY_CUSTOM_VALUE')
+            .reply(200, () => {
+                return { ok: true };
+            });
 
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
 

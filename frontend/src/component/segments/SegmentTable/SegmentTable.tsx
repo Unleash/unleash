@@ -80,6 +80,7 @@ export const SegmentTable = () => {
             defaultColumn: {
                 Cell: HighlightCell,
             },
+            getRowId: (row: any) => row.id,
         },
         useGlobalFilter,
         useSortBy,

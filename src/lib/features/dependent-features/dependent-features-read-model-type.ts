@@ -1,4 +1,4 @@
-import type { IDependency, IFeatureDependency } from '../../types';
+import type { IDependency, IFeatureDependency } from '../../types/index.js';
 
 export interface IDependentFeaturesReadModel {
     getChildren(parents: string[]): Promise<string[]>;

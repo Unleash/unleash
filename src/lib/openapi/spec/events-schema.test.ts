@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { EventsSchema } from './events-schema';
+import { validateSchema } from '../validate.js';
+import type { EventsSchema } from './events-schema.js';
 
 test('eventsSchema', () => {
     const data: EventsSchema = {

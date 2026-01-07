@@ -54,7 +54,7 @@ export const useStrategyForm = (
     const validateParams = () => {
         let res = true;
         // eslint-disable-next-line
-        for (const [index, p] of Object.entries(params)) {
+        for (const [_index, _p] of Object.entries(params)) {
             // eslint-disable-next-line
             params.forEach((p, index) => {
                 if (p.name.length === 0) {

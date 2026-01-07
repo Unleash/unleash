@@ -1,11 +1,11 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { TAG_MAX_LENGTH, TAG_MIN_LENGTH } from '../../util';
+import { TAG_MIN_LENGTH, TAG_MAX_LENGTH } from '../../tags/index.js';
 
 export const tagSchema = {
     $id: '#/components/schemas/tagSchema',
     type: 'object',
     description:
-        'Representation of a [tag](https://docs.getunleash.io/reference/feature-toggles#tags)',
+        'Representation of a [tag](https://docs.getunleash.io/concepts/feature-flags#tags)',
     additionalProperties: false,
     required: ['value', 'type'],
     properties: {
@@ -21,8 +21,15 @@ export const tagSchema = {
             minLength: TAG_MIN_LENGTH,
             maxLength: TAG_MAX_LENGTH,
             description:
-                'The [type](https://docs.getunleash.io/reference/feature-toggles#tags) of the tag',
+                'The [type](https://docs.getunleash.io/concepts/feature-flags#tags) of the tag',
             example: 'simple',
+        },
+        color: {
+            type: 'string',
+            description: 'The hexadecimal color code for the tag type.',
+            example: '#FFFFFF',
+            pattern: '^#[0-9A-Fa-f]{6}$',
+            nullable: true,
         },
     },
     components: {},

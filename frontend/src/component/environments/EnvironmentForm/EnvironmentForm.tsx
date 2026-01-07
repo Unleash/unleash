@@ -1,14 +1,18 @@
 import { Box, Button, styled } from '@mui/material';
 import type React from 'react';
 import Input from 'component/common/Input/Input';
-import EnvironmentTypeSelector from './EnvironmentTypeSelector/EnvironmentTypeSelector';
+import { EnvironmentTypeSelector } from './EnvironmentTypeSelector.tsx';
+import { ChangeRequestSelector } from './ChangeRequestSelector.tsx';
 import { trim } from 'component/common/util';
 
 interface IEnvironmentForm {
     name: string;
     type: string;
+    requiredApprovals: number | null;
     setName: React.Dispatch<React.SetStateAction<string>>;
     setType: React.Dispatch<React.SetStateAction<string>>;
+    setRequiredApprovals: React.Dispatch<React.SetStateAction<number | null>>;
+
     validateEnvironmentName?: (e: any) => void;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
@@ -67,8 +71,10 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
     handleCancel,
     name,
     type,
+    requiredApprovals,
     setName,
     setType,
+    setRequiredApprovals,
     validateEnvironmentName,
     errors,
     mode,
@@ -102,6 +108,17 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
                     onChange={(e) => setType(e.currentTarget.value)}
                     value={type}
                 />
+
+                <>
+                    <StyledInputDescription sx={{ mt: 2 }}>
+                        Would you like to predefine change requests for this
+                        environment?
+                    </StyledInputDescription>
+                    <ChangeRequestSelector
+                        onChange={setRequiredApprovals}
+                        value={requiredApprovals}
+                    />
+                </>
             </StyledContainer>
 
             <LimitContainer>{Limit}</LimitContainer>

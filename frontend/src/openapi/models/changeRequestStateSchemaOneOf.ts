@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestStateSchemaOneOfState } from './changeRequestStateSchemaOneOfState';
+import type { ChangeRequestStateSchemaOneOfState } from './changeRequestStateSchemaOneOfState.js';
 
 export type ChangeRequestStateSchemaOneOf = {
     /** Any comments accompanying the state changed. Used when sending a draft to review. */

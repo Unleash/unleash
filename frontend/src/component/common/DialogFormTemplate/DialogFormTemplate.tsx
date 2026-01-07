@@ -15,11 +15,8 @@ import {
 import { Button } from '@mui/material';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { IPermissionButtonProps } from 'component/common/PermissionButton/PermissionButton';
-import type { FeatureNamingType } from 'interfaces/project';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
-import { NamingPatternInfo } from './NamingPatternInfo';
-
-type NamingPattern = FeatureNamingType;
+import { NamingPatternInfo } from './NamingPatternInfo.tsx';
+import type { CreateFeatureNamingPatternSchema } from 'openapi';
 
 type FormProps = {
     createButtonProps: IPermissionButtonProps;
@@ -35,7 +32,7 @@ type FormProps = {
     setDescription: (newDescription: string) => void;
     setName: (newName: string) => void;
     validateName?: () => void;
-    namingPattern?: NamingPattern;
+    namingPattern?: CreateFeatureNamingPatternSchema;
 };
 
 export const DialogFormTemplate: React.FC<FormProps> = ({
@@ -54,8 +51,6 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
     createButtonProps,
     validateName = () => {},
 }) => {
-    const displayNamingPattern = Boolean(namingPattern?.pattern);
-
     return (
         <StyledForm onSubmit={handleSubmit}>
             <TopGrid>
@@ -66,7 +61,7 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                         label={`${resource} name`}
                         aria-required
                         aria-details={
-                            displayNamingPattern
+                            namingPattern?.pattern
                                 ? 'naming-pattern-info'
                                 : undefined
                         }
@@ -89,10 +84,9 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                         size='medium'
                     />
 
-                    <ConditionallyRender
-                        condition={displayNamingPattern}
-                        show={<NamingPatternInfo naming={namingPattern!} />}
-                    />
+                    {namingPattern?.pattern ? (
+                        <NamingPatternInfo naming={namingPattern!} />
+                    ) : null}
                 </NameContainer>
                 <DescriptionContainer>
                     <StyledInput

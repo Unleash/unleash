@@ -1,7 +1,7 @@
 import type { SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 
 type ConnectedInstancesSchema = {
     instances: {
@@ -17,8 +17,9 @@ export const useConnectedInstances = (
     environment?: string,
     options: SWRConfiguration = {},
 ) => {
+    const encodedApplication = encodeURIComponent(application);
     const path = formatApiPath(
-        `api/admin/metrics/instances/${application}/environment/${environment}`,
+        `api/admin/metrics/instances/${encodedApplication}/environment/${environment}`,
     );
     const { data, error } = useConditionalSWR<ConnectedInstancesSchema>(
         Boolean(environment),

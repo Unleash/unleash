@@ -1,4 +1,4 @@
-import { formatBaseUri } from './format-base-uri';
+import { formatBaseUri } from './format-base-uri.js';
 
 test('formatBaseUri returns the correct path when the path is the right format', () => {
     const result = formatBaseUri('/hosted');

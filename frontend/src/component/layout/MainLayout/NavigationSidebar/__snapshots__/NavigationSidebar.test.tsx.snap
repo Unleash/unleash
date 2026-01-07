@@ -3,6 +3,10 @@
 exports[`order of items in navigation > menu for enterprise plan 1`] = `
 [
   {
+    "icon": null,
+    "text": ".cls-1{fill:#1a4049;}.cls-2{fill:#fff;}.cls-3{fill:#817afe;}",
+  },
+  {
     "icon": "DashboardOutlinedIcon",
     "text": "Dashboard",
   },
@@ -11,8 +15,12 @@ exports[`order of items in navigation > menu for enterprise plan 1`] = `
     "text": "Projects",
   },
   {
-    "icon": "SearchIcon",
-    "text": "Search",
+    "icon": "FlagOutlinedIcon",
+    "text": "Flags overview",
+  },
+  {
+    "icon": "MergeTypeIcon",
+    "text": "Change requests",
   },
   {
     "icon": "AutoFixNormalIcon",
@@ -20,91 +28,47 @@ exports[`order of items in navigation > menu for enterprise plan 1`] = `
   },
   {
     "icon": "InsightsIcon",
-    "text": "Insights",
+    "text": "Analytics",
   },
   {
-    "icon": "AppsOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Applications",
   },
   {
-    "icon": "AccountTreeOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Context fields",
   },
   {
-    "icon": "OutlinedFlagIcon",
+    "icon": "StopRoundedIcon",
     "text": "Feature flag types",
   },
   {
-    "icon": "ExtensionOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Strategy types",
   },
   {
-    "icon": "CloudOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Environments",
   },
   {
-    "icon": "LabelImportantOutlinedIcon",
+    "icon": "StopRoundedIcon",
+    "text": "Release templates",
+  },
+  {
+    "icon": "StopRoundedIcon",
     "text": "Tag types",
   },
   {
-    "icon": "IntegrationInstructionsOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Integrations",
   },
   {
-    "icon": "DonutLargeOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Segments",
   },
   {
-    "icon": "GroupOutlinedIcon",
-    "text": "Users",
-  },
-  {
-    "icon": "ComputerIcon",
-    "text": "Service accounts",
-  },
-  {
-    "icon": "GroupsOutlinedIcon",
-    "text": "Groups",
-  },
-  {
-    "icon": "AdminPanelSettingsOutlinedIcon",
-    "text": "Roles",
-  },
-  {
-    "icon": "KeyOutlinedIcon",
-    "text": "API access",
-  },
-  {
-    "icon": "AssignmentOutlinedIcon",
-    "text": "Single sign-on",
-  },
-  {
-    "icon": "HubOutlinedIcon",
-    "text": "Network",
-  },
-  {
-    "icon": "BuildOutlinedIcon",
-    "text": "Maintenance",
-  },
-  {
-    "icon": "ViewCarouselIcon",
-    "text": "Banners",
-  },
-  {
-    "icon": "QueryStatsOutlinedIcon",
-    "text": "Instance stats",
-  },
-  {
-    "icon": "ShieldOutlinedIcon",
-    "text": "Instance privacy",
-  },
-  {
-    "icon": "HistoryOutlinedIcon",
-    "text": "Login history",
-  },
-  {
-    "icon": "EventNoteOutlinedIcon",
-    "text": "Event log",
+    "icon": "SettingsIcon",
+    "text": "Admin settings",
   },
 ]
 `;
@@ -112,6 +76,10 @@ exports[`order of items in navigation > menu for enterprise plan 1`] = `
 exports[`order of items in navigation > menu for open-source 1`] = `
 [
   {
+    "icon": null,
+    "text": ".cls-1{fill:#1a4049;}.cls-2{fill:#fff;}.cls-3{fill:#817afe;}",
+  },
+  {
     "icon": "DashboardOutlinedIcon",
     "text": "Dashboard",
   },
@@ -120,64 +88,44 @@ exports[`order of items in navigation > menu for open-source 1`] = `
     "text": "Projects",
   },
   {
-    "icon": "SearchIcon",
-    "text": "Search",
+    "icon": "FlagOutlinedIcon",
+    "text": "Flags overview",
   },
   {
     "icon": "AutoFixNormalIcon",
     "text": "Playground",
   },
   {
-    "icon": "AppsOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Applications",
   },
   {
-    "icon": "AccountTreeOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Context fields",
   },
   {
-    "icon": "OutlinedFlagIcon",
+    "icon": "StopRoundedIcon",
     "text": "Feature flag types",
   },
   {
-    "icon": "ExtensionOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Strategy types",
   },
   {
-    "icon": "LabelImportantOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Tag types",
   },
   {
-    "icon": "IntegrationInstructionsOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Integrations",
   },
   {
-    "icon": "DonutLargeOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Segments",
   },
   {
-    "icon": "GroupOutlinedIcon",
-    "text": "Users",
-  },
-  {
-    "icon": "KeyOutlinedIcon",
-    "text": "API access",
-  },
-  {
-    "icon": "BuildOutlinedIcon",
-    "text": "Maintenance",
-  },
-  {
-    "icon": "QueryStatsOutlinedIcon",
-    "text": "Instance stats",
-  },
-  {
-    "icon": "ShieldOutlinedIcon",
-    "text": "Instance privacy",
-  },
-  {
-    "icon": "EventNoteOutlinedIcon",
-    "text": "Event log",
+    "icon": "SettingsIcon",
+    "text": "Admin settings",
   },
 ]
 `;
@@ -185,6 +133,10 @@ exports[`order of items in navigation > menu for open-source 1`] = `
 exports[`order of items in navigation > menu for pro plan 1`] = `
 [
   {
+    "icon": null,
+    "text": ".cls-1{fill:#1a4049;}.cls-2{fill:#fff;}.cls-3{fill:#817afe;}",
+  },
+  {
     "icon": "DashboardOutlinedIcon",
     "text": "Dashboard",
   },
@@ -193,8 +145,8 @@ exports[`order of items in navigation > menu for pro plan 1`] = `
     "text": "Projects",
   },
   {
-    "icon": "SearchIcon",
-    "text": "Search",
+    "icon": "FlagOutlinedIcon",
+    "text": "Flags overview",
   },
   {
     "icon": "AutoFixNormalIcon",
@@ -202,91 +154,47 @@ exports[`order of items in navigation > menu for pro plan 1`] = `
   },
   {
     "icon": "InsightsIcon",
-    "text": "Insights",
+    "text": "Analytics",
   },
   {
-    "icon": "AppsOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Applications",
   },
   {
-    "icon": "AccountTreeOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Context fields",
   },
   {
-    "icon": "OutlinedFlagIcon",
+    "icon": "StopRoundedIcon",
     "text": "Feature flag types",
   },
   {
-    "icon": "ExtensionOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Strategy types",
   },
   {
-    "icon": "CloudOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Environments",
   },
   {
-    "icon": "LabelImportantOutlinedIcon",
+    "icon": "StopRoundedIcon",
+    "text": "Release templates",
+  },
+  {
+    "icon": "StopRoundedIcon",
     "text": "Tag types",
   },
   {
-    "icon": "IntegrationInstructionsOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Integrations",
   },
   {
-    "icon": "DonutLargeOutlinedIcon",
+    "icon": "StopRoundedIcon",
     "text": "Segments",
   },
   {
-    "icon": "GroupOutlinedIcon",
-    "text": "Users",
-  },
-  {
-    "icon": "ComputerIcon",
-    "text": "Service accounts",
-  },
-  {
-    "icon": "GroupsOutlinedIcon",
-    "text": "Groups",
-  },
-  {
-    "icon": "AdminPanelSettingsOutlinedIcon",
-    "text": "Roles",
-  },
-  {
-    "icon": "KeyOutlinedIcon",
-    "text": "API access",
-  },
-  {
-    "icon": "AssignmentOutlinedIcon",
-    "text": "Single sign-on",
-  },
-  {
-    "icon": "HubOutlinedIcon",
-    "text": "Network",
-  },
-  {
-    "icon": "BuildOutlinedIcon",
-    "text": "Maintenance",
-  },
-  {
-    "icon": "ViewCarouselIcon",
-    "text": "Banners",
-  },
-  {
-    "icon": "QueryStatsOutlinedIcon",
-    "text": "Instance stats",
-  },
-  {
-    "icon": "ShieldOutlinedIcon",
-    "text": "Instance privacy",
-  },
-  {
-    "icon": "HistoryOutlinedIcon",
-    "text": "Login history",
-  },
-  {
-    "icon": "EventNoteOutlinedIcon",
-    "text": "Event log",
+    "icon": "SettingsIcon",
+    "text": "Admin settings",
   },
 ]
 `;

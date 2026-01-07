@@ -1,12 +1,12 @@
 import type { SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import { useClearSWRCache } from 'hooks/useClearSWRCache';
 import type { ISignalQuerySignal } from 'interfaces/signal';
-import useUiConfig from '../useUiConfig/useUiConfig';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 
 type SignalQueryParams = {
     from?: string;
@@ -61,7 +61,11 @@ const createSignalQuery = () => {
 
         const { KEY, fetcher } = getSignalQueryFetcher(params);
         const swrKey = `${cachePrefix}${KEY}`;
-        useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
+        useClearSWRCache({
+            currentKey: swrKey,
+            clearPrefix: PATH,
+            cacheSize: SWR_CACHE_SIZE,
+        });
 
         const { data, error, mutate, isLoading } =
             useConditionalSWR<SignalQueryResponse>(

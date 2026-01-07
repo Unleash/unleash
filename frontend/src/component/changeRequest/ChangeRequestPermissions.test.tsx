@@ -1,16 +1,16 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import { FeatureView } from '../feature/FeatureView/FeatureView';
+import { FeatureView } from '../feature/FeatureView/FeatureView.tsx';
 import { ThemeProvider } from 'themes/ThemeProvider';
-import { AccessProvider } from '../providers/AccessProvider/AccessProvider';
-import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider';
-import { testServerRoute, testServerSetup } from '../../utils/testServer';
-import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
+import { AccessProvider } from '../providers/AccessProvider/AccessProvider.tsx';
+import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider.tsx';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer.tsx';
 import type React from 'react';
 import type { FC } from 'react';
-import type { IPermission } from '../../interfaces/user';
+import type { IPermission } from 'interfaces/user';
 import { SWRConfig } from 'swr';
-import type { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm';
+import type { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm.ts';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 
@@ -98,17 +98,20 @@ const setupOtherRoutes = (feature: string) => {
                 deprecated: false,
             },
             {
-                displayName: 'UserIDs',
-                name: 'userWithId',
+                displayName: 'Gradual rollout',
+                name: 'flexibleRollout',
                 editable: false,
                 description:
-                    'Enable the feature for a specific set of userIds.',
+                    'The gradual rollout strategy allows you to gradually roll out a feature to a percentage of users.',
                 parameters: [
                     {
-                        name: 'userIds',
-                        type: 'list',
-                        description: '',
-                        required: false,
+                        name: 'rollout',
+                    },
+                    {
+                        name: 'stickiness',
+                    },
+                    {
+                        name: 'groupId',
                     },
                 ],
                 deprecated: false,
@@ -214,12 +217,10 @@ const UnleashUiSetup: FC<{
     </SWRConfig>
 );
 
-const strategiesAreDisplayed = async (
-    firstStrategy: string,
-    secondStrategy: string,
-) => {
-    await screen.findByText(firstStrategy);
-    await screen.findByText(secondStrategy);
+const strategiesAreDisplayed = async (strategies: string[]) => {
+    for (const strategy of strategies) {
+        await screen.findByText(strategy);
+    }
 };
 
 const getDeleteButtons = async () => {
@@ -278,7 +279,7 @@ const copyButtonsActiveInOtherEnv = async () => {
 
     // production
     const productionStrategyCopyButton = copyButtons[0];
-    expect(productionStrategyCopyButton).toBeDisabled();
+    expect(productionStrategyCopyButton).toBeEnabled();
 
     // custom env
     const customEnvStrategyCopyButton = copyButtons[1];
@@ -287,7 +288,10 @@ const copyButtonsActiveInOtherEnv = async () => {
 
 const openEnvironments = async (envNames: string[]) => {
     for (const env of envNames) {
-        (await screen.findAllByText(env))[1].click();
+        const environmentHeader = await screen.findByRole('heading', {
+            name: env,
+        });
+        fireEvent.click(environmentHeader);
     }
 };
 
@@ -296,7 +300,7 @@ test('open mode + non-project member can perform basic change request actions', 
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['userWithId'] },
+        { name: 'production', strategies: ['flexibleRollout'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([]);
@@ -313,10 +317,9 @@ test('open mode + non-project member can perform basic change request actions', 
             <FeatureView />
         </UnleashUiSetup>,
     );
-
     await openEnvironments(['development', 'production', 'custom']);
 
-    await strategiesAreDisplayed('UserIDs', 'Standard');
+    await strategiesAreDisplayed(['Gradual rollout', 'Standard']);
     await deleteButtonsActiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });
@@ -326,7 +329,7 @@ test('protected mode + project member can perform basic change request actions',
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['userWithId'] },
+        { name: 'production', strategies: ['flexibleRollout'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([project]);
@@ -346,7 +349,7 @@ test('protected mode + project member can perform basic change request actions',
 
     await openEnvironments(['development', 'production', 'custom']);
 
-    await strategiesAreDisplayed('UserIDs', 'Standard');
+    await strategiesAreDisplayed(['Gradual rollout', 'Standard']);
     await deleteButtonsActiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });
@@ -356,7 +359,7 @@ test.skip('protected mode + non-project member cannot perform basic change reque
     const featureName = 'test';
     featureEnvironments(featureName, [
         { name: 'development', strategies: [] },
-        { name: 'production', strategies: ['userWithId'] },
+        { name: 'production', strategies: ['flexibleRollout'] },
         { name: 'custom', strategies: ['default'] },
     ]);
     userIsMemberOfProjects([]);
@@ -376,7 +379,7 @@ test.skip('protected mode + non-project member cannot perform basic change reque
 
     await openEnvironments(['development', 'production', 'custom']);
 
-    await strategiesAreDisplayed('UserIDs', 'Standard');
+    await strategiesAreDisplayed(['Gradual rollout', 'Standard']);
     await deleteButtonsInactiveInChangeRequestEnv();
     await copyButtonsActiveInOtherEnv();
 });

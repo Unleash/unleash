@@ -1,9 +1,9 @@
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 exports.up = function (db, cb) {
-    const instanceId = uuidv4();
+    const instanceId = randomUUID();
     db.runSql(
         `
     INSERT INTO settings(name, content) VALUES ('instanceInfo', json_build_object('id', '${instanceId}'));

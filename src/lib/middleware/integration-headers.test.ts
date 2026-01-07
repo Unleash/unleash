@@ -1,4 +1,4 @@
-import { determineIntegrationSource } from './integration-headers';
+import { determineIntegrationSource } from './integration-headers.js';
 
 test('resolves known user agents to source labels', () => {
     expect(determineIntegrationSource('axios/0.27.2')).toBe('Axios');

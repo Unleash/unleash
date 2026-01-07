@@ -4,23 +4,14 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Icon, styled } from '@mui/material';
-import Add from '@mui/icons-material/Add';
+import FilterList from '@mui/icons-material/FilterList';
 import { Box } from '@mui/system';
-import type { IFilterItem } from './Filters/Filters';
+import type { IFilterItem } from './Filters/Filters.tsx';
 import { FILTERS_MENU } from 'utils/testIds';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
-import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
-import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(0, 1.25, 0, 1.25),
     height: theme.spacing(3.75),
-}));
-
-const StyledHtmlTooltip = styled(HtmlTooltip)(({ theme }) => ({
-    zIndex: theme.zIndex.drawer,
 }));
 
 const StyledIconContainer = styled(Box)(({ theme }) => ({
@@ -38,28 +29,18 @@ const StyledIcon = styled(Icon)(({ theme }) => ({
 
 interface IAddFilterButtonProps {
     visibleOptions: string[];
-    setVisibleOptions: (filters: string[]) => void;
     hiddenOptions: string[];
-    setHiddenOptions: (filters: string[]) => void;
+    onSelectedOptionsChange: (filters: string[]) => void;
     availableFilters: IFilterItem[];
 }
 
 export const AddFilterButton = ({
     visibleOptions,
-    setVisibleOptions,
     hiddenOptions,
-    setHiddenOptions,
+    onSelectedOptionsChange,
     availableFilters,
 }: IAddFilterButtonProps) => {
-    const projectId = useOptionalPathParam('projectId');
-    const { user } = useAuthUser();
-    const { setSplashSeen } = useSplashApi();
-    const { splash } = useAuthSplash();
-
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [archiveTooltipOpen, setArchiveTooltipOpen] = useState(
-        !splash?.simplifyProjectOverview,
-    );
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -69,63 +50,15 @@ export const AddFilterButton = ({
     };
 
     const onSelect = (label: string) => {
-        const newVisibleOptions = visibleOptions.filter((f) => f !== label);
-        const newHiddenOptions = [...hiddenOptions, label];
-
-        setHiddenOptions(newHiddenOptions);
-        setVisibleOptions(newVisibleOptions);
+        onSelectedOptionsChange([...hiddenOptions, label]);
         handleClose();
     };
 
-    const isOldCustomer = (createdAt: string | undefined) => {
-        if (!createdAt) return false;
-        const cutoffDate = new Date('2024-11-08T00:00:00.000Z');
-        return new Date(createdAt) < cutoffDate;
-    };
-
-    const showArchiveTooltip = projectId && isOldCustomer(user?.createdAt);
-
-    const ArchiveTooltip = () => {
-        return (
-            <Box>
-                <Box>
-                    Archived flags are now accessible via the{' '}
-                    <b>Show only archived</b> filter option.
-                </Box>
-                <Box
-                    onClick={() => {
-                        setArchiveTooltipOpen(false);
-                        setSplashSeen('simplifyProjectOverview');
-                    }}
-                    sx={(theme) => ({
-                        color: theme.palette.primary.dark,
-                        cursor: 'pointer',
-                    })}
-                >
-                    Got it
-                </Box>
-            </Box>
-        );
-    };
     return (
         <div>
-            {showArchiveTooltip ? (
-                <StyledHtmlTooltip
-                    placement='right'
-                    arrow
-                    title={<ArchiveTooltip />}
-                    describeChild
-                    open={archiveTooltipOpen}
-                >
-                    <StyledButton onClick={handleClick} startIcon={<Add />}>
-                        Add Filter
-                    </StyledButton>
-                </StyledHtmlTooltip>
-            ) : (
-                <StyledButton onClick={handleClick} startIcon={<Add />}>
-                    Add Filter
-                </StyledButton>
-            )}
+            <StyledButton onClick={handleClick} startIcon={<FilterList />}>
+                Filter
+            </StyledButton>
 
             <Menu
                 id='simple-menu'

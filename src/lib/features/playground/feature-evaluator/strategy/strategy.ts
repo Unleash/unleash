@@ -1,9 +1,9 @@
-import type { PlaygroundConstraintSchema } from '../../../../openapi/spec/playground-constraint-schema';
-import type { PlaygroundSegmentSchema } from '../../../../openapi/spec/playground-segment-schema';
-import type { StrategyEvaluationResult } from '../client';
-import { type Constraint, operators } from '../constraint';
-import type { Context } from '../context';
-import { selectVariantDefinition, type VariantDefinition } from '../variant';
+import type { PlaygroundConstraintSchema } from '../../../../openapi/spec/playground-constraint-schema.js';
+import type { PlaygroundSegmentSchema } from '../../../../openapi/spec/playground-segment-schema.js';
+import type { StrategyEvaluationResult } from '../client.js';
+import { type Constraint, operators } from '../constraint.js';
+import type { Context } from '../context.js';
+import { selectVariantDefinition, type VariantDefinition } from '../variant.js';
 
 export type SegmentForEvaluation = {
     name: string;
@@ -88,7 +88,7 @@ export class Strategy {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isEnabled(parameters: unknown, context: Context): boolean {
+    isEnabled(_parameters: unknown, _context: Context): boolean {
         return this.returnValue;
     }
 

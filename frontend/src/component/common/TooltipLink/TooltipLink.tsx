@@ -3,7 +3,7 @@ import { Link, type LinkProps, styled } from '@mui/material';
 import {
     HtmlTooltip,
     type IHtmlTooltipProps,
-} from '../HtmlTooltip/HtmlTooltip';
+} from '../HtmlTooltip/HtmlTooltip.tsx';
 
 const StyledLink = styled(Link, {
     shouldForwardProp: (prop) => prop !== 'highlighted',

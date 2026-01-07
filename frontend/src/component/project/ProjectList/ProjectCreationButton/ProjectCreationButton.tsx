@@ -7,7 +7,7 @@ import Add from '@mui/icons-material/Add';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
-import { CreateProjectDialog } from '../../Project/CreateProject/NewCreateProjectForm/CreateProjectDialog';
+import { CreateProjectDialog } from '../../Project/CreateProject/NewCreateProjectForm/CreateProjectDialog.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 

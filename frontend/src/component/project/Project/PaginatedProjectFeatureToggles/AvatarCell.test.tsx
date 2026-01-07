@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { vi } from 'vitest';
-import { AvatarCell } from './AvatarCell';
+import { AvatarCell } from './AvatarCell.tsx';
 
 test("the filtering button should have aria-disabled='true' when the user id is 0", async () => {
     const Cell = AvatarCell(() => {});

@@ -2,8 +2,8 @@ import type {
     IClientInstance,
     IClientInstanceStore,
     INewClientInstance,
-} from '../../lib/types/stores/client-instance-store';
-import NotFoundError from '../../lib/error/notfound-error';
+} from '../../lib/types/stores/client-instance-store.js';
+import NotFoundError from '../../lib/error/notfound-error.js';
 import groupBy from 'lodash.groupby';
 
 export default class FakeClientInstanceStore implements IClientInstanceStore {
@@ -28,10 +28,6 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
         );
     }
 
-    setLastSeen(): Promise<void> {
-        return Promise.resolve();
-    }
-
     async getBySdkName(sdkName: string): Promise<IClientInstance[]> {
         return this.instances.filter((instance) =>
             instance.sdkVersion?.startsWith(sdkName),
@@ -50,7 +46,7 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
     }
 
     async groupApplicationsBySdkAndProject(
-        projectId: string,
+        _projectId: string,
     ): Promise<{ sdkVersion: string; applications: string[] }[]> {
         throw new Error('Not implemented in mock');
     }
@@ -104,7 +100,9 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
 
     async getDistinctApplications(): Promise<string[]> {
         const apps = new Set<string>();
-        this.instances.forEach((i) => apps.add(i.appName));
+        this.instances.forEach((i) => {
+            apps.add(i.appName);
+        });
         return Array.from(apps.values());
     }
 
@@ -113,11 +111,11 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
         return apps.length;
     }
 
-    async insert(details: INewClientInstance): Promise<void> {
+    async upsert(details: INewClientInstance): Promise<void> {
         this.instances.push({ createdAt: new Date(), ...details });
     }
 
-    removeInstancesOlderThanTwoDays(): Promise<void> {
+    removeOldInstances(): Promise<void> {
         return Promise.resolve(undefined);
     }
 }

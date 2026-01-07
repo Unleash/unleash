@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdvancedPlaygroundEnvironmentFeatureSchema } from './advancedPlaygroundEnvironmentFeatureSchema';
+import type { AdvancedPlaygroundEnvironmentFeatureSchema } from './advancedPlaygroundEnvironmentFeatureSchema.js';
 
 /**
  * The lists of features that have been evaluated grouped by environment.

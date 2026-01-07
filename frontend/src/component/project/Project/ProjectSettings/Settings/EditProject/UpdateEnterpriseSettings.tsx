@@ -9,10 +9,10 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ProjectEnterpriseSettingsForm from 'component/project/Project/ProjectEnterpriseSettingsForm/ProjectEnterpriseSettingsForm';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
-import type { IProjectOverview } from 'component/../interfaces/project';
 import { styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import type { ProjectOverviewSchema } from 'openapi';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     minHeight: 0,
@@ -33,7 +33,7 @@ const StyledFormContainer = styled('div')(({ theme }) => ({
 }));
 
 interface IUpdateEnterpriseSettings {
-    project: IProjectOverview;
+    project: ProjectOverviewSchema;
 }
 const EDIT_PROJECT_SETTINGS_BTN = 'EDIT_PROJECT_SETTINGS_BTN';
 
@@ -65,18 +65,21 @@ export const UpdateEnterpriseSettings = ({
         featureNamingExample,
         featureNamingDescription,
         featureNamingPattern,
+        linkTemplates,
         setFeatureNamingPattern,
         setFeatureNamingExample,
         setFeatureNamingDescription,
         setProjectMode,
+        setLinkTemplates,
         getEnterpriseSettingsPayload,
         errors: settingsErrors = {},
         clearErrors: clearSettingsErrors,
     } = useProjectEnterpriseSettingsForm(
         project.mode,
-        project?.featureNaming?.pattern,
-        project?.featureNaming?.example,
-        project?.featureNaming?.description,
+        project?.featureNaming?.pattern || undefined,
+        project?.featureNaming?.example || undefined,
+        project?.featureNaming?.description || undefined,
+        project?.linkTemplates || [],
     );
 
     const formatProjectSettingsApiCode = () => {
@@ -146,7 +149,7 @@ export const UpdateEnterpriseSettings = ({
                 loading={loading}
                 title='Enterprise Settings'
                 description=''
-                documentationLink='https://docs.getunleash.io/reference/projects'
+                documentationLink='https://docs.getunleash.io/concepts/projects'
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectSettingsApiCode}
                 compactPadding
@@ -161,12 +164,14 @@ export const UpdateEnterpriseSettings = ({
                         featureNamingPattern={featureNamingPattern}
                         featureNamingExample={featureNamingExample}
                         featureNamingDescription={featureNamingDescription}
+                        linkTemplates={linkTemplates}
                         setFeatureNamingPattern={setFeatureNamingPattern}
                         setFeatureNamingExample={setFeatureNamingExample}
                         setFeatureNamingDescription={
                             setFeatureNamingDescription
                         }
                         setProjectMode={setProjectMode}
+                        setLinkTemplates={setLinkTemplates}
                         handleSubmit={handleEditProjectSettings}
                         errors={settingsErrors}
                         clearErrors={clearSettingsErrors}

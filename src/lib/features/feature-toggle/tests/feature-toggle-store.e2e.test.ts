@@ -1,13 +1,13 @@
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
-import getLogger from '../../../../test/fixtures/no-logger';
+} from '../../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
 import type {
     IFeatureToggleStore,
     IProjectStore,
     IUnleashStores,
-} from '../../../types';
-import type { FeatureToggleInsert } from '../feature-toggle-store';
+} from '../../../types/index.js';
+import type { FeatureToggleInsert } from '../feature-toggle-store.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -44,7 +44,7 @@ describe('potentially_stale marking', () => {
     });
     const getFutureTimestamp = (days: number) => {
         return new Date(
-            new Date().getTime() +
+            Date.now() +
                 days * 24 * 60 * 60 * 1000 +
                 // add an extra second
                 1000,
@@ -105,49 +105,46 @@ describe('potentially_stale marking', () => {
         [7, ['operational']],
         [40, ['operational', 'release', 'experiment']],
         [10000, ['operational', 'release', 'experiment']],
-    ])(
-        'it marks toggles based on their type (days elapsed: %s)',
-        async (daysElapsed, expectedMarkedFeatures) => {
-            const features: FeatureToggleInsert[] = [
-                'release',
-                'experiment',
-                'operational',
-                'kill-switch',
-                'permission',
-            ].map((type) => ({ name: type, type, createdByUserId: 9999 }));
-            await Promise.all(
-                features.map((feature) =>
-                    featureToggleStore.create('default', feature),
-                ),
+    ])('it marks toggles based on their type (days elapsed: %s)', async (daysElapsed, expectedMarkedFeatures) => {
+        const features: FeatureToggleInsert[] = [
+            'release',
+            'experiment',
+            'operational',
+            'kill-switch',
+            'permission',
+        ].map((type) => ({ name: type, type, createdByUserId: 9999 }));
+        await Promise.all(
+            features.map((feature) =>
+                featureToggleStore.create('default', feature),
+            ),
+        );
+
+        for (const feature of expectedMarkedFeatures) {
+            expect(await featureToggleStore.get(feature)).toBeTruthy();
+        }
+
+        const markedToggles =
+            await featureToggleStore.updatePotentiallyStaleFeatures(
+                getFutureTimestamp(daysElapsed),
             );
 
-            for (const feature of expectedMarkedFeatures) {
-                expect(await featureToggleStore.get(feature)).toBeTruthy();
-            }
+        expect(markedToggles).toEqual(
+            expect.arrayContaining(
+                expectedMarkedFeatures.map((name: string) => ({
+                    name,
+                    potentiallyStale: true,
+                    project: 'default',
+                })),
+            ),
+        );
+        expect(markedToggles.length).toEqual(expectedMarkedFeatures.length);
 
-            const markedToggles =
-                await featureToggleStore.updatePotentiallyStaleFeatures(
-                    getFutureTimestamp(daysElapsed),
-                );
-
-            expect(markedToggles).toEqual(
-                expect.arrayContaining(
-                    expectedMarkedFeatures.map((name: string) => ({
-                        name,
-                        potentiallyStale: true,
-                        project: 'default',
-                    })),
-                ),
-            );
-            expect(markedToggles.length).toEqual(expectedMarkedFeatures.length);
-
-            for (const feature of expectedMarkedFeatures) {
-                expect(
-                    await featureToggleStore.isPotentiallyStale(feature),
-                ).toBeTruthy();
-            }
-        },
-    );
+        for (const feature of expectedMarkedFeatures) {
+            expect(
+                await featureToggleStore.isPotentiallyStale(feature),
+            ).toBeTruthy();
+        }
+    });
     test('it does not mark toggles already flagged as stale', async () => {
         const features: FeatureToggleInsert[] = [
             {

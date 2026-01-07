@@ -1,13 +1,15 @@
-import getLogger from '../../test/fixtures/no-logger';
-import { CLIENT } from '../types/permissions';
-import { createTestConfig } from '../../test/config/test-config';
-import ApiUser from '../types/api-user';
-import { ALL, ApiTokenType } from '../types/models/api-token';
+import getLogger from '../../test/fixtures/no-logger.js';
+import { CLIENT } from '../types/permissions.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import ApiUser from '../types/api-user.js';
+import { ALL } from '../types/models/api-token.js';
+import { ApiTokenType } from '../types/model.js';
 import apiTokenMiddleware, {
     TOKEN_TYPE_ERROR_MESSAGE,
-} from './api-token-middleware';
-import type { ApiTokenService } from '../services';
-import type { IUnleashConfig } from '../types';
+} from './api-token-middleware.js';
+import type { ApiTokenService } from '../services/index.js';
+import type { IUnleashConfig } from '../types/index.js';
+import { vi } from 'vitest';
 
 let config: IUnleashConfig;
 
@@ -22,15 +24,15 @@ beforeEach(() => {
 
 test('should not do anything if request does not contain a authorization', async () => {
     const apiTokenService = {
-        getUserForToken: jest.fn(),
+        getUserForToken: vi.fn(),
     } as unknown as ApiTokenService;
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn(),
+        header: vi.fn(),
     };
 
     await func(req, undefined, cb);
@@ -41,15 +43,15 @@ test('should not do anything if request does not contain a authorization', async
 
 test('should not add user if unknown token', async () => {
     const apiTokenService = {
-        getUserForToken: jest.fn(),
+        getUserForToken: vi.fn(),
     } as unknown as ApiTokenService;
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('some-token'),
+        header: vi.fn().mockReturnValue('some-token'),
         user: undefined,
     };
 
@@ -62,15 +64,15 @@ test('should not add user if unknown token', async () => {
 
 test('should not make database query when provided PAT format', async () => {
     const apiTokenService = {
-        getUserForToken: jest.fn(),
+        getUserForToken: vi.fn(),
     } as unknown as ApiTokenService;
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('user:asdkjsdhg3'),
+        header: vi.fn().mockReturnValue('user:asdkjsdhg3'),
         user: undefined,
     };
 
@@ -88,19 +90,19 @@ test('should add user if known token', async () => {
         permissions: [CLIENT],
         project: ALL,
         environment: ALL,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         secret: 'a',
     });
     const apiTokenService = {
-        getUserForToken: jest.fn().mockReturnValue(apiUser),
+        getUserForToken: vi.fn().mockReturnValue(apiUser),
     } as unknown as ApiTokenService;
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('some-known-token'),
+        header: vi.fn().mockReturnValue('some-known-token'),
         user: undefined,
         path: '/api/client',
     };
@@ -112,7 +114,10 @@ test('should add user if known token', async () => {
     expect(req.user).toBe(apiUser);
 });
 
-test('should not add user if not /api/client', async () => {
+test.each([
+    ApiTokenType.CLIENT,
+    ApiTokenType.BACKEND,
+])('should not add user if not /api/client with token type %s', async (type) => {
     expect.assertions(5);
 
     const apiUser = new ApiUser({
@@ -120,16 +125,16 @@ test('should not add user if not /api/client', async () => {
         permissions: [CLIENT],
         project: ALL,
         environment: ALL,
-        type: ApiTokenType.CLIENT,
+        type,
         secret: 'a',
     });
 
     const apiTokenService = {
-        getUserForToken: jest.fn().mockReturnValue(apiUser),
+        getUserForToken: vi.fn().mockReturnValue(apiUser),
     } as unknown as ApiTokenService;
 
     const func = apiTokenMiddleware(config, { apiTokenService });
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const res = {
         status: (code: unknown) => ({
@@ -141,7 +146,7 @@ test('should not add user if not /api/client', async () => {
     };
 
     const req = {
-        header: jest.fn().mockReturnValue('some-known-token'),
+        header: vi.fn().mockReturnValue('some-known-token'),
         user: undefined,
         path: '/api/admin',
     };
@@ -159,11 +164,11 @@ test('should not add user if disabled', async () => {
         permissions: [CLIENT],
         project: ALL,
         environment: ALL,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         secret: 'a',
     });
     const apiTokenService = {
-        getUserForToken: jest.fn().mockReturnValue(apiUser),
+        getUserForToken: vi.fn().mockReturnValue(apiUser),
     } as unknown as ApiTokenService;
 
     const disabledConfig = createTestConfig({
@@ -176,14 +181,14 @@ test('should not add user if disabled', async () => {
 
     const func = apiTokenMiddleware(disabledConfig, { apiTokenService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('some-known-token'),
+        header: vi.fn().mockReturnValue('some-known-token'),
         user: undefined,
     };
 
-    const send = jest.fn();
+    const send = vi.fn();
     const res = {
         status: () => {
             return {
@@ -209,10 +214,10 @@ test('should call next if apiTokenService throws', async () => {
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('some-token'),
+        header: vi.fn().mockReturnValue('some-token'),
         user: undefined,
     };
 
@@ -223,7 +228,7 @@ test('should call next if apiTokenService throws', async () => {
 });
 
 test('should call next if apiTokenService throws x2', async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    vi.spyOn(global.console, 'error').mockImplementation(() => vi.fn());
     const apiTokenService = {
         getUserForToken: () => {
             throw new Error('hi there, i am stupid');
@@ -232,10 +237,10 @@ test('should call next if apiTokenService throws x2', async () => {
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('some-token'),
+        header: vi.fn().mockReturnValue('some-token'),
         user: undefined,
     };
 
@@ -250,19 +255,19 @@ test('should add user if client token and /edge/metrics', async () => {
         permissions: [CLIENT],
         project: ALL,
         environment: ALL,
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         secret: 'a',
     });
     const apiTokenService = {
-        getUserForToken: jest.fn().mockReturnValue(apiUser),
+        getUserForToken: vi.fn().mockReturnValue(apiUser),
     } as unknown as ApiTokenService;
 
     const func = apiTokenMiddleware(config, { apiTokenService });
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
     const req = {
-        header: jest.fn().mockReturnValue('some-known-token'),
+        header: vi.fn().mockReturnValue('some-known-token'),
         user: undefined,
         path: '/edge/metrics',
         method: 'POST',

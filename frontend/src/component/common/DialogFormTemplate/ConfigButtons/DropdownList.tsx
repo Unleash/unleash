@@ -107,7 +107,7 @@ export function DropdownList<T = string>({
                     return (
                         <StyledListItem
                             aria-describedby={labelId}
-                            key={`${option.label}@index`}
+                            key={`${option.label}@${index}`}
                             dense
                             disablePadding
                             tabIndex={0}

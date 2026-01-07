@@ -1,7 +1,7 @@
-import { PersonalDashboard } from './PersonalDashboard';
+import { PersonalDashboard } from './PersonalDashboard.tsx';
 import { render } from 'utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';
-import { testServerRoute, testServerSetup } from '../../utils/testServer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();
 
@@ -18,7 +18,7 @@ const setupLongRunningProject = () => {
                 id: 'projectId',
                 memberCount: 10,
                 featureCount: 100,
-                health: 80,
+                techicalDebt: 20,
                 name: 'projectName',
             },
         ],
@@ -40,7 +40,7 @@ const setupLongRunningProject = () => {
             potentiallyStaleFlags: 14,
             staleFlags: 13,
             activeFlags: 12,
-            health: 81,
+            technicalDebt: 19,
         },
         latestEvents: [{ summary: 'someone created a flag', id: 0 }],
         roles: [{ name: 'Member' }],
@@ -84,7 +84,7 @@ const setupNewProject = () => {
                 id: 'projectId',
                 memberCount: 3,
                 featureCount: 0,
-                health: 100,
+                technicalDebt: 0,
                 name: 'projectName',
             },
         ],
@@ -142,10 +142,10 @@ test('Render personal dashboard for a long running project', async () => {
     await screen.findByText('projectName');
     await screen.findByText('10'); // members
     await screen.findByText('100'); // features
-    await screen.findAllByText('80%'); // health
+    await screen.findAllByText('20%'); // technical debt
 
-    await screen.findByText('Project health');
-    await screen.findByText('70%'); // avg health past window
+    await screen.findByText('Technical debt');
+    await screen.findByText('30%'); // avg technical debt past window
     await screen.findByText('someone created a flag');
     await screen.findByText('Member');
     await screen.findByText('myFlag');
@@ -161,7 +161,7 @@ test('Render personal dashboard for a new project', async () => {
     await screen.findByText('projectName');
     await screen.findByText('3'); // members
     await screen.findByText('0'); // features
-    await screen.findByText('100%'); // health
+    await screen.findByText('0%'); // technical debt
 
     await screen.findByText('Create a feature flag');
     await screen.findByText('Connect an SDK');

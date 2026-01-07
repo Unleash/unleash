@@ -1,8 +1,9 @@
 import knex from 'knex';
-import EventStore from './event-store';
-import getLogger from '../../../test/fixtures/no-logger';
+import { EventStore } from './event-store.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import { subHours, formatRFC3339 } from 'date-fns';
-import dbInit from '../../../test/e2e/helpers/database-init';
+import dbInit from '../../../test/e2e/helpers/database-init.js';
+import { APPLICATION_CREATED } from '../../events/index.js';
 
 beforeAll(() => {
     getLogger.setMuteError(true);
@@ -27,9 +28,19 @@ test('Trying to get events by name if db fails should yield empty list', async (
         client: 'pg',
     });
     const store = new EventStore(db, getLogger);
-    const events = await store.deprecatedSearchEvents({
-        type: 'application-created',
-    });
+    const events = await store.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'type',
+                operator: 'IS',
+                values: [APPLICATION_CREATED],
+            },
+        ],
+    );
     expect(events).toBeTruthy();
     expect(events.length).toBe(0);
     await db.destroy();

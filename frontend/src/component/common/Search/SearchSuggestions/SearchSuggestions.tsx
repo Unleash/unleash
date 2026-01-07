@@ -9,22 +9,22 @@ import {
     type IGetSearchContextOutput,
 } from 'hooks/useSearch';
 import type { VFC } from 'react';
-import { SearchDescription } from './SearchDescription/SearchDescription';
+import { SearchDescription } from './SearchDescription/SearchDescription.tsx';
 import {
     SearchInstructions,
     StyledCode,
-} from './SearchInstructions/SearchInstructions';
+} from './SearchInstructions/SearchInstructions.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { onEnter } from './onEnter';
-import { SearchHistory } from './SearchHistory';
-import { SearchPaper } from '../Search';
+import { onEnter } from './onEnter.ts';
+import { SearchHistory } from './SearchHistory.tsx';
+import { SearchPaper } from '../Search.tsx';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(2),
 }));
 
-const StyledHistory = styled(History)(({ theme }) => ({
+const _StyledHistory = styled(History)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 

@@ -3,7 +3,7 @@ import type {
     IFeatureLifecycleStore,
     FeatureLifecycleView,
     NewStage,
-} from './feature-lifecycle-store-type';
+} from './feature-lifecycle-store-type.js';
 
 export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
     private lifecycles: Record<string, FeatureLifecycleView> = {};
@@ -26,15 +26,13 @@ export class FakeFeatureLifecycleStore implements IFeatureLifecycleStore {
         return results.filter((result) => result !== null) as NewStage[];
     }
 
-    async backfill() {}
-
     private async insertOne(
         featureLifecycleStage: FeatureLifecycleStage,
     ): Promise<boolean> {
         if (await this.stageExists(featureLifecycleStage)) {
             return false;
         }
-        const newStages: NewStage[] = [];
+        const _newStages: NewStage[] = [];
         const existingStages = await this.get(featureLifecycleStage.feature);
         this.lifecycles[featureLifecycleStage.feature] = [
             ...existingStages,

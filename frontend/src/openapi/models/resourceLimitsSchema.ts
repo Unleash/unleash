@@ -17,7 +17,7 @@ export interface ResourceLimitsSchema {
     /** The maximum number of action set definitions per project allowed. */
     actionSetsPerProject: number;
     /**
-     * The maximum number of SDK and admin API tokens you can have at the same time. This limit applies only to server-side and client-side SDK tokens and to admin tokens. Personal access tokens are not subject to this limit. The limit applies to the total number of tokens across all projects in your organization.
+     * The maximum number of SDK and admin API tokens you can have at the same time. This limit applies only to backend and frontend SDK tokens and to admin tokens. Personal access tokens are not subject to this limit. The limit applies to the total number of tokens across all projects in your organization.
      * @minimum 0
      */
     apiTokens: number;
@@ -42,6 +42,8 @@ export interface ResourceLimitsSchema {
      * @minimum 1
      */
     projects: number;
+    /** The maximum number of release templates allowed. */
+    releaseTemplates: number;
     /** The maximum number of segments allowed. */
     segments: number;
     /** The maximum number of values per segment allowed. */

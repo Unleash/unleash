@@ -1,8 +1,7 @@
-import { UnleashError } from './unleash-error';
+import { UnleashError } from './unleash-error.js';
 
 class ForbiddenError extends UnleashError {
     statusCode = 403;
 }
 
 export default ForbiddenError;
-module.exports = ForbiddenError;

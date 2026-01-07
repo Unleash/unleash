@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
-import { DemoTopics } from './DemoTopics/DemoTopics';
-import { DemoSteps } from './DemoSteps/DemoSteps';
+import { DemoTopics } from './DemoTopics/DemoTopics.tsx';
+import { DemoSteps } from './DemoSteps/DemoSteps.tsx';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { TOPICS } from './demo-topics';
-import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome';
-import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish';
-import { DemoDialogPlans } from './DemoDialog/DemoDialogPlans/DemoDialogPlans';
+import { TOPICS } from './demo-topics.js';
+import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome.tsx';
+import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { DemoBanner } from './DemoBanner/DemoBanner';
+import { DemoBanner } from './DemoBanner/DemoBanner.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
@@ -37,7 +36,6 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
         storedProgress.welcomeOpen ?? defaultProgress.welcomeOpen,
     );
     const [finishOpen, setFinishOpen] = useState(false);
-    const [plansOpen, setPlansOpen] = useState(false);
 
     const [expanded, setExpanded] = useState(
         storedProgress.expanded ?? defaultProgress.expanded,
@@ -84,21 +82,8 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
 
     return (
         <>
-            <DemoBanner
-                onPlans={() => {
-                    closeGuide();
-                    setWelcomeOpen(false);
-
-                    setPlansOpen(true);
-
-                    trackEvent('demo-see-plans');
-                }}
-            />
+            <DemoBanner />
             {children}
-            <DemoDialogPlans
-                open={plansOpen}
-                onClose={() => setPlansOpen(false)}
-            />
             <ConditionallyRender
                 condition={!isSmallScreen}
                 show={
@@ -129,7 +114,6 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                             open={finishOpen}
                             onClose={() => {
                                 setFinishOpen(false);
-                                setPlansOpen(true);
                             }}
                             onRestart={() => {
                                 setFinishOpen(false);
@@ -148,7 +132,6 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                                 setStep(0);
 
                                 setWelcomeOpen(false);
-                                setPlansOpen(false);
 
                                 trackEvent('demo-start-topic', {
                                     props: {
@@ -159,7 +142,6 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                             topics={TOPICS}
                             onWelcome={() => {
                                 closeGuide();
-                                setPlansOpen(false);
 
                                 setWelcomeOpen(true);
 

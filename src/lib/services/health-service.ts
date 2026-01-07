@@ -1,19 +1,13 @@
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import type { Logger } from '../logger';
-import type { IFeatureTypeStore } from '../types/stores/feature-type-store';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IFeatureTypeStore } from '../types/stores/feature-type-store.js';
 
 class HealthService {
     private featureTypeStore: IFeatureTypeStore;
 
-    private logger: Logger;
-
-    constructor(
-        { featureTypeStore }: Pick<IUnleashStores, 'featureTypeStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
-    ) {
+    constructor({
+        featureTypeStore,
+    }: Pick<IUnleashStores, 'featureTypeStore'>) {
         this.featureTypeStore = featureTypeStore;
-        this.logger = getLogger('services/health-service.ts');
     }
 
     async dbIsUp(): Promise<boolean> {
@@ -23,4 +17,3 @@ class HealthService {
 }
 
 export default HealthService;
-module.exports = HealthService;

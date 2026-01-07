@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
-import { useFilteredTrends } from './useFilteredTrends';
-import { useGroupedProjectTrends } from './useGroupedProjectTrends';
-import { useFilteredFlagsSummary } from './useFilteredFlagsSummary';
-import { useAllDatapoints } from './useAllDatapoints';
+import { useFilteredTrends } from './useFilteredTrends.js';
+import { useGroupedProjectTrends } from './useGroupedProjectTrends.js';
+import { useFilteredFlagsSummary } from './useFilteredFlagsSummary.js';
+import { useAllDatapoints } from './useAllDatapoints.js';
 
 export const useInsightsData = (
     instanceInsights: InstanceInsightsSchema,
@@ -12,6 +12,7 @@ export const useInsightsData = (
     const allMetricsDatapoints = useAllDatapoints(
         instanceInsights.metricsSummaryTrends,
     );
+
     const projectsData = useFilteredTrends(
         instanceInsights.projectFlagTrends,
         projects,
@@ -27,6 +28,19 @@ export const useInsightsData = (
 
     const summary = useFilteredFlagsSummary(projectsData);
 
+    const lifecycleData = useFilteredTrends(
+        instanceInsights.lifecycleTrends,
+        projects,
+    );
+    const groupedLifecycleData = useGroupedProjectTrends(lifecycleData);
+
+    const creationArchiveData = useFilteredTrends(
+        instanceInsights.creationArchiveTrends,
+        projects,
+    );
+    const groupedCreationArchiveData =
+        useGroupedProjectTrends(creationArchiveData);
+
     return useMemo(
         () => ({
             ...instanceInsights,
@@ -37,6 +51,9 @@ export const useInsightsData = (
             environmentTypeTrends: instanceInsights.environmentTypeTrends,
             summary,
             allMetricsDatapoints,
+            lifecycleData,
+            groupedLifecycleData,
+            groupedCreationArchiveData,
         }),
         [
             instanceInsights,
@@ -46,6 +63,9 @@ export const useInsightsData = (
             metricsData,
             groupedMetricsData,
             summary,
+            lifecycleData,
+            groupedLifecycleData,
+            groupedCreationArchiveData,
         ],
     );
 };

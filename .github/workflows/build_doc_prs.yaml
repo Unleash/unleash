@@ -5,12 +5,17 @@ on:
     paths:
       - website/**
 
+# If two events are triggered within a short time in the same PR, cancel the run of the oldest event
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     name: build # temporary solution to trick branch protection rules
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build docs
         env:
           UNLEASH_FEEDBACK_TARGET_URL: ${{ secrets.DOCS_FEEDBACK_TARGET_URL }}

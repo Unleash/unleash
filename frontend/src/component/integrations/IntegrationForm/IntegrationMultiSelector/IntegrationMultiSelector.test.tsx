@@ -5,7 +5,7 @@ import { render } from 'utils/testRenderer';
 import {
     type IIntegrationMultiSelectorProps,
     IntegrationMultiSelector,
-} from './IntegrationMultiSelector';
+} from './IntegrationMultiSelector.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const onChange = vi.fn();

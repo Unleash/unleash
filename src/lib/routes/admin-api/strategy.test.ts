@@ -1,9 +1,10 @@
 import supertest from 'supertest';
-import { createTestConfig } from '../../../test/config/test-config';
-import createStores from '../../../test/fixtures/store';
-import permissions from '../../../test/fixtures/permissions';
-import getApp from '../../app';
-import { createServices } from '../../services';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import createStores from '../../../test/fixtures/store.js';
+import permissions from '../../../test/fixtures/permissions.js';
+import getApp from '../../app.js';
+import { createServices } from '../../services/index.js';
+import { afterEach, vi } from 'vitest';
 
 async function getSetup() {
     const randomBase = `/random${Math.round(Math.random() * 1000)}`;
@@ -23,6 +24,11 @@ async function getSetup() {
         perms,
     };
 }
+
+afterEach(() => {
+    delete process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION;
+    delete process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_EDITING;
+});
 
 test('add version numbers for /strategies', async () => {
     const { request, base } = await getSetup();
@@ -70,6 +76,20 @@ test('create a new strategy with empty parameters', async () => {
         .expect(201);
 });
 
+test('creating strategies is forbidden when disabled by configuration', async () => {
+    process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION = 'true';
+    const { request, base } = await getSetup();
+
+    const response = await request
+        .post(`${base}/api/admin/strategies`)
+        .send({ name: 'LockedStrategy', parameters: [] })
+        .expect(403);
+
+    expect(response.body.message).toContain(
+        'Custom strategy creation is disabled',
+    );
+});
+
 test('not be possible to override name', async () => {
     const { request, base, strategyStore } = await getSetup();
     strategyStore.createStrategy({ name: 'Testing', parameters: [] });
@@ -89,6 +109,22 @@ test('update strategy', async () => {
         .put(`${base}/api/admin/strategies/${name}`)
         .send({ name, parameters: [], description: 'added' })
         .expect(200);
+});
+
+test('updating strategies is forbidden when disabled by configuration', async () => {
+    process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_EDITING = 'true';
+    const { request, base, strategyStore } = await getSetup();
+    const name = 'LockedStrategy';
+    await strategyStore.createStrategy({ name, parameters: [] });
+
+    const response = await request
+        .put(`${base}/api/admin/strategies/${name}`)
+        .send({ name, parameters: [] })
+        .expect(403);
+
+    expect(response.body.message).toContain(
+        'Custom strategy modification is disabled',
+    );
 });
 
 test('not update unknown strategy', async () => {
@@ -112,14 +148,14 @@ test('validate format when updating strategy', async () => {
 });
 
 test('editable=false will stop delete request', async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    vi.spyOn(global.console, 'error').mockImplementation(() => vi.fn());
     const { request, base } = await getSetup();
     const name = 'default';
     return request.delete(`${base}/api/admin/strategies/${name}`).expect(500);
 });
 
 test('editable=false will stop edit request', async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    vi.spyOn(global.console, 'error').mockImplementation(() => vi.fn());
     const { request, base } = await getSetup();
     const name = 'default';
     return request

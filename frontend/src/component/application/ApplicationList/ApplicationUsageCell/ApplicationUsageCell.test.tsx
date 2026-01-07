@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { ApplicationUsageCell } from './ApplicationUsageCell';
+import { ApplicationUsageCell } from './ApplicationUsageCell.tsx';
 
 test('displays not connected if no usage found', () => {
     render(<ApplicationUsageCell usage={[]} />);

@@ -2,7 +2,7 @@ import { type FormEventHandler, useState, type VFC } from 'react';
 import { Button, Grid, styled, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
-import AuthOptions from './common/AuthOptions/AuthOptions';
+import AuthOptions from './common/AuthOptions/AuthOptions.tsx';
 import DividerText from 'component/common/DividerText/DividerText';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PasswordField from 'component/common/PasswordField/PasswordField';

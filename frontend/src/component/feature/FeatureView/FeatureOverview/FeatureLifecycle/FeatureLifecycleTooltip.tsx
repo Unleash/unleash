@@ -6,15 +6,15 @@ import CloudCircle from '@mui/icons-material/CloudCircle';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
-import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
-import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors';
-import type { LifecycleStage } from './LifecycleStage';
+import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen.tsx';
+import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors.ts';
+import type { LifecycleStage } from './LifecycleStage.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
-import { isSafeToArchive } from './isSafeToArchive';
+import { isSafeToArchive } from './isSafeToArchive.ts';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { formatDistanceToNow, parseISO } from 'date-fns';
@@ -164,6 +164,33 @@ const LiveStageAction: FC<{
     );
 };
 
+const ReadyForCleanupAction: FC<{
+    onComplete: () => void;
+    loading: boolean;
+    project: string;
+}> = ({ onComplete, loading, project }) => {
+    return (
+        <StyledStageAction>
+            <StyledStageActionTitle>Ready for cleanup?</StyledStageActionTitle>
+            <InfoText sx={{ mb: 1 }}>
+                If this flag is no longer needed and ready to be removed from
+                the code, you can mark it as ready for cleanup. This helps
+                reduce technical debt.
+            </InfoText>
+            <PermissionButton
+                variant='outlined'
+                permission={UPDATE_FEATURE}
+                size='small'
+                onClick={onComplete}
+                disabled={loading}
+                projectId={project}
+            >
+                Mark ready for cleanup
+            </PermissionButton>
+        </StyledStageAction>
+    );
+};
+
 const SafeToArchive: FC<{
     onArchive: () => void;
     onUncomplete: () => void;
@@ -194,7 +221,7 @@ const SafeToArchive: FC<{
                     disabled={loading}
                     projectId={project}
                 >
-                    Revert to live
+                    Revert to previous stage
                 </PermissionButton>
                 <PermissionButton
                     variant='outlined'
@@ -223,7 +250,7 @@ const ActivelyUsed: FC<{
         </InfoText>
         <InfoText>
             If you think this feature was completed too early you can revert to
-            the live stage.
+            the previous stage.
         </InfoText>
         <PermissionButton
             variant='outlined'
@@ -233,7 +260,7 @@ const ActivelyUsed: FC<{
             onClick={onUncomplete}
             disabled={loading}
         >
-            Revert to live
+            Revert to previous stage
         </PermissionButton>
     </StyledStageAction>
 );
@@ -348,9 +375,9 @@ export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
     project: string;
-    onArchive: () => void;
-    onComplete: () => void;
-    onUncomplete: () => void;
+    onArchive?: () => void;
+    onComplete?: () => void;
+    onUncomplete?: () => void;
     loading: boolean;
 }> = ({
     children,
@@ -399,7 +426,7 @@ export const FeatureLifecycleTooltip: FC<{
                 {stage.name !== 'archived' ? (
                     <StyledFooter>
                         <EnvironmentsInfo stage={stage} />
-                        {stage.name === 'live' && (
+                        {stage.name === 'live' && onComplete ? (
                             <LiveStageAction
                                 onComplete={onComplete}
                                 loading={loading}
@@ -409,8 +436,10 @@ export const FeatureLifecycleTooltip: FC<{
                                     environments={stage.environments!}
                                 />
                             </LiveStageAction>
-                        )}
-                        {stage.name === 'completed' && (
+                        ) : null}
+                        {stage.name === 'completed' &&
+                        onArchive &&
+                        onUncomplete ? (
                             <CompletedStageDescription
                                 environments={stage.environments!}
                                 onArchive={onArchive}
@@ -418,7 +447,16 @@ export const FeatureLifecycleTooltip: FC<{
                                 loading={loading}
                                 project={project}
                             />
-                        )}
+                        ) : null}
+                        {(stage.name === 'initial' ||
+                            stage.name === 'pre-live') &&
+                        onComplete ? (
+                            <ReadyForCleanupAction
+                                onComplete={onComplete}
+                                loading={loading}
+                                project={project}
+                            />
+                        ) : null}
                     </StyledFooter>
                 ) : null}
             </Box>

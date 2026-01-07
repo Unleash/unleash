@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { updateContextFieldSchema } from './update-context-field-schema';
+import { updateContextFieldSchema } from './update-context-field-schema.js';
 
 export const createContextFieldSchema = {
     ...updateContextFieldSchema,

@@ -1,8 +1,8 @@
 import type {
     IInactiveUserRow,
     IInactiveUsersStore,
-} from '../types/inactive-users-store-type';
-import type { IUser } from '../../../types';
+} from '../types/inactive-users-store-type.js';
+import type { IUser } from '../../../types/index.js';
 import { subDays } from 'date-fns';
 
 export class FakeInactiveUsersStore implements IInactiveUsersStore {
@@ -21,13 +21,14 @@ export class FakeInactiveUsersStore implements IInactiveUsersStore {
                             user.createdAt < subDays(new Date(), daysInactive)
                         );
                     }
+                    return false;
                 })
                 .map((user) => {
                     return {
                         id: user.id,
                         name: user.name,
                         username: user.username,
-                        email: user.email,
+                        email: user.email!,
                         seen_at: user.seenAt,
                         created_at: user.createdAt || new Date(),
                     };

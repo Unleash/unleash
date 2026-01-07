@@ -1,12 +1,15 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import type User from '../../../../lib/types/user';
-import { SYSTEM_USER_AUDIT, TEST_AUDIT_USER } from '../../../../lib/types';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../../../lib/util/constants.js';
+import type User from '../../../../lib/types/user.js';
+import {
+    SYSTEM_USER_AUDIT,
+    TEST_AUDIT_USER,
+} from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -25,7 +28,7 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureX',
@@ -34,7 +37,7 @@ beforeAll(async () => {
         },
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureY',
@@ -43,7 +46,7 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureZ',
@@ -51,7 +54,7 @@ beforeAll(async () => {
         },
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureArchivedX',
@@ -66,13 +69,13 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await app.services.featureToggleServiceV2.archiveToggle(
+    await app.services.featureToggleService.archiveToggle(
         'featureArchivedX',
         testUser,
         TEST_AUDIT_USER,
     );
 
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureArchivedY',
@@ -81,12 +84,12 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await app.services.featureToggleServiceV2.archiveToggle(
+    await app.services.featureToggleService.archiveToggle(
         'featureArchivedY',
         testUser,
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureArchivedZ',
@@ -94,12 +97,12 @@ beforeAll(async () => {
         },
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.archiveToggle(
+    await app.services.featureToggleService.archiveToggle(
         'featureArchivedZ',
         testUser,
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'feature.with.variants',
@@ -107,7 +110,7 @@ beforeAll(async () => {
         },
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.saveVariants(
+    await app.services.featureToggleService.saveVariants(
         'feature.with.variants',
         'default',
         [

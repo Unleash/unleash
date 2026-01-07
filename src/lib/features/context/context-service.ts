@@ -1,29 +1,30 @@
-import type { Logger } from '../../logger';
 import type {
     IContextField,
     IContextFieldDto,
     IContextFieldStore,
-} from './context-field-store-type';
+} from './context-field-store-type.js';
 import type {
     IFeatureStrategiesStore,
     IUnleashStores,
-} from '../../types/stores';
-import type { IUnleashConfig } from '../../types/option';
-import type { ContextFieldStrategiesSchema } from '../../openapi/spec/context-field-strategies-schema';
+} from '../../types/stores.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { ContextFieldStrategiesSchema } from '../../openapi/spec/context-field-strategies-schema.js';
+import type { IAuditUser, IFeatureStrategy } from '../../types/index.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import type EventService from '../events/event-service.js';
+import {
+    contextSchema,
+    legalValueSchema,
+} from '../../services/context-schema.js';
+import { NameExistsError, NotFoundError } from '../../error/index.js';
+import { nameSchema } from '../../schema/feature-schema.js';
+import type { LegalValueSchema } from '../../openapi/index.js';
 import {
     CONTEXT_FIELD_CREATED,
-    CONTEXT_FIELD_DELETED,
     CONTEXT_FIELD_UPDATED,
-    type IAuditUser,
-    type IFeatureStrategy,
-    type IFlagResolver,
-} from '../../types';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type EventService from '../events/event-service';
-import { contextSchema, legalValueSchema } from '../../services/context-schema';
-import { NameExistsError } from '../../error';
-import { nameSchema } from '../../schema/feature-schema';
-import type { LegalValueSchema } from '../../openapi';
+    CONTEXT_FIELD_DELETED,
+} from '../../events/index.js';
+import ConflictError from '../../error/conflict-error.js';
 
 class ContextService {
     private eventService: EventService;
@@ -32,10 +33,6 @@ class ContextService {
 
     private featureStrategiesStore: IFeatureStrategiesStore;
 
-    private logger: Logger;
-
-    private flagResolver: IFlagResolver;
-
     private privateProjectChecker: IPrivateProjectChecker;
 
     constructor(
@@ -43,27 +40,38 @@ class ContextService {
             contextFieldStore,
             featureStrategiesStore,
         }: Pick<IUnleashStores, 'contextFieldStore' | 'featureStrategiesStore'>,
-        {
-            getLogger,
-            flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        _config: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.privateProjectChecker = privateProjectChecker;
         this.eventService = eventService;
-        this.flagResolver = flagResolver;
         this.contextFieldStore = contextFieldStore;
         this.featureStrategiesStore = featureStrategiesStore;
-        this.logger = getLogger('services/context-service.js');
     }
 
     async getAll(): Promise<IContextField[]> {
         return this.contextFieldStore.getAll();
     }
 
+    async getAllWithoutProject(): Promise<IContextField[]> {
+        const allFields = await this.contextFieldStore.getAll();
+        return allFields.filter((field) => !field.project);
+    }
+
+    async getAllForProject(projectId: string): Promise<IContextField[]> {
+        const allFields = await this.contextFieldStore.getAll();
+        return allFields.filter((field) => field.project === projectId);
+    }
+
     async getContextField(name: string): Promise<IContextField> {
-        return this.contextFieldStore.get(name);
+        const field = await this.contextFieldStore.get(name);
+        if (field === undefined) {
+            throw new NotFoundError(
+                `Could not find context field with name ${name}`,
+            );
+        }
+        return field;
     }
 
     async getStrategiesByContextField(
@@ -125,6 +133,11 @@ class ContextService {
         const contextField = await this.contextFieldStore.get(
             updatedContextField.name,
         );
+        if (contextField === undefined) {
+            throw new NotFoundError(
+                `Could not find context field with name: ${updatedContextField.name}`,
+            );
+        }
         const value = await contextSchema.validateAsync(updatedContextField);
 
         await this.contextFieldStore.update(value);
@@ -147,6 +160,11 @@ class ContextService {
         const contextField = await this.contextFieldStore.get(
             contextFieldLegalValue.name,
         );
+        if (contextField === undefined) {
+            throw new NotFoundError(
+                `Context field with name ${contextFieldLegalValue.name} was not found`,
+            );
+        }
         const validatedLegalValue = await legalValueSchema.validateAsync(
             contextFieldLegalValue.legalValue,
         );
@@ -186,6 +204,11 @@ class ContextService {
         const contextField = await this.contextFieldStore.get(
             contextFieldLegalValue.name,
         );
+        if (contextField === undefined) {
+            throw new NotFoundError(
+                `Could not find context field with name ${contextFieldLegalValue.name}`,
+            );
+        }
 
         const newContextField = {
             ...contextField,
@@ -213,6 +236,15 @@ class ContextService {
     ): Promise<void> {
         const contextField = await this.contextFieldStore.get(name);
 
+        const strategies =
+            await this.featureStrategiesStore.getStrategiesByContextField(name);
+
+        if (strategies.length > 0) {
+            throw new ConflictError(
+                `This context field is in use by existing flags. To delete it, first remove its usage from all flags.`,
+            );
+        }
+
         // delete
         await this.contextFieldStore.delete(name);
         await this.eventService.storeEvent({
@@ -231,7 +263,7 @@ class ContextService {
         try {
             await this.contextFieldStore.get(name);
             msg = 'A context field with that name already exist';
-        } catch (error) {
+        } catch (_error) {
             // No conflict, everything ok!
             return;
         }
@@ -246,4 +278,3 @@ class ContextService {
     }
 }
 export default ContextService;
-module.exports = ContextService;

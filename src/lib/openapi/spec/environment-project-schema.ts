@@ -1,6 +1,8 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { createFeatureStrategySchema } from './create-feature-strategy-schema';
-import { createStrategyVariantSchema } from './create-strategy-variant-schema';
+import { constraintSchema } from './constraint-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
 
 export const environmentProjectSchema = {
     $id: '#/components/schemas/environmentProjectSchema',
@@ -18,7 +20,7 @@ export const environmentProjectSchema = {
             type: 'string',
             example: 'production',
             description:
-                'The [type of environment](https://docs.getunleash.io/reference/environments#environment-types).',
+                'The [type of environment](https://docs.getunleash.io/concepts/environments#environment-types).',
         },
         enabled: {
             type: 'boolean',
@@ -55,17 +57,34 @@ export const environmentProjectSchema = {
         defaultStrategy: {
             description:
                 'The strategy configuration to add when enabling a feature environment by default',
-            $ref: '#/components/schemas/createFeatureStrategySchema',
+            $ref: '#/components/schemas/featureStrategySchema',
+        },
+        visible: {
+            type: 'boolean',
+            example: true,
+            description:
+                'Indicates whether the environment can be enabled for feature flags in the project',
+        },
+        requiredApprovals: {
+            type: 'integer',
+            nullable: true,
+            description:
+                'Experimental field. The number of approvals required before a change request can be applied in this environment.',
+            minimum: 1,
+            example: 3,
         },
     },
     components: {
         schemas: {
-            createFeatureStrategySchema,
-            createStrategyVariantSchema,
+            featureStrategySchema,
+            strategyVariantSchema,
+            constraintSchema,
+            parametersSchema,
         },
     },
 } as const;
 
 export type EnvironmentProjectSchema = FromSchema<
-    typeof environmentProjectSchema
+    typeof environmentProjectSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

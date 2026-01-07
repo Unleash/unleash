@@ -1,11 +1,11 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { patSchema } from './pat-schema';
+import { patSchema } from './pat-schema.js';
 
 export const patsSchema = {
     $id: '#/components/schemas/patsSchema',
     type: 'object',
     description:
-        'Contains a collection of [personal access tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens), or PATs. PATs are automatically scoped to the authenticated user.',
+        'Contains a collection of [personal access tokens](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens), or PATs. PATs are automatically scoped to the authenticated user.',
     properties: {
         pats: {
             type: 'array',

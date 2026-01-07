@@ -1,33 +1,34 @@
+import NotImplementedError from '../../lib/error/not-implemented-error.js';
 import type {
     IUserSplashKey,
     IUserSplash,
     IUserSplashStore,
-} from '../../lib/types/stores/user-splash-store';
+} from '../../lib/types/stores/user-splash-store.js';
 
 export default class FakeUserSplashStore implements IUserSplashStore {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getAllUserSplashes(userId: number): Promise<IUserSplash[]> {
+    getAllUserSplashes(_userId: number): Promise<IUserSplash[]> {
         return Promise.resolve([]);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getSplash(userId: number, splashId: string): Promise<IUserSplash> {
-        return Promise.resolve(undefined);
+    getSplash(_userId: number, _splashId: string): Promise<IUserSplash> {
+        throw new NotImplementedError('This is not implemented yet');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    updateSplash(splash: IUserSplash): Promise<IUserSplash> {
-        return Promise.resolve(undefined);
+    updateSplash(_splash: IUserSplash): Promise<IUserSplash> {
+        throw new NotImplementedError('This is not implemented yet');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    exists(key: IUserSplashKey): Promise<boolean> {
+    exists(_key: IUserSplashKey): Promise<boolean> {
         return Promise.resolve(false);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    get(key: IUserSplashKey): Promise<IUserSplash> {
-        return Promise.resolve(undefined);
+    get(_key: IUserSplashKey): Promise<IUserSplash> {
+        throw new NotImplementedError('This is not implemented yet');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -36,7 +37,7 @@ export default class FakeUserSplashStore implements IUserSplashStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    delete(key: IUserSplashKey): Promise<void> {
+    delete(_key: IUserSplashKey): Promise<void> {
         return Promise.resolve(undefined);
     }
 

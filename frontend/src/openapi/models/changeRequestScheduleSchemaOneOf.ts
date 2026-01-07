@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestScheduleSchemaOneOfStatus } from './changeRequestScheduleSchemaOneOfStatus';
+import type { ChangeRequestScheduleSchemaOneOfStatus } from './changeRequestScheduleSchemaOneOfStatus.js';
 
 /**
  * A pending schedule for a change request.

@@ -1,6 +1,6 @@
-import type { Logger } from './logger';
-import type { IUnleashConfig } from './types';
-import { createGauge, type Gauge } from './util/metrics';
+import type { Logger } from './logger.js';
+import type { IUnleashConfig } from './types/index.js';
+import { createGauge, type Gauge } from './util/metrics/index.js';
 
 type Query<R> = () => Promise<R | undefined | null>;
 type MetricValue<L extends string> = {

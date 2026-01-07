@@ -1,5 +1,5 @@
 import type EventEmitter from 'events';
-import timer from './timer';
+import timer from './timer.js';
 
 // wrapTimer keeps track of the timing of a async operation and emits
 // a event on the given eventBus once the operation is complete
@@ -36,6 +36,3 @@ const metricsHelper = {
     wrapTimer,
 };
 export default metricsHelper;
-module.exports = {
-    wrapTimer,
-};

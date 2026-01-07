@@ -1,12 +1,12 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { legalValueSchema } from './legal-value-schema';
+import { legalValueSchema } from './legal-value-schema.js';
 
 export const contextFieldSchema = {
     $id: '#/components/schemas/contextFieldSchema',
     type: 'object',
     additionalProperties: false,
     description:
-        'A representation of a [context field](https://docs.getunleash.io/reference/unleash-context).',
+        'A representation of a [context field](https://docs.getunleash.io/concepts/unleash-context).',
     required: ['name'],
     properties: {
         name: {
@@ -22,7 +22,7 @@ export const contextFieldSchema = {
         },
         stickiness: {
             description:
-                'Does this context field support being used for [stickiness](https://docs.getunleash.io/reference/stickiness) calculations',
+                'Does this context field support being used for [stickiness](https://docs.getunleash.io/concepts/stickiness) calculations',
             type: 'boolean',
             example: true,
         },
@@ -62,6 +62,12 @@ export const contextFieldSchema = {
             items: {
                 $ref: '#/components/schemas/legalValueSchema',
             },
+        },
+        project: {
+            description:
+                'The project this context field belongs to (if it is project-specific)',
+            type: 'string',
+            example: 'my-project',
         },
     },
     components: {

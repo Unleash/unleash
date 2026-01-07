@@ -111,7 +111,7 @@ export const StrategyParameter = ({
                         Parameters let you provide arguments to your strategy
                         that it can access for evaluation. Read more in the{' '}
                         <Link
-                            href='https://docs.getunleash.io/reference/custom-activation-strategies#parameter-types'
+                            href='https://docs.getunleash.io/concepts/activation-strategies#paremeters'
                             target='_blank'
                             rel='noreferrer'
                         >
@@ -133,7 +133,7 @@ export const StrategyParameter = ({
                 <Tooltip title='Remove parameter' arrow>
                     <IconButton
                         onClick={() => {
-                            setParams(params.filter((e, i) => i !== index));
+                            setParams(params.filter((_e, i) => i !== index));
                         }}
                         size='large'
                     >

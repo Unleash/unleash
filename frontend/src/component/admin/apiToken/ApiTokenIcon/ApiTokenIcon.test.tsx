@@ -1,7 +1,7 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ApiTokenIcon, isOrphanedToken } from './ApiTokenIcon';
+import { ApiTokenIcon, isOrphanedToken } from './ApiTokenIcon.tsx';
 
 describe('isOrphanedToken', () => {
     it('should be true for wildcard tokens with secret indicating it is orphaned', () => {

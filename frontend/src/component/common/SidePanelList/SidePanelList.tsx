@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import { type ReactNode, useState } from 'react';
-import { SidePanelListHeader } from './SidePanelListHeader';
-import { SidePanelListItem } from './SidePanelListItem';
+import { SidePanelListHeader } from './SidePanelListHeader.tsx';
+import { SidePanelListItem } from './SidePanelListItem.tsx';
 
 const StyledSidePanelListWrapper = styled('div')({
     display: 'flex',

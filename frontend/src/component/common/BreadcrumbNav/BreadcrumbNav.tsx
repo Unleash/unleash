@@ -20,7 +20,10 @@ const StyledBreadcrumbs = styled(Breadcrumbs)({
     },
 });
 
-const StyledParagraph = styled('p')(textTruncated);
+const StyledCurrentPage = styled('span')(({ theme }) => ({
+    ...textTruncated,
+    fontWeight: theme.typography.fontWeightBold,
+}));
 
 const StyledLink = styled(Link)(({ theme }) => ({
     '& > *': {
@@ -57,6 +60,10 @@ const BreadcrumbNav = () => {
         return null;
     }
 
+    if (location.pathname === '/impact-metrics') {
+        return null;
+    }
+
     if (paths.length === 1 && paths[0] === 'projects-archive') {
         // It's not possible to use `projects/archive`, because it's :projectId path
         paths = ['projects', 'archive'];
@@ -78,9 +85,9 @@ const BreadcrumbNav = () => {
                                     const lastItem = index === paths.length - 1;
                                     if (lastItem) {
                                         return (
-                                            <StyledParagraph key={path}>
+                                            <StyledCurrentPage key={path}>
                                                 {path}
-                                            </StyledParagraph>
+                                            </StyledCurrentPage>
                                         );
                                     }
 
@@ -96,9 +103,7 @@ const BreadcrumbNav = () => {
 
                                     return (
                                         <StyledLink key={path} to={link}>
-                                            <StyledParagraph>
-                                                {path}
-                                            </StyledParagraph>
+                                            {path}
                                         </StyledLink>
                                     );
                                 })}

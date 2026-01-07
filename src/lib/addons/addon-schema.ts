@@ -1,7 +1,7 @@
 import joi from 'joi';
-import { nameType } from '../routes/util';
-import { tagTypeSchema } from '../services/tag-type-schema';
-import { installationDefinitionSchema } from './installation-definition-schema';
+import { nameType } from '../routes/util.js';
+import { tagTypeSchema } from '../services/tag-type-schema.js';
+import { installationDefinitionSchema } from './installation-definition-schema.js';
 
 export const addonDefinitionSchema = joi.object().keys({
     name: nameType,

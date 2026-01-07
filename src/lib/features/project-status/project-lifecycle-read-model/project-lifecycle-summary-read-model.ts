@@ -1,10 +1,10 @@
-import type { Db } from '../../../db/db';
-import type { IFeatureToggleStore } from '../../../types';
+import type { Db } from '../../../db/db.js';
+import type { IFeatureToggleStore } from '../../../types/index.js';
 import { subDays } from 'date-fns';
 import type {
     IProjectLifecycleSummaryReadModel,
     ProjectLifecycleSummary,
-} from './project-lifecycle-read-model-type';
+} from './project-lifecycle-read-model-type.js';
 
 type FlagsInStage = {
     initial: number;

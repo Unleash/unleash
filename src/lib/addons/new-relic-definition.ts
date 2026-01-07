@@ -14,14 +14,14 @@ import {
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
     FEATURE_UPDATED,
-} from '../types/events';
-import type { IAddonDefinition } from '../types/model';
+} from '../events/index.js';
+import type { IAddonDefinition } from '../types/model.js';
 
 const newRelicDefinition: IAddonDefinition = {
     name: 'new-relic',
     displayName: 'New Relic',
     description: 'Allows Unleash to post updates to New Relic Event API.',
-    documentationUrl: 'https://docs.getunleash.io/docs/addons/new-relic',
+    documentationUrl: 'https://docs.getunleash.io/integrate',
     howTo: 'The New Relic integration allows Unleash to post Updates to New Relic Event API when a feature flag is updated.',
     parameters: [
         {

@@ -1,12 +1,14 @@
-import type { ITagType, ITagTypeStore } from './tag-type-store-type';
+import type { ITagType, ITagTypeStore } from './tag-type-store-type.js';
 
-const NotFoundError = require('../../error/notfound-error');
+import { NotFoundError } from '../../error/index.js';
 
 export default class FakeTagTypeStore implements ITagTypeStore {
     tagTypes: ITagType[] = [];
 
     async bulkImport(tagTypes: ITagType[]): Promise<ITagType[]> {
-        tagTypes.forEach((tT) => this.tagTypes.push(tT));
+        tagTypes.forEach((tT) => {
+            this.tagTypes.push(tT);
+        });
         return tagTypes;
     }
 

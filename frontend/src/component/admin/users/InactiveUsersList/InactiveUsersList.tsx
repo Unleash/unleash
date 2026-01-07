@@ -2,30 +2,33 @@ import {
     type IInactiveUser,
     useInactiveUsers,
 } from 'hooks/api/getters/useInactiveUsers/useInactiveUsers';
-import { useUsers } from '../../../../hooks/api/getters/useUsers/useUsers';
-import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
-import { useInactiveUsersApi } from '../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi';
-import useToast from '../../../../hooks/useToast';
-import { formatUnknownError } from '../../../../utils/formatUnknownError';
-import type { IUser } from '../../../../interfaces/user';
+import { useUsers } from '../../../../hooks/api/getters/useUsers/useUsers.ts';
+import useAdminUsersApi from '../../../../hooks/api/actions/useAdminUsersApi/useAdminUsersApi.ts';
+import { useInactiveUsersApi } from '../../../../hooks/api/actions/useInactiveUsersApi/useInactiveUsersApi.ts';
+import useToast from '../../../../hooks/useToast.tsx';
+import { formatUnknownError } from '../../../../utils/formatUnknownError.ts';
+import type { IUser } from '../../../../interfaces/user.ts';
 import type React from 'react';
 import { useMemo, useState } from 'react';
-import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell';
-import type { IRole } from '../../../../interfaces/role';
-import { RoleCell } from '../../../common/Table/cells/RoleCell/RoleCell';
-import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
-import { PageContent } from '../../../common/PageContent/PageContent';
-import { PageHeader } from '../../../common/PageHeader/PageHeader';
+import { TimeAgoCell } from '../../../common/Table/cells/TimeAgoCell/TimeAgoCell.tsx';
+import type { IRole } from '../../../../interfaces/role.ts';
+import { RoleCell } from '../../../common/Table/cells/RoleCell/RoleCell.tsx';
+import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell.tsx';
+import { PageContent } from '../../../common/PageContent/PageContent.tsx';
+import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
 import { Button } from '@mui/material';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
-import { TablePlaceholder, VirtualizedTable } from '../../../common/Table';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender.tsx';
+import {
+    TablePlaceholder,
+    VirtualizedTable,
+} from '../../../common/Table/index.ts';
 
-import { DateCell } from '../../../common/Table/cells/DateCell/DateCell';
-import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsersActionCell';
-import { TextCell } from '../../../common/Table/cells/TextCell/TextCell';
-import DeleteUser from './DeleteUser/DeleteUser';
-import { DeleteInactiveUsers } from './DeleteInactiveUsers/DeleteInactiveUsers';
+import { DateCell } from '../../../common/Table/cells/DateCell/DateCell.tsx';
+import { InactiveUsersActionCell } from './InactiveUsersActionCell/InactiveUsersActionCell.tsx';
+import { TextCell } from '../../../common/Table/cells/TextCell/TextCell.tsx';
+import DeleteUser from './DeleteUser/DeleteUser.tsx';
+import { DeleteInactiveUsers } from './DeleteInactiveUsers/DeleteInactiveUsers.tsx';
 import { Link } from 'react-router-dom';
 import { StyledUsersLinkDiv } from '../Users.styles';
 
@@ -144,27 +147,15 @@ export const InactiveUsersList = () => {
             {
                 id: 'last-login',
                 Header: 'Last login',
-                accessor: (row: any) => row.seenAt || '',
-                Cell: ({ row: { original: user } }: any) => (
-                    <TimeAgoCell
-                        value={user.seenAt}
-                        emptyText='Never'
-                        title={(date) => `Last login: ${date}`}
-                    />
-                ),
+                accessor: 'seenAt',
+                Cell: TimeAgoCell,
                 maxWidth: 150,
             },
             {
                 id: 'pat-last-login',
                 Header: 'PAT last used',
-                accessor: (row: any) => row.patSeenAt || '',
-                Cell: ({ row: { original: user } }: any) => (
-                    <TimeAgoCell
-                        value={user.patSeenAt}
-                        emptyText='Never'
-                        title={(date) => `Last used: ${date}`}
-                    />
-                ),
+                accessor: 'patSeenAt',
+                Cell: TimeAgoCell,
                 maxWidth: 150,
             },
             {

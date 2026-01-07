@@ -1,9 +1,10 @@
 import type { Theme } from '@mui/material';
 import type { ILocationSettings } from 'hooks/useLocationSettings';
-import type { TooltipState } from './ChartTooltip/ChartTooltip';
-import { createTooltip } from './createTooltip';
-import { legendOptions } from './legendOptions';
+import type { TooltipState } from './ChartTooltip/ChartTooltip.jsx';
+import { createTooltip } from './createTooltip.js';
+import { legendOptions } from './legendOptions.js';
 import type { ChartOptions } from 'chart.js';
+import { getDateFnsLocale } from 'component/insights/getDateFnsLocale.js';
 
 export const createOptions = (
     theme: Theme,
@@ -59,10 +60,15 @@ export const createOptions = (
                 },
             },
             x: {
+                adapters: {
+                    date: {
+                        locale: getDateFnsLocale(locationSettings.locale),
+                    },
+                },
                 type: 'time',
                 time: {
                     unit: 'week',
-                    tooltipFormat: 'PPP',
+                    tooltipFormat: 'P',
                 },
                 grid: {
                     color: 'transparent',

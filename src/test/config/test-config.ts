@@ -3,15 +3,16 @@ import {
     IAuthType,
     type IUnleashConfig,
     type IUnleashOptions,
-} from '../../lib/types/option';
-import getLogger from '../fixtures/no-logger';
-import { createConfig } from '../../lib/create-config';
-import path from 'path';
-
+} from '../../lib/types/option.js';
+import getLogger from '../fixtures/no-logger.js';
+import { createConfig } from '../../lib/create-config.js';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 function mergeAll<T>(objects: Partial<T>[]): T {
     return merge.all<T>(objects.filter((i) => i));
 }
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
     getLogger.setMuteError(true);
     const testConfig: IUnleashOptions = {
@@ -23,12 +24,6 @@ export function createTestConfig(config?: IUnleashOptions): IUnleashConfig {
         disableScheduler: true,
         clientFeatureCaching: {
             enabled: false,
-        },
-        experimental: {
-            flags: {
-                embedProxy: true,
-                embedProxyFrontend: true,
-            },
         },
         publicFolder: path.join(__dirname, '../examples'),
     };

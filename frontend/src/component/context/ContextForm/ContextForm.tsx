@@ -14,7 +14,7 @@ import Add from '@mui/icons-material/Add';
 import type { ILegalValue } from 'interfaces/context';
 import { ContextFormChip } from 'component/context/ContectFormChip/ContextFormChip';
 import { ContextFormChipList } from 'component/context/ContectFormChip/ContextFormChipList';
-import { ContextFieldUsage } from '../ContextFieldUsage/ContextFieldUsage';
+import { ContextFieldUsage } from '../ContextFieldUsage/ContextFieldUsage.tsx';
 
 interface IContextForm {
     contextName: string;
@@ -247,7 +247,7 @@ export const ContextForm: React.FC<IContextForm> = ({
                     context field. PS! Not all client SDK's support this feature
                     yet!{' '}
                     <Link
-                        href='https://docs.getunleash.io/reference/stickiness'
+                        href='https://docs.getunleash.io/concepts/stickiness'
                         target='_blank'
                         rel='noreferrer'
                     >
@@ -262,7 +262,9 @@ export const ContextForm: React.FC<IContextForm> = ({
                     />
                     <Typography>{stickiness ? 'On' : 'Off'}</Typography>
                 </StyledSwitchContainer>
-                <ContextFieldUsage contextName={contextName} />
+                {mode === 'Edit' ? (
+                    <ContextFieldUsage contextName={contextName} />
+                ) : null}
             </div>
             <StyledButtonContainer>
                 {children}

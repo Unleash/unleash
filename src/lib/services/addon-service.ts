@@ -1,35 +1,35 @@
 import memoizee from 'memoizee';
-import { ValidationError } from 'joi';
-import { getAddons, type IAddonProviders } from '../addons';
-import * as events from '../types/events';
+import joi from 'joi';
+const { ValidationError } = joi;
+import { getAddons, type IAddonProviders } from '../addons/index.js';
 import {
     AddonConfigCreatedEvent,
     AddonConfigDeletedEvent,
     AddonConfigUpdatedEvent,
-} from '../types/events';
-import { addonSchema } from './addon-schema';
-import NameExistsError from '../error/name-exists-error';
-import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
-import type { Logger } from '../logger';
-import type TagTypeService from '../features/tag-type/tag-type-service';
+} from '../types/index.js';
+import { addonSchema } from './addon-schema.js';
+import NameExistsError from '../error/name-exists-error.js';
+import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type.js';
+import type { Logger } from '../logger.js';
+import type TagTypeService from '../features/tag-type/tag-type-service.js';
 import type {
     IAddon,
     IAddonDto,
     IAddonStore,
-} from '../types/stores/addon-store';
+} from '../types/stores/addon-store.js';
 import {
     type IAuditUser,
     type IUnleashConfig,
     type IUnleashStores,
     SYSTEM_USER_AUDIT,
-} from '../types';
-import type { IAddonDefinition } from '../types/model';
+} from '../types/index.js';
+import type { IAddonDefinition } from '../types/model.js';
 import { minutesToMilliseconds } from 'date-fns';
-import type EventService from '../features/events/event-service';
-import { omitKeys } from '../util';
-
-const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
-
+import type EventService from '../features/events/event-service.js';
+import { omitKeys } from '../util/index.js';
+import { BadDataError, NotFoundError } from '../error/index.js';
+import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
+import { type IEvent, type IEventType, IEventTypes } from '../events/index.js';
 const MASKED_VALUE = '*****';
 
 const WILDCARD_OPTION = '*';
@@ -55,6 +55,8 @@ export default class AddonService {
     fetchAddonConfigs: (() => Promise<IAddon[]>) &
         memoizee.Memoized<() => Promise<IAddon[]>>;
 
+    private eventHandlers: Map<IEventType, (event: IEvent) => Promise<void>>;
+
     constructor(
         {
             addonStore,
@@ -71,7 +73,7 @@ export default class AddonService {
         >,
         tagTypeService: TagTypeService,
         eventService: EventService,
-        integrationEventsService,
+        integrationEventsService: IntegrationEventsService,
         addons?: IAddonProviders,
     ) {
         this.addonStore = addonStore;
@@ -79,6 +81,7 @@ export default class AddonService {
         this.logger = getLogger('services/addon-service.js');
         this.tagTypeService = tagTypeService;
         this.eventService = eventService;
+        this.eventHandlers = new Map();
 
         this.addonProviders =
             addons ||
@@ -110,7 +113,7 @@ export default class AddonService {
         );
         return providerDefinitions.reduce((obj, definition) => {
             const sensitiveParams = definition.parameters
-                .filter((p) => p.sensitive)
+                ?.filter((p) => p.sensitive)
                 .map((p) => p.name);
 
             const o = { ...obj };
@@ -120,42 +123,44 @@ export default class AddonService {
     }
 
     registerEventHandler(): void {
-        SUPPORTED_EVENTS.forEach((eventName) =>
-            this.eventService.onEvent(eventName, this.handleEvent(eventName)),
-        );
+        IEventTypes.forEach((eventName) => {
+            const handler = this.handleEvent(eventName);
+            this.eventHandlers.set(eventName, handler);
+            this.eventService.onEvent(eventName, handler);
+        });
     }
 
-    handleEvent(eventName: string): (IEvent) => void {
+    handleEvent(eventName: string): (event: IEvent) => Promise<void> {
         const { addonProviders } = this;
-        return (event) => {
-            this.fetchAddonConfigs().then((addonInstances) => {
-                addonInstances
-                    .filter((addon) => addon.events.includes(eventName))
-                    .filter(
-                        (addon) =>
-                            !event.project ||
-                            !addon.projects ||
-                            addon.projects.length === 0 ||
-                            addon.projects[0] === WILDCARD_OPTION ||
-                            addon.projects.includes(event.project),
-                    )
-                    .filter(
-                        (addon) =>
-                            !event.environment ||
-                            !addon.environments ||
-                            addon.environments.length === 0 ||
-                            addon.environments[0] === WILDCARD_OPTION ||
-                            addon.environments.includes(event.environment),
-                    )
-                    .filter((addon) => addonProviders[addon.provider])
-                    .forEach((addon) =>
-                        addonProviders[addon.provider].handleEvent(
-                            event,
-                            addon.parameters,
-                            addon.id,
-                        ),
-                    );
-            });
+        return async (event) => {
+            const addonInstances = await this.fetchAddonConfigs();
+            const tasks = addonInstances
+                .filter((addon) => addon.events.includes(eventName))
+                .filter(
+                    (addon) =>
+                        !event.project ||
+                        !addon.projects ||
+                        addon.projects.length === 0 ||
+                        addon.projects[0] === WILDCARD_OPTION ||
+                        addon.projects.includes(event.project),
+                )
+                .filter(
+                    (addon) =>
+                        !event.environment ||
+                        !addon.environments ||
+                        addon.environments.length === 0 ||
+                        addon.environments[0] === WILDCARD_OPTION ||
+                        addon.environments.includes(event.environment),
+                )
+                .filter((addon) => addonProviders[addon.provider])
+                .map((addon) =>
+                    addonProviders[addon.provider].handleEvent(
+                        event,
+                        addon.parameters,
+                        addon.id,
+                    ),
+                );
+            await Promise.all(tasks);
         };
     }
 
@@ -183,6 +188,9 @@ export default class AddonService {
 
     async getAddon(id: number): Promise<IAddon> {
         const addonConfig = await this.addonStore.get(id);
+        if (addonConfig === undefined) {
+            throw new NotFoundError();
+        }
         return this.filterSensitiveFields(addonConfig);
     }
 
@@ -217,6 +225,10 @@ export default class AddonService {
         const addonConfig = await addonSchema.validateAsync(data);
         await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
+        const addon = this.addonProviders[addonConfig.provider];
+        if (addon.definition.deprecated) {
+            throw new BadDataError(addon.definition.deprecated);
+        }
 
         const createdAddon = await this.addonStore.insert(addonConfig);
         await this.addTagTypes(createdAddon.provider);
@@ -240,7 +252,10 @@ export default class AddonService {
         data: IAddonDto,
         auditUser: IAuditUser,
     ): Promise<IAddon> {
-        const existingConfig = await this.addonStore.get(id); // because getting an early 404 here makes more sense
+        const existingConfig = await this.addonStore.get(id);
+        if (existingConfig === undefined) {
+            throw new NotFoundError();
+        } // because getting an early 404 here makes more sense
         const addonConfig = await addonSchema.validateAsync(data);
         await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
@@ -272,6 +287,10 @@ export default class AddonService {
 
     async removeAddon(id: number, auditUser: IAuditUser): Promise<void> {
         const existingConfig = await this.addonStore.get(id);
+        if (existingConfig === undefined) {
+            /// No config, no need to delete
+            return;
+        }
         await this.addonStore.delete(id);
         await this.eventService.storeEvent(
             new AddonConfigDeletedEvent({
@@ -310,13 +329,14 @@ export default class AddonService {
     }): Promise<boolean> {
         const providerDefinition = this.addonProviders[provider].definition;
 
-        const requiredParamsMissing = providerDefinition.parameters
-            .filter((p) => p.required)
-            .map((p) => p.name)
-            .filter(
-                (requiredParam) =>
-                    !Object.keys(parameters).includes(requiredParam),
-            );
+        const requiredParamsMissing =
+            providerDefinition.parameters
+                ?.filter((p) => p.required)
+                .map((p) => p.name)
+                .filter(
+                    (requiredParam) =>
+                        !Object.keys(parameters).includes(requiredParam),
+                ) || [];
         if (requiredParamsMissing.length > 0) {
             throw new ValidationError(
                 `Missing required parameters: ${requiredParamsMissing.join(
@@ -330,8 +350,20 @@ export default class AddonService {
     }
 
     destroy(): void {
-        Object.values(this.addonProviders).forEach((addon) =>
-            addon.destroy?.(),
-        );
+        this.eventHandlers.forEach((handler, eventName) => {
+            try {
+                this.eventService.off(eventName, handler);
+            } catch (error) {
+                this.logger.debug(
+                    `Failed to remove event handler for ${eventName}:`,
+                    error,
+                );
+            }
+        });
+        this.eventHandlers.clear();
+
+        Object.values(this.addonProviders).forEach((addon) => {
+            addon.destroy?.();
+        });
     }
 }

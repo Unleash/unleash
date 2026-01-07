@@ -3,18 +3,18 @@ import { Divider, Grid, styled, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
-import { GridColLink } from './GridColLink/GridColLink';
+import { GridColLink } from './GridColLink/GridColLink.tsx';
 import type { IInstanceStatus } from 'interfaces/instance';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import {
     BILLING_INCLUDED_REQUESTS,
-    BILLING_PLAN_PRICES,
     BILLING_PRO_DEFAULT_INCLUDED_SEATS,
-    BILLING_PRO_USER_PRICE,
-    BILLING_TRAFFIC_BUNDLE_PRICE,
-} from './BillingPlan';
-import { useOverageCost } from './useOverageCost';
+    BILLING_PRO_BASE_PRICE,
+    BILLING_PRO_SEAT_PRICE,
+    BILLING_TRAFFIC_PRICE,
+} from './BillingPlan.tsx';
+import { useOverageCost } from './useOverageCost.ts';
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -41,14 +41,18 @@ export const BillingDetailsPro = ({
 
     const eligibleUsers = users.filter((user) => user.email);
 
-    const planPrice = BILLING_PLAN_PRICES[instanceStatus.plan];
+    const planPrice =
+        instanceStatus.prices?.pro?.base ?? BILLING_PRO_BASE_PRICE;
+    const seatPrice =
+        instanceStatus.prices?.pro?.seat ?? BILLING_PRO_SEAT_PRICE;
+    const trafficPrice =
+        instanceStatus.prices?.pro?.traffic ?? BILLING_TRAFFIC_PRICE;
     const seats = BILLING_PRO_DEFAULT_INCLUDED_SEATS;
 
     const freeAssigned = Math.min(eligibleUsers.length, seats);
     const paidAssigned = eligibleUsers.length - freeAssigned;
-    const paidAssignedPrice = BILLING_PRO_USER_PRICE * paidAssigned;
-    const includedTraffic = BILLING_INCLUDED_REQUESTS;
-    const overageCost = useOverageCost(includedTraffic);
+    const paidAssignedPrice = seatPrice * paidAssigned;
+    const overageCost = useOverageCost(BILLING_INCLUDED_REQUESTS);
 
     const totalCost = planPrice + paidAssignedPrice + overageCost;
 
@@ -96,7 +100,7 @@ export const BillingDetailsPro = ({
                             </GridColLink>
                         </Typography>
                         <StyledInfoLabel>
-                            ${BILLING_PRO_USER_PRICE}/month per paid member
+                            ${seatPrice}/month per paid member
                         </StyledInfoLabel>
                     </GridCol>
                     <GridCol>
@@ -123,8 +127,8 @@ export const BillingDetailsPro = ({
                                     </GridColLink>
                                 </Typography>
                                 <StyledInfoLabel>
-                                    ${BILLING_TRAFFIC_BUNDLE_PRICE} per 1
-                                    million started above included data
+                                    ${trafficPrice} per 1 million started above
+                                    included data
                                 </StyledInfoLabel>
                             </GridCol>
                             <GridCol>

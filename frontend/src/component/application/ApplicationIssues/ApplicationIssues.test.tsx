@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { ApplicationIssues } from './ApplicationIssues';
+import { ApplicationIssues } from './ApplicationIssues.tsx';
 import type { ApplicationOverviewSchema } from 'openapi';
 
 test('Display all application issues', async () => {
@@ -14,6 +14,8 @@ test('Display all application issues', async () => {
                     outdatedSdks: ['unleash-client-php:1.13.0'],
                 },
                 sdks: [],
+                backendSdks: [],
+                frontendSdks: [],
                 instanceCount: 0,
                 lastSeen: new Date().toISOString(),
                 name: 'development',
@@ -49,6 +51,8 @@ test('Each SDK version should be displayed once', async () => {
                     outdatedSdks: ['unleash-client-php:1.13.0'],
                 },
                 sdks: [],
+                frontendSdks: [],
+                backendSdks: [],
                 instanceCount: 0,
                 lastSeen: new Date().toISOString(),
                 name: 'development',
@@ -59,6 +63,8 @@ test('Each SDK version should be displayed once', async () => {
                     outdatedSdks: ['unleash-client-php:1.13.0'],
                 },
                 sdks: [],
+                frontendSdks: [],
+                backendSdks: [],
                 instanceCount: 0,
                 lastSeen: new Date().toISOString(),
                 name: 'production',

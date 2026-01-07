@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { MultipleRoleSelect } from './MultipleRoleSelect';
+import { MultipleRoleSelect } from './MultipleRoleSelect.tsx';
 import { fireEvent, screen } from '@testing-library/react';
 
 test('Display grouped project roles with names and descriptions', async () => {

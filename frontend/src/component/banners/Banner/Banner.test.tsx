@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { Banner } from './Banner';
+import { Banner } from './Banner.tsx';
 
 test('should render correctly when using basic options', () => {
     render(

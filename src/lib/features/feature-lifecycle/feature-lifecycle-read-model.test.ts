@@ -1,28 +1,20 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model';
-import type { IFeatureLifecycleStore } from './feature-lifecycle-store-type';
-import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type';
-import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
-import type { IFlagResolver } from '../../types';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { FeatureLifecycleReadModel } from './feature-lifecycle-read-model.js';
+import type { IFeatureLifecycleStore } from './feature-lifecycle-store-type.js';
+import type { IFeatureLifecycleReadModel } from './feature-lifecycle-read-model-type.js';
+import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type.js';
 
 let db: ITestDb;
 let featureLifecycleReadModel: IFeatureLifecycleReadModel;
 let featureLifecycleStore: IFeatureLifecycleStore;
 let featureToggleStore: IFeatureToggleStore;
 
-const alwaysOnFlagResolver = {
-    isEnabled() {
-        return true;
-    },
-} as unknown as IFlagResolver;
-
 beforeAll(async () => {
     db = await dbInit('feature_lifecycle_read_model', getLogger);
-    featureLifecycleReadModel = new FeatureLifecycleReadModel(
-        db.rawDatabase,
-        alwaysOnFlagResolver,
-    );
+    featureLifecycleReadModel = new FeatureLifecycleReadModel(db.rawDatabase);
     featureLifecycleStore = db.stores.featureLifecycleStore;
     featureToggleStore = db.stores.featureToggleStore;
 });

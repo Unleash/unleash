@@ -5,13 +5,19 @@
  */
 
 export type CreateApiTokenSchemaOneOf = {
+    /** The environment that the token should be valid for. Defaults to "default" */
+    environment?: string;
     /** The time when this token should expire. */
     expiresAt?: string;
+    /** The project that the token should be valid for. Defaults to "*" meaning every project. This property is mutually incompatible with the `projects` property. If you specify one, you cannot specify the other. */
+    project?: string;
+    /** A list of projects that the token should be valid for. This property is mutually incompatible with the `project` property. If you specify one, you cannot specify the other. */
+    projects?: string[];
     /** The name of the token. */
     tokenName: string;
     /**
-     * An admin token. Must be the string "admin" (not case sensitive).
-     * @pattern ^[Aa][Dd][Mm][Ii][Nn]$
+     * A client or frontend token. Must be one of the strings "client" (deprecated), "backend" (preferred over "client") or "frontend" (not case sensitive).
+     * @pattern ^([Cc][Ll][Ii][Ee][Nn][Tt]|[Bb][Aa][Cc][Kk][Ee][Nn][Dd]|[Ff][Rr][Oo][Nn][Tt][Ee][Nn][Dd])$
      */
     type: string;
 };

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type VFC } from 'react';
+import { useCallback, useEffect, useMemo, useState, type FC } from 'react';
 import { Box, Link, useMediaQuery, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
@@ -6,44 +6,61 @@ import { PaginatedTable, TablePlaceholder } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { FeatureTypeCell } from 'component/common/Table/cells/FeatureTypeCell/FeatureTypeCell';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import type { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
-import { FeatureStaleCell } from './FeatureStaleCell/FeatureStaleCell';
 import { Search } from 'component/common/Search/Search';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import { ExportDialog } from './ExportDialog';
+import { ExportDialog } from './ExportDialog.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
-import { FeatureEnvironmentSeenCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
+import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
-import { FeatureToggleFilters } from './FeatureToggleFilters/FeatureToggleFilters';
+import { FeaturesOverviewToggleFilters } from './FeaturesOverviewLifecycleFilters/FeaturesOverviewToggleFilters.tsx';
 import { withTableState } from 'utils/withTableState';
-import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
-import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
-import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useGlobalFeatureSearch } from './useGlobalFeatureSearch';
+import {
+    useGlobalFeatureSearch,
+    useTableStateFilter,
+} from './useGlobalFeatureSearch.ts';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { FeaturesOverviewLifecycleFilters } from './FeaturesOverviewLifecycleFilters/FeaturesOverviewLifecycleFilters.tsx';
+import { ExportFlags } from './ExportFlags.tsx';
+import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
+import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
+import { StatusCell } from './StatusCell/StatusCell.tsx';
 
 export const featuresPlaceholder = Array(15).fill({
     name: 'Name of the feature',
     description: 'Short description of the feature',
     type: '-',
-    createdAt: new Date(2022, 1, 1),
+    createdAt: new Date(2022, 1, 1).toISOString(),
     project: 'projectID',
-});
+    createdBy: {
+        id: 0,
+        name: 'admin',
+        imageUrl: '',
+    },
+    archivedAt: null,
+    favorite: false,
+    stale: false,
+    dependencyType: null,
+    tags: [],
+    environments: [],
+    impressionData: false,
+    segments: [],
+} as FeatureSearchResponseSchema);
 
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
-const feedbackCategory = 'search';
 
-export const FeatureToggleListTable: VFC = () => {
+export const FeatureToggleListTable: FC = () => {
     const theme = useTheme();
+    const { isOss } = useUiConfig();
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -54,7 +71,6 @@ export const FeatureToggleListTable: VFC = () => {
     const [showExportDialog, setShowExportDialog] = useState(false);
 
     const { setToastApiError } = useToast();
-    const { uiConfig } = useUiConfig();
 
     const {
         features,
@@ -66,6 +82,18 @@ export const FeatureToggleListTable: VFC = () => {
         setTableState,
         filterState,
     } = useGlobalFeatureSearch();
+    const onFlagTypeClick = useTableStateFilter(
+        ['type', 'IS'],
+        tableState,
+        setTableState,
+    );
+    const onTagClick = useTableStateFilter(
+        ['tag', 'INCLUDE'],
+        tableState,
+        setTableState,
+    );
+
+    const { projects } = useProjects();
     const bodyLoadingRef = useLoading(loading);
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
@@ -77,7 +105,7 @@ export const FeatureToggleListTable: VFC = () => {
                     await favorite(feature.project!, feature.name);
                 }
                 refetchFeatures();
-            } catch (error) {
+            } catch (_error) {
                 setToastApiError(
                     'Something went wrong, could not update favorite',
                 );
@@ -85,6 +113,8 @@ export const FeatureToggleListTable: VFC = () => {
         },
         [favorite, refetchFeatures, unfavorite, setToastApiError],
     );
+
+    const showStatusColumn = !isOss();
 
     const columns = useMemo(
         () => [
@@ -100,110 +130,84 @@ export const FeatureToggleListTable: VFC = () => {
                     />
                 ),
                 cell: ({ getValue, row }) => (
-                    <>
-                        <FavoriteIconCell
-                            value={getValue()}
-                            onClick={() => onFavorite(row.original)}
-                        />
-                    </>
+                    <FavoriteIconCell
+                        value={getValue()}
+                        onClick={() => onFavorite(row.original)}
+                    />
                 ),
                 enableSorting: false,
-                meta: {
-                    width: '1%',
-                },
-            }),
-            columnHelper.accessor('lastSeenAt', {
-                header: 'Seen',
-                cell: ({ row }) => (
-                    <FeatureEnvironmentSeenCell feature={row.original} />
-                ),
-                meta: {
-                    align: 'center',
-                    width: '1%',
-                },
-            }),
-            columnHelper.accessor('type', {
-                header: 'Type',
-                cell: ({ getValue }) => <FeatureTypeCell value={getValue()} />,
-                meta: {
-                    align: 'center',
-                    width: '1%',
-                },
+                meta: { width: 48 },
             }),
             columnHelper.accessor('name', {
                 header: 'Name',
-                // cell: (cell) => <FeatureNameCell value={cell.row} />,
-                cell: ({ row }) => (
-                    <LinkCell
-                        title={row.original.name}
-                        subtitle={row.original.description || undefined}
-                        to={`/projects/${row.original.project}/features/${row.original.name}`}
-                    />
-                ),
-                meta: {
-                    width: '50%',
-                },
+                cell: createFeatureOverviewCell(onTagClick, onFlagTypeClick),
+                meta: { width: '40%' },
             }),
-            columnHelper.accessor((row) => row.segments?.join('\n') || '', {
-                header: 'Segments',
-                cell: ({ getValue, row }) => (
-                    <FeatureSegmentCell value={getValue()} row={row} />
-                ),
-                enableSorting: false,
-                meta: {
-                    width: '1%',
-                },
-            }),
-            columnHelper.accessor(
-                (row) =>
-                    row.tags
-                        ?.map(({ type, value }) => `${type}:${value}`)
-                        .join('\n') || '',
-                {
-                    header: 'Tags',
-                    cell: FeatureTagCell,
-                    enableSorting: false,
-                    meta: {
-                        width: '1%',
-                    },
-                },
-            ),
             columnHelper.accessor('createdAt', {
                 header: 'Created',
                 cell: ({ getValue }) => <DateCell value={getValue()} />,
-                meta: {
-                    width: '1%',
-                },
+                meta: { width: '1%' },
             }),
-            columnHelper.accessor('project', {
-                header: 'Project ID',
-                cell: ({ getValue }) => (
-                    <LinkCell
-                        title={getValue()}
-                        to={`/projects/${getValue()}`}
+            columnHelper.accessor('createdBy', {
+                id: 'createdBy',
+                header: 'By',
+                cell: AvatarCell(),
+                meta: { width: '1%', align: 'center' },
+                enableSorting: false,
+            }),
+            columnHelper.accessor('lifecycle', {
+                id: 'lifecycle',
+                header: 'Lifecycle',
+                cell: ({ row: { original } }) => (
+                    <FeatureLifecycleCell
+                        feature={original}
+                        expanded
+                        data-loading
                     />
                 ),
-                meta: {
-                    width: '1%',
-                },
+                enableSorting: false,
+                size: 50,
+                meta: { width: '1%' },
             }),
-            columnHelper.accessor('stale', {
-                header: 'State',
-                cell: ({ getValue }) => <FeatureStaleCell value={getValue()} />,
-                meta: {
-                    width: '1%',
+            ...(showStatusColumn
+                ? [
+                      columnHelper.accessor('environments', {
+                          id: 'status',
+                          header: 'Status',
+                          cell: ({ row: { original } }) => (
+                              <StatusCell {...original} />
+                          ),
+                          enableSorting: false,
+                          size: 350,
+                      }),
+                  ]
+                : []),
+            columnHelper.accessor('project', {
+                header: 'Project',
+                cell: ({ getValue }) => {
+                    const projectId = getValue();
+                    const projectName = projects.find(
+                        (project) => project.id === projectId,
+                    )?.name;
+
+                    return (
+                        <Box sx={{ minWidth: '180px' }}>
+                            <LinkCell
+                                title={projectName || projectId}
+                                to={`/projects/${projectId}`}
+                            />
+                        </Box>
+                    );
                 },
             }),
         ],
-        [tableState.favoritesFirst],
+        [tableState.favoritesFirst, showStatusColumn],
     );
-
-    const data = useMemo(
+    const data = useMemo<FeatureSearchResponseSchema[]>(
         () =>
             features?.length === 0 && loading ? featuresPlaceholder : features,
         [initialLoad, features, loading],
     );
-
     const table = useReactTable(
         withTableState(tableState, setTableState, {
             columns,
@@ -252,31 +256,30 @@ export const FeatureToggleListTable: VFC = () => {
             bodyClass='no-padding'
             header={
                 <PageHeader
-                    title='Search'
+                    title='Flags overview'
                     actions={
                         <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            placeholder='Search'
-                                            expandable
-                                            initialValue={
-                                                tableState.query || ''
-                                            }
-                                            onChange={setSearchValue}
-                                            id='globalFeatureFlags'
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
+                            <Link
+                                component={RouterLink}
+                                to='/unknown-flags'
+                                underline='always'
+                                sx={{
+                                    marginRight: 2,
+                                    fontSize: theme.typography.body2.fontSize,
+                                    ...focusable(theme),
+                                }}
+                            >
+                                Unknown flags
+                            </Link>
                             <Link
                                 component={RouterLink}
                                 to='/archive'
                                 underline='always'
-                                sx={{ marginRight: 2, ...focusable(theme) }}
+                                sx={{
+                                    marginRight: 2,
+                                    fontSize: theme.typography.body2.fontSize,
+                                    ...focusable(theme),
+                                }}
                                 onClick={() => {
                                     trackEvent('search-feature-buttons', {
                                         props: {
@@ -285,36 +288,49 @@ export const FeatureToggleListTable: VFC = () => {
                                     });
                                 }}
                             >
-                                View archive
+                                Archived flags
                             </Link>
-                            <FeatureToggleListActions
-                                onExportClick={() => setShowExportDialog(true)}
+                            <ExportFlags
+                                onClick={() => setShowExportDialog(true)}
                             />
                         </>
                     }
-                >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={tableState.query || ''}
-                                onChange={setSearchValue}
-                                id='globalFeatureFlags'
-                            />
-                        }
-                    />
-                </PageHeader>
+                />
             }
         >
-            <FeatureToggleFilters
+            <FeaturesOverviewLifecycleFilters
+                state={filterState}
+                onChange={setTableState}
+                total={loading ? undefined : total}
+            >
+                {!isSmallScreen ? (
+                    <Search
+                        placeholder='Search'
+                        initialValue={tableState.query || ''}
+                        onChange={setSearchValue}
+                        id='globalFeatureFlags'
+                    />
+                ) : null}
+            </FeaturesOverviewLifecycleFilters>
+            <FeaturesOverviewToggleFilters
                 onChange={setTableState}
                 state={filterState}
             />
+            {isSmallScreen ? (
+                <Box sx={(theme) => ({ padding: theme.spacing(0, 3, 3) })}>
+                    <Search
+                        initialValue={tableState.query || ''}
+                        onChange={setSearchValue}
+                        id='globalFeatureFlags'
+                    />
+                </Box>
+            ) : null}
             <SearchHighlightProvider value={tableState.query || ''}>
                 <div ref={bodyLoadingRef}>
                     <PaginatedTable tableInstance={table} totalItems={total} />
                 </div>
             </SearchHighlightProvider>
+
             <ConditionallyRender
                 condition={rows.length === 0}
                 show={
@@ -331,8 +347,7 @@ export const FeatureToggleListTable: VFC = () => {
                             elseShow={
                                 <TablePlaceholder>
                                     No feature flags found matching your
-                                    criteria. Get started by adding a new
-                                    feature flag.
+                                    criteria.
                                 </TablePlaceholder>
                             }
                         />

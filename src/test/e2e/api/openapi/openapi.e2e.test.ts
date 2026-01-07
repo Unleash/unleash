@@ -2,13 +2,13 @@ import {
     type IUnleashTest,
     setupApp,
     setupAppWithBaseUrl,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
 import SwaggerParser from '@apidevtools/swagger-parser';
 import enforcer from 'openapi-enforcer';
 import semver from 'semver';
-import { openApiTags } from '../../../../lib/openapi/util/openapi-tags';
+import { openApiTags } from '../../../../lib/openapi/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -34,13 +34,7 @@ test('should serve the OpenAPI spec', async () => {
     return app.request
         .get('/docs/openapi.json')
         .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            // Don't use the version field in snapshot tests. Having the version
-            // listed in automated testing causes issues when trying to deploy
-            // new versions of the API (due to mismatch between new tag versions etc).
-            delete res.body.info.version;
-        });
+        .expect(200);
 });
 
 test('should serve the OpenAPI spec with a `version` property', async () => {
@@ -187,7 +181,7 @@ test('all tags are listed in the root "tags" list', async () => {
     // dictionary of all invalid tags found in the spec
     let invalidTags = {};
     for (const [path, data] of Object.entries(spec.paths)) {
-        for (const [operation, opData] of Object.entries(data)) {
+        for (const [operation, opData] of Object.entries(data!)) {
             // ensure that the list of tags for every operation is a subset of
             // the list of tags defined on the root level
 
@@ -218,7 +212,7 @@ test('all tags are listed in the root "tags" list', async () => {
     if (Object.keys(invalidTags).length) {
         // create a human-readable list of invalid tags per operation
         const msgs = Object.entries(invalidTags).flatMap(([path, data]) =>
-            Object.entries(data).map(
+            Object.entries(data!).map(
                 ([operation, opData]) =>
                     `${operation.toUpperCase()} ${path} (operation id: ${
                         opData.operationId
@@ -247,7 +241,7 @@ test('all API operations have non-empty summaries and descriptions', async () =>
         .expect(200);
 
     const anomalies = Object.entries(spec.paths).flatMap(([path, data]) => {
-        return Object.entries(data)
+        return Object.entries(data!)
             .map(([verb, operationDescription]) => {
                 if (
                     operationDescription.summary &&
@@ -260,6 +254,7 @@ test('all API operations have non-empty summaries and descriptions', async () =>
             })
             .filter(Boolean)
             .map(
+                // @ts-expect-error - requesting an iterator where none could be found
                 ([verb, operationId]) =>
                     `${verb.toUpperCase()} ${path} (operation ID: ${operationId})`,
             );

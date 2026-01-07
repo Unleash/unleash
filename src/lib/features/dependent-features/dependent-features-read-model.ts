@@ -1,6 +1,6 @@
-import type { Db } from '../../db/db';
-import type { IDependentFeaturesReadModel } from './dependent-features-read-model-type';
-import type { IDependency, IFeatureDependency } from '../../types';
+import type { Db } from '../../db/db.js';
+import type { IDependentFeaturesReadModel } from './dependent-features-read-model-type.js';
+import type { IDependency, IFeatureDependency } from '../../types/index.js';
 
 interface IVariantName {
     variant_name: string;

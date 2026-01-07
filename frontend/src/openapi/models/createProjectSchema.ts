@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateProjectSchemaChangeRequestEnvironmentsItem } from './createProjectSchemaChangeRequestEnvironmentsItem';
-import type { CreateProjectSchemaMode } from './createProjectSchemaMode';
+import type { CreateProjectSchemaChangeRequestEnvironmentsItem } from './createProjectSchemaChangeRequestEnvironmentsItem.js';
+import type { CreateProjectSchemaMode } from './createProjectSchemaMode.js';
 
 /**
- * Data used to create a new [project](https://docs.getunleash.io/reference/projects).
+ * Data used to create a new [project](https://docs.getunleash.io/concepts/projects).
  */
 export interface CreateProjectSchema {
     /** A list of environments that should have change requests enabled. If the list includes environments not in the `environments` list, they will still have change requests enabled. */
@@ -19,10 +19,7 @@ export interface CreateProjectSchema {
      * @nullable
      */
     description?: string | null;
-    /**
-     * A list of environments that should be enabled for this project. When provided, the list must contain at least one environment. If this property is missing, Unleash will default to enabling all non-deprecated environments for the project.
-     * @minItems 1
-     */
+    /** A list of environments that should be enabled for this project. If this property is missing, Unleash will default to enabling all non-deprecated environments for the project. An empty list will result in no environment enabled for the project. */
     environments?: string[];
     /**
      * The project's identifier. If this property is not present or is an empty string, Unleash will generate the project id automatically. This property is deprecated.

@@ -1,7 +1,7 @@
 import type {
     IClientMetricsEnv,
     IClientMetricsEnvVariant,
-} from './client-metrics-store-v2-type';
+} from './client-metrics-store-v2-type.js';
 import { startOfHour } from 'date-fns';
 
 const createMetricKey = (metric: IClientMetricsEnv): string => {

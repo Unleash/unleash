@@ -2,14 +2,8 @@ import type { FC } from 'react';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { styled } from '@mui/material';
 
-const StyledWrapper = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'flex-end',
-    flex: 1,
-}));
-
 const StyledContainer = styled('div')(() => ({
-    maxWidth: '220px',
+    maxWidth: '200px',
     width: '100%',
 }));
 
@@ -35,16 +29,14 @@ export const ProjectsListSort: FC<ProjectsListSortProps> = ({
     setSortBy,
 }) => {
     return (
-        <StyledWrapper>
-            <StyledContainer>
-                <GeneralSelect
-                    fullWidth
-                    label='Sort by'
-                    onChange={setSortBy}
-                    options={options}
-                    value={sortBy || options[0].key}
-                />
-            </StyledContainer>
-        </StyledWrapper>
+        <StyledContainer>
+            <GeneralSelect
+                fullWidth
+                label='Sort by'
+                onChange={setSortBy}
+                options={options}
+                value={sortBy || options[0].key}
+            />
+        </StyledContainer>
     );
 };

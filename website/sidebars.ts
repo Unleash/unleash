@@ -11,7 +11,7 @@
 
 import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
-import docsSidebar from './docs/reference/api/unleash/sidebar.ts';
+import docsSidebar from './docs/api/sidebar.ts';
 
 const sidebars: SidebarsConfig = {
     academy: [
@@ -37,761 +37,744 @@ const sidebars: SidebarsConfig = {
         },
     ],
     documentation: [
-        'quickstart',
         {
-            label: 'Feature Flags Developer Guide',
+            label: 'Get started',
             type: 'category',
             link: {
-                type: 'generated-index',
-                title: 'Feature Flag Developer Guide',
-                description:
-                    'What are feature flags? And other concepts to get you started.',
-                slug: '/topics',
+                type: 'doc',
+                id: 'get-started/quickstart',
             },
             items: [
                 {
-                    label: 'Feature Flag Concepts',
-                    collapsed: true,
-                    type: 'category',
-                    items: ['topics/concepts/what-is-a-feature-flag'],
+                    type: 'doc',
+                    label: 'Quickstart',
+                    id: 'get-started/quickstart',
                 },
                 {
-                    label: 'Feature Flag Best Practices',
+                    type: 'doc',
+                    label: 'Introduction to feature flags',
+                    id: 'get-started/what-is-a-feature-flag',
+                },
+                {
+                    type: 'doc',
+                    label: 'Unleash architecture overview',
+                    id: 'get-started/unleash-overview',
+                },
+            ],
+        },
+        {
+            label: 'Core concepts',
+            type: 'category',
+            link: {
+                type: 'doc',
+                id: 'concepts/concepts-overview',
+            },
+            items: [
+                {
+                    label: 'Projects and environments',
+                    collapsed: true,
+                    type: 'category',
+                    link: { type: 'doc', id: 'concepts/projects' },
+                    items: [
+                        'concepts/projects',
+                        'concepts/project-collaboration-mode',
+                        'concepts/environments',
+                    ],
+                },
+                {
+                    label: 'Feature flags and activation strategies',
                     collapsed: true,
                     type: 'category',
                     link: {
-                        type: 'generated-index',
-                        title: 'Feature Flag Best Practices',
-                        description:
-                            'Principles and recommendations for best practices of using feature flags.',
-                        slug: 'topics/feature-flags/',
+                        type: 'doc',
+                        id: 'concepts/feature-flags',
+                    },
+                    items: [
+                        'concepts/feature-flags',
+                        'concepts/activation-strategies',
+                        'concepts/strategy-variants',
+                        'concepts/segments',
+                        'concepts/unleash-context',
+                        'concepts/stickiness',
+                    ],
+                },
+                {
+                    label: 'Release management',
+                    collapsed: true,
+                    type: 'category',
+                    link: {
+                        type: 'doc',
+                        id: 'concepts/release-templates',
+                    },
+                    items: [
+                        'concepts/getting-started-release-management',
+                        'concepts/release-templates',
+                        'concepts/impact-metrics',
+                    ],
+                },
+                {
+                    label: 'Identity and access',
+                    collapsed: true,
+                    type: 'category',
+                    link: {
+                        type: 'doc',
+                        id: 'concepts/api-tokens-and-client-keys',
+                    },
+                    items: [
+                        'concepts/api-tokens-and-client-keys',
+                        'concepts/front-end-api',
+                        'concepts/rbac',
+                        'concepts/sso',
+                        'concepts/scim',
+                        'concepts/change-requests',
+                        'concepts/public-signup',
+                    ],
+                },
+                {
+                    label: 'Instance health and configuration',
+                    collapsed: true,
+                    type: 'category',
+                    link: {
+                        type: 'doc',
+                        id: 'concepts/technical-debt',
+                    },
+                    items: [
+                        'concepts/technical-debt',
+                        'concepts/insights',
+                        'concepts/resource-limits',
+                    ],
+                },
+                {
+                    label: 'Testing and monitoring',
+                    collapsed: true,
+                    type: 'category',
+                    link: {
+                        type: 'doc',
+                        id: 'concepts/impression-data',
+                    },
+                    items: [
+                        'concepts/impression-data',
+                        'concepts/events',
+                        'concepts/playground',
+                        'concepts/network-view',
+                        'concepts/enterprise-edge-observability',
+                    ],
+                },
+                {
+                    label: 'Automation and integrations',
+                    collapsed: true,
+                    type: 'category',
+                    link: {
+                        type: 'doc',
+                        id: 'concepts/applications',
+                    },
+                    items: [
+                        'concepts/applications',
+                        'concepts/service-accounts',
+                        'concepts/signals',
+                        'concepts/actions',
+                    ],
+                },
+                {
+                    label: 'Admin UI',
+                    collapsed: true,
+                    type: 'category',
+                    link: {
+                        type: 'doc',
+                        id: 'concepts/login-history',
+                    },
+                    items: [
+                        'concepts/login-history',
+                        'concepts/banners',
+                        'concepts/command-menu',
+                        'concepts/search-operators',
+                        'concepts/maintenance-mode',
+                    ],
+                },
+                {
+                    type: 'doc',
+                    label: 'Import and export',
+                    id: 'concepts/import-export',
+                },
+            ],
+        },
+        {
+            label: 'Tutorials and guides',
+            type: 'category',
+            link: {
+                type: 'doc',
+                id: 'guides/guides-overview',
+            },
+            items: [
+                {
+                    label: 'Feature management best practices',
+                    collapsed: true,
+                    type: 'category',
+                    link: {
+                        type: 'doc',
+                        id: 'guides/feature-flag-best-practices',
                     },
                     items: [
                         {
                             type: 'doc',
                             label: 'Building and scaling feature flag systems',
-                            id: 'topics/feature-flags/feature-flag-best-practices',
+                            id: 'guides/feature-flag-best-practices',
                         },
                         {
                             type: 'doc',
                             label: 'Using feature flags at scale',
-                            id: 'topics/feature-flags/best-practices-using-feature-flags-at-scale',
+                            id: 'guides/best-practices-using-feature-flags-at-scale',
                         },
                         {
                             type: 'doc',
                             label: 'Migrating from homegrown feature management solutions',
-                            id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
+                            id: 'guides/feature-flag-migration-best-practices',
                         },
-                    ],
-                },
-                {
-                    label: 'Feature Flag Tutorials',
-                    type: 'category',
-                    collapsed: true,
-                    link: {
-                        type: 'generated-index',
-                        title: 'Feature Flag Tutorials',
-                        description:
-                            'Tutorials to implement feature flags with your framework.',
-                        slug: 'feature-flag-tutorials',
-                    },
-                    items: [
-                        {
-                            type: 'category',
-                            label: 'Use Cases',
-                            collapsed: true,
-                            link: {
-                                type: 'generated-index',
-                                title: 'Use Cases',
-                                slug: 'use-cases',
-                            },
-                            items: [
-                                {
-                                    type: 'doc',
-                                    label: 'Gradual Rollout',
-                                    id: 'feature-flag-tutorials/use-cases/gradual-rollout',
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'A/B Testing',
-                                    id: 'feature-flag-tutorials/use-cases/a-b-testing',
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'Feature Flags for AI',
-                                    id: 'feature-flag-tutorials/use-cases/ai',
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'Trunk-Based Development',
-                                    id: 'feature-flag-tutorials/use-cases/trunk-based-development',
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'User Management, Access Controls, and Auditing',
-                                    id: 'feature-flag-tutorials/use-cases/user-management-access-controls',
-                                },
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Languages and Frameworks',
-                            collapsed: true,
-                            link: {
-                                type: 'generated-index',
-                                title: 'Languages and Frameworks',
-                                slug: 'languages-and-frameworks',
-                            },
-                            items: [
-                                {
-                                    type: 'category',
-                                    label: 'React',
-                                    link: {
-                                        type: 'doc',
-                                        id: 'feature-flag-tutorials/react/implementing-feature-flags',
-                                    },
-                                    items: [
-                                        {
-                                            type: 'doc',
-                                            label: 'Examples',
-                                            id: 'feature-flag-tutorials/react/examples',
-                                        },
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Python',
-                                    link: {
-                                        type: 'doc',
-                                        id: 'feature-flag-tutorials/python/implementing-feature-flags',
-                                    },
-                                    items: [
-                                        {
-                                            type: 'doc',
-                                            label: 'Python Examples',
-                                            id: 'feature-flag-tutorials/python/examples',
-                                        },
-                                        {
-                                            type: 'doc',
-                                            label: 'Django Tutorial',
-                                            id: 'feature-flag-tutorials/django/implementing-feature-flags-django',
-                                        },
-                                        {
-                                            type: 'doc',
-                                            label: 'Django Examples',
-                                            id: 'feature-flag-tutorials/django/django-examples',
-                                        },
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Java',
-                                    link: {
-                                        type: 'doc',
-                                        id: 'feature-flag-tutorials/java/implementing-feature-flags',
-                                    },
-                                    items: [
-                                        {
-                                            type: 'doc',
-                                            label: 'Spring Boot',
-                                            id: 'feature-flag-tutorials/java/spring-boot-implementing-feature-flags',
-                                        },
-                                        {
-                                            type: 'doc',
-                                            label: 'Spring Boot Examples',
-                                            id: 'feature-flag-tutorials/java/spring-boot-examples',
-                                        },
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Ruby',
-                                    link: {
-                                        type: 'doc',
-                                        id: 'feature-flag-tutorials/ruby/implementing-feature-flags-ruby',
-                                    },
-                                    items: [
-                                        {
-                                            type: 'doc',
-                                            label: 'Ruby Examples',
-                                            id: 'feature-flag-tutorials/ruby/ruby-examples',
-                                        },
-                                        {
-                                            type: 'doc',
-                                            label: 'Rails Tutorial',
-                                            id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
-                                        },
-                                        {
-                                            type: 'doc',
-                                            label: 'Rails Examples',
-                                            id: 'feature-flag-tutorials/rails/rails-examples',
-                                        },
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Go',
-                                    link: {
-                                        type: 'doc',
-                                        id: 'feature-flag-tutorials/golang/implementing-feature-flags-golang',
-                                    },
-                                    items: [
-                                        {
-                                            type: 'doc',
-                                            label: 'Go Examples',
-                                            id: 'feature-flag-tutorials/golang/golang-examples',
-                                        },
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: '.NET',
-                                    link: {
-                                        type: 'doc',
-                                        id: 'feature-flag-tutorials/dotnet/implementing-feature-flags-dotnet',
-                                    },
-                                    items: [
-                                        {
-                                            type: 'doc',
-                                            label: 'Examples',
-                                            id: 'feature-flag-tutorials/dotnet/dotnet-examples',
-                                        },
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'iOS',
-                                    link: {
-                                        type: 'doc',
-                                        id: 'feature-flag-tutorials/ios/implementing-feature-flags-ios',
-                                    },
-                                    items: [
-                                        {
-                                            type: 'doc',
-                                            label: 'Examples',
-                                            id: 'feature-flag-tutorials/ios/examples',
-                                        },
-                                    ],
-                                },
-                                {
-                                    type: 'category',
-                                    label: 'Rust',
-                                    link: {
-                                        type: 'doc',
-                                        id: 'feature-flag-tutorials/rust/implementing-feature-flags-rust',
-                                    },
-                                    items: [
-                                        {
-                                            type: 'doc',
-                                            label: 'Examples',
-                                            id: 'feature-flag-tutorials/rust/rust-examples',
-                                        },
-                                    ],
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'JavaScript',
-                                    id: 'feature-flag-tutorials/javascript/implementing-feature-flags-js',
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'Serverless',
-                                    id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'Flutter',
-                                    id: 'feature-flag-tutorials/flutter/a-b-testing',
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'Next.js',
-                                    id: 'feature-flag-tutorials/nextjs/implementing-feature-flags-nextjs',
-                                },
-                                {
-                                    type: 'doc',
-                                    label: 'SvelteKit',
-                                    id: 'feature-flag-tutorials/sveltekit/implementing-feature-flags-sveltekit',
-                                },
-                            ],
-                        },
-                    ],
-                },
-            ],
-        },
-
-        {
-            label: 'Understanding Unleash',
-            collapsed: false,
-            type: 'category',
-            link: {
-                type: 'generated-index',
-                title: 'Understanding Unleash',
-                description:
-                    'Documentation on how Unleash works, high-level architecture and important concepts.',
-                slug: 'understanding-unleash',
-            },
-            items: [
-                'understanding-unleash/unleash-overview',
-                'understanding-unleash/the-anatomy-of-unleash',
-                'understanding-unleash/managing-constraints',
-                'understanding-unleash/proxy-hosting',
-                'understanding-unleash/data-collection',
-                {
-                    type: 'category',
-                    link: {
-                        type: 'generated-index',
-                        title: 'Unleash Concepts',
-                        description:
-                            'Documents describing the inner parts of Unleash.',
-                        slug: '/reference',
-                    },
-                    label: 'Unleash Concepts',
-                    items: [
-                        {
-                            label: 'Projects and Environments',
-                            collapsed: false,
-                            type: 'category',
-                            link: { type: 'doc', id: 'reference/projects' },
-                            items: [
-                                'reference/projects',
-                                'reference/project-collaboration-mode',
-                                'reference/environments',
-                            ],
-                        },
-                        {
-                            label: 'Feature Flags and Activation Strategies',
-                            collapsed: false,
-                            type: 'category',
-                            link: {
-                                type: 'doc',
-                                id: 'reference/feature-toggles',
-                            },
-                            items: [
-                                'reference/feature-toggles',
-                                'reference/activation-strategies',
-                                'reference/strategy-variants',
-                                'reference/segments',
-                                'reference/unleash-context',
-                                'reference/stickiness',
-                            ],
-                        },
-                        {
-                            label: 'Access Controls',
-                            collapsed: true,
-                            type: 'category',
-                            link: {
-                                type: 'doc',
-                                id: 'reference/api-tokens-and-client-keys',
-                            },
-                            items: [
-                                'reference/api-tokens-and-client-keys',
-                                'reference/front-end-api',
-                                'reference/rbac',
-                                'reference/sso',
-                                'reference/scim',
-                                'reference/change-requests',
-                                'reference/public-signup',
-                            ],
-                        },
-                        {
-                            label: 'Instance Health and Configuration',
-                            collapsed: true,
-                            type: 'category',
-                            link: {
-                                type: 'doc',
-                                id: 'reference/technical-debt',
-                            },
-                            items: [
-                                'reference/technical-debt',
-                                'reference/insights',
-                                'reference/resource-limits',
-                            ],
-                        },
-                        {
-                            label: 'Testing and Monitoring',
-                            collapsed: true,
-                            type: 'category',
-                            link: {
-                                type: 'doc',
-                                id: 'reference/impression-data',
-                            },
-                            items: [
-                                'reference/impression-data',
-                                'reference/events',
-                                'reference/playground',
-                                'reference/network-view',
-                            ],
-                        },
-                        {
-                            label: 'Automation and Integrations',
-                            collapsed: true,
-                            type: 'category',
-                            link: {
-                                type: 'doc',
-                                id: 'reference/applications',
-                            },
-                            items: [
-                                'reference/applications',
-                                'reference/service-accounts',
-                                'reference/signals',
-                                'reference/actions',
-                            ],
-                        },
-                        {
-                            label: 'Admin UI',
-                            collapsed: true,
-                            type: 'category',
-                            link: {
-                                type: 'doc',
-                                id: 'reference/login-history',
-                            },
-                            items: [
-                                'reference/login-history',
-                                'reference/banners',
-                                'reference/command-menu',
-                                'reference/search-operators',
-                                'reference/maintenance-mode',
-                            ],
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            label: 'Using Unleash',
-            collapsed: false,
-            type: 'category',
-            link: {
-                type: 'generated-index',
-                title: 'Using Unleash',
-                description:
-                    'Documentation on how to accomplish specific tasks when building with Unleash, including API and SDK documentation.',
-                slug: '/using-unleash',
-            },
-            items: [
-                {
-                    label: 'APIs',
-                    collapsed: true,
-                    type: 'category',
-                    link: {
-                        title: 'Unleash Server APIs',
-                        type: 'generated-index',
-                        description:
-                            'Generated API docs based on the Unleash OpenAPI schema.',
-                        slug: '/reference/api/unleash',
-                    },
-                    items: [
-                        docsSidebar,
-                        {
-                            'System API': [
-                                'reference/api/legacy/unleash/internal/prometheus',
-                                'reference/api/legacy/unleash/internal/health',
-                            ],
-                            '(Legacy Docs) Admin API': [
-                                'reference/api/legacy/unleash/admin/addons',
-                                'reference/api/legacy/unleash/admin/context',
-                                'reference/api/legacy/unleash/admin/events',
-                                'reference/api/legacy/unleash/admin/features-v2',
-                                'reference/api/legacy/unleash/admin/feature-types',
-                                'reference/api/legacy/unleash/admin/features',
-                                'reference/api/legacy/unleash/admin/archive',
-                                'reference/api/legacy/unleash/admin/metrics',
-                                'reference/api/legacy/unleash/admin/projects',
-                                'reference/api/legacy/unleash/admin/segments',
-                                'reference/api/legacy/unleash/admin/state',
-                                'reference/api/legacy/unleash/admin/strategies',
-                                'reference/api/legacy/unleash/admin/tags',
-                                'reference/api/legacy/unleash/admin/user-admin',
-                            ],
-                            '(Legacy Docs) Client API': [
-                                'reference/api/legacy/unleash/client/features',
-                                'reference/api/legacy/unleash/client/metrics',
-                                'reference/api/legacy/unleash/client/register',
-                            ],
-                        },
-                    ],
-                },
-                {
-                    label: 'Application SDKs',
-                    type: 'category',
-                    link: { type: 'doc', id: 'reference/sdks/index' },
-                    items: [
-                        {
-                            type: 'category',
-                            label: 'Server-side SDKs',
-                            items: [
-                                {
-                                    type: 'autogenerated',
-                                    dirName: 'generated/sdks/server-side',
-                                },
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Client-side SDKs',
-                            items: [
-                                {
-                                    type: 'autogenerated',
-                                    dirName: 'generated/sdks/client-side',
-                                },
-                            ],
-                        },
-                        {
-                            type: 'link',
-                            label: 'Community SDKs',
-                            href: '/reference/sdks#community-sdks',
-                        },
-                    ],
-                },
-                {
-                    label: 'Integrations and automation',
-                    type: 'category',
-                    link: { type: 'doc', id: 'reference/integrations/index' },
-                    items: [
-                        'reference/integrations/datadog',
-                        {
-                            'Jira Server': [
-                                'reference/integrations/jira-server-plugin-installation',
-                                'reference/integrations/jira-server-plugin-usage',
-                            ],
-                            'Jira Cloud': [
-                                'reference/integrations/jira-cloud-plugin-installation',
-                                'reference/integrations/jira-cloud-plugin-usage',
-                            ],
-                        },
-                        'reference/integrations/slack-app',
-                        'reference/integrations/teams',
-                        'reference/integrations/webhook',
                         {
                             type: 'doc',
-                            label: 'Terraform',
-                            id: 'reference/terraform',
+                            label: 'Managing large constraints',
+                            id: 'guides/managing-constraints',
+                        },
+                    ],
+                },
+                {
+                    label: 'Development and release workflows',
+                    type: 'category',
+                    collapsed: true,
+                    link: {
+                        type: 'doc',
+                        id: 'guides/how-to-create-feature-flags',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            id: 'guides/how-to-create-feature-flags',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Schedule a feature release',
+                            id: 'guides/how-to-schedule-feature-releases',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Trunk-based development',
+                            id: 'guides/trunk-based-development',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Gradual rollout',
+                            id: 'guides/gradual-rollout',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Unleash Edge quickstart',
+                            id: 'guides/unleash-edge-quickstart',
+                        },
+                    ],
+                },
+                {
+                    label: 'Enterprise-grade security and scale',
+                    type: 'category',
+                    collapsed: true,
+                    link: {
+                        type: 'doc',
+                        id: 'guides/user-management-access-controls',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'User management, access controls, and auditing',
+                            id: 'guides/user-management-access-controls',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Security and compliance',
+                            id: 'guides/security-compliance',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Scaling Unleash',
+                            id: 'guides/scaling-unleash',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Managing feature flags in code',
+                            id: 'guides/manage-feature-flags-in-code',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Organizing feature flags using projects and environments',
+                            id: 'guides/organize-feature-flags',
+                        },
+                    ],
+                },
+                {
+                    label: 'Experimentation and analytics',
+                    type: 'category',
+                    collapsed: true,
+                    link: {
+                        type: 'doc',
+                        id: 'guides/a-b-testing',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'A/B testing',
+                            id: 'guides/a-b-testing',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Feature flags for AI',
+                            id: 'guides/manage-ai-models-with-feature-flags',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Use impression data for analytics',
+                            id: 'guides/how-to-capture-impression-data',
                         },
                     ],
                 },
                 {
                     type: 'category',
+                    label: 'Language and framework examples',
+                    collapsed: true,
                     link: {
-                        type: 'generated-index',
-                        title: 'Self-Hosting Unleash',
-                        description:
-                            'All you need to learn how to deploy and manage your own Unleash instance.',
-                        slug: '/using-unleash/deploy',
+                        type: 'doc',
+                        id: 'guides/language-specific-tutorials/react/implementing-feature-flags',
                     },
-                    label: 'Self-hosting',
                     items: [
-                        'using-unleash/deploy/getting-started',
-                        'using-unleash/deploy/configuring-unleash',
-                        'using-unleash/deploy/database-setup',
-                        'using-unleash/deploy/database-backup',
-                        'using-unleash/deploy/email-service',
-                        'using-unleash/deploy/google-auth-hook',
-                        'using-unleash/deploy/upgrading-unleash',
-                        'using-unleash/deploy/securing-unleash',
-                        'using-unleash/deploy/license-keys',
+                        {
+                            type: 'category',
+                            label: 'React',
+                            link: {
+                                type: 'doc',
+                                id: 'guides/language-specific-tutorials/react/implementing-feature-flags',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Examples',
+                                    id: 'guides/language-specific-tutorials/react/examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Java',
+                            link: {
+                                type: 'doc',
+                                id: 'guides/language-specific-tutorials/java/implementing-feature-flags',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Spring Boot',
+                                    id: 'guides/language-specific-tutorials/java/spring-boot-implementing-feature-flags',
+                                },
+                                {
+                                    type: 'doc',
+                                    label: 'Spring Boot Examples',
+                                    id: 'guides/language-specific-tutorials/java/spring-boot-examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Python',
+                            link: {
+                                type: 'doc',
+                                id: 'guides/language-specific-tutorials/python/implementing-feature-flags',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Python Examples',
+                                    id: 'guides/language-specific-tutorials/python/examples',
+                                },
+                                {
+                                    type: 'doc',
+                                    label: 'Django Tutorial',
+                                    id: 'guides/language-specific-tutorials/django/implementing-feature-flags-django',
+                                },
+                                {
+                                    type: 'doc',
+                                    label: 'Django Examples',
+                                    id: 'guides/language-specific-tutorials/django/django-examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Next.js',
+                            id: 'guides/language-specific-tutorials/nextjs/implementing-feature-flags-nextjs',
+                        },
+                        {
+                            type: 'category',
+                            label: 'Go',
+                            link: {
+                                type: 'doc',
+                                id: 'guides/language-specific-tutorials/golang/implementing-feature-flags-golang',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Go Examples',
+                                    id: 'guides/language-specific-tutorials/golang/golang-examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'doc',
+                            label: 'JavaScript',
+                            id: 'guides/language-specific-tutorials/javascript/implementing-feature-flags-js',
+                        },
+                        {
+                            type: 'category',
+                            label: '.NET',
+                            link: {
+                                type: 'doc',
+                                id: 'guides/language-specific-tutorials/dotnet/implementing-feature-flags-dotnet',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Examples',
+                                    id: 'guides/language-specific-tutorials/dotnet/dotnet-examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'iOS',
+                            link: {
+                                type: 'doc',
+                                id: 'guides/language-specific-tutorials/ios/implementing-feature-flags-ios',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Examples',
+                                    id: 'guides/language-specific-tutorials/ios/examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Serverless',
+                            id: 'guides/language-specific-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
+                        },
+                        {
+                            type: 'category',
+                            label: 'Rust',
+                            link: {
+                                type: 'doc',
+                                id: 'guides/language-specific-tutorials/rust/implementing-feature-flags-rust',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Examples',
+                                    id: 'guides/language-specific-tutorials/rust/rust-examples',
+                                },
+                            ],
+                        },
+                        {
+                            type: 'doc',
+                            label: 'Flutter',
+                            id: 'guides/language-specific-tutorials/flutter/a-b-testing',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'SvelteKit',
+                            id: 'guides/language-specific-tutorials/sveltekit/implementing-feature-flags-sveltekit',
+                        },
+                        {
+                            type: 'category',
+                            label: 'Ruby',
+                            link: {
+                                type: 'doc',
+                                id: 'guides/language-specific-tutorials/ruby/implementing-feature-flags-ruby',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Ruby Examples',
+                                    id: 'guides/language-specific-tutorials/ruby/ruby-examples',
+                                },
+                                {
+                                    type: 'doc',
+                                    label: 'Rails Tutorial',
+                                    id: 'guides/language-specific-tutorials/rails/implementing-feature-flags-rails',
+                                },
+                                {
+                                    type: 'doc',
+                                    label: 'Rails Examples',
+                                    id: 'guides/language-specific-tutorials/rails/rails-examples',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            label: 'SDKs',
+            type: 'category',
+            link: { type: 'doc', id: 'sdks/index' },
+            items: [
+                {
+                    type: 'category',
+                    label: 'Backend SDKs',
+                    items: [
+                        {
+                            type: 'autogenerated',
+                            dirName: 'generated/sdks/backend',
+                        },
+                    ],
+                },
+                {
+                    type: 'category',
+                    label: 'Frontend SDKs',
+                    items: [
+                        {
+                            type: 'autogenerated',
+                            dirName: 'generated/sdks/frontend',
+                        },
+                    ],
+                },
+                {
+                    type: 'link',
+                    label: 'Community SDKs',
+                    href: '/sdks#community-sdks',
+                },
+            ],
+        },
+        {
+            label: 'API reference',
+            type: 'category',
+            link: {
+                type: 'doc',
+                id: 'api/api-overview',
+            },
+            items: [docsSidebar],
+        },
+        {
+            type: 'category',
+            label: 'Unleash Enterprise Edge',
+            collapsed: true,
+            link: {
+                type: 'doc',
+                id: 'unleash-edge/unleash-edge-overview',
+            },
+            items: [
+                {
+                    type: 'doc',
+                    label: 'Enterprise Edge overview',
+                    id: 'unleash-edge/unleash-edge-overview',
+                },
+                {
+                    type: 'category',
+                    label: 'Self-host Enterprise Edge',
+                    link: {
+                        type: 'doc',
+                        id: 'unleash-edge/deploy',
+                    },
+                    items: [
+                        'unleash-edge/deploy',
+                        'unleash-edge/configure',
+                        'unleash-edge/migrate-from-proxy',
+                    ],
+                },
+            ],
+        },
+        {
+            label: 'Integrate and deploy',
+            type: 'category',
+            link: {
+                type: 'doc',
+                id: 'deploy/hosting-options',
+            },
+            items: [
+                {
+                    type: 'doc',
+                    label: 'Unleash hosting options',
+                    id: 'deploy/hosting-options',
+                },
+                {
+                    type: 'category',
+                    link: {
+                        type: 'doc',
+                        id: 'deploy/getting-started',
+                    },
+                    label: 'Self-hosting Unleash',
+                    items: [
+                        'deploy/getting-started',
+                        'deploy/configuring-unleash',
+                        'deploy/upgrading-unleash',
+                        'deploy/license-keys',
+                        'deploy/https',
+                        {
+                            type: 'doc',
+                            label: 'Synchronize Unleash instances',
+                            id: 'guides/how-to-synchronize-unleash-instances',
+                        },
                     ],
                 },
                 {
                     label: 'Single sign-on',
-                    items: [
-                        'how-to/how-to-add-sso-open-id-connect',
-                        'how-to/how-to-add-sso-saml',
-                        'how-to/how-to-add-sso-saml-keycloak',
-                        'how-to/how-to-add-sso-azure-saml',
-                        'how-to/how-to-setup-sso-keycloak-group-sync',
-                    ],
                     type: 'category',
                     link: {
-                        type: 'generated-index',
-                        title: 'How-to: Single sign-on',
-                        description: 'Single sign-on guides.',
-                        slug: '/how-to/sso',
+                        type: 'doc',
+                        id: 'single-sign-on/how-to-add-sso-open-id-connect',
                     },
+                    items: [
+                        'single-sign-on/how-to-add-sso-open-id-connect',
+                        'single-sign-on/how-to-add-sso-saml',
+                        'single-sign-on/how-to-add-sso-saml-keycloak',
+                        'single-sign-on/how-to-add-sso-azure-saml',
+                        'single-sign-on/how-to-setup-sso-keycloak-group-sync',
+                        'single-sign-on/how-to-set-up-group-sso-sync',
+                    ],
                 },
                 {
                     label: 'Automatic provisioning',
-                    items: [
-                        'how-to/how-to-setup-provisioning-with-okta',
-                        'how-to/how-to-setup-provisioning-with-entra',
-                    ],
                     type: 'category',
-                    link: {
-                        type: 'generated-index',
-                        title: 'How to: Provisioning',
-                        description: 'Provisioning how-to guides.',
-                        slug: '/how-to/provisioning',
-                    },
-                },
-                {
-                    type: 'category',
-                    label: 'Unleash Edge',
-                    collapsed: true,
                     link: {
                         type: 'doc',
-                        id: 'generated/unleash-edge',
+                        id: 'provisioning/how-to-setup-provisioning-with-okta',
                     },
                     items: [
-                        'generated/unleash-edge/concepts',
-                        'generated/unleash-edge/deploying',
+                        'provisioning/how-to-setup-provisioning-with-okta',
+                        'provisioning/how-to-setup-provisioning-with-entra',
                     ],
                 },
-                'generated/unleash-proxy',
+                {
+                    label: 'Integrations',
+                    type: 'category',
+                    link: {
+                        type: 'doc',
+                        id: 'integrate/index',
+                    },
+                    items: [
+                        'integrate/datadog',
+                        {
+                            type: 'category',
+                            label: 'Jira server',
+                            items: [
+                                'integrate/jira-server-plugin-installation',
+                                'integrate/jira-server-plugin-usage',
+                            ],
+                        },
+                        {
+                            type: 'category',
+                            label: 'Jira cloud',
+                            items: [
+                                'integrate/jira-cloud-plugin-installation',
+                                'integrate/jira-cloud-plugin-usage',
+                            ],
+                        },
+                        'integrate/slack-app',
+                        'integrate/teams',
+                        'integrate/webhook',
+                        {
+                            type: 'doc',
+                            label: 'Terraform',
+                            id: 'concepts/terraform',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'MCP',
+                            id: 'generated/integrate/mcp',
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            label: 'Data privacy and compliance',
+            type: 'category',
+            link: {
+                type: 'doc',
+                id: 'privacy-and-compliance/data-privacy',
+            },
+            items: [
+                {
+                    type: 'doc',
+                    label: 'Data collection and privacy',
+                    id: 'privacy-and-compliance/data-privacy',
+                },
                 {
                     type: 'category',
                     label: 'Compliance',
                     link: {
                         type: 'doc',
-                        id: 'using-unleash/compliance/compliance-overview',
+                        id: 'privacy-and-compliance/compliance-overview',
                     },
                     items: [
                         {
                             type: 'doc',
                             label: 'FedRAMP',
-                            id: 'using-unleash/compliance/fedramp',
+                            id: 'privacy-and-compliance/fedramp',
                         },
                         {
                             type: 'doc',
-                            label: 'SOC2 Type II',
-                            id: 'using-unleash/compliance/soc2',
+                            label: 'SOC2 type II',
+                            id: 'privacy-and-compliance/soc2',
                         },
                         {
                             type: 'doc',
                             label: 'ISO27001',
-                            id: 'using-unleash/compliance/iso27001',
-                        },
-                    ],
-                },
-                {
-                    label: 'Troubleshooting',
-                    type: 'category',
-                    link: {
-                        type: 'generated-index',
-                        title: 'How-to: troubleshooting',
-                        description:
-                            'Troubleshooting common problems. If you want to suggest new items, please phrase the title as a concrete problem',
-                        slug: '/using-unleash/troubleshooting',
-                    },
-                    items: [
-                        'using-unleash/troubleshooting/cors',
-                        'using-unleash/troubleshooting/https',
-                        'using-unleash/troubleshooting/email-service',
-                        'using-unleash/troubleshooting/feature-not-available',
-                        'using-unleash/troubleshooting/flag-exposure',
-                        'using-unleash/troubleshooting/flag-not-returned',
-                        'using-unleash/troubleshooting/flag-abn-test-unexpected-result',
-                    ],
-                },
-                {
-                    label: 'How-to guides',
-                    type: 'category',
-                    link: {
-                        type: 'generated-index',
-                        title: 'How-to guides',
-                        description: 'Step-by-step recipes for you to follow.',
-                        slug: '/how-to',
-                    },
-                    items: [
-                        {
-                            label: 'Unleash API guides',
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How-to: Unleash API',
-                                description:
-                                    'Learn how to work with the Unleash API',
-                                slug: '/how-to/api',
-                            },
-                            items: [
-                                'how-to/how-to-download-login-history',
-                                'how-to/how-to-use-the-admin-api',
-                                'how-to/how-to-enable-openapi',
-                            ],
-                        },
-                        {
-                            label: 'Unleash Proxy guides',
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How-to: The Unleash Proxy',
-                                description:
-                                    'Learn how to work with the Unleash Proxy',
-                                slug: '/how-to/proxy',
-                            },
-                            items: ['how-to/how-to-run-the-unleash-proxy'],
-                        },
-                        {
-                            label: 'Feature flags, strategies, context',
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How-to: general Unleash tasks',
-                                description:
-                                    'Guides for how to perform general Unleash tasks.',
-                                slug: '/how-to/misc',
-                            },
-                            items: [
-                                'how-to/how-to-capture-impression-data',
-                                'how-to/how-to-create-feature-toggles',
-                                'how-to/how-to-create-and-display-banners',
-                                'how-to/how-to-schedule-feature-releases',
-                                'how-to/how-to-synchronize-unleash-instances',
-                            ],
-                        },
-                        {
-                            label: 'Environments',
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How-to: environments',
-                                description: 'Environments how-to guides.',
-                                slug: '/how-to/env',
-                            },
-                            items: ['how-to/how-to-environment-import-export'],
-                        },
-                        {
-                            label: 'Users and permissions',
-                            items: [
-                                'how-to/how-to-add-users-to-unleash',
-                                'how-to/how-to-create-and-assign-custom-root-roles',
-                                'how-to/how-to-create-and-assign-custom-project-roles',
-                                'how-to/how-to-create-and-manage-user-groups',
-                                'how-to/how-to-set-up-group-sso-sync',
-                            ],
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How-to: users and permissions',
-                                description:
-                                    'Users and permission how-to guides.',
-                                slug: '/how-to/users-and-permissions',
-                            },
+                            id: 'privacy-and-compliance/iso27001',
                         },
                     ],
                 },
             ],
         },
         {
-            label: 'Contributing to Unleash',
+            label: 'Support and community',
             type: 'category',
-            collapsed: true,
             link: {
-                type: 'generated-index',
-                title: 'Contributing to Unleash',
-                description: 'Learn how to contribute to unleash.',
-                slug: '/contributing',
+                type: 'doc',
+                id: 'support/troubleshooting',
             },
             items: [
-                'contributing/developer-guide',
-                'contributing/frontend/overview',
-                'contributing/backend/overview',
                 {
+                    type: 'doc',
+                    id: 'support/troubleshooting',
+                    label: 'Troubleshooting',
+                },
+                {
+                    type: 'doc',
+                    id: 'support/availability',
+                    label: 'Feature availability and versioning',
+                },
+                {
+                    type: 'doc',
+                    id: 'support/oss-comparison',
+                    label: 'Compare Unleash OSS and Unleash Enterprise',
+                },
+                {
+                    label: 'Contribute to Unleash',
                     type: 'category',
-                    label: 'Architectural Decision Records',
+                    collapsed: true,
+                    link: {
+                        type: 'doc',
+                        id: 'contributing/developer-guide',
+                    },
                     items: [
+                        'contributing/developer-guide',
+                        'contributing/client-specification',
+                        'contributing/frontend/overview',
+                        'contributing/backend/overview',
                         {
-                            type: 'autogenerated',
-                            dirName: 'contributing/ADRs', // '.' means the current docs folder
+                            type: 'category',
+                            label: 'Architectural decision records',
+                            items: [
+                                {
+                                    type: 'autogenerated',
+                                    dirName: 'contributing/ADRs',
+                                },
+                            ],
                         },
                     ],
                 },

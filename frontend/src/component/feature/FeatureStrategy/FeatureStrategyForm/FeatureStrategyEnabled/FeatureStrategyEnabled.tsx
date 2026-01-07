@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert } from '@mui/material';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { formatFeaturePath } from '../../FeatureStrategyEdit/FeatureStrategyEdit';
+import { formatFeaturePath } from '../../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 interface IFeatureStrategyEnabledProps {
@@ -35,7 +35,7 @@ export const FeatureStrategyEnabled: FC<IFeatureStrategyEnabledProps> = ({
                 </Alert>
             }
             elseShow={
-                <Alert severity='warning'>
+                <Alert severity='info'>
                     This feature flag is currently disabled in the{' '}
                     <strong>{environmentId}</strong> environment. Any changes
                     made here will not take effect until the flag has been

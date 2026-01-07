@@ -1,6 +1,7 @@
 import { useTheme } from '@mui/material';
 import { useMemo } from 'react';
-import { fillGradientPrimary } from '../components/LineChart/LineChart';
+import { fillGradientPrimary } from '../components/LineChart/LineChart.jsx';
+import type { ChartData } from 'chart.js';
 
 type PlaceholderDataOptions = {
     fill?: boolean;
@@ -9,7 +10,7 @@ type PlaceholderDataOptions = {
 
 export const usePlaceholderData = (
     placeholderDataOptions?: PlaceholderDataOptions,
-) => {
+): ChartData<'line', number[]> => {
     const { fill = false, type = 'constant' } = placeholderDataOptions || {};
     const theme = useTheme();
 

@@ -3,18 +3,20 @@ import {
     minutesToMilliseconds,
     secondsToMilliseconds,
 } from 'date-fns';
-import type { IUnleashConfig, IUnleashServices } from '../../server-impl';
+import type { IUnleashConfig } from '../../types/index.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 /**
  * Schedules service methods.
  *
  * In order to promote runtime control, you should **not use** a flagResolver inside this method. Instead, implement your flag usage inside the scheduled methods themselves.
  * @param services
+ * @param config
  */
-export const scheduleServices = async (
+export const scheduleServices = (
     services: IUnleashServices,
     config: IUnleashConfig,
-): Promise<void> => {
+): void => {
     const {
         accountService,
         schedulerService,
@@ -33,6 +35,7 @@ export const scheduleServices = async (
         clientMetricsServiceV2,
         integrationEventsService,
         uniqueConnectionService,
+        unknownFlagsService,
     } = services;
 
     schedulerService.schedule(
@@ -71,16 +74,22 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        clientInstanceService.removeInstancesOlderThanTwoDays.bind(
-            clientInstanceService,
-        ),
+        clientInstanceService.removeOldInstances.bind(clientInstanceService),
         hoursToMilliseconds(24),
         'removeInstancesOlderThanTwoDays',
     );
 
     schedulerService.schedule(
+        clientInstanceService.removeInactiveApplications.bind(
+            clientInstanceService,
+        ),
+        hoursToMilliseconds(24),
+        'removeInactiveApplications',
+    );
+
+    schedulerService.schedule(
         clientInstanceService.bulkAdd.bind(clientInstanceService),
-        secondsToMilliseconds(5),
+        secondsToMilliseconds(10),
         'bulkAddInstances',
     );
 
@@ -185,5 +194,17 @@ export const scheduleServices = async (
         uniqueConnectionService.sync.bind(uniqueConnectionService),
         minutesToMilliseconds(10),
         'uniqueConnectionService',
+    );
+
+    schedulerService.schedule(
+        unknownFlagsService.flush.bind(unknownFlagsService),
+        minutesToMilliseconds(2),
+        'flushUnknownFlags',
+    );
+
+    schedulerService.schedule(
+        unknownFlagsService.clear.bind(unknownFlagsService, 24),
+        hoursToMilliseconds(6),
+        'clearUnknownFlags',
     );
 };

@@ -1,4 +1,4 @@
-import type User from '../user';
+import type User from '../user.js';
 
 export interface IPublicSignupTokenCreate {
     name: string;

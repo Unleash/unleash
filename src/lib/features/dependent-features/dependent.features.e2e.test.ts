@@ -1,27 +1,26 @@
-import { v4 as uuidv4 } from 'uuid';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
-import type { CreateDependentFeatureSchema } from '../../openapi';
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { CreateDependentFeatureSchema } from '../../openapi/index.js';
 import {
     FEATURE_DEPENDENCIES_REMOVED,
     FEATURE_DEPENDENCY_ADDED,
     FEATURE_DEPENDENCY_REMOVED,
-    type IEventStore,
-} from '../../types';
-import { DEFAULT_ENV } from '../../util';
+} from '../../events/index.js';
+import { DEFAULT_ENV, randomId } from '../../util/index.js';
+import type { IEventStore } from '../../server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let eventStore: IEventStore;
 
 beforeAll(async () => {
-    db = await dbInit('dependent_features', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('dependent_features', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -169,9 +168,9 @@ const checkDependenciesExist = async (expectedCode = 200) => {
 };
 
 test('should add and delete feature dependencies', async () => {
-    const parent = uuidv4();
-    const child = uuidv4();
-    const child2 = uuidv4();
+    const parent = randomId();
+    const child = randomId();
+    const child2 = randomId();
     await app.createFeature(parent);
     await app.createFeature(child);
     await app.createFeature(child2);
@@ -209,10 +208,10 @@ test('should add and delete feature dependencies', async () => {
 });
 
 test('should sort potential parent features alphabetically', async () => {
-    const parent1 = `a${uuidv4()}`;
-    const parent2 = `c${uuidv4()}`;
-    const parent3 = `b${uuidv4()}`;
-    const child = uuidv4();
+    const parent1 = `a${randomId()}`;
+    const parent2 = `c${randomId()}`;
+    const parent3 = `b${randomId()}`;
+    const child = randomId();
     await app.createFeature(parent1);
     await app.createFeature(parent2);
     await app.createFeature(parent3);
@@ -223,7 +222,7 @@ test('should sort potential parent features alphabetically', async () => {
 });
 
 test('should sort potential parent variants', async () => {
-    const parent = uuidv4();
+    const parent = randomId();
     await app.createFeature(parent);
     await addFeatureEnvironmentVariant(parent, 'e');
     await addStrategyVariants(parent, ['c', 'a', 'd']);
@@ -235,9 +234,9 @@ test('should sort potential parent variants', async () => {
 });
 
 test('should not allow to add grandparent', async () => {
-    const grandparent = uuidv4();
-    const parent = uuidv4();
-    const child = uuidv4();
+    const grandparent = randomId();
+    const parent = randomId();
+    const child = randomId();
     await app.createFeature(grandparent);
     await app.createFeature(parent);
     await app.createFeature(child);
@@ -255,9 +254,9 @@ test('should not allow to add grandparent', async () => {
 });
 
 test('should not allow to add grandchild', async () => {
-    const grandparent = uuidv4();
-    const parent = uuidv4();
-    const child = uuidv4();
+    const grandparent = randomId();
+    const parent = randomId();
+    const child = randomId();
     await app.createFeature(grandparent);
     await app.createFeature(parent);
     await app.createFeature(child);
@@ -276,8 +275,8 @@ test('should not allow to add grandchild', async () => {
 });
 
 test('should not allow to add non-existent parent dependency', async () => {
-    const parent = uuidv4();
-    const child = uuidv4();
+    const parent = randomId();
+    const child = randomId();
     await app.createFeature(child);
 
     await addFeatureDependency(
@@ -290,8 +289,8 @@ test('should not allow to add non-existent parent dependency', async () => {
 });
 
 test('should not allow to add archived parent dependency', async () => {
-    const parent = uuidv4();
-    const child = uuidv4();
+    const parent = randomId();
+    const child = randomId();
     await app.createFeature(child);
     await app.createFeature(parent);
     await app.archiveFeature(parent);
@@ -306,8 +305,8 @@ test('should not allow to add archived parent dependency', async () => {
 });
 
 test('should check if any dependencies exist', async () => {
-    const parent = uuidv4();
-    const child = uuidv4();
+    const parent = randomId();
+    const child = randomId();
     await app.createFeature(child);
     await app.createFeature(parent);
 
@@ -323,7 +322,7 @@ test('should check if any dependencies exist', async () => {
 });
 
 test('should not allow to add dependency to self', async () => {
-    const parent = uuidv4();
+    const parent = randomId();
     await app.createFeature(parent);
 
     await addFeatureDependency(
@@ -336,8 +335,8 @@ test('should not allow to add dependency to self', async () => {
 });
 
 test('should not allow to add dependency to feature from another project', async () => {
-    const child = uuidv4();
-    const parent = uuidv4();
+    const child = randomId();
+    const parent = randomId();
     await app.createFeature(parent);
     await createProject('another-project');
     await app.createFeature(child, 'another-project');
@@ -351,8 +350,8 @@ test('should not allow to add dependency to feature from another project', async
     );
 });
 test('should create feature-dependency-removed when archiving and has dependency', async () => {
-    const child = uuidv4();
-    const parent = uuidv4();
+    const child = randomId();
+    const parent = randomId();
     await app.createFeature(parent);
     await app.createFeature(child);
 
@@ -369,8 +368,8 @@ test('should create feature-dependency-removed when archiving and has dependency
 });
 
 test('should not create feature-dependency-removed when archiving and no dependency', async () => {
-    const child = uuidv4();
-    const parent = uuidv4();
+    const child = randomId();
+    const parent = randomId();
     await app.createFeature(parent);
     await app.createFeature(child);
 

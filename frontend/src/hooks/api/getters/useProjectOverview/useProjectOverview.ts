@@ -1,15 +1,15 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
-import { getProjectOverviewFetcher } from './getProjectOverviewFetcher';
-import type { IProjectOverview } from 'interfaces/project';
+import { getProjectOverviewFetcher } from './getProjectOverviewFetcher.js';
+import type { ProjectOverviewSchema } from 'openapi';
 
-const fallbackProject: IProjectOverview = {
+const fallbackProject: ProjectOverviewSchema = {
     featureTypeCounts: [],
     environments: [],
     name: '',
     health: 0,
     members: 0,
-    version: '1',
+    version: 1,
     description: 'Default',
     favorite: false,
     mode: 'open',
@@ -31,7 +31,7 @@ const fallbackProject: IProjectOverview = {
 
 const useProjectOverview = (id: string, options: SWRConfiguration = {}) => {
     const { KEY, fetcher } = getProjectOverviewFetcher(id);
-    const { data, error, mutate } = useSWR<IProjectOverview>(
+    const { data, error, mutate } = useSWR<ProjectOverviewSchema>(
         KEY,
         fetcher,
         options,
@@ -54,10 +54,10 @@ export const useProjectOverviewNameOrId = (id: string): string => {
 };
 
 export const featuresCount = (
-    project: Pick<IProjectOverview, 'featureTypeCounts'>,
+    project: Pick<ProjectOverviewSchema, 'featureTypeCounts'>,
 ) => {
     return project.featureTypeCounts
-        .map((count) => count.count)
+        ?.map((count) => count.count)
         .reduce((a, b) => a + b, 0);
 };
 

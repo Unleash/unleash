@@ -1,7 +1,7 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import { Button, styled } from '@mui/material';
-import { TemplateForm } from './TemplateForm/TemplateForm';
-import { useTemplateForm } from '../hooks/useTemplateForm';
+import { TemplateForm } from './TemplateForm/TemplateForm.tsx';
+import { useTemplateForm } from '../hooks/useTemplateForm.ts';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 import { useNavigate } from 'react-router-dom';
@@ -10,9 +10,10 @@ import useReleasePlanTemplatesApi from 'hooks/api/actions/useReleasePlanTemplate
 import { scrollToTop } from 'component/common/util';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Limit } from 'component/common/Limit/Limit.tsx';
+import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates.ts';
 
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
@@ -26,12 +27,16 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 
 export const CreateReleasePlanTemplate = () => {
     const { uiConfig, isEnterprise } = useUiConfig();
-    const releasePlansEnabled = useUiFlag('releasePlans');
     const { setToastApiError, setToastData } = useToast();
     const navigate = useNavigate();
     const { createReleasePlanTemplate } = useReleasePlanTemplatesApi();
     const { trackEvent } = usePlausibleTracker();
-    usePageTitle('Create release plan template');
+    const { templates } = useReleasePlanTemplates();
+    const releaseTemplateLimit = uiConfig.resourceLimits.releaseTemplates;
+    const canCreateMore = templates.length < releaseTemplateLimit;
+
+    usePageTitle('Create release template');
+
     const {
         name,
         setName,
@@ -61,7 +66,7 @@ export const CreateReleasePlanTemplate = () => {
                 scrollToTop();
                 setToastData({
                     type: 'success',
-                    text: 'Release plan template created',
+                    text: 'Release template created',
                 });
 
                 trackEvent('release-management', {
@@ -71,7 +76,7 @@ export const CreateReleasePlanTemplate = () => {
                     },
                 });
 
-                navigate('/release-management');
+                navigate('/release-templates');
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -85,7 +90,7 @@ export const CreateReleasePlanTemplate = () => {
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(getTemplatePayload(), undefined, 2)}'`;
 
-    if (!releasePlansEnabled || !isEnterprise()) {
+    if (!isEnterprise()) {
         return null;
     }
 
@@ -99,14 +104,22 @@ export const CreateReleasePlanTemplate = () => {
             setMilestones={setMilestones}
             errors={errors}
             clearErrors={clearErrors}
-            formTitle='Create release plan template'
+            formTitle='Create release template'
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
+            Limit={
+                <Limit
+                    name='release templates'
+                    limit={releaseTemplateLimit}
+                    currentValue={templates.length}
+                />
+            }
         >
             <StyledButtonContainer>
                 <CreateButton
                     name='template'
                     permission={RELEASE_PLAN_TEMPLATE_CREATE}
+                    disabled={!canCreateMore}
                 >
                     Save template
                 </CreateButton>

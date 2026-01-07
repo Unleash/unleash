@@ -1,12 +1,13 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
-import type { IUnleashStores } from '../../../../lib/types';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { registerPrometheusMetrics } from '../../../../lib/metrics';
+} from '../../helpers/test-helper.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import type { IUnleashStores } from '../../../../lib/types/index.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { registerPrometheusMetrics } from '../../../../lib/metrics.js';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -14,9 +15,7 @@ let stores: IUnleashStores;
 let refreshDbMetrics: () => Promise<void>;
 
 beforeAll(async () => {
-    db = await dbInit('instance_admin_api_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('instance_admin_api_serial', getLogger);
     stores = db.stores;
     await stores.settingStore.insert('instanceInfo', { id: 'test-static' });
     app = await setupAppWithCustomConfig(
@@ -73,13 +72,13 @@ test('api tokens are serialized correctly', async () => {
     await app.services.apiTokenService.createApiTokenWithProjects({
         tokenName: 'frontend',
         type: ApiTokenType.FRONTEND,
-        environment: 'default',
+        environment: DEFAULT_ENV,
         projects: ['*'],
     });
     await app.services.apiTokenService.createApiTokenWithProjects({
         tokenName: 'client',
-        type: ApiTokenType.CLIENT,
-        environment: 'default',
+        type: ApiTokenType.BACKEND,
+        environment: DEFAULT_ENV,
         projects: ['*'],
     });
 
@@ -89,7 +88,7 @@ test('api tokens are serialized correctly', async () => {
         .expect(200);
 
     expect(body).toMatchObject({
-        apiTokens: { client: 1, admin: 1, frontend: 1 },
+        apiTokens: { backend: 1, admin: 1, frontend: 1 },
     });
 
     const { text: csv } = await app.request
@@ -97,7 +96,7 @@ test('api tokens are serialized correctly', async () => {
         .expect('Content-Type', /text\/csv/)
         .expect(200);
 
-    expect(csv).toMatch(/{""client"":1,""admin"":1,""frontend"":1}/);
+    expect(csv).toMatch(/{""admin"":1,""frontend"":1,""backend"":1}/);
 });
 
 test('should return instance statistics with correct number of projects', async () => {
@@ -125,7 +124,7 @@ test('should return signed instance statistics', async () => {
         .expect((res) => {
             expect(res.body.instanceId).toBe('test-static');
             expect(res.body.sum).toBe(
-                '5ba2cb7c3e29f4e5b3382c560b92b837f3603dc7db73a501ec331c7f0ed17bd0',
+                '13399adbb553c360f4c9ac1ea889cd2b89804e5ac498da8b4e3de2ef90649dd9',
             );
         });
 });

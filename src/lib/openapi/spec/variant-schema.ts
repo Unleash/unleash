@@ -1,12 +1,12 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { overrideSchema } from './override-schema';
+import { overrideSchema } from './override-schema.js';
 
 export const variantSchema = {
     $id: '#/components/schemas/variantSchema',
     type: 'object',
     additionalProperties: false,
     description:
-        'A variant allows for further separation of users into segments. See [our excellent documentation](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) for a more detailed description',
+        'A variant allows for further separation of users into segments. See [our excellent documentation](https://docs.getunleash.io/concepts/feature-flag-variants#what-are-variants) for a more detailed description',
     required: ['name', 'weight'],
     properties: {
         name: {
@@ -17,7 +17,7 @@ export const variantSchema = {
         weight: {
             type: 'number',
             description:
-                'The weight is the likelihood of any one user getting this variant. It is a number between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight) for more information',
+                'The weight is the likelihood of any one user getting this variant. It is a number between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/concepts/feature-flag-variants#variant-weight) for more information',
             minimum: 0,
             maximum: 1000,
         },
@@ -31,7 +31,7 @@ export const variantSchema = {
         stickiness: {
             type: 'string',
             description:
-                '[Stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) is how Unleash guarantees that the same user gets the same variant every time',
+                '[Stickiness](https://docs.getunleash.io/concepts/feature-flag-variants#variant-stickiness) is how Unleash guarantees that the same user gets the same variant every time',
             example: 'custom.context.field',
         },
         payload: {

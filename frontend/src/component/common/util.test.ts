@@ -1,4 +1,4 @@
-import { updateWeightEdit } from './util';
+import { updateWeightEdit } from './util.js';
 
 const variantTemplate = {
     id: '0',

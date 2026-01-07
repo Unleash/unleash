@@ -1,22 +1,26 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
+} from '../../helpers/test-helper.js';
+import getLogger from '../../../fixtures/no-logger.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('tag_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {
@@ -218,4 +222,48 @@ test('backward compatibility: the API should return invalid tag names if they ex
     await db.stores.tagStore.createTag(tag);
     const { body } = await app.request.get('/api/admin/tags').expect(200);
     expect(body.tags).toContainEqual(tag);
+});
+
+test('should include tag color information when getting feature tags', async () => {
+    const featureName = 'test.feature.with.color';
+    const tagType = 'simple';
+    const tag = {
+        value: 'TeamRed',
+        type: tagType,
+    };
+
+    await app.request.post('/api/admin/projects/default/features').send({
+        name: featureName,
+        type: 'kill-switch',
+        enabled: true,
+        strategies: [{ name: 'default' }],
+    });
+
+    await app.request
+        .put(`/api/admin/tag-types/${tagType}`)
+        .send({
+            name: tagType,
+            color: '#FF0000',
+        })
+        .expect(200);
+
+    await app.request
+        .put(`/api/admin/features/${featureName}/tags`)
+        .send({ addedTags: [tag], removedTags: [] })
+        .expect(200);
+
+    const { body } = await app.request
+        .get(`/api/admin/features/${featureName}/tags`)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        tags: [
+            {
+                value: 'TeamRed',
+                type: 'simple',
+                color: '#FF0000',
+            },
+        ],
+    });
 });

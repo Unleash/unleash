@@ -1,35 +1,32 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import type { Request, Response } from 'express';
-import Controller from '../../../routes/controller';
-import { NONE, UPDATE_FEATURE } from '../../../types/permissions';
-import type { IUnleashConfig } from '../../../types/option';
-import type { IUnleashServices } from '../../../types';
-import type FeatureToggleService from '../feature-toggle-service';
-import { querySchema } from '../../../schema/feature-schema';
-import type { IFeatureToggleQuery } from '../../../types/model';
-import type FeatureTagService from '../../../services/feature-tag-service';
-import type { IAuthRequest } from '../../../routes/unleash-types';
-import type { TagSchema } from '../../../openapi/spec/tag-schema';
-import type { TagsSchema } from '../../../openapi/spec/tags-schema';
-import type { OpenApiService } from '../../../services/openapi-service';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
+import Controller from '../../../routes/controller.js';
+import { NONE, UPDATE_FEATURE } from '../../../types/permissions.js';
+import type { IUnleashConfig } from '../../../types/option.js';
+import type { FeatureToggleService } from '../feature-toggle-service.js';
+import { querySchema } from '../../../schema/feature-schema.js';
+import type { IFeatureToggleQuery } from '../../../types/model.js';
+import type FeatureTagService from '../../../services/feature-tag-service.js';
+import type { IAuthRequest } from '../../../routes/unleash-types.js';
+import type { TagSchema } from '../../../openapi/spec/tag-schema.js';
+import type { TagsSchema } from '../../../openapi/spec/tags-schema.js';
+import type { IUnleashServices } from '../../../services/index.js';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
-} from '../../../openapi/util/create-response-schema';
+} from '../../../openapi/util/create-response-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../../openapi/util/standard-responses';
-import type { UpdateTagsSchema } from '../../../openapi/spec/update-tags-schema';
-import type { ValidateFeatureSchema } from '../../../openapi/spec/validate-feature-schema';
+} from '../../../openapi/util/standard-responses.js';
+import type { UpdateTagsSchema } from '../../../openapi/spec/update-tags-schema.js';
+import type { ValidateFeatureSchema } from '../../../openapi/spec/validate-feature-schema.js';
 
 const version = 1;
 
 class FeatureController extends Controller {
     private tagService: FeatureTagService;
-
-    private openApiService: OpenApiService;
 
     private service: FeatureToggleService;
 
@@ -37,17 +34,16 @@ class FeatureController extends Controller {
         config: IUnleashConfig,
         {
             featureTagService,
-            featureToggleServiceV2,
+            featureToggleService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            'featureTagService' | 'featureToggleServiceV2' | 'openApiService'
+            'featureTagService' | 'featureToggleService' | 'openApiService'
         >,
     ) {
         super(config);
         this.tagService = featureTagService;
-        this.openApiService = openApiService;
-        this.service = featureToggleServiceV2;
+        this.service = featureToggleService;
 
         this.route({
             method: 'post',

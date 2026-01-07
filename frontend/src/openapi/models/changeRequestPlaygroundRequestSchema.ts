@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SdkContextSchema } from './sdkContextSchema';
+import type { SdkContextSchema } from './sdkContextSchema.js';
 
 /**
  * Data for the playground API to evaluate flags with change request applied in preview mode

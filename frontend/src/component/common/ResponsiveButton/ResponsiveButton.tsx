@@ -3,7 +3,7 @@ import { useMediaQuery } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import type { ITooltipResolverProps } from '../TooltipResolver/TooltipResolver';
+import type { ITooltipResolverProps } from '../TooltipResolver/TooltipResolver.tsx';
 import type { OverridableStringUnion } from '@mui/types';
 import type { ButtonPropsVariantOverrides } from '@mui/material/Button/Button';
 

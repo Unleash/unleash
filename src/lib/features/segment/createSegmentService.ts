@@ -1,26 +1,26 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
-import { SegmentService } from '../../services';
-import type { ISegmentService } from './segment-service-interface';
-import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
-import SegmentStore from './segment-store';
-import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
-import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import { ResourceLimitsService, SegmentService } from '../../services/index.js';
+import type { ISegmentService } from './segment-service-interface.js';
+import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store.js';
+import SegmentStore from './segment-store.js';
+import FakeSegmentStore from '../../../test/fixtures/fake-segment-store.js';
+import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store.js';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
-} from '../change-request-access-service/createChangeRequestAccessReadModel';
+} from '../change-request-access-service/createChangeRequestAccessReadModel.js';
 import {
     createChangeRequestSegmentUsageReadModel,
     createFakeChangeRequestSegmentUsageReadModel,
-} from '../change-request-segment-usage-service/createChangeRequestSegmentUsageReadModel';
+} from '../change-request-segment-usage-service/createChangeRequestSegmentUsageReadModel.js';
 import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
-} from '../private-project/createPrivateProjectChecker';
+} from '../private-project/createPrivateProjectChecker.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
+} from '../events/createEventsService.js';
 
 export const createSegmentService = (
     db: Db,
@@ -51,6 +51,8 @@ export const createSegmentService = (
 
     const eventService = createEventsService(db, config);
 
+    const resourceLimitsService = new ResourceLimitsService(config);
+
     return new SegmentService(
         { segmentStore, featureStrategiesStore },
         changeRequestAccessReadModel,
@@ -58,6 +60,7 @@ export const createSegmentService = (
         config,
         eventService,
         privateProjectChecker,
+        resourceLimitsService,
     );
 };
 
@@ -74,6 +77,8 @@ export const createFakeSegmentService = (
 
     const eventService = createFakeEventsService(config);
 
+    const resourceLimitsService = new ResourceLimitsService(config);
+
     return new SegmentService(
         { segmentStore, featureStrategiesStore },
         changeRequestAccessReadModel,
@@ -81,5 +86,6 @@ export const createFakeSegmentService = (
         config,
         eventService,
         privateProjectChecker,
+        resourceLimitsService,
     );
 };

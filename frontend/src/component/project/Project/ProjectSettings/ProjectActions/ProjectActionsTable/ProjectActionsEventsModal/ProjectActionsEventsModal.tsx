@@ -8,8 +8,8 @@ import { formatDateYMDHMS } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { ProjectActionsEventsStateCell } from './ProjectActionsEventsStateCell';
-import { ProjectActionsEventsDetails } from './ProjectActionsEventsDetails/ProjectActionsEventsDetails';
+import { ProjectActionsEventsStateCell } from './ProjectActionsEventsStateCell.tsx';
+import { ProjectActionsEventsDetails } from './ProjectActionsEventsDetails/ProjectActionsEventsDetails.tsx';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',

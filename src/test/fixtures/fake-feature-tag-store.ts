@@ -1,9 +1,9 @@
-import type { ITag } from '../../lib/types/model';
+import type { ITag } from '../../lib/tags/index.js';
 import type {
     IFeatureAndTag,
     IFeatureTag,
     IFeatureTagStore,
-} from '../../lib/types/stores/feature-tag-store';
+} from '../../lib/types/stores/feature-tag-store.js';
 
 export default class FakeFeatureTagStore implements IFeatureTagStore {
     private featureTags: IFeatureTag[] = [];
@@ -26,10 +26,7 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
     }
 
     async delete(key: IFeatureTag): Promise<void> {
-        this.featureTags.splice(
-            this.featureTags.findIndex((t) => t === key),
-            1,
-        );
+        this.featureTags.splice(this.featureTags.indexOf(key), 1);
     }
 
     destroy(): void {}
@@ -38,7 +35,7 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
         return this.featureTags.some((t) => t === key);
     }
 
-    async get(key: IFeatureTag): Promise<IFeatureTag> {
+    async get(key: IFeatureTag): Promise<IFeatureTag | undefined> {
         return this.featureTags.find((t) => t === key);
     }
 
@@ -78,7 +75,7 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
                         value: fT.tagValue,
                         type: fT.tagType,
                     },
-                    fT.createdByUserId,
+                    fT.createdByUserId || -1337,
                 );
                 return {
                     featureName: fT.featureName,
@@ -107,9 +104,7 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    untagFeatures(featureTags: IFeatureTag[]): Promise<void> {
+    untagFeatures(_featureTags: IFeatureTag[]): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }
-
-module.exports = FakeFeatureTagStore;

@@ -1,21 +1,27 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
-import GroupStore from '../../db/group-store';
-import { AccountStore } from '../../db/account-store';
-import RoleStore from '../../db/role-store';
-import EnvironmentStore from '../project-environments/environment-store';
-import { AccessStore } from '../../db/access-store';
-import { AccessService, GroupService } from '../../services';
-import FakeGroupStore from '../../../test/fixtures/fake-group-store';
-import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
-import FakeRoleStore from '../../../test/fixtures/fake-role-store';
-import FakeEnvironmentStore from '../project-environments/fake-environment-store';
-import FakeAccessStore from '../../../test/fixtures/fake-access-store';
-import type { IAccessStore, IEventStore, IRoleStore } from '../../types';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import GroupStore from '../../db/group-store.js';
+import { AccountStore } from '../../db/account-store.js';
+import RoleStore from '../../db/role-store.js';
+import EnvironmentStore from '../project-environments/environment-store.js';
+import { AccessStore } from '../../db/access-store.js';
+import { AccessService, GroupService } from '../../services/index.js';
+import FakeGroupStore from '../../../test/fixtures/fake-group-store.js';
+import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
+import { FakeAccountStore } from '../../../test/fixtures/fake-account-store.js';
+import FakeRoleStore from '../../../test/fixtures/fake-role-store.js';
+import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
+import FakeAccessStore, {
+    type FakeAccessStoreConfig,
+} from '../../../test/fixtures/fake-access-store.js';
+import type {
+    IAccessStore,
+    IEventStore,
+    IRoleStore,
+} from '../../types/index.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
+} from '../events/createEventsService.js';
 
 export const createAccessService = (
     db: Db,
@@ -41,8 +47,13 @@ export const createAccessService = (
     );
 };
 
+export type FakeAccessServiceConfig = {
+    accessStoreConfig?: FakeAccessStoreConfig;
+};
+
 export const createFakeAccessService = (
     config: IUnleashConfig,
+    { accessStoreConfig }: FakeAccessServiceConfig = {},
 ): {
     accessService: AccessService;
     eventStore: IEventStore;
@@ -55,7 +66,7 @@ export const createFakeAccessService = (
     const accountStore = new FakeAccountStore();
     const roleStore = new FakeRoleStore();
     const environmentStore = new FakeEnvironmentStore();
-    const accessStore = new FakeAccessStore(roleStore);
+    const accessStore = new FakeAccessStore(roleStore, accessStoreConfig);
     const eventService = createFakeEventsService(config, { eventStore });
     const groupService = new GroupService(
         { groupStore, accountStore },

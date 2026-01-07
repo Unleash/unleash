@@ -1,14 +1,11 @@
-import { ArchiveTable } from './ArchiveTable';
+import { ArchiveTable } from 'component/archive/ArchiveTable/ArchiveTable';
 import { render } from 'utils/testRenderer';
 import { useState } from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import {
-    DELETE_FEATURE,
-    UPDATE_FEATURE,
-} from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import type { FeatureSearchResponseSchema } from 'openapi';
 
 const mockedFeatures = [
     {
@@ -21,7 +18,6 @@ const mockedFeatures = [
         lastSeenAt: null,
         impressionData: false,
         archivedAt: '2023-08-11T10:18:03.429Z',
-        archived: true,
     },
     {
         name: 'someOtherFeature',
@@ -33,9 +29,8 @@ const mockedFeatures = [
         lastSeenAt: null,
         impressionData: false,
         archivedAt: '2023-08-11T10:18:03.429Z',
-        archived: true,
     },
-];
+] as FeatureSearchResponseSchema[];
 
 const Component = () => {
     const [storedParams, setStoredParams] = useState({});
@@ -47,7 +42,6 @@ const Component = () => {
             loading={false}
             setStoredParams={setStoredParams as any}
             storedParams={storedParams as any}
-            projectId='default'
         />
     );
 };
@@ -102,37 +96,6 @@ test('should show confirm dialog when reviving flag', async () => {
         expect(reviveFlagsButton).toBeEnabled();
     });
     fireEvent.click(reviveFlagsButton);
-
-    await screen.findByText('Feature flags revived');
-});
-
-test('should show confirm dialog when batch reviving flag', async () => {
-    setupApi();
-    render(
-        <>
-            <ToastRenderer />
-            <Component />
-        </>,
-        {
-            permissions: [
-                { permission: UPDATE_FEATURE, project: 'default' },
-                { permission: DELETE_FEATURE, project: 'default' },
-            ],
-        },
-    );
-    await screen.findByText('someFeature');
-
-    const selectAll = await screen.findByTestId('select_all_rows');
-    fireEvent.click(selectAll.firstChild!);
-    const batchReviveButton = await screen.findByText(/Revive/i);
-    await userEvent.click(batchReviveButton!);
-
-    await screen.findByText('Revive feature flags?');
-
-    const reviveTogglesButton = screen.getByRole('button', {
-        name: /Revive feature flags/i,
-    });
-    fireEvent.click(reviveTogglesButton);
 
     await screen.findByText('Feature flags revived');
 });

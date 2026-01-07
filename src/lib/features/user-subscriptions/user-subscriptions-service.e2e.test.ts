@@ -4,13 +4,15 @@ import {
     type IUnleashStores,
     type IUserStore,
     TEST_AUDIT_USER,
-} from '../../types';
-import type { UserSubscriptionsService } from './user-subscriptions-service';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import { createTestConfig } from '../../../test/config/test-config';
-import getLogger from '../../../test/fixtures/no-logger';
-import { createUserSubscriptionsService } from './createUserSubscriptionsService';
-import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type';
+} from '../../types/index.js';
+import type { UserSubscriptionsService } from './user-subscriptions-service.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { createUserSubscriptionsService } from './createUserSubscriptionsService.js';
+import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

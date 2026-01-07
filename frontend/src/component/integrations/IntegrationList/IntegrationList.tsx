@@ -1,7 +1,7 @@
 import type { VFC } from 'react';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
-import { AvailableIntegrations } from './AvailableIntegrations/AvailableIntegrations';
-import { ConfiguredIntegrations } from './ConfiguredIntegrations/ConfiguredIntegrations';
+import { AvailableIntegrations } from './AvailableIntegrations/AvailableIntegrations.tsx';
+import { ConfiguredIntegrations } from './ConfiguredIntegrations/ConfiguredIntegrations.tsx';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';

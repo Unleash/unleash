@@ -1,24 +1,28 @@
 import { Knex } from 'knex';
 import type EventEmitter from 'events';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
-import type { Logger, LogProvider } from '../../logger';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
+import type { LogProvider } from '../../logger.js';
 import type {
+    FeatureSearchEnvironment,
     IFeatureSearchOverview,
     IFeatureSearchStore,
     IFlagResolver,
-    ITag,
-} from '../../types';
-import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
-import type { Db } from '../../db/db';
+} from '../../types/index.js';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
+import type { Db } from '../../db/db.js';
 import type {
     IFeatureSearchParams,
     IQueryParam,
-} from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import { applyGenericQueryParams, applySearchFilters } from './search-utils';
-import type { FeatureSearchEnvironmentSchema } from '../../openapi/spec/feature-search-environment-schema';
-import { generateImageUrl } from '../../util';
+} from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import {
+    applyGenericQueryParams,
+    applySearchFilters,
+    parseSearchOperatorValue,
+} from './search-utils.js';
+import { generateImageUrl } from '../../util/index.js';
 import Raw = Knex.Raw;
+import type { ITag } from '../../tags/index.js';
 
 const sortEnvironments = (overview: IFeatureSearchOverview[]) => {
     return overview.map((data: IFeatureSearchOverview) => ({
@@ -37,21 +41,15 @@ const sortEnvironments = (overview: IFeatureSearchOverview[]) => {
 class FeatureSearchStore implements IFeatureSearchStore {
     private db: Db;
 
-    private logger: Logger;
-
     private readonly timer: Function;
-
-    private flagResolver: IFlagResolver;
 
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        getLogger: LogProvider,
-        flagResolver: IFlagResolver,
+        _getLogger: LogProvider,
+        _flagResolver: IFlagResolver,
     ) {
         this.db = db;
-        this.logger = getLogger('feature-search-store.ts');
-        this.flagResolver = flagResolver;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-search',
@@ -59,7 +57,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             });
     }
 
-    private static getEnvironment(r: any): FeatureSearchEnvironmentSchema {
+    private static getEnvironment(r: any): FeatureSearchEnvironment {
         return {
             name: r.environment,
             enabled: r.enabled,
@@ -71,25 +69,15 @@ class FeatureSearchStore implements IFeatureSearchStore {
             hasEnabledStrategies: r.has_enabled_strategies,
             yes: Number(r.yes) || 0,
             no: Number(r.no) || 0,
+            changeRequestIds: r.change_request_ids ?? [],
+            ...(r.milestone_name
+                ? {
+                      milestoneName: r.milestone_name,
+                      milestoneOrder: r.milestone_order,
+                      totalMilestones: Number(r.total_milestones || 0),
+                  }
+                : {}),
         };
-    }
-
-    private getLatestLifecycleStageQuery() {
-        return this.db('feature_lifecycles')
-            .select(
-                'feature as stage_feature',
-                'stage as latest_stage',
-                'status as stage_status',
-                'created_at as entered_stage_at',
-            )
-            .distinctOn('stage_feature')
-            .orderBy([
-                'stage_feature',
-                {
-                    column: 'entered_stage_at',
-                    order: 'desc',
-                },
-            ]);
     }
 
     async searchFeatures(
@@ -99,6 +87,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             status,
             offset,
             limit,
+            lifecycle,
             sortOrder,
             sortBy,
             archived,
@@ -134,12 +123,16 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'environments.sort_order as environment_sort_order',
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
+                    'tag_types.color as tag_type_color',
                     'segments.name as segment_name',
                     'users.id as user_id',
                     'users.name as user_name',
                     'users.username as user_username',
                     'users.email as user_email',
                     'users.image_url as user_image_url',
+                    'lifecycle.latest_stage',
+                    'lifecycle.stage_status',
+                    'lifecycle.entered_stage_at',
                 ] as (string | Raw<any> | Knex.QueryBuilder)[];
 
                 const lastSeenQuery = 'last_seen_at_metrics.last_seen_at';
@@ -207,6 +200,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'ft.feature_name',
                         'features.name',
                     )
+                    .leftJoin('tag_types', 'tag_types.name', 'ft.tag_type')
                     .leftJoin(
                         'feature_strategies',
                         'feature_strategies.feature_name',
@@ -237,23 +231,50 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'users',
                         'users.id',
                         'features.created_by_user_id',
+                    )
+                    .leftJoin('last_seen_at_metrics', function () {
+                        this.on(
+                            'last_seen_at_metrics.environment',
+                            '=',
+                            'environments.name',
+                        ).andOn(
+                            'last_seen_at_metrics.feature_name',
+                            '=',
+                            'features.name',
+                        );
+                    })
+                    .leftJoin(
+                        this.db
+                            .select(
+                                'feature as stage_feature',
+                                'stage as latest_stage',
+                                'status as stage_status',
+                                'created_at as entered_stage_at',
+                            )
+                            .from('feature_lifecycles')
+                            .distinctOn('feature')
+                            .orderBy([
+                                'feature',
+                                { column: 'created_at', order: 'desc' },
+                            ])
+                            .as('lifecycle'),
+                        'features.name',
+                        'lifecycle.stage_feature',
                     );
 
-                query.leftJoin('last_seen_at_metrics', function () {
-                    this.on(
-                        'last_seen_at_metrics.environment',
-                        '=',
-                        'environments.name',
-                    ).andOn(
-                        'last_seen_at_metrics.feature_name',
-                        '=',
-                        'features.name',
-                    );
-                });
+                const parsedLifecycle = lifecycle
+                    ? parseSearchOperatorValue(
+                          'lifecycle.latest_stage',
+                          lifecycle,
+                      )
+                    : null;
+                if (parsedLifecycle) {
+                    applyGenericQueryParams(query, [parsedLifecycle]);
+                }
 
                 const rankingSql = this.buildRankingSql(
                     favoritesFirst,
-                    sortBy,
+                    sortBy || '',
                     validatedSortOrder,
                     lastSeenQuery,
                 );
@@ -262,7 +283,6 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     .select(selectColumns)
                     .denseRank('rank', this.db.raw(rankingSql));
             })
-            .with('lifecycle', this.getLatestLifecycleStageQuery())
             .with(
                 'final_ranks',
                 this.db.raw(
@@ -313,17 +333,10 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .joinRaw('CROSS JOIN total_features')
             .whereBetween('final_rank', [offset + 1, offset + limit])
             .orderBy('final_rank');
-        finalQuery
-            .select(
-                'lifecycle.latest_stage',
-                'lifecycle.stage_status',
-                'lifecycle.entered_stage_at',
-            )
-            .leftJoin(
-                'lifecycle',
-                'ranked_features.feature_name',
-                'lifecycle.stage_feature',
-            );
+
+        this.buildChangeRequestSql(finalQuery);
+        this.buildReleasePlanSql(finalQuery);
+
         this.queryExtraData(finalQuery);
         const rows = await finalQuery;
         stopTimer();
@@ -410,6 +423,93 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     );
                 },
             );
+    }
+
+    private buildReleasePlanSql(queryBuilder: Knex.QueryBuilder) {
+        queryBuilder
+            .leftJoin(
+                this.db
+                    .with('total_milestones', (qb) => {
+                        qb.select('release_plan_definition_id')
+                            .count('* as total_milestones')
+                            .from('milestones')
+                            .groupBy('release_plan_definition_id');
+                    })
+                    .select([
+                        'rpd.feature_name',
+                        'rpd.environment',
+                        'active_milestone.sort_order AS milestone_order',
+                        'total_milestones.total_milestones',
+                        'active_milestone.name AS milestone_name',
+                    ])
+                    .from('release_plan_definitions AS rpd')
+                    .join(
+                        'total_milestones',
+                        'total_milestones.release_plan_definition_id',
+                        'rpd.id',
+                    )
+                    .join(
+                        'milestones AS active_milestone',
+                        'active_milestone.id',
+                        'rpd.active_milestone_id',
+                    )
+                    .where('rpd.discriminator', 'plan')
+                    .as('feature_release_plan'),
+                function () {
+                    this.on(
+                        'feature_release_plan.feature_name',
+                        '=',
+                        'ranked_features.feature_name',
+                    ).andOn(
+                        'feature_release_plan.environment',
+                        '=',
+                        'ranked_features.environment',
+                    );
+                },
+            )
+            .select([
+                'feature_release_plan.milestone_name',
+                'feature_release_plan.milestone_order',
+                'feature_release_plan.total_milestones',
+            ]);
+    }
+
+    private buildChangeRequestSql(queryBuilder: Knex.QueryBuilder) {
+        queryBuilder
+            .leftJoin(
+                this.db('change_request_events AS cre')
+                    .join(
+                        'change_requests AS cr',
+                        'cre.change_request_id',
+                        'cr.id',
+                    )
+                    .select('cre.feature')
+                    .select(
+                        this.db.raw(
+                            'array_agg(distinct cre.change_request_id) AS change_request_ids',
+                        ),
+                    )
+                    .select('cr.environment')
+                    .groupBy('cre.feature', 'cr.environment')
+                    .whereNotIn('cr.state', [
+                        'Applied',
+                        'Cancelled',
+                        'Rejected',
+                    ])
+                    .as('feature_cr'),
+                function () {
+                    this.on(
+                        'feature_cr.feature',
+                        '=',
+                        'ranked_features.feature_name',
+                    ).andOn(
+                        'feature_cr.environment',
+                        '=',
+                        'ranked_features.environment',
+                    );
+                },
+            )
+            .select('feature_cr.change_request_ids');
     }
 
     private buildRankingSql(
@@ -548,6 +648,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
         return {
             value: r.tag_value,
             type: r.tag_type,
+            color: r.tag_type_color,
         };
     }
 
@@ -664,6 +765,26 @@ const applyStaleConditions = (
         }
     }
 };
+const applyLastSeenAtConditions = (
+    query: Knex.QueryBuilder,
+    lastSeenAtConditions: IQueryParam[],
+): void => {
+    lastSeenAtConditions.forEach((param) => {
+        const lastSeenAtExpression = query.client.raw(
+            'coalesce(last_seen_at_metrics.last_seen_at, features.last_seen_at)',
+        );
+
+        switch (param.operator) {
+            case 'IS_BEFORE':
+                query.where(lastSeenAtExpression, '<', param.values[0]);
+                break;
+            case 'IS_ON_OR_AFTER':
+                query.where(lastSeenAtExpression, '>=', param.values[0]);
+                break;
+        }
+    });
+};
+
 const applyQueryParams = (
     query: Knex.QueryBuilder,
     queryParams: IQueryParam[],
@@ -675,12 +796,17 @@ const applyQueryParams = (
     const segmentConditions = queryParams.filter(
         (param) => param.field === 'segment',
     );
+    const lastSeenAtConditions = queryParams.filter(
+        (param) => param.field === 'lastSeenAt',
+    );
     const genericConditions = queryParams.filter(
-        (param) => !['tag', 'stale'].includes(param.field),
+        (param) =>
+            !['tag', 'stale', 'segment', 'lastSeenAt'].includes(param.field),
     );
     applyGenericQueryParams(query, genericConditions);
 
     applyStaleConditions(query, staleConditions);
+    applyLastSeenAtConditions(query, lastSeenAtConditions);
 
     applyMultiQueryParams(
         query,
@@ -705,12 +831,14 @@ const applyMultiQueryParams = (
     ) => (dbSubQuery: Knex.QueryBuilder) => Knex.QueryBuilder,
 ): void => {
     queryParams.forEach((param) => {
-        const values = param.values.map((val) =>
-            (Array.isArray(fields)
-                ? val.split(/:(.+)/).filter(Boolean)
-                : [val]
-            ).map((s) => s.trim()),
-        );
+        const values = param.values
+            .filter((v) => typeof v === 'string')
+            .map((val) =>
+                (Array.isArray(fields)
+                    ? val!.split(/:(.+)/).filter(Boolean)
+                    : [val]
+                ).map((s) => s?.trim() || ''),
+            );
         const baseSubQuery = createBaseQuery(values);
 
         switch (param.operator) {
@@ -778,5 +906,4 @@ const createSegmentBaseQuery = (segments: string[]) => {
     };
 };
 
-module.exports = FeatureSearchStore;
 export default FeatureSearchStore;

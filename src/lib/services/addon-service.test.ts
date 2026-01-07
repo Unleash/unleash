@@ -1,34 +1,30 @@
-import { ValidationError } from 'joi';
-
-import getLogger from '../../test/fixtures/no-logger';
-import TagTypeService from '../features/tag-type/tag-type-service';
+import getLogger from '../../test/fixtures/no-logger.js';
+import TagTypeService from '../features/tag-type/tag-type-service.js';
 import {
     ADDON_CONFIG_CREATED,
     ADDON_CONFIG_DELETED,
     ADDON_CONFIG_UPDATED,
     FEATURE_CREATED,
-} from '../types/events';
-import createStores from '../../test/fixtures/store';
+} from '../events/index.js';
+import createStores from '../../test/fixtures/store.js';
 
-import AddonService from './addon-service';
-import type { IAddonDto } from '../types/stores/addon-store';
-import SimpleAddon from './addon-service-test-simple-addon';
-import type { IAddonProviders } from '../addons';
+import AddonService from './addon-service.js';
+import type { IAddonDto } from '../types/stores/addon-store.js';
+import SimpleAddon from './addon-service-test-simple-addon.js';
+import type { IAddonProviders } from '../addons/index.js';
 import {
     type IFlagResolver,
     type IUnleashConfig,
     SYSTEM_USER,
     TEST_AUDIT_USER,
-} from '../types';
-import {
-    createFakeEventsService,
-    IntegrationEventsService,
-} from '../internals';
-import { createTestConfig } from '../../test/config/test-config';
+} from '../types/index.js';
+import { createFakeEventsService } from '../internals.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import { IntegrationEventsService } from './index.js';
+import joi from 'joi';
+const { ValidationError } = joi;
 
 const MASKED_VALUE = '*****';
-
-const TEST_USER_ID = -9999;
 
 let addonProvider: IAddonProviders;
 
@@ -47,13 +43,21 @@ function getSetup() {
         flagResolver: {} as IFlagResolver,
     });
 
-    addonProvider = { simple: new SimpleAddon() };
+    addonProvider = {
+        simple: new SimpleAddon({
+            getLogger,
+            unleashUrl: 'http://test',
+            integrationEventsService,
+            flagResolver: {} as IFlagResolver,
+            eventBus: config.eventBus,
+        }),
+    };
     return {
         addonService: new AddonService(
             stores,
             {
                 getLogger,
-                // @ts-ignore
+                // @ts-expect-error
                 server: { unleashUrl: 'http://test' },
             },
             tagTypeService,
@@ -132,8 +136,7 @@ test('should trigger simple-addon eventHandler', async () => {
         ip: '127.0.0.1',
     });
 
-    const simpleProvider = addonService.addonProviders.simple;
-    // @ts-ignore
+    const simpleProvider = addonService.addonProviders.simple as SimpleAddon;
     const events = simpleProvider.getEvents();
 
     expect(events.length).toBe(1);
@@ -167,8 +170,7 @@ test('should not trigger event handler if project of event is different from add
         },
         ip: '127.0.0.1',
     });
-    const simpleProvider = addonService.addonProviders.simple;
-    // @ts-expect-error
+    const simpleProvider = addonService.addonProviders.simple as SimpleAddon;
     const events = simpleProvider.getEvents();
 
     expect(events.length).toBe(0);
@@ -214,8 +216,7 @@ test('should trigger event handler if project for event is one of the desired pr
         },
         ip: '127.0.0.1',
     });
-    const simpleProvider = addonService.addonProviders.simple;
-    // @ts-expect-error
+    const simpleProvider = addonService.addonProviders.simple as SimpleAddon;
     const events = simpleProvider.getEvents();
 
     expect(events.length).toBe(1);
@@ -275,8 +276,7 @@ test('should trigger events for multiple projects if addon is setup to filter mu
         },
         ip: '127.0.0.1',
     });
-    const simpleProvider = addonService.addonProviders.simple;
-    // @ts-expect-error
+    const simpleProvider = addonService.addonProviders.simple as SimpleAddon;
     const events = simpleProvider.getEvents();
 
     expect(events.length).toBe(2);
@@ -328,8 +328,7 @@ test('should filter events on environment if addon is setup to filter for it', a
         },
         ip: '127.0.0.1',
     });
-    const simpleProvider = addonService.addonProviders.simple;
-    // @ts-expect-error
+    const simpleProvider = addonService.addonProviders.simple as SimpleAddon;
     const events = simpleProvider.getEvents();
 
     expect(events.length).toBe(1);
@@ -367,8 +366,7 @@ test('should not filter out global events (no specific environment) even if addo
 
     await addonService.createAddon(config, TEST_AUDIT_USER);
     await eventService.storeEvent(globalEventWithNoEnvironment);
-    const simpleProvider = addonService.addonProviders.simple;
-    // @ts-expect-error
+    const simpleProvider = addonService.addonProviders.simple as SimpleAddon;
     const events = simpleProvider.getEvents();
 
     expect(events.length).toBe(1);
@@ -405,8 +403,7 @@ test('should not filter out global events (no specific project) even if addon is
 
     await addonService.createAddon(config, TEST_AUDIT_USER);
     await eventService.storeEvent(globalEventWithNoProject);
-    const simpleProvider = addonService.addonProviders.simple;
-    // @ts-expect-error
+    const simpleProvider = addonService.addonProviders.simple as SimpleAddon;
     const events = simpleProvider.getEvents();
 
     expect(events.length).toBe(1);
@@ -466,8 +463,7 @@ test('should support wildcard option for filtering addons', async () => {
         },
         ip: '127.0.0.1',
     });
-    const simpleProvider = addonService.addonProviders.simple;
-    // @ts-expect-error
+    const simpleProvider = addonService.addonProviders.simple as SimpleAddon;
     const events = simpleProvider.getEvents();
 
     expect(events).toHaveLength(3);
@@ -566,8 +562,7 @@ test('Should support filtering by both project and environment', async () => {
         ip: '127.0.0.1',
     });
 
-    const simpleProvider = addonService.addonProviders.simple;
-    // @ts-expect-error
+    const simpleProvider = addonService.addonProviders.simple as SimpleAddon;
     const events = simpleProvider.getEvents();
 
     expect(events.length).toBe(3);
@@ -717,9 +712,7 @@ test('should hide sensitive fields when fetching', async () => {
     const addonRetrieved = await addonService.getAddon(createdConfig.id);
 
     expect(addons.length).toBe(1);
-    // @ts-ignore
     expect(addons[0].parameters.sensitiveParam).toBe(MASKED_VALUE);
-    // @ts-ignore
     expect(addonRetrieved.parameters.sensitiveParam).toBe(MASKED_VALUE);
 });
 
@@ -747,10 +740,8 @@ test('should not overwrite masked values when updating', async () => {
     await addonService.updateAddon(addonConfig.id, updated, TEST_AUDIT_USER);
 
     const updatedConfig = await stores.addonStore.get(addonConfig.id);
-    // @ts-ignore
-    expect(updatedConfig.parameters.url).toBe('http://localhost/wh');
-    // @ts-ignore
-    expect(updatedConfig.parameters.var).toBe('some-new-value');
+    expect(updatedConfig!.parameters.url).toBe('http://localhost/wh');
+    expect(updatedConfig!.parameters.var).toBe('some-new-value');
 });
 
 test('should reject addon config with missing required parameter when creating', async () => {

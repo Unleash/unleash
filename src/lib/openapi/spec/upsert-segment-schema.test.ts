@@ -1,4 +1,4 @@
-import { validateSchema } from '../validate';
+import { validateSchema } from '../validate.js';
 
 test('upsertSegmentSchema', () => {
     const validObjects = [
@@ -19,11 +19,11 @@ test('upsertSegmentSchema', () => {
         },
     ];
 
-    validObjects.forEach((obj) =>
+    validObjects.forEach((obj) => {
         expect(
             validateSchema('#/components/schemas/upsertSegmentSchema', obj),
-        ).toBeUndefined(),
-    );
+        ).toBeUndefined();
+    });
 
     const invalidObjects = [
         {
@@ -36,9 +36,9 @@ test('upsertSegmentSchema', () => {
         {},
     ];
 
-    invalidObjects.forEach((obj) =>
+    invalidObjects.forEach((obj) => {
         expect(
             validateSchema('#/components/schemas/upsertSegmentSchema', obj),
-        ).toMatchSnapshot(),
-    );
+        ).toMatchSnapshot();
+    });
 });

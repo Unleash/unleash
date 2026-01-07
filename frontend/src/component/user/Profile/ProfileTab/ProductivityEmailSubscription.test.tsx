@@ -1,8 +1,8 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { ProductivityEmailSubscription } from './ProductivityEmailSubscription';
-import ToastRenderer from '../../../common/ToastRenderer/ToastRenderer';
+import { ProductivityEmailSubscription } from './ProductivityEmailSubscription.tsx';
+import ToastRenderer from '../../../common/ToastRenderer/ToastRenderer.tsx';
 
 const server = testServerSetup();
 

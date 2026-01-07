@@ -1,13 +1,13 @@
 import { addHours, set, subDays } from 'date-fns';
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
-import getLogger from '../../../../test/fixtures/no-logger';
-import type { IUnleashStores } from '../../../types';
+} from '../../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
+import type { IUnleashStores } from '../../../types/index.js';
 import type {
     IClientMetricsEnv,
     IClientMetricsStoreV2,
-} from './client-metrics-store-v2-type';
+} from './client-metrics-store-v2-type.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -352,12 +352,12 @@ test('Should get metric', async () => {
         },
     ];
     await clientMetricsStore.batchInsertMetrics(metrics);
-    const metric = await clientMetricsStore.get({
+    const metric = (await clientMetricsStore.get({
         featureName: 'demo4',
         timestamp: twoDaysAgo,
         appName: 'backend-api',
         environment: 'dev',
-    });
+    }))!;
 
     expect(metric.featureName).toBe('demo4');
     expect(metric.yes).toBe(41);

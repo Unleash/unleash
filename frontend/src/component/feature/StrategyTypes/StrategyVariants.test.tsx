@@ -1,9 +1,9 @@
 import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { StrategyVariants } from './StrategyVariants';
+import { StrategyVariants } from './StrategyVariants.tsx';
 import { Route, Routes } from 'react-router-dom';
-import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
-import type { IFeatureStrategy } from '../../../interfaces/strategy';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
+import type { IFeatureStrategy } from '../../../interfaces/strategy.ts';
 import { useState } from 'react';
 
 test('should render variants', async () => {
@@ -19,7 +19,7 @@ test('should render variants', async () => {
                 weight: 1000,
                 weightType: 'variable' as const,
                 payload: {
-                    type: 'string',
+                    type: 'string' as const,
                     value: 'variantValue',
                 },
             },

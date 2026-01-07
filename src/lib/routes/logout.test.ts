@@ -1,13 +1,14 @@
 import supertest from 'supertest';
 import express from 'express';
-import { createTestConfig } from '../../test/config/test-config';
+import { createTestConfig } from '../../test/config/test-config.js';
 
-import LogoutController from './logout';
-import type { IAuthRequest } from './unleash-types';
-import SessionService from '../services/session-service';
-import FakeSessionStore from '../../test/fixtures/fake-session-store';
-import noLogger from '../../test/fixtures/no-logger';
+import LogoutController from './logout.js';
+import type { IAuthRequest } from './unleash-types.js';
+import SessionService from '../services/session-service.js';
+import FakeSessionStore from '../../test/fixtures/fake-session-store.js';
+import noLogger from '../../test/fixtures/no-logger.js';
 import { addDays } from 'date-fns';
+import { vi } from 'vitest';
 
 test('should redirect to "/" after logout', async () => {
     const baseUriPath = '';
@@ -145,11 +146,11 @@ test('should clear "unleash-session" cookie even when disabled clear site data',
 test('should call destroy on session', async () => {
     const baseUriPath = '';
     const fakeSession = {
-        destroy: jest.fn(),
+        destroy: vi.fn(),
     };
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
-    app.use((req: IAuthRequest, res, next) => {
+    app.use((req: IAuthRequest, _res, next) => {
         req.session = fakeSession;
         next();
     });
@@ -170,10 +171,10 @@ test('should call destroy on session', async () => {
 test('should handle req.logout with callback function', async () => {
     // passport >=0.6.0
     const baseUriPath = '';
-    const logoutFunction = jest.fn((cb: (err?: any) => void) => cb());
+    const logoutFunction = vi.fn((cb: (err?: any) => void) => cb());
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
-    app.use((req: IAuthRequest, res, next) => {
+    app.use((req: IAuthRequest, _res, next) => {
         req.logout = logoutFunction;
         next();
     });
@@ -195,10 +196,10 @@ test('should handle req.logout with callback function', async () => {
 test('should handle req.logout without callback function', async () => {
     // passport <0.6.0
     const baseUriPath = '';
-    const logoutFunction = jest.fn();
+    const logoutFunction = vi.fn();
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
-    app.use((req: IAuthRequest, res, next) => {
+    app.use((req: IAuthRequest, _res, next) => {
         req.logout = logoutFunction;
         next();
     });
@@ -219,12 +220,12 @@ test('should handle req.logout without callback function', async () => {
 
 test('should redirect to alternative logoutUrl', async () => {
     const fakeSession = {
-        destroy: jest.fn(),
+        destroy: vi.fn(),
         logoutUrl: '/some-other-path',
     };
     const app = express();
     const config = createTestConfig();
-    app.use((req: IAuthRequest, res, next) => {
+    app.use((req: IAuthRequest, _res, next) => {
         req.session = fakeSession;
         next();
     });
@@ -247,12 +248,12 @@ test('Should destroy sessions for user', async () => {
     const app = express();
     const config = createTestConfig();
     const fakeSession = {
-        destroy: jest.fn(),
+        destroy: vi.fn(),
         user: {
             id: 1,
         },
     };
-    app.use((req: IAuthRequest, res, next) => {
+    app.use((req: IAuthRequest, _res, next) => {
         req.session = fakeSession;
         next();
     });

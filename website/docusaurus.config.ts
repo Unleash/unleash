@@ -1,7 +1,7 @@
 import type { Config } from '@docusaurus/types';
 
 import { sdks } from './remote-content/sdks';
-import { docs as edgeAndProxy } from './remote-content/edge-proxy';
+import { docs as services } from './remote-content/services';
 import pluginNpm2Yarn from '@docusaurus/remark-plugin-npm2yarn';
 
 // for a given redirect object, modify it's `from` property such that for every
@@ -64,6 +64,9 @@ const getUnleashRepoStars = async () => {
 export default async function createConfigAsync(): Promise<Config> {
     const stars = await getUnleashRepoStars();
     return {
+        future: {
+            experimental_faster: true, // turns Docusaurus Faster on globally
+        },
         title: 'Unleash Documentation',
         tagline: 'The enterprise ready feature flag service',
         url: 'https://docs.getunleash.io',
@@ -81,6 +84,17 @@ export default async function createConfigAsync(): Promise<Config> {
             // expose env vars etc here
             environment: process.env.NODE_ENV,
         },
+        headTags: [
+            {
+                tagName: 'link',
+                attributes: {
+                    rel: 'preload',
+                    href: '/img/unleash_logo_dark.svg',
+                    as: 'image',
+                    type: 'image/svg+xml',
+                },
+            },
+        ],
         themeConfig: {
             defaultMode: 'light',
             disableSwitch: true,
@@ -90,6 +104,13 @@ export default async function createConfigAsync(): Promise<Config> {
                 apiKey: 'dc9c4491fcf9143ee34015f22d1dd9d6',
                 indexName: 'getunleash',
             },
+            theme: {
+                customCss: './src/css/custom.css',
+            },
+            metadata: [
+                { name: 'og:image:width', content: '1200' },
+                { name: 'og:image:height', content: '630' },
+            ],
             navbar: {
                 logo: {
                     alt: 'Unleash logo',
@@ -159,7 +180,7 @@ class="header-github-link"
                     {
                         type: 'html',
                         position: 'right',
-                        value: '<a href="https://www.getunleash.io/plans/enterprise" target="_blank" rel="noopener noreferrer" class="navbar__link navbar-link-solid">Get a demo</a>',
+                        value: '<a href="https://www.getunleash.io/pricing" target="_blank" rel="noopener noreferrer" class="navbar__link navbar-link-solid">Start free trial</a>',
                         className: 'hide-at-small-sizes',
                     },
                 ],
@@ -223,39 +244,39 @@ class="header-github-link"
                         items: [
                             {
                                 label: 'Node.js',
-                                to: '/reference/sdks/node',
+                                to: '/sdks/node',
                             },
                             {
                                 label: 'Java',
-                                to: '/reference/sdks/java',
+                                to: '/sdks/java',
                             },
                             {
                                 label: 'Go',
-                                to: '/reference/sdks/go',
+                                to: '/sdks/go',
                             },
                             {
                                 label: 'Rust',
-                                to: '/reference/sdks/rust',
+                                to: '/sdks/rust',
                             },
                             {
                                 label: 'Ruby',
-                                to: '/reference/sdks/ruby',
+                                to: '/sdks/ruby',
                             },
                             {
                                 label: 'Python',
-                                to: '/reference/sdks/python',
+                                to: '/sdks/python',
                             },
                             {
                                 label: '.NET',
-                                to: '/reference/sdks/dotnet',
+                                to: '/sdks/dotnet',
                             },
                             {
                                 label: 'PHP',
-                                to: '/reference/sdks/php',
+                                to: '/sdks/php',
                             },
                             {
                                 label: 'All SDKs',
-                                to: '/reference/sdks',
+                                to: '/sdks',
                             },
                         ],
                     },
@@ -264,31 +285,31 @@ class="header-github-link"
                         items: [
                             {
                                 label: 'JavaScript',
-                                to: '/reference/sdks/javascript-browser',
+                                to: '/sdks/javascript-browser',
                             },
                             {
                                 label: 'React',
-                                to: '/reference/sdks/react',
+                                to: '/sdks/react',
                             },
                             {
                                 label: 'Next.js',
-                                to: '/reference/sdks/next-js',
+                                to: '/sdks/next-js',
                             },
                             {
                                 label: 'Vue',
-                                to: '/reference/sdks/vue',
+                                to: '/sdks/vue',
                             },
                             {
                                 label: 'iOS',
-                                to: '/reference/sdks/ios-proxy',
+                                to: '/sdks/ios',
                             },
                             {
                                 label: 'Android',
-                                to: '/reference/sdks/android-proxy',
+                                to: '/sdks/android',
                             },
                             {
                                 label: 'Flutter',
-                                to: '/reference/sdks/flutter',
+                                to: '/sdks/flutter',
                             },
                         ],
                     },
@@ -297,7 +318,7 @@ class="header-github-link"
                         items: [
                             {
                                 label: 'Secure, scalable feature flags',
-                                to: '/topics/feature-flags/feature-flag-best-practices',
+                                to: '/guides/feature-flag-best-practices',
                             },
                             {
                                 label: 'Rollbacks',
@@ -305,15 +326,15 @@ class="header-github-link"
                             },
                             {
                                 label: 'FedRAMP, SOC2, ISO2700 compliance',
-                                to: '/using-unleash/compliance/compliance-overview',
+                                to: '/privacy-and-compliance/compliance-overview',
                             },
                             {
                                 label: 'Progressive or gradual rollouts',
-                                to: '/feature-flag-tutorials/use-cases/gradual-rollout',
+                                to: '/guides/gradual-rollout',
                             },
                             {
                                 label: 'Trunk-based development',
-                                to: '/feature-flag-tutorials/use-cases/trunk-based-development',
+                                to: '/guides/trunk-based-development',
                             },
                             {
                                 label: 'Software kill switches',
@@ -321,7 +342,7 @@ class="header-github-link"
                             },
                             {
                                 label: 'A/B testing',
-                                to: '/feature-flag-tutorials/use-cases/a-b-testing',
+                                to: '/guides/a-b-testing',
                             },
                             {
                                 label: 'Feature management',
@@ -338,15 +359,19 @@ class="header-github-link"
                         items: [
                             {
                                 label: 'Quickstart',
-                                to: '/quickstart',
+                                to: '/get-started/quickstart',
                             },
                             {
                                 label: 'Unleash architecture',
-                                to: '/understanding-unleash/unleash-overview',
+                                to: '/get-started/unleash-overview',
                             },
                             {
                                 label: 'Pricing',
                                 href: 'https://www.getunleash.io/pricing',
+                            },
+                            {
+                                label: 'Product vision',
+                                href: 'https://www.getunleash.io/product-vision',
                             },
                             {
                                 label: 'Open live demo',
@@ -378,10 +403,6 @@ class="header-github-link"
                                 href: 'https://unleash.instatus.com',
                             },
                             {
-                                label: 'Roadmap',
-                                href: 'https://github.com/orgs/Unleash/projects/10/views/1',
-                            },
-                            {
                                 label: 'Changelog',
                                 href: 'https://github.com/Unleash/unleash/releases',
                             },
@@ -395,10 +416,11 @@ class="header-github-link"
                     alt: 'Unleash logo',
                 },
             },
-            image: 'img/logo.png',
+            image: 'img/unleash-preview-1200-630.png',
             imageZoom: {
                 // Optional medium-zoom options at
                 // https://www.npmjs.com/package/medium-zoom#options
+                selector: '.markdown :not(p) > img',
                 options: {
                     background: 'var(--ifm-background-color)',
                 },
@@ -416,15 +438,10 @@ class="header-github-link"
                         remarkPlugins: [[pluginNpm2Yarn, { sync: true }]],
                         docItemComponent: '@theme/ApiItem',
                         sidebarPath: './sidebars.ts',
+                        breadcrumbs: true,
                     },
                     theme: {
                         customCss: './src/css/custom.css',
-                    },
-                    googleAnalytics: {
-                        trackingID: 'UA-134882379-1',
-                    },
-                    googleTagManager: {
-                        containerId: 'GTM-KV5PRR2',
                     },
                     sitemap: {
                         changefreq: 'weekly',
@@ -452,530 +469,7 @@ class="header-github-link"
                 '@docusaurus/plugin-client-redirects',
                 {
                     fromExtensions: ['html', 'htm'],
-                    redirects: [
-                        {
-                            from: '/advanced/audit_log',
-                            to: '/reference/events',
-                        },
-                        {
-                            from: '/reference/event-log',
-                            to: '/reference/events',
-                        },
-                        {
-                            from: '/reference/event-types',
-                            to: '/reference/events',
-                        },
-                        {
-                            from: '/advanced/api_access',
-                            to: '/how-to/how-to-use-the-admin-api',
-                        },
-                        {
-                            from: '/advanced/archived_toggles',
-                            to: '/reference/feature-toggles',
-                        },
-                        {
-                            from: [
-                                '/advanced/custom-activation-strategy',
-                                '/advanced/custom_activation_strategy',
-                            ],
-                            to: '/reference/custom-activation-strategies',
-                        },
-                        {
-                            from: '/advanced/feature_toggle_types',
-                            to: '/reference/feature-toggles',
-                        },
-                        {
-                            from: [
-                                '/toggle_variants',
-                                '/advanced/feature_toggle_variants',
-                                '/advanced/toggle_variants',
-                            ],
-                            to: '/reference/feature-toggle-variants',
-                        },
-                        {
-                            from: [
-                                '/advanced/impression-data',
-                                '/advanced/impression_data',
-                            ],
-                            to: '/reference/impression-data',
-                        },
-                        {
-                            from: '/advanced/stickiness',
-                            to: '/reference/stickiness',
-                        },
-                        {
-                            from: '/advanced/sso-google',
-                            to: '/how-to/how-to-add-sso-google',
-                        },
-                        {
-                            from: '/advanced/sso-open-id-connect',
-                            to: '/how-to/how-to-add-sso-open-id-connect',
-                        },
-                        {
-                            from: '/advanced/sso-saml-keycloak',
-                            to: '/how-to/how-to-add-sso-saml-keycloak',
-                        },
-                        {
-                            from: '/advanced/sso-saml',
-                            to: '/how-to/how-to-add-sso-saml',
-                        },
-                        {
-                            from: '/advanced/enterprise-authentication',
-                            to: '/reference/sso',
-                        },
-                        {
-                            from: ['/addons', '/reference/addons'],
-                            to: '/reference/integrations',
-                        },
-                        {
-                            from: [
-                                '/addons/datadog',
-                                '/reference/addons/datadog',
-                            ],
-                            to: '/reference/integrations/datadog',
-                        },
-                        {
-                            from: ['/addons/slack', '/reference/addons/slack'],
-                            to: '/reference/integrations/slack',
-                        },
-                        {
-                            from: [
-                                '/addons/slack-app',
-                                '/reference/addons/slack-app',
-                            ],
-                            to: '/reference/integrations/slack-app',
-                        },
-                        {
-                            from: ['/addons/teams', '/reference/addons/teams'],
-                            to: '/reference/integrations/teams',
-                        },
-                        {
-                            from: [
-                                '/addons/webhook',
-                                '/reference/addons/webhook',
-                            ],
-                            to: '/reference/integrations/webhook',
-                        },
-                        {
-                            from: '/guides/feature_updates_to_slack',
-                            to: '/how-to/how-to-send-feature-updates-to-slack-deprecated',
-                        },
-                        {
-                            from: [
-                                '/integrations/integrations',
-                                '/integrations',
-                            ],
-                            to: '/reference/integrations',
-                        },
-                        {
-                            from: '/integrations/jira_server_plugin_installation',
-                            to: '/reference/integrations/jira-server-plugin-installation',
-                        },
-                        {
-                            from: '/integrations/jira_server_plugin_usage',
-                            to: '/reference/integrations/jira-server-plugin-usage',
-                        },
-                        {
-                            from: [
-                                '/sdks',
-                                '/user_guide/client-sdk',
-                                '/client-sdk',
-                                '/user_guide/connect_sdk',
-                                '/sdks/community',
-                            ],
-                            to: '/reference/sdks',
-                        },
-                        {
-                            from: '/sdks/go_sdk',
-                            to: '/reference/sdks/go',
-                        },
-                        {
-                            from: '/sdks/java_sdk',
-                            to: '/reference/sdks/java',
-                        },
-                        {
-                            from: '/sdks/node_sdk',
-                            to: '/reference/sdks/node',
-                        },
-                        {
-                            from: '/sdks/php_sdk',
-                            to: '/reference/sdks/php',
-                        },
-                        {
-                            from: '/sdks/python_sdk',
-                            to: '/reference/sdks/python',
-                        },
-                        {
-                            from: '/sdks/dot_net_sdk',
-                            to: '/reference/sdks/dotnet',
-                        },
-                        {
-                            from: '/sdks/ruby_sdk',
-                            to: '/reference/sdks/ruby',
-                        },
-                        {
-                            from: '/sdks/android_proxy_sdk',
-                            to: '/reference/sdks/android-proxy',
-                        },
-                        {
-                            from: '/sdks/proxy-ios',
-                            to: '/reference/sdks/ios-proxy',
-                        },
-                        {
-                            from: [
-                                '/sdks/proxy-javascript',
-                                '/sdks/javascript-browser',
-                            ],
-                            to: '/reference/sdks/javascript-browser',
-                        },
-                        {
-                            from: ['/sdks/proxy-react', '/sdks/react'],
-                            to: '/reference/sdks/react',
-                        },
-                        {
-                            from: '/sdks/proxy-vue',
-                            to: '/reference/sdks/vue',
-                        },
-                        {
-                            from: '/sdks/proxy-svelte',
-                            to: '/reference/sdks/svelte',
-                        },
-                        {
-                            from: [
-                                '/user_guide/native_apps',
-                                '/user_guide/proxy-api',
-                                '/sdks/unleash-proxy',
-                            ],
-                            to: '/reference/unleash-proxy',
-                        },
-                        {
-                            to: '/reference/activation-strategies',
-                            from: [
-                                '/user_guide/control_rollout',
-                                '/user_guide/activation_strategy',
-                            ],
-                        },
-                        {
-                            from: '/user_guide/environments',
-                            to: '/reference/environments',
-                        },
-                        {
-                            from: '/user_guide/projects',
-                            to: '/reference/projects',
-                        },
-                        {
-                            from: ['/user_guide/rbac', '/advanced/groups'],
-                            to: '/reference/rbac',
-                        },
-                        {
-                            from: '/user_guide/technical_debt',
-                            to: '/reference/technical-debt',
-                        },
-                        {
-                            from: '/user_guide/unleash_context',
-                            to: '/reference/unleash-context',
-                        },
-                        {
-                            from: '/user_guide/user-management',
-                            to: '/how-to/how-to-add-users-to-unleash',
-                        },
-                        {
-                            from: '/user_guide/v4-whats-new',
-                            to: '/reference/whats-new-v4',
-                        },
-                        {
-                            from: [
-                                '/user_guide/important-concepts',
-                                '/tutorials/important-concepts',
-                                '/reference/concepts/',
-                            ],
-                            to: '/reference',
-                        },
-                        {
-                            from: [
-                                '/user_guide/quickstart',
-                                '/docs/getting_started',
-                                '/tutorials/quickstart',
-                                '/tutorials/getting-started',
-                            ],
-                            to: '/quickstart',
-                        },
-                        {
-                            from: '/api/basic-auth',
-                            to: '/reference/api/legacy/unleash/basic-auth',
-                        },
-                        {
-                            from: '/api',
-                            to: '/reference/api/legacy/unleash',
-                        },
-                        {
-                            from: '/api/admin/addons',
-                            to: '/reference/api/legacy/unleash/admin/addons',
-                        },
-                        {
-                            from: '/api/admin/context',
-                            to: '/reference/api/legacy/unleash/admin/context',
-                        },
-                        {
-                            from: '/api/admin/events',
-                            to: '/reference/api/legacy/unleash/admin/events',
-                        },
-                        {
-                            from: '/api/admin/feature-toggles-v2',
-                            to: '/reference/api/legacy/unleash/admin/features-v2',
-                        },
-                        {
-                            from: '/api/admin/feature-types',
-                            to: '/reference/api/legacy/unleash/admin/feature-types',
-                        },
-                        {
-                            from: '/api/admin/features',
-                            to: '/reference/api/legacy/unleash/admin/features',
-                        },
-                        {
-                            from: '/api/admin/features-archive',
-                            to: '/reference/api/legacy/unleash/admin/archive',
-                        },
-                        {
-                            from: '/api/admin/metrics',
-                            to: '/reference/api/legacy/unleash/admin/metrics',
-                        },
-                        {
-                            from: '/api/admin/projects',
-                            to: '/reference/api/legacy/unleash/admin/projects',
-                        },
-                        {
-                            from: '/api/admin/segments',
-                            to: '/reference/api/legacy/unleash/admin/segments',
-                        },
-                        {
-                            from: '/api/admin/state',
-                            to: '/reference/api/legacy/unleash/admin/state',
-                        },
-                        {
-                            from: '/api/admin/strategies',
-                            to: '/reference/api/legacy/unleash/admin/strategies',
-                        },
-                        {
-                            from: '/api/admin/tags',
-                            to: '/reference/api/legacy/unleash/admin/tags',
-                        },
-                        {
-                            from: '/api/admin/user-admin',
-                            to: '/reference/api/legacy/unleash/admin/user-admin',
-                        },
-                        {
-                            from: '/api/client/features',
-                            to: '/reference/api/legacy/unleash/client/features',
-                        },
-                        {
-                            from: '/api/client/metrics',
-                            to: '/reference/api/legacy/unleash/client/metrics',
-                        },
-                        {
-                            from: '/api/client/register',
-                            to: '/reference/api/legacy/unleash/client/register',
-                        },
-                        {
-                            from: '/api/internal/internal',
-                            to: '/reference/api/legacy/unleash/internal/prometheus',
-                        },
-                        {
-                            from: '/api/internal/health',
-                            to: '/reference/api/legacy/unleash/internal/health',
-                        },
-                        {
-                            from: '/help',
-                            to: '/',
-                        },
-                        {
-                            from: [
-                                '/topics/feature-flags/tutorials',
-                                '/tutorials',
-                            ],
-                            to: '/feature-flag-tutorials',
-                        },
-                        {
-                            from: ['/tutorials/academy', '/unleash-academy'],
-                            to: '/unleash-academy/introduction',
-                        },
-                        {
-                            from: '/tutorials/academy-foundational',
-                            to: '/unleash-academy/foundational',
-                        },
-                        {
-                            from: '/tutorials/academy-advanced-for-devs',
-                            to: '/unleash-academy/advanced-for-devs',
-                        },
-                        {
-                            from: '/tutorials/academy-managing-unleash-for-devops',
-                            to: '/unleash-academy/managing-unleash-for-devops',
-                        },
-                        {
-                            from: '/developer-guide',
-                            to: '/contributing',
-                        },
-                        {
-                            from: [
-                                '/tutorials/unleash-overview',
-                                '/user_guide/unleash_overview',
-                            ],
-                            to: '/understanding-unleash/unleash-overview',
-                        },
-                        {
-                            from: [
-                                '/tutorials/managing-constraints',
-                                '/topics/managing-constraints',
-                            ],
-                            to: '/understanding-unleash/managing-constraints',
-                        },
-                        {
-                            from: [
-                                '/tutorials/the-anatomy-of-unleash',
-                                '/topics/the-anatomy-of-unleash',
-                            ],
-                            to: '/understanding-unleash/the-anatomy-of-unleash',
-                        },
-                        {
-                            from: [
-                                '/tutorials/proxy-hosting',
-                                '/topics/proxy-hosting',
-                            ],
-                            to: '/understanding-unleash/proxy-hosting',
-                        },
-                        {
-                            from: [
-                                '/tutorials/data-collection',
-                                '/topics/data-collection',
-                            ],
-                            to: '/understanding-unleash/data-collection',
-                        },
-
-                        {
-                            from: '/how-to/how-to-troubleshoot-flag-exposure',
-                            to: '/using-unleash/troubleshooting/flag-exposure',
-                        },
-                        {
-                            from: '/how-to/how-to-troubleshoot-flag-not-returned',
-                            to: '/using-unleash/troubleshooting/flag-not-returned',
-                        },
-                        {
-                            from: '/how-to/how-to-troubleshoot-cors',
-                            to: '/using-unleash/troubleshooting/cors',
-                        },
-                        {
-                            from: '/how-to/how-to-troubleshoot-https',
-                            to: '/using-unleash/troubleshooting/https',
-                        },
-                        {
-                            from: '/how-to/how-to-troubleshoot-feature-not-available',
-                            to: '/using-unleash/troubleshooting/feature-not-available',
-                        },
-                        {
-                            from: ['/reference/deploy', '/deploy'],
-                            to: '/using-unleash/deploy',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/getting-started',
-                                '/deploy/getting_started',
-                            ],
-                            to: '/using-unleash/deploy/getting-started',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/configuring-unleash',
-                                '/deploy/configuring_unleash',
-                            ],
-                            to: '/using-unleash/deploy/configuring-unleash',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/database-setup',
-                                '/deploy/database-setup',
-                            ],
-                            to: '/using-unleash/deploy/database-setup',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/database-backup',
-                                '/deploy/database-backup',
-                            ],
-                            to: '/using-unleash/deploy/database-backup',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/email-service',
-                                '/deploy/email',
-                            ],
-                            to: '/using-unleash/deploy/email-service',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/google-auth-hook',
-                                '/deploy/google_auth',
-                            ],
-                            to: '/using-unleash/deploy/google-auth-hook',
-                        },
-                        {
-                            from: [
-                                '/deploy/migration_guide',
-                                '/reference/deploy/migration-guide',
-                            ],
-                            to: '/using-unleash/deploy/upgrading-unleash',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/securing-unleash',
-                                '/deploy/securing_unleash',
-                            ],
-                            to: '/using-unleash/deploy/securing-unleash',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/import-export',
-                                '/deploy/import_export',
-                            ],
-                            to: '/how-to/how-to-import-export',
-                        },
-                        {
-                            from: [
-                                '/reference/deploy/environment-import-export',
-                                '/deploy/environment-import-export',
-                            ],
-                            to: '/how-to/how-to-environment-import-export',
-                        },
-                        {
-                            from: [
-                                '/topics/feature-flags/runtime-control',
-                                '/topics/feature-flags/never-expose-pii',
-                                '/topics/feature-flags/evaluate-flags-close-to-user',
-                                '/topics/feature-flags/scale-horizontally',
-                                '/topics/feature-flags/limit-payloads',
-                                '/topics/feature-flags/availability-over-consistency',
-                                '/topics/feature-flags/short-lived-feature-flags',
-                                '/topics/feature-flags/unique-names',
-                                '/topics/feature-flags/democratize-feature-flag-access',
-                                '/topics/feature-flags/prioritize-ux',
-                                '/topics/feature-flags/enable-traceability',
-                            ],
-                            to: '/topics/feature-flags/feature-flag-best-practices',
-                        },
-                        {
-                            from: [
-                                '/topics/feature-flag-migration/feature-flag-migration-scope',
-                                '/topics/feature-flag-migration/business-case-feature-flag-migration',
-                                '/topics/feature-flag-migration/planning-feature-flag-migration',
-                                '/topics/feature-flag-migration/how-to-execute-feature-flag-migration',
-                                '/topics/feature-flag-migration/onbording-users-to-feature-flag-service',
-                            ],
-                            to: '/topics/feature-flag-migration/feature-flag-migration-best-practices',
-                        },
-                        {
-                            from: '/topics/a-b-testing',
-                            to: '/feature-flag-tutorials/use-cases/a-b-testing',
-                        },
-                    ].map(addDocsRoutePrefix), // add /docs prefixes
+                    redirects: [], // redirects are performed by Vercel
                     createRedirects: (toPath) => {
                         if (
                             toPath.indexOf('/docs/') === -1 &&
@@ -994,7 +488,7 @@ class="header-github-link"
                     config: {
                         server: {
                             specPath: 'docs/generated/openapi.json',
-                            outputDir: 'docs/reference/api/unleash',
+                            outputDir: 'docs/api',
                             sidebarOptions: {
                                 groupPathsBy: 'tag',
                                 categoryLinkSource: 'tag',
@@ -1022,8 +516,8 @@ class="header-github-link"
                     name: 'content-external',
                     sourceBaseUrl: 'https://raw.githubusercontent.com/Unleash/', // gets prepended to all of the documents when fetching
                     outDir: 'docs/generated/', // the base directory to output to.
-                    documents: edgeAndProxy.urls, // the file names to download
-                    modifyContent: edgeAndProxy.modifyContent,
+                    documents: services.urls, // the file names to download
+                    modifyContent: services.modifyContent,
                     noRuntimeDownloads: true,
                 },
             ],
@@ -1033,29 +527,5 @@ class="header-github-link"
             'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components
             '@docusaurus/theme-mermaid',
         ],
-        scripts: [
-            {
-                src: 'https://widget.kapa.ai/kapa-widget.bundle.js', // See configuration: https://docs.kapa.ai/integrations/website-widget/configuration
-                'data-website-id': '1d187510-1726-4011-b0f7-62742ae064ee',
-                'data-project-name': 'Unleash',
-                'data-project-color': '#1A4049',
-                'data-project-logo':
-                    'https://cdn.getunleash.io/uploads/2024/05/logo-unleash-white.svg',
-                'data-modal-image':
-                    'https://cdn.getunleash.io/uploads/2022/05/logo.png',
-                'data-button-position-right': '0',
-                'data-button-border-radius': '10px 0px 0px 10px',
-                'data-button-width': '80px',
-                'data-button-height': '100px',
-                'data-button-image-height': '55px',
-                'data-button-image-width': '55px',
-                'data-button-text-font-weight': '400',
-                'data-button-text-font-size': '16px',
-                'data-button-text-font-family': '"Sen", sans-serif',
-                'data-button-text': 'ASK AI',
-                defer: true,
-            },
-        ],
-        clientModules: ['./global.js'],
     };
 }

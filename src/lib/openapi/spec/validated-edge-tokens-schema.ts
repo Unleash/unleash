@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { edgeTokenSchema } from './edge-token-schema';
+import { edgeTokenSchema } from './edge-token-schema.js';
 
 export const validatedEdgeTokensSchema = {
     $id: '#/components/schemas/validatedEdgeTokensSchema',

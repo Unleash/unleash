@@ -1,14 +1,21 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { projectStatsSchema } from './project-stats-schema';
-import { featureTypeCountSchema } from './feature-type-count-schema';
-import { doraFeaturesSchema } from './dora-features-schema';
-import { projectDoraMetricsSchema } from './project-dora-metrics-schema';
+import { projectStatsSchema } from './project-stats-schema.js';
+import { featureTypeCountSchema } from './feature-type-count-schema.js';
+import { doraFeaturesSchema } from './dora-features-schema.js';
+import { projectDoraMetricsSchema } from './project-dora-metrics-schema.js';
 
 export const projectInsightsSchema = {
     $id: '#/components/schemas/projectInsightsSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['stats', 'leadTime', 'featureTypeCounts', 'health', 'members'],
+    required: [
+        'stats',
+        'leadTime',
+        'featureTypeCounts',
+        'health',
+        'technicalDebt',
+        'members',
+    ],
     description:
         'A high-level overview of a project insights. It contains information such as project statistics, overall health, types of flags, members overview, change requests overview.',
     properties: {
@@ -18,6 +25,7 @@ export const projectInsightsSchema = {
         },
         health: {
             type: 'object',
+            deprecated: true,
             required: [
                 'rating',
                 'activeCount',
@@ -28,7 +36,7 @@ export const projectInsightsSchema = {
                 rating: {
                     type: 'integer',
                     description:
-                        "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100",
+                        "An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100",
                     example: 95,
                 },
                 activeCount: {
@@ -48,7 +56,44 @@ export const projectInsightsSchema = {
                     example: 10,
                 },
             },
-            description: 'Health summary of the project',
+            description:
+                'Use `technicalDebt` instead. Summary of the project health',
+        },
+        technicalDebt: {
+            type: 'object',
+            required: [
+                'rating',
+                'activeCount',
+                'potentiallyStaleCount',
+                'staleCount',
+            ],
+            properties: {
+                rating: {
+                    type: 'integer',
+                    description:
+                        "An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100",
+                    example: 25,
+                    minimum: 0,
+                    maximum: 100,
+                },
+                activeCount: {
+                    type: 'number',
+                    description: 'The number of active feature flags.',
+                    example: 12,
+                },
+                potentiallyStaleCount: {
+                    type: 'number',
+                    description:
+                        'The number of potentially stale feature flags.',
+                    example: 5,
+                },
+                staleCount: {
+                    type: 'number',
+                    description: 'The number of stale feature flags.',
+                    example: 10,
+                },
+            },
+            description: 'Summary of the projects technical debt',
         },
         leadTime: {
             type: 'object',

@@ -3,14 +3,16 @@ import {
     FEATURE_ARCHIVED,
     FEATURE_CREATED,
     FEATURE_REVIVED,
-    type IEnvironment,
-    type IUnleashConfig,
-    type StageName,
-} from '../../types';
-import { createFakeFeatureLifecycleService } from './createFeatureLifecycle';
+} from '../../events/index.js';
+import type {
+    IEnvironment,
+    IUnleashConfig,
+    StageName,
+} from '../../types/index.js';
+import { createFakeFeatureLifecycleService } from './createFeatureLifecycle.js';
 import EventEmitter from 'events';
-import noLoggerProvider from '../../../test/fixtures/no-logger';
-import { STAGE_ENTERED } from '../../metric-events';
+import noLoggerProvider from '../../../test/fixtures/no-logger.js';
+import { STAGE_ENTERED } from '../../metric-events.js';
 
 test('can insert and read lifecycle stages', async () => {
     const eventBus = new EventEmitter();

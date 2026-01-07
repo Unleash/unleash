@@ -1,10 +1,12 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     createGetProductionChanges,
     type GetProductionChanges,
-} from './getProductionChanges';
-import subDays from 'date-fns/subDays';
+} from './getProductionChanges.js';
+import { subDays } from 'date-fns/subDays';
 let db: ITestDb;
 let getProductionChanges: GetProductionChanges;
 
@@ -33,7 +35,7 @@ const mockRawEventDaysAgo = (
     };
 };
 
-const noEnvironmentEvent = (days: number) => {
+const noEnvironmentEvent = (_days: number) => {
     return {
         type: 'FEATURE_UPDATED',
         created_by: 'testrunner',

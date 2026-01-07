@@ -1,6 +1,6 @@
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
-import Footer from './Footer';
+import Footer from './Footer.tsx';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 

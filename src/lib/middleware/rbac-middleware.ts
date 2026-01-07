@@ -4,14 +4,14 @@ import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
     UPDATE_PROJECT_SEGMENT,
-} from '../types/permissions';
-import type { IUnleashConfig } from '../types/option';
-import type { IUnleashStores } from '../types/stores';
-import type User from '../types/user';
+} from '../types/permissions.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IUnleashStores } from '../types/stores.js';
+import type User from '../types/user.js';
 import type { Request } from 'express';
-import { extractUserId } from '../util';
+import { extractUserId } from '../util/index.js';
 
-interface PermissionChecker {
+export interface PermissionChecker {
     hasPermission(
         user: User,
         permissions: string[],
@@ -43,7 +43,7 @@ const rbacMiddleware = (
     const logger = config.getLogger('/middleware/rbac-middleware.ts');
     logger.debug('Enabling RBAC middleware');
 
-    return (req, res, next) => {
+    return (req, _res, next) => {
         req.checkRbac = async (permissions: string | string[]) => {
             const permissionsArray = Array.isArray(permissions)
                 ? permissions
@@ -87,6 +87,7 @@ const rbacMiddleware = (
                 )
             ) {
                 const { featureName } = params;
+                // TODO track if this deprecated path is still in use
                 projectId = await featureToggleStore.getProjectId(featureName);
             } else if (
                 projectId === undefined &&
@@ -125,8 +126,11 @@ const rbacMiddleware = (
                 params.id
             ) {
                 const { id } = params;
-                const { project } = await segmentStore.get(id);
-                projectId = project;
+                const segment = await segmentStore.get(id);
+                if (segment === undefined) {
+                    return false;
+                }
+                projectId = segment.project;
             }
 
             return accessService.hasPermission(

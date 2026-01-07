@@ -1,7 +1,7 @@
 import { Box, styled } from '@mui/material';
-import { InviteLinkBar } from '../InviteLinkBar/InviteLinkBar';
+import { InviteLinkBar } from '../InviteLinkBar/InviteLinkBar.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { LicensedUsersBox } from './LicensedUsersBox';
+import { LicensedUsersBox } from './LicensedUsersBox.tsx';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -23,8 +23,12 @@ const StyledElement = styled(Box)(({ theme }) => ({
 }));
 
 export const UsersHeader = () => {
-    const { isOss } = useUiConfig();
-    const licensedUsersEnabled = !isOss();
+    const {
+        isEnterprise,
+        uiConfig: { billing },
+    } = useUiConfig();
+
+    const licensedUsersEnabled = isEnterprise() && billing !== 'pay-as-you-go';
 
     return (
         <StyledContainer>

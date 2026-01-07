@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
-import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
-import type { ChangeRequestsSchemaItemOneOfFourCreatedBy } from './changeRequestsSchemaItemOneOfFourCreatedBy';
-import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
-import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema';
-import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
-import type { ChangeRequestsSchemaItemOneOfFourState } from './changeRequestsSchemaItemOneOfFourState';
+import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema.js';
+import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema.js';
+import type { ChangeRequestsSchemaItemOneOfFourCreatedBy } from './changeRequestsSchemaItemOneOfFourCreatedBy.js';
+import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema.js';
+import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema.js';
+import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema.js';
+import type { ChangeRequestsSchemaItemOneOfFourState } from './changeRequestsSchemaItemOneOfFourState.js';
 
 export type ChangeRequestsSchemaItemOneOfFour = {
     /**
@@ -36,7 +36,7 @@ export type ChangeRequestsSchemaItemOneOfFour = {
      * The minimum number of approvals required before this change request can be applied.
      * @deprecated
      */
-    minApprovals: number;
+    minApprovals?: number;
     /** The project this change request belongs to. */
     project: string;
     /**

@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { BulkDisableDialog } from './BulkDisableDialog';
+import { BulkDisableDialog } from './BulkDisableDialog.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();

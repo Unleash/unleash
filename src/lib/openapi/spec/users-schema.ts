@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { userSchema } from './user-schema';
-import { roleSchema } from './role-schema';
+import { userSchema } from './user-schema.js';
+import { roleSchema } from './role-schema.js';
 
 export const usersSchema = {
     $id: '#/components/schemas/usersSchema',
@@ -19,7 +19,7 @@ export const usersSchema = {
         rootRoles: {
             type: 'array',
             description:
-                'A list of [root roles](https://docs.getunleash.io/reference/rbac#predefined-roles) in the Unleash instance.',
+                'A list of [root roles](https://docs.getunleash.io/concepts/rbac#predefined-roles) in the Unleash instance.',
             items: {
                 $ref: '#/components/schemas/roleSchema',
             },

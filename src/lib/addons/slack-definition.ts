@@ -14,8 +14,10 @@ import {
     FEATURE_PROJECT_CHANGE,
     FEATURE_VARIANTS_UPDATED,
     FEATURE_POTENTIALLY_STALE_ON,
-} from '../types/events';
-import type { IAddonDefinition } from '../types/model';
+    RELEASE_PLAN_PROGRESSIONS_PAUSED,
+    RELEASE_PLAN_PROGRESSIONS_RESUMED,
+} from '../events/index.js';
+import type { IAddonDefinition } from '../types/model.js';
 
 const slackDefinition: IAddonDefinition = {
     name: 'slack',
@@ -23,11 +25,11 @@ const slackDefinition: IAddonDefinition = {
     description: 'Allows Unleash to post updates to Slack.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack',
     deprecated:
-        'This integration is deprecated. Please try the new Slack App integration instead.',
+        'This integration is deprecated. Please try the new App for Slack integration instead.',
     alerts: [
         {
             type: 'warning',
-            text: `This integration is deprecated. Please try the new Slack App integration instead.`,
+            text: `This integration is deprecated. Please try the new App for Slack integration instead.`,
         },
     ],
     parameters: [
@@ -97,6 +99,8 @@ const slackDefinition: IAddonDefinition = {
         FEATURE_VARIANTS_UPDATED,
         FEATURE_PROJECT_CHANGE,
         FEATURE_POTENTIALLY_STALE_ON,
+        RELEASE_PLAN_PROGRESSIONS_PAUSED,
+        RELEASE_PLAN_PROGRESSIONS_RESUMED,
     ],
     tagTypes: [
         {

@@ -1,8 +1,8 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { FeatureToggleListTable } from './FeatureToggleListTable';
-import { FeedbackProvider } from '../../feedbackNew/FeedbackProvider';
+import { FeatureToggleListTable } from './FeatureToggleListTable.tsx';
+import { FeedbackProvider } from '../../feedbackNew/FeedbackProvider.tsx';
 
 type APIFeature = {
     name: string;
@@ -16,15 +16,6 @@ type APIFeature = {
 type APIProject = {
     name: string;
     id: string;
-};
-
-type UIFeature = {
-    name: string;
-    segments: string;
-    tags: string;
-    createdAt: string;
-    project: string;
-    state: string;
 };
 
 const server = testServerSetup();
@@ -74,27 +65,6 @@ const setupApi = (features: APIFeature[], projects: APIProject[]) => {
     });
 };
 
-const verifyTableFeature = async (feature: Partial<UIFeature>) => {
-    await screen.findByText('Search');
-    await screen.findByText('Add Filter');
-    await Promise.all(
-        Object.values(feature).map((value) => screen.findByText(value)),
-    );
-};
-
-const filterFeaturesByProject = async (projectName: string) => {
-    const addFilterButton = screen.getByText('Add Filter');
-    addFilterButton.click();
-
-    const projectItem = await screen.findByText('Project');
-    fireEvent.click(projectItem);
-
-    await screen.findByPlaceholderText('Search');
-    const anotherProjectCheckbox = await screen.findByText(projectName);
-
-    anotherProjectCheckbox.click();
-};
-
 test('Filter table by project', async () => {
     setupApi(
         [
@@ -124,21 +94,35 @@ test('Filter table by project', async () => {
         </FeedbackProvider>,
     );
 
-    await verifyTableFeature({
-        name: 'Operational Feature',
-        createdAt: '11/03/2023',
-        segments: '1 segment',
-        tags: '1 tag',
-        project: 'project-a',
-        state: 'Active',
+    await screen.findByPlaceholderText(/Search/);
+    await screen.getByRole('button', {
+        name: 'Filter',
     });
 
-    setupNoFeaturesReturned();
-    await filterFeaturesByProject('Project B');
-
-    await screen.findByText(
-        'No feature flags found matching your criteria. Get started by adding a new feature flag.',
+    await Promise.all(
+        Object.values({
+            name: 'Operational Feature',
+            createdAt: '11/03/2023',
+            project: 'project-a',
+        }).map((value) => screen.findByText(value)),
     );
+
+    setupNoFeaturesReturned();
+
+    const addFilterButton = screen.getByText('Filter');
+    addFilterButton.click();
+
+    const projectItem = await screen.findByRole('menuitem', {
+        name: 'Project',
+    });
+    fireEvent.click(projectItem);
+
+    await screen.findByPlaceholderText('Search');
+    const anotherProjectCheckbox = await screen.findByText('Project B');
+
+    anotherProjectCheckbox.click();
+
+    await screen.findByText('No feature flags found matching your criteria.');
     expect(window.location.href).toContain(
         '?offset=0&columns=&project=IS%3Aproject-b',
     );

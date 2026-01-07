@@ -1,9 +1,9 @@
 import { Avatar, Box, Link, styled, Typography } from '@mui/material';
 import type { FC } from 'react';
 import { formatAssetPath } from 'utils/formatPath';
-import { SectionHeader, StepperBox } from './SharedComponents';
-import { clientSdks, type Sdk, serverSdks } from './sharedTypes';
-import { Stepper } from './Stepper';
+import { SectionHeader, StepperBox } from './SharedComponents.tsx';
+import { clientSdks, type Sdk, serverSdks } from './sharedTypes.ts';
+import { Stepper } from './Stepper.tsx';
 import { Badge } from 'component/common/Badge/Badge';
 
 const SpacedContainer = styled('div')(({ theme }) => ({

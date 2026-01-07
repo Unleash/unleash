@@ -1,58 +1,36 @@
 import {
+    StyledProjectCardTitle,
     StyledProjectCard,
-    StyledCardTitle,
     StyledProjectCardBody,
-    StyledIconBox,
+    StyledProjectCardHeader,
+    StyledProjectCardContent,
+    StyledProjectCardTitleContainer,
 } from './ProjectCard.styles';
-import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
-import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
-import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { FavoriteAction } from './FavoriteAction/FavoriteAction';
-import { Box, styled } from '@mui/material';
-import { flexColumn } from 'themes/themeStyles';
+import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter.tsx';
+import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
+import { FavoriteAction } from './FavoriteAction/FavoriteAction.tsx';
+import { styled } from '@mui/material';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
-import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen';
+import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen.tsx';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { ProjectMembers } from './ProjectCardFooter/ProjectMembers/ProjectMembers';
+import { ProjectMembers } from './ProjectCardFooter/ProjectMembers/ProjectMembers.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import type { ProjectSchema } from 'openapi';
+import { Truncator } from 'component/common/Truncator/Truncator.tsx';
 
-const StyledUpdated = styled('span')(({ theme }) => ({
+const StyledSubtitle = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallerBody,
 }));
-
-const StyledCount = styled('strong')(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightMedium,
-}));
-
-const StyledInfo = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridTemplate: '1rem 1rem / 1fr 1fr',
-    gridAutoFlow: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: theme.spacing(1),
-    fontSize: theme.fontSizes.smallerBody,
-}));
-
-const StyledHeader = styled('div')(({ theme }) => ({
-    gap: theme.spacing(1),
-    display: 'flex',
-    width: '100%',
-    alignItems: 'center',
-}));
-
-type ProjectCardProps = ProjectSchema & { onHover?: () => void };
 
 export const ProjectCard = ({
     name,
     featureCount,
     health,
+    technicalDebt,
     memberCount = 0,
-    onHover,
     id,
     mode,
     favorite = false,
@@ -60,49 +38,47 @@ export const ProjectCard = ({
     createdAt,
     lastUpdatedAt,
     lastReportedFlagUsage,
-}: ProjectCardProps) => {
+}: ProjectSchema) => {
     const { searchQuery } = useSearchHighlightContext();
 
     return (
-        <StyledProjectCard onMouseEnter={onHover}>
+        <StyledProjectCard>
             <StyledProjectCardBody>
-                <StyledHeader>
-                    <StyledIconBox>
-                        <ProjectIcon />
-                    </StyledIconBox>
-                    <Box
-                        data-loading
-                        sx={(theme) => ({
-                            ...flexColumn,
-                            margin: theme.spacing(1, 'auto', 1, 0),
-                        })}
-                    >
-                        <StyledCardTitle lines={1} sx={{ margin: 0 }}>
+                <StyledProjectCardHeader>
+                    <StyledProjectCardTitleContainer data-loading>
+                        <Truncator
+                            title={name}
+                            arrow
+                            component={StyledProjectCardTitle}
+                        >
                             <Highlighter search={searchQuery}>
                                 {name}
                             </Highlighter>
-                        </StyledCardTitle>
-                        <StyledUpdated>
+                        </Truncator>
+                        <StyledSubtitle>
                             Updated{' '}
                             <TimeAgo date={lastUpdatedAt || createdAt} />
-                        </StyledUpdated>
-                    </Box>
+                        </StyledSubtitle>
+                    </StyledProjectCardTitleContainer>
                     <ProjectModeBadge mode={mode} />
                     <FavoriteAction id={id} isFavorite={favorite} />
-                </StyledHeader>
-                <StyledInfo>
-                    <div data-loading>
-                        <StyledCount>{featureCount}</StyledCount> flag
-                        {featureCount === 1 ? '' : 's'}
-                    </div>
-                    <div data-loading>
-                        <StyledCount>{health}%</StyledCount> health
-                    </div>
-                    <div />
-                    <div data-loading>
-                        <ProjectLastSeen date={lastReportedFlagUsage} />
-                    </div>
-                </StyledInfo>
+                </StyledProjectCardHeader>
+                <div>
+                    <StyledProjectCardContent>
+                        <div data-loading>
+                            <strong>{featureCount}</strong> flag
+                            {featureCount === 1 ? '' : 's'}
+                        </div>
+                    </StyledProjectCardContent>
+                    <StyledProjectCardContent>
+                        <div data-loading>
+                            <strong>{technicalDebt}%</strong> technical debt
+                        </div>
+                        <div data-loading>
+                            <ProjectLastSeen date={lastReportedFlagUsage} />
+                        </div>
+                    </StyledProjectCardContent>
+                </div>
             </StyledProjectCardBody>
             <ProjectCardFooter id={id} owners={owners}>
                 <ConditionallyRender

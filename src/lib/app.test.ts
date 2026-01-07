@@ -1,28 +1,30 @@
-import express from 'express';
-import { createTestConfig } from '../test/config/test-config';
-import compression from 'compression';
+import { createTestConfig } from '../test/config/test-config.js';
+import { type Mock, vi } from 'vitest';
 
-jest.mock('compression', () =>
-    jest.fn().mockImplementation(() => (req, res, next) => {
-        next();
+// This mock setup MUST be at the top-level, before any other code that might trigger imports.
+vi.mock('compression', () => ({
+    default: vi.fn().mockImplementation(() => {
+        // This is the actual middleware function Express would use
+        return (_req, _res, next) => {
+            next();
+        };
     }),
-);
+}));
+let getApp: any;
+let compression: any;
 
-jest.mock(
-    './routes',
-    () =>
-        class Index {
-            router() {
-                return express.Router();
-            }
-        },
-);
+const openApiService = {
+    // returns a middleware
+    validPath: vi.fn().mockReturnValue(() => {}),
+    useDocs: vi.fn(),
+};
 
-const getApp = require('./app').default;
+const appModule = await import('./app.js');
+getApp = appModule.default;
 
 test('should not throw when valid config', async () => {
     const config = createTestConfig();
-    const app = await getApp(config, {}, {});
+    const app = await getApp(config, {}, { openApiService });
     expect(typeof app.listen).toBe('function');
 });
 
@@ -33,7 +35,7 @@ test('should call preHook', async () => {
             called++;
         },
     });
-    await getApp(config, {}, {});
+    await getApp(config, {}, { openApiService });
     expect(called).toBe(1);
 });
 
@@ -44,17 +46,36 @@ test('should call preRouterHook', async () => {
             called++;
         },
     });
-    await getApp(config, {}, {});
+    await getApp(config, {}, { openApiService });
     expect(called).toBe(1);
 });
 
 describe('compression middleware', () => {
-    beforeAll(() => {
-        (compression as jest.Mock).mockClear();
+    beforeAll(async () => {
+        vi.resetModules(); // Crucial: Clears the module cache.
+        // Import 'compression' AFTER resetModules. This ensures we get the mock.
+        const compressionModule = await import('compression');
+        compression = compressionModule.default; // `compression` is now our vi.fn()
+
+        // Import 'app.js' AFTER resetModules and AFTER 'compression' is set to the mock.
+        // This ensures app.js uses the mocked version of compression.
+        const appModule = await import('./app.js');
+        getApp = appModule.default;
     });
 
-    afterEach(() => {
-        (compression as jest.Mock).mockClear();
+    beforeEach(() => {
+        // Clear call history for the mock before each test in this describe block
+        if (
+            compression &&
+            typeof (compression as Mock).mockClear === 'function'
+        ) {
+            (compression as Mock).mockClear();
+        } else {
+            // This case might happen if beforeAll failed or types are unexpected
+            console.warn(
+                'Compression mock was not available or not a mock function in beforeEach',
+            );
+        }
     });
 
     test.each([
@@ -74,16 +95,16 @@ describe('compression middleware', () => {
             disableCompression: undefined,
             expectCompressionEnabled: true,
         },
-    ])(
-        `should expect the compression middleware to be $expectCompressionEnabled when configInput.server.disableCompression is $disableCompression`,
-        async ({ disableCompression, expectCompressionEnabled }) => {
-            const config = createTestConfig({
-                server: {
-                    disableCompression: disableCompression as any,
-                },
-            });
-            await getApp(config, {}, {});
-            expect(compression).toBeCalledTimes(+expectCompressionEnabled);
-        },
-    );
+    ])(`should expect the compression middleware to be $expectCompressionEnabled when configInput.server.disableCompression is $disableCompression`, async ({
+        disableCompression,
+        expectCompressionEnabled,
+    }) => {
+        const config = createTestConfig({
+            server: {
+                disableCompression: disableCompression as any,
+            },
+        });
+        await getApp(config, {}, { openApiService });
+        expect(compression).toHaveBeenCalledTimes(+expectCompressionEnabled);
+    });
 });

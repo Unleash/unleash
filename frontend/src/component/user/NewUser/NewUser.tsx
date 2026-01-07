@@ -9,13 +9,13 @@ import { useUserInvite } from 'hooks/api/getters/useUserInvite/useUserInvite';
 import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
-import AuthOptions from '../common/AuthOptions/AuthOptions';
+import AuthOptions from '../common/AuthOptions/AuthOptions.tsx';
 import DividerText from 'component/common/DividerText/DividerText';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
-import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm';
-import InvalidToken from '../common/InvalidToken/InvalidToken';
-import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper';
-import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError';
+import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm.tsx';
+import InvalidToken from '../common/InvalidToken/InvalidToken.tsx';
+import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper.tsx';
+import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError.tsx';
 
 export const NewUser = () => {
     const { authDetails } = useAuthDetails();

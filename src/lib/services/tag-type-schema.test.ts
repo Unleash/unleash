@@ -1,4 +1,4 @@
-import { tagTypeSchema } from './tag-type-schema';
+import { tagTypeSchema } from './tag-type-schema.js';
 
 test('should require a URLFriendly name but allow empty description and icon', () => {
     const simpleTagType = {
@@ -6,7 +6,7 @@ test('should require a URLFriendly name but allow empty description and icon', (
     };
 
     const { error } = tagTypeSchema.validate(simpleTagType);
-    expect(error.details[0].message).toEqual('"name" must be URL friendly');
+    expect(error!.details[0].message).toEqual('"name" must be URL friendly');
 });
 
 test('should require a stringy description and icon', () => {
@@ -17,8 +17,8 @@ test('should require a stringy description and icon', () => {
     };
 
     const { error } = tagTypeSchema.validate(tagType);
-    expect(error.details[0].message).toEqual('"description" must be a string');
-    expect(error.details[1].message).toEqual('"icon" must be a string');
+    expect(error!.details[0].message).toEqual('"description" must be a string');
+    expect(error!.details[1].message).toEqual('"icon" must be a string');
 });
 
 test('Should validate if all requirements are fulfilled', () => {

@@ -7,7 +7,6 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
-import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import {
     StyledOuterContainer,
@@ -33,8 +32,9 @@ import type {
     ChangeRequestSchedulePending,
     ChangeRequestScheduleSuspended,
 } from 'component/changeRequest/changeRequest.types';
-import { getBrowserTimezone } from './utils';
+import { getBrowserTimezone } from './utils.ts';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon.tsx';
 
 interface ISuggestChangeReviewsStatusProps {
     changeRequest: ChangeRequestType;
@@ -82,11 +82,7 @@ export const ChangeRequestReviewStatus: FC<
             <StyledButtonContainer
                 {...resolveIconColors(changeRequest.state, theme)}
             >
-                <ChangesAppliedIcon
-                    style={{
-                        transform: `scale(1.5)`,
-                    }}
-                />
+                <ChangeRequestIcon />
             </StyledButtonContainer>
             <StyledReviewStatusContainer
                 sx={{
@@ -284,7 +280,9 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
 
 const ScheduledFailed = ({
     schedule,
-}: { schedule: ChangeRequestScheduleFailed }) => {
+}: {
+    schedule: ChangeRequestScheduleFailed;
+}) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
@@ -309,7 +307,9 @@ const ScheduledFailed = ({
 };
 const ScheduledSuspended = ({
     schedule,
-}: { schedule: ChangeRequestScheduleSuspended }) => {
+}: {
+    schedule: ChangeRequestScheduleSuspended;
+}) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();
@@ -338,7 +338,9 @@ const ScheduledSuspended = ({
 
 const ScheduledPending = ({
     schedule,
-}: { schedule: ChangeRequestSchedulePending }) => {
+}: {
+    schedule: ChangeRequestSchedulePending;
+}) => {
     const theme = useTheme();
     const timezone = getBrowserTimezone();
     const { locationSettings } = useLocationSettings();

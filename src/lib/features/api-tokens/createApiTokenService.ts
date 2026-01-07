@@ -1,14 +1,15 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
-import EnvironmentStore from '../project-environments/environment-store';
-import { ApiTokenService, type EventService } from '../../services';
-import FakeEnvironmentStore from '../project-environments/fake-environment-store';
-import type { IEnvironmentStore } from '../../types';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import EnvironmentStore from '../project-environments/environment-store.js';
+import { ApiTokenService, type EventService } from '../../services/index.js';
+import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
+import type { IEnvironmentStore } from '../../types/index.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
-import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store';
-import { ApiTokenStore } from '../../db/api-token-store';
+} from '../events/createEventsService.js';
+import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store.js';
+import { ApiTokenStore } from '../../db/api-token-store.js';
+import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 
 export const createApiTokenService = (
     db: Db,
@@ -23,11 +24,13 @@ export const createApiTokenService = (
     );
     const environmentStore = new EnvironmentStore(db, eventBus, config);
     const eventService = createEventsService(db, config);
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     return new ApiTokenService(
         { apiTokenStore, environmentStore },
         config,
         eventService,
+        resourceLimitsService,
     );
 };
 
@@ -36,23 +39,27 @@ export const createFakeApiTokenService = (
 ): {
     apiTokenService: ApiTokenService;
     eventService: EventService;
+    resourceLimitsService: ResourceLimitsService;
     apiTokenStore: FakeApiTokenStore;
     environmentStore: IEnvironmentStore;
 } => {
     const apiTokenStore = new FakeApiTokenStore();
     const environmentStore = new FakeEnvironmentStore();
     const eventService = createFakeEventsService(config);
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const apiTokenService = new ApiTokenService(
         { apiTokenStore, environmentStore },
         config,
         eventService,
+        resourceLimitsService,
     );
 
     return {
         apiTokenService,
         apiTokenStore,
         eventService,
+        resourceLimitsService,
         environmentStore,
     };
 };

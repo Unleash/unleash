@@ -1,19 +1,19 @@
-import SettingService from '../../../lib/services/setting-service';
-import { createTestConfig } from '../../config/test-config';
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import type { IUnleashStores } from '../../../lib/types/stores';
+import SettingService from '../../../lib/services/setting-service.js';
+import { createTestConfig } from '../../config/test-config.js';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import type { IUnleashStores } from '../../../lib/types/stores.js';
 import {
     SETTING_CREATED,
     SETTING_DELETED,
     SETTING_UPDATED,
-} from '../../../lib/types/events';
-import { TEST_AUDIT_USER } from '../../../lib/types';
-import { createEventsService } from '../../../lib/features';
+} from '../../../lib/events/index.js';
+import { createEventsService } from '../../../lib/features/index.js';
+import { TEST_AUDIT_USER } from '../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: SettingService;
-const TEST_USER_ID = -9999;
+const _TEST_USER_ID = -9999;
 
 beforeAll(async () => {
     const config = createTestConfig();
@@ -36,9 +36,19 @@ test('Can create new setting', async () => {
 
     expect(actual).toStrictEqual(someData);
     const { eventStore } = stores;
-    const createdEvents = await eventStore.deprecatedSearchEvents({
-        type: SETTING_CREATED,
-    });
+    const createdEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'type',
+                operator: 'IS',
+                values: [SETTING_CREATED],
+            },
+        ],
+    );
     expect(createdEvents).toHaveLength(1);
     expect(createdEvents[0].data).toEqual({ id: 'some-setting', some: 'blob' });
 });
@@ -51,9 +61,19 @@ test('Can delete setting', async () => {
     const actual = await service.get('some-setting');
     expect(actual).toBeUndefined();
     const { eventStore } = stores;
-    const createdEvents = await eventStore.deprecatedSearchEvents({
-        type: SETTING_DELETED,
-    });
+    const createdEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'type',
+                operator: 'IS',
+                values: [SETTING_DELETED],
+            },
+        ],
+    );
     expect(createdEvents).toHaveLength(1);
 });
 
@@ -63,12 +83,22 @@ test('Sentitive SSO settings are redacted in event log', async () => {
     await service.insert(property, someData, TEST_AUDIT_USER);
 
     await service.insert(property, { password: 'changed' }, TEST_AUDIT_USER);
-    const actual = await service.get(property);
+    const _actual = await service.get(property);
     const { eventStore } = stores;
 
-    const updatedEvents = await eventStore.deprecatedSearchEvents({
-        type: SETTING_UPDATED,
-    });
+    const updatedEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'type',
+                operator: 'IS',
+                values: [SETTING_UPDATED],
+            },
+        ],
+    );
     expect(updatedEvents[0].preData).toEqual({ hideEventDetails: true });
     await service.delete(property, TEST_AUDIT_USER);
 });
@@ -83,9 +113,19 @@ test('Can update setting', async () => {
         TEST_AUDIT_USER,
         false,
     );
-    const updatedEvents = await eventStore.deprecatedSearchEvents({
-        type: SETTING_UPDATED,
-    });
+    const updatedEvents = await eventStore.searchEvents(
+        {
+            offset: 0,
+            limit: 10,
+        },
+        [
+            {
+                field: 'type',
+                operator: 'IS',
+                values: [SETTING_UPDATED],
+            },
+        ],
+    );
     expect(updatedEvents).toHaveLength(1);
     expect(updatedEvents[0].data).toEqual({
         id: 'updated-setting',

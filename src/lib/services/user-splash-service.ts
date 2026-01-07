@@ -1,11 +1,11 @@
-import type { Logger } from '../logger';
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import type { IUser } from '../types/user';
+import type { Logger } from '../logger.js';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IUser } from '../types/user.js';
 import type {
     IUserSplash,
     IUserSplashStore,
-} from '../types/stores/user-splash-store';
+} from '../types/stores/user-splash-store.js';
 
 export default class UserSplashService {
     private userSplashStore: IUserSplashStore;
@@ -45,8 +45,11 @@ export default class UserSplashService {
     }
 
     async updateSplash(splash: IUserSplash): Promise<IUserSplash> {
-        return this.userSplashStore.updateSplash(splash);
+        try {
+            return await this.userSplashStore.updateSplash(splash);
+        } catch (err) {
+            this.logger.warn(err);
+            return splash;
+        }
     }
 }
-
-module.exports = UserSplashService;

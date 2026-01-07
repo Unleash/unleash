@@ -10,10 +10,9 @@ import {
     deleteSegment_UI,
     deleteFeatureStrategy_UI,
     addFlexibleRolloutStrategyToFeature_UI,
-    addUserIdStrategyToFeature_UI,
     updateFlexibleRolloutStrategy_UI,
-    //@ts-ignore
-} from './UI';
+    do_login,
+} from './UI.ts';
 import {
     addUserToProject_API,
     createFeature_API,
@@ -23,8 +22,7 @@ import {
     deleteProject_API,
     updateUserPassword_API,
     createEnvironment_API,
-    //@ts-ignore
-} from './API';
+} from './API.ts';
 
 Cypress.on('window:before:load', (window) => {
     Object.defineProperty(window.navigator, 'language', { value: 'en' });
@@ -32,6 +30,7 @@ Cypress.on('window:before:load', (window) => {
 });
 Cypress.Commands.add('runBefore', runBefore);
 Cypress.Commands.add('login_UI', login_UI);
+Cypress.Commands.add('do_login', do_login);
 Cypress.Commands.add('createSegment_UI', createSegment_UI);
 Cypress.Commands.add('deleteSegment_UI', deleteSegment_UI);
 Cypress.Commands.add('deleteFeature_API', deleteFeature_API);
@@ -45,10 +44,6 @@ Cypress.Commands.add('updateUserPassword_API', updateUserPassword_API);
 Cypress.Commands.add('createFeature_UI', createFeature_UI);
 Cypress.Commands.add('deleteFeatureStrategy_UI', deleteFeatureStrategy_UI);
 Cypress.Commands.add('createFeature_API', createFeature_API);
-Cypress.Commands.add(
-    'addUserIdStrategyToFeature_UI',
-    addUserIdStrategyToFeature_UI,
-);
 Cypress.Commands.add(
     'addFlexibleRolloutStrategyToFeature_UI',
     addFlexibleRolloutStrategyToFeature_UI,
@@ -67,4 +62,9 @@ Cypress.Commands.overwrite('visit', (originalFn, url, options = {}) => {
     options.headers['x-vercel-skip-toolbar'] = '1';
 
     return originalFn(url, options);
+});
+
+Cypress.Commands.overwrite('click', (originalFn, x, y, options = {}) => {
+    options.waitForAnimations = false;
+    return originalFn(x, y, options);
 });

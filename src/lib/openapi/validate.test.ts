@@ -1,5 +1,5 @@
-import { constraintSchema } from './spec';
-import { throwOnInvalidSchema, validateSchema } from './validate';
+import { constraintSchema } from './spec/index.js';
+import { throwOnInvalidSchema, validateSchema } from './validate.js';
 
 test('validateSchema', () => {
     expect(() => validateSchema('unknownSchemaId' as any, {})).toThrow(

@@ -1,4 +1,4 @@
-import { UnleashError } from './unleash-error';
+import { UnleashError } from './unleash-error.js';
 
 class ArchivedFeatureError extends UnleashError {
     statusCode = 400;
@@ -10,4 +10,3 @@ class ArchivedFeatureError extends UnleashError {
     }
 }
 export default ArchivedFeatureError;
-module.exports = ArchivedFeatureError;

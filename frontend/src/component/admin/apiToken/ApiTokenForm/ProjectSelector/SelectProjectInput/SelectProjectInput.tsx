@@ -19,7 +19,7 @@ import type {
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import type { IAutocompleteBoxOption } from 'component/common/AutocompleteBox/AutocompleteBox';
-import { SelectAllButton } from './SelectAllButton/SelectAllButton';
+import { SelectAllButton } from './SelectAllButton/SelectAllButton.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const ALL_PROJECTS = '*';
@@ -60,7 +60,7 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
         projects[0] !== ALL_PROJECTS;
 
     const onAllProjectsChange = (
-        e: ChangeEvent<HTMLInputElement>,
+        _e: ChangeEvent<HTMLInputElement>,
         checked: boolean,
     ) => {
         if (checked) {

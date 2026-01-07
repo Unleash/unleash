@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PersonalDashboardProjectDetailsSchemaInsights } from './personalDashboardProjectDetailsSchemaInsights';
-import type { PersonalDashboardProjectDetailsSchemaLatestEventsItem } from './personalDashboardProjectDetailsSchemaLatestEventsItem';
-import type { PersonalDashboardProjectDetailsSchemaOnboardingStatus } from './personalDashboardProjectDetailsSchemaOnboardingStatus';
-import type { PersonalDashboardProjectDetailsSchemaOwners } from './personalDashboardProjectDetailsSchemaOwners';
-import type { PersonalDashboardProjectDetailsSchemaRolesItem } from './personalDashboardProjectDetailsSchemaRolesItem';
+import type { PersonalDashboardProjectDetailsSchemaInsights } from './personalDashboardProjectDetailsSchemaInsights.js';
+import type { PersonalDashboardProjectDetailsSchemaLatestEventsItem } from './personalDashboardProjectDetailsSchemaLatestEventsItem.js';
+import type { PersonalDashboardProjectDetailsSchemaOnboardingStatus } from './personalDashboardProjectDetailsSchemaOnboardingStatus.js';
+import type { PersonalDashboardProjectDetailsSchemaOwners } from './personalDashboardProjectDetailsSchemaOwners.js';
+import type { PersonalDashboardProjectDetailsSchemaRolesItem } from './personalDashboardProjectDetailsSchemaRolesItem.js';
 
 /**
  * Project details in personal dashboard

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
 import {
     AppBar,
     Box,
@@ -14,53 +13,33 @@ import MenuIcon from '@mui/icons-material/Menu';
 import UserProfile from 'component/user/UserProfile';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
-import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
-import { ReactComponent as CelebatoryUnleashLogo } from 'assets/img/unleashHoliday.svg';
-import { ReactComponent as CelebatoryUnleashLogoWhite } from 'assets/img/unleashHolidayDark.svg';
 
-import { DrawerMenu } from './DrawerMenu/DrawerMenu';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { flexRow, focusable } from 'themes/themeStyles';
-import { getCondensedRoutes, getRoutes } from 'component/menu/routes';
+import { DrawerMenu } from './DrawerMenu/DrawerMenu.tsx';
 import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
-import { filterByConfig, mapRouteLink } from 'component/common/util';
-import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useThemeMode } from 'hooks/useThemeMode';
-import { Notifications } from 'component/common/Notifications/Notifications';
-import { useAdminRoutes } from 'component/admin/useAdminRoutes';
-import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
-import { useUiFlag } from 'hooks/useUiFlag';
+import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
-import { HeaderEventTimelineButton } from './HeaderEventTimelineButton';
 
-const HeaderComponent = styled(AppBar, {
-    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
-})<{ frontendHeaderRedesign?: boolean }>(
-    ({ theme, frontendHeaderRedesign }) => ({
-        backgroundColor: frontendHeaderRedesign
-            ? theme.palette.background.application
-            : theme.palette.background.paper,
-        padding: theme.spacing(1),
-        boxShadow: 'none',
-        position: 'relative',
-        zIndex: 300,
-        paddingRight: theme.spacing(9),
-        [theme.breakpoints.down('lg')]: {
-            paddingLeft: theme.spacing(1),
-            paddingRight: theme.spacing(1),
-        },
-        [theme.breakpoints.down(1024)]: {
-            marginLeft: 0,
-            marginRight: 0,
-        },
-        [theme.breakpoints.down('sm')]: {
-            minWidth: '100%',
-        },
-        margin: '0 auto',
-    }),
-);
+const HeaderComponent = styled(AppBar)(({ theme }) => ({
+    backgroundColor: theme.palette.background.application,
+    padding: theme.spacing(1),
+    boxShadow: 'none',
+    position: 'relative',
+    paddingRight: theme.spacing(9),
+    [theme.breakpoints.down('lg')]: {
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    [theme.breakpoints.down(1024)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
+    },
+    margin: '0 auto',
+}));
 
 const ContainerComponent = styled(Box)(() => ({
     display: 'flex',
@@ -81,14 +60,6 @@ const StyledNav = styled('nav')({
     flexGrow: 1,
 });
 
-const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '150px' });
-
-const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
-
-const StyledCelebatoryLogo = styled(CelebatoryUnleashLogo)({ width: '150px' });
-
-const StyledLink = styled(Link)(({ theme }) => focusable(theme));
-
 const StyledIconButton = styled(IconButton)<{
     component?: 'a' | 'button';
     href?: string;
@@ -107,33 +78,13 @@ const Header = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
 
-    const disableNotifications = useUiFlag('disableNotifications');
-    const { uiConfig, isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
-    const celebatoryUnleash = useUiFlag('celebrateUnleash');
-    const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
-
-    const routes = getRoutes();
-    const adminRoutes = useAdminRoutes();
-
-    const filteredMainRoutes = {
-        mainNavRoutes: getCondensedRoutes(routes.mainNavRoutes)
-            .filter(filterByConfig(uiConfig))
-            .map(mapRouteLink),
-        mobileRoutes: getCondensedRoutes(routes.mobileRoutes)
-            .filter(filterByConfig(uiConfig))
-            .map(mapRouteLink),
-        adminRoutes,
-    };
 
     if (smallScreen) {
         return (
-            <HeaderComponent
-                position='static'
-                frontendHeaderRedesign={frontendHeaderRedesign}
-            >
+            <HeaderComponent position='static'>
                 <ContainerComponent>
                     <Tooltip title='Menu' arrow>
                         <IconButton
@@ -148,12 +99,7 @@ const Header = () => {
                             <MenuIcon />
                         </IconButton>
                     </Tooltip>
-                    <DrawerMenu
-                        links={uiConfig.links}
-                        open={openDrawer}
-                        toggleDrawer={toggleDrawer}
-                        routes={filteredMainRoutes}
-                    />
+                    <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
                     <StyledUserContainer>
                         <UserProfile />
                     </StyledUserContainer>
@@ -163,59 +109,19 @@ const Header = () => {
     }
 
     return (
-        <HeaderComponent
-            frontendHeaderRedesign={frontendHeaderRedesign}
-            position='static'
-        >
+        <HeaderComponent position='static'>
             <ContainerComponent>
-                <ConditionallyRender
-                    condition={!frontendHeaderRedesign}
-                    show={
-                        <StyledLink to='/' sx={flexRow} aria-label='Home'>
-                            <ThemeMode
-                                darkmode={
-                                    <ConditionallyRender
-                                        condition={celebatoryUnleash}
-                                        show={<CelebatoryUnleashLogoWhite />}
-                                        elseShow={
-                                            <StyledUnleashLogoWhite aria-label='Unleash logo' />
-                                        }
-                                    />
-                                }
-                                lightmode={
-                                    <ConditionallyRender
-                                        condition={celebatoryUnleash}
-                                        show={<StyledCelebatoryLogo />}
-                                        elseShow={
-                                            <StyledUnleashLogo aria-label='Unleash logo' />
-                                        }
-                                    />
-                                }
-                            />
-                        </StyledLink>
-                    }
-                />
-
                 <StyledNav>
                     <StyledUserContainer>
                         <CommandBar />
-                        <ConditionallyRender
-                            condition={frontendHeaderRedesign}
-                            show={
-                                <Divider
-                                    orientation='vertical'
-                                    variant='middle'
-                                    flexItem
-                                    sx={(theme) => ({
-                                        marginLeft: theme.spacing(1),
-                                        border: 'transparent',
-                                    })}
-                                />
-                            }
-                        />
-                        <ConditionallyRender
-                            condition={!frontendHeaderRedesign}
-                            show={<HeaderEventTimelineButton />}
+                        <Divider
+                            orientation='vertical'
+                            variant='middle'
+                            flexItem
+                            sx={(theme) => ({
+                                marginLeft: theme.spacing(1),
+                                border: 'transparent',
+                            })}
                         />
                         <InviteLinkButton />
                         <Tooltip
@@ -237,10 +143,6 @@ const Header = () => {
                                 />
                             </StyledIconButton>
                         </Tooltip>
-                        <ConditionallyRender
-                            condition={!isOss() && !disableNotifications}
-                            show={<Notifications />}
-                        />
                         <Tooltip title='Documentation' arrow>
                             <StyledIconButton
                                 component='a'

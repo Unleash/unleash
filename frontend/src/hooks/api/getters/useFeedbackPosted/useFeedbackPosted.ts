@@ -1,8 +1,8 @@
 import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import type { FeedbackListSchema } from '../../../../openapi';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import type { FeedbackListSchema } from 'openapi';
 
 const KEY = `api/admin/feedback`;
 const path = formatApiPath(KEY);

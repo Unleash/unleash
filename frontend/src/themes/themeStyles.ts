@@ -84,7 +84,7 @@ export const fadeInBottomLeave: CSSProperties = {
     opacity: '0',
     transition: 'transform 1.25s ease, opacity 1s ease',
 };
-export const fadeInTopStart = (theme: Theme): CSSProperties => ({
+export const fadeInTopStart = (_theme: Theme): CSSProperties => ({
     opacity: '0',
     position: 'fixed',
     transform: 'translateY(-400px)',

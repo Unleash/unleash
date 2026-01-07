@@ -1,7 +1,7 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { versionSchema } from './version-schema';
-import { variantFlagSchema } from './variant-flag-schema';
-import { resourceLimitsSchema } from './resource-limits-schema';
+import { versionSchema } from './version-schema.js';
+import { variantFlagSchema } from './variant-flag-schema.js';
+import { resourceLimitsSchema } from './resource-limits-schema.js';
 
 export const uiConfigSchema = {
     $id: '#/components/schemas/uiConfigSchema',
@@ -71,20 +71,6 @@ export const uiConfigSchema = {
             type: 'boolean',
             description: 'Whether maintenance mode is currently active or not.',
             example: false,
-        },
-        segmentValuesLimit: {
-            type: 'number',
-            description:
-                'The maximum number of values that can be used in a single segment.',
-            example: 1000,
-            deprecated: true,
-        },
-        strategySegmentsLimit: {
-            type: 'number',
-            description:
-                'The maximum number of segments that can be applied to a single strategy.',
-            example: 5,
-            deprecated: true,
         },
         resourceLimits: {
             $ref: resourceLimitsSchema.$id,
@@ -190,6 +176,11 @@ export const uiConfigSchema = {
             type: 'number',
             description: 'The maximum number of sessions that a user has.',
             example: 10,
+        },
+        unleashContext: {
+            type: 'object',
+            description:
+                'The context object used to configure the Unleash instance.',
         },
     },
     components: {

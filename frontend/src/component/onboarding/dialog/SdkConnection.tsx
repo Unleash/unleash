@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import Loader from 'component/common/Loader/Loader';
-import TestSdkConnection from './TestSdkConnection';
-import type { Sdk } from './sharedTypes';
-import { SdkConnected } from './SdkConnected';
+import TestSdkConnection from './TestSdkConnection.tsx';
+import type { Sdk } from './sharedTypes.ts';
+import { SdkConnected } from './SdkConnected.tsx';
 
 interface ISdkConnectionProps {
     sdk: Sdk;

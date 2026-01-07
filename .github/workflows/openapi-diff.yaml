@@ -1,0 +1,184 @@
+name: OpenAPI Diff
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    paths:
+      - src/lib/**
+      - .github/workflows/openapi-diff.yaml
+  workflow_dispatch:
+    inputs:
+      stable_version:
+        description: 'Stable Unleash version to compare against (e.g. unleash-server:6.9.3 or unleash-enterprise:6.10.0)'
+        required: false
+        default: 'unleash-server:latest'
+
+jobs:
+  generate-openapi-stable:
+    name: Generate OpenAPI (stable)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Start Unleash test instance
+        run: |
+          docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
+        env:
+          FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
+          UNLEASH_VERSION: ${{ github.event.inputs.stable_version || 'unleash-server:main-edge' }}
+          CHECK_VERSION: 'false'
+      - name: Wait for Unleash to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://localhost:3000/health; then
+              echo "Unleash is up!";
+              exit 0
+            fi
+            echo "Waiting for Unleash...";
+            sleep 2
+          done
+          echo "Unleash did not become ready in time."
+          exit 1
+      - name: Download OpenAPI spec from (${{ github.event.inputs.stable_version || 'tip of main' }})
+        run: curl -sSL -o openapi-stable.json "localhost:3000/docs/openapi.json"
+      - name: Upload openapi-stable.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-stable
+          path: openapi-stable.json
+
+  generate-openapi-current:
+    name: Generate OpenAPI (current branch)
+    runs-on: ubuntu-latest
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_INITDB_ARGS: "--no-sync"
+        # Set health checks to wait until postgres has started
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+      - name: Install dependencies
+        run: |
+          yarn install --immutable
+      - name: Start Unleash test instance
+        run: |
+          # fake frontend build
+          mkdir frontend/build
+          touch frontend/build/index.html
+          touch frontend/build/favicon.ico
+          # end fake frontend build
+
+          # start unleash in background
+          NODE_ENV=openapi yarn dev:backend &
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+          DATABASE_SSL: 'false'
+          CHECK_VERSION: 'false'
+      - name: Wait for Unleash to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://localhost:4242/health; then
+              echo "Unleash is up!";
+              break;
+            fi
+            echo "Waiting for Unleash...";
+            sleep 2
+          done
+      - name: Download OpenAPI spec (current branch)
+        run: curl -sSL -o openapi-current.json localhost:4242/docs/openapi.json
+      - name: Upload openapi-current.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-current
+          path: openapi-current.json
+
+  openapi-diff:
+    name: OpenAPI Diff
+    runs-on: ubuntu-latest
+    needs: [generate-openapi-current, generate-openapi-stable]
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Download openapi-current.json
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-current
+      - name: Download openapi-stable.json
+        uses: actions/download-artifact@v4
+        with:
+          name: openapi-stable
+      - name: Run OpenAPI diff
+        id: diff
+        run: |
+          docker run --rm -t -v $(pwd):/specs:ro tufin/oasdiff changelog --format markdown /specs/openapi-stable.json /specs/openapi-current.json > openapi-diff.txt || true
+          # then output in a format that is useful when you go inside the job output
+          docker run --rm -t -v $(pwd):/specs:ro tufin/oasdiff changelog --format githubactions /specs/openapi-stable.json /specs/openapi-current.json
+      - name: Show OpenAPI diff
+        if: github.event_name != 'pull_request'
+        run: cat openapi-diff.txt
+      - name: Comment on PR with OpenAPI diff
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const diff = fs.readFileSync('openapi-diff.txt', 'utf8');
+            const diffLines = diff.split('\n').filter(line => line.trim() !== '' && !line.startsWith('#')).length;
+            const marker = '[//]: # (OpenAPI diff - used to identify the comment)';
+            // Get all comments on the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            // Find existing OpenAPI Diff comment
+            const existing = comments.find(c => c.body && c.body.includes(marker) && c.user.type === 'Bot');
+            let body;
+            if (diffLines > 300) {
+              body = `${marker} too long, check the this task output for details.`;
+              console.log(diff);
+            } else if (diffLines > 0) {
+              body = `${marker}\n${diff}`;
+            } else {
+              body = null;
+            }
+            if (body) {
+              if (existing) {
+                await github.rest.issues.updateComment({
+                  comment_id: existing.id,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body,
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body,
+                });
+              }
+            } else {
+              console.log('No significant changes detected in OpenAPI spec.');
+              if (existing) {
+                await github.rest.issues.deleteComment({
+                  comment_id: existing.id,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                });
+              }
+            }

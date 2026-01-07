@@ -1,5 +1,5 @@
 import type { Knex } from 'knex';
-import FeatureToggleStore from '../feature-toggle-store';
+import FeatureToggleStore from '../feature-toggle-store.js';
 
 export class FeatureToggleListBuilder {
     private db: Knex;

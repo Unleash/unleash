@@ -1,4 +1,4 @@
-import { useGroupedProjectTrends } from './useGroupedProjectTrends';
+import { useGroupedProjectTrends } from './useGroupedProjectTrends.js';
 import { renderHook } from '@testing-library/react';
 
 describe('useGroupedProjectTrends', () => {

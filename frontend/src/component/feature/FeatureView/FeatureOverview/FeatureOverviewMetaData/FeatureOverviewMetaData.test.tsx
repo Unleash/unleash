@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import FeatureOverviewMetaData from './FeatureOverviewMetaData';
+import FeatureOverviewMetaData from './FeatureOverviewMetaData.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { Route, Routes } from 'react-router-dom';
 import type { IDependency, IFeatureToggle } from 'interfaces/featureToggle';
@@ -66,14 +66,6 @@ const setupChangeRequestApi = () => {
     );
 };
 
-const setupFeatureApi = (feature: IFeatureToggle) => {
-    testServerRoute(
-        server,
-        '/api/admin/projects/default/features/feature',
-        feature,
-    );
-};
-
 beforeEach(() => {
     setupApi();
 });
@@ -81,12 +73,16 @@ beforeEach(() => {
 const route = '/projects/default/features/feature';
 
 test('show dependency dialogue', async () => {
-    setupFeatureApi(feature);
     render(
         <Routes>
             <Route
                 path={'/projects/:projectId/features/:featureId'}
-                element={<FeatureOverviewMetaData />}
+                element={
+                    <FeatureOverviewMetaData
+                        feature={feature}
+                        onChange={() => {}}
+                    />
+                }
             />
         </Routes>,
         {
@@ -105,18 +101,23 @@ test('show dependency dialogue', async () => {
 });
 
 test('show dependency dialogue for OSS with dependencies', async () => {
-    setupOssWithExistingDependencies();
-    setupFeatureApi({
+    const feature = {
         name: 'feature',
         project: 'default',
         dependencies: [] as Array<{ feature: string }>,
         children: [] as string[],
-    } as IFeatureToggle);
+    } as IFeatureToggle;
+    setupOssWithExistingDependencies();
     render(
         <Routes>
             <Route
                 path={'/projects/:projectId/features/:featureId'}
-                element={<FeatureOverviewMetaData />}
+                element={
+                    <FeatureOverviewMetaData
+                        feature={feature}
+                        onChange={() => {}}
+                    />
+                }
             />
         </Routes>,
         {
@@ -135,17 +136,22 @@ test('show dependency dialogue for OSS with dependencies', async () => {
 });
 
 test('show child', async () => {
-    setupFeatureApi({
+    const feature = {
         name: 'feature',
         project: 'default',
         dependencies: [] as Array<{ feature: string }>,
         children: ['some_child'],
-    } as IFeatureToggle);
+    } as IFeatureToggle;
     render(
         <Routes>
             <Route
                 path={'/projects/:projectId/features/:featureId'}
-                element={<FeatureOverviewMetaData />}
+                element={
+                    <FeatureOverviewMetaData
+                        feature={feature}
+                        onChange={() => {}}
+                    />
+                }
             />
         </Routes>,
         { route },
@@ -156,17 +162,22 @@ test('show child', async () => {
 });
 
 test('show children', async () => {
-    setupFeatureApi({
+    const feature = {
         name: 'feature',
         project: 'default',
         dependencies: [] as Array<{ feature: string }>,
         children: ['some_child', 'some_other_child'],
-    } as IFeatureToggle);
+    } as IFeatureToggle;
     render(
         <Routes>
             <Route
                 path={'/projects/:projectId/features/:featureId'}
-                element={<FeatureOverviewMetaData />}
+                element={
+                    <FeatureOverviewMetaData
+                        feature={feature}
+                        onChange={() => {}}
+                    />
+                }
             />
         </Routes>,
         { route },
@@ -184,17 +195,22 @@ const feature = {
 } as IFeatureToggle;
 
 test('delete dependency', async () => {
-    setupFeatureApi({
+    const featureWithDeps = {
         ...feature,
         dependencies: [{ feature: 'some_parent' }],
-    });
+    };
     render(
         <>
             <ToastRenderer />
             <Routes>
                 <Route
                     path={'/projects/:projectId/features/:featureId'}
-                    element={<FeatureOverviewMetaData />}
+                    element={
+                        <FeatureOverviewMetaData
+                            feature={featureWithDeps}
+                            onChange={() => {}}
+                        />
+                    }
                 />
             </Routes>
         </>,
@@ -221,18 +237,23 @@ test('delete dependency', async () => {
 });
 
 test('delete dependency with change request', async () => {
-    setupChangeRequestApi();
-    setupFeatureApi({
+    const featureWithDeps = {
         ...feature,
         dependencies: [{ feature: 'some_parent' }],
-    });
+    };
+    setupChangeRequestApi();
     render(
         <>
             <ToastRenderer />
             <Routes>
                 <Route
                     path={'/projects/:projectId/features/:featureId'}
-                    element={<FeatureOverviewMetaData />}
+                    element={
+                        <FeatureOverviewMetaData
+                            feature={featureWithDeps}
+                            onChange={() => {}}
+                        />
+                    }
                 />
             </Routes>
         </>,
@@ -259,15 +280,20 @@ test('delete dependency with change request', async () => {
 });
 
 test('edit dependency', async () => {
-    setupFeatureApi({
+    const featureWithDeps = {
         ...feature,
         dependencies: [{ feature: 'some_parent', enabled: false }],
-    });
+    };
     render(
         <Routes>
             <Route
                 path={'/projects/:projectId/features/:featureId'}
-                element={<FeatureOverviewMetaData />}
+                element={
+                    <FeatureOverviewMetaData
+                        feature={featureWithDeps}
+                        onChange={() => {}}
+                    />
+                }
             />
         </Routes>,
         {
@@ -295,7 +321,7 @@ test('edit dependency', async () => {
 });
 
 test('show variant dependencies', async () => {
-    setupFeatureApi({
+    const featureWithDeps = {
         ...feature,
         dependencies: [
             {
@@ -304,12 +330,17 @@ test('show variant dependencies', async () => {
                 variants: ['variantA', 'variantB'],
             },
         ],
-    });
+    };
     render(
         <Routes>
             <Route
                 path={'/projects/:projectId/features/:featureId'}
-                element={<FeatureOverviewMetaData />}
+                element={
+                    <FeatureOverviewMetaData
+                        feature={featureWithDeps}
+                        onChange={() => {}}
+                    />
+                }
             />
         </Routes>,
         { route },
@@ -324,7 +355,7 @@ test('show variant dependencies', async () => {
 });
 
 test('show variant dependency', async () => {
-    setupFeatureApi({
+    const featureWithDeps = {
         ...feature,
         dependencies: [
             {
@@ -333,12 +364,17 @@ test('show variant dependency', async () => {
                 variants: ['variantA'],
             },
         ],
-    });
+    };
     render(
         <Routes>
             <Route
                 path={'/projects/:projectId/features/:featureId'}
-                element={<FeatureOverviewMetaData />}
+                element={
+                    <FeatureOverviewMetaData
+                        feature={featureWithDeps}
+                        onChange={() => {}}
+                    />
+                }
             />
         </Routes>,
         { route },
@@ -348,7 +384,7 @@ test('show variant dependency', async () => {
 });
 
 test('show disabled dependency', async () => {
-    setupFeatureApi({
+    const featureWithDeps = {
         ...feature,
         dependencies: [
             {
@@ -356,12 +392,17 @@ test('show disabled dependency', async () => {
                 enabled: false,
             },
         ],
-    });
+    };
     render(
         <Routes>
             <Route
                 path={'/projects/:projectId/features/:featureId'}
-                element={<FeatureOverviewMetaData />}
+                element={
+                    <FeatureOverviewMetaData
+                        feature={featureWithDeps}
+                        onChange={() => {}}
+                    />
+                }
             />
         </Routes>,
         { route },

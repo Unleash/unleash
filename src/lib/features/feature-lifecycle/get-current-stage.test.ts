@@ -1,5 +1,5 @@
-import { getCurrentStage } from './get-current-stage';
-import type { IFeatureLifecycleStage } from '../../types';
+import { getCurrentStage } from './get-current-stage.js';
+import type { IFeatureLifecycleStage } from '../../types/index.js';
 
 const irrelevantDate = new Date('2024-04-22T10:00:00Z');
 

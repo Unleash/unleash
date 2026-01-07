@@ -1,6 +1,6 @@
 import { type ReactElement, type ReactNode, useMemo } from 'react';
 import AccessContext, { type IAccessContext } from 'contexts/AccessContext';
-import { ADMIN, SKIP_CHANGE_REQUEST } from './permissions';
+import { ADMIN, SKIP_CHANGE_REQUEST } from './permissions.ts';
 import type { IPermission } from 'interfaces/user';
 import { useAuthPermissions } from 'hooks/api/getters/useAuth/useAuthPermissions';
 

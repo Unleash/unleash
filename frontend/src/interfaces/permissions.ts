@@ -37,6 +37,6 @@ export interface IPermissionCategory {
     permissions: IPermission[];
 }
 
-export interface IMatrixPermission extends IPermission {
+export interface IAccessOverviewPermission extends IPermission {
     hasPermission: boolean;
 }

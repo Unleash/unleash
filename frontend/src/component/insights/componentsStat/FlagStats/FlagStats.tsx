@@ -1,6 +1,9 @@
 import Icon from '@mui/material/Icon';
 import { Box, Typography, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useId } from 'hooks/useId';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
 
 const StyledRingContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -31,7 +34,7 @@ const StyledRingContent = styled(Box)(({ theme }) => ({
     border: `10px solid ${theme.palette.background.paper}`,
 }));
 
-const StyledInsightsContainer = styled(Box)(({ theme }) => ({
+const _StyledInsightsContainer = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(4),
     padding: theme.spacing(1.5, 2),
     background: theme.palette.background.elevation2,
@@ -40,24 +43,24 @@ const StyledInsightsContainer = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
-const StyledHeaderContainer = styled(Box)(({ theme }) => ({
+const _StyledHeaderContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     marginBottom: theme.spacing(0.5),
 }));
 
-const StyledTextContainer = styled(Box)(({ theme }) => ({
+const _StyledTextContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
 }));
 
-const StyledFlagCountPerUser = styled(Typography)(({ theme }) => ({
+const _StyledFlagCountPerUser = styled(Typography)(({ theme }) => ({
     marginLeft: 'auto',
     fontSize: theme.fontSizes.mainHeader,
 }));
 
-const StyledIcon = styled(Icon)(({ theme }) => ({
+const _StyledIcon = styled(Icon)(({ theme }) => ({
     color: theme.palette.primary.main,
     width: '15px',
     height: '15px',
@@ -65,52 +68,54 @@ const StyledIcon = styled(Icon)(({ theme }) => ({
     fontSize: '15px!important',
 }));
 
+const LabelContainer = styled('div')({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+});
+
 interface IFlagStatsProps {
     count: number;
-    flagsPerUser?: string;
     isLoading?: boolean;
 }
 
-export const FlagStats: React.FC<IFlagStatsProps> = ({
-    count,
-    flagsPerUser,
-    isLoading,
-}) => {
+export const FlagStats: React.FC<IFlagStatsProps> = ({ count, isLoading }) => {
+    const labelId = useId();
+    const descriptionId = useId();
     return (
         <>
             <StyledRingContainer>
                 <StyledRing>
-                    <StyledRingContent>
-                        {isLoading ? '' : count}
+                    <StyledRingContent
+                        aria-labelledby={labelId}
+                        aria-describedby={descriptionId}
+                    >
+                        {isLoading ? (
+                            <ScreenReaderOnly>
+                                Loading total flag count
+                            </ScreenReaderOnly>
+                        ) : (
+                            count
+                        )}
                     </StyledRingContent>
                 </StyledRing>
             </StyledRingContainer>
 
-            <ConditionallyRender
-                condition={flagsPerUser !== undefined && flagsPerUser !== ''}
-                show={
-                    <StyledInsightsContainer>
-                        <StyledTextContainer>
-                            <StyledHeaderContainer>
-                                <StyledIcon>award_star</StyledIcon>
-                                <Typography
-                                    fontWeight='bold'
-                                    variant='body2'
-                                    color='primary'
-                                >
-                                    Insights
-                                </Typography>
-                            </StyledHeaderContainer>
-                            <Typography variant='body2'>
-                                Flags per user
-                            </Typography>
-                        </StyledTextContainer>
-                        <StyledFlagCountPerUser>
-                            {flagsPerUser}
-                        </StyledFlagCountPerUser>
-                    </StyledInsightsContainer>
-                }
-            />
+            <LabelContainer>
+                <Typography id={labelId} variant='body2'>
+                    Total number of flags
+                </Typography>
+                <HelpIcon
+                    htmlTooltip
+                    tooltipId={descriptionId}
+                    tooltip={
+                        'This includes the four lifecycle stages define, develop, production, and cleanup'
+                    }
+                >
+                    <InfoOutlined />
+                </HelpIcon>
+            </LabelContainer>
         </>
     );
 };

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureLifecycleCompletedSchemaStatus } from './featureLifecycleCompletedSchemaStatus';
+import type { FeatureLifecycleCompletedSchemaStatus } from './featureLifecycleCompletedSchemaStatus.js';
 
 /**
  * A feature that has been marked as completed

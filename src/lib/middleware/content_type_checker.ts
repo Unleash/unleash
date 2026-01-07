@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import { is } from 'type-is';
-import ContentTypeError from '../error/content-type-error';
+import ContentTypeError from '../error/content-type-error.js';
 
 const DEFAULT_ACCEPTED_CONTENT_TYPE = 'application/json';
 
@@ -19,7 +19,10 @@ export default function requireContentType(
     }
     return (req, res, next) => {
         const contentType = req.header('Content-Type');
-        if (is(contentType, acceptedContentTypes)) {
+        if (
+            contentType !== undefined &&
+            is(contentType, acceptedContentTypes)
+        ) {
             next();
         } else {
             const error = new ContentTypeError(

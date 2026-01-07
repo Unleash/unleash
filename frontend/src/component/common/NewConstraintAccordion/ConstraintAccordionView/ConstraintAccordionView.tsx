@@ -8,34 +8,33 @@ import {
     styled,
 } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody';
-import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader';
-import { oneOf } from 'utils/oneOf';
-import {
-    dateOperators,
-    numOperators,
-    semVerOperators,
-} from 'constants/operators';
+import { ConstraintAccordionViewBody } from './ConstraintAccordionViewBody/ConstraintAccordionViewBody.tsx';
+import { ConstraintAccordionViewHeader } from './ConstraintAccordionViewHeader/ConstraintAccordionViewHeader.tsx';
 
 interface IConstraintAccordionViewProps {
     constraint: IConstraint;
-    onDelete?: () => void;
-    onEdit?: () => void;
+    onUse?: () => void;
     sx?: SxProps<Theme>;
-    compact?: boolean;
     disabled?: boolean;
     renderAfter?: JSX.Element;
+    borderStyle?: 'solid' | 'dashed';
 }
 
-const StyledAccordion = styled(Accordion)(({ theme }) => ({
-    border: `1px solid ${theme.palette.divider}`,
+interface StyledAccordionProps {
+    borderStyle?: 'solid' | 'dashed';
+}
+
+const StyledAccordion = styled(Accordion, {
+    shouldForwardProp: (prop) => prop !== 'borderStyle',
+})<StyledAccordionProps>(({ theme, borderStyle = 'solid' }) => ({
+    border: `1px ${borderStyle} ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: 'transparent',
     boxShadow: 'none',
     margin: 0,
     '&:before': {
         opacity: '0',
     },
+    overflow: 'hidden',
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -65,20 +64,15 @@ const StyledWrapper = styled('div')({
 
 export const ConstraintAccordionView = ({
     constraint,
-    onEdit,
-    onDelete,
+    onUse,
     sx = undefined,
-    compact = false,
     disabled = false,
     renderAfter,
+    borderStyle = 'solid',
 }: IConstraintAccordionViewProps) => {
     const [expandable, setExpandable] = useState(true);
     const [expanded, setExpanded] = useState(false);
 
-    const singleValue = oneOf(
-        [...semVerOperators, ...numOperators, ...dateOperators],
-        constraint.operator,
-    );
     const handleClick = () => {
         if (expandable) {
             setExpanded(!expanded);
@@ -86,7 +80,7 @@ export const ConstraintAccordionView = ({
     };
 
     return (
-        <StyledAccordion expanded={expanded} sx={sx}>
+        <StyledAccordion expanded={expanded} sx={sx} borderStyle={borderStyle}>
             <StyledAccordionSummary
                 expandIcon={null}
                 onClick={handleClick}
@@ -96,17 +90,15 @@ export const ConstraintAccordionView = ({
                         cursor: expandable ? 'pointer' : 'default!important',
                     },
                 }}
+                tabIndex={expandable ? 0 : -1}
             >
                 <StyledWrapper>
                     <ConstraintAccordionViewHeader
                         constraint={constraint}
-                        onEdit={onEdit}
-                        onDelete={onDelete}
-                        singleValue={singleValue}
+                        onUse={onUse}
                         allowExpand={setExpandable}
                         disabled={disabled}
                         expanded={expanded}
-                        compact={compact}
                     />
                     {renderAfter}
                 </StyledWrapper>

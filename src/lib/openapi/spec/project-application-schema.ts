@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { projectApplicationSdkSchema } from './project-application-sdk-schema';
+import { projectApplicationSdkSchema } from './project-application-sdk-schema.js';
 
 export const projectApplicationSchema = {
     $id: '#/components/schemas/projectApplicationSchema',

@@ -4,8 +4,8 @@ import { type ChartOptions, defaults } from 'chart.js';
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { formatDateHM, formatDateYMD, formatDateYMDHM } from 'utils/formatDate';
 import type { Theme } from '@mui/material/styles/createTheme';
-import type { IPoint } from './createChartData';
-import { daysOrHours } from '../daysOrHours';
+import type { IPoint } from './createChartData.ts';
+import { daysOrHours } from '../daysOrHours.ts';
 
 const formatVariantEntry = (
     variant: [string, number],
@@ -19,7 +19,7 @@ const formatVariantEntry = (
 
 export const createChartOptions = (
     theme: Theme,
-    metrics: IFeatureMetricsRaw[],
+    _metrics: IFeatureMetricsRaw[],
     hoursBack: number,
     locationSettings: ILocationSettings,
 ): ChartOptions<'line'> => {

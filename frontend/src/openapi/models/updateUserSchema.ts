@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UpdateUserSchemaRootRole } from './updateUserSchemaRootRole';
+import type { UpdateUserSchemaRootRole } from './updateUserSchemaRootRole.js';
 
 /**
  * All fields that can be directly changed for the user

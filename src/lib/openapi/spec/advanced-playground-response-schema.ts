@@ -1,16 +1,16 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { sdkContextSchema } from './sdk-context-schema';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { playgroundConstraintSchema } from './playground-constraint-schema';
-import { playgroundSegmentSchema } from './playground-segment-schema';
-import { playgroundStrategySchema } from './playground-strategy-schema';
-import { advancedPlaygroundRequestSchema } from './advanced-playground-request-schema';
-import { advancedPlaygroundFeatureSchema } from './advanced-playground-feature-schema';
-import { advancedPlaygroundEnvironmentFeatureSchema } from './advanced-playground-environment-feature-schema';
-import { sdkFlatContextSchema } from './sdk-flat-context-schema';
+import { sdkContextSchema } from './sdk-context-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { playgroundConstraintSchema } from './playground-constraint-schema.js';
+import { playgroundSegmentSchema } from './playground-segment-schema.js';
+import { playgroundStrategySchema } from './playground-strategy-schema.js';
+import { advancedPlaygroundRequestSchema } from './advanced-playground-request-schema.js';
+import { advancedPlaygroundFeatureSchema } from './advanced-playground-feature-schema.js';
+import { advancedPlaygroundEnvironmentFeatureSchema } from './advanced-playground-environment-feature-schema.js';
+import { sdkFlatContextSchema } from './sdk-flat-context-schema.js';
 
 export const advancedPlaygroundResponseSchema = {
     $id: '#/components/schemas/advancedPlaygroundResponseSchema',
@@ -64,5 +64,6 @@ export const advancedPlaygroundResponseSchema = {
 } as const;
 
 export type AdvancedPlaygroundResponseSchema = FromSchema<
-    typeof advancedPlaygroundResponseSchema
+    typeof advancedPlaygroundResponseSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

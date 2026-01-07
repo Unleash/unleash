@@ -1,4 +1,4 @@
-import { featuresCount } from './useProjectOverview';
+import { featuresCount } from './useProjectOverview.js';
 
 test('features count based on feature types', () => {
     expect(

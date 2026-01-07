@@ -29,6 +29,7 @@ const StyledContainer = styled('span')<{ size: string | undefined }>(
 
 type IHelpIconProps = {
     tooltip: React.ReactNode;
+    tooltipId?: string;
     placement?: TooltipProps['placement'];
     children?: React.ReactNode;
     size?: string;
@@ -43,6 +44,7 @@ type IHelpIconProps = {
 export const HelpIcon = ({
     tooltip,
     htmlTooltip,
+    tooltipId,
     placement,
     children,
     size,
@@ -55,6 +57,7 @@ export const HelpIcon = ({
 
         return (
             <HtmlTooltip
+                id={tooltipId}
                 title={tooltip}
                 placement={placement}
                 arrow
@@ -68,7 +71,7 @@ export const HelpIcon = ({
     }
 
     return (
-        <Tooltip title={tooltip} placement={placement} arrow>
+        <Tooltip title={tooltip} placement={placement} arrow id={tooltipId}>
             <StyledContainer size={size} tabIndex={0} aria-label='Help'>
                 {children ?? <HelpOutline />}
             </StyledContainer>

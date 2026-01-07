@@ -1,26 +1,9 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 export const useUiConfigApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
-
-    /**
-     * @deprecated remove when `granularAdminPermissions` flag is removed
-     */
-    const setFrontendSettings = async (
-        frontendApiOrigins: string[],
-    ): Promise<void> => {
-        const payload = {
-            frontendSettings: { frontendApiOrigins },
-        };
-        const req = createRequest(
-            'api/admin/ui-config',
-            { method: 'POST', body: JSON.stringify(payload) },
-            'setFrontendSettings',
-        );
-        await makeRequest(req.caller, req.id);
-    };
 
     const setCors = async (frontendApiOrigins: string[]): Promise<void> => {
         const req = createRequest(
@@ -32,7 +15,6 @@ export const useUiConfigApi = () => {
     };
 
     return {
-        setFrontendSettings,
         setCors,
         loading,
         errors,

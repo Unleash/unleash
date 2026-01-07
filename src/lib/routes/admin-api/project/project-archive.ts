@@ -1,30 +1,27 @@
 import type { Response } from 'express';
-import type { IUnleashConfig } from '../../../types/option';
+import type { IUnleashConfig } from '../../../types/option.js';
 import {
     type IFlagResolver,
     type IProjectParam,
-    type IUnleashServices,
     UPDATE_FEATURE,
-} from '../../../types';
-import type { Logger } from '../../../logger';
-import { DELETE_FEATURE } from '../../../types/permissions';
-import type FeatureToggleService from '../../../features/feature-toggle/feature-toggle-service';
-import type { IAuthRequest } from '../../unleash-types';
-import type { OpenApiService } from '../../../services/openapi-service';
+} from '../../../types/index.js';
+import type { Logger } from '../../../logger.js';
+import { DELETE_FEATURE } from '../../../types/permissions.js';
+import type { FeatureToggleService } from '../../../features/feature-toggle/feature-toggle-service.js';
+import type { IAuthRequest } from '../../unleash-types.js';
+import type { OpenApiService } from '../../../services/openapi-service.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../../openapi/util/standard-responses';
+} from '../../../openapi/util/standard-responses.js';
 import {
     type BatchFeaturesSchema,
     createRequestSchema,
     createResponseSchema,
-} from '../../../openapi';
-import Controller from '../../controller';
-import type {
-    TransactionCreator,
-    UnleashTransaction,
-} from '../../../db/transaction';
+} from '../../../openapi/index.js';
+import Controller from '../../controller.js';
+import type { IUnleashServices } from '../../../services/index.js';
+import type { WithTransactional } from '../../../db/transaction.js';
 
 const PATH = '/:projectId';
 const PATH_ARCHIVE = `${PATH}/archive`;
@@ -37,10 +34,7 @@ export default class ProjectArchiveController extends Controller {
 
     private featureService: FeatureToggleService;
 
-    private transactionalFeatureToggleService: (
-        db: UnleashTransaction,
-    ) => FeatureToggleService;
-    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
+    private transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
 
     private openApiService: OpenApiService;
 
@@ -50,24 +44,22 @@ export default class ProjectArchiveController extends Controller {
         config: IUnleashConfig,
         {
             transactionalFeatureToggleService,
-            featureToggleServiceV2,
+            featureToggleService,
             openApiService,
         }: Pick<
             IUnleashServices,
             | 'transactionalFeatureToggleService'
-            | 'featureToggleServiceV2'
+            | 'featureToggleService'
             | 'openApiService'
         >,
-        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
         this.logger = config.getLogger('/admin-api/archive.js');
-        this.featureService = featureToggleServiceV2;
+        this.featureService = featureToggleService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
         this.transactionalFeatureToggleService =
             transactionalFeatureToggleService;
-        this.startTransaction = startTransaction;
 
         this.route({
             method: 'post',
@@ -178,12 +170,8 @@ export default class ProjectArchiveController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const { features } = req.body;
-        await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).reviveFeatures(
-                features,
-                projectId,
-                req.audit,
-            ),
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.reviveFeatures(features, projectId, req.audit),
         );
         res.status(200).end();
     }
@@ -195,13 +183,8 @@ export default class ProjectArchiveController extends Controller {
         const { features } = req.body;
         const { projectId } = req.params;
 
-        await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).archiveToggles(
-                features,
-                req.user,
-                req.audit,
-                projectId,
-            ),
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.archiveToggles(features, req.user, req.audit, projectId),
         );
 
         res.status(202).end();
@@ -219,5 +202,3 @@ export default class ProjectArchiveController extends Controller {
         res.send({ parentsWithChildFeatures, hasDeletedDependencies });
     }
 }
-
-module.exports = ProjectArchiveController;

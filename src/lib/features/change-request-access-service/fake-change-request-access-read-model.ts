@@ -1,4 +1,4 @@
-import type { IChangeRequestAccessReadModel } from './change-request-access-read-model';
+import type { IChangeRequestAccessReadModel } from './change-request-access-read-model.js';
 
 export class FakeChangeRequestAccessReadModel
     implements IChangeRequestAccessReadModel

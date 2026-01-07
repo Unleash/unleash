@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateRoleWithPermissionsSchemaAnyOfFourPermissionsItem } from './createRoleWithPermissionsSchemaAnyOfFourPermissionsItem';
-import type { CreateRoleWithPermissionsSchemaAnyOfFourType } from './createRoleWithPermissionsSchemaAnyOfFourType';
+import type { CreateRoleWithPermissionsSchemaAnyOfFourPermissionsItem } from './createRoleWithPermissionsSchemaAnyOfFourPermissionsItem.js';
+import type { CreateRoleWithPermissionsSchemaAnyOfFourType } from './createRoleWithPermissionsSchemaAnyOfFourType.js';
 
 export type CreateRoleWithPermissionsSchemaAnyOfFour = {
     /** A more detailed description of the custom role and what use it's intended for */
@@ -13,6 +13,6 @@ export type CreateRoleWithPermissionsSchemaAnyOfFour = {
     name: string;
     /** A list of permissions assigned to this role */
     permissions?: CreateRoleWithPermissionsSchemaAnyOfFourPermissionsItem[];
-    /** [Custom project roles](https://docs.getunleash.io/reference/rbac#custom-project-roles) contain a specific set of permissions for project resources. */
+    /** [Custom project roles](https://docs.getunleash.io/concepts/rbac#custom-project-roles) contain a specific set of permissions for project resources. */
     type?: CreateRoleWithPermissionsSchemaAnyOfFourType;
 };

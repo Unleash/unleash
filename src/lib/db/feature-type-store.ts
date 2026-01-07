@@ -1,9 +1,9 @@
-import type { Logger, LogProvider } from '../logger';
+import type { LogProvider } from '../logger.js';
 import type {
     IFeatureType,
     IFeatureTypeStore,
-} from '../types/stores/feature-type-store';
-import type { Db } from './db';
+} from '../types/stores/feature-type-store.js';
+import type { Db } from './db.js';
 
 const COLUMNS = ['id', 'name', 'description', 'lifetime_days'];
 const TABLE = 'feature_types';
@@ -18,11 +18,8 @@ interface IFeatureTypeRow {
 class FeatureTypeStore implements IFeatureTypeStore {
     private db: Db;
 
-    private logger: Logger;
-
-    constructor(db: Db, getLogger: LogProvider) {
+    constructor(db: Db, _getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('feature-type-store.ts');
     }
 
     async getAll(): Promise<IFeatureType[]> {
@@ -85,4 +82,3 @@ class FeatureTypeStore implements IFeatureTypeStore {
     }
 }
 export default FeatureTypeStore;
-module.exports = FeatureTypeStore;

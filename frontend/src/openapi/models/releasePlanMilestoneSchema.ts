@@ -3,7 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReleasePlanMilestoneStrategySchema } from './releasePlanMilestoneStrategySchema';
+import type { ReleasePlanMilestoneStrategySchema } from './releasePlanMilestoneStrategySchema.js';
+import type { ReleasePlanMilestoneSchemaTransitionCondition } from './releasePlanMilestoneSchemaTransitionCondition.js';
 
 /**
  * Schema representing the creation of a release plan milestone.
@@ -15,10 +16,30 @@ export interface ReleasePlanMilestoneSchema {
     id: string;
     /** The name of the milestone. */
     name: string;
+    /**
+     * The date and time when the milestone was paused.
+     * @nullable
+     */
+    pausedAt?: string | null;
+    /**
+     * The date and time when the milestone progression was executed.
+     * @nullable
+     */
+    progressionExecutedAt?: string | null;
     /** The ID of the release plan/template that this milestone belongs to. */
     releasePlanDefinitionId: string;
     /** The order of the milestone in the release plan. */
     sortOrder: number;
+    /**
+     * The date and time when the milestone was started.
+     * @nullable
+     */
+    startedAt?: string | null;
     /** A list of strategies that are attached to this milestone. */
     strategies?: ReleasePlanMilestoneStrategySchema[];
+    /**
+     * The condition configuration for the transition
+     * @nullable
+     */
+    transitionCondition?: ReleasePlanMilestoneSchemaTransitionCondition;
 }

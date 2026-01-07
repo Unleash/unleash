@@ -2,13 +2,13 @@ import type { Tick } from 'chart.js';
 
 export const formatTickValue = (
     tickValue: string | number,
-    index: number,
-    ticks: Tick[],
+    _index: number,
+    _ticks: Tick[],
 ) => {
     if (typeof tickValue === 'string') {
         return tickValue;
     }
-    const value = Number.parseInt(tickValue.toString());
+    const value = Number.parseInt(tickValue.toString(), 10);
     if (value > 999999) {
         return `${value / 1000000}M`;
     }

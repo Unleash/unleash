@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { LicenseCheckSchemaMessageType } from './licenseCheckSchemaMessageType.js';
 
 /**
  * A model representing a license check response.
@@ -12,4 +13,6 @@ export interface LicenseCheckSchema {
     isValid: boolean;
     /** Message describing the current state of the Unleash license */
     message?: string;
+    /** Type of messages, whether it is an informative or a warning */
+    messageType?: LicenseCheckSchemaMessageType;
 }

@@ -15,7 +15,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
 import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
-import { LinkField } from '../LinkField/LinkField';
+import { LinkField } from '../LinkField/LinkField.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
@@ -135,7 +135,7 @@ export const InviteLink: FC<IInviteLinkProps> = () => {
             loading={loading || isSending}
             title={isUpdating ? 'Update invite link' : 'Create invite link'}
             description='When you send an invite link to someone, they will be able to create an account and get access to Unleash. This new user will only have read access, until you change their assigned role.'
-            documentationLink='https://docs.getunleash.io/reference/public-signup'
+            documentationLink='https://docs.getunleash.io/concepts/public-signup'
             documentationLinkLabel='Invite link documentation'
             formatApiCode={formatApiCode}
         >

@@ -1,11 +1,11 @@
-import NotFoundError from '../../lib/error/notfound-error';
+import NotFoundError from '../../lib/error/notfound-error.js';
 import type {
     IResetQuery,
     IResetToken,
     IResetTokenCreate,
     IResetTokenQuery,
     IResetTokenStore,
-} from '../../lib/types/stores/reset-token-store';
+} from '../../lib/types/stores/reset-token-store.js';
 
 export default class FakeResetTokenStore implements IResetTokenStore {
     data: IResetToken[];
@@ -27,7 +27,7 @@ export default class FakeResetTokenStore implements IResetTokenStore {
             userId: newToken.user_id,
             token: newToken.reset_token,
             expiresAt: newToken.expires_at,
-            createdBy: newToken.created_by,
+            createdBy: newToken.created_by || 'system-user',
             createdAt: new Date(),
         };
         this.data.push(token);
@@ -72,7 +72,11 @@ export default class FakeResetTokenStore implements IResetTokenStore {
     }
 
     async get(token: string): Promise<IResetToken> {
-        return this.data.find((t) => t.token === token);
+        const foundToken = this.data.find((t) => t.token === token);
+        if (foundToken === undefined) {
+            throw new NotFoundError('Could find token');
+        }
+        return Promise.resolve(foundToken);
     }
 
     async getActiveTokens(): Promise<IResetToken[]> {
@@ -85,11 +89,11 @@ export default class FakeResetTokenStore implements IResetTokenStore {
     }
 
     async useToken(token: IResetQuery): Promise<boolean> {
-        if (this.exists(token.token)) {
+        if (await this.exists(token.token)) {
             const d = this.data.find(
                 (t) => t.usedAt === null && t.token === token.token,
             );
-            d.usedAt = new Date();
+            d!!.usedAt = new Date();
             return true;
         }
         return false;

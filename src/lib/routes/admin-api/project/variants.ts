@@ -1,26 +1,24 @@
-import type FeatureToggleService from '../../../features/feature-toggle/feature-toggle-service';
-import type { Logger } from '../../../logger';
-import Controller from '../../controller';
-import type { IUnleashConfig } from '../../../types/option';
-import type { IUnleashServices } from '../../../types';
+import type { FeatureToggleService } from '../../../features/feature-toggle/feature-toggle-service.js';
+import type { Logger } from '../../../logger.js';
+import Controller from '../../controller.js';
+import type { IUnleashConfig } from '../../../types/option.js';
+import type { IUnleashServices } from '../../../services/index.js';
 import type { Request, Response } from 'express';
 import type { Operation } from 'fast-json-patch';
 import {
     NONE,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
-    UPDATE_FEATURE_VARIANTS,
-} from '../../../types/permissions';
-import { type IVariant, WeightType } from '../../../types/model';
-import { extractUsername } from '../../../util/extract-user';
-import type { IAuthRequest } from '../../unleash-types';
-import type { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-schema';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import type { AccessService } from '../../../services';
-import { BadDataError, PermissionError } from '../../../../lib/error';
-import type { IUser } from '../../../server-impl';
-import type { PushVariantsSchema } from '../../../openapi/spec/push-variants-schema';
-import { getStandardResponses } from '../../../openapi';
+} from '../../../types/permissions.js';
+import { type IVariant, WeightType } from '../../../types/model.js';
+import type { IAuthRequest } from '../../unleash-types.js';
+import type { FeatureVariantsSchema } from '../../../openapi/spec/feature-variants-schema.js';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema.js';
+import type { AccessService } from '../../../services/index.js';
+import { BadDataError, PermissionError } from '../../../../lib/error/index.js';
+import type { IUser } from '../../../types/index.js';
+import type { PushVariantsSchema } from '../../../openapi/spec/push-variants-schema.js';
+import { getStandardResponses } from '../../../openapi/index.js';
 
 const PREFIX = '/:projectId/features/:featureName/variants';
 const ENV_PREFIX =
@@ -59,75 +57,6 @@ export default class VariantsController extends Controller {
         this.logger = config.getLogger('admin-api/project/variants.ts');
         this.featureService = featureToggleService;
         this.accessService = accessService;
-        this.route({
-            method: 'get',
-            path: PREFIX,
-            permission: NONE,
-            handler: this.getVariants,
-            middleware: [
-                openApiService.validPath({
-                    summary: 'Retrieve variants for a feature (deprecated) ',
-                    description:
-                        '(deprecated from 4.21) Retrieve the variants for the specified feature. From Unleash 4.21 onwards, this endpoint will attempt to choose a [production-type environment](https://docs.getunleash.io/reference/environments) as the source of truth. If more than one production environment is found, the first one will be used.',
-                    deprecated: true,
-                    tags: ['Features'],
-                    operationId: 'getFeatureVariants',
-                    responses: {
-                        200: createResponseSchema('featureVariantsSchema'),
-                        ...getStandardResponses(401, 403, 404),
-                    },
-                }),
-            ],
-        });
-        this.route({
-            method: 'patch',
-            path: PREFIX,
-            permission: UPDATE_FEATURE_VARIANTS,
-            handler: this.patchVariants,
-            middleware: [
-                openApiService.validPath({
-                    summary:
-                        "Apply a patch to a feature's variants (in all environments).",
-                    description: `Apply a list of patches patch to the specified feature's variants. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).
-
-⚠️ **Warning**: This method is not atomic. If something fails in the middle of applying the patch, you can be left with a half-applied patch. We recommend that you instead [patch variants on a per-environment basis](/docs/reference/api/unleash/patch-environments-feature-variants.api.mdx), which **is** an atomic operation.`,
-                    tags: ['Features'],
-                    operationId: 'patchFeatureVariants',
-                    requestBody: createRequestSchema('patchesSchema'),
-                    responses: {
-                        200: createResponseSchema('featureVariantsSchema'),
-                        ...getStandardResponses(400, 401, 403, 404),
-                    },
-                }),
-            ],
-        });
-        this.route({
-            method: 'put',
-            path: PREFIX,
-            permission: UPDATE_FEATURE_VARIANTS,
-            handler: this.overwriteVariants,
-            middleware: [
-                openApiService.validPath({
-                    summary:
-                        'Create (overwrite) variants for a feature flag in all environments',
-                    description: `This overwrites the current variants for the feature specified in the :featureName parameter in all environments.
-
-The backend will validate the input for the following invariants
-
-* If there are variants, there needs to be at least one variant with \`weightType: variable\`
-* The sum of the weights of variants with \`weightType: fix\` must be strictly less than 1000 (< 1000)
-
-The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
-                    tags: ['Features'],
-                    operationId: 'overwriteFeatureVariants',
-                    requestBody: createRequestSchema('variantsSchema'),
-                    responses: {
-                        200: createResponseSchema('featureVariantsSchema'),
-                        ...getStandardResponses(400, 401, 403, 404),
-                    },
-                }),
-            ],
-        });
         this.route({
             method: 'get',
             path: ENV_PREFIX,
@@ -212,56 +141,6 @@ The backend will also distribute remaining weight up to 1000 after adding the va
                     },
                 }),
             ],
-        });
-    }
-
-    /**
-     * @deprecated - Variants should be fetched from featureService.getVariantsForEnv (since variants are now; since 4.18, connected to environments)
-     * @param req
-     * @param res
-     */
-    async getVariants(
-        req: Request<FeatureParams, any, any, any>,
-        res: Response<FeatureVariantsSchema>,
-    ): Promise<void> {
-        const { featureName } = req.params;
-        const variants = await this.featureService.getVariants(featureName);
-        res.status(200).json({ version: 1, variants: variants || [] });
-    }
-
-    async patchVariants(
-        req: IAuthRequest<FeatureParams, any, Operation[]>,
-        res: Response<FeatureVariantsSchema>,
-    ): Promise<void> {
-        const { projectId, featureName } = req.params;
-        const updatedFeature = await this.featureService.updateVariants(
-            featureName,
-            projectId,
-            req.body,
-            req.user,
-            req.audit,
-        );
-        res.status(200).json({
-            version: 1,
-            variants: updatedFeature.variants || [],
-        });
-    }
-
-    async overwriteVariants(
-        req: IAuthRequest<FeatureParams, any, IVariant[], any>,
-        res: Response<FeatureVariantsSchema>,
-    ): Promise<void> {
-        const { projectId, featureName } = req.params;
-        const userName = extractUsername(req);
-        const updatedFeature = await this.featureService.saveVariants(
-            featureName,
-            projectId,
-            req.body,
-            req.audit,
-        );
-        res.status(200).json({
-            version: 1,
-            variants: updatedFeature.variants || [],
         });
     }
 

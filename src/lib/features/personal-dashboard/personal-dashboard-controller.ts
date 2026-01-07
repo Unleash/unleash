@@ -1,24 +1,23 @@
 import {
     type IUnleashConfig,
-    type IUnleashServices,
     NONE,
     serializeDates,
-} from '../../types';
-import type { OpenApiService } from '../../services';
+} from '../../types/index.js';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import {
     createResponseSchema,
     getStandardResponses,
     personalDashboardSchema,
     type PersonalDashboardSchema,
-} from '../../openapi';
-import Controller from '../../routes/controller';
+} from '../../openapi/index.js';
+import Controller from '../../routes/controller.js';
 import type { Response } from 'express';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import type { PersonalDashboardService } from './personal-dashboard-service';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import type { PersonalDashboardService } from './personal-dashboard-service.js';
 import {
     personalDashboardProjectDetailsSchema,
     type PersonalDashboardProjectDetailsSchema,
-} from '../../openapi/spec/personal-dashboard-project-details-schema';
+} from '../../openapi/spec/personal-dashboard-project-details-schema.js';
 
 export default class PersonalDashboardController extends Controller {
     private openApiService: OpenApiService;

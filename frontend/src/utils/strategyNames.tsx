@@ -1,7 +1,6 @@
 import type { FC, SVGProps } from 'react';
 import { SvgIcon, useTheme } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PeopleIcon from '@mui/icons-material/People';
 import LanguageIcon from '@mui/icons-material/Language';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import CodeIcon from '@mui/icons-material/Code';
@@ -28,8 +27,6 @@ export const getFeatureStrategyIcon = (strategyName?: string) => {
             return LanguageIcon;
         case 'flexibleRollout':
             return RolloutSvgIcon;
-        case 'userWithId':
-            return PeopleIcon;
         case 'applicationHostname':
             return LocationOnIcon;
         case 'releasePlanTemplate':
@@ -47,7 +44,6 @@ export const BuiltInStrategies = [
     'gradualRolloutSessionId',
     'gradualRolloutUserId',
     'remoteAddress',
-    'userWithId',
 ];
 
 export const GetFeatureStrategyIcon: FC<{ strategyName: string }> = ({
@@ -66,5 +62,4 @@ export const formattedStrategyNames: Record<string, string> = {
     gradualRolloutSessionId: 'Sessions',
     gradualRolloutUserId: 'Users',
     remoteAddress: 'IPs',
-    userWithId: 'UserIDs',
 };

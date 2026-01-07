@@ -1,4 +1,4 @@
-import type { IConstraint } from './strategy';
+import type { IConstraint } from './strategy.js';
 
 export interface ISegment {
     id: number;

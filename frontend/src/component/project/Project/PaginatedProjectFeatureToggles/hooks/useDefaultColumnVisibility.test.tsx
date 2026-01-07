@@ -1,6 +1,6 @@
 import theme from 'themes/theme';
 import { screen } from '@testing-library/react';
-import { useDefaultColumnVisibility } from './useDefaultColumnVisibility';
+import { useDefaultColumnVisibility } from './useDefaultColumnVisibility.ts';
 import { render } from 'utils/testRenderer';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { resizeScreen } from 'utils/resizeScreen';
@@ -34,22 +34,21 @@ const TestComponent: React.FC = () => {
     );
 };
 
-test.each(Object.keys(theme.breakpoints.values))(
-    'it renders all envs on %s screens',
-    (screenSize) => {
-        resizeScreen(
-            theme.breakpoints.values[
-                screenSize as keyof typeof theme.breakpoints.values
-            ] + 1,
-        );
-        render(<TestComponent />);
+test.each(
+    Object.keys(theme.breakpoints.values),
+)('it renders all envs on %s screens', (screenSize) => {
+    resizeScreen(
+        theme.breakpoints.values[
+            screenSize as keyof typeof theme.breakpoints.values
+        ] + 1,
+    );
+    render(<TestComponent />);
 
-        const allEnvs = columnIds.filter((column) =>
-            column.startsWith('environment:'),
-        );
+    const allEnvs = columnIds.filter((column) =>
+        column.startsWith('environment:'),
+    );
 
-        for (const env of allEnvs) {
-            screen.getByText(env);
-        }
-    },
-);
+    for (const env of allEnvs) {
+        screen.getByText(env);
+    }
+});

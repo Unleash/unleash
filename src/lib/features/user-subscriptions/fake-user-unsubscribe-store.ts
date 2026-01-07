@@ -1,4 +1,4 @@
-import type { IUserUnsubscribeStore } from './user-unsubscribe-store-type';
+import type { IUserUnsubscribeStore } from './user-unsubscribe-store-type.js';
 
 export class FakeUserUnsubscribeStore implements IUserUnsubscribeStore {
     async insert() {}

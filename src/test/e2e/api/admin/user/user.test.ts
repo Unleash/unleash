@@ -1,9 +1,9 @@
-import dbInit, { type ITestDb } from '../../../helpers/database-init';
-import getLogger from '../../../../fixtures/no-logger';
+import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
+import getLogger from '../../../../fixtures/no-logger.js';
 import {
     type IUnleashTest,
     setupAppWithAuth,
-} from '../../../helpers/test-helper';
+} from '../../../helpers/test-helper.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

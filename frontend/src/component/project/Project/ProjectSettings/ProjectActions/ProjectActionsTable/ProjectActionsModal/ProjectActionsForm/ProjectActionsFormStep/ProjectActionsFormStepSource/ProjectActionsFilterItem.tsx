@@ -5,26 +5,25 @@ import {
     Tooltip,
     styled,
 } from '@mui/material';
-import type { ActionsFilterState } from '../../useProjectActionsForm';
+import type { ActionsFilterState } from '../../useProjectActionsForm.ts';
 import Delete from '@mui/icons-material/Delete';
 import Input from 'component/common/Input/Input';
-import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
-import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect';
+import { ProjectActionsFormItem } from '../ProjectActionsFormItem.tsx';
 import {
-    type Operator,
-    allOperators,
-    dateOperators,
     inOperators,
+    isStringOperator,
+    numOperators,
+    type Operator,
+    semVerOperators,
     stringOperators,
 } from 'constants/operators';
 import { useEffect, useState } from 'react';
-import { oneOf } from 'utils/oneOf';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { CaseSensitiveButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton';
-import { InvertedOperatorButton } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton';
-import { ResolveInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/ResolveInput/ResolveInput';
-import { useConstraintInput } from 'component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditBody/useConstraintInput/useConstraintInput';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { CaseSensitiveButton } from './StyledToggleButton/CaseSensitiveButton/CaseSensitiveButton.tsx';
+import { InvertedOperatorButton } from './StyledToggleButton/InvertedOperatorButton/InvertedOperatorButton.tsx';
+import { constraintValidator } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/useEditableConstraint/constraint-validator.ts';
+import { ResolveInput } from './ProjectActionsFilterItemInputs/ResolveInput.tsx';
+import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 
 const StyledDeleteButton = styled(IconButton)({
     marginRight: '-6px',
@@ -77,7 +76,7 @@ const StyledInputContainer = styled('div')({
     flex: 1,
 });
 
-const StyledInput = styled(Input)({
+const _StyledInput = styled(Input)({
     width: '100%',
 });
 
@@ -132,27 +131,30 @@ export const ProjectActionsFilterItem = ({
         </>
     );
 
-    // Adapted from `/frontend/src/component/common/NewConstraintAccordion/ConstraintAccordionEdit/ConstraintAccordionEditHeader/ConstraintAccordionEditHeader.tsx`
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
 
-    const caseInsensitiveInOperators = useUiFlag('caseInsensitiveInOperators');
+    const validOperators = [
+        ...inOperators,
+        ...stringOperators,
+        ...numOperators,
+        ...semVerOperators,
+    ];
 
-    const validOperators = allOperators.filter(
-        (operator) => !oneOf(dateOperators, operator),
-    );
-
-    const { input, validator, setError, error } = useConstraintInput({
-        contextDefinition: { legalValues: [] },
-        localConstraint: { operator, value, values },
-    });
+    const [error, setError] = useState('');
+    const validator = constraintValidator(operator);
 
     const validate = () => {
         stateChanged({
             ...filter,
             error: undefined,
         });
-        const [typeValidatorResult, err] = validator();
+
+        if (value === undefined && values === undefined) {
+            return;
+        }
+        const validatorArgs = values ? values : [value || ''];
+        const [typeValidatorResult, err] = validator(...validatorArgs);
         if (!typeValidatorResult) {
             setError(err);
             stateChanged({
@@ -167,21 +169,15 @@ export const ProjectActionsFilterItem = ({
     }, [value, error]);
 
     useEffect(() => {
-        if (
-            oneOf(stringOperators, operator) ||
-            (oneOf(inOperators, operator) && caseInsensitiveInOperators)
-        ) {
+        if (isStringOperator(operator)) {
             setShowCaseSensitiveButton(true);
         } else {
             setShowCaseSensitiveButton(false);
         }
-    }, [operator, caseInsensitiveInOperators]);
+    }, [operator]);
 
     const onOperatorChange = (operator: Operator) => {
-        if (
-            oneOf(stringOperators, operator) ||
-            (oneOf(inOperators, operator) && caseInsensitiveInOperators)
-        ) {
+        if (isStringOperator(operator)) {
             setShowCaseSensitiveButton(true);
         } else {
             setShowCaseSensitiveButton(false);
@@ -280,15 +276,11 @@ export const ProjectActionsFilterItem = ({
                 <StyledResolveInputWrapper>
                     <ResolveInput
                         setValues={setValues}
-                        setValuesWithRecord={setValues}
                         setValue={setValue}
                         setError={setError}
                         localConstraint={{ value, values }}
-                        constraintValues={values || []}
-                        constraintValue={value || ''}
-                        input={input}
+                        operator={operator}
                         error={error}
-                        contextDefinition={{ legalValues: [] }}
                         removeValue={removeValue}
                     />
                 </StyledResolveInputWrapper>

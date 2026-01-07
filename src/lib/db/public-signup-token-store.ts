@@ -1,13 +1,13 @@
 import type { EventEmitter } from 'events';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
-import type { Logger, LogProvider } from '../logger';
-import NotFoundError from '../error/notfound-error';
-import type { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema';
-import type { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store';
-import type { UserSchema } from '../openapi/spec/user-schema';
-import type { IPublicSignupTokenCreate } from '../types/models/public-signup-token';
-import type { Db } from './db';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
+import type { LogProvider } from '../logger.js';
+import NotFoundError from '../error/notfound-error.js';
+import type { PublicSignupTokenSchema } from '../openapi/spec/public-signup-token-schema.js';
+import type { IPublicSignupTokenStore } from '../types/stores/public-signup-token-store.js';
+import type { UserSchema } from '../openapi/spec/user-schema.js';
+import type { IPublicSignupTokenCreate } from '../types/models/public-signup-token.js';
+import type { Db } from './db.js';
 
 const TABLE = 'public_signup_tokens';
 const TOKEN_USERS_TABLE = 'public_signup_tokens_user';
@@ -87,15 +87,12 @@ const toTokens = (rows: any[]): PublicSignupTokenSchema[] => {
 };
 
 export class PublicSignupTokenStore implements IPublicSignupTokenStore {
-    private logger: Logger;
-
     private timer: Function;
 
     private db: Db;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, _getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('public-signup-tokens.js');
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'public-signup-tokens',
@@ -153,6 +150,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
         newToken: IPublicSignupTokenCreate,
     ): Promise<PublicSignupTokenSchema> {
         const response = await this.db<ITokenRow>(TABLE).insert(
+            // @ts-expect-error - knex expects us to return a DbRecordArr<OurType>, we return OurType, which works fine.
             toRow(newToken),
             ['secret'],
         );

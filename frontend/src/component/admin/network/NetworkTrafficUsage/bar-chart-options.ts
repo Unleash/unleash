@@ -6,6 +6,7 @@ export const createBarChartOptions = (
     theme: Theme,
     tooltipTitleCallback: (tooltipItems: any) => string,
     includedTraffic?: number,
+    showAverageDaily?: boolean,
 ): ChartOptions<'bar'> => ({
     plugins: {
         annotation: {
@@ -18,7 +19,7 @@ export const createBarChartOptions = (
                     yMax: includedTraffic ? includedTraffic / 30 : 0,
                     borderColor: 'gray',
                     borderWidth: 1,
-                    display: !!includedTraffic,
+                    display: !!includedTraffic && !!showAverageDaily,
 
                     label: {
                         backgroundColor: 'rgba(192, 192, 192,  0.8)',

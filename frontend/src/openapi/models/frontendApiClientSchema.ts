@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FrontendApiClientSchemaStarted } from './frontendApiClientSchemaStarted';
+import type { FrontendApiClientSchemaStarted } from './frontendApiClientSchemaStarted.js';
 
 /**
  * Frontend SDK client registration information

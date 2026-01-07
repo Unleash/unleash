@@ -1,6 +1,6 @@
 import helmet from 'helmet';
 import type { RequestHandler } from 'express';
-import type { IUnleashConfig } from '../types';
+import type { IUnleashConfig } from '../types/index.js';
 import { hoursToSeconds } from 'date-fns';
 
 const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
@@ -60,9 +60,12 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'gravatar.com',
                         'europe-west3-metrics-304612.cloudfunctions.net',
                         'app.unleash-hosted.com',
+                        'hosted.edge.getunleash.io',
                         ...config.additionalCspAllowedDomains.connectSrc,
                     ],
                     mediaSrc: [
+                        "'self'",
+                        'cdn.getunleash.io',
                         '*.youtube.com',
                         '*.youtube-nocookie.com',
                         ...config.additionalCspAllowedDomains.mediaSrc,
@@ -134,7 +137,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
             }
         };
     }
-    return (req, res, next) => {
+    return (_req, _res, next) => {
         next();
     };
 };

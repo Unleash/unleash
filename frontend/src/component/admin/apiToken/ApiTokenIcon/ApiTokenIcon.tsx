@@ -16,7 +16,7 @@ export const isOrphanedToken = ({
     project,
     projects,
 }: IApiTokenIconProps): boolean => {
-    const tokenFormat = secret?.includes(':') ? 'v2' : 'v1'; // see https://docs.getunleash.io/reference/api-tokens-and-client-keys#format
+    const tokenFormat = secret?.includes(':') ? 'v2' : 'v1'; // see https://docs.getunleash.io/concepts/api-tokens-and-client-keys#format
     const isWildcardSecret = secret?.startsWith('*:');
     const hasProjects =
         (projects && projects?.length > 1) ||

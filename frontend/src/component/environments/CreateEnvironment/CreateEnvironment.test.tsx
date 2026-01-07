@@ -1,15 +1,18 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { testServerRoute, testServerSetup } from '../../../utils/testServer';
-import CreateEnvironment from './CreateEnvironment';
-import { ADMIN } from '../../providers/AccessProvider/permissions';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import CreateEnvironment from './CreateEnvironment.tsx';
+import { ADMIN } from '../../providers/AccessProvider/permissions.ts';
 
 const server = testServerSetup();
 
 const setupApi = ({
     limit,
     environments,
-}: { limit: number; environments: number }) => {
+}: {
+    limit: number;
+    environments: number;
+}) => {
     testServerRoute(server, '/api/admin/ui-config', {
         resourceLimits: {
             environments: limit,
@@ -31,7 +34,7 @@ test('show limit reached info', async () => {
     const createButton = await screen.findByText('Create environment', {
         selector: 'button',
     });
-    expect(createButton).toBeDisabled();
+    expect(createButton).toHaveAttribute('aria-disabled', 'true');
 });
 
 test('show approaching limit info', async () => {

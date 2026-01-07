@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import EventDiff from 'component/events/EventDiff/EventDiff';
+import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import type { IFeatureVariant } from 'interfaces/featureToggle';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
@@ -31,7 +31,6 @@ export const VariantDiff = ({ preData, data }: IDiffProps) => (
                 preData: variantsArrayToObject(preData),
                 data: variantsArrayToObject(data),
             }}
-            sort={(a, b) => a.index - b.index}
         />
     </StyledCodeSection>
 );

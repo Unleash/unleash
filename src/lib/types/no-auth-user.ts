@@ -1,5 +1,5 @@
-import { ADMIN } from './permissions';
-import type { IUser } from './user';
+import { ADMIN } from './permissions.js';
+import type { IUser } from './user.js';
 export default class NoAuthUser implements IUser {
     isAPI: boolean;
 

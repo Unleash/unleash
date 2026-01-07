@@ -1,18 +1,13 @@
-import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import type { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
-import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
+import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo.tsx';
 import { styled } from '@mui/system';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { ConstraintAccordionViewActions } from '../../ConstraintAccordionViewActions/ConstraintAccordionViewActions.tsx';
 
 interface IConstraintAccordionViewHeaderProps {
     constraint: IConstraint;
-    onDelete?: () => void;
-    onEdit?: () => void;
-    singleValue: boolean;
+    onUse?: () => void;
     expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
-    compact?: boolean;
     disabled?: boolean;
 }
 
@@ -29,36 +24,20 @@ const StyledContainer = styled('div')(({ theme }) => ({
 
 export const ConstraintAccordionViewHeader = ({
     constraint,
-    onEdit,
-    onDelete,
-    singleValue,
+    onUse,
     allowExpand,
     expanded,
-    compact,
     disabled,
 }: IConstraintAccordionViewHeaderProps) => {
-    const { context } = useUnleashContext();
-    const { contextName } = constraint;
-
-    const disableEdit = !context
-        .map((contextDefinition) => contextDefinition.name)
-        .includes(contextName);
-
     return (
         <StyledContainer>
-            <ConstraintIcon compact={compact} disabled={disabled} />
             <ConstraintAccordionViewHeaderInfo
                 constraint={constraint}
-                singleValue={singleValue}
                 allowExpand={allowExpand}
                 expanded={expanded}
                 disabled={disabled}
             />
-            <ConstraintAccordionHeaderActions
-                onEdit={onEdit}
-                onDelete={onDelete}
-                disableEdit={disableEdit}
-            />
+            {onUse ? <ConstraintAccordionViewActions onUse={onUse} /> : null}
         </StyledContainer>
     );
 };

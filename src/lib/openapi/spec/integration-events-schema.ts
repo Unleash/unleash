@@ -1,8 +1,8 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { eventSchema } from './event-schema';
-import { tagSchema } from './tag-schema';
-import { variantSchema } from './variant-schema';
-import { integrationEventSchema } from './integration-event-schema';
+import { eventSchema } from './event-schema.js';
+import { tagSchema } from './tag-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { integrationEventSchema } from './integration-event-schema.js';
 
 export const integrationEventsSchema = {
     $id: '#/components/schemas/integrationEventsSchema',

@@ -1,28 +1,23 @@
-import { Parser } from 'json2csv';
+import { Parser } from '@json2csv/plainjs';
 import type { Response } from 'express';
-import type { AuthedRequest } from '../../types/core';
-import type { IUnleashServices } from '../../types/services';
-import type { IUnleashConfig } from '../../types/option';
-import Controller from '../controller';
-import { NONE } from '../../types/permissions';
+import type { AuthedRequest } from '../../types/core.js';
+import type { IUnleashServices } from '../../services/index.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import Controller from '../controller.js';
+import { NONE } from '../../types/permissions.js';
 import type {
     InstanceStatsService,
     InstanceStatsSigned,
-} from '../../features/instance-stats/instance-stats-service';
-import type { OpenApiService } from '../../services/openapi-service';
+} from '../../features/instance-stats/instance-stats-service.js';
 import {
     createCsvResponseSchema,
     createResponseSchema,
-} from '../../openapi/util/create-response-schema';
-import type { InstanceAdminStatsSchema } from '../../openapi';
-import { serializeDates } from '../../types';
+} from '../../openapi/util/create-response-schema.js';
+import type { InstanceAdminStatsSchema } from '../../openapi/index.js';
+import { serializeDates } from '../../types/index.js';
 
 class InstanceAdminController extends Controller {
     private instanceStatsService: InstanceStatsService;
-
-    private openApiService: OpenApiService;
-
-    private jsonCsvParser: Parser;
 
     constructor(
         config: IUnleashConfig,
@@ -32,8 +27,7 @@ class InstanceAdminController extends Controller {
         }: Pick<IUnleashServices, 'instanceStatsService' | 'openApiService'>,
     ) {
         super(config);
-        this.jsonCsvParser = new Parser();
-        this.openApiService = openApiService;
+        const jsonCsvParser = new Parser();
         this.instanceStatsService = instanceStatsService;
 
         this.route({
@@ -51,9 +45,7 @@ class InstanceAdminController extends Controller {
                     responses: {
                         200: createCsvResponseSchema(
                             'instanceAdminStatsSchemaCsv',
-                            this.jsonCsvParser.parse(
-                                this.instanceStatsExample(),
-                            ),
+                            jsonCsvParser.parse(this.instanceStatsExample()),
                         ),
                     },
                 }),
@@ -75,7 +67,6 @@ class InstanceAdminController extends Controller {
                     responses: {
                         200: createResponseSchema('instanceAdminStatsSchema'),
                     },
-                    deprecated: true,
                 }),
             ],
         });
@@ -132,6 +123,13 @@ class InstanceAdminController extends Controller {
             maxEnvironmentStrategies: 20,
             maxConstraints: 17,
             maxConstraintValues: 123,
+            releaseTemplates: 3,
+            releasePlans: 5,
+            edgeInstanceUsage: {
+                '2022-06': 2.345,
+                '2022-07': 2.567,
+                '2022-08': 2.789,
+            },
         };
     }
 
@@ -157,7 +155,7 @@ class InstanceAdminController extends Controller {
 
     async getStatisticsCSV(
         _: AuthedRequest,
-        res: Response<InstanceAdminStatsSchema>,
+        res: Response<string>,
     ): Promise<void> {
         const instanceStats = await this.instanceStatsService.getSignedStats();
         const fileName = `unleash-${

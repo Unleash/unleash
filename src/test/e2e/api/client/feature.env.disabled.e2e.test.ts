@@ -1,11 +1,11 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import { type IUser, TEST_AUDIT_USER } from '../../../../lib/types';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../../../lib/util/constants.js';
+import { type IUser, TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -15,12 +15,10 @@ const userId = -9999;
 const projectId = 'default';
 
 beforeAll(async () => {
-    db = await dbInit('feature_env_api_client', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_env_api_client', getLogger);
     app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         projectId,
         {
             name: featureName,
@@ -29,7 +27,7 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await app.services.featureToggleServiceV2.createStrategy(
+    await app.services.featureToggleService.createStrategy(
         { name: 'default', constraints: [], parameters: {} },
         { projectId, featureName, environment: DEFAULT_ENV },
         TEST_AUDIT_USER,
@@ -43,10 +41,10 @@ afterAll(async () => {
 });
 
 test('returns feature flag for default env', async () => {
-    await app.services.featureToggleServiceV2.updateEnabled(
+    await app.services.featureToggleService.updateEnabled(
         'default',
         'feature.default.1',
-        'default',
+        DEFAULT_ENV,
         true,
         TEST_AUDIT_USER,
     );
@@ -64,12 +62,12 @@ test('returns feature flag for default env', async () => {
 
 test('returns feature flag for default env even if it is removed from project', async () => {
     await db.stores.featureEnvironmentStore.disconnectFeatures(
-        'default',
+        DEFAULT_ENV,
         'default',
     );
 
     await db.stores.featureEnvironmentStore.disconnectProject(
-        'default',
+        DEFAULT_ENV,
         'default',
     );
 

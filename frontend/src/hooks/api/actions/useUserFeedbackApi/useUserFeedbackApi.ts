@@ -1,4 +1,4 @@
-import type { ProvideFeedbackSchema } from '../../../../openapi';
+import type { ProvideFeedbackSchema } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const ENDPOINT = 'https://app.unleash-hosted.com/hosted/feedback';

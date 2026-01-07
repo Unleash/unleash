@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { IAutocompleteBoxOption } from '../../../common/AutocompleteBox/AutocompleteBox';
+import type { IAutocompleteBoxOption } from '../../../common/AutocompleteBox/AutocompleteBox.tsx';
 import type {
     AutocompleteRenderInputParams,
     AutocompleteRenderOptionState,

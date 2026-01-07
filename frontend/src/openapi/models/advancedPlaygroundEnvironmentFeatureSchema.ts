@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SdkFlatContextSchema } from './sdkFlatContextSchema';
-import type { AdvancedPlaygroundEnvironmentFeatureSchemaStrategies } from './advancedPlaygroundEnvironmentFeatureSchemaStrategies';
-import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariant } from './advancedPlaygroundEnvironmentFeatureSchemaVariant';
-import type { VariantSchema } from './variantSchema';
+import type { SdkFlatContextSchema } from './sdkFlatContextSchema.js';
+import type { AdvancedPlaygroundEnvironmentFeatureSchemaStrategies } from './advancedPlaygroundEnvironmentFeatureSchemaStrategies.js';
+import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariant } from './advancedPlaygroundEnvironmentFeatureSchemaVariant.js';
+import type { VariantSchema } from './variantSchema.js';
 
 /**
  * A simplified feature flag model intended for the Unleash playground.

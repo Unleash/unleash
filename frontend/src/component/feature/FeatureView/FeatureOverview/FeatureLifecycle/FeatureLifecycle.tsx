@@ -1,10 +1,11 @@
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon';
-import { FeatureLifecycleTooltip } from './FeatureLifecycleTooltip';
-import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';
-import { populateCurrentStage } from './populateCurrentStage';
+import { FeatureLifecycleTooltip } from './FeatureLifecycleTooltip.tsx';
+import { populateCurrentStage } from './populateCurrentStage.ts';
 import type { FC } from 'react';
 import type { Lifecycle } from 'interfaces/featureToggle';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { getFeatureLifecycleName } from 'component/common/FeatureLifecycle/getFeatureLifecycleName';
+import { Box } from '@mui/material';
+import { useUncomplete } from './useUncomplete.ts';
 
 export interface LifecycleFeature {
     lifecycle?: Lifecycle;
@@ -19,35 +20,35 @@ export interface LifecycleFeature {
 }
 
 export const FeatureLifecycle: FC<{
-    onArchive: () => void;
-    onComplete: () => void;
-    onUncomplete: () => void;
+    onArchive?: () => void;
+    onComplete?: () => void;
+    onUncomplete?: () => void;
     feature: LifecycleFeature;
-}> = ({ feature, onComplete, onUncomplete, onArchive }) => {
+    expanded?: boolean;
+}> = ({ feature, expanded, onComplete, onUncomplete, onArchive }) => {
     const currentStage = populateCurrentStage(feature);
-    const { markFeatureUncompleted, loading } = useFeatureLifecycleApi();
-    const { trackEvent } = usePlausibleTracker();
 
-    const onUncompleteHandler = async () => {
-        await markFeatureUncompleted(feature.name, feature.project);
-        onUncomplete();
-        trackEvent('feature-lifecycle', {
-            props: {
-                eventType: 'uncomplete',
-            },
-        });
-    };
+    const { onUncompleteHandler, loading } = useUncomplete({
+        feature: feature.name,
+        project: feature.project,
+        onChange: onUncomplete,
+    });
 
     return currentStage ? (
-        <FeatureLifecycleTooltip
-            stage={currentStage!}
-            project={feature.project}
-            onArchive={onArchive}
-            onComplete={onComplete}
-            onUncomplete={onUncompleteHandler}
-            loading={loading}
-        >
-            <FeatureLifecycleStageIcon stage={currentStage} />
-        </FeatureLifecycleTooltip>
+        <Box sx={(theme) => ({ display: 'flex', gap: theme.spacing(0.5) })}>
+            <FeatureLifecycleTooltip
+                stage={currentStage!}
+                project={feature.project}
+                onArchive={onArchive}
+                onComplete={onComplete}
+                onUncomplete={onUncomplete ? onUncompleteHandler : undefined}
+                loading={loading}
+            >
+                <FeatureLifecycleStageIcon stage={currentStage} />
+            </FeatureLifecycleTooltip>{' '}
+            <p>
+                {expanded ? getFeatureLifecycleName(currentStage.name) : null}
+            </p>
+        </Box>
     ) : null;
 };

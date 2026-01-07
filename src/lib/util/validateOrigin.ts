@@ -1,4 +1,7 @@
-export const validateOrigin = (origin: string): boolean => {
+export const validateOrigin = (origin: string | undefined): boolean => {
+    if (origin === undefined) {
+        return false;
+    }
     if (origin === '*') {
         return true;
     }
@@ -9,7 +12,7 @@ export const validateOrigin = (origin: string): boolean => {
 
     try {
         const parsed = new URL(origin);
-        return parsed.origin && parsed.origin === origin;
+        return typeof parsed.origin === 'string' && parsed.origin === origin;
     } catch {
         return false;
     }

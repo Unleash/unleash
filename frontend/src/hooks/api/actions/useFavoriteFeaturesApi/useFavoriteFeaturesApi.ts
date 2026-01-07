@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 export const useFavoriteFeaturesApi = () => {
     const { makeLightRequest, createRequest, errors, loading } = useAPI({

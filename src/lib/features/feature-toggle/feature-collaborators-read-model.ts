@@ -1,9 +1,9 @@
-import type { Db } from '../../db/db';
+import type { Db } from '../../db/db.js';
 import type {
     Collaborator,
     IFeatureCollaboratorsReadModel,
-} from './types/feature-collaborators-read-model-type';
-import { generateImageUrl } from '../../util';
+} from './types/feature-collaborators-read-model-type.js';
+import { generateImageUrl } from '../../util/index.js';
 
 export class FeatureCollaboratorsReadModel
     implements IFeatureCollaboratorsReadModel

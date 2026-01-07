@@ -1,10 +1,9 @@
 import { Knex } from 'knex';
 import type EventEmitter from 'events';
-import { v4 as uuidv4 } from 'uuid';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
-import type { Logger, LogProvider } from '../../logger';
-import NotFoundError from '../../error/notfound-error';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
+import type { LogProvider } from '../../logger.js';
+import NotFoundError from '../../error/notfound-error.js';
 import type {
     FeatureToggleWithEnvironment,
     IConstraint,
@@ -16,17 +15,21 @@ import type {
     IFlagResolver,
     IStrategyConfig,
     IStrategyVariant,
-    ITag,
     PartialDeep,
     PartialSome,
-} from '../../types';
-import FeatureToggleStore from './feature-toggle-store';
-import { ensureStringValue, generateImageUrl, mapValues } from '../../util';
-import type { IFeatureProjectUserParams } from './feature-toggle-controller';
-import type { Db } from '../../db/db';
+} from '../../types/index.js';
+import FeatureToggleStore from './feature-toggle-store.js';
+import {
+    ensureStringValue,
+    generateImageUrl,
+    mapValues,
+    randomId,
+} from '../../util/index.js';
+import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
+import type { Db } from '../../db/db.js';
 import { isAfter } from 'date-fns';
-import merge from 'deepmerge';
 import Raw = Knex.Raw;
+import type { ITag } from '../../tags/index.js';
 
 const COLUMNS = [
     'id',
@@ -153,55 +156,23 @@ function mapStrategyUpdate(
     return update;
 }
 
-function mergeAll<T>(objects: Partial<T>[]): T {
-    return merge.all<T>(objects.filter((i) => i));
-}
-
-const defaultParameters = (
-    params: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
-    stickiness: string,
-) => {
-    if (params.strategyName === 'flexibleRollout') {
-        return {
-            rollout: '100',
-            stickiness,
-            groupId: params.featureName,
-        };
-    } else {
-        /// We don't really have good defaults for the other kinds of known strategies, so return an empty map.
-        return {};
-    }
-};
-
-const parametersWithDefaults = (
-    params: PartialSome<IFeatureStrategy, 'id' | 'createdAt'>,
-    stickiness: string,
-) => {
-    return mergeAll([defaultParameters(params, stickiness), params.parameters]);
-};
 class FeatureStrategiesStore implements IFeatureStrategiesStore {
     private db: Db;
 
-    private logger: Logger;
-
     private readonly timer: Function;
-
-    private flagResolver: IFlagResolver;
 
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        getLogger: LogProvider,
-        flagResolver: IFlagResolver,
+        _getLogger: LogProvider,
+        _flagResolver: IFlagResolver,
     ) {
         this.db = db;
-        this.logger = getLogger('feature-toggle-strategies-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-toggle-strategies',
                 action,
             });
-        this.flagResolver = flagResolver;
     }
 
     async delete(key: string): Promise<void> {
@@ -244,7 +215,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             });
         return Number.isInteger(max) ? max + 1 : 0;
     }
-    private async getDefaultStickiness(projectName: string): Promise<string> {
+    async getDefaultStickiness(projectName: string): Promise<string> {
         const defaultFromDb = await this.db(T.projectSettings)
             .select('default_stickiness')
             .where('project', projectName)
@@ -260,15 +231,8 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 strategyConfig.featureName,
                 strategyConfig.environment,
             ));
-        const stickiness = await this.getDefaultStickiness(
-            strategyConfig.projectId,
-        );
-        strategyConfig.parameters = parametersWithDefaults(
-            strategyConfig,
-            stickiness,
-        );
         const strategyRow = mapInput({
-            id: uuidv4(),
+            id: randomId(),
             ...strategyConfig,
             sortOrder,
         });
@@ -308,6 +272,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             .select(COLUMNS)
             .from<IFeatureStrategiesTable>(T.featureStrategies)
             .whereIn('feature_name', features)
+            .andWhere('milestone_id', null)
             .orderBy('feature_name', 'asc');
         if (environment) {
             query.where('environment', environment);
@@ -921,6 +886,12 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         const rows = await this.db
             .select(this.prefixColumns())
             .from<IFeatureStrategiesTable>(T.featureStrategies)
+            .join(
+                T.features,
+                `${T.features}.name`,
+                `${T.featureStrategies}.feature_name`,
+            )
+            .where(`${T.features}.archived_at`, 'IS', null)
             .where(
                 this.db.raw(
                     "EXISTS (SELECT 1 FROM jsonb_array_elements(constraints) AS elem WHERE elem ->> 'contextName' = ?)",
@@ -956,6 +927,4 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return rows.length;
     }
 }
-
-module.exports = FeatureStrategiesStore;
 export default FeatureStrategiesStore;

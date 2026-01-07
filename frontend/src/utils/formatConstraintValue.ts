@@ -1,10 +1,10 @@
-import type { IConstraint } from 'interfaces/strategy';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import type { ILocationSettings } from 'hooks/useLocationSettings';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
+import type { ConstraintSchema } from 'openapi';
 
 export const formatConstraintValue = (
-    constraint: IConstraint,
+    constraint: Pick<ConstraintSchema, 'value' | 'contextName'>,
     locationSettings: ILocationSettings,
 ): string | undefined => {
     if (

@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-import type { Logger } from '../../lib/logger';
+import type { Logger } from '../../lib/logger.js';
 
 let muteError = false;
 let verbose = false;
-function noLoggerProvider(): Logger {
+export function noLoggerProvider(): Logger {
     // do something with the name
     return {
         debug: verbose ? console.log : () => {},
@@ -22,6 +22,4 @@ noLoggerProvider.setMuteError = (mute: boolean) => {
 noLoggerProvider.setVerbose = (beVerbose: boolean) => {
     verbose = beVerbose;
 };
-
-module.exports = noLoggerProvider;
 export default noLoggerProvider;

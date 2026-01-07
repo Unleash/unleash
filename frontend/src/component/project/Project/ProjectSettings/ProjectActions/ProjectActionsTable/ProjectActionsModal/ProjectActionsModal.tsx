@@ -11,8 +11,8 @@ import {
     type ActionSetPayload,
     useActionsApi,
 } from 'hooks/api/actions/useActionsApi/useActionsApi';
-import { ProjectActionsForm } from './ProjectActionsForm/ProjectActionsForm';
-import { useProjectActionsForm } from './ProjectActionsForm/useProjectActionsForm';
+import { ProjectActionsForm } from './ProjectActionsForm/ProjectActionsForm.tsx';
+import { useProjectActionsForm } from './ProjectActionsForm/useProjectActionsForm.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
@@ -181,7 +181,7 @@ export const ProjectActionsModal = ({
                 loading={loading}
                 modal
                 description='Actions allow you to configure automations based on specific signals, like the ones originated from signal endpoints.'
-                documentationLink='https://docs.getunleash.io/reference/actions'
+                documentationLink='https://docs.getunleash.io/concepts/actions'
                 documentationLinkLabel='Actions documentation'
                 formatApiCode={formatApiCode}
             >

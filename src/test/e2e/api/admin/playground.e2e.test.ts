@@ -1,22 +1,20 @@
 import fc, { type Arbitrary } from 'fast-check';
-import { clientFeature, clientFeatures } from '../../../arbitraries.test';
-import { generate as generateRequest } from '../../../../lib/openapi/spec/playground-request-schema.test';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import { clientFeature, clientFeatures } from '../../../arbitraries.test.js';
+import { generate as generateRequest } from '../../../../lib/openapi/spec/playground-request-schema.test.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import { type FeatureToggle, WeightType } from '../../../../lib/types/model';
-import getLogger from '../../../fixtures/no-logger';
-import {
-    ALL,
-    ApiTokenType,
-    type IApiToken,
-} from '../../../../lib/types/models/api-token';
-import type { PlaygroundFeatureSchema } from '../../../../lib/openapi/spec/playground-feature-schema';
-import type { ClientFeatureSchema } from '../../../../lib/openapi/spec/client-feature-schema';
-import type { PlaygroundResponseSchema } from '../../../../lib/openapi/spec/playground-response-schema';
-import type { PlaygroundRequestSchema } from '../../../../lib/openapi/spec/playground-request-schema';
+} from '../../helpers/test-helper.js';
+import { type FeatureToggle, WeightType } from '../../../../lib/types/model.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { ALL } from '../../../../lib/types/models/api-token.js';
+import { ApiTokenType, type IApiToken } from '../../../../lib/types/model.js';
+import type { PlaygroundFeatureSchema } from '../../../../lib/openapi/spec/playground-feature-schema.js';
+import type { ClientFeatureSchema } from '../../../../lib/openapi/spec/client-feature-schema.js';
+import type { PlaygroundResponseSchema } from '../../../../lib/openapi/spec/playground-response-schema.js';
+import type { PlaygroundRequestSchema } from '../../../../lib/openapi/spec/playground-request-schema.js';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -110,9 +108,9 @@ describe('Playground API E2E', () => {
                     feature.enabled,
                 );
 
-                await database.stores.featureToggleStore.saveVariants(
-                    feature.project!,
+                await database.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
                     feature.name,
+                    environment,
                     [
                         ...(feature.variants ?? []).map((variant) => ({
                             ...variant,
@@ -207,18 +205,17 @@ describe('Playground API E2E', () => {
                             request,
                         );
 
-                        switch (projects) {
-                            case ALL:
-                                // no features have been filtered out
-                                return body.features.length === features.length;
-                            case []:
-                                // no feature should be without a project
-                                return body.features.length === 0;
-                            default:
-                                // every feature should be in one of the prescribed projects
-                                return body.features.every((feature) =>
-                                    projects.includes(feature.projectId),
-                                );
+                        if (projects === ALL) {
+                            // no features have been filtered out
+                            return body.features.length === features.length;
+                        } else if (projects.length === 0) {
+                            // no feature should be without a project
+                            return body.features.length === 0;
+                        } else {
+                            // every feature should be in one of the prescribed projects
+                            return body.features.every((feature) =>
+                                projects.includes(feature.projectId),
+                            );
                         }
                     },
                 )
@@ -243,7 +240,7 @@ describe('Playground API E2E', () => {
                             token.secret,
                             {
                                 projects: ALL,
-                                environment: 'default',
+                                environment: DEFAULT_ENV,
                                 context: {
                                     appName: 'playground-test',
                                 },
@@ -290,14 +287,14 @@ describe('Playground API E2E', () => {
                     clientFeatures(),
                     fc.context(),
                     async (features, ctx) => {
-                        await seedDatabase(db, features, 'default');
+                        await seedDatabase(db, features, DEFAULT_ENV);
 
                         const body = await playgroundRequest(
                             app,
                             token.secret,
                             {
                                 projects: ALL,
-                                environment: 'default',
+                                environment: DEFAULT_ENV,
                                 context: {
                                     appName: 'playground-test',
                                 },
@@ -375,7 +372,7 @@ describe('Playground API E2E', () => {
                                 // one of the above values
                                 context: {
                                     appName: generatedAppName,
-                                    environment: 'default',
+                                    environment: DEFAULT_ENV,
                                 },
                             })),
                         constrainedFeatures(),
@@ -391,7 +388,7 @@ describe('Playground API E2E', () => {
                                 (acc, next) => ({
                                     ...acc,
                                     [next.name]:
-                                        // @ts-ignore
+                                        // @ts-expect-error
                                         next.strategies[0].constraints[0]
                                             .values[0] === req.context.appName,
                                 }),

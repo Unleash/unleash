@@ -1,4 +1,4 @@
-import type { IStrategyConfig } from '../types';
+import type { IStrategyConfig } from '../types/index.js';
 
 type SortableStrategy = Pick<IStrategyConfig, 'milestoneId' | 'sortOrder'>;
 

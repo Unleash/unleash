@@ -4,17 +4,13 @@ import type {
     ISegmentReadModel,
     IUnleashConfig,
     IUnleashStores,
-} from '../../types';
+} from '../../types/index.js';
 
-import type { Logger } from '../../logger';
-
-import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import type { ClientFeatureToggleDelta } from './delta/client-feature-toggle-delta';
-import type { ClientFeaturesDeltaSchema } from '../../openapi';
+import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import type { ClientFeatureToggleDelta } from './delta/client-feature-toggle-delta.js';
+import type { ClientFeaturesDeltaSchema } from '../../openapi/index.js';
 
 export class ClientFeatureToggleService {
-    private logger: Logger;
-
     private clientFeatureToggleStore: IFeatureToggleClientStore;
 
     private segmentReadModel: ISegmentReadModel;
@@ -27,9 +23,8 @@ export class ClientFeatureToggleService {
         }: Pick<IUnleashStores, 'clientFeatureToggleStore'>,
         segmentReadModel: ISegmentReadModel,
         clientFeatureToggleCache: ClientFeatureToggleDelta | null,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        _config: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     ) {
-        this.logger = getLogger('services/client-feature-toggle-service.ts');
         this.segmentReadModel = segmentReadModel;
         this.clientFeatureToggleDelta = clientFeatureToggleCache;
         this.clientFeatureToggleStore = clientFeatureToggleStore;

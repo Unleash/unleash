@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { Highlighter } from './Highlighter'; // adjust the import path accordingly
+import { Highlighter } from './Highlighter.tsx'; // adjust the import path accordingly
 
 test('renders children when there is no search term', () => {
     const { container } = render(<Highlighter>Test Text</Highlighter>);

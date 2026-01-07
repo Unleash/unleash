@@ -1,5 +1,5 @@
 ///<reference path="../../global.d.ts" />
-import { TOPICS } from '../../../src/component/demo/demo-topics';
+import { TOPICS } from '../../../src/component/demo/demo-topics.js';
 
 describe('demo', () => {
     const baseUrl = Cypress.config().baseUrl;
@@ -40,7 +40,6 @@ describe('demo', () => {
                     res.body.flags = {
                         ...res.body.flags,
                         demo: true,
-                        flagOverviewRedesign: true,
                     };
                 }
             });

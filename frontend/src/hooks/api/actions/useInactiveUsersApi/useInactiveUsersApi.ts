@@ -1,4 +1,4 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 export const DEL_INACTIVE_USERS_ERROR = 'delInactiveUsers';
 export const useInactiveUsersApi = () => {

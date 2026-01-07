@@ -1,8 +1,8 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback, useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import type { IApiToken } from '../useApiTokens/useApiTokens';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import type { IApiToken } from '../useApiTokens/useApiTokens.js';
 
 export const useProjectApiTokens = (
     project: string,

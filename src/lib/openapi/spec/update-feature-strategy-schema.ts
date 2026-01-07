@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { parametersSchema } from './parameters-schema';
-import { constraintSchema } from './constraint-schema';
+import { parametersSchema } from './parameters-schema.js';
+import { constraintSchema } from './constraint-schema.js';
 
 export const updateFeatureStrategySchema = {
     $id: '#/components/schemas/updateFeatureStrategySchema',
@@ -22,7 +22,7 @@ export const updateFeatureStrategySchema = {
                 $ref: '#/components/schemas/constraintSchema',
             },
             description:
-                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/activation-strategies#constraints',
+                'A list of the constraints attached to the strategy. See https://docs.getunleash.io/concepts/activation-strategies#constraints',
         },
         title: {
             type: 'string',
@@ -50,5 +50,6 @@ export const updateFeatureStrategySchema = {
 } as const;
 
 export type UpdateFeatureStrategySchema = FromSchema<
-    typeof updateFeatureStrategySchema
+    typeof updateFeatureStrategySchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

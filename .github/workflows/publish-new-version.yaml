@@ -14,10 +14,10 @@ on:
       version:
         description: What version number would you like to use? The version number should be **without** a leading `v`, e.g. `5.7.1` or `6.2.4`.
       bump-main:
-        description: Should we bump the package.json main version?
+        description: I'm releasing from a branch and want the version number backported to main
         required: true
         type: boolean
-        default: true
+        default: false
       is-latest-version:
         description: Is this the latest version? If latest we'll update the version function, docker and npm latest
         required: true
@@ -49,7 +49,7 @@ jobs:
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_PUSH_TOKEN }}
@@ -60,7 +60,7 @@ jobs:
           git config user.name "Github Actions Bot"
           git config user.email "<>"
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
@@ -114,7 +114,7 @@ jobs:
 
     steps:
       - name: checkout main branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 0
@@ -124,9 +124,9 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
       - name: Use Node js 20
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '22.x'
           cache: 'yarn'
       - name: upgrade package version
         run: |

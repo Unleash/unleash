@@ -1,6 +1,7 @@
-import type { IConstraint } from 'interfaces/strategy';
+import type { IConstraint, IConstraintWithId } from 'interfaces/strategy';
 import { useEffect, useState } from 'react';
 import { useSegmentValidation } from 'hooks/api/getters/useSegmentValidation/useSegmentValidation';
+import { constraintId } from 'constants/constraintId';
 
 export const useSegmentForm = (
     initialName = '',
@@ -11,8 +12,13 @@ export const useSegmentForm = (
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
     const [project, setProject] = useState<string | undefined>(initialProject);
-    const [constraints, setConstraints] =
-        useState<IConstraint[]>(initialConstraints);
+    const initialConstraintsWithId = initialConstraints.map((constraint) => ({
+        [constraintId]: crypto.randomUUID(),
+        ...constraint,
+    }));
+    const [constraints, setConstraints] = useState<IConstraintWithId[]>(
+        initialConstraintsWithId,
+    );
     const [errors, setErrors] = useState({});
     const nameError = useSegmentValidation(name, initialName);
 
@@ -29,7 +35,7 @@ export const useSegmentForm = (
     }, [initialProject]);
 
     useEffect(() => {
-        setConstraints(initialConstraints);
+        setConstraints(initialConstraintsWithId);
         // eslint-disable-next-line
     }, [JSON.stringify(initialConstraints)]);
 
@@ -61,7 +67,9 @@ export const useSegmentForm = (
         project,
         setProject,
         constraints,
-        setConstraints,
+        setConstraints: setConstraints as React.Dispatch<
+            React.SetStateAction<IConstraint[]>
+        >,
         getSegmentPayload,
         clearErrors,
         errors,

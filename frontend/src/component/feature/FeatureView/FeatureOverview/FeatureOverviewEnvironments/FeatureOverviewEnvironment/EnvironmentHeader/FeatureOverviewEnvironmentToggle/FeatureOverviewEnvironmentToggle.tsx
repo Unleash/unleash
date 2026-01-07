@@ -23,12 +23,17 @@ export const FeatureOverviewEnvironmentToggle = ({
 }: FeatureOverviewEnvironmentToggleProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { refetchFeature } = useFeature(projectId, featureId);
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
 
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
     const { onToggle: onFeatureToggle, modals: featureToggleModals } =
         useFeatureToggleSwitch(projectId);
+
+    const hasReleasePlans = Boolean(
+        feature.environments.find((env) => env.name === name)?.releasePlans
+            ?.length,
+    );
 
     const onToggle = (newState: boolean, onRollback: () => void) =>
         onFeatureToggle(newState, {
@@ -40,6 +45,7 @@ export const FeatureOverviewEnvironmentToggle = ({
             hasEnabledStrategies: strategies.some(
                 (strategy) => !strategy.disabled,
             ),
+            hasReleasePlans,
             isChangeRequestEnabled: isChangeRequestConfigured(name),
             onRollback,
             onSuccess: refetchFeature,

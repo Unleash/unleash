@@ -1,13 +1,13 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { parametersSchema } from './parameters-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { playgroundStrategySchema } from './playground-strategy-schema';
-import { playgroundConstraintSchema } from './playground-constraint-schema';
-import { playgroundSegmentSchema } from './playground-segment-schema';
-import { sdkContextSchema } from './sdk-context-schema';
-import { advancedPlaygroundEnvironmentFeatureSchema } from './advanced-playground-environment-feature-schema';
-import { sdkFlatContextSchema } from './sdk-flat-context-schema';
+import { parametersSchema } from './parameters-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { playgroundStrategySchema } from './playground-strategy-schema.js';
+import { playgroundConstraintSchema } from './playground-constraint-schema.js';
+import { playgroundSegmentSchema } from './playground-segment-schema.js';
+import { sdkContextSchema } from './sdk-context-schema.js';
+import { advancedPlaygroundEnvironmentFeatureSchema } from './advanced-playground-environment-feature-schema.js';
+import { sdkFlatContextSchema } from './sdk-flat-context-schema.js';
 
 export const advancedPlaygroundFeatureSchema = {
     $id: '#/components/schemas/advancedPlaygroundFeatureSchema',

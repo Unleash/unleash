@@ -1,14 +1,15 @@
-import type { ReactNode, VFC } from 'react';
+import type { VFC } from 'react';
 import { Link } from 'react-router-dom';
 import { Divider, Drawer, styled } from '@mui/material';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
-import type { INavigationMenuItem } from 'interfaces/route';
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/NavigationSidebar';
-import { NewInUnleash } from 'component/layout/MainLayout/NavigationSidebar/NewInUnleash/NewInUnleash';
+import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/MobileNavigationSidebar';
+import { LegacyNewInUnleash } from 'component/layout/MainLayout/NavigationSidebar/NewInUnleash/LegacyNewInUnleash.tsx';
+import { AdminMobileNavigation } from 'component/layout/MainLayout/AdminMenu/AdminNavigationItems';
+import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 
 const StyledDrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -26,25 +27,16 @@ interface IDrawerMenuProps {
     title?: string;
     open?: boolean;
     toggleDrawer: () => void;
-    links: Array<{
-        value: string;
-        icon: ReactNode;
-        href: string;
-        title: string;
-    }>;
-    routes: {
-        mainNavRoutes: INavigationMenuItem[];
-        mobileRoutes: INavigationMenuItem[];
-        adminRoutes: INavigationMenuItem[];
-    };
 }
 
 export const DrawerMenu: VFC<IDrawerMenuProps> = ({
-    links = [],
     open = false,
     toggleDrawer,
-    routes,
 }) => {
+    const { showOnlyAdminMenu } = useNewAdminMenu();
+    const onClick = () => {
+        toggleDrawer();
+    };
     return (
         <Drawer
             className={styles.drawer}
@@ -72,10 +64,14 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                     </Link>
                 </StyledDrawerHeader>
                 <Divider />
-                <MobileNavigationSidebar
-                    onClick={toggleDrawer}
-                    NewInUnleash={NewInUnleash}
-                />
+                {showOnlyAdminMenu ? (
+                    <AdminMobileNavigation onClick={onClick} />
+                ) : (
+                    <MobileNavigationSidebar
+                        onClick={toggleDrawer}
+                        NewInUnleash={LegacyNewInUnleash}
+                    />
+                )}
             </nav>
         </Drawer>
     );

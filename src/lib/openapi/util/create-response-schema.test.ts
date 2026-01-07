@@ -3,7 +3,7 @@ import {
     createResponseSchemas,
     schemaNamed,
     schemaTyped,
-} from './create-response-schema';
+} from './create-response-schema.js';
 
 test('createResponseSchema', () => {
     expect(createResponseSchema('schemaName')).toMatchInlineSnapshot(`

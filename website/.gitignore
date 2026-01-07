@@ -20,9 +20,10 @@ yarn-debug.log*
 yarn-error.log*
 
 # OpenAPI docusaurus generated stuff
-docs/reference/api/**/sidebar.ts
+docs/api/**/sidebar.ts
 *.api.mdx
 *.tag.mdx
+*.info.mdx
 
 # Yarn (https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored)
 .pnp.*

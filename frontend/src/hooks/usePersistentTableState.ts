@@ -3,7 +3,11 @@ import { useSearchParams } from 'react-router-dom';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { encodeQueryParams, useQueryParams } from 'use-query-params';
 import type { QueryParamConfigMap } from 'serialize-query-params/src/types';
-import { reorderObject } from '../utils/reorderObject';
+import { reorderObject } from '../utils/reorderObject.js';
+import {
+    isValidPaginationOption,
+    DEFAULT_PAGE_LIMIT,
+} from 'utils/paginationConfig';
 
 const usePersistentSearchParams = <T extends QueryParamConfigMap>(
     key: string,
@@ -34,7 +38,7 @@ const usePersistentSearchParams = <T extends QueryParamConfigMap>(
 export const usePersistentTableState = <T extends QueryParamConfigMap>(
     key: string,
     queryParamsDefinition: T,
-    excludedFromStorage: string[] = ['offset'],
+    excludedFromStorage: (keyof T)[] = ['offset'],
 ) => {
     const updateStoredParams = usePersistentSearchParams(
         key,
@@ -50,6 +54,16 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
     const orderedTableState = useMemo(() => {
         return reorderObject(tableState, [...searchParams.keys()]);
     }, [searchParams, tableState, reorderObject]);
+
+    useEffect(() => {
+        if (tableState.limit && !isValidPaginationOption(tableState.limit)) {
+            setTableStateInternal((prevState) => ({
+                ...prevState,
+                limit: DEFAULT_PAGE_LIMIT,
+                offset: 0, // Reset offset when changing limit
+            }));
+        }
+    }, [tableState.limit, setTableStateInternal]);
 
     type SetTableStateInternalParam = Parameters<
         typeof setTableStateInternal

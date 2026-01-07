@@ -5,7 +5,7 @@ import { Alert } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { Typography } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
-import type { IInactiveUser } from '../../../../../hooks/api/getters/useInactiveUsers/useInactiveUsers';
+import type { IInactiveUser } from '../../../../../hooks/api/getters/useInactiveUsers/useInactiveUsers.ts';
 
 interface IDeleteUserProps {
     showDialog: boolean;

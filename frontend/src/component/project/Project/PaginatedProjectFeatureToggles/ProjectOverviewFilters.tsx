@@ -1,4 +1,4 @@
-import { useEffect, useState, type VFC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
 import {
     type FilterItemParamHolder,
@@ -6,14 +6,20 @@ import {
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
+import { formatTag } from 'utils/format-tag';
+import { styled } from '@mui/material';
 
-interface IProjectOverviewFilters {
+type ProjectOverviewFiltersProps = {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     project: string;
-}
+};
 
-export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
+const StyledFilters = styled(Filters)({
+    padding: 0,
+});
+
+export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
     state,
     onChange,
     project,
@@ -23,10 +29,13 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 
     useEffect(() => {
-        const tagsOptions = (tags || []).map((tag) => ({
-            label: `${tag.type}:${tag.value}`,
-            value: `${tag.type}:${tag.value}`,
-        }));
+        const tagsOptions = (tags || []).map((tag) => {
+            const tagString = formatTag(tag);
+            return {
+                label: tagString,
+                value: tagString,
+            };
+        });
 
         const flagCreatorsOptions = flagCreators.map((creator) => ({
             label: creator.name,
@@ -78,6 +87,13 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 dateOperators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],
             },
             {
+                label: 'Last seen',
+                icon: 'monitor_heart',
+                options: [],
+                filterKey: 'lastSeenAt',
+                dateOperators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],
+            },
+            {
                 label: 'Flag type',
                 icon: 'flag',
                 options: [
@@ -99,21 +115,13 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
-            {
-                label: 'Show only archived',
-                icon: 'inventory',
-                options: [{ label: 'True', value: 'true' }],
-                filterKey: 'archived',
-                singularOperators: ['IS'],
-                pluralOperators: ['IS_ANY_OF'],
-            },
         ];
 
         setAvailableFilters(availableFilters);
     }, [JSON.stringify(tags), JSON.stringify(flagCreators)]);
 
     return (
-        <Filters
+        <StyledFilters
             availableFilters={availableFilters}
             state={state}
             onChange={onChange}

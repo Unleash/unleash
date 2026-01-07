@@ -1,46 +1,49 @@
 import { register } from 'prom-client';
 import EventEmitter from 'events';
-import type { IEventStore } from './types/stores/event-store';
-import { createTestConfig } from '../test/config/test-config';
+import type { IEventStore } from './types/stores/event-store.js';
+import { createTestConfig } from '../test/config/test-config.js';
 import {
+    CLIENT_REGISTERED,
     DB_TIME,
     EXCEEDS_LIMIT,
     FUNCTION_TIME,
     REQUEST_TIME,
-} from './metric-events';
+} from './metric-events.js';
 import {
     CLIENT_METRICS,
     CLIENT_REGISTER,
     FEATURE_ENVIRONMENT_ENABLED,
     FEATURE_UPDATED,
     PROJECT_ENVIRONMENT_REMOVED,
-} from './types/events';
+} from './events/index.js';
 import {
     createMetricsMonitor,
     registerPrometheusMetrics,
     registerPrometheusPostgresMetrics,
-} from './metrics';
-import createStores from '../test/fixtures/store';
-import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
-import VersionService from './services/version-service';
-import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUsers';
-import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges';
+} from './metrics.js';
+import createStores from '../test/fixtures/store.js';
+import { InstanceStatsService } from './features/instance-stats/instance-stats-service.js';
+import VersionService from './services/version-service.js';
+import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUsers.js';
+import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges.js';
 import type {
     IEnvironmentStore,
     IFeatureLifecycleReadModel,
     IFeatureLifecycleStore,
     IUnleashStores,
-} from './types';
-import FakeEnvironmentStore from './features/project-environments/fake-environment-store';
-import { SchedulerService } from './services';
-import noLogger from '../test/fixtures/no-logger';
-import getLogger from '../test/fixtures/no-logger';
-import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init';
-import { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store';
-import { FeatureLifecycleReadModel } from './features/feature-lifecycle/feature-lifecycle-read-model';
-import { createFakeGetLicensedUsers } from './features/instance-stats/getLicensedUsers';
+} from './types/index.js';
+import FakeEnvironmentStore from './features/project-environments/fake-environment-store.js';
+import { SchedulerService } from './services/index.js';
+import noLogger from '../test/fixtures/no-logger.js';
+import getLogger from '../test/fixtures/no-logger.js';
+import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init.js';
+import { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store.js';
+import { FeatureLifecycleReadModel } from './features/feature-lifecycle/feature-lifecycle-read-model.js';
+import { createFakeGetLicensedUsers } from './features/instance-stats/getLicensedUsers.js';
+import { createFakeGetReadOnlyUsers } from './features/instance-stats/getReadOnlyUsers.js';
+import { createFakeGetEdgeInstances } from './features/instance-stats/getEdgeInstances.js';
 
-const monitor = createMetricsMonitor();
+const _monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
 const prometheusRegister = register;
 let eventStore: IEventStore;
@@ -66,12 +69,9 @@ beforeAll(async () => {
     const versionService = new VersionService(stores, config);
     db = await dbInit('metrics_test', getLogger);
 
-    featureLifeCycleReadModel = new FeatureLifecycleReadModel(
-        db.rawDatabase,
-        config.flagResolver,
-    );
+    featureLifeCycleReadModel = new FeatureLifecycleReadModel(db.rawDatabase);
     stores.featureLifecycleReadModel = featureLifeCycleReadModel;
-    featureLifeCycleStore = new FeatureLifecycleStore(db.rawDatabase);
+    featureLifeCycleStore = new FeatureLifecycleStore(db.rawDatabase, eventBus);
     stores.featureLifecycleStore = featureLifeCycleStore;
 
     statsService = new InstanceStatsService(
@@ -81,6 +81,8 @@ beforeAll(async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
         createFakeGetLicensedUsers(),
+        createFakeGetReadOnlyUsers(),
+        createFakeGetEdgeInstances(),
     );
 
     schedulerService = new SchedulerService(
@@ -90,19 +92,6 @@ beforeAll(async () => {
         },
         eventBus,
     );
-
-    const metricsDbConf = {
-        client: {
-            pool: {
-                min: 0,
-                max: 4,
-                numUsed: () => 2,
-                numFree: () => 2,
-                numPendingAcquires: () => 0,
-                numPendingCreates: () => 1,
-            },
-        },
-    };
 
     const { collectAggDbMetrics, collectStaticCounters } =
         registerPrometheusMetrics(
@@ -143,7 +132,7 @@ test('should collect metrics for updated toggles', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="default",environmentType="production",action="updated"\} 1/,
+        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="n\/a",environmentType="n\/a",action="updated"\} 1/,
     );
 });
 
@@ -270,10 +259,10 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"\,platform_name=\"not-set\",platform_version=\"not-set\",yggdrasil_version=\"not-set\",spec_version=\"not-set\"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 3/,
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0"\,platform_name=\"not-set\",platform_version=\"not-set\",yggdrasil_version=\"not-set\",spec_version=\"not-set\"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 3/,
     );
     eventStore.emit(CLIENT_REGISTER, {
         sdkName: 'unleash-client-node',
@@ -283,7 +272,22 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(newmetrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5"\,platform_name=\"not-set\",platform_version=\"not-set\",yggdrasil_version=\"not-set\",spec_version=\"not-set\"} 4/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 4/,
+    );
+});
+
+test('Should register intervals when client registered', async () => {
+    eventBus.emit(CLIENT_REGISTERED, {
+        appName: 'unleash-client-node',
+        environment: 'development',
+        interval: '15',
+    });
+
+    const metrics = await prometheusRegister.getSingleMetricAsString(
+        'client_registration_total',
+    );
+    expect(metrics).toMatch(
+        /client_registration_total{appName="unleash-client-node",environment="development",interval="15"} 1/,
     );
 });
 
@@ -308,7 +312,7 @@ test('should collect metrics for project disabled numbers', async () => {
         'project_environments_disabled',
     );
     expect(recordedMetric).toMatch(
-        /project_environments_disabled{project_id=\"default\"} 1/,
+        /project_environments_disabled{project_id="default"} 1/,
     );
 });
 
@@ -345,7 +349,7 @@ test('should collect limit exceeded metrics', async () => {
         'exceeds_limit_error',
     );
     expect(recordedMetric).toMatch(
-        /exceeds_limit_error{resource=\"feature flags\",limit=\"5000\"} 1/,
+        /exceeds_limit_error{resource="feature flags",limit="5000"} 1/,
     );
 });
 
@@ -359,4 +363,10 @@ test('should collect licensed_users metrics', async () => {
     const recordedMetric =
         await prometheusRegister.getSingleMetricAsString('licensed_users');
     expect(recordedMetric).toMatch(/licensed_users 0/);
+});
+
+test('should collect read_only_users metrics', async () => {
+    const recordedMetric =
+        await prometheusRegister.getSingleMetricAsString('read_only_users');
+    expect(recordedMetric).toMatch(/read_only_users 0/);
 });

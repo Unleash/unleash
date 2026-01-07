@@ -1,11 +1,11 @@
-import type { ChangeRequestStrategy } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
-import type { UpsertSegmentSchema } from '../../openapi';
+import type { ChangeRequestStrategy } from '../change-request-segment-usage-service/change-request-segment-usage-read-model.js';
+import type { UpsertSegmentSchema } from '../../openapi/index.js';
 import type {
     IAuditUser,
     IFeatureStrategy,
     ISegment,
     IUser,
-} from '../../types';
+} from '../../types/index.js';
 
 export type StrategiesUsingSegment = {
     strategies: IFeatureStrategy[];
@@ -22,7 +22,7 @@ export interface ISegmentService {
 
     getByStrategy(strategyId: string): Promise<ISegment[]>;
 
-    get(id: number): Promise<ISegment>;
+    get(id: number, userId?: number): Promise<ISegment>;
 
     /**
      * Gets all strategies for a segment
@@ -38,7 +38,7 @@ export interface ISegmentService {
 
     validateName(name: string): Promise<void>;
 
-    getAll(): Promise<ISegment[]>;
+    getAll(userId?: number): Promise<ISegment[]>;
 
     create(data: UpsertSegmentSchema, auditUser: IAuditUser): Promise<ISegment>;
 

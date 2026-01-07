@@ -1,12 +1,15 @@
-import type { IImportTogglesStore } from './import-toggles-store-type';
+import type { IImportTogglesStore } from './import-toggles-store-type.js';
 import type {
     AccessService,
     ContextService,
     TagTypeService,
-} from '../../services';
-import type { ContextFieldSchema, ImportTogglesSchema } from '../../openapi';
-import type { ITagType } from '../tag-type/tag-type-store-type';
-import type { IUser } from '../../types/user';
+} from '../../services/index.js';
+import type {
+    ContextFieldSchema,
+    ImportTogglesSchema,
+} from '../../openapi/index.js';
+import type { ITagType } from '../tag-type/tag-type-store-type.js';
+import type { IUser } from '../../types/user.js';
 import {
     CREATE_CONTEXT_FIELD,
     CREATE_FEATURE,
@@ -15,8 +18,8 @@ import {
     UPDATE_FEATURE,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     CREATE_TAG_TYPE,
-} from '../../types';
-import { PermissionError } from '../../error';
+} from '../../types/index.js';
+import { PermissionError } from '../../error/index.js';
 
 export type Mode = 'regular' | 'change_request';
 
@@ -48,12 +51,14 @@ export class ImportPermissionsService {
     ): Promise<ContextFieldSchema[]> {
         const availableContextFields = await this.contextService.getAll();
 
-        return dto.data.contextFields?.filter(
-            (contextField) =>
-                !availableContextFields.some(
-                    (availableField) =>
-                        availableField.name === contextField.name,
-                ),
+        return (
+            dto.data.contextFields?.filter(
+                (contextField) =>
+                    !availableContextFields.some(
+                        (availableField) =>
+                            availableField.name === contextField.name,
+                    ),
+            ) || []
         );
     }
 

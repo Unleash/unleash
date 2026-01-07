@@ -1,22 +1,20 @@
 import EventEmitter from 'events';
-import type { Segment } from 'unleash-client/lib/strategy/strategy';
-import type { FeatureInterface } from 'unleash-client/lib/feature';
-import type { IApiUser } from '../../types/api-user';
+import type { Segment } from 'unleash-client/lib/strategy/strategy.js';
+import type { FeatureInterface } from 'unleash-client/lib/feature.js';
+import type { IApiUser } from '../../types/api-user.js';
 import type {
     IFeatureToggleClient,
     ISegmentReadModel,
     IUnleashConfig,
-} from '../../types';
+} from '../../types/index.js';
 import {
     mapFeatureForClient,
     mapSegmentsForClient,
-} from '../playground/offline-unleash-client';
-import { ALL_ENVS } from '../../util/constants';
-import type { Logger } from '../../logger';
-import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
-import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
-import metricsHelper from '../../util/metrics-helper';
-import { FUNCTION_TIME } from '../../metric-events';
+} from '../playground/offline-unleash-client.js';
+import { ALL_ENVS, DEFAULT_ENV } from '../../util/constants.js';
+import type { Logger } from '../../logger.js';
+import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
+import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type.js';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>;
 
@@ -25,8 +23,6 @@ type FrontendApiFeatureCache = Record<string, Record<string, FeatureInterface>>;
 export type GlobalFrontendApiCacheState = 'starting' | 'ready' | 'updated';
 
 export class GlobalFrontendApiCache extends EventEmitter {
-    private readonly config: Config;
-
     private readonly logger: Logger;
 
     private readonly clientFeatureToggleReadModel: IClientFeatureToggleReadModel;
@@ -41,8 +37,6 @@ export class GlobalFrontendApiCache extends EventEmitter {
 
     private status: GlobalFrontendApiCacheState = 'starting';
 
-    private timer: Function;
-
     constructor(
         config: Config,
         segmentReadModel: ISegmentReadModel,
@@ -50,18 +44,11 @@ export class GlobalFrontendApiCache extends EventEmitter {
         configurationRevisionService: EventEmitter,
     ) {
         super();
-        this.config = config;
         this.logger = config.getLogger('global-frontend-api-cache.ts');
         this.clientFeatureToggleReadModel = clientFeatureToggleReadModel;
         this.configurationRevisionService = configurationRevisionService;
         this.segmentReadModel = segmentReadModel;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
-        this.timer = (functionName) =>
-            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
-                className: 'GlobalFrontendApiCache',
-                functionName,
-            });
-
         this.refreshData();
         this.configurationRevisionService.on(
             UPDATE_REVISION,
@@ -141,7 +128,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
 
     private environmentNameForToken(token: IApiUser): string {
         if (token.environment === ALL_ENVS) {
-            return 'default';
+            return DEFAULT_ENV;
         }
         return token.environment;
     }
@@ -154,7 +141,10 @@ export class GlobalFrontendApiCache extends EventEmitter {
             Object.fromEntries(
                 Object.entries(value).map(([innerKey, innerValue]) => [
                     innerKey,
-                    mapFeatureForClient(innerValue),
+                    mapFeatureForClient({
+                        ...innerValue,
+                        stale: innerValue.stale || false,
+                    }),
                 ]),
             ),
         ]);

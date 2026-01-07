@@ -16,4 +16,5 @@ export const PatchSchemaOp = {
     replace: 'replace',
     copy: 'copy',
     move: 'move',
+    test: 'test',
 } as const;

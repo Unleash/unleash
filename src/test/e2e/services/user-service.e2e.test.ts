@@ -1,37 +1,46 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import UserService from '../../../lib/services/user-service';
-import { AccessService } from '../../../lib/services/access-service';
-import ResetTokenService from '../../../lib/services/reset-token-service';
-import { EmailService } from '../../../lib/services/email-service';
-import { createTestConfig } from '../../config/test-config';
-import SessionService from '../../../lib/services/session-service';
-import NotFoundError from '../../../lib/error/notfound-error';
-import type { IRole } from '../../../lib/types/stores/access-store';
-import { RoleName } from '../../../lib/types/model';
-import SettingService from '../../../lib/services/setting-service';
-import { simpleAuthSettingsKey } from '../../../lib/types/settings/simple-auth-settings';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import UserService from '../../../lib/services/user-service.js';
+import { AccessService } from '../../../lib/services/access-service.js';
+import ResetTokenService from '../../../lib/services/reset-token-service.js';
+import { EmailService } from '../../../lib/services/email-service.js';
+import { createTestConfig } from '../../config/test-config.js';
+import SessionService from '../../../lib/services/session-service.js';
+import NotFoundError from '../../../lib/error/notfound-error.js';
+import type { IRole } from '../../../lib/types/stores/access-store.js';
+import { RoleName } from '../../../lib/types/model.js';
+import SettingService from '../../../lib/services/setting-service.js';
+import { simpleAuthSettingsKey } from '../../../lib/types/settings/simple-auth-settings.js';
 import { addDays, minutesToMilliseconds } from 'date-fns';
-import { GroupService } from '../../../lib/services/group-service';
-import { BadDataError } from '../../../lib/error';
-import PasswordMismatch from '../../../lib/error/password-mismatch';
-import type { EventService } from '../../../lib/services';
+import { GroupService } from '../../../lib/services/group-service.js';
+import { BadDataError } from '../../../lib/error/index.js';
+import PasswordMismatch from '../../../lib/error/password-mismatch.js';
+import type { EventService } from '../../../lib/services/index.js';
 import {
     CREATE_ADDON,
     type IUnleashStores,
     type IUserStore,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
+} from '../../../lib/types/index.js';
+import {
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
-} from '../../../lib/types';
-import { CUSTOM_ROOT_ROLE_TYPE } from '../../../lib/util';
-import { PasswordPreviouslyUsedError } from '../../../lib/error/password-previously-used';
-import { createEventsService } from '../../../lib/features';
+} from '../../../lib/events/index.js';
+import { CUSTOM_ROOT_ROLE_TYPE } from '../../../lib/util/index.js';
+import { PasswordPreviouslyUsedError } from '../../../lib/error/password-previously-used.js';
+import { createEventsService } from '../../../lib/features/index.js';
 import type EventEmitter from 'events';
-import { USER_LOGIN } from '../../../lib/metric-events';
-
+import { USER_LOGIN } from '../../../lib/metric-events.js';
+import {
+    beforeAll,
+    afterAll,
+    beforeEach,
+    test,
+    describe,
+    expect,
+} from 'vitest';
 let db: ITestDb;
 let stores: IUnleashStores;
 let userService: UserService;
@@ -236,7 +245,7 @@ test('should not be able to login with deleted user', async () => {
 
     await expect(
         userService.loginUser('deleted_user', 'unleash4all'),
-    ).rejects.toThrow(
+    ).rejects.errorWithMessage(
         new PasswordMismatch(
             'The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.',
         ),
@@ -253,12 +262,12 @@ test('should not be able to login without password_hash on user', async () => {
         TEST_AUDIT_USER,
     );
 
-    /*@ts-ignore: we are testing for null on purpose! */
+    /*@ts-expect-error: we are testing for null on purpose! */
     await userStore.setPasswordHash(user.id, null);
 
     await expect(
         userService.loginUser('deleted_user', 'anything-should-fail'),
-    ).rejects.toThrow(
+    ).rejects.errorWithMessage(
         new PasswordMismatch(
             'The combination of password and username you provided is invalid. If you have forgotten your password, visit /forgotten-password or get in touch with your instance administrator.',
         ),
@@ -426,139 +435,177 @@ test('updating a user without an email should not strip the email', async () => 
     expect(updatedUser.email).toBe(email);
 });
 
-test('should login and create user via SSO', async () => {
-    const recordedEvents: Array<{ loginOrder: number }> = [];
-    eventBus.on(USER_LOGIN, (data) => {
-        recordedEvents.push(data);
-    });
-    const email = 'some@test.com';
-    const user = await userService.loginUserSSO({
-        email,
-        rootRole: RoleName.VIEWER,
-        name: 'some',
-        autoCreate: true,
-    });
-
-    const userWithRole = await userService.getUser(user.id);
-    expect(user.email).toBe(email);
-    expect(user.name).toBe('some');
-    expect(userWithRole.name).toBe('some');
-    expect(userWithRole.rootRole).toBe(viewerRole.id);
-    expect(recordedEvents).toEqual([{ loginOrder: 0 }]);
-});
-
-test('should throw if rootRole is wrong via SSO', async () => {
-    expect.assertions(1);
-
-    await expect(
-        userService.loginUserSSO({
-            email: 'some@test.com',
-            rootRole: RoleName.MEMBER,
+describe('loginUserSSO', () => {
+    test('should login and create user via SSO', async () => {
+        const recordedEvents: Array<{ loginOrder: number }> = [];
+        eventBus.on(USER_LOGIN, (data) => {
+            recordedEvents.push(data);
+        });
+        const email = 'some@test.com';
+        const user = await userService.loginUserSSO({
+            email,
+            rootRole: RoleName.VIEWER,
             name: 'some',
             autoCreate: true,
-        }),
-    ).rejects.toThrow(new BadDataError('Could not find rootRole=Member'));
-});
+        });
 
-test('should update user name when signing in via SSO', async () => {
-    const email = 'some@test.com';
-    const originalUser = await userService.createUser(
-        {
-            email,
-            rootRole: RoleName.VIEWER,
-            name: 'some',
-        },
-        TEST_AUDIT_USER,
-    );
-
-    await userService.loginUserSSO({
-        email,
-        rootRole: RoleName.ADMIN,
-        name: 'New name!',
-        autoCreate: true,
+        const userWithRole = await userService.getUser(user.id);
+        expect(user.email).toBe(email);
+        expect(user.name).toBe('some');
+        expect(userWithRole.name).toBe('some');
+        expect(userWithRole.rootRole).toBe(viewerRole.id);
+        expect(recordedEvents).toEqual([{ loginOrder: 0 }]);
     });
 
-    const actualUser = await userService.getUser(originalUser.id);
+    test('should throw if rootRole is wrong via SSO', async () => {
+        expect.assertions(1);
 
-    expect(actualUser.email).toBe(email);
-    expect(actualUser.name).toBe('New name!');
-    expect(actualUser.rootRole).toBe(viewerRole.id);
-});
-
-test('should update name if it is different via SSO', async () => {
-    const email = 'some@test.com';
-    const originalUser = await userService.createUser(
-        {
-            email,
-            rootRole: RoleName.VIEWER,
-            name: 'some',
-        },
-        TEST_AUDIT_USER,
-    );
-
-    await userService.loginUserSSO({
-        email,
-        rootRole: RoleName.ADMIN,
-        name: 'New name!',
-        autoCreate: false,
+        await expect(
+            userService.loginUserSSO({
+                email: 'some@test.com',
+                rootRole: RoleName.MEMBER,
+                name: 'some',
+                autoCreate: true,
+            }),
+        ).rejects.errorWithMessage(
+            new BadDataError('Could not find rootRole=Member'),
+        );
     });
 
-    const actualUser = await userService.getUser(originalUser.id);
+    test('should update user name when signing in via SSO', async () => {
+        const email = 'some@test.com';
+        const originalUser = await userService.createUser(
+            {
+                email,
+                rootRole: RoleName.VIEWER,
+                name: 'some',
+            },
+            TEST_AUDIT_USER,
+        );
 
-    expect(actualUser.email).toBe(email);
-    expect(actualUser.name).toBe('New name!');
-    expect(actualUser.rootRole).toBe(viewerRole.id);
-});
+        await userService.loginUserSSO({
+            email,
+            rootRole: RoleName.ADMIN,
+            name: 'New name!',
+            autoCreate: true,
+        });
 
-test('should throw if autoCreate is false via SSO', async () => {
-    expect.assertions(1);
+        const actualUser = await userService.getUser(originalUser.id);
 
-    await expect(
-        userService.loginUserSSO({
-            email: 'some@test.com',
-            rootRole: RoleName.MEMBER,
-            name: 'some',
+        expect(actualUser.email).toBe(email);
+        expect(actualUser.name).toBe('New name!');
+        expect(actualUser.rootRole).toBe(viewerRole.id);
+        const { events } = await eventService.getEvents();
+        const updateEvent = events.find(
+            (e) => e.data.id === originalUser.id && e.data.name === 'New name!',
+        );
+        expect(updateEvent).toBeDefined();
+    });
+
+    test('should update name if it is different via SSO', async () => {
+        const email = 'some@test.com';
+        const originalUser = await userService.createUser(
+            {
+                email,
+                rootRole: RoleName.VIEWER,
+                name: 'some',
+            },
+            TEST_AUDIT_USER,
+        );
+
+        await userService.loginUserSSO({
+            email,
+            rootRole: RoleName.ADMIN,
+            name: 'New name!',
             autoCreate: false,
-        }),
-    ).rejects.toThrow(new NotFoundError('No user found'));
-});
+        });
 
-test('should support a root role id when logging in and creating user via SSO', async () => {
-    const name = 'root-role-id';
-    const email = `${name}@test.com`;
-    const user = await userService.loginUserSSO({
-        email,
-        rootRole: viewerRole.id,
-        name,
-        autoCreate: true,
+        const actualUser = await userService.getUser(originalUser.id);
+
+        expect(actualUser.email).toBe(email);
+        expect(actualUser.name).toBe('New name!');
+        expect(actualUser.rootRole).toBe(viewerRole.id);
     });
 
-    const userWithRole = await userService.getUser(user.id);
-    expect(user.email).toBe(email);
-    expect(user.name).toBe(name);
-    expect(userWithRole.name).toBe(name);
-    expect(userWithRole.rootRole).toBe(viewerRole.id);
-});
+    test('should throw if autoCreate is false via SSO', async () => {
+        expect.assertions(1);
 
-test('should support a custom root role id when logging in and creating user via SSO', async () => {
-    const name = 'custom-root-role-id';
-    const email = `${name}@test.com`;
-    const user = await userService.loginUserSSO({
-        email,
-        rootRole: customRole.id,
-        name,
-        autoCreate: true,
+        await expect(
+            userService.loginUserSSO({
+                email: 'some@test.com',
+                rootRole: RoleName.MEMBER,
+                name: 'some',
+                autoCreate: false,
+            }),
+        ).rejects.errorWithMessage(new NotFoundError('No user found'));
     });
 
-    const userWithRole = await userService.getUser(user.id);
-    expect(user.email).toBe(email);
-    expect(user.name).toBe(name);
-    expect(userWithRole.name).toBe(name);
-    expect(userWithRole.rootRole).toBe(customRole.id);
+    test('should support a root role id when logging in and creating user via SSO', async () => {
+        const name = 'root-role-id';
+        const email = `${name}@test.com`;
+        const user = await userService.loginUserSSO({
+            email,
+            rootRole: viewerRole.id,
+            name,
+            autoCreate: true,
+        });
 
-    const permissions = await accessService.getPermissionsForUser(user);
-    expect(permissions).toHaveLength(1);
-    expect(permissions[0].permission).toBe(CREATE_ADDON);
+        const userWithRole = await userService.getUser(user.id);
+        expect(user.email).toBe(email);
+        expect(user.name).toBe(name);
+        expect(userWithRole.name).toBe(name);
+        expect(userWithRole.rootRole).toBe(viewerRole.id);
+    });
+
+    test('should support a custom root role id when logging in and creating user via SSO', async () => {
+        const name = 'custom-root-role-id';
+        const email = `${name}@test.com`;
+        const user = await userService.loginUserSSO({
+            email,
+            rootRole: customRole.id,
+            name,
+            autoCreate: true,
+        });
+
+        const userWithRole = await userService.getUser(user.id);
+        expect(user.email).toBe(email);
+        expect(user.name).toBe(name);
+        expect(userWithRole.name).toBe(name);
+        expect(userWithRole.rootRole).toBe(customRole.id);
+
+        const permissions = await accessService.getPermissionsForUser(user);
+        expect(permissions).toHaveLength(1);
+        expect(permissions[0].permission).toBe(CREATE_ADDON);
+    });
+
+    test(`should not update the username if managed by SCIM`, async () => {
+        const email = 'test-1@getunleash.io';
+        const originalName = 'Original Name';
+        const name = 'Updated Name';
+        const createdUser = await userStore.insert({
+            name: originalName,
+            username: 'random-1234',
+            email,
+        });
+        await db
+            .rawDatabase('users')
+            .update({
+                scim_id: '123',
+            })
+            .where({ id: createdUser.id });
+
+        const user = await userService.loginUserSSO({
+            email,
+            autoCreate: true,
+            name,
+        });
+
+        expect(user.name).toBe(originalName);
+
+        // Fetch the user directly from the store to verify
+        const storedUser = await userStore.get(user.id);
+        expect(storedUser!.name).toBe(originalName);
+    });
 });
 
 describe('Should not be able to use any of previous 5 passwords', () => {
@@ -577,7 +624,7 @@ describe('Should not be able to use any of previous 5 passwords', () => {
                 user.id,
                 password,
             ),
-        ).rejects.toThrow(new PasswordPreviouslyUsedError());
+        ).rejects.errorWithMessage(new PasswordPreviouslyUsedError());
     });
     test('Is still able to change password to one not used', async () => {
         const name = 'new-password-is-allowed';

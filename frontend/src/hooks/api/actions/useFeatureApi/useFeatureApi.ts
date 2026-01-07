@@ -3,7 +3,7 @@ import type { ITag } from 'interfaces/tags';
 import type { Operation } from 'fast-json-patch';
 import type { IConstraint } from 'interfaces/strategy';
 import type { CreateFeatureSchema, UpdateTagsSchema } from 'openapi';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 import type { IFeatureVariant } from 'interfaces/featureToggle';
 
 const useFeatureApi = () => {
@@ -208,20 +208,6 @@ const useFeatureApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
-    const patchFeatureVariants = async (
-        projectId: string,
-        featureId: string,
-        patchPayload: Operation[],
-    ) => {
-        const path = `api/admin/projects/${projectId}/features/${featureId}/variants`;
-        const req = createRequest(path, {
-            method: 'PATCH',
-            body: JSON.stringify(patchPayload),
-        });
-
-        return makeRequest(req.caller, req.id);
-    };
-
     const patchFeatureEnvironmentVariants = async (
         projectId: string,
         featureId: string,
@@ -279,7 +265,6 @@ const useFeatureApi = () => {
         updateFeatureTags,
         archiveFeatureToggle,
         patchFeatureToggle,
-        patchFeatureVariants,
         patchFeatureEnvironmentVariants,
         overrideVariantsInEnvironments,
         cloneFeatureToggle,

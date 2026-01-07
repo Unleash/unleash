@@ -1,9 +1,9 @@
-import type { IOnboardingReadModel } from '../../types';
+import type { IOnboardingReadModel } from '../../types/index.js';
 import type {
     InstanceOnboarding,
     OnboardingStatus,
     ProjectOnboarding,
-} from './onboarding-read-model-type';
+} from './onboarding-read-model-type.js';
 
 export class FakeOnboardingReadModel implements IOnboardingReadModel {
     getInstanceOnboardingMetrics(): Promise<InstanceOnboarding> {

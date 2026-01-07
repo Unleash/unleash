@@ -1,15 +1,14 @@
 import type EventEmitter from 'events';
-import type { Logger, LogProvider } from '../logger';
+import type { Logger, LogProvider } from '../logger.js';
 import type {
     IClientInstance,
     IClientInstanceStore,
     INewClientInstance,
-} from '../types/stores/client-instance-store';
+} from '../types/stores/client-instance-store.js';
 import { subDays } from 'date-fns';
-import type { Db } from './db';
-
-const metricsHelper = require('../util/metrics-helper');
-const { DB_TIME } = require('../metric-events');
+import type { Db } from './db.js';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
 
 const COLUMNS = [
     'app_name',
@@ -22,24 +21,37 @@ const COLUMNS = [
 ];
 const TABLE = 'client_instances';
 
-const mapRow = (row) => ({
+const mapRow = (row): IClientInstance => ({
     appName: row.app_name,
     instanceId: row.instance_id,
     sdkVersion: row.sdk_version,
+    sdkType: row.sdk_type,
     clientIp: row.client_ip,
     lastSeen: row.last_seen,
     createdAt: row.created_at,
     environment: row.environment,
 });
 
-const mapToDb = (client) => ({
-    app_name: client.appName,
-    instance_id: client.instanceId,
-    sdk_version: client.sdkVersion || '',
-    client_ip: client.clientIp,
-    last_seen: client.lastSeen || 'now()',
-    environment: client.environment || 'default',
-});
+const mapToDb = (client: INewClientInstance) => {
+    const temp = {
+        app_name: client.appName,
+        instance_id: client.instanceId,
+        sdk_version: client.sdkVersion,
+        sdk_type: client.sdkType,
+        client_ip: client.clientIp,
+        last_seen: client.lastSeen || 'now()',
+        environment: client.environment,
+    };
+
+    const result = {};
+    for (const [key, value] of Object.entries(temp)) {
+        if (value !== undefined) {
+            result[key] = value;
+        }
+    }
+
+    return result;
+};
 
 export default class ClientInstanceStore implements IClientInstanceStore {
     private db: Db;
@@ -61,9 +73,9 @@ export default class ClientInstanceStore implements IClientInstanceStore {
             });
     }
 
-    async removeInstancesOlderThanTwoDays(): Promise<void> {
+    async removeOldInstances(): Promise<void> {
         const rows = await this.db(TABLE)
-            .whereRaw("created_at < now() - interval '2 days'")
+            .whereRaw("last_seen < now() - interval '1 days'")
             .del();
 
         if (rows > 0) {
@@ -71,33 +83,16 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         }
     }
 
-    async setLastSeen({
-        appName,
-        instanceId,
-        environment,
-        clientIp,
-    }: INewClientInstance): Promise<void> {
-        await this.db(TABLE)
-            .insert({
-                app_name: appName,
-                instance_id: instanceId,
-                environment,
-                last_seen: new Date(),
-                client_ip: clientIp,
-            })
-            .onConflict(['app_name', 'instance_id', 'environment'])
-            .merge({
-                last_seen: new Date(),
-                client_ip: clientIp,
-            });
-    }
-
     async bulkUpsert(instances: INewClientInstance[]): Promise<void> {
+        const stopTimer = this.metricTimer('bulkUpsert');
+
         const rows = instances.map(mapToDb);
         await this.db(TABLE)
             .insert(rows)
             .onConflict(['app_name', 'instance_id', 'environment'])
             .merge();
+
+        stopTimer();
     }
 
     async delete({
@@ -144,7 +139,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         return present;
     }
 
-    async insert(details: INewClientInstance): Promise<void> {
+    async upsert(details: INewClientInstance): Promise<void> {
         const stopTimer = this.metricTimer('insert');
 
         await this.db(TABLE)

@@ -5,9 +5,9 @@ import type {
     IFeatureStrategy,
     IStrategyConfig,
     IVariant,
-} from '../../../types/model';
-import type { Store } from '../../../types/stores/store';
-import type { IFeatureProjectUserParams } from '../feature-toggle-controller';
+} from '../../../types/model.js';
+import type { Store } from '../../../types/stores/store.js';
+import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js';
 
 export interface FeatureConfigurationClient {
     name: string;
@@ -30,6 +30,8 @@ export interface IFeatureSearchParams {
     state?: string;
     type?: string;
     tag?: string;
+    lifecycle?: string;
+    lastSeenAt?: string;
     status?: string[][];
     offset: number;
     favoritesFirst?: boolean;
@@ -123,4 +125,6 @@ export interface IFeatureStrategiesStore
     ): Promise<IFeatureStrategy[]>;
 
     getCustomStrategiesInUseCount(): Promise<number>;
+
+    getDefaultStickiness(projectId: string): Promise<string>;
 }

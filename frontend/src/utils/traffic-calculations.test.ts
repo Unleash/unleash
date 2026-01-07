@@ -5,16 +5,12 @@ import {
     calculateProjectedUsage,
     calculateTotalUsage,
     cleanTrafficData,
-} from './traffic-calculations';
-import { toSelectablePeriod } from '../component/admin/network/NetworkTrafficUsage/selectable-periods';
+} from './traffic-calculations.js';
+import { toSelectablePeriod } from '../component/admin/network/NetworkTrafficUsage/selectable-periods.js';
 import type {
     TrafficUsageDataSegmentedCombinedSchema,
     TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
 } from 'openapi';
-import {
-    calculateEstimatedMonthlyCost as deprecatedCalculateEstimatedMonthlyCost,
-    calculateProjectedUsage as deprecatedCalculateProjectedUsage,
-} from 'hooks/useTrafficData';
 
 const testData4Days = [
     {
@@ -94,24 +90,16 @@ describe('traffic overage calculation', () => {
 
     it('doesnt estimate when having less than 5 days worth of data', () => {
         const now = new Date();
-        const period = toSelectablePeriod(now);
+        const _period = toSelectablePeriod(now);
         const testNow = new Date(now.getFullYear(), now.getMonth(), 4);
         const includedTraffic = 53_000_000;
-        const result = deprecatedCalculateEstimatedMonthlyCost(
-            period.key,
-            testData4Days,
-            includedTraffic,
-            testNow,
-        );
-        expect(result).toBe(0);
-
         const rawData = trafficData4Days(now);
-        const result2 = calculateEstimatedMonthlyCost(
+        const result = calculateEstimatedMonthlyCost(
             rawData,
             includedTraffic,
             testNow,
         );
-        expect(result2).toBe(result);
+        expect(result).toBe(0);
     });
 
     it('needs 5 days or more to estimate for the month', () => {
@@ -120,27 +108,18 @@ describe('traffic overage calculation', () => {
         testData[1].data.push(23_000_000);
         testData[2].data.push(23_000_000);
         const now = new Date();
-        const period = toSelectablePeriod(now);
         const testNow = new Date(now.getFullYear(), now.getMonth(), 5);
         const includedTraffic = 53_000_000;
-        const result = deprecatedCalculateEstimatedMonthlyCost(
-            period.key,
-            testData,
-            includedTraffic,
-            testNow,
-        );
-        expect(result).toBeGreaterThan(1430);
-
         const rawData = trafficData4Days(now);
         rawData[0].dataPoints.push(dataPoint(now)(5, 23_000_000));
         rawData[1].dataPoints.push(dataPoint(now)(5, 23_000_000));
         rawData[2].dataPoints.push(dataPoint(now)(5, 23_000_000));
-        const result2 = calculateEstimatedMonthlyCost(
+        const result = calculateEstimatedMonthlyCost(
             rawData,
             includedTraffic,
             testNow,
         );
-        expect(result2).toBe(result);
+        expect(result).toBeGreaterThan(1430);
     });
 
     it('estimates projected data usage', () => {
@@ -151,24 +130,17 @@ describe('traffic overage calculation', () => {
         // Testing April 5th of 2024 (30 days)
         const now = new Date(2024, 3, 5);
         const period = toSelectablePeriod(now);
-        const result = deprecatedCalculateProjectedUsage(
-            now.getDate(),
-            testData,
-            period.dayCount,
-        );
-        // 22_500_000 * 3 * 30 = 2_025_000_000
-        expect(result).toBe(2_025_000_000);
-
         const rawData = trafficData4Days(now);
         rawData[0].dataPoints.push(dataPoint(now)(5, 22_500_000));
         rawData[1].dataPoints.push(dataPoint(now)(5, 22_500_000));
         rawData[2].dataPoints.push(dataPoint(now)(5, 22_500_000));
-        const result2 = calculateProjectedUsage({
+        const result = calculateProjectedUsage({
             dayOfMonth: now.getDate(),
             daysInMonth: period.dayCount,
             trafficData: rawData,
         });
-        expect(result2).toBe(result);
+        // 22_500_000 * 3 * 30 = 2_025_000_000
+        expect(result).toBe(2_025_000_000);
     });
 
     it('supports custom price and unit size', () => {
@@ -189,14 +161,18 @@ describe('traffic overage calculation', () => {
         testData[1].data.push(22_500_000);
         testData[2].data.push(22_500_000);
         const now = new Date();
-        const period = toSelectablePeriod(now);
+        const _period = toSelectablePeriod(now);
         const testNow = new Date(now.getFullYear(), now.getMonth(), 5);
         const includedTraffic = 53_000_000;
         const trafficUnitSize = 500_000;
         const trafficUnitCost = 10;
-        const result = deprecatedCalculateEstimatedMonthlyCost(
-            period.key,
-            testData,
+
+        const rawData = trafficData4Days(now);
+        rawData[0].dataPoints.push(dataPoint(now)(5, 22_500_000));
+        rawData[1].dataPoints.push(dataPoint(now)(5, 22_500_000));
+        rawData[2].dataPoints.push(dataPoint(now)(5, 22_500_000));
+        const result = calculateEstimatedMonthlyCost(
+            rawData,
             includedTraffic,
             testNow,
             trafficUnitCost,
@@ -208,20 +184,6 @@ describe('traffic overage calculation', () => {
         const overageUnits = Math.floor(overage / trafficUnitSize);
         const total = overageUnits * trafficUnitCost;
         expect(result).toBe(total);
-
-        const rawData = trafficData4Days(now);
-        rawData[0].dataPoints.push(dataPoint(now)(5, 22_500_000));
-        rawData[1].dataPoints.push(dataPoint(now)(5, 22_500_000));
-        rawData[2].dataPoints.push(dataPoint(now)(5, 22_500_000));
-        const result2 = calculateEstimatedMonthlyCost(
-            rawData,
-            includedTraffic,
-            testNow,
-            trafficUnitCost,
-            trafficUnitSize,
-        );
-
-        expect(result2).toBe(result);
     });
 });
 

@@ -1,11 +1,11 @@
-import Webhook from './webhook';
-import SlackAddon from './slack';
-import TeamsAddon from './teams';
-import DatadogAddon from './datadog';
-import NewRelicAddon from './new-relic';
-import type Addon from './addon';
-import SlackAppAddon from './slack-app';
-import type { IAddonConfig } from '../types';
+import Webhook from './webhook.js';
+import SlackAddon from './slack.js';
+import TeamsAddon from './teams.js';
+import DatadogAddon from './datadog.js';
+import NewRelicAddon from './new-relic.js';
+import type Addon from './addon.js';
+import SlackAppAddon from './slack-app.js';
+import type { IAddonConfig } from '../types/index.js';
 
 export interface IAddonProviders {
     [key: string]: Addon;

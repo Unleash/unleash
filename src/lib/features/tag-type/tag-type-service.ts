@@ -1,19 +1,20 @@
-import NameExistsError from '../../error/name-exists-error';
+import NameExistsError from '../../error/name-exists-error.js';
 
-import { tagTypeSchema } from '../../services/tag-type-schema';
+import { tagTypeSchema } from '../../services/tag-type-schema.js';
 
-import type { IUnleashStores } from '../../types/stores';
+import type { IUnleashStores } from '../../types/stores.js';
 import {
     TagTypeCreatedEvent,
     TagTypeDeletedEvent,
     TagTypeUpdatedEvent,
-} from '../../types/events';
+} from '../../types/index.js';
 
-import type { Logger } from '../../logger';
-import type { ITagType, ITagTypeStore } from './tag-type-store-type';
-import type { IUnleashConfig } from '../../types/option';
-import type EventService from '../events/event-service';
-import type { IAuditUser } from '../../types';
+import type { Logger } from '../../logger.js';
+import type { ITagType, ITagTypeStore } from './tag-type-store-type.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type EventService from '../events/event-service.js';
+import type { IAuditUser } from '../../types/index.js';
+import { NotFoundError } from '../../error/index.js';
 
 export default class TagTypeService {
     private tagTypeStore: ITagTypeStore;
@@ -37,7 +38,11 @@ export default class TagTypeService {
     }
 
     async getTagType(name: string): Promise<ITagType> {
-        return this.tagTypeStore.get(name);
+        const tagType = await this.tagTypeStore.get(name);
+        if (tagType === undefined) {
+            throw new NotFoundError(`Tagtype ${name} could not be found`);
+        }
+        return tagType;
     }
 
     async createTagType(
@@ -101,5 +106,3 @@ export default class TagTypeService {
         return data;
     }
 }
-
-module.exports = TagTypeService;

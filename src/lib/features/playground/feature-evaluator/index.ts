@@ -1,13 +1,13 @@
 import {
     FeatureEvaluator,
     type FeatureEvaluatorConfig,
-} from './feature-evaluator';
-import { Variant } from './variant';
-import { Context } from './context';
-import type { ClientFeaturesResponse } from './feature';
-import InMemStorageProvider from './repository/storage-provider-in-mem';
+} from './feature-evaluator.js';
+import type { Variant } from './variant.js';
+import type { Context } from './context.js';
+import type { ClientFeaturesResponse } from './feature.js';
+import InMemStorageProvider from './repository/storage-provider-in-mem.js';
 
 // exports
-export { Strategy } from './strategy';
-export { Context, Variant, FeatureEvaluator, InMemStorageProvider };
+export { Strategy } from './strategy/index.js';
+export { type Context, type Variant, FeatureEvaluator, InMemStorageProvider };
 export type { ClientFeaturesResponse, FeatureEvaluatorConfig };

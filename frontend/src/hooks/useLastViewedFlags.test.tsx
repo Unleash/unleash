@@ -1,6 +1,6 @@
 import type React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { useLastViewedFlags } from './useLastViewedFlags';
+import { useLastViewedFlags } from './useLastViewedFlags.ts';
 
 const TestComponent: React.FC<{
     testId: string;

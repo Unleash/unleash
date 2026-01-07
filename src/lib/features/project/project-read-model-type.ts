@@ -1,11 +1,12 @@
-import type { ProjectMode } from '../../types';
-import type { IProjectQuery, IProjectsQuery } from './project-store-type';
+import type { ProjectMode } from '../../types/index.js';
+import type { IProjectQuery, IProjectsQuery } from './project-store-type.js';
 
 export type ProjectForUi = {
     id: string;
     name: string;
     description?: string;
     health: number;
+    technicalDebt: number;
     createdAt: Date;
     mode: ProjectMode;
     memberCount: number;
@@ -18,12 +19,16 @@ export type ProjectForUi = {
 
 export type ProjectForInsights = {
     id: string;
-    health: number;
+    technicalDebt: number;
     memberCount: number;
     featureCount: number;
     staleFeatureCount: number;
     potentiallyStaleFeatureCount: number;
     avgTimeToProduction: number;
+    /**
+     * @deprecated
+     */
+    health: number;
 };
 
 export interface IProjectReadModel {

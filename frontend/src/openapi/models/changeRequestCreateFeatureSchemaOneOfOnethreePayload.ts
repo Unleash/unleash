@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { VariantSchema } from './variantSchema';
+import type { VariantSchema } from './variantSchema.js';
 
 export type ChangeRequestCreateFeatureSchemaOneOfOnethreePayload = {
     variants: VariantSchema[];

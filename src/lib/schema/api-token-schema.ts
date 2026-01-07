@@ -1,33 +1,22 @@
 import joi from 'joi';
-import { ALL, ApiTokenType } from '../types/models/api-token';
-import { DEFAULT_ENV } from '../util/constants';
+import { ALL } from '../types/models/api-token.js';
+import { ApiTokenType } from '../types/model.js';
 
 export const createApiToken = joi
     .object()
     .keys({
-        username: joi.string().optional(),
-        tokenName: joi.string().optional(),
+        tokenName: joi.string().required(),
         type: joi
             .string()
             .lowercase()
             .required()
             .valid(
-                ApiTokenType.ADMIN,
                 ApiTokenType.CLIENT,
+                ApiTokenType.BACKEND,
                 ApiTokenType.FRONTEND,
             ),
         expiresAt: joi.date().optional(),
-        project: joi.when('projects', {
-            not: joi.required(),
-            then: joi.string().optional().default(ALL),
-        }),
-        projects: joi.array().min(0).optional(),
-        environment: joi.when('type', {
-            is: joi.string().valid(ApiTokenType.CLIENT, ApiTokenType.FRONTEND),
-            then: joi.string().optional().default(DEFAULT_ENV),
-            otherwise: joi.string().optional().default(ALL),
-        }),
+        projects: joi.array().min(1).optional().default([ALL]),
+        environment: joi.string().optional().default('development'),
     })
-    .nand('username', 'tokenName')
-    .nand('project', 'projects')
     .options({ stripUnknown: true, allowUnknown: false, abortEarly: false });

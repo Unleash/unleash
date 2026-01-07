@@ -2,8 +2,8 @@ import { styled, Typography } from '@mui/material';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
-import type { PersonalDashboardProjectDetailsSchemaInsights } from '../../openapi';
-import { ActionBox } from './ActionBox';
+import type { PersonalDashboardProjectDetailsSchemaInsights } from 'openapi';
+import { ActionBox } from './ActionBox.tsx';
 
 const PercentageScore = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
@@ -57,19 +57,24 @@ const ProjectHealthMessage: FC<{
     insights: PersonalDashboardProjectDetailsSchemaInsights;
     project: string;
 }> = ({ trend, insights, project }) => {
-    const { avgHealthCurrentWindow, avgHealthPastWindow, health } = insights;
+    const { avgHealthCurrentWindow, avgHealthPastWindow } = insights;
     const improveMessage =
-        'Remember to archive your stale feature flags to keep the project health growing.';
+        'Remember to archive your stale feature flags to keep the technical debt low.';
     const keepDoingMessage =
         'This indicates that you are doing a good job of archiving your feature flags.';
+    const avgCurrentTechnicalDebt = 100 - (avgHealthCurrentWindow ?? 0);
+    const avgPastTechnicalDebt = 100 - (avgHealthPastWindow ?? 0);
 
     if (trend === 'improved') {
         return (
             <>
                 <Typography>
-                    On average, your project health went up from{' '}
-                    <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
-                    <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                    On average, your project technical debt went down from{' '}
+                    <PercentageScore>{avgPastTechnicalDebt}%</PercentageScore>{' '}
+                    to{' '}
+                    <PercentageScore>
+                        {avgCurrentTechnicalDebt}%
+                    </PercentageScore>{' '}
                     during the last 4 weeks.
                 </Typography>
                 <Typography>{keepDoingMessage}</Typography>
@@ -81,9 +86,12 @@ const ProjectHealthMessage: FC<{
         return (
             <>
                 <Typography>
-                    On average, your project health went down from{' '}
-                    <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
-                    <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                    On average, your project technical debt went up from{' '}
+                    <PercentageScore>{avgPastTechnicalDebt}%</PercentageScore>{' '}
+                    to{' '}
+                    <PercentageScore>
+                        {avgCurrentTechnicalDebt}%
+                    </PercentageScore>{' '}
                     during the last 4 weeks.
                 </Typography>
                 <Typography>{improveMessage}</Typography>
@@ -95,15 +103,13 @@ const ProjectHealthMessage: FC<{
         return (
             <>
                 <Typography>
-                    On average, your project health has remained at{' '}
-                    <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                    On average, your project technical debt has remained at{' '}
+                    <PercentageScore>
+                        {avgCurrentTechnicalDebt}%
+                    </PercentageScore>{' '}
                     during the last 4 weeks.
                 </Typography>
-                <Typography>
-                    {avgHealthCurrentWindow && avgHealthCurrentWindow >= 75
-                        ? keepDoingMessage
-                        : improveMessage}
-                </Typography>
+                <Typography>{keepDoingMessage}</Typography>
             </>
         );
     }
@@ -112,12 +118,13 @@ const ProjectHealthMessage: FC<{
         return (
             <>
                 <Typography>
-                    Your current health score is{' '}
-                    <PercentageScore>{health}%</PercentageScore>.
+                    Your current project technical debt is{' '}
+                    <PercentageScore>
+                        {avgCurrentTechnicalDebt}%
+                    </PercentageScore>
+                    .
                 </Typography>
-                <Typography>
-                    {health >= 75 ? keepDoingMessage : improveMessage}
-                </Typography>
+                <Typography>{improveMessage}</Typography>
             </>
         );
     }
@@ -137,7 +144,7 @@ export const ProjectSetupComplete: FC<{
                 <>
                     <Lightbulb color='primary' />
                     <Typography sx={{ fontWeight: 'bold' }} component='h4'>
-                        Project health
+                        Technical debt
                     </Typography>
                 </>
             }
@@ -149,7 +156,7 @@ export const ProjectSetupComplete: FC<{
             />
 
             {projectHealthTrend !== 'unknown' && (
-                <Link to={`/projects/${project}/insights`}>
+                <Link to={`/projects/${project}?project-status`}>
                     View more insights
                 </Link>
             )}

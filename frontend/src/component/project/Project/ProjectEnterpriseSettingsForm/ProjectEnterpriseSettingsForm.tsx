@@ -1,11 +1,18 @@
-import React, { useEffect } from 'react';
+import React, {
+    type Dispatch,
+    type ReactNode,
+    type SetStateAction,
+    useEffect,
+} from 'react';
 import Select from 'component/common/select';
-import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm';
+import type { ProjectMode } from '../hooks/useProjectEnterpriseSettingsForm.ts';
 import { Box, InputAdornment, styled, TextField } from '@mui/material';
-import { CollaborationModeTooltip } from './CollaborationModeTooltip';
+import { CollaborationModeTooltip } from './CollaborationModeTooltip.tsx';
 import Input from 'component/common/Input/Input';
-import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip';
+import { FeatureFlagNamingTooltip } from './FeatureFlagNamingTooltip.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import type { ProjectLinkTemplateSchema } from 'openapi';
+import ProjectLinkTemplates from './ProjectLinkTemplates/ProjectLinkTemplates.tsx';
 
 interface IProjectEnterpriseSettingsForm {
     projectId: string;
@@ -13,14 +20,16 @@ interface IProjectEnterpriseSettingsForm {
     featureNamingPattern?: string;
     featureNamingExample?: string;
     featureNamingDescription?: string;
-    setFeatureNamingPattern?: React.Dispatch<React.SetStateAction<string>>;
-    setFeatureNamingExample?: React.Dispatch<React.SetStateAction<string>>;
-    setFeatureNamingDescription?: React.Dispatch<React.SetStateAction<string>>;
-    setProjectMode?: React.Dispatch<React.SetStateAction<ProjectMode>>;
+    linkTemplates?: ProjectLinkTemplateSchema[];
+    setFeatureNamingPattern?: Dispatch<SetStateAction<string>>;
+    setFeatureNamingExample?: Dispatch<SetStateAction<string>>;
+    setFeatureNamingDescription?: Dispatch<SetStateAction<string>>;
+    setProjectMode?: Dispatch<SetStateAction<ProjectMode>>;
+    setLinkTemplates?: Dispatch<SetStateAction<ProjectLinkTemplateSchema[]>>;
     handleSubmit: (e: any) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -128,10 +137,12 @@ const ProjectEnterpriseSettingsForm: React.FC<
     featureNamingExample,
     featureNamingPattern,
     featureNamingDescription,
+    linkTemplates = [],
     setFeatureNamingExample,
     setFeatureNamingPattern,
     setFeatureNamingDescription,
     setProjectMode,
+    setLinkTemplates,
     errors,
 }) => {
     const { setPreviousPattern, trackPattern } =
@@ -191,7 +202,7 @@ const ProjectEnterpriseSettingsForm: React.FC<
             try {
                 new RegExp(regex);
                 delete errors.featureNamingPattern;
-            } catch (e) {
+            } catch (_e) {
                 errors.featureNamingPattern = 'Invalid regular expression';
             }
         }
@@ -253,7 +264,7 @@ const ProjectEnterpriseSettingsForm: React.FC<
                         gap: 1,
                     }}
                 >
-                    <legend>Feature flag naming pattern?</legend>
+                    <legend>Feature flag naming pattern</legend>
                     <FeatureFlagNamingTooltip />
                 </Box>
                 <StyledSubtitle>
@@ -339,6 +350,11 @@ The flag name should contain the project name, the feature name, and the ticket 
                         }
                     />
                 </StyledFlagNamingContainer>
+
+                <ProjectLinkTemplates
+                    linkTemplates={linkTemplates || []}
+                    setLinkTemplates={setLinkTemplates}
+                />
             </StyledFieldset>
             <StyledButtonContainer>{children}</StyledButtonContainer>
         </StyledForm>

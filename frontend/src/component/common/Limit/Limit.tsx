@@ -5,7 +5,7 @@ import WarningIcon from '@mui/icons-material/ErrorOutlined';
 import ErrorIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
 import type { FC } from 'react';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -82,7 +82,7 @@ export const Limit: FC<{
 
     const footerContent = isOss() ? (
         <>
-            Need help with resource limits? Try the the{' '}
+            Need help with resource limits? Try the{' '}
             <a href='https://slack.unleash.run'>Unleash community Slack</a>.
         </>
     ) : (
@@ -145,7 +145,7 @@ export const Limit: FC<{
                 <LimitExplanation>
                     <Link
                         target='_blank'
-                        to='https://docs.getunleash.io/reference/resource-limits'
+                        to='https://docs.getunleash.io/concepts/resource-limits'
                     >
                         Read more about limits
                     </Link>

@@ -1,6 +1,6 @@
 import type { ErrorRequestHandler } from 'express';
-import type { LogProvider } from '../logger';
-import { handleErrors } from '../routes/util';
+import type { LogProvider } from '../logger.js';
+import { handleErrors } from '../routes/util.js';
 
 export const catchAllErrorHandler = (
     logProvider: LogProvider,
@@ -8,7 +8,7 @@ export const catchAllErrorHandler = (
     const logger = logProvider('/debug-error-handler.ts');
     // should not remove next as express needs 4 parameters to distinguish error handler from regular handler
     /* eslint-disable @typescript-eslint/no-unused-vars */
-    return (err, req, res, next) => {
+    return (err, _req, res, _next) => {
         handleErrors(res, logger, err);
     };
 };

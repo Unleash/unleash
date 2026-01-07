@@ -1,9 +1,9 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 
 import { Route, Routes } from 'react-router-dom';
 
 import { render } from 'utils/testRenderer';
-import { ChangeRequest } from './ChangeRequest';
+import { ChangeRequest } from './ChangeRequest.tsx';
 import type {
     ChangeRequestType,
     IChangeRequestAddStrategy,
@@ -203,9 +203,7 @@ test('Display default add strategy', async () => {
 
     expect(screen.getByText('feature1')).toBeInTheDocument();
     expect(screen.getByText('Enabled')).toBeInTheDocument();
-    expect(
-        screen.getByText('Default strategy will be added'),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Adding default strategy')).toBeInTheDocument();
 });
 
 test('Display default disable feature', async () => {
@@ -226,7 +224,7 @@ test('Display default disable feature', async () => {
     expect(screen.getByText('Feature status will change')).toBeInTheDocument();
 });
 
-test('Displays feature strategy variants table when addStrategy action with variants', async () => {
+test('Displays strategy variant table when addStrategy action with variants', async () => {
     render(
         <Routes>
             <Route
@@ -269,7 +267,7 @@ test('Displays feature strategy variants table when addStrategy action with vari
         },
     );
 
-    await screen.findByText('Setting strategy variants to:');
+    await screen.findByText('Adding strategy variants:');
 });
 
 test('Displays feature strategy variants table when there is a change in the variants array', async () => {
@@ -297,7 +295,10 @@ test('Displays feature strategy variants table when there is a change in the var
             route: '/projects/default/change-requests/27',
         },
     );
-    await screen.findByText('Updating strategy variants to:');
+
+    waitFor(async () => {
+        await screen.findByText('Updating strategy variants to:');
+    });
 });
 
 test('Displays feature strategy variants table when existing strategy does not have variants and change does', async () => {
@@ -325,5 +326,5 @@ test('Displays feature strategy variants table when existing strategy does not h
             route: '/projects/default/change-requests/27',
         },
     );
-    await screen.findByText('Updating strategy variants to:');
+    await screen.findByText('Adding strategy variants:');
 });

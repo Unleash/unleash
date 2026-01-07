@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AddonSchemaParameters } from './addonSchemaParameters';
+import type { AddonSchemaParameters } from './addonSchemaParameters.js';
 
 /**
- * An [addon](https://docs.getunleash.io/reference/addons) instance description. Contains data about what kind of provider it uses, whether it's enabled or not, what events it listens for, and more.
+ * An [addon](https://docs.getunleash.io/integrate) instance description. Contains data about what kind of provider it uses, whether it's enabled or not, what events it listens for, and more.
  */
 export interface AddonSchema {
     /**

@@ -10,10 +10,10 @@ import { VirtualizedTable } from 'component/common/Table';
 import { sortTypes } from 'utils/sortTypes';
 import type { AdvancedPlaygroundFeatureSchemaEnvironments } from 'openapi';
 import { Box } from '@mui/material';
-import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell';
-import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
+import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell.tsx';
+import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell.tsx';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
-import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell';
+import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell.tsx';
 
 interface IPlaygroundEnvironmentTableProps {
     features: AdvancedPlaygroundFeatureSchemaEnvironments;
@@ -28,7 +28,7 @@ export const PlaygroundEnvironmentDiffTable = ({
 
     const data = useMemo(
         () =>
-            firstEnvFeatures.map((item, index) => ({
+            firstEnvFeatures.map((_item, index) => ({
                 ...Object.fromEntries(
                     environments.map((env) => [env, features[env][index]]),
                 ),

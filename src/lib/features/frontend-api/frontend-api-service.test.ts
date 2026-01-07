@@ -1,11 +1,11 @@
-import { FrontendApiService, type Config } from './frontend-api-service';
-import type { GlobalFrontendApiCache } from './global-frontend-api-cache';
-import type { IApiUser } from '../../types';
-import type { FeatureInterface } from 'unleash-client/lib/feature';
-import noLogger from '../../../test/fixtures/no-logger';
-import { ApiTokenType } from '../../types/models/api-token';
+import { FrontendApiService, type Config } from './frontend-api-service.js';
+import type { GlobalFrontendApiCache } from './global-frontend-api-cache.js';
+import type { IApiUser } from '../../types/index.js';
+import type { FeatureInterface } from 'unleash-client/lib/feature.js';
+import noLogger from '../../../test/fixtures/no-logger.js';
+import { ApiTokenType } from '../../types/model.js';
 import EventEmitter from 'events';
-import { FRONTEND_API_REPOSITORY_CREATED } from '../../metric-events';
+import { FRONTEND_API_REPOSITORY_CREATED } from '../../metric-events.js';
 
 test('frontend api service fetching features from global cache', async () => {
     const irrelevant = {} as any;
@@ -19,7 +19,7 @@ test('frontend api service fetching features from global cache', async () => {
                     type: 'release',
                     variants: [],
                     strategies: [
-                        { name: 'default', parameters: [], constraints: [] },
+                        { name: 'default', parameters: {}, constraints: [] },
                     ],
                 },
                 {
@@ -29,7 +29,7 @@ test('frontend api service fetching features from global cache', async () => {
                     type: 'release',
                     variants: [],
                     strategies: [
-                        { name: 'default', parameters: [], constraints: [] },
+                        { name: 'default', parameters: {}, constraints: [] },
                     ],
                 },
             ];
@@ -47,7 +47,6 @@ test('frontend api service fetching features from global cache', async () => {
     });
     const frontendApiService = new FrontendApiService(
         { getLogger: noLogger, eventBus } as unknown as Config,
-        irrelevant,
         irrelevant,
         globalFrontendApiCache,
     );

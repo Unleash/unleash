@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { safeRegExp } from '@server/util/escape-regex';
-import type { sortKeys } from '../ProjectsListSort/ProjectsListSort';
+import type { sortKeys } from '../ProjectsListSort/ProjectsListSort.jsx';
 import type { ProjectSchema } from 'openapi';
 
 export const useProjectsSearchAndSort = (

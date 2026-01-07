@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { IGroup } from 'interfaces/group';
 import type { IUser } from 'interfaces/user';
 import type { IServiceAccount } from 'interfaces/service-account';

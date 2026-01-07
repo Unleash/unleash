@@ -1,10 +1,10 @@
 import {
     type IUnleashTest,
     setupAppWithAuth,
-} from '../../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../../helpers/database-init';
-import getLogger from '../../../../fixtures/no-logger';
-import type { IPatStore } from '../../../../../lib/types/stores/pat-store';
+} from '../../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
+import getLogger from '../../../../fixtures/no-logger.js';
+import type { IPatStore } from '../../../../../lib/types/stores/pat-store.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -19,7 +19,7 @@ beforeAll(async () => {
     getLogger.setMuteError(true);
     db = await dbInit('user_pat', getLogger);
     patStore = db.stores.patStore;
-    app = await setupAppWithAuth(db.stores);
+    app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
 
     await app.request
         .post(`/auth/demo/login`)
@@ -284,7 +284,7 @@ test('should fail creation of PAT when PAT limit has been reached', async () => 
     const address = setup.server.address();
     expect(address).not.toBeNull();
     expect(address).toHaveProperty('port');
-    // @ts-ignore We just checked that we do indeed have the port
+    // @ts-expect-error We just checked that we do indeed have the port
     const baseUrl = `http://localhost:${address.port}`;
 
     const tokenCreations: Promise<any>[] = [];

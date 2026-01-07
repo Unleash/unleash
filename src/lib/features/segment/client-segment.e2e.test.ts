@@ -1,32 +1,34 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
+} from '../../../test/e2e/helpers/test-helper.js';
 import type {
     IConstraint,
     IFeatureOverview,
     IFeatureToggleClient,
     ISegment,
-} from '../../types/model';
-import { randomId } from '../../util/random-id';
-import User from '../../types/user';
+} from '../../types/model.js';
+import { randomId } from '../../util/random-id.js';
+import User from '../../types/user.js';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
-} from '../../util/segments';
-import { collectIds } from '../../util/collect-ids';
-import { arraysHaveSameItems } from '../../util/arraysHaveSameItems';
+} from '../../util/segments.js';
+import { collectIds } from '../../util/collect-ids.js';
+import { arraysHaveSameItems } from '../../util/arraysHaveSameItems.js';
 import type {
     CreateFeatureSchema,
     CreateFeatureStrategySchema,
     FeatureStrategySchema,
     UpsertSegmentSchema,
-} from '../../openapi';
-import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util';
-import { DEFAULT_PROJECT, TEST_AUDIT_USER } from '../../types';
-
+} from '../../openapi/index.js';
+import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../util/index.js';
+import { DEFAULT_PROJECT, TEST_AUDIT_USER } from '../../types/index.js';
+import { beforeAll, afterAll, afterEach, test, describe, expect } from 'vitest';
 let db: ITestDb;
 let app: IUnleashTest;
 
@@ -44,7 +46,7 @@ const fetchFeatures = (): Promise<IFeatureOverview[]> => {
 };
 
 const getFeatureStrategiesPath = (featureName: string) => {
-    return `/api/admin/projects/default/features/${featureName}/environments/default/strategies`;
+    return `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/strategies`;
 };
 
 const fetchFeatureStrategies = (featureName: string) =>
@@ -53,11 +55,9 @@ const fetchFeatureStrategies = (featureName: string) =>
         .expect(200)
         .then((res) => res.body);
 
-const fetchClientFeatures = (): Promise<IFeatureToggleClient[]> => {
-    return app.request
-        .get(FEATURES_CLIENT_BASE_PATH)
-        .expect(200)
-        .then((res) => res.body.features);
+const fetchClientFeatures = async (): Promise<IFeatureToggleClient[]> => {
+    const res = await app.request.get(FEATURES_CLIENT_BASE_PATH).expect(200);
+    return res.body.features;
 };
 
 const createSegment = (postData: UpsertSegmentSchema): Promise<ISegment> => {
@@ -197,9 +197,7 @@ const createTestSegments = async () => {
 };
 
 beforeAll(async () => {
-    db = await dbInit('segments', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('segments', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -233,7 +231,7 @@ test('should validate segment constraint values limit', async () => {
 
     await expect(
         createSegment({ name: randomId(), constraints }),
-    ).rejects.toThrow(
+    ).rejects.toThrowError(
         `Segments may not have more than ${DEFAULT_SEGMENT_VALUES_LIMIT} values`,
     );
 });
@@ -254,7 +252,7 @@ test('should validate segment constraint values limit with multiple constraints'
 
     await expect(
         createSegment({ name: randomId(), constraints }),
-    ).rejects.toThrow(
+    ).rejects.toThrowError(
         `Segments may not have more than ${DEFAULT_SEGMENT_VALUES_LIMIT} values`,
     );
 });
@@ -355,7 +353,9 @@ test('should inline segment constraints into features by default', async () => {
 
     const clientFeatures = await fetchClientFeatures();
     const clientStrategies = clientFeatures.flatMap((f) => f.strategies);
-    const clientConstraints = clientStrategies.flatMap((s) => s.constraints);
+    const clientConstraints = clientStrategies.flatMap(
+        (s) => s.constraints || [],
+    );
     const clientValues = clientConstraints.flatMap((c) => c.values);
     const uniqueValues = [...new Set(clientValues)];
 
@@ -510,7 +510,7 @@ describe('project-specific segments', () => {
                 ...segment,
                 project: project2,
             }),
-        ).rejects.toThrow(
+        ).rejects.toThrowError(
             `Invalid project. Segment is being used by strategies in other projects: ${project1}`,
         );
     });
@@ -539,12 +539,12 @@ describe('project-specific segments', () => {
             [strategy],
             project1,
         );
-        await expect(() =>
+        await expect(
             updateSegment(segment.id, {
                 ...segment,
                 project: '',
             }),
-        ).resolves;
+        ).resolves.toBeUndefined();
     });
 
     test(`can't set a specific segment project when being used by multiple projects (global)`, async () => {
@@ -585,12 +585,12 @@ describe('project-specific segments', () => {
             [strategy2],
             project2,
         );
-        await expect(() =>
+        await expect(
             updateSegment(segment.id, {
                 ...segment,
                 project: project1,
             }),
-        ).rejects.toThrow(
+        ).rejects.toThrowError(
             `Invalid project. Segment is being used by strategies in other projects: ${project1}, ${project2}`,
         );
     });

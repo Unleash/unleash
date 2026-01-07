@@ -1,15 +1,15 @@
-import SimpleAuth from '../SimpleAuth/SimpleAuth';
+import SimpleAuth from '../SimpleAuth/SimpleAuth.tsx';
 import { AuthenticationCustomComponent } from 'component/user/AuthenticationCustomComponent';
-import PasswordAuth from '../PasswordAuth';
-import HostedAuth from '../HostedAuth';
-import DemoAuth from '../DemoAuth/DemoAuth';
+import PasswordAuth from '../PasswordAuth.tsx';
+import HostedAuth from '../HostedAuth.tsx';
+import DemoAuth from '../DemoAuth/DemoAuth.tsx';
 import {
     SIMPLE_TYPE,
     DEMO_TYPE,
     PASSWORD_TYPE,
     HOSTED_TYPE,
 } from 'constants/authTypes';
-import SecondaryLoginActions from '../common/SecondaryLoginActions';
+import SecondaryLoginActions from '../common/SecondaryLoginActions.tsx';
 import useQueryParams from 'hooks/useQueryParams';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Alert } from '@mui/material';

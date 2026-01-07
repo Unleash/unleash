@@ -1,14 +1,16 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type.js';
 import type {
     IEventStore,
     IFlagResolver,
     ILastSeenStore,
     IProjectReadModel,
     IProjectStore,
-} from '../../types';
-import { ProjectReadModel } from './project-read-model';
+} from '../../types/index.js';
+import { ProjectReadModel } from './project-read-model.js';
 import type EventEmitter from 'events';
 
 let db: ITestDb;

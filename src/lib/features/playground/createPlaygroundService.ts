@@ -1,15 +1,15 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
-import { PlaygroundService } from './playground-service';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import { PlaygroundService } from './playground-service.js';
 import {
     createFakeFeatureToggleService,
     createFeatureToggleService,
-} from '../feature-toggle/createFeatureToggleService';
+} from '../feature-toggle/createFeatureToggleService.js';
 import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
-} from '../private-project/createPrivateProjectChecker';
-import { SegmentReadModel } from '../segment/segment-read-model';
-import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
+} from '../private-project/createPrivateProjectChecker.js';
+import { SegmentReadModel } from '../segment/segment-read-model.js';
+import { FakeSegmentReadModel } from '../segment/fake-segment-read-model.js';
 
 export const createPlaygroundService = (
     db: Db,
@@ -17,12 +17,12 @@ export const createPlaygroundService = (
 ): PlaygroundService => {
     const segmentReadModel = new SegmentReadModel(db);
     const privateProjectChecker = createPrivateProjectChecker(db, config);
-    const featureToggleServiceV2 = createFeatureToggleService(db, config);
+    const featureToggleService = createFeatureToggleService(db, config);
 
     const playgroundService = new PlaygroundService(
         config,
         {
-            featureToggleServiceV2,
+            featureToggleService,
             privateProjectChecker,
         },
         segmentReadModel,
@@ -34,13 +34,13 @@ export const createPlaygroundService = (
 export const createFakePlaygroundService = (config: IUnleashConfig) => {
     const segmentReadModel = new FakeSegmentReadModel();
     const privateProjectChecker = createFakePrivateProjectChecker();
-    const featureToggleServiceV2 =
+    const featureToggleService =
         createFakeFeatureToggleService(config).featureToggleService;
 
     const playgroundService = new PlaygroundService(
         config,
         {
-            featureToggleServiceV2,
+            featureToggleService,
             privateProjectChecker,
         },
         segmentReadModel,

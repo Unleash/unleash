@@ -1,14 +1,11 @@
-import { SYSTEM_USER } from '../../lib/types';
-import type {
-    IApiRequest,
-    IApiUser,
-    IAuditUser,
-    IAuthRequest,
-    IUser,
-} from '../server-impl';
+import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../../lib/types/index.js';
+import type { IApiUser, IAuditUser, IUser } from '../types/index.js';
+import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
 
 export function extractUsernameFromUser(user: IUser | IApiUser): string {
-    return (user as IUser)?.email || user?.username || SYSTEM_USER.username;
+    return (
+        (user as IUser)?.email || user?.username || SYSTEM_USER_AUDIT.username
+    );
 }
 
 export function extractUsername(req: IAuthRequest | IApiRequest): string {

@@ -5,14 +5,14 @@ import type {
     IFeatureTypeStore,
     IProjectStore,
     IUnleashStores,
-} from '../../types';
-import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production';
-import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
+} from '../../types/index.js';
+import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production.js';
+import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type.js';
 import type {
     ProjectDoraMetricsSchema,
     ProjectInsightsSchema,
-} from '../../openapi';
-import { calculateProjectHealth } from '../../domain/project-health/project-health';
+} from '../../openapi/index.js';
+import { calculateProjectHealth } from '../../domain/project-health/project-health.js';
 import { subDays } from 'date-fns';
 
 export class ProjectInsightsService {
@@ -93,6 +93,10 @@ export class ProjectInsightsService {
             activeCount,
             potentiallyStaleCount,
             staleCount,
+            technicalDebt: overview.technicalDebt,
+            /**
+             * @deprecated
+             */
             rating: overview.health,
         };
     }
@@ -101,7 +105,14 @@ export class ProjectInsightsService {
         projectId: string,
         archived: boolean = false,
         userId?: number,
-    ): Promise<{ health: number; features: IFeatureOverview[] }> {
+    ): Promise<{
+        technicalDebt: number;
+        features: IFeatureOverview[];
+        /**
+         * @deprecated
+         */
+        health: number;
+    }> {
         const [project, features] = await Promise.all([
             this.projectStore.get(projectId),
             this.featureStrategiesStore.getFeatureOverview({
@@ -112,7 +123,8 @@ export class ProjectInsightsService {
         ]);
 
         return {
-            health: project.health || 0,
+            health: project?.health || 0,
+            technicalDebt: 100 - (project?.health || 0),
             features: features,
         };
     }
@@ -151,9 +163,23 @@ export class ProjectInsightsService {
         return {
             stats,
             featureTypeCounts,
-            health,
+            technicalDebt: {
+                rating: health.technicalDebt,
+                activeCount: health.activeCount,
+                potentiallyStaleCount: health.potentiallyStaleCount,
+                staleCount: health.staleCount,
+            },
             leadTime,
             members,
+            /**
+             * @deprecated
+             */
+            health: {
+                rating: health.rating,
+                activeCount: health.activeCount,
+                potentiallyStaleCount: health.potentiallyStaleCount,
+                staleCount: health.staleCount,
+            },
         };
     }
 }

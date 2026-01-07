@@ -1,9 +1,9 @@
 import memoizee from 'memoizee';
-import type { IAuditUser, IUnleashConfig } from '../../types';
-import type { Logger } from '../../logger';
-import type SettingService from '../../services/setting-service';
-import { maintenanceSettingsKey } from '../../types/settings/maintenance-settings';
-import type { MaintenanceSchema } from '../../openapi/spec/maintenance-schema';
+import type { IAuditUser, IUnleashConfig } from '../../types/index.js';
+import type { Logger } from '../../logger.js';
+import type SettingService from '../../services/setting-service.js';
+import { maintenanceSettingsKey } from '../../types/settings/maintenance-settings.js';
+import type { MaintenanceSchema } from '../../openapi/spec/maintenance-schema.js';
 import { minutesToMilliseconds } from 'date-fns';
 
 export interface IMaintenanceStatus {
@@ -54,7 +54,7 @@ export default class MaintenanceService implements IMaintenanceStatus {
         setting: MaintenanceSchema,
         auditUser: IAuditUser,
     ): Promise<void> {
-        //@ts-ignore
+        //@ts-expect-error
         this.resolveMaintenance.clear();
         return this.settingService.insert(
             maintenanceSettingsKey,
@@ -64,5 +64,3 @@ export default class MaintenanceService implements IMaintenanceStatus {
         );
     }
 }
-
-module.exports = MaintenanceService;

@@ -2,11 +2,11 @@ import type { Request } from 'express';
 import type EventEmitter from 'events';
 import type * as https from 'https';
 import type * as http from 'http';
-import type User from './user';
-import type { IAuditUser, IUser } from './user';
-import type { IUnleashConfig } from './option';
-import type { IUnleashStores } from './stores';
-import type { IUnleashServices } from './services';
+import type User from './user.js';
+import type { IAuditUser, IUser } from './user.js';
+import type { IUnleashConfig } from './option.js';
+import type { IUnleashStores } from './stores.js';
+import type { IUnleashServices } from '../services/index.js';
 
 export interface AuthedRequest extends Request {
     user: User;

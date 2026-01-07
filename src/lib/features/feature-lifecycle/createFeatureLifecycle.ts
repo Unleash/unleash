@@ -1,24 +1,24 @@
-import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import { FakeFeatureLifecycleStore } from './fake-feature-lifecycle-store';
-import { FeatureLifecycleService } from './feature-lifecycle-service';
-import FakeEnvironmentStore from '../project-environments/fake-environment-store';
-import type { IUnleashConfig } from '../../types';
-import EventStore from '../../db/event-store';
-import type { Db } from '../../db/db';
-import { FeatureLifecycleStore } from './feature-lifecycle-store';
-import EnvironmentStore from '../project-environments/environment-store';
-import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
-import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
+import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
+import { FakeFeatureLifecycleStore } from './fake-feature-lifecycle-store.js';
+import { FeatureLifecycleService } from './feature-lifecycle-service.js';
+import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import { EventStore } from '../../db/event-store.js';
+import type { Db } from '../../db/db.js';
+import { FeatureLifecycleStore } from './feature-lifecycle-store.js';
+import EnvironmentStore from '../project-environments/environment-store.js';
+import { FeatureEnvironmentStore } from '../../db/feature-environment-store.js';
+import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
+} from '../events/createEventsService.js';
 
 export const createFeatureLifecycleService =
     (config: IUnleashConfig) => (db: Db) => {
         const { eventBus, getLogger } = config;
         const eventStore = new EventStore(db, getLogger);
-        const featureLifecycleStore = new FeatureLifecycleStore(db);
+        const featureLifecycleStore = new FeatureLifecycleStore(db, eventBus);
         const environmentStore = new EnvironmentStore(db, eventBus, config);
         const featureEnvironmentStore = new FeatureEnvironmentStore(
             db,

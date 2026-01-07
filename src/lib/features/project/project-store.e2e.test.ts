@@ -1,9 +1,11 @@
-import type { IEnvironmentStore } from '../project-environments/environment-store-type';
+import type { IEnvironmentStore } from '../project-environments/environment-store-type.js';
 
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import type { IProjectStore, IUnleashStores } from '../../types';
-import type { IProjectInsert } from './project-store-type';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { IProjectStore, IUnleashStores } from '../../types/index.js';
+import type { IProjectInsert } from './project-store-type.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -11,9 +13,7 @@ let projectStore: IProjectStore;
 let environmentStore: IEnvironmentStore;
 
 beforeAll(async () => {
-    db = await dbInit('project_store_serial', getLogger, {
-        experimental: { flags: {} },
-    });
+    db = await dbInit('project_store_serial', getLogger);
     stores = db.stores;
     projectStore = stores.projectStore;
     environmentStore = stores.environmentStore;
@@ -45,7 +45,7 @@ test('should exclude archived projects', async () => {
 test('should have default project', async () => {
     const project = await projectStore.get('default');
     expect(project).toBeDefined();
-    expect(project.id).toBe('default');
+    expect(project!.id).toBe('default');
 });
 
 test('should create new project', async () => {
@@ -58,11 +58,11 @@ test('should create new project', async () => {
     await projectStore.create(project);
     const ret = await projectStore.get('test');
     const exists = await projectStore.exists('test');
-    expect(project.id).toEqual(ret.id);
-    expect(project.name).toEqual(ret.name);
-    expect(project.description).toEqual(ret.description);
-    expect(ret.createdAt).toBeTruthy();
-    expect(ret.updatedAt).toBeTruthy();
+    expect(project.id).toEqual(ret!.id);
+    expect(project.name).toEqual(ret!.name);
+    expect(project.description).toEqual(ret!.description);
+    expect(ret!.createdAt).toBeTruthy();
+    expect(ret!.updatedAt).toBeTruthy();
     expect(exists).toBe(true);
 });
 
@@ -103,8 +103,8 @@ test('should update project', async () => {
 
     const readProject = await projectStore.get(project.id);
 
-    expect(updatedProject.name).toBe(readProject.name);
-    expect(updatedProject.description).toBe(readProject.description);
+    expect(updatedProject.name).toBe(readProject!.name);
+    expect(updatedProject.description).toBe(readProject!.description);
 });
 
 test('should give error when getting unknown project', async () => {
@@ -166,4 +166,76 @@ test('should add environment to project', async () => {
     const envs = await projectStore.getEnvironmentsForProject(project.id);
 
     expect(envs).toHaveLength(1);
+});
+
+test('should update project enterprise settings', async () => {
+    const project = {
+        id: 'test-enterprise-settings',
+        name: 'New project for enterprise settings',
+        description: 'Blah',
+        mode: 'open' as const,
+    };
+    await projectStore.create(project);
+
+    await projectStore.updateProjectEnterpriseSettings({
+        id: 'test-enterprise-settings',
+        mode: 'open' as const,
+    });
+
+    let updatedProject = await projectStore.get(project.id);
+
+    expect(updatedProject!.mode).toBe('open');
+    expect(updatedProject!.featureNaming).toEqual({
+        pattern: null,
+        example: null,
+        description: null,
+    });
+    expect(updatedProject!.linkTemplates).toEqual([]);
+
+    await projectStore.updateProjectEnterpriseSettings({
+        id: 'test-enterprise-settings',
+        mode: 'protected' as const,
+        featureNaming: {
+            pattern: 'custom-pattern-[A-Z]+',
+            example: 'custom-pattern-MYFLAG',
+            description: 'Custom description',
+        },
+        linkTemplates: [
+            {
+                title: 'My Link',
+                urlTemplate: 'https://example.com/{{flag}}',
+            },
+        ],
+    });
+
+    updatedProject = await projectStore.get(project.id);
+    expect(updatedProject!.mode).toBe('protected');
+    expect(updatedProject!.featureNaming).toEqual(
+        expect.objectContaining({
+            pattern: 'custom-pattern-[A-Z]+',
+            example: 'custom-pattern-MYFLAG',
+            description: 'Custom description',
+        }),
+    );
+    expect(updatedProject!.linkTemplates).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
+                title: 'My Link',
+                urlTemplate: 'https://example.com/{{flag}}',
+            }),
+        ]),
+    );
+
+    const linkTemplates = await projectStore.getProjectLinkTemplates(
+        project.id,
+    );
+
+    expect(linkTemplates).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
+                title: 'My Link',
+                urlTemplate: 'https://example.com/{{flag}}',
+            }),
+        ]),
+    );
 });

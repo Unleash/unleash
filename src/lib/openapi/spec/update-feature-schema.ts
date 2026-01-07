@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
+import { constraintSchema } from './constraint-schema.js';
 
 export const updateFeatureSchema = {
     $id: '#/components/schemas/updateFeatureSchema',
@@ -33,7 +33,7 @@ export const updateFeatureSchema = {
             type: 'boolean',
             example: true,
             description:
-                'If `true` the feature flag will be moved to the [archive](https://docs.getunleash.io/reference/feature-toggles#archive-a-feature-flag) with a property `archivedAt` set to current time',
+                'If `true` the feature flag will be moved to the [archive](https://docs.getunleash.io/concepts/feature-flags#archive-a-feature-flag) with a property `archivedAt` set to current time',
         },
         impressionData: {
             type: 'boolean',
@@ -49,4 +49,7 @@ export const updateFeatureSchema = {
     },
 } as const;
 
-export type UpdateFeatureSchema = FromSchema<typeof updateFeatureSchema>;
+export type UpdateFeatureSchema = FromSchema<
+    typeof updateFeatureSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

@@ -1,31 +1,39 @@
 import type EventEmitter from 'events';
-import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../types/events';
-import type { IApplication, IApplicationOverview } from './models';
-import type { IUnleashStores } from '../../../types/stores';
-import type { IUnleashConfig } from '../../../types/option';
-import type { IEventStore } from '../../../types/stores/event-store';
+import { APPLICATION_CREATED, CLIENT_REGISTER } from '../../../events/index.js';
+import type { IApplication, IApplicationOverview } from './models.js';
+import type { IUnleashStores } from '../../../types/stores.js';
+import type { IUnleashConfig } from '../../../types/option.js';
+import type { IEventStore } from '../../../types/stores/event-store.js';
 import type {
     IClientApplication,
     IClientApplications,
     IClientApplicationsSearchParams,
     IClientApplicationsStore,
-} from '../../../types/stores/client-applications-store';
-import type { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type';
-import type { IStrategyStore } from '../../../types/stores/strategy-store';
-import type { IClientInstanceStore } from '../../../types/stores/client-instance-store';
-import type { IClientApp, ISdkHeartbeat } from '../../../types/model';
-import { clientRegisterSchema } from '../shared/schema';
+} from '../../../types/stores/client-applications-store.js';
+import type { IFeatureToggleStore } from '../../feature-toggle/types/feature-toggle-store-type.js';
+import type { IStrategyStore } from '../../../types/stores/strategy-store.js';
+import type { IClientInstanceStore } from '../../../types/stores/client-instance-store.js';
+import type {
+    IClientApp,
+    IFrontendClientApp,
+    ISdkHeartbeat,
+} from '../../../types/model.js';
+import { clientRegisterSchema } from '../shared/schema.js';
 
-import type { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type';
-import { clientMetricsSchema } from '../shared/schema';
-import type { PartialSome } from '../../../types/partial';
-import type { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType';
-import { type IFlagResolver, SYSTEM_USER } from '../../../types';
-import { ALL_PROJECTS, parseStrictSemVer } from '../../../util';
-import type { Logger } from '../../../logger';
-import { findOutdatedSDKs, isOutdatedSdk } from './findOutdatedSdks';
-import type { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-schema';
-import { CLIENT_REGISTERED } from '../../../metric-events';
+import type { IClientMetricsStoreV2 } from '../client-metrics/client-metrics-store-v2-type.js';
+import type { IPrivateProjectChecker } from '../../private-project/privateProjectCheckerType.js';
+import {
+    type ApplicationCreatedEvent,
+    type IFlagResolver,
+    SYSTEM_USER,
+} from '../../../types/index.js';
+import { ALL_PROJECTS, parseStrictSemVer } from '../../../util/index.js';
+import type { Logger } from '../../../logger.js';
+import { findOutdatedSDKs, isOutdatedSdk } from './findOutdatedSdks.js';
+import type { OutdatedSdksSchema } from '../../../openapi/spec/outdated-sdks-schema.js';
+import { CLIENT_REGISTERED } from '../../../metric-events.js';
+import { NotFoundError } from '../../../error/index.js';
+import type { ClientMetricsSchema, PartialSome } from '../../../server-impl.js';
 
 export default class ClientInstanceService {
     apps = {};
@@ -90,27 +98,44 @@ export default class ClientInstanceService {
         );
     }
 
+    private updateSeenClient = (data: IClientApp) => {
+        const current = this.seenClients[this.clientKey(data)];
+        this.seenClients[this.clientKey(data)] = {
+            ...current,
+            ...data,
+        };
+    };
+
     public async registerInstance(
-        data: PartialSome<IClientApp, 'instanceId'>,
+        data: Pick<
+            ClientMetricsSchema,
+            'appName' | 'instanceId' | 'environment'
+        >,
         clientIp: string,
     ): Promise<void> {
-        const value = await clientMetricsSchema.validateAsync(data);
-        await this.clientInstanceStore.setLastSeen({
-            appName: value.appName,
-            instanceId: value.instanceId,
-            environment: value.environment,
+        this.updateSeenClient({
+            appName: data.appName,
+            instanceId: data.instanceId ?? 'default',
+            environment: data.environment,
             clientIp: clientIp,
         });
     }
 
-    public async registerClient(
+    public registerFrontendClient(data: IFrontendClientApp): void {
+        data.createdBy = SYSTEM_USER.username!;
+
+        this.updateSeenClient(data);
+    }
+
+    public async registerBackendClient(
         data: PartialSome<IClientApp, 'instanceId'>,
         clientIp: string,
     ): Promise<void> {
         const value = await clientRegisterSchema.validateAsync(data);
         value.clientIp = clientIp;
         value.createdBy = SYSTEM_USER.username!;
-        this.seenClients[this.clientKey(value)] = value;
+        value.sdkType = 'backend';
+        this.updateSeenClient(value);
         this.eventBus.emit(CLIENT_REGISTERED, value);
 
         if (value.sdkVersion && value.sdkVersion.indexOf(':') > -1) {
@@ -135,13 +160,15 @@ export default class ClientInstanceService {
             const appsToAnnounce =
                 await this.clientApplicationsStore.setUnannouncedToAnnounced();
             if (appsToAnnounce.length > 0) {
-                const events = appsToAnnounce.map((app) => ({
-                    type: APPLICATION_CREATED,
-                    createdBy: app.createdBy || SYSTEM_USER.username!,
-                    data: app,
-                    createdByUserId: app.createdByUserId || SYSTEM_USER.id,
-                    ip: '', // TODO: fix this, how do we get the ip from the client? This comes from a row in the DB
-                }));
+                const events: ApplicationCreatedEvent[] = appsToAnnounce.map(
+                    (app) => ({
+                        type: APPLICATION_CREATED,
+                        createdBy: app.createdBy || SYSTEM_USER.username!,
+                        data: app,
+                        createdByUserId: app.createdByUserId || SYSTEM_USER.id,
+                        ip: '', // TODO: fix this, how do we get the ip from the client? This comes from a row in the DB
+                    }),
+                );
                 await this.eventStore.batchStore(events);
             }
         }
@@ -161,8 +188,19 @@ export default class ClientInstanceService {
             const uniqueRegistrations = Object.values(this.seenClients);
             const uniqueApps: Partial<IClientApplication>[] = Object.values(
                 uniqueRegistrations.reduce((soFar, reg) => {
-                    // eslint-disable-next-line no-param-reassign
-                    soFar[reg.appName] = reg;
+                    let existingProjects = [];
+                    if (soFar[`${reg.appName} ${reg.environment}`]) {
+                        existingProjects =
+                            soFar[`${reg.appName} ${reg.environment}`]
+                                .projects || [];
+                    }
+                    soFar[`${reg.appName} ${reg.environment}`] = {
+                        ...reg,
+                        projects: [
+                            ...existingProjects,
+                            ...(reg.projects || []),
+                        ],
+                    };
                     return soFar;
                 }, {}),
             );
@@ -219,7 +257,11 @@ export default class ClientInstanceService {
                 this.strategyStore.getAll(),
                 this.featureToggleStore.getAll(),
             ]);
-
+        if (application === undefined) {
+            throw new NotFoundError(
+                `Could not find application with appName ${appName}`,
+            );
+        }
         return {
             appName: application.appName,
             createdAt: application.createdAt,
@@ -289,8 +331,12 @@ export default class ClientInstanceService {
         await this.clientApplicationsStore.upsert(input);
     }
 
-    async removeInstancesOlderThanTwoDays(): Promise<void> {
-        return this.clientInstanceStore.removeInstancesOlderThanTwoDays();
+    async removeOldInstances(): Promise<void> {
+        return this.clientInstanceStore.removeOldInstances();
+    }
+
+    async removeInactiveApplications(): Promise<number> {
+        return this.clientApplicationsStore.removeInactiveApplications();
     }
 
     async getOutdatedSdks(): Promise<OutdatedSdksSchema['sdks']> {
@@ -327,6 +373,7 @@ export default class ClientInstanceService {
                     instanceUsedSemver < semver
                 );
             }
+            return false;
         });
     }
 }

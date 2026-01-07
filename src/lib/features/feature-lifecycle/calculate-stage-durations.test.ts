@@ -1,7 +1,7 @@
 import {
     calculateMedians,
     calculateStageDurations,
-} from './calculate-stage-durations';
+} from './calculate-stage-durations.js';
 
 test('can find feature lifecycle stage timings', async () => {
     const now = new Date();

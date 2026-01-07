@@ -1,6 +1,5 @@
 import { createTheme } from '@mui/material/styles';
-import { colors } from './colors';
-import { alpha } from '@mui/material';
+import { colors } from './colors.js';
 import { focusable } from 'themes/themeStyles';
 
 export const baseTheme = {
@@ -16,15 +15,17 @@ export const baseTheme = {
     typography: {
         fontFamily: 'Sen, Roboto, sans-serif',
         fontWeightBold: '700',
-        fontWeightMedium: '700',
+        fontWeightMedium: '500',
+        fontWeightRegular: '400',
         allVariants: { lineHeight: 1.4 },
         button: {
-            fontSize: `${15 / 16}rem`,
+            fontSize: `${14 / 16}rem`,
             lineHeight: 1.75,
         },
         h1: {
             fontSize: '1.5rem',
             lineHeight: 1.875,
+            fontWeight: '700',
         },
         h2: {
             fontSize: `${20 / 16}rem`,
@@ -36,7 +37,7 @@ export const baseTheme = {
         },
         h4: {
             fontSize: `${15 / 16}rem`,
-            fontWeight: '400',
+            fontWeight: '700',
         },
         caption: {
             fontSize: `${12 / 16}rem`,
@@ -59,7 +60,7 @@ export const baseTheme = {
     },
     fontWeight: {
         thin: 300,
-        medium: 400,
+        medium: 500,
         semi: 700,
         bold: 700,
     },
@@ -252,16 +253,6 @@ const theme = {
         },
 
         /**
-         * For Environment Accordion.
-         * @deprecated Use `elevation1` for `disabled` and `elevation2` for `expanded` instead.
-         * remove with the flagOverviewRedesign flag
-         */
-        envAccordion: {
-            disabled: colors.grey[100],
-            expanded: colors.grey[200],
-        },
-
-        /**
          * MUI grey colors
          */
         grey: {
@@ -281,32 +272,26 @@ const theme = {
             // A400: '#A6000E',
             // A700: '#A6000E',
         },
-        variants: colors.variants,
+        variants: colors.lightVariants,
 
         /**
          * Dashboard and charts
          */
         charts: {
-            gauge: {
-                gradientStart: colors.purple[100],
-                gradientEnd: colors.purple[700],
-                background: colors.purple[50],
-                sectionLine: colors.purple[500],
-                text: colors.grey[600],
-            },
-            health: {
-                mainCircleBackground: colors.purple[800],
-                orbit: colors.grey[300],
-                circles: colors.grey[50],
-                text: colors.grey[900],
-                title: colors.grey[50],
-                healthy: colors.purple[800],
-                stale: colors.red[800],
-                potentiallyStale: colors.orange[900],
-                gradientStale: colors.red[300],
-                gradientPotentiallyStale: colors.orange[500],
-            },
+            A1: '#6C65E5',
+            A2: '#9D98EE',
+            A3: '#CECCF6',
+            A4: '#F1F0FC',
+            B1: '#1791AE',
+            C1: '#DF416E',
+            D1: '#D76500',
+            E1: '#68A611',
             series: colors.chartSeries,
+        },
+
+        inverse: {
+            main: '#222130',
+            contrastText: '#EEEEFC',
         },
     },
 } as const;
@@ -333,6 +318,7 @@ export const lightTheme = createTheme({
 
                 a: {
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                 },
             },
         },
@@ -343,6 +329,7 @@ export const lightTheme = createTheme({
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
+                    fontWeight: theme.typography.fontWeightBold,
                 }),
             },
         },
@@ -353,6 +340,7 @@ export const lightTheme = createTheme({
                 root: ({ theme }) => ({
                     ...focusable(theme),
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                     '&:hover': {
                         textDecoration: 'none',
                     },
@@ -489,9 +477,9 @@ export const lightTheme = createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     color: theme.palette.text.primary,
-                    fontSize: theme.typography.body1.fontSize,
+                    fontSize: theme.typography.body2.fontSize,
                     textTransform: 'none',
-                    fontWeight: 400,
+                    fontWeight: theme.typography.fontWeightMedium,
                     lineHeight: '1',
                     minHeight: '62px',
                     '&:hover': {
@@ -516,17 +504,6 @@ export const lightTheme = createTheme({
                 root: ({ theme }) => ({
                     '&:first-of-type, &:last-of-type': {
                         borderRadius: theme.shape.borderRadiusLarge,
-                    },
-                    // Environment accordion -- remove with `flagOverviewRedesign` flag
-                    '&.environment-accordion.Mui-expanded': {
-                        outline: `2px solid ${alpha(
-                            theme.palette.background.alternative,
-                            0.6,
-                        )}`,
-                        boxShadow: `0px 2px 8px ${alpha(
-                            theme.palette.primary.main,
-                            0.2,
-                        )}`,
                     },
                 }),
             },

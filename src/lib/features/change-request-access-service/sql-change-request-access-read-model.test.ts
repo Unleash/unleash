@@ -1,8 +1,10 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import { createChangeRequestAccessReadModel } from './createChangeRequestAccessReadModel';
-import { createTestConfig } from '../../../test/config/test-config';
-import type { IChangeRequestAccessReadModel } from './change-request-access-read-model';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { createChangeRequestAccessReadModel } from './createChangeRequestAccessReadModel.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import type { IChangeRequestAccessReadModel } from './change-request-access-read-model.js';
 
 let db: ITestDb;
 

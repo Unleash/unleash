@@ -1,30 +1,30 @@
 import EventEmitter from 'events';
-import type { RepositoryInterface } from 'unleash-client/lib/repository';
-import type { Segment } from 'unleash-client/lib/strategy/strategy';
+import type { RepositoryInterface } from 'unleash-client/lib/repository/index.js';
+import type { Segment } from 'unleash-client/lib/strategy/strategy.js';
 import type {
     EnhancedFeatureInterface,
     FeatureInterface,
-} from 'unleash-client/lib/feature';
-import type { IApiUser } from '../../types/api-user';
+} from 'unleash-client/lib/feature.js';
 import type {
     IUnleashConfig,
-    IUnleashServices,
+    IApiUser,
     IUnleashStores,
-} from '../../types';
+} from '../../types/index.js';
 import {
     mapFeaturesForClient,
     mapSegmentsForClient,
-} from '../playground/offline-unleash-client';
-import { ALL_ENVS } from '../../util/constants';
+} from '../playground/offline-unleash-client.js';
+import { ALL_ENVS } from '../../util/constants.js';
 import { UnleashEvents } from 'unleash-client';
-import type { Logger } from '../../logger';
-import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
-import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
+import type { Logger } from '../../logger.js';
+import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service.js';
+import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
 import {
     FUNCTION_TIME,
     PROXY_FEATURES_FOR_TOKEN_TIME,
-} from '../../metric-events';
-import metricsHelper from '../../util/metrics-helper';
+} from '../../metric-events.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'frontendApi' | 'eventBus'>;
 
@@ -32,7 +32,7 @@ type Stores = Pick<IUnleashStores, 'segmentReadModel'>;
 
 type Services = Pick<
     IUnleashServices,
-    'featureToggleServiceV2' | 'configurationRevisionService'
+    'featureToggleService' | 'configurationRevisionService'
 >;
 
 // TODO: remove after finished migration to global frontend api cache
@@ -98,7 +98,7 @@ export class ProxyRepository
     }
 
     getToggle(name: string): FeatureInterface {
-        //@ts-ignore (we must update the node SDK to allow undefined)
+        //@ts-expect-error (we must update the node SDK to allow undefined)
         return this.features.find((feature) => feature.name === name);
     }
 
@@ -170,7 +170,7 @@ export class ProxyRepository
     private async featuresForToken(): Promise<FeatureInterface[]> {
         const start = Date.now();
         const mappedFeatures = await mapFeaturesForClient(
-            await this.services.featureToggleServiceV2.getClientFeatures({
+            await this.services.featureToggleService.getClientFeatures({
                 project: this.token.projects,
                 environment: this.environmentNameForToken(),
             }),

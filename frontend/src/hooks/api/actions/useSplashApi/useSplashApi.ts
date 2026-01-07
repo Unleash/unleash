@@ -1,4 +1,4 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 const useSplashApi = () => {
     const { makeRequest, createRequest } = useAPI({
@@ -14,7 +14,7 @@ const useSplashApi = () => {
         try {
             const res = await makeRequest(req.caller, req.id);
             return res;
-        } catch (e) {
+        } catch (_e) {
             console.log('An exception was caught and handled.');
         }
     };

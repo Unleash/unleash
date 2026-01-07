@@ -1,27 +1,28 @@
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import metricsExample from '../../../examples/client-metrics.json';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
 import {
-    ApiTokenType,
-    type IApiToken,
-} from '../../../../lib/types/models/api-token';
-import { TEST_AUDIT_USER } from '../../../../lib/types';
-
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import metricsExample from '../../../examples/client-metrics.json' with {
+    type: 'json',
+};
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { ApiTokenType, type IApiToken } from '../../../../lib/types/model.js';
+import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
+import { vi } from 'vitest';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 let app: IUnleashTest;
 let db: ITestDb;
 
 let defaultToken: IApiToken;
 beforeAll(async () => {
-    db = await dbInit('metrics_two_api_client', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('metrics_two_api_client', getLogger);
     app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
     defaultToken =
         await app.services.apiTokenService.createApiTokenWithProjects({
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: ['default'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: 'tester',
         });
 });
@@ -72,12 +73,19 @@ test('should accept client metrics', async () => {
 test('should pick up environment from token', async () => {
     const environment = 'test';
     await db.stores.environmentStore.create({ name: 'test', type: 'test' });
-    const token = await app.services.apiTokenService.createApiToken({
-        type: ApiTokenType.CLIENT,
-        project: 'default',
-        environment,
-        tokenName: 'tester',
-    });
+    const token = await app.services.apiTokenService.createApiTokenWithProjects(
+        {
+            type: ApiTokenType.BACKEND,
+            projects: ['default'],
+            environment,
+            tokenName: 'tester',
+        },
+    );
+
+    // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
+    app.services.clientMetricsServiceV2.cachedFeatureNames = vi
+        .fn<() => Promise<string[]>>()
+        .mockResolvedValue(['test']);
 
     await app.request
         .post('/api/client/metrics')
@@ -106,23 +114,30 @@ test('should pick up environment from token', async () => {
 
 test('should set lastSeen for toggles with metrics both for toggle and toggle env', async () => {
     const start = Date.now();
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         { name: 't1' },
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         { name: 't2' },
         TEST_AUDIT_USER,
     );
 
-    const token = await app.services.apiTokenService.createApiToken({
-        type: ApiTokenType.CLIENT,
-        project: 'default',
-        environment: 'default',
-        tokenName: 'tester',
-    });
+    // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
+    app.services.clientMetricsServiceV2.cachedFeatureNames = vi
+        .fn<() => Promise<string[]>>()
+        .mockResolvedValue(['t1', 't2']);
+
+    const token = await app.services.apiTokenService.createApiTokenWithProjects(
+        {
+            type: ApiTokenType.BACKEND,
+            projects: ['default'],
+            environment: DEFAULT_ENV,
+            tokenName: 'tester',
+        },
+    );
 
     await app.request
         .post('/api/client/metrics')
@@ -149,21 +164,21 @@ test('should set lastSeen for toggles with metrics both for toggle and toggle en
 
     await app.services.clientMetricsServiceV2.bulkAdd();
     await app.services.lastSeenService.store();
-    const t1 = await app.services.featureToggleServiceV2.getFeature({
+    const t1 = await app.services.featureToggleService.getFeature({
         featureName: 't1',
         archived: false,
         environmentVariants: true,
         projectId: 'default',
     });
-    const t2 = await app.services.featureToggleServiceV2.getFeature({
+    const t2 = await app.services.featureToggleService.getFeature({
         featureName: 't2',
         archived: false,
         environmentVariants: true,
         projectId: 'default',
     });
 
-    const t1Env = t1.environments.find((e) => e.name === 'default');
-    const t2Env = t2.environments.find((e) => e.name === 'default');
+    const t1Env = t1.environments.find((e) => e.name === DEFAULT_ENV);
+    const t2Env = t2.environments.find((e) => e.name === DEFAULT_ENV);
 
     expect(t1.lastSeenAt?.getTime()).toBeGreaterThanOrEqual(start);
     expect(t1Env?.lastSeenAt.getTime()).toBeGreaterThanOrEqual(start);

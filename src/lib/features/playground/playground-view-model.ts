@@ -4,11 +4,11 @@ import type {
     PlaygroundRequestSchema,
     PlaygroundResponseSchema,
     PlaygroundStrategySchema,
-} from '../../openapi';
+} from '../../openapi/index.js';
 import type {
     AdvancedPlaygroundFeatureEvaluationResult,
     PlaygroundFeatureEvaluationResult,
-} from './playground-service';
+} from './playground-service.js';
 
 const buildStrategyLink = (
     project: string,

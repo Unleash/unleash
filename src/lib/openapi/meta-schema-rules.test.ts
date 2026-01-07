@@ -1,6 +1,7 @@
 import Ajv, { type Schema } from 'ajv';
-import { schemas } from '.';
+import { schemas } from './index.js';
 
+// @ts-expect-error: Mismatch between expected export and actual Ajv when running in ESM
 const ajv = new Ajv();
 
 type SchemaNames = keyof typeof schemas;
@@ -132,6 +133,11 @@ describe.each(metaRules)('OpenAPI schemas $name', (rule) => {
                 } else {
                     expect(validateMetaSchema.errors).toBeNull();
                 }
+            });
+        } else {
+            // Added, because vitest requires tests for all exceptions.
+            it(`${schemaName}`, () => {
+                expect(true).toBe(true);
             });
         }
     });

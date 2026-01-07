@@ -1,6 +1,5 @@
-import type { Logger } from '../../server-impl';
-import type { JobStore } from './job-store';
-import type { LogProvider } from '../../logger';
+import type { JobStore } from './job-store.js';
+import type { Logger, LogProvider } from '../../logger.js';
 import { subMinutes } from 'date-fns';
 
 export class JobService {
@@ -34,7 +33,7 @@ export class JobService {
 
             if (acquired) {
                 const { name, bucket } = acquired;
-                this.logger.info(
+                this.logger.debug(
                     `Acquired job lock for ${name} from >= ${subMinutes(
                         bucket,
                         bucketSizeInMinutes,

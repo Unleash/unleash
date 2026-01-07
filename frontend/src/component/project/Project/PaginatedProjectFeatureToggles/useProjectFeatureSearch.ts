@@ -1,14 +1,10 @@
 import {
     ArrayParam,
     encodeQueryParams,
-    NumberParam,
     StringParam,
     withDefault,
 } from 'use-query-params';
-import {
-    DEFAULT_PAGE_LIMIT,
-    useFeatureSearch,
-} from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import {
     BooleansStringParam,
     FilterItemParam,
@@ -16,6 +12,8 @@ import {
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import type { SearchFeaturesParams } from 'openapi';
+import { SafeNumberParam } from 'utils/safeNumberParam';
+import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 
 type Attribute =
     | { key: 'tag'; operator: 'INCLUDE' }
@@ -28,8 +26,8 @@ export const useProjectFeatureSearch = (
     refreshInterval = 15 * 1000,
 ) => {
     const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
+        offset: withDefault(SafeNumberParam, 0),
+        limit: withDefault(SafeNumberParam, DEFAULT_PAGE_LIMIT),
         query: StringParam,
         favoritesFirst: withDefault(BooleansStringParam, true),
         sortBy: withDefault(StringParam, 'createdAt'),
@@ -38,9 +36,11 @@ export const useProjectFeatureSearch = (
         tag: FilterItemParam,
         state: FilterItemParam,
         createdAt: FilterItemParam,
+        lastSeenAt: FilterItemParam,
         type: FilterItemParam,
         createdBy: FilterItemParam,
         archived: FilterItemParam,
+        lifecycle: FilterItemParam,
     };
     const [tableState, setTableState] = usePersistentTableState(
         `${storageKey}-${projectId}`,

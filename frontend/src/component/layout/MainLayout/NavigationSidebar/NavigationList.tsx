@@ -1,89 +1,20 @@
-import type React from 'react';
-import { type FC, useCallback } from 'react';
+import type { ComponentProps, FC } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
-import type { NavigationMode } from './NavigationMode';
+import type { NavigationMode } from './NavigationMode.tsx';
 import {
     ExternalFullListItem,
-    FullListItem,
-    MiniListItem,
+    MenuListItem,
     SignOutItem,
-} from './ListItems';
-import { Box, List, styled, Tooltip, Typography } from '@mui/material';
-import { IconRenderer } from './IconRenderer';
-import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
+} from './ListItems.tsx';
+import { Box, List } from '@mui/material';
+import { IconRenderer } from './IconRenderer.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import SearchIcon from '@mui/icons-material/Search';
-import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
-import InsightsIcon from '@mui/icons-material/Insights';
-import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import FlagIcon from '@mui/icons-material/OutlinedFlag';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-
-const StyledBadgeContainer = styled('div')(({ theme }) => ({
-    paddingLeft: theme.spacing(2),
-    display: 'flex',
-}));
-
-const EnterprisePlanBadge = () => (
-    <Tooltip title='This is an Enterprise feature'>
-        <StyledBadgeContainer>
-            <EnterpriseBadge />
-        </StyledBadgeContainer>
-    </Tooltip>
-);
-
-const useShowBadge = () => {
-    const { isPro } = useUiConfig();
-
-    const showBadge = useCallback(
-        (mode?: INavigationMenuItem['menu']['mode']) => {
-            return !!(
-                isPro() &&
-                !mode?.includes('pro') &&
-                mode?.includes('enterprise')
-            );
-        },
-        [isPro],
-    );
-    return showBadge;
-};
-
-export const SecondaryNavigationList: FC<{
-    routes: INavigationMenuItem[];
-    mode: NavigationMode;
-    onClick: (activeItem: string) => void;
-    activeItem?: string;
-}> = ({ routes, mode, onClick, activeItem }) => {
-    const showBadge = useShowBadge();
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-
-    return (
-        <List>
-            {routes.map((route) => (
-                <DynamicListItem
-                    key={route.title}
-                    onClick={() => onClick(route.path)}
-                    href={route.path}
-                    text={route.title}
-                    selected={activeItem === route.path}
-                    badge={
-                        showBadge(route?.menu?.mode) ? (
-                            <EnterprisePlanBadge />
-                        ) : null
-                    }
-                >
-                    <IconRenderer path={route.path} />
-                </DynamicListItem>
-            ))}
-        </List>
-    );
-};
+import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
+import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
+import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
+import { useRoutes } from './useRoutes.ts';
 
 export const OtherLinksList = () => {
     const { uiConfig } = useUiConfig();
@@ -104,201 +35,113 @@ export const OtherLinksList = () => {
     );
 };
 
-export const RecentProjectsList: FC<{
-    projectId: string;
-    projectName: string;
-    mode: NavigationMode;
-    onClick: () => void;
-}> = ({ projectId, projectName, mode, onClick }) => {
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-
-    return (
-        <List>
-            <DynamicListItem
-                href={`/projects/${projectId}`}
-                text={projectName}
-                onClick={onClick}
-                selected={false}
-            >
-                <ProjectIcon />
-            </DynamicListItem>
-        </List>
-    );
-};
-
-export const RecentFlagsList: FC<{
-    flags: { featureId: string; projectId: string }[];
-    mode: NavigationMode;
-    onClick: () => void;
-}> = ({ flags, mode, onClick }) => {
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-
-    return (
-        <List>
-            {flags.map((flag) => (
-                <DynamicListItem
-                    href={`/projects/${flag.projectId}/features/${flag.featureId}`}
-                    text={flag.featureId}
-                    onClick={onClick}
-                    selected={false}
-                    key={flag.featureId}
-                >
-                    <FlagIcon />
-                </DynamicListItem>
-            ))}
-        </List>
-    );
-};
-
 export const PrimaryNavigationList: FC<{
     mode: NavigationMode;
+    setMode: (mode: NavigationMode) => void;
     onClick: (activeItem: string) => void;
     activeItem?: string;
-}> = ({ mode, onClick, activeItem }) => {
-    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-    const { isOss } = useUiConfig();
+}> = ({ mode, setMode, onClick, activeItem }) => {
+    const {
+        routes: { primaryRoutes },
+    } = useRoutes();
+    const newRoute = primaryRoutes.find((route) => route.isNew);
+    const PrimaryListItem = ({
+        href,
+        text,
+        isNew,
+    }: Pick<ComponentProps<typeof MenuListItem>, 'href' | 'text'> & {
+        isNew?: boolean;
+    }) => (
+        <MenuListItem
+            href={href}
+            text={text}
+            icon={<IconRenderer path={href} />}
+            onClick={() => onClick(href)}
+            selected={activeItem === href}
+            mode={mode}
+            badge={
+                newRoute?.title.toLowerCase() === text.toLowerCase() ? (
+                    <NewFeatureBadge />
+                ) : null
+            }
+        />
+    );
+
+    const { isOss, isEnterprise } = useUiConfig();
+    const impactMetricsEnabled = useUiFlag('impactMetrics');
+    const showChangeRequestList = isEnterprise();
 
     return (
         <List>
-            <DynamicListItem
-                href='/personal'
-                text='Dashboard'
-                onClick={() => onClick('/personal')}
-                selected={activeItem === '/personal'}
-            >
-                <PersonalDashboardIcon />
-            </DynamicListItem>
-
-            <DynamicListItem
-                href='/projects'
-                text='Projects'
-                onClick={() => onClick('/projects')}
-                selected={activeItem === '/projects'}
-            >
-                <ProjectIcon />
-            </DynamicListItem>
-            <DynamicListItem
-                href='/search'
-                text='Search'
-                onClick={() => onClick('/search')}
-                selected={activeItem === '/search'}
-            >
-                <SearchIcon />
-            </DynamicListItem>
-            <DynamicListItem
-                href='/playground'
-                text='Playground'
-                onClick={() => onClick('/playground')}
-                selected={activeItem === '/playground'}
-            >
-                <PlaygroundIcon />
-            </DynamicListItem>
-            <ConditionallyRender
-                condition={!isOss()}
-                show={
-                    <DynamicListItem
-                        href='/insights'
-                        text='Insights'
-                        onClick={() => onClick('/insights')}
-                        selected={activeItem === '/insights'}
-                    >
-                        <InsightsIcon />
-                    </DynamicListItem>
-                }
+            <PrimaryListItem href='/personal' text='Dashboard' />
+            <PrimaryListItem href='/projects' text='Projects' />
+            <PrimaryListItem href='/search' text='Flags overview' />
+            {showChangeRequestList ? (
+                <PrimaryListItem
+                    href='/change-requests'
+                    text='Change requests'
+                />
+            ) : null}
+            <PrimaryListItem href='/playground' text='Playground' />
+            {!isOss() ? (
+                <PrimaryListItem href='/insights' text='Analytics' />
+            ) : null}
+            {!isOss() && impactMetricsEnabled ? (
+                <PrimaryListItem href='/impact-metrics' text='Impact Metrics' />
+            ) : null}
+            <ConfigurationAccordion
+                mode={mode}
+                setMode={setMode}
+                activeItem={activeItem}
+                onClick={onClick}
             />
         </List>
     );
 };
 
-const AccordionHeader: FC<{ children?: React.ReactNode }> = ({ children }) => {
-    return (
-        <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls='configure-content'
-            id='configure-header'
-        >
-            <Typography sx={{ fontWeight: 'bold', fontSize: 'small' }}>
-                {children}
-            </Typography>
-        </AccordionSummary>
-    );
-};
-
-export const SecondaryNavigation: FC<{
+export const AdminSettingsNavigation: FC<{
+    onClick: (activeItem: string) => void;
+    onSetFullMode: () => void;
     expanded: boolean;
+    routes: INavigationMenuItem[];
     onExpandChange: (expanded: boolean) => void;
+    activeItem: string;
     mode: NavigationMode;
-    title: string;
-    children?: React.ReactNode;
-}> = ({ mode, expanded, onExpandChange, title, children }) => {
-    return (
-        <Accordion
-            disableGutters={true}
-            sx={{
-                boxShadow: 'none',
-                '&:before': {
-                    display: 'none',
-                },
-            }}
-            expanded={expanded}
-            onChange={(_, expand) => {
-                onExpandChange(expand);
-            }}
-        >
-            {mode === 'full' && <AccordionHeader>{title}</AccordionHeader>}
-            <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>
-        </Accordion>
-    );
+}> = ({
+    onClick,
+    onSetFullMode,
+    expanded,
+    routes,
+    onExpandChange,
+    activeItem,
+    mode,
+}) => {
+    const { showOnlyAdminMenu } = useNewAdminMenu();
+    if (showOnlyAdminMenu) {
+        return <AdminMenuNavigation onClick={() => onClick('/admin')} />;
+    }
+
+    const setFullModeOnClick = (activeItem: string) => {
+        onSetFullMode();
+        onClick(activeItem);
+    };
+
+    return <AdminSettingsLink mode={mode} onClick={setFullModeOnClick} />;
 };
 
-export const RecentProjectsNavigation: FC<{
+export const AdminSettingsLink: FC<{
     mode: NavigationMode;
-    projectId: string;
-    onClick: () => void;
-}> = ({ mode, onClick, projectId }) => {
-    const { project, loading } = useProjectOverview(projectId);
-    const projectDeleted = !project.name && !loading;
-
-    if (projectDeleted) return null;
-    return (
-        <Box>
-            {mode === 'full' && (
-                <Typography
-                    sx={{
-                        fontWeight: 'bold',
-                        fontSize: 'small',
-                        ml: 2,
-                        mt: 1.5,
-                    }}
-                >
-                    Recent project
-                </Typography>
-            )}
-            <RecentProjectsList
-                projectId={projectId}
-                projectName={project.name}
+    onClick: (activeItem: string) => void;
+}> = ({ mode, onClick }) => (
+    <Box>
+        <List>
+            <MenuListItem
+                href='/admin'
+                text='Admin settings'
+                onClick={() => onClick('/admin')}
                 mode={mode}
-                onClick={onClick}
+                icon={<IconRenderer path='/admin' />}
             />
-        </Box>
-    );
-};
-
-export const RecentFlagsNavigation: FC<{
-    mode: NavigationMode;
-    flags: { featureId: string; projectId: string }[];
-    onClick: () => void;
-}> = ({ mode, onClick, flags }) => {
-    return (
-        <Box>
-            {mode === 'full' && (
-                <Typography
-                    sx={{ fontWeight: 'bold', fontSize: 'small', ml: 2 }}
-                >
-                    Recent flags
-                </Typography>
-            )}
-            <RecentFlagsList flags={flags} mode={mode} onClick={onClick} />
-        </Box>
-    );
-};
+        </List>
+    </Box>
+);

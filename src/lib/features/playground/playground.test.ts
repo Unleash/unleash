@@ -1,19 +1,20 @@
 import fc from 'fast-check';
 
 import supertest from 'supertest';
-import { createServices } from '../../services';
-import { createTestConfig } from '../../../test/config/test-config';
+import { createServices } from '../../services/index.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { it } from '@fast-check/vitest';
+import { describe } from 'vitest';
+import createStores from '../../../test/fixtures/store.js';
 
-import createStores from '../../../test/fixtures/store';
-
-import getApp from '../../app';
+import getApp from '../../app.js';
 import {
     playgroundRequestSchema,
     type PlaygroundRequestSchema,
-} from '../../openapi/spec/playground-request-schema';
+} from '../../openapi/spec/playground-request-schema.js';
 
-import { generate as generateRequest } from '../../openapi/spec/playground-request-schema.test';
-import { clientFeatures } from '../../../test/arbitraries.test';
+import { generate as generateRequest } from '../../openapi/spec/playground-request-schema.test.js';
+import { clientFeatures } from '../../../test/arbitraries.test.js';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
@@ -56,7 +57,7 @@ describe('the playground API', () => {
                         .expect('Content-Type', /json/)
                         .expect(200);
 
-                    expect(body.input).toStrictEqual(payload);
+                    expect(body.input).toEqual(payload);
 
                     return true;
                 },
@@ -80,7 +81,7 @@ describe('the playground API', () => {
                         .send(payload)
                         .expect('Content-Type', /json/);
 
-                    return status === 400;
+                    expect(status).toBe(400);
                 },
             ),
             testParams,

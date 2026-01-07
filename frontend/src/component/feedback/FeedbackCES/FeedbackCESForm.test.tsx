@@ -1,4 +1,4 @@
-import { FeedbackCESForm } from './FeedbackCESForm';
+import { FeedbackCESForm } from './FeedbackCESForm.tsx';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { render } from 'utils/testRenderer';
 

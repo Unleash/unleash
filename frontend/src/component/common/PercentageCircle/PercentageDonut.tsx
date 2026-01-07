@@ -27,6 +27,7 @@ type PercentageDonutProps = {
     disabled?: boolean | null;
     donut?: boolean;
     children?: ReactNode;
+    strokeRatio?: number;
 };
 
 export const PercentageDonut = ({
@@ -34,6 +35,7 @@ export const PercentageDonut = ({
     size = '4rem',
     disabled = false,
     children,
+    strokeRatio = 0.2,
 }: PercentageDonutProps) => {
     const theme = useTheme();
 
@@ -50,7 +52,7 @@ export const PercentageDonut = ({
     // See https://stackoverflow.com/a/70659532.
     const r = 100 / (2 * Math.PI);
     const d = 2 * r;
-    const strokeWidth = d * 0.2;
+    const strokeWidth = d * strokeRatio;
 
     const color = disabled
         ? theme.palette.neutral.border

@@ -1,5 +1,11 @@
 .container {
     width: 350px;
+    text-align: center;
+}
+
+.container > h2 {
+    margin-top: 16px;
+    margin-bottom: 16px;
 }
 
 .container > * {
@@ -24,7 +30,13 @@
 .button {
     min-width: 150px;
     margin: 1rem auto;
+    margin-top: 0.5rem;
     display: block;
+}
+
+.terms {
+    margin-top: 32px;
+    font-size: 12px;
 }
 
 @media (max-width: 500px) {

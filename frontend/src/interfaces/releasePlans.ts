@@ -1,4 +1,5 @@
-import type { IFeatureStrategy } from './strategy';
+import type { IFeatureStrategy } from './strategy.ts';
+import type { SafeguardSchema } from '../openapi/index.js';
 
 export interface IReleasePlanTemplate {
     id: string;
@@ -15,8 +16,10 @@ export interface IReleasePlanTemplate {
     createdAt: string;
     createdByUserId: number;
     milestones: IReleasePlanMilestonePayload[];
+    archivedAt?: string;
 }
 
+export type ISafeguard = SafeguardSchema;
 export interface IReleasePlan {
     id: string;
     name: string;
@@ -27,6 +30,7 @@ export interface IReleasePlan {
     featureName: string;
     environment: string;
     milestones: IReleasePlanMilestone[];
+    safeguards: ISafeguard[];
 }
 
 export interface IReleasePlanMilestone {
@@ -34,6 +38,11 @@ export interface IReleasePlanMilestone {
     name: string;
     releasePlanDefinitionId: string;
     strategies: IReleasePlanMilestoneStrategy[];
+    startedAt?: string | null;
+    pausedAt?: string | null;
+    transitionCondition?: {
+        intervalMinutes: number;
+    } | null;
 }
 
 export interface IReleasePlanMilestoneStrategy extends IFeatureStrategy {

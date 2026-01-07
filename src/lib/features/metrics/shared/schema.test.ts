@@ -1,4 +1,4 @@
-import { clientRegisterSchema, clientMetricsSchema } from './schema';
+import { clientRegisterSchema, clientMetricsSchema } from './schema.js';
 
 test('clientRegisterSchema should allow empty ("") instanceId', () => {
     const { value } = clientRegisterSchema.validate({
@@ -8,7 +8,6 @@ test('clientRegisterSchema should allow empty ("") instanceId', () => {
         started: Date.now(),
         interval: 100,
     });
-    //@ts-ignore
     expect(value.instanceId).toBe('default');
 });
 

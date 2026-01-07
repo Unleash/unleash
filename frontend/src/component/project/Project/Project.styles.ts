@@ -50,7 +50,7 @@ export const StyledInnerContainer = styled('div')(({ theme }) => ({
     alignItems: 'start',
 }));
 
-export const StyledProjectTitle = styled('span')(({ theme }) => ({
+export const StyledProjectTitle = styled('h1')(({ theme }) => ({
     margin: 0,
     width: '100%',
     fontSize: theme.typography.h1.fontSize,
@@ -59,6 +59,7 @@ export const StyledProjectTitle = styled('span')(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(2),
     overflow: 'hidden',
+    lineHeight: 1.5,
 }));
 
 export const StyledSeparator = styled('div')(({ theme }) => ({
@@ -73,7 +74,6 @@ export const StyledTabContainer = styled('div')(({ theme }) => ({
 
 export const StyledTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
-    fontSize: theme.fontSizes.bodySize,
     flexBasis: 0,
     [theme.breakpoints.down('md')]: {
         paddingLeft: theme.spacing(1),

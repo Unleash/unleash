@@ -1,8 +1,8 @@
 import { createTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
-import { colors } from './colors';
-import { baseTheme } from './theme';
+import { colors } from './colors.js';
+import { baseTheme } from './theme.js';
 
 const actionColors = {
     0.54: 'rgba(223, 222, 255, 0.54)',
@@ -195,14 +195,6 @@ const theme = {
         },
 
         /**
-         * For Environment Accordion
-         */
-        envAccordion: {
-            disabled: '#2B2A3C',
-            expanded: '#1A1924',
-        },
-
-        /**
          * MUI grey colors
          */
         grey: {
@@ -222,32 +214,26 @@ const theme = {
             // A400: '#A6000E',
             // A700: '#A6000E',
         },
-        variants: colors.variants,
+        variants: colors.darkVariants,
 
         /**
          * Dashboard and charts
          */
         charts: {
-            gauge: {
-                gradientStart: '#4C4992',
-                gradientEnd: '#9792ED',
-                background: '#39384C',
-                sectionLine: '#8c89bf',
-                text: colors.grey[800],
-            },
-            health: {
-                mainCircleBackground: '#34325E',
-                orbit: '#4C4992',
-                circles: '#2B2A3C',
-                text: colors.grey[500],
-                title: colors.grey[50],
-                healthy: colors.purple[800],
-                stale: colors.red[800],
-                potentiallyStale: colors.orange[800],
-                gradientStale: '#8A3E45',
-                gradientPotentiallyStale: '#875D21',
-            },
+            A1: '#6C65E5',
+            A2: '#9D98EE',
+            A3: '#CECCF6',
+            A4: '#F1F0FC',
+            B1: '#1791AE',
+            C1: '#DF416E',
+            D1: '#D76500',
+            E1: '#68A611',
             series: colors.chartSeries,
+        },
+
+        inverse: {
+            main: '#EEEEFC',
+            contrastText: colors.grey[900],
         },
     },
 } as const;
@@ -273,6 +259,7 @@ export const darkTheme = createTheme({
                 },
                 a: {
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                 },
                 '.dropdown-outline, .MuiAutocomplete-popper': {
                     // used for user dropdown, autocomplete, and change request primary button dropdown, notifications dropdown
@@ -287,6 +274,7 @@ export const darkTheme = createTheme({
                 root: ({ theme }) => ({
                     ...focusable(theme),
                     color: theme.palette.links,
+                    fontWeight: theme.typography.fontWeightMedium,
                     '&:hover': {
                         textDecoration: 'none',
                     },
@@ -424,9 +412,9 @@ export const darkTheme = createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     color: theme.palette.text.primary,
-                    fontSize: theme.typography.body1.fontSize,
+                    fontSize: theme.typography.body2.fontSize,
                     textTransform: 'none',
-                    fontWeight: 400,
+                    fontWeight: theme.typography.fontWeightMedium,
                     lineHeight: '1',
                     minHeight: '62px',
                     '&:hover': {
@@ -537,6 +525,7 @@ export const darkTheme = createTheme({
                 root: ({ theme }) => ({
                     borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
+                    fontWeight: theme.typography.fontWeightBold,
                     '&:not(.Mui-disabled).MuiButton-containedPrimary': {
                         backgroundColor: theme.palette.background.alternative,
                         '&:hover': {

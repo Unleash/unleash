@@ -1,4 +1,4 @@
-import { useOptionalPathParam } from './useOptionalPathParam';
+import { useOptionalPathParam } from './useOptionalPathParam.js';
 
 export const useRequiredPathParam = (key: string): string => {
     const value = useOptionalPathParam(key);

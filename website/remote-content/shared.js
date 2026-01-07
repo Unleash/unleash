@@ -93,6 +93,14 @@ export const modifyContent =
         const subpageKey = filename.replace(`${data.name}/${data.branch}/`, '');
         const subpage = data.subPages?.[subpageKey];
 
+        //  Add search the priority level. Use the sub-page's priority if it exists,
+        //  otherwise fall back to the main repository's priority.
+        const priorityLevel = subpage?.searchPriority ?? data.searchPriority;
+
+        // Create the component string, but only if a priority level was defined.
+        const priorityComponent = priorityLevel
+            ? `import SearchPriority from '@site/src/components/SearchPriority';\n\n<SearchPriority level="${priorityLevel}" />`
+            : '';
         const generationTime = new Date();
 
         const processedFilename = (() => {
@@ -133,6 +141,8 @@ custom_edit_url: ${data.repoUrl}/edit/${data.branch}/${
                 subpage ? subpageKey : 'README.md'
             }
 ---
+
+${priorityComponent}
 
 :::info Generated content
 This document was generated from ${

@@ -1,18 +1,18 @@
-import type { Db } from '../../db/db';
-import type { IUnleashConfig } from '../../types';
-import EnvironmentService from './environment-service';
-import EnvironmentStore from './environment-store';
-import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
-import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
-import ProjectStore from '../project/project-store';
-import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
-import FakeProjectStore from '../../../test/fixtures/fake-project-store';
-import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
-import FakeEnvironmentStore from './fake-environment-store';
+import type { Db } from '../../db/db.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import EnvironmentService from './environment-service.js';
+import EnvironmentStore from './environment-store.js';
+import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store.js';
+import { FeatureEnvironmentStore } from '../../db/feature-environment-store.js';
+import ProjectStore from '../project/project-store.js';
+import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store.js';
+import FakeProjectStore from '../../../test/fixtures/fake-project-store.js';
+import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store.js';
+import FakeEnvironmentStore from './fake-environment-store.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
+} from '../events/createEventsService.js';
 
 export const createEnvironmentService =
     (config: IUnleashConfig) =>

@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { styled, Typography } from '@mui/material';
 import type { ICheckedPermissions, IPermission } from 'interfaces/permissions';
-import { createProjectPermissionsStructure } from './createProjectPermissionsStructure';
-import { RolePermissionProjectItem } from './RolePermissionProjectItem';
+import { createProjectPermissionsStructure } from './createProjectPermissionsStructure.ts';
+import { RolePermissionProjectItem } from './RolePermissionProjectItem.tsx';
 
 interface IEnvironmentPermissionAccordionProps {
     permissions: IPermission[];

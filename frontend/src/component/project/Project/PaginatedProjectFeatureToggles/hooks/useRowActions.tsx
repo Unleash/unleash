@@ -2,10 +2,14 @@ import { useState } from 'react';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { MarkCompletedDialogue } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/MarkCompletedDialogue';
-import { ArchivedFeatureDeleteConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
-import { ArchivedFeatureReviveConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
+import { ArchivedFeatureDeleteConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm.tsx';
+import { ArchivedFeatureReviveConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm.tsx';
 
-export const useRowActions = (onChange: () => void, projectId: string) => {
+export const useRowActions = (
+    onChange: () => void,
+    projectId: string,
+    onArchiveConfirm?: () => void,
+) => {
     const [featureArchiveState, setFeatureArchiveState] = useState<
         string | undefined
     >();
@@ -52,7 +56,10 @@ export const useRowActions = (onChange: () => void, projectId: string) => {
 
             <FeatureArchiveDialog
                 isOpen={Boolean(featureArchiveState)}
-                onConfirm={onChange}
+                onConfirm={() => {
+                    onChange();
+                    onArchiveConfirm?.();
+                }}
                 onClose={() => {
                     setFeatureArchiveState(undefined);
                 }}

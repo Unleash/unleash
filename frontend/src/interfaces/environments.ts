@@ -1,5 +1,5 @@
-import type { CreateFeatureStrategySchema } from '../openapi';
-import type { IFeatureStrategy } from './strategy';
+import type { CreateFeatureStrategySchema } from 'openapi';
+import type { IFeatureStrategy } from './strategy.js';
 
 export interface IEnvironment {
     name: string;
@@ -12,6 +12,7 @@ export interface IEnvironment {
     apiTokenCount?: number;
     enabledToggleCount?: number;
     lastSeenAt: string;
+    requiredApprovals?: number | null;
 }
 
 export interface IProjectEnvironment extends IEnvironment {

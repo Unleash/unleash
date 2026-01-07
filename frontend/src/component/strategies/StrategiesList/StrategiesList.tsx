@@ -24,13 +24,14 @@ import type { IStrategy } from 'interfaces/strategy';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { sortTypes } from 'utils/sortTypes';
 import { useTable, useSortBy } from 'react-table';
-import { StrategySwitch } from './StrategySwitch/StrategySwitch';
-import { StrategyEditButton } from './StrategyEditButton/StrategyEditButton';
-import { StrategyDeleteButton } from './StrategyDeleteButton/StrategyDeleteButton';
+import { StrategySwitch } from './StrategySwitch/StrategySwitch.tsx';
+import { StrategyEditButton } from './StrategyEditButton/StrategyEditButton.tsx';
+import { StrategyDeleteButton } from './StrategyDeleteButton/StrategyDeleteButton.tsx';
 import { Badge } from 'component/common/Badge/Badge';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo';
-import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton';
+import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo.tsx';
+import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton.tsx';
+import { usePageTitle } from 'hooks/usePageTitle.ts';
 
 interface IDialogueMetaData {
     show: boolean;
@@ -38,94 +39,78 @@ interface IDialogueMetaData {
     onConfirm: () => void;
 }
 
-const StyledBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-}));
-
 const StyledBadge = styled(Badge)(({ theme }) => ({
     marginLeft: theme.spacing(1),
     display: 'inline-block',
 }));
 
-const StyledTypography = styled(Typography)(({ theme }) => ({
+const StyledTitle = styled(Box)(({ theme }) => ({
     display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing(1),
     fontSize: theme.fontSizes.mainHeader,
+    width: '100%',
 }));
 
-const Subtitle: FC<{
+const StyledSubtitle = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(2),
+    '& > span': {
+        fontWeight: theme.fontWeight.bold,
+    },
+}));
+
+const Title: FC<{
     title: string;
     description: string;
     link: string;
 }> = ({ title, description, link }) => (
-    <StyledTypography>
+    <StyledTitle>
         {title}
         <HelpIcon
             htmlTooltip
             tooltip={
                 <>
-                    <Typography
-                        variant='body2'
-                        component='p'
-                        sx={(theme) => ({ marginBottom: theme.spacing(1) })}
-                    >
+                    <Typography variant='body2' component='p' sx={{ mb: 1 }}>
                         {description}
                     </Typography>
-                    <Link href={link} target='_blank' variant='body2'>
+                    <Link
+                        href={link}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        variant='body2'
+                    >
                         Read more in the documentation
                     </Link>
                 </>
             }
         />
-    </StyledTypography>
+    </StyledTitle>
 );
 
-const CustomStrategyTitle: FC = () => (
-    <Box
-        sx={(theme) => ({
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: theme.spacing(1.5),
-        })}
-    >
-        <Subtitle
-            title='Custom strategies'
-            description='Custom activation strategies let you define your own activation strategies to use with Unleash.'
-            link='https://docs.getunleash.io/reference/custom-activation-strategies'
-        />
-        <AddStrategyButton />
-    </Box>
-);
-
-const PredefinedStrategyTitle = () => (
-    <Box>
-        <Subtitle
-            title='Predefined strategies'
-            description='Activation strategies let you enable a feature only for a specified audience. Different strategies use different parameters. Predefined strategies are bundled with Unleash.'
-            link='https://docs.getunleash.io/reference/activation-strategies'
-        />
-    </Box>
-);
-
-const StrategyDeprecationWarning = () => (
-    <Alert severity='warning' sx={{ mb: 2 }}>
-        Custom strategies are deprecated and may be removed in a future major
-        version. We recommend not using custom strategies going forward and
-        instead using the predefined strategies with{' '}
+const RecommendationAlert = () => (
+    <Alert severity='info' sx={{ mb: 2 }}>
+        We recommend using gradual rollout. You can customize it with{' '}
         <Link
-            href={
-                'https://docs.getunleash.io/reference/activation-strategies#constraints'
-            }
+            href='https://docs.getunleash.io/concepts/activation-strategies#constraints'
             target='_blank'
-            variant='body2'
+            rel='noopener noreferrer'
         >
             constraints
+        </Link>{' '}
+        and{' '}
+        <Link
+            href='https://docs.getunleash.io/concepts/activation-strategies#variants'
+            target='_blank'
+            rel='noopener noreferrer'
+        >
+            variants
         </Link>
-        . If you have a need for custom strategies that you cannot support with
-        constraints, please reach out to us.
+        .
     </Alert>
 );
 
@@ -144,6 +129,8 @@ export const StrategiesList = () => {
         useStrategiesApi();
     const { setToastData, setToastApiError } = useToast();
 
+    usePageTitle('Strategy types');
+
     const data = useMemo(() => {
         if (loading) {
             const mock = Array(5).fill({
@@ -152,22 +139,28 @@ export const StrategiesList = () => {
             });
             return {
                 all: mock,
-                predefined: mock,
+                standard: mock,
+                advanced: mock,
                 custom: mock,
             };
         }
 
         const all = strategies.map(
-            ({ name, description, editable, deprecated }) => ({
+            ({ name, description, editable, deprecated, advanced }) => ({
                 name,
                 description,
                 editable,
                 deprecated,
+                advanced,
             }),
         );
+
+        const predefined = all.filter((strategy) => !strategy.editable);
+
         return {
             all,
-            predefined: all.filter((strategy) => !strategy.editable),
+            standard: predefined.filter((strategy) => !strategy.advanced),
+            advanced: predefined.filter((strategy) => strategy.advanced),
             custom: all.filter((strategy) => strategy.editable),
         };
     }, [strategies, loading]);
@@ -350,19 +343,43 @@ export const StrategiesList = () => {
         [],
     );
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-        useTable(
-            {
-                columns: columns as any[], // TODO: fix after `react-table` v8 update
-                data: data.predefined,
-                initialState,
-                sortTypes,
-                autoResetSortBy: false,
-                disableSortRemove: true,
-                autoResetHiddenColumns: false,
-            },
-            useSortBy,
-        );
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows: standardRows,
+        prepareRow,
+    } = useTable(
+        {
+            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            data: data.standard,
+            initialState,
+            sortTypes,
+            autoResetSortBy: false,
+            disableSortRemove: true,
+            autoResetHiddenColumns: false,
+        },
+        useSortBy,
+    );
+
+    const {
+        getTableProps: advancedGetTableProps,
+        getTableBodyProps: advancedGetTableBodyProps,
+        headerGroups: advancedHeaderGroups,
+        rows: advancedRows,
+        prepareRow: advancedPrepareRow,
+    } = useTable(
+        {
+            columns: columns as any[], // TODO: fix after `react-table` v8 update
+            data: data.advanced,
+            initialState,
+            sortTypes,
+            autoResetSortBy: false,
+            disableSortRemove: true,
+            autoResetHiddenColumns: false,
+        },
+        useSortBy,
+    );
 
     const {
         getTableProps: customGetTableProps,
@@ -392,21 +409,25 @@ export const StrategiesList = () => {
     };
 
     return (
-        <StyledBox>
+        <>
             <PageContent
                 isLoading={loading}
                 header={
-                    <PageHeader
-                        titleElement={<PredefinedStrategyTitle />}
-                        title='Strategy types'
-                    />
+                    <PageHeader>
+                        <Title
+                            title='Standard strategies'
+                            description='Standard strategies let you enable a feature only for a specified audience. Select a starting setup, then customize your strategy with targeting and variants.'
+                            link='https://docs.getunleash.io/concepts/activation-strategies'
+                        />
+                    </PageHeader>
                 }
             >
                 <Box>
+                    <RecommendationAlert />
                     <Table {...getTableProps()}>
                         <SortableTableHeader headerGroups={headerGroups} />
                         <TableBody {...getTableBodyProps()}>
-                            {rows.map((row) => {
+                            {standardRows.map((row) => {
                                 prepareRow(row);
                                 const { key, ...rowProps } = row.getRowProps();
                                 return (
@@ -430,7 +451,7 @@ export const StrategiesList = () => {
                         </TableBody>
                     </Table>
                     <ConditionallyRender
-                        condition={rows.length === 0}
+                        condition={standardRows.length === 0}
                         show={
                             <TablePlaceholder>
                                 No strategies available.
@@ -455,12 +476,61 @@ export const StrategiesList = () => {
                 isLoading={loading}
                 header={
                     <PageHeader>
-                        <CustomStrategyTitle />
+                        <Title
+                            title='Advanced and custom strategies'
+                            description='Advanced strategies let you target based on specific properties. Custom activation strategies let you define your own activation strategies to use with Unleash.'
+                            link='https://docs.getunleash.io/concepts/activation-strategies#custom-strategies'
+                        />
                     </PageHeader>
                 }
+                sx={{ mt: 2 }}
             >
                 <Box>
-                    <StrategyDeprecationWarning />
+                    <StyledSubtitle>
+                        <span>Advanced strategies</span>
+                    </StyledSubtitle>
+                    <Table {...advancedGetTableProps()}>
+                        <SortableTableHeader
+                            headerGroups={advancedHeaderGroups}
+                        />
+                        <TableBody {...advancedGetTableBodyProps()}>
+                            {advancedRows.map((row) => {
+                                advancedPrepareRow(row);
+                                const { key, ...rowProps } = row.getRowProps();
+                                return (
+                                    <TableRow hover key={key} {...rowProps}>
+                                        {row.cells.map((cell) => {
+                                            const { key, ...cellProps } =
+                                                cell.getCellProps();
+
+                                            return (
+                                                <TableCell
+                                                    key={key}
+                                                    {...cellProps}
+                                                >
+                                                    {cell.render('Cell')}
+                                                </TableCell>
+                                            );
+                                        })}
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                    <ConditionallyRender
+                        condition={advancedRows.length === 0}
+                        show={
+                            <TablePlaceholder>
+                                No advanced strategies available.
+                            </TablePlaceholder>
+                        }
+                    />
+                </Box>
+                <Box>
+                    <StyledSubtitle sx={{ mt: 4 }}>
+                        <span>Custom strategies</span>
+                        <AddStrategyButton />
+                    </StyledSubtitle>
                     <Table {...customGetTableProps()}>
                         <SortableTableHeader
                             headerGroups={customHeaderGroups}
@@ -507,6 +577,6 @@ export const StrategiesList = () => {
                     }
                 />
             </PageContent>
-        </StyledBox>
+        </>
     );
 };

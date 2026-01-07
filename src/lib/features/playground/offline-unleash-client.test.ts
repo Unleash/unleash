@@ -3,13 +3,14 @@ import {
     mapFeaturesForClient,
     mapSegmentsForClient,
     offlineUnleashClient,
-} from './offline-unleash-client';
+} from './offline-unleash-client.js';
 import {
     Unleash as UnleashClientNode,
     InMemStorageProvider as InMemStorageProviderNode,
 } from 'unleash-client';
 import { once } from 'events';
-import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema';
+import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema.js';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 export const offlineUnleashClientNode = async ({
     features,
@@ -54,7 +55,7 @@ describe('offline client', () => {
                     stale: false,
                 },
             ],
-            context: { appName: 'other-app', environment: 'default' },
+            context: { appName: 'other-app', environment: DEFAULT_ENV },
             logError: console.log,
         });
 
@@ -108,7 +109,7 @@ describe('offline client', () => {
                     stale: false,
                 },
             ],
-            context: { appName, environment: 'default' },
+            context: { appName, environment: DEFAULT_ENV },
             logError: console.log,
         });
 
@@ -348,11 +349,11 @@ describe('offline client', () => {
 
         const result = client.isEnabled(name, context);
 
-        result.strategies.forEach((strategy) =>
+        result.strategies.forEach((strategy) => {
             expect(strategy.result.enabled).toEqual(
                 playgroundStrategyEvaluation.unknownResult,
-            ),
-        );
+            );
+        });
         expect(result.result).toEqual(
             playgroundStrategyEvaluation.unknownResult,
         );
@@ -385,11 +386,11 @@ describe('offline client', () => {
 
         const result = client.isEnabled(name, context);
 
-        result.strategies.forEach((strategy) =>
+        result.strategies.forEach((strategy) => {
             expect(strategy.result.enabled).toEqual(
                 playgroundStrategyEvaluation.unknownResult,
-            ),
-        );
+            );
+        });
         expect(result.result).toEqual(
             playgroundStrategyEvaluation.unknownResult,
         );
@@ -433,13 +434,6 @@ describe('offline client', () => {
                 },
             },
             {
-                name: 'userWithId',
-                constraints: [],
-                parameters: {
-                    userIds: 'uoea,ueoa',
-                },
-            },
-            {
                 name: 'remoteAddress',
                 constraints: [],
                 parameters: {
@@ -453,6 +447,7 @@ describe('offline client', () => {
         const client = await offlineUnleashClient({
             features: [
                 {
+                    // @ts-expect-error: hostnames is incompatible with index signature | undefined is not assignable to type string
                     strategies,
                     // impressionData: false,
                     enabled: true,

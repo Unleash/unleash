@@ -1,61 +1,62 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
-import EventStore from '../events/event-store';
-import GroupStore from '../../db/group-store';
-import { AccountStore } from '../../db/account-store';
-import EnvironmentStore from '../project-environments/environment-store';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import { EventStore } from '../events/event-store.js';
+import GroupStore from '../../db/group-store.js';
+import { AccountStore } from '../../db/account-store.js';
+import EnvironmentStore from '../project-environments/environment-store.js';
 import {
     type AccessService,
     ApiTokenService,
     FavoritesService,
     GroupService,
     ProjectService,
-} from '../../services';
-import FakeGroupStore from '../../../test/fixtures/fake-group-store';
-import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import ProjectStore from './project-store';
-import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
-import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
-import ProjectStatsStore from '../../db/project-stats-store';
+    ResourceLimitsService,
+} from '../../services/index.js';
+import FakeGroupStore from '../../../test/fixtures/fake-group-store.js';
+import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
+import ProjectStore from './project-store.js';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
+import { FeatureEnvironmentStore } from '../../db/feature-environment-store.js';
+import ProjectStatsStore from '../../db/project-stats-store.js';
 import {
     createAccessService,
     createFakeAccessService,
-} from '../access/createAccessService';
+} from '../access/createAccessService.js';
 import {
     createFakeFeatureToggleService,
     createFeatureToggleService,
-} from '../feature-toggle/createFeatureToggleService';
-import { FavoriteFeaturesStore } from '../../db/favorite-features-store';
-import { FavoriteProjectsStore } from '../../db/favorite-projects-store';
-import FakeProjectStore from '../../../test/fixtures/fake-project-store';
-import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store';
-import FakeEnvironmentStore from '../project-environments/fake-environment-store';
-import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
-import FakeProjectStatsStore from '../../../test/fixtures/fake-project-stats-store';
-import FakeFavoriteFeaturesStore from '../../../test/fixtures/fake-favorite-features-store';
-import FakeFavoriteProjectsStore from '../../../test/fixtures/fake-favorite-projects-store';
-import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
+} from '../feature-toggle/createFeatureToggleService.js';
+import { FavoriteFeaturesStore } from '../../db/favorite-features-store.js';
+import { FavoriteProjectsStore } from '../../db/favorite-projects-store.js';
+import FakeProjectStore from '../../../test/fixtures/fake-project-store.js';
+import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store.js';
+import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
+import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store.js';
+import FakeProjectStatsStore from '../../../test/fixtures/fake-project-stats-store.js';
+import FakeFavoriteFeaturesStore from '../../../test/fixtures/fake-favorite-features-store.js';
+import FakeFavoriteProjectsStore from '../../../test/fixtures/fake-favorite-projects-store.js';
+import { FakeAccountStore } from '../../../test/fixtures/fake-account-store.js';
 import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
-} from '../private-project/createPrivateProjectChecker';
-import { ProjectOwnersReadModel } from './project-owners-read-model';
-import { FakeProjectOwnersReadModel } from './fake-project-owners-read-model';
-import { FakeProjectFlagCreatorsReadModel } from './fake-project-flag-creators-read-model';
-import { ProjectFlagCreatorsReadModel } from './project-flag-creators-read-model';
-import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store';
-import { ApiTokenStore } from '../../db/api-token-store';
+} from '../private-project/createPrivateProjectChecker.js';
+import { ProjectOwnersReadModel } from './project-owners-read-model.js';
+import { FakeProjectOwnersReadModel } from './fake-project-owners-read-model.js';
+import { FakeProjectFlagCreatorsReadModel } from './fake-project-flag-creators-read-model.js';
+import { ProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.js';
+import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store.js';
+import { ApiTokenStore } from '../../db/api-token-store.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
+} from '../events/createEventsService.js';
 import {
     createFakeProjectReadModel,
     createProjectReadModel,
-} from './createProjectReadModel';
+} from './createProjectReadModel.js';
 import {
     createFakeOnboardingReadModel,
     createOnboardingReadModel,
-} from '../onboarding/createOnboardingReadModel';
+} from '../onboarding/createOnboardingReadModel.js';
 
 export const createProjectService = (
     db: Db,
@@ -117,10 +118,13 @@ export const createProjectService = (
 
     const privateProjectChecker = createPrivateProjectChecker(db, config);
 
+    const resourceLimitsService = new ResourceLimitsService(config);
+
     const apiTokenService = new ApiTokenService(
         { apiTokenStore, environmentStore },
         config,
         eventService,
+        resourceLimitsService,
     );
 
     const projectReadModel = createProjectReadModel(
@@ -153,12 +157,11 @@ export const createProjectService = (
         eventService,
         privateProjectChecker,
         apiTokenService,
+        resourceLimitsService,
     );
 };
 
-export const createFakeProjectService = (
-    config: IUnleashConfig,
-): ProjectService => {
+export const createFakeProjectService = (config: IUnleashConfig) => {
     const { getLogger } = config;
     const eventStore = new FakeEventStore();
     const projectOwnersReadModel = new FakeProjectOwnersReadModel();
@@ -191,17 +194,20 @@ export const createFakeProjectService = (
         eventService,
     );
 
+    const resourceLimitsService = new ResourceLimitsService(config);
+
     const apiTokenService = new ApiTokenService(
         { apiTokenStore, environmentStore },
         config,
         eventService,
+        resourceLimitsService,
     );
 
     const projectReadModel = createFakeProjectReadModel();
 
     const onboardingReadModel = createFakeOnboardingReadModel();
 
-    return new ProjectService(
+    const projectService = new ProjectService(
         {
             projectStore,
             projectOwnersReadModel,
@@ -223,5 +229,13 @@ export const createFakeProjectService = (
         eventService,
         privateProjectChecker,
         apiTokenService,
+        resourceLimitsService,
     );
+    return {
+        projectService,
+        environmentStore,
+        accessService,
+        eventService,
+        projectStore,
+    };
 };

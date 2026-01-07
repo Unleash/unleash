@@ -1,9 +1,8 @@
 # This docker compose setup configures:
 # - the Unleash server instance + the necessary backing Postgres database
-# - the Unleash proxy
 #
 # To learn more about all the parts of Unleash, visit
-# https://docs.getunleash.io
+# https://docs.getunleash.io/get-started/unleash-overview
 #
 # NOTE: please do not use this configuration for production setups.
 # Unleash does not take responsibility for any data leaks or other
@@ -12,11 +11,10 @@
 # This is intended to be used for demo, development, and learning
 # purposes only.
 
-version: "3.9"
 services:
 
   # The Unleash server contains the Unleash configuration and
-  # communicates with server-side SDKs and the Unleash Proxy
+  # communicates with client SDKs and Unleash Edge
   web:
     image: unleashorg/unleash-server:latest
     ports:
@@ -24,21 +22,16 @@ services:
     environment:
       # This points Unleash to its backing database (defined in the `db` section below)
       DATABASE_URL: "postgres://postgres:unleash@db/db"
-      # Disable SSL for database connections. @chriswk: why do we do this?
+      # Disable SSL for database connections.
       DATABASE_SSL: "false"
       # Changing log levels:
       LOG_LEVEL: "warn"
-      # Proxy clients must use one of these keys to connect to the
-      # Proxy. To add more keys, separate them with a comma (`key1,key2`).
       INIT_FRONTEND_API_TOKENS: "default:development.unleash-insecure-frontend-api-token"
-      # Initialize Unleash with a default set of client API tokens. To
-      # initialize Unleash with multiple tokens, separate them with a
-      # comma (`token1,token2`).
-      INIT_CLIENT_API_TOKENS: "default:development.unleash-insecure-api-token"
+      # The default API token is insecure and should not be used in production.
+      INIT_BACKEND_API_TOKENS: "default:development.unleash-insecure-api-token"
     depends_on:
       db:
         condition: service_healthy
-    command: [ "node", "index.js" ]
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:4242/health || exit 1
       interval: 1s

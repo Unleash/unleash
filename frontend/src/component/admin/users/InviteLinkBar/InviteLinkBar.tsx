@@ -1,6 +1,6 @@
 import type { VFC } from 'react';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { InviteLinkBarContent } from './InviteLinkBarContent';
+import { InviteLinkBarContent } from './InviteLinkBarContent.tsx';
 import { styled } from '@mui/material';
 
 const Bar = styled('article')(({ theme }) => ({

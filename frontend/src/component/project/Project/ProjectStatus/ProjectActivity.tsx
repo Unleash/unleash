@@ -1,7 +1,7 @@
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import ActivityCalendar, { type ThemeInput } from 'react-activity-calendar';
-import type { ProjectActivitySchema } from '../../../../openapi';
+import type { ProjectActivitySchema } from 'openapi';
 import { styled, Tooltip } from '@mui/material';
 import theme from 'themes/theme';
 import { useThemeMode } from 'hooks/useThemeMode';

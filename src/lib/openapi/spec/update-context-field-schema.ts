@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { legalValueSchema } from './legal-value-schema';
+import { legalValueSchema } from './legal-value-schema.js';
 
 export const updateContextFieldSchema = {
     $id: '#/components/schemas/updateContextFieldSchema',
@@ -14,7 +14,7 @@ export const updateContextFieldSchema = {
         stickiness: {
             type: 'boolean',
             description:
-                '`true` if this field should be available for use with [custom stickiness](https://docs.getunleash.io/reference/stickiness#custom-stickiness), otherwise `false`',
+                '`true` if this field should be available for use with [custom stickiness](https://docs.getunleash.io/concepts/stickiness#custom-stickiness), otherwise `false`',
             example: false,
         },
         sortOrder: {
@@ -34,6 +34,12 @@ export const updateContextFieldSchema = {
             items: {
                 $ref: '#/components/schemas/legalValueSchema',
             },
+        },
+        project: {
+            description:
+                'The project this context field belongs to (if it is project-specific)',
+            type: 'string',
+            example: 'my-project',
         },
     },
     components: {

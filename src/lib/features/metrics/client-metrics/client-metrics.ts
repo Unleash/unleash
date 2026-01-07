@@ -1,22 +1,22 @@
 import type { Request, Response } from 'express';
-import Controller from '../../../routes/controller';
-import type { IUnleashConfig } from '../../../types/option';
-import type { IFlagResolver, IUnleashServices } from '../../../types';
-import type { Logger } from '../../../logger';
-import type ClientMetricsServiceV2 from './metrics-service-v2';
-import { NONE } from '../../../types/permissions';
-import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import type { OpenApiService } from '../../../services/openapi-service';
-import { serializeDates } from '../../../types/serialize-dates';
+import Controller from '../../../routes/controller.js';
+import type { IUnleashConfig } from '../../../types/option.js';
+import type { IFlagResolver } from '../../../types/index.js';
+import type ClientMetricsServiceV2 from './metrics-service-v2.js';
+import { NONE } from '../../../types/permissions.js';
+import { createResponseSchema } from '../../../openapi/util/create-response-schema.js';
+import type { OpenApiService } from '../../../services/openapi-service.js';
+import { serializeDates } from '../../../types/serialize-dates.js';
 import {
     type FeatureUsageSchema,
     featureUsageSchema,
-} from '../../../openapi/spec/feature-usage-schema';
+} from '../../../openapi/spec/feature-usage-schema.js';
 import {
     featureMetricsSchema,
     type FeatureMetricsSchema,
-} from '../../../openapi/spec/feature-metrics-schema';
-import { getStandardResponses } from '../../../openapi';
+} from '../../../openapi/spec/feature-metrics-schema.js';
+import { getStandardResponses } from '../../../openapi/index.js';
+import type { IUnleashServices } from '../../../services/index.js';
 
 interface IName {
     name: string;
@@ -27,8 +27,6 @@ interface IHoursBack {
 }
 
 class ClientMetricsController extends Controller {
-    private logger: Logger;
-
     private metrics: ClientMetricsServiceV2;
 
     private openApiService: OpenApiService;
@@ -49,7 +47,6 @@ class ClientMetricsController extends Controller {
         }: Pick<IUnleashServices, 'clientMetricsServiceV2' | 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/client-metrics.ts');
 
         this.metrics = clientMetricsServiceV2;
         this.openApiService = openApiService;

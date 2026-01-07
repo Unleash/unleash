@@ -2,14 +2,13 @@ import { type FC, useMemo, useState } from 'react';
 import { Button } from '@mui/material';
 import type { FeatureSchema } from 'openapi';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
-import { ArchiveButton } from './ArchiveButton';
-import { MoreActions } from './MoreActions';
-import { ManageTags } from './ManageTags';
+import { ArchiveButton } from './ArchiveButton.tsx';
+import { MoreActions } from './MoreActions.tsx';
+import { ManageTags } from './ManageTags.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { BulkDisableDialog } from 'component/feature/FeatureToggleList/BulkDisableDialog';
 import { BulkEnableDialog } from 'component/feature/FeatureToggleList/BulkEnableDialog';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface IProjectFeaturesBatchActionsProps {
     selectedIds: string[];
@@ -72,32 +71,20 @@ export const ProjectFeaturesBatchActions: FC<
 
     return (
         <>
-            <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.disableBulkToggle)}
-                show={null}
-                elseShow={
-                    <Button
-                        variant='outlined'
-                        size='small'
-                        onClick={() => setShowBulkEnableDialog(true)}
-                    >
-                        Enable
-                    </Button>
-                }
-            />
-            <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.disableBulkToggle)}
-                show={null}
-                elseShow={
-                    <Button
-                        variant='outlined'
-                        size='small'
-                        onClick={() => setShowBulkDisableDialog(true)}
-                    >
-                        Disable
-                    </Button>
-                }
-            />
+            <Button
+                variant='outlined'
+                size='small'
+                onClick={() => setShowBulkEnableDialog(true)}
+            >
+                Enable
+            </Button>
+            <Button
+                variant='outlined'
+                size='small'
+                onClick={() => setShowBulkDisableDialog(true)}
+            >
+                Disable
+            </Button>
             <ArchiveButton
                 projectId={projectId}
                 featureIds={selectedIds}

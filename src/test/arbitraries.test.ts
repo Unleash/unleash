@@ -1,11 +1,11 @@
 import fc, { type Arbitrary } from 'fast-check';
 
-import { ALL_OPERATORS } from '../lib/util/constants';
-import type { ClientFeatureSchema } from '../lib/openapi/spec/client-feature-schema';
-import { type IVariant, WeightType } from '../lib/types/model';
-import type { FeatureStrategySchema } from '../lib/openapi/spec/feature-strategy-schema';
-import type { ConstraintSchema } from '../lib/openapi/spec/constraint-schema';
-import type { SegmentSchema } from '../lib/openapi/spec/segment-schema';
+import { ALL_OPERATORS } from '../lib/util/constants.js';
+import type { ClientFeatureSchema } from '../lib/openapi/spec/client-feature-schema.js';
+import { type IVariant, WeightType } from '../lib/types/model.js';
+import type { FeatureStrategySchema } from '../lib/openapi/spec/feature-strategy-schema.js';
+import type { ConstraintSchema } from '../lib/openapi/spec/constraint-schema.js';
+import type { SegmentSchema } from '../lib/openapi/spec/segment-schema.js';
 
 export const urlFriendlyString = (): Arbitrary<string> =>
     fc
@@ -34,6 +34,7 @@ export const commonISOTimestamp = (): Arbitrary<string> =>
         .date({
             min: new Date('1900-01-01T00:00:00.000Z'),
             max: new Date('9999-12-31T23:59:59.999Z'),
+            noInvalidDate: true,
         })
         .map((timestamp) => timestamp.toISOString());
 
@@ -107,14 +108,6 @@ export const strategies = (): Arbitrary<FeatureStrategySchema[]> =>
                 }),
             ),
 
-            strategy(
-                'userWithId',
-                fc.record({
-                    userIds: fc
-                        .uniqueArray(fc.emailAddress())
-                        .map((ids) => ids.join(',')),
-                }),
-            ),
             strategy(
                 'remoteAddress',
                 fc.record({

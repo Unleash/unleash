@@ -1,10 +1,14 @@
 import type { Response } from 'express';
-import Controller from '../controller';
-import type { FavoritesService, OpenApiService } from '../../services';
-import type { Logger } from '../../logger';
-import { type IUnleashConfig, type IUnleashServices, NONE } from '../../types';
-import { emptyResponse, getStandardResponses } from '../../openapi';
-import type { IAuthRequest } from '../unleash-types';
+import Controller from '../controller.js';
+import type {
+    FavoritesService,
+    IUnleashServices,
+    OpenApiService,
+} from '../../services/index.js';
+import type { Logger } from '../../logger.js';
+import { type IUnleashConfig, NONE } from '../../types/index.js';
+import { emptyResponse, getStandardResponses } from '../../openapi/index.js';
+import type { IAuthRequest } from '../unleash-types.js';
 
 export default class FavoritesController extends Controller {
     private favoritesService: FavoritesService;

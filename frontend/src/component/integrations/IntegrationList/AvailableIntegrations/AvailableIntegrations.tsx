@@ -1,11 +1,11 @@
 import type { VFC } from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import type { AddonTypeSchema } from 'openapi';
-import { IntegrationCard } from '../IntegrationCard/IntegrationCard';
-import { JIRA_INFO } from '../../ViewIntegration/JiraIntegration/JiraIntegration';
+import { IntegrationCard } from '../IntegrationCard/IntegrationCard.tsx';
+import { JIRA_INFO } from '../../ViewIntegration/JiraIntegration/JiraIntegration.tsx';
 import { StyledCardsGrid } from '../IntegrationList.styles';
-import { RequestIntegrationCard } from '../RequestIntegrationCard/RequestIntegrationCard';
-import { OFFICIAL_SDKS } from './SDKs';
+import { RequestIntegrationCard } from '../RequestIntegrationCard/RequestIntegrationCard.tsx';
+import { OFFICIAL_SDKS } from './SDKs.ts';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -56,6 +56,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
 }) => {
     const { isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
+    const filtered = providers?.filter((provider) => !provider.deprecated);
 
     const customProviders = [JIRA_INFO];
     const serverSdks = OFFICIAL_SDKS.filter((sdk) => sdk.type === 'server');
@@ -74,7 +75,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                     </Typography>
                 </div>
                 <StyledCardsGrid>
-                    {providers
+                    {filtered
                         ?.sort(
                             (a, b) =>
                                 a.displayName?.localeCompare(b.displayName) ||
@@ -121,6 +122,14 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                             />
                         ),
                     )}
+                    <IntegrationCard
+                        icon='terraform'
+                        title='Terraform'
+                        description={`Manage Unleash with HashiCorp’s Terraform using infrastructure as code (IaC).`}
+                        link='https://docs.getunleash.io/concepts/terraform'
+                        configureActionText='View documentation'
+                        isExternal
+                    />
                     <RequestIntegrationCard />
                 </StyledCardsGrid>
             </StyledSection>
@@ -142,15 +151,6 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                         link='/integrations/view/edge'
                         configureActionText='Learn more'
                     />
-                    <IntegrationCard
-                        icon='unleash'
-                        title='Unleash Proxy'
-                        description='The Unleash Proxy is a lightweight, stateless proxy that sits between your Unleash client SDKs and the Unleash API.'
-                        link='https://docs.getunleash.io/reference/unleash-proxy'
-                        configureActionText='View documentation'
-                        deprecated='Try Unleash Edge instead. It has all the features of Unleash Proxy and more.'
-                        isExternal
-                    />
                 </StyledCardsGrid>
             </StyledSection>
             <StyledSection>
@@ -163,7 +163,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                         need a client SDK (software developer kit) for your
                         programming language and an{' '}
                         <a
-                            href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+                            href='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
                             target='_blank'
                             rel='noopener noreferrer'
                         >
@@ -175,10 +175,10 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                     <StyledSdksGroup>
                         <Box>
                             <Typography component='h4' variant='h4'>
-                                Server-side SDKs
+                                Backend SDKs
                             </Typography>
                             <Typography variant='body2' color='text.secondary'>
-                                Server-side clients run on your server and
+                                Backend clients run on your server and
                                 communicate directly with your Unleash instance.
                             </Typography>
                         </Box>
@@ -208,12 +208,12 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                     <StyledSdksGroup>
                         <Box>
                             <Typography component='h4' variant='h4'>
-                                Client-side SDKs
+                                Frontend SDKs
                             </Typography>
                             <Typography variant='body2' color='text.secondary'>
-                                Client-side SDKs can connect to the{' '}
+                                Frontend SDKs can connect to the{' '}
                                 <a
-                                    href='https://docs.getunleash.io/reference/unleash-edge'
+                                    href='https://docs.getunleash.io/unleash-edge'
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
@@ -221,13 +221,13 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                 </a>{' '}
                                 or to the{' '}
                                 <a
-                                    href='https://docs.getunleash.io/reference/front-end-api'
+                                    href='https://docs.getunleash.io/concepts/front-end-api'
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
-                                    Unleash front-end API
+                                    Unleash Frontend API
                                 </a>
-                                , but not to the regular Unleash client API.
+                                , but not to the regular Unleash Client API.
                             </Typography>
                         </Box>
                         <StyledCardsGrid small>
@@ -261,7 +261,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                                 </Typography>
                                 <Typography>
                                     <a
-                                        href='https://docs.getunleash.io/reference/sdks#community-sdks'
+                                        href='https://docs.getunleash.io/sdks#community-sdks'
                                         target='_blank'
                                         rel='noopener noreferrer'
                                     >

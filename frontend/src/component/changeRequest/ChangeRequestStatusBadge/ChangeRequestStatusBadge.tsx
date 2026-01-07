@@ -1,6 +1,5 @@
-import type { VFC } from 'react';
-import type { ChangeRequestType } from '../changeRequest.types';
-import { Badge } from 'component/common/Badge/Badge';
+import type { FC } from 'react';
+import { Badge as MuiBadge } from 'component/common/Badge/Badge';
 import AccessTime from '@mui/icons-material/AccessTime';
 import Check from '@mui/icons-material/Check';
 import CircleOutlined from '@mui/icons-material/CircleOutlined';
@@ -8,22 +7,36 @@ import Close from '@mui/icons-material/Close';
 import ErrorIcon from '@mui/icons-material/Error';
 import PauseCircle from '@mui/icons-material/PauseCircle';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import type {
+    ScheduledChangeRequest,
+    UnscheduledChangeRequest,
+} from '../changeRequest.types';
+import { styled } from '@mui/material';
 
-interface IChangeRequestStatusBadgeProps {
-    changeRequest: ChangeRequestType | undefined;
+const Badge = styled(MuiBadge)({
+    whiteSpace: 'nowrap',
+});
+
+export interface IChangeRequestStatusBadgeProps {
+    changeRequest:
+        | Pick<UnscheduledChangeRequest, 'state'>
+        | Pick<ScheduledChangeRequest, 'state' | 'schedule'>
+        | undefined;
 }
 
-const ReviewRequiredBadge: VFC = () => (
+const ReviewRequiredBadge: FC = () => (
     <Badge color='secondary' icon={<CircleOutlined fontSize={'small'} />}>
         Review required
     </Badge>
 );
 
-const DraftBadge: VFC = () => <Badge color='warning'>Draft</Badge>;
+const DraftBadge: FC = () => <Badge color='warning'>Draft</Badge>;
 
-export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
+export const ChangeRequestStatusBadge: FC<IChangeRequestStatusBadgeProps> = ({
     changeRequest,
 }) => {
+    const { locationSettings } = useLocationSettings();
     if (!changeRequest) {
         return null;
     }
@@ -59,7 +72,9 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Scheduled': {
             const { schedule } = changeRequest;
-            const scheduledAt = new Date(schedule.scheduledAt).toLocaleString();
+            const scheduledAt = new Date(schedule.scheduledAt).toLocaleString(
+                locationSettings.locale,
+            );
 
             const { color, icon, tooltipTitle } = (() => {
                 switch (schedule.status) {

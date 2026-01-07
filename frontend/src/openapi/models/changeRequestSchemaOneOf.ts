@@ -3,12 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
-import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
-import type { ChangeRequestSchemaOneOfCreatedBy } from './changeRequestSchemaOneOfCreatedBy';
-import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
-import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
-import type { ChangeRequestSchemaOneOfState } from './changeRequestSchemaOneOfState';
+import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema.js';
+import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema.js';
+import type { ChangeRequestSchemaOneOfCreatedBy } from './changeRequestSchemaOneOfCreatedBy.js';
+import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema.js';
+import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema.js';
+import type { ChangeRequestSchemaOneOfState } from './changeRequestSchemaOneOfState.js';
+import type { ChangeRequestSchemaOneOfStateTimestamps } from './changeRequestSchemaOneOfStateTimestamps.js';
 
 export type ChangeRequestSchemaOneOf = {
     /** A list of approvals that this change request has received. */
@@ -35,6 +36,8 @@ export type ChangeRequestSchemaOneOf = {
     segments: ChangeRequestSegmentChangeSchema[];
     /** The current state of the change request. */
     state: ChangeRequestSchemaOneOfState;
+    /** A mapping of each state this change request has entered to the most recent time when it entered that state. If a change request has entered the same state multiple times, only the most recent timestamp will be included. */
+    stateTimestamps: ChangeRequestSchemaOneOfStateTimestamps;
     /** A title describing the change request's content. */
     title?: string;
 };

@@ -5,7 +5,7 @@ import type {
     IEnvironment,
     IEnvironmentClonePayload,
 } from 'interfaces/environments';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 const useEnvironmentApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

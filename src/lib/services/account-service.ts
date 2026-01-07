@@ -1,10 +1,11 @@
-import type { Logger } from '../logger';
-import type { IUser } from '../types/user';
-import type { IUnleashConfig } from '../types/option';
-import type { IAccountStore, IUnleashStores } from '../types/stores';
-import type { AccessService } from './access-service';
-import { RoleName } from '../types/model';
-import type { IAdminCount } from '../types/stores/account-store';
+import type { IUser } from '../types/user.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IAccountStore, IUnleashStores } from '../types/stores.js';
+import type { AccessService } from './access-service.js';
+import { RoleName } from '../types/model.js';
+import type { IAdminCount } from '../types/stores/account-store.js';
+import { NotFoundError } from '../error/index.js';
+import type { Logger } from '../logger.js';
 
 interface IUserWithRole extends IUser {
     rootRole: number;
@@ -32,6 +33,7 @@ export class AccountService {
     }
 
     async getAll(): Promise<IUserWithRole[]> {
+        this.logger.debug('getAll');
         const accounts = await this.store.getAll();
         const defaultRole = await this.accessService.getPredefinedRole(
             RoleName.VIEWER,
@@ -46,7 +48,12 @@ export class AccountService {
     }
 
     async getAccountByPersonalAccessToken(secret: string): Promise<IUser> {
-        return this.store.getAccountByPersonalAccessToken(secret);
+        const account =
+            await this.store.getAccountByPersonalAccessToken(secret);
+        if (account === undefined) {
+            throw new NotFoundError();
+        }
+        return account;
     }
 
     async getAdminCount(): Promise<IAdminCount> {

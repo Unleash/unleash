@@ -3,7 +3,7 @@ import { IconButton } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { TooltipResolver } from '../../TooltipResolver/TooltipResolver';
+import { TooltipResolver } from '../../TooltipResolver/TooltipResolver.tsx';
 
 interface IFavoriteIconHeaderProps {
     isActive: boolean;

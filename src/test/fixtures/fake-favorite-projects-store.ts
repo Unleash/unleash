@@ -1,17 +1,17 @@
-import type { IFavoriteProjectsStore } from '../../lib/types';
-import type { IFavoriteProjectKey } from '../../lib/types/stores/favorite-projects';
-import type { IFavoriteProject } from '../../lib/types/favorites';
+import type { IFavoriteProjectsStore } from '../../lib/types/index.js';
+import type { IFavoriteProjectKey } from '../../lib/types/stores/favorite-projects.js';
+import type { IFavoriteProject } from '../../lib/types/favorites.js';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakeFavoriteProjectsStore
     implements IFavoriteProjectsStore
 {
     addFavoriteProject(
-        favorite: IFavoriteProjectKey,
-    ): Promise<IFavoriteProject> {
+        _favorite: IFavoriteProjectKey,
+    ): Promise<IFavoriteProject | undefined> {
         return Promise.resolve(undefined);
     }
 
-    delete(key: IFavoriteProjectKey): Promise<void> {
+    delete(_key: IFavoriteProjectKey): Promise<void> {
         return Promise.resolve(undefined);
     }
 
@@ -21,15 +21,15 @@ export default class FakeFavoriteProjectsStore
 
     destroy(): void {}
 
-    exists(key: IFavoriteProjectKey): Promise<boolean> {
+    exists(_key: IFavoriteProjectKey): Promise<boolean> {
         return Promise.resolve(false);
     }
 
-    get(key: IFavoriteProjectKey): Promise<IFavoriteProject> {
+    get(_key: IFavoriteProjectKey): Promise<IFavoriteProject | undefined> {
         return Promise.resolve(undefined);
     }
 
-    getAll(query?: Object): Promise<IFavoriteProject[]> {
+    getAll(_query?: Object): Promise<IFavoriteProject[]> {
         return Promise.resolve([]);
     }
 }

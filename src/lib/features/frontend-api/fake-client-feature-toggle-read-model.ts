@@ -1,5 +1,5 @@
-import type { IFeatureToggleClient } from '../../types';
-import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type';
+import type { IFeatureToggleClient } from '../../types/index.js';
+import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type.js';
 
 export default class FakeClientFeatureToggleReadModel
     implements IClientFeatureToggleReadModel

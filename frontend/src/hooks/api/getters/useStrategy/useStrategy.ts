@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import type { IStrategy } from 'interfaces/strategy';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 interface IUseStrategyOutput {
     strategyDefinition?: IStrategy;

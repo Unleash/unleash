@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TagTypeSchema } from './tagTypeSchema';
+import type { TagTypeSchema } from './tagTypeSchema.js';
 
 /**
  * The result of validating a tag type.

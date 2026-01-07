@@ -2,7 +2,7 @@ import type {
     IClientSegment,
     IFeatureStrategySegment,
     ISegment,
-} from '../../types';
+} from '../../types/index.js';
 
 export interface ISegmentReadModel {
     getAll(ids?: number[]): Promise<ISegment[]>;

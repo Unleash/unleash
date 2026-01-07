@@ -4,7 +4,7 @@ import {
     FilterItem,
     type FilterItemParams,
     type IFilterItemProps,
-} from './FilterItem';
+} from './FilterItem.tsx';
 
 const getOption = (option: string) =>
     screen.getByText(option).closest('li')!.querySelector('input')!;
@@ -75,7 +75,7 @@ describe('FilterItem Component', () => {
     it('renders initial popover when no existing value', async () => {
         const mockState = null;
 
-        const recordedChanges = setup(mockState);
+        const _recordedChanges = setup(mockState);
 
         await screen.findByPlaceholderText('Search');
     });
@@ -86,7 +86,7 @@ describe('FilterItem Component', () => {
             values: ['1', '3', '2'],
         };
 
-        const recordedChanges = setup(mockState);
+        const _recordedChanges = setup(mockState);
 
         const valuesElement = await screen.findByText('Option 1, Option 3 +1');
         await screen.findByText('is any of');

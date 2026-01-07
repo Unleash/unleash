@@ -1,8 +1,8 @@
+import { vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
-import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultFeatureStrategyList';
-import { vi } from 'vitest';
+import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultsFeatureStrategyList.tsx';
 
 const testCases = [
     {
@@ -23,7 +23,7 @@ const testCases = [
             hasUnsatisfiedDependency: true,
         } as PlaygroundFeatureSchema,
         expectedText:
-            'If environment was enabled and parent dependencies were satisfied, then this feature flag would be TRUE with strategies evaluated like so:',
+            'If the environment was enabled and parent dependencies were satisfied, then this feature flag would be TRUE with strategies evaluated like this:',
     },
     {
         name: 'Environment enabled and parent dependency not satisfied',
@@ -43,7 +43,7 @@ const testCases = [
             hasUnsatisfiedDependency: true,
         } as PlaygroundFeatureSchema,
         expectedText:
-            'If parent dependencies were satisfied, then this feature flag would be TRUE with strategies evaluated like so:',
+            'If parent dependencies were satisfied, then this feature flag would be TRUE with strategies evaluated like this:',
     },
     {
         name: 'Environment not enabled and parent dependency satisfied',
@@ -63,7 +63,7 @@ const testCases = [
             hasUnsatisfiedDependency: false,
         } as PlaygroundFeatureSchema,
         expectedText:
-            'If environment was enabled, then this feature flag would be TRUE with strategies evaluated like so:',
+            'If the environment was enabled, then this feature flag would be TRUE with strategies evaluated like this:',
     },
     {
         name: 'Has disabled strategies and is enabled in environment',
@@ -133,6 +133,21 @@ vi.mock('../../../../../../hooks/useUiFlag', () => ({
 
 afterAll(() => {
     vi.clearAllMocks();
+});
+
+testCases.forEach(({ name, feature, expectedText }) => {
+    test(`${name} (legacy)`, async () => {
+        render(
+            <PlaygroundResultFeatureStrategyList
+                feature={feature}
+                input={
+                    { environment: 'development' } as PlaygroundRequestSchema
+                }
+            />,
+        );
+
+        await screen.findByText(expectedText);
+    });
 });
 
 testCases.forEach(({ name, feature, expectedText }) => {

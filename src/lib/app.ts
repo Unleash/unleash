@@ -4,33 +4,36 @@ import favicon from 'serve-favicon';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import errorHandler from 'errorhandler';
-import { responseTimeMetrics } from './middleware/response-time-metrics';
-import { corsOriginMiddleware } from './middleware/cors-origin-middleware';
-import rbacMiddleware from './middleware/rbac-middleware';
-import apiTokenMiddleware from './middleware/api-token-middleware';
-import type { IUnleashServices } from './types/services';
-import { IAuthType, type IUnleashConfig } from './types/option';
-import type { IUnleashStores } from './types';
+import {
+    responseTimeMetrics,
+    corsOriginMiddleware,
+} from './middleware/index.js';
+import rbacMiddleware from './middleware/rbac-middleware.js';
+import { apiAccessMiddleware } from './middleware/api-token-middleware.js';
+import type { IUnleashServices } from './services/index.js';
+import { IAuthType, type IUnleashConfig } from './types/option.js';
+import type { IUnleashStores } from './types/index.js';
 
-import IndexRouter from './routes';
+import IndexRouter from './routes/index.js';
 
-import requestLogger from './middleware/request-logger';
-import demoAuthentication from './middleware/demo-authentication';
-import ossAuthentication from './middleware/oss-authentication';
-import noAuthentication, { noApiToken } from './middleware/no-authentication';
-import secureHeaders from './middleware/secure-headers';
+import requestLogger from './middleware/request-logger.js';
+import demoAuthentication from './middleware/demo-authentication.js';
+import ossAuthentication from './middleware/oss-authentication.js';
+import noAuthentication, {
+    noApiToken,
+} from './middleware/no-authentication.js';
+import secureHeaders from './middleware/secure-headers.js';
 
-import { loadIndexHTML } from './util/load-index-html';
-import { findPublicFolder } from './util/findPublicFolder';
-import patMiddleware from './middleware/pat-middleware';
+import { loadIndexHTML, findPublicFolder } from './util/index.js';
+import patMiddleware from './middleware/pat-middleware.js';
 import type { Knex } from 'knex';
-import maintenanceMiddleware from './features/maintenance/maintenance-middleware';
-import { unless } from './middleware/unless-middleware';
-import { catchAllErrorHandler } from './middleware/catch-all-error-handler';
-import NotFoundError from './error/notfound-error';
-import { bearerTokenMiddleware } from './middleware/bearer-token-middleware';
-import { auditAccessMiddleware } from './middleware';
-import { originMiddleware } from './middleware/origin-middleware';
+import maintenanceMiddleware from './features/maintenance/maintenance-middleware.js';
+import { unless } from './middleware/unless-middleware.js';
+import { catchAllErrorHandler } from './middleware/catch-all-error-handler.js';
+import NotFoundError from './error/notfound-error.js';
+import { bearerTokenMiddleware } from './middleware/bearer-token-middleware.js';
+import { auditAccessMiddleware } from './middleware/index.js';
+import { originMiddleware } from './middleware/origin-middleware.js';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -40,7 +43,6 @@ export default async function getApp(
     db?: Knex,
 ): Promise<Application> {
     const app = express();
-
     const baseUriPath = config.server.baseUriPath || '';
     const publicFolder = config.publicFolder || findPublicFolder();
     const indexHTML = await loadIndexHTML(config, publicFolder);
@@ -74,7 +76,7 @@ export default async function getApp(
 
     app.use(cookieParser());
 
-    app.use((req, res, next) => {
+    app.use((req, _res, next) => {
         req.url = req.url.replace(/\/+/g, '/');
         next();
     });
@@ -98,17 +100,10 @@ export default async function getApp(
     app.use(baseUriPath, favicon(path.join(publicFolder, 'favicon.ico')));
     app.use(baseUriPath, express.static(publicFolder, { index: false }));
 
-    if (config.enableOAS) {
-        app.use(`${baseUriPath}/oas`, express.static('docs/api/oas'));
-    }
-
     if (config.enableOAS && services.openApiService) {
         services.openApiService.useDocs(app);
     }
-    // Support CORS preflight requests for the frontend endpoints.
-    // Preflight requests should not have Authorization headers,
-    // so this must be handled before the API token middleware.
-    app.options(
+    app.use(
         `${baseUriPath}/api/frontend*`,
         corsOriginMiddleware(services, config),
     );
@@ -121,26 +116,26 @@ export default async function getApp(
 
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             ossAuthentication(app, config.getLogger, config.server.baseUriPath);
             break;
         }
         case IAuthType.ENTERPRISE: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             if (config.authentication.customAuthHandler) {
                 config.authentication.customAuthHandler(app, config, services);
             }
             break;
         }
         case IAuthType.HOSTED: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             if (config.authentication.customAuthHandler) {
                 config.authentication.customAuthHandler(app, config, services);
             }
             break;
         }
         case IAuthType.DEMO: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             demoAuthentication(
                 app,
                 config.server.baseUriPath,
@@ -150,7 +145,7 @@ export default async function getApp(
             break;
         }
         case IAuthType.CUSTOM: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             if (config.authentication.customAuthHandler) {
                 config.authentication.customAuthHandler(app, config, services);
             }
@@ -161,12 +156,12 @@ export default async function getApp(
                 'The AuthType=none option for Unleash is no longer recommended and will be removed in version 6.',
             );
             noApiToken(baseUriPath, app);
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             noAuthentication(baseUriPath, app);
             break;
         }
         default: {
-            app.use(baseUriPath, apiTokenMiddleware(config, services));
+            app.use(baseUriPath, apiAccessMiddleware(config, services));
             demoAuthentication(
                 app,
                 config.server.baseUriPath,
@@ -195,7 +190,10 @@ export default async function getApp(
     }
 
     // Setup API routes
-    app.use(`${baseUriPath}/`, new IndexRouter(config, services, db).router);
+    app.use(
+        `${baseUriPath}/`,
+        new IndexRouter(config, services, stores, db!).router,
+    );
 
     if (process.env.NODE_ENV !== 'production') {
         app.use(errorHandler());
@@ -203,7 +201,7 @@ export default async function getApp(
         app.use(catchAllErrorHandler(config.getLogger));
     }
 
-    app.get(`${baseUriPath}`, (req, res) => {
+    app.get(`${baseUriPath}`, (_req, res) => {
         res.set('Content-Type', 'text/html');
         res.send(indexHTML);
     });

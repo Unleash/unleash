@@ -8,14 +8,14 @@ import {
     Typography,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StyledFileDropZone } from './StyledFileDropZone';
+import { StyledFileDropZone } from './StyledFileDropZone.tsx';
 import { PulsingAvatar } from 'component/common/PulsingAvatar/PulsingAvatar';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
-import { ImportExplanation } from './ImportExplanation';
+import { ImportExplanation } from './ImportExplanation.tsx';
 import { type FC, type ReactNode, useState } from 'react';
 import useToast from 'hooks/useToast';
-import { ImportLayoutContainer } from '../ImportLayoutContainer';
-import { ActionsContainer } from '../ActionsContainer';
+import { ImportLayoutContainer } from '../ImportLayoutContainer.tsx';
+import { ActionsContainer } from '../ActionsContainer.tsx';
 import {
     CODE_EDITOR_TAB,
     CODE_TEXT_FIELD,

@@ -2,14 +2,14 @@ import type {
     IEnvironment,
     IEnvironmentCreate,
     IProjectEnvironment,
-} from '../../types/model';
-import type { Store } from '../../types/stores/store';
+} from '../../types/model.js';
+import type { Store } from '../../types/stores/store.js';
 
 export interface IEnvironmentStore extends Store<IEnvironment, string> {
     exists(name: string): Promise<boolean>;
     create(env: IEnvironmentCreate): Promise<IEnvironment>;
     update(
-        env: Pick<IEnvironment, 'type' | 'protected'>,
+        env: Pick<IEnvironment, 'type' | 'protected' | 'requiredApprovals'>,
         name: string,
     ): Promise<IEnvironment>;
     updateProperty(
@@ -30,4 +30,7 @@ export interface IEnvironmentStore extends Store<IEnvironment, string> {
         projectId: string,
         query?: Object,
     ): Promise<IProjectEnvironment[]>;
+    getChangeRequestEnvironments(
+        environments: string[],
+    ): Promise<{ name: string; requiredApprovals: number }[]>;
 }

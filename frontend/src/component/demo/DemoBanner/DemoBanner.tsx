@@ -27,18 +27,14 @@ const StyledButton = styled(Button)(({ theme }) => ({
     '&&&': {
         fontSize: theme.fontSizes.smallBody,
     },
-}));
+})) as typeof Button;
 
 const StyledQuestionsButton = styled(StyledButton)(({ theme }) => ({
     color: theme.palette.web.contrastText,
     border: `1px solid rgba(255, 255, 255, 0.5)`,
 })) as typeof Button;
 
-interface IDemoBannerProps {
-    onPlans: () => void;
-}
-
-export const DemoBanner = ({ onPlans }: IDemoBannerProps) => {
+export const DemoBanner = () => {
     const { trackEvent } = usePlausibleTracker();
 
     return (
@@ -63,7 +59,12 @@ export const DemoBanner = ({ onPlans }: IDemoBannerProps) => {
                 <StyledButton
                     variant='contained'
                     color='primary'
-                    onClick={onPlans}
+                    href='https://www.getunleash.io/pricing'
+                    target='_blank'
+                    rel='noreferrer'
+                    onClick={() => {
+                        trackEvent('demo-see-plans');
+                    }}
                 >
                     Get started
                 </StyledButton>

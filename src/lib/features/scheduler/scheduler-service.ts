@@ -1,7 +1,7 @@
 import type EventEmitter from 'events';
-import type { Logger, LogProvider } from '../../logger';
-import type { IMaintenanceStatus } from '../maintenance/maintenance-service';
-import { SCHEDULER_JOB_TIME } from '../../metric-events';
+import type { Logger, LogProvider } from '../../logger.js';
+import type { IMaintenanceStatus } from '../maintenance/maintenance-service.js';
+import { SCHEDULER_JOB_TIME } from '../../metric-events.js';
 
 // returns between min and max seconds in ms
 // when schedule interval is smaller than max jitter then no jitter

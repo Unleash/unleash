@@ -1,9 +1,7 @@
 import type { EventEmitter } from 'events';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
-import type { Logger } from '../logger';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
 import type {
-    IAccessInfo,
     IAccessStore,
     IProjectRoleUsage,
     IRole,
@@ -11,23 +9,23 @@ import type {
     IUserPermission,
     IUserRole,
     IUserWithProjectRoles,
-} from '../types/stores/access-store';
-import type { IPermission, IUserAccessOverview } from '../types/model';
-import NotFoundError from '../error/notfound-error';
+} from '../types/stores/access-store.js';
+import type { IPermission, IUserAccessOverview } from '../types/model.js';
+import NotFoundError from '../error/notfound-error.js';
 import {
     ENVIRONMENT_PERMISSION_TYPE,
     PROJECT_ROLE_TYPES,
     ROOT_PERMISSION_TYPE,
     ROOT_ROLE_TYPES,
-} from '../util/constants';
-import type { Db } from './db';
+} from '../util/constants.js';
+import type { Db } from './db.js';
 import type {
     IdPermissionRef,
     NamePermissionRef,
     PermissionRef,
-} from '../services/access-service';
-import { inTransaction } from './transaction';
-import BadDataError from '../error/bad-data-error';
+} from '../services/access-service.js';
+import { inTransaction } from './transaction.js';
+import BadDataError from '../error/bad-data-error.js';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -56,15 +54,12 @@ interface IPermissionRow {
 type NameAndIdPermission = NamePermissionRef & IdPermissionRef;
 
 export class AccessStore implements IAccessStore {
-    private logger: Logger;
-
     private timer: Function;
 
     private db: Db;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: Function) {
+    constructor(db: Db, eventBus: EventEmitter, _getLogger: Function) {
         this.db = db;
-        this.logger = getLogger('access-store.ts');
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'access-store',
@@ -257,7 +252,7 @@ export class AccessStore implements IAccessStore {
     }
 
     mapUserPermission(row: IPermissionRow): IUserPermission {
-        let project: string | undefined = undefined;
+        let project: string | undefined;
         // Since the editor should have access to the default project,
         // we map the project to the project and environment specific
         // permissions that are connected to the editor role.
@@ -555,20 +550,6 @@ export class AccessStore implements IAccessStore {
         });
     }
 
-    async removeGroupFromRole(
-        groupId: number,
-        roleId: number,
-        projectId?: string,
-    ): Promise<void> {
-        return this.db(T.GROUP_ROLE)
-            .where({
-                group_id: groupId,
-                role_id: roleId,
-                project: projectId,
-            })
-            .delete();
-    }
-
     async updateUserProjectRole(
         userId: number,
         roleId: number,
@@ -584,63 +565,6 @@ export class AccessStore implements IAccessStore {
                 this.db(T.ROLES).select('id as role_id').where('type', 'root'),
             )
             .update('role_id', roleId);
-    }
-
-    updateGroupProjectRole(
-        groupId: number,
-        roleId: number,
-        projectId: string,
-    ): Promise<void> {
-        return this.db(T.GROUP_ROLE)
-            .where({
-                group_id: groupId,
-                project: projectId,
-            })
-            .whereNotIn(
-                'role_id',
-                this.db(T.ROLES).select('id as role_id').where('type', 'root'),
-            )
-            .update('role_id', roleId);
-    }
-
-    async addRoleAccessToProject(
-        users: IAccessInfo[],
-        groups: IAccessInfo[],
-        projectId: string,
-        roleId: number,
-        createdBy: string,
-    ): Promise<void> {
-        const userRows = users.map((user) => {
-            return {
-                user_id: user.id,
-                project: projectId,
-                role_id: roleId,
-            };
-        });
-
-        const groupRows = groups.map((group) => {
-            return {
-                group_id: group.id,
-                project: projectId,
-                role_id: roleId,
-                created_by: createdBy,
-            };
-        });
-
-        await inTransaction(this.db, async (tx) => {
-            if (userRows.length > 0) {
-                await tx(T.ROLE_USER)
-                    .insert(userRows)
-                    .onConflict(['project', 'role_id', 'user_id'])
-                    .merge();
-            }
-            if (groupRows.length > 0) {
-                await tx(T.GROUP_ROLE)
-                    .insert(groupRows)
-                    .onConflict(['project', 'role_id', 'group_id'])
-                    .merge();
-            }
-        });
     }
 
     async addAccessToProject(

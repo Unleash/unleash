@@ -8,7 +8,7 @@ import omit from 'lodash.omit';
 import {
     getSegmentChangesThatWouldBeOverwritten,
     getStrategyChangesThatWouldBeOverwritten,
-} from './strategy-change-diff-calculation';
+} from './strategy-change-diff-calculation.js';
 
 describe('Strategy change conflict detection', () => {
     const existingStrategy: IFeatureStrategy = {
@@ -274,7 +274,7 @@ describe('Strategy change conflict detection', () => {
                     name: 'variant1',
                     weight: 1000,
                     payload: {
-                        type: 'string',
+                        type: 'string' as const,
                         value: 'beaty',
                     },
                     stickiness: 'userId',

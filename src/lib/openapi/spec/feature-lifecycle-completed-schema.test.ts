@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { FeatureLifecycleCompletedSchema } from './feature-lifecycle-completed-schema';
+import { validateSchema } from '../validate.js';
+import type { FeatureLifecycleCompletedSchema } from './feature-lifecycle-completed-schema.js';
 
 test('featureLifecycleCompletedSchema', () => {
     const data: FeatureLifecycleCompletedSchema = {

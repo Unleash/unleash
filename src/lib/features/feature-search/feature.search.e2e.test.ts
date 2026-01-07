@@ -1,27 +1,27 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import { subDays } from 'date-fns';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
     insertLastSeenAt,
     type IUnleashTest,
     setupAppWithAuth,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
-import type { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters.js';
 import {
-    CREATE_FEATURE_STRATEGY,
     DEFAULT_PROJECT,
     type IUnleashStores,
-    UPDATE_FEATURE_ENVIRONMENT,
-} from '../../types';
-import { DEFAULT_ENV } from '../../util';
+    TEST_AUDIT_USER,
+} from '../../types/index.js';
+import { DEFAULT_ENV } from '../../util/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let stores: IUnleashStores;
 
 beforeAll(async () => {
-    db = await dbInit('feature_search', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_search', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {
@@ -43,36 +43,20 @@ beforeAll(async () => {
         })
         .expect(200);
 
-    await stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
-    });
-
-    await app.linkProjectToEnvironment('default', 'development');
-
-    await stores.accessStore.addPermissionsToRole(
-        body.rootRole,
-        [
-            { name: UPDATE_FEATURE_ENVIRONMENT },
-            { name: CREATE_FEATURE_STRATEGY },
-        ],
-        'development',
+    await app.services.userService.createUser(
+        {
+            username: 'admin@test.com',
+            rootRole: 1,
+        },
+        TEST_AUDIT_USER,
     );
 
-    await stores.environmentStore.create({
-        name: 'production',
-        type: 'production',
-    });
-
-    await app.linkProjectToEnvironment('default', 'production');
-
-    await stores.accessStore.addPermissionsToRole(
-        body.rootRole,
-        [
-            { name: UPDATE_FEATURE_ENVIRONMENT },
-            { name: CREATE_FEATURE_STRATEGY },
-        ],
-        'production',
+    await app.services.userService.createUser(
+        {
+            username: 'admin2@test.com',
+            rootRole: 1,
+        },
+        TEST_AUDIT_USER,
     );
 });
 
@@ -98,6 +82,22 @@ const searchFeatures = async (
     return app.request
         .get(
             `/api/admin/search/features?query=${query}&project=${project}&archived=${archived}`,
+        )
+        .expect(expectedCode);
+};
+
+const searchFeaturesWithLifecycle = async (
+    {
+        query = '',
+        project = 'IS:default',
+        archived = 'IS:false',
+        lifecycle = 'IS:initial',
+    }: FeatureSearchQueryParameters,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(
+            `/api/admin/search/features?query=${query}&project=${project}&archived=${archived}&lifecycle=${lifecycle}`,
         )
         .expect(expectedCode);
 };
@@ -180,7 +180,7 @@ const filterFeaturesByOperators = async (
         .expect(expectedCode);
 };
 
-const filterFeaturesByCreated = async (
+const _filterFeaturesByCreated = async (
     createdAt: string,
     expectedCode = 200,
 ) => {
@@ -206,7 +206,9 @@ const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
 };
 const getProjectArchive = async (projectId = 'default', expectedCode = 200) => {
     return app.request
-        .get(`/api/admin/archive/features/${projectId}`)
+        .get(
+            `/api/admin/search/features?project=IS%3A${projectId}&archived=IS%3Atrue`,
+        )
         .expect(expectedCode);
 };
 
@@ -413,12 +415,12 @@ test('should filter features by tag that has colon inside', async () => {
 test('should filter features by environment status', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');
-    await app.enableFeature('my_feature_a', 'default');
+    await app.enableFeature('my_feature_a', DEFAULT_ENV);
 
     const { body } = await filterFeaturesByEnvironmentStatus([
-        'default:enabled',
+        `${DEFAULT_ENV}:enabled`,
         'nonexistentEnv:disabled',
-        'default:wrongStatus',
+        `${DEFAULT_ENV}:wrongStatus`,
     ]);
 
     expect(body).toMatchObject({
@@ -490,10 +492,10 @@ test('should sort features', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_c');
     await app.createFeature('my_feature_b');
-    await app.enableFeature('my_feature_c', 'default');
+    await app.enableFeature('my_feature_c', DEFAULT_ENV);
     await app.favoriteFeature('my_feature_b');
 
-    await insertLastSeenAt('my_feature_c', db.rawDatabase, 'default');
+    await insertLastSeenAt('my_feature_c', db.rawDatabase, DEFAULT_ENV);
 
     const { body: ascName } = await sortFeatures({
         sortBy: 'name',
@@ -538,7 +540,7 @@ test('should sort features', async () => {
     });
 
     const { body: environmentAscSort } = await sortFeatures({
-        sortBy: 'environment:default',
+        sortBy: `environment:${DEFAULT_ENV}`,
         sortOrder: 'asc',
     });
 
@@ -552,7 +554,7 @@ test('should sort features', async () => {
     });
 
     const { body: environmentDescSort } = await sortFeatures({
-        sortBy: 'environment:default',
+        sortBy: `environment:${DEFAULT_ENV}`,
         sortOrder: 'desc',
     });
 
@@ -566,7 +568,7 @@ test('should sort features', async () => {
     });
 
     const { body: favoriteEnvironmentDescSort } = await sortFeatures({
-        sortBy: 'environment:default',
+        sortBy: `environment:${DEFAULT_ENV}`,
         sortOrder: 'desc',
         favoritesFirst: 'true',
     });
@@ -829,11 +831,6 @@ test('should return segments in payload with no duplicates/nulls', async () => {
                 segments: [mySegment.name],
                 environments: [
                     {
-                        name: 'default',
-                        hasStrategies: true,
-                        hasEnabledStrategies: true,
-                    },
-                    {
                         name: 'development',
                         hasStrategies: true,
                         hasEnabledStrategies: true,
@@ -1089,9 +1086,156 @@ test('should filter features by combined operators', async () => {
     });
 });
 
+test('should filter features by lastSeenAt', async () => {
+    await app.createFeature({
+        name: 'recently_seen_feature',
+    });
+    await app.createFeature({
+        name: 'old_seen_feature',
+    });
+
+    const currentDate = new Date();
+
+    await insertLastSeenAt(
+        'recently_seen_feature',
+        db.rawDatabase,
+        DEFAULT_ENV,
+        currentDate.toISOString(),
+    );
+    await insertLastSeenAt(
+        'old_seen_feature',
+        db.rawDatabase,
+        DEFAULT_ENV,
+        subDays(currentDate, 10).toISOString(),
+    );
+
+    const sevenDaysAgo = subDays(currentDate, 7);
+
+    const { body: recentFeatures } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${sevenDaysAgo.toISOString().split('T')[0]}`,
+        )
+        .expect(200);
+
+    expect(recentFeatures.features).toHaveLength(1);
+    expect(recentFeatures.features[0].name).toBe('recently_seen_feature');
+
+    const { body: oldFeatures } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_BEFORE:${sevenDaysAgo.toISOString().split('T')[0]}`,
+        )
+        .expect(200);
+
+    expect(oldFeatures.features).toHaveLength(1);
+    expect(oldFeatures.features[0].name).toBe('old_seen_feature');
+
+    const { body: allFeatures } = await app.request
+        .get('/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:2000-01-01')
+        .expect(200);
+    expect(allFeatures.features).toHaveLength(2);
+});
+
+test('should filter by last seen even if in different environment', async () => {
+    await app.createFeature({
+        name: 'feature_in_production',
+    });
+    await app.createFeature({
+        name: 'feature_in_development',
+    });
+
+    const currentDate = new Date();
+
+    await insertLastSeenAt(
+        'feature_in_production',
+        db.rawDatabase,
+        'production',
+        subDays(currentDate, 2).toISOString(),
+    );
+
+    await insertLastSeenAt(
+        'feature_in_development',
+        db.rawDatabase,
+        DEFAULT_ENV,
+        subDays(currentDate, 5).toISOString(),
+    );
+
+    const threeDaysAgo = subDays(currentDate, 3);
+
+    const { body: recentFeatures } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${threeDaysAgo.toISOString().split('T')[0]}`,
+        )
+        .expect(200);
+
+    expect(recentFeatures.features).toHaveLength(1);
+    expect(recentFeatures.features[0].name).toBe('feature_in_production');
+
+    const sixDaysAgo = subDays(currentDate, 6);
+
+    const { body: olderFeatures } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${sixDaysAgo.toISOString().split('T')[0]}`,
+        )
+        .expect(200);
+
+    expect(olderFeatures.features).toHaveLength(2);
+    expect(olderFeatures.features.map((f) => f.name)).toContain(
+        'feature_in_production',
+    );
+    expect(olderFeatures.features.map((f) => f.name)).toContain(
+        'feature_in_development',
+    );
+});
+
+test('should not return features with no last seen when filtering by lastSeenAt', async () => {
+    await app.createFeature({
+        name: 'feature_with_last_seen',
+    });
+    await app.createFeature({
+        name: 'feature_without_last_seen',
+    });
+
+    const currentDate = new Date();
+
+    await insertLastSeenAt(
+        'feature_with_last_seen',
+        db.rawDatabase,
+        DEFAULT_ENV,
+        subDays(currentDate, 1).toISOString(),
+    );
+
+    const twoDaysAgo = subDays(currentDate, 2);
+
+    const { body: featuresWithLastSeen } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_ON_OR_AFTER:${twoDaysAgo.toISOString().split('T')[0]}`,
+        )
+        .expect(200);
+
+    expect(featuresWithLastSeen.features).toHaveLength(1);
+    expect(featuresWithLastSeen.features[0].name).toBe(
+        'feature_with_last_seen',
+    );
+
+    const currentDateFormatted = currentDate.toISOString().split('T')[0];
+
+    const { body: featuresBeforeToday } = await app.request
+        .get(
+            `/api/admin/search/features?lastSeenAt=IS_BEFORE:${currentDateFormatted}`,
+        )
+        .expect(200);
+
+    expect(featuresBeforeToday.features).toHaveLength(1);
+    expect(featuresBeforeToday.features[0].name).toBe('feature_with_last_seen');
+});
+
 test('should return environment usage metrics and lifecycle', async () => {
     await app.createFeature({
         name: 'my_feature_b',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+    await app.createFeature({
+        name: 'my_feature_c',
         createdAt: '2023-01-29T15:21:39.975Z',
     });
 
@@ -1126,23 +1270,22 @@ test('should return environment usage metrics and lifecycle', async () => {
         { feature: 'my_feature_b', stage: 'initial' },
     ]);
     await stores.featureLifecycleStore.insert([
+        { feature: 'my_feature_c', stage: 'initial' },
+    ]);
+    await stores.featureLifecycleStore.insert([
         { feature: 'my_feature_b', stage: 'completed', status: 'discarded' },
     ]);
 
-    const { body } = await searchFeatures({
+    const { body: noExplicitLifecycle } = await searchFeatures({
         query: 'my_feature_b',
     });
-    expect(body).toMatchObject({
+    expect(noExplicitLifecycle).toMatchObject({
+        total: 1,
         features: [
             {
                 name: 'my_feature_b',
                 lifecycle: { stage: 'completed', status: 'discarded' },
                 environments: [
-                    {
-                        name: 'default',
-                        yes: 0,
-                        no: 0,
-                    },
                     {
                         name: 'development',
                         yes: 10,
@@ -1156,6 +1299,25 @@ test('should return environment usage metrics and lifecycle', async () => {
                 ],
             },
         ],
+    });
+
+    const { body: noFeaturesWithOtherLifecycle } =
+        await searchFeaturesWithLifecycle({
+            query: 'my_feature_b',
+            lifecycle: 'IS:initial',
+        });
+    expect(noFeaturesWithOtherLifecycle).toMatchObject({
+        total: 0,
+        features: [],
+    });
+
+    const { body: featureWithMatchingLifecycle } =
+        await searchFeaturesWithLifecycle({
+            lifecycle: 'IS:completed',
+        });
+    expect(featureWithMatchingLifecycle).toMatchObject({
+        total: 1,
+        features: [{ name: 'my_feature_b' }],
     });
 });
 
@@ -1251,4 +1413,263 @@ test('should return archived when query param set', async () => {
             },
         ],
     });
+});
+
+test('should return tags with color information from tag type', async () => {
+    await app.createFeature('my_feature_a');
+
+    await app.request
+        .put('/api/admin/tag-types/simple')
+        .send({
+            name: 'simple',
+            color: '#FF0000',
+        })
+        .expect(200);
+
+    await app.addTag('my_feature_a', {
+        type: 'simple',
+        value: 'my_tag',
+    });
+
+    const { body } = await searchFeatures({});
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                tags: [
+                    {
+                        type: 'simple',
+                        value: 'my_tag',
+                        color: '#FF0000',
+                    },
+                ],
+            },
+        ],
+    });
+});
+
+const createChangeRequest = async ({
+    id,
+    feature,
+    environment,
+    state,
+    createdBy,
+}: {
+    id: number;
+    feature: string;
+    environment: string;
+    state: string;
+    createdBy: number;
+}) => {
+    await db.rawDatabase('change_requests').insert({
+        id,
+        environment,
+        state,
+        project: 'default',
+        created_by: createdBy,
+    });
+    await db.rawDatabase('change_request_events').insert({
+        id,
+        feature,
+        action: 'updateEnabled',
+        created_by: createdBy,
+        change_request_id: id,
+    });
+};
+
+test('should return change request ids per environment', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+
+    await createChangeRequest({
+        id: 1,
+        feature: 'my_feature_a',
+        environment: 'production',
+        state: 'In review',
+        createdBy: 1,
+    });
+    await createChangeRequest({
+        id: 2,
+        feature: 'my_feature_a',
+        environment: 'production',
+        state: 'Applied',
+        createdBy: 1,
+    });
+    await createChangeRequest({
+        id: 3,
+        feature: 'my_feature_a',
+        environment: 'production',
+        state: 'Cancelled',
+        createdBy: 1,
+    });
+    await createChangeRequest({
+        id: 4,
+        feature: 'my_feature_a',
+        environment: 'production',
+        state: 'Rejected',
+        createdBy: 1,
+    });
+    await createChangeRequest({
+        id: 5,
+        feature: 'my_feature_a',
+        environment: 'development',
+        state: 'Draft',
+        createdBy: 1,
+    });
+    await createChangeRequest({
+        id: 6,
+        feature: 'my_feature_a',
+        environment: 'development',
+        state: 'Scheduled',
+        createdBy: 1,
+    });
+    await createChangeRequest({
+        id: 7,
+        feature: 'my_feature_a',
+        environment: 'development',
+        state: 'Approved',
+        createdBy: 2,
+    });
+    await createChangeRequest({
+        id: 8,
+        feature: 'my_feature_b',
+        environment: 'development',
+        state: 'Approved',
+        createdBy: 3,
+    });
+
+    const { body } = await searchFeatures({});
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                environments: [
+                    { name: 'development', changeRequestIds: [5, 6, 7] },
+                    { name: 'production', changeRequestIds: [1] },
+                ],
+            },
+            {
+                name: 'my_feature_b',
+                environments: [
+                    { name: 'development', changeRequestIds: [8] },
+                    { name: 'production', changeRequestIds: [] },
+                ],
+            },
+        ],
+    });
+});
+
+const createReleasePlan = async (
+    {
+        feature,
+        environment,
+        planId,
+    }: { feature: string; environment: string; planId: string },
+    milestones: {
+        name: string;
+        order: number;
+    }[],
+) => {
+    const result = await db.stores.releasePlanTemplateStore.insert({
+        name: 'plan',
+        createdByUserId: 1,
+        discriminator: 'template',
+    });
+    const releasePlan = await db.stores.releasePlanStore.insert({
+        id: planId,
+        name: 'plan',
+        featureName: feature,
+        environment: environment,
+        createdByUserId: 1,
+        releasePlanTemplateId: result.id,
+    });
+    const milestoneResults = await Promise.all(
+        milestones.map((milestone) =>
+            createMilestone({
+                ...milestone,
+                planId: releasePlan.id,
+            }),
+        ),
+    );
+    return { releasePlan, milestones: milestoneResults };
+};
+
+const createMilestone = async ({
+    name,
+    order,
+    planId,
+}: {
+    name: string;
+    order: number;
+    planId: string;
+}) => {
+    return db.stores.releasePlanMilestoneStore.insert({
+        name,
+        sortOrder: order,
+        releasePlanDefinitionId: planId,
+    });
+};
+
+const activateMilestone = async ({
+    planId,
+    milestoneId,
+}: {
+    planId: string;
+    milestoneId: string;
+}) => {
+    await db.stores.releasePlanStore.update(planId, {
+        activeMilestoneId: milestoneId,
+    });
+};
+
+test('should return release plan milestones', async () => {
+    await app.createFeature('my_feature_a');
+
+    const { releasePlan, milestones } = await createReleasePlan(
+        {
+            feature: 'my_feature_a',
+            environment: 'development',
+            planId: 'plan0',
+        },
+        [
+            {
+                name: 'Milestone 1',
+                order: 0,
+            },
+            {
+                name: 'Milestone 2',
+                order: 1,
+            },
+            {
+                name: 'Milestone 3',
+                order: 2,
+            },
+        ],
+    );
+    await activateMilestone({
+        planId: releasePlan.id,
+        milestoneId: milestones[1].id,
+    });
+
+    const { body } = await searchFeatures({});
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                environments: [
+                    {
+                        name: 'development',
+                        totalMilestones: 3,
+                        milestoneName: 'Milestone 2',
+                        milestoneOrder: 1,
+                    },
+                    { name: 'production' },
+                ],
+            },
+        ],
+    });
+    expect(body.features[0].environments[1].milestoneName).toBeUndefined();
 });

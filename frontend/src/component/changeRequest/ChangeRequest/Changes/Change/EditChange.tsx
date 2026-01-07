@@ -22,10 +22,10 @@ import type {
 } from 'component/changeRequest/changeRequest.types';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm';
+import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
-import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
-import { v4 as uuidv4 } from 'uuid';
+import { constraintId } from 'constants/constraintId.ts';
+import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 
 interface IEditChangeProps {
     change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;
@@ -43,7 +43,7 @@ const addIdSymbolToConstraints = (
     if (!strategy) return;
 
     return strategy?.constraints.map((constraint) => {
-        return { ...constraint, [constraintId]: uuidv4() };
+        return { ...constraint, [constraintId]: crypto.randomUUID() };
     });
 };
 
@@ -208,7 +208,7 @@ export const formatUpdateStrategyApiCode = (
     }
 
     const url = `${unleashUrl}/api/admin/projects/${projectId}/change-requests/${changeRequestId}/changes/${changeId}`;
-    const payload = JSON.stringify(strategy, undefined, 2);
+    const payload = JSON.stringify(strategy, apiPayloadConstraintReplacer, 2);
 
     return `curl --location --request PUT '${url}' \\
     --header 'Authorization: INSERT_API_KEY' \\
@@ -222,6 +222,6 @@ export const featureStrategyHelp = `
 `;
 
 export const featureStrategyDocsLink =
-    'https://docs.getunleash.io/reference/activation-strategies';
+    'https://docs.getunleash.io/concepts/activation-strategies';
 
 export const featureStrategyDocsLinkLabel = 'Strategies documentation';

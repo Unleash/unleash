@@ -1,7 +1,7 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { SearchFeaturesParams, SearchFeaturesSchema } from 'openapi';
 import { useClearSWRCache } from 'hooks/useClearSWRCache';
 
@@ -60,10 +60,14 @@ const createFeatureSearch = () => {
         const { KEY, fetcher } = getFeatureSearchFetcher(params);
         const swrKey = `${cachePrefix}${KEY}`;
         const cacheId = params.project || '';
-        useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
+        useClearSWRCache({
+            currentKey: swrKey,
+            clearPrefix: PATH,
+            cacheSize: SWR_CACHE_SIZE,
+        });
 
         useEffect(() => {
-            initCache(params.project || '');
+            initCache(cacheId);
         }, []);
 
         const { data, error, mutate, isLoading } = useSWR<SearchFeaturesSchema>(
@@ -100,12 +104,13 @@ const createFeatureSearch = () => {
 
 export const DEFAULT_PAGE_LIMIT = 25;
 
-const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
+export const getFeatureSearchFetcher = (params: SearchFeaturesParams) => {
     const urlSearchParams = new URLSearchParams(
         Array.from(
             Object.entries(params)
                 .filter(([_, value]) => !!value)
-                .map(([key, value]) => [key, value.toString()]), // TODO: parsing non-string parameters
+                .map(([key, value]) => [key, value.toString()]) // TODO: parsing non-string parameters
+                .toSorted(),
         ),
     ).toString();
     const KEY = `${PATH}${urlSearchParams}`;

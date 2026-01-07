@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { contextFieldSchema } from './context-field-schema';
-import { legalValueSchema } from './legal-value-schema';
+import { contextFieldSchema } from './context-field-schema.js';
+import { legalValueSchema } from './legal-value-schema.js';
 
 export const contextFieldsSchema = {
     $id: '#/components/schemas/contextFieldsSchema',

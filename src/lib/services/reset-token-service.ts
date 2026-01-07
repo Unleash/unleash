@@ -1,16 +1,16 @@
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { URL } from 'url';
-import type { Logger } from '../logger';
-import UsedTokenError from '../error/used-token-error';
-import InvalidTokenError from '../error/invalid-token-error';
-import type { IUnleashConfig } from '../types/option';
-import type { IUnleashStores } from '../types/stores';
+import type { Logger } from '../logger.js';
+import UsedTokenError from '../error/used-token-error.js';
+import InvalidTokenError from '../error/invalid-token-error.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IUnleashStores } from '../types/stores.js';
 import type {
     IResetQuery,
     IResetToken,
     IResetTokenStore,
-} from '../types/stores/reset-token-store';
+} from '../types/stores/reset-token-store.js';
 import { hoursToMilliseconds } from 'date-fns';
 
 interface IInviteLinks {
@@ -38,7 +38,7 @@ export default class ResetTokenService {
             await this.isValid(token.token);
             await this.store.useToken(token);
             return true;
-        } catch (e) {
+        } catch (_e) {
             return false;
         }
     }
@@ -56,7 +56,7 @@ export default class ResetTokenService {
             }, {});
 
             return links;
-        } catch (e) {
+        } catch (_e) {
             return {};
         }
     }
@@ -72,7 +72,7 @@ export default class ResetTokenService {
             if (!t.usedAt) {
                 return t;
             }
-        } catch (e) {
+        } catch (_e) {
             throw new InvalidTokenError();
         }
         throw new UsedTokenError(t.usedAt);
@@ -126,5 +126,3 @@ export default class ResetTokenService {
         return bcrypt.hash(crypto.randomBytes(32).toString(), 10);
     }
 }
-
-module.exports = ResetTokenService;

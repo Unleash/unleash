@@ -21,21 +21,24 @@ interface ISimpleAuthProps {
 
 const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
     const [email, setEmail] = useState('');
+    const [isPending, setIsPending] = useState(false);
     const { refetchUser } = useAuthUser();
     const { emailAuth } = useAuthApi();
     const navigate = useNavigate();
     const { setToastApiError } = useToast();
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (evt) => {
+        setIsPending(true);
         evt.preventDefault();
 
         try {
             await emailAuth(authDetails.path, email);
-            refetchUser();
-            navigate(redirect, { replace: true });
+            await refetchUser();
+            navigate(redirect);
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }
+        setIsPending(false);
     };
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -81,6 +84,7 @@ const SimpleAuth: VFC<ISimpleAuthProps> = ({ authDetails, redirect }) => {
                         color='primary'
                         className={styles.button}
                         data-testid={LOGIN_BUTTON}
+                        disabled={isPending}
                     >
                         Sign in
                     </Button>

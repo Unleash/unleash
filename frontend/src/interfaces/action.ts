@@ -1,5 +1,5 @@
-import type { ISignal, SignalSource } from './signal';
-import type { IConstraint } from './strategy';
+import type { ISignal, SignalSource } from './signal.js';
+import type { IConstraint } from './strategy.js';
 
 type ActionSetState = 'started' | 'success' | 'failed';
 

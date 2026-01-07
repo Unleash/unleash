@@ -1,8 +1,8 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useStrategiesBySegment } from 'hooks/api/getters/useStrategiesBySegment/useStrategiesBySegment';
 import type { ISegment } from 'interfaces/segment';
-import { SegmentDeleteConfirm } from './SegmentDeleteConfirm/SegmentDeleteConfirm';
-import { SegmentDeleteUsedSegment } from './SegmentDeleteUsedSegment/SegmentDeleteUsedSegment';
+import { SegmentDeleteConfirm } from './SegmentDeleteConfirm/SegmentDeleteConfirm.tsx';
+import { SegmentDeleteUsedSegment } from './SegmentDeleteUsedSegment/SegmentDeleteUsedSegment.tsx';
 
 interface ISegmentDeleteProps {
     segment: ISegment;

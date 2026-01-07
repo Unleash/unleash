@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import useEnvironmentForm from '../hooks/useEnvironmentForm';
-import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
+import useEnvironmentForm from '../hooks/useEnvironmentForm.ts';
+import EnvironmentForm from '../EnvironmentForm/EnvironmentForm.tsx';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
@@ -27,6 +27,8 @@ const CreateEnvironment = () => {
         setName,
         type,
         setType,
+        requiredApprovals,
+        setRequiredApprovals,
         getEnvPayload,
         validateEnvironmentName,
         clearErrors,
@@ -78,7 +80,7 @@ const CreateEnvironment = () => {
                             development or test environment without
                             enabling the feature flag in the
                             production environment.'
-            documentationLink='https://docs.getunleash.io/reference/environments'
+            documentationLink='https://docs.getunleash.io/concepts/environments'
             documentationLinkLabel='Environments documentation'
             formatApiCode={formatApiCode}
         >
@@ -91,6 +93,8 @@ const CreateEnvironment = () => {
                 type={type}
                 setName={setName}
                 setType={setType}
+                requiredApprovals={requiredApprovals}
+                setRequiredApprovals={setRequiredApprovals}
                 mode='Create'
                 clearErrors={clearErrors}
                 Limit={

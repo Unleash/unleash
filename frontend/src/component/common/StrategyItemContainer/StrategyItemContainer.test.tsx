@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { StrategyItemContainer } from './LegacyStrategyItemContainer';
 import type { IFeatureStrategy } from 'interfaces/strategy';
+import { StrategyItemContainer } from './StrategyItemContainer.tsx';
 
 test('should render strategy name, custom title and description', async () => {
     const strategy: IFeatureStrategy = {
@@ -12,14 +12,8 @@ test('should render strategy name, custom title and description', async () => {
         parameters: {},
     };
 
-    render(
-        <StrategyItemContainer
-            strategy={strategy}
-            description={'description'}
-        />,
-    );
+    render(<StrategyItemContainer strategy={strategy} />);
 
-    expect(screen.getByText('strategy name')).toBeInTheDocument();
-    expect(screen.getByText('description')).toBeInTheDocument();
+    expect(screen.getByText('strategy name:')).toBeInTheDocument();
     await screen.findByText('custom title'); // behind async flag
 });

@@ -1,7 +1,7 @@
 import { alpha, styled } from '@mui/material';
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
-import { useHighlightContext } from './HighlightContext';
-import type { HighlightKey } from './HighlightProvider';
+import { useHighlightContext } from './HighlightContext.tsx';
+import type { HighlightKey } from './HighlightProvider.tsx';
 
 const StyledHighlight = styled('div', {
     shouldForwardProp: (prop) => prop !== 'highlighted',

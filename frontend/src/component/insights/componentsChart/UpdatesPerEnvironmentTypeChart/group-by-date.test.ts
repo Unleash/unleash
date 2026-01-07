@@ -1,4 +1,4 @@
-import { groupByDateAndFillMissingDatapoints } from './UpdatesPerEnvironmentTypeChart';
+import { groupByDateAndFillMissingDatapoints } from './UpdatesPerEnvironmentTypeChart.jsx';
 
 describe('groupByDate', () => {
     it('correctly groups items by date and includes all environment types', () => {

@@ -1,15 +1,21 @@
-import type { Logger, LogProvider } from '../../../logger';
+import type { LogProvider } from '../../../logger.js';
 import type {
     IClientMetricsEnv,
     IClientMetricsEnvKey,
     IClientMetricsEnvVariant,
     IClientMetricsStoreV2,
-} from './client-metrics-store-v2-type';
-import NotFoundError from '../../../error/notfound-error';
+} from './client-metrics-store-v2-type.js';
+import NotFoundError from '../../../error/notfound-error.js';
 import { endOfDay, startOfHour } from 'date-fns';
-import { collapseHourlyMetrics, spreadVariants } from './collapseHourlyMetrics';
-import type { Db } from '../../../db/db';
-import type { IFlagResolver } from '../../../types';
+import {
+    collapseHourlyMetrics,
+    spreadVariants,
+} from './collapseHourlyMetrics.js';
+import type { Db } from '../../../db/db.js';
+import type { IFlagResolver } from '../../../types/index.js';
+import metricsHelper from '../../../util/metrics-helper.js';
+import { DB_TIME } from '../../../metric-events.js';
+import type EventEmitter from 'events';
 
 interface ClientMetricsBaseTable {
     feature_name: string;
@@ -130,14 +136,20 @@ const variantRowReducerV2 = (acc, tokenRow) => {
 export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
     private db: Db;
 
-    private logger: Logger;
+    private metricTimer: Function;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        _getLogger: LogProvider,
+        _flagResolver: IFlagResolver,
+    ) {
         this.db = db;
-        this.logger = getLogger('client-metrics-store-v2.js');
-        this.flagResolver = flagResolver;
+        this.metricTimer = (action) =>
+            metricsHelper.wrapTimer(eventBus, DB_TIME, {
+                store: 'client-metrics',
+                action,
+            });
     }
 
     async get(key: IClientMetricsEnvKey): Promise<IClientMetricsEnv> {
@@ -171,7 +183,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         try {
             await this.get(key);
             return true;
-        } catch (e) {
+        } catch (_e) {
             return false;
         }
     }
@@ -393,6 +405,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
 
     // aggregates all hourly metrics from a previous day into daily metrics
     async aggregateDailyMetrics(): Promise<void> {
+        const stopTimer = this.metricTimer('aggregateDailyMetrics');
         const rawQuery: string = `
           INSERT INTO ${DAILY_TABLE} (feature_name, app_name, environment, date, yes, no)
           SELECT
@@ -435,5 +448,6 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         // have to be run serially since variants table has FK on yes/no metrics
         await this.db.raw(rawQuery);
         await this.db.raw(rawVariantsQuery);
+        stopTimer();
     }
 }

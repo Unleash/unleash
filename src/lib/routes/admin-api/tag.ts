@@ -1,42 +1,36 @@
 import type { Request, Response } from 'express';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import type TagService from '../../services/tag-service';
-import type { Logger } from '../../logger';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import type TagService from '../../services/tag-service.js';
 
-import Controller from '../controller';
+import Controller from '../controller.js';
 
-import { NONE, UPDATE_FEATURE } from '../../types/permissions';
-import { extractUsername } from '../../util/extract-user';
-import type { IAuthRequest } from '../unleash-types';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import { NONE, UPDATE_FEATURE } from '../../types/permissions.js';
+import { extractUsername } from '../../util/extract-user.js';
+import type { IAuthRequest } from '../unleash-types.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
-} from '../../openapi/util/create-response-schema';
-import { tagsSchema, type TagsSchema } from '../../openapi/spec/tags-schema';
-import type { TagSchema } from '../../openapi/spec/tag-schema';
-import type { OpenApiService } from '../../services/openapi-service';
+} from '../../openapi/util/create-response-schema.js';
+import { tagsSchema, type TagsSchema } from '../../openapi/spec/tags-schema.js';
+import type { TagSchema } from '../../openapi/spec/tag-schema.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     tagWithVersionSchema,
     type TagWithVersionSchema,
-} from '../../openapi/spec/tag-with-version-schema';
+} from '../../openapi/spec/tag-with-version-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import type FeatureTagService from '../../services/feature-tag-service';
-import type { IFlagResolver } from '../../types';
-import type { CreateTagSchema } from '../../openapi';
+} from '../../openapi/util/standard-responses.js';
+import type { IFlagResolver } from '../../types/index.js';
+import type { CreateTagSchema } from '../../openapi/index.js';
 
 const version = 1;
 
 class TagController extends Controller {
-    private logger: Logger;
-
     private tagService: TagService;
-
-    private featureTagService: FeatureTagService;
 
     private openApiService: OpenApiService;
 
@@ -47,17 +41,11 @@ class TagController extends Controller {
         {
             tagService,
             openApiService,
-            featureTagService,
-        }: Pick<
-            IUnleashServices,
-            'tagService' | 'openApiService' | 'featureTagService'
-        >,
+        }: Pick<IUnleashServices, 'tagService' | 'openApiService'>,
     ) {
         super(config);
         this.tagService = tagService;
         this.openApiService = openApiService;
-        this.featureTagService = featureTagService;
-        this.logger = config.getLogger('/admin-api/tag.js');
         this.flagResolver = config.flagResolver;
 
         this.route({
@@ -159,7 +147,7 @@ class TagController extends Controller {
         });
     }
 
-    async getTags(req: Request, res: Response<TagsSchema>): Promise<void> {
+    async getTags(_req: Request, res: Response<TagsSchema>): Promise<void> {
         const tags = await this.tagService.getTags();
         this.openApiService.respondWithValidation<TagsSchema>(
             200,
@@ -200,7 +188,7 @@ class TagController extends Controller {
         req: IAuthRequest<unknown, unknown, CreateTagSchema>,
         res: Response<TagWithVersionSchema>,
     ): Promise<void> {
-        const userName = extractUsername(req);
+        const _userName = extractUsername(req);
         const tag = await this.tagService.createTag(req.body, req.audit);
         res.status(201)
             .header('location', `tags/${tag.type}/${tag.value}`)
@@ -213,7 +201,7 @@ class TagController extends Controller {
         res: Response,
     ): Promise<void> {
         const { type, value } = req.params;
-        const userName = extractUsername(req);
+        const _userName = extractUsername(req);
         await this.tagService.deleteTag({ type, value }, req.audit);
         res.status(200).end();
     }

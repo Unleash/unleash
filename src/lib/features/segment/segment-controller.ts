@@ -1,12 +1,7 @@
 import type { Request, Response } from 'express';
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 
-import type {
-    IAuthRequest,
-    IUnleashConfig,
-    IUnleashServices,
-    Logger,
-} from '../../server-impl';
+import type { IAuthRequest, IUnleashConfig } from '../../types/index.js';
 import {
     type AdminSegmentSchema,
     adminSegmentSchema,
@@ -16,14 +11,18 @@ import {
     updateFeatureStrategySchema,
     type UpdateFeatureStrategySegmentsSchema,
     type UpsertSegmentSchema,
-} from '../../openapi';
+} from '../../openapi/index.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import type { ISegmentService } from './segment-service-interface';
-import type { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema';
-import type { AccessService, OpenApiService } from '../../services';
+} from '../../openapi/util/standard-responses.js';
+import type { ISegmentService } from './segment-service-interface.js';
+import type { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema.js';
+import type {
+    AccessService,
+    IUnleashServices,
+    OpenApiService,
+} from '../../services/index.js';
 import {
     CREATE_SEGMENT,
     DELETE_SEGMENT,
@@ -33,14 +32,14 @@ import {
     UPDATE_FEATURE_STRATEGY,
     UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
-} from '../../types';
+} from '../../types/index.js';
 import {
     segmentsSchema,
     type SegmentsSchema,
-} from '../../openapi/spec/segments-schema';
+} from '../../openapi/spec/segments-schema.js';
 
-import { anonymiseKeys, extractUserIdFromUser } from '../../util';
-import { BadDataError } from '../../error';
+import { anonymiseKeys, extractUserIdFromUser } from '../../util/index.js';
+import { BadDataError } from '../../error/index.js';
 
 type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
     {},
@@ -49,8 +48,6 @@ type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
 >;
 
 export class SegmentsController extends Controller {
-    private logger: Logger;
-
     private segmentService: ISegmentService;
 
     private accessService: AccessService;
@@ -73,7 +70,6 @@ export class SegmentsController extends Controller {
         super(config);
         this.flagResolver = config.flagResolver;
         this.config = config;
-        this.logger = config.getLogger('/admin-api/segments.ts');
         this.segmentService = segmentService;
         this.accessService = accessService;
         this.openApiService = openApiService;
@@ -394,9 +390,10 @@ export class SegmentsController extends Controller {
     ): Promise<void> {
         const id = req.params.id;
         const { user } = req;
+        const userId = extractUserIdFromUser(user);
         const strategies = await this.segmentService.getVisibleStrategies(
             id,
-            extractUserIdFromUser(user),
+            userId,
         );
 
         const segmentStrategies = strategies.strategies.map((strategy) => ({
@@ -462,11 +459,13 @@ export class SegmentsController extends Controller {
     }
 
     async getSegment(
-        req: Request<{ id: number }>,
+        req: IAuthRequest<{ id: number }>,
         res: Response,
     ): Promise<void> {
         const id = req.params.id;
-        const segment = await this.segmentService.get(id);
+        const userId = extractUserIdFromUser(req.user);
+        const segment = await this.segmentService.get(id, userId);
+
         if (this.flagResolver.isEnabled('anonymiseEventLog')) {
             res.json(anonymiseKeys(segment, ['createdBy']));
         } else {
@@ -496,7 +495,8 @@ export class SegmentsController extends Controller {
         req: IAuthRequest,
         res: Response<SegmentsSchema>,
     ): Promise<void> {
-        const segments = await this.segmentService.getAll();
+        const userId = extractUserIdFromUser(req.user);
+        const segments = await this.segmentService.getAll(userId);
 
         const response = {
             segments: this.flagResolver.isEnabled('anonymiseEventLog')

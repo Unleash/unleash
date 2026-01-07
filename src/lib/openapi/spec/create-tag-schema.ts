@@ -1,12 +1,12 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { TAG_MAX_LENGTH, TAG_MIN_LENGTH } from '../../util';
-import { tagSchema } from './tag-schema';
+import { tagSchema } from './tag-schema.js';
+import { TAG_MIN_LENGTH, TAG_MAX_LENGTH } from '../../tags/index.js';
 
 export const createTagSchema = {
     ...tagSchema,
     $id: '#/components/schemas/createTagSchema',
     description:
-        'Data used to create a new [tag](https://docs.getunleash.io/reference/feature-toggles#tags)',
+        'Data used to create a new [tag](https://docs.getunleash.io/concepts/feature-flags#tags)',
     properties: {
         ...tagSchema.properties,
         value: {

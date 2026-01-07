@@ -1,5 +1,15 @@
 import type { Knex } from 'knex';
-import type { IUnleashConfig } from '../server-impl';
+import type { IUnleashConfig } from '../types/index.ts';
+import { ulid } from 'ulidx';
+
+export interface TransactionUserParams {
+    type: 'change-request' | 'transaction';
+    id: string;
+}
+
+function generateTransactionId(): string {
+    return ulid();
+}
 
 export type KnexTransaction = Knex.Transaction;
 
@@ -38,7 +48,10 @@ export type ServiceFactory<S> = (
 ) => DeferredServiceFactory<S>;
 
 export type WithTransactional<S> = S & {
-    transactional: <R>(fn: (service: S) => R) => Promise<R>;
+    transactional: <R>(
+        fn: (service: S) => R,
+        transactionContext?: TransactionUserParams,
+    ) => Promise<R>;
 };
 
 export type WithRollbackTransaction<S> = S & {
@@ -75,10 +88,17 @@ export function withTransactional<S>(
 ): WithTransactional<S> {
     const service = serviceFactory(db) as WithTransactional<S>;
 
-    service.transactional = async <R>(fn: (service: S) => R) =>
-        // Maybe: inTransaction(db, async (trx: Knex.Transaction) => fn(serviceFactory(trx)));
-        // this assumes that the caller didn't start a transaction already and opens a new one.
+    service.transactional = async <R>(
+        fn: (service: S) => R,
+        transactionContext?: TransactionUserParams,
+    ) =>
         db.transaction(async (trx: Knex.Transaction) => {
+            const defaultContext: TransactionUserParams = {
+                type: 'transaction',
+                id: generateTransactionId(),
+            };
+
+            trx.userParams = transactionContext || defaultContext;
             const transactionalService = serviceFactory(trx);
             return fn(transactionalService);
         });

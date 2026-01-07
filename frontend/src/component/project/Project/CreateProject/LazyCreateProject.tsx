@@ -1,3 +1,3 @@
 import { lazy } from 'react';
 
-export const LazyCreateProject = lazy(() => import('./CreateProject'));
+export const LazyCreateProject = lazy(() => import('./CreateProject.tsx'));

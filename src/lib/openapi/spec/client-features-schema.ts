@@ -1,22 +1,22 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { clientFeaturesQuerySchema } from './client-features-query-schema';
-import { clientSegmentSchema } from './client-segment-schema';
-import { constraintSchema } from './constraint-schema';
-import { environmentSchema } from './environment-schema';
-import { overrideSchema } from './override-schema';
-import { parametersSchema } from './parameters-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { clientFeatureSchema } from './client-feature-schema';
-import { variantSchema } from './variant-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { dependentFeatureSchema } from './dependent-feature-schema';
+import { clientFeaturesQuerySchema } from './client-features-query-schema.js';
+import { clientSegmentSchema } from './client-segment-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { environmentSchema } from './environment-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { clientFeatureSchema } from './client-feature-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { dependentFeatureSchema } from './dependent-feature-schema.js';
 
 export const clientFeaturesSchema = {
     $id: '#/components/schemas/clientFeaturesSchema',
     type: 'object',
     required: ['version', 'features'],
     description:
-        'Configuration data for server-side SDKs for evaluating feature flags.',
+        'Configuration data for backend SDKs for evaluating feature flags.',
     properties: {
         version: {
             type: 'number',
@@ -34,7 +34,7 @@ export const clientFeaturesSchema = {
         },
         segments: {
             description:
-                'A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance',
+                'A list of [Segments](https://docs.getunleash.io/concepts/segments) configured for this Unleash instance',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/clientSegmentSchema',
@@ -63,4 +63,7 @@ export const clientFeaturesSchema = {
     },
 } as const;
 
-export type ClientFeaturesSchema = FromSchema<typeof clientFeaturesSchema>;
+export type ClientFeaturesSchema = FromSchema<
+    typeof clientFeaturesSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

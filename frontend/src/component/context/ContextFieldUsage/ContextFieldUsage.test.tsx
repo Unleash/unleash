@@ -1,7 +1,7 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { ContextFieldUsage } from './ContextFieldUsage';
+import { ContextFieldUsage } from './ContextFieldUsage.tsx';
 
 const server = testServerSetup();
 const contextFieldName = 'appName';

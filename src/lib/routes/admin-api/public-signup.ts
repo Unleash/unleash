@@ -1,19 +1,18 @@
 import type { Response } from 'express';
 
-import Controller from '../controller';
+import Controller from '../controller.js';
 import {
     ADMIN,
     type IUnleashConfig,
-    type IUnleashServices,
     serializeDates,
-} from '../../types';
-import type { Logger } from '../../logger';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
 import type {
-    AccessService,
+    IUnleashServices,
     OpenApiService,
     PublicSignupTokenService,
-} from '../../services';
-import type { IAuthRequest } from '../unleash-types';
+} from '../../services/index.js';
+import type { IAuthRequest } from '../unleash-types.js';
 import {
     createRequestSchema,
     createResponseSchema,
@@ -25,8 +24,7 @@ import {
     type PublicSignupTokensSchema,
     type PublicSignupTokenUpdateSchema,
     resourceCreatedResponseSchema,
-} from '../../openapi';
-import type UserService from '../../services/user-service';
+} from '../../openapi/index.js';
 
 interface TokenParam {
     token: string;
@@ -34,10 +32,6 @@ interface TokenParam {
 
 export class PublicSignupController extends Controller {
     private publicSignupTokenService: PublicSignupTokenService;
-
-    private userService: UserService;
-
-    private accessService: AccessService;
 
     private openApiService: OpenApiService;
 
@@ -47,21 +41,14 @@ export class PublicSignupController extends Controller {
         config: IUnleashConfig,
         {
             publicSignupTokenService,
-            accessService,
-            userService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            | 'publicSignupTokenService'
-            | 'accessService'
-            | 'userService'
-            | 'openApiService'
+            'publicSignupTokenService' | 'openApiService'
         >,
     ) {
         super(config);
         this.publicSignupTokenService = publicSignupTokenService;
-        this.accessService = accessService;
-        this.userService = userService;
         this.openApiService = openApiService;
         this.logger = config.getLogger('public-signup-controller.js');
 
@@ -154,7 +141,7 @@ export class PublicSignupController extends Controller {
     }
 
     async getAllPublicSignupTokens(
-        req: IAuthRequest,
+        _req: IAuthRequest,
         res: Response<PublicSignupTokensSchema>,
     ): Promise<void> {
         const tokens = await this.publicSignupTokenService.getAllTokens();

@@ -1,9 +1,14 @@
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import metricsExample from '../../../examples/client-metrics.json';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
-
+import {
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import metricsExample from '../../../examples/client-metrics.json' with {
+    type: 'json',
+};
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { vi } from 'vitest';
 let app: IUnleashTest;
 let db: ITestDb;
 
@@ -26,12 +31,18 @@ test('should enrich metrics with environment from api-token', async () => {
         type: 'test',
     });
 
-    const token = await apiTokenService.createApiToken({
-        type: ApiTokenType.CLIENT,
+    const token = await apiTokenService.createApiTokenWithProjects({
+        type: ApiTokenType.BACKEND,
         tokenName: 'test',
         environment: 'some',
-        project: '*',
+        projects: ['*'],
     });
+
+    const featureName = Object.keys(metricsExample.bucket.toggles)[0];
+    // @ts-expect-error - cachedFeatureNames is a private property in ClientMetricsServiceV2
+    app.services.clientMetricsServiceV2.cachedFeatureNames = vi
+        .fn<() => Promise<string[]>>()
+        .mockResolvedValue([featureName]);
 
     await app.request
         .post('/api/client/metrics')

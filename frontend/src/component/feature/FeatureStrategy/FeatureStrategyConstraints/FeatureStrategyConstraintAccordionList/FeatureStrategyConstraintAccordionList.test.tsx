@@ -1,9 +1,9 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList';
+import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList.tsx';
 import type { IConstraint } from 'interfaces/strategy';
-import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { constraintId } from 'constants/constraintId.ts';
 
 const server = testServerSetup();
 

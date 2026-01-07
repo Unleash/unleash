@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateSegmentSchemaOneOf } from './changeRequestCreateSegmentSchemaOneOf';
-import type { ChangeRequestCreateSegmentSchemaOneOfThree } from './changeRequestCreateSegmentSchemaOneOfThree';
+import type { ChangeRequestCreateSegmentSchemaOneOf } from './changeRequestCreateSegmentSchemaOneOf.js';
+import type { ChangeRequestCreateSegmentSchemaOneOfThree } from './changeRequestCreateSegmentSchemaOneOfThree.js';
 
 /**
- * Data used to create a [change request](https://docs.getunleash.io/reference/change-requests) for a single segment change.
+ * Data used to create a [change request](https://docs.getunleash.io/concepts/change-requests) for a single segment change.
  */
 export type ChangeRequestCreateSegmentSchema =
     | ChangeRequestCreateSegmentSchemaOneOf

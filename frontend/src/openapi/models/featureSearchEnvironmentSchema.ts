@@ -3,13 +3,16 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureStrategySchema } from './featureStrategySchema';
-import type { VariantSchema } from './variantSchema';
+import type { ReleasePlanSchema } from './releasePlanSchema.js';
+import type { FeatureStrategySchema } from './featureStrategySchema.js';
+import type { VariantSchema } from './variantSchema.js';
 
 /**
  * A detailed description of the feature environment
  */
 export interface FeatureSearchEnvironmentSchema {
+    /** Experimental. A list of change request identifiers for actionable change requests that are not Cancelled, Rejected or Approved. */
+    changeRequestIds?: number[];
     /** `true` if the feature is enabled for the environment, otherwise `false`. */
     enabled: boolean;
     /** The name of the environment */
@@ -25,6 +28,10 @@ export interface FeatureSearchEnvironmentSchema {
      * @nullable
      */
     lastSeenAt?: string | null;
+    /** Experimental: The name of the currently active release plan milestone */
+    milestoneName?: string;
+    /** Experimental: The zero-indexed order of currently active milestone in the list of all release plan milestones */
+    milestoneOrder?: number;
     /** The name of the environment */
     name: string;
     /**
@@ -32,10 +39,14 @@ export interface FeatureSearchEnvironmentSchema {
      * @minimum 0
      */
     no?: number;
+    /** Release plans for this feature environment (only available when milestoneProgression feature flag is enabled) */
+    releasePlans?: ReleasePlanSchema[];
     /** The sort order of the feature environment in the feature environments list */
     sortOrder?: number;
     /** A list of activation strategies for the feature environment */
     strategies?: FeatureStrategySchema[];
+    /** Experimental: The total number of milestones in the feature environment release plan */
+    totalMilestones?: number;
     /** The type of the environment */
     type: string;
     /** The number of defined variants */

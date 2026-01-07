@@ -22,7 +22,7 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo';
+import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
@@ -78,6 +78,9 @@ export const CopyFeatureToggle = () => {
     const navigate = useNavigate();
     const { isChangeRequestConfiguredInAnyEnv } =
         useChangeRequestsEnabled(projectId);
+    const hasReleasePlan = feature.environments?.some((env) =>
+        Boolean(env.releasePlans?.length),
+    );
 
     const {
         project: { featureNaming },
@@ -143,6 +146,16 @@ export const CopyFeatureToggle = () => {
                         Copy functionality is disabled for this project because
                         change request is enabled for at least one environment
                         in this project.
+                    </StyledAlert>
+                }
+            />
+            <ConditionallyRender
+                condition={hasReleasePlan}
+                show={
+                    <StyledAlert severity='warning'>
+                        Cloning a feature flag will not clone the associated
+                        release plans. You will need to set up a new release
+                        plan for the cloned feature flag.
                     </StyledAlert>
                 }
             />

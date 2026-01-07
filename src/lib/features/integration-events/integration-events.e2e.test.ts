@@ -1,13 +1,15 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
-import { TEST_AUDIT_USER } from '../../types';
-import type { IAddonDto } from '../../types/stores/addon-store';
-import type { IntegrationEventsService } from './integration-events-service';
-import type { IntegrationEventWriteModel } from './integration-events-store';
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { TEST_AUDIT_USER } from '../../types/index.js';
+import type { IAddonDto } from '../../types/stores/addon-store.js';
+import type { IntegrationEventsService } from './integration-events-service.js';
+import type { IntegrationEventWriteModel } from './integration-events-store.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

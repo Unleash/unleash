@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import type { ParentValue } from './constants';
+import type { ParentValue } from './constants.ts';
 import { styled } from '@mui/material';
-import GeneralSelect from '../../common/GeneralSelect/GeneralSelect';
+import GeneralSelect from '../../common/GeneralSelect/GeneralSelect.tsx';
 
 export const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
     marginTop: theme.spacing(2),

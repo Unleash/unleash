@@ -7,7 +7,7 @@ import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import { formatApiPath } from 'utils/formatPath';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import DividerText from 'component/common/DividerText/DividerText';
-import StandaloneLayout from '../common/StandaloneLayout';
+import StandaloneLayout from '../common/StandaloneLayout.tsx';
 import {
     contentSpacingY,
     flexColumn,

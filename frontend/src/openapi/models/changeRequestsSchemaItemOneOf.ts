@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
-import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
-import type { ChangeRequestsSchemaItemOneOfCreatedBy } from './changeRequestsSchemaItemOneOfCreatedBy';
-import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
-import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
-import type { ChangeRequestsSchemaItemOneOfState } from './changeRequestsSchemaItemOneOfState';
+import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema.js';
+import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema.js';
+import type { ChangeRequestsSchemaItemOneOfCreatedBy } from './changeRequestsSchemaItemOneOfCreatedBy.js';
+import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema.js';
+import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema.js';
+import type { ChangeRequestsSchemaItemOneOfState } from './changeRequestsSchemaItemOneOfState.js';
 
 export type ChangeRequestsSchemaItemOneOf = {
     /**
@@ -35,7 +35,7 @@ export type ChangeRequestsSchemaItemOneOf = {
      * The minimum number of approvals required before this change request can be applied.
      * @deprecated
      */
-    minApprovals: number;
+    minApprovals?: number;
     /** The project this change request belongs to. */
     project: string;
     /**

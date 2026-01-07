@@ -26,7 +26,8 @@ export type PersonalDashboardProjectDetailsSchemaInsights = {
      */
     avgHealthPastWindow: number | null;
     /**
-     * The project's current health score
+     * Use `technicalDebt` instead.
+     * @deprecated
      * @minimum 0
      */
     health: number;
@@ -40,6 +41,12 @@ export type PersonalDashboardProjectDetailsSchemaInsights = {
      * @minimum 0
      */
     staleFlags: number;
+    /**
+     * An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100
+     * @minimum 0
+     * @maximum 100
+     */
+    technicalDebt: number;
     /**
      * The current number of non-archived flags
      * @minimum 0

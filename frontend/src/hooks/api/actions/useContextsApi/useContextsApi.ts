@@ -1,11 +1,13 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
-const useContextsApi = () => {
+const useContextsApi = (projectId?: string) => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
 
-    const URI = 'api/admin/context';
+    const URI = projectId
+        ? `api/admin/projects/${projectId}/context`
+        : 'api/admin/context';
 
     const validateContextName = async (name: string) => {
         const path = `${URI}/validate`;

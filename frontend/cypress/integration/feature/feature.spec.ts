@@ -44,7 +44,6 @@ describe('feature', () => {
                 if (res.body) {
                     res.body.flags = {
                         ...res.body.flags,
-                        flagOverviewRedesign: true,
                     };
                 }
             });

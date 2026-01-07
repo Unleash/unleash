@@ -1,60 +1,68 @@
-import { IProjectStore } from '../features/project/project-store-type';
-import { IEventStore } from './stores/event-store';
-import { IFeatureTypeStore } from './stores/feature-type-store';
-import { IStrategyStore } from './stores/strategy-store';
-import { IClientApplicationsStore } from './stores/client-applications-store';
-import { IClientInstanceStore } from './stores/client-instance-store';
-import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
-import { IContextFieldStore } from '../features/context/context-field-store-type';
-import { ISettingStore } from './stores/settings-store';
-import { ISessionStore } from './stores/session-store';
-import { ITagStore } from './stores/tag-store';
-import { ITagTypeStore } from '../features/tag-type/tag-type-store-type';
-import { IFeatureTagStore } from './stores/feature-tag-store';
-import { IUserStore } from './stores/user-store';
-import { IAddonStore } from './stores/addon-store';
-import { IAccessStore } from './stores/access-store';
-import { IApiTokenStore } from './stores/api-token-store';
-import { IResetTokenStore } from './stores/reset-token-store';
-import { IUserFeedbackStore } from './stores/user-feedback-store';
-import { IFeatureEnvironmentStore } from './stores/feature-environment-store';
-import { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type';
-import { IEnvironmentStore } from '../features/project-environments/environment-store-type';
-import { IFeatureToggleClientStore } from '../features/client-feature-toggles/types/client-feature-toggle-store-type';
-import { IClientMetricsStoreV2 } from '../features/metrics/client-metrics/client-metrics-store-v2-type';
-import { IUserSplashStore } from './stores/user-splash-store';
-import { IRoleStore } from './stores/role-store';
-import { ISegmentStore } from '../features/segment/segment-store-type';
-import { IGroupStore } from './stores/group-store';
-import { IPatStore } from './stores/pat-store';
-import { IPublicSignupTokenStore } from './stores/public-signup-token-store';
-import { IFavoriteFeaturesStore } from './stores/favorite-features';
-import { IFavoriteProjectsStore } from './stores/favorite-projects';
-import { IAccountStore } from './stores/account-store';
-import type { IProjectStatsStore } from './stores/project-stats-store-type';
-import { IImportTogglesStore } from '../features/export-import-toggles/import-toggles-store-type';
-import { IPrivateProjectStore } from '../features/private-project/privateProjectStoreType';
-import { IDependentFeaturesStore } from '../features/dependent-features/dependent-features-store-type';
-import { ILastSeenStore } from '../features/metrics/last-seen/types/last-seen-store-type';
-import { IFeatureSearchStore } from '../features/feature-search/feature-search-store-type';
-import type { IInactiveUsersStore } from '../users/inactive/types/inactive-users-store-type';
-import { ITrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store-type';
-import { ISegmentReadModel } from '../features/segment/segment-read-model-type';
-import { IProjectOwnersReadModel } from '../features/project/project-owners-read-model.type';
-import { IFeatureLifecycleStore } from '../features/feature-lifecycle/feature-lifecycle-store-type';
-import { IProjectFlagCreatorsReadModel } from '../features/project/project-flag-creators-read-model.type';
-import { IFeatureStrategiesReadModel } from '../features/feature-toggle/types/feature-strategies-read-model-type';
-import { IFeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model-type';
-import { ILargestResourcesReadModel } from '../features/metrics/sizes/largest-resources-read-model-type';
-import type { IntegrationEventsStore } from '../features/integration-events/integration-events-store';
-import { IFeatureCollaboratorsReadModel } from '../features/feature-toggle/types/feature-collaborators-read-model-type';
-import type { IProjectReadModel } from '../features/project/project-read-model-type';
-import { IOnboardingReadModel } from '../features/onboarding/onboarding-read-model-type';
-import { IOnboardingStore } from '../features/onboarding/onboarding-store-type';
-import type { IUserUnsubscribeStore } from '../features/user-subscriptions/user-unsubscribe-store-type';
-import type { IUserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model-type';
-import { IUniqueConnectionStore } from '../features/unique-connection/unique-connection-store-type';
-import { IUniqueConnectionReadModel } from '../features/unique-connection/unique-connection-read-model-type';
+import type { IProjectStore } from '../features/project/project-store-type.js';
+import type { IEventStore } from './stores/event-store.js';
+import type { IFeatureTypeStore } from './stores/feature-type-store.js';
+import type { IStrategyStore } from './stores/strategy-store.js';
+import type { IClientApplicationsStore } from './stores/client-applications-store.js';
+import type { IClientInstanceStore } from './stores/client-instance-store.js';
+import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type.js';
+import type { IContextFieldStore } from '../features/context/context-field-store-type.js';
+import type { ISettingStore } from './stores/settings-store.js';
+import type { ISessionStore } from './stores/session-store.js';
+import type { ITagStore } from './stores/tag-store.js';
+import type { ITagTypeStore } from '../features/tag-type/tag-type-store-type.js';
+import type { IFeatureTagStore } from './stores/feature-tag-store.js';
+import type { IUserStore } from './stores/user-store.js';
+import type { IAddonStore } from './stores/addon-store.js';
+import type { IAccessStore } from './stores/access-store.js';
+import type { IApiTokenStore } from './stores/api-token-store.js';
+import type { IResetTokenStore } from './stores/reset-token-store.js';
+import type { IUserFeedbackStore } from './stores/user-feedback-store.js';
+import type { IFeatureEnvironmentStore } from './stores/feature-environment-store.js';
+import type { IFeatureStrategiesStore } from '../features/feature-toggle/types/feature-toggle-strategies-store-type.js';
+import type { IEnvironmentStore } from '../features/project-environments/environment-store-type.js';
+import type { IFeatureToggleClientStore } from '../features/client-feature-toggles/types/client-feature-toggle-store-type.js';
+import type { IClientMetricsStoreV2 } from '../features/metrics/client-metrics/client-metrics-store-v2-type.js';
+import type { IUserSplashStore } from './stores/user-splash-store.js';
+import type { IRoleStore } from './stores/role-store.js';
+import type { ISegmentStore } from '../features/segment/segment-store-type.js';
+import type { IGroupStore } from './stores/group-store.js';
+import type { IPatStore } from './stores/pat-store.js';
+import type { IPublicSignupTokenStore } from './stores/public-signup-token-store.js';
+import type { IFavoriteFeaturesStore } from './stores/favorite-features.js';
+import type { IFavoriteProjectsStore } from './stores/favorite-projects.js';
+import type { IAccountStore } from './stores/account-store.js';
+import type { IProjectStatsStore } from './stores/project-stats-store-type.js';
+import type { IImportTogglesStore } from '../features/export-import-toggles/import-toggles-store-type.js';
+import type { IPrivateProjectStore } from '../features/private-project/privateProjectStoreType.js';
+import type { IDependentFeaturesStore } from '../features/dependent-features/dependent-features-store-type.js';
+import type { ILastSeenStore } from '../features/metrics/last-seen/types/last-seen-store-type.js';
+import type { IFeatureSearchStore } from '../features/feature-search/feature-search-store-type.js';
+import type { IInactiveUsersStore } from '../users/inactive/types/inactive-users-store-type.js';
+import type { ITrafficDataUsageStore } from '../features/traffic-data-usage/traffic-data-usage-store-type.js';
+import type { ISegmentReadModel } from '../features/segment/segment-read-model-type.js';
+import type { IProjectOwnersReadModel } from '../features/project/project-owners-read-model.type.js';
+import type { IFeatureLifecycleStore } from '../features/feature-lifecycle/feature-lifecycle-store-type.js';
+import type { IProjectFlagCreatorsReadModel } from '../features/project/project-flag-creators-read-model.type.js';
+import type { IFeatureStrategiesReadModel } from '../features/feature-toggle/types/feature-strategies-read-model-type.js';
+import type { IFeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model-type.js';
+import type { ILargestResourcesReadModel } from '../features/metrics/sizes/largest-resources-read-model-type.js';
+import type { IntegrationEventsStore } from '../features/integration-events/integration-events-store.js';
+import type { IFeatureCollaboratorsReadModel } from '../features/feature-toggle/types/feature-collaborators-read-model-type.js';
+import type { IProjectReadModel } from '../features/project/project-read-model-type.js';
+import type { IOnboardingReadModel } from '../features/onboarding/onboarding-read-model-type.js';
+import type { IOnboardingStore } from '../features/onboarding/onboarding-store-type.js';
+import type { IUserUnsubscribeStore } from '../features/user-subscriptions/user-unsubscribe-store-type.js';
+import type { IUserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model-type.js';
+import type { IUniqueConnectionStore } from '../features/unique-connection/unique-connection-store-type.js';
+import type { IUniqueConnectionReadModel } from '../features/unique-connection/unique-connection-read-model-type.js';
+import { ReleasePlanStore } from '../features/release-plans/release-plan-store.js';
+import { ReleasePlanTemplateStore } from '../features/release-plans/release-plan-template-store.js';
+import { ReleasePlanMilestoneStore } from '../features/release-plans/release-plan-milestone-store.js';
+import { ReleasePlanMilestoneStrategyStore } from '../features/release-plans/release-plan-milestone-strategy-store.js';
+import type { IFeatureLinkStore } from '../features/feature-links/feature-link-store-type.js';
+import type { IUnknownFlagsStore } from '../features/metrics/unknown-flags/unknown-flags-store.js';
+import type { IFeatureLinksReadModel } from '../features/feature-links/feature-links-read-model-type.js';
+import type { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -83,6 +91,7 @@ export interface IUnleashStores {
     tagTypeStore: ITagTypeStore;
     userFeedbackStore: IUserFeedbackStore;
     userStore: IUserStore;
+    userUpdatesReadModel: UserUpdatesReadModel;
     userSplashStore: IUserSplashStore;
     roleStore: IRoleStore;
     segmentStore: ISegmentStore;
@@ -114,61 +123,75 @@ export interface IUnleashStores {
     userSubscriptionsReadModel: IUserSubscriptionsReadModel;
     uniqueConnectionStore: IUniqueConnectionStore;
     uniqueConnectionReadModel: IUniqueConnectionReadModel;
+    releasePlanStore: ReleasePlanStore;
+    releasePlanTemplateStore: ReleasePlanTemplateStore;
+    releasePlanMilestoneStore: ReleasePlanMilestoneStore;
+    releasePlanMilestoneStrategyStore: ReleasePlanMilestoneStrategyStore;
+    featureLinkStore: IFeatureLinkStore;
+    unknownFlagsStore: IUnknownFlagsStore;
+    featureLinkReadModel: IFeatureLinksReadModel;
 }
 
 export {
-    IAccessStore,
-    IAccountStore,
-    IAddonStore,
-    IApiTokenStore,
-    IClientApplicationsStore,
-    IClientInstanceStore,
-    IClientMetricsStoreV2,
-    IContextFieldStore,
-    IEnvironmentStore,
-    IEventStore,
-    IFeatureEnvironmentStore,
-    IFeatureStrategiesStore,
-    IFeatureTagStore,
-    IFeatureToggleClientStore,
-    IFeatureToggleStore,
-    IFeatureTypeStore,
-    IGroupStore,
-    IPatStore,
-    IProjectStore,
-    IPublicSignupTokenStore,
-    IResetTokenStore,
-    IRoleStore,
-    ISegmentStore,
-    ISessionStore,
-    ISettingStore,
-    IStrategyStore,
-    ITagStore,
-    ITagTypeStore,
-    IUserFeedbackStore,
-    IUserSplashStore,
-    IUserStore,
-    IFavoriteFeaturesStore,
-    IFavoriteProjectsStore,
-    IImportTogglesStore,
-    IPrivateProjectStore,
-    IDependentFeaturesStore,
-    ILastSeenStore,
-    IFeatureSearchStore,
-    ITrafficDataUsageStore,
-    ISegmentReadModel,
-    IProjectOwnersReadModel,
-    IFeatureLifecycleStore,
-    IProjectFlagCreatorsReadModel,
-    IFeatureStrategiesReadModel,
-    IFeatureLifecycleReadModel,
-    ILargestResourcesReadModel,
-    IFeatureCollaboratorsReadModel,
-    IOnboardingReadModel,
+    type IAccessStore,
+    type IAccountStore,
+    type IAddonStore,
+    type IApiTokenStore,
+    type IClientApplicationsStore,
+    type IClientInstanceStore,
+    type IClientMetricsStoreV2,
+    type IContextFieldStore,
+    type IEnvironmentStore,
+    type IEventStore,
+    type IFeatureEnvironmentStore,
+    type IFeatureStrategiesStore,
+    type IFeatureTagStore,
+    type IFeatureToggleClientStore,
+    type IFeatureToggleStore,
+    type IFeatureTypeStore,
+    type IGroupStore,
+    type IPatStore,
+    type IProjectStore,
+    type IPublicSignupTokenStore,
+    type IResetTokenStore,
+    type IRoleStore,
+    type ISegmentStore,
+    type ISessionStore,
+    type ISettingStore,
+    type IStrategyStore,
+    type ITagStore,
+    type ITagTypeStore,
+    type IUserFeedbackStore,
+    type IUserSplashStore,
+    type IUserStore,
+    type IFavoriteFeaturesStore,
+    type IFavoriteProjectsStore,
+    type IImportTogglesStore,
+    type IPrivateProjectStore,
+    type IDependentFeaturesStore,
+    type ILastSeenStore,
+    type IFeatureSearchStore,
+    type ITrafficDataUsageStore,
+    type ISegmentReadModel,
+    type IProjectOwnersReadModel,
+    type IFeatureLifecycleStore,
+    type IProjectFlagCreatorsReadModel,
+    type IFeatureStrategiesReadModel,
+    type IFeatureLifecycleReadModel,
+    type ILargestResourcesReadModel,
+    type IFeatureCollaboratorsReadModel,
+    type IOnboardingReadModel,
     type IntegrationEventsStore,
     type IProjectReadModel,
-    IOnboardingStore,
+    type IOnboardingStore,
     type IUserSubscriptionsReadModel,
-    IUniqueConnectionStore,
-    IUniqueConnectionReadModel,
+    type IUniqueConnectionStore,
+    type IUniqueConnectionReadModel,
+    ReleasePlanStore,
+    ReleasePlanTemplateStore,
+    ReleasePlanMilestoneStore,
+    ReleasePlanMilestoneStrategyStore,
+    type IFeatureLinkStore,
+    type IUnknownFlagsStore,
+    type IFeatureLinksReadModel,
 };

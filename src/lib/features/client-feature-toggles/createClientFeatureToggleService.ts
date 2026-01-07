@@ -1,11 +1,11 @@
-import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store';
-import type { Db } from '../../db/db';
-import type { IUnleashConfig } from '../../types';
-import FakeClientFeatureToggleStore from './fakes/fake-client-feature-toggle-store';
-import { ClientFeatureToggleService } from './client-feature-toggle-service';
-import { SegmentReadModel } from '../segment/segment-read-model';
-import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
-import { createClientFeatureToggleDelta } from './delta/createClientFeatureToggleDelta';
+import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store.js';
+import type { Db } from '../../db/db.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import FakeClientFeatureToggleStore from './fakes/fake-client-feature-toggle-store.js';
+import { ClientFeatureToggleService } from './client-feature-toggle-service.js';
+import { SegmentReadModel } from '../segment/segment-read-model.js';
+import { FakeSegmentReadModel } from '../segment/fake-segment-read-model.js';
+import { createClientFeatureToggleDelta } from './delta/createClientFeatureToggleDelta.js';
 
 export const createClientFeatureToggleService = (
     db: Db,

@@ -1,17 +1,16 @@
-import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm';
-import { updateWeightEdit } from '../../common/util';
+import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
+import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
 import { type FC, useEffect, useState } from 'react';
-import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
-import PermissionButton from '../../common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
-import { v4 as uuidv4 } from 'uuid';
-import { WeightType } from '../../../constants/variantTypes';
+import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
+import { WeightType } from '../../../constants/variantTypes.ts';
 import { Link, styled, Typography, useTheme } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import SplitPreviewSlider from './SplitPreviewSlider/SplitPreviewSlider';
-import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
-import { StrategyVariantsUpgradeAlert } from '../../common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
+import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledVariantForms = styled('div')({
@@ -51,7 +50,7 @@ export const StrategyVariants: FC<{
                 ...variant,
                 new: editable || false,
                 isValid: true,
-                id: uuidv4(),
+                id: crypto.randomUUID(),
                 overrides: [],
             })),
         );
@@ -82,7 +81,7 @@ export const StrategyVariants: FC<{
     };
 
     const addVariant = () => {
-        const id = uuidv4();
+        const id = crypto.randomUUID();
         setVariantsEdit((variantsEdit) => [
             ...variantsEdit,
             {
@@ -121,7 +120,7 @@ export const StrategyVariants: FC<{
                             </span>
                             <Link
                                 target='_blank'
-                                href='https://docs.getunleash.io/reference/strategy-variants'
+                                href='https://docs.getunleash.io/concepts/strategy-variants'
                             >
                                 Learn more
                             </Link>
@@ -168,7 +167,7 @@ export const StrategyVariants: FC<{
             >
                 Add variant
             </PermissionButton>
-            <SplitPreviewSlider variants={variantsEdit} />
+            <VariantsSplitPreview variants={variantsEdit} />
         </>
     );
 };

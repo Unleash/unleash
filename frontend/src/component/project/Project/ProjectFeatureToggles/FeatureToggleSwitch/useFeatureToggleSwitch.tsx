@@ -9,7 +9,7 @@ import {
     FeatureStrategyProdGuard,
     isProdGuardEnabled,
 } from 'component/feature/FeatureStrategy/FeatureStrategyProdGuard/FeatureStrategyProdGuard';
-import { EnableEnvironmentDialog } from './EnableEnvironmentDialog/EnableEnvironmentDialog';
+import { EnableEnvironmentDialog } from './EnableEnvironmentDialog/EnableEnvironmentDialog.tsx';
 import type {
     OnFeatureToggleSwitchArgs,
     UseFeatureToggleSwitchType,
@@ -102,7 +102,8 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 if (
                     newState === false ||
                     !config.hasStrategies ||
-                    config.hasEnabledStrategies
+                    config.hasEnabledStrategies ||
+                    config.hasReleasePlans
                 ) {
                     return next();
                 }

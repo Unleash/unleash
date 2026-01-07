@@ -5,8 +5,8 @@ import {
     styled,
 } from '@mui/material';
 import type { IRole } from 'interfaces/role';
-import { RoleDescription } from '../RoleDescription/RoleDescription';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { RoleDescription } from '../RoleDescription/RoleDescription.tsx';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 
 const StyledRoleOption = styled('div')(({ theme }) => ({
     display: 'flex',

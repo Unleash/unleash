@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { getLocalStorageItem, setLocalStorageItem } from '../utils/storage';
+import { getLocalStorageItem, setLocalStorageItem } from '../utils/storage.js';
 import { basePath } from 'utils/formatPath';
-import { useCustomEvent } from './useCustomEvent';
+import { useCustomEvent } from './useCustomEvent.js';
 
 export const useLastViewedProject = () => {
     const key = `${basePath}:unleash-lastViewedProject`;

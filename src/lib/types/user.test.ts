@@ -1,4 +1,4 @@
-import User from './user';
+import User from './user.js';
 
 test('should create user', () => {
     const user = new User({ id: 11, name: 'ole', email: 'some@email.com' });

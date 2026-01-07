@@ -1,7 +1,7 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useNavigate } from 'react-router-dom';
-import { GroupForm } from '../GroupForm/GroupForm';
-import { useGroupForm } from '../hooks/useGroupForm';
+import { GroupForm } from '../GroupForm/GroupForm.tsx';
+import { useGroupForm } from '../hooks/useGroupForm.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useGroupApi } from 'hooks/api/actions/useGroupApi/useGroupApi';
@@ -14,7 +14,7 @@ import { UG_SAVE_BTN_ID } from 'utils/testIds';
 import { GO_BACK } from 'constants/navigate';
 import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
 import type { IGroup } from 'interfaces/group';
-import { scimGroupTooltip } from '../group-constants';
+import { scimGroupTooltip } from '../group-constants.ts';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 
 export const EditGroupContainer = () => {
@@ -130,7 +130,7 @@ export const EditGroup = ({
             loading={loading}
             title='Edit group'
             description='Groups is the best and easiest way to organize users and then use them in projects to assign a specific role in one go to all the users in a group.'
-            documentationLink='https://docs.getunleash.io/reference/rbac#user-groups'
+            documentationLink='https://docs.getunleash.io/concepts/rbac#user-groups'
             documentationLinkLabel='Groups documentation'
             formatApiCode={formatApiCode}
         >

@@ -1,0 +1,223 @@
+---
+title: Configure Enterprise Edge
+---
+
+If you are using [Unleash Enterprise Edge hosted](/unleash-edge#enterprise-edge-hosted), these configurations are managed for you automatically. You do not need to set environment variables or manage tokens via CLI.
+
+This reference covers all configuration options for Enterprise Edge self-hosted.
+
+## Configure the operating mode
+
+Edge supports two modes: [Edge mode](#edge-mode) (default) and [Offline mode](#offline-mode).
+
+### Edge mode
+
+Connects to Unleash and synchronizes feature flags. Use for production deployments.
+
+```shell
+unleash-edge edge --upstream-url https://your-unleash.com --tokens your-token
+```
+
+### Offline mode
+
+Serves flags from a local file without upstream connection. Use for development, testing, or air-gapped environments. See [Offline mode configuration](#offline-mode-configuration) for all available options.
+
+```shell
+unleash-edge offline \
+  --bootstrap-file /path/to/features.json \
+  --client-tokens your-token
+```
+
+In offline mode, Edge validates requests against tokens you provide at startup rather than validating with Unleash. Use `--client-tokens` for [backend SDK](/sdks#backend-sdks) access and `--frontend-tokens` for [frontend SDK](/sdks#frontend-sdks) access.
+These tokens don't need to exist in Unleash—they serve as shared secrets between your SDKs and Edge.
+
+To use offline mode, you also need to provide a local file that contains your feature flag configurations. 
+You can create one by exporting your feature flags from Unleash:
+
+```shell
+curl -H "Authorization: your-token" \
+  https://your-unleash.com/api/client/features > features.json
+```
+
+Alternatively, use a simplified JSON for development:
+
+```json
+{
+  "my-feature": { "enabled": true },
+  "another-feature": { "enabled": false, "variant": "control" }
+}
+```
+
+When using offline mode you must specify one or more tokens at startup. These tokens let your SDKs access Edge.
+Tokens following the Unleash API format `[project]:[environment].<somesecret>` allow Edge to recognize the [project](/concepts/projects) and [environment](/concepts/environments) specified in the token, returning only the relevant features to the calling SDK.
+On the other hand, for tokens not adhering to this format, Edge will return all features if there is an exact match with any of the startup tokens.
+Edge does not support multiple [environments](/concepts/environments) in offline mode. All tokens added at startup will receive the same list of features passed in as the bootstrap argument.
+
+## Configuration reference
+
+## Global configuration
+
+These settings apply to the Unleash Edge process regardless of whether it is running in Edge or Offline mode.
+
+### Server and network
+
+| Feature | Environment variable | CLI flag | Default | Description |
+| :---- | :---- | :---- | :---- | :---- |
+| **Port** | `PORT` | `-p, --port` | 3063 | HTTP port to listen on. |
+| **Interface** | `INTERFACE` | `-i, --interface` | 0.0.0.0 | Interface to bind to. |
+| **Base path** | `BASE_PATH` | `--base-path` | "" | Base path for all routes. |
+| **App name** | `APP_NAME` | `-a, --app-name` | unleash-edge | App name for metrics. |
+| **Instance ID** | `INSTANCE_ID` | `--instance-id` | ULID | Unique ID for this instance. |
+| **Req timeout** | `EDGE_REQUEST_TIMEOUT` | `--edge-request-timeout` | 5 | Timeout for incoming requests (seconds). |
+| **Keepalive** | `EDGE_KEEPALIVE_TIMEOUT` | `--edge-keepalive-timeout` | 5 | Keepalive timeout (seconds). |
+| **Workers** | `WORKERS` | `-w, --workers` | CPUs | **Deprecated** in 20.0.0. |
+
+### Security
+
+| Feature | Environment variable | CLI flag | Default | Description |
+| :---- | :---- | :---- | :---- | :---- |
+| **Enable TLS** | `TLS_ENABLE` | `--tls-enable` | false | Bind HTTPS. |
+| **Server key** | `TLS_SERVER_KEY` | `--tls-server-key` | - | Path to private key. |
+| **Server cert** | `TLS_SERVER_CERT` | `--tls-server-cert` | - | Path to certificate. |
+| **TLS port** | `TLS_SERVER_PORT` | `--tls-server-port` | 3043 | Port for HTTPS. |
+| **Force HTTPS** | - | `--redirect-http-to-https` | false | Redirect HTTP to HTTPS. |
+| **CORS origin** | `CORS_ORIGIN` | `--cors-origin` | - | Allowed origins (comma-separated). |
+| **CORS headers** | `CORS_ALLOWED_HEADERS` | `--cors-allowed-headers` | - | Allowed headers. |
+| **CORS max age** | `CORS_MAX_AGE` | `--cors-max-age` | 172800 | Pre-flight cache duration. |
+| **CORS exposed** | `CORS_EXPOSED_HEADERS` | `--cors-exposed-headers` | - | Exposed headers. |
+| **CORS methods** | `CORS_METHODS` | `--cors-methods` | - | Allowed methods. |
+
+### Access control and proxy
+
+| Feature | Environment variable | CLI flag | Description |
+| :---- | :---- | :---- | :---- |
+| **Allow list** | `ALLOW_LIST` | `--allow-list` | CIDRs allowed to connect (Default `0.0.0.0/0`). |
+| **Deny list** | `DENY_LIST` | `--deny-list` | CIDRs denied connection. |
+| **Trust proxy** | `TRUST_PROXY` | `--trust-proxy` | Enabled `Trust X-Forwarded-*` headers. Required if running behind a load balancer to correctly identify client IPs. |
+| **Trusted servers** | - | `--proxy-trusted-servers` | Comma-separated list of specific IPs/CIDRs to trust. Requires `TRUST_PROXY` to be enabled. |
+| **Auth header** | `EDGE_AUTH_HEADER` | `--edge-auth-header` | Custom header to use for Edge authorization checks. |
+| **Token header** | `TOKEN_HEADER` | `--token-header` | Custom header to extract tokens from (Default: `Authorization`). |
+
+### Logging and debugging
+
+| Feature | Environment variable | CLI flag | Description |
+| :---- | :---- | :---- | :---- |
+| **Log format** | `LOG_FORMAT` | `-l, --log-format` | plain, json, or pretty. |
+| **Disable all** | - | `--disable-all-endpoint` | Disables /api/proxy/all (Security hardening). |
+| **Disable metrics batch** | `DISABLE_METRICS_BATCH_ENDPOINT` | `--disable-metrics-batch-endpoint` | Disables `/internal-backstage/metricsbatch`. |
+| **Disable metrics** | `DISABLE_METRICS_ENDPOINT` | `--disable-metrics-endpoint` | Disables `/internal-backstage/metrics`. |
+| **Disable features** | `DISABLE_FEATURES_ENDPOINT` | `--disable-features-endpoint` | Disables `/internal-backstage/features`. |
+| **Disable tokens** | `DISABLE_TOKENS_ENDPOINT` | `--disable-tokens-endpoint` | Disables `/internal-backstage/tokens`. |
+| **Disable info** | `DISABLE_INSTANCE_DATA_ENDPOINT` | `--disable-instance-data-endpoint` | Disables `/internal-backstage/instancedata`. |
+
+## Edge mode configuration
+
+These settings apply when running Unleash Edge in Edge mode.
+
+### Upstream connection
+
+| Feature | Environment variable | CLI flag | Default | Description |
+| :---- | :---- | :---- | :---- | :---- |
+| **URL** | `UPSTREAM_URL` | `-u, --upstream-url` | - | **Required**. URL to Unleash (no /api). |
+| **Startup tokens** | `TOKENS` | `-t, --tokens` | - | [Backend tokens](/concepts/api-tokens-and-client-keys#backend-tokens) to bootstrap cache and set scope. |
+| **Skip SSL** | `SKIP_SSL_VERIFICATION` | `-s, --skip-ssl-verification` | false | **Insecure**. Skips upstream TLS verification. |
+| **Headers** | `CUSTOM_CLIENT_HEADERS` | `-H, --custom-client-headers` | - | Custom headers to send upstream. |
+| **Req timeout** | `UPSTREAM_REQUEST_TIMEOUT` | `--upstream-request-timeout` | 5 | Upstream request timeout (seconds). |
+| **Sock timeout** | `UPSTREAM_SOCKET_TIMEOUT` | `--upstream-socket-timeout` | 5 | Upstream socket timeout (seconds). |
+| **Keepalive** | `CLIENT_KEEPALIVE_TIMEOUT` | `--client-keepalive-timeout` | 15 | Keepalive duration. |
+| **Auth header** | `UPSTREAM_AUTH_HEADER` | `--upstream-auth-header` | - | Header for upstream authorization. |
+
+### Synchronization and polling
+
+| Feature | Environment variable | CLI flag | Default | Description |
+| :---- | :---- | :---- | :---- | :---- |
+| **Metrics interval** | `METRICS_INTERVAL_SECONDS` | `-m, --metrics-interval-seconds` | 60 | How often to push metrics upstream. |
+| **Refresh interval** | `FEATURES_REFRESH_INTERVAL_SECONDS` | `-f, --features-refresh-interval-seconds` | 15 | How often to poll for feature updates. |
+| **Token revalidation** | `TOKEN_REVALIDATION_INTERVAL_SECONDS` | `--token-revalidation-interval-seconds` | 3600 | How often to re-validate tokens. |
+| **Streaming** | `STREAMING` | `--streaming` | false | Enables real-time updates. |
+
+### Persistence
+
+| Feature | Environment variable | CLI flag | Default | Description |
+| :---- | :---- | :---- | :---- | :---- |
+| **Backup folder** | `BACKUP_FOLDER` | `-b, --backup-folder` | - | Local folder for backups (mutually exclusive with Redis). |
+| **S3 bucket** | `S3_BUCKET_NAME` | `--s3-bucket-name` | - | S3 bucket for snapshots. |
+| **Redis URL** | `REDIS_URL` | `--redis-url` | - | Redis connection string. |
+| **Redis mode** | `REDIS_MODE` | `--redis-mode` | single | Single or cluster mode. |
+| **Redis host** | `REDIS_HOST` | `--redis-host` | - | Redis hostname (alternative to `REDIS_URL`). |
+| **Redis port** | `REDIS_PORT` | `--redis-port` | - | Redis port (alternative to `REDIS_URL`). |
+| **Redis user** | `REDIS_USERNAME` | `--redis-username` | - | Redis username. |
+| **Redis pass** | `REDIS_PASSWORD` | `--redis-password` | - | Redis password. |
+| **Redis TLS** | `REDIS_SECURE` | `--redis-secure` | false | Enable TLS. |
+| **Redis scheme** | `REDIS_SCHEME` | `--redis-scheme` | redis | tcp, tls, redis, rediss, unix. |
+| **Read timeout** | `REDIS_READ_CONNECTION_TIMEOUT_MILLISECONDS` | `--redis-read-connection-timeout-milliseconds` | 2000 | Timeout for restoring from Redis. |
+| **Write timeout** | `REDIS_WRITE_CONNECTION_TIMEOUT_MILLISECONDS` | `--redis-write-connection-timeout-milliseconds` | 2000 | Timeout for persisting to Redis. |
+
+### Observability
+
+| Feature | Environment variable | CLI flag | Description |
+| :---- | :---- | :---- | :---- |
+| **Prometheus URL** | `PROMETHEUS_REMOTE_WRITE_URL` | `--prometheus-remote-write-url` | URL for remote metric write. |
+| **Push interval** | `PROMETHEUS_PUSH_INTERVAL` | `--prometheus-push-interval` | Interval for pushing metrics (Default 60). |
+| **Prometheus user** | `PROMETHEUS_USERNAME` | `--prometheus-username` | Auth username. |
+| **Prometheus pass** | `PROMETHEUS_PASSWORD` | `--prometheus-password` | Auth password. |
+| **Prometheus ID** | `PROMETHEUS_USER_ID` | `--prometheus-user-id` | User ID. |
+| **Datadog** | `DATADOG_URL` | `--datadog-url` | Datadog agent URL. |
+| **OpenTelemetry** | `OTEL_COLLECTOR_URL` | `--otel-collector-url` | OTel collector endpoint. |
+| **Sentry DSN** | `SENTRY_DSN` | `--sentry-dsn` | Sentry DSN. |
+| **Sentry rate** | `SENTRY_TRACING_RATE` | `--sentry-tracing-rate` | Tracing rate (Default `0.1`). |
+| **Sentry debug** | `SENTRY_DEBUG` | `--sentry-debug` | Enable Sentry debugging. |
+| **Sentry logs** | `SENTRY_ENABLE_LOGS` | `--sentry-enable-logs` | Enable sending application logs to Sentry |
+
+### Upstream mTLS
+
+| Environment variable | CLI flag | Description |
+| :---- | :---- | :---- |
+| `PKCS8_CLIENT_CERTIFICATE_FILE` | `--pkcs8-client-certificate-file` | Client cert chain (PEM). |
+| `PKCS8_CLIENT_KEY_FILE` | `--pkcs8-client-key-file` | Client private key (PKCS#8). |
+| `PKCS12_IDENTITY_FILE` | `--pkcs12-identity-file` | Identity file (.pfx / pkcs12). |
+| `PKCS12_PASSPHRASE` | `--pkcs12-passphrase` | Passphrase for pkcs12 file. |
+| `PEM_CERT_FILE` | `--pem-cert-file` | PEM cert file. |
+| `UPSTREAM_CERTIFICATE_FILE` | `--upstream-certificate-file` | Extra CA certs for trust chain. |
+
+## Offline mode configuration
+
+These settings apply when running Unleash Edge in Offline mode.
+
+| Feature | Environment variable | CLI flag | Default | Description |
+| :---- | :---- | :---- | :---- | :---- |
+| **Bootstrap file** | `BOOTSTRAP_FILE` | `-b, --bootstrap-file` | - | Path to features.json file. |
+| **Reload interval** | `RELOAD_INTERVAL` | `-r, --reload-interval` | 0 | Seconds between reloading the file. |
+| **Backend tokens** | `CLIENT_TOKENS` | `-c, --client-tokens` | - | Tokens for [backend SDK](/sdks#backend-sdks) access. |
+| **Frontend tokens** | `FRONTEND_TOKENS` | `-f, --frontend-tokens` | - | Tokens for [frontend SDK](/sdks#frontend-sdks) access. |
+
+## Debugging
+
+### View internal state
+
+| Endpoint | Shows |
+|----------|-------|
+| `/internal-backstage/tokens` | Known tokens |
+| `/internal-backstage/features` | Cached features |
+| `/internal-backstage/metrics` | Prometheus metrics |
+
+
+### Health check
+
+```
+unleash-edge health [OPTIONS]
+
+Options:
+  -e, --edge-url <URL>   Edge URL [default: http://localhost:3063]
+  -c, --ca-certificate-file <FILE>   CA cert for self-signed TLS
+```
+
+### Ready check
+
+```
+unleash-edge ready [OPTIONS]
+
+Options:
+  -e, --edge-url <URL>   Edge URL [default: http://localhost:3063]
+  -c, --ca-certificate-file <FILE>   CA cert for self-signed TLS
+```

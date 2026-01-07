@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PersonalDashboardSchemaAdminsItem } from './personalDashboardSchemaAdminsItem';
-import type { PersonalDashboardSchemaFlagsItem } from './personalDashboardSchemaFlagsItem';
-import type { PersonalDashboardSchemaProjectOwnersItem } from './personalDashboardSchemaProjectOwnersItem';
-import type { PersonalDashboardSchemaProjectsItem } from './personalDashboardSchemaProjectsItem';
+import type { PersonalDashboardSchemaAdminsItem } from './personalDashboardSchemaAdminsItem.js';
+import type { PersonalDashboardSchemaFlagsItem } from './personalDashboardSchemaFlagsItem.js';
+import type { PersonalDashboardSchemaProjectOwnersItem } from './personalDashboardSchemaProjectOwnersItem.js';
+import type { PersonalDashboardSchemaProjectsItem } from './personalDashboardSchemaProjectsItem.js';
 
 /**
  * Project and flags relevant to the user

@@ -1,10 +1,10 @@
 import { Grid } from '@mui/material';
-import { BillingInformation } from './BillingInformation/BillingInformation';
-import { BillingPlan } from './BillingPlan/BillingPlan';
+import { BillingInformation } from './BillingInformation/BillingInformation.tsx';
+import { BillingPlan } from './BillingPlan/BillingPlan.tsx';
 
 export const BillingDashboard = () => {
     return (
-        <Grid container spacing={4}>
+        <Grid container spacing={2}>
             <BillingInformation />
             <BillingPlan />
         </Grid>

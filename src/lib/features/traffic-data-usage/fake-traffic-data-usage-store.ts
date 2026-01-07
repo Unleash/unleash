@@ -2,8 +2,8 @@ import type {
     IStatTrafficUsageKey,
     IStatTrafficUsage,
     IStatMonthlyTrafficUsage,
-} from './traffic-data-usage-store-type';
-import type { ITrafficDataUsageStore } from '../../types';
+} from './traffic-data-usage-store-type.js';
+import type { ITrafficDataUsageStore } from '../../types/index.js';
 import {
     differenceInCalendarMonths,
     endOfDay,
@@ -16,16 +16,16 @@ import {
 export class FakeTrafficDataUsageStore implements ITrafficDataUsageStore {
     private trafficData: IStatTrafficUsage[] = [];
 
-    get(key: IStatTrafficUsageKey): Promise<IStatTrafficUsage> {
+    get(_key: IStatTrafficUsageKey): Promise<IStatTrafficUsage> {
         throw new Error('Method not implemented.');
     }
-    getAll(query?: Object | undefined): Promise<IStatTrafficUsage[]> {
+    getAll(_query?: Object | undefined): Promise<IStatTrafficUsage[]> {
         throw new Error('Method not implemented.');
     }
-    exists(key: IStatTrafficUsageKey): Promise<boolean> {
+    exists(_key: IStatTrafficUsageKey): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
-    delete(key: IStatTrafficUsageKey): Promise<void> {
+    delete(_key: IStatTrafficUsageKey): Promise<void> {
         throw new Error('Method not implemented.');
     }
     deleteAll(): Promise<void> {

@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { CreateApiTokenButton } from './CreateApiTokenButton';
+import { CreateApiTokenButton } from './CreateApiTokenButton.tsx';
 import { CREATE_PROJECT_API_TOKEN } from 'component/providers/AccessProvider/permissions';
 
 const server = testServerSetup();
@@ -9,7 +9,10 @@ const server = testServerSetup();
 const setupApi = ({
     apiTokenCount,
     apiTokenLimit,
-}: { apiTokenCount: number; apiTokenLimit: number }) => {
+}: {
+    apiTokenCount: number;
+    apiTokenLimit: number;
+}) => {
     testServerRoute(server, '/api/admin/ui-config', {
         resourceLimits: { apiTokens: apiTokenLimit },
     });
@@ -57,6 +60,6 @@ test('should not allow you to create API tokens when you have reached the limit'
 
     await waitFor(async () => {
         const button = await screen.findByRole('button');
-        expect(button).toBeDisabled();
+        expect(button).toHaveAttribute('aria-disabled', 'true');
     });
 });

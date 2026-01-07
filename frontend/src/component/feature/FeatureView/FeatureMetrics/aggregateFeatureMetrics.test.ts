@@ -1,5 +1,5 @@
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
-import { aggregateFeatureMetrics } from './aggregateFeatureMetrics';
+import { aggregateFeatureMetrics } from './aggregateFeatureMetrics.js';
 
 describe('aggregateFeatureMetrics', () => {
     it('should aggregate yes and no values for identical timestamps', () => {

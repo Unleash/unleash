@@ -1,7 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useState } from 'react';
-import { LicensedUsersSidebar } from './LicensedUsersSidebar';
+import { LicensedUsersSidebar } from './LicensedUsersSidebar.tsx';
 import { useLicensedUsers } from 'hooks/useLicensedUsers';
 import useLoading from 'hooks/useLoading';
 

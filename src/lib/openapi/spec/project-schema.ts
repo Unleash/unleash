@@ -28,8 +28,16 @@ export const projectSchema = {
         health: {
             type: 'number',
             example: 50,
+            description: 'Use `technicalDebt` instead.',
+            deprecated: true,
+        },
+        technicalDebt: {
+            type: 'number',
+            example: 25,
+            minimum: 0,
+            maximum: 100,
             description:
-                "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100",
+                "An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100",
         },
         featureCount: {
             type: 'number',
@@ -93,7 +101,7 @@ export const projectSchema = {
             enum: ['open', 'protected', 'private'],
             example: 'open',
             description:
-                "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+                "The project's [collaboration mode](https://docs.getunleash.io/concepts/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
         },
         defaultStickiness: {
             deprecated: true,

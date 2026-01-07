@@ -1,7 +1,7 @@
 import { Alert, styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 
-const StyledAlert = styled(Alert)(({ theme }) => ({
+const _StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(3),
 }));
 

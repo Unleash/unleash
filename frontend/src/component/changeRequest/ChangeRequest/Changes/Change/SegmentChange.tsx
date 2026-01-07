@@ -5,8 +5,9 @@ import type {
     ChangeRequestState,
     ISegmentChange,
 } from '../../../changeRequest.types';
-import { SegmentChangeDetails } from './SegmentChangeDetails';
-import { ConflictWarning } from './ConflictWarning';
+import { SegmentChangeDetails } from './SegmentChangeDetails.tsx';
+import { ConflictWarning } from './ConflictWarning.tsx';
+import { useSegment } from 'hooks/api/getters/useSegment/useSegment.ts';
 
 interface ISegmentChangeProps {
     segmentChange: ISegmentChange;
@@ -20,61 +21,65 @@ export const SegmentChange: FC<ISegmentChangeProps> = ({
     onNavigate,
     actions,
     changeRequestState,
-}) => (
-    <Card
-        elevation={0}
-        sx={(theme) => ({
-            marginTop: theme.spacing(2),
-            marginBottom: theme.spacing(2),
-            overflow: 'hidden',
-        })}
-    >
-        <Box
+}) => {
+    const { segment } = useSegment(segmentChange.payload.id);
+
+    return (
+        <Card
+            elevation={0}
             sx={(theme) => ({
-                backgroundColor: theme.palette.neutral.light,
-                borderRadius: (theme) =>
-                    `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
-                border: '1px solid',
-                borderColor: (theme) =>
-                    segmentChange.conflict
-                        ? theme.palette.warning.border
-                        : theme.palette.divider,
-                borderBottom: 'none',
+                marginTop: theme.spacing(2),
+                marginBottom: theme.spacing(2),
                 overflow: 'hidden',
             })}
         >
-            <ConflictWarning conflict={segmentChange.conflict} />
             <Box
-                sx={{
-                    display: 'flex',
-                    pt: 2,
-                    pb: 2,
-                    px: 3,
-                }}
+                sx={(theme) => ({
+                    backgroundColor: theme.palette.neutral.light,
+                    borderRadius: `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
+                    border: '1px solid',
+                    borderColor: segmentChange.conflict
+                        ? theme.palette.warning.border
+                        : theme.palette.divider,
+                    borderBottom: 'none',
+                    overflow: 'hidden',
+                })}
             >
-                <Typography>Segment name: </Typography>
-
-                <Link
-                    component={RouterLink}
-                    to={`/segments/edit/${segmentChange.payload.id}`}
-                    color='primary'
-                    underline='hover'
+                <ConflictWarning conflict={segmentChange.conflict} />
+                <Box
                     sx={{
-                        marginLeft: 1,
-                        '& :hover': {
-                            textDecoration: 'underline',
-                        },
+                        display: 'flex',
+                        pt: 2,
+                        pb: 2,
+                        px: 3,
                     }}
-                    onClick={onNavigate}
                 >
-                    <strong>{segmentChange.payload.name}</strong>
-                </Link>
+                    <Typography>Segment name:</Typography>
+
+                    <Link
+                        component={RouterLink}
+                        to={`/segments/edit/${segmentChange.payload.id}`}
+                        color='primary'
+                        underline='hover'
+                        sx={{
+                            marginLeft: 1,
+                            '& :hover': {
+                                textDecoration: 'underline',
+                            },
+                        }}
+                        onClick={onNavigate}
+                    >
+                        <strong>
+                            {segmentChange.payload.name || segment?.name}
+                        </strong>
+                    </Link>
+                </Box>
             </Box>
-        </Box>
-        <SegmentChangeDetails
-            change={segmentChange}
-            actions={actions}
-            changeRequestState={changeRequestState}
-        />
-    </Card>
-);
+            <SegmentChangeDetails
+                change={segmentChange}
+                actions={actions}
+                changeRequestState={changeRequestState}
+            />
+        </Card>
+    );
+};

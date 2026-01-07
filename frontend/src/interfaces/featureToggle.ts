@@ -1,6 +1,7 @@
 import type { CreateFeatureSchemaType, FeatureSchema } from 'openapi';
-import type { IFeatureStrategy } from './strategy';
-import type { ITag } from './tags';
+import type { IFeatureStrategy } from './strategy.js';
+import type { ITag } from './tags.js';
+import type { IReleasePlan } from './releasePlans.js';
 
 /**
  * @deprecated use FeatureSchema from openapi
@@ -49,6 +50,8 @@ export type CollaboratorData = {
     users: Collaborator[];
 };
 
+export type FeatureLink = { url: string; title: string | null; id: string };
+
 /**
  * @deprecated use FeatureSchema from openapi
  */
@@ -76,6 +79,7 @@ export interface IFeatureToggle {
         imageUrl: string;
     };
     collaborators?: CollaboratorData;
+    links?: FeatureLink[];
 }
 
 export interface IDependency {
@@ -93,12 +97,16 @@ export interface IFeatureEnvironment {
     lastSeenAt?: string;
     yes?: number;
     no?: number;
+    releasePlans?: IReleasePlan[];
 }
 
 export interface IFeatureEnvironmentWithCrEnabled extends IFeatureEnvironment {
     crEnabled?: boolean;
 }
 
+/**
+ * @deprecated use `StrategyVariantSchema` from openapi
+ */
 export interface IFeatureVariant {
     name: string;
     stickiness: string;
@@ -114,7 +122,7 @@ export interface IOverride {
 }
 
 export interface IPayload {
-    type: string;
+    type: 'string' | 'number' | 'json' | 'csv';
     value: string;
 }
 

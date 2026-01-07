@@ -38,8 +38,8 @@ export const useApiTokenTable = (
                 width: 50,
             },
             {
-                Header: 'Username',
-                accessor: 'username',
+                Header: 'Token name',
+                accessor: 'tokenName',
                 Cell: HighlightCell,
                 minWidth: 35,
             },
@@ -49,7 +49,7 @@ export const useApiTokenTable = (
                 Cell: ({
                     value,
                 }: {
-                    value: 'client' | 'admin' | 'frontend';
+                    value: 'client' | 'backend' | 'admin' | 'frontend';
                 }) => (
                     <HighlightCell
                         value={tokenDescriptions[value.toLowerCase()].label}
@@ -142,12 +142,16 @@ const tokenDescriptions: {
     [index: string]: { label: string; title: string };
 } = {
     client: {
-        label: 'CLIENT',
-        title: 'Connect server-side SDK or Unleash Proxy/Edge',
+        label: 'BACKEND',
+        title: 'Connect backend SDK or Unleash Edge',
+    },
+    backend: {
+        label: 'BACKEND',
+        title: 'Connect backend SDK or Unleash Edge',
     },
     frontend: {
         label: 'FRONTEND',
-        title: 'Connect web and mobile SDK',
+        title: 'Connect frontend SDK',
     },
     admin: {
         label: 'ADMIN',

@@ -2,22 +2,25 @@ import type {
     IEnvironment,
     IProject,
     IProjectApplications,
+    IProjectLinkTemplate,
     IProjectStore,
-} from '../../lib/types';
-import NotFoundError from '../../lib/error/notfound-error';
+} from '../../lib/types/index.js';
+import NotFoundError from '../../lib/error/notfound-error.js';
 import type {
     IEnvironmentProjectLink,
     ProjectModeCount,
-} from '../../lib/features/project/project-store';
-import type { CreateFeatureStrategySchema } from '../../lib/openapi';
+} from '../../lib/features/project/project-store.js';
+import type { CreateFeatureStrategySchema } from '../../lib/openapi/index.js';
 import type {
     IProjectApplicationsSearchParams,
     IProjectHealthUpdate,
     IProjectInsert,
     ProjectEnvironment,
-} from '../../lib/features/project/project-store-type';
+} from '../../lib/features/project/project-store-type.js';
 
-type ArchivableProject = IProject & { archivedAt: null | Date };
+type ArchivableProject = Omit<IProject, 'archivedAt'> & {
+    archivedAt: null | Date;
+};
 
 export default class FakeProjectStore implements IProjectStore {
     projects: ArchivableProject[] = [];
@@ -30,7 +33,7 @@ export default class FakeProjectStore implements IProjectStore {
 
     getProjectLinksForEnvironments(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environments: string[],
+        _environments: string[],
     ): Promise<IEnvironmentProjectLink[]> {
         throw new Error('Method not implemented.');
     }
@@ -56,7 +59,7 @@ export default class FakeProjectStore implements IProjectStore {
             archivedAt: null,
         };
         this.projects.push(newProj);
-        return newProj;
+        return newProj as IProject;
     }
 
     async create(project: IProjectInsert): Promise<IProject> {
@@ -95,17 +98,19 @@ export default class FakeProjectStore implements IProjectStore {
     async get(key: string): Promise<IProject> {
         const project = this.projects.find((p) => p.id === key);
         if (project) {
-            return project;
+            return project as IProject;
         }
         throw new NotFoundError(`Could not find project with id: ${key}`);
     }
 
     async getAll(): Promise<IProject[]> {
-        return this.projects.filter((project) => project.archivedAt === null);
+        return this.projects
+            .filter((project) => project.archivedAt === null)
+            .map((p) => p as IProject);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async getMembersCountByProject(projectId: string): Promise<number> {
+    async getMembersCountByProject(_projectId: string): Promise<number> {
         return Promise.resolve(0);
     }
 
@@ -127,7 +132,7 @@ export default class FakeProjectStore implements IProjectStore {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         projects: IProjectInsert[],
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environments?: IEnvironment[],
+        _environments?: IEnvironment[],
     ): Promise<IProject[]> {
         return projects.map((project) => this.createInternal(project));
     }
@@ -145,45 +150,51 @@ export default class FakeProjectStore implements IProjectStore {
 
     addEnvironmentToProjects(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: string,
+        _environment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projects: string[],
+        _projects: string[],
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
     async getMembersCountByProjectAfterDate(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
+        _projectId: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        date: string,
+        _date: string,
     ): Promise<number> {
         return 0;
     }
 
     updateDefaultStrategy(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
+        _projectId: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: string,
+        _environment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        strategy: CreateFeatureStrategySchema,
+        _strategy: CreateFeatureStrategySchema,
     ): Promise<CreateFeatureStrategySchema> {
         throw new Error('Method not implemented.');
     }
 
     getDefaultStrategy(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: string,
+        _projectId: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: string,
-    ): Promise<CreateFeatureStrategySchema | null> {
+        _environment: string,
+    ): Promise<CreateFeatureStrategySchema | undefined> {
         throw new Error('Method not implemented.');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isFeatureLimitReached(id: string): Promise<boolean> {
+    isFeatureLimitReached(_id: string): Promise<boolean> {
         return Promise.resolve(false);
+    }
+
+    async getProjectLinkTemplates(
+        _id: string,
+    ): Promise<IProjectLinkTemplate[]> {
+        return [] as IProjectLinkTemplate[];
     }
 
     getProjectModeCounts(): Promise<ProjectModeCount[]> {
@@ -191,12 +202,12 @@ export default class FakeProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    updateProjectEnterpriseSettings(update: IProjectInsert): Promise<void> {
+    updateProjectEnterpriseSettings(_update: IProjectInsert): Promise<void> {
         throw new Error('Method not implemented.');
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getApplicationsByProject(
-        searchParams: IProjectApplicationsSearchParams,
+        _searchParams: IProjectApplicationsSearchParams,
     ): Promise<IProjectApplications> {
         throw new Error('Method not implemented.');
     }

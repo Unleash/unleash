@@ -21,14 +21,14 @@ import theme from 'themes/theme';
 import { useSearch } from 'hooks/useSearch';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
-import { ChangeRequestStatusCell } from './ChangeRequestStatusCell';
-import { AvatarCell } from './AvatarCell';
-import { ChangeRequestTitleCell } from './ChangeRequestTitleCell';
+import { ChangeRequestStatusCell } from './ChangeRequestStatusCell.tsx';
+import { AvatarCell } from './AvatarCell.tsx';
+import { ChangeRequestTitleCell } from './ChangeRequestTitleCell.tsx';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { useStyles } from './ChangeRequestsTabs.styles';
-import { FeaturesCell } from './FeaturesCell';
-import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell';
+import { FeaturesCell } from './FeaturesCell.tsx';
+import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell.tsx';
 
 export interface IChangeRequestTableProps {
     changeRequests: any[];
@@ -50,7 +50,7 @@ const StyledTabContainer = styled('div')({
 const StyledTabButton = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
     width: 'auto',
-    fontSize: theme.fontSizes.bodySize,
+    fontSize: theme.typography.body2.fontSize,
     [theme.breakpoints.up('md')]: {
         minWidth: 160,
     },
@@ -60,6 +60,17 @@ const ConftigurationLinkBox = styled(Box)(({ theme }) => ({
     textAlign: 'right',
     paddingBottom: theme.spacing(2),
     fontSize: theme.fontSizes.smallBody,
+}));
+
+const StyledTable = styled(Table)(() => ({
+    th: {
+        whiteSpace: 'nowrap',
+    },
+
+    td: {
+        verticalAlign: 'top',
+        maxWidth: '250px',
+    },
 }));
 
 export const ChangeRequestsTabs = ({
@@ -104,7 +115,7 @@ export const ChangeRequestsTabs = ({
 
     const tabs = [
         {
-            title: 'Change requests',
+            title: 'Open',
             data: openChangeRequests,
             type: 'open' as const,
         },
@@ -122,7 +133,6 @@ export const ChangeRequestsTabs = ({
             {
                 id: 'Title',
                 Header: 'Title',
-                width: 100,
                 canSort: true,
                 accessor: 'title',
                 searchable: true,
@@ -164,7 +174,7 @@ export const ChangeRequestsTabs = ({
             {
                 Header: 'By',
                 accessor: 'createdBy',
-                maxWidth: 180,
+                width: '10%',
                 canSort: false,
                 Cell: AvatarCell,
                 align: 'left',
@@ -177,13 +187,14 @@ export const ChangeRequestsTabs = ({
                 Header: 'Submitted',
                 accessor: 'createdAt',
                 maxWidth: 100,
+                width: '5%',
                 Cell: TimeAgoCell,
             },
             {
                 Header: 'Environment',
                 accessor: 'environment',
                 searchable: true,
-                maxWidth: 100,
+                width: '10%',
                 Cell: HighlightCell,
                 filterName: 'environment',
             },
@@ -192,6 +203,7 @@ export const ChangeRequestsTabs = ({
                 accessor: 'state',
                 searchable: true,
                 maxWidth: '170px',
+                width: '10%',
                 Cell: ChangeRequestStatusCell,
                 filterName: 'status',
             },
@@ -333,7 +345,7 @@ export const ChangeRequestsTabs = ({
                 </Link>
             </ConftigurationLinkBox>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
-                <Table {...getTableProps()}>
+                <StyledTable {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />
                     <TableBody {...getTableBodyProps()}>
                         {rows.map((row) => {
@@ -355,7 +367,7 @@ export const ChangeRequestsTabs = ({
                             );
                         })}
                     </TableBody>
-                </Table>
+                </StyledTable>
             </SearchHighlightProvider>
             <ConditionallyRender
                 condition={rows.length === 0}

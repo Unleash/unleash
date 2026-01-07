@@ -14,16 +14,16 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { useSignalEndpointsApi } from 'hooks/api/actions/useSignalEndpointsApi/useSignalEndpointsApi';
 import type { ISignalEndpoint } from 'interfaces/signal';
-import { SignalEndpointsActionsCell } from './SignalEndpointsActionsCell';
-import { SignalEndpointsDeleteDialog } from './SignalEndpointsDeleteDialog';
+import { SignalEndpointsActionsCell } from './SignalEndpointsActionsCell.tsx';
+import { SignalEndpointsDeleteDialog } from './SignalEndpointsDeleteDialog.tsx';
 import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';
 import copy from 'copy-to-clipboard';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { SignalEndpointsTokensCell } from './SignalEndpointsTokensCell';
-import { SignalEndpointsModal } from '../SignalEndpointsModal/SignalEndpointsModal';
-import { SignalEndpointsTokensDialog } from '../SignalEndpointsModal/SignalEndpointsForm/SignalEndpointsTokens/SignalEndpointsTokensDialog';
+import { SignalEndpointsTokensCell } from './SignalEndpointsTokensCell.tsx';
+import { SignalEndpointsModal } from '../SignalEndpointsModal/SignalEndpointsModal.tsx';
+import { SignalEndpointsTokensDialog } from '../SignalEndpointsModal/SignalEndpointsForm/SignalEndpointsTokens/SignalEndpointsTokensDialog.tsx';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { SignalEndpointsSignalsModal } from '../SignalEndpointsSignals/SignalEndpointsSignalsModal';
+import { SignalEndpointsSignalsModal } from '../SignalEndpointsSignals/SignalEndpointsSignalsModal.tsx';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
@@ -100,7 +100,9 @@ export const SignalEndpointsTable = () => {
                 accessor: 'name',
                 Cell: ({
                     row: { original: signalEndpoint },
-                }: { row: { original: ISignalEndpoint } }) => (
+                }: {
+                    row: { original: ISignalEndpoint };
+                }) => (
                     <LinkCell
                         title={signalEndpoint.name}
                         onClick={() => {
@@ -154,7 +156,9 @@ export const SignalEndpointsTable = () => {
                 accessor: 'enabled',
                 Cell: ({
                     row: { original: signalEndpoint },
-                }: { row: { original: ISignalEndpoint } }) => (
+                }: {
+                    row: { original: ISignalEndpoint };
+                }) => (
                     <ToggleCell
                         checked={signalEndpoint.enabled}
                         setChecked={(enabled) =>
@@ -172,7 +176,9 @@ export const SignalEndpointsTable = () => {
                 align: 'center',
                 Cell: ({
                     row: { original: signalEndpoint },
-                }: { row: { original: ISignalEndpoint } }) => (
+                }: {
+                    row: { original: ISignalEndpoint };
+                }) => (
                     <SignalEndpointsActionsCell
                         signalEndpointId={signalEndpoint.id}
                         onCopyToClipboard={() => {
@@ -308,7 +314,7 @@ export const SignalEndpointsTable = () => {
                 <StyledParagraph>
                     Read more about these features in our documentation:{' '}
                     <a
-                        href='https://docs.getunleash.io/reference/signals'
+                        href='https://docs.getunleash.io/concepts/signals'
                         target='_blank'
                         rel='noreferrer'
                     >
@@ -316,7 +322,7 @@ export const SignalEndpointsTable = () => {
                     </a>{' '}
                     and{' '}
                     <a
-                        href='https://docs.getunleash.io/reference/actions'
+                        href='https://docs.getunleash.io/concepts/actions'
                         target='_blank'
                         rel='noreferrer'
                     >

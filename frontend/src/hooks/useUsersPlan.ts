@@ -1,6 +1,6 @@
 import type { IUser } from 'interfaces/user';
 import { useMemo } from 'react';
-import { useInstanceStatus } from './api/getters/useInstanceStatus/useInstanceStatus';
+import { useInstanceStatus } from './api/getters/useInstanceStatus/useInstanceStatus.js';
 import { InstancePlan } from 'interfaces/instance';
 import { BILLING_PRO_DEFAULT_INCLUDED_SEATS } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 

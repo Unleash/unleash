@@ -3,7 +3,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { styled } from '@mui/material';
-import { ArchiveProject } from '../ArchiveProject';
+import { ArchiveProject } from '../ArchiveProject.tsx';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.spacing(2),
@@ -28,7 +28,7 @@ export const ArchiveProjectForm = ({ featureCount }: IDeleteProjectForm) => {
                 loading={loading}
                 title='Archive project'
                 description=''
-                documentationLink='https://docs.getunleash.io/reference/projects'
+                documentationLink='https://docs.getunleash.io/concepts/projects'
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectArchiveApiCode}
                 compact

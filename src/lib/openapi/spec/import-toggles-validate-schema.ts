@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { importTogglesValidateItemSchema } from './import-toggles-validate-item-schema';
+import { importTogglesValidateItemSchema } from './import-toggles-validate-item-schema.js';
 
 export const importTogglesValidateSchema = {
     $id: '#/components/schemas/importTogglesValidateSchema',
@@ -7,7 +7,7 @@ export const importTogglesValidateSchema = {
     required: ['errors', 'warnings'],
     additionalProperties: false,
     description:
-        'An object containing [feature import](https://docs.getunleash.io/reference/deploy/environment-import-export) validation results.',
+        'An object containing [feature import](https://docs.getunleash.io/concepts/import-export) validation results.',
     properties: {
         errors: {
             description:

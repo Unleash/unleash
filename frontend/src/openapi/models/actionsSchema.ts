@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionSchema } from './actionSchema';
-import type { ActionsSchemaMatch } from './actionsSchemaMatch';
+import type { ActionSchema } from './actionSchema.js';
+import type { ActionsSchemaMatch } from './actionsSchemaMatch.js';
 
 /**
  * A response model with an identifiable action set.

@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useOptimisticUpdate } from './useOptimisticUpdate';
+import { useOptimisticUpdate } from './useOptimisticUpdate.js';
 import { act } from 'react';
 
 describe('useOptimisticUpdate', () => {

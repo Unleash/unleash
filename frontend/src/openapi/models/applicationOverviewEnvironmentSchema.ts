@@ -3,12 +3,16 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ApplicationEnvironmentIssuesSchema } from './applicationEnvironmentIssuesSchema';
+import type { ApplicationEnvironmentIssuesSchema } from './applicationEnvironmentIssuesSchema.js';
 
 /**
  * Data about an application environment
  */
 export interface ApplicationOverviewEnvironmentSchema {
+    /** Backend SDKs used in the application environment */
+    backendSdks: string[];
+    /** Frontend SDKs used in the application environment */
+    frontendSdks: string[];
     /** The number of instances of the application environment */
     instanceCount: number;
     /** This list of issues that might be wrong with the application */

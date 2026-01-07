@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Divider, styled } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
-import { ProjectActionsActionItem } from './ProjectActionsActionItem';
-import type { ActionsActionState } from '../../useProjectActionsForm';
-import { ProjectActionsFormStep } from '../ProjectActionsFormStep';
+import { ProjectActionsActionItem } from './ProjectActionsActionItem.tsx';
+import type { ActionsActionState } from '../../useProjectActionsForm.ts';
+import { ProjectActionsFormStep } from '../ProjectActionsFormStep.tsx';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Add from '@mui/icons-material/Add';
 import type { IServiceAccount } from 'interfaces/service-account';
@@ -48,7 +47,7 @@ export const ProjectActionsFormStepActions = ({
     const { actionConfigurations } = useActionConfigurations(projectId);
 
     const addAction = (projectId: string) => {
-        const id = uuidv4();
+        const id = crypto.randomUUID();
         const action: ActionsActionState = {
             id,
             action: '',
@@ -98,7 +97,7 @@ export const ProjectActionsFormStepActions = ({
                 value={`${actorId}`}
                 onChange={(v) => {
                     validateActorId(Number(v));
-                    setActorId(Number.parseInt(v));
+                    setActorId(Number.parseInt(v, 10));
                 }}
             />
             <StyledDivider />

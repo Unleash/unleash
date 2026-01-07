@@ -4,6 +4,7 @@ import {
     Button,
     capitalize,
     Checkbox,
+    Chip,
     styled,
     TextField,
     Tooltip,
@@ -36,7 +37,7 @@ import {
 import { caseInsensitiveSearch } from 'utils/search';
 import type { IServiceAccount } from 'interfaces/service-account';
 import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
-import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
+import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles.ts';
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
@@ -85,6 +86,18 @@ const StyledUserOption = styled('div')(({ theme }) => ({
         color: theme.palette.text.secondary,
     },
 }));
+
+const getOptionLabel = (option: IAccessOption) => {
+    if (
+        option.type === ENTITY_TYPE.USER ||
+        option.type === ENTITY_TYPE.SERVICE_ACCOUNT
+    ) {
+        const optionUser = option.entity as IUser;
+        return optionUser.email || optionUser.name || optionUser.username || '';
+    } else {
+        return option.entity.name;
+    }
+};
 
 interface IAccessOption {
     id: number;
@@ -272,7 +285,7 @@ export const ProjectAccessAssign = ({
     };
 
     const renderOption = (
-        props: React.HTMLAttributes<HTMLLIElement>,
+        { key, ...props }: React.HTMLAttributes<HTMLLIElement> & { key?: any },
         option: IAccessOption,
         selected: boolean,
     ) => {
@@ -283,9 +296,9 @@ export const ProjectAccessAssign = ({
             optionUser = option.entity as IUser;
         }
         return (
-            <Tooltip title={createRootGroupWarning(optionGroup)}>
-                <span>
-                    <li {...props}>
+            <li key={key} {...props}>
+                <Tooltip title={createRootGroupWarning(optionGroup)}>
+                    <>
                         <Checkbox
                             icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
                             checkedIcon={<CheckBoxIcon fontSize='small' />}
@@ -319,9 +332,9 @@ export const ProjectAccessAssign = ({
                                 </StyledUserOption>
                             }
                         />
-                    </li>
-                </span>
-            </Tooltip>
+                    </>
+                </Tooltip>
+            </li>
         );
     };
 
@@ -340,6 +353,8 @@ export const ProjectAccessAssign = ({
         );
     }
 
+    const autocompleteSize = 'small';
+
     return (
         <SidebarModal
             open
@@ -351,7 +366,7 @@ export const ProjectAccessAssign = ({
                 modal
                 title={`${!edit ? 'Assign' : 'Edit'} ${entityType} access`}
                 description='Custom project roles allow you to fine-tune access rights and permissions within your projects.'
-                documentationLink='https://docs.getunleash.io/how-to/how-to-create-and-assign-custom-project-roles'
+                documentationLink='https://docs.getunleash.io/concepts/rbac#create-and-assign-a-custom-project-role'
                 documentationLinkLabel='Project access documentation'
                 formatApiCode={formatApiCode}
             >
@@ -365,7 +380,7 @@ export const ProjectAccessAssign = ({
                         <StyledAutocompleteWrapper>
                             <AutocompleteVirtual
                                 data-testid={PA_USERS_GROUPS_ID}
-                                size='small'
+                                size={autocompleteSize}
                                 multiple
                                 openOnFocus
                                 limitTags={10}
@@ -396,24 +411,19 @@ export const ProjectAccessAssign = ({
                                 renderOption={(props, option, { selected }) =>
                                     renderOption(props, option, selected)
                                 }
-                                getOptionLabel={(option: IAccessOption) => {
-                                    if (
-                                        option.type === ENTITY_TYPE.USER ||
-                                        option.type ===
-                                            ENTITY_TYPE.SERVICE_ACCOUNT
-                                    ) {
-                                        const optionUser =
-                                            option.entity as IUser;
+                                getOptionLabel={getOptionLabel}
+                                renderTags={(tagValue, getTagProps) =>
+                                    tagValue.map((option, index) => {
                                         return (
-                                            optionUser.email ||
-                                            optionUser.name ||
-                                            optionUser.username ||
-                                            ''
+                                            <Chip
+                                                {...getTagProps({ index })}
+                                                size={autocompleteSize}
+                                                key={`${option.type}:${option.id}`}
+                                                label={getOptionLabel(option)}
+                                            />
                                         );
-                                    } else {
-                                        return option.entity.name;
-                                    }
-                                }}
+                                    })
+                                }
                                 filterOptions={(options, { inputValue }) =>
                                     options.filter((option: IAccessOption) => {
                                         if (

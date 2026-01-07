@@ -1,0 +1,352 @@
+name: AI flag cleanup PR
+
+on:
+  workflow_call:
+    inputs:
+      issue-number:
+        description: "Flag completed issue number"
+        required: true
+        type: number
+      model:
+        description: "Model to use"
+        required: true
+        type: string
+      api_key_env_name:
+        description: "The name of the API key environment variable. For example, OPENAI_API_KEY, ANTHROPIC_API_KEY, etc. See more info: https://aider.chat/docs/llms.html"
+        required: true
+        type: string
+      base-branch:
+        description: "Base branch to create PR against (e.g. main)"
+        required: false
+        type: string
+        default: ${{ github.event.repository.default_branch }}
+      chat-timeout:
+        description: "Timeout for flag cleanup, in minutes"
+        required: false
+        type: number
+        default: 10
+    secrets:
+      api_key_env_value:
+        description: "The API key"
+        required: true
+      UNLEASH_BOT_APP_ID:
+        required: true
+      UNLEASH_BOT_PRIVATE_KEY:
+        required: true
+
+permissions:
+  pull-requests: write
+  contents: write
+  issues: write
+
+concurrency:
+  group: AI-flag-cleanup-${{ inputs.issue-number }}
+  cancel-in-progress: true
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Generate GitHub App token
+        id: app_token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id:        ${{ secrets.UNLEASH_BOT_APP_ID }}
+          private-key:   ${{ secrets.UNLEASH_BOT_PRIVATE_KEY }}
+
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref:                 ${{ github.ref }}
+          token:               ${{ steps.app_token.outputs.token }}
+          fetch-depth:         0
+          persist-credentials: true
+
+      - name: Get issue
+        uses: actions/github-script@v7
+        id: get_issue
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
+          script: |
+            console.log('Fetching issue #${{ inputs.issue-number }}')
+            const { owner, repo } = context.repo;
+            const result = await github.rest.issues.get({
+              owner,
+              repo,
+              issue_number: ${{ inputs.issue-number }}
+            });
+            return {
+              title: result.data.title.replace(/"/g, "'").replace(/`/g, '\\`'),
+              body:  result.data.body.replace(/"/g, "'").replace(/`/g, '\\`')
+            };
+
+      - name: Extract flag name
+        id: extract_flag
+        run: |
+          TITLE="${{ fromJson(steps.get_issue.outputs.result).title }}"
+
+          if [[ $TITLE =~ Flag[[:space:]]+([^[:space:]]+)[[:space:]]+marked ]]; then
+            FLAG="${BASH_REMATCH[1]}"
+            echo "flag-name=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+          else
+            MSG="Could not extract flag name from title: $TITLE"
+            echo "ERROR_MESSAGE=$MSG" >> $GITHUB_ENV
+            echo "❌ $MSG" >&2
+            exit 1
+          fi
+
+      - name: Create a new branch
+        id: create_branch
+        uses: actions/github-script@v7
+        env:
+          FLAG_NAME: ${{ steps.extract_flag.outputs.flag-name }}
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
+          result-encoding: string
+          script: |
+            const kebab = (s) => s
+              .toLowerCase().trim()
+              .replace(/[^\w\s-]/g, '')
+              .replace(/\s+/g, '-')
+              .replace(/^-+|-+$/g, '');
+
+            const { owner, repo } = context.repo;
+            const base = '${{ inputs.base-branch }}';
+            const baseBranch = await github.rest.repos.getBranch({ owner, repo, branch: base });
+
+            const branchName = `chore/unleash-ai-${kebab(process.env.FLAG_NAME)}-flag-cleanup`;
+            const refFull  = `refs/heads/${branchName}`;
+            const refShort = `heads/${branchName}`;
+
+            // remove stale ref if it exists without branch
+            const existing = await github.rest.git.getRef({ owner, repo, ref: refShort }).catch(() => null);
+            if (existing) {
+              try {
+                await github.rest.repos.getBranch({ owner, repo, branch: branchName });
+                return branchName;
+              } catch {
+                await github.rest.git.deleteRef({ owner, repo, ref: refShort });
+              }
+            }
+
+            // create new
+            await github.rest.git.createRef({
+              owner, repo,
+              ref: refFull,
+              sha: baseBranch.data.commit.sha
+            });
+            return branchName;
+
+      - name: Check out new branch
+        uses: actions/checkout@v6
+        with:
+          ref:                 ${{ steps.create_branch.outputs.result }}
+          token:               ${{ steps.app_token.outputs.token }}
+          fetch-depth:         0
+          persist-credentials: true
+
+      - name: Configure Git
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config --global user.email "194219037+unleash-bot[bot]@users.noreply.github.com"
+          git config --global user.name  "unleash-bot"
+
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
+      - name: Find files
+        id: find_files
+        run: |
+          FLAG="${{ steps.extract_flag.outputs.flag-name }}"
+          mapfile -d '' FILES < <(rg -0 -l "$FLAG" .)
+          if [[ -z "$FILES" ]]; then
+            MSG="No files found for flag '$FLAG'"
+            echo "ERROR_MESSAGE=$MSG" >> $GITHUB_ENV
+            echo "❌ $MSG" >&2
+            exit 1
+          fi
+          printf '%s\0' "${FILES[@]}" > file_list.bin
+          echo "file_list=./file_list.bin" >> $GITHUB_OUTPUT
+
+      - name: Create prompt
+        id: create_prompt
+        run: |
+          FLAG="${{ steps.extract_flag.outputs.flag-name }}"
+          ISSUE_BODY="${{ fromJson(steps.get_issue.outputs.result).body }}"
+
+          cat <<-EOF > cleanup_prompt.txt
+          **Flag to clean up:** \`$FLAG\`
+          Based on the issue description below, refactor the codebase to permanently apply the desired outcome for this feature flag (e.g. enable, keep variant, or discard), by removing all conditional checks and dead branches, preserving only the correct code path.
+
+          **Safety constraint**: Only modify or remove code, tests, and config related to the specified feature flag ($FLAG), and do not touch any other flags or their associated code.
+
+          You may **find no conditional logic** or actual usage of \`$FLAG\`. You may only find its **definition** or **configuration**. In that case, clean up any definitions or configurations for that flag and add a short **warning** to your summary saying no logic was found here (as the actual logic for the feature flag may live in another repo).
+
+          After making the changes, provide a **Markdown summary** of what was changed, written for a developer reviewing the PR. Keep it clear, focused, and readable. Use the exact following format (including start & end separator lines, headings, bullets, emojis):
+
+          \`\`\`md
+
+          === AI Flag Cleanup Summary Start ===
+
+          ## 🧹 AI Flag Cleanup Summary
+
+          (Short summary of the changes made)
+
+          (Include any details that you think are critical for the reviewer to know, if any, prefixing them with an appropriate emoji)
+
+          ### 🚮 Removed
+          - **(Category)**
+            - (list of removed items)
+
+          ### 🛠 Kept
+          - **(Category)**
+            - (list of kept items)
+
+          ### 📝 Why
+          (Your reasoning for the changes made, including any relevant context or decisions that do not belong at the top of the summary.)
+
+          === AI Flag Cleanup Summary End ===
+
+          \`\`\`
+
+          --- Issue Description ---
+          $ISSUE_BODY
+          EOF
+
+          echo "Cleanup prompt created:"
+          cat cleanup_prompt.txt
+          echo "prompt-file=cleanup_prompt.txt" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install aider-chat
+
+      - name: Clean up flag and capture summary
+        id: flag_cleanup
+        timeout-minutes: ${{ inputs.chat-timeout }}
+        env:
+          GIT_AUTHOR_NAME: 'unleash-bot'
+          GIT_AUTHOR_EMAIL: '194219037+unleash-bot[bot]@users.noreply.github.com'
+          GIT_COMMITTER_NAME: 'unleash-bot'
+          GIT_COMMITTER_EMAIL: '194219037+unleash-bot[bot]@users.noreply.github.com'
+          ${{ inputs.api_key_env_name }}: ${{ secrets.api_key_env_value }}
+        run: |
+          set -euo pipefail
+
+          mapfile -d '' FILES < <(cat "${{ steps.find_files.outputs.file_list }}")
+          aider --model "${{ inputs.model }}" \
+            --yes \
+            --message-file cleanup_prompt.txt \
+            --no-attribute-author \
+            --no-attribute-committer \
+            --no-attribute-co-authored-by \
+             "${FILES[@]}" \
+            | tee flag_cleanup.txt || {
+              MSG="Flag cleanup failed"
+              echo "ERROR_MESSAGE=$MSG" >> $GITHUB_ENV
+              echo "❌ $MSG" >&2
+              exit 1
+          }
+
+          SUMMARY=$(
+            awk '
+              /^=== AI Flag Cleanup Summary Start ===/ { inside=1; buf=""; next }
+              /^=== AI Flag Cleanup Summary End ===/   { inside=0; last=buf; next }
+              inside { buf = buf $0 "\n" }
+              END { printf "%s", last }
+            ' flag_cleanup.txt
+          )
+
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$SUMMARY"       >> $GITHUB_OUTPUT
+          echo "EOF"            >> $GITHUB_OUTPUT
+
+      - name: Push commit
+        run: git push -u origin HEAD
+
+      - name: Create Pull Request
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
+          result-encoding: string
+          script: |
+            const { owner, repo } = context.repo;
+            const branch  = '${{ steps.create_branch.outputs.result }}';
+            const flag    = '${{ steps.extract_flag.outputs.flag-name }}';
+            const summary = ${{ toJson(steps.flag_cleanup.outputs.summary) }};
+
+            const body = [
+              `This PR cleans up the ${flag} flag. These changes were automatically generated by AI and should be reviewed carefully.`,
+              '',
+              `Fixes #${{ inputs.issue-number }}`,
+              '',
+              summary
+            ].join('\n');
+
+            const { data: prs } = await github.rest.pulls.list({ owner, repo, state: 'open', per_page: 100 });
+            const existing = prs.find(p => p.head.ref === branch);
+            if (existing) {
+              await github.rest.pulls.update({
+                owner,
+                repo,
+                pull_number: existing.number,
+                body
+              });
+
+              console.log(`Updated PR #${existing.number}: ${existing.html_url}`);
+              return existing;
+            }
+
+            const { data: pr } = await github.rest.pulls.create({
+              owner,
+              repo,
+              title: `chore(AI): ${flag} flag cleanup`,
+              head: branch,
+              base: '${{ inputs.base-branch }}',
+              body
+            });
+
+            await github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number: pr.number,
+              labels: ['unleash-ai-flag-cleanup']
+            });
+
+            console.log(`Created PR #${pr.number}: ${pr.html_url}`);
+            return pr;
+
+      - name: Report failure to Issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
+          script: |
+            const runId     = process.env.GITHUB_RUN_ID;
+            const serverUrl = process.env.GITHUB_SERVER_URL || 'https://github.com';
+            const runUrl    = `${serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${runId}`;
+
+            const errorMsg = process.env.ERROR_MESSAGE || "An unknown error occurred.";
+
+            const body = [
+              `⚠️ **AI Flag Cleanup** workflow [run #${runId}](${runUrl}) failed:`,
+              '',
+              `> ${errorMsg}`,
+              '',
+              'Please check the logs for more details.'
+            ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner:        context.repo.owner,
+              repo:         context.repo.repo,
+              issue_number: ${{ inputs.issue-number }},
+              body
+            });

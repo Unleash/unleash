@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const useFavoriteProjectsApi = () => {

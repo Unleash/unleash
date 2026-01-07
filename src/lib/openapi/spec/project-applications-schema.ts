@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { projectApplicationSchema } from './project-application-schema';
-import { projectApplicationSdkSchema } from './project-application-sdk-schema';
+import { projectApplicationSchema } from './project-application-schema.js';
+import { projectApplicationSdkSchema } from './project-application-sdk-schema.js';
 
 export const projectApplicationsSchema = {
     $id: '#/components/schemas/projectApplicationsSchema',

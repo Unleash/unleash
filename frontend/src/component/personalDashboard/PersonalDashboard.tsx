@@ -7,26 +7,27 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import { WelcomeDialog } from './WelcomeDialog';
+import { WelcomeDialog } from './WelcomeDialog.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
-import { MyProjects } from './MyProjects';
+import { MyProjects } from './MyProjects.tsx';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
-import { useDashboardState } from './useDashboardState';
-import { MyFlags } from './MyFlags';
+import { useDashboardState } from './useDashboardState.ts';
+import { MyFlags } from './MyFlags.tsx';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData';
+import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData.ts';
 import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { InfoSection } from './InfoSection';
-import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
-import { AccordionContent } from './SharedComponents';
-import { Link } from 'react-router-dom';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { InfoSection } from './InfoSection.tsx';
+import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
+import { AccordionContent } from './SharedComponents.tsx';
+import { Link } from 'react-router-dom';
+import { ReleaseTemplatesBanner } from 'component/common/ReleaseTemplatesBanner/ReleaseTemplatesBanner';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -107,7 +108,7 @@ const AccordionSummaryText = styled('div')(({ theme }) => ({
 const AccordionSummaryHeader = styled('h3')(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.typography.body1.fontSize,
-    fontWeight: theme.typography.body2.fontWeight,
+    fontWeight: theme.typography.fontWeightBold,
     margin: 0,
 }));
 
@@ -275,9 +276,9 @@ export const PersonalDashboard = () => {
     const { trackEvent } = usePlausibleTracker();
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
-    const { isOss } = useUiConfig();
+    const { isOss, isEnterprise } = useUiConfig();
+    const gtmReleaseManagementEnabled = useUiFlag('gtmReleaseManagement');
     const name = user?.name || '';
-    const showTimelinePanel = useUiFlag('frontendHeaderRedesign');
 
     usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
 
@@ -298,6 +299,9 @@ export const PersonalDashboard = () => {
 
     return (
         <MainContent>
+            {isEnterprise() && gtmReleaseManagementEnabled ? (
+                <ReleaseTemplatesBanner />
+            ) : null}
             {isOss() ? <InfoSection /> : null}
 
             <WelcomeSection>
@@ -324,7 +328,7 @@ export const PersonalDashboard = () => {
                 </ViewKeyConceptsButton>
             </WelcomeSection>
 
-            {showTimelinePanel && <EventTimelinePanel />}
+            <EventTimelinePanel />
 
             <ProjectPanel />
 

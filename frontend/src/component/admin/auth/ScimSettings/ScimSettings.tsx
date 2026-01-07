@@ -1,15 +1,15 @@
 import { Button, FormControlLabel, Grid, Switch, styled } from '@mui/material';
 import { Alert } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ScimTokenGenerationDialog } from './ScimTokenGenerationDialog';
-import { ScimTokenDialog } from './ScimTokenDialog';
+import { ScimTokenGenerationDialog } from './ScimTokenGenerationDialog.tsx';
+import { ScimTokenDialog } from './ScimTokenDialog.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { useScimSettingsApi } from 'hooks/api/actions/useScimSettingsApi/useScimSettingsApi';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
-import { ScimDeleteEntityDialog } from './ScimDeleteUsersDialog';
+import { ScimDeleteEntityDialog } from './ScimDeleteUsersDialog.tsx';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import { useGroupApi } from 'hooks/api/actions/useGroupApi/useGroupApi';
 
@@ -109,7 +109,7 @@ export const ScimSettings = () => {
                     <Alert severity='info'>
                         Please read the{' '}
                         <a
-                            href='https://docs.getunleash.io/reference/scim'
+                            href='https://docs.getunleash.io/concepts/scim'
                             target='_blank'
                             rel='noreferrer'
                         >

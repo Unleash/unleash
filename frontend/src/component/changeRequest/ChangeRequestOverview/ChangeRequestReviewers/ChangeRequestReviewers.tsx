@@ -1,9 +1,9 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
 import type React from 'react';
 import type { FC, ReactNode } from 'react';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
-import { ChangeRequestRejections } from './ChangeRequestRejections';
-import { ChangeRequestApprovals } from './ChangeRequestApprovals';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender.tsx';
+import { ChangeRequestRejections } from './ChangeRequestRejections.tsx';
+import { ChangeRequestApprovals } from './ChangeRequestApprovals.tsx';
 import type { ChangeRequestType } from '../../changeRequest.types';
 
 const StyledBox = styled(Box)(({ theme }) => ({

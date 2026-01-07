@@ -1,13 +1,12 @@
-import { countCombinations, getBucket } from './combinationCounter';
+import { countCombinations, getBucket } from './combinationCounter.js';
 import type {
     AdvancedPlaygroundEnvironmentFeatureSchema,
     AdvancedPlaygroundFeatureSchema,
 } from 'openapi';
-// @ts-expect-error no types available
 import cartesian from 'cartesian';
 
 const generateFeature = (
-    context: Record<string, string>,
+    _context: Record<string, string>,
 ): AdvancedPlaygroundEnvironmentFeatureSchema => ({
     isEnabled: false,
     isEnabledInCurrentEnvironment: true,

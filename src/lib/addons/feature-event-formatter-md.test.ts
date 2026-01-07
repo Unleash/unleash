@@ -8,10 +8,10 @@ import {
     FEATURE_STRATEGY_UPDATE,
     type IEvent,
     PROJECT_ARCHIVED,
-    SYSTEM_USER_ID,
-} from '../types';
+} from '../events/index.js';
+import { SYSTEM_USER_ID } from '../types/index.js';
 
-import { FeatureEventFormatterMd } from './feature-event-formatter-md';
+import { FeatureEventFormatterMd } from './feature-event-formatter-md.js';
 import {
     DATE_AFTER,
     DATE_BEFORE,
@@ -28,7 +28,7 @@ import {
     STR_CONTAINS,
     STR_ENDS_WITH,
     STR_STARTS_WITH,
-} from '../util';
+} from '../util/index.js';
 
 const testCases: [string, IEvent][] = [
     [
@@ -353,46 +353,6 @@ const testCases: [string, IEvent][] = [
             ],
     ),
     [
-        'when userIds changed',
-        {
-            id: 920,
-            type: FEATURE_STRATEGY_UPDATE,
-            createdBy: 'user@company.com',
-            createdByUserId: SYSTEM_USER_ID,
-            createdAt: new Date('2022-06-01T10:03:11.549Z'),
-            data: {
-                name: 'userWithId',
-                constraints: [
-                    {
-                        values: ['x', 'y'],
-                        inverted: false,
-                        operator: IN,
-                        contextName: 'appName',
-                        caseInsensitive: false,
-                    },
-                ],
-                parameters: {
-                    userIds: 'a,b',
-                },
-                sortOrder: 9999,
-                id: '9a995d94-5944-4897-a82f-0f7e65c2fb3f',
-            },
-            preData: {
-                name: 'userWithId',
-                constraints: [],
-                parameters: {
-                    userIds: '',
-                },
-                sortOrder: 9999,
-                id: '9a995d94-5944-4897-a82f-0f7e65c2fb3f',
-            },
-            tags: [],
-            featureName: 'new-feature',
-            project: 'my-other-project',
-            environment: 'production',
-        },
-    ],
-    [
         'when IPs changed',
         {
             id: 920,
@@ -591,12 +551,12 @@ const testCases: [string, IEvent][] = [
     ],
 ];
 
-testCases.forEach(([description, event]) =>
+testCases.forEach(([description, event]) => {
     test(`Should format specialised text for events ${description}`, () => {
         const formatter = new FeatureEventFormatterMd({
             unleashUrl: 'unleashUrl',
         });
         const formattedEvent = formatter.format(event);
         expect(formattedEvent).toMatchSnapshot();
-    }),
-);
+    });
+});

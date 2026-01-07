@@ -1,4 +1,4 @@
-import { validateOrigin } from './validateOrigin';
+import { validateOrigin } from './validateOrigin.js';
 
 test('validateOrigin', () => {
     expect(validateOrigin(undefined)).toEqual(false);

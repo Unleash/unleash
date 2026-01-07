@@ -1,5 +1,5 @@
 import type { ISignalEndpointToken } from 'interfaces/signal';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 const ENDPOINT = 'api/admin/signal-endpoints';
 

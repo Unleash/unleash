@@ -1,6 +1,6 @@
 import { Alert, styled } from '@mui/material';
 import type { IntegrationEvent } from 'interfaces/integrationEvent';
-import { IntegrationEventsDetailsAccordion } from './IntegrationEventsDetailsAccordion';
+import { IntegrationEventsDetailsAccordion } from './IntegrationEventsDetailsAccordion.tsx';
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
 import { Link } from 'react-router-dom';
 import { lazy, Suspense } from 'react';

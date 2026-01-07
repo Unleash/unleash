@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeedbackSchema } from './feedbackSchema';
+import type { FeedbackSchema } from './feedbackSchema.js';
 
 /**
  * A list of feedback items.

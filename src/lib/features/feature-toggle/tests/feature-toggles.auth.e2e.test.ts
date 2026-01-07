@@ -1,25 +1,23 @@
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
+} from '../../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithAuth,
-} from '../../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../../test/fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../util';
+} from '../../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../../util/index.js';
 import {
     CREATE_FEATURE_STRATEGY,
     RoleName,
     TEST_AUDIT_USER,
-} from '../../../types';
+} from '../../../types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('feature_strategy_auth_api_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('feature_strategy_auth_api_serial', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {
@@ -115,7 +113,7 @@ test('Should not be possible auto-enable feature flag without CREATE_FEATURE_STR
     const url = '/api/admin/projects/default/features';
     const name = 'auth.flag.enable';
 
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         { name },
         TEST_AUDIT_USER,
@@ -139,10 +137,10 @@ test('Should not be possible auto-enable feature flag without CREATE_FEATURE_STR
     await db.stores.accessStore.removePermissionFromRole(
         role.id,
         CREATE_FEATURE_STRATEGY,
-        'default',
+        DEFAULT_ENV,
     );
     await app.request
-        .post(`${url}/${name}/environments/default/on`)
+        .post(`${url}/${name}/environments/${DEFAULT_ENV}/on`)
         .expect(403);
 });
 

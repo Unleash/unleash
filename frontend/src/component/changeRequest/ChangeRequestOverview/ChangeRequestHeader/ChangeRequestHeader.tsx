@@ -11,9 +11,10 @@ import {
     StyledAvatar,
     StyledCard,
 } from './ChangeRequestHeader.styles';
-import { Separator } from '../../ChangeRequestSidebar/ChangeRequestSidebar';
-import { ChangeRequestTitle } from '../../ChangeRequestSidebar/EnvironmentChangeRequest/ChangeRequestTitle';
+import { Separator } from '../../ChangeRequestSidebar/ChangeRequestSidebar.tsx';
+import { ChangeRequestTitle } from '../../ChangeRequestSidebar/EnvironmentChangeRequest/ChangeRequestTitle.tsx';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
+import { Truncator } from 'component/common/Truncator/Truncator.tsx';
 
 export const ChangeRequestHeader: FC<{ changeRequest: ChangeRequestType }> = ({
     changeRequest,
@@ -26,8 +27,8 @@ export const ChangeRequestHeader: FC<{ changeRequest: ChangeRequestType }> = ({
                 title={title}
                 setTitle={setTitle}
             >
-                <StyledHeader variant='h1' sx={{ mr: 1.5 }}>
-                    {title}
+                <StyledHeader variant='h1' component='h2' sx={{ mr: 1.5 }}>
+                    <Truncator lines={3}>{title}</Truncator>
                 </StyledHeader>
             </ChangeRequestTitle>
             <StyledInnerContainer>

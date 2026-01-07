@@ -1,5 +1,5 @@
 import type { ProjectApplicationsSchema } from 'openapi';
-import { createPaginatedHook } from '../usePaginatedData/usePaginatedData';
+import { createPaginatedHook } from '../usePaginatedData/usePaginatedData.js';
 
 export const DEFAULT_PAGE_LIMIT = 25;
 

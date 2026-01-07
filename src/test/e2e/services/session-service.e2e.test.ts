@@ -1,9 +1,9 @@
-import noLoggerProvider from '../../fixtures/no-logger';
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import SessionService from '../../../lib/services/session-service';
-import NotFoundError from '../../../lib/error/notfound-error';
+import noLoggerProvider from '../../fixtures/no-logger.js';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import SessionService from '../../../lib/services/session-service.js';
+import NotFoundError from '../../../lib/error/notfound-error.js';
 import { addDays, minutesToMilliseconds } from 'date-fns';
-import type { IUnleashStores } from '../../../lib/types';
+import type { IUnleashStores } from '../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -114,6 +114,7 @@ test('Can delete session by sid', async () => {
 
 test('Can delete stale sessions', async () => {
     await sessionService.insertSession(newSession);
+    await new Promise((resolve) => setTimeout(resolve, 10)); // Ensure a different createdAt
     await sessionService.insertSession({ ...newSession, sid: 'new' });
 
     const sessionsToKeep = 1;

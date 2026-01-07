@@ -6,14 +6,18 @@ import type {
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests';
+import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { EnvironmentHeader } from './EnvironmentHeader/EnvironmentHeader';
-import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
-import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle';
+import {
+    environmentAccordionSummaryClassName,
+    EnvironmentHeader,
+} from './EnvironmentHeader/EnvironmentHeader.tsx';
+import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics.tsx';
+import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle.tsx';
 import { useState } from 'react';
 import type { IReleasePlan } from 'interfaces/releasePlans';
-import { EnvironmentAccordionBody as NewEnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody';
+import { EnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
+import { Box } from '@mui/material';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -24,11 +28,10 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     boxShadow: 'none',
     background: 'none',
-    '&&& .MuiAccordionSummary-root': {
-        borderRadius: theme.shape.borderRadiusLarge,
-        pointerEvents: 'auto',
-        opacity: 1,
-        backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.shape.borderRadiusLarge,
+
+    [`&:has(.${environmentAccordionSummaryClassName}:focus-visible)`]: {
+        background: theme.palette.table.headerHover,
     },
 }));
 
@@ -44,7 +47,6 @@ const StyledAccordionFooter = styled('footer')(({ theme }) => ({
     padding: theme.spacing(2, 3, 3),
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-end',
     gap: theme.spacing(2),
 }));
 
@@ -59,14 +61,16 @@ type FeatureOverviewEnvironmentProps = {
     };
     metrics?: Pick<IFeatureEnvironmentMetrics, 'yes' | 'no'>;
     otherEnvironments?: string[];
+    onToggleEnvOpen?: (isOpen: boolean) => void;
 };
 
 export const FeatureOverviewEnvironment = ({
     environment,
     metrics = { yes: 0, no: 0 },
     otherEnvironments = [],
+    onToggleEnvOpen = () => {},
 }: FeatureOverviewEnvironmentProps) => {
-    const [isOpen, setIsOopen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { isOss } = useUiConfig();
@@ -82,12 +86,22 @@ export const FeatureOverviewEnvironment = ({
                 TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
                 data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${environment.name}`}
                 expanded={isOpen && hasActivations}
-                disabled={!hasActivations}
-                onChange={() => setIsOopen(isOpen ? !isOpen : hasActivations)}
+                onChange={() => {
+                    const state = isOpen ? !isOpen : hasActivations;
+                    onToggleEnvOpen(state);
+                    setIsOpen(state);
+                }}
             >
                 <EnvironmentHeader
+                    environmentMetadata={{
+                        strategyCount: environment.strategies?.length ?? 0,
+                        releasePlanCount: environment.releasePlans?.length ?? 0,
+                    }}
                     environmentId={environment.name}
+                    projectId={projectId}
+                    featureId={featureId}
                     expandable={hasActivations}
+                    hasActivations={hasActivations}
                 >
                     <FeatureOverviewEnvironmentToggle
                         environment={environment}
@@ -99,29 +113,32 @@ export const FeatureOverviewEnvironment = ({
                             featureId={featureId}
                             environmentId={environment.name}
                             variant='outlined'
-                            size='small'
                         />
-                    ) : null}
-                    <FeatureOverviewEnvironmentMetrics
-                        environmentMetric={metrics}
-                        collapsed={!hasActivations}
-                    />
+                    ) : (
+                        <FeatureOverviewEnvironmentMetrics
+                            environmentMetric={metrics}
+                        />
+                    )}
                 </EnvironmentHeader>
                 <NewStyledAccordionDetails>
                     <StyledEnvironmentAccordionContainer>
-                        <NewEnvironmentAccordionBody
+                        <EnvironmentAccordionBody
                             featureEnvironment={environment}
                             isDisabled={!environment.enabled}
                             otherEnvironments={otherEnvironments}
                         />
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
-                        <FeatureStrategyMenu
-                            label='Add strategy'
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={environment.name}
-                        />
+                        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                            <Box ml='auto'>
+                                <FeatureStrategyMenu
+                                    label='Add strategy'
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={environment.name}
+                                />
+                            </Box>
+                        </Box>
                         {isOss() && environment?.type === 'production' ? (
                             <UpgradeChangeRequests />
                         ) : null}

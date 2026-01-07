@@ -1,4 +1,5 @@
 import { endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
+import { parseMonthString } from './dates.js';
 
 export type ChartDataSelection =
     | {
@@ -16,7 +17,7 @@ export const toDateRange = (
 ): { from: string; to: string } => {
     const fmt = (date: Date) => format(date, 'yyyy-MM-dd');
     if (selection.grouping === 'daily') {
-        const month = new Date(selection.month);
+        const month = parseMonthString(selection.month);
         const from = fmt(month);
         const to = fmt(endOfMonth(month));
         return { from, to };

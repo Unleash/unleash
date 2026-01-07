@@ -3,7 +3,7 @@ import { styled } from '@mui/material';
 import { flexRow } from 'themes/themeStyles';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import VariantsWarningTooltip from 'component/feature/FeatureView/FeatureVariants/VariantsTooltipWarning';
-import { FeatureToggleSwitch } from '../../ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch';
+import { FeatureToggleSwitch } from '../../ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch.tsx';
 import type { UseFeatureToggleSwitchType } from '../../ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch.types';
 import type { FeatureEnvironmentSchema } from 'openapi';
 
@@ -65,6 +65,7 @@ const FeatureToggleCellComponent = ({
             environmentName: environment?.name || '',
             environmentType: environment?.type,
             hasStrategies: environment?.hasStrategies,
+            hasReleasePlans: Boolean(environment?.releasePlans?.length),
             hasEnabledStrategies: environment?.hasEnabledStrategies,
             isChangeRequestEnabled,
             onRollback,

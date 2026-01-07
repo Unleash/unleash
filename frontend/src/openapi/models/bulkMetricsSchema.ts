@@ -3,8 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { BulkRegistrationSchema } from './bulkRegistrationSchema';
-import type { ClientMetricsEnvSchema } from './clientMetricsEnvSchema';
+import type { BulkRegistrationSchema } from './bulkRegistrationSchema.js';
+import type { ImpactMetricsSchema } from './impactMetricsSchema.js';
+import type { ClientMetricsEnvSchema } from './clientMetricsEnvSchema.js';
 
 /**
  * A batch of metrics accumulated by Edge (or other compatible applications). Includes both application registrations as well usage metrics from clients
@@ -12,6 +13,8 @@ import type { ClientMetricsEnvSchema } from './clientMetricsEnvSchema';
 export interface BulkMetricsSchema {
     /** A list of applications registered by an Unleash SDK */
     applications: BulkRegistrationSchema[];
+    /** a list of custom impact metrics registered by downstream providers. (Typically Unleash Edge) */
+    impactMetrics?: ImpactMetricsSchema[];
     /** a list of client usage metrics registered by downstream providers. (Typically Unleash Edge) */
     metrics: ClientMetricsEnvSchema[];
 }

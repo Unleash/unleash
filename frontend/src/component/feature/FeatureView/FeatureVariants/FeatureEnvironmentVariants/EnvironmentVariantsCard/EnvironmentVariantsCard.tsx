@@ -1,11 +1,11 @@
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import { styled, Link } from '@mui/material';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable';
+import { EnvironmentVariantsTable } from './EnvironmentVariantsTable/EnvironmentVariantsTable.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useVariantsFromScheduledRequests } from './useVariantsFromScheduledRequests';
+import { useVariantsFromScheduledRequests } from './useVariantsFromScheduledRequests.ts';
 import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import { Box } from '@mui/system';
 
@@ -131,7 +131,7 @@ export const EnvironmentVariantsCard = ({
                                         ensure consistent traffic allocation
                                         across variants.{' '}
                                         <Link
-                                            href='https://docs.getunleash.io/reference/feature-toggle-variants'
+                                            href='https://docs.getunleash.io/concepts/feature-flag-variants'
                                             target='_blank'
                                             rel='noreferrer'
                                         >

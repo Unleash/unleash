@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import UserForm from '../UserForm/UserForm';
-import useAddUserForm from '../hooks/useAddUserForm';
+import UserForm from '../UserForm/UserForm.tsx';
+import useAddUserForm from '../hooks/useAddUserForm.ts';
 import { scrollToTop } from 'component/common/util';
 import { useEffect } from 'react';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
@@ -78,7 +78,7 @@ const EditUser = () => {
             loading={loading}
             title='Edit user'
             description='In order for a user to get access to Unleash, they need to be assigned a root role, such as Viewer, Editor, or Admin.'
-            documentationLink='https://docs.getunleash.io/reference/rbac#predefined-roles'
+            documentationLink='https://docs.getunleash.io/concepts/rbac#predefined-roles'
             documentationLinkLabel='User management documentation'
             formatApiCode={formatApiCode}
         >

@@ -3,14 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchemaCollaborators } from './featureSchemaCollaborators';
-import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy';
-import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
-import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle';
-import type { FeatureSchemaStrategiesItem } from './featureSchemaStrategiesItem';
-import type { TagSchema } from './tagSchema';
-import type { VariantSchema } from './variantSchema';
+import type { FeatureSchemaCollaborators } from './featureSchemaCollaborators.js';
+import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy.js';
+import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem.js';
+import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema.js';
+import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle.js';
+import type { FeatureSchemaLinksItem } from './featureSchemaLinksItem.js';
+import type { FeatureSchemaStrategiesItem } from './featureSchemaStrategiesItem.js';
+import type { TagSchema } from './tagSchema.js';
+import type { VariantSchema } from './variantSchema.js';
 
 /**
  * A feature flag definition
@@ -57,6 +58,8 @@ export interface FeatureSchema {
     lastSeenAt?: string | null;
     /** Current lifecycle stage of the feature */
     lifecycle?: FeatureSchemaLifecycle;
+    /** The list of links. This is an experimental field and may change. */
+    links?: FeatureSchemaLinksItem[];
     /** Unique feature name */
     name: string;
     /** Name of the project the feature belongs to */

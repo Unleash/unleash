@@ -1,14 +1,14 @@
 import type React from 'react';
 import type { FC } from 'react';
-import { render, screen, within, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { MainLayout } from 'component/layout/MainLayout/MainLayout';
-import { FeatureView } from '../feature/FeatureView/FeatureView';
-import { AccessProvider } from '../providers/AccessProvider/AccessProvider';
-import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider';
-import { testServerRoute, testServerSetup } from '../../utils/testServer';
-import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
+import { FeatureView } from '../feature/FeatureView/FeatureView.tsx';
+import { AccessProvider } from '../providers/AccessProvider/AccessProvider.tsx';
+import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/AnnouncerProvider.tsx';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer.tsx';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 
@@ -271,13 +271,6 @@ const verifyBannerForPendingChangeRequest = async () => {
     return screen.findByText('Change request mode', {}, { timeout: 5000 });
 };
 
-const changeFlag = async (environment: string) => {
-    const featureFlagStatusBox = screen.getByTestId('feature-flag-status');
-    await within(featureFlagStatusBox).findByText(environment);
-    const flag = screen.getAllByRole('checkbox')[1];
-    fireEvent.click(flag);
-};
-
 const verifyChangeRequestDialog = async (bannerMainText: string) => {
     await screen.findByText('Your suggestion:');
     const message = screen.getByTestId('update-enabled-message').textContent;
@@ -298,7 +291,8 @@ test('add flag change to pending change request', async () => {
 
     await verifyBannerForPendingChangeRequest();
 
-    await changeFlag('production');
+    const flag = screen.getByLabelText('production');
+    fireEvent.click(flag);
 
     await verifyChangeRequestDialog('Enable feature flag test in production');
 }, 10000);

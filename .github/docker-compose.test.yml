@@ -1,0 +1,67 @@
+# This docker compose setup configures:
+# - the Unleash enterprise server instance + the necessary backing Postgres database
+#
+# To learn more about all the parts of Unleash, visit
+# https://docs.getunleash.io
+#
+# NOTE: please do not use this configuration for production setups.
+# Unleash does not take responsibility for any data leaks or other
+# problems that may arise as a result.
+#
+# This is intended to be used for demo, development, and learning
+# purposes only.
+
+services:
+  # The Unleash server contains the Unleash configuration and
+  # communicates with server-side SDKs and the Unleash Proxy
+  frontend:
+    image: node:alpine
+    working_dir: /app
+    command: npx http-server ./build -p 80 --cors --proxy http://unleash:4242
+    ports:
+      - "3000:80"
+    volumes:
+      - ../frontend/build:/app:ro
+    depends_on:
+      unleash:
+        condition: service_healthy
+  unleash:
+    image: unleashorg/${UNLEASH_VERSION:-unleash-enterprise:latest}
+    pull_policy: "always"
+    expose:
+      - "4242"
+    environment:
+      DATABASE_URL: "postgres://postgres:unleash@db/unleash"
+      DATABASE_SSL: "false"
+      UNLEASH_LICENSE: "${FRONTEND_TEST_LICENSE}"
+      LOG_LEVEL: "info"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:4242/health || exit 1
+      interval: 1s
+      timeout: 1m
+      retries: 5
+      start_period: 15s
+  db:
+    expose:
+      - "5432"
+    image: postgres:16
+    environment:
+      POSTGRES_DB: "unleash"
+      # trust incoming connections blindly (DON'T DO THIS IN PRODUCTION!)
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "--username=postgres",
+          "--host=127.0.0.1",
+          "--port=5432",
+        ]
+      interval: 2s
+      timeout: 1m
+      retries: 5
+      start_period: 10s

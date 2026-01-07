@@ -24,28 +24,35 @@ export const runBefore = () => {
     disableActiveSplashScreens();
 };
 
+export const do_login = (
+    user = AUTH_USER,
+    password = AUTH_PASSWORD,
+): Chainable<any> => {
+    cy.visit('/');
+    cy.wait(200);
+    cy.get("[data-testid='LOGIN_EMAIL_ID']").type(user);
+
+    if (AUTH_PASSWORD) {
+        cy.get("[data-testid='LOGIN_PASSWORD_ID']").type(password);
+    }
+
+    cy.get("[data-testid='LOGIN_BUTTON']").click();
+
+    // Wait for the login redirect to complete.
+    cy.get("[data-testid='HEADER_USER_AVATAR']");
+
+    if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
+        cy.get("[data-testid='CLOSE_SPLASH']").click();
+    }
+
+    return cy;
+};
+
 export const login_UI = (
     user = AUTH_USER,
     password = AUTH_PASSWORD,
 ): Chainable<any> => {
-    return cy.session(user, () => {
-        cy.visit('/');
-        cy.wait(200);
-        cy.get("[data-testid='LOGIN_EMAIL_ID']").type(user);
-
-        if (AUTH_PASSWORD) {
-            cy.get("[data-testid='LOGIN_PASSWORD_ID']").type(password);
-        }
-
-        cy.get("[data-testid='LOGIN_BUTTON']").click();
-
-        // Wait for the login redirect to complete.
-        cy.get("[data-testid='HEADER_USER_AVATAR']");
-
-        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-            cy.get("[data-testid='CLOSE_SPLASH']").click();
-        }
-    });
+    return cy.session(user, () => do_login(user, password));
 };
 
 export const createFeature_UI = (
@@ -60,7 +67,7 @@ export const createFeature_UI = (
 
     cy.wait(5_000);
 
-    cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click(uiOpts);
+    cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').first().click(uiOpts);
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(
         'createFeature',
@@ -72,10 +79,14 @@ export const createFeature_UI = (
     cy.get("[data-testid='FORM_DESCRIPTION_INPUT'] textarea")
         .first()
         .type('hello-world', uiOpts);
-    if (!shouldWait)
-        return cy.get("[data-testid='FORM_CREATE_BUTTON']").click(uiOpts);
-    else cy.get("[data-testid='FORM_CREATE_BUTTON']").click(uiOpts);
-    return cy.wait('@createFeature');
+    const clicked = cy
+        .get("[data-testid='FORM_CREATE_BUTTON']")
+        .first()
+        .click(uiOpts);
+    if (shouldWait) {
+        return cy.wait('@createFeature');
+    }
+    return clicked;
 };
 
 export const createProject_UI = (
@@ -161,7 +172,10 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
         cy.get('[data-testid=ADD_CONSTRAINT_ID]').click();
         cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
     }
-    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
+    // this one needs to wait until the dropdown selector of stickiness is set, that's why waitForAnimations: true
+    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`)
+        .first()
+        .click({ waitForAnimations: true });
     return cy.wait('@addStrategyToFeature');
 };
 
@@ -209,7 +223,10 @@ export const updateFlexibleRolloutStrategy_UI = (
         },
     ).as('updateStrategy');
 
-    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
+    // this one needs to wait until the dropdown selector of stickiness is set, that's why waitForAnimations: true
+    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`)
+        .first()
+        .click({ waitForAnimations: true });
     return cy.wait('@updateStrategy');
 };
 
@@ -238,54 +255,6 @@ export const deleteFeatureStrategy_UI = (
     if (!shouldWait) return cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
     else cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
     return cy.wait('@deleteUserStrategy');
-};
-
-export const addUserIdStrategyToFeature_UI = (
-    featureToggleName: string,
-    projectName: string,
-): Chainable<any> => {
-    const project = projectName || 'default';
-    cy.visit(
-        `/projects/${project}/features/${featureToggleName}/strategies/create?environmentId=development&strategyName=userWithId`,
-    );
-
-    if (ENTERPRISE) {
-        cy.get('[data-testid=ADD_CONSTRAINT_ID]').click();
-        cy.get('[data-testid=CONSTRAINT_AUTOCOMPLETE_ID]')
-            .type('{downArrow}'.repeat(1))
-            .type('{enter}');
-        cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
-    }
-
-    cy.get('[data-testid=STRATEGY_INPUT_LIST]')
-        .type('user1')
-        .type('{enter}')
-        .type('user2')
-        .type('{enter}');
-    cy.get('[data-testid=ADD_TO_STRATEGY_INPUT_LIST]').click();
-
-    cy.intercept(
-        'POST',
-        `/api/admin/projects/default/features/${featureToggleName}/environments/*/strategies`,
-        (req) => {
-            expect(req.body.name).to.equal('userWithId');
-
-            expect(req.body.parameters.userIds.length).to.equal(11);
-
-            if (ENTERPRISE) {
-                expect(req.body.constraints.length).to.equal(1);
-            } else {
-                expect(req.body.constraints.length).to.equal(0);
-            }
-
-            req.continue((res) => {
-                strategyId = res.body.id;
-            });
-        },
-    ).as('addStrategyToFeature');
-
-    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
-    return cy.wait('@addStrategyToFeature');
 };
 
 export const logout_UI = (): Chainable<any> => {

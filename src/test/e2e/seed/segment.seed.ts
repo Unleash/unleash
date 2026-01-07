@@ -1,15 +1,15 @@
-import dbInit from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
+import dbInit from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
 import assert from 'assert';
-import { randomId } from '../../../lib/util/random-id';
+import { randomId } from '../../../lib/util/index.js';
 import type {
     IConstraint,
     IFeatureToggleClient,
     ISegment,
-} from '../../../lib/types/model';
-import { type IUnleashTest, setupApp } from '../helpers/test-helper';
-import type { UpsertSegmentSchema } from '../../../lib/openapi';
-import { TEST_AUDIT_USER } from '../../../lib/types';
+} from '../../../lib/types/model.js';
+import { type IUnleashTest, setupApp } from '../helpers/test-helper.js';
+import type { UpsertSegmentSchema } from '../../../lib/openapi/index.js';
+import { TEST_AUDIT_USER } from '../../../lib/types/index.js';
 
 interface ISeedSegmentSpec {
     featuresCount: number;
@@ -81,7 +81,7 @@ const seedConstraints = (spec: ISeedSegmentSpec): IConstraint[] => {
 };
 
 const seedSegments = (spec: ISeedSegmentSpec): UpsertSegmentSchema[] => {
-    return Array.from({ length: spec.segmentsPerFeature }).map((v, i) => {
+    return Array.from({ length: spec.segmentsPerFeature }).map((_v, i) => {
         return {
             name: `${seedSchema}_segment_${i}`,
             constraints: seedConstraints(spec),
@@ -92,7 +92,7 @@ const seedSegments = (spec: ISeedSegmentSpec): UpsertSegmentSchema[] => {
 const seedFeatures = (
     spec: ISeedSegmentSpec,
 ): Partial<IFeatureToggleClient>[] => {
-    return Array.from({ length: spec.featuresCount }).map((v, i) => {
+    return Array.from({ length: spec.featuresCount }).map((_v, i) => {
         return mockFeatureToggle({
             name: `${seedSchema}_feature_${i}`,
         });
@@ -120,7 +120,7 @@ const seedSegmentsDatabase = async (
     assert(segments.length === spec.segmentsPerFeature);
 
     const addSegment = (feature: IFeatureToggleClient, segment: ISegment) => {
-        return addSegmentToStrategy(app, segment.id, feature.strategies[0].id);
+        return addSegmentToStrategy(app, segment.id, feature.strategies[0].id!);
     };
 
     for (const feature of features) {

@@ -1,4 +1,4 @@
-import { generateDayBuckets, generateHourBuckets } from './time-utils';
+import { generateDayBuckets, generateHourBuckets } from './time-utils.js';
 import { endOfDay, subDays } from 'date-fns';
 
 test('generateHourBuckets', () => {

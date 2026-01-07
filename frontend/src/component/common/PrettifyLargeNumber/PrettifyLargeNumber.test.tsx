@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { PrettifyLargeNumber } from './PrettifyLargeNumber';
+import { PrettifyLargeNumber } from './PrettifyLargeNumber.tsx';
 import { LARGE_NUMBER_PRETTIFIED } from 'utils/testIds';
 
 describe('PrettifyLargeNumber', () => {

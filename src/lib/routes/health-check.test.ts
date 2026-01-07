@@ -1,11 +1,11 @@
 import supertest, { type Test } from 'supertest';
-import { createServices } from '../services';
-import { createTestConfig } from '../../test/config/test-config';
+import { createServices } from '../services/index.js';
+import { createTestConfig } from '../../test/config/test-config.js';
 
-import createStores from '../../test/fixtures/store';
-import getLogger from '../../test/fixtures/no-logger';
-import getApp from '../app';
-import type TestAgent from 'supertest/lib/agent';
+import createStores from '../../test/fixtures/store.js';
+import getLogger from '../../test/fixtures/no-logger.js';
+import getApp from '../app.js';
+import type TestAgent from 'supertest/lib/agent.d.ts';
 
 async function getSetup() {
     const stores = createStores();
@@ -28,11 +28,11 @@ afterEach(() => {
     getLogger.setMuteError(false);
 });
 
-test('should give 200 when ready', async () => {
+test('should give 200 when healthy', async () => {
     await request.get('/health').expect(200);
 });
 
-test('should give health=GOOD  when ready', async () => {
+test('should give health=GOOD when healthy', async () => {
     expect.assertions(2);
     await request
         .get('/health')

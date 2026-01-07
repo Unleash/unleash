@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
-import { clientSegmentSchema } from './client-segment-schema';
+import { constraintSchema } from './constraint-schema.js';
+import { clientSegmentSchema } from './client-segment-schema.js';
 
 export const segmentSchema = {
     $id: '#/components/schemas/segmentSchema',
@@ -43,4 +43,7 @@ export const segmentSchema = {
     },
 } as const;
 
-export type SegmentSchema = FromSchema<typeof segmentSchema>;
+export type SegmentSchema = FromSchema<
+    typeof segmentSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

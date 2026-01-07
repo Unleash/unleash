@@ -1,18 +1,17 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
+} from '../../helpers/test-helper.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('metrics_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('metrics_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -30,33 +29,33 @@ beforeEach(async () => {
     await app.services.clientInstanceService.createApplication({
         appName: 'demo-app-1',
         strategies: ['default'],
-        //@ts-ignore
+        //@ts-expect-error
         announced: true,
     });
     await app.services.clientInstanceService.createApplication({
         appName: 'demo-app-2',
         strategies: ['default', 'extra'],
         description: 'hello',
-        //@ts-ignore
+        //@ts-expect-error
         announced: true,
     });
     await app.services.clientInstanceService.createApplication({
         appName: 'deletable-app',
         strategies: ['default'],
         description: 'Some desc',
-        //@ts-ignore
+        //@ts-expect-error
         announced: true,
     });
 
-    await db.stores.clientInstanceStore.insert({
+    await db.stores.clientInstanceStore.upsert({
         appName: 'demo-app-1',
         instanceId: 'test-1',
     });
-    await db.stores.clientInstanceStore.insert({
+    await db.stores.clientInstanceStore.upsert({
         appName: 'demo-seed-2',
         instanceId: 'test-2',
     });
-    await db.stores.clientInstanceStore.insert({
+    await db.stores.clientInstanceStore.upsert({
         appName: 'deletable-app',
         instanceId: 'inst-1',
     });
@@ -154,9 +153,9 @@ test('should save multiple projects from token', async () => {
 
     const multiProjectToken =
         await app.services.apiTokenService.createApiTokenWithProjects({
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             projects: ['default', 'mainProject'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: 'tester',
         });
 
@@ -178,22 +177,21 @@ test('should save multiple projects from token', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body).toMatchObject({
-        applications: [
-            {
+    expect(body.applications).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
                 appName: 'multi-project-app',
                 usage: [
                     {
-                        environments: ['default'],
+                        environments: [DEFAULT_ENV],
                         project: 'default',
                     },
                     {
-                        environments: ['default'],
+                        environments: [DEFAULT_ENV],
                         project: 'mainProject',
                     },
                 ],
-            },
-        ],
-        total: 1,
-    });
+            }),
+        ]),
+    );
 });

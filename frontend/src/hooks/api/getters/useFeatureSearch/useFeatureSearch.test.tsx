@@ -2,7 +2,10 @@ import type { FC } from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { useFeatureSearch } from './useFeatureSearch';
+import {
+    getFeatureSearchFetcher,
+    useFeatureSearch,
+} from './useFeatureSearch.ts';
 import { useSWRConfig } from 'swr';
 
 const server = testServerSetup();
@@ -92,5 +95,19 @@ describe('useFeatureSearch', () => {
 
         rerender(<TestComponent params={{ project }} />);
         await screen.findByText(/Total: 0/);
+    });
+
+    test('should give the same cache key, regardless of parameter order', async () => {
+        const params1 = {
+            query: 'query-string',
+            project: 'IS:project',
+        };
+        const params2 = {
+            project: 'IS:project',
+            query: 'query-string',
+        };
+        const { KEY: key1 } = getFeatureSearchFetcher(params1);
+        const { KEY: key2 } = getFeatureSearchFetcher(params2);
+        expect(key1).toEqual(key2);
     });
 });

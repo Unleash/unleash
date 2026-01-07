@@ -1,73 +1,49 @@
-import { type IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../types/events';
-import SlackAppAddon from './slack-app';
-import { type ChatPostMessageArguments, ErrorCode } from '@slack/web-api';
+import { type IEvent, FEATURE_ENVIRONMENT_ENABLED } from '../events/index.js';
+import SlackAppAddon from './slack-app.js';
+import {
+    type ChatPostMessageArguments,
+    ErrorCode,
+    type Methods,
+} from '@slack/web-api';
 import {
     type IAddonConfig,
     type IFlagKey,
     type IFlagResolver,
     serializeDates,
     SYSTEM_USER_ID,
-} from '../types';
-import type { IntegrationEventsService } from '../services';
-import type { Logger } from '../logger';
-
+} from '../types/index.js';
+import type { IntegrationEventsService } from '../services/index.js';
 const slackApiCalls: ChatPostMessageArguments[] = [];
+import { vi } from 'vitest';
 
 const loggerMock = {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    fatal: jest.fn(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    fatal: vi.fn(),
 };
-const getLogger = jest.fn(() => loggerMock);
+const getLogger = vi.fn(() => loggerMock);
 
-const registerEventMock = jest.fn();
+const registerEventMock = vi.fn();
 
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
     getLogger,
     unleashUrl: 'http://some-url.com',
-    integrationEventsService: {} as IntegrationEventsService,
-    flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
-    eventBus: {} as any,
+    integrationEventsService: {
+        registerEvent: registerEventMock,
+    } as unknown as IntegrationEventsService,
+    flagResolver: { isEnabled: (_expName: IFlagKey) => false } as IFlagResolver,
+    eventBus: {
+        emit: vi.fn(),
+    } as any,
 };
 
-let postMessage = jest.fn().mockImplementation((options) => {
+let postMessage = vi.fn().mockImplementation((options: any) => {
     slackApiCalls.push(options);
     return Promise.resolve();
 });
-
-jest.mock('@slack/web-api', () => ({
-    WebClient: jest.fn().mockImplementation(() => ({
-        chat: {
-            postMessage,
-        },
-        on: jest.fn(),
-    })),
-    ErrorCode: {
-        PlatformError: 'slack_webapi_platform_error',
-    },
-    WebClientEvent: {
-        RATE_LIMITED: 'rate_limited',
-    },
-}));
-
-jest.mock(
-    './addon',
-    () =>
-        class Addon {
-            logger: Logger;
-
-            constructor(_, { getLogger }) {
-                this.logger = getLogger('addon/test');
-            }
-
-            async registerEvent(event) {
-                return registerEventMock(event);
-            }
-        },
-);
 
 describe('SlackAppAddon', () => {
     let addon: SlackAppAddon;
@@ -97,15 +73,22 @@ describe('SlackAppAddon', () => {
     };
 
     beforeEach(() => {
-        jest.useFakeTimers();
+        vi.useFakeTimers();
         slackApiCalls.length = 0;
         postMessage.mockClear();
         registerEventMock.mockClear();
-        addon = new SlackAppAddon(ARGS);
+        addon = new SlackAppAddon(ARGS, () => {
+            return {
+                chat: {
+                    postMessage,
+                },
+                on: vi.fn(),
+            } as unknown as Methods;
+        });
     });
 
     afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     it('should post message when feature is toggled', async () => {
@@ -198,7 +181,7 @@ describe('SlackAppAddon', () => {
     });
 
     it('should log error when an API call fails', async () => {
-        postMessage = jest.fn().mockRejectedValue(mockError);
+        postMessage = vi.fn().mockRejectedValue(mockError);
 
         await addon.handleEvent(
             event,
@@ -224,7 +207,7 @@ describe('SlackAppAddon', () => {
             ],
         };
 
-        postMessage = jest
+        postMessage = vi
             .fn()
             .mockResolvedValueOnce({ ok: true })
             .mockResolvedValueOnce({ ok: true })

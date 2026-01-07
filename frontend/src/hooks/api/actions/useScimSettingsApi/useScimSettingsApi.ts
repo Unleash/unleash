@@ -1,4 +1,4 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 import type { ScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 
 const ENDPOINT = 'api/admin/scim-settings';

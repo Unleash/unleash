@@ -1,4 +1,4 @@
-import { serializeDates } from './serialize-dates';
+import { serializeDates } from './serialize-dates.js';
 
 test('serializeDates primitives', () => {
     expect(serializeDates(undefined)).toEqual(undefined);

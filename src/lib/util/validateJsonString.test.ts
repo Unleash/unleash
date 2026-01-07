@@ -1,4 +1,4 @@
-import { validateJsonString } from './validateJsonString';
+import { validateJsonString } from './validateJsonString.js';
 
 test('should return true for valid json string', () => {
     const input = '{"test":1,"nested":[{"test1":{"testinner":true}}]}';

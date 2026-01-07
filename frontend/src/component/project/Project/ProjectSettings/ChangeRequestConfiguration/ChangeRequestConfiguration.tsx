@@ -10,9 +10,9 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { ChangeRequestTable } from './ChangeRequestTable';
+import { ChangeRequestTable } from './ChangeRequestTable.tsx';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp';
+import { ChangeRequestProcessHelp } from './ChangeRequestProcessHelp/ChangeRequestProcessHelp.tsx';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 export const ChangeRequestConfiguration = () => {
@@ -45,7 +45,8 @@ export const ChangeRequestConfiguration = () => {
                 header={<PageHeader title='Change request configuration' />}
             >
                 <Alert severity='error'>
-                    You need project owner permissions to access this section.
+                    You need project owner permissions or a custom role with
+                    "view change request configuration" to access this section.
                 </Alert>
             </PageContent>
         );

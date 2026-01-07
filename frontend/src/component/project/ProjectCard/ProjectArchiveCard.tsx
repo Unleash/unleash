@@ -1,21 +1,20 @@
 import type { FC } from 'react';
 import {
     StyledProjectCard,
-    StyledBox,
-    StyledCardTitle,
+    StyledProjectCardTitle,
     StyledProjectCardBody,
-    StyledIconBox,
-    StyledActions,
+    StyledProjectCardHeader,
+    StyledProjectCardContent,
+    StyledProjectCardTitleContainer,
 } from './ProjectCard.styles';
-import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
-import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
+import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter.tsx';
+import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
 import type { ProjectSchemaOwners } from 'openapi';
-import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { parseISO } from 'date-fns';
-import { Box, Link, styled, Tooltip } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Box, styled, Tooltip } from '@mui/material';
+import { Link } from 'react-router-dom';
 import {
     DELETE_PROJECT,
     UPDATE_PROJECT,
@@ -26,7 +25,12 @@ import Delete from '@mui/icons-material/Delete';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
-import { flexRow } from 'themes/themeStyles';
+import { Truncator } from 'component/common/Truncator/Truncator.tsx';
+
+const StyledActions = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+}));
 
 export type ProjectArchiveCardProps = {
     id: string;
@@ -37,24 +41,6 @@ export type ProjectArchiveCardProps = {
     mode?: string;
     owners?: ProjectSchemaOwners;
 };
-
-export const StyledDivHeader = styled('div')(({ theme }) => ({
-    ...flexRow,
-    width: '100%',
-    gap: theme.spacing(1),
-    minHeight: theme.spacing(6),
-    marginBottom: theme.spacing(1),
-}));
-
-const StyledTitle = styled(StyledCardTitle)(({ theme }) => ({
-    margin: 0,
-}));
-
-const StyledContent = styled('div')(({ theme }) => ({
-    ...flexRow,
-    fontSize: theme.fontSizes.smallerBody,
-    justifyContent: 'space-between',
-}));
 
 export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
     id,
@@ -71,54 +57,48 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
     return (
         <StyledProjectCard disabled data-testid={id}>
             <StyledProjectCardBody>
-                <StyledDivHeader>
-                    <StyledIconBox>
-                        <ProjectIcon color='action' />
-                    </StyledIconBox>
-                    <StyledBox data-loading>
-                        <Tooltip title={`id: ${id}`} arrow>
-                            <StyledTitle>
-                                <Highlighter search={searchQuery}>
-                                    {name}
-                                </Highlighter>
-                            </StyledTitle>
-                        </Tooltip>
-                    </StyledBox>
-                    <ProjectModeBadge mode={mode} />
-                </StyledDivHeader>
-                <StyledContent>
-                    <Tooltip
-                        title={
-                            archivedAt
-                                ? formatDateYMDHM(
-                                      parseISO(archivedAt as string),
-                                      locationSettings.locale,
-                                  )
-                                : undefined
-                        }
-                        arrow
-                        placement='top'
-                    >
-                        <Box
-                            sx={(theme) => ({
-                                color: theme.palette.text.secondary,
-                            })}
+                <StyledProjectCardHeader>
+                    <StyledProjectCardTitleContainer data-loading>
+                        <Truncator
+                            title={name}
+                            arrow
+                            component={StyledProjectCardTitle}
                         >
-                            <p data-loading>
-                                Archived:{' '}
-                                <TimeAgo date={archivedAt} refresh={false} />
-                            </p>
-                        </Box>
-                    </Tooltip>
-                    <Link
-                        component={RouterLink}
-                        to={`/archive?search=project%3A${encodeURI(id)}`}
-                    >
-                        <p>View archived flags</p>
-                    </Link>
-                </StyledContent>
+                            <Highlighter search={searchQuery}>
+                                {name}
+                            </Highlighter>
+                        </Truncator>
+                    </StyledProjectCardTitleContainer>
+                    <ProjectModeBadge mode={mode} />
+                </StyledProjectCardHeader>
+                <StyledProjectCardContent>
+                    {archivedAt && (
+                        <div data-loading>
+                            Archived{' '}
+                            <Tooltip
+                                title={formatDateYMDHM(
+                                    parseISO(archivedAt as string),
+                                    locationSettings.locale,
+                                )}
+                                arrow
+                            >
+                                <strong>
+                                    <TimeAgo
+                                        date={archivedAt}
+                                        refresh={false}
+                                    />
+                                </strong>
+                            </Tooltip>
+                        </div>
+                    )}
+                    <div data-loading>
+                        <Link to={`/archive?search=project%3A${encodeURI(id)}`}>
+                            View archived flags
+                        </Link>
+                    </div>
+                </StyledProjectCardContent>
             </StyledProjectCardBody>
-            <ProjectCardFooter id={id} disabled owners={owners}>
+            <ProjectCardFooter id={id} owners={owners}>
                 <StyledActions>
                     <PermissionIconButton
                         onClick={onRevive}
@@ -126,6 +106,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                         permission={UPDATE_PROJECT}
                         tooltipProps={{ title: 'Revive project' }}
                         data-testid={`revive-feature-flag-button`}
+                        size='small'
                     >
                         <Undo />
                     </PermissionIconButton>
@@ -134,6 +115,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                         projectId={id}
                         tooltipProps={{ title: 'Permanently delete project' }}
                         onClick={onDelete}
+                        size='small'
                     >
                         <Delete />
                     </PermissionIconButton>

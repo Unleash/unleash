@@ -26,15 +26,15 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm';
+import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
-import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
-import { v4 as uuidv4 } from 'uuid';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
     getChangeRequestConflictCreatedData,
     getChangeRequestConflictCreatedDataFromScheduleData,
-} from './change-request-conflict-data';
+} from './change-request-conflict-data.ts';
+import { constraintId } from 'constants/constraintId.ts';
+import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -86,7 +86,7 @@ const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
     if (!strategy) return;
 
     return strategy?.constraints.map((constraint) => {
-        return { ...constraint, [constraintId]: uuidv4() };
+        return { ...constraint, [constraintId]: crypto.randomUUID() };
     });
 };
 
@@ -160,15 +160,15 @@ export const FeatureStrategyEdit = () => {
         [
             ...pendingCrsUsingThisStrategy,
             ...scheduledCrsUsingThisStrategy,
-        ].forEach((data) =>
+        ].forEach((data) => {
             trackEvent('change_request', {
                 props: {
                     ...data,
                     action: 'edit-strategy',
                     eventType: 'conflict-created',
                 },
-            }),
-        );
+            });
+        });
 
     const {
         segments: savedStrategySegments,
@@ -352,7 +352,11 @@ export const formatUpdateStrategyApiCode = (
     };
 
     const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
-    const payload = JSON.stringify(sortedStrategy, undefined, 2);
+    const payload = JSON.stringify(
+        sortedStrategy,
+        apiPayloadConstraintReplacer,
+        2,
+    );
 
     return `curl --location --request PUT '${url}' \\
     --header 'Authorization: INSERT_API_KEY' \\
@@ -366,6 +370,6 @@ export const featureStrategyHelp = `
 `;
 
 export const featureStrategyDocsLink =
-    'https://docs.getunleash.io/reference/activation-strategies';
+    'https://docs.getunleash.io/concepts/activation-strategies';
 
 export const featureStrategyDocsLinkLabel = 'Strategies documentation';

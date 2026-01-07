@@ -1,5 +1,5 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Banner } from '../Banner/Banner';
+import { Banner } from '../Banner/Banner.tsx';
 import type { IBanner } from 'interfaces/banner';
 import { useOutdatedSdks } from 'hooks/api/getters/useOutdatedSdks/useOutdatedSdks';
 import { Link } from 'react-router-dom';

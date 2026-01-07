@@ -1,7 +1,7 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { NotificationsSchema } from 'openapi';
 
 export const useNotifications = (options: SWRConfiguration = {}) => {

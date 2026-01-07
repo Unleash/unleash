@@ -3,13 +3,12 @@ import type {
     FeatureToggleDTO,
     IFeatureToggleQuery,
     IFeatureTypeCount,
-    IVariant,
-} from '../../../types/model';
-import type { FeatureToggleInsert } from '../feature-toggle-store';
-import type { Store } from '../../../types/stores/store';
-import type { LastSeenInput } from '../../metrics/last-seen/last-seen-service';
-import type { FeatureConfigurationClient } from './feature-toggle-strategies-store-type';
-import type { IFeatureProjectUserParams } from '../feature-toggle-controller';
+} from '../../../types/model.js';
+import type { FeatureToggleInsert } from '../feature-toggle-store.js';
+import type { Store } from '../../../types/stores/store.js';
+import type { LastSeenInput } from '../../metrics/last-seen/last-seen-service.js';
+import type { FeatureConfigurationClient } from './feature-toggle-strategies-store-type.js';
+import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js';
 
 export interface IFeatureToggleStoreQuery {
     archived: boolean;
@@ -23,7 +22,7 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
 
     setLastSeen(data: LastSeenInput[]): Promise<void>;
 
-    getProjectId(name: string): Promise<string | undefined>;
+    getProjectId(name: string | undefined): Promise<string | undefined>;
 
     create(project: string, data: FeatureToggleInsert): Promise<FeatureToggle>;
 
@@ -54,8 +53,6 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
         archived?: boolean,
     ): Promise<FeatureToggle[]>;
 
-    getArchivedFeatures(project?: string): Promise<FeatureToggle[]>;
-
     getPlaygroundFeatures(
         featureQuery?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]>;
@@ -77,26 +74,6 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     >;
 
     isPotentiallyStale(featureName: string): Promise<boolean>;
-
-    /**
-     * @deprecated - Variants should be fetched from FeatureEnvironmentStore (since variants are now; since 4.18, connected to environments)
-     * @param featureName
-     * TODO: Remove before release 5.0
-     */
-    getVariants(featureName: string): Promise<IVariant[]>;
-
-    /**
-     * TODO: Remove before release 5.0
-     * @deprecated - Variants should be fetched from FeatureEnvironmentStore (since variants are now; since 4.18, connected to environments)
-     * @param project
-     * @param featureName
-     * @param newVariants
-     */
-    saveVariants(
-        project: string,
-        featureName: string,
-        newVariants: IVariant[],
-    ): Promise<FeatureToggle>;
 
     disableAllEnvironmentsForFeatures(names: string[]): Promise<void>;
 

@@ -5,7 +5,7 @@
  */
 
 /**
- * The feature flag's [type](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types). One of experiment, kill-switch, release, operational, or permission
+ * The feature flag's [type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types). One of experiment, kill-switch, release, operational, or permission
  */
 export type CreateFeatureSchemaType =
     (typeof CreateFeatureSchemaType)[keyof typeof CreateFeatureSchemaType];

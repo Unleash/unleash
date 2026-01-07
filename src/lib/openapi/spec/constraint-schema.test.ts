@@ -1,11 +1,13 @@
-import { validateSchema } from '../validate';
-import type { ConstraintSchema } from './constraint-schema';
+import { validateSchema } from '../validate.js';
+import type { ConstraintSchema } from './constraint-schema.js';
 
 test('constraintSchema', () => {
     const data: ConstraintSchema = {
         contextName: 'a',
         operator: 'NUM_LTE',
         value: '1',
+        caseInsensitive: false,
+        inverted: false,
     };
 
     expect(

@@ -1,9 +1,9 @@
-import type { Db } from '../../db/db';
+import type { Db } from '../../db/db.js';
 import type {
     InstanceEvent,
     IOnboardingStore,
     ProjectEvent,
-} from './onboarding-store-type';
+} from './onboarding-store-type.js';
 
 export type DBProjectEvent = {
     event: 'first-flag' | 'first-pre-live' | 'first-live';

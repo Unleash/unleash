@@ -1,7 +1,8 @@
 import { Box, Paper, styled, Typography } from '@mui/material';
 import type { TooltipItem } from 'chart.js';
+import { Truncator } from 'component/common/Truncator/Truncator';
 import type React from 'react';
-import type { FC, VFC } from 'react';
+import type { FC } from 'react';
 import { objectId } from 'utils/objectId';
 
 export type TooltipState = {
@@ -32,12 +33,13 @@ const StyledItem = styled('li')(({ theme }) => ({
     marginBottom: theme.spacing(0.5),
     display: 'flex',
     alignItems: 'center',
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 const StyledLabelIcon = styled('span')(({ theme }) => ({
     display: 'inline-block',
-    width: 8,
-    height: 8,
+    minWidth: 8,
+    minHeight: 8,
     borderRadius: '50%',
     marginRight: theme.spacing(1),
 }));
@@ -89,12 +91,12 @@ export const ChartTooltipContainer: FC<IChartTooltipProps> = ({
     </Box>
 );
 
-export const ChartTooltip: VFC<IChartTooltipProps> = ({ tooltip }) => (
+export const ChartTooltip: FC<IChartTooltipProps> = ({ tooltip }) => (
     <ChartTooltipContainer tooltip={tooltip}>
         <Paper
             elevation={3}
             sx={(theme) => ({
-                width: 220,
+                width: 'max-content',
                 padding: theme.spacing(1.5, 2),
             })}
         >
@@ -119,14 +121,7 @@ export const ChartTooltip: VFC<IChartTooltipProps> = ({ tooltip }) => (
                         >
                             {' '}
                         </StyledLabelIcon>
-                        <Typography
-                            variant='body2'
-                            sx={{
-                                display: 'inline-block',
-                            }}
-                        >
-                            {item.title}
-                        </Typography>
+                        <Truncator lines={2}>{item.title}</Truncator>
                     </StyledItem>
                 ))}
             </StyledList>

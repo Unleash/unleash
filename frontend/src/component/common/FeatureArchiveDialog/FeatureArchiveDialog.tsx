@@ -3,7 +3,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { Alert, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -26,7 +26,7 @@ interface IFeatureArchiveDialogProps {
 const RemovedDependenciesAlert = () => {
     return (
         <Alert severity='warning' sx={{ m: (theme) => theme.spacing(2, 0) }}>
-            Archiving features with dependencies will also remove those
+            Archiving flags with dependencies will also remove those
             dependencies.
         </Alert>
     );

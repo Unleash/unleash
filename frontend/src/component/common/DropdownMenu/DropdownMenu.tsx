@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { Menu } from '@mui/material';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
-import { DropdownButton } from './DropdownButton/DropdownButton';
+import { DropdownButton } from './DropdownButton/DropdownButton.tsx';
 
 export interface IDropdownMenuProps {
     renderOptions: () => ReactNode;

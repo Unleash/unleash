@@ -3,6 +3,7 @@ import {
     ErrorCode,
     WebClientEvent,
     type CodedError,
+    type Methods as SlackSDK,
     type WebAPIPlatformError,
     type WebAPIRequestError,
     type WebAPIRateLimitedError,
@@ -10,37 +11,45 @@ import {
     type KnownBlock,
     type Block,
 } from '@slack/web-api';
-import Addon from './addon';
+import Addon from './addon.js';
 
-import slackAppDefinition from './slack-app-definition';
+import slackAppDefinition from './slack-app-definition.js';
 import {
     type IAddonConfig,
     type IFlagResolver,
     serializeDates,
-} from '../types';
+} from '../types/index.js';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
     LinkStyle,
-} from './feature-event-formatter-md';
-import type { IEvent } from '../types/events';
-import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+} from './feature-event-formatter-md.js';
+import type { IEvent } from '../events/index.js';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
 interface ISlackAppAddonParameters {
     accessToken: string;
     defaultChannels: string;
 }
 
+export type SlackClientProvider = (accessToken: string) => SlackSDK;
+const defaultClientProvider: SlackClientProvider = (accessToken: string) => {
+    return new WebClient(accessToken);
+};
+
 export default class SlackAppAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    flagResolver: IFlagResolver;
+    declare flagResolver: IFlagResolver;
 
     private accessToken?: string;
 
-    private slackClient?: WebClient;
+    private slackClient?: SlackSDK;
 
-    constructor(args: IAddonConfig) {
+    constructor(
+        args: IAddonConfig,
+        readonly clientProvider: SlackClientProvider = defaultClientProvider,
+    ) {
         super(slackAppDefinition, args);
         this.msgFormatter = new FeatureEventFormatterMd({
             unleashUrl: args.unleashUrl,
@@ -93,7 +102,7 @@ export default class SlackAppAddon extends Addon {
             );
 
             if (!this.slackClient || this.accessToken !== accessToken) {
-                const client = new WebClient(accessToken);
+                const client = this.clientProvider(accessToken);
                 client.on(WebClientEvent.RATE_LIMITED, (numSeconds) => {
                     this.logger.debug(
                         `Rate limit reached for event ${event.type}. Retry scheduled after ${numSeconds} seconds`,
@@ -254,5 +263,3 @@ export default class SlackAppAddon extends Addon {
         return error.message;
     }
 }
-
-module.exports = SlackAppAddon;

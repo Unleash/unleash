@@ -1,32 +1,18 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { ApiTokenType } from '../../types/models/api-token';
+import { ApiTokenType } from '../../types/model.js';
 
 export const apiTokenSchema = {
     $id: '#/components/schemas/apiTokenSchema',
     type: 'object',
     additionalProperties: false,
-    required: [
-        'secret',
-        'tokenName',
-        'type',
-        'project',
-        'projects',
-        'createdAt',
-    ],
+    required: ['secret', 'tokenName', 'type', 'projects', 'createdAt'],
     description:
-        'An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).',
+        'An overview of an [Unleash API token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys).',
     properties: {
         secret: {
             type: 'string',
             description: 'The token used for authentication.',
             example: 'project:environment.xyzrandomstring',
-        },
-        username: {
-            type: 'string',
-            deprecated: true,
-            description:
-                'This property was deprecated in Unleash v5. Prefer the `tokenName` property instead.',
-            example: 'a-name',
         },
         tokenName: {
             type: 'string',
@@ -41,9 +27,9 @@ export const apiTokenSchema = {
         },
         environment: {
             type: 'string',
-            description:
-                'The environment the token has access to. `*` if it has access to all environments.',
+            description: 'The environment the token has access to.',
             example: 'development',
+            default: 'development',
         },
         project: {
             type: 'string',

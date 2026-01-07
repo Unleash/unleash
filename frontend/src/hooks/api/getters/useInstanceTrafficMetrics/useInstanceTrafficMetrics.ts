@@ -1,43 +1,11 @@
 import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import type {
-    TrafficUsageDataSegmentedCombinedSchema,
-    TrafficUsageDataSegmentedSchema,
-} from 'openapi';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
 import { cleanTrafficData } from 'utils/traffic-calculations';
 
-export interface IInstanceTrafficMetricsResponse {
-    usage: TrafficUsageDataSegmentedSchema;
-
-    refetch: () => void;
-
-    loading: boolean;
-
-    error?: Error;
-}
-
-export const useInstanceTrafficMetrics = (
-    period: string,
-): IInstanceTrafficMetricsResponse => {
-    const { data, error, mutate } = useSWR(
-        formatApiPath(`api/admin/metrics/traffic/${period}`),
-        fetcher,
-    );
-
-    return useMemo(
-        () => ({
-            usage: data,
-            loading: !error && !data,
-            refetch: () => mutate(),
-            error,
-        }),
-        [data, error, mutate],
-    );
-};
-
-export type InstanceTrafficMetricsResponse2 = {
+export type InstanceTrafficMetricsResponse = {
     refetch: () => void;
     result:
         | { state: 'success'; data: TrafficUsageDataSegmentedCombinedSchema }
@@ -54,8 +22,8 @@ export const useTrafficSearch = (
         from: string;
         to: string;
     },
-): InstanceTrafficMetricsResponse2 => {
-    const apiPath = `api/admin/metrics/traffic-search?grouping=${grouping}&from=${from}&to=${to}`;
+): InstanceTrafficMetricsResponse => {
+    const apiPath = `api/admin/metrics/traffic?grouping=${grouping}&from=${from}&to=${to}`;
 
     const { data, error, mutate } = useSWR(formatApiPath(apiPath), fetcher);
 

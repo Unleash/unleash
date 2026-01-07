@@ -6,8 +6,8 @@ import {
     fadeInBottomStartWithoutFixed,
 } from 'themes/themeStyles';
 import UIContext from 'contexts/UIContext';
-import AnimateOnMount from '../AnimateOnMount/AnimateOnMount';
-import Toast from './Toast/Toast';
+import AnimateOnMount from '../AnimateOnMount/AnimateOnMount.tsx';
+import Toast from './Toast/Toast.tsx';
 import type { IToast } from 'interfaces/toast';
 
 const ToastRenderer = () => {

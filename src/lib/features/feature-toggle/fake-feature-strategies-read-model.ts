@@ -1,4 +1,4 @@
-import type { IFeatureStrategiesReadModel } from './types/feature-strategies-read-model-type';
+import type { IFeatureStrategiesReadModel } from './types/feature-strategies-read-model-type.js';
 
 export class FakeFeatureStrategiesReadModel
     implements IFeatureStrategiesReadModel

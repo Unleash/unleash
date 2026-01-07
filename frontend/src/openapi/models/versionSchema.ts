@@ -3,13 +3,18 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { VersionSchemaCurrent } from './versionSchemaCurrent';
-import type { VersionSchemaLatest } from './versionSchemaLatest';
+import type { VersionSchemaCurrent } from './versionSchemaCurrent.js';
+import type { VersionSchemaLatest } from './versionSchemaLatest.js';
 
 /**
  * Detailed information about an Unleash version
  */
 export interface VersionSchema {
+    /**
+     * The date and time of when this Unleash instance version was built
+     * @nullable
+     */
+    buildDate?: string | null;
     /** The current version of Unleash. */
     current: VersionSchemaCurrent;
     /** The instance identifier of the Unleash instance */

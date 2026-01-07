@@ -1,6 +1,6 @@
-import { FeatureMetricsTable } from '../FeatureMetricsTable/FeatureMetricsTable';
+import { FeatureMetricsTable } from '../FeatureMetricsTable/FeatureMetricsTable.tsx';
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
-import { FeatureMetricsStatsRaw } from '../FeatureMetricsStats/FeatureMetricsStatsRaw';
+import { FeatureMetricsStatsRaw } from '../FeatureMetricsStats/FeatureMetricsStatsRaw.tsx';
 import { Box, Typography } from '@mui/material';
 import { useId } from 'hooks/useId';
 import React, { Suspense } from 'react';
@@ -60,5 +60,5 @@ export const FeatureMetricsContent = ({
 };
 
 const LazyFeatureMetricsChart = React.lazy(
-    () => import('../FeatureMetricsChart/FeatureMetricsChart'),
+    () => import('../FeatureMetricsChart/FeatureMetricsChart.tsx'),
 );

@@ -37,8 +37,9 @@ type TableProps = {
     environments: {
         name: string;
         type: string;
-        requiredApprovals: number;
         changeRequestEnabled: boolean;
+        requiredApprovals: number;
+        configurable: boolean;
     }[];
     enableEnvironment: (name: string, requiredApprovals: number) => void;
     disableEnvironment: (name: string) => void;
@@ -111,6 +112,7 @@ export const ChangeRequestTable = (props: TableProps) => {
                                                 approvals,
                                             );
                                         }}
+                                        disabled={!original.configurable}
                                         IconComponent={
                                             KeyboardArrowDownOutlined
                                         }
@@ -143,6 +145,7 @@ export const ChangeRequestTable = (props: TableProps) => {
                                         original.environment
                                     }`,
                                 }}
+                                disabled={!original.configurable}
                                 onClick={onToggleEnvironment(
                                     original.environment,
                                     original.changeRequestEnabled,
@@ -163,7 +166,7 @@ export const ChangeRequestTable = (props: TableProps) => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable(
             {
-                // @ts-ignore
+                // @ts-expect-error
                 columns,
                 data: props.environments.map((env) => {
                     return {
@@ -171,6 +174,7 @@ export const ChangeRequestTable = (props: TableProps) => {
                         type: env.type,
                         changeRequestEnabled: env.changeRequestEnabled,
                         requiredApprovals: env.requiredApprovals ?? 1,
+                        configurable: env.configurable,
                     };
                 }),
 

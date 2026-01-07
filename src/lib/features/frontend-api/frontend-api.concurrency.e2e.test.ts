@@ -1,11 +1,15 @@
 import {
     type IUnleashNoSupertest,
     setupAppWithoutSupertest,
-} from '../../../test/e2e/helpers/test-helper';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
-import { randomId } from '../../util';
-import { ApiTokenType } from '../../types/models/api-token';
+} from '../../../test/e2e/helpers/test-helper.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { DEFAULT_ENV, randomId } from '../../util/index.js';
+import { ApiTokenType } from '../../types/model.js';
+
+import { vi } from 'vitest';
 
 let app: IUnleashNoSupertest;
 let db: ITestDb;
@@ -33,7 +37,7 @@ beforeAll(async () => {
 
 afterEach(() => {
     app.services.frontendApiService.stopAll();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
 });
 
 afterAll(async () => {
@@ -54,13 +58,13 @@ test('multiple parallel calls to api/frontend should not create multiple instanc
         await app.services.apiTokenService.createApiTokenWithProjects({
             type: ApiTokenType.FRONTEND,
             projects: ['default'],
-            environment: 'default',
+            environment: DEFAULT_ENV,
             tokenName: `test-token-${randomId()}`,
         });
     const address = app.server.address();
     expect(address).not.toBeNull();
     expect(address).toHaveProperty('port');
-    // @ts-ignore - We've just checked that we have this property
+    // @ts-expect-error - We've just checked that we have this property
     const serverUrl = `http://localhost:${address.port}/api/frontend`;
     await Promise.all(
         Array.from(Array(10).keys()).map(() =>

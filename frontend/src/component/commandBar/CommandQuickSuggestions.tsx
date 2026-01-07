@@ -3,7 +3,7 @@ import {
     RecentlyVisitedFeatureButton,
     RecentlyVisitedPathButton,
     RecentlyVisitedProjectButton,
-} from './RecentlyVisited/CommandResultGroup';
+} from './RecentlyVisited/CommandResultGroup.tsx';
 import {
     useRecentlyVisited,
     type LastViewedPage,
@@ -11,7 +11,7 @@ import {
 
 const toListItemButton = (
     item: LastViewedPage,
-    routes: Record<string, { path: string; route: string; title: string }>,
+    routes: Record<string, { path: string; title: string }>,
     index: number,
     onClick: () => void,
 ) => {
@@ -55,7 +55,7 @@ export const CommandQuickSuggestions = ({
     onClick,
 }: {
     onClick: () => void;
-    routes: Record<string, { path: string; route: string; title: string }>;
+    routes: Record<string, { path: string; title: string }>;
 }) => {
     const { lastVisited } = useRecentlyVisited();
     const buttons = lastVisited.map((item, index) =>

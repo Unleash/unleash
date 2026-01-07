@@ -1,12 +1,7 @@
 import type { Request, Response } from 'express';
-import Controller from '../controller';
-import type {
-    IFlagResolver,
-    IUnleashConfig,
-    IUnleashServices,
-} from '../../types';
-import type { Logger } from '../../logger';
-import type AddonService from '../../services/addon-service';
+import Controller from '../controller.js';
+import type { IFlagResolver, IUnleashConfig } from '../../types/index.js';
+import type AddonService from '../../services/addon-service.js';
 
 import {
     ADMIN,
@@ -14,32 +9,38 @@ import {
     DELETE_ADDON,
     NONE,
     UPDATE_ADDON,
-} from '../../types/permissions';
-import type { IAuthRequest } from '../unleash-types';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import type { OpenApiService } from '../../services/openapi-service';
-import { type AddonSchema, addonSchema } from '../../openapi/spec/addon-schema';
-import { serializeDates } from '../../types/serialize-dates';
+} from '../../types/permissions.js';
+import type { IAuthRequest } from '../unleash-types.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import {
+    type AddonSchema,
+    addonSchema,
+} from '../../openapi/spec/addon-schema.js';
+import { serializeDates } from '../../types/serialize-dates.js';
 import {
     type AddonsSchema,
     addonsSchema,
-} from '../../openapi/spec/addons-schema';
+} from '../../openapi/spec/addons-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import type { AddonCreateUpdateSchema } from '../../openapi/spec/addon-create-update-schema';
+} from '../../openapi/util/standard-responses.js';
+import type { AddonCreateUpdateSchema } from '../../openapi/spec/addon-create-update-schema.js';
 import {
     type BasePaginationParameters,
     basePaginationParameters,
-} from '../../openapi/spec/base-pagination-parameters';
+} from '../../openapi/spec/base-pagination-parameters.js';
 import {
     type IntegrationEventsSchema,
     integrationEventsSchema,
-} from '../../openapi/spec/integration-events-schema';
-import { BadDataError } from '../../error';
-import type { IntegrationEventsService } from '../../services';
+} from '../../openapi/spec/integration-events-schema.js';
+import { BadDataError } from '../../error/index.js';
+import type {
+    IntegrationEventsService,
+    IUnleashServices,
+} from '../../services/index.js';
 
 type AddonServices = Pick<
     IUnleashServices,
@@ -49,8 +50,6 @@ type AddonServices = Pick<
 const PATH = '/';
 
 class AddonController extends Controller {
-    private logger: Logger;
-
     private addonService: AddonService;
 
     private openApiService: OpenApiService;
@@ -68,7 +67,6 @@ class AddonController extends Controller {
         }: AddonServices,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/addon.ts');
         this.addonService = addonService;
         this.openApiService = openApiService;
         this.integrationEventsService = integrationEventsService;
@@ -201,7 +199,7 @@ Note: passing \`null\` as a value for the description property will set it to an
         });
     }
 
-    async getAddons(req: Request, res: Response<AddonsSchema>): Promise<void> {
+    async getAddons(_req: Request, res: Response<AddonsSchema>): Promise<void> {
         const addons = await this.addonService.getAddons();
         const providers = this.addonService.getProviderDefinitions();
 
@@ -306,4 +304,3 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 }
 export default AddonController;
-module.exports = AddonController;

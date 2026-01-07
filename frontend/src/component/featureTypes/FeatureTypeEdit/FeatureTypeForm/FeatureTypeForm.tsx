@@ -103,9 +103,9 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                 `curl --location --request PUT '${uiConfig.unleashUrl}/api/admin/feature-types/${featureType?.id}/lifetime`,
                 "--header 'Authorization: INSERT_API_KEY'",
                 "--header 'Content-Type: application/json'",
-                '--data-raw \'{\n  "lifetimeDays": 7\n}\'',
+                `--data-raw '{\n  "lifetimeDays": ${doesntExpire ? 0 : lifetime}\n}'`,
             ].join(' \\\n'),
-        [uiConfig, featureType?.id],
+        [uiConfig, featureType?.id, lifetime, doesntExpire],
     );
 
     if (!loading && !featureType) {
@@ -125,7 +125,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                     : `Edit flag type: ${featureType?.name}`
             }
             description={featureType?.description || ''}
-            documentationLink='https://docs.getunleash.io/reference/feature-toggles#feature-flag-types'
+            documentationLink='https://docs.getunleash.io/concepts/feature-flags#feature-flag-types'
             documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >
@@ -151,7 +151,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                                 </p>
                                 <br />
                                 <a
-                                    href='https://docs.getunleash.io/reference/feature-toggles#feature-flag-types'
+                                    href='https://docs.getunleash.io/concepts/feature-flags#feature-flag-types'
                                     target='_blank'
                                     rel='noreferrer'
                                 >

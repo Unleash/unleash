@@ -1,6 +1,9 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import { setupApp, setupAppWithCustomConfig } from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import {
+    setupApp,
+    setupAppWithCustomConfig,
+} from '../../helpers/test-helper.js';
+import getLogger from '../../../fixtures/no-logger.js';
 
 let db: ITestDb;
 
@@ -35,7 +38,11 @@ test('should not allow to create feature flags in maintenance mode', async () =>
 });
 
 test('maintenance mode is off by default', async () => {
-    const appWithMaintenanceMode = await setupApp(db.stores);
+    const appWithMaintenanceMode = await setupAppWithCustomConfig(
+        db.stores,
+        {},
+        db.rawDatabase,
+    );
 
     return appWithMaintenanceMode.request
         .post('/api/admin/projects/default/features')

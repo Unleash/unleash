@@ -8,18 +8,16 @@ import {
 import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList';
 import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
-import { Box, Divider, styled, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+
+import { RecentlyUsedSegments } from './RecentlyUsedSegments/RecentlyUsedSegments.tsx';
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
     projectId: string;
 }
-
-const StyledDivider = styled(Divider)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-}));
 
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -82,7 +80,7 @@ export const FeatureStrategySegment = ({
                                 on the global or the project level. Read more
                                 about segments{' '}
                                 <a
-                                    href='https://docs.getunleash.io/reference/segments'
+                                    href='https://docs.getunleash.io/concepts/segments'
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
@@ -100,10 +98,16 @@ export const FeatureStrategySegment = ({
                 options={autocompleteOptions}
                 onChange={onChange}
                 disabled={atStrategySegmentsLimit}
+                icon={null}
+                width={'175px'}
             />
             <FeatureStrategySegmentList
                 segments={selectedSegments}
                 setSegments={setSelectedSegments}
+            />
+            <RecentlyUsedSegments
+                setSegments={setSelectedSegments}
+                segments={selectedSegments}
             />
         </>
     );

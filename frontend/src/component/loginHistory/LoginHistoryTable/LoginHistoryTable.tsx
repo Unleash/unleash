@@ -20,7 +20,7 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { useSearch } from 'hooks/useSearch';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useLoginHistory } from 'hooks/api/getters/useLoginHistory/useLoginHistory';
-import { LoginHistorySuccessfulCell } from './LoginHistorySuccessfulCell/LoginHistorySuccessfulCell';
+import { LoginHistorySuccessfulCell } from './LoginHistorySuccessfulCell/LoginHistorySuccessfulCell.tsx';
 import type { ILoginEvent } from 'interfaces/loginEvent';
 import { useLoginHistoryApi } from 'hooks/api/actions/useLoginHistoryApi/useLoginHistoryApi';
 import { formatDateYMDHMS } from 'utils/formatDate';
@@ -44,6 +44,7 @@ const AUTH_TYPE_LABEL: { [key: string]: string } = {
     oidc: 'OIDC',
     saml: 'SAML',
     google: 'Google',
+    github: 'GitHub',
 };
 
 export const LoginHistoryTable = () => {
@@ -74,8 +75,12 @@ export const LoginHistoryTable = () => {
             {
                 Header: 'Created',
                 accessor: 'created_at',
-                Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} dateFormat={formatDateYMDHMS} />
+                Cell: ({ value, column }) => (
+                    <TimeAgoCell
+                        value={value}
+                        column={column}
+                        dateFormat={formatDateYMDHMS}
+                    />
                 ),
                 maxWidth: 150,
             },

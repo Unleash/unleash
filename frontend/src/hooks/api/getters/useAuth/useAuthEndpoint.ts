@@ -58,9 +58,10 @@ export const useAuthEndpoint = (): IUseAuthEndpointOutput => {
         swrConfig,
     );
 
-    const refetchAuth = useCallback(() => {
-        mutate(USER_ENDPOINT_PATH).catch(console.warn);
-    }, []);
+    const refetchAuth = useCallback(
+        async () => mutate(USER_ENDPOINT_PATH).catch(console.warn),
+        [],
+    );
 
     return {
         data,

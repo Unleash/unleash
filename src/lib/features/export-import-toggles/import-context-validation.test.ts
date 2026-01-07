@@ -1,4 +1,4 @@
-import { isValidField } from './import-context-validation';
+import { isValidField } from './import-context-validation.js';
 
 test('has value context field', () => {
     expect(

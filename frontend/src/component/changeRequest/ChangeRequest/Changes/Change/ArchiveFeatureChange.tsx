@@ -1,22 +1,15 @@
 import type { FC, ReactNode } from 'react';
-import { Box, styled } from '@mui/material';
-import { ChangeItemWrapper } from './StrategyChange';
+import { Action, ChangeItemInfo, ChangeItemWrapper } from './Change.styles.tsx';
 
-const ArchiveBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    color: theme.palette.error.main,
-}));
-
-interface IArchiveFeatureChange {
+type ArchiveFeatureChange = {
     actions?: ReactNode;
-}
+};
 
-export const ArchiveFeatureChange: FC<IArchiveFeatureChange> = ({
-    actions,
-}) => (
+export const ArchiveFeatureChange: FC<ArchiveFeatureChange> = ({ actions }) => (
     <ChangeItemWrapper>
-        <ArchiveBox>Archiving feature</ArchiveBox>
-        {actions}
+        <ChangeItemInfo>
+            <Action color='error.main'>Archiving flag</Action>
+            {actions}
+        </ChangeItemInfo>
     </ChangeItemWrapper>
 );

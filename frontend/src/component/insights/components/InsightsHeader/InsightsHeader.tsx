@@ -49,6 +49,7 @@ const StyledActionsSmallScreen = styled('div')(({ theme }) => ({
 
 export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
     const showInactiveUsers = useUiFlag('showInactiveUsers');
+    const pageName = 'Analytics';
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -69,18 +70,18 @@ export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
     return (
         <>
             <PageHeader
-                title='Insights'
+                title={pageName}
                 titleElement={
                     <Typography
                         variant='h1'
-                        component='div'
+                        component='span'
                         sx={(theme) => ({
                             display: 'flex',
                             alignItems: 'center',
                             gap: theme.spacing(1),
                         })}
                     >
-                        <span>Insights</span>{' '}
+                        {pageName}
                     </Typography>
                 }
                 actions={

@@ -1,9 +1,9 @@
 import { screen } from '@testing-library/react';
-import { FeatureLifecycleTooltip } from './FeatureLifecycleTooltip';
+import { FeatureLifecycleTooltip } from './FeatureLifecycleTooltip.tsx';
 import { render } from 'utils/testRenderer';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import type { LifecycleStage } from './LifecycleStage';
+import type { LifecycleStage } from './LifecycleStage.tsx';
 import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
@@ -104,7 +104,7 @@ test('render completed stage with still active', async () => {
     });
 
     await screen.findByText('Cleanup');
-    await screen.findByText(/production/);
+    await screen.findByText('production');
     await screen.findByText('2 hours ago');
     expect(screen.queryByText('Archive feature')).not.toBeInTheDocument();
 });

@@ -10,7 +10,7 @@ import {
     NotEnoughData,
 } from 'component/insights/components/LineChart/LineChart';
 import { usePlaceholderData } from 'component/insights/hooks/usePlaceholderData';
-import { UpdatesPerEnvironmentTypeChartTooltip } from './UpdatesPerEnvironmentTypeChartTooltip/UpdatesPerEnvironmentTypeChartTooltip';
+import { UpdatesPerEnvironmentTypeChartTooltip } from './UpdatesPerEnvironmentTypeChartTooltip/UpdatesPerEnvironmentTypeChartTooltip.tsx';
 
 interface IUpdatesPerEnvironmnetTypeChart {
     environmentTypeTrends: InstanceInsightsSchema['environmentTypeTrends'];
@@ -105,7 +105,7 @@ export const UpdatesPerEnvironmentTypeChart: VFC<
             InstanceInsightsSchemaEnvironmentTypeTrendsItem[]
         > = {};
 
-        Object.entries(groupedByDate).forEach(([date, trends]) => {
+        Object.entries(groupedByDate).forEach(([_date, trends]) => {
             trends.forEach((trend) => {
                 if (!aggregatedByType[trend.environmentType]) {
                     aggregatedByType[trend.environmentType] = [];

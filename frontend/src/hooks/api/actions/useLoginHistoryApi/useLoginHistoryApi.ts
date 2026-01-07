@@ -1,4 +1,4 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 export const useLoginHistoryApi = () => {
     const { loading, makeRequest, createRequest, errors } = useAPI({

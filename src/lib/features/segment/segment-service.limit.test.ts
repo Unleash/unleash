@@ -1,6 +1,10 @@
-import type { IAuditUser, IFlagResolver, IUnleashConfig } from '../../types';
-import getLogger from '../../../test/fixtures/no-logger';
-import { createFakeSegmentService } from './createSegmentService';
+import type {
+    IAuditUser,
+    IFlagResolver,
+    IUnleashConfig,
+} from '../../types/index.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { createFakeSegmentService } from './createSegmentService.js';
 
 const alwaysOnFlagResolver = {
     isEnabled() {

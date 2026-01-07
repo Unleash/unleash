@@ -1,21 +1,24 @@
 import type { Response } from 'express';
-import Controller from '../../../routes/controller';
-import type { IFlagResolver, IUnleashServices } from '../../../types';
-import type { IUnleashConfig } from '../../../types/option';
-import type { Logger } from '../../../logger';
-import type ClientInstanceService from './instance-service';
-import type { IAuthRequest, IUser } from '../../../server-impl';
-import type { IClientApp } from '../../../types/model';
-import ApiUser, { type IApiUser } from '../../../types/api-user';
-import { ALL } from '../../../types/models/api-token';
-import { NONE } from '../../../types/permissions';
-import type { OpenApiService } from '../../../services/openapi-service';
-import { emptyResponse } from '../../../openapi/util/standard-responses';
-import { createRequestSchema } from '../../../openapi/util/create-request-schema';
-import type { ClientApplicationSchema } from '../../../openapi/spec/client-application-schema';
+import Controller from '../../../routes/controller.js';
+import type { IFlagResolver } from '../../../types/index.js';
+import type { IUnleashConfig } from '../../../types/option.js';
+import type { Logger } from '../../../logger.js';
+import type ClientInstanceService from './instance-service.js';
+import type { IAuthRequest, IUser } from '../../../types/index.js';
+import type { IClientApp } from '../../../types/model.js';
+import ApiUser, { type IApiUser } from '../../../types/api-user.js';
+import { ALL } from '../../../types/models/api-token.js';
+import { NONE } from '../../../types/permissions.js';
+import type {
+    IUnleashServices,
+    OpenApiService,
+} from '../../../services/index.js';
+import { emptyResponse } from '../../../openapi/util/standard-responses.js';
+import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
+import type { ClientApplicationSchema } from '../../../openapi/spec/client-application-schema.js';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
-import version from '../../../util/version';
+import version from '../../../util/version.js';
 
 export default class RegisterController extends Controller {
     logger: Logger;
@@ -94,7 +97,7 @@ export default class RegisterController extends Controller {
         data.environment = this.resolveEnvironment(user, data);
         data.projects = this.resolveProject(user);
 
-        await this.clientInstanceService.registerClient(data, clientIp);
+        await this.clientInstanceService.registerBackendClient(data, clientIp);
         res.header('X-Unleash-Version', version).status(202).end();
     }
 }

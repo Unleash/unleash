@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { TimeAgo } from './TimeAgo';
+import { TimeAgo } from './TimeAgo.tsx';
 import { act } from 'react';
 
 const h = 3_600_000 as const;
@@ -77,7 +77,7 @@ test('renders fallback for invalid date', () => {
 });
 
 test('on date change, current time should be updated', () => {
-    const start = new Date().getTime();
+    const start = Date.now();
 
     vi.advanceTimersByTime(60_000);
 

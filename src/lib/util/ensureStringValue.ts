@@ -1,4 +1,4 @@
-import { isDefined } from './isDefined';
+import { isDefined } from './isDefined.js';
 
 export function ensureStringValue(value: unknown): string {
     if (!isDefined(value)) {

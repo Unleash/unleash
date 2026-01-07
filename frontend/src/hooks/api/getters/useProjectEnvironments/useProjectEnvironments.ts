@@ -5,7 +5,7 @@ import type {
     IProjectEnvironment,
 } from 'interfaces/environments';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 interface IUseProjectEnvironmentsOutput {
     environments: IProjectEnvironment[];

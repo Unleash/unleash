@@ -1,4 +1,4 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 export const useFeatureArchiveApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

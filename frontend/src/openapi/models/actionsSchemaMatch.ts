@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionsSchemaMatchPayload } from './actionsSchemaMatchPayload';
-import type { ActionsSchemaMatchSource } from './actionsSchemaMatchSource';
+import type { ActionsSchemaMatchPayload } from './actionsSchemaMatchPayload.js';
+import type { ActionsSchemaMatchSource } from './actionsSchemaMatchSource.js';
 
 /**
  * Defines a matching rule for the signal that will trigger the action set

@@ -1,3 +1,5 @@
 import { lazy } from 'react';
 
-export const LazyFeatureView = lazy(() => import('./FeatureViewLazyExport'));
+export const LazyFeatureView = lazy(
+    () => import('./FeatureViewLazyExport.tsx'),
+);

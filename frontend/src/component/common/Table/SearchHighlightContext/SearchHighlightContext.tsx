@@ -5,5 +5,6 @@ const SearchHighlightContext = createContext('');
 export const SearchHighlightProvider = SearchHighlightContext.Provider;
 
 export const useSearchHighlightContext = (): { searchQuery: string } => {
-    return { searchQuery: useContext(SearchHighlightContext) };
+    const searchQuery = useContext(SearchHighlightContext);
+    return { searchQuery };
 };

@@ -1,7 +1,7 @@
 import { register } from 'prom-client';
-import { createTestConfig } from '../test/config/test-config';
-import type { IUnleashConfig } from './types';
-import { DbMetricsMonitor } from './metrics-gauge';
+import { createTestConfig } from '../test/config/test-config.js';
+import type { IUnleashConfig } from './types/index.js';
+import { DbMetricsMonitor } from './metrics-gauge.js';
 
 const prometheusRegister = register;
 let config: IUnleashConfig;

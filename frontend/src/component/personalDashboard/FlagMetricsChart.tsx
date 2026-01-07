@@ -12,16 +12,16 @@ import { Bar } from 'react-chartjs-2';
 import useTheme from '@mui/material/styles/useTheme';
 import { type FC, useEffect, useMemo, useState } from 'react';
 import { Box, type Theme, styled, Typography } from '@mui/material';
-import { FeatureMetricsHours } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsHours/FeatureMetricsHours';
-import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
+import { FeatureMetricsHours } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsHours/FeatureMetricsHours.tsx';
+import GeneralSelect from '../common/GeneralSelect/GeneralSelect.tsx';
 import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { createChartData } from './createChartData';
-import { aggregateFeatureMetrics } from '../feature/FeatureView/FeatureMetrics/aggregateFeatureMetrics';
+import { createChartData } from './createChartData.ts';
+import { aggregateFeatureMetrics } from '../feature/FeatureView/FeatureMetrics/aggregateFeatureMetrics.ts';
 import {
     createBarChartOptions,
     createPlaceholderBarChartOptions,
-} from './createChartOptions';
+} from './createChartOptions.ts';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 

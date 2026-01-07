@@ -1,4 +1,4 @@
-import { sortStrategies } from './sortStrategies';
+import { sortStrategies } from './sortStrategies.js';
 
 describe('sortStrategies', () => {
     it('should prioritize strategies with milestoneId over those without', () => {

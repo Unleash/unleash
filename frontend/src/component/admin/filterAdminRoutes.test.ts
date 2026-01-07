@@ -1,9 +1,9 @@
-import { filterAdminRoutes } from './filterAdminRoutes';
+import { filterRoutesByPlanData } from './filterRoutesByPlanData.js';
 
-describe('filterAdminRoutes - open souce routes', () => {
+describe('filterRoutesByPlanData - open souce routes', () => {
     test('open source - should show menu item if mode paid plan mode is not defined', () => {
         expect(
-            filterAdminRoutes(
+            filterRoutesByPlanData(
                 {},
                 {
                     pro: false,
@@ -21,12 +21,14 @@ describe('filterAdminRoutes - open souce routes', () => {
             billing: false,
         };
 
-        expect(filterAdminRoutes({ mode: ['pro'] }, state)).toBe(false);
-        expect(filterAdminRoutes({ mode: ['enterprise'] }, state)).toBe(false);
-        expect(filterAdminRoutes({ mode: ['pro', 'enterprise'] }, state)).toBe(
+        expect(filterRoutesByPlanData({ mode: ['pro'] }, state)).toBe(false);
+        expect(filterRoutesByPlanData({ mode: ['enterprise'] }, state)).toBe(
             false,
         );
-        expect(filterAdminRoutes({ billing: true }, state)).toBe(false);
+        expect(
+            filterRoutesByPlanData({ mode: ['pro', 'enterprise'] }, state),
+        ).toBe(false);
+        expect(filterRoutesByPlanData({ billing: true }, state)).toBe(false);
     });
 
     test('pro - should show menu item for pro customers', () => {
@@ -36,12 +38,14 @@ describe('filterAdminRoutes - open souce routes', () => {
             billing: false,
         };
 
-        expect(filterAdminRoutes({ mode: ['pro'] }, state)).toBe(true);
-        expect(filterAdminRoutes({ mode: ['pro', 'enterprise'] }, state)).toBe(
+        expect(filterRoutesByPlanData({ mode: ['pro'] }, state)).toBe(true);
+        expect(
+            filterRoutesByPlanData({ mode: ['pro', 'enterprise'] }, state),
+        ).toBe(true);
+        // This is to show enterprise badge in pro mode
+        expect(filterRoutesByPlanData({ mode: ['enterprise'] }, state)).toBe(
             true,
         );
-        // This is to show enterprise badge in pro mode
-        expect(filterAdminRoutes({ mode: ['enterprise'] }, state)).toBe(true);
     });
 
     test('enterprise - should show menu item if mode enterprise is defined or mode is undefined', () => {
@@ -51,16 +55,18 @@ describe('filterAdminRoutes - open souce routes', () => {
             billing: false,
         };
 
-        expect(filterAdminRoutes({ mode: ['enterprise'] }, state)).toBe(true);
-        expect(filterAdminRoutes({ mode: ['pro', 'enterprise'] }, state)).toBe(
+        expect(filterRoutesByPlanData({ mode: ['enterprise'] }, state)).toBe(
             true,
         );
-        expect(filterAdminRoutes({ mode: ['pro'] }, state)).toBe(false);
+        expect(
+            filterRoutesByPlanData({ mode: ['pro', 'enterprise'] }, state),
+        ).toBe(true);
+        expect(filterRoutesByPlanData({ mode: ['pro'] }, state)).toBe(false);
     });
 
     test('billing - should show menu item if billing is defined', () => {
         expect(
-            filterAdminRoutes(
+            filterRoutesByPlanData(
                 { mode: ['pro'], billing: true },
                 {
                     pro: true,
@@ -70,7 +76,7 @@ describe('filterAdminRoutes - open souce routes', () => {
             ),
         ).toBe(true);
         expect(
-            filterAdminRoutes(
+            filterRoutesByPlanData(
                 { mode: ['enterprise'], billing: true },
                 {
                     pro: false,
@@ -80,7 +86,7 @@ describe('filterAdminRoutes - open souce routes', () => {
             ),
         ).toBe(true);
         expect(
-            filterAdminRoutes(
+            filterRoutesByPlanData(
                 { mode: ['pro', 'enterprise'], billing: true },
                 {
                     pro: true,
@@ -90,7 +96,7 @@ describe('filterAdminRoutes - open souce routes', () => {
             ),
         ).toBe(true);
         expect(
-            filterAdminRoutes(
+            filterRoutesByPlanData(
                 { mode: ['pro'], billing: true },
                 {
                     pro: false,

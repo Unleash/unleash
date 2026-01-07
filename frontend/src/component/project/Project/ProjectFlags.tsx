@@ -1,15 +1,15 @@
 import { type FC, useEffect } from 'react';
 import { Box, styled } from '@mui/material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { ProjectFeatureToggles } from './PaginatedProjectFeatureToggles/ProjectFeatureToggles';
+import { ProjectFeatureToggles } from './PaginatedProjectFeatureToggles/ProjectFeatureToggles.tsx';
 import useProjectOverview, {
     useProjectOverviewNameOrId,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
-import { OutdatedSdksBanner } from '../../banners/OutdatedSdksBanner/OutdatedSdksBanner';
+import { OutdatedSdksBanner } from '../../banners/OutdatedSdksBanner/OutdatedSdksBanner.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender.tsx';
 
 const refreshInterval = 15 * 1000;
 
@@ -59,9 +59,11 @@ const ProjectOverview: FC = () => {
                 />
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
-                        environments={project.environments.map(
-                            (environment) => environment.environment,
-                        )}
+                        environments={
+                            project.environments?.map(
+                                (environment) => environment.environment,
+                            ) || []
+                        }
                     />
                 </StyledProjectToggles>
             </StyledContentContainer>

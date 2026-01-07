@@ -9,12 +9,13 @@ import { ThemeProvider } from 'themes/ThemeProvider';
 import type { IPermission } from 'interfaces/user';
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
-import { UIProviderContainer } from '../component/providers/UIProvider/UIProviderContainer';
+import { UIProviderContainer } from '../component/providers/UIProvider/UIProviderContainer.tsx';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import { QueryParamProvider } from 'use-query-params';
 import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
+import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 
 export const render = (
     ui: JSX.Element,
@@ -52,7 +53,9 @@ export const render = (
                                     <AnnouncerProvider>
                                         <StickyProvider>
                                             <HighlightProvider>
-                                                {children}
+                                                <EventTimelineProvider>
+                                                    {children}
+                                                </EventTimelineProvider>
                                             </HighlightProvider>
                                         </StickyProvider>
                                     </AnnouncerProvider>

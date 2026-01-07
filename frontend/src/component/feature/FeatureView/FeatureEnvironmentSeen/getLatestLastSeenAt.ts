@@ -13,7 +13,7 @@ export const getLatestLastSeenAt = (
             .map((item) => new Date(item.lastSeenAt!))
             .reduce((latest, current) => (current > latest ? current : latest))
             .toISOString();
-    } catch (error) {
+    } catch (_error) {
         return null;
     }
 };

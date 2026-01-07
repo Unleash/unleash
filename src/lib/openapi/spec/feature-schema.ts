@@ -1,12 +1,21 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { variantSchema } from './variant-schema';
-import { constraintSchema } from './constraint-schema';
-import { overrideSchema } from './override-schema';
-import { parametersSchema } from './parameters-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { tagSchema } from './tag-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
+import { variantSchema } from './variant-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { tagSchema } from './tag-schema.js';
+import { featureEnvironmentSchema } from './feature-environment-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { releasePlanSchema } from './release-plan-schema.js';
+import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
+import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
+import { transitionConditionSchema } from './transition-condition-schema.js';
+import { safeguardSchema } from './safeguard-schema.js';
+import { metricQuerySchema } from './metric-query-schema.js';
+import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
 export const featureSchema = {
     $id: '#/components/schemas/featureSchema',
@@ -172,6 +181,13 @@ export const featureSchema = {
                     ],
                     example: 'initial',
                 },
+                status: {
+                    type: 'string',
+                    nullable: true,
+                    example: 'kept',
+                    description:
+                        'The name of the detailed status of a given stage. E.g. completed stage can be kept or discarded.',
+                },
                 enteredStageAt: {
                     description: 'When the feature entered this stage',
                     type: 'string',
@@ -248,6 +264,41 @@ export const featureSchema = {
                 },
             },
         },
+        links: {
+            type: 'array',
+            items: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['id', 'url'],
+                properties: {
+                    id: {
+                        type: 'string',
+                        example: '01JTJNCJ5XVP2KPJFA03YRBZCA',
+                        description: 'The id of the link',
+                    },
+                    url: {
+                        type: 'string',
+                        example:
+                            'https://github.com/search?q=cleanupReminder&type=code',
+                        description: 'The URL the feature is linked to',
+                    },
+                    title: {
+                        type: 'string',
+                        example: 'Github cleanup',
+                        description: 'The description of the link',
+                        nullable: true,
+                    },
+                    feature: {
+                        type: 'string',
+                        example: 'disable-comments',
+                        description:
+                            'The name of the feature this link belongs to',
+                    },
+                },
+            },
+            description:
+                'The list of links. This is an experimental field and may change.',
+        },
     },
     components: {
         schemas: {
@@ -259,8 +310,20 @@ export const featureSchema = {
             parametersSchema,
             variantSchema,
             tagSchema,
+            releasePlanSchema,
+            releasePlanMilestoneSchema,
+            releasePlanMilestoneStrategySchema,
+            createFeatureStrategySchema,
+            createStrategyVariantSchema,
+            transitionConditionSchema,
+            safeguardSchema,
+            metricQuerySchema,
+            safeguardTriggerConditionSchema,
         },
     },
 } as const;
 
-export type FeatureSchema = FromSchema<typeof featureSchema>;
+export type FeatureSchema = FromSchema<
+    typeof featureSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

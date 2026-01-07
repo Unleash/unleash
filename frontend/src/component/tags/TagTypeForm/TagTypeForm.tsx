@@ -1,6 +1,6 @@
 import Input from 'component/common/Input/Input';
-import { TextField, Button, styled } from '@mui/material';
-
+import { TextField, Button, styled, Typography } from '@mui/material';
+import { TagTypeColorPicker } from './TagTypeColorPicker.tsx';
 import type React from 'react';
 import { trim } from 'component/common/util';
 import { EDIT } from 'constants/misc';
@@ -8,8 +8,10 @@ import { EDIT } from 'constants/misc';
 interface ITagTypeForm {
     tagName: string;
     tagDesc: string;
+    color: string;
     setTagName: React.Dispatch<React.SetStateAction<string>>;
     setTagDesc: React.Dispatch<React.SetStateAction<string>>;
+    setColor: React.Dispatch<React.SetStateAction<string>>;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
@@ -59,8 +61,10 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
     handleCancel,
     tagName,
     tagDesc,
+    color,
     setTagName,
     setTagDesc,
+    setColor,
     errors,
     mode,
     validateNameUniqueness,
@@ -95,6 +99,14 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
                     value={tagDesc}
                     onChange={(e) => setTagDesc(e.target.value)}
                 />
+
+                <Typography variant='body2'>
+                    Tag color
+                    <TagTypeColorPicker
+                        selectedColor={color}
+                        onChange={setColor}
+                    />
+                </Typography>
             </StyledContainer>
             <StyledButtonContainer>
                 {children}

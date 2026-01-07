@@ -1,65 +1,74 @@
 import type { Request, Response } from 'express';
-import Controller from '../controller';
-import { ADMIN, NONE } from '../../types/permissions';
-import type UserService from '../../services/user-service';
-import type { AccountService } from '../../services/account-service';
-import type { AccessService } from '../../services/access-service';
-import type { Logger } from '../../logger';
-import type { IUnleashConfig, IUnleashServices, RoleName } from '../../types';
-import type ResetTokenService from '../../services/reset-token-service';
-import type { IAuthRequest } from '../unleash-types';
-import type SettingService from '../../services/setting-service';
-import type { IUser } from '../../server-impl';
-import { anonymise } from '../../util/anonymise';
-import type { OpenApiService } from '../../services/openapi-service';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import Controller from '../controller.js';
+import { ADMIN, NONE } from '../../types/permissions.js';
+import type UserService from '../../services/user-service.js';
+import type { AccountService } from '../../services/account-service.js';
+import type { AccessService } from '../../services/access-service.js';
+import type { Logger } from '../../logger.js';
+import type { IUnleashConfig, RoleName } from '../../types/index.js';
+import type { IUnleashServices } from '../../services/index.js';
+import type ResetTokenService from '../../services/reset-token-service.js';
+import type { IAuthRequest } from '../unleash-types.js';
+import type SettingService from '../../services/setting-service.js';
+import type { IUser } from '../../types/index.js';
+import { anonymise } from '../../util/anonymise.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
-} from '../../openapi/util/create-response-schema';
-import { userSchema, type UserSchema } from '../../openapi/spec/user-schema';
-import { serializeDates } from '../../types/serialize-dates';
-import { usersSchema, type UsersSchema } from '../../openapi/spec/users-schema';
+} from '../../openapi/util/create-response-schema.js';
+import { userSchema, type UserSchema } from '../../openapi/spec/user-schema.js';
+import { serializeDates } from '../../types/serialize-dates.js';
+import {
+    usersSchema,
+    type UsersSchema,
+} from '../../openapi/spec/users-schema.js';
 import {
     usersSearchSchema,
     type UsersSearchSchema,
-} from '../../openapi/spec/users-search-schema';
-import type { CreateUserSchema } from '../../openapi/spec/create-user-schema';
-import type { UpdateUserSchema } from '../../openapi/spec/update-user-schema';
-import type { PasswordSchema } from '../../openapi/spec/password-schema';
-import type { IdSchema } from '../../openapi/spec/id-schema';
+} from '../../openapi/spec/users-search-schema.js';
+import type { CreateUserSchema } from '../../openapi/spec/create-user-schema.js';
+import type { UpdateUserSchema } from '../../openapi/spec/update-user-schema.js';
+import type { PasswordSchema } from '../../openapi/spec/password-schema.js';
+import type { IdSchema } from '../../openapi/spec/id-schema.js';
 import {
     resetPasswordSchema,
     type ResetPasswordSchema,
-} from '../../openapi/spec/reset-password-schema';
+} from '../../openapi/spec/reset-password-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import type { GroupService } from '../../services/group-service';
+} from '../../openapi/util/standard-responses.js';
+import type { GroupService } from '../../services/group-service.js';
 import {
     type UsersGroupsBaseSchema,
     usersGroupsBaseSchema,
-} from '../../openapi/spec/users-groups-base-schema';
-import type { IGroup } from '../../types/group';
-import type { IFlagResolver } from '../../types/experimental';
+} from '../../openapi/spec/users-groups-base-schema.js';
+import type { IGroup } from '../../types/group.js';
+import type { IFlagResolver } from '../../types/experimental.js';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 import {
     type AdminCountSchema,
     adminCountSchema,
-} from '../../openapi/spec/admin-count-schema';
-import { ForbiddenError } from '../../error';
+} from '../../openapi/spec/admin-count-schema.js';
+import { ForbiddenError } from '../../error/index.js';
 import {
     createUserResponseSchema,
     type CreateUserResponseSchema,
-} from '../../openapi/spec/create-user-response-schema';
-import type { IRoleWithPermissions } from '../../types/stores/access-store';
+} from '../../openapi/spec/create-user-response-schema.js';
+import type { IRoleWithPermissions } from '../../types/stores/access-store.js';
+import {
+    type UserAccessOverviewSchema,
+    userAccessOverviewSchema,
+} from '../../openapi/index.js';
+import type { WithTransactional } from '../../server-impl.js';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
 
-    private userService: UserService;
+    private userService: WithTransactional<UserService>;
 
     private accountService: AccountService;
 
@@ -193,7 +202,7 @@ export default class UserAdminController extends Controller {
                     tags: ['Users'],
                     operationId: 'getUsers',
                     summary:
-                        'Get all users and [root roles](https://docs.getunleash.io/reference/rbac#predefined-roles)',
+                        'Get all users and [root roles](https://docs.getunleash.io/concepts/rbac#predefined-roles)',
                     description:
                         'Will return all users and all available root roles for the Unleash instance.',
                     responses: {
@@ -260,7 +269,7 @@ export default class UserAdminController extends Controller {
             handler: this.getPermissions,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Auth'],
+                    tags: ['Unstable'],
                     operationId: 'getUserPermissions',
                     summary: 'Returns the list of permissions for the user',
                     description:
@@ -293,7 +302,7 @@ export default class UserAdminController extends Controller {
                         },
                     ],
                     responses: {
-                        200: emptyResponse, // TODO define schema
+                        200: createResponseSchema(userAccessOverviewSchema.$id),
                         ...getStandardResponses(401, 403, 415),
                     },
                 }),
@@ -482,12 +491,12 @@ export default class UserAdminController extends Controller {
         );
     }
 
-    async getUsers(req: Request, res: Response<UsersSchema>): Promise<void> {
+    async getUsers(_req: Request, res: Response<UsersSchema>): Promise<void> {
         const users = await this.userService.getAll();
         const rootRoles = await this.accessService.getRootRoles();
         const inviteLinks = await this.resetTokenService.getActiveInvitations();
 
-        const usersWithInviteLinks = users.map((user) => {
+        const usersWithInviteLinks = users.map(({ isAPI, ...user }) => {
             const inviteLink = inviteLinks[user.id] || '';
             return { ...user, inviteLink };
         });
@@ -525,12 +534,12 @@ export default class UserAdminController extends Controller {
             200,
             res,
             usersSearchSchema.$id,
-            serializeDates(users),
+            serializeDates(users.map(({ isAPI, ...u }) => u)),
         );
     }
 
     async getBaseUsersAndGroups(
-        req: Request,
+        _req: Request,
         res: Response<UsersGroupsBaseSchema>,
     ): Promise<void> {
         const allUsers = await this.accountService.getAll();
@@ -572,7 +581,7 @@ export default class UserAdminController extends Controller {
         res: Response<UserSchema>,
     ): Promise<void> {
         const { id } = req.params;
-        const user = await this.userService.getUser(id);
+        const { isAPI, ...user } = await this.userService.getUser(id);
 
         this.openApiService.respondWithValidation(
             200,
@@ -592,33 +601,42 @@ export default class UserAdminController extends Controller {
             ? Number(rootRole)
             : (rootRole as RoleName);
 
-        const createdUser = await this.userService.createUser(
-            {
-                username,
-                email,
-                name,
-                password,
-                rootRole: normalizedRootRole,
+        const responseData = await this.userService.transactional(
+            async (txUserService) => {
+                const createdUser = await txUserService.createUser(
+                    {
+                        username,
+                        email,
+                        name,
+                        password,
+                        rootRole: normalizedRootRole,
+                    },
+                    req.audit,
+                );
+
+                const inviteLink = await txUserService.newUserInviteLink(
+                    createdUser,
+                    req.audit,
+                );
+
+                // send email defaults to true
+                const emailSent = (sendEmail !== undefined ? sendEmail : true)
+                    ? await txUserService.sendWelcomeEmail(
+                          createdUser,
+                          inviteLink,
+                      )
+                    : false;
+
+                const { isAPI, ...user } = createdUser;
+                const responseData: CreateUserResponseSchema = {
+                    ...serializeDates(user),
+                    inviteLink,
+                    emailSent,
+                    rootRole: normalizedRootRole,
+                };
+                return responseData;
             },
-            req.audit,
         );
-
-        const inviteLink = await this.userService.newUserInviteLink(
-            createdUser,
-            req.audit,
-        );
-
-        // send email defaults to true
-        const emailSent = (sendEmail !== undefined ? sendEmail : true)
-            ? await this.userService.sendWelcomeEmail(createdUser, inviteLink)
-            : false;
-
-        const responseData: CreateUserResponseSchema = {
-            ...serializeDates(createdUser),
-            inviteLink,
-            emailSent,
-            rootRole: normalizedRootRole,
-        };
 
         this.openApiService.respondWithValidation(
             201,
@@ -646,7 +664,7 @@ export default class UserAdminController extends Controller {
             ? Number(rootRole)
             : (rootRole as RoleName);
 
-        const updateUser = await this.userService.updateUser(
+        const { isAPI, ...updateUser } = await this.userService.updateUser(
             {
                 id,
                 name,
@@ -702,7 +720,7 @@ export default class UserAdminController extends Controller {
     }
 
     async getAdminCount(
-        req: Request,
+        _req: Request,
         res: Response<AdminCountSchema>,
     ): Promise<void> {
         const adminCount = await this.accountService.getAdminCount();
@@ -722,10 +740,12 @@ export default class UserAdminController extends Controller {
             unknown,
             { project?: string; environment?: string }
         >,
-        res: Response,
+        res: Response<UserAccessOverviewSchema>,
     ): Promise<void> {
         const { project, environment } = req.query;
-        const user = await this.userService.getUser(req.params.id);
+        const { isAPI, ...user } = await this.userService.getUser(
+            req.params.id,
+        );
         const rootRole = await this.accessService.getRootRoleForUser(user.id);
         let projectRoles: IRoleWithPermissions[] = [];
         if (project) {
@@ -741,19 +761,23 @@ export default class UserAdminController extends Controller {
                 ),
             );
         }
-        const matrix = await this.accessService.permissionsMatrixForUser(
+        const overview = await this.accessService.getAccessOverviewForUser(
             user,
             project,
             environment,
         );
 
-        // TODO add response validation based on the schema
-        res.status(200).json({
-            matrix,
-            user,
-            rootRole,
-            projectRoles,
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            userAccessOverviewSchema.$id,
+            {
+                overview,
+                user: serializeDates(user),
+                rootRole,
+                projectRoles,
+            },
+        );
     }
 
     async throwIfScimUser({

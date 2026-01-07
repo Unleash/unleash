@@ -1,4 +1,4 @@
-import { constraintSchemaBase } from './constraint-schema';
+import { constraintSchemaBase } from './constraint-schema.js';
 import type { FromSchema } from 'json-schema-to-ts';
 
 export const playgroundConstraintSchema = {
@@ -16,5 +16,6 @@ export const playgroundConstraintSchema = {
 } as const;
 
 export type PlaygroundConstraintSchema = FromSchema<
-    typeof playgroundConstraintSchema
+    typeof playgroundConstraintSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

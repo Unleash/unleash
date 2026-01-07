@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useParentOptions } from 'hooks/api/getters/useFeatureDependencyOptions/useFeatureDependencyOptions';
-import { REMOVE_DEPENDENCY_OPTION } from './constants';
-import { StyledSelect } from './FeatureStatusOptions';
+import { REMOVE_DEPENDENCY_OPTION } from './constants.ts';
+import { StyledSelect } from './FeatureStatusOptions.tsx';
 
 // Project can have 100s of parents. We want to read them only when the modal for dependencies opens.
 export const LazyParentOptions: FC<{

@@ -1,5 +1,15 @@
 name: 'Publish to npm'
+
+permissions:
+  id-token: write
+
 on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Which version number should we use for the release"
+        type: 'string'
+        required: true
   workflow_call:
     inputs:
       version:
@@ -10,33 +20,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: v${{ inputs.version }} # tag that should be created by the caller workflow
       - name: Setup to npm
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20.x
+          node-version: 22.x
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
       - name: Enable corepack
         run: corepack enable
+      - name: Make sure we have newest version of npm
+        run: npm install -g npm@latest
       - name: Build
         run: |
           yarn install --immutable
       - name: Publish to npm
+        env:
+          NPM_CONFIG_PROVENANCE: true
         run: |
           LATEST=$(npm show unleash-server version)
           TAG=$(node scripts/npm-tag.js $LATEST)
           npm publish --tag ${TAG:-latest}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

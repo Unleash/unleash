@@ -1,10 +1,14 @@
 import { useRef, useEffect, type RefObject } from 'react';
 
-export type OnMoveItem = (
-    dragIndex: number,
-    dropIndex: number,
-    save?: boolean,
-) => void;
+type OnMoveItemParams = {
+    dragIndex: number;
+    dropIndex: number;
+    save: boolean;
+    event: DragEvent;
+    draggedElement: HTMLElement;
+};
+
+export type OnMoveItem = (args: OnMoveItemParams) => void;
 
 // The element being dragged in the browser.
 let globalDraggedElement: HTMLElement | null;
@@ -37,11 +41,17 @@ const addEventListeners = (
 ): (() => void) => {
     const handleEl = handle ?? el;
 
-    const moveDraggedElement = (save: boolean) => {
+    const moveDraggedElement = (save: boolean, event: DragEvent) => {
         if (globalDraggedElement) {
-            const fromIndex = Number(globalDraggedElement.dataset.index);
-            const toIndex = Number(el.dataset.index);
-            onMoveItem(fromIndex, toIndex, save);
+            const dragIndex = Number(globalDraggedElement.dataset.index);
+            const dropIndex = Number(el.dataset.index);
+            onMoveItem({
+                dragIndex,
+                dropIndex,
+                save,
+                event,
+                draggedElement: globalDraggedElement,
+            });
         }
     };
 
@@ -60,16 +70,16 @@ const addEventListeners = (
         globalDraggedElement = el;
     };
 
-    const onDragEnter = () => {
-        moveDraggedElement(false);
+    const onDragEnter = (event: DragEvent) => {
+        moveDraggedElement(false, event);
     };
 
     const onDragOver = (event: DragEvent) => {
         event.preventDefault();
     };
 
-    const onDrop = () => {
-        moveDraggedElement(true);
+    const onDrop = (event: DragEvent) => {
+        moveDraggedElement(true, event);
         globalDraggedElement = null;
     };
 

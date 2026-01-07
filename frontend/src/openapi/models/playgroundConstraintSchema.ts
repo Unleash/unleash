@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundConstraintSchemaOperator } from './playgroundConstraintSchemaOperator';
+import type { PlaygroundConstraintSchemaOperator } from './playgroundConstraintSchemaOperator.js';
 
 /**
- * A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/reference/strategy-constraints)
+ * A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/concepts/activation-strategies#constraints)
  */
 export interface PlaygroundConstraintSchema {
     /** Whether the operator should be case sensitive or not. Defaults to `false` (being case sensitive). */
@@ -15,7 +15,7 @@ export interface PlaygroundConstraintSchema {
     contextName: string;
     /** Whether the result should be negated or not. If `true`, will turn a `true` result into a `false` result and vice versa. */
     inverted?: boolean;
-    /** The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators). */
+    /** The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/concepts/activation-strategies#constraint-operators). */
     operator: PlaygroundConstraintSchemaOperator;
     /** Whether this was evaluated as true or false. */
     result: boolean;

@@ -1,0 +1,263 @@
+import { ArcherContainer, ArcherElement } from 'react-archer';
+import { Typography, alpha, styled, useTheme } from '@mui/material';
+import { unknownify } from 'utils/unknownify';
+import { useMemo } from 'react';
+import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
+import { ReactComponent as LogoIconWhite } from 'assets/icons/logoWhiteBg.svg';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import type { ConnectedEdge } from 'interfaces/connectedEdge';
+import { EnterpriseEdgeInstance } from './EnterpriseEdgeInstance/EnterpriseEdgeInstance.tsx';
+import { Badge } from 'component/common/Badge/Badge.tsx';
+
+const UNLEASH = 'Unleash';
+
+const StyledUnleashLevel = styled('div')(({ theme }) => ({
+    marginBottom: theme.spacing(18),
+    display: 'flex',
+    justifyContent: 'center',
+}));
+
+const StyledEdgeLevel = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    gap: theme.spacing(4),
+    flexWrap: 'wrap',
+    marginTop: theme.spacing(2),
+}));
+
+const StyledNode = styled('div')(({ theme }) => ({
+    borderRadius: theme.shape.borderRadiusMedium,
+    border: `1px solid ${theme.palette.secondary.border}`,
+    backgroundColor: theme.palette.secondary.light,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: theme.spacing(1.5),
+    zIndex: 1,
+    marginTop: theme.spacing(1),
+    '& > svg': {
+        width: theme.spacing(9),
+        height: theme.spacing(9),
+    },
+}));
+
+const StyledGroup = styled(StyledNode)(({ theme }) => ({
+    backgroundColor: alpha(theme.palette.background.paper, 0.75),
+    position: 'relative',
+}));
+
+const StyledHostingBadge = styled(Badge)({
+    position: 'absolute',
+    top: -13,
+});
+
+const StyledNodeHeader = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(0.5),
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const StyledNodeDescription = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.secondary,
+}));
+
+type AppNameGroup = {
+    appName: string;
+    instances: ConnectedEdge[];
+    groupTargets: Set<string>;
+    level: number;
+};
+
+const createGroups = (edges: ConnectedEdge[]): Map<string, AppNameGroup> =>
+    edges.reduce((groups, edge) => {
+        if (!groups.has(edge.appName)) {
+            groups.set(edge.appName, {
+                appName: edge.appName,
+                instances: [],
+                groupTargets: new Set(),
+                level: 0,
+            });
+        }
+        groups.get(edge.appName)!.instances.push(edge);
+        return groups;
+    }, new Map<string, AppNameGroup>());
+
+const computeGroupLevels = (
+    groups: Map<string, AppNameGroup>,
+): Map<number, AppNameGroup[]> => {
+    const memo = new Map<string, number>();
+
+    const getLevel = (group: AppNameGroup): number => {
+        if (memo.has(group.appName)) return memo.get(group.appName)!;
+        let level = 0;
+        group.groupTargets.forEach((target) => {
+            if (target !== UNLEASH) {
+                const targetGroup = groups.get(target);
+                if (targetGroup) {
+                    level = Math.max(level, getLevel(targetGroup) + 1);
+                }
+            }
+        });
+        memo.set(group.appName, level);
+        return level;
+    };
+
+    groups.forEach((group) => {
+        group.level = getLevel(group);
+    });
+
+    const levelsMap = new Map<number, AppNameGroup[]>();
+    groups.forEach((group) => {
+        const levelGroups = levelsMap.get(group.level) || [];
+        levelGroups.push(group);
+        levelsMap.set(group.level, levelGroups);
+    });
+    return levelsMap;
+};
+
+const processEdges = (edges: ConnectedEdge[]): Map<number, AppNameGroup[]> => {
+    const groups = createGroups(edges);
+    const instanceIdToId = new Map<string, string>();
+    const idToAppName = new Map<string, string>();
+
+    groups.forEach((group) => {
+        group.instances = group.instances
+            .sort((a, b) => a.instanceId.localeCompare(b.instanceId))
+            .map((instance, index) => {
+                const id = `${group.appName}-${index + 1}`;
+                instanceIdToId.set(instance.instanceId, id);
+                idToAppName.set(id, group.appName);
+                return { ...instance, id };
+            });
+    });
+
+    groups.forEach((group) => {
+        group.instances = group.instances.map((instance) => ({
+            ...instance,
+            connectedVia: instance.connectedVia
+                ? instanceIdToId.get(instance.connectedVia) ||
+                  instance.connectedVia
+                : UNLEASH,
+        }));
+        const targets = new Set<string>();
+        group.instances.forEach((instance) => {
+            if (!instance.connectedVia || instance.connectedVia === UNLEASH) {
+                targets.add(UNLEASH);
+            } else {
+                const targetApp = idToAppName.get(instance.connectedVia);
+                if (targetApp && targetApp !== group.appName) {
+                    targets.add(targetApp);
+                }
+            }
+        });
+        group.groupTargets = targets;
+    });
+
+    return computeGroupLevels(groups);
+};
+
+const getGroupHosting = (instances: ConnectedEdge[]) => {
+    if (instances.every((i) => i.hosting === 'hosted')) {
+        return { hostingLabel: 'Cloud', hostingColor: 'secondary' } as const;
+    }
+    if (instances.every((i) => i.hosting === 'enterprise-self-hosted')) {
+        return { hostingLabel: 'Self-hosted', hostingColor: 'info' } as const;
+    }
+    if (
+        instances.every(
+            (i) =>
+                i.hosting === 'hosted' ||
+                i.hosting === 'enterprise-self-hosted',
+        )
+    ) {
+        return { hostingLabel: 'Hybrid', hostingColor: 'warning' } as const;
+    }
+    return { hostingLabel: 'Unknown', hostingColor: 'neutral' } as const;
+};
+
+interface IEnterpriseEdgeInstancesProps {
+    connectedEdges: ConnectedEdge[];
+}
+
+export const EnterpriseEdgeInstances = ({
+    connectedEdges,
+}: IEnterpriseEdgeInstancesProps) => {
+    const theme = useTheme();
+
+    const edgeLevels = useMemo(
+        () => processEdges(connectedEdges),
+        [connectedEdges],
+    );
+    const levels = Array.from(edgeLevels.keys()).sort((a, b) => a - b);
+
+    return (
+        <ArcherContainer
+            strokeColor={theme.palette.text.primary}
+            endShape={{
+                arrow: { arrowLength: 4, arrowThickness: 4 },
+            }}
+        >
+            <StyledUnleashLevel>
+                <ArcherElement id={UNLEASH}>
+                    <StyledNode>
+                        <ThemeMode
+                            darkmode={<LogoIconWhite />}
+                            lightmode={<LogoIcon />}
+                        />
+                        <Typography sx={{ mt: 1 }}>{UNLEASH}</Typography>
+                    </StyledNode>
+                </ArcherElement>
+            </StyledUnleashLevel>
+            {levels.map((level) => (
+                <StyledEdgeLevel key={level}>
+                    {edgeLevels
+                        .get(level)
+                        ?.map(({ appName, groupTargets, instances }) => {
+                            const { hostingLabel, hostingColor } =
+                                getGroupHosting(instances);
+
+                            return (
+                                <ArcherElement
+                                    key={appName}
+                                    id={appName}
+                                    relations={Array.from(groupTargets).map(
+                                        (target) => ({
+                                            targetId: target,
+                                            targetAnchor: 'bottom',
+                                            sourceAnchor: 'top',
+                                            style: {
+                                                strokeColor:
+                                                    theme.palette.secondary
+                                                        .border,
+                                            },
+                                        }),
+                                    )}
+                                >
+                                    <StyledGroup>
+                                        <StyledHostingBadge
+                                            color={hostingColor}
+                                        >
+                                            {hostingLabel}
+                                        </StyledHostingBadge>
+                                        <StyledNodeHeader>
+                                            {unknownify(appName)}
+                                        </StyledNodeHeader>
+                                        <StyledNodeDescription>
+                                            {instances.length} instance
+                                            {instances.length !== 1 && 's'}
+                                        </StyledNodeDescription>
+                                        {instances.map((instance) => (
+                                            <EnterpriseEdgeInstance
+                                                key={instance.instanceId}
+                                                instance={instance}
+                                            />
+                                        ))}
+                                    </StyledGroup>
+                                </ArcherElement>
+                            );
+                        })}
+                </StyledEdgeLevel>
+            ))}
+        </ArcherContainer>
+    );
+};

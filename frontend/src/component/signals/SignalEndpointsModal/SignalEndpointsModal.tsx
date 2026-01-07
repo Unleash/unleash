@@ -12,11 +12,11 @@ import {
     useSignalEndpointsApi,
 } from 'hooks/api/actions/useSignalEndpointsApi/useSignalEndpointsApi';
 import { useSignalEndpointTokensApi } from 'hooks/api/actions/useSignalEndpointTokensApi/useSignalEndpointTokensApi';
-import { SignalEndpointsForm } from './SignalEndpointsForm/SignalEndpointsForm';
+import { SignalEndpointsForm } from './SignalEndpointsForm/SignalEndpointsForm.tsx';
 import {
     TokenGeneration,
     useSignalEndpointsForm,
-} from './SignalEndpointsForm/useSignalEndpointsForm';
+} from './SignalEndpointsForm/useSignalEndpointsForm.ts';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -154,7 +154,7 @@ export const SignalEndpointsModal = ({
                 loading={loading}
                 modal
                 description='Signal endpoints allow third-party services to send signals to Unleash.'
-                documentationLink='https://docs.getunleash.io/reference/signals'
+                documentationLink='https://docs.getunleash.io/concepts/signals'
                 documentationLinkLabel='Signals documentation'
                 formatApiCode={formatApiCode}
             >

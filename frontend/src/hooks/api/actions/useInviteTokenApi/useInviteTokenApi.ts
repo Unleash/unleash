@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 import type {
     ICreateInvitedUser,
     IPublicSignupTokenCreate,

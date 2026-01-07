@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchema } from './projectSchema';
+import type { ProjectSchema } from './projectSchema.js';
 
 /**
  * An overview of all the projects in the Unleash instance

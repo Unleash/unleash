@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
-import useUiConfig from '../useUiConfig/useUiConfig';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
-import { useUiFlag } from 'hooks/useUiFlag';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 
 const ENDPOINT = 'api/admin/release-plan-templates';
@@ -12,10 +11,9 @@ const DEFAULT_DATA: IReleasePlanTemplate[] = [];
 
 export const useReleasePlanTemplates = () => {
     const { isEnterprise } = useUiConfig();
-    const releasePlansEnabled = useUiFlag('releasePlans');
 
     const { data, error, mutate } = useConditionalSWR<IReleasePlanTemplate[]>(
-        isEnterprise() && releasePlansEnabled,
+        isEnterprise(),
         DEFAULT_DATA,
         formatApiPath(ENDPOINT),
         fetcher,
@@ -34,6 +32,6 @@ export const useReleasePlanTemplates = () => {
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Release plan templates'))
+        .then(handleErrorResponses('Release templates'))
         .then((res) => res.json());
 };

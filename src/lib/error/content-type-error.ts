@@ -1,4 +1,4 @@
-import { UnleashError } from './unleash-error';
+import { UnleashError } from './unleash-error.js';
 
 class ContentTypeError extends UnleashError {
     statusCode = 415;
@@ -18,4 +18,3 @@ class ContentTypeError extends UnleashError {
 }
 
 export default ContentTypeError;
-module.exports = ContentTypeError;

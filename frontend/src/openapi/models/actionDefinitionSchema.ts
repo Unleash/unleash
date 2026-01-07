@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionDefinitionParameterSchema } from './actionDefinitionParameterSchema';
+import type { ActionDefinitionParameterSchema } from './actionDefinitionParameterSchema.js';
 
 /**
  * Configuration of a single action and its parameters.

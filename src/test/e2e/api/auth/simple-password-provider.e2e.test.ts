@@ -1,22 +1,22 @@
-import { createTestConfig } from '../../../config/test-config';
+import { createTestConfig } from '../../../config/test-config.js';
 import {
     type IUnleashConfig,
     type IUnleashStores,
     TEST_AUDIT_USER,
-} from '../../../../lib/types';
-import UserService from '../../../../lib/services/user-service';
-import { AccessService } from '../../../../lib/services/access-service';
-import type { IUser } from '../../../../lib/types/user';
-import { type IUnleashTest, setupApp } from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { EmailService } from '../../../../lib/services/email-service';
-import SessionService from '../../../../lib/services/session-service';
-import { RoleName } from '../../../../lib/types/model';
-import SettingService from '../../../../lib/services/setting-service';
-import { GroupService } from '../../../../lib/services/group-service';
-import ResetTokenService from '../../../../lib/services/reset-token-service';
-import { createEventsService } from '../../../../lib/features';
+} from '../../../../lib/types/index.js';
+import UserService from '../../../../lib/services/user-service.js';
+import { AccessService } from '../../../../lib/services/access-service.js';
+import type { IUser } from '../../../../lib/types/user.js';
+import { type IUnleashTest, setupApp } from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { EmailService } from '../../../../lib/services/email-service.js';
+import SessionService from '../../../../lib/services/session-service.js';
+import { RoleName } from '../../../../lib/types/model.js';
+import SettingService from '../../../../lib/services/setting-service.js';
+import { GroupService } from '../../../../lib/services/group-service.js';
+import ResetTokenService from '../../../../lib/services/reset-token-service.js';
+import { createEventsService } from '../../../../lib/features/index.js';
 
 let app: IUnleashTest;
 let stores: IUnleashStores;

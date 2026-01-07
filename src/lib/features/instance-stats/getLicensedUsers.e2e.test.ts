@@ -1,9 +1,11 @@
 import {
     createGetLicensedUsers,
     type GetLicensedUsers,
-} from './getLicensedUsers';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+} from './getLicensedUsers.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 
 let db: ITestDb;
 let getLicensedUsers: GetLicensedUsers;

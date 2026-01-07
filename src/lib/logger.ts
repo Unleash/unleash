@@ -1,4 +1,5 @@
-import { configure, getLogger } from 'log4js';
+import pkg from 'log4js';
+const { configure, getLogger } = pkg;
 
 export type LogProvider = (category?: string) => Logger;
 

@@ -1,6 +1,5 @@
 // export module version
-require('pkginfo')(module, 'version');
-
-const { version } = module.exports;
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const { version } = require('../../../package.json');
 export default version;
-module.exports = version;

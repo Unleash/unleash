@@ -1,11 +1,11 @@
 import type { EventEmitter } from 'events';
-import type { LogProvider, Logger } from '../logger';
+import type { LogProvider, Logger } from '../logger.js';
 import type {
     IUserSplash,
     IUserSplashKey,
     IUserSplashStore,
-} from '../types/stores/user-splash-store';
-import type { Db } from './db';
+} from '../types/stores/user-splash-store.js';
+import type { Db } from './db.js';
 
 const COLUMNS = ['user_id', 'splash_id', 'seen'];
 const TABLE = 'user_splash';
@@ -23,7 +23,7 @@ const fieldToRow = (fields: IUserSplash): IUserSplashTable => ({
 });
 
 const rowToField = (row: IUserSplashTable): IUserSplash => ({
-    seen: row.seen,
+    seen: row.seen || false,
     splashId: row.splash_id,
     userId: row.user_id,
 });
@@ -33,7 +33,7 @@ export default class UserSplashStore implements IUserSplashStore {
 
     private logger: Logger;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, _eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('user-splash-store.ts');
     }
@@ -65,7 +65,7 @@ export default class UserSplashStore implements IUserSplashStore {
             .merge()
             .returning(COLUMNS);
 
-        return rowToField(insertedSplash[0]);
+        return rowToField(insertedSplash[0] as IUserSplashTable);
     }
 
     async delete({ userId, splashId }: IUserSplashKey): Promise<void> {
@@ -101,5 +101,3 @@ export default class UserSplashStore implements IUserSplashStore {
         return userSplashs.map(rowToField);
     }
 }
-
-module.exports = UserSplashStore;

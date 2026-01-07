@@ -1,17 +1,17 @@
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import type User from '../../../../lib/types/user';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { TEST_AUDIT_USER } from '../../../../lib/types';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../../../lib/util/constants.js';
+import type User from '../../../../lib/types/user.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
-const testUser = { name: 'test', id: -9999 } as User;
+const _testUser = { name: 'test', id: -9999 } as User;
 let clientSecret: string;
 let frontendSecret: string;
 
@@ -61,7 +61,7 @@ beforeAll(async () => {
     const token = await app.services.apiTokenService.createApiTokenWithProjects(
         {
             tokenName: 'test',
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
             environment: DEFAULT_ENV,
             projects: ['default'],
         },

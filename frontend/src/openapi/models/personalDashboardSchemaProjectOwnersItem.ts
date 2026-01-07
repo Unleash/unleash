@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PersonalDashboardSchemaProjectOwnersItemOwnerType } from './personalDashboardSchemaProjectOwnersItemOwnerType';
+import type { PersonalDashboardSchemaProjectOwnersItemOwnerType } from './personalDashboardSchemaProjectOwnersItemOwnerType.js';
 
 export type PersonalDashboardSchemaProjectOwnersItem = {
     /**

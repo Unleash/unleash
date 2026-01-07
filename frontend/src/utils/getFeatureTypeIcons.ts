@@ -4,7 +4,7 @@ import {
     KILLSWITCH,
     OPERATIONAL,
     PERMISSION,
-} from '../constants/featureToggleTypes';
+} from '../constants/featureToggleTypes.js';
 
 import LoopIcon from '@mui/icons-material/Loop';
 import TimelineIcon from '@mui/icons-material/Timeline';

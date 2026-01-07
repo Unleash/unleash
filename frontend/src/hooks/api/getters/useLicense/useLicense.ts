@@ -1,6 +1,6 @@
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR.js';
 import type { BannerVariant } from 'interfaces/banner';
 
 export interface LicenseInfo {
@@ -18,13 +18,19 @@ const fallback = {
     loading: false,
 };
 
+type LicenseResources = {
+    seats?: number;
+    releaseTemplates?: number;
+    edgeInstances?: number;
+};
+
 export interface License {
     license?: {
         token: string;
         customer: string;
         instanceName: string;
         plan: string;
-        seats: number;
+        resources: LicenseResources;
         expireAt: Date;
     };
     loading: boolean;
@@ -57,7 +63,7 @@ export const useLicense = (): License => {
     );
 
     return {
-        license: { ...data },
+        license: data,
         loading: !error && !data,
         refetchLicense: () => mutate(),
         error,

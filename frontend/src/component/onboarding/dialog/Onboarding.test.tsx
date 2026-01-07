@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { ConnectSdkDialog } from './ConnectSdkDialog';
+import { ConnectSdkDialog } from './ConnectSdkDialog.tsx';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { resizeScreen } from 'utils/resizeScreen';

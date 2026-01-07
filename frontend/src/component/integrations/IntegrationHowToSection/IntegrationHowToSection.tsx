@@ -2,7 +2,7 @@ import type { AddonTypeSchema } from 'openapi';
 import type { VFC } from 'react';
 import { StyledRaisedSection } from '../IntegrationForm/IntegrationForm.styles';
 import { Typography, styled } from '@mui/material';
-import { IntegrationIcon } from '../IntegrationList/IntegrationIcon/IntegrationIcon';
+import { IntegrationIcon } from '../IntegrationList/IntegrationIcon/IntegrationIcon.tsx';
 import { Markdown } from 'component/common/Markdown/Markdown';
 
 const StyledHowDoesItWorkSection = styled(StyledRaisedSection)(({ theme }) => ({

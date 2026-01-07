@@ -1,6 +1,6 @@
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
-import { parseToken } from './parseToken';
+import { parseToken } from './parseToken.ts';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import {
@@ -15,10 +15,10 @@ import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/Co
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { ArcherContainer, ArcherElement } from 'react-archer';
 import { useEffect } from 'react';
-import { SectionHeader, StepperBox } from './SharedComponents';
-import { Stepper } from './Stepper';
+import { SectionHeader, StepperBox } from './SharedComponents.tsx';
+import { Stepper } from './Stepper.tsx';
 import { Badge } from 'component/common/Badge/Badge';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker.ts';
 
 const ChooseEnvironment = ({
     environments,
@@ -100,7 +100,11 @@ const TokenExplanation = ({
     project,
     environment,
     secret,
-}: { project: string; environment: string; secret: string }) => {
+}: {
+    project: string;
+    environment: string;
+    secret: string;
+}) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
@@ -217,7 +221,7 @@ export const GenerateApiKey = ({
                     environment,
                     type: sdkType,
                     projects: [project],
-                    username: `api-key-${project}-${environment}`,
+                    tokenName: `api-key-${project}-${environment}`,
                 },
                 project,
             );

@@ -1,6 +1,6 @@
-import { Strategy } from './strategy';
-import type { Context } from '../context';
-import { normalizedStrategyValue } from './util';
+import { Strategy } from './strategy.js';
+import type { Context } from '../context.js';
+import { normalizedStrategyValue } from './util.js';
 
 export default class GradualRolloutUserIdStrategy extends Strategy {
     constructor() {

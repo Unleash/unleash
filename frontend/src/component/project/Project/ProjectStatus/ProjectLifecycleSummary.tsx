@@ -7,7 +7,7 @@ import type { FC } from 'react';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { lifecycleMessages } from './LifecycleMessages';
+import { lifecycleMessages } from './LifecycleMessages.ts';
 import InfoIcon from '@mui/icons-material/Info';
 import { getFeatureLifecycleName } from 'component/common/FeatureLifecycle/getFeatureLifecycleName';
 
@@ -162,7 +162,7 @@ export const ProjectLifecycleSummary = () => {
         return (
             <StyledStageTitle>
                 {flagWord(stage)} in{' '}
-                {getFeatureLifecycleName(lifecycleStageName)} stage
+                {getFeatureLifecycleName(lifecycleStageName)}
             </StyledStageTitle>
         );
     };

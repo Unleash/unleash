@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SearchFeaturesSortOrder } from './searchFeaturesSortOrder';
+import type { SearchFeaturesSortOrder } from './searchFeaturesSortOrder.js';
 
 export type SearchFeaturesParams = {
     /**
@@ -18,6 +18,10 @@ export type SearchFeaturesParams = {
      * The state of the feature active/stale. The state can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
      */
     state?: string;
+    /**
+     * The lifecycle stage of the feature. The stagee can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
+     */
+    lifecycle?: string;
     /**
      * The feature flag type to filter by. The type can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
      */
@@ -59,11 +63,15 @@ export type SearchFeaturesParams = {
      */
     favoritesFirst?: string;
     /**
-     * Whether to get results for archived feature flags or active feature flags. If `true`, Unleash will return only archived flags. If `false`, it will return only active flags.
+     * Whether to get results for archived feature flags or active feature flags. If `IS:true`, Unleash will return only archived flags. If `IS:false`, it will return only active flags.
      */
     archived?: string;
     /**
      * The date the feature was created. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.
      */
     createdAt?: string;
+    /**
+     * The date the feature was last seen from metrics. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.
+     */
+    lastSeenAt?: string;
 };

@@ -2,12 +2,12 @@ import type { Application, NextFunction, Request, Response } from 'express';
 import {
     type IUnleashTest,
     setupAppWithCustomAuth,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import type { IUnleashConfig } from '../../../../lib/types/option';
-import type { IUnleashServices } from '../../../../lib/types/services';
-import type { IUnleashStores } from '../../../../lib/types';
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import type { IUnleashConfig } from '../../../../lib/types/option.js';
+import type { IUnleashServices } from '../../../../lib/services/index.js';
+import type { IUnleashStores } from '../../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -21,13 +21,13 @@ beforeAll(async () => {
 
     const preHook = (
         application: Application,
-        config: IUnleashConfig,
+        _config: IUnleashConfig,
         { userService }: IUnleashServices,
     ) => {
         application.use(
             '/api/admin/',
-            async (req: Request, res: Response, next: NextFunction) => {
-                // @ts-ignore
+            async (req: Request, _res: Response, next: NextFunction) => {
+                // @ts-expect-error
                 req.user = await userService.loginUserWithoutPassword(
                     email,
                     true,

@@ -1,11 +1,11 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback, useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 export interface IApiToken {
     createdAt: Date;
-    username: string;
+    tokenName: string;
     secret: string;
     type: string;
     project?: string;

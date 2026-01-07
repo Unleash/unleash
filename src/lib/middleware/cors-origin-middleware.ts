@@ -1,6 +1,7 @@
 import type { RequestHandler } from 'express';
 import cors from 'cors';
-import type { IUnleashConfig, IUnleashServices } from '../types';
+import type { IUnleashConfig } from '../types/index.js';
+import type { IUnleashServices } from '../services/index.js';
 
 export const resolveOrigin = (allowedOrigins: string[]): string | string[] => {
     if (allowedOrigins.length === 0) {
@@ -19,7 +20,7 @@ export const corsOriginMiddleware = (
     { frontendApiService }: Pick<IUnleashServices, 'frontendApiService'>,
     config: IUnleashConfig,
 ): RequestHandler => {
-    const corsFunc = cors(async (req, callback) => {
+    const corsFunc = cors(async (_req, callback) => {
         try {
             const { frontendApiOrigins = [] } =
                 await frontendApiService.getFrontendSettings();

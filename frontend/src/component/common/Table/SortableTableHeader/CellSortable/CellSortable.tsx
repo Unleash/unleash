@@ -9,7 +9,6 @@ import {
     useState,
 } from 'react';
 import { Tooltip } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AnnouncerContext } from 'component/common/Announcer/AnnouncerContext/AnnouncerContext';
 import {
     StyledButton,
@@ -18,7 +17,7 @@ import {
     StyledTableCell,
     StyledVisibleAbsoluteLayer,
 } from './CellSortable.styles';
-import { SortArrow } from './SortArrow/SortArrow';
+import { SortArrow } from './SortArrow/SortArrow.tsx';
 
 interface ICellSortableProps {
     isSortable?: boolean;
@@ -52,7 +51,7 @@ export const CellSortable: FC<ICellSortableProps> = ({
     styles,
 }) => {
     const { setAnnouncement } = useContext(AnnouncerContext);
-    const [title, setTitle] = useState('');
+    const [tooltipTitle, setTooltipTitle] = useState('');
     const ref = useRef<HTMLSpanElement>(null);
 
     const ariaSort = isSorted
@@ -93,17 +92,17 @@ export const CellSortable: FC<ICellSortableProps> = ({
     }, [align]);
 
     useEffect(() => {
-        const newTitle =
+        const newTooltipTitle =
             ariaTitle &&
             ref.current &&
             ref?.current?.offsetWidth < ref?.current?.scrollWidth
                 ? `${children}`
                 : '';
 
-        if (newTitle !== title) {
-            setTitle(newTitle);
+        if (newTooltipTitle !== tooltipTitle) {
+            setTooltipTitle(newTooltipTitle);
         }
-    }, [setTitle, ariaTitle]);
+    }, [setTooltipTitle, ariaTitle]);
 
     return (
         <StyledTableCell
@@ -114,42 +113,40 @@ export const CellSortable: FC<ICellSortableProps> = ({
             isFlexGrow={isFlexGrow}
             isSortable={isSortable}
         >
-            <ConditionallyRender
-                condition={isSortable}
-                show={
-                    <Tooltip title={title} arrow>
-                        <StyledButton
-                            isSorted={isSorted}
-                            type='button'
-                            onClick={onSortClick}
+            {isSortable ? (
+                <Tooltip title={tooltipTitle} arrow>
+                    <StyledButton
+                        isSorted={isSorted}
+                        type='button'
+                        onClick={onSortClick}
+                    >
+                        <StyledHiddenMeasurementLayer
+                            style={alignStyle}
+                            aria-hidden
                         >
-                            <StyledHiddenMeasurementLayer
-                                style={alignStyle}
-                                aria-hidden
-                            >
-                                <StyledLabel tabIndex={-1} data-text={children}>
-                                    {children}
-                                </StyledLabel>
-                                <SortArrow
-                                    isSorted={isSorted}
-                                    isDesc={isDescending}
-                                />
-                            </StyledHiddenMeasurementLayer>
-                            <StyledVisibleAbsoluteLayer style={alignStyle}>
-                                <span ref={ref} tabIndex={-1}>
-                                    <span>{children}</span>
-                                </span>
-                                <SortArrow
-                                    isSorted={isSorted}
-                                    isDesc={isDescending}
-                                    className='sort-arrow'
-                                />
-                            </StyledVisibleAbsoluteLayer>
-                        </StyledButton>
-                    </Tooltip>
-                }
-                elseShow={<div style={alignStyle}>{children}</div>}
-            />
+                            <StyledLabel tabIndex={-1} data-text={children}>
+                                {children}
+                            </StyledLabel>
+                            <SortArrow
+                                isSorted={isSorted}
+                                isDesc={isDescending}
+                            />
+                        </StyledHiddenMeasurementLayer>
+                        <StyledVisibleAbsoluteLayer style={alignStyle}>
+                            <span ref={ref} tabIndex={-1}>
+                                <span>{children}</span>
+                            </span>
+                            <SortArrow
+                                isSorted={isSorted}
+                                isDesc={isDescending}
+                                className='sort-arrow'
+                            />
+                        </StyledVisibleAbsoluteLayer>
+                    </StyledButton>
+                </Tooltip>
+            ) : (
+                <div style={alignStyle}>{children}</div>
+            )}
         </StyledTableCell>
     );
 };

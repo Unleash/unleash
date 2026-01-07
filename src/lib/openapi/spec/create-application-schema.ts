@@ -5,20 +5,9 @@ export const createApplicationSchema = {
     type: 'object',
     description: 'Reported application information from Unleash SDKs',
     properties: {
-        appName: {
-            description: 'Name of the application',
-            type: 'string',
-            example: 'accounting',
-        },
-        sdkVersion: {
-            description:
-                'Which SDK and version the application reporting uses. Typically represented as `<identifier>:<version>`',
-            type: 'string',
-            example: 'unleash-client-java:8.0.0',
-        },
         strategies: {
             description:
-                'Which [strategies](https://docs.getunleash.io/topics/the-anatomy-of-unleash#activation-strategies) the application has loaded. Useful when trying to figure out if your [custom strategy](https://docs.getunleash.io/reference/custom-activation-strategies) has been loaded in the SDK',
+                'Which [strategies](https://docs.getunleash.io/concepts#activation-strategies) the application has loaded. Useful when trying to figure out if your [custom strategy](https://docs.getunleash.io/concepts/activation-strategies#custom-strategies) has been loaded in the SDK',
             type: 'array',
             items: {
                 type: 'string',

@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ApiTokenSchemaType } from './apiTokenSchemaType';
+import type { ApiTokenSchemaType } from './apiTokenSchemaType.js';
 
 /**
- * An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).
+ * An overview of an [Unleash API token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys).
  */
 export interface ApiTokenSchema {
     /**
@@ -16,7 +16,7 @@ export interface ApiTokenSchema {
     alias?: string | null;
     /** When the token was created. */
     createdAt: string;
-    /** The environment the token has access to. `*` if it has access to all environments. */
+    /** The environment the token has access to. */
     environment?: string;
     /**
      * The token's expiration date. NULL if the token doesn't have an expiration set.
@@ -24,7 +24,7 @@ export interface ApiTokenSchema {
      */
     expiresAt?: string | null;
     /** The project this token belongs to. */
-    project: string;
+    project?: string;
     /** The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as `[*]` */
     projects: string[];
     /** The token used for authentication. */
@@ -38,9 +38,4 @@ export interface ApiTokenSchema {
     tokenName: string;
     /** The type of API token */
     type: ApiTokenSchemaType;
-    /**
-     * This property was deprecated in Unleash v5. Prefer the `tokenName` property instead.
-     * @deprecated
-     */
-    username?: string;
 }

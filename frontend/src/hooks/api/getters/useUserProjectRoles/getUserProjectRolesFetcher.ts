@@ -1,5 +1,5 @@
-import { formatApiPath } from '../../../../utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import { formatApiPath } from '../../../../utils/formatPath.js';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 export const getUserProjectRolesFetcher = (id: string) => {
     const fetcher = () => {

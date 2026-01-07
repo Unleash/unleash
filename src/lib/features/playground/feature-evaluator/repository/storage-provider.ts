@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { promises } from 'fs';
-import { safeName } from '../helpers';
+import { safeName } from '../helpers.js';
 
 const { writeFile, readFile } = promises;
 

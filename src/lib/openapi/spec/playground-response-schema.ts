@@ -1,14 +1,14 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { sdkContextSchema } from './sdk-context-schema';
-import { playgroundRequestSchema } from './playground-request-schema';
-import { playgroundFeatureSchema } from './playground-feature-schema';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { playgroundConstraintSchema } from './playground-constraint-schema';
-import { playgroundSegmentSchema } from './playground-segment-schema';
-import { playgroundStrategySchema } from './playground-strategy-schema';
+import { sdkContextSchema } from './sdk-context-schema.js';
+import { playgroundRequestSchema } from './playground-request-schema.js';
+import { playgroundFeatureSchema } from './playground-feature-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { playgroundConstraintSchema } from './playground-constraint-schema.js';
+import { playgroundSegmentSchema } from './playground-segment-schema.js';
+import { playgroundStrategySchema } from './playground-strategy-schema.js';
 
 export const playgroundResponseSchema = {
     $id: '#/components/schemas/playgroundResponseSchema',
@@ -46,5 +46,6 @@ export const playgroundResponseSchema = {
 } as const;
 
 export type PlaygroundResponseSchema = FromSchema<
-    typeof playgroundResponseSchema
+    typeof playgroundResponseSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

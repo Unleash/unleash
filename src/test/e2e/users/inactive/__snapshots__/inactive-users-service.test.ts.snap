@@ -1,5 +1,5 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Inactive users service Deleting inactive users Deletes users that have never logged in but was created before our deadline: noUserSnapshot 1`] = `"No user found"`;
+exports[`Inactive users service > Deleting inactive users > Deletes users that have never logged in but was created before our deadline > noUserSnapshot 1`] = `[NotFoundError: No user found]`;
 
-exports[`Inactive users service Deleting inactive users Finds users that was last logged in before our deadline: noUserSnapshot 1`] = `"No user found"`;
+exports[`Inactive users service > Deleting inactive users > Finds users that was last logged in before our deadline > noUserSnapshot 1`] = `[NotFoundError: No user found]`;

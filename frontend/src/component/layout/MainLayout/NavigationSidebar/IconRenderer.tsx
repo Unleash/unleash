@@ -1,3 +1,4 @@
+import { useMemo, type ComponentProps, type FC } from 'react';
 import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import type SvgIcon from '@mui/material/SvgIcon/SvgIcon';
 import ApplicationsIcon from '@mui/icons-material/AppsOutlined';
@@ -12,7 +13,9 @@ import UsersIcon from '@mui/icons-material/GroupOutlined';
 import ServiceAccountIcon from '@mui/icons-material/Computer';
 import GroupsIcon from '@mui/icons-material/GroupsOutlined';
 import RoleIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import SearchIcon from '@mui/icons-material/Search';
+import SettingsIcon from '@mui/icons-material/Settings';
+import InsightsIcon from '@mui/icons-material/Insights';
+import ImpactMetricsIcon from '@mui/icons-material/TrendingUpOutlined';
 import ApiAccessIcon from '@mui/icons-material/KeyOutlined';
 import SingleSignOnIcon from '@mui/icons-material/AssignmentOutlined';
 import NetworkIcon from '@mui/icons-material/HubOutlined';
@@ -29,11 +32,21 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
-import type { FC } from 'react';
+import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunchOutlined';
+import BuildIcon from '@mui/icons-material/BuildOutlined';
+import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon';
 
 // TODO: move to routes
-const icons: Record<string, typeof SvgIcon> = {
-    '/search': SearchIcon,
+const icons: Record<
+    string,
+    typeof SvgIcon | FC<ComponentProps<typeof SvgIcon>>
+> = {
+    '/search': FlagOutlinedIcon,
+    '/insights': InsightsIcon,
+    '/impact-metrics': ImpactMetricsIcon,
     '/applications': ApplicationsIcon,
     '/context': ContextFieldsIcon,
     '/feature-toggle-type': FlagTypesIcon,
@@ -42,13 +55,25 @@ const icons: Record<string, typeof SvgIcon> = {
     '/strategies': CustomStrategiesIcon,
     '/tag-types': TagTypesIcon,
     '/environments': EnvironmentsIcon,
+    '/admin': SettingsIcon,
     '/admin/users': UsersIcon,
     '/admin/service-accounts': ServiceAccountIcon,
     '/admin/groups': GroupsIcon,
     '/admin/roles': RoleIcon,
+    '/admin/roles/project-roles': RoleIcon,
     '/admin/api': ApiAccessIcon,
     '/admin/auth': SingleSignOnIcon,
+    '/admin/auth/oidc': SingleSignOnIcon,
+    '/admin/auth/saml': SingleSignOnIcon,
+    '/admin/auth/scim': SingleSignOnIcon,
+    '/admin/auth/password': SingleSignOnIcon,
+    '/admin/auth/google': SingleSignOnIcon,
     '/admin/network': NetworkIcon,
+    '/admin/network/traffic': NetworkIcon,
+    '/admin/network/data-usage': NetworkIcon,
+    '/admin/network/frontend-data-usage': NetworkIcon,
+    '/admin/network/connected-edges': NetworkIcon,
+    '/admin/network/backend-connections': NetworkIcon,
     '/admin/maintenance': MaintenanceIcon,
     '/admin/banners': BannersIcon,
     '/admin/instance': InstanceStatsIcon,
@@ -58,18 +83,19 @@ const icons: Record<string, typeof SvgIcon> = {
     '/admin/cors': CorsIcon,
     '/admin/billing': BillingIcon,
     '/history': EventLogIcon,
-    '/release-management': FactCheckOutlinedIcon,
+    '/release-templates': FactCheckOutlinedIcon,
     '/personal': PersonalDashboardIcon,
+    '/projects': ProjectIcon,
+    '/playground': PlaygroundIcon,
+    '/custom-metrics': RocketLaunchIcon,
+    '/change-requests': ChangeRequestIcon,
     GitHub: GitHubIcon,
     Documentation: LibraryBooksIcon,
-};
-
-const findIcon = (key: string) => {
-    return icons[key] || EmptyIcon;
+    Configure: BuildIcon,
 };
 
 export const IconRenderer: FC<{ path: string }> = ({ path }) => {
-    const IconComponent = findIcon(path); // Fallback to 'default' if the type is not found
+    const IconComponent = useMemo(() => icons[path] || EmptyIcon, [path]); // Fallback to 'default' if the type is not found
 
     return <IconComponent />;
 };

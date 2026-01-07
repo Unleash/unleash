@@ -18,7 +18,7 @@ export const createFeatureNamingPatternSchema = {
             nullable: true,
             description:
                 'An example of a feature name that matches the pattern. Must itself match the pattern supplied.',
-            example: 'dx.feature1.1-135',
+            example: 'dx.feature.1-135',
         },
         description: {
             type: 'string',

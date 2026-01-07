@@ -1,6 +1,6 @@
-import { ProjectHealth } from './ProjectHealth';
+import { ProjectHealth } from './ProjectHealth.tsx';
 import { styled } from '@mui/material';
-import { ProjectResources } from './ProjectResources';
+import { ProjectResources } from './ProjectResources.tsx';
 
 const onNarrowGrid = (css: object) => ({
     '@container (max-width: 650px)': css,

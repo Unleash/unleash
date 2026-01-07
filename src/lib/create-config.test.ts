@@ -1,6 +1,12 @@
-import { createConfig, resolveIsOss } from './create-config';
-import { ApiTokenType } from './types/models/api-token';
+import { createConfig, resolveIsOss } from './create-config.js';
+import { ApiTokenType } from './types/model.js';
 
+beforeEach(() => {
+    delete process.env.INIT_BACKEND_API_TOKENS;
+    delete process.env.INIT_ADMIN_API_TOKENS;
+    delete process.env.INIT_CLIENT_API_TOKENS;
+    delete process.env.ENABLED_ENVIRONMENTS;
+});
 test('should create default config', async () => {
     const config = createConfig({
         db: {
@@ -27,7 +33,7 @@ test('should create default config', async () => {
 test('should add initApiToken for admin token from options', async () => {
     const token = {
         environment: '*',
-        project: '*',
+        projects: ['*'],
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
         tokenName: 'admin',
@@ -52,7 +58,9 @@ test('should add initApiToken for admin token from options', async () => {
     expect(config.authentication.initApiTokens[0].environment).toBe(
         token.environment,
     );
-    expect(config.authentication.initApiTokens[0].project).toBe(token.project);
+    expect(config.authentication.initApiTokens[0].projects).toMatchObject(
+        token.projects,
+    );
     expect(config.authentication.initApiTokens[0].type).toBe(
         ApiTokenType.ADMIN,
     );
@@ -61,9 +69,9 @@ test('should add initApiToken for admin token from options', async () => {
 test('should add initApiToken for client token from options', async () => {
     const token = {
         environment: 'development',
-        project: 'default',
+        projects: ['default'],
         secret: 'default:development.some-random-string',
-        type: ApiTokenType.CLIENT,
+        type: ApiTokenType.BACKEND,
         tokenName: 'admin',
     };
     const config = createConfig({
@@ -86,9 +94,11 @@ test('should add initApiToken for client token from options', async () => {
     expect(config.authentication.initApiTokens[0].environment).toBe(
         token.environment,
     );
-    expect(config.authentication.initApiTokens[0].project).toBe(token.project);
+    expect(config.authentication.initApiTokens[0].projects).toMatchObject(
+        token.projects,
+    );
     expect(config.authentication.initApiTokens[0].type).toBe(
-        ApiTokenType.CLIENT,
+        ApiTokenType.BACKEND,
     );
 });
 
@@ -110,15 +120,15 @@ test('should add initApiToken for admin token from env var', async () => {
 
     expect(config.authentication.initApiTokens).toHaveLength(2);
     expect(config.authentication.initApiTokens[0].environment).toBe('*');
-    expect(config.authentication.initApiTokens[0].project).toBe('*');
+    expect(config.authentication.initApiTokens[0].projects).toMatchObject([
+        '*',
+    ]);
     expect(config.authentication.initApiTokens[0].type).toBe(
         ApiTokenType.ADMIN,
     );
     expect(config.authentication.initApiTokens[1].secret).toBe(
         '*:*.some-token2',
     );
-
-    delete process.env.INIT_ADMIN_API_TOKENS;
 });
 
 test('should validate initApiToken for admin token from env var', async () => {
@@ -127,26 +137,22 @@ test('should validate initApiToken for admin token from env var', async () => {
     expect(() => createConfig({})).toThrow(
         'Admin token cannot be scoped to single project',
     );
-
-    delete process.env.INIT_ADMIN_API_TOKENS;
 });
 
 test('should validate initApiToken for client token from env var', async () => {
-    process.env.INIT_CLIENT_API_TOKENS = '*:*:some-token1';
+    process.env.INIT_BACKEND_API_TOKENS = '*:*:some-token1';
 
     expect(() => createConfig({})).toThrow(
         'Client token cannot be scoped to all environments',
     );
-
-    delete process.env.INIT_CLIENT_API_TOKENS;
 });
 
 test('should merge initApiToken from options and env vars', async () => {
     process.env.INIT_ADMIN_API_TOKENS = '*:*.some-token1, *:*.some-token2';
-    process.env.INIT_CLIENT_API_TOKENS = 'default:development.some-token1';
+    process.env.INIT_BACKEND_API_TOKENS = 'default:development.some-token1';
     const token = {
         environment: '*',
-        project: '*',
+        projects: ['*'],
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
         tokenName: 'admin',
@@ -168,12 +174,13 @@ test('should merge initApiToken from options and env vars', async () => {
     });
 
     expect(config.authentication.initApiTokens).toHaveLength(4);
-    delete process.env.INIT_CLIENT_API_TOKENS;
-    delete process.env.INIT_ADMIN_API_TOKENS;
 });
 
-test('should add initApiToken for client token from env var', async () => {
-    process.env.INIT_CLIENT_API_TOKENS =
+test.each([
+    ApiTokenType.BACKEND,
+    ApiTokenType.CLIENT,
+])('should add initApiToken for %s token from env var', async (tokenType) => {
+    process.env[`INIT_${tokenType.toUpperCase()}_API_TOKENS`] =
         'default:development.some-token1, default:development.some-token2';
 
     const config = createConfig({
@@ -193,21 +200,21 @@ test('should add initApiToken for client token from env var', async () => {
     expect(config.authentication.initApiTokens[0].environment).toBe(
         'development',
     );
-    expect(config.authentication.initApiTokens[0].project).toBe('default');
+    expect(config.authentication.initApiTokens[0].projects).toMatchObject([
+        'default',
+    ]);
     expect(config.authentication.initApiTokens[0].type).toBe(
-        ApiTokenType.CLIENT,
+        ApiTokenType.BACKEND,
     );
     expect(config.authentication.initApiTokens[0].secret).toBe(
         'default:development.some-token1',
     );
-
-    delete process.env.INIT_CLIENT_API_TOKENS;
 });
 
 test('should handle cases where no env var specified for tokens', async () => {
     const token = {
         environment: '*',
-        project: '*',
+        projects: ['*'],
         secret: '*:*.some-random-string',
         type: ApiTokenType.ADMIN,
         tokenName: 'admin',
@@ -257,7 +264,6 @@ test('should load environment overrides from env var', async () => {
 
     expect(config.environmentEnableOverrides).toHaveLength(2);
     expect(config.environmentEnableOverrides).toContain('production');
-    delete process.env.ENABLED_ENVIRONMENTS;
 });
 
 test('should yield an empty list when no environment overrides are specified', async () => {
@@ -336,22 +342,19 @@ test.each([
     ['CSP_ALLOWED_SCRIPT', 'googlefonts.com', 'scriptSrc'],
     ['CSP_ALLOWED_IMG', 'googlefonts.com', 'imgSrc'],
     ['CSP_ALLOWED_CONNECT', 'googlefonts.com', 'connectSrc'],
-])(
-    'When %s is set to %s. %s should include passed in domain',
-    (env, domain, key) => {
-        process.env[env] = domain;
-        const config = createConfig({});
-        expect(config.additionalCspAllowedDomains[key][0]).toBe(domain);
-        Object.keys(config.additionalCspAllowedDomains)
-            .filter((objKey) => objKey !== key)
-            .forEach((otherKey) => {
-                expect(
-                    config.additionalCspAllowedDomains[otherKey],
-                ).toStrictEqual([]);
-            });
-        delete process.env[env];
-    },
-);
+])('When %s is set to %s. %s should include passed in domain', (env, domain, key) => {
+    process.env[env] = domain;
+    const config = createConfig({});
+    expect(config.additionalCspAllowedDomains[key][0]).toBe(domain);
+    Object.keys(config.additionalCspAllowedDomains)
+        .filter((objKey) => objKey !== key)
+        .forEach((otherKey) => {
+            expect(config.additionalCspAllowedDomains[otherKey]).toStrictEqual(
+                [],
+            );
+        });
+    delete process.env[env];
+});
 
 test('When multiple CSP environment variables are set, respects them all', () => {
     process.env.CSP_ALLOWED_DEFAULT = 'googlefonts.com';
@@ -471,17 +474,18 @@ test('environment variable takes precedence over configured variable', async () 
     delete process.env.BASE_URI_PATH;
 });
 
-test.each(['demo', '/demo', '/demo/'])(
-    'Trailing and leading slashes gets normalized for base path %s',
-    async (path) => {
-        const config = createConfig({
-            server: {
-                baseUriPath: path,
-            },
-        });
-        expect(config.server.baseUriPath).toBe('/demo');
-    },
-);
+test.each([
+    'demo',
+    '/demo',
+    '/demo/',
+])('Trailing and leading slashes gets normalized for base path %s', async (path) => {
+    const config = createConfig({
+        server: {
+            baseUriPath: path,
+        },
+    });
+    expect(config.server.baseUriPath).toBe('/demo');
+});
 
 test('Config with enterpriseVersion set and pro environment should set isEnterprise to false', async () => {
     const config = createConfig({
@@ -497,6 +501,39 @@ test('Config with enterpriseVersion set and not pro environment should set isEnt
         ui: { environment: 'Enterprise' },
     });
     expect(config.isEnterprise).toBe(true);
+});
+
+test('create config should be idempotent in terms of tokens', async () => {
+    // two admin tokens
+    process.env.INIT_ADMIN_API_TOKENS = '*:*.some-token1, *:*.some-token2';
+    process.env.INIT_BACKEND_API_TOKENS = 'default:development.some-token1';
+    process.env.INIT_FRONTEND_API_TOKENS = 'frontend:development.some-token1';
+    const token = {
+        environment: '*',
+        projects: ['*'],
+        secret: '*:*.some-random-string',
+        type: ApiTokenType.ADMIN,
+        tokenName: 'admin',
+    };
+    const config = createConfig({
+        db: {
+            host: 'localhost',
+            port: 4242,
+            user: 'unleash',
+            password: 'password',
+            database: 'unleash_db',
+        },
+        server: {
+            port: 4242,
+        },
+        authentication: {
+            initApiTokens: [token],
+        },
+    });
+    expect(config.authentication.initApiTokens.length).toStrictEqual(
+        createConfig(config).authentication.initApiTokens.length,
+    );
+    expect(config.authentication.initApiTokens).toHaveLength(5);
 });
 
 describe('isOSS', () => {

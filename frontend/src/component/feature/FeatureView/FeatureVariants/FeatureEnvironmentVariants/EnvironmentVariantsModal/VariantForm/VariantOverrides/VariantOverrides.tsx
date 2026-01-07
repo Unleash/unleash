@@ -6,7 +6,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { InputListField } from 'component/common/InputListField/InputListField';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IOverride } from 'interfaces/featureToggle';
-import type { OverridesDispatchType } from './useOverrides';
+import type { OverridesDispatchType } from './useOverrides.ts';
 import SelectMenu from 'component/common/select';
 
 const StyledRow = styled('div')(({ theme }) => ({

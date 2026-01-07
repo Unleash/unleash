@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 export interface ISimpleAuthSettings {
     disabled: boolean;

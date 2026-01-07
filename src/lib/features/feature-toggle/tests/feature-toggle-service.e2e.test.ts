@@ -1,11 +1,11 @@
-import type FeatureToggleService from '../feature-toggle-service';
-import { createTestConfig } from '../../../../test/config/test-config';
+import type { FeatureToggleService } from '../feature-toggle-service.js';
+import { createTestConfig } from '../../../../test/config/test-config.js';
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
-import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../../util';
-import type { FeatureStrategySchema } from '../../../openapi';
-import type User from '../../../types/user';
+} from '../../../../test/e2e/helpers/database-init.js';
+import { DEFAULT_ENV, extractAuditInfoFromUser } from '../../../util/index.js';
+import type { FeatureStrategySchema } from '../../../openapi/index.js';
+import type User from '../../../types/user.js';
 import {
     type IConstraint,
     type IUnleashConfig,
@@ -14,27 +14,37 @@ import {
     SKIP_CHANGE_REQUEST,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
-} from '../../../types';
-import EnvironmentService from '../../project-environments/environment-service';
+} from '../../../types/index.js';
+import EnvironmentService from '../../project-environments/environment-service.js';
 import {
     ForbiddenError,
     NotFoundError,
     PatternError,
     PermissionError,
-} from '../../../error';
-import type { ISegmentService } from '../../segment/segment-service-interface';
+} from '../../../error/index.js';
+import type { ISegmentService } from '../../segment/segment-service-interface.js';
 import {
     createEventsService,
+    createFeatureLinkService,
     createFeatureToggleService,
     createSegmentService,
-} from '../..';
-import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper';
-import type { EventService } from '../../../services';
-
+} from '../../index.js';
+import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper.js';
+import type { EventService } from '../../../services/index.js';
+import type FeatureLinkService from '../../feature-links/feature-link-service.js';
+import {
+    beforeAll,
+    afterAll,
+    beforeEach,
+    test,
+    expect,
+    describe,
+} from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: FeatureToggleService;
 let segmentService: ISegmentService;
+let featureLinkService: FeatureLinkService;
 let eventService: EventService;
 let environmentService: EnvironmentService;
 let unleashConfig: IUnleashConfig;
@@ -49,18 +59,18 @@ const mockConstraints = (): IConstraint[] => {
 const irrelevantDate = new Date();
 
 beforeAll(async () => {
-    const config = createTestConfig({
-        experimental: { flags: {} },
-    });
+    const config = createTestConfig();
+
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
         config.getLogger,
-        { dbInitMethod: 'legacy' as const },
     );
     unleashConfig = config;
     stores = db.stores;
 
     segmentService = createSegmentService(db.rawDatabase, config);
+
+    featureLinkService = createFeatureLinkService(config)(db.rawDatabase);
 
     service = createFeatureToggleService(db.rawDatabase, config);
 
@@ -126,12 +136,19 @@ test('Should be able to update existing strategy configuration', async () => {
     expect(createdConfig.name).toEqual('default');
     const updatedConfig = await service.updateStrategy(
         createdConfig.id,
-        { parameters: { b2b: 'true' } },
+        { name: 'flexibleRollout', parameters: { b2b: 'true' } },
         { projectId, featureName, environment: DEFAULT_ENV },
         TEST_AUDIT_USER,
     );
     expect(createdConfig.id).toEqual(updatedConfig.id);
-    expect(updatedConfig.parameters).toEqual({ b2b: 'true' });
+    expect(updatedConfig.name).toEqual('flexibleRollout');
+    expect(updatedConfig.parameters).toEqual({
+        b2b: 'true',
+        // flexible rollout default parameters
+        rollout: '100',
+        groupId: featureName,
+        stickiness: 'default',
+    });
 });
 
 test('Should be able to get strategy by id', async () => {
@@ -273,7 +290,7 @@ test('adding and removing an environment preserves variants when variants per en
             // @ts-expect-error - incomplete flag resolver definition
             flagResolver: {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                isEnabled: (flagName: string) => false,
+                isEnabled: (_flagName: string) => false,
             },
         },
         eventService,
@@ -353,7 +370,7 @@ test('cloning a feature flag copies variant environments correctly', async () =>
         );
 
     const defaultEnv = clonedFlag.environments.find(
-        (x) => x.name === 'default',
+        (x) => x.name === DEFAULT_ENV,
     );
     const newEnv = clonedFlag.environments.find((x) => x.name === targetEnv);
 
@@ -364,7 +381,7 @@ test('cloning a feature flag copies variant environments correctly', async () =>
 test('cloning a feature flag not allowed for change requests enabled', async () => {
     await db.rawDatabase('change_request_settings').insert({
         project: 'default',
-        environment: 'default',
+        environment: DEFAULT_ENV,
     });
     await expect(
         service.cloneFeatureToggle(
@@ -374,7 +391,7 @@ test('cloning a feature flag not allowed for change requests enabled', async () 
             SYSTEM_USER_AUDIT,
             true,
         ),
-    ).rejects.toEqual(
+    ).rejects.errorWithMessage(
         new ForbiddenError(
             `Cloning not allowed. Project default has change requests enabled.`,
         ),
@@ -384,11 +401,11 @@ test('cloning a feature flag not allowed for change requests enabled', async () 
 test('changing to a project with change requests enabled should not be allowed', async () => {
     await db.rawDatabase('change_request_settings').insert({
         project: 'default',
-        environment: 'default',
+        environment: DEFAULT_ENV,
     });
     await expect(
         service.changeProject('newFlagName', 'default', TEST_AUDIT_USER),
-    ).rejects.toEqual(
+    ).rejects.errorWithMessage(
         new ForbiddenError(
             `Changing project not allowed. Project default has change requests enabled.`,
         ),
@@ -440,7 +457,7 @@ test('Cloning a feature flag also clones segments correctly', async () => {
         featureName: clonedFeatureName,
     });
     expect(
-        feature.environments.find((x) => x.name === 'default')?.strategies[0]
+        feature.environments.find((x) => x.name === DEFAULT_ENV)?.strategies[0]
             .segments,
     ).toHaveLength(1);
 });
@@ -497,13 +514,13 @@ test('If change requests are enabled, cannot change variants without going via C
     };
     await db.rawDatabase('change_request_settings').insert({
         project: 'default',
-        environment: 'default',
+        environment: DEFAULT_ENV,
     });
     return expect(async () =>
         customFeatureService.crProtectedSaveVariantsOnEnv(
             'default',
             featureName,
-            'default',
+            DEFAULT_ENV,
             [newVariant],
             {
                 createdAt: irrelevantDate,
@@ -520,7 +537,9 @@ test('If change requests are enabled, cannot change variants without going via C
             TEST_AUDIT_USER,
             [],
         ),
-    ).rejects.toThrowError(new PermissionError(SKIP_CHANGE_REQUEST));
+    ).rejects.toThrowError(
+        expect.errorWithMessage(new PermissionError(SKIP_CHANGE_REQUEST)),
+    );
 });
 
 test('If CRs are protected for any environment in the project stops bulk update of variants', async () => {
@@ -609,7 +628,9 @@ test('If CRs are protected for any environment in the project stops bulk update 
             },
             TEST_AUDIT_USER,
         ),
-    ).rejects.toThrowError(new PermissionError(SKIP_CHANGE_REQUEST));
+    ).rejects.toThrowError(
+        expect.errorWithMessage(new PermissionError(SKIP_CHANGE_REQUEST)),
+    );
 });
 
 test('getPlaygroundFeatures should return ids and titles (if they exist) on client strategies', async () => {
@@ -744,33 +765,80 @@ test('Should return last seen at per environment', async () => {
     expect(featureToggle.lastSeenAt).toEqual(new Date(lastSeenAtStoreDate));
 });
 
-test('Should return "default" for stickiness when creating a flexibleRollout strategy with empty stickiness', async () => {
+test.each([
+    ['empty stickiness', { rollout: '100', stickiness: '' }],
+    ['undefined stickiness', { rollout: '100' }],
+    ['undefined parameters', undefined],
+    [
+        'different group id and stickiness',
+        { rollout: '100', groupId: 'test-group', stickiness: 'userId' },
+    ],
+    ['different rollout', { rollout: '25' }],
+    ['empty parameters', {}],
+    ['extra parameters are preserved', { extra: 'value', rollout: '100' }],
+])('Should use default parameters when creating a flexibleRollout strategy with %s', async (description, parameters: {
+    [key: string]: any;
+}) => {
     const strategy = {
         name: 'flexibleRollout',
-        parameters: {
-            rollout: '100',
-            stickiness: '',
-        },
+        parameters,
         constraints: [],
     };
     const feature = {
-        name: 'test-feature-stickiness-1',
-        description: 'the #1 feature',
+        name: `test-feature-create-${description.replaceAll(' ', '-')}`,
     };
     const projectId = 'default';
+    const defaultStickiness = `not-default-${description.replaceAll(' ', '-')}`;
+    const expectedStickiness =
+        parameters?.stickiness === ''
+            ? defaultStickiness
+            : (parameters?.stickiness ?? defaultStickiness);
+    const expectedParameters = {
+        ...parameters, // expect extra parameters to be preserved
+        groupId: parameters?.groupId ?? feature.name,
+        stickiness: expectedStickiness,
+        rollout: parameters?.rollout ?? '100', // default rollout
+    };
+    await stores.projectStore.update({
+        id: projectId,
+        name: 'stickiness-project-test',
+        defaultStickiness,
+    });
+    const context = {
+        projectId,
+        featureName: feature.name,
+        environment: DEFAULT_ENV,
+    };
 
     await service.createFeatureToggle(projectId, feature, TEST_AUDIT_USER);
-    await service.createStrategy(
+    const createdStrategy = await service.createStrategy(
         strategy,
-        { projectId, featureName: feature.name, environment: DEFAULT_ENV },
+        context,
         TEST_AUDIT_USER,
     );
 
-    const featureDB = await service.getFeature({ featureName: feature.name });
-
-    expect(featureDB.environments[0]).toMatchObject({
-        strategies: [{ parameters: { stickiness: 'default' } }],
+    const featureDB = await service.getFeature({
+        featureName: feature.name,
     });
+
+    expect(featureDB.environments[0].strategies[0].parameters).toStrictEqual(
+        expectedParameters,
+    );
+
+    // Verify that updating the strategy with same data is idempotent
+    await service.updateStrategy(
+        createdStrategy.id,
+        strategy,
+        context,
+        TEST_AUDIT_USER,
+    );
+    const featureDBAfterUpdate = await service.getFeature({
+        featureName: feature.name,
+    });
+
+    expect(
+        featureDBAfterUpdate.environments[0].strategies[0].parameters,
+    ).toStrictEqual(expectedParameters);
 });
 
 test('Should not allow to add flags to archived projects', async () => {
@@ -788,7 +856,7 @@ test('Should not allow to add flags to archived projects', async () => {
             },
             TEST_AUDIT_USER,
         ),
-    ).rejects.toEqual(
+    ).rejects.errorWithMessage(
         new NotFoundError(
             `Active project with id archivedProject does not exist`,
         ),
@@ -817,7 +885,7 @@ test('Should not allow to revive flags to archived projects', async () => {
 
     await expect(
         service.reviveFeature(flag.name, TEST_AUDIT_USER),
-    ).rejects.toEqual(
+    ).rejects.errorWithMessage(
         new NotFoundError(
             `Active project with id archivedProjectWithFlag does not exist`,
         ),
@@ -825,7 +893,7 @@ test('Should not allow to revive flags to archived projects', async () => {
 
     await expect(
         service.reviveFeatures([flag.name], project.id, TEST_AUDIT_USER),
-    ).rejects.toEqual(
+    ).rejects.errorWithMessage(
         new NotFoundError(
             `Active project with id archivedProjectWithFlag does not exist`,
         ),
@@ -835,7 +903,7 @@ test('Should not allow to revive flags to archived projects', async () => {
 test('Should enable disabled strategies on feature environment enabled', async () => {
     const flagName = 'enableThisFlag';
     const project = 'default';
-    const environment = 'default';
+    const environment = DEFAULT_ENV;
     await service.createFeatureToggle(
         project,
         {
@@ -877,4 +945,48 @@ test('Should enable disabled strategies on feature environment enabled', async (
 
     const strategy = await service.getStrategy(createdConfig.id);
     expect(strategy).toMatchObject({ ...config, disabled: false });
+});
+
+test('Should add links from templates when creating a feature flag', async () => {
+    const projectId = 'default';
+    const featureName = 'test-link-feature';
+
+    await stores.projectStore.updateProjectEnterpriseSettings({
+        id: projectId,
+        linkTemplates: [
+            {
+                title: 'Issue tracker',
+                urlTemplate:
+                    'https://issues.example.com/project/{{project}}/tasks/{{feature}}',
+            },
+            {
+                title: 'Docs',
+                urlTemplate: 'https://docs.example.com/{{project}}/{{feature}}',
+            },
+        ],
+    });
+
+    await service.createFeatureToggle(
+        projectId,
+        { name: featureName },
+        TEST_AUDIT_USER,
+    );
+
+    const links = await featureLinkService.getAll();
+
+    expect(links.length).toBe(2);
+    expect(links).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({
+                title: 'Issue tracker',
+                url: `https://issues.example.com/project/${projectId}/tasks/${featureName}`,
+                featureName,
+            }),
+            expect.objectContaining({
+                title: 'Docs',
+                url: `https://docs.example.com/${projectId}/${featureName}`,
+                featureName,
+            }),
+        ]),
+    );
 });

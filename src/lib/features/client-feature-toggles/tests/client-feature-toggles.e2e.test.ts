@@ -1,14 +1,17 @@
-import { RoleName } from '../../../types/model';
+import { RoleName } from '../../../types/model.js';
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
+} from '../../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../../test/fixtures/no-logger';
-import { DEFAULT_ENV } from '../../../util/constants';
-import { type IUserWithRootRole, TEST_AUDIT_USER } from '../../../types';
+} from '../../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../../util/constants.js';
+import {
+    type IUserWithRootRole,
+    TEST_AUDIT_USER,
+} from '../../../types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -77,7 +80,7 @@ const getApiClientResponse = (project = 'default') => [
     },
 ];
 
-const cleanup = async (db: ITestDb, app: IUnleashTest) => {
+const cleanup = async (db: ITestDb, _app: IUnleashTest) => {
     const all =
         await db.stores.projectStore.getEnvironmentsForProject('default');
     await Promise.all(

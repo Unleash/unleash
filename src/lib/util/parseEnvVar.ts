@@ -1,3 +1,5 @@
+import { PayloadType, type Variant } from 'unleash-client';
+
 export function parseEnvVarNumber(
     envVar: string | undefined,
     defaultVal: number,
@@ -46,10 +48,36 @@ export function parseEnvVarJSON(
     if (envVar) {
         try {
             return JSON.parse(envVar);
-        } catch (e) {
+        } catch (_e) {
             return defaultVal;
         }
     }
 
     return defaultVal;
+}
+
+export function parseEnvVarBooleanOrStringVariant(
+    envVar: string | undefined,
+    defaultVal: boolean | Variant,
+): boolean | Variant {
+    if (!envVar) {
+        return defaultVal;
+    }
+
+    if (envVar === '1' || envVar === 't' || envVar === 'true') {
+        return true;
+    }
+
+    if (envVar === '0' || envVar === 'f' || envVar === 'false') {
+        return false;
+    }
+
+    return {
+        name: 'Variant',
+        enabled: true,
+        payload: {
+            type: PayloadType.STRING,
+            value: envVar,
+        },
+    };
 }

@@ -1,5 +1,5 @@
-import { Strategy } from './strategy';
-import type { Context } from '../context';
+import { Strategy } from './strategy.js';
+import type { Context } from '../context.js';
 
 export default class GradualRolloutRandomStrategy extends Strategy {
     private randomGenerator: Function = () =>
@@ -13,7 +13,7 @@ export default class GradualRolloutRandomStrategy extends Strategy {
     isEnabled(
         parameters: { percentage: number | string },
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        context: Context,
+        _context: Context,
     ): boolean {
         const percentage: number = Number(parameters.percentage);
         const random: number = this.randomGenerator();

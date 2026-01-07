@@ -3,11 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InstanceAdminStatsSchemaActiveUsers } from './instanceAdminStatsSchemaActiveUsers';
-import type { InstanceAdminStatsSchemaApiTokens } from './instanceAdminStatsSchemaApiTokens';
-import type { InstanceAdminStatsSchemaClientAppsItem } from './instanceAdminStatsSchemaClientAppsItem';
-import type { InstanceAdminStatsSchemaPreviousDayMetricsBucketsCount } from './instanceAdminStatsSchemaPreviousDayMetricsBucketsCount';
-import type { InstanceAdminStatsSchemaProductionChanges } from './instanceAdminStatsSchemaProductionChanges';
+import type { InstanceAdminStatsSchemaActiveUsers } from './instanceAdminStatsSchemaActiveUsers.js';
+import type { InstanceAdminStatsSchemaApiTokens } from './instanceAdminStatsSchemaApiTokens.js';
+import type { InstanceAdminStatsSchemaClientAppsItem } from './instanceAdminStatsSchemaClientAppsItem.js';
+import type { InstanceAdminStatsSchemaEdgeInstanceUsage } from './instanceAdminStatsSchemaEdgeInstanceUsage.js';
+import type { InstanceAdminStatsSchemaPreviousDayMetricsBucketsCount } from './instanceAdminStatsSchemaPreviousDayMetricsBucketsCount.js';
+import type { InstanceAdminStatsSchemaProductionChanges } from './instanceAdminStatsSchemaProductionChanges.js';
 
 /**
  * Information about an instance and statistics about usage of various features of Unleash
@@ -24,6 +25,8 @@ export interface InstanceAdminStatsSchema {
      * @minimum 0
      */
     contextFields?: number;
+    /** The average number of edge instances, per month, in the last 12 months, rounded to 3 decimal places */
+    edgeInstanceUsage?: InstanceAdminStatsSchemaEdgeInstanceUsage;
     /**
      * The number of environments defined in this instance
      * @minimum 0
@@ -82,6 +85,16 @@ export interface InstanceAdminStatsSchema {
      * @minimum 0
      */
     projects?: number;
+    /**
+     * The number of release plans in this instance
+     * @minimum 0
+     */
+    releasePlans?: number;
+    /**
+     * The number of release templates in this instance
+     * @minimum 0
+     */
+    releaseTemplates?: number;
     /**
      * The number of roles defined in this instance
      * @minimum 0

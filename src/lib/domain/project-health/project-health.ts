@@ -3,11 +3,11 @@ import type {
     IFeatureToggleStore,
     IProject,
     IProjectHealthReport,
-} from '../../types';
+} from '../../types/index.js';
 import type {
     IFeatureType,
     IFeatureTypeStore,
-} from '../../types/stores/feature-type-store';
+} from '../../types/stores/feature-type-store.js';
 
 type IPartialFeatures = Array<{
     stale?: boolean;
@@ -19,10 +19,12 @@ const getPotentiallyStaleCount = (
     features: IPartialFeatures,
     featureTypes: IFeatureType[],
 ) => {
-    const today = new Date().valueOf();
+    const today = Date.now();
 
     return features.filter((feature) => {
-        const diff = today - feature.createdAt?.valueOf();
+        const diff = feature.createdAt
+            ? today - feature.createdAt.valueOf()
+            : 0;
         const featureTypeExpectedLifetime = featureTypes.find(
             (t) => t.id === feature.type,
         )?.lifetimeDays;
@@ -30,6 +32,7 @@ const getPotentiallyStaleCount = (
         return (
             !feature.stale &&
             featureTypeExpectedLifetime !== null &&
+            featureTypeExpectedLifetime !== undefined &&
             diff >= featureTypeExpectedLifetime * hoursToMilliseconds(24)
         );
     }).length;

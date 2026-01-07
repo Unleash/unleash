@@ -2,10 +2,10 @@ import Mustache from 'mustache';
 import {
     FEATURE_ARCHIVED,
     FEATURE_STRATEGY_UPDATE,
-    type IConstraint,
     type IEvent,
-} from '../types';
-import { EVENT_MAP } from './feature-event-formatter-md-events';
+} from '../events/index.js';
+import { EVENT_MAP } from './feature-event-formatter-md-events.js';
+import type { IConstraint } from '../types/index.js';
 
 export interface IFormattedEventData {
     label: string;
@@ -135,8 +135,6 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                         return this.flexibleRolloutStrategyChangeText(event);
                     case 'default':
                         return this.defaultStrategyChangeText(event);
-                    case 'userWithId':
-                        return this.userWithIdStrategyChangeText(event);
                     case 'remoteAddress':
                         return this.remoteAddressStrategyChangeText(event);
                     case 'applicationHostname':
@@ -160,10 +158,6 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
 
     private remoteAddressStrategyChangeText(event: IEvent) {
         return this.listOfValuesStrategyChangeText(event, 'IPs');
-    }
-
-    private userWithIdStrategyChangeText(event: IEvent) {
-        return this.listOfValuesStrategyChangeText(event, 'userIds');
     }
 
     private listOfValuesStrategyChangeText(

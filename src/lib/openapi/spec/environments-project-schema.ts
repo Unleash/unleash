@@ -1,5 +1,9 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { environmentProjectSchema } from './environment-project-schema';
+import { environmentProjectSchema } from './environment-project-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
 
 export const environmentsProjectSchema = {
     $id: '#/components/schemas/environmentsProjectSchema',
@@ -24,10 +28,15 @@ export const environmentsProjectSchema = {
     components: {
         schemas: {
             environmentProjectSchema,
+            featureStrategySchema,
+            strategyVariantSchema,
+            constraintSchema,
+            parametersSchema,
         },
     },
 } as const;
 
 export type EnvironmentsProjectSchema = FromSchema<
-    typeof environmentsProjectSchema
+    typeof environmentsProjectSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

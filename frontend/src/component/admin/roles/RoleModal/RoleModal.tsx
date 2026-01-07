@@ -1,9 +1,9 @@
 import { Button, styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { useRoleForm } from '../RoleForm/useRoleForm';
+import { useRoleForm } from '../RoleForm/useRoleForm.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { RoleForm } from '../RoleForm/RoleForm';
+import { RoleForm } from '../RoleForm/RoleForm.tsx';
 import { useRoles } from 'hooks/api/getters/useRoles/useRoles';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -125,7 +125,7 @@ export const RoleModal = ({
                 modal
                 title={editing ? `Edit ${type} role` : `New ${type} role`}
                 description={`${titleCasedType} roles allow you to control access to ${type} resources. Besides the built-in ${type} roles, you can create and manage custom ${type} roles to fit your needs.`}
-                documentationLink={`https://docs.getunleash.io/reference/rbac${
+                documentationLink={`https://docs.getunleash.io/concepts/rbac${
                     type === ROOT_ROLE_TYPE
                         ? '#custom-root-roles'
                         : '#custom-project-roles'

@@ -1,6 +1,6 @@
 import { TableHead, TableRow } from '@mui/material';
 import type { HeaderGroup } from 'react-table';
-import { CellSortable } from './CellSortable/CellSortable';
+import { CellSortable } from './CellSortable/CellSortable.tsx';
 
 export const SortableTableHeader = <T extends object>({
     headerGroups,

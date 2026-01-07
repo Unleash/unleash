@@ -1,4 +1,4 @@
-import { roleSchema } from './role-schema';
+import { roleSchema } from './role-schema.js';
 import type { FromSchema } from 'json-schema-to-ts';
 
 export const rolesSchema = {

@@ -3,12 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
-import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
-import type { FeatureTypeCountSchema } from './featureTypeCountSchema';
-import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode';
-import type { ProjectOverviewSchemaOnboardingStatus } from './projectOverviewSchemaOnboardingStatus';
-import type { ProjectStatsSchema } from './projectStatsSchema';
+import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema.js';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema.js';
+import type { FeatureTypeCountSchema } from './featureTypeCountSchema.js';
+import type { ProjectLinkTemplateSchema } from './projectLinkTemplateSchema.js';
+import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode.js';
+import type { ProjectOverviewSchemaOnboardingStatus } from './projectOverviewSchemaOnboardingStatus.js';
+import type { ProjectStatsSchema } from './projectStatsSchema.js';
 
 /**
  * A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.
@@ -43,11 +44,16 @@ export interface ProjectOverviewSchema {
     featureNaming?: CreateFeatureNamingPatternSchema;
     /** The number of features of each type that are in this project */
     featureTypeCounts?: FeatureTypeCountSchema[];
-    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
+    /**
+     * Use `technicalDebt` instead.
+     * @deprecated
+     */
     health?: number;
+    /** A list of templates for links that will be automatically added to new feature flags. */
+    linkTemplates?: ProjectLinkTemplateSchema[];
     /** The number of members this project has */
     members?: number;
-    /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
+    /** The project's [collaboration mode](https://docs.getunleash.io/concepts/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
     mode?: ProjectOverviewSchemaMode;
     /** The name of this project */
     name: string;
@@ -55,6 +61,12 @@ export interface ProjectOverviewSchema {
     onboardingStatus: ProjectOverviewSchemaOnboardingStatus;
     /** Project statistics */
     stats?: ProjectStatsSchema;
+    /**
+     * An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100
+     * @minimum 0
+     * @maximum 100
+     */
+    technicalDebt?: number;
     /**
      * When the project was last updated.
      * @nullable

@@ -1,7 +1,6 @@
 import { useActions } from 'hooks/api/getters/useActions/useActions';
 import type { IAction, IActionSet, ParameterMatch } from 'interfaces/action';
 import { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 enum ErrorField {
@@ -59,7 +58,7 @@ export const useProjectActionsForm = (action?: IActionSet) => {
                     parameter,
                     { inverted, operator, caseInsensitive, value, values },
                 ]) => ({
-                    id: uuidv4(),
+                    id: crypto.randomUUID(),
                     parameter,
                     inverted,
                     operator,
@@ -72,7 +71,7 @@ export const useProjectActionsForm = (action?: IActionSet) => {
         setActorId(action?.actorId ?? 0);
         setActions(
             action?.actions?.map((action) => ({
-                id: uuidv4(),
+                id: crypto.randomUUID(),
                 action: action.action,
                 sortOrder: action.sortOrder,
                 executionParams: action.executionParams,

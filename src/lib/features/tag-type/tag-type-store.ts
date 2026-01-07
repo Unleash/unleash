@@ -1,18 +1,19 @@
 import type { EventEmitter } from 'events';
-import type { LogProvider, Logger } from '../../logger';
-import { DB_TIME } from '../../metric-events';
-import metricsHelper from '../../util/metrics-helper';
-import NotFoundError from '../../error/notfound-error';
-import type { ITagType, ITagTypeStore } from './tag-type-store-type';
-import type { Db } from '../../db/db';
+import type { LogProvider, Logger } from '../../logger.js';
+import { DB_TIME } from '../../metric-events.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { ITagType, ITagTypeStore } from './tag-type-store-type.js';
+import type { Db } from '../../db/db.js';
 
-const COLUMNS = ['name', 'description', 'icon'];
+const COLUMNS = ['name', 'description', 'icon', 'color'];
 const TABLE = 'tag_types';
 
 interface ITagTypeTable {
     name: string;
     description?: string;
     icon?: string;
+    color?: string;
 }
 
 export default class TagTypeStore implements ITagTypeStore {
@@ -96,9 +97,16 @@ export default class TagTypeStore implements ITagTypeStore {
         return [];
     }
 
-    async updateTagType({ name, description, icon }: ITagType): Promise<void> {
+    async updateTagType({
+        name,
+        description,
+        icon,
+        color,
+    }: ITagType): Promise<void> {
         const stopTimer = this.timer('updateTagType');
-        await this.db(TABLE).where({ name }).update({ description, icon });
+        await this.db(TABLE)
+            .where({ name })
+            .update({ description, icon, color });
         stopTimer();
     }
 
@@ -109,8 +117,7 @@ export default class TagTypeStore implements ITagTypeStore {
             name: row.name,
             description: row.description,
             icon: row.icon,
+            color: row.color,
         };
     }
 }
-
-module.exports = TagTypeStore;

@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ImportTogglesValidateItemSchema } from './importTogglesValidateItemSchema';
+import type { ImportTogglesValidateItemSchema } from './importTogglesValidateItemSchema.js';
 
 /**
- * An object containing [feature import](https://docs.getunleash.io/reference/deploy/environment-import-export) validation results.
+ * An object containing [feature import](https://docs.getunleash.io/concepts/import-export) validation results.
  */
 export interface ImportTogglesValidateSchema {
     /** A list of errors that prevent the provided data from being successfully imported. */

@@ -5,12 +5,14 @@ import { useSearchHighlightContext } from 'component/common/Table/SearchHighligh
 import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 interface IHighlightCellProps {
     value: string;
     subtitle?: string;
     afterTitle?: React.ReactNode;
     subtitleTooltip?: boolean;
+    maxTitleLines?: number;
 }
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -21,14 +23,7 @@ const StyledContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1, 2),
 }));
 
-const StyledTitle = styled('span')(({ theme }) => ({
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical',
-    WebkitLineClamp: '1',
-    lineClamp: '1',
-}));
+const StyledTitle = styled('span')(() => ({}));
 
 const StyledSubtitle = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -46,6 +41,7 @@ export const HighlightCell: FC<IHighlightCellProps> = ({
     subtitle,
     afterTitle,
     subtitleTooltip,
+    maxTitleLines,
 }) => {
     const { searchQuery } = useSearchHighlightContext();
 
@@ -73,16 +69,17 @@ export const HighlightCell: FC<IHighlightCellProps> = ({
 
     return (
         <StyledContainer>
-            <StyledTitle
-                style={{
-                    WebkitLineClamp: subtitle ? 1 : 2,
-                    lineClamp: subtitle ? 1 : 2,
-                }}
+            <Truncator
+                lines={maxTitleLines ?? (subtitle ? 1 : 2)}
+                title={value}
+                arrow
                 data-loading
             >
-                <Highlighter search={searchQuery}>{value}</Highlighter>
-                {afterTitle}
-            </StyledTitle>
+                <StyledTitle>
+                    <Highlighter search={searchQuery}>{value}</Highlighter>
+                    {afterTitle}
+                </StyledTitle>
+            </Truncator>
             <ConditionallyRender
                 condition={Boolean(subtitle)}
                 show={renderSubtitle}

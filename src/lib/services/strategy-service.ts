@@ -1,13 +1,12 @@
-import type { Logger } from '../logger';
-import type { IUnleashConfig } from '../types/option';
-import type { IUnleashStores } from '../types/stores';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IUnleashStores } from '../types/stores.js';
 import type {
     IMinimalStrategy,
     IStrategy,
     IStrategyStore,
-} from '../types/stores/strategy-store';
-import NotFoundError from '../error/notfound-error';
-import type EventService from '../features/events/event-service';
+} from '../types/stores/strategy-store.js';
+import NotFoundError from '../error/notfound-error.js';
+import type EventService from '../features/events/event-service.js';
 import {
     type IAuditUser,
     StrategyCreatedEvent,
@@ -15,40 +14,32 @@ import {
     StrategyDeprecatedEvent,
     StrategyReactivatedEvent,
     StrategyUpdatedEvent,
-} from '../types';
-
-const strategySchema = require('./strategy-schema');
-const NameExistsError = require('../error/name-exists-error');
-const {
-    STRATEGY_CREATED,
-    STRATEGY_DELETED,
-    STRATEGY_DEPRECATED,
-    STRATEGY_REACTIVATED,
-    STRATEGY_UPDATED,
-} = require('../types/events');
+} from '../types/index.js';
+import strategySchema from './strategy-schema.js';
+import { NameExistsError, OperationDeniedError } from '../error/index.js';
 
 class StrategyService {
-    private logger: Logger;
-
     private strategyStore: IStrategyStore;
 
     private eventService: EventService;
 
+    private customStrategySettings: IUnleashConfig['customStrategySettings'];
+
     constructor(
         { strategyStore }: Pick<IUnleashStores, 'strategyStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        config: Pick<IUnleashConfig, 'getLogger' | 'customStrategySettings'>,
         eventService: EventService,
     ) {
         this.strategyStore = strategyStore;
         this.eventService = eventService;
-        this.logger = getLogger('services/strategy-service.js');
+        this.customStrategySettings = config.customStrategySettings;
     }
 
     async getStrategies(): Promise<IStrategy[]> {
         return this.strategyStore.getAll();
     }
 
-    async getStrategy(name: string): Promise<IStrategy> {
+    async getStrategy(name: string): Promise<IStrategy | undefined> {
         return this.strategyStore.get(name);
     }
 
@@ -110,7 +101,8 @@ class StrategyService {
     async createStrategy(
         value: IMinimalStrategy,
         auditUser: IAuditUser,
-    ): Promise<IStrategy> {
+    ): Promise<IStrategy | undefined> {
+        this.assertCreationAllowed();
         const strategy = await strategySchema.validateAsync(value);
         strategy.deprecated = false;
         await this._validateStrategyName(strategy);
@@ -128,6 +120,7 @@ class StrategyService {
         input: IMinimalStrategy,
         auditUser: IAuditUser,
     ): Promise<void> {
+        this.assertEditingAllowed();
         const value = await strategySchema.validateAsync(input);
         const strategy = await this.strategyStore.get(input.name);
         await this._validateEditable(strategy);
@@ -158,11 +151,26 @@ class StrategyService {
     }
 
     // This check belongs in the store.
-    _validateEditable(strategy: IStrategy): void {
-        if (!strategy.editable) {
-            throw new Error(`Cannot edit strategy ${strategy.name}`);
+    _validateEditable(strategy: IStrategy | undefined): void {
+        if (!strategy?.editable) {
+            throw new Error(`Cannot edit strategy ${strategy?.name}`);
+        }
+    }
+
+    private assertCreationAllowed(): void {
+        if (this.customStrategySettings?.disableCreation) {
+            throw new OperationDeniedError(
+                'Custom strategy creation is disabled by configuration.',
+            );
+        }
+    }
+
+    private assertEditingAllowed(): void {
+        if (this.customStrategySettings?.disableEditing) {
+            throw new OperationDeniedError(
+                'Custom strategy modification is disabled by configuration.',
+            );
         }
     }
 }
 export default StrategyService;
-module.exports = StrategyService;

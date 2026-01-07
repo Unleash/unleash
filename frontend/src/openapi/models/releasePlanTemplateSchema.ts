@@ -3,13 +3,18 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReleasePlanTemplateSchemaDiscriminator } from './releasePlanTemplateSchemaDiscriminator';
-import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema';
+import type { ReleasePlanTemplateSchemaDiscriminator } from './releasePlanTemplateSchemaDiscriminator.js';
+import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema.js';
 
 /**
  * Schema representing the creation of a release template.
  */
 export interface ReleasePlanTemplateSchema {
+    /**
+     * The date and time that the release template was archived.
+     * @nullable
+     */
+    archivedAt?: string | null;
     /**
      * The date and time that the release template was created.
      */

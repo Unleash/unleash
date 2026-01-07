@@ -28,16 +28,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [20.18.1-alpine]
+        version: [22.21-alpine3.23]
     steps:
       - name: Checkout tag v${{ inputs.version }}
         if: ${{ inputs.version != '' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: v${{ inputs.version }} # tag that should be created by the caller workflow
       - name: Checkout
         if: ${{ inputs.version == '' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:

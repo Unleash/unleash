@@ -1,20 +1,11 @@
-import {
-    IconButton,
-    MenuItem,
-    styled,
-    TextField,
-    Tooltip,
-} from '@mui/material';
+import { MenuItem, styled, TextField } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useEffect, useMemo } from 'react';
-import { timeSpanOptions } from '../EventTimelineProvider';
-import CloseIcon from '@mui/icons-material/Close';
-import { useEventTimelineContext } from '../EventTimelineContext';
+import { timeSpanOptions } from '../EventTimelineProvider.tsx';
+import { useEventTimelineContext } from '../EventTimelineContext.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { EventTimelineHeaderTip } from './EventTimelineHeaderTip';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledCol = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -50,7 +41,6 @@ export const EventTimelineHeader = ({
     const { timeSpan, environment, setOpen, setTimeSpan, setEnvironment } =
         useEventTimelineContext();
     const { environments } = useEnvironments();
-    const frontendHeaderRefactor = useUiFlag('frontendHeaderRedesign');
 
     const activeEnvironments = useMemo(
         () => environments.filter(({ enabled }) => enabled),
@@ -123,36 +113,10 @@ export const EventTimelineHeader = ({
                     {totalEvents === 1 ? '' : 's'}
                     <HelpIcon tooltip='These are key events per environment across all your projects. For more details, visit the event log.' />
                 </StyledTimelineEventsCount>
-                {!frontendHeaderRefactor && <TimeSpanFilter />}
             </StyledCol>
             <StyledCol>
-                {frontendHeaderRefactor ? (
-                    <>
-                        <TimeSpanFilter />
-                        <EnvironmentFilter />
-                    </>
-                ) : (
-                    <>
-                        <EventTimelineHeaderTip />
-                        <EnvironmentFilter />
-                        <Tooltip title='Hide event timeline' arrow>
-                            <IconButton
-                                aria-label='close'
-                                size='small'
-                                onClick={() => {
-                                    trackEvent('event-timeline', {
-                                        props: {
-                                            eventType: 'close',
-                                        },
-                                    });
-                                    setOpen(false);
-                                }}
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </>
-                )}
+                <TimeSpanFilter />
+                <EnvironmentFilter />
             </StyledCol>
         </>
     );

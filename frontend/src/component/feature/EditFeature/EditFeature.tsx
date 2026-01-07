@@ -1,7 +1,7 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useNavigate } from 'react-router-dom';
-import EditFeatureForm from '../FeatureForm/EditFeatureForm';
-import useFeatureForm from '../hooks/useFeatureForm';
+import EditFeatureForm from '../FeatureForm/EditFeatureForm.tsx';
+import useFeatureForm from '../hooks/useFeatureForm.ts';
 import * as jsonpatch from 'fast-json-patch';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -32,13 +32,13 @@ const EditFeature = () => {
         impressionData,
         setImpressionData,
         clearErrors,
-    } = useFeatureForm(
-        feature?.name,
-        feature?.type,
-        feature?.project,
-        feature?.description,
-        feature?.impressionData,
-    );
+    } = useFeatureForm({
+        name: feature?.name,
+        type: feature?.type,
+        project: feature?.project,
+        description: feature?.description,
+        impressionData: feature?.impressionData,
+    });
 
     const createPatch = () => {
         const comparison = { ...feature, type, description, impressionData };
@@ -81,7 +81,7 @@ const EditFeature = () => {
             title='Edit Feature flag'
             description='Feature flags support different use cases, each with their own specific needs such as simple static routing or more complex routing.
             The feature flag is disabled when created and you decide when to enable'
-            documentationLink='https://docs.getunleash.io/reference/feature-toggles#feature-flag-types'
+            documentationLink='https://docs.getunleash.io/concepts/feature-flags#feature-flag-types'
             documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >

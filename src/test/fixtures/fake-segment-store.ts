@@ -1,5 +1,8 @@
-import type { ISegmentStore } from '../../lib/features/segment/segment-store-type';
-import type { IFeatureStrategySegment, ISegment } from '../../lib/types/model';
+import type { ISegmentStore } from '../../lib/features/segment/segment-store-type.js';
+import type {
+    IFeatureStrategySegment,
+    ISegment,
+} from '../../lib/types/model.js';
 
 export default class FakeSegmentStore implements ISegmentStore {
     segments: ISegment[] = [];

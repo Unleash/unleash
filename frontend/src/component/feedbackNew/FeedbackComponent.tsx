@@ -8,7 +8,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useFeedbackContext } from './useFeedback';
+import { useFeedbackContext } from './useFeedback.tsx';
 import type React from 'react';
 import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
@@ -18,10 +18,10 @@ import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUser
 import { useUserSubmittedFeedback } from 'hooks/useSubmittedFeedback';
 import type { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
-import type { FeedbackData, FeedbackMode } from './FeedbackContext';
+import type { FeedbackData, FeedbackMode } from './FeedbackContext.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
-import useUserType from './useUserType';
+import useUserType from './useUserType.ts';
 import { BaseModal } from 'component/common/SidebarModal/SidebarModal';
 
 export const ParentContainer = styled('div')(({ theme }) => ({
@@ -256,7 +256,7 @@ export const FeedbackComponent = ({
                 toastTitle = 'Feedback sent';
                 toastType = 'success';
                 setHasSubmittedFeedback(true);
-            } catch (e) {}
+            } catch (_e) {}
         }
 
         setToastData({

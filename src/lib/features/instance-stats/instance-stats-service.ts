@@ -1,6 +1,5 @@
 import { sha256 } from 'js-sha256';
-import type { Logger } from '../../logger';
-import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashConfig } from '../../types/option.js';
 import type {
     IClientInstanceStore,
     IClientMetricsStoreV2,
@@ -9,32 +8,32 @@ import type {
     IFeatureStrategiesStore,
     ITrafficDataUsageStore,
     IUnleashStores,
-} from '../../types/stores';
-import type { IContextFieldStore } from '../context/context-field-store-type';
-import type { IEnvironmentStore } from '../project-environments/environment-store-type';
-import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
-import type { IGroupStore } from '../../types/stores/group-store';
-import type { IProjectStore } from '../../features/project/project-store-type';
-import type { IStrategyStore } from '../../types/stores/strategy-store';
-import type { IUserStore } from '../../types/stores/user-store';
-import type { ISegmentStore } from '../segment/segment-store-type';
-import type { IRoleStore } from '../../types/stores/role-store';
-import type VersionService from '../../services/version-service';
-import type { ISettingStore } from '../../types/stores/settings-store';
-import {
-    FEATURES_EXPORTED,
-    FEATURES_IMPORTED,
-    type IApiTokenStore,
-    type IFlagResolver,
-} from '../../types';
-import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
-import type { GetActiveUsers } from './getActiveUsers';
-import type { ProjectModeCount } from '../project/project-store';
-import type { GetProductionChanges } from './getProductionChanges';
+} from '../../types/stores.js';
+import type { IContextFieldStore } from '../context/context-field-store-type.js';
+import type { IEnvironmentStore } from '../project-environments/environment-store-type.js';
+import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type.js';
+import type { IGroupStore } from '../../types/stores/group-store.js';
+import type { IProjectStore } from '../../features/project/project-store-type.js';
+import type { IStrategyStore } from '../../types/stores/strategy-store.js';
+import type { IUserStore } from '../../types/stores/user-store.js';
+import type { ISegmentStore } from '../segment/segment-store-type.js';
+import type { IRoleStore } from '../../types/stores/role-store.js';
+import type VersionService from '../../services/version-service.js';
+import type { ISettingStore } from '../../types/stores/settings-store.js';
+import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../../events/index.js';
+import type { IApiTokenStore, IFlagResolver } from '../../types/index.js';
+import { CUSTOM_ROOT_ROLE_TYPE } from '../../util/index.js';
+import type { GetActiveUsers } from './getActiveUsers.js';
+import type { ProjectModeCount } from '../project/project-store.js';
+import type { GetProductionChanges } from './getProductionChanges.js';
 import { format, minutesToMilliseconds } from 'date-fns';
 import memoizee from 'memoizee';
-import type { GetLicensedUsers } from './getLicensedUsers';
-import type { IFeatureUsageInfo } from '../../services/version-service';
+import type { GetLicensedUsers } from './getLicensedUsers.js';
+import type { GetReadOnlyUsers } from './getReadOnlyUsers.js';
+import type { IFeatureUsageInfo } from '../../services/version-service.js';
+import type { ReleasePlanTemplateStore } from '../release-plans/release-plan-template-store.js';
+import type { ReleasePlanStore } from '../release-plans/release-plan-store.js';
+import type { GetEdgeInstances } from './getEdgeInstances.js';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -74,6 +73,10 @@ export interface InstanceStats {
     maxEnvironmentStrategies: number;
     maxConstraints: number;
     maxConstraintValues: number;
+    releaseTemplates: number;
+    releasePlans: number;
+    edgeInstanceUsage: Awaited<ReturnType<GetEdgeInstances>>;
+    readOnlyUsers?: number;
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -82,8 +85,6 @@ export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
 };
 
 export class InstanceStatsService {
-    private logger: Logger;
-
     private strategyStore: IStrategyStore;
 
     private userStore: IUserStore;
@@ -122,13 +123,21 @@ export class InstanceStatsService {
 
     getLicencedUsers: GetLicensedUsers;
 
+    getReadOnlyUsers: GetReadOnlyUsers;
+
     getProductionChanges: GetProductionChanges;
+
+    getEdgeInstances: GetEdgeInstances;
 
     private featureStrategiesReadModel: IFeatureStrategiesReadModel;
 
     private featureStrategiesStore: IFeatureStrategiesStore;
 
     private trafficDataUsageStore: ITrafficDataUsageStore;
+
+    private releasePlanTemplateStore: ReleasePlanTemplateStore;
+
+    private releasePlanStore: ReleasePlanStore;
 
     constructor(
         {
@@ -149,6 +158,8 @@ export class InstanceStatsService {
             featureStrategiesReadModel,
             featureStrategiesStore,
             trafficDataUsageStore,
+            releasePlanTemplateStore,
+            releasePlanStore,
         }: Pick<
             IUnleashStores,
             | 'featureToggleStore'
@@ -168,15 +179,16 @@ export class InstanceStatsService {
             | 'featureStrategiesReadModel'
             | 'featureStrategiesStore'
             | 'trafficDataUsageStore'
+            | 'releasePlanTemplateStore'
+            | 'releasePlanStore'
         >,
-        {
-            getLogger,
-            flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        { flagResolver }: Pick<IUnleashConfig, 'flagResolver'>,
         versionService: VersionService,
         getActiveUsers: GetActiveUsers,
         getProductionChanges: GetProductionChanges,
         getLicencedUsers: GetLicensedUsers,
+        getReadOnlyUsers: GetReadOnlyUsers,
+        getEdgeInstances: GetEdgeInstances,
     ) {
         this.strategyStore = strategyStore;
         this.userStore = userStore;
@@ -191,22 +203,27 @@ export class InstanceStatsService {
         this.settingStore = settingStore;
         this.eventStore = eventStore;
         this.clientInstanceStore = clientInstanceStore;
-        this.logger = getLogger('services/stats-service.js');
         this.getActiveUsers = () =>
             this.memorize('getActiveUsers', getActiveUsers.bind(this));
         this.getLicencedUsers = () =>
             this.memorize('getLicencedUsers', getLicencedUsers.bind(this));
+        this.getReadOnlyUsers = () =>
+            this.memorize('getReadOnlyUsers', getReadOnlyUsers.bind(this));
         this.getProductionChanges = () =>
             this.memorize(
                 'getProductionChanges',
                 getProductionChanges.bind(this),
             );
+        this.getEdgeInstances = () =>
+            this.memorize('getEdgeInstances', getEdgeInstances.bind(this));
         this.apiTokenStore = apiTokenStore;
         this.clientMetricsStore = clientMetricsStoreV2;
         this.flagResolver = flagResolver;
         this.featureStrategiesReadModel = featureStrategiesReadModel;
         this.featureStrategiesStore = featureStrategiesStore;
         this.trafficDataUsageStore = trafficDataUsageStore;
+        this.releasePlanTemplateStore = releasePlanTemplateStore;
+        this.releasePlanStore = releasePlanStore;
     }
 
     memory = new Map<string, () => Promise<any>>();
@@ -299,6 +316,20 @@ export class InstanceStatsService {
         });
     }
 
+    async getReleaseTemplates(): Promise<number> {
+        return this.memorize('getReleaseTemplates', async () => {
+            const count = await this.releasePlanTemplateStore.count();
+            return count;
+        });
+    }
+
+    async getReleasePlans(): Promise<number> {
+        return this.memorize('getReleasePlans', async () => {
+            const count = await this.releasePlanStore.count();
+            return count;
+        });
+    }
+
     async getStats(): Promise<InstanceStats> {
         const versionInfo = await this.versionService.getVersionInfo();
         const [
@@ -330,6 +361,10 @@ export class InstanceStatsService {
             maxEnvironmentStrategies,
             maxConstraintValues,
             maxConstraints,
+            releaseTemplates,
+            releasePlans,
+            edgeInstanceUsage,
+            readOnlyUsers,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getArchivedToggleCount(),
@@ -374,6 +409,12 @@ export class InstanceStatsService {
                     this.featureStrategiesReadModel,
                 ),
             ),
+            this.getReleaseTemplates(),
+            this.getReleasePlans(),
+            this.getEdgeInstances(),
+            this.flagResolver.isEnabled('readOnlyUsers')
+                ? this.getReadOnlyUsers()
+                : Promise.resolve(null),
         ]);
 
         return {
@@ -412,6 +453,10 @@ export class InstanceStatsService {
             maxEnvironmentStrategies: maxEnvironmentStrategies?.count ?? 0,
             maxConstraintValues: maxConstraintValues?.count ?? 0,
             maxConstraints: maxConstraints?.count ?? 0,
+            releaseTemplates,
+            releasePlans,
+            edgeInstanceUsage,
+            ...(readOnlyUsers !== null ? { readOnlyUsers } : {}),
         };
     }
 
@@ -437,6 +482,12 @@ export class InstanceStatsService {
             userActive,
             productionChanges,
             postgresVersion,
+            licenseType,
+            hostedBy,
+            releaseTemplates,
+            releasePlans,
+            edgeInstanceUsage,
+            readOnlyUsers,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getRegisteredUsers(),
@@ -458,6 +509,14 @@ export class InstanceStatsService {
             this.getActiveUsers(),
             this.getProductionChanges(),
             this.postgresVersion(),
+            this.getLicenseType(),
+            this.getHostedBy(),
+            this.getReleaseTemplates(),
+            this.getReleasePlans(),
+            this.getEdgeInstances(),
+            this.flagResolver.isEnabled('readOnlyUsers')
+                ? this.getReadOnlyUsers()
+                : Promise.resolve(null),
         ]);
         const versionInfo = await this.versionService.getVersionInfo();
 
@@ -491,23 +550,45 @@ export class InstanceStatsService {
             productionChanges60: productionChanges.last60,
             productionChanges90: productionChanges.last90,
             postgresVersion,
+            licenseType,
+            hostedBy,
+            releaseTemplates,
+            releasePlans,
+            edgeInstanceUsage,
+            ...(readOnlyUsers !== null ? { readOnlyUsers } : {}),
         };
         return featureInfo;
     }
 
+    getHostedBy(): string {
+        return 'self-hosted';
+    }
+
+    getLicenseType(): string {
+        return 'oss';
+    }
+
     featuresExported(): Promise<number> {
-        return this.memorize('deprecatedFilteredCountFeaturesExported', () =>
-            this.eventStore.deprecatedFilteredCount({
-                type: FEATURES_EXPORTED,
-            }),
+        return this.memorize('searchEventsCountFeaturesExported', () =>
+            this.eventStore.searchEventsCount([
+                {
+                    field: 'type',
+                    operator: 'IS',
+                    values: [FEATURES_EXPORTED],
+                },
+            ]),
         );
     }
 
     featuresImported(): Promise<number> {
-        return this.memorize('deprecatedFilteredCountFeaturesImported', () =>
-            this.eventStore.deprecatedFilteredCount({
-                type: FEATURES_IMPORTED,
-            }),
+        return this.memorize('searchEventsCountFeaturesImported', () =>
+            this.eventStore.searchEventsCount([
+                {
+                    field: 'type',
+                    operator: 'IS',
+                    values: [FEATURES_IMPORTED],
+                },
+            ]),
         );
     }
 
@@ -562,6 +643,14 @@ export class InstanceStatsService {
     contextFieldCount(): Promise<number> {
         return this.memorize('contextFieldCount', () =>
             this.contextFieldStore.count(),
+        );
+    }
+
+    projectContextFieldCount(): Promise<number> {
+        return this.memorize('projectContextFieldCount', () =>
+            this.flagResolver.isEnabled('projectContextFields')
+                ? this.contextFieldStore.countProjectFields()
+                : Promise.resolve(0),
         );
     }
 

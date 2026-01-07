@@ -1,5 +1,5 @@
-import type { IFavoriteProject } from '../favorites';
-import type { Store } from './store';
+import type { IFavoriteProject } from '../favorites.js';
+import type { Store } from './store.js';
 
 export interface IFavoriteProjectKey {
     userId: number;
@@ -10,5 +10,5 @@ export interface IFavoriteProjectsStore
     extends Store<IFavoriteProject, IFavoriteProjectKey> {
     addFavoriteProject(
         favorite: IFavoriteProjectKey,
-    ): Promise<IFavoriteProject>;
+    ): Promise<IFavoriteProject | undefined>;
 }

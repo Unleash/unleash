@@ -1,5 +1,5 @@
 import type { ActionConfigurationParameter } from 'interfaces/action';
-import { ProjectActionsActionParameterAutocomplete } from './ProjectActionsActionParameterAutocomplete';
+import { ProjectActionsActionParameterAutocomplete } from './ProjectActionsActionParameterAutocomplete.tsx';
 
 interface IProjectActionsActionParameterProps {
     parameter: ActionConfigurationParameter;

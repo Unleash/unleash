@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Chip, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { ConstraintValueSearch } from '../../../ConstraintValueSearch/ConstraintValueSearch';
+import { ConstraintValueSearch as NewConstraintValueSearch } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/ConstraintValueSearch';
 
 interface IMultipleValuesProps {
     values: string[] | undefined;
@@ -16,6 +16,11 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     margin: theme.spacing(0, 1, 1, 0),
 }));
 
+const SearchWrapper = styled('div')(({ theme }) => ({
+    width: '300px',
+    marginBottom: theme.spacing(2),
+}));
+
 export const MultipleValues = ({ values }: IMultipleValuesProps) => {
     const [filter, setFilter] = useState('');
 
@@ -26,10 +31,12 @@ export const MultipleValues = ({ values }: IMultipleValuesProps) => {
             <ConditionallyRender
                 condition={values.length > 20}
                 show={
-                    <ConstraintValueSearch
-                        filter={filter}
-                        setFilter={setFilter}
-                    />
+                    <SearchWrapper>
+                        <NewConstraintValueSearch
+                            filter={filter}
+                            setFilter={setFilter}
+                        />
+                    </SearchWrapper>
                 }
             />
             {values

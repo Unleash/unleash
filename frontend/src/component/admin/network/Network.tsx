@@ -1,21 +1,25 @@
 import { lazy } from 'react';
 
 import { Tab, Tabs } from '@mui/material';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { TabLink } from 'component/common/TabNav/TabLink';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-const NetworkOverview = lazy(() => import('./NetworkOverview/NetworkOverview'));
-const NetworkConnectedEdges = lazy(
-    () => import('./NetworkConnectedEdges/NetworkConnectedEdges'),
+const NetworkOverview = lazy(
+    () => import('./NetworkOverview/NetworkOverview.tsx'),
 );
-const NetworkTraffic = lazy(() => import('./NetworkTraffic/NetworkTraffic'));
+const NetworkTraffic = lazy(
+    () => import('./NetworkTraffic/NetworkTraffic.tsx'),
+);
 const NetworkTrafficUsage = lazy(
-    () => import('./NetworkTrafficUsage/NetworkTrafficUsage'),
+    () => import('./NetworkTrafficUsage/NetworkTrafficUsage.tsx'),
 );
 const BackendConnections = lazy(
-    () => import('./NetworkTrafficUsage/BackendConnections'),
+    () => import('./NetworkTrafficUsage/BackendConnections.tsx'),
+);
+const FrontendNetworkTrafficUsage = lazy(
+    () => import('./NetworkTrafficUsage/FrontendNetworkTrafficUsage.tsx'),
 );
 
 const tabs = [
@@ -26,10 +30,6 @@ const tabs = [
     {
         label: 'Traffic',
         path: '/admin/network/traffic',
-    },
-    {
-        label: 'Connected Edges',
-        path: '/admin/network/connected-edges',
     },
 ];
 
@@ -45,19 +45,18 @@ const consumptionModelTabs = [
         label: 'Backend Connections',
         path: '/admin/network/backend-connections',
     },
+    {
+        label: 'Frontend Traffic',
+        path: '/admin/network/frontend-data-usage',
+    },
 ];
 
 export const Network = () => {
     const { pathname } = useLocation();
-    const edgeObservabilityEnabled = useUiFlag('edgeObservability');
-    const consumptionModelEnabled = useUiFlag('consumptionModel');
+    const consumptionModelEnabled = useUiFlag('consumptionModelUI');
     const allTabs = consumptionModelEnabled
         ? [...tabs, ...consumptionModelTabs]
         : [...tabs, ...seatModelTabs];
-
-    const filteredTabs = allTabs.filter(
-        ({ label }) => label !== 'Connected Edges' || edgeObservabilityEnabled,
-    );
 
     return (
         <div>
@@ -71,7 +70,7 @@ export const Network = () => {
                         variant='scrollable'
                         allowScrollButtonsMobile
                     >
-                        {filteredTabs.map(({ label, path }) => (
+                        {allTabs.map(({ label, path }) => (
                             <Tab
                                 key={label}
                                 value={path}
@@ -89,12 +88,12 @@ export const Network = () => {
                 <Routes>
                     <Route path='*' element={<NetworkOverview />} />
                     <Route path='traffic' element={<NetworkTraffic />} />
-                    {edgeObservabilityEnabled && (
-                        <Route
-                            path='connected-edges'
-                            element={<NetworkConnectedEdges />}
-                        />
-                    )}
+                    <Route
+                        path='connected-edges'
+                        element={
+                            <Navigate to='/admin/enterprise-edge' replace />
+                        }
+                    />
                     <Route
                         path='data-usage'
                         element={<NetworkTrafficUsage />}
@@ -102,6 +101,10 @@ export const Network = () => {
                     <Route
                         path='backend-connections'
                         element={<BackendConnections />}
+                    />
+                    <Route
+                        path='frontend-data-usage'
+                        element={<FrontendNetworkTrafficUsage />}
                     />
                 </Routes>
             </PageContent>

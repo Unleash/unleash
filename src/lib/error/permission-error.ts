@@ -1,4 +1,4 @@
-import { type ApiErrorSchema, UnleashError } from './unleash-error';
+import { type ApiErrorSchema, UnleashError } from './unleash-error.js';
 
 type Permission = string | string[];
 
@@ -37,4 +37,3 @@ class PermissionError extends UnleashError {
 }
 
 export default PermissionError;
-module.exports = PermissionError;

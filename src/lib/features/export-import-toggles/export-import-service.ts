@@ -1,7 +1,7 @@
-import type { Logger } from '../../logger';
-import type { IStrategy } from '../../types/stores/strategy-store';
-import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
-import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import type { Logger } from '../../logger.js';
+import type { IStrategy } from '../../types/stores/strategy-store.js';
+import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type.js';
+import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import {
     FeaturesExportedEvent,
     FeaturesImportedEvent,
@@ -17,20 +17,20 @@ import {
     type IFlagResolver,
     type ITagTypeStore,
     type IUnleashConfig,
-    type IUnleashServices,
     type IUnleashStores,
     type IVariant,
     type WithRequired,
-} from '../../types';
+    type IFeatureLinksReadModel,
+} from '../../types/index.js';
 import type {
     ExportQuerySchema,
     ExportResultSchema,
     FeatureStrategySchema,
     ImportTogglesSchema,
     ImportTogglesValidateSchema,
-} from '../../openapi';
-import type { IUser } from '../../types/user';
-import { BadDataError } from '../../error';
+} from '../../openapi/index.js';
+import type { IUser } from '../../types/user.js';
+import { BadDataError } from '../../error/index.js';
 import type {
     AccessService,
     ContextService,
@@ -38,26 +38,28 @@ import type {
     EventService,
     FeatureTagService,
     FeatureToggleService,
+    IUnleashServices,
     StrategyService,
     TagTypeService,
-} from '../../services';
-import { isValidField } from './import-context-validation';
+} from '../../services/index.js';
+import { isValidField } from './import-context-validation.js';
 import type {
     IImportTogglesStore,
     ProjectFeaturesLimit,
-} from './import-toggles-store-type';
+} from './import-toggles-store-type.js';
 import {
     ImportPermissionsService,
     type Mode,
-} from './import-permissions-service';
-import { ImportValidationMessages } from './import-validation-messages';
-import { findDuplicates } from '../../util/findDuplicates';
-import type { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
-import type { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type';
+} from './import-permissions-service.js';
+import { ImportValidationMessages } from './import-validation-messages.js';
+import { findDuplicates } from '../../util/findDuplicates.js';
+import type { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service.js';
+import type { IDependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model-type.js';
 import groupBy from 'lodash.groupby';
-import { allSettledWithRejection } from '../../util/allSettledWithRejection';
-import type { ISegmentReadModel } from '../segment/segment-read-model-type';
-import { readFile } from '../../util/read-file';
+import { allSettledWithRejection } from '../../util/allSettledWithRejection.js';
+import type { ISegmentReadModel } from '../segment/segment-read-model-type.js';
+import { readFile } from '../../util/read-file.js';
+import type FeatureLinkService from '../feature-links/feature-link-service.js';
 
 export type IImportService = {
     validate(
@@ -128,6 +130,10 @@ export default class ExportImportService
 
     private dependentFeaturesService: DependentFeaturesService;
 
+    private featureLinksReadModel: IFeatureLinksReadModel;
+
+    private featureLinkService: FeatureLinkService;
+
     constructor(
         stores: Pick<
             IUnleashStores,
@@ -152,6 +158,7 @@ export default class ExportImportService
             tagTypeService,
             featureTagService,
             dependentFeaturesService,
+            featureLinkService,
         }: Pick<
             IUnleashServices,
             | 'featureToggleService'
@@ -162,9 +169,11 @@ export default class ExportImportService
             | 'tagTypeService'
             | 'featureTagService'
             | 'dependentFeaturesService'
+            | 'featureLinkService'
         >,
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
         segmentReadModel: ISegmentReadModel,
+        featureLinksReadModel: IFeatureLinksReadModel,
     ) {
         this.toggleStore = stores.featureToggleStore;
         this.importTogglesStore = stores.importTogglesStore;
@@ -182,6 +191,7 @@ export default class ExportImportService
         this.tagTypeService = tagTypeService;
         this.featureTagService = featureTagService;
         this.dependentFeaturesService = dependentFeaturesService;
+        this.featureLinkService = featureLinkService;
         this.importPermissionsService = new ImportPermissionsService(
             this.importTogglesStore,
             this.accessService,
@@ -190,6 +200,7 @@ export default class ExportImportService
         );
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
         this.segmentReadModel = segmentReadModel;
+        this.featureLinksReadModel = featureLinksReadModel;
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -292,6 +303,7 @@ export default class ExportImportService
         await this.importTagTypes(dto, auditUser);
         await this.importTags(dto, auditUser);
         await this.importContextFields(dto, auditUser);
+        await this.importLinks(dto, auditUser);
     }
 
     async import(
@@ -348,6 +360,27 @@ export default class ExportImportService
         await this.importStrategies(dto, auditUser);
         await this.importToggleStatuses(dto, user, auditUser);
         await this.importDependencies(dto, user, auditUser);
+    }
+
+    private async importLinks(dto: ImportTogglesSchema, auditUser: IAuditUser) {
+        await this.importTogglesStore.deleteLinksForFeatures(
+            (dto.data.links ?? []).map((featureLink) => featureLink.feature),
+        );
+
+        const links = dto.data.links || [];
+        for (const featureLink of links) {
+            for (const link of featureLink.links) {
+                await this.featureLinkService.createLink(
+                    dto.project,
+                    {
+                        featureName: featureLink.feature,
+                        url: link.url,
+                        title: link.title || undefined,
+                    },
+                    auditUser,
+                );
+            }
+        }
     }
 
     private async importDependencies(
@@ -463,9 +496,10 @@ export default class ExportImportService
                 this.contextService.createContextField(
                     {
                         name: contextField.name,
-                        description: contextField.description || '',
+                        description: contextField.description,
                         legalValues: contextField.legalValues,
                         stickiness: contextField.stickiness,
+                        project: contextField.project ? dto.project : undefined,
                     },
                     auditUser,
                 ),
@@ -784,11 +818,22 @@ export default class ExportImportService
 
     private async getUnsupportedContextFields(dto: ImportTogglesSchema) {
         const availableContextFields = await this.contextService.getAll();
+        const targetProject = dto.project;
 
-        return dto.data.contextFields?.filter(
-            (contextField) =>
-                !isValidField(contextField, availableContextFields),
-        );
+        return dto.data.contextFields?.filter((importingField) => {
+            if (!isValidField(importingField, availableContextFields)) {
+                return true;
+            }
+
+            const existingField = availableContextFields.find(
+                (field) => field.name === importingField.name,
+            );
+
+            return (
+                existingField?.project &&
+                existingField.project !== targetProject
+            );
+        });
     }
 
     private async getArchivedFeatures(dto: ImportTogglesSchema) {
@@ -872,6 +917,7 @@ export default class ExportImportService
             segments,
             tagTypes,
             featureDependencies,
+            featureLinks,
         ] = await Promise.all([
             this.toggleStore.getAllByNames(featureNames),
             await this.featureEnvironmentStore.getAllByFeatures(
@@ -888,6 +934,7 @@ export default class ExportImportService
             this.segmentReadModel.getAll(),
             this.tagTypeStore.getAll(),
             this.dependentFeaturesReadModel.getDependencies(featureNames),
+            this.featureLinksReadModel.getLinks(...featureNames),
         ]);
         this.addSegmentsToStrategies(featureStrategies, strategySegments);
         const filteredContextFields = contextFields
@@ -929,13 +976,24 @@ export default class ExportImportService
             featureDependencies,
             'feature',
         );
-
         const mappedFeatureDependencies = Object.entries(
             groupedFeatureDependencies,
         ).map(([feature, dependencies]) => ({
             feature,
             dependencies: dependencies.map((d) => d.dependency),
         }));
+
+        const groupedFeatureLinks = groupBy(featureLinks, 'feature');
+        const mappedFeatureLinks = Object.entries(groupedFeatureLinks).map(
+            ([feature, links]) => ({
+                feature,
+                links: links.map((link) => ({
+                    id: link.id,
+                    url: link.url,
+                    title: link.title,
+                })),
+            }),
+        );
 
         const result = {
             features: features.map((item) => {
@@ -978,6 +1036,7 @@ export default class ExportImportService
             }),
             tagTypes: filteredTagTypes,
             dependencies: mappedFeatureDependencies,
+            links: mappedFeatureLinks,
         };
         await this.eventService.storeEvent(
             new FeaturesExportedEvent({ data: result, auditUser }),
@@ -1000,4 +1059,3 @@ export default class ExportImportService
         });
     }
 }
-module.exports = ExportImportService;

@@ -12,11 +12,15 @@ on:
       - frontend/**
       - website/**
       - coverage/**
+
 jobs:
   build:
     runs-on: ubuntu-latest
     name: build
-
+    permissions:
+      contents: read
+      # Needed for the github-reporter from vitest to make comments on PRs
+      pull-requests: write
     services:
       # Label used to access the service container
       postgres:
@@ -34,11 +38,11 @@ jobs:
 
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Use Node.js 20
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20.x
+          node-version: 22.x
           cache: 'yarn'
       - name: Enable corepack
         run: corepack enable
@@ -47,14 +51,8 @@ jobs:
           YARN_ENABLE_SCRIPTS: false
       - run: yarn lint
       - run: yarn build:backend
-      - run: yarn run test:report # This adds test results as github check to the workflow
+      - run: yarn run test
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-      - name: Upload test report to build # Done this way since external PRs would not be able to write the check. See https://github.com/marketplace/actions/test-reporter#recommended-setup-for-public-repositories
-        uses: actions/upload-artifact@v4
-        if: (success() || failure()) && github.ref == 'refs/heads/main'
-        with:
-          name: test-results
-          path: ./reports/jest-junit.xml

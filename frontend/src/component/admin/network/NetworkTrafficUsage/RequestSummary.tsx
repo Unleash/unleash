@@ -3,12 +3,15 @@ import { Badge } from 'component/common/Badge/Badge';
 import { subMonths } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { FC } from 'react';
-import type { ChartDataSelection } from './chart-data-selection';
+import type { ChartDataSelection } from './chart-data-selection.ts';
+import { parseMonthString } from './dates.ts';
 
 type Props = {
     period: ChartDataSelection;
     usageTotal: number;
     includedTraffic: number;
+    purchasedTraffic: number;
+    currentMonth: boolean;
 };
 
 const Container = styled('article')(({ theme }) => ({
@@ -62,13 +65,15 @@ const incomingRequestsText = (period: ChartDataSelection): string => {
         return `Average requests from ${formatMonth(fromMonth)} to ${formatMonth(toMonth)}`;
     }
 
-    return `Incoming requests in ${formatMonth(new Date(period.month))}`;
+    return `Requests used in ${formatMonth(parseMonthString(period.month))}`;
 };
 
 export const RequestSummary: FC<Props> = ({
     period,
     usageTotal,
     includedTraffic,
+    purchasedTraffic,
+    currentMonth,
 }) => {
     const { locationSettings } = useLocationSettings();
 
@@ -87,7 +92,6 @@ export const RequestSummary: FC<Props> = ({
                                         : 'error'
                                     : 'neutral'
                             }
-                            tabIndex={-1}
                         >
                             {usageTotal.toLocaleString(
                                 locationSettings.locale ?? 'en-US',
@@ -98,9 +102,28 @@ export const RequestSummary: FC<Props> = ({
                 </Row>
                 {includedTraffic > 0 && (
                     <Row>
-                        <dt>Included in your plan monthly</dt>
+                        <dt>Included in your plan</dt>
                         <dd>
                             {includedTraffic.toLocaleString('en-US')} requests
+                        </dd>
+                    </Row>
+                )}
+                {purchasedTraffic > 0 && currentMonth && (
+                    <Row>
+                        <dt>Additional traffic purchased</dt>
+                        <dd>
+                            {purchasedTraffic.toLocaleString('en-US')} requests
+                        </dd>
+                    </Row>
+                )}
+                {includedTraffic > 0 && currentMonth && (
+                    <Row>
+                        <dt>Total traffic available</dt>
+                        <dd>
+                            {(
+                                includedTraffic + purchasedTraffic
+                            ).toLocaleString('en-US')}{' '}
+                            requests
                         </dd>
                     </Row>
                 )}

@@ -1,20 +1,31 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { featureSchema } from './feature-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
-import { contextFieldSchema } from './context-field-schema';
-import { featureTagSchema } from './feature-tag-schema';
-import { parametersSchema } from './parameters-schema';
-import { legalValueSchema } from './legal-value-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { variantsSchema } from './variants-schema';
-import { constraintSchema } from './constraint-schema';
-import { tagTypeSchema } from './tag-type-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { featureDependenciesSchema } from './feature-dependencies-schema';
-import { dependentFeatureSchema } from './dependent-feature-schema';
-import { tagSchema } from './tag-schema';
+import { featureSchema } from './feature-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { featureEnvironmentSchema } from './feature-environment-schema.js';
+import { contextFieldSchema } from './context-field-schema.js';
+import { featureTagSchema } from './feature-tag-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { legalValueSchema } from './legal-value-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { variantsSchema } from './variants-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { tagTypeSchema } from './tag-type-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { featureDependenciesSchema } from './feature-dependencies-schema.js';
+import { releasePlanSchema } from './release-plan-schema.js';
+import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
+import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
+import { transitionConditionSchema } from './transition-condition-schema.js';
+import { dependentFeatureSchema } from './dependent-feature-schema.js';
+import { tagSchema } from './tag-schema.js';
+import { featureLinksSchema } from './feature-links-schema.js';
+import { featureLinkSchema } from './feature-link-schema.js';
+import { safeguardSchema } from './safeguard-schema.js';
+import { metricQuerySchema } from './metric-query-schema.js';
+import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
 export const exportResultSchema = {
     $id: '#/components/schemas/exportResultSchema',
@@ -177,6 +188,13 @@ export const exportResultSchema = {
                 $ref: '#/components/schemas/featureDependenciesSchema',
             },
         },
+        links: {
+            type: 'array',
+            description: 'A list of links for features in `features` list.',
+            items: {
+                $ref: '#/components/schemas/featureLinksSchema',
+            },
+        },
     },
     components: {
         schemas: {
@@ -196,8 +214,22 @@ export const exportResultSchema = {
             featureDependenciesSchema,
             dependentFeatureSchema,
             tagSchema,
+            featureLinksSchema,
+            featureLinkSchema,
+            releasePlanSchema,
+            releasePlanMilestoneSchema,
+            releasePlanMilestoneStrategySchema,
+            createFeatureStrategySchema,
+            createStrategyVariantSchema,
+            transitionConditionSchema,
+            safeguardSchema,
+            metricQuerySchema,
+            safeguardTriggerConditionSchema,
         },
     },
 } as const;
 
-export type ExportResultSchema = FromSchema<typeof exportResultSchema>;
+export type ExportResultSchema = FromSchema<
+    typeof exportResultSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

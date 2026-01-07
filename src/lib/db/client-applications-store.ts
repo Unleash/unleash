@@ -1,18 +1,18 @@
 import type EventEmitter from 'events';
-import NotFoundError from '../error/notfound-error';
+import NotFoundError from '../error/notfound-error.js';
 import type {
     IClientApplication,
     IClientApplications,
     IClientApplicationsSearchParams,
     IClientApplicationsStore,
-} from '../types/stores/client-applications-store';
-import type { Logger, LogProvider } from '../logger';
-import type { Db } from './db';
-import type { IApplicationOverview } from '../features/metrics/instance/models';
-import { applySearchFilters } from '../features/feature-search/search-utils';
-import type { IFlagResolver } from '../types';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
+} from '../types/stores/client-applications-store.js';
+import type { Logger, LogProvider } from '../logger.js';
+import type { Db } from './db.js';
+import type { IApplicationOverview } from '../features/metrics/instance/models.js';
+import { applySearchFilters } from '../features/feature-search/search-utils.js';
+import type { IFlagResolver } from '../types/index.js';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
 
 const COLUMNS = [
     'app_name',
@@ -91,7 +91,7 @@ const reduceRows = (rows: any[]): IClientApplication[] => {
     return Object.values(appsObj);
 };
 
-const remapRow = (input) => {
+const remapRow = (input: Partial<IClientApplication>) => {
     const temp = {
         app_name: input.appName,
         updated_at: input.updatedAt || new Date(),
@@ -141,6 +141,7 @@ export default class ClientApplicationsStore
     }
 
     async upsert(details: Partial<IClientApplication>): Promise<void> {
+        const stopTimer = this.timer('upsert');
         const row = remapRow(details);
         await this.db(TABLE).insert(row).onConflict('app_name').merge();
         const usageRows = this.remapUsageRow(details);
@@ -148,43 +149,75 @@ export default class ClientApplicationsStore
             .insert(usageRows)
             .onConflict(['app_name', 'project', 'environment'])
             .merge();
+        stopTimer();
     }
 
     async bulkUpsert(apps: Partial<IClientApplication>[]): Promise<void> {
+        const stopTimer = this.timer('bulkUpsert');
         const rows = apps.map(remapRow);
+        const uniqueRows = Object.values(
+            rows.reduce((acc, row) => {
+                if (row.app_name) {
+                    acc[row.app_name] = row;
+                }
+                return acc;
+            }, {}),
+        );
         const usageRows = apps.flatMap(this.remapUsageRow);
-        await this.db(TABLE).insert(rows).onConflict('app_name').merge();
+        const uniqueUsageRows = Object.values(
+            usageRows.reduce((acc, row) => {
+                if (row.app_name) {
+                    acc[`${row.app_name} ${row.project} ${row.environment}`] =
+                        row;
+                }
+                return acc;
+            }, {}),
+        );
+
+        await this.db(TABLE)
+            .insert(uniqueRows)
+            .onConflict('app_name')
+            .merge({
+                updated_at: this.db.raw('EXCLUDED.updated_at'),
+                seen_at: this.db.raw('EXCLUDED.seen_at'),
+            });
+
         await this.db(TABLE_USAGE)
-            .insert(usageRows)
+            .insert(uniqueUsageRows)
             .onConflict(['app_name', 'project', 'environment'])
-            .merge();
+            .ignore();
+        stopTimer();
     }
 
     async exists(appName: string): Promise<boolean> {
+        const stopTimer = this.timer('exists');
         const result = await this.db.raw(
             `SELECT EXISTS(SELECT 1 FROM ${TABLE} WHERE app_name = ?) AS present`,
             [appName],
         );
         const { present } = result.rows[0];
+        stopTimer();
         return present;
     }
 
     async getAll(): Promise<IClientApplication[]> {
+        const stopTimer = this.timer('getAll');
         const rows = await this.db
             .select(COLUMNS)
             .from(TABLE)
             .orderBy('app_name', 'asc');
-
+        stopTimer();
         return rows.map(mapRow);
     }
 
     async getApplication(appName: string): Promise<IClientApplication> {
+        const stopTimer = this.timer('getApplication');
         const row = await this.db
             .select(COLUMNS)
             .where('app_name', appName)
             .from(TABLE)
             .first();
-
+        stopTimer();
         if (!row) {
             throw new NotFoundError(`Could not find appName=${appName}`);
         }
@@ -199,6 +232,7 @@ export default class ClientApplicationsStore
     async getApplications(
         params: IClientApplicationsSearchParams,
     ): Promise<IClientApplications> {
+        const stopTimer = this.timer('getApplications');
         const { limit, offset, sortOrder = 'asc', searchParams } = params;
         const validatedSortOrder =
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
@@ -239,6 +273,7 @@ export default class ClientApplicationsStore
             .whereBetween('rank', [offset + 1, offset + limit]);
 
         const rows = await query;
+        stopTimer();
 
         if (rows.length !== 0) {
             const applications = reduceRows(rows);
@@ -255,9 +290,11 @@ export default class ClientApplicationsStore
     }
 
     async getUnannounced(): Promise<IClientApplication[]> {
+        const stopTimer = this.timer('getUnannounced');
         const rows = await this.db(TABLE)
             .select(COLUMNS)
             .where('announced', false);
+        stopTimer();
         return rows.map(mapRow);
     }
 
@@ -266,31 +303,38 @@ export default class ClientApplicationsStore
      * @return {[app]} - Apps that hadn't been announced
      */
     async setUnannouncedToAnnounced(): Promise<IClientApplication[]> {
+        const stopTimer = this.timer('setUnannouncedToAnnounced');
         const rows = await this.db(TABLE)
             .update({ announced: true })
             .where('announced', false)
             .whereNotNull('announced')
             .returning(COLUMNS);
+        stopTimer();
         return rows.map(mapRow);
     }
 
     async delete(key: string): Promise<void> {
+        const stopTimer = this.timer('delete');
         await this.db(TABLE).where('app_name', key).del();
+        stopTimer();
     }
 
     async deleteAll(): Promise<void> {
+        const stopTimer = this.timer('deleteAll');
         await this.db(TABLE).del();
+        stopTimer();
     }
 
     destroy(): void {}
 
     async get(appName: string): Promise<IClientApplication> {
+        const stopTimer = this.timer('get');
         const row = await this.db
             .select(COLUMNS)
             .where('app_name', appName)
             .from(TABLE)
             .first();
-
+        stopTimer();
         if (!row) {
             throw new NotFoundError(`Could not find appName=${appName}`);
         }
@@ -328,6 +372,12 @@ export default class ClientApplicationsStore
                         'ARRAY_AGG(DISTINCT ci.sdk_version) FILTER (WHERE ci.sdk_version IS NOT NULL) as sdk_versions',
                     ),
                     this.db.raw('MAX(ci.last_seen) as latest_last_seen'),
+                    this.db.raw(
+                        "ARRAY_AGG(DISTINCT ci.sdk_version) FILTER (WHERE ci.sdk_type = 'frontend' AND ci.sdk_version IS NOT NULL) as frontend_sdks",
+                    ),
+                    this.db.raw(
+                        "ARRAY_AGG(DISTINCT ci.sdk_version) FILTER (WHERE ci.sdk_type = 'backend' AND ci.sdk_version IS NOT NULL) as backend_sdks",
+                    ),
                 ])
                     .from('client_instances as ci')
                     .where('ci.app_name', appName)
@@ -340,6 +390,8 @@ export default class ClientApplicationsStore
                 'm.features',
                 'i.unique_instance_count',
                 'i.sdk_versions',
+                'i.backend_sdks',
+                'i.frontend_sdks',
                 'i.latest_last_seen',
                 'ca.strategies',
             ])
@@ -371,6 +423,8 @@ export default class ClientApplicationsStore
                 environment,
                 unique_instance_count,
                 sdk_versions,
+                frontend_sdks,
+                backend_sdks,
                 latest_last_seen,
                 project,
                 features,
@@ -396,6 +450,8 @@ export default class ClientApplicationsStore
                     name: environment,
                     instanceCount: Number(unique_instance_count),
                     sdks: sdk_versions || [],
+                    frontendSdks: frontend_sdks || [],
+                    backendSdks: backend_sdks || [],
                     lastSeen: latest_last_seen,
                     issues: {
                         missingFeatures: featuresNotMappedToProject
@@ -432,7 +488,7 @@ export default class ClientApplicationsStore
         };
     }
 
-    private remapUsageRow = (input) => {
+    private remapUsageRow = (input: Partial<IClientApplication>) => {
         if (!input.projects || input.projects.length === 0) {
             return [
                 {
@@ -449,4 +505,17 @@ export default class ClientApplicationsStore
             }));
         }
     };
+
+    async removeInactiveApplications(): Promise<number> {
+        const stopTimer = this.timer('removeInactiveApplications');
+        const rows = await this.db(TABLE)
+            .whereRaw("seen_at < now() - interval '30 days'")
+            .del();
+        stopTimer();
+        if (rows > 0) {
+            this.logger.debug(`Deleted ${rows} applications`);
+        }
+
+        return rows;
+    }
 }

@@ -2,7 +2,7 @@ import type {
     FeatureTypeSchema,
     UpdateFeatureTypeLifetimeSchema,
 } from 'openapi';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 export const useFeatureTypeApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({

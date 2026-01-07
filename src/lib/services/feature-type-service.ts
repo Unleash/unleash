@@ -1,13 +1,13 @@
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import type { Logger } from '../logger';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { Logger } from '../logger.js';
 import type {
     IFeatureType,
     IFeatureTypeStore,
-} from '../types/stores/feature-type-store';
-import NotFoundError from '../error/notfound-error';
-import type EventService from '../features/events/event-service';
-import { FeatureTypeUpdatedEvent, type IAuditUser } from '../types';
+} from '../types/stores/feature-type-store.js';
+import NotFoundError from '../error/notfound-error.js';
+import type EventService from '../features/events/event-service.js';
+import { FeatureTypeUpdatedEvent, type IAuditUser } from '../types/index.js';
 
 export default class FeatureTypeService {
     private featureTypeStore: IFeatureTypeStore;
@@ -64,5 +64,3 @@ export default class FeatureTypeService {
         return result;
     }
 }
-
-module.exports = FeatureTypeService;

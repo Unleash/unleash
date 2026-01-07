@@ -7,23 +7,24 @@ import {
     Typography,
 } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { TagTypeSelect } from './TagTypeSelect';
-import { type TagOption, TagsInput } from './TagsInput';
+import { TagTypeSelect } from './TagTypeSelect.tsx';
+import { type TagOption, TagsInput } from './TagsInput.tsx';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
-import type { ITag, ITagType } from 'interfaces/tags';
+import type { ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
+import type { TagSchema } from 'openapi';
 
 type Payload = {
-    addedTags: ITag[];
-    removedTags: ITag[];
+    addedTags: TagSchema[];
+    removedTags: TagSchema[];
 };
 
 interface IManageBulkTagsDialogProps {
     open: boolean;
-    initialValues: ITag[];
-    initialIndeterminateValues: ITag[];
+    initialValues: TagSchema[];
+    initialIndeterminateValues: TagSchema[];
     onCancel: () => void;
     onSubmit: (payload: Payload) => void;
 }
@@ -36,14 +37,14 @@ const StyledDialogFormContent = styled('section')(({ theme }) => ({
 
 const formId = 'manage-tags-form';
 
-const mergeTags = (tags: ITag[], newTag: ITag) => [
+const mergeTags = (tags: TagSchema[], newTag: TagSchema) => [
     ...tags,
     ...(tags.some((x) => x.value === newTag.value && x.type === newTag.type)
         ? []
         : [newTag]),
 ];
 
-const filterTags = (tags: ITag[], tag: ITag) =>
+const filterTags = (tags: TagSchema[], tag: TagSchema) =>
     tags.filter((x) => !(x.value === tag.value && x.type === tag.type));
 
 export const payloadReducer = (
@@ -51,11 +52,11 @@ export const payloadReducer = (
     action:
         | {
               type: 'add' | 'remove';
-              payload: ITag;
+              payload: TagSchema;
           }
         | {
               type: 'clear';
-              payload: ITag[];
+              payload: TagSchema[];
           }
         | { type: 'reset' },
 ) => {
@@ -171,7 +172,7 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
             value,
             type,
         }).then(async () => {
-            await refetchTags();
+            refetchTags();
             setSelectedTags((prev) => [...prev, { title: value }]);
             dispatch({
                 type: 'add',
@@ -193,7 +194,7 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
                     value.inputValue &&
                     value.title.startsWith('Create new value')
                 ) {
-                    return createNewTagOnTheFly(value.inputValue, tagType.name);
+                    createNewTagOnTheFly(value.inputValue, tagType.name);
                 }
 
                 setSelectedTags(newValue as TagOption[]);

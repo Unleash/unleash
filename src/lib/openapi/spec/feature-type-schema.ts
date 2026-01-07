@@ -4,7 +4,7 @@ export const featureTypeSchema = {
     $id: '#/components/schemas/featureTypeSchema',
     type: 'object',
     description:
-        'A [feature flag type](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types).',
+        'A [feature flag type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types).',
     additionalProperties: false,
     required: ['id', 'name', 'description', 'lifetimeDays'],
     properties: {
@@ -29,7 +29,7 @@ export const featureTypeSchema = {
             type: 'integer',
             minimum: 0,
             description:
-                'How many days it takes before a feature flag of this typed is flagged as [potentially stale](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles) by Unleash. If this value is `null`, Unleash will never mark it as potentially stale.',
+                'How many days it takes before a feature flag of this typed is flagged as [potentially stale](https://docs.getunleash.io/concepts/technical-debt#stale-and-potentially-stale-toggles) by Unleash. If this value is `null`, Unleash will never mark it as potentially stale.',
             example: 40,
             nullable: true,
         },

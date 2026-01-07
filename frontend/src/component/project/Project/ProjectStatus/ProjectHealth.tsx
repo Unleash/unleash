@@ -5,6 +5,7 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
+import { getTechnicalDebtColor } from 'utils/getTechnicalDebtColor.ts';
 
 const ChartRadius = 40;
 const ChartStrokeWidth = 13;
@@ -80,6 +81,18 @@ const UnhealthyFlagBox = ({ flagCount }: { flagCount: number }) => {
     );
 };
 
+const useTechnicalDebtColor = (techicalDebt: number) => {
+    const theme = useTheme();
+    switch (getTechnicalDebtColor(techicalDebt)) {
+        case 'error':
+            return theme.palette.error.main;
+        case 'warning':
+            return theme.palette.warning.border;
+        default:
+            return theme.palette.success.border;
+    }
+};
+
 const Wrapper = styled(HealthGridTile)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -90,24 +103,21 @@ const Wrapper = styled(HealthGridTile)(({ theme }) => ({
 export const ProjectHealth = () => {
     const projectId = useRequiredPathParam('projectId');
     const {
-        data: { health, staleFlags },
+        data: { technicalDebt, staleFlags },
     } = useProjectStatus(projectId);
-    const healthRating = health.current;
     const { isOss } = useUiConfig();
     const theme = useTheme();
-    const circumference = 2 * Math.PI * ChartRadius; //
+    const circumference = 2 * Math.PI * ChartRadius;
 
     const gapLength = 0.3;
     const filledLength = 1 - gapLength;
     const offset = 0.75 - gapLength / 2;
-    const healthLength = (healthRating / 100) * circumference * 0.7;
+    const technicalDebtLength =
+        ((technicalDebt.current || 0) / 100) * circumference * 0.7;
 
-    const healthColor =
-        healthRating >= 0 && healthRating <= 24
-            ? theme.palette.error.main
-            : healthRating >= 25 && healthRating <= 74
-              ? theme.palette.warning.border
-              : theme.palette.success.border;
+    const technicalDebtColor = useTechnicalDebtColor(
+        technicalDebt.current || 0,
+    );
 
     return (
         <Wrapper>
@@ -129,9 +139,9 @@ export const ProjectHealth = () => {
                             cy='50'
                             r={ChartRadius}
                             fill='none'
-                            stroke={healthColor}
+                            stroke={technicalDebtColor}
                             strokeWidth={ChartStrokeWidth}
-                            strokeDasharray={`${healthLength} ${circumference - healthLength}`}
+                            strokeDasharray={`${technicalDebtLength} ${circumference - technicalDebtLength}`}
                             strokeDashoffset={offset * circumference}
                         />
                         <text
@@ -142,17 +152,18 @@ export const ProjectHealth = () => {
                             fill={theme.palette.text.primary}
                             fontSize={theme.typography.h1.fontSize}
                         >
-                            {healthRating}%
+                            {technicalDebt.current || 0}%
                         </text>
                     </StyledSVG>
                 </SVGWrapper>
                 <TextContainer>
                     <Typography>
-                        Your current project health rating is {healthRating}%
+                        Your current technical debt rating is{' '}
+                        {technicalDebt.current}%.
                     </Typography>
                     {!isOss() && (
                         <Link to={`/insights?project=IS%3A${projectId}`}>
-                            View health over time
+                            View technical debt over time
                         </Link>
                     )}
                 </TextContainer>

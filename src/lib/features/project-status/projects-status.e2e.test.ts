@@ -1,21 +1,23 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
-    FEATURE_CREATED,
     type IUser,
     RoleName,
     type IAuditUser,
     type IUnleashConfig,
-} from '../../types';
-import type { EventService } from '../../services';
-import { createEventsService } from '../events/createEventsService';
-import { createTestConfig } from '../../../test/config/test-config';
-import { randomId } from '../../util';
-import { ApiTokenType } from '../../types/models/api-token';
+} from '../../types/index.js';
+import type { EventService } from '../../services/index.js';
+import { createEventsService } from '../events/createEventsService.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { DEFAULT_ENV, randomId } from '../../util/index.js';
+import { ApiTokenType } from '../../types/model.js';
+import { FEATURE_CREATED } from '../../events/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -24,7 +26,7 @@ let eventService: EventService;
 const TEST_USER_ID = -9999;
 const config: IUnleashConfig = createTestConfig();
 
-const insertHealthScore = (id: string, health: number) => {
+const _insertHealthScore = (id: string, health: number) => {
     const irrelevantFlagTrendDetails = {
         total_flags: 10,
         stale_flags: 10,
@@ -158,7 +160,7 @@ test('project resources should contain the right data', async () => {
         tokenName: 'test-token',
         projects: ['default'],
         type: ApiTokenType.CLIENT,
-        environment: 'default',
+        environment: DEFAULT_ENV,
     });
 
     await app.services.segmentService.create(

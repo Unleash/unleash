@@ -1,35 +1,17 @@
-import Addon from './addon';
+import Addon from './addon.js';
 
-import teamsDefinition from './teams-definition';
+import teamsDefinition from './teams-definition.js';
 import {
     type IAddonConfig,
     type IFlagResolver,
     serializeDates,
-} from '../types';
+} from '../types/index.js';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
-} from './feature-event-formatter-md';
-import type { IEvent } from '../types/events';
-import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
-
-import {
-    CHANGE_ADDED,
-    CHANGE_DISCARDED,
-    CHANGE_EDITED,
-    CHANGE_REQUEST_APPLIED,
-    CHANGE_REQUEST_APPROVAL_ADDED,
-    CHANGE_REQUEST_APPROVED,
-    CHANGE_REQUEST_CANCELLED,
-    CHANGE_REQUEST_CREATED,
-    CHANGE_REQUEST_DISCARDED,
-    CHANGE_REQUEST_REJECTED,
-    CHANGE_REQUEST_SENT_TO_REVIEW,
-    CHANGE_REQUEST_SCHEDULED,
-    CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
-    CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
-    CHANGE_REQUEST_SCHEDULE_SUSPENDED,
-} from '../types/events';
+} from './feature-event-formatter-md.js';
+import type { IEvent } from '../events/index.js';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
 interface ITeamsParameters {
     url: string;
@@ -38,29 +20,9 @@ interface ITeamsParameters {
 export default class TeamsAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    flagResolver: IFlagResolver;
+    declare flagResolver: IFlagResolver;
 
     constructor(args: IAddonConfig) {
-        if (args.flagResolver.isEnabled('teamsIntegrationChangeRequests')) {
-            teamsDefinition.events = [
-                ...teamsDefinition.events!,
-                CHANGE_ADDED,
-                CHANGE_DISCARDED,
-                CHANGE_EDITED,
-                CHANGE_REQUEST_APPLIED,
-                CHANGE_REQUEST_APPROVAL_ADDED,
-                CHANGE_REQUEST_APPROVED,
-                CHANGE_REQUEST_CANCELLED,
-                CHANGE_REQUEST_CREATED,
-                CHANGE_REQUEST_DISCARDED,
-                CHANGE_REQUEST_REJECTED,
-                CHANGE_REQUEST_SENT_TO_REVIEW,
-                CHANGE_REQUEST_SCHEDULED,
-                CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
-                CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
-                CHANGE_REQUEST_SCHEDULE_SUSPENDED,
-            ];
-        }
         super(teamsDefinition, args);
         this.msgFormatter = new FeatureEventFormatterMd({
             unleashUrl: args.unleashUrl,
@@ -118,7 +80,7 @@ export default class TeamsAddon extends Addon {
         if (typeof customHeaders === 'string' && customHeaders.length > 1) {
             try {
                 extraHeaders = JSON.parse(customHeaders);
-            } catch (e) {
+            } catch (_e) {
                 state = 'successWithErrors';
                 const badHeadersMessage =
                     'Could not parse the JSON in the customHeaders parameter.';
@@ -132,6 +94,7 @@ export default class TeamsAddon extends Addon {
             headers: { 'Content-Type': 'application/json', ...extraHeaders },
             body: JSON.stringify(body),
         };
+
         const res = await this.fetchRetry(url, requestOpts);
 
         this.logger.info(`Handled event "${event.type}".`);

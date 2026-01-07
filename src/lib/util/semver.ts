@@ -16,7 +16,7 @@ export const mustParseStrictSemVer = (version: string): SemVer => {
     const parsedVersion = parseStrictSemVer(version);
 
     if (!parsedVersion) {
-        throw new Error('Could not parse SemVer string: ${version}');
+        throw new Error(`Could not parse SemVer string: ${version}`);
     }
 
     return parsedVersion;

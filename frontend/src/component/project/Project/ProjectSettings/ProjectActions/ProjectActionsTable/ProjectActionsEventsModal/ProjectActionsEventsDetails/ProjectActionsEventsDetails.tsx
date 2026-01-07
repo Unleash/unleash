@@ -1,7 +1,7 @@
 import { Alert, styled } from '@mui/material';
 import type { IActionSetEvent } from 'interfaces/action';
-import { ProjectActionsEventsDetailsAction } from './ProjectActionsEventsDetailsAction';
-import { ProjectActionsEventsDetailsSource } from './ProjectActionsEventsDetailsSource/ProjectActionsEventsDetailsSource';
+import { ProjectActionsEventsDetailsAction } from './ProjectActionsEventsDetailsAction.tsx';
+import { ProjectActionsEventsDetailsSource } from './ProjectActionsEventsDetailsSource/ProjectActionsEventsDetailsSource.tsx';
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
 
 const StyledDetails = styled('div')(({ theme }) => ({

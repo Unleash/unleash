@@ -1,30 +1,31 @@
-import ClientMetricsServiceV2 from './metrics-service-v2';
+import ClientMetricsServiceV2 from './metrics-service-v2.js';
 
-import getLogger from '../../../../test/fixtures/no-logger';
+import getLogger from '../../../../test/fixtures/no-logger.js';
 
-import createStores from '../../../../test/fixtures/store';
+import createStores from '../../../../test/fixtures/store.js';
 import EventEmitter from 'events';
-import { LastSeenService } from '../last-seen/last-seen-service';
+import { LastSeenService } from '../last-seen/last-seen-service.js';
 import type {
     IClientMetricsStoreV2,
     IUnleashConfig,
-} from '../../../../lib/types';
+} from '../../../../lib/types/index.js';
 import { endOfDay, startOfHour, subDays, subHours } from 'date-fns';
-import type { IClientMetricsEnv } from './client-metrics-store-v2-type';
+import type { IClientMetricsEnv } from './client-metrics-store-v2-type.js';
+import { UnknownFlagsService } from '../unknown-flags/unknown-flags-service.js';
 
-function initClientMetrics(flagEnabled = true) {
+import { vi } from 'vitest';
+
+function initClientMetrics() {
     const stores = createStores();
 
     const eventBus = new EventEmitter();
-    eventBus.emit = jest.fn();
+    eventBus.emit = vi.fn(() => true);
 
     const config = {
         eventBus,
         getLogger,
         flagResolver: {
-            isEnabled: () => {
-                return flagEnabled;
-            },
+            isEnabled: () => true,
         },
     } as unknown as IUnleashConfig;
 
@@ -34,15 +35,31 @@ function initClientMetrics(flagEnabled = true) {
         },
         config,
     );
-    lastSeenService.updateLastSeen = jest.fn();
+    lastSeenService.updateLastSeen = vi.fn();
+    const unknownFlagsService = new UnknownFlagsService(
+        {
+            unknownFlagsStore: stores.unknownFlagsStore,
+        },
+        config,
+    );
 
-    const service = new ClientMetricsServiceV2(stores, config, lastSeenService);
-    return { clientMetricsService: service, eventBus, lastSeenService };
+    const service = new ClientMetricsServiceV2(
+        stores,
+        config,
+        lastSeenService,
+        unknownFlagsService,
+    );
+    return { clientMetricsService: service, eventBus, lastSeenService, stores };
 }
 
 test('process metrics properly', async () => {
-    const { clientMetricsService, eventBus, lastSeenService } =
+    const { clientMetricsService, eventBus, lastSeenService, stores } =
         initClientMetrics();
+
+    stores.clientMetricsStoreV2.getFeatureFlagNames = vi
+        .fn<() => Promise<string[]>>()
+        .mockResolvedValue(['myCoolToggle', 'myOtherToggle']);
+
     await clientMetricsService.registerClientMetrics(
         {
             appName: 'test',
@@ -100,31 +117,6 @@ test('process metrics properly even when some names are not url friendly, filter
     expect(lastSeenService.updateLastSeen).not.toHaveBeenCalled();
 });
 
-test('process metrics properly even when some names are not url friendly, with default behavior when flag is off', async () => {
-    const { clientMetricsService, eventBus, lastSeenService } =
-        initClientMetrics(false);
-    await clientMetricsService.registerClientMetrics(
-        {
-            appName: 'test',
-            bucket: {
-                start: '1982-07-25T12:00:00.000Z',
-                stop: '2023-07-25T12:00:00.000Z',
-                toggles: {
-                    'not url friendly ☹': {
-                        yes: 0,
-                        no: 100,
-                    },
-                },
-            },
-            environment: 'test',
-        },
-        '127.0.0.1',
-    );
-
-    expect(eventBus.emit).toHaveBeenCalledTimes(1);
-    expect(lastSeenService.updateLastSeen).toHaveBeenCalledTimes(1);
-});
-
 test('get daily client metrics for a toggle', async () => {
     const yesterday = subDays(new Date(), 1);
     const twoDaysAgo = subDays(new Date(), 2);
@@ -138,8 +130,8 @@ test('get daily client metrics for a toggle', async () => {
     };
     const clientMetricsStoreV2 = {
         getMetricsForFeatureToggleV2(
-            featureName: string,
-            hoursBack?: number,
+            _featureName: string,
+            _hoursBack?: number,
         ): Promise<IClientMetricsEnv[]> {
             return Promise.resolve([
                 {
@@ -161,10 +153,12 @@ test('get daily client metrics for a toggle', async () => {
         getLogger() {},
     } as unknown as IUnleashConfig;
     const lastSeenService = {} as LastSeenService;
+    const unknownFlagsService = {} as UnknownFlagsService;
     const service = new ClientMetricsServiceV2(
         { clientMetricsStoreV2 },
         config,
         lastSeenService,
+        unknownFlagsService,
     );
 
     const metrics = await service.getClientMetricsForToggle('feature', 3 * 24);
@@ -194,8 +188,8 @@ test('get hourly client metrics for a toggle', async () => {
     };
     const clientMetricsStoreV2 = {
         getMetricsForFeatureToggleV2(
-            featureName: string,
-            hoursBack?: number,
+            _featureName: string,
+            _hoursBack?: number,
         ): Promise<IClientMetricsEnv[]> {
             return Promise.resolve([
                 {
@@ -217,10 +211,12 @@ test('get hourly client metrics for a toggle', async () => {
         getLogger() {},
     } as unknown as IUnleashConfig;
     const lastSeenService = {} as LastSeenService;
+    const unknownFlagsService = {} as UnknownFlagsService;
     const service = new ClientMetricsServiceV2(
         { clientMetricsStoreV2 },
         config,
         lastSeenService,
+        unknownFlagsService,
     );
 
     const metrics = await service.getClientMetricsForToggle('feature', 2);
@@ -287,10 +283,12 @@ const setupMetricsService = ({
         },
     } as unknown as IUnleashConfig;
     const lastSeenService = {} as LastSeenService;
+    const unknownFlagsService = {} as UnknownFlagsService;
     const service = new ClientMetricsServiceV2(
         { clientMetricsStoreV2 },
         config,
         lastSeenService,
+        unknownFlagsService,
     );
     return {
         service,

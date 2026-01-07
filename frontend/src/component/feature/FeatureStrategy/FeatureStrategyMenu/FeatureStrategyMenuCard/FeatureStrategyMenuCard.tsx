@@ -1,51 +1,29 @@
-import type { IStrategy } from 'interfaces/strategy';
-import { Link } from 'react-router-dom';
-import {
-    getFeatureStrategyIcon,
-    formatStrategyName,
-} from 'utils/strategyNames';
-import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { styled } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-
-interface IFeatureStrategyMenuCardProps {
-    projectId: string;
-    featureId: string;
-    environmentId: string;
-    strategy: Pick<IStrategy, 'name' | 'displayName' | 'description'> &
-        Partial<IStrategy>;
-    defaultStrategy?: boolean;
-}
+import { Truncator } from 'component/common/Truncator/Truncator';
+import type { ReactNode } from 'react';
 
 const StyledIcon = styled('div')(({ theme }) => ({
-    width: theme.spacing(4),
-    height: 'auto',
+    display: 'flex',
+    alignItems: 'center',
     '& > svg': {
-        // Styling for SVG icons.
+        width: theme.spacing(6),
+        height: theme.spacing(6),
         fill: theme.palette.primary.main,
     },
-    '& > div': {
-        // Styling for the Rollout icon.
-        height: theme.spacing(2),
-        marginLeft: '-.75rem',
-        color: theme.palette.primary.main,
-    },
 }));
 
-const StyledDescription = styled('div')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
+const StyledName = styled(Truncator)(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
-const StyledName = styled(StringTruncator)(({ theme }) => ({
-    fontWeight: theme.fontWeight.bold,
-}));
-
-const StyledCard = styled(Link)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: '3rem 1fr',
-    width: '20rem',
+const StyledCard = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'isDefault',
+})<{ isDefault?: boolean }>(({ theme, isDefault }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    height: theme.spacing(10),
     padding: theme.spacing(2),
+    backgroundColor: theme.palette.background.elevation1,
     color: 'inherit',
     textDecoration: 'inherit',
     lineHeight: 1.25,
@@ -53,51 +31,79 @@ const StyledCard = styled(Link)(({ theme }) => ({
     borderStyle: 'solid',
     borderColor: theme.palette.divider,
     borderRadius: theme.spacing(1),
-    '&:hover, &:focus': {
-        borderColor: theme.palette.primary.main,
+    textAlign: 'left',
+    overflow: 'hidden',
+    position: 'relative',
+    fontSize: theme.typography.caption.fontSize,
+    '&:hover .cardContent, &:focus-within .cardContent': {
+        opacity: 0.4,
     },
+    '&:hover .cardActions, &:focus-within .cardActions': {
+        opacity: 1,
+    },
+    ...(isDefault && {
+        backgroundColor: theme.palette.secondary.light,
+        borderColor: theme.palette.secondary.border,
+    }),
+    userSelect: 'none',
 }));
 
+const StyledCardContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    transition: 'opacity 0.2s ease-in-out',
+    gap: theme.spacing(2),
+}));
+
+const StyledCardDescription = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    gap: theme.spacing(0.5),
+}));
+
+const StyledCardActions = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    top: theme.spacing(0),
+    bottom: theme.spacing(0),
+    right: theme.spacing(2),
+    gap: theme.spacing(1),
+    opacity: 0,
+    transition: 'opacity 0.1s ease-in-out',
+}));
+
+interface IFeatureStrategyMenuCardProps {
+    name: string;
+    description: string;
+    icon: ReactNode;
+    isDefault?: boolean;
+    children: ReactNode;
+}
+
 export const FeatureStrategyMenuCard = ({
-    projectId,
-    featureId,
-    environmentId,
-    strategy,
-    defaultStrategy,
-}: IFeatureStrategyMenuCardProps) => {
-    const StrategyIcon = getFeatureStrategyIcon(strategy.name);
-    const strategyName = formatStrategyName(strategy.name);
-    const { trackEvent } = usePlausibleTracker();
-
-    const createStrategyPath = formatCreateStrategyPath(
-        projectId,
-        featureId,
-        environmentId,
-        strategy.name,
-        defaultStrategy,
-    );
-
-    const openStrategyCreationModal = () => {
-        trackEvent('strategy-add', {
-            props: {
-                buttonTitle: strategy.displayName || strategyName,
-            },
-        });
-    };
-
-    return (
-        <StyledCard to={createStrategyPath} onClick={openStrategyCreationModal}>
-            <StyledIcon>
-                <StrategyIcon />
-            </StyledIcon>
-            <div>
-                <StyledName
-                    text={strategy.displayName || strategyName}
-                    maxWidth='200'
-                    maxLength={25}
-                />
-                <StyledDescription>{strategy.description}</StyledDescription>
-            </div>
-        </StyledCard>
-    );
-};
+    name,
+    description,
+    icon,
+    isDefault,
+    children,
+}: IFeatureStrategyMenuCardProps) => (
+    <StyledCard isDefault={isDefault}>
+        <StyledCardContent className='cardContent'>
+            <StyledIcon>{icon}</StyledIcon>
+            <StyledCardDescription>
+                <StyledName lines={1} title={name} arrow>
+                    {name}
+                </StyledName>
+                {description && (
+                    <Truncator lines={2} title={description} arrow>
+                        {description}
+                    </Truncator>
+                )}
+            </StyledCardDescription>
+        </StyledCardContent>
+        <StyledCardActions className='cardActions'>
+            {children}
+        </StyledCardActions>
+    </StyledCard>
+);

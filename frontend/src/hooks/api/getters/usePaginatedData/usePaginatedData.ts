@@ -1,7 +1,7 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { useClearSWRCache } from '../../../useClearSWRCache';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { useClearSWRCache } from '../../../useClearSWRCache.js';
 
 type GenericSearchOutput<T> = {
     loading: boolean;
@@ -29,7 +29,10 @@ export function createPaginatedHook<T extends { total?: number }>(
 
         const prefix = dynamicPrefixKey || defaultPrefixKey;
         const KEY = `${prefix}${urlSearchParams}`;
-        useClearSWRCache(KEY, prefix);
+        useClearSWRCache({
+            currentKey: KEY,
+            clearPrefix: prefix,
+        });
 
         const fetcher = async () => {
             return fetch(formatApiPath(KEY), {

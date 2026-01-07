@@ -2,7 +2,7 @@ import { formatApiPath } from 'utils/formatPath';
 import { useEffect, useState } from 'react';
 import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import type { IFeatureMetrics } from 'interfaces/featureToggle';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 
 const emptyMetrics: IFeatureMetrics = {
     lastHourUsage: [],

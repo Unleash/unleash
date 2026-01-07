@@ -1,19 +1,19 @@
-import Addon from './addon';
+import Addon from './addon.js';
 
-import slackDefinition from './slack-definition';
+import slackDefinition from './slack-definition.js';
 import {
     type IAddonConfig,
     type IFlagResolver,
     serializeDates,
-} from '../types';
+} from '../types/index.js';
 
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
     LinkStyle,
-} from './feature-event-formatter-md';
-import type { IEvent } from '../types/events';
-import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+} from './feature-event-formatter-md.js';
+import type { IEvent } from '../events/index.js';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
 interface ISlackAddonParameters {
     url: string;
@@ -25,7 +25,7 @@ interface ISlackAddonParameters {
 export default class SlackAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    flagResolver: IFlagResolver;
+    declare flagResolver: IFlagResolver;
 
     constructor(args: IAddonConfig) {
         super(slackDefinition, args);
@@ -36,7 +36,6 @@ export default class SlackAddon extends Addon {
         this.flagResolver = args.flagResolver;
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async handleEvent(
         event: IEvent,
         parameters: ISlackAddonParameters,
@@ -63,7 +62,7 @@ export default class SlackAddon extends Addon {
         if (typeof customHeaders === 'string' && customHeaders.length > 1) {
             try {
                 extraHeaders = JSON.parse(customHeaders);
-            } catch (e) {
+            } catch (_e) {
                 state = 'successWithErrors';
                 const badHeadersMessage =
                     'Could not parse the JSON in the customHeaders parameter.';
@@ -79,7 +78,7 @@ export default class SlackAddon extends Addon {
         const requests = slackChannels.map((channel) => {
             const body = {
                 username,
-                icon_emoji: emojiIcon, // eslint-disable-line camelcase
+                icon_emoji: emojiIcon,
                 text,
                 channel: `#${channel}`,
                 attachments: [
@@ -160,5 +159,3 @@ export default class SlackAddon extends Addon {
         return [];
     }
 }
-
-module.exports = SlackAddon;

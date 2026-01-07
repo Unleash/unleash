@@ -1,4 +1,4 @@
-import React, { type VFC } from 'react';
+import React, { type FC } from 'react';
 import { FeatureEnvironmentSeen } from 'component/feature/FeatureView/FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import type { FeatureSearchEnvironmentSchema } from 'openapi';
 import { FeatureLifecycle } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycle';
@@ -11,7 +11,7 @@ interface IFeatureSeenCellProps {
     };
 }
 
-export const FeatureEnvironmentSeenCell: VFC<IFeatureSeenCellProps> = ({
+export const FeatureEnvironmentSeenCell: FC<IFeatureSeenCellProps> = ({
     feature,
     ...rest
 }) => {
@@ -35,33 +35,36 @@ interface IFeatureLifecycleProps {
         project: string;
         name: string;
     };
-    onComplete: () => void;
-    onUncomplete: () => void;
-    onArchive: () => void;
+    onComplete?: () => void;
+    onUncomplete?: () => void;
+    onArchive?: () => void;
+    expanded?: boolean;
 }
 
-export const FeatureLifecycleCell: VFC<IFeatureLifecycleProps> = ({
+export const FeatureLifecycleCell: FC<IFeatureLifecycleProps> = ({
     feature,
     onComplete,
     onUncomplete,
     onArchive,
+    expanded,
     ...rest
-}) => {
-    const environments = feature.environments
-        ? Object.values(feature.environments)
-        : [];
-
-    return (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <FeatureLifecycle
-                onArchive={onArchive}
-                onComplete={onComplete}
-                onUncomplete={onUncomplete}
-                feature={feature}
-            />
-        </Box>
-    );
-};
+}) => (
+    <Box
+        sx={(theme) => ({
+            display: 'flex',
+            justifyContent: expanded ? 'flex-start' : 'center',
+            padding: theme.spacing(0, expanded ? 2 : 0),
+        })}
+    >
+        <FeatureLifecycle
+            onArchive={onArchive}
+            onComplete={onComplete}
+            onUncomplete={onUncomplete}
+            feature={feature}
+            expanded={expanded}
+        />
+    </Box>
+);
 
 export const MemoizedFeatureEnvironmentSeenCell = React.memo(
     FeatureEnvironmentSeenCell,

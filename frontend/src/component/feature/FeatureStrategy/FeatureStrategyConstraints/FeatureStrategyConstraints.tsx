@@ -6,7 +6,7 @@ import {
     CREATE_FEATURE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
-import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList/FeatureStrategyConstraintAccordionList';
+import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList/FeatureStrategyConstraintAccordionList.tsx';
 
 interface IFeatureStrategyConstraintsProps {
     projectId: string;

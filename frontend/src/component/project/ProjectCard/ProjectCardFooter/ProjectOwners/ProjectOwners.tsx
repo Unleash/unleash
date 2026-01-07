@@ -45,14 +45,16 @@ const StyledHeader = styled('span')(({ theme }) => ({
     marginRight: 'auto',
 }));
 
+const AvatarHeight = 3.5;
 const StyledWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1.5, 0, 1.5, 2),
     display: 'flex',
     alignItems: 'center',
+    minHeight: theme.spacing(AvatarHeight),
 }));
 
 const StyledAvatarComponent = styled(AvatarComponent)(({ theme }) => ({
     cursor: 'default',
+    height: theme.spacing(AvatarHeight),
 }));
 
 const getOwnerName = (owner?: ProjectSchemaOwners[number]) => {

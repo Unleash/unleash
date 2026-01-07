@@ -1,9 +1,10 @@
-import { basePath } from './formatPath';
-import { getLocalStorageItem, setLocalStorageItem } from './storage';
+import { basePath } from './formatPath.js';
+import { getLocalStorageItem, setLocalStorageItem } from './storage.js';
 
 export const createLocalStorage = <T extends object | string>(
     key: string,
     initialValue: T,
+    timeToLive?: number,
 ) => {
     const internalKey = `${basePath}:${key}:localStorage:v2`;
     const value = (() => {
@@ -18,11 +19,11 @@ export const createLocalStorage = <T extends object | string>(
         if (newValue instanceof Function) {
             const previousValue = getLocalStorageItem<T>(internalKey);
             const output = newValue(previousValue ?? initialValue);
-            setLocalStorageItem(internalKey, output);
+            setLocalStorageItem(internalKey, output, timeToLive);
             return output;
         }
 
-        setLocalStorageItem(internalKey, newValue);
+        setLocalStorageItem(internalKey, newValue, timeToLive);
         return newValue;
     };
 

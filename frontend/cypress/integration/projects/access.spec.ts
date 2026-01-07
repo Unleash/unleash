@@ -8,8 +8,8 @@ import {
     PA_ROLE_ID,
     PA_USERS_GROUPS_ID,
     PA_USERS_GROUPS_TITLE_ID,
-    //@ts-ignore
-} from '../../../src/utils/testIds';
+    //@ts-expect-error
+} from '../../../src/utils/testIds.js';
 
 describe('project-access', () => {
     const baseUrl = Cypress.config().baseUrl;
@@ -50,12 +50,12 @@ describe('project-access', () => {
     });
 
     after(() => {
-        userIds.forEach((id) =>
-            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`),
-        );
-        groupIds.forEach((id) =>
-            cy.request('DELETE', `${baseUrl}/api/admin/groups/${id}`),
-        );
+        userIds.forEach((id) => {
+            cy.request('DELETE', `${baseUrl}/api/admin/user-admin/${id}`);
+        });
+        groupIds.forEach((id) => {
+            cy.request('DELETE', `${baseUrl}/api/admin/groups/${id}`);
+        });
 
         cy.request(
             'DELETE',
@@ -150,7 +150,10 @@ describe('project-access', () => {
     });
 
     it('can remove access', () => {
-        cy.get(`[data-testid='${PA_REMOVE_BUTTON_ID}']`).first().click();
+        cy.get(`[data-testid='${PA_REMOVE_BUTTON_ID}']`)
+            .filter(':not(:disabled)')
+            .first()
+            .click();
 
         cy.intercept(
             'DELETE',

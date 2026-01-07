@@ -1,4 +1,4 @@
-import { findDuplicates } from './findDuplicates';
+import { findDuplicates } from './findDuplicates.js';
 
 test('should find single duplicates', () => {
     expect(findDuplicates([1, 2, 3, 4, 1])).toEqual([1]);

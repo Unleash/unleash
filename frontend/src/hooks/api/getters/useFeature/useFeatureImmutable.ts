@@ -1,6 +1,6 @@
 import useSWRImmutable from 'swr/immutable';
 import { useCallback } from 'react';
-import { emptyFeature } from './emptyFeature';
+import { emptyFeature } from './emptyFeature.js';
 import {
     type IUseFeatureOutput,
     type IFeatureResponse,

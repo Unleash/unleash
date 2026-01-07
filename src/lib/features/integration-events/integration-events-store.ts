@@ -1,7 +1,7 @@
-import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store';
-import type { Row } from '../../db/crud/row-type';
-import type { Db } from '../../db/db';
-import type { IntegrationEventSchema } from '../../openapi/spec/integration-event-schema';
+import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
+import type { Row } from '../../db/crud/row-type.js';
+import type { Db } from '../../db/db.js';
+import type { IntegrationEventSchema } from '../../openapi/spec/integration-event-schema.js';
 
 export type IntegrationEventWriteModel = Omit<
     IntegrationEventSchema,

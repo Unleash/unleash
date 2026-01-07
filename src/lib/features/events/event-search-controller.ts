@@ -1,32 +1,32 @@
 import type { Response } from 'express';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import type EventService from '../../features/events/event-service';
-import { NONE } from '../../types/permissions';
-import type { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import { serializeDates } from '../../../lib/types/serialize-dates';
-import type { IFlagResolver } from '../../types/experimental';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import type EventService from '../../features/events/event-service.js';
+import { NONE } from '../../types/permissions.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+import { serializeDates } from '../../../lib/types/serialize-dates.js';
+import type { IFlagResolver } from '../../types/experimental.js';
 import {
     type EventSearchQueryParameters,
     eventSearchQueryParameters,
-} from '../../openapi/spec/event-search-query-parameters';
+} from '../../openapi/spec/event-search-query-parameters.js';
 import {
     type EventSearchResponseSchema,
     eventSearchResponseSchema,
-} from '../../openapi';
-import { normalizeQueryParams } from '../../features/feature-search/search-utils';
-import Controller from '../../routes/controller';
-import type { IAuthRequest } from '../../server-impl';
-import type { IEnrichedEvent, IEvent } from '../../types';
-import { anonymiseKeys, extractUserIdFromUser } from '../../util';
+} from '../../openapi/index.js';
+import { normalizeQueryParams } from '../feature-search/search-utils.js';
+import Controller from '../../routes/controller.js';
+import type { IEnrichedEvent, IEvent } from '../../events/index.js';
+import { anonymiseKeys, extractUserIdFromUser } from '../../util/index.js';
 import {
     FeatureEventFormatterMd,
     type FeatureEventFormatter,
-} from '../../addons/feature-event-formatter-md';
+} from '../../addons/feature-event-formatter-md.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
-const version = 1 as const;
+const _version = 1 as const;
 export default class EventSearchController extends Controller {
     private eventService: EventService;
 

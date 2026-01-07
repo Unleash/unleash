@@ -1,7 +1,7 @@
 import {
     CommandResultGroup,
     type CommandResultGroupItem,
-} from './RecentlyVisited/CommandResultGroup';
+} from './RecentlyVisited/CommandResultGroup.tsx';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
 import { useEffect } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

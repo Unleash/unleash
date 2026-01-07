@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UpdateStrategySchemaParametersItemType } from './updateStrategySchemaParametersItemType';
+import type { UpdateStrategySchemaParametersItemType } from './updateStrategySchemaParametersItemType.js';
 
 export type UpdateStrategySchemaParametersItem = {
     /** A description of this strategy parameter. Use this to indicate to the users what the parameter does. */
@@ -12,6 +12,6 @@ export type UpdateStrategySchemaParametersItem = {
     name: string;
     /** Whether this parameter must be configured when using the strategy. Defaults to `false` */
     required?: boolean;
-    /** The [type of the parameter](https://docs.getunleash.io/reference/custom-activation-strategies#parameter-types) */
+    /** The [type of the parameter](https://docs.getunleash.io/concepts/activation-strategies#parameters) */
     type: UpdateStrategySchemaParametersItemType;
 };

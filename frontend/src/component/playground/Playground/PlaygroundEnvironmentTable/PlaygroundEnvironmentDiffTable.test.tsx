@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { PlaygroundEnvironmentDiffTable } from './PlaygroundEnvironmentDiffTable';
+import { PlaygroundEnvironmentDiffTable } from './PlaygroundEnvironmentDiffTable.tsx';
 
 const irrelevantDetails = {
     strategies: {

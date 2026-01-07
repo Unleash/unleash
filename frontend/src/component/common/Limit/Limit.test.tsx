@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { Limit } from './Limit';
+import { Limit } from './Limit.tsx';
 
 test('Render approaching limit variant', () => {
     render(

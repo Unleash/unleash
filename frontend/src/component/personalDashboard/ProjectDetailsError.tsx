@@ -1,7 +1,7 @@
 import type { PersonalDashboardSchemaAdminsItem } from 'openapi';
 import type { FC } from 'react';
-import { YourAdmins } from './YourAdmins';
-import { ActionBox } from './ActionBox';
+import { YourAdmins } from './YourAdmins.tsx';
+import { ActionBox } from './ActionBox.tsx';
 
 export const DataError: FC<{ project: string }> = ({ project }) => {
     return (

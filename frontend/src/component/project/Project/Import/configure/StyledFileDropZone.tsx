@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { FileDropZone } from './FileDropZone';
+import { FileDropZone } from './FileDropZone.tsx';
 
 export const StyledFileDropZone = styled(FileDropZone)(({ theme }) => ({
     padding: theme.spacing(4, 2, 2, 2),

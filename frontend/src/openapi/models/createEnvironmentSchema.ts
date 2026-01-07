@@ -5,7 +5,7 @@
  */
 
 /**
- * Data required to create a new [environment](https://docs.getunleash.io/reference/environments)
+ * Data required to create a new [environment](https://docs.getunleash.io/concepts/environments)
  */
 export interface CreateEnvironmentSchema {
     /** Newly created environments are enabled by default. Set this property to `false` to create the environment in a disabled state. */
@@ -15,10 +15,16 @@ export interface CreateEnvironmentSchema {
      * @pattern ^[a-zA-Z0-9~_.-]+$
      */
     name: string;
+    /**
+     * Experimental field. The number of approvals required before a change request can be applied in this environment.
+     * @minimum 1
+     * @nullable
+     */
+    requiredApprovals?: number | null;
     /** Defines where in the list of environments to place this environment. The list uses an ascending sort, so lower numbers are shown first. You can change this value later. */
     sortOrder?: number;
     /**
-   * The [type of environment](https://docs.getunleash.io/reference/environments#environment-types) you would like to create. Unleash officially recognizes the following values:
+   * The [type of environment](https://docs.getunleash.io/concepts/environments#environment-types) you would like to create. Unleash officially recognizes the following values:
 - `development`
 - `test`
 - `preproduction`

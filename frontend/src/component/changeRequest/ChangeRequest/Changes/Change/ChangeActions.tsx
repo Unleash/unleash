@@ -27,7 +27,7 @@ import {
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import MoreVert from '@mui/icons-material/MoreVert';
-import { EditChange } from './EditChange';
+import { EditChange } from './EditChange.tsx';
 
 const useShowActions = (changeRequest: ChangeRequestType, change: IChange) => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(
@@ -58,6 +58,10 @@ const useShowActions = (changeRequest: ChangeRequestType, change: IChange) => {
 const StyledPopover = styled(Popover)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(1, 1.5),
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    marginLeft: 'auto',
 }));
 
 export const ChangeActions: FC<{
@@ -113,7 +117,7 @@ export const ChangeActions: FC<{
             show={
                 <>
                     <Tooltip title='Change request actions' arrow describeChild>
-                        <IconButton
+                        <StyledIconButton
                             id={id}
                             aria-controls={open ? menuId : undefined}
                             aria-haspopup='true'
@@ -122,7 +126,7 @@ export const ChangeActions: FC<{
                             type='button'
                         >
                             <MoreVert />
-                        </IconButton>
+                        </StyledIconButton>
                     </Tooltip>
                     <StyledPopover
                         id={menuId}

@@ -10,14 +10,14 @@ import {
 } from '@mui/material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useApplicationOverview } from 'hooks/api/getters/useApplicationOverview/useApplicationOverview';
-import { ApplicationIssues } from './ApplicationIssues/ApplicationIssues';
-import { ApplicationChart } from './ApplicationChart';
+import { ApplicationIssues } from './ApplicationIssues/ApplicationIssues.tsx';
+import { ApplicationChart } from './ApplicationChart.tsx';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
-import { Badge } from '../common/Badge/Badge';
-import { useNavigate } from 'react-router-dom';
+import { Badge } from '../common/Badge/Badge.tsx';
+import { Link, useNavigate } from 'react-router-dom';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useEffect } from 'react';
-import { useFeedback } from '../feedbackNew/useFeedback';
+import { useFeedback } from '../feedbackNew/useFeedback.tsx';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -35,11 +35,22 @@ const ApplicationContainer = styled(Box)(({ theme }) => ({
     alignSelf: 'stretch',
 }));
 
-const ProjectContainer = styled(Box)(({ theme }) => ({
+const ProjectContainer = styled('ul')(({ theme }) => ({
+    padding: 0,
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(2),
     alignSelf: 'stretch',
+    listStyle: 'none',
+}));
+
+const StyledBadgeLink = styled(Link)(({ theme }) => ({
+    ':hover,:focus-visible': {
+        outline: 'none',
+        '> *': {
+            outline: `1px solid ${theme.palette.primary.main}`,
+        },
+    },
 }));
 
 const ApplicationHeader = styled('div')(({ theme }) => ({
@@ -63,7 +74,7 @@ const ApplicationOverview = () => {
     usePageTitle('Applications - Overview');
     useTracking();
     const applicationName = useRequiredPathParam('name');
-    const navigate = useNavigate();
+    const _navigate = useNavigate();
     const { data, loading } = useApplicationOverview(applicationName);
 
     const { openFeedback } = useFeedback('applicationOverview', 'automatic');
@@ -97,18 +108,18 @@ const ApplicationOverview = () => {
                         <ProjectContainer>
                             Application is connected to these projects:
                             {data.projects.map((project) => (
-                                <Badge
-                                    sx={{ cursor: 'pointer' }}
-                                    key={project}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        navigate(`/projects/${project}`);
-                                    }}
-                                    color='secondary'
-                                    icon={<TopicOutlinedIcon />}
-                                >
-                                    {project}
-                                </Badge>
+                                <li key={project}>
+                                    <StyledBadgeLink
+                                        to={`/projects/${project}`}
+                                    >
+                                        <Badge
+                                            color='secondary'
+                                            icon={<TopicOutlinedIcon />}
+                                        >
+                                            {project}
+                                        </Badge>
+                                    </StyledBadgeLink>
+                                </li>
                             ))}
                         </ProjectContainer>
                         <Button

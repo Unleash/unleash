@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { healthOverviewSchema } from './health-overview-schema';
+import { healthOverviewSchema } from './health-overview-schema.js';
 
 export const healthReportSchema = {
     ...healthOverviewSchema,
@@ -32,4 +32,7 @@ export const healthReportSchema = {
     },
 } as const;
 
-export type HealthReportSchema = FromSchema<typeof healthReportSchema>;
+export type HealthReportSchema = FromSchema<
+    typeof healthReportSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

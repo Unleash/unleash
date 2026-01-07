@@ -1,13 +1,16 @@
 import type { Request, Response } from 'express';
-import type FeatureToggleService from '../../features/feature-toggle/feature-toggle-service';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types';
-import { NONE } from '../../types/permissions';
-import Controller from '../controller';
-import type { Logger } from '../../logger';
-import type { OpenApiService } from '../../services/openapi-service';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { type ConstraintSchema, getStandardResponses } from '../../openapi';
+import type { FeatureToggleService } from '../../features/feature-toggle/feature-toggle-service.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import { NONE } from '../../types/permissions.js';
+import Controller from '../controller.js';
+import type { Logger } from '../../logger.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import {
+    type ConstraintSchema,
+    getStandardResponses,
+} from '../../openapi/index.js';
 
 export default class ConstraintController extends Controller {
     private featureService: FeatureToggleService;
@@ -19,12 +22,12 @@ export default class ConstraintController extends Controller {
     constructor(
         config: IUnleashConfig,
         {
-            featureToggleServiceV2,
+            featureToggleService,
             openApiService,
-        }: Pick<IUnleashServices, 'featureToggleServiceV2' | 'openApiService'>,
+        }: Pick<IUnleashServices, 'featureToggleService' | 'openApiService'>,
     ) {
         super(config);
-        this.featureService = featureToggleServiceV2;
+        this.featureService = featureToggleService;
         this.openApiService = openApiService;
         this.logger = config.getLogger('/admin-api/validation.ts');
 

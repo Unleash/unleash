@@ -1,8 +1,12 @@
-import getLogger from '../../../fixtures/no-logger';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import { IAuthType, type IUnleashStores } from '../../../../lib/types';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
+import getLogger from '../../../fixtures/no-logger.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import {
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import { IAuthType, type IUnleashStores } from '../../../../lib/types/index.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
 
 let app: IUnleashTest;
 let appWithBaseUrl: IUnleashTest;
@@ -60,10 +64,10 @@ test('multiple slashes after base path is also rejected with 404', async () => {
 test('Access with API token is granted', async () => {
     const token = await app.services.apiTokenService.createApiTokenWithProjects(
         {
-            environment: 'default',
+            environment: DEFAULT_ENV,
             projects: ['default'],
             tokenName: 'test',
-            type: ApiTokenType.CLIENT,
+            type: ApiTokenType.BACKEND,
         },
     );
     await app.request

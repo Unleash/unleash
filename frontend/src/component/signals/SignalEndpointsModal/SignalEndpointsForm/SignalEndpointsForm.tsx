@@ -14,9 +14,9 @@ import type { ISignalEndpoint } from 'interfaces/signal';
 import {
     type SignalEndpointsFormErrors,
     TokenGeneration,
-} from './useSignalEndpointsForm';
-import { SignalEndpointsFormURL } from './SignalEndpointsFormURL';
-import { SignalEndpointsTokens } from './SignalEndpointsTokens/SignalEndpointsTokens';
+} from './useSignalEndpointsForm.ts';
+import { SignalEndpointsFormURL } from './SignalEndpointsFormURL.tsx';
+import { SignalEndpointsTokens } from './SignalEndpointsTokens/SignalEndpointsTokens.tsx';
 
 const StyledRaisedSection = styled('div')(({ theme }) => ({
     background: theme.palette.background.elevation1,
@@ -145,7 +145,7 @@ export const SignalEndpointsForm = ({
                             In order to connect your newly created signal
                             endpoint, you will also need a token.{' '}
                             <Link
-                                href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+                                href='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
                                 target='_blank'
                                 rel='noreferrer'
                             >

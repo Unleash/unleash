@@ -1,16 +1,15 @@
 import { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Divider, styled } from '@mui/material';
-import { v4 as uuidv4 } from 'uuid';
 import { IN } from 'constants/operators';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { ProjectActionsFilterItem } from './ProjectActionsFilterItem';
-import type { ActionsFilterState } from '../../useProjectActionsForm';
-import { ProjectActionsFormStep } from '../ProjectActionsFormStep';
+import { ProjectActionsFilterItem } from './ProjectActionsFilterItem.tsx';
+import type { ActionsFilterState } from '../../useProjectActionsForm.ts';
+import { ProjectActionsFormStep } from '../ProjectActionsFormStep.tsx';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Add from '@mui/icons-material/Add';
-import { ProjectActionsPreviewPayload } from './ProjectActionsPreviewPayload';
+import { ProjectActionsPreviewPayload } from './ProjectActionsPreviewPayload.tsx';
 import { useSignalEndpointSignals } from 'hooks/api/getters/useSignalEndpointSignals/useSignalEndpointSignals';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flattenPayload } from '@server/util/flattenPayload';
@@ -53,7 +52,7 @@ export const ProjectActionsFormStepSource = ({
     const { signalEndpointSignals } = useSignalEndpointSignals(sourceId, 1);
 
     const addFilter = () => {
-        const id = uuidv4();
+        const id = crypto.randomUUID();
         setFilters((filters) => [
             ...filters,
             {
@@ -108,7 +107,7 @@ export const ProjectActionsFormStepSource = ({
                 value={`${sourceId}`}
                 onChange={(v) => {
                     validateSourceId(Number(v));
-                    setSourceId(Number.parseInt(v));
+                    setSourceId(Number.parseInt(v, 10));
                 }}
             />
             <ConditionallyRender

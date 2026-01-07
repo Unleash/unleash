@@ -3,21 +3,25 @@ import { Knex } from 'knex';
 import Raw = Knex.Raw;
 
 import type EventEmitter from 'events';
-import { ALL_PROJECTS, ensureStringValue, mapValues } from '../../../util';
+import {
+    ALL_PROJECTS,
+    ensureStringValue,
+    mapValues,
+} from '../../../util/index.js';
 import type {
     FeatureConfigurationDeltaClient,
     IClientFeatureToggleDeltaReadModel,
-} from './client-feature-toggle-delta-read-model-type';
-import type { Db } from '../../../db/db';
+} from './client-feature-toggle-delta-read-model-type.js';
+import type { Db } from '../../../db/db.js';
 import {
     DB_TIME,
     type IFeatureToggleDeltaQuery,
     type IStrategyConfig,
     type PartialDeep,
-} from '../../../internals';
-import metricsHelper from '../../../util/metrics-helper';
-import FeatureToggleStore from '../../feature-toggle/feature-toggle-store';
-import { sortStrategies } from '../../../util/sortStrategies';
+} from '../../../internals.js';
+import metricsHelper from '../../../util/metrics-helper.js';
+import FeatureToggleStore from '../../feature-toggle/feature-toggle-store.js';
+import { sortStrategies } from '../../../util/sortStrategies.js';
 
 export default class ClientFeatureToggleDeltaReadModel
     implements IClientFeatureToggleDeltaReadModel

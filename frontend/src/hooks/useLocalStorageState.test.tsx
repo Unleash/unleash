@@ -1,5 +1,5 @@
-import { useLocalStorageState } from './useLocalStorageState';
-import { createLocalStorage } from '../utils/createLocalStorage';
+import { useLocalStorageState } from './useLocalStorageState.ts';
+import { createLocalStorage } from '../utils/createLocalStorage.ts';
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import type { FC } from 'react';

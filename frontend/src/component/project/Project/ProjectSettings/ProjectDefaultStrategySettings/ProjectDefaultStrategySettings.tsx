@@ -10,13 +10,13 @@ import {
     UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
 import { Alert, styled } from '@mui/material';
-import ProjectEnvironment from './ProjectEnvironment/ProjectEnvironment';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import EditDefaultStrategy from './ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';
+import EditDefaultStrategy from './ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy.tsx';
 import useProjectOverview, {
     useProjectOverviewNameOrId,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { ProjectEnvironment } from './ProjectEnvironment/ProjectEnvironment.tsx';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -44,7 +44,9 @@ export const ProjectDefaultStrategySettings = () => {
                 header={<PageHeader title='Default Strategy configuration' />}
             >
                 <Alert severity='error'>
-                    You need project owner permissions to access this section.
+                    You need project owner permissions or a custom role with
+                    "project default strategy configuration" permission to
+                    access this section.
                 </Alert>
             </PageContent>
         );
@@ -61,7 +63,7 @@ export const ProjectDefaultStrategySettings = () => {
                     specific environment. These will be used when you enable a
                     toggle environment that has no strategies defined
                 </StyledAlert>
-                {project?.environments.map((environment) => (
+                {project?.environments?.map((environment) => (
                     <ProjectEnvironment
                         environment={environment}
                         key={environment.environment}

@@ -1,5 +1,5 @@
 // Copy of https://github.com/Unleash/unleash-proxy/blob/main/src/create-context.ts.
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import type { Context } from 'unleash-client';
 
 export function createContext(contextData: any): Context {

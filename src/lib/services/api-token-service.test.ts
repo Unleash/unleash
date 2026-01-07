@@ -1,22 +1,25 @@
-import { createTestConfig } from '../../test/config/test-config';
-import type { IUnleashConfig, IUnleashOptions, IUser } from '../server-impl';
-import { ApiTokenType, type IApiTokenCreate } from '../types/models/api-token';
+import { createTestConfig } from '../../test/config/test-config.js';
+import type { IUnleashConfig, IUnleashOptions, IUser } from '../types/index.js';
+import { ApiTokenType, type IApiTokenCreate } from '../types/model.js';
 import {
     ADMIN_TOKEN_USER,
+    SYSTEM_USER,
+    TEST_AUDIT_USER,
+} from '../types/index.js';
+import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
+import { DEFAULT_ENV, extractAuditInfoFromUser } from '../util/index.js';
+import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService.js';
+import {
     API_TOKEN_CREATED,
     API_TOKEN_DELETED,
     API_TOKEN_UPDATED,
-    SYSTEM_USER,
-    TEST_AUDIT_USER,
-} from '../types';
-import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
-import { extractAuditInfoFromUser } from '../util';
-import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService';
+} from '../events/index.js';
+import { vi } from 'vitest';
 
 test('Should init api token', async () => {
     const token = {
         environment: '*',
-        project: '*',
+        projects: ['*'],
         secret: '*:*:some-random-string',
         type: ApiTokenType.ADMIN,
         tokenName: 'admin',
@@ -32,11 +35,12 @@ test('Should init api token', async () => {
             },
         },
     });
-    const { apiTokenStore } = createFakeApiTokenService(config);
+    const { apiTokenService, apiTokenStore } =
+        createFakeApiTokenService(config);
     const insertCalled = new Promise((resolve) => {
         apiTokenStore.on('insert', resolve);
     });
-
+    apiTokenService.initApiTokens([token]);
     await insertCalled;
 
     const tokens = await apiTokenStore.getAll();
@@ -46,7 +50,7 @@ test('Should init api token', async () => {
 
 test("Shouldn't return frontend token when secret is undefined", async () => {
     const token: IApiTokenCreate = {
-        environment: 'default',
+        environment: DEFAULT_ENV,
         projects: ['*'],
         secret: '*:*:some-random-string',
         type: ApiTokenType.FRONTEND,
@@ -58,7 +62,7 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
     const { environmentStore, apiTokenService } =
         createFakeApiTokenService(config);
     await environmentStore.create({
-        name: 'default',
+        name: DEFAULT_ENV,
         enabled: true,
         type: 'test',
         sortOrder: 1,
@@ -72,7 +76,7 @@ test("Shouldn't return frontend token when secret is undefined", async () => {
 
 test('Api token operations should all have events attached', async () => {
     const token: IApiTokenCreate = {
-        environment: 'default',
+        environment: DEFAULT_ENV,
         projects: ['*'],
         secret: '*:*:some-random-string',
         type: ApiTokenType.FRONTEND,
@@ -85,7 +89,7 @@ test('Api token operations should all have events attached', async () => {
     const { environmentStore, apiTokenService, eventService } =
         createFakeApiTokenService(config);
     await environmentStore.create({
-        name: 'default',
+        name: DEFAULT_ENV,
         enabled: true,
         type: 'test',
         sortOrder: 1,
@@ -146,7 +150,7 @@ test('getUserForToken should get a user with admin token user id and token name'
 
 describe('API token getTokenWithCache', () => {
     const token: IApiTokenCreate = {
-        environment: 'default',
+        environment: DEFAULT_ENV,
         projects: ['*'],
         secret: '*:*:some-random-string',
         type: ApiTokenType.CLIENT,
@@ -166,7 +170,7 @@ describe('API token getTokenWithCache', () => {
 
     test('should return the token and perform only one db query', async () => {
         const { apiTokenService, apiTokenStore } = setup();
-        const apiTokenStoreGet = jest.spyOn(apiTokenStore, 'get');
+        const apiTokenStoreGet = vi.spyOn(apiTokenStore, 'get');
 
         // valid token not present in cache (could be inserted by another instance)
         apiTokenStore.insert(token);
@@ -181,9 +185,9 @@ describe('API token getTokenWithCache', () => {
     });
 
     test('should query the db only once for invalid tokens', async () => {
-        jest.useFakeTimers();
+        vi.useFakeTimers();
         const { apiTokenService, apiTokenStore } = setup();
-        const apiTokenStoreGet = jest.spyOn(apiTokenStore, 'get');
+        const apiTokenStoreGet = vi.spyOn(apiTokenStore, 'get');
 
         const invalidToken = 'invalid-token';
         for (let i = 0; i < 5; i++) {
@@ -194,7 +198,7 @@ describe('API token getTokenWithCache', () => {
         expect(apiTokenStoreGet).toHaveBeenCalledTimes(1);
 
         // after more than 5 minutes we should be able to query again
-        jest.advanceTimersByTime(minutesToMilliseconds(6));
+        vi.advanceTimersByTime(minutesToMilliseconds(6));
         for (let i = 0; i < 5; i++) {
             expect(
                 await apiTokenService.getTokenWithCache(invalidToken),
@@ -205,7 +209,7 @@ describe('API token getTokenWithCache', () => {
 
     test('should not return the token if it has expired and shoud perform only one db query', async () => {
         const { apiTokenService, apiTokenStore } = setup();
-        const apiTokenStoreGet = jest.spyOn(apiTokenStore, 'get');
+        const apiTokenStoreGet = vi.spyOn(apiTokenStore, 'get');
 
         // valid token not present in cache but expired
         apiTokenStore.insert({ ...token, expiresAt: subDays(new Date(), 1) });
@@ -224,18 +228,18 @@ test('normalizes api token type casing to lowercase', async () => {
         createFakeApiTokenService(config);
 
     await environmentStore.create({
-        name: 'default',
+        name: DEFAULT_ENV,
         enabled: true,
         type: 'test',
         sortOrder: 1,
     });
 
-    const apiTokenStoreInsert = jest.spyOn(apiTokenStore, 'insert');
+    const apiTokenStoreInsert = vi.spyOn(apiTokenStore, 'insert');
 
     await apiTokenService.createApiTokenWithProjects(
         {
-            environment: 'default',
-            // @ts-ignore
+            environment: DEFAULT_ENV,
+            // @ts-expect-error
             type: 'CLIENT',
             projects: [],
             tokenName: 'uppercase-token',
@@ -245,8 +249,8 @@ test('normalizes api token type casing to lowercase', async () => {
 
     await apiTokenService.createApiTokenWithProjects(
         {
-            environment: 'default',
-            // @ts-ignore
+            environment: DEFAULT_ENV,
+            // @ts-expect-error
             type: 'client',
             projects: [],
             tokenName: 'lowercase-token',

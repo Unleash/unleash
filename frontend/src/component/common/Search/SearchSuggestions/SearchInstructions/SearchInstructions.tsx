@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { VFC } from 'react';
-import { onEnter } from '../onEnter';
+import { onEnter } from '../onEnter.ts';
 
 const StyledHeader = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,

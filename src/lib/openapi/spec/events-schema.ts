@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { eventSchema } from './event-schema';
-import { tagSchema } from './tag-schema';
+import { eventSchema } from './event-schema.js';
+import { tagSchema } from './tag-schema.js';
 
 export const eventsSchema = {
     $id: '#/components/schemas/eventsSchema',

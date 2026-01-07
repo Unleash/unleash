@@ -1,23 +1,21 @@
-import dbInit, { type ITestDb } from './helpers/database-init';
-import { setupAppWithCustomAuth } from './helpers/test-helper';
-import {
-    type IUnleashServices,
-    type IUnleashStores,
-    RoleName,
-} from '../../lib/types';
+import dbInit, { type ITestDb } from './helpers/database-init.js';
+import { setupAppWithCustomAuth } from './helpers/test-helper.js';
+import { type IUnleashStores, RoleName } from '../../lib/types/index.js';
+import type { IUnleashServices } from '../../lib/services/index.js';
+import { vi } from 'vitest';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 
 const preHook = (
     app,
-    config,
+    _config,
     {
         userService,
         accessService,
     }: Pick<IUnleashServices, 'userService' | 'accessService'>,
 ) => {
-    app.use('/api/admin/', async (req, res, next) => {
+    app.use('/api/admin/', async (req, _res, next) => {
         const role = await accessService.getPredefinedRole(RoleName.EDITOR);
         req.user = await userService.createUser({
             email: 'editor2@example.com',
@@ -37,7 +35,7 @@ afterAll(async () => {
 });
 
 test('Using custom auth type without defining custom middleware causes default DENY ALL policy to take effect', async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    vi.spyOn(global.console, 'error').mockImplementation(() => vi.fn());
     const { request, destroy } = await setupAppWithCustomAuth(
         stores,
         undefined,

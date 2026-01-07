@@ -1,11 +1,11 @@
 import { Button, styled } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ReactComponent as ProjectStatusSvg } from 'assets/icons/projectStatus.svg';
-import { ProjectActivity } from './ProjectActivity';
-import { ProjectLifecycleSummary } from './ProjectLifecycleSummary';
+import { ProjectActivity } from './ProjectActivity.tsx';
+import { ProjectLifecycleSummary } from './ProjectLifecycleSummary.tsx';
 import type { FC } from 'react';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { ProjectHealthGrid } from './ProjectHealthGrid';
+import { ProjectHealthGrid } from './ProjectHealthGrid.tsx';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import FeedbackIcon from '@mui/icons-material/ChatOutlined';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -17,7 +17,7 @@ const ModalContentContainer = styled('section')(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(2),
+    gap: theme.spacing(2.5),
     paddingInline: theme.spacing(4),
     paddingBlock: theme.spacing(3.75),
 }));
@@ -88,7 +88,7 @@ const LifecycleTooltip: FC = () => {
                     </TooltipText>
 
                     <TooltipText>
-                        <a href='https://docs.getunleash.io/reference/feature-toggles#feature-flag-lifecycle'>
+                        <a href='https://docs.getunleash.io/concepts/feature-flags#feature-flag-lifecycle'>
                             Read more in our documentation
                         </a>
                     </TooltipText>
@@ -124,10 +124,11 @@ const FeedbackButton = styled(Button)(({ theme }) => ({
 
 type Props = {
     open: boolean;
-    close: () => void;
+    onClose: () => void;
+    onFollowLink: () => void;
 };
 
-export const ProjectStatusModal = ({ open, close }: Props) => {
+export const ProjectStatusModal = ({ open, onClose, onFollowLink }: Props) => {
     const { openFeedback } = useFeedback('projectStatus', 'manual');
     const createFeedbackContext = () => {
         openFeedback({
@@ -143,11 +144,11 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
     return (
         <DynamicSidebarModal
             open={open}
-            onClose={close}
+            onClose={onClose}
             label='Project status'
             onClick={(e: React.SyntheticEvent) => {
                 if (e.target instanceof HTMLAnchorElement) {
-                    close();
+                    onFollowLink();
                 }
             }}
         >
@@ -158,7 +159,6 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                 </HeaderRow>
                 <WidgetContainer>
                     <Row>
-                        <RowHeader>Health</RowHeader>
                         <ProjectHealthGrid />
                     </Row>
                     {!isOss() && (
@@ -188,7 +188,7 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                                 variant='text'
                                 onClick={() => {
                                     createFeedbackContext();
-                                    close();
+                                    onClose();
                                 }}
                                 size='small'
                             >
@@ -196,8 +196,7 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                             </FeedbackButton>
                         </p>
                     </FeedbackContainer>
-
-                    <Button variant='outlined' onClick={close}>
+                    <Button variant='outlined' onClick={onClose}>
                         Close
                     </Button>
                 </CloseRow>

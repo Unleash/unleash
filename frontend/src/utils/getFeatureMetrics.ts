@@ -1,7 +1,7 @@
 import type {
     IFeatureEnvironment,
     IFeatureMetrics,
-} from '../interfaces/featureToggle';
+} from '../interfaces/featureToggle.js';
 
 const emptyMetric = (environment: string) => ({
     yes: 0,

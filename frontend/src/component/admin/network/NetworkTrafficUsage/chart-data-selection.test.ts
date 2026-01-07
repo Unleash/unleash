@@ -1,4 +1,7 @@
-import { type ChartDataSelection, toDateRange } from './chart-data-selection';
+import {
+    type ChartDataSelection,
+    toDateRange,
+} from './chart-data-selection.js';
 
 test('daily conversion', () => {
     const input: ChartDataSelection = {

@@ -3,7 +3,6 @@ import {
     Button,
     styled,
     Alert,
-    Link,
     Tab,
     Tabs,
     Typography,
@@ -14,17 +13,18 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import type { ISegment } from 'interfaces/segment';
 import { useEffect, useState } from 'react';
-import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
+import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useFormErrors } from 'hooks/useFormErrors';
 import produce from 'immer';
-import { MilestoneStrategySegment } from './MilestoneStrategySegment';
+import { MilestoneStrategySegment } from './MilestoneStrategySegment.tsx';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { MilestoneStrategyTitle } from './MilestoneStrategyTitle';
-import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints';
-import { MilestoneStrategyVariants } from './MilestoneStrategyVariants';
-import { MilestoneStrategyType } from './MilestoneStrategyType';
+import { MilestoneStrategyTitle } from './MilestoneStrategyTitle.tsx';
+import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints.tsx';
+import { MilestoneStrategyVariants } from './MilestoneStrategyVariants.tsx';
+import { MilestoneStrategyType } from './MilestoneStrategyType.tsx';
+import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import {
     featureStrategyDocsLink,
     featureStrategyDocsLinkLabel,
@@ -65,15 +65,6 @@ const StyledTitle = styled('h1')(({ theme }) => ({
     paddingBottom: theme.spacing(2),
 }));
 
-const StyledAlertBox = styled(Box)(({ theme }) => ({
-    paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(6),
-    '& > *': {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-    },
-}));
-
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -108,26 +99,14 @@ const StyledBox = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(3.5),
 }));
 
-const StyledTargetingHeader = styled('div')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginTop: theme.spacing(1.5),
-}));
-
 const StyledDivider = styled(Divider)(({ theme }) => ({
     width: '100%',
 }));
 
-const StyledDividerContent = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(0.75, 1),
-    color: theme.palette.text.primary,
-    fontSize: theme.fontSizes.smallerBody,
-    backgroundColor: theme.palette.background.elevation2,
-    borderRadius: theme.shape.borderRadius,
-    width: '45px',
-    position: 'absolute',
+const StyledConstraintSeparator = styled(ConstraintSeparator)(({ theme }) => ({
     top: '-10px',
-    left: 'calc(50% - 45px)',
-    lineHeight: 1,
+    left: '0',
+    transform: 'translateY(0)',
 }));
 
 interface IReleasePlanTemplateAddStrategyFormProps {
@@ -205,7 +184,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         return null;
     }
 
-    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
         setActiveTab(newValue);
     };
 
@@ -216,7 +195,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         return constraintCount + segmentCount;
     };
 
-    const validateParameter = (key: string, value: string) => true;
+    const validateParameter = (_key: string, _value: string) => true;
     const updateParameter = (name: string, value: string) => {
         setCurrentStrategy(
             produce((draft) => {
@@ -256,27 +235,6 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                     )}
                 </StyledTitle>
             </StyledHeaderBox>
-            {!BuiltInStrategies.includes(
-                strategy.strategyName || 'default',
-            ) && (
-                <StyledAlertBox>
-                    <Alert severity='warning'>
-                        Custom strategies are deprecated. We recommend not
-                        adding them to any templates going forward and using the
-                        predefined strategies like Gradual rollout with{' '}
-                        <Link
-                            href={
-                                'https://docs.getunleash.io/reference/strategy-constraints'
-                            }
-                            target='_blank'
-                            variant='body2'
-                        >
-                            constraints
-                        </Link>{' '}
-                        instead.
-                    </Alert>
-                </StyledAlertBox>
-            )}
             <StyledTabs value={activeTab} onChange={handleChange}>
                 <StyledTab label='General' />
                 <Tab
@@ -321,24 +279,24 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 )}
                 {activeTab === 1 && (
                     <>
-                        <StyledTargetingHeader>
+                        <Alert severity='info' sx={{ mb: 2 }} icon={false}>
                             Segmentation and constraints allow you to set
                             filters on your strategies, so that they will only
                             be evaluated for users and applications that match
                             the specified preconditions.
-                            <MilestoneStrategySegment
-                                segments={segments}
-                                setSegments={setSegments}
-                            />
-                            <StyledBox>
-                                <StyledDivider />
-                                <StyledDividerContent>AND</StyledDividerContent>
-                            </StyledBox>
-                            <MilestoneStrategyConstraints
-                                strategy={currentStrategy}
-                                setStrategy={setCurrentStrategy}
-                            />
-                        </StyledTargetingHeader>
+                        </Alert>
+                        <MilestoneStrategySegment
+                            segments={segments}
+                            setSegments={setSegments}
+                        />
+                        <StyledBox>
+                            <StyledDivider />
+                            <StyledConstraintSeparator />
+                        </StyledBox>
+                        <MilestoneStrategyConstraints
+                            strategy={currentStrategy}
+                            setStrategy={setCurrentStrategy}
+                        />
                     </>
                 )}
                 {activeTab === 2 && showVariants && (

@@ -1,18 +1,22 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
 import {
+    createUserWithRootRole,
     type IUnleashTest,
-    setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import { validateSchema } from '../../../../lib/openapi/validate';
-import { featureTypesSchema } from '../../../../lib/openapi/spec/feature-types-schema';
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import { validateSchema } from '../../../../lib/openapi/validate.js';
+import { featureTypesSchema } from '../../../../lib/openapi/spec/feature-types-schema.js';
+import { RoleName } from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
+const adminEmail = 'admin-user@getunleash.io';
+
 beforeAll(async () => {
     db = await dbInit('feature_type_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(
+    app = await setupAppWithAuth(
         db.stores,
         {
             experimental: {
@@ -23,6 +27,17 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+
+    await createUserWithRootRole({
+        app,
+        stores: db.stores,
+        email: adminEmail,
+        roleName: RoleName.ADMIN,
+    });
+});
+
+beforeEach(async () => {
+    await app.login({ email: adminEmail });
 });
 
 afterAll(async () => {
@@ -47,17 +62,17 @@ test('Should get all defined feature types', async () => {
 });
 
 describe('updating lifetimes', () => {
-    test.each([null, 5])(
-        'it updates to the lifetime correctly: `%s`',
-        async (lifetimeDays) => {
-            const { body } = await app.request
-                .put('/api/admin/feature-types/release/lifetime')
-                .send({ lifetimeDays })
-                .expect(200);
+    test.each([
+        null,
+        5,
+    ])('it updates to the lifetime correctly: `%s`', async (lifetimeDays) => {
+        const { body } = await app.request
+            .put('/api/admin/feature-types/release/lifetime')
+            .send({ lifetimeDays })
+            .expect(200);
 
-            expect(body.lifetimeDays).toEqual(lifetimeDays);
-        },
-    );
+        expect(body.lifetimeDays).toEqual(lifetimeDays);
+    });
     test("if the feature type doesn't exist, you get a 404", async () => {
         await app.request
             .put('/api/admin/feature-types/bogus-feature-type/lifetime')

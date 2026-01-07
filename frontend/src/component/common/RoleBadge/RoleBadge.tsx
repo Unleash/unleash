@@ -27,7 +27,12 @@ export const RoleBadge = ({ roleId, hideIcon, children }: IRoleBadgeProps) => {
 
     return (
         <HtmlTooltip title={<RoleDescription roleId={roleId} tooltip />} arrow>
-            <Badge color='success' icon={icon} sx={{ cursor: 'pointer' }}>
+            <Badge
+                tabIndex={0}
+                color='success'
+                icon={icon}
+                sx={{ cursor: 'pointer' }}
+            >
                 {role.name}
             </Badge>
         </HtmlTooltip>

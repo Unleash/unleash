@@ -1,17 +1,16 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
-import getLogger from '../../../fixtures/no-logger';
+} from '../../helpers/test-helper.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { DEFAULT_ENV, randomId } from '../../../../lib/server-impl.js';
 
 let db: ITestDb;
 let app: IUnleashTest;
 
 beforeAll(async () => {
-    db = await dbInit('context_api_serial', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('context_api_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -32,13 +31,15 @@ afterAll(async () => {
 
 test('gets all context fields', async () => {
     expect.assertions(1);
-    return app.request
+    const { body } = await app.request
         .get('/api/admin/context')
         .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.length).toBe(3);
-        });
+        .expect(200);
+
+    // because tests share the database, we might have more fields than expected
+    expect(body.map((field) => field.name)).toEqual(
+        expect.arrayContaining(['environment', 'userId', 'sessionId']),
+    );
 });
 
 test('get the context field', async () => {
@@ -179,6 +180,47 @@ test('should delete context field', async () => {
     return app.request.delete('/api/admin/context/userId').expect(200);
 });
 
+test('should not delete a context field that is in use by active flags', async () => {
+    const context = 'appName';
+    const feature = randomId();
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({
+            name: feature,
+            enabled: false,
+            strategies: [{ name: 'default' }],
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+    await app.request
+        .post(
+            `/api/admin/projects/default/features/${feature}/environments/${DEFAULT_ENV}/strategies`,
+        )
+        .send({
+            name: 'default',
+            constraints: [
+                {
+                    contextName: context,
+                    operator: 'IN',
+                    values: ['test'],
+                    caseInsensitive: false,
+                    inverted: false,
+                },
+            ],
+        })
+        .expect(200);
+
+    app.request.delete(`/api/admin/context/${context}`).expect(409);
+
+    await app.archiveFeature(feature).expect(202);
+
+    const { body: postArchiveBody } = await app.request.get(
+        `/api/admin/context/${context}/strategies`,
+    );
+
+    expect(postArchiveBody.strategies).toHaveLength(0);
+});
+
 test('refuses to create a context not url-friendly name', async () => {
     expect.assertions(0);
     return app.request
@@ -241,7 +283,7 @@ test('should update context field with stickiness', async () => {
     expect(contextField.stickiness).toBe(true);
 });
 
-test('should show context field usage', async () => {
+test('should show context field usage for active flags', async () => {
     const context = 'appName';
     const feature = 'contextFeature';
     await app.request
@@ -255,7 +297,7 @@ test('should show context field usage', async () => {
         .expect(201);
     await app.request
         .post(
-            `/api/admin/projects/default/features/${feature}/environments/default/strategies`,
+            `/api/admin/projects/default/features/${feature}/environments/${DEFAULT_ENV}/strategies`,
         )
         .send({
             name: 'default',
@@ -285,6 +327,37 @@ test('should show context field usage', async () => {
 
     expect(body.strategies).toHaveLength(1);
     expect(body).toMatchObject({
-        strategies: [{ environment: 'default', featureName: 'contextFeature' }],
+        strategies: [
+            { environment: DEFAULT_ENV, featureName: 'contextFeature' },
+        ],
     });
+
+    const { body: getAllBody } = await app.request
+        .get(`/api/admin/context`)
+        .expect(200);
+
+    expect(
+        getAllBody.find((field) => field.name === context)?.usedInFeatures,
+    ).toBe(1);
+
+    await app.archiveFeature('contextFeature').expect(202);
+
+    const { body: postArchiveBody } = await app.request.get(
+        `/api/admin/context/${context}/strategies`,
+    );
+
+    expect(postArchiveBody.strategies).toHaveLength(0);
+
+    const { body: getContextBody } = await app.request.get(
+        `/api/admin/context/${context}/strategies`,
+    );
+
+    const { body: postArchiveGetAllBody } = await app.request
+        .get(`/api/admin/context`)
+        .expect(200);
+
+    expect(
+        postArchiveGetAllBody.find((field) => field.name === context)
+            ?.usedInFeatures,
+    ).toBe(0);
 });

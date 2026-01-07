@@ -1,11 +1,11 @@
 import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useState } from 'react';
-import { StyledLink } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
-import { DependencyActions } from './DependencyActions';
+import { StyledLink } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow.tsx';
+import { ExtraActions } from './ExtraActions.tsx';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { ChildrenTooltip } from './ChildrenTooltip';
+import { ChildrenTooltip } from './ChildrenTooltip.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_DEPENDENCY } from 'component/providers/AccessProvider/permissions';
 import { useCheckProjectAccess } from 'hooks/useHasAccess';
@@ -16,13 +16,14 @@ import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPe
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { VariantsTooltip } from './VariantsTooltip';
+import { VariantsTooltip } from './VariantsTooltip.tsx';
 import { styled } from '@mui/material';
 import {
     StyledMetaDataItem,
     StyledMetaDataItemLabel,
     StyledMetaDataItemValue,
-} from './FeatureOverviewMetaData';
+} from './FeatureOverviewMetaData.tsx';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledPermissionButton = styled(PermissionButton)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -137,10 +138,13 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                         <StyledLink
                             to={`/projects/${feature.project}/features/${feature.dependencies[0]?.feature}`}
                         >
-                            {feature.dependencies[0]?.feature}
+                            <Truncator title={feature.dependencies[0]?.feature}>
+                                {feature.dependencies[0]?.feature}
+                            </Truncator>
                         </StyledLink>
                         {checkAccess(UPDATE_FEATURE_DEPENDENCY, environment) ? (
-                            <DependencyActions
+                            <ExtraActions
+                                capabilityId='dependency'
                                 feature={feature.name}
                                 onEdit={() => setShowDependencyDialogue(true)}
                                 onDelete={deleteDependency}

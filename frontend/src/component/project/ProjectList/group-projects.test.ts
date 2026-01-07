@@ -1,5 +1,5 @@
 import type { ProjectSchema } from 'openapi';
-import { groupProjects } from './group-projects';
+import { groupProjects } from './group-projects.js';
 
 test('should check that the project is a user project OR that it is a favorite', () => {
     const myProjectIds = new Set(['my1', 'my2', 'my3']);

@@ -1,11 +1,11 @@
 import type { VFC } from 'react';
 import { Box, Typography } from '@mui/material';
 import type { ChangeRequestType } from '../changeRequest.types';
-import { FeatureToggleChanges } from './Changes/FeatureToggleChanges';
-import { FeatureChange } from './Changes/Change/FeatureChange';
-import { ChangeActions } from './Changes/Change/ChangeActions';
+import { FeatureToggleChanges } from './Changes/FeatureToggleChanges.tsx';
+import { FeatureChange } from './Changes/Change/FeatureChange.tsx';
+import { ChangeActions } from './Changes/Change/ChangeActions.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { SegmentChange } from './Changes/Change/SegmentChange';
+import { SegmentChange } from './Changes/Change/SegmentChange.tsx';
 
 interface IChangeRequestProps {
     changeRequest: ChangeRequestType;
@@ -77,21 +77,12 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                             change={change}
                             feature={feature}
                             onNavigate={onNavigate}
+                            onRefetch={onRefetch}
                         />
                     ))}
                     {feature.defaultChange ? (
                         <FeatureChange
-                            actions={
-                                <Typography
-                                    variant='body2'
-                                    color='text.secondary'
-                                >
-                                    {feature.defaultChange.action ===
-                                    'addStrategy'
-                                        ? 'Default strategy will be added'
-                                        : 'Feature status will change'}
-                                </Typography>
-                            }
+                            isDefaultChange
                             index={feature.changes.length}
                             changeRequest={changeRequest}
                             change={feature.defaultChange}

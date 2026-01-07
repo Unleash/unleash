@@ -15,7 +15,7 @@ import Delete from '@mui/icons-material/Delete';
 import LinkIcon from '@mui/icons-material/Link';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
-import { ConnectedInstances } from './ConnectedInstances/ConnectedInstances';
+import { ConnectedInstances } from './ConnectedInstances/ConnectedInstances.tsx';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -28,7 +28,7 @@ import useToast from 'hooks/useToast';
 import { formatDateYMD } from 'utils/formatDate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import ApplicationOverview from './ApplicationOverview';
+import ApplicationOverview from './ApplicationOverview.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 
 type Tab = {
@@ -55,7 +55,6 @@ const Separator = styled('div')(({ theme }) => ({
 
 const StyledTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
-    fontSize: theme.fontSizes.bodySize,
     flexGrow: 1,
     flexBasis: 0,
     [theme.breakpoints.down('md')]: {
@@ -78,7 +77,7 @@ export const Application = () => {
     const { setToastData, setToastApiError } = useToast();
     const { pathname } = useLocation();
 
-    const basePath = `/applications/${name}`;
+    const basePath = `/applications/${encodeURIComponent(name)}`;
 
     const [showDialog, setShowDialog] = useState(false);
 

@@ -5,7 +5,7 @@ import WarningAmber from '@mui/icons-material/WarningAmber';
 import { styled, Icon, Link } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useNavigate } from 'react-router-dom';
-import { BannerDialog } from './BannerDialog/BannerDialog';
+import { BannerDialog } from './BannerDialog/BannerDialog.tsx';
 import { useState } from 'react';
 import { Markdown } from 'component/common/Markdown/Markdown';
 import type { BannerVariant, IBanner } from 'interfaces/banner';

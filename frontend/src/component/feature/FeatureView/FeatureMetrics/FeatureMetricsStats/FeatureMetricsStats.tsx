@@ -1,7 +1,7 @@
 import { calculatePercentage } from 'utils/calculatePercentage';
 import { Grid, styled } from '@mui/material';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
-import { daysOrHours } from '../daysOrHours';
+import { daysOrHours } from '../daysOrHours.ts';
 
 export interface IFeatureMetricsStatsProps {
     totalYes: number;

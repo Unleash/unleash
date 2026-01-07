@@ -2,22 +2,22 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import ApiTokenForm from '../ApiTokenForm/ApiTokenForm';
+import ApiTokenForm from '../ApiTokenForm/ApiTokenForm.tsx';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useApiTokenForm } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
-import { ConfirmToken } from '../ConfirmToken/ConfirmToken';
+import { ConfirmToken } from '../ConfirmToken/ConfirmToken.tsx';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { GO_BACK } from 'constants/navigate';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
-import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo';
-import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
-import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector';
-import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector';
+import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo.tsx';
+import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector.tsx';
+import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector.tsx';
+import { EnvironmentSelector } from '../ApiTokenForm/EnvironmentSelector/EnvironmentSelector.tsx';
 import {
     ADMIN,
     CREATE_CLIENT_API_TOKEN,
@@ -62,11 +62,11 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
 
     const {
         getApiTokenPayload,
-        username,
+        tokenName,
         type,
         projects,
         environment,
-        setUsername,
+        setTokenName,
         setTokenType,
         setProjects,
         setEnvironment,
@@ -125,8 +125,8 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
             loading={loadingCreateToken}
             title={pageTitle}
             modal={modal}
-            description="Unleash SDKs use API tokens to authenticate to the Unleash API. Client SDKs need a token with 'client privileges', which allows them to fetch feature flag configurations and post usage metrics."
-            documentationLink='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+            description='Unleash SDKs use API tokens to authenticate with the Unleash API. An SDK must be configured with a token of the corresponding type, so they can fetch feature flags and post usage metrics.'
+            documentationLink='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
             documentationLinkLabel='API tokens documentation'
             formatApiCode={formatApiCode}
         >
@@ -149,8 +149,8 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
                 }
             >
                 <TokenInfo
-                    username={username}
-                    setUsername={setUsername}
+                    tokenName={tokenName}
+                    setTokenName={setTokenName}
                     errors={errors}
                     clearErrors={clearErrors}
                 />

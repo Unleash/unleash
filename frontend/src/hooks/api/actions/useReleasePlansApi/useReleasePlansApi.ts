@@ -1,4 +1,4 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 export const useReleasePlansApi = () => {
     const { makeRequest, makeLightRequest, createRequest, errors, loading } =
         useAPI({
@@ -12,7 +12,7 @@ export const useReleasePlansApi = () => {
         environment: string,
     ): Promise<void> => {
         const requestId = 'addReleasePlanToFeature';
-        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release_plans`;
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release-plans`;
         const req = createRequest(
             path,
             {
@@ -32,7 +32,7 @@ export const useReleasePlansApi = () => {
         releasePlanId: string,
     ): Promise<void> => {
         const requestId = 'removeReleasePlanFromFeature';
-        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release_plans/${releasePlanId}`;
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release-plans/${releasePlanId}`;
         const req = createRequest(path, { method: 'DELETE' }, requestId);
 
         await makeRequest(req.caller, req.id);
@@ -46,7 +46,7 @@ export const useReleasePlansApi = () => {
         milestoneId: string,
     ): Promise<void> => {
         const requestId = 'startReleasePlanMilestone';
-        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release_plans/${releasePlanId}/milestones/${milestoneId}/start`;
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release-plans/${releasePlanId}/milestones/${milestoneId}/start`;
         const req = createRequest(path, { method: 'POST' }, requestId);
 
         await makeRequest(req.caller, req.id);

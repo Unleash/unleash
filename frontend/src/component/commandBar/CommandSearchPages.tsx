@@ -7,9 +7,9 @@ import {
     StyledListItemText,
     listItemButtonStyle,
     type CommandResultGroupItem,
-} from './RecentlyVisited/CommandResultGroup';
+} from './RecentlyVisited/CommandResultGroup.tsx';
 import { ListItemButton } from '@mui/material';
-import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
+import { ButtonItemIcon } from './ButtonItemIcon.tsx';
 
 export const CommandSearchPages = ({
     items,
@@ -50,7 +50,7 @@ export const CommandSearchPages = ({
                     sx={listItemButtonStyle}
                 >
                     <StyledListItemIcon>
-                        <IconRenderer path={item.link} />
+                        <ButtonItemIcon path={item.link} />
                     </StyledListItemIcon>
                     <StyledListItemText>
                         <StyledButtonTypography color='textPrimary'>

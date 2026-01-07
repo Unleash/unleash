@@ -1,6 +1,6 @@
 import type { Operator } from 'constants/operators';
-import type { IFeatureVariant } from './featureToggle';
-import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import type { IFeatureVariant } from './featureToggle.js';
+import { constraintId } from 'constants/constraintId.js';
 
 export interface IFeatureStrategy {
     id: string;
@@ -22,6 +22,9 @@ export interface IFeatureStrategyParameters {
     [key: string]: string | number | undefined;
 }
 
+/**
+ * @deprecated use `FeatureStrategySchema` from openapi
+ */
 export interface IFeatureStrategyPayload {
     id?: string;
     name?: string;
@@ -38,6 +41,7 @@ export interface IStrategy {
     displayName: string;
     editable: boolean;
     deprecated: boolean;
+    advanced?: boolean;
     description: string;
     parameters: IStrategyParameter[];
 }
@@ -63,6 +67,10 @@ export interface IConstraint {
     operator: Operator;
     contextName: string;
     [constraintId]?: string;
+}
+
+export interface IConstraintWithId extends IConstraint {
+    [constraintId]: string;
 }
 
 export interface IFeatureStrategySortOrder {

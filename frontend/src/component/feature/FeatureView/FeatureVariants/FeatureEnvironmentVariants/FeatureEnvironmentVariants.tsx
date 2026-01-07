@@ -15,13 +15,13 @@ import type {
     IFeatureVariant,
 } from 'interfaces/featureToggle';
 import { useMemo, useState } from 'react';
-import { EnvironmentVariantsModal } from './EnvironmentVariantsModal/EnvironmentVariantsModal';
-import { EnvironmentVariantsCard } from './EnvironmentVariantsCard/EnvironmentVariantsCard';
+import { EnvironmentVariantsModal } from './EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
+import { EnvironmentVariantsCard } from './EnvironmentVariantsCard/EnvironmentVariantsCard.tsx';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import { EnvironmentVariantsCopyFrom } from './EnvironmentVariantsCopyFrom/EnvironmentVariantsCopyFrom';
-import { PushVariantsButton } from './PushVariantsButton/PushVariantsButton';
+import { EnvironmentVariantsCopyFrom } from './EnvironmentVariantsCopyFrom/EnvironmentVariantsCopyFrom.tsx';
+import { PushVariantsButton } from './PushVariantsButton/PushVariantsButton.tsx';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';

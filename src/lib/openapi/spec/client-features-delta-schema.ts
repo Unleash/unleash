@@ -1,14 +1,14 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
-import { clientFeatureSchema } from './client-feature-schema';
-import { environmentSchema } from './environment-schema';
-import { clientSegmentSchema } from './client-segment-schema';
-import { overrideSchema } from './override-schema';
-import { parametersSchema } from './parameters-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { variantSchema } from './variant-schema';
-import { dependentFeatureSchema } from './dependent-feature-schema';
+import { constraintSchema } from './constraint-schema.js';
+import { clientFeatureSchema } from './client-feature-schema.js';
+import { environmentSchema } from './environment-schema.js';
+import { clientSegmentSchema } from './client-segment-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { dependentFeatureSchema } from './dependent-feature-schema.js';
 
 export const clientFeaturesDeltaSchema = {
     $id: '#/components/schemas/clientFeaturesDeltaSchema',
@@ -104,5 +104,6 @@ export const clientFeaturesDeltaSchema = {
 } as const;
 
 export type ClientFeaturesDeltaSchema = FromSchema<
-    typeof clientFeaturesDeltaSchema
+    typeof clientFeaturesDeltaSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

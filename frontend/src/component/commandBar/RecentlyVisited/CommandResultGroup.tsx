@@ -10,14 +10,12 @@ import {
 import { Link } from 'react-router-dom';
 import type { Theme } from '@mui/material/styles/createTheme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IconRenderer } from 'component/layout/MainLayout/NavigationSidebar/IconRenderer';
-import InsightsIcon from '@mui/icons-material/Insights';
-import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { Children } from 'react';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import { ButtonItemIcon } from '../ButtonItemIcon.tsx';
 
 export const listItemButtonStyle = (theme: Theme) => ({
     border: `1px solid transparent`,
@@ -47,24 +45,6 @@ export interface CommandResultGroupItem {
     link: string;
     description?: string | null;
 }
-
-const ButtonItemIcon = ({
-    path,
-}: {
-    path: string;
-}) => {
-    if (path === '/projects') {
-        return <ProjectIcon />;
-    }
-    if (path === '/playground') {
-        return <PlaygroundIcon />;
-    }
-    if (path === '/insights') {
-        return <InsightsIcon />;
-    }
-
-    return <IconRenderer path={path} />;
-};
 
 export const RecentlyVisitedPathButton = ({
     keyName,
@@ -169,9 +149,8 @@ export const RecentlyVisitedFeatureButton = ({
     featureId: string;
     onClick: () => void;
 }) => {
+    const { trackEvent } = usePlausibleTracker();
     const onItemClick = () => {
-        const { trackEvent } = usePlausibleTracker();
-
         trackEvent('command-bar', {
             props: {
                 eventType: `click`,

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EventCreatorsSchemaItem } from './eventCreatorsSchemaItem';
+import type { EventCreatorsSchemaItem } from './eventCreatorsSchemaItem.js';
 
 /**
  * A list of event creators

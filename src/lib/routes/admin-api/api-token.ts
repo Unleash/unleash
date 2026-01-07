@@ -1,6 +1,6 @@
 import type { Response } from 'express';
 
-import Controller from '../controller';
+import Controller from '../controller.js';
 import {
     ADMIN,
     CREATE_CLIENT_API_TOKEN,
@@ -11,38 +11,40 @@ import {
     READ_FRONTEND_API_TOKEN,
     UPDATE_CLIENT_API_TOKEN,
     UPDATE_FRONTEND_API_TOKEN,
-} from '../../types/permissions';
-import type { ApiTokenService } from '../../services/api-token-service';
-import type { Logger } from '../../logger';
-import type { AccessService } from '../../services/access-service';
-import type { IAuthRequest } from '../unleash-types';
-import type { IUser } from '../../types/user';
-import type { IUnleashConfig } from '../../types/option';
-import { ApiTokenType, type IApiToken } from '../../types/models/api-token';
-import { createApiToken } from '../../schema/api-token-schema';
-import type { OpenApiService } from '../../services/openapi-service';
-import type { IFlagResolver, IUnleashServices } from '../../types';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
+} from '../../types/permissions.js';
+import type { ApiTokenService } from '../../services/api-token-service.js';
+import type { Logger } from '../../logger.js';
+import type { AccessService } from '../../services/access-service.js';
+import type { IAuthRequest } from '../unleash-types.js';
+import type { IUser } from '../../types/user.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import { ApiTokenType, type IApiToken } from '../../types/model.js';
+import { createApiToken } from '../../schema/api-token-schema.js';
+import type { OpenApiService, IUnleashServices } from '../../services/index.js';
+import type { IFlagResolver } from '../../types/index.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
-} from '../../openapi/util/create-response-schema';
+} from '../../openapi/util/create-response-schema.js';
 import {
     apiTokensSchema,
     type ApiTokensSchema,
-} from '../../openapi/spec/api-tokens-schema';
-import { serializeDates } from '../../types/serialize-dates';
+} from '../../openapi/spec/api-tokens-schema.js';
+import { serializeDates } from '../../types/serialize-dates.js';
 import {
     apiTokenSchema,
     type ApiTokenSchema,
-} from '../../openapi/spec/api-token-schema';
-import type { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema';
+} from '../../openapi/spec/api-token-schema.js';
+import type { UpdateApiTokenSchema } from '../../openapi/spec/update-api-token-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service';
-import { OperationDeniedError } from '../../error';
+} from '../../openapi/util/standard-responses.js';
+import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service.js';
+import { OperationDeniedError } from '../../error/index.js';
+import type { CreateApiTokenSchema } from '../../internals.js';
+import type { IUserPermission } from '../../server-impl.js';
 
 interface TokenParam {
     token: string;
@@ -56,38 +58,35 @@ export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
             case ApiTokenType.ADMIN:
                 return ADMIN;
             case ApiTokenType.CLIENT:
+            case ApiTokenType.BACKEND:
                 return CREATE_CLIENT_API_TOKEN;
             case ApiTokenType.FRONTEND:
                 return CREATE_FRONTEND_API_TOKEN;
         }
     };
 
-const permissionToTokenType: (permission: string) => ApiTokenType | undefined =
-    (permission) => {
-        if (
-            [
-                CREATE_FRONTEND_API_TOKEN,
-                READ_FRONTEND_API_TOKEN,
-                DELETE_FRONTEND_API_TOKEN,
-                UPDATE_FRONTEND_API_TOKEN,
-            ].includes(permission)
-        ) {
-            return ApiTokenType.FRONTEND;
-        } else if (
-            [
-                CREATE_CLIENT_API_TOKEN,
-                READ_CLIENT_API_TOKEN,
-                DELETE_CLIENT_API_TOKEN,
-                UPDATE_CLIENT_API_TOKEN,
-            ].includes(permission)
-        ) {
-            return ApiTokenType.CLIENT;
-        } else if (ADMIN === permission) {
-            return ApiTokenType.ADMIN;
-        } else {
-            return undefined;
-        }
-    };
+const canReadToken = ({ permission }: IUserPermission, type: ApiTokenType) => {
+    if (permission === ADMIN) {
+        return true;
+    }
+    if (type === ApiTokenType.FRONTEND) {
+        return [
+            CREATE_FRONTEND_API_TOKEN,
+            READ_FRONTEND_API_TOKEN,
+            DELETE_FRONTEND_API_TOKEN,
+            UPDATE_FRONTEND_API_TOKEN,
+        ].includes(permission);
+    }
+    if (type === ApiTokenType.CLIENT || type === ApiTokenType.BACKEND) {
+        return [
+            CREATE_CLIENT_API_TOKEN,
+            READ_CLIENT_API_TOKEN,
+            DELETE_CLIENT_API_TOKEN,
+            UPDATE_CLIENT_API_TOKEN,
+        ].includes(permission);
+    }
+    return false;
+};
 
 const tokenTypeToUpdatePermission: (tokenType: ApiTokenType) => string = (
     tokenType,
@@ -96,6 +95,7 @@ const tokenTypeToUpdatePermission: (tokenType: ApiTokenType) => string = (
         case ApiTokenType.ADMIN:
             return ADMIN;
         case ApiTokenType.CLIENT:
+        case ApiTokenType.BACKEND:
             return UPDATE_CLIENT_API_TOKEN;
         case ApiTokenType.FRONTEND:
             return UPDATE_FRONTEND_API_TOKEN;
@@ -109,6 +109,7 @@ const tokenTypeToDeletePermission: (tokenType: ApiTokenType) => string = (
         case ApiTokenType.ADMIN:
             return ADMIN;
         case ApiTokenType.CLIENT:
+        case ApiTokenType.BACKEND:
             return DELETE_CLIENT_API_TOKEN;
         case ApiTokenType.FRONTEND:
             return DELETE_FRONTEND_API_TOKEN;
@@ -299,24 +300,20 @@ export class ApiTokenController extends Controller {
     }
 
     async createApiToken(
-        req: IAuthRequest,
+        req: IAuthRequest<CreateApiTokenSchema>,
         res: Response<ApiTokenSchema>,
     ): Promise<any> {
         const createToken = await createApiToken.validateAsync(req.body);
         const permissionRequired = tokenTypeToCreatePermission(
             createToken.type,
         );
-        if (createToken.type.toUpperCase() === 'ADMIN') {
-            throw new OperationDeniedError(
-                `Admin tokens are disabled in this instance. Use a Service account or a PAT to access admin operations instead`,
-            );
-        }
+
         const hasPermission = await this.accessService.hasPermission(
             req.user,
             permissionRequired,
         );
         if (hasPermission) {
-            const token = await this.apiTokenService.createApiToken(
+            const token = await this.apiTokenService.createApiTokenWithProjects(
                 createToken,
                 req.audit,
             );
@@ -348,7 +345,7 @@ export class ApiTokenController extends Controller {
         let tokenToUpdate: IApiToken | undefined;
         try {
             tokenToUpdate = await this.apiTokenService.getToken(token);
-        } catch (error) {}
+        } catch (_error) {}
         if (!tokenToUpdate) {
             res.status(200).end();
             return;
@@ -383,7 +380,7 @@ export class ApiTokenController extends Controller {
         let tokenToUpdate: IApiToken | undefined;
         try {
             tokenToUpdate = await this.apiTokenService.getToken(token);
-        } catch (error) {}
+        } catch (_error) {}
         if (!tokenToUpdate) {
             res.status(200).end();
             return;
@@ -419,23 +416,15 @@ export class ApiTokenController extends Controller {
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;
         }
+
         const userPermissions =
             await this.accessService.getPermissionsForUser(user);
 
-        const allowedTokenTypes = [
-            ADMIN,
-            READ_CLIENT_API_TOKEN,
-            READ_FRONTEND_API_TOKEN,
-        ]
-            .filter((readPerm) =>
-                userPermissions.some(
-                    (p) => p.permission === readPerm || p.permission === ADMIN,
-                ),
-            )
-            .map(permissionToTokenType)
-            .filter((t) => t);
-        return allTokens.filter((token) =>
-            allowedTokenTypes.includes(token.type),
+        const accessibleTokens = allTokens.filter((token) =>
+            userPermissions.some((permission) =>
+                canReadToken(permission, token.type),
+            ),
         );
+        return accessibleTokens;
     }
 }

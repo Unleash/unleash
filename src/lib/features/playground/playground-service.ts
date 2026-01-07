@@ -1,34 +1,34 @@
-import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
-import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema';
-import type { IUnleashServices } from '../../types/services';
-import { ALL } from '../../types/models/api-token';
-import type { PlaygroundFeatureSchema } from '../../openapi/spec/playground-feature-schema';
-import type { Logger } from '../../logger';
+import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
+import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema.js';
+import type { IUnleashServices } from '../../services/index.js';
+import { ALL } from '../../types/models/api-token.js';
+import type { PlaygroundFeatureSchema } from '../../openapi/spec/playground-feature-schema.js';
+import type { Logger } from '../../logger.js';
 import type {
     IFlagResolver,
     ISegment,
     ISegmentReadModel,
     IUnleashConfig,
-} from '../../types';
-import { offlineUnleashClient } from './offline-unleash-client';
-import type { FeatureInterface } from '../../features/playground/feature-evaluator/feature';
+} from '../../types/index.js';
+import { offlineUnleashClient } from './offline-unleash-client.js';
+import type { FeatureInterface } from '../../features/playground/feature-evaluator/feature.js';
 import type {
     EvaluatedPlaygroundStrategy,
     FeatureStrategiesEvaluationResult,
-} from '../../features/playground/feature-evaluator/client';
-import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import { generateObjectCombinations } from './generateObjectCombinations';
+} from '../../features/playground/feature-evaluator/client.js';
+import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import { generateObjectCombinations } from './generateObjectCombinations.js';
 import groupBy from 'lodash.groupby';
-import { omitKeys } from '../../util';
+import { omitKeys } from '../../util/index.js';
 import type {
     AdvancedPlaygroundFeatureSchema,
     playgroundStrategyEvaluation,
-} from '../../openapi';
-import type { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema';
-import { validateQueryComplexity } from './validateQueryComplexity';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import { getDefaultVariant } from './feature-evaluator/variant';
-import { cleanContext } from './clean-context';
+} from '../../openapi/index.js';
+import type { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema.js';
+import { validateQueryComplexity } from './validateQueryComplexity.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import { getDefaultVariant } from './feature-evaluator/variant.js';
+import { cleanContext } from './clean-context.js';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -82,17 +82,17 @@ export class PlaygroundService {
     constructor(
         config: IUnleashConfig,
         {
-            featureToggleServiceV2,
+            featureToggleService,
             privateProjectChecker,
         }: Pick<
             IUnleashServices,
-            'featureToggleServiceV2' | 'privateProjectChecker'
+            'featureToggleService' | 'privateProjectChecker'
         >,
         segmentReadModel: ISegmentReadModel,
     ) {
         this.logger = config.getLogger('services/playground-service.ts');
         this.flagResolver = config.flagResolver;
-        this.featureToggleService = featureToggleServiceV2;
+        this.featureToggleService = featureToggleService;
         this.privateProjectChecker = privateProjectChecker;
         this.segmentReadModel = segmentReadModel;
     }
@@ -109,8 +109,9 @@ export class PlaygroundService {
         // used for runtime control, do not remove
         const { payload } = this.flagResolver.getVariant('advancedPlayground');
         const limit =
-            payload?.value && Number.isInteger(Number.parseInt(payload?.value))
-                ? Number.parseInt(payload?.value)
+            payload?.value &&
+            Number.isInteger(Number.parseInt(payload?.value, 10))
+                ? Number.parseInt(payload?.value, 10)
                 : 15000;
 
         const segments = await this.segmentReadModel.getActive();

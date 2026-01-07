@@ -14,11 +14,10 @@ import CloudCircle from '@mui/icons-material/CloudCircle';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { VariantForm } from './VariantForm/VariantForm';
+import { VariantForm } from './VariantForm/VariantForm.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { WeightType } from 'constants/variantTypes';
-import { v4 as uuidv4 } from 'uuid';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { updateWeightEdit } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
@@ -170,7 +169,7 @@ export const EnvironmentVariantsModal = ({
                           ...oldVariant,
                           isValid: true,
                           new: false,
-                          id: uuidv4(),
+                          id: crypto.randomUUID(),
                       }))
                     : [
                           {
@@ -184,7 +183,7 @@ export const EnvironmentVariantsModal = ({
                                       : defaultStickiness,
                               new: true,
                               isValid: false,
-                              id: uuidv4(),
+                              id: crypto.randomUUID(),
                           },
                       ],
             );
@@ -203,7 +202,7 @@ export const EnvironmentVariantsModal = ({
     };
 
     const addVariant = () => {
-        const id = uuidv4();
+        const id = crypto.randomUUID();
         setVariantsEdit((variantsEdit) => [
             ...variantsEdit,
             {
@@ -330,7 +329,7 @@ export const EnvironmentVariantsModal = ({
                 modal
                 title=''
                 description='Variants allow you to return a variant object if the feature flag is considered enabled for the current request.'
-                documentationLink='https://docs.getunleash.io/reference/feature-toggle-variants'
+                documentationLink='https://docs.getunleash.io/concepts/feature-flag-variants'
                 documentationLinkLabel='Feature flag variants documentation'
                 formatApiCode={formatApiCode}
                 loading={!open}
@@ -421,7 +420,7 @@ export const EnvironmentVariantsModal = ({
                                     which parameter is used to ensure consistent
                                     traffic allocation across variants.{' '}
                                     <Link
-                                        href='https://docs.getunleash.io/reference/feature-toggle-variants'
+                                        href='https://docs.getunleash.io/concepts/feature-flag-variants'
                                         target='_blank'
                                         rel='noreferrer'
                                     >

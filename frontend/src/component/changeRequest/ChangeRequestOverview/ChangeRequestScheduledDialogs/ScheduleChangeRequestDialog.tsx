@@ -4,7 +4,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DateTimePicker } from 'component/common/DateTimePicker/DateTimePicker';
-import { getBrowserTimezone } from '../ChangeRequestReviewStatus/utils';
+import { getBrowserTimezone } from '../ChangeRequestReviewStatus/utils.ts';
 
 export interface ScheduleChangeRequestDialogProps {
     title: string;

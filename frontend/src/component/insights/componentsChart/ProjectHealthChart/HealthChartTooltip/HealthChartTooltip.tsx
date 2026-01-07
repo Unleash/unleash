@@ -5,6 +5,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
 import { HorizontalDistributionChart } from 'component/insights/components/HorizontalDistributionChart/HorizontalDistributionChart';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { getTechnicalDebtColor } from 'utils/getTechnicalDebtColor.ts';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -17,20 +18,11 @@ const StyledItemHeader = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
-const getHealthBadgeColor = (health?: number | null) => {
-    if (health === undefined || health === null) {
+const getTechnicalDebtBadgeColor = (technicalDebt?: number | null) => {
+    if (technicalDebt === undefined || technicalDebt === null) {
         return 'info';
     }
-
-    if (health >= 75) {
-        return 'success';
-    }
-
-    if (health >= 50) {
-        return 'warning';
-    }
-
-    return 'error';
+    return getTechnicalDebtColor(technicalDebt);
 };
 
 const Distribution = ({ stale = 0, potentiallyStale = 0, total = 0 }) => {
@@ -137,7 +129,7 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
                             color='textSecondary'
                             component='span'
                         >
-                            Project health
+                            Technical debt
                         </Typography>
                     </StyledItemHeader>
                     <StyledItemHeader>
@@ -150,8 +142,12 @@ export const HealthTooltip: FC<{ tooltip: TooltipState | null }> = ({
                             </Typography>
                             <strong>{point.title}</strong>
                         </Typography>
-                        <Badge color={getHealthBadgeColor(point.value.health)}>
-                            {point.value.health}%
+                        <Badge
+                            color={getTechnicalDebtBadgeColor(
+                                point.value.technicalDebt,
+                            )}
+                        >
+                            {point.value.technicalDebt}%
                         </Badge>
                     </StyledItemHeader>{' '}
                     <Divider

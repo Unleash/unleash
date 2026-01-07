@@ -9,6 +9,7 @@ import newRelicIcon from 'assets/icons/new-relic.svg';
 import jiraIcon from 'assets/icons/jira.svg';
 import jiraCommentIcon from 'assets/icons/jira-comment.svg';
 import signals from 'assets/icons/signals.svg';
+import terraformIcon from 'assets/icons/terraform.svg';
 import slackIcon from 'assets/icons/slack.svg';
 import teamsIcon from 'assets/icons/teams.svg';
 import webhooksIcon from 'assets/icons/webhooks.svg';
@@ -55,6 +56,7 @@ const integrations: Record<
     jira: { title: 'Jira', icon: jiraIcon },
     'jira-comment': { title: 'Jira', icon: jiraCommentIcon },
     signals: { title: 'Signals', icon: signals },
+    terraform: { title: 'Terraform', icon: terraformIcon },
     slack: { title: 'Slack', icon: slackIcon },
     'slack-app': { title: 'Slack', icon: slackIcon },
     teams: { title: 'Teams', icon: teamsIcon },

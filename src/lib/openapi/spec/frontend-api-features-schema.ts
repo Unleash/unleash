@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { frontendApiFeatureSchema } from './frontend-api-feature-schema';
+import { frontendApiFeatureSchema } from './frontend-api-feature-schema.js';
 
 export const frontendApiFeaturesSchema = {
     $id: '#/components/schemas/frontendApiFeaturesSchema',

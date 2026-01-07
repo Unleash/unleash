@@ -1,4 +1,5 @@
-import timer from './timer';
+import timer from './timer.js';
+import { vi } from 'vitest';
 
 function timeout(fn, ms): Promise<void> {
     return new Promise((resolve) =>
@@ -17,14 +18,14 @@ test('should calculate the correct time in seconds', () => {
 });
 
 test('timer should track the time', async () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const tt = timer.new();
     let diff: number | undefined;
     timeout(() => {
         diff = tt();
     }, 20);
-    jest.advanceTimersByTime(20);
+    vi.advanceTimersByTime(20);
     expect(diff).toBeGreaterThan(0.0019);
     expect(diff).toBeLessThan(0.05);
-    jest.useRealTimers();
+    vi.useRealTimers();
 });

@@ -1,4 +1,4 @@
-import type { Store } from '../../types/stores/store';
+import type { Store } from '../../types/stores/store.js';
 
 export interface IContextFieldDto {
     name: string;
@@ -8,6 +8,7 @@ export interface IContextFieldDto {
     usedInProjects?: number | null;
     usedInFeatures?: number | null;
     legalValues?: ILegalValue[];
+    project?: string;
 }
 
 export interface ILegalValue {
@@ -23,4 +24,5 @@ export interface IContextFieldStore extends Store<IContextField, string> {
     create(data: IContextFieldDto): Promise<IContextField>;
     update(data: IContextFieldDto): Promise<IContextField>;
     count(): Promise<number>;
+    countProjectFields(): Promise<number>;
 }

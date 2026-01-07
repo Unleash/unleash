@@ -1,5 +1,5 @@
-import { validateSchema } from '../validate';
-import type { RoleSchema } from './role-schema';
+import { validateSchema } from '../validate.js';
+import type { RoleSchema } from './role-schema.js';
 
 test('roleSchema', () => {
     const data: RoleSchema = {

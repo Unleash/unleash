@@ -1,4 +1,4 @@
-import { roleSchema } from './role-schema';
+import { roleSchema } from './role-schema.js';
 
 test('role schema rejects a role without a name', async () => {
     expect.assertions(1);

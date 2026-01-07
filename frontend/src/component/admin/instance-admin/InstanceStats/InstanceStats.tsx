@@ -10,9 +10,9 @@ import {
 import { Box } from '@mui/system';
 import type { FC } from 'react';
 import { useInstanceStats } from 'hooks/api/getters/useInstanceStats/useInstanceStats';
-import { formatApiPath } from '../../../../utils/formatPath';
-import { PageContent } from '../../../common/PageContent/PageContent';
-import { PageHeader } from '../../../common/PageHeader/PageHeader';
+import { formatApiPath } from '../../../../utils/formatPath.ts';
+import { PageContent } from '../../../common/PageContent/PageContent.tsx';
+import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
 
 export const InstanceStats: FC = () => {
     const { stats } = useInstanceStats();
@@ -63,6 +63,8 @@ export const InstanceStats: FC = () => {
             title: 'Highest number of values used for a single constraint',
             value: stats?.maxConstraintValues,
         },
+        { title: 'Release templates', value: stats?.releaseTemplates },
+        { title: 'Release plans', value: stats?.releasePlans },
     ];
 
     if (stats?.versionEnterprise) {

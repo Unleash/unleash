@@ -43,7 +43,7 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ProjectGroupView } from '../ProjectGroupView/ProjectGroupView';
+import { ProjectGroupView } from '../ProjectGroupView/ProjectGroupView.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { IUser } from 'interfaces/user';
 import type { IGroup } from 'interfaces/group';
@@ -179,13 +179,8 @@ export const ProjectAccessTable: VFC = () => {
             {
                 id: 'added',
                 Header: 'Added',
-                accessor: (row: IProjectAccess) => {
-                    const userRow = row.entity as IUser | IGroup;
-                    return userRow.addedAt || '';
-                },
-                Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} emptyText='Never' />
-                ),
+                accessor: 'entity.addedAt',
+                Cell: TimeAgoCell,
                 maxWidth: 130,
             },
             {
@@ -202,9 +197,7 @@ export const ProjectAccessTable: VFC = () => {
                         .sort()
                         .reverse()[0];
                 },
-                Cell: ({ value }: { value: Date }) => (
-                    <TimeAgoCell value={value} emptyText='Never' />
-                ),
+                Cell: TimeAgoCell,
                 maxWidth: 130,
             },
             {
@@ -232,12 +225,8 @@ export const ProjectAccessTable: VFC = () => {
                                     ? 'group'
                                     : 'user'
                             }/${row.entity.id}`}
-                            disabled={access?.rows.length === 1}
                             tooltipProps={{
-                                title:
-                                    access?.rows.length === 1
-                                        ? 'Cannot edit access. A project must have at least one owner'
-                                        : 'Edit access',
+                                title: 'Edit access',
                             }}
                         >
                             <Edit />
@@ -253,12 +242,8 @@ export const ProjectAccessTable: VFC = () => {
                                 setSelectedRow(row);
                                 setRemoveOpen(true);
                             }}
-                            disabled={access?.rows.length === 1}
                             tooltipProps={{
-                                title:
-                                    access?.rows.length === 1
-                                        ? 'Cannot remove access. A project must have at least one owner'
-                                        : 'Remove access',
+                                title: 'Remove access',
                             }}
                         >
                             <Delete />

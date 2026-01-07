@@ -31,8 +31,8 @@ import { MainHeader } from 'component/common/MainHeader/MainHeader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { RemoveGroup } from 'component/admin/groups/RemoveGroup/RemoveGroup';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { EditGroupUsers } from './EditGroupUsers/EditGroupUsers';
-import { RemoveGroupUser } from './RemoveGroupUser/RemoveGroupUser';
+import { EditGroupUsers } from './EditGroupUsers/EditGroupUsers.tsx';
+import { RemoveGroupUser } from './RemoveGroupUser/RemoveGroupUser.tsx';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import {
@@ -42,7 +42,7 @@ import {
     UG_REMOVE_USER_BTN_ID,
 } from 'utils/testIds';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
-import { scimGroupTooltip } from '../group-constants';
+import { scimGroupTooltip } from '../group-constants.ts';
 
 export const groupUsersPlaceholder: IGroupUser[] = Array(15).fill({
     name: 'Name of the user',
@@ -117,14 +117,8 @@ export const Group: VFC = () => {
             },
             {
                 Header: 'Last login',
-                accessor: (row: IGroupUser) => row.seenAt || '',
-                Cell: ({ row: { original: user } }: any) => (
-                    <TimeAgoCell
-                        value={user.seenAt}
-                        emptyText='Never'
-                        title={(date) => `Last login: ${date}`}
-                    />
-                ),
+                accessor: 'seenAt',
+                Cell: TimeAgoCell,
                 maxWidth: 150,
             },
             {

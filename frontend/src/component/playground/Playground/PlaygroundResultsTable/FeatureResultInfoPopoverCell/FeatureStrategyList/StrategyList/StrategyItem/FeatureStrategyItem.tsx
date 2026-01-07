@@ -1,69 +1,50 @@
-import { useTheme } from '@mui/material';
-import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/PlaygroundResultChip';
+import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/PlaygroundResultChip.tsx';
 import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
 } from 'openapi';
-import { StrategyExecution } from './StrategyExecution/StrategyExecution';
-import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import { objectId } from 'utils/objectId';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { DisabledStrategyExecution } from './StrategyExecution/DisabledStrategyExecution';
+import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
+import { PlaygroundStrategyExecution } from './PlaygroundStrategyExecution/PlaygroundStrategyExecution.tsx';
 
 interface IFeatureStrategyItemProps {
     strategy: PlaygroundStrategySchema;
-    index: number;
     input?: PlaygroundRequestSchema;
+    className?: string;
 }
 
 export const FeatureStrategyItem = ({
     strategy,
     input,
-    index,
+    className,
 }: IFeatureStrategyItemProps) => {
     const { result } = strategy;
-    const theme = useTheme();
     const label =
         result.evaluationStatus === 'incomplete' ||
         result.evaluationStatus === 'unevaluated'
-            ? 'Unevaluated'
+            ? 'Not evaluated'
             : result.enabled
               ? 'True'
               : 'False';
 
     return (
         <StrategyItemContainer
-            style={{
-                borderColor:
-                    result.enabled && result.evaluationStatus === 'complete'
-                        ? theme.palette.success.main
-                        : 'none',
-            }}
             strategy={{ ...strategy, id: `${objectId(strategy)}` }}
-            orderNumber={index + 1}
-            actions={
-                <PlaygroundResultChip
-                    showIcon={false}
-                    enabled={result.enabled}
-                    label={label}
-                />
+            strategyHeaderLevel={4}
+            className={className}
+            headerItemsLeft={
+                strategy.disabled ? null : (
+                    <PlaygroundResultChip
+                        showIcon={false}
+                        enabled={result.enabled}
+                        label={label}
+                    />
+                )
             }
         >
-            <ConditionallyRender
-                condition={Boolean(strategy.disabled)}
-                show={
-                    <DisabledStrategyExecution
-                        strategyResult={strategy}
-                        input={input}
-                    />
-                }
-                elseShow={
-                    <StrategyExecution
-                        strategyResult={strategy}
-                        input={input}
-                        percentageFill={theme.palette.background.elevation2}
-                    />
-                }
+            <PlaygroundStrategyExecution
+                strategyResult={strategy}
+                input={input}
             />
         </StrategyItemContainer>
     );

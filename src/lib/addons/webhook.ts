@@ -1,17 +1,17 @@
 import Mustache from 'mustache';
-import Addon from './addon';
-import definition from './webhook-definition';
-import type { IEvent } from '../types/events';
+import Addon from './addon.js';
+import definition from './webhook-definition.js';
+import type { IEvent } from '../events/index.js';
 import {
     type IAddonConfig,
     type IFlagResolver,
     serializeDates,
-} from '../types';
-import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+} from '../types/index.js';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
-} from './feature-event-formatter-md';
+} from './feature-event-formatter-md.js';
 
 interface IParameters {
     url: string;
@@ -25,7 +25,7 @@ interface IParameters {
 export default class Webhook extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    flagResolver: IFlagResolver;
+    declare flagResolver: IFlagResolver;
 
     constructor(args: IAddonConfig) {
         super(definition, args);
@@ -71,7 +71,7 @@ export default class Webhook extends Addon {
         if (typeof customHeaders === 'string' && customHeaders.length > 1) {
             try {
                 extraHeaders = JSON.parse(customHeaders);
-            } catch (e) {
+            } catch (_e) {
                 state = 'successWithErrors';
                 const badHeadersMessage =
                     'Could not parse the JSON in the customHeaders parameter.';

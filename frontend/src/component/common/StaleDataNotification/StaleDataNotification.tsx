@@ -1,5 +1,5 @@
 import { Typography, Button, useTheme, useMediaQuery } from '@mui/material';
-import EventDiff from 'component/events/EventDiff/EventDiff';
+import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import {
     fadeInBottomEnter,
     fadeInBottomStartWithoutFixed,

@@ -1,14 +1,16 @@
-import rbacMiddleware from './rbac-middleware';
-import User from '../types/user';
-import * as perms from '../types/permissions';
-import type { IUnleashConfig } from '../types/option';
-import { createTestConfig } from '../../test/config/test-config';
-import ApiUser from '../types/api-user';
-import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
-import FakeFeatureToggleStore from '../features/feature-toggle/fakes/fake-feature-toggle-store';
-import { ApiTokenType } from '../types/models/api-token';
-import { type ISegmentStore, SYSTEM_USER_ID } from '../types';
-import FakeSegmentStore from '../../test/fixtures/fake-segment-store';
+import rbacMiddleware, { type PermissionChecker } from './rbac-middleware.js';
+import User from '../types/user.js';
+import * as perms from '../types/permissions.js';
+import type { IUnleashConfig } from '../types/option.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import ApiUser from '../types/api-user.js';
+import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type.js';
+import FakeFeatureToggleStore from '../features/feature-toggle/fakes/fake-feature-toggle-store.js';
+import { ApiTokenType } from '../types/model.js';
+import { type ISegmentStore, SYSTEM_USER_ID } from '../types/index.js';
+import FakeSegmentStore from '../../test/fixtures/fake-segment-store.js';
+
+import { vi } from 'vitest';
 
 let config: IUnleashConfig;
 let featureToggleStore: IFeatureToggleStore;
@@ -22,8 +24,8 @@ beforeEach(() => {
 
 test('should add checkRbac to request', () => {
     const accessService = {
-        hasPermission: jest.fn(),
-    };
+        hasPermission: vi.fn(),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -31,22 +33,22 @@ test('should add checkRbac to request', () => {
         accessService,
     );
 
-    const cb = jest.fn();
+    const cb = vi.fn();
 
-    const req = jest.fn();
+    const req = vi.fn();
 
     func(req, undefined, cb);
 
-    // @ts-ignore
+    // @ts-expect-error
     expect(req.checkRbac).toBeTruthy();
-    // @ts-ignore
+    // @ts-expect-error
     expect(typeof req.checkRbac).toBe('function');
 });
 
 test('should give api-user ADMIN permission', async () => {
     const accessService = {
-        hasPermission: jest.fn(),
-    };
+        hasPermission: vi.fn(),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -54,7 +56,7 @@ test('should give api-user ADMIN permission', async () => {
         accessService,
     );
 
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: new ApiUser({
             tokenName: 'api',
@@ -77,8 +79,8 @@ describe('ADMIN tokens should have user id -1337 when only passed through rbac-m
     /// Will be -42 (ADMIN_USER.id) when we have the api-token-middleware run first
     test('Should give ADMIN api-user userid -1337 (SYSTEM_USER_ID)', async () => {
         const accessService = {
-            hasPermission: jest.fn(),
-        };
+            hasPermission: vi.fn(),
+        } as PermissionChecker;
 
         const func = rbacMiddleware(
             config,
@@ -86,7 +88,7 @@ describe('ADMIN tokens should have user id -1337 when only passed through rbac-m
             accessService,
         );
 
-        const cb = jest.fn();
+        const cb = vi.fn();
         const req: any = {
             user: new ApiUser({
                 tokenName: 'api',
@@ -105,8 +107,8 @@ describe('ADMIN tokens should have user id -1337 when only passed through rbac-m
     /// Will be -42 (ADMIN_USER.id) when we have the api-token-middleware run first
     test('Also when checking against permission NONE, userid should still be -1337', async () => {
         const accessService = {
-            hasPermission: jest.fn(),
-        };
+            hasPermission: vi.fn(),
+        } as PermissionChecker;
 
         const func = rbacMiddleware(
             config,
@@ -114,7 +116,7 @@ describe('ADMIN tokens should have user id -1337 when only passed through rbac-m
             accessService,
         );
 
-        const cb = jest.fn();
+        const cb = vi.fn();
         const req: any = {
             user: new ApiUser({
                 tokenName: 'api',
@@ -132,10 +134,14 @@ describe('ADMIN tokens should have user id -1337 when only passed through rbac-m
     });
 });
 
-test('should not give api-user ADMIN permission', async () => {
+test.each([
+    ApiTokenType.BACKEND,
+    ApiTokenType.CLIENT,
+    ApiTokenType.FRONTEND,
+])('should not give api-user ADMIN permission to token %s', async (tokenType) => {
     const accessService = {
-        hasPermission: jest.fn(),
-    };
+        hasPermission: vi.fn(),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -143,14 +149,14 @@ test('should not give api-user ADMIN permission', async () => {
         accessService,
     );
 
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: new ApiUser({
-            tokenName: 'api',
+            tokenName: `api_${tokenType}`,
             permissions: [perms.CLIENT],
             project: '*',
             environment: '*',
-            type: ApiTokenType.CLIENT,
+            type: tokenType,
             secret: 'a',
         }),
     };
@@ -164,10 +170,10 @@ test('should not give api-user ADMIN permission', async () => {
 });
 
 test('should not allow user to miss userId', async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    vi.spyOn(global.console, 'error').mockImplementation(() => vi.fn());
     const accessService = {
-        hasPermission: jest.fn(),
-    };
+        hasPermission: vi.fn(),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -175,7 +181,7 @@ test('should not allow user to miss userId', async () => {
         accessService,
     );
 
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: {
             username: 'user',
@@ -190,10 +196,10 @@ test('should not allow user to miss userId', async () => {
 });
 
 test('should return false for missing user', async () => {
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+    vi.spyOn(global.console, 'error').mockImplementation(() => vi.fn());
     const accessService = {
-        hasPermission: jest.fn(),
-    };
+        hasPermission: vi.fn(),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -201,7 +207,7 @@ test('should return false for missing user', async () => {
         accessService,
     );
 
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {};
 
     func(req, undefined, cb);
@@ -214,8 +220,8 @@ test('should return false for missing user', async () => {
 
 test('should verify permission for root resource', async () => {
     const accessService = {
-        hasPermission: jest.fn(),
-    };
+        hasPermission: vi.fn(),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -223,7 +229,7 @@ test('should verify permission for root resource', async () => {
         accessService,
     );
 
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: new User({
             username: 'user',
@@ -247,8 +253,8 @@ test('should verify permission for root resource', async () => {
 
 test('should lookup projectId from params', async () => {
     const accessService = {
-        hasPermission: jest.fn(),
-    };
+        hasPermission: vi.fn(),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -256,7 +262,7 @@ test('should lookup projectId from params', async () => {
         accessService,
     );
 
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: new User({
             username: 'user',
@@ -284,10 +290,10 @@ test('should lookup projectId from feature flag', async () => {
     const featureName = 'some-feature-flag';
 
     const accessService = {
-        hasPermission: jest.fn(),
-    };
+        hasPermission: vi.fn(),
+    } as PermissionChecker;
 
-    featureToggleStore.getProjectId = jest.fn().mockReturnValue(projectId);
+    featureToggleStore.getProjectId = vi.fn().mockReturnValue(projectId);
 
     const func = rbacMiddleware(
         config,
@@ -295,7 +301,7 @@ test('should lookup projectId from feature flag', async () => {
         accessService,
     );
 
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: new User({
             username: 'user',
@@ -323,8 +329,8 @@ test('should lookup projectId from data', async () => {
     const featureName = 'some-feature-flag';
 
     const accessService = {
-        hasPermission: jest.fn(),
-    };
+        hasPermission: vi.fn(),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -332,7 +338,7 @@ test('should lookup projectId from data', async () => {
         accessService,
     );
 
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: new User({
             username: 'user',
@@ -361,16 +367,16 @@ test('Does not double check permission if not changing project when updating fla
     const oldProjectId = 'some-project-34';
     const featureName = 'some-feature-flag';
     const accessService = {
-        hasPermission: jest.fn().mockReturnValue(true),
-    };
-    featureToggleStore.getProjectId = jest.fn().mockReturnValue(oldProjectId);
+        hasPermission: vi.fn().mockReturnValue(true),
+    } as PermissionChecker;
+    featureToggleStore.getProjectId = vi.fn().mockReturnValue(oldProjectId);
 
     const func = rbacMiddleware(
         config,
         { featureToggleStore, segmentStore },
         accessService,
     );
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: new User({ username: 'user', id: 1 }),
         params: { featureName },
@@ -390,15 +396,15 @@ test('Does not double check permission if not changing project when updating fla
 
 test('CREATE_TAG_TYPE does not need projectId', async () => {
     const accessService = {
-        hasPermission: jest.fn().mockReturnValue(true),
-    };
+        hasPermission: vi.fn().mockReturnValue(true),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
         { featureToggleStore, segmentStore },
         accessService,
     );
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: new User({ username: 'user', id: 1 }),
         params: {},
@@ -418,15 +424,15 @@ test('CREATE_TAG_TYPE does not need projectId', async () => {
 
 test('UPDATE_TAG_TYPE does not need projectId', async () => {
     const accessService = {
-        hasPermission: jest.fn().mockReturnValue(true),
-    };
+        hasPermission: vi.fn().mockReturnValue(true),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
         { featureToggleStore, segmentStore },
         accessService,
     );
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: new User({ username: 'user', id: 1 }),
         params: {},
@@ -446,15 +452,15 @@ test('UPDATE_TAG_TYPE does not need projectId', async () => {
 
 test('DELETE_TAG_TYPE does not need projectId', async () => {
     const accessService = {
-        hasPermission: jest.fn().mockReturnValue(true),
-    };
+        hasPermission: vi.fn().mockReturnValue(true),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
         { featureToggleStore, segmentStore },
         accessService,
     );
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: new User({ username: 'user', id: 1 }),
         params: {},
@@ -476,8 +482,8 @@ test('should not expect featureName for UPDATE_FEATURE when projectId specified'
     const projectId = 'some-project-33';
 
     const accessService = {
-        hasPermission: jest.fn(),
-    };
+        hasPermission: vi.fn(),
+    } as PermissionChecker;
 
     const func = rbacMiddleware(
         config,
@@ -485,7 +491,7 @@ test('should not expect featureName for UPDATE_FEATURE when projectId specified'
         accessService,
     );
 
-    const cb = jest.fn();
+    const cb = vi.fn();
     const req: any = {
         user: new User({
             username: 'user',

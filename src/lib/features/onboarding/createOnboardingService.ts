@@ -1,12 +1,12 @@
-import type { IUnleashConfig } from '../../types';
-import type { Db } from '../../db/db';
-import { OnboardingService } from './onboarding-service';
-import { OnboardingStore } from './onboarding-store';
-import { ProjectReadModel } from '../project/project-read-model';
-import UserStore from '../../db/user-store';
-import FakeUserStore from '../../../test/fixtures/fake-user-store';
-import { FakeProjectReadModel } from '../project/fake-project-read-model';
-import { FakeOnboardingStore } from './fake-onboarding-store';
+import type { IUnleashConfig } from '../../types/index.js';
+import type { Db } from '../../db/db.js';
+import { OnboardingService } from './onboarding-service.js';
+import { OnboardingStore } from './onboarding-store.js';
+import { ProjectReadModel } from '../project/project-read-model.js';
+import { UserStore } from '../users/user-store.js';
+import FakeUserStore from '../../../test/fixtures/fake-user-store.js';
+import { FakeProjectReadModel } from '../project/fake-project-read-model.js';
+import { FakeOnboardingStore } from './fake-onboarding-store.js';
 
 export const createOnboardingService =
     (config: IUnleashConfig) =>
@@ -18,7 +18,7 @@ export const createOnboardingService =
             eventBus,
             flagResolver,
         );
-        const userStore = new UserStore(db, getLogger, flagResolver);
+        const userStore = new UserStore(db, getLogger);
         const onboardingService = new OnboardingService(
             {
                 onboardingStore,

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createProjectPermissionsStructure } from './createProjectPermissionsStructure';
+import { createProjectPermissionsStructure } from './createProjectPermissionsStructure.js';
 
 describe('createProjectPermissionsStructure', () => {
     it('returns an empty array when no permissions are given', () => {

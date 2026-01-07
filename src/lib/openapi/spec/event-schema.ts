@@ -1,7 +1,7 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { tagSchema } from './tag-schema';
-import { IEventTypes } from '../../types';
-import { variantSchema } from './variant-schema';
+import { tagSchema } from './tag-schema.js';
+import { IEventTypes } from '../../events/index.js';
+import { variantSchema } from './variant-schema.js';
 
 const eventDataSchema = {
     type: 'object',
@@ -43,7 +43,7 @@ export const eventSchema = {
         type: {
             type: 'string',
             description:
-                'What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is',
+                'What [type](https://docs.getunleash.io/concepts/events#event-types) of event this is',
             enum: IEventTypes,
             example: 'feature-created',
         },
@@ -101,6 +101,25 @@ export const eventSchema = {
             type: 'string',
             nullable: true,
             description: 'A markdown-formatted summary of the event.',
+        },
+        ip: {
+            type: 'string',
+            nullable: true,
+            description:
+                'The IP address of the user that created the event. Only available in Enterprise.',
+            example: '192.168.1.1',
+        },
+        groupType: {
+            type: 'string',
+            description:
+                'The type of transaction group this event belongs to, if applicable.',
+            example: 'change-request',
+        },
+        groupId: {
+            type: 'string',
+            description:
+                'The unique identifier for the transaction group this event belongs to, if applicable.',
+            example: '01HQVX5K8P9EXAMPLE123456',
         },
     },
     components: {

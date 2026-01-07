@@ -1,10 +1,11 @@
-import EventDiff from 'component/events/EventDiff/EventDiff';
+import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material';
 import type { EventSchema } from 'openapi';
+import { useLocation } from 'react-router-dom';
 
 interface IEventCardProps {
     entry: EventSchema;
@@ -72,23 +73,51 @@ export const StyledCodeSection = styled('div')(({ theme }) => ({
 
 const EventCard = ({ entry }: IEventCardProps) => {
     const { locationSettings } = useLocationSettings();
+    const location = useLocation();
 
     const createdAtFormatted = formatDateYMDHMS(
         entry.createdAt,
         locationSettings.locale,
     );
 
+    const getGroupIdLink = () => {
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set('groupId', `IS:${entry.groupId}`);
+        return `${location.pathname}?${searchParams.toString()}`;
+    };
+
     return (
         <StyledContainerListItem>
             <dl>
                 <StyledDefinitionTerm>Event id:</StyledDefinitionTerm>
                 <dd>{entry.id}</dd>
+                <ConditionallyRender
+                    condition={entry.groupId !== undefined}
+                    show={
+                        <>
+                            <StyledDefinitionTerm>
+                                Group id:
+                            </StyledDefinitionTerm>
+                            <dd>
+                                <Link to={getGroupIdLink()}>
+                                    {entry.groupId}
+                                </Link>
+                            </dd>
+                        </>
+                    }
+                />
                 <StyledDefinitionTerm>Changed at:</StyledDefinitionTerm>
                 <dd>{createdAtFormatted}</dd>
                 <StyledDefinitionTerm>Event:</StyledDefinitionTerm>
                 <dd>{entry.type}</dd>
                 <StyledDefinitionTerm>Changed by:</StyledDefinitionTerm>
                 <dd title={entry.createdBy}>{entry.createdBy}</dd>
+                {entry.ip && (
+                    <>
+                        <StyledDefinitionTerm>IP:</StyledDefinitionTerm>
+                        <dd title={entry.ip}>{entry.ip}</dd>
+                    </>
+                )}
                 <ConditionallyRender
                     condition={Boolean(entry.project)}
                     show={
@@ -129,6 +158,23 @@ const EventCard = ({ entry }: IEventCardProps) => {
                                 Environment:
                             </StyledDefinitionTerm>
                             <dd>{entry.environment}</dd>
+                        </>
+                    }
+                />
+                <ConditionallyRender
+                    condition={Boolean(entry.data?.changeRequestId)}
+                    show={
+                        <>
+                            <StyledDefinitionTerm>
+                                Change request id:
+                            </StyledDefinitionTerm>
+                            <dd>
+                                <Link
+                                    to={`/projects/${entry.project}/change-requests/${entry.data?.changeRequestId}`}
+                                >
+                                    {String(entry.data?.changeRequestId)}
+                                </Link>
+                            </dd>
                         </>
                     }
                 />

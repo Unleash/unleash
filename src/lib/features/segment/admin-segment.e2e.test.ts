@@ -1,18 +1,21 @@
-import { randomId } from '../../util/random-id';
-import type { ISegment } from '../../types/model';
-import { collectIds } from '../../util/collect-ids';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+import { randomId } from '../../util/random-id.js';
+import type { ISegment } from '../../types/model.js';
+import { collectIds } from '../../util/collect-ids.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     addStrategyToFeatureEnv,
     createFeatureFlag,
-} from '../../../test/e2e/helpers/app.utils';
+} from '../../../test/e2e/helpers/app.utils.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import type { StrategiesUsingSegment } from './segment-service-interface';
-import type { IFeatureOverview, IUser } from '../../types';
+} from '../../../test/e2e/helpers/test-helper.js';
+import type { StrategiesUsingSegment } from './segment-service-interface.js';
+import type { IFeatureOverview, IUser } from '../../types/index.js';
+import { DEFAULT_ENV } from '../../server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -21,7 +24,7 @@ const SEGMENTS_BASE_PATH = '/api/admin/segments';
 const FEATURES_LIST_BASE_PATH = '/api/admin/projects/default/features';
 
 const getFeatureStrategiesPath = (featureName: string) => {
-    return `/api/admin/projects/default/features/${featureName}/environments/default/strategies`;
+    return `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/strategies`;
 };
 
 // Recursively change all Date properties to string properties.
@@ -85,7 +88,7 @@ const addSegmentsToStrategy = (
             strategyId,
             segmentIds,
             projectId: 'default',
-            environmentId: 'default',
+            environmentId: DEFAULT_ENV,
             additional: 'property',
         })
         .expect(expectStatusCode);
@@ -118,7 +121,6 @@ beforeAll(async () => {
                 anonymiseEventLog: true,
             },
         },
-        dbInitMethod: 'legacy' as const,
     };
 
     db = await dbInit('segments_api_serial', getLogger, customOptions);
@@ -180,7 +182,7 @@ test('should fail on missing properties', async () => {
         .set('Content-type', 'application/json')
         .send({
             projectId: 'default',
-            environmentId: 'default',
+            environmentId: DEFAULT_ENV,
             additional: 'property',
         });
 
@@ -289,12 +291,11 @@ test('should not delete segments used by strategies', async () => {
     await addStrategyToFeatureEnv(
         app,
         { ...flag.strategies[0] },
-        'default',
+        DEFAULT_ENV,
         flag.name,
     );
     const [feature] = await fetchFeatures();
     const [strategy] = await fetchFeatureStrategies(feature.name);
-    //@ts-ignore
     await addSegmentsToStrategy([segment.id], strategy.id);
     const segments = await fetchSegments();
     expect(segments.length).toEqual(1);
@@ -318,12 +319,11 @@ test('should delete segments used by strategies in archived feature flags', asyn
     await addStrategyToFeatureEnv(
         app,
         { ...flag.strategies[0] },
-        'default',
+        DEFAULT_ENV,
         flag.name,
     );
     const [feature] = await fetchFeatures();
     const [strategy] = await fetchFeatureStrategies(feature.name);
-    //@ts-ignore
     await addSegmentsToStrategy([segment.id], strategy.id);
     const segments = await fetchSegments();
     expect(segments.length).toEqual(1);
@@ -360,19 +360,19 @@ test('should list strategies by segment', async () => {
     await addStrategyToFeatureEnv(
         app,
         { ...flag1.strategies[0] },
-        'default',
+        DEFAULT_ENV,
         flag1.name,
     );
     await addStrategyToFeatureEnv(
         app,
         { ...flag1.strategies[0] },
-        'default',
+        DEFAULT_ENV,
         flag2.name,
     );
     await addStrategyToFeatureEnv(
         app,
         { ...flag3.strategies[0] },
-        'default',
+        DEFAULT_ENV,
         flag3.name,
     );
 
@@ -385,15 +385,12 @@ test('should list strategies by segment', async () => {
 
     await addSegmentsToStrategy(
         [segment1.id, segment2.id, segment3.id],
-        //@ts-ignore
         feature1Strategies[0].id,
     );
     await addSegmentsToStrategy(
         [segment2.id, segment3.id],
-        //@ts-ignore
         feature2Strategies[0].id,
     );
-    //@ts-ignore
     await addSegmentsToStrategy([segment3.id], feature3Strategies[0].id);
 
     const segmentStrategies1 = await fetchSegmentStrategies(segment1.id);
@@ -440,19 +437,19 @@ test('should list segments by strategy', async () => {
     await addStrategyToFeatureEnv(
         app,
         { ...flag1.strategies[0] },
-        'default',
+        DEFAULT_ENV,
         flag1.name,
     );
     await addStrategyToFeatureEnv(
         app,
         { ...flag1.strategies[0] },
-        'default',
+        DEFAULT_ENV,
         flag2.name,
     );
     await addStrategyToFeatureEnv(
         app,
         { ...flag3.strategies[0] },
-        'default',
+        DEFAULT_ENV,
         flag3.name,
     );
 
@@ -465,27 +462,21 @@ test('should list segments by strategy', async () => {
 
     await addSegmentsToStrategy(
         [segment1.id, segment2.id, segment3.id],
-        //@ts-ignore
         feature1Strategy.id,
     );
     await addSegmentsToStrategy(
         [segment2.id, segment3.id],
-        //@ts-ignore
         feature2Strategy.id,
     );
-    //@ts-ignore
     await addSegmentsToStrategy([segment3.id], feature3Strategy.id);
 
     const strategySegments1 = await fetchSegmentsByStrategy(
-        //@ts-ignore
         feature1Strategy.id,
     );
     const strategySegments2 = await fetchSegmentsByStrategy(
-        //@ts-ignore
         feature2Strategy.id,
     );
     const strategySegments3 = await fetchSegmentsByStrategy(
-        //@ts-ignore
         feature3Strategy.id,
     );
 
@@ -592,7 +583,7 @@ test('Should show usage in features and projects', async () => {
     await addStrategyToFeatureEnv(
         app,
         { ...flag.strategies[0] },
-        'default',
+        DEFAULT_ENV,
         flag.name,
     );
     const [feature] = await fetchFeatures();
@@ -671,7 +662,7 @@ describe('detect strategy usage in change requests', () => {
 
         await db.rawDatabase.table('change_requests').insert({
             id: CR_ID,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             state: 'In review',
             project: 'default',
             created_by: user.id,
@@ -768,7 +759,7 @@ describe('detect strategy usage in change requests', () => {
 
         expect(changeRequestStrategies).toMatchObject([
             {
-                environment: 'default',
+                environment: DEFAULT_ENV,
                 featureName: flag.name,
                 projectId: 'default',
                 strategyName: 'flexibleRollout',
@@ -795,7 +786,7 @@ describe('detect strategy usage in change requests', () => {
         await addStrategyToFeatureEnv(
             enterpriseApp,
             { ...flag.strategies[0] },
-            'default',
+            DEFAULT_ENV,
             flag.name,
         );
 
@@ -855,7 +846,7 @@ describe('detect strategy usage in change requests', () => {
         await addStrategyToFeatureEnv(
             enterpriseApp,
             { ...flag.strategies[0] },
-            'default',
+            DEFAULT_ENV,
             flag.name,
         );
 
@@ -956,7 +947,7 @@ describe('detect strategy usage in change requests', () => {
         await addStrategyToFeatureEnv(
             enterpriseApp,
             { ...flag.strategies[0] },
-            'default',
+            DEFAULT_ENV,
             flag.name,
         );
 

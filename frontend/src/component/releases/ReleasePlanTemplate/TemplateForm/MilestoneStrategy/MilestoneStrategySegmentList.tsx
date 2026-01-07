@@ -1,9 +1,10 @@
+import type React from 'react';
 import { Fragment, useState } from 'react';
 import type { ISegment } from 'interfaces/segment';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentChip';
+import { Alert, styled } from '@mui/material';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
-import { styled } from '@mui/material';
 
 const StyledList = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -28,6 +29,11 @@ const StyledAnd = styled('p')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
 }));
 
+const StyledWarningAlert = styled(Alert)(({ theme }) => ({
+    marginTop: theme.spacing(1.5),
+    marginBottom: theme.spacing(1.5),
+}));
+
 type IMilestoneStrategySegmentListProps = {
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
@@ -44,6 +50,11 @@ export const MilestoneStrategySegmentList = ({
         return null;
     }
 
+    const emptySegments = segments.filter(
+        (segment) => !segment.constraints || segment.constraints.length === 0,
+    );
+    const hasEmptySegments = emptySegments.length > 0;
+
     return (
         <>
             <ConditionallyRender
@@ -52,6 +63,17 @@ export const MilestoneStrategySegmentList = ({
                     <StyledSelectedSegmentsLabel>
                         Selected Segments
                     </StyledSelectedSegmentsLabel>
+                }
+            />
+            <ConditionallyRender
+                condition={hasEmptySegments}
+                show={
+                    <StyledWarningAlert severity='warning'>
+                        <strong>Warning!</strong> You are adding an empty
+                        segment{emptySegments.length > 1 ? 's' : ''} (
+                        {emptySegments.map((s) => s.name).join(', ')}). This
+                        will activate this feature for ALL USERS.
+                    </StyledWarningAlert>
                 }
             />
             <StyledList>

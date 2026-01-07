@@ -1,21 +1,21 @@
-import Addon from './addon';
+import Addon from './addon.js';
 
-import definition from './datadog-definition';
+import definition from './datadog-definition.js';
 import Mustache from 'mustache';
 import {
     type IAddonConfig,
     type IFlagResolver,
     serializeDates,
-} from '../types';
+} from '../types/index.js';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
-} from './feature-event-formatter-md';
-import type { IEvent } from '../types/events';
-import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+} from './feature-event-formatter-md.js';
+import type { IEvent } from '../events/index.js';
+import type { IntegrationEventState } from '../features/integration-events/integration-events-store.js';
 
 interface IDatadogParameters {
-    url: string;
+    url?: string;
     apiKey: string;
     sourceTypeName?: string;
     customHeaders?: string;
@@ -32,7 +32,7 @@ interface DDRequestBody {
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    flagResolver: IFlagResolver;
+    declare flagResolver: IFlagResolver;
 
     constructor(config: IAddonConfig) {
         super(definition, config);
@@ -83,7 +83,7 @@ export default class DatadogAddon extends Addon {
         if (typeof customHeaders === 'string' && customHeaders.length > 1) {
             try {
                 extraHeaders = JSON.parse(customHeaders);
-            } catch (e) {
+            } catch (_e) {
                 state = 'successWithErrors';
                 const badHeadersMessage =
                     'Could not parse the JSON in the customHeaders parameter.';

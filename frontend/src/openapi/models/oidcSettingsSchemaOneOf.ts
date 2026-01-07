@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { OidcSettingsSchemaOneOfDefaultRootRole } from './oidcSettingsSchemaOneOfDefaultRootRole';
-import type { OidcSettingsSchemaOneOfIdTokenSigningAlgorithm } from './oidcSettingsSchemaOneOfIdTokenSigningAlgorithm';
+import type { OidcSettingsSchemaOneOfDefaultRootRole } from './oidcSettingsSchemaOneOfDefaultRootRole.js';
+import type { OidcSettingsSchemaOneOfIdTokenSigningAlgorithm } from './oidcSettingsSchemaOneOfIdTokenSigningAlgorithm.js';
 
 export type OidcSettingsSchemaOneOf = {
     /** Authentication Context Class Reference, used to request extra values in the acr claim returned from the server. If multiple values are required, they should be space separated. 
@@ -17,7 +17,7 @@ export type OidcSettingsSchemaOneOf = {
     autoCreate?: boolean;
     /** The OIDC client ID of this application. */
     clientId: string;
-    /** [Default role](https://docs.getunleash.io/reference/rbac#standard-roles) granted to users auto-created from email. Only relevant if autoCreate is `true` */
+    /** [Default role](https://docs.getunleash.io/concepts/rbac#standard-roles) granted to users auto-created from email. Only relevant if autoCreate is `true` */
     defaultRootRole?: OidcSettingsSchemaOneOfDefaultRootRole;
     /** Assign this root role to auto created users. Should be a role ID and takes precedence over `defaultRootRole`. */
     defaultRootRoleId?: number;
@@ -27,8 +27,10 @@ export type OidcSettingsSchemaOneOf = {
     emailDomains?: string;
     /** Whether to enable or disable OpenID Connect for this instance */
     enabled: boolean;
-    /** Should we enable group syncing. Refer to the documentation [Group syncing](https://docs.getunleash.io/how-to/how-to-set-up-group-sso-sync) */
+    /** Should we enable group syncing. Refer to the documentation [Group syncing](https://docs.getunleash.io/guides/how-to-set-up-group-sso-sync) */
     enableGroupSyncing?: boolean;
+    /** Enable PKCE (Proof Key for Code Exchange) for enhanced security. Recommended for public clients and provides additional protection against authorization code interception attacks. */
+    enablePkce?: boolean;
     /** Support Single sign out when user clicks logout in Unleash. If `true` user is signed out of all OpenID Connect sessions against the clientId they may have active */
     enableSingleSignOut?: boolean;
     /** Specifies the path in the OIDC token response to read which groups the user belongs to from. */

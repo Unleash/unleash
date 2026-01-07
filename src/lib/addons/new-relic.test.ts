@@ -1,65 +1,44 @@
 import {
-    FEATURE_ARCHIVED,
-    FEATURE_CREATED,
-    FEATURE_ENVIRONMENT_DISABLED,
     type IFlagResolver,
     type IAddonConfig,
-    type IEvent,
     serializeDates,
     type IFlagKey,
-} from '../types';
-import type { Logger } from '../logger';
+} from '../types/index.js';
 
-import NewRelicAddon, { type INewRelicParameters } from './new-relic';
+import NewRelicAddon, { type INewRelicParameters } from './new-relic.js';
 
-import noLogger from '../../test/fixtures/no-logger';
+import noLogger from '../../test/fixtures/no-logger.js';
 import { gunzip } from 'node:zlib';
 import { promisify } from 'util';
-import type { IntegrationEventsService } from '../services';
+import type { IntegrationEventsService } from '../services/index.js';
+import {
+    FEATURE_CREATED,
+    type IEvent,
+    FEATURE_ARCHIVED,
+    FEATURE_ENVIRONMENT_DISABLED,
+} from '../events/index.js';
+import { vi } from 'vitest';
+import nock from 'nock';
 
-const asyncGunzip = promisify(gunzip);
+const _asyncGunzip = promisify(gunzip);
 
-let fetchRetryCalls: any[] = [];
-const registerEventMock = jest.fn();
+const registerEventMock = vi.fn();
 
 const INTEGRATION_ID = 1337;
 const ARGS: IAddonConfig = {
     getLogger: noLogger,
     unleashUrl: 'http://some-url.com',
-    integrationEventsService: {} as IntegrationEventsService,
-    flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
-    eventBus: {} as any,
+    integrationEventsService: {
+        registerEvent: registerEventMock,
+    } as unknown as IntegrationEventsService,
+    flagResolver: { isEnabled: (_expName: IFlagKey) => false } as IFlagResolver,
+    eventBus: {
+        emit: vi.fn(),
+    } as any,
 };
 
-jest.mock(
-    './addon',
-    () =>
-        class Addon {
-            logger: Logger;
-
-            constructor(definition, { getLogger }) {
-                this.logger = getLogger('addon/test');
-                fetchRetryCalls = [];
-            }
-
-            async fetchRetry(url, options, retries, backoff) {
-                fetchRetryCalls.push({
-                    url,
-                    options,
-                    retries,
-                    backoff,
-                });
-                return Promise.resolve({ ok: true, status: 200 });
-            }
-
-            async registerEvent(event) {
-                return registerEventMock(event);
-            }
-        },
-);
-
 const defaultParameters = {
-    url: 'fakeUrl',
+    url: 'http://fakeurl',
     licenseKey: 'fakeLicenseKey',
 } as INewRelicParameters;
 
@@ -77,10 +56,15 @@ const defaultEvent = {
     },
 } as IEvent;
 
-const makeAddHandleEvent = (event: IEvent, parameters: INewRelicParameters) => {
+const makeAddHandleEvent = (
+    event: IEvent,
+    parameters: INewRelicParameters,
+): (() => Promise<void>) => {
     const addon = new NewRelicAddon(ARGS);
 
-    return () => addon.handleEvent(event, parameters, INTEGRATION_ID);
+    return async () => {
+        await addon.handleEvent(event, parameters, INTEGRATION_ID);
+    };
 };
 
 describe('New Relic integration', () => {
@@ -144,49 +128,57 @@ describe('New Relic integration', () => {
         partialEvent: Partial<IEvent>;
         partialParameters?: Partial<INewRelicParameters>;
         test: String;
-    }>)(
-        'Should call New Relic Event API for $test',
-        async ({ partialEvent, partialParameters }) => {
-            const event = {
-                ...defaultEvent,
-                ...partialEvent,
-            };
+    }>)('Should call New Relic Event API for $test', async ({
+        partialEvent,
+        partialParameters,
+    }) => {
+        const event = {
+            ...defaultEvent,
+            ...partialEvent,
+        };
 
-            const parameters = {
-                ...defaultParameters,
-                ...partialParameters,
-            };
+        const parameters = {
+            ...defaultParameters,
+            ...partialParameters,
+        };
 
-            const handleEvent = makeAddHandleEvent(event, parameters);
+        const handleEvent = makeAddHandleEvent(event, parameters);
 
-            await handleEvent();
-            expect(fetchRetryCalls.length).toBe(1);
+        let body: any;
+        nock('http://fakeurl')
+            .post('/')
+            .matchHeader('Content-Type', 'application/json')
+            .matchHeader('Api-Key', parameters.licenseKey)
+            .matchHeader('Content-Encoding', 'gzip')
+            .reply(200, (_uri, requestBody) => {
+                body = requestBody;
+                return [200, 'OK'];
+            });
+        await handleEvent();
+        expect(nock.isDone()).toBe(true);
 
-            const { url, options } = fetchRetryCalls[0];
-            const jsonBody = JSON.parse(
-                (await asyncGunzip(options.body)).toString(),
-            );
+        const jsonBody = body;
 
-            expect(url).toBe(parameters.url);
-            expect(options.method).toBe('POST');
-            expect(options.headers['Api-Key']).toBe(parameters.licenseKey);
-            expect(options.headers['Content-Type']).toBe('application/json');
-            expect(options.headers['Content-Encoding']).toBe('gzip');
-            expect(options.headers).toMatchSnapshot();
-
-            expect(jsonBody.eventType).toBe('UnleashServiceEvent');
-            expect(jsonBody.unleashEventType).toBe(event.type);
-            expect(jsonBody.featureName).toBe(event.data.name);
-            expect(jsonBody.environment).toBe(event.environment);
-            expect(jsonBody.createdBy).toBe(event.createdBy);
-            expect(jsonBody.createdByUserId).toBe(event.createdByUserId);
-            expect(jsonBody.createdAt).toBe(event.createdAt.getTime());
-        },
-    );
+        expect(jsonBody.eventType).toBe('UnleashServiceEvent');
+        expect(jsonBody.unleashEventType).toBe(event.type);
+        expect(jsonBody.featureName).toBe(event.data.name);
+        expect(jsonBody.environment).toBe(event.environment);
+        expect(jsonBody.createdBy).toBe(event.createdBy);
+        expect(jsonBody.createdByUserId).toBe(event.createdByUserId);
+        expect(jsonBody.createdAt).toBe(event.createdAt.getTime());
+    });
 
     test('Should call registerEvent', async () => {
         const handleEvent = makeAddHandleEvent(defaultEvent, defaultParameters);
 
+        nock('http://fakeurl')
+            .post('/')
+            .matchHeader('Content-Type', 'application/json')
+            .matchHeader('Api-Key', defaultParameters.licenseKey)
+            .matchHeader('Content-Encoding', 'gzip')
+            .reply(200, () => {
+                return [200, 'OK'];
+            });
         await handleEvent();
 
         expect(registerEventMock).toHaveBeenCalledTimes(1);

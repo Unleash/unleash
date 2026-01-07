@@ -10,7 +10,8 @@ export const StyledTableCell = styled(TableCell, {
     isFlexGrow?: boolean;
 }>(({ theme, isFlex, isSortable, isFlexGrow }) => ({
     position: 'relative',
-    fontWeight: theme.typography.fontWeightRegular,
+    fontWeight: theme.typography.fontWeightMedium,
+    color: theme.palette.text.secondary,
     ...(isFlex && {
         justifyContent: 'stretch',
         alignItems: 'center',
@@ -51,9 +52,13 @@ export const StyledButton = styled('button', {
     display: 'flex',
     boxSizing: 'inherit',
     cursor: 'pointer',
+    fontWeight: theme.typography.fontWeightMedium,
+    color: theme.palette.text.secondary,
     ...(isSorted && {
         fontWeight: theme.typography.fontWeightBold,
+        color: theme.palette.text.primary,
     }),
+    contain: 'paint',
 }));
 
 export const StyledLabel = styled('span')(({ theme }) => ({

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateSchemaOneOfTwooneAction } from './changeRequestCreateSchemaOneOfTwooneAction';
-import type { SetStrategySortOrderSchema } from './setStrategySortOrderSchema';
+import type { ChangeRequestCreateSchemaOneOfTwooneAction } from './changeRequestCreateSchemaOneOfTwooneAction.js';
+import type { SetStrategySortOrderSchema } from './setStrategySortOrderSchema.js';
 
 /**
  * Reorder strategies for this feature

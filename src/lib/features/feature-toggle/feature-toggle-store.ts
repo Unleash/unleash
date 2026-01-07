@@ -1,30 +1,30 @@
 import type { Knex } from 'knex';
 import type EventEmitter from 'events';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
-import NotFoundError from '../../error/notfound-error';
-import type { Logger, LogProvider } from '../../logger';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { Logger, LogProvider } from '../../logger.js';
 import type {
     FeatureToggle,
     FeatureToggleDTO,
     IFeatureToggleQuery,
     IVariant,
-} from '../../types/model';
-import type { IFeatureToggleStore } from './types/feature-toggle-store-type';
-import type { Db } from '../../db/db';
-import type { LastSeenInput } from '../metrics/last-seen/last-seen-service';
-import { NameExistsError } from '../../error';
-import { DEFAULT_ENV } from '../../../lib/util';
+} from '../../types/model.js';
+import type { IFeatureToggleStore } from './types/feature-toggle-store-type.js';
+import type { Db } from '../../db/db.js';
+import type { LastSeenInput } from '../metrics/last-seen/last-seen-service.js';
+import { NameExistsError } from '../../error/index.js';
+import { DEFAULT_ENV } from '../../util/index.js';
 
-import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-builder';
-import type { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type';
+import { FeatureToggleListBuilder } from './query-builders/feature-toggle-list-builder.js';
+import type { FeatureConfigurationClient } from './types/feature-toggle-strategies-store-type.js';
 import {
     ADMIN_TOKEN_USER,
     type IFeatureTypeCount,
     type IFlagResolver,
-} from '../../../lib/types';
-import { FeatureToggleRowConverter } from './converters/feature-toggle-row-converter';
-import type { IFeatureProjectUserParams } from './feature-toggle-controller';
+} from '../../types/index.js';
+import { FeatureToggleRowConverter } from './converters/feature-toggle-row-converter.js';
+import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
 
 export type EnvironmentFeatureNames = {
     [key: string]: string[];
@@ -44,15 +44,15 @@ const FEATURE_COLUMNS = [
 
 export interface FeaturesTable {
     name: string;
-    description: string;
-    type: string;
-    stale: boolean;
+    description: string | null;
+    type?: string;
+    stale?: boolean | null;
     project: string;
     last_seen_at?: Date;
     created_at?: Date;
-    impression_data: boolean;
+    impression_data?: boolean | null;
     archived?: boolean;
-    archived_at?: Date;
+    archived_at?: Date | null;
     created_by_user_id?: number;
 }
 
@@ -110,11 +110,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async count(
-        query: {
-            archived?: boolean;
-            project?: string;
-            stale?: boolean;
-        } = { archived: false },
+        query: { archived?: boolean; project?: string; stale?: boolean } = {
+            archived: false,
+        },
     ): Promise<number> {
         const { archived, ...rest } = query;
         return this.db
@@ -242,11 +240,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getAll(
-        query: {
-            archived?: boolean;
-            project?: string;
-            stale?: boolean;
-        } = { archived: false },
+        query: { archived?: boolean; project?: string; stale?: boolean } = {
+            archived: false,
+        },
     ): Promise<FeatureToggle[]> {
         const { archived, ...rest } = query;
         const rows = await this.db
@@ -256,40 +252,6 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .modify(FeatureToggleStore.filterByArchived, archived);
 
         return rows.map(this.rowToFeature);
-    }
-
-    async getArchivedFeatures(project?: string): Promise<FeatureToggle[]> {
-        const builder = new FeatureToggleListBuilder(this.db, [
-            ...commonSelectColumns,
-            'features.archived_at as archived_at',
-        ]);
-
-        const archived = true;
-        builder.query('features').withLastSeenByEnvironment(archived);
-
-        builder.addSelectColumn(
-            'last_seen_at_metrics.last_seen_at as env_last_seen_at',
-        );
-        builder.addSelectColumn(
-            'last_seen_at_metrics.environment as last_seen_at_env',
-        );
-
-        let rows: any[];
-
-        if (project) {
-            rows = await builder.internalQuery
-                .select(builder.getSelectColumns())
-                .where({ project })
-                .whereNotNull('archived_at');
-        } else {
-            rows = await builder.internalQuery
-                .select(builder.getSelectColumns())
-                .whereNotNull('archived_at');
-        }
-
-        return this.featureToggleRowConverter.buildArchivedFeatureToggleListFromRows(
-            rows,
-        );
     }
 
     async getFeatureTypeCounts({
@@ -309,7 +271,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
         const result = await query;
         return result.map((row) => ({
-            type: row.type,
+            type: row.type!,
             count: Number(row.count),
         }));
     }
@@ -348,7 +310,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         }
 
         const queryResult = await query.first();
-        return Number.parseInt(queryResult.count || 0);
+        return Number.parseInt(queryResult.count || 0, 10);
     }
 
     /**
@@ -449,11 +411,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             description: row.description,
             type: row.type,
             project: row.project,
-            stale: row.stale,
+            stale: row.stale || false,
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
-            impressionData: row.impression_data,
-            archivedAt: row.archived_at,
+            impressionData: row.impression_data || false,
+            archivedAt: row.archived_at || undefined,
             archived: row.archived_at != null,
         };
     }
@@ -472,13 +434,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     insertToRow(project: string, data: FeatureToggleInsert): FeaturesTable {
         const row = {
             name: data.name,
-            description: data.description,
+            description: data.description || null,
             type: data.type,
             project,
             archived_at: data.archived ? new Date() : null,
-            stale: data.stale,
+            stale: data.stale || false,
             created_at: data.createdAt,
-            impression_data: data.impressionData,
+            impression_data: data.impressionData || false,
             created_by_user_id: data.createdByUserId,
         };
         if (!row.created_at) {
@@ -494,7 +456,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     ): Omit<FeaturesTable, 'created_by_user_id'> {
         const row = {
             name: data.name,
-            description: data.description,
+            description: data.description || null,
             type: data.type,
             project,
             archived_at: data.archived ? new Date() : null,
@@ -760,5 +722,3 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return toUpdate.length;
     }
 }
-
-module.exports = FeatureToggleStore;

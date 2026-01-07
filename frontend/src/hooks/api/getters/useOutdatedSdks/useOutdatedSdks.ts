@@ -1,5 +1,5 @@
-import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter';
-import type { OutdatedSdksSchema } from '../../../../openapi';
+import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
+import type { OutdatedSdksSchema } from 'openapi';
 import { formatApiPath } from 'utils/formatPath';
 
 export const useOutdatedSdks = (project: string) => {

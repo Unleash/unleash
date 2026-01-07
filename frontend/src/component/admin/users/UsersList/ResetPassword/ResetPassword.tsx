@@ -10,7 +10,7 @@ import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersAp
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { LinkField } from '../../LinkField/LinkField';
+import { LinkField } from '../../LinkField/LinkField.tsx';
 
 const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
     width: theme.spacing(5),

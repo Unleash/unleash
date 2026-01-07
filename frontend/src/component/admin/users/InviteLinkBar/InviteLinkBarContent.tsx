@@ -3,7 +3,7 @@ import { Box, Button, styled, Typography } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useInviteTokens } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
-import { LinkField } from '../LinkField/LinkField';
+import { LinkField } from '../LinkField/LinkField.tsx';
 import { add, formatDistanceToNowStrict, isAfter, parseISO } from 'date-fns';
 import { formatDateYMD } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';

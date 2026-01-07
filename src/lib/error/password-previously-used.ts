@@ -1,4 +1,4 @@
-import { UnleashError } from './unleash-error';
+import { UnleashError } from './unleash-error.js';
 
 export class PasswordPreviouslyUsedError extends UnleashError {
     statusCode = 400;

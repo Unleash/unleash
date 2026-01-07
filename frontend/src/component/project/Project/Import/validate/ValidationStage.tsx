@@ -1,4 +1,4 @@
-import { ImportLayoutContainer } from '../ImportLayoutContainer';
+import { ImportLayoutContainer } from '../ImportLayoutContainer.tsx';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { type FC, useEffect, useState } from 'react';
 import {
@@ -8,7 +8,7 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ActionsContainer } from '../ActionsContainer';
+import { ActionsContainer } from '../ActionsContainer.tsx';
 import { IMPORT_CONFIGURATION_BUTTON } from 'utils/testIds';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';

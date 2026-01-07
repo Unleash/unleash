@@ -49,7 +49,11 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
             <Logo className={styles.logo} aria-label='Unleash logo' />
             <div className={styles.container}>
                 <h2>Access the Unleash demo instance</h2>
-                <p>No further data or Credit Card required</p>
+                <p>
+                    Use your email to test out the demo
+                    <br />
+                    No further data or credit card required
+                </p>
                 <div className={styles.form}>
                     <TextField
                         value={email}
@@ -73,10 +77,10 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                         className={styles.button}
                         data-testid={LOGIN_BUTTON}
                     >
-                        Sign in
+                        Test Unleash demo
                     </Button>
                 </div>
-                <p>
+                <p className={styles.terms}>
                     By accessing our demo instance, you agree to the
                     Unleash&nbsp;
                     <a

@@ -1,15 +1,17 @@
-import { styled, Typography } from '@mui/material';
+import { styled } from '@mui/material';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import type { FC, ReactNode } from 'react';
 
 type ProjectsListHeaderProps = {
-    children?: ReactNode;
-    subtitle?: string;
+    children: ReactNode;
+    helpText: string;
     actions?: ReactNode;
 };
 
 const StyledHeaderContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column-reverse',
+    minHeight: theme.spacing(5),
     gap: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
         flexDirection: 'row',
@@ -18,30 +20,32 @@ const StyledHeaderContainer = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const StyledHeaderTitle = styled('div')(() => ({
+const StyledHeaderTitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(0.5),
+    fontWeight: theme.typography.fontWeightBold,
     flexGrow: 0,
+}));
+
+const StyledHeaderActions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: 'auto',
+    gap: theme.spacing(2),
 }));
 
 export const ProjectsListHeader: FC<ProjectsListHeaderProps> = ({
     children,
-    subtitle,
+    helpText,
     actions,
 }) => {
     return (
         <StyledHeaderContainer>
             <StyledHeaderTitle>
-                {children ? (
-                    <Typography component='h2' variant='h2'>
-                        {children}
-                    </Typography>
-                ) : null}
-                {subtitle ? (
-                    <Typography variant='body2' color='text.secondary'>
-                        {subtitle}
-                    </Typography>
-                ) : null}
+                {children}
+                <HelpIcon tooltip={helpText} />
             </StyledHeaderTitle>
-            {actions}
+            <StyledHeaderActions>{actions}</StyledHeaderActions>
         </StyledHeaderContainer>
     );
 };

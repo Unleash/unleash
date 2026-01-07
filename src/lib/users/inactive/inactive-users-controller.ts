@@ -1,12 +1,11 @@
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 import {
     ADMIN,
     type IFlagResolver,
     type IUnleashConfig,
-    type IUnleashServices,
-} from '../../types';
-import type { Logger } from '../../logger';
-import type { InactiveUsersService } from './inactive-users-service';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
+import type { InactiveUsersService } from './inactive-users-service.js';
 import {
     createRequestSchema,
     createResponseSchema,
@@ -16,11 +15,11 @@ import {
     type InactiveUserSchema,
     inactiveUsersSchema,
     type InactiveUsersSchema,
-} from '../../openapi';
-import type { IAuthRequest } from '../../routes/unleash-types';
+} from '../../openapi/index.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
 import type { Response } from 'express';
-import type { OpenApiService } from '../../services';
-import { anonymise } from '../../util';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
+import { anonymise } from '../../util/index.js';
 export class InactiveUsersController extends Controller {
     private readonly logger: Logger;
 

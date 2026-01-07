@@ -1,22 +1,42 @@
 import { type FC, useState } from 'react';
-import { styled } from '@mui/material';
+import {
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    styled,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
-import { DependencyRow } from './DependencyRow';
+import { DependencyRow } from './DependencyRow.tsx';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { useShowDependentFeatures } from './useShowDependentFeatures';
-import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle';
-import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue';
-import { TagRow } from './TagRow';
+import { useShowDependentFeatures } from './useShowDependentFeatures.ts';
+import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle.tsx';
+import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue.tsx';
+import { TagRow } from './TagRow.tsx';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
-import { Collaborators } from './Collaborators';
-import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu';
+import { Collaborators } from './Collaborators.tsx';
+import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu.tsx';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import type {
+    FeatureLink,
+    IFeatureToggle,
+} from '../../../../../interfaces/featureToggle.ts';
+import AddIcon from '@mui/icons-material/Add';
+import { Badge } from 'component/common/Badge/Badge';
+import LinkIcon from '@mui/icons-material/Link';
+import { UPDATE_FEATURE } from '../../../../providers/AccessProvider/permissions.ts';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { EditLinkDialogue, AddLinkDialogue } from './LinkDialogue.tsx';
+import { useFeatureLinkApi } from 'hooks/api/actions/useFeatureLinkApi/useFeatureLinkApi';
+import useToast from 'hooks/useToast';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { ExtraActions } from './ExtraActions.tsx';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -30,6 +50,7 @@ const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         width: '100%',
     },
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledTitle = styled('h2')(({ theme }) => ({
@@ -66,19 +87,153 @@ export const StyledMetaDataItemValue = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+export const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
+    minWidth: theme.spacing(5),
+}));
+
 type FeatureOverviewMetaDataProps = {
     hiddenEnvironments?: string[];
     onEnvironmentVisibilityChange?: (environment: string) => void;
+    feature: IFeatureToggle;
+    onChange: () => void;
+};
+
+interface FeatureLinksProps {
+    links: FeatureLink[];
+    project: string;
+    feature: string;
+}
+
+const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
+    const [showAddLinkDialogue, setShowAddLinkDialogue] = useState(false);
+    const [editLink, setEditLink] = useState<FeatureLink | null>(null);
+    const { deleteLink, loading } = useFeatureLinkApi(project, feature);
+    const { setToastData, setToastApiError } = useToast();
+    const { refetchFeature } = useFeature(project, feature);
+
+    const addLinkButton = (
+        <PermissionButton
+            size='small'
+            startIcon={<AddIcon />}
+            permission={UPDATE_FEATURE}
+            disabled={links.length >= 10}
+            projectId={project}
+            variant='text'
+            onClick={() => setShowAddLinkDialogue(true)}
+        >
+            Add link
+        </PermissionButton>
+    );
+
+    const renderLinkItems = () => (
+        <List>
+            {links.map((link) => (
+                <ListItem
+                    secondaryAction={
+                        <ExtraActions
+                            capabilityId='link'
+                            feature={feature}
+                            onEdit={() => {
+                                setEditLink(link);
+                            }}
+                            onDelete={async () => {
+                                try {
+                                    await deleteLink(link.id);
+                                    setToastData({
+                                        text: 'Link removed',
+                                        type: 'success',
+                                    });
+                                    refetchFeature();
+                                } catch (error) {
+                                    setToastApiError(formatUnknownError(error));
+                                }
+                            }}
+                        />
+                    }
+                    key={link.id}
+                    disablePadding
+                    dense
+                >
+                    <ListItemButton
+                        component='a'
+                        href={link.url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        disableGutters
+                    >
+                        <StyledListItemIcon>
+                            <LinkIcon color='primary' />
+                        </StyledListItemIcon>
+                        <ListItemText
+                            primary={link.title}
+                            secondary={link.url}
+                            secondaryTypographyProps={{
+                                sx: {
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    display: 'block',
+                                },
+                            }}
+                        />
+                    </ListItemButton>
+                </ListItem>
+            ))}
+        </List>
+    );
+
+    const emptyStateContent = (
+        <>
+            <StyledTitle>
+                You can now add links{' '}
+                <Badge color='success' sx={{ ml: 1 }}>
+                    New
+                </Badge>
+            </StyledTitle>
+            <StyledMetaDataItem>
+                Gather relevant links for external resources such as issue
+                trackers, code repositories or analytics tooling
+            </StyledMetaDataItem>
+            <div>{addLinkButton}</div>
+        </>
+    );
+
+    const linksContent = (
+        <>
+            <StyledTitle>Resources</StyledTitle>
+            {renderLinkItems()}
+            <div>{addLinkButton}</div>
+        </>
+    );
+
+    return (
+        <>
+            <StyledMetaDataContainer>
+                {links.length === 0 ? emptyStateContent : linksContent}
+            </StyledMetaDataContainer>
+
+            <AddLinkDialogue
+                project={project}
+                featureId={feature}
+                showDialogue={showAddLinkDialogue}
+                onClose={() => setShowAddLinkDialogue(false)}
+            />
+            <EditLinkDialogue
+                project={project}
+                featureId={feature}
+                link={editLink}
+                onClose={() => setEditLink(null)}
+            />
+        </>
+    );
 };
 
 const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
     hiddenEnvironments,
     onEnvironmentVisibilityChange,
+    feature,
+    onChange,
 }) => {
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
-
     const { locationSettings } = useLocationSettings();
     const navigate = useNavigate();
 
@@ -92,6 +247,11 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
 
     return (
         <>
+            <FeatureLinks
+                links={feature.links || []}
+                project={feature.project}
+                feature={feature.name}
+            />
             <StyledMetaDataContainer>
                 <div>
                     <StyledTitle>Flag details</StyledTitle>
@@ -125,7 +285,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                                 onComplete={() =>
                                     setMarkCompletedDialogueOpen(true)
                                 }
-                                onUncomplete={refetchFeature}
+                                onUncomplete={onChange}
                             />
                         </StyledMetaDataItem>
                     ) : null}
@@ -181,7 +341,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
             {feature.children.length > 0 ? (
                 <FeatureArchiveNotAllowedDialog
                     features={feature.children}
-                    project={projectId}
+                    project={feature.project}
                     isOpen={archiveDialogOpen}
                     onClose={() => setArchiveDialogOpen(false)}
                 />
@@ -189,11 +349,11 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                 <FeatureArchiveDialog
                     isOpen={archiveDialogOpen}
                     onConfirm={() => {
-                        navigate(`/projects/${projectId}`);
+                        navigate(`/projects/${feature.project}`);
                     }}
                     onClose={() => setArchiveDialogOpen(false)}
-                    projectId={projectId}
-                    featureIds={[featureId]}
+                    projectId={feature.project}
+                    featureIds={[feature.name]}
                 />
             )}
             {feature.project ? (
@@ -202,7 +362,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                     setIsOpen={setMarkCompletedDialogueOpen}
                     projectId={feature.project}
                     featureId={feature.name}
-                    onComplete={refetchFeature}
+                    onComplete={onChange}
                 />
             ) : null}
         </>

@@ -179,6 +179,6 @@ export const NewInUnleashTooltip: FC<{
             </ClickAwayListener>
         }
     >
-        {children}
+        <div>{children}</div>
     </HtmlTooltip>
 );

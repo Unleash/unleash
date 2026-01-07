@@ -2,69 +2,72 @@ import {
     AccessService,
     FeatureToggleService,
     GroupService,
-} from '../../services';
-import FeatureStrategiesStore from './feature-toggle-strategies-store';
-import FeatureToggleStore from './feature-toggle-store';
-import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store';
-import ProjectStore from '../project/project-store';
-import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
-import ContextFieldStore from '../context/context-field-store';
-import GroupStore from '../../db/group-store';
-import { AccountStore } from '../../db/account-store';
-import { AccessStore } from '../../db/access-store';
-import RoleStore from '../../db/role-store';
-import EnvironmentStore from '../project-environments/environment-store';
-import type { Db } from '../../db/db';
-import type { IUnleashConfig } from '../../types';
-import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import FakeFeatureStrategiesStore from './fakes/fake-feature-strategies-store';
-import FakeFeatureToggleStore from './fakes/fake-feature-toggle-store';
-import FakeClientFeatureToggleStore from '../client-feature-toggles/fakes/fake-client-feature-toggle-store';
-import FakeProjectStore from '../../../test/fixtures/fake-project-store';
-import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
-import FakeContextFieldStore from '../context/fake-context-field-store';
-import FakeGroupStore from '../../../test/fixtures/fake-group-store';
-import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
-import FakeAccessStore from '../../../test/fixtures/fake-access-store';
-import FakeRoleStore from '../../../test/fixtures/fake-role-store';
-import FakeEnvironmentStore from '../project-environments/fake-environment-store';
+} from '../../services/index.js';
+import FeatureStrategiesStore from './feature-toggle-strategies-store.js';
+import FeatureToggleStore from './feature-toggle-store.js';
+import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store.js';
+import ProjectStore from '../project/project-store.js';
+import { FeatureEnvironmentStore } from '../../db/feature-environment-store.js';
+import ContextFieldStore from '../context/context-field-store.js';
+import GroupStore from '../../db/group-store.js';
+import { AccountStore } from '../../db/account-store.js';
+import { AccessStore } from '../../db/access-store.js';
+import RoleStore from '../../db/role-store.js';
+import EnvironmentStore from '../project-environments/environment-store.js';
+import type { Db } from '../../db/db.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
+import FakeFeatureStrategiesStore from './fakes/fake-feature-strategies-store.js';
+import FakeFeatureToggleStore from './fakes/fake-feature-toggle-store.js';
+import FakeClientFeatureToggleStore from '../client-feature-toggles/fakes/fake-client-feature-toggle-store.js';
+import FakeProjectStore from '../../../test/fixtures/fake-project-store.js';
+import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store.js';
+import FakeContextFieldStore from '../context/fake-context-field-store.js';
+import FakeGroupStore from '../../../test/fixtures/fake-group-store.js';
+import { FakeAccountStore } from '../../../test/fixtures/fake-account-store.js';
+import FakeAccessStore from '../../../test/fixtures/fake-access-store.js';
+import FakeRoleStore from '../../../test/fixtures/fake-role-store.js';
+import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
-} from '../change-request-access-service/createChangeRequestAccessReadModel';
+} from '../change-request-access-service/createChangeRequestAccessReadModel.js';
 import {
     createFakeSegmentService,
     createSegmentService,
-} from '../segment/createSegmentService';
-import StrategyStore from '../../db/strategy-store';
-import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
-import {
-    createFakePrivateProjectChecker,
-    createPrivateProjectChecker,
-} from '../private-project/createPrivateProjectChecker';
-import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
-import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
-import FeatureTagStore from '../../db/feature-tag-store';
-import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
+} from '../segment/createSegmentService.js';
+import StrategyStore from '../../db/strategy-store.js';
+import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store.js';
+import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model.js';
+import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model.js';
+import FeatureTagStore from '../../db/feature-tag-store.js';
+import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store.js';
 import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
-} from '../dependent-features/createDependentFeaturesService';
+} from '../dependent-features/createDependentFeaturesService.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
-import { EventEmitter } from 'stream';
-import { FeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model';
-import { FakeFeatureLifecycleReadModel } from '../feature-lifecycle/fake-feature-lifecycle-read-model';
-import { FakeFeatureCollaboratorsReadModel } from './fake-feature-collaborators-read-model';
-import { FeatureCollaboratorsReadModel } from './feature-collaborators-read-model';
+} from '../events/createEventsService.js';
+import EventEmitter from 'node:stream';
+import { FeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model.js';
+import { FakeFeatureLifecycleReadModel } from '../feature-lifecycle/fake-feature-lifecycle-read-model.js';
+import { FakeFeatureCollaboratorsReadModel } from './fake-feature-collaborators-read-model.js';
+import { FeatureCollaboratorsReadModel } from './feature-collaborators-read-model.js';
+import { FeatureLinksReadModel } from '../feature-links/feature-links-read-model.js';
+import { FakeFeatureLinksReadModel } from '../feature-links/fake-feature-links-read-model.js';
+import {
+    createFakeFeatureLinkService,
+    createFeatureLinkService,
+} from '../feature-links/createFeatureLinkService.js';
+import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 
 export const createFeatureToggleService = (
     db: Db,
     config: IUnleashConfig,
 ): FeatureToggleService => {
-    const { getLogger, eventBus, flagResolver, resourceLimits } = config;
+    const { getLogger, eventBus, flagResolver } = config;
     const featureStrategiesStore = new FeatureStrategiesStore(
         db,
         eventBus,
@@ -118,18 +121,19 @@ export const createFeatureToggleService = (
         config,
     );
 
-    const privateProjectChecker = createPrivateProjectChecker(db, config);
-
     const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
-    const featureLifecycleReadModel = new FeatureLifecycleReadModel(
-        db,
-        config.flagResolver,
-    );
+    const featureLifecycleReadModel = new FeatureLifecycleReadModel(db);
 
     const dependentFeaturesService = createDependentFeaturesService(config)(db);
 
     const featureCollaboratorsReadModel = new FeatureCollaboratorsReadModel(db);
+
+    const featureLinksReadModel = new FeatureLinksReadModel(db, eventBus);
+
+    const featureLinkService = createFeatureLinkService(config)(db);
+
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const featureToggleService = new FeatureToggleService(
         {
@@ -142,23 +146,27 @@ export const createFeatureToggleService = (
             contextFieldStore,
             strategyStore,
         },
-        { getLogger, flagResolver, eventBus, resourceLimits },
-        segmentService,
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        privateProjectChecker,
-        dependentFeaturesReadModel,
-        dependentFeaturesService,
-        featureLifecycleReadModel,
-        featureCollaboratorsReadModel,
+        { getLogger, flagResolver, eventBus },
+        {
+            segmentService,
+            accessService,
+            eventService,
+            changeRequestAccessReadModel,
+            dependentFeaturesReadModel,
+            dependentFeaturesService,
+            featureLifecycleReadModel,
+            featureCollaboratorsReadModel,
+            featureLinksReadModel,
+            featureLinkService,
+            resourceLimitsService,
+        },
     );
     return featureToggleService;
 };
 
 export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
-    const { getLogger, flagResolver, resourceLimits } = config;
-    const eventStore = new FakeEventStore();
+    const { getLogger, flagResolver } = config;
+    const _eventStore = new FakeEventStore();
     const strategyStore = new FakeStrategiesStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const featureToggleStore = new FakeFeatureToggleStore();
@@ -186,12 +194,15 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     );
     const segmentService = createFakeSegmentService(config);
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
-    const fakePrivateProjectChecker = createFakePrivateProjectChecker();
     const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
     const dependentFeaturesService = createFakeDependentFeaturesService(config);
     const featureLifecycleReadModel = new FakeFeatureLifecycleReadModel();
     const featureCollaboratorsReadModel =
         new FakeFeatureCollaboratorsReadModel();
+    const featureLinksReadModel = new FakeFeatureLinksReadModel();
+    const { featureLinkService } = createFakeFeatureLinkService(config);
+
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const featureToggleService = new FeatureToggleService(
         {
@@ -208,17 +219,20 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             getLogger,
             flagResolver,
             eventBus: new EventEmitter(),
-            resourceLimits,
         },
-        segmentService,
-        accessService,
-        eventService,
-        changeRequestAccessReadModel,
-        fakePrivateProjectChecker,
-        dependentFeaturesReadModel,
-        dependentFeaturesService,
-        featureLifecycleReadModel,
-        featureCollaboratorsReadModel,
+        {
+            segmentService,
+            accessService,
+            eventService,
+            changeRequestAccessReadModel,
+            dependentFeaturesReadModel,
+            dependentFeaturesService,
+            featureLifecycleReadModel,
+            featureCollaboratorsReadModel,
+            featureLinksReadModel,
+            featureLinkService,
+            resourceLimitsService,
+        },
     );
     return {
         featureToggleService,

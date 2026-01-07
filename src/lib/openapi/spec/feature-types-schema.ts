@@ -1,12 +1,12 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { featureTypeSchema } from './feature-type-schema';
+import { featureTypeSchema } from './feature-type-schema.js';
 
 export const featureTypesSchema = {
     $id: '#/components/schemas/featureTypesSchema',
     type: 'object',
     additionalProperties: false,
     description:
-        'A list of [feature flag types](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types) and the schema version used to represent those feature types.',
+        'A list of [feature flag types](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types) and the schema version used to represent those feature types.',
     required: ['version', 'types'],
     properties: {
         version: {

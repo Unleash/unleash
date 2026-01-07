@@ -1,9 +1,9 @@
-import type { IApiTokenStore } from '../../lib/types/stores/api-token-store';
+import type { IApiTokenStore } from '../../lib/types/stores/api-token-store.js';
 import type {
     ApiTokenType,
     IApiToken,
     IApiTokenCreate,
-} from '../../lib/types/models/api-token';
+} from '../../lib/types/model.js';
 
 import EventEmitter from 'events';
 
@@ -74,7 +74,10 @@ export default class FakeApiTokenStore
             });
     }
 
-    async setExpiry(secret: string, expiresAt: Date): Promise<IApiToken> {
+    async setExpiry(
+        secret: string,
+        expiresAt: Date,
+    ): Promise<IApiToken | undefined> {
         const found = this.tokens.find((t) => t.secret === secret);
         if (!found) {
             return undefined;

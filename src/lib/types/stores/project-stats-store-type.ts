@@ -1,5 +1,5 @@
-import type { DoraFeaturesSchema } from '../../openapi';
-import type { IProjectStats } from '../../features/project/project-service';
+import type { DoraFeaturesSchema } from '../../openapi/index.js';
+import type { IProjectStats } from '../../features/project/project-service.js';
 
 export interface ICreateEnabledDates {
     created: Date;

@@ -1,6 +1,6 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { updateTagsSchema } from './update-tags-schema';
-import { tagSchema } from './tag-schema';
+import { updateTagsSchema } from './update-tags-schema.js';
+import { tagSchema } from './tag-schema.js';
 
 export const tagsBulkAddSchema = {
     $id: '#/components/schemas/tagsBulkAddSchema',

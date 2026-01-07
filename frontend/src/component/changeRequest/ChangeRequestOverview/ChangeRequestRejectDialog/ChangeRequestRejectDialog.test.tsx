@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog';
+import { ChangeRequestRejectDialogue } from './ChangeRequestRejectDialog.tsx';
 
 describe('<ChangeRequestRejectDialogue />', () => {
     test('submits the typed comment to onConfirm', () => {

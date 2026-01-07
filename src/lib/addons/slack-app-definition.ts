@@ -57,21 +57,23 @@ import {
     CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
     PROJECT_ARCHIVED,
-} from '../types/events';
-import type { IAddonDefinition } from '../types/model';
+    RELEASE_PLAN_PROGRESSIONS_PAUSED,
+    RELEASE_PLAN_PROGRESSIONS_RESUMED,
+} from '../events/index.js';
+import type { IAddonDefinition } from '../types/model.js';
 
 const slackAppDefinition: IAddonDefinition = {
     name: 'slack-app',
-    displayName: 'Slack App',
+    displayName: 'App for Slack',
     description:
-        'The Unleash Slack App posts messages to the selected channels in your Slack workspace.',
-    howTo: 'Below you can specify which Slack channels receive event notifications. The configuration settings allow you to choose the events and whether you want to filter them by projects and environments.\n\nYou can also select which channels to post to by configuring your feature flags with “slack” tags. For example, if you’d like the bot to post messages to the #general channel, you can configure your feature flag with the “slack:general” tag.\n\nThe Unleash Slack App bot has access to public channels by default. If you want the bot to post messages to private channels, you’ll need to invite it to those channels.',
+        'The Unleash App for Slack posts messages to the selected channels in your Slack workspace.',
+    howTo: 'Below you can specify which Slack channels receive event notifications. The configuration settings allow you to choose the events and whether you want to filter them by projects and environments.\n\nYou can also select which channels to post to by configuring your feature flags with “slack” tags. For example, if you’d like the bot to post messages to the #general channel, you can configure your feature flag with the “slack:general” tag.\n\nThe Unleash App for Slack bot has access to public channels by default. If you want the bot to post messages to private channels, you’ll need to invite it to those channels.',
     documentationUrl: 'https://docs.getunleash.io/docs/addons/slack-app',
     installation: {
-        url: 'https://unleash-slack-app.vercel.app/install',
-        title: 'Slack App installation',
+        url: 'https://app-for-slack.getunleash.io/install',
+        title: 'App for Slack installation',
         helpText:
-            'After installing the Unleash Slack app in your Slack workspace, paste the access token into the appropriate field below in order to configure this integration.',
+            'After installing the Unleash App for Slack in your Slack workspace, paste the access token into the appropriate field below in order to configure this integration.',
     },
     parameters: [
         {
@@ -113,6 +115,8 @@ const slackAppDefinition: IAddonDefinition = {
         CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
         CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
         CHANGE_REQUEST_SCHEDULE_SUSPENDED,
+        RELEASE_PLAN_PROGRESSIONS_PAUSED,
+        RELEASE_PLAN_PROGRESSIONS_RESUMED,
         CONTEXT_FIELD_CREATED,
         CONTEXT_FIELD_DELETED,
         CONTEXT_FIELD_UPDATED,

@@ -1,8 +1,8 @@
 import { Button, Divider, Typography, styled } from '@mui/material';
-import demoQR from 'assets/img/demo-qr.png';
+import demoQR from 'assets/img/demo-qr.svg';
 import { formatAssetPath } from 'utils/formatPath';
 import Launch from '@mui/icons-material/Launch';
-import { DemoDialog } from '../DemoDialog';
+import { DemoDialog } from '../DemoDialog.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledDemoPane = styled('div')(({ theme }) => ({

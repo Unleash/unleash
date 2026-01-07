@@ -1,8 +1,8 @@
 import type {
     IGroupStore,
     IStoreGroup,
-} from '../../lib/types/stores/group-store';
-import type Group from '../../lib/types/group';
+} from '../../lib/types/stores/group-store.js';
+import type Group from '../../lib/types/group.js';
 import type {
     ICreateGroupUserModel,
     IGroup,
@@ -10,8 +10,8 @@ import type {
     IGroupProject,
     IGroupRole,
     IGroupUser,
-} from '../../lib/types/group';
-import type { IGroupWithProjectRoles } from '../../lib/types/stores/access-store';
+} from '../../lib/types/group.js';
+import type { IGroupWithProjectRoles } from '../../lib/types/stores/access-store.js';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export default class FakeGroupStore implements IGroupStore {
     count(): Promise<number> {
@@ -39,90 +39,90 @@ export default class FakeGroupStore implements IGroupStore {
         return this.data.some((u) => u.id === key);
     }
 
-    async get(key: number): Promise<IGroup> {
+    async get(key: number): Promise<IGroup | undefined> {
         return this.data.find((u) => u.id === key);
     }
 
-    create(group: IStoreGroup): Promise<IGroup> {
+    create(_group: IStoreGroup): Promise<IGroup> {
         throw new Error('Method not implemented.');
     }
 
-    existsWithName(name: string): Promise<boolean> {
+    existsWithName(_name: string): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 
     addUsersToGroup(
-        id: number,
-        users: ICreateGroupUserModel[],
-        userName: string,
+        _id: number,
+        _users: ICreateGroupUserModel[],
+        _userName: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    getAllUsersByGroups(groupIds: number[]): Promise<IGroupUser[]> {
+    getAllUsersByGroups(_groupIds: number[]): Promise<IGroupUser[]> {
         throw new Error('Method not implemented.');
     }
 
-    deleteUsersFromGroup(deletableUsers: IGroupUser[]): Promise<void> {
+    deleteUsersFromGroup(_deletableUsers: IGroupUser[]): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    update(group: IGroupModel): Promise<IGroup> {
+    update(_group: IGroupModel): Promise<IGroup> {
         throw new Error('Method not implemented.');
     }
 
     updateGroupUsers(
-        groupId: number,
-        newUsers: ICreateGroupUserModel[],
-        deletableUsers: IGroupUser[],
-        userName: string,
+        _groupId: number,
+        _newUsers: ICreateGroupUserModel[],
+        _deletableUsers: IGroupUser[],
+        _userName: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
-    getAllWithId(ids: number[]): Promise<IGroup[]> {
+    getAllWithId(_ids: number[]): Promise<IGroup[]> {
         throw new Error('Method not implemented.');
     }
 
-    getProjectGroupRoles(projectId: string): Promise<IGroupRole[]> {
+    getProjectGroupRoles(_projectId: string): Promise<IGroupRole[]> {
         throw new Error('Method not implemented.');
     }
 
-    getProjectGroups(projectId: string): Promise<IGroupWithProjectRoles[]> {
+    getProjectGroups(_projectId: string): Promise<IGroupWithProjectRoles[]> {
         throw new Error('Method not implemented.');
     }
 
-    getGroupProjects(groupIds: number[]): Promise<IGroupProject[]> {
+    getGroupProjects(_groupIds: number[]): Promise<IGroupProject[]> {
         throw new Error('Method not implemented.');
     }
 
     getNewGroupsForExternalUser(
-        userId: number,
-        externalGroups: string[],
+        _userId: number,
+        _externalGroups: string[],
     ): Promise<IGroup[]> {
         throw new Error('Method not implemented.');
     }
 
     addUserToGroups(
-        userId: number,
-        groupIds: number[],
-        createdBy?: string,
+        _userId: number,
+        _groupIds: number[],
+        _createdBy?: string,
     ): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
     getOldGroupsForExternalUser(
-        userId: number,
-        externalGroups: string[],
+        _userId: number,
+        _externalGroups: string[],
     ): Promise<IGroupUser[]> {
         throw new Error('Method not implemented.');
     }
 
-    getGroupsForUser(userId: number): Promise<Group[]> {
+    getGroupsForUser(_userId: number): Promise<Group[]> {
         throw new Error('Method not implemented.');
     }
 
-    hasProjectRole(groupId: number): Promise<boolean> {
+    hasProjectRole(_groupId: number): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
 

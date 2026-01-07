@@ -41,6 +41,7 @@ export type CustomEvents =
     | 'context-usage'
     | 'segment-usage'
     | 'strategy-add'
+    | 'suggestion-strategy-add'
     | 'playground'
     | 'feature-type-edit'
     | 'strategy-variants'
@@ -73,7 +74,13 @@ export type CustomEvents =
     | 'order-environments'
     | 'project-navigation'
     | 'productivity-report'
-    | 'release-management';
+    | 'release-management'
+    | 'release-templates-banner'
+    | 'feature-links'
+    | 'project-cleanup'
+    | 'project-list-view-toggle'
+    | 'impact-metrics'
+    | 'release-management-splash';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

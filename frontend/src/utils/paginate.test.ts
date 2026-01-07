@@ -1,7 +1,7 @@
-import { paginate } from './paginate';
+import { paginate } from './paginate.js';
 
 const createInput = (count: number) => {
-    const result = [];
+    const result: number[] = [];
 
     for (let i = 0; i < count; i++) {
         result.push(i);

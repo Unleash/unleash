@@ -1,5 +1,5 @@
 import type { IAction, IActionSet } from 'interfaces/action';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 export type ActionPayload = Omit<
     IAction,

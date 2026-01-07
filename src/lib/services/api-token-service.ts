@@ -1,48 +1,49 @@
 import crypto from 'crypto';
-import type { Logger } from '../logger';
-import { ADMIN, CLIENT, FRONTEND } from '../types/permissions';
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import ApiUser, { type IApiUser } from '../types/api-user';
+import type { Logger } from '../logger.js';
+import { ADMIN, CLIENT, FRONTEND } from '../types/permissions.js';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IUnleashConfig } from '../types/option.js';
+import ApiUser, { type IApiUser } from '../types/api-user.js';
 import {
-    ApiTokenType,
-    type IApiToken,
-    type ILegacyApiTokenCreate,
-    type IApiTokenCreate,
+    ALL,
+    resolveValidProjects,
     validateApiToken,
-    validateApiTokenEnvironment,
-    mapLegacyToken,
-    mapLegacyTokenWithSecret,
-} from '../types/models/api-token';
-import type { IApiTokenStore } from '../types/stores/api-token-store';
-import { FOREIGN_KEY_VIOLATION } from '../error/db-error';
-import BadDataError from '../error/bad-data-error';
-import type { IEnvironmentStore } from '../features/project-environments/environment-store-type';
-import { constantTimeCompare } from '../util/constantTimeCompare';
+} from '../types/models/api-token.js';
+import type { IApiTokenStore } from '../types/stores/api-token-store.js';
+import { FOREIGN_KEY_VIOLATION } from '../error/db-error.js';
+import BadDataError from '../error/bad-data-error.js';
+import type { IEnvironmentStore } from '../features/project-environments/environment-store-type.js';
+import { constantTimeCompare } from '../util/constantTimeCompare.js';
 import {
     ADMIN_TOKEN_USER,
     ApiTokenCreatedEvent,
     ApiTokenDeletedEvent,
+    ApiTokenType,
     ApiTokenUpdatedEvent,
+    type IApiToken,
+    type IApiTokenCreate,
     type IAuditUser,
     type IFlagResolver,
     SYSTEM_USER_AUDIT,
-} from '../types';
-import { omitKeys } from '../util';
-import type EventService from '../features/events/event-service';
+} from '../types/index.js';
+import { omitKeys } from '../util/index.js';
+import type EventService from '../features/events/event-service.js';
 import { addMinutes, isPast } from 'date-fns';
-import metricsHelper from '../util/metrics-helper';
-import { FUNCTION_TIME } from '../metric-events';
-import type { ResourceLimitsSchema } from '../openapi';
-import { throwExceedsLimitError } from '../error/exceeds-limit-error';
+import metricsHelper from '../util/metrics-helper.js';
+import { FUNCTION_TIME } from '../metric-events.js';
+import { throwExceedsLimitError } from '../error/exceeds-limit-error.js';
 import type EventEmitter from 'events';
+import type { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
 
 const resolveTokenPermissions = (tokenType: string) => {
     if (tokenType === ApiTokenType.ADMIN) {
         return [ADMIN];
     }
 
-    if (tokenType === ApiTokenType.CLIENT) {
+    if (
+        tokenType === ApiTokenType.BACKEND ||
+        tokenType === ApiTokenType.CLIENT
+    ) {
         return [CLIENT];
     }
 
@@ -72,7 +73,7 @@ export class ApiTokenService {
 
     private timer: Function;
 
-    private resourceLimits: ResourceLimitsSchema;
+    private resourceLimitsService: ResourceLimitsService;
 
     private eventBus: EventEmitter;
 
@@ -83,30 +84,22 @@ export class ApiTokenService {
         }: Pick<IUnleashStores, 'apiTokenStore' | 'environmentStore'>,
         config: Pick<
             IUnleashConfig,
-            | 'getLogger'
-            | 'authentication'
-            | 'flagResolver'
-            | 'eventBus'
-            | 'resourceLimits'
+            'getLogger' | 'authentication' | 'flagResolver' | 'eventBus'
         >,
         eventService: EventService,
+        resourceLimitsService: ResourceLimitsService,
     ) {
         this.store = apiTokenStore;
         this.eventService = eventService;
+        this.resourceLimitsService = resourceLimitsService;
         this.environmentStore = environmentStore;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/services/api-token-service.ts');
-        this.resourceLimits = config.resourceLimits;
         if (!this.flagResolver.isEnabled('useMemoizedActiveTokens')) {
             // This is probably not needed because the scheduler will run it
             this.fetchActiveTokens();
         }
         this.updateLastSeen();
-        if (config.authentication.initApiTokens.length > 0) {
-            process.nextTick(async () =>
-                this.initApiTokens(config.authentication.initApiTokens),
-            );
-        }
         this.timer = (functionName: string) =>
             metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
                 className: 'ApiTokenService',
@@ -127,7 +120,7 @@ export class ApiTokenService {
         }
     }
 
-    async getToken(secret: string): Promise<IApiToken> {
+    async getToken(secret: string): Promise<IApiToken | undefined> {
         return this.store.get(secret);
     }
 
@@ -177,11 +170,14 @@ export class ApiTokenService {
                 }
                 stopCacheTimer();
             } else {
-                this.logger.info(
-                    `Not allowed to query this token until: ${this.queryAfter.get(
-                        secret,
-                    )}`,
-                );
+                if (Math.random() < 0.1) {
+                    this.logger.info(
+                        `Token ${secret.replace(
+                            /^([^.]*)\.(.{8}).*$/,
+                            '$1.$2...',
+                        )} rate limited until: ${this.queryAfter.get(secret)}`,
+                    );
+                }
             }
         }
         return token;
@@ -199,18 +195,27 @@ export class ApiTokenService {
         return this.store.getAll();
     }
 
-    private async initApiTokens(tokens: ILegacyApiTokenCreate[]) {
+    async initApiTokens(tokens: IApiTokenCreate[]) {
         const tokenCount = await this.store.count();
         if (tokenCount > 0) {
+            this.logger.debug(
+                'Not creating initial API tokens because tokens exist in the database',
+            );
             return;
         }
         try {
-            const createAll = tokens
-                .map(mapLegacyTokenWithSecret)
-                .map((t) => this.insertNewApiToken(t, SYSTEM_USER_AUDIT));
+            const createAll = tokens.map((t) =>
+                this.insertNewApiToken(t, SYSTEM_USER_AUDIT),
+            );
             await Promise.all(createAll);
+            this.logger.info(
+                `Created initial API tokens: ${tokens.map((t) => `(name: ${t.tokenName}, type: ${t.type})`).join(', ')}`,
+            );
         } catch (e) {
-            this.logger.error('Unable to create initial Admin API tokens');
+            this.logger.warn(
+                `Unable to create initial API tokens from: ${tokens.map((t) => `(name: ${t.tokenName}, type: ${t.type})`).join(', ')}`,
+                e,
+            );
         }
     }
 
@@ -245,7 +250,7 @@ export class ApiTokenService {
         auditUser: IAuditUser,
     ): Promise<IApiToken> {
         const previous = (await this.store.get(secret))!;
-        const token = await this.store.setExpiry(secret, expiresAt);
+        const token = (await this.store.setExpiry(secret, expiresAt))!;
         await this.eventService.storeEvent(
             new ApiTokenUpdatedEvent({
                 auditUser,
@@ -258,7 +263,7 @@ export class ApiTokenService {
 
     public async delete(secret: string, auditUser: IAuditUser): Promise<void> {
         if (await this.store.exists(secret)) {
-            const token = await this.store.get(secret);
+            const token = (await this.store.get(secret))!;
             await this.store.delete(secret);
             await this.eventService.storeEvent(
                 new ApiTokenDeletedEvent({
@@ -270,17 +275,6 @@ export class ApiTokenService {
     }
 
     /**
-     * @deprecated This may be removed in a future release, prefer createApiTokenWithProjects
-     */
-    public async createApiToken(
-        newToken: Omit<ILegacyApiTokenCreate, 'secret'>,
-        auditUser: IAuditUser = SYSTEM_USER_AUDIT,
-    ): Promise<IApiToken> {
-        const token = mapLegacyToken(newToken);
-        return this.internalCreateApiTokenWithProjects(token, auditUser);
-    }
-
-    /**
      * @param newToken
      * @param createdBy should be IApiUser or IUser. Still supports optional or string for backward compatibility
      * @param createdByUserId still supported for backward compatibility
@@ -289,7 +283,13 @@ export class ApiTokenService {
         newToken: Omit<IApiTokenCreate, 'secret'>,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IApiToken> {
-        return this.internalCreateApiTokenWithProjects(newToken, auditUser);
+        return this.internalCreateApiTokenWithProjects(
+            {
+                ...newToken,
+                projects: resolveValidProjects(newToken.projects),
+            },
+            auditUser,
+        );
     }
 
     private async internalCreateApiTokenWithProjects(
@@ -297,9 +297,7 @@ export class ApiTokenService {
         auditUser: IAuditUser,
     ): Promise<IApiToken> {
         validateApiToken(newToken);
-        const environments = await this.environmentStore.getAll();
-        validateApiTokenEnvironment(newToken, environments);
-
+        await this.validateApiTokenEnvironment(newToken);
         await this.validateApiTokenLimit();
 
         const secret = this.generateSecretKey(newToken);
@@ -307,9 +305,23 @@ export class ApiTokenService {
         return this.insertNewApiToken(createNewToken, auditUser);
     }
 
+    private async validateApiTokenEnvironment({
+        environment,
+    }: Pick<IApiTokenCreate, 'environment'>): Promise<void> {
+        if (environment === ALL) {
+            return;
+        }
+
+        const exists = await this.environmentStore.exists(environment);
+        if (!exists) {
+            throw new BadDataError(`Environment=${environment} does not exist`);
+        }
+    }
+
     private async validateApiTokenLimit() {
         const currentTokenCount = await this.store.count();
-        const limit = this.resourceLimits.apiTokens;
+        const { apiTokens: limit } =
+            await this.resourceLimitsService.getResourceLimits();
         if (currentTokenCount >= limit) {
             throwExceedsLimitError(this.eventBus, {
                 resource: 'api token',

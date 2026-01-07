@@ -1,12 +1,13 @@
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
+} from '../../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../../test/fixtures/no-logger';
-import type { IClientMetricsEnv } from './client-metrics-store-v2-type';
+} from '../../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../../server-impl.js';
+import type { IClientMetricsEnv } from './client-metrics-store-v2-type.js';
 import { subHours } from 'date-fns';
 
 let app: IUnleashTest;
@@ -55,7 +56,7 @@ test('should return raw metrics, aggregated on key', async () => {
         {
             featureName: 'demo',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: date,
             yes: 2,
             no: 2,
@@ -63,7 +64,7 @@ test('should return raw metrics, aggregated on key', async () => {
         {
             featureName: 't2',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: date,
             yes: 5,
             no: 5,
@@ -71,7 +72,7 @@ test('should return raw metrics, aggregated on key', async () => {
         {
             featureName: 't2',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: date,
             yes: 2,
             no: 99,
@@ -79,7 +80,7 @@ test('should return raw metrics, aggregated on key', async () => {
         {
             featureName: 'demo',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: date,
             yes: 3,
             no: 2,
@@ -106,7 +107,7 @@ test('should return raw metrics, aggregated on key', async () => {
         .expect(200);
 
     expect(demo.data).toHaveLength(48);
-    expect(demo.data[46].environment).toBe('default');
+    expect(demo.data[46].environment).toBe(DEFAULT_ENV);
     expect(demo.data[46].yes).toBe(5);
     expect(demo.data[46].no).toBe(4);
     expect(demo.data[47].environment).toBe('test');
@@ -114,7 +115,7 @@ test('should return raw metrics, aggregated on key', async () => {
     expect(demo.data[47].no).toBe(3);
 
     expect(t2.data).toHaveLength(24);
-    expect(t2.data[23].environment).toBe('default');
+    expect(t2.data[23].environment).toBe(DEFAULT_ENV);
     expect(t2.data[23].yes).toBe(7);
     expect(t2.data[23].no).toBe(104);
 });
@@ -125,7 +126,7 @@ test('should support the hoursBack query param for raw metrics', async () => {
         {
             featureName: 'demo',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: date,
             yes: 1,
             no: 1,
@@ -133,7 +134,7 @@ test('should support the hoursBack query param for raw metrics', async () => {
         {
             featureName: 'demo',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: subHours(date, 12),
             yes: 2,
             no: 2,
@@ -141,7 +142,7 @@ test('should support the hoursBack query param for raw metrics', async () => {
         {
             featureName: 'demo',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: subHours(date, 32),
             yes: 3,
             no: 3,
@@ -172,7 +173,7 @@ test('should return toggle summary', async () => {
         {
             featureName: 'demo',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: date,
             yes: 2,
             no: 2,
@@ -180,7 +181,7 @@ test('should return toggle summary', async () => {
         {
             featureName: 't2',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: date,
             yes: 5,
             no: 5,
@@ -188,7 +189,7 @@ test('should return toggle summary', async () => {
         {
             featureName: 't2',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: date,
             yes: 2,
             no: 99,
@@ -196,7 +197,7 @@ test('should return toggle summary', async () => {
         {
             featureName: 'demo',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: date,
             yes: 3,
             no: 2,
@@ -228,7 +229,7 @@ test('should return toggle summary', async () => {
 
     const test = demo.lastHourUsage.find((u) => u.environment === 'test');
     const defaultEnv = demo.lastHourUsage.find(
-        (u) => u.environment === 'default',
+        (u) => u.environment === DEFAULT_ENV,
     );
 
     expect(demo.featureName).toBe('demo');
@@ -236,7 +237,7 @@ test('should return toggle summary', async () => {
     expect(test.environment).toBe('test');
     expect(test.yes).toBe(2);
     expect(test.no).toBe(6);
-    expect(defaultEnv.environment).toBe('default');
+    expect(defaultEnv.environment).toBe(DEFAULT_ENV);
     expect(defaultEnv.yes).toBe(5);
     expect(defaultEnv.no).toBe(4);
     expect(demo.seenApplications).toStrictEqual(['backend-api', 'web']);
@@ -249,7 +250,7 @@ test('should only include last hour of metrics return toggle summary', async () 
         {
             featureName: 'demo',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: now,
             yes: 2,
             no: 2,
@@ -257,7 +258,7 @@ test('should only include last hour of metrics return toggle summary', async () 
         {
             featureName: 'demo',
             appName: 'web',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             timestamp: now,
             yes: 3,
             no: 2,
@@ -297,12 +298,12 @@ test('should only include last hour of metrics return toggle summary', async () 
 
     const test = demo.lastHourUsage.find((u) => u.environment === 'test');
     const defaultEnv = demo.lastHourUsage.find(
-        (u) => u.environment === 'default',
+        (u) => u.environment === DEFAULT_ENV,
     );
 
     expect(demo.featureName).toBe('demo');
     expect(demo.lastHourUsage).toHaveLength(2);
-    expect(defaultEnv.environment).toBe('default');
+    expect(defaultEnv.environment).toBe(DEFAULT_ENV);
     expect(defaultEnv.yes).toBe(5);
     expect(defaultEnv.no).toBe(4);
     expect(test.environment).toBe('test');
@@ -316,7 +317,7 @@ test('should support posting and receiving variants data', async () => {
     const metric = {
         featureName: 'demo',
         appName: 'web',
-        environment: 'default',
+        environment: DEFAULT_ENV,
         timestamp: date,
         yes: 7,
         no: 1,

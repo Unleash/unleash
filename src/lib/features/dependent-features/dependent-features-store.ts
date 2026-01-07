@@ -1,9 +1,9 @@
-import type { Db } from '../../db/db';
-import type { IDependentFeaturesStore } from './dependent-features-store-type';
+import type { Db } from '../../db/db.js';
+import type { IDependentFeaturesStore } from './dependent-features-store-type.js';
 import type {
     FeatureDependency,
     FeatureDependencyId,
-} from './dependent-features';
+} from './dependent-features.js';
 
 type SerializableFeatureDependency = Omit<FeatureDependency, 'variants'> & {
     variants?: string;

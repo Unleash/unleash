@@ -1,7 +1,8 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { bulkRegistrationSchema } from './bulk-registration-schema';
-import { dateSchema } from './date-schema';
-import { clientMetricsEnvSchema } from './client-metrics-env-schema';
+import { bulkRegistrationSchema } from './bulk-registration-schema.js';
+import { dateSchema } from './date-schema.js';
+import { clientMetricsEnvSchema } from './client-metrics-env-schema.js';
+import { impactMetricsSchema } from './impact-metrics-schema.js';
 
 export const bulkMetricsSchema = {
     $id: '#/components/schemas/bulkMetricsSchema',
@@ -25,12 +26,21 @@ export const bulkMetricsSchema = {
                 $ref: '#/components/schemas/clientMetricsEnvSchema',
             },
         },
+        impactMetrics: {
+            description:
+                'a list of custom impact metrics registered by downstream providers. (Typically Unleash Edge)',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/impactMetricsSchema',
+            },
+        },
     },
     components: {
         schemas: {
             bulkRegistrationSchema,
             dateSchema,
             clientMetricsEnvSchema,
+            impactMetricsSchema,
         },
     },
 } as const;

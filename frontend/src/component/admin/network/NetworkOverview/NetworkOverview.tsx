@@ -11,7 +11,7 @@ import type {
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 import { ReactComponent as LogoIconWhite } from 'assets/icons/logoWhiteBg.svg';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import { NetworkPrometheusAPIWarning } from '../NetworkPrometheusAPIWarning';
+import { NetworkPrometheusAPIWarning } from '../NetworkPrometheusAPIWarning.tsx';
 
 const StyleUnleashContainer = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(18),
@@ -58,7 +58,7 @@ const StyledElementDescription = styled(Typography)(({ theme }) => ({
 
 const isRecent = (value: ResultValue) => {
     const threshold = 600000; // ten minutes
-    return value[0] * 1000 > new Date().getTime() - threshold;
+    return value[0] * 1000 > Date.now() - threshold;
 };
 
 type ResultValue = [number, string];

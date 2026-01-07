@@ -15,21 +15,21 @@ export type Operator =
     | 'SEMVER_GT'
     | 'SEMVER_LT';
 
-export const NOT_IN = 'NOT_IN';
-export const IN = 'IN';
-export const STR_ENDS_WITH = 'STR_ENDS_WITH';
-export const STR_STARTS_WITH = 'STR_STARTS_WITH';
-export const STR_CONTAINS = 'STR_CONTAINS';
-export const NUM_EQ = 'NUM_EQ';
-export const NUM_GT = 'NUM_GT';
-export const NUM_GTE = 'NUM_GTE';
-export const NUM_LT = 'NUM_LT';
-export const NUM_LTE = 'NUM_LTE';
-export const DATE_AFTER = 'DATE_AFTER';
-export const DATE_BEFORE = 'DATE_BEFORE';
-export const SEMVER_EQ = 'SEMVER_EQ';
-export const SEMVER_GT = 'SEMVER_GT';
-export const SEMVER_LT = 'SEMVER_LT';
+export const NOT_IN = 'NOT_IN' as const;
+export const IN = 'IN' as const;
+export const STR_ENDS_WITH = 'STR_ENDS_WITH' as const;
+export const STR_STARTS_WITH = 'STR_STARTS_WITH' as const;
+export const STR_CONTAINS = 'STR_CONTAINS' as const;
+export const NUM_EQ = 'NUM_EQ' as const;
+export const NUM_GT = 'NUM_GT' as const;
+export const NUM_GTE = 'NUM_GTE' as const;
+export const NUM_LT = 'NUM_LT' as const;
+export const NUM_LTE = 'NUM_LTE' as const;
+export const DATE_AFTER = 'DATE_AFTER' as const;
+export const DATE_BEFORE = 'DATE_BEFORE' as const;
+export const SEMVER_EQ = 'SEMVER_EQ' as const;
+export const SEMVER_GT = 'SEMVER_GT' as const;
+export const SEMVER_LT = 'SEMVER_LT' as const;
 
 export const allOperators: Operator[] = [
     IN,
@@ -49,39 +49,47 @@ export const allOperators: Operator[] = [
     SEMVER_LT,
 ];
 
-export const stringOperators: Operator[] = [
-    STR_CONTAINS,
-    STR_STARTS_WITH,
-    STR_ENDS_WITH,
-];
+const isOperator =
+    <T extends string>(operators: T[]) =>
+    (operator: string): operator is T =>
+        operators.includes(operator as T);
 
-export const inOperators: Operator[] = [IN, NOT_IN];
+export const stringOperators = [STR_CONTAINS, STR_STARTS_WITH, STR_ENDS_WITH];
+export type StringOperator = (typeof stringOperators)[number];
+export const isStringOperator = isOperator(stringOperators);
 
-export const numOperators: Operator[] = [
-    NUM_EQ,
-    NUM_GT,
-    NUM_GTE,
-    NUM_LT,
-    NUM_LTE,
-];
+export const inOperators = [IN, NOT_IN];
+export type InOperator = (typeof inOperators)[number];
+export const isInOperator = isOperator(inOperators);
 
-export const dateOperators: Operator[] = [DATE_BEFORE, DATE_AFTER];
+export const numOperators = [NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE];
+export type NumOperator = (typeof numOperators)[number];
+export const isNumOperator = isOperator(numOperators);
 
-export const semVerOperators: Operator[] = [SEMVER_EQ, SEMVER_GT, SEMVER_LT];
+export const dateOperators = [DATE_BEFORE, DATE_AFTER];
+export type DateOperator = (typeof dateOperators)[number];
+export const isDateOperator = isOperator(dateOperators);
 
-export const singleValueOperators: Operator[] = [
+export const semVerOperators = [SEMVER_EQ, SEMVER_GT, SEMVER_LT];
+export type SemVerOperator = (typeof semVerOperators)[number];
+export const isSemVerOperator = isOperator(semVerOperators);
+
+export const singleValueOperators = [
     ...semVerOperators,
     ...dateOperators,
     ...numOperators,
 ];
+export type SingleValueOperator = (typeof singleValueOperators)[number];
+export const isSingleValueOperator = isOperator(singleValueOperators);
 
-export const multipleValueOperators: Operator[] = [
-    ...stringOperators,
-    ...inOperators,
-];
+export const multipleValueOperators = [...stringOperators, ...inOperators];
+export type MultiValueOperator = (typeof multipleValueOperators)[number];
+export const isMultiValueOperator = isOperator(multipleValueOperators);
 
-export const newOperators: Operator[] = [
+export const newOperators = [
     ...stringOperators,
     ...dateOperators,
     ...singleValueOperators,
 ];
+export type NewOperator = (typeof newOperators)[number];
+export const isNewOperator = isOperator(newOperators);

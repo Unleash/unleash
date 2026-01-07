@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import type { IApiTokenCreate } from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import { TokenType } from 'interfaces/token';
@@ -9,15 +8,13 @@ import {
     CREATE_PROJECT_API_TOKEN,
 } from '@server/types/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
-import type { SelectOption } from './TokenTypeSelector/TokenTypeSelector';
+import type { SelectOption } from './TokenTypeSelector/TokenTypeSelector.jsx';
 
-export type ApiTokenFormErrorType = 'username' | 'projects';
+export type ApiTokenFormErrorType = 'tokenName' | 'projects';
 export const useApiTokenForm = (project?: string) => {
     const { environments } = useEnvironments();
-    const { uiConfig } = useUiConfig();
     const initialEnvironment = environments?.find((e) => e.enabled)?.name;
 
-    const hasCreateTokenPermission = useHasRootAccess(CREATE_CLIENT_API_TOKEN);
     const hasCreateProjectTokenPermission = useHasRootAccess(
         CREATE_PROJECT_API_TOKEN,
         project,
@@ -26,31 +23,25 @@ export const useApiTokenForm = (project?: string) => {
     const apiTokenTypes: SelectOption[] = [
         {
             key: TokenType.CLIENT,
-            label: `Server-side SDK (${TokenType.CLIENT})`,
-            title: 'Connect server-side SDK or Unleash Proxy/Edge',
+            label: 'Backend SDK',
+            title: 'Creates a backend token to connect a backend SDK or Unleash Edge',
             enabled:
-                hasCreateTokenPermission || hasCreateProjectTokenPermission,
+                useHasRootAccess(CREATE_CLIENT_API_TOKEN) ||
+                hasCreateProjectTokenPermission,
+        },
+        {
+            key: TokenType.FRONTEND,
+            label: 'Frontend SDK',
+            title: 'Creates a frontend token to connect a frontend SDK',
+            enabled:
+                useHasRootAccess(CREATE_FRONTEND_API_TOKEN) ||
+                hasCreateProjectTokenPermission,
         },
     ];
 
-    const hasCreateFrontendAccess = useHasRootAccess(CREATE_FRONTEND_API_TOKEN);
-    const hasCreateFrontendTokenAccess = useHasRootAccess(
-        CREATE_PROJECT_API_TOKEN,
-        project,
-    );
-
-    if (uiConfig.flags.embedProxyFrontend) {
-        apiTokenTypes.splice(1, 0, {
-            key: TokenType.FRONTEND,
-            label: `Client-side SDK (${TokenType.FRONTEND})`,
-            title: 'Connect web and mobile SDK directly to Unleash',
-            enabled: hasCreateFrontendAccess || hasCreateFrontendTokenAccess,
-        });
-    }
-
     const firstAccessibleType = apiTokenTypes.find((t) => t.enabled)?.key;
 
-    const [username, setUsername] = useState('');
+    const [tokenName, setTokenName] = useState('');
     const [type, setType] = useState(firstAccessibleType || TokenType.CLIENT);
     const [projects, setProjects] = useState<string[]>([
         project ? project : '*',
@@ -80,7 +71,7 @@ export const useApiTokenForm = (project?: string) => {
     };
 
     const getApiTokenPayload = (): IApiTokenCreate => ({
-        username,
+        tokenName,
         type,
         environment,
         projects,
@@ -88,8 +79,8 @@ export const useApiTokenForm = (project?: string) => {
 
     const isValid = () => {
         const newErrors: Partial<Record<ApiTokenFormErrorType, string>> = {};
-        if (!username) {
-            newErrors.username = 'Username is required';
+        if (!tokenName) {
+            newErrors.tokenName = 'Token name is required';
         }
         if (projects.length === 0) {
             newErrors.projects = 'At least one project is required';
@@ -110,12 +101,12 @@ export const useApiTokenForm = (project?: string) => {
     };
 
     return {
-        username,
+        tokenName,
         type,
         apiTokenTypes,
         projects,
         environment,
-        setUsername,
+        setTokenName,
         setTokenType,
         setProjects,
         setEnvironment,

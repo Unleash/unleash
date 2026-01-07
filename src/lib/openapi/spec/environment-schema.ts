@@ -16,7 +16,7 @@ export const environmentSchema = {
             type: 'string',
             example: 'development',
             description:
-                'The [type of environment](https://docs.getunleash.io/reference/environments#environment-types).',
+                'The [type of environment](https://docs.getunleash.io/concepts/environments#environment-types).',
         },
         enabled: {
             type: 'boolean',
@@ -57,6 +57,14 @@ export const environmentSchema = {
             example: 10,
             description:
                 'The number of enabled toggles for the project environment',
+        },
+        requiredApprovals: {
+            type: 'integer',
+            nullable: true,
+            description:
+                'Experimental field. The number of approvals required before a change request can be applied in this environment.',
+            minimum: 1,
+            example: 3,
         },
     },
     components: {},

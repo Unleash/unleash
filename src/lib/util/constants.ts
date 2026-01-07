@@ -1,4 +1,4 @@
-export const DEFAULT_ENV = 'default';
+export const DEFAULT_ENV = 'development';
 
 export const ALL_PROJECTS = '*';
 export const ALL_ENVS = '*';
@@ -16,9 +16,6 @@ export const CUSTOM_PROJECT_ROLE_TYPE = 'custom';
 export const PREDEFINED_ROLE_TYPES = [ROOT_ROLE_TYPE, PROJECT_ROLE_TYPE];
 export const ROOT_ROLE_TYPES = [ROOT_ROLE_TYPE, CUSTOM_ROOT_ROLE_TYPE];
 export const PROJECT_ROLE_TYPES = [PROJECT_ROLE_TYPE, CUSTOM_PROJECT_ROLE_TYPE];
-
-export const TAG_MIN_LENGTH = 2;
-export const TAG_MAX_LENGTH = 50;
 
 /* CONTEXT FIELD OPERATORS */
 

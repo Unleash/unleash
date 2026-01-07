@@ -1,8 +1,8 @@
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import type { IContextFieldDto } from '../../../lib/features/context/context-field-store-type';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import type { IContextFieldDto } from '../../../lib/features/context/context-field-store-type.js';
 import fc, { type Arbitrary } from 'fast-check';
-import type { IUnleashStores } from '../../../lib/types';
+import type { IUnleashStores } from '../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -48,7 +48,7 @@ test('creating an arbitrary context field should return the created context fiel
                     await stores.contextFieldStore.create(input);
 
                 Object.entries(input).forEach(([key, value]) => {
-                    expect(storedData[key]).toStrictEqual(value);
+                    expect(storedData[key]).toEqual(value);
                 });
             })
             .afterEach(cleanup),
@@ -83,7 +83,7 @@ test('updating a context field should update the specified fields and leave ever
                     );
 
                     Object.entries(updateData).forEach(([key, value]) => {
-                        expect(updatedData[key]).toStrictEqual(value);
+                        expect(updatedData[key]).toEqual(value);
                     });
 
                     for (const key in unchangedKeys) {

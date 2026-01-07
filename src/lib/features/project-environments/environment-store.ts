@@ -1,18 +1,18 @@
 import type EventEmitter from 'events';
-import type { Db } from '../../db/db';
-import type { Logger } from '../../logger';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
+import type { Db } from '../../db/db.js';
+import type { Logger } from '../../logger.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
 import type {
     IEnvironment,
     IEnvironmentCreate,
     IProjectEnvironment,
-} from '../../types/model';
-import NotFoundError from '../../error/notfound-error';
-import type { IEnvironmentStore } from './environment-store-type';
-import { snakeCaseKeys } from '../../util/snakeCase';
-import type { CreateFeatureStrategySchema } from '../../openapi';
-import type { IUnleashConfig } from '../../types';
+} from '../../types/model.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { IEnvironmentStore } from './environment-store-type.js';
+import { snakeCaseKeys } from '../../util/snakeCase.js';
+import type { CreateFeatureStrategySchema } from '../../openapi/index.js';
+import type { IFlagResolver, IUnleashConfig } from '../../types/index.js';
 
 interface IEnvironmentsTable {
     name: string;
@@ -21,6 +21,7 @@ interface IEnvironmentsTable {
     sort_order: number;
     enabled: boolean;
     protected: boolean;
+    required_approvals?: number | null;
 }
 
 interface IEnvironmentsWithCountsTable extends IEnvironmentsTable {
@@ -42,6 +43,7 @@ const COLUMNS = [
     'sort_order',
     'enabled',
     'protected',
+    'required_approvals',
 ];
 
 function mapRow(row: IEnvironmentsTable): IEnvironment {
@@ -51,6 +53,7 @@ function mapRow(row: IEnvironmentsTable): IEnvironment {
         sortOrder: row.sort_order,
         enabled: row.enabled,
         protected: row.protected,
+        requiredApprovals: row.required_approvals,
     };
 }
 
@@ -95,6 +98,7 @@ function fieldToRow(env: IEnvironment): IEnvironmentsTable {
         sort_order: env.sortOrder,
         enabled: env.enabled,
         protected: env.protected,
+        required_approvals: env.requiredApprovals,
     };
 }
 
@@ -102,6 +106,8 @@ const TABLE = 'environments';
 
 export default class EnvironmentStore implements IEnvironmentStore {
     private logger: Logger;
+
+    private flagResolver: IFlagResolver;
 
     private db: Db;
 
@@ -112,11 +118,16 @@ export default class EnvironmentStore implements IEnvironmentStore {
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        { getLogger, isOss }: Pick<IUnleashConfig, 'getLogger' | 'isOss'>,
+        {
+            getLogger,
+            isOss,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'isOss' | 'flagResolver'>,
     ) {
         this.db = db;
         this.logger = getLogger('db/environment-store.ts');
         this.isOss = isOss;
+        this.flagResolver = flagResolver;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'environment',
@@ -221,6 +232,21 @@ export default class EnvironmentStore implements IEnvironmentStore {
         return rows.map(mapRowWithCounts);
     }
 
+    async getChangeRequestEnvironments(
+        environments: string[],
+    ): Promise<{ name: string; requiredApprovals: number }[]> {
+        const stopTimer = this.timer('getChangeRequestEnvironments');
+        const rows = await this.db<IEnvironmentsTable>(TABLE)
+            .select('name', 'required_approvals')
+            .whereIn('name', environments)
+            .andWhere('required_approvals', '>', 0);
+        stopTimer();
+        return rows.map((row) => ({
+            name: row.name,
+            requiredApprovals: row.required_approvals || 1,
+        }));
+    }
+
     async getProjectEnvironments(
         projectId: string,
         query?: Object,
@@ -275,20 +301,6 @@ export default class EnvironmentStore implements IEnvironmentStore {
         return present;
     }
 
-    async getByName(name: string): Promise<IEnvironment> {
-        const stopTimer = this.timer('getByName');
-        const row = await this.db<IEnvironmentsTable>(TABLE)
-            .where({ name })
-            .first();
-        stopTimer();
-        if (!row) {
-            throw new NotFoundError(
-                `Could not find environment with name ${name}`,
-            );
-        }
-        return mapRow(row);
-    }
-
     async updateProperty(
         id: string,
         field: string,
@@ -318,7 +330,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
     }
 
     async update(
-        env: Pick<IEnvironment, 'type' | 'protected'>,
+        env: Pick<IEnvironment, 'type' | 'protected' | 'requiredApprovals'>,
         name: string,
     ): Promise<IEnvironment> {
         const updatedEnv = await this.db<IEnvironmentsTable>(TABLE)

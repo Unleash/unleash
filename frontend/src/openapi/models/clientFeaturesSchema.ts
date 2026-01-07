@@ -3,19 +3,19 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientFeatureSchema } from './clientFeatureSchema';
-import type { ClientFeaturesQuerySchema } from './clientFeaturesQuerySchema';
-import type { ClientSegmentSchema } from './clientSegmentSchema';
+import type { ClientFeatureSchema } from './clientFeatureSchema.js';
+import type { ClientFeaturesQuerySchema } from './clientFeaturesQuerySchema.js';
+import type { ClientSegmentSchema } from './clientSegmentSchema.js';
 
 /**
- * Configuration data for server-side SDKs for evaluating feature flags.
+ * Configuration data for backend SDKs for evaluating feature flags.
  */
 export interface ClientFeaturesSchema {
     /** A list of feature flags with their configuration */
     features: ClientFeatureSchema[];
     /** A summary of filters and parameters sent to the endpoint. Used by the server to build the features and segments response */
     query?: ClientFeaturesQuerySchema;
-    /** A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance */
+    /** A list of [Segments](https://docs.getunleash.io/concepts/segments) configured for this Unleash instance */
     segments?: ClientSegmentSchema[];
     /**
      * A version number for the format used in the response. Most Unleash instances now return version 2, which includes segments as a separate array

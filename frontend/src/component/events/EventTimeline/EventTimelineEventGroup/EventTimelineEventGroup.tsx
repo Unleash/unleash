@@ -1,8 +1,8 @@
 import { Badge, styled } from '@mui/material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { EventTimelineEventTooltip } from './EventTimelineEventTooltip/EventTimelineEventTooltip';
-import type { TimelineEventGroup } from '../EventTimeline';
-import { EventTimelineEventCircle } from './EventTimelineEventCircle';
+import { EventTimelineEventTooltip } from './EventTimelineEventTooltip/EventTimelineEventTooltip.tsx';
+import type { TimelineEventGroup } from '../EventTimeline.tsx';
+import { EventTimelineEventCircle } from './EventTimelineEventCircle.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledEvent = styled('div', {

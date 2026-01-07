@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { tagSchema } from './tag-schema';
+import { tagSchema } from './tag-schema.js';
 
 export const createFeatureSchema = {
     $id: '#/components/schemas/createFeatureSchema',
@@ -22,7 +22,7 @@ export const createFeatureSchema = {
             ],
             example: 'release',
             description:
-                "The feature flag's [type](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types). One of experiment, kill-switch, release, operational, or permission",
+                "The feature flag's [type](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types). One of experiment, kill-switch, release, operational, or permission",
         },
         description: {
             type: 'string',

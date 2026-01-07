@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOfSixAction } from './changeRequestCreateFeatureSchemaOneOfSixAction';
-import type { UpdateFeatureStrategySchema } from './updateFeatureStrategySchema';
+import type { ChangeRequestCreateFeatureSchemaOneOfSixAction } from './changeRequestCreateFeatureSchemaOneOfSixAction.js';
+import type { UpdateFeatureStrategySchema } from './updateFeatureStrategySchema.js';
 
 /**
  * Update a strategy belonging to this feature.

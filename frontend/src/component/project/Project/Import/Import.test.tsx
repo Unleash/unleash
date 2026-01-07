@@ -1,6 +1,6 @@
 import { render } from 'utils/testRenderer';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { ImportModal } from './ImportModal';
+import { ImportModal } from './ImportModal.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import userEvent from '@testing-library/user-event';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -148,5 +148,5 @@ test('Show validation errors', async () => {
     await screen.findByText('itemF');
 
     const importButton = screen.getByText('Import configuration');
-    expect(importButton).toBeDisabled();
+    expect(importButton).toHaveAttribute('aria-disabled', 'true');
 });

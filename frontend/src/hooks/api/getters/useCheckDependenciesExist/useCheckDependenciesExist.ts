@@ -1,7 +1,7 @@
 import type { SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 
 export const useCheckDependenciesExist = (
     project: string,

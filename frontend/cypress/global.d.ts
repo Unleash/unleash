@@ -21,6 +21,7 @@ declare namespace Cypress {
     interface Chainable {
         runBefore(): Chainable;
 
+        do_login(user = AUTH_USER, password = AUTH_PASSWORD): Chainable;
         login_UI(user = AUTH_USER, password = AUTH_PASSWORD): Chainable;
         logout_UI(): Chainable;
 
@@ -53,10 +54,6 @@ declare namespace Cypress {
         deleteSegment_UI(segmentName: string, id: string): Chainable;
 
         // STRATEGY
-        addUserIdStrategyToFeature_UI(
-            featureName: string,
-            projectName: string,
-        ): Chainable;
         addFlexibleRolloutStrategyToFeature_UI(
             options: AddFlexibleRolloutStrategyOptions,
         ): Chainable;

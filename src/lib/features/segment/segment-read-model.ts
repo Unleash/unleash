@@ -3,10 +3,10 @@ import type {
     IConstraint,
     IFeatureStrategySegment,
     ISegment,
-} from '../../types';
-import type { ISegmentReadModel } from './segment-read-model-type';
-import NotFoundError from '../../error/notfound-error';
-import type { Db } from '../../db/db';
+} from '../../types/index.js';
+import type { ISegmentReadModel } from './segment-read-model-type.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { Db } from '../../db/db.js';
 
 interface ISegmentRow {
     id: number;
@@ -111,7 +111,7 @@ export class SegmentReadModel implements ISegmentReadModel {
     }
 
     async getAllForClientIds(ids?: number[]): Promise<IClientSegment[]> {
-        if (!ids || ids.length === 0) {
+        if (ids?.length === 0) {
             return [];
         }
 

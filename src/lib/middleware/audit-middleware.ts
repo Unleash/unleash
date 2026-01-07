@@ -1,6 +1,6 @@
-import type { IUnleashConfig } from '../types';
-import type { IApiRequest, IAuthRequest } from '../routes/unleash-types';
-import { extractAuditInfo } from '../util';
+import type { IUnleashConfig } from '../types/index.js';
+import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
+import { extractAuditInfo } from '../util/index.js';
 
 export const auditAccessMiddleware = ({
     getLogger,
@@ -12,7 +12,7 @@ export const auditAccessMiddleware = ({
         } else {
             try {
                 req.audit = extractAuditInfo(req);
-            } catch (e) {
+            } catch (_e) {
                 logger.warn('Could not find audit info in request');
             }
         }

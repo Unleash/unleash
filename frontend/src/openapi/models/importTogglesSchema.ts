@@ -3,15 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ExportResultSchema } from './exportResultSchema';
+import type { ExportResultSchema } from './exportResultSchema.js';
 
 /**
  * The result of the export operation for a project and environment, used at import
  */
 export interface ImportTogglesSchema {
     data: ExportResultSchema;
-    /** The exported [environment](https://docs.getunleash.io/reference/environments) */
+    /** The exported [environment](https://docs.getunleash.io/concepts/environments) */
     environment: string;
-    /** The exported [project](https://docs.getunleash.io/reference/projects) */
+    /** The exported [project](https://docs.getunleash.io/concepts/projects) */
     project: string;
 }

@@ -5,14 +5,15 @@
  */
 
 /**
- * Health summary of the project
+ * Use `technicalDebt` instead. Summary of the project health
+ * @deprecated
  */
 export type ProjectInsightsSchemaHealth = {
     /** The number of active feature flags. */
     activeCount: number;
     /** The number of potentially stale feature flags. */
     potentiallyStaleCount: number;
-    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
+    /** An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100 */
     rating: number;
     /** The number of stale feature flags. */
     staleCount: number;

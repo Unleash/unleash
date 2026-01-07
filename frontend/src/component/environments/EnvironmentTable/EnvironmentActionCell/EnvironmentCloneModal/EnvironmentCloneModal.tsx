@@ -21,9 +21,9 @@ import type {
 } from 'interfaces/environments';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import EnvironmentTypeSelector from 'component/environments/EnvironmentForm/EnvironmentTypeSelector/EnvironmentTypeSelector';
+import { EnvironmentTypeSelector } from 'component/environments/EnvironmentForm/EnvironmentTypeSelector';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { EnvironmentProjectSelect } from './EnvironmentProjectSelect/EnvironmentProjectSelect';
+import { EnvironmentProjectSelect } from './EnvironmentProjectSelect/EnvironmentProjectSelect.tsx';
 import { SelectProjectInput } from 'component/admin/apiToken/ApiTokenForm/ProjectSelector/SelectProjectInput/SelectProjectInput';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useApiTokensApi, {
@@ -164,7 +164,7 @@ export const EnvironmentCloneModal = ({
     });
 
     const getApiTokenCreatePayload = (): IApiTokenCreate => ({
-        username: `${name}_token`,
+        tokenName: `${name}_token`,
         type: 'CLIENT',
         environment: name,
         projects: tokenProjects,
@@ -238,7 +238,7 @@ export const EnvironmentCloneModal = ({
                 modal
                 title={`Clone ${environment.name} environment`}
                 description='Cloning an environment will clone all feature flags and their configuration (activation strategies, segments, status, etc) into a new environment.'
-                documentationLink='https://docs.getunleash.io/reference/environments#clone-an-environment'
+                documentationLink='https://docs.getunleash.io/concepts/environments#clone-an-environment'
                 documentationLinkLabel='Cloning environments documentation'
                 formatApiCode={formatApiCode}
             >
@@ -301,7 +301,7 @@ export const EnvironmentCloneModal = ({
                                 cloned environment, you will also need an API
                                 token.{' '}
                                 <Link
-                                    href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
+                                    href='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
                                     target='_blank'
                                     rel='noreferrer'
                                 >
@@ -334,10 +334,9 @@ export const EnvironmentCloneModal = ({
                             </FormControl>
                             <StyledInlineContainer>
                                 <StyledInputSecondaryDescription>
-                                    A new Server-side SDK (CLIENT) API token
-                                    will be generated for the cloned
-                                    environment, so you can get started right
-                                    away.
+                                    A new backend API token will be generated
+                                    for the cloned environment, so you can get
+                                    started right away.
                                 </StyledInputSecondaryDescription>
                                 <ConditionallyRender
                                     condition={

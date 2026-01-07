@@ -10,7 +10,6 @@ import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
 import { ProjectList } from 'component/project/ProjectList/ProjectList';
 import { ArchiveProjectList } from 'component/project/ProjectList/ArchiveProjectList';
-import RedirectArchive from 'component/archive/RedirectArchive';
 import CreateEnvironment from 'component/environments/CreateEnvironment/CreateEnvironment';
 import EditEnvironment from 'component/environments/EditEnvironment/EditEnvironment';
 import { EditContext } from 'component/context/EditContext/EditContext';
@@ -30,8 +29,8 @@ import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import type { INavigationMenuItem, IRoute } from 'interfaces/route';
 import { EnvironmentTable } from 'component/environments/EnvironmentTable/EnvironmentTable';
-import { SegmentTable } from '../segments/SegmentTable/SegmentTable';
-import { FeaturesArchiveTable } from '../archive/FeaturesArchiveTable';
+import { SegmentTable } from '../segments/SegmentTable/SegmentTable.jsx';
+import { FeaturesArchiveTable } from 'component/archive/FeaturesArchiveTable';
 import { LazyPlayground } from 'component/playground/Playground/LazyPlayground';
 import { Profile } from 'component/user/Profile/Profile';
 import { LazyFeatureView } from 'component/feature/FeatureView/LazyFeatureView';
@@ -40,17 +39,21 @@ import { LazyProject } from 'component/project/Project/LazyProject';
 import { LoginHistory } from 'component/loginHistory/LoginHistory';
 import { FeatureTypesList } from 'component/featureTypes/FeatureTypesList';
 import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewIntegration';
-import { PaginatedApplicationList } from '../application/ApplicationList/PaginatedApplicationList';
+import { PaginatedApplicationList } from '../application/ApplicationList/PaginatedApplicationList.jsx';
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
-import { Insights } from '../insights/Insights';
-import { FeedbackList } from '../feedbackNew/FeedbackList';
+import { Insights } from '../insights/Insights.jsx';
+import { LazyImpactMetricsPage } from '../impact-metrics/LazyImpactMetricsPage.tsx';
+import { FeedbackList } from '../feedbackNew/FeedbackList.jsx';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
-import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject';
-import { PersonalDashboard } from '../personalDashboard/PersonalDashboard';
+import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject.jsx';
+import { PersonalDashboard } from '../personalDashboard/PersonalDashboard.jsx';
 import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseManagement';
 import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
 import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
+import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCounters.js';
+import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
+import { ChangeRequests } from 'component/changeRequest/ChangeRequests/ChangeRequests';
 
 export const routes: IRoute[] = [
     // Splash
@@ -68,7 +71,7 @@ export const routes: IRoute[] = [
         title: 'Dashboard',
         component: PersonalDashboard,
         type: 'protected',
-        menu: { mobile: true },
+        menu: { primary: true },
     },
 
     // Project
@@ -79,14 +82,6 @@ export const routes: IRoute[] = [
         component: LazyCreateProject,
         type: 'protected',
         enterprise: true,
-        menu: {},
-    },
-    {
-        path: '/projects/:projectId/archived',
-        title: ':projectId',
-        parent: '/archive',
-        component: RedirectArchive,
-        type: 'protected',
         menu: {},
     },
     {
@@ -127,7 +122,7 @@ export const routes: IRoute[] = [
         title: 'Projects',
         component: ProjectList,
         type: 'protected',
-        menu: { mobile: true },
+        menu: { primary: true },
     },
     {
         path: '/projects-archive',
@@ -135,15 +130,26 @@ export const routes: IRoute[] = [
         component: ArchiveProjectList,
         type: 'protected',
         menu: {},
+        enterprise: true,
     },
 
-    // Features
+    // Flags overview
     {
         path: '/search',
-        title: 'Search',
+        title: 'Flags overview',
         component: FeatureToggleListTable,
         type: 'protected',
-        menu: { mobile: true },
+        menu: { primary: true },
+    },
+
+    // Global change request overview
+    {
+        path: '/change-requests',
+        title: 'Change Requests',
+        component: ChangeRequests,
+        type: 'protected',
+        menu: { primary: true },
+        enterprise: true,
     },
 
     // Playground
@@ -153,17 +159,28 @@ export const routes: IRoute[] = [
         component: LazyPlayground,
         hidden: false,
         type: 'protected',
-        menu: { mobile: true },
+        menu: { primary: true },
     },
 
-    // Insights
+    // Analytics
     {
         path: '/insights',
-        title: 'Insights',
+        title: 'Analytics',
         component: Insights,
         type: 'protected',
-        menu: { mobile: true },
+        menu: { primary: true },
         enterprise: true,
+    },
+
+    // Impact Metrics
+    {
+        path: '/impact-metrics',
+        title: 'Impact metrics',
+        component: LazyImpactMetricsPage,
+        type: 'protected',
+        menu: { primary: true },
+        enterprise: true,
+        flag: 'impactMetrics',
     },
 
     // Applications
@@ -180,7 +197,17 @@ export const routes: IRoute[] = [
         title: 'Applications',
         component: PaginatedApplicationList,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
+    },
+
+    // Counters
+    {
+        path: '/custom-metrics',
+        title: 'Custom metrics',
+        component: ExploreCounters,
+        type: 'protected',
+        menu: { main: true },
+        flag: 'customMetrics',
     },
 
     // Context
@@ -205,7 +232,7 @@ export const routes: IRoute[] = [
         title: 'Context fields',
         component: ContextList,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
 
     // Feature types
@@ -214,7 +241,7 @@ export const routes: IRoute[] = [
         title: 'Feature flag types',
         component: FeatureTypesList,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
 
     // Strategies
@@ -247,7 +274,7 @@ export const routes: IRoute[] = [
         title: 'Strategy types',
         component: StrategiesList,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
     {
         path: '/environments/create',
@@ -269,7 +296,7 @@ export const routes: IRoute[] = [
         title: 'Environments',
         component: EnvironmentTable,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
         enterprise: true,
     },
     {
@@ -283,31 +310,28 @@ export const routes: IRoute[] = [
 
     // Release management/plans
     {
-        path: '/release-management',
-        title: 'Release management',
+        path: '/release-templates',
+        title: 'Release templates',
         component: ReleaseManagement,
         type: 'protected',
-        menu: { advanced: true, mode: ['enterprise'] },
-        flag: 'releasePlans',
+        menu: { main: true, mode: ['enterprise'] },
     },
     {
-        path: '/release-management/create-template',
-        title: 'Create release plan template',
-        parent: '/release-management',
+        path: '/release-templates/create-template',
+        title: 'Create release template',
+        parent: '/release-templates',
         component: CreateReleasePlanTemplate,
         type: 'protected',
         menu: { mode: ['enterprise'] },
-        flag: 'releasePlans',
         enterprise: true,
     },
     {
-        path: '/release-management/edit/:templateId',
-        title: 'Edit release plan template',
-        parent: '/release-management',
+        path: '/release-templates/edit/:templateId',
+        title: 'Edit release template',
+        parent: '/release-templates',
         component: EditReleasePlanTemplate,
         type: 'protected',
         menu: { mode: ['enterprise'] },
-        flag: 'releasePlans',
         enterprise: true,
     },
 
@@ -333,7 +357,7 @@ export const routes: IRoute[] = [
         title: 'Tag types',
         component: TagTypeList,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
 
     // Integrations
@@ -391,7 +415,7 @@ export const routes: IRoute[] = [
         component: IntegrationList,
         hidden: false,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
     {
         path: '/integrations/signals',
@@ -427,7 +451,7 @@ export const routes: IRoute[] = [
         component: SegmentTable,
         hidden: false,
         type: 'protected',
-        menu: { mobile: true, advanced: true },
+        menu: { main: true },
     },
 
     // History
@@ -452,6 +476,15 @@ export const routes: IRoute[] = [
         path: '/archive',
         title: 'Archived flags',
         component: FeaturesArchiveTable,
+        type: 'protected',
+        menu: {},
+    },
+
+    // Unknown flags
+    {
+        path: '/unknown-flags',
+        title: 'Unknown flags',
+        component: UnknownFlagsTable,
         type: 'protected',
         menu: {},
     },
@@ -518,24 +551,7 @@ export const routes: IRoute[] = [
 export const getRoute = (path: string) =>
     routes.find((route) => route.path === path);
 
-export const baseRoutes = routes.filter((route) => !route.hidden);
-
-const computeRoutes = () => {
-    const mainNavRoutes = baseRoutes.filter((route) => route.menu.advanced);
-    const adminRoutes = routes.filter((route) => route.menu.adminSettings);
-    const mobileRoutes = routes.filter((route) => route.menu.mobile);
-
-    const computedRoutes = {
-        mainNavRoutes,
-        adminRoutes,
-        mobileRoutes,
-    };
-    return () => {
-        return computedRoutes;
-    };
-};
-
-export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
+const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
     return routes.map((route) => {
         return {
             path: route.path,
@@ -549,4 +565,10 @@ export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
     });
 };
 
-export const getRoutes = computeRoutes();
+export const baseRoutes = routes.filter((route) => !route.hidden);
+export const getNavRoutes = () => {
+    return getCondensedRoutes(baseRoutes.filter((route) => route.menu.main));
+};
+export const getPrimaryRoutes = () => {
+    return getCondensedRoutes(baseRoutes.filter((route) => route.menu.primary));
+};

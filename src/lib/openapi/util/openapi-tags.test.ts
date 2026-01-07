@@ -1,4 +1,4 @@
-import { openApiTags } from './openapi-tags';
+import { openApiTags } from './openapi-tags.js';
 
 test('no duplicate tags', () => {
     openApiTags.reduce((acc, tag) => {

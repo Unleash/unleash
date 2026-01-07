@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 export const handleBadRequest = async (
     setErrors?: Dispatch<SetStateAction<{}>>,

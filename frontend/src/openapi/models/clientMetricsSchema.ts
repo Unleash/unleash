@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientMetricsSchemaBucket } from './clientMetricsSchemaBucket';
+import type { ClientMetricsSchemaBucket } from './clientMetricsSchemaBucket.js';
 
 /**
  * Client usage metrics, accumulated in buckets of hour by hour by default
@@ -18,7 +18,7 @@ export interface ClientMetricsSchema {
      * @deprecated
      */
     environment?: string;
-    /** A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application */
+    /** A [(somewhat) unique identifier](https://docs.getunleash.io/sdks/node#advanced-usage) for the application */
     instanceId?: string;
     /** The platform the application is running on. For languages that compile to binaries, this can be omitted */
     platformName?: string;

@@ -1,4 +1,4 @@
-import { useMemo, useState, type VFC } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
 import {
     Table,
@@ -16,21 +16,26 @@ import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashCon
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { AddContextButton } from '../AddContextButton';
+import { AddContextButton } from '../AddContextButton.tsx';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { sortTypes } from 'utils/sortTypes';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { ContextActionsCell } from '../ContextActionsCell';
+import { ContextActionsCell } from '../ContextActionsCell.tsx';
 import Adjust from '@mui/icons-material/Adjust';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
-import { UsedInCell } from '../UsedInCell';
+import { UsedInCell } from '../UsedInCell.tsx';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
-const ContextList: VFC = () => {
+const ContextList: FC = () => {
+    const projectId = useOptionalPathParam('projectId');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
-    const [name, setName] = useState<string>();
-    const { context, refetchUnleashContext, loading } = useUnleashContext();
-    const { removeContext } = useContextsApi();
+    const [contextFieldToDelete, setContextFieldToDelete] = useState<string>();
+    const { context, refetchUnleashContext, loading } = useUnleashContext(
+        undefined,
+        projectId,
+    );
+    const { removeContext } = useContextsApi(projectId);
     const { setToastData, setToastApiError } = useToast();
 
     const data = useMemo(() => {
@@ -75,13 +80,19 @@ const ContextList: VFC = () => {
                     row: {
                         original: { name, description },
                     },
-                }: any) => (
-                    <LinkCell
-                        title={name}
-                        to={`/context/edit/${name}`}
-                        subtitle={description}
-                    />
-                ),
+                }: any) => {
+                    const editUrl = projectId
+                        ? `/projects/${projectId}/settings/context/edit/${name}`
+                        : `/context/edit/${name}`;
+
+                    return (
+                        <LinkCell
+                            title={name}
+                            to={editUrl}
+                            subtitle={description}
+                        />
+                    );
+                },
                 sortType: 'alphanumeric',
             },
             {
@@ -97,15 +108,16 @@ const ContextList: VFC = () => {
                 align: 'center',
                 Cell: ({
                     row: {
-                        original: { name },
+                        original: { name, usedInFeatures },
                     },
                 }: any) => (
                     <ContextActionsCell
                         name={name}
                         onDelete={() => {
-                            setName(name);
+                            setContextFieldToDelete(name);
                             setShowDelDialogue(true);
                         }}
+                        allowDelete={usedInFeatures === 0}
                     />
                 ),
                 width: 150,
@@ -135,10 +147,10 @@ const ContextList: VFC = () => {
 
     const onDeleteContext = async () => {
         try {
-            if (name === undefined) {
+            if (contextFieldToDelete === undefined) {
                 throw new Error();
             }
-            await removeContext(name);
+            await removeContext(contextFieldToDelete);
             refetchUnleashContext();
             setToastData({
                 type: 'success',
@@ -147,7 +159,7 @@ const ContextList: VFC = () => {
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }
-        setName(undefined);
+        setContextFieldToDelete(undefined);
         setShowDelDialogue(false);
     };
 
@@ -231,8 +243,8 @@ const ContextList: VFC = () => {
                         }
                         elseShow={
                             <TablePlaceholder>
-                                No contexts available. Get started by adding
-                                one.
+                                No context fields available. Get started by
+                                adding one.
                             </TablePlaceholder>
                         }
                     />
@@ -242,7 +254,7 @@ const ContextList: VFC = () => {
                 open={showDelDialogue}
                 onClick={onDeleteContext}
                 onClose={() => {
-                    setName(undefined);
+                    setContextFieldToDelete(undefined);
                     setShowDelDialogue(false);
                 }}
                 title='Really delete context field'

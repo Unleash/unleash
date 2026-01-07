@@ -2,7 +2,7 @@ import {
     constraintDateTypeSchema,
     constraintNumberTypeSchema,
     constraintStringTypeSchema,
-} from './constraint-value-types';
+} from './constraint-value-types.js';
 
 /* Number type */
 test('should require number', async () => {

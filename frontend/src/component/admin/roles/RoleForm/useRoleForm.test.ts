@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useRoleForm } from './useRoleForm';
+import { useRoleForm } from './useRoleForm.js';
 import { test } from 'vitest';
 import { act } from 'react';
 

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InactiveUserSchema } from './inactiveUserSchema';
+import type { InactiveUserSchema } from './inactiveUserSchema.js';
 
 /**
  * A list of users that has been flagged as inactive

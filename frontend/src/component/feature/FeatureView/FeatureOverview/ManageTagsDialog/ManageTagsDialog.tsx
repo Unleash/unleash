@@ -12,8 +12,8 @@ import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import useToast from 'hooks/useToast';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { ITag, ITagType } from 'interfaces/tags';
-import { type TagOption, TagsInput } from './TagsInput';
-import { TagTypeSelect } from './TagTypeSelect';
+import { type TagOption, TagsInput } from './TagsInput.tsx';
+import { TagTypeSelect } from './TagTypeSelect.tsx';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useTags from 'hooks/api/getters/useTags/useTags';
 import cloneDeep from 'lodash.clonedeep';
@@ -132,7 +132,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
                 removedTags: removed,
             });
             await refetch();
-        } catch (error: unknown) {
+        } catch (_error: unknown) {
             setToastData({
                 type: 'error',
                 text: 'Failed to add tag',
@@ -140,7 +140,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
         }
     };
 
-    const getToastText = (addedCount: number, removedCount: number) => {
+    const _getToastText = (addedCount: number, removedCount: number) => {
         let result = 'We successfully';
         if (addedCount > 0)
             result = result.concat(
@@ -196,7 +196,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
     };
 
     const handleInputChange = (
-        event: React.SyntheticEvent,
+        _event: React.SyntheticEvent,
         newValue: AutocompleteValue<
             TagOption | string,
             true,

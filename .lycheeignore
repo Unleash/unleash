@@ -6,6 +6,8 @@ www.instagram.com/getunleash
 twitter.com/getunleash
 www.java.com/*
 myoidchost.azure.com
+mycdn.com
+www.unido.org
 
 .*.unleash.host.*.com.*
 unleash.*.com/api/
@@ -25,3 +27,7 @@ datadog.*/api/v1/events
 ddog.*/api/v1/events
 api.datadoghq.com
 myoidchost.azure.com
+
+www.youtube.com/embed/
+
+https://github.com/bricks-software

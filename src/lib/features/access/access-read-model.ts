@@ -2,10 +2,11 @@ import {
     ADMIN_TOKEN_USER,
     type IAccessStore,
     type IUnleashStores,
+    RoleType,
     SYSTEM_USER_ID,
-} from '../../types';
-import type { IAccessReadModel } from './access-read-model-type';
-import * as permissions from '../../types/permissions';
+} from '../../types/index.js';
+import type { IAccessReadModel } from './access-read-model-type.js';
+import * as permissions from '../../types/permissions.js';
 
 const { ADMIN } = permissions;
 
@@ -22,7 +23,9 @@ export class AccessReadModel implements IAccessReadModel {
         }
         const roles = await this.store.getRolesForUserId(userId);
         return roles.some(
-            (role) => role.name.toLowerCase() === ADMIN.toLowerCase(),
+            (role) =>
+                role.name.toLowerCase() === ADMIN.toLowerCase() &&
+                role.type === RoleType.ROOT,
         );
     }
 }

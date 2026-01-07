@@ -3,7 +3,7 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IActionSet } from 'interfaces/action';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
-import { ProjectActionsLastEvent } from './ProjectActionsLastEvent';
+import { ProjectActionsLastEvent } from './ProjectActionsLastEvent.tsx';
 
 const StyledCell = styled('div')(({ theme }) => ({
     display: 'flex',

@@ -1,0 +1,169 @@
+---
+title: Import and export
+---
+
+
+import SearchPriority from '@site/src/components/SearchPriority';
+
+<SearchPriority level="medium" />
+
+
+import VideoContent from '@site/src/components/VideoContent.jsx'
+
+:::note Availability
+
+**Version**: `4.22+`
+
+:::
+
+You can import and export feature flag configurations between environments within an instance or between different Unleash instances.
+This lets you migrate between self-hosted and cloud-hosted instances, move from open source version to Unleash Enterprise, or use import/export as part of a backup and restore strategy.
+
+On the project-level, you can import and export:
+- [Feature flags](/concepts/feature-flags)
+- [Feature flag tags](/concepts/feature-flags#tags)
+- [Feature flag dependencies](/concepts/feature-flags#feature-flag-dependencies)
+
+On the environment-level, you can import and export:
+
+- [Activation strategies](/concepts/activation-strategies) including [constraints](/concepts/activation-strategies#constraints) and references to [segments](/concepts/segments)
+- [Strategy variants](/concepts/feature-flag-variants)
+- Feature flag status (enabled/disabled)
+
+For additional global configuration, you can import and export:
+- [Custom context fields](/concepts/unleash-context#custom-context-fields)
+- [Feature flag tag types](/concepts/feature-flags#tags)
+
+Not included in the export:
+- [Segments](/concepts/segments) and [custom strategies](/concepts/activation-strategies#custom-strategies): Only references are included in the export. If an import file contains references that don't exist in the target, the import process will stop. You must create the segments or custom strategies manually in the target instance before running the import again.
+- [Release plans](/concepts/release-templates): You must manually recreate any release plans for imported feature flags.
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/Bs73l2fZxJ4"]}/>
+
+## Export feature flags
+
+### Export all flags from a project
+
+1. Go to **Projects** and open the project you want to export from.
+2. Click **Export all project flags**.
+3. Select the environment to export flag configurations from.
+4. Click **Export selection**.
+
+![Export all flags from a project](/img/export-all-project-flags.png)
+
+As a result, you'll have a JSON export that includes the selected flags in the chosen environment.
+
+### Export a selection of flags from a project
+
+1. Go to **Projects** and open the project you want to export from.
+2. [Optional] Use search or filtering to narrow the list.
+3. Select one or more flags. You can use the header checkbox to select all rows in the current view (up to 100).
+4. Click **Export**.
+5. Select the environment to export flag configurations from.
+6. Click **Export selection**.
+
+![Export a selection of flags from a project.](/img/export-flag-selection.png)
+
+As a result, you'll have a JSON export that includes the selected flags in the chosen environment.
+
+
+### Export flags from the flags overview
+
+1. Go to **Flags overview**.
+2. [Optional] Use search or filtering to narrow the list.
+3. Click **Export flags**.
+4. Select the environment to export flag configurations from.
+5. Click **Export selection**.
+
+![Export flags from the flags overview](/img/export-flags-overview.png)
+
+As a result, you'll have a JSON export that includes the selected flags in the chosen environment.
+
+## Import feature flags
+
+### Import requirements
+
+Before you begin an import, ensure that you have met the following requirements:
+- The import file size limit is **500 kB**. Larger files fail with `413 Payload Too Large`. [Export in batches](#export-a-selection-of-flags-from-a-project) to stay under the limit.
+- The project and environment you are importing into must not have any pending [change requests](/concepts/change-requests).
+- Your import file must pass all [validation rules](#validation-rules).
+
+### Import stages
+
+The import process runs in three stages: import file, validate configuration, and finish import.
+
+![The import UI. It has three stages: import file, validate configuration, finish import.](/img/import-steps.png)
+
+#### Import file
+
+1. Go to **Projects** and open the target project.
+2. Click **Import**.
+3. In the **Import options** section, select the target environment.
+4. Do one of the following:
+   - In the **Upload file** tab, click **Select file** and choose the exported JSON, or
+   - In the **Code editor** tab, paste the exported JSON into the editor.
+5. Click **Validate**.
+
+![The import UI. It has three stages: import file, validate configuration, finish import.](/img/import.png)
+
+#### Validate configuration
+
+1. Review any errors or warnings.
+   - **Errors** must be fixed before you can continue.
+   - **Warnings** do not block import, but review them carefully.
+2. If you see errors about **segments** or **custom strategies**, create those items in the target instance and restart the import.
+3. If you see errors about **context fields** or **legal values**, add or update those in the target instance and restart the import.
+
+See the full list of validation rules [here](#validation-rules).
+
+#### Finish import
+
+When validation passes with no errors, you can commit the import by clicking **Import configuration**.
+
+The target environment now contains the imported configuration. If [change requests](/concepts/change-requests) are enabled for the environment, Unleash creates a draft change request with all changes instead of applying them immediately.
+
+### Validation rules
+
+Unleash enforces the following validation rules during import:
+
+- **Context fields:**
+  If the import [contains context](/concepts/unleash-context#custom-context-fields) fields with defined legal values, matching context fields must already exist in the target instance. The imported legal values must be a subset of the existing ones.
+
+- **Segments:**
+  [Segments](/concepts/segments) referenced by name must already exist in the target instance. If not present, the import stops.
+
+- **Dependencies:**
+  [Parent features](/concepts/feature-flags#feature-flag-dependencies) must already exist in the target instance or be included in the import file.
+
+- **Custom strategies:**
+  If your import contains [custom strategies](/concepts/activation-strategies#custom-strategies), then custom strategies with the same names must already exist in the target Unleash instance. Note that Unleash doesn't verify that the [configuration parameters](/concepts/activation-strategies#parameters) of the strategies match.
+
+- **Existing features in other projects:**
+  If a feature exists in a different project on the target instance, the import is rejected.
+
+- **Archived features:**
+  You can't import any features that have already been [archived](/concepts/feature-flags#archive-a-feature-flag) on the target Unleash instance. You must either permanently delete those archived features from the target instance, or revive them.
+
+### Required permissions
+
+To run an import you always need the **Update feature flags** [permission](/concepts/rbac#project-level-permissions). Depending on what your import changes, you may also need:
+
+- Create feature flags 
+- Update tag types
+- Create context fields
+- Create activation strategies
+- Delete activation strategies
+- Update variants
+- Update feature dependency
+
+If [change requests](/concepts/change-requests) are enabled, permissions for activation strategies or variants are not required.
+
+## Import on startup
+
+You can also import on startup by using an import file in a JSON format either through configuration parameters and environment variables.
+
+| Config parameter   | Environment variable    | Default       | Value                                 |
+|--------------------|-------------------------|---------------|---------------------------------------|
+| `file`             | `IMPORT_FILE`           | none          | Path to the configuration file.        |
+| `project`          | `IMPORT_PROJECT`        | `default`     | The project to import into.          |
+| `environment`      | `IMPORT_ENVIRONMENT`    | `development` | The environment to import for.       |

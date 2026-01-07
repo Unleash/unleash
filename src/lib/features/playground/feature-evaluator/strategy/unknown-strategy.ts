@@ -1,8 +1,8 @@
-import { playgroundStrategyEvaluation } from '../../../../openapi/spec/playground-strategy-schema';
-import type { StrategyEvaluationResult } from '../client';
-import type { Constraint } from '../constraint';
-import type { Context } from '../context';
-import { type SegmentForEvaluation, Strategy } from './strategy';
+import { playgroundStrategyEvaluation } from '../../../../openapi/spec/playground-strategy-schema.js';
+import type { StrategyEvaluationResult } from '../client.js';
+import type { Constraint } from '../constraint.js';
+import type { Context } from '../context.js';
+import { type SegmentForEvaluation, Strategy } from './strategy.js';
 
 export default class UnknownStrategy extends Strategy {
     constructor() {
@@ -14,7 +14,7 @@ export default class UnknownStrategy extends Strategy {
     }
 
     isEnabledWithConstraints(
-        parameters: unknown,
+        _parameters: unknown,
         context: Context,
         constraints: Iterable<Constraint>,
         segments: SegmentForEvaluation[],

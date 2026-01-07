@@ -63,13 +63,19 @@ const StyledTooltipTitle = styled('div')(({ theme }) => ({
 const StyledTooltipActions = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: theme.spacing(3),
     '&&& button': {
         fontSize: theme.fontSizes.smallBody,
     },
 }));
 
-// @ts-ignore
+const StyledBackButton = styled(Button)({
+    padding: 0,
+    minWidth: 0,
+});
+
+// @ts-expect-error
 export interface IDemoStepTooltipProps extends TooltipRenderProps {
     step: ITutorialTopicStep;
     topic: number;
@@ -92,14 +98,19 @@ export const DemoStepTooltip = ({
 }: IDemoStepTooltipProps) => {
     const nextLabel =
         stepIndex === 0
-            ? 'Start'
+            ? 'Start tutorial'
             : stepIndex === topics[topic].steps.length - 1
               ? 'Finish'
               : 'Next';
 
     if (step.target === 'body') {
         return (
-            <div {...tooltipProps}>
+            <div
+                onClick={(e) => {
+                    e.stopPropagation();
+                }}
+                {...tooltipProps}
+            >
                 <StyledDialog
                     open
                     onClose={(_, r) => {
@@ -112,28 +123,23 @@ export const DemoStepTooltip = ({
                         <CloseIcon />
                     </StyledCloseButton>
                     <StyledTooltipTitle>
-                        <ConditionallyRender
-                            condition={Boolean(step.title)}
-                            show={step.title}
-                            elseShow={
-                                <Typography fontWeight='bold'>
-                                    {topics[topic].title}
-                                </Typography>
-                            }
-                        />
+                        <Typography fontWeight='bold'>
+                            {step.title || topics[topic].title}
+                        </Typography>
                     </StyledTooltipTitle>
                     {step.content}
                     <StyledTooltipActions>
                         <div>
                             <ConditionallyRender
-                                condition={topic > 0 || stepIndex > 0}
+                                condition={
+                                    !step.hideBackButton && stepIndex > 0
+                                }
                                 show={
-                                    <Button
-                                        variant='outlined'
+                                    <StyledBackButton
                                         onClick={() => onBack(step)}
                                     >
                                         Back
-                                    </Button>
+                                    </StyledBackButton>
                                 }
                             />
                         </div>
@@ -159,33 +165,29 @@ export const DemoStepTooltip = ({
     }
 
     return (
-        <StyledTooltip {...tooltipProps}>
+        <StyledTooltip
+            onClick={(e) => {
+                e.stopPropagation();
+            }}
+            {...tooltipProps}
+        >
             <StyledCloseButton aria-label='close' onClick={onClose}>
                 <CloseIcon />
             </StyledCloseButton>
             <StyledTooltipTitle>
-                <ConditionallyRender
-                    condition={Boolean(step.title)}
-                    show={step.title}
-                    elseShow={
-                        <Typography fontWeight='bold'>
-                            {topics[topic].title}
-                        </Typography>
-                    }
-                />
+                <Typography fontWeight='bold'>
+                    {step.title || topics[topic].title}
+                </Typography>
             </StyledTooltipTitle>
             {step.content}
             <StyledTooltipActions>
                 <div>
                     <ConditionallyRender
-                        condition={topic > 0 || stepIndex > 0}
+                        condition={!step.hideBackButton && stepIndex > 0}
                         show={
-                            <Button
-                                variant='outlined'
-                                onClick={() => onBack(step)}
-                            >
+                            <StyledBackButton onClick={() => onBack(step)}>
                                 Back
-                            </Button>
+                            </StyledBackButton>
                         }
                     />
                 </div>

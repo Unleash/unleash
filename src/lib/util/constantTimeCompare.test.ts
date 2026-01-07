@@ -1,4 +1,4 @@
-import { constantTimeCompare } from './constantTimeCompare';
+import { constantTimeCompare } from './constantTimeCompare.js';
 
 test('constantTimeCompare', () => {
     expect(constantTimeCompare('', '')).toEqual(false);

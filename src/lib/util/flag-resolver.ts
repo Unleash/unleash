@@ -6,8 +6,9 @@ import type {
     IFlags,
     IFlagResolver,
     IFlagKey,
-} from '../types/experimental';
-import { getDefaultVariant } from 'unleash-client/lib/variant';
+    IImpactMetricsResolver,
+} from '../types/experimental.js';
+import { defaultVariant } from 'unleash-client/lib/variant.js';
 
 export default class FlagResolver implements IFlagResolver {
     private experiments: IFlags;
@@ -26,10 +27,17 @@ export default class FlagResolver implements IFlagResolver {
             const flag = flags[flagName];
             if (typeof flag === 'boolean') {
                 if (!flag) {
-                    flags[flagName] = this.externalResolver.isEnabled(
+                    const variant = this.externalResolver.getVariant(
                         flagName,
                         context,
                     );
+                    if (variant.enabled) {
+                        flags[flagName] = variant;
+                    } else {
+                        flags[flagName] =
+                            variant.feature_enabled ??
+                            this.externalResolver.isEnabled(flagName, context);
+                    }
                 }
             } else {
                 if (!flag?.enabled) {
@@ -48,7 +56,7 @@ export default class FlagResolver implements IFlagResolver {
         const exp = this.experiments[expName];
         if (exp) {
             if (typeof exp === 'boolean') return exp;
-            else return exp.enabled;
+            else if (exp.enabled) return exp.enabled;
         }
         return this.externalResolver.isEnabled(expName, context);
     }
@@ -56,10 +64,18 @@ export default class FlagResolver implements IFlagResolver {
     getVariant(expName: IFlagKey, context?: IFlagContext): Variant {
         const exp = this.experiments[expName];
         if (exp) {
-            if (typeof exp === 'boolean') return getDefaultVariant();
+            if (typeof exp === 'boolean') return defaultVariant;
             else if (exp.enabled) return exp;
         }
         return this.externalResolver.getVariant(expName, context);
+    }
+
+    getStaticContext(): IFlagContext {
+        return this.externalResolver.getStaticContext();
+    }
+
+    get impactMetrics(): IImpactMetricsResolver | undefined {
+        return this.externalResolver?.impactMetrics;
     }
 }
 

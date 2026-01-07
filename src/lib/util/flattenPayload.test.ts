@@ -1,4 +1,4 @@
-import { flattenPayload } from './flattenPayload';
+import { flattenPayload } from './flattenPayload.js';
 
 describe('flattenPayload', () => {
     it('should flatten a payload', () => {

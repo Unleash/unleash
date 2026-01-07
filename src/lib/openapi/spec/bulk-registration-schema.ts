@@ -1,11 +1,11 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { dateSchema } from './date-schema';
+import { dateSchema } from './date-schema.js';
 
 export const bulkRegistrationSchema = {
     $id: '#/components/schemas/bulkRegistrationSchema',
     type: 'object',
     required: ['appName', 'instanceId', 'environment'],
-    description: `An application registration. Defines the format POSTed by our server-side SDKs when they're starting up`,
+    description: `An application registration. Defines the format POSTed by our backend SDKs when they're starting up`,
     properties: {
         connectVia: {
             type: 'array',
@@ -40,7 +40,7 @@ export const bulkRegistrationSchema = {
         },
         instanceId: {
             description:
-                'A [(somewhat) unique identifier](https://docs.getunleash.io/reference/sdks/node#advanced-usage) for the application',
+                'A [(somewhat) unique identifier](https://docs.getunleash.io/sdks/node#advanced-usage) for the application',
             type: 'string',
             example: 'application-name-dacb1234',
         },
@@ -57,9 +57,17 @@ export const bulkRegistrationSchema = {
         },
         strategies: {
             description:
-                'Enabled [strategies](https://docs.getunleash.io/reference/activation-strategies) in the application',
+                'Enabled [strategies](https://docs.getunleash.io/concepts/activation-strategies) in the application',
             type: 'array',
             example: ['standard', 'gradualRollout'],
+            items: {
+                type: 'string',
+            },
+        },
+        projects: {
+            description: 'The list of projects used in the application',
+            type: 'array',
+            example: ['projectA', 'projectB'],
             items: {
                 type: 'string',
             },
@@ -69,6 +77,13 @@ export const bulkRegistrationSchema = {
                 'The version the sdk is running. Typically <client>:<version>',
             example: 'unleash-client-java:8.0.0',
             type: 'string',
+        },
+        sdkType: {
+            description: 'The sdk type',
+            example: 'backend',
+            type: 'string',
+            enum: ['frontend', 'backend', null],
+            nullable: true,
         },
     },
     components: {

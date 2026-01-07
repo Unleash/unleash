@@ -1,63 +1,71 @@
-import FakeFeatureStrategiesStore from '../../lib/features/feature-toggle/fakes/fake-feature-strategies-store';
-import FakeClientInstanceStore from './fake-client-instance-store';
-import FakeClientApplicationsStore from './fake-client-applications-store';
-import FakeFeatureToggleStore from '../../lib/features/feature-toggle/fakes/fake-feature-toggle-store';
-import FakeTagStore from './fake-tag-store';
-import FakeTagTypeStore from '../../lib/features/tag-type/fake-tag-type-store';
-import FakeEventStore from './fake-event-store';
-import FakeContextFieldStore from '../../lib/features/context/fake-context-field-store';
-import FakeSettingStore from './fake-setting-store';
-import FakeAddonStore from './fake-addon-store';
-import FakeProjectStore from './fake-project-store';
-import FakeUserStore from './fake-user-store';
-import FakeAccessStore from './fake-access-store';
-import FakeUserFeedbackStore from './fake-user-feedback-store';
-import FakeFeatureTagStore from './fake-feature-tag-store';
-import FakeEnvironmentStore from '../../lib/features/project-environments/fake-environment-store';
-import FakeStrategiesStore from './fake-strategies-store';
+import FakeFeatureStrategiesStore from '../../lib/features/feature-toggle/fakes/fake-feature-strategies-store.js';
+import FakeClientInstanceStore from './fake-client-instance-store.js';
+import FakeClientApplicationsStore from './fake-client-applications-store.js';
+import FakeFeatureToggleStore from '../../lib/features/feature-toggle/fakes/fake-feature-toggle-store.js';
+import FakeTagStore from './fake-tag-store.js';
+import FakeTagTypeStore from '../../lib/features/tag-type/fake-tag-type-store.js';
+import FakeEventStore from './fake-event-store.js';
+import FakeContextFieldStore from '../../lib/features/context/fake-context-field-store.js';
+import FakeSettingStore from './fake-setting-store.js';
+import FakeAddonStore from './fake-addon-store.js';
+import FakeProjectStore from './fake-project-store.js';
+import FakeUserStore from './fake-user-store.js';
+import FakeAccessStore from './fake-access-store.js';
+import FakeUserFeedbackStore from './fake-user-feedback-store.js';
+import FakeFeatureTagStore from './fake-feature-tag-store.js';
+import FakeEnvironmentStore from '../../lib/features/project-environments/fake-environment-store.js';
+import FakeStrategiesStore from './fake-strategies-store.js';
 import type {
     IImportTogglesStore,
     IntegrationEventsStore,
     IPrivateProjectStore,
     IUnleashStores,
-} from '../../lib/types';
-import FakeSessionStore from './fake-session-store';
-import FakeFeatureEnvironmentStore from './fake-feature-environment-store';
-import FakeApiTokenStore from './fake-api-token-store';
-import FakeFeatureTypeStore from './fake-feature-type-store';
-import FakeResetTokenStore from './fake-reset-token-store';
-import FakeClientFeatureToggleStore from '../../lib/features/client-feature-toggles/fakes/fake-client-feature-toggle-store';
-import FakeClientMetricsStoreV2 from '../../lib/features/metrics/client-metrics/fake-client-metrics-store-v2';
-import FakeUserSplashStore from './fake-user-splash-store';
-import FakeRoleStore from './fake-role-store';
-import FakeSegmentStore from './fake-segment-store';
-import FakeGroupStore from './fake-group-store';
-import FakePatStore from './fake-pat-store';
-import FakePublicSignupStore from './fake-public-signup-store';
-import FakeFavoriteFeaturesStore from './fake-favorite-features-store';
-import FakeFavoriteProjectsStore from './fake-favorite-projects-store';
-import { FakeAccountStore } from './fake-account-store';
-import FakeProjectStatsStore from './fake-project-stats-store';
-import { FakeDependentFeaturesStore } from '../../lib/features/dependent-features/fake-dependent-features-store';
-import { FakeLastSeenStore } from '../../lib/features/metrics/last-seen/fake-last-seen-store';
-import FakeFeatureSearchStore from '../../lib/features/feature-search/fake-feature-search-store';
-import { FakeInactiveUsersStore } from '../../lib/users/inactive/fakes/fake-inactive-users-store';
-import { FakeTrafficDataUsageStore } from '../../lib/features/traffic-data-usage/fake-traffic-data-usage-store';
-import { FakeSegmentReadModel } from '../../lib/features/segment/fake-segment-read-model';
-import { FakeProjectOwnersReadModel } from '../../lib/features/project/fake-project-owners-read-model';
-import { FakeFeatureLifecycleStore } from '../../lib/features/feature-lifecycle/fake-feature-lifecycle-store';
-import { FakeProjectFlagCreatorsReadModel } from '../../lib/features/project/fake-project-flag-creators-read-model';
-import { FakeFeatureStrategiesReadModel } from '../../lib/features/feature-toggle/fake-feature-strategies-read-model';
-import { FakeFeatureLifecycleReadModel } from '../../lib/features/feature-lifecycle/fake-feature-lifecycle-read-model';
-import { FakeLargestResourcesReadModel } from '../../lib/features/metrics/sizes/fake-largest-resources-read-model';
-import { FakeFeatureCollaboratorsReadModel } from '../../lib/features/feature-toggle/fake-feature-collaborators-read-model';
-import { createFakeProjectReadModel } from '../../lib/features/project/createProjectReadModel';
-import { FakeOnboardingStore } from '../../lib/features/onboarding/fake-onboarding-store';
-import { createFakeOnboardingReadModel } from '../../lib/features/onboarding/createOnboardingReadModel';
-import { FakeUserUnsubscribeStore } from '../../lib/features/user-subscriptions/fake-user-unsubscribe-store';
-import { FakeUserSubscriptionsReadModel } from '../../lib/features/user-subscriptions/fake-user-subscriptions-read-model';
-import { FakeUniqueConnectionStore } from '../../lib/features/unique-connection/fake-unique-connection-store';
-import { UniqueConnectionReadModel } from '../../lib/features/unique-connection/unique-connection-read-model';
+    ReleasePlanMilestoneStore,
+    ReleasePlanMilestoneStrategyStore,
+    ReleasePlanStore,
+    ReleasePlanTemplateStore,
+} from '../../lib/types/index.js';
+import FakeSessionStore from './fake-session-store.js';
+import FakeFeatureEnvironmentStore from './fake-feature-environment-store.js';
+import FakeApiTokenStore from './fake-api-token-store.js';
+import FakeFeatureTypeStore from './fake-feature-type-store.js';
+import FakeResetTokenStore from './fake-reset-token-store.js';
+import FakeClientFeatureToggleStore from '../../lib/features/client-feature-toggles/fakes/fake-client-feature-toggle-store.js';
+import FakeClientMetricsStoreV2 from '../../lib/features/metrics/client-metrics/fake-client-metrics-store-v2.js';
+import FakeUserSplashStore from './fake-user-splash-store.js';
+import FakeRoleStore from './fake-role-store.js';
+import FakeSegmentStore from './fake-segment-store.js';
+import FakeGroupStore from './fake-group-store.js';
+import FakePatStore from './fake-pat-store.js';
+import FakePublicSignupStore from './fake-public-signup-store.js';
+import FakeFavoriteFeaturesStore from './fake-favorite-features-store.js';
+import FakeFavoriteProjectsStore from './fake-favorite-projects-store.js';
+import { FakeAccountStore } from './fake-account-store.js';
+import FakeProjectStatsStore from './fake-project-stats-store.js';
+import { FakeDependentFeaturesStore } from '../../lib/features/dependent-features/fake-dependent-features-store.js';
+import { FakeLastSeenStore } from '../../lib/features/metrics/last-seen/fake-last-seen-store.js';
+import FakeFeatureSearchStore from '../../lib/features/feature-search/fake-feature-search-store.js';
+import { FakeInactiveUsersStore } from '../../lib/users/inactive/fakes/fake-inactive-users-store.js';
+import { FakeTrafficDataUsageStore } from '../../lib/features/traffic-data-usage/fake-traffic-data-usage-store.js';
+import { FakeSegmentReadModel } from '../../lib/features/segment/fake-segment-read-model.js';
+import { FakeProjectOwnersReadModel } from '../../lib/features/project/fake-project-owners-read-model.js';
+import { FakeFeatureLifecycleStore } from '../../lib/features/feature-lifecycle/fake-feature-lifecycle-store.js';
+import { FakeProjectFlagCreatorsReadModel } from '../../lib/features/project/fake-project-flag-creators-read-model.js';
+import { FakeFeatureStrategiesReadModel } from '../../lib/features/feature-toggle/fake-feature-strategies-read-model.js';
+import { FakeFeatureLifecycleReadModel } from '../../lib/features/feature-lifecycle/fake-feature-lifecycle-read-model.js';
+import { FakeLargestResourcesReadModel } from '../../lib/features/metrics/sizes/fake-largest-resources-read-model.js';
+import { FakeFeatureCollaboratorsReadModel } from '../../lib/features/feature-toggle/fake-feature-collaborators-read-model.js';
+import { createFakeProjectReadModel } from '../../lib/features/project/createProjectReadModel.js';
+import { FakeOnboardingStore } from '../../lib/features/onboarding/fake-onboarding-store.js';
+import { createFakeOnboardingReadModel } from '../../lib/features/onboarding/createOnboardingReadModel.js';
+import { FakeUserUnsubscribeStore } from '../../lib/features/user-subscriptions/fake-user-unsubscribe-store.js';
+import { FakeUserSubscriptionsReadModel } from '../../lib/features/user-subscriptions/fake-user-subscriptions-read-model.js';
+import { FakeUniqueConnectionStore } from '../../lib/features/unique-connection/fake-unique-connection-store.js';
+import { UniqueConnectionReadModel } from '../../lib/features/unique-connection/unique-connection-read-model.js';
+import FakeFeatureLinkStore from '../../lib/features/feature-links/fake-feature-link-store.js';
+import { FakeFeatureLinksReadModel } from '../../lib/features/feature-links/fake-feature-links-read-model.js';
+import { FakeUnknownFlagsStore } from '../../lib/features/metrics/unknown-flags/fake-unknown-flags-store.js';
+import type { UserUpdatesReadModel } from '../../lib/features/users/user-updates-read-model.js';
 
 const db = {
     select: () => ({
@@ -67,6 +75,7 @@ const db = {
 
 const createStores: () => IUnleashStores = () => {
     const uniqueConnectionStore = new FakeUniqueConnectionStore();
+    const unknownFlagsStore = new FakeUnknownFlagsStore();
 
     return {
         db,
@@ -84,6 +93,7 @@ const createStores: () => IUnleashStores = () => {
         addonStore: new FakeAddonStore(),
         projectStore: new FakeProjectStore(),
         userStore: new FakeUserStore(),
+        userUpdatesReadModel: {} as UserUpdatesReadModel,
         accessStore: new FakeAccessStore(),
         accountStore: new FakeAccountStore(),
         userFeedbackStore: new FakeUserFeedbackStore(),
@@ -129,6 +139,20 @@ const createStores: () => IUnleashStores = () => {
         uniqueConnectionReadModel: new UniqueConnectionReadModel(
             uniqueConnectionStore,
         ),
+        releasePlanStore: {
+            count: () => Promise.resolve(0),
+        } as ReleasePlanStore,
+        releasePlanMilestoneStore: {
+            count: () => Promise.resolve(0),
+        } as ReleasePlanMilestoneStore,
+        releasePlanTemplateStore: {
+            count: () => Promise.resolve(0),
+        } as ReleasePlanTemplateStore,
+        releasePlanMilestoneStrategyStore:
+            {} as ReleasePlanMilestoneStrategyStore,
+        featureLinkStore: new FakeFeatureLinkStore(),
+        unknownFlagsStore,
+        featureLinkReadModel: new FakeFeatureLinksReadModel(),
     };
 };
 

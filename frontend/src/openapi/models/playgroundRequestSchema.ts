@@ -3,16 +3,16 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SdkContextSchema } from './sdkContextSchema';
-import type { PlaygroundRequestSchemaProjects } from './playgroundRequestSchemaProjects';
+import type { SdkContextSchema } from './sdkContextSchema.js';
+import type { PlaygroundRequestSchemaProjects } from './playgroundRequestSchemaProjects.js';
 
 /**
- * Data for the playground API to evaluate toggles
+ * Data for the playground API to evaluate feature flags
  */
 export interface PlaygroundRequestSchema {
     context: SdkContextSchema;
-    /** The environment to evaluate toggles in. */
+    /** The environment to evaluate feature flags in. */
     environment: string;
-    /** A list of projects to check for toggles in. */
+    /** A list of projects to check for feature flags in. */
     projects?: PlaygroundRequestSchemaProjects;
 }

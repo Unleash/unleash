@@ -6,9 +6,9 @@ import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { getLocalizedDateString } from '../util';
+import { getLocalizedDateString } from '../util.ts';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
-import { DateRangePresets } from './DateRangePresets';
+import { DateRangePresets } from './DateRangePresets.tsx';
 
 export interface IFilterDateItemProps {
     name: string;
@@ -21,6 +21,7 @@ export interface IFilterDateItemProps {
     onChipClose?: () => void;
     state: FilterItemParams | null | undefined;
     operators: [string, ...string[]];
+    initMode?: 'auto-open' | 'manual';
 }
 
 export const FilterDateItem: FC<IFilterDateItemProps> = ({
@@ -31,6 +32,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     onChipClose,
     state,
     operators,
+    initMode = 'auto-open',
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
@@ -41,7 +43,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     };
 
     useEffect(() => {
-        if (!state) {
+        if (!state && initMode === 'auto-open') {
             open();
         }
     }, []);

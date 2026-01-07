@@ -1,4 +1,4 @@
-import { medianTimeToProduction } from './median-time-to-production';
+import { medianTimeToProduction } from './median-time-to-production.js';
 import type { InstanceInsightsSchema } from 'openapi';
 
 describe('medianTimeToProduction', () => {

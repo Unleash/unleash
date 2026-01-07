@@ -5,7 +5,7 @@ import {
     type FilterItemParamHolder,
     Filters,
     type IFilterItem,
-} from './Filters';
+} from './Filters.tsx';
 
 test('shoulder render all available filters', async () => {
     const availableFilters: IFilterItem[] = [
@@ -120,7 +120,7 @@ test('should remove selected item from the add filter list', async () => {
     );
 
     // initial selection list
-    const addFilterButton = await screen.findByText('Add Filter');
+    const addFilterButton = await screen.findByText('Filter');
     fireEvent.click(addFilterButton);
     expect((await screen.findByTestId(FILTERS_MENU)).textContent).toBe(
         'StateTags',

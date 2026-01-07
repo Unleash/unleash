@@ -1,5 +1,5 @@
 import joi from 'joi';
-import type { IMetricsBucket } from '../../../types';
+import type { IMetricsBucket } from '../../../types/index.js';
 
 const countSchema = joi
     .object()
@@ -39,7 +39,7 @@ export const clientMetricsEnvSchema = joi
     .object()
     .options({ stripUnknown: true })
     .keys({
-        featureName: joi.string().required(),
+        featureName: joi.string().required().allow(''),
         environment: joi.string().required(),
         appName: joi.string().required(),
         yes: joi.number().default(0),
@@ -69,6 +69,83 @@ export const applicationSchema = joi
         announced: joi.boolean().optional().default(false),
     });
 
+export const customMetricSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        name: joi.string().required(),
+        value: joi.number().required(),
+        labels: joi.object().pattern(joi.string(), joi.string()).optional(),
+    });
+
+export const customMetricsSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        metrics: joi.array().items(customMetricSchema).required(),
+    });
+
+export const metricSampleSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        value: joi.number().required(),
+        labels: joi
+            .object()
+            .pattern(
+                joi.string(),
+                joi.alternatives().try(joi.string(), joi.number()),
+            )
+            .optional(),
+    });
+
+export const histogramSampleSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        count: joi.number().required(),
+        sum: joi.number().required(),
+        buckets: joi
+            .array()
+            .items(
+                joi.object({
+                    le: joi
+                        .alternatives()
+                        .try(joi.number(), joi.string().valid('+Inf'))
+                        .required(),
+                    count: joi.number().required(),
+                }),
+            )
+            .required(),
+        labels: joi
+            .object()
+            .pattern(
+                joi.string(),
+                joi.alternatives().try(joi.string(), joi.number()),
+            )
+            .optional(),
+    });
+
+export const impactMetricSchema = joi
+    .object()
+    .options({ stripUnknown: true })
+    .keys({
+        name: joi.string().required(),
+        help: joi.string().required(),
+        type: joi.string().required(),
+        buckets: joi.array().items(joi.number()).optional(),
+        samples: joi.when('type', {
+            is: 'histogram',
+            then: joi.array().items(histogramSampleSchema).required(),
+            otherwise: joi.array().items(metricSampleSchema).required(),
+        }),
+    });
+
+export const impactMetricsSchema = joi
+    .array()
+    .items(impactMetricSchema)
+    .empty();
+
 export const batchMetricsSchema = joi
     .object()
     .options({ stripUnknown: true })
@@ -84,10 +161,7 @@ export const clientRegisterSchema = joi
         appName: joi.string().required(),
         instanceId: joi.string().empty(['', null]).default('default'),
         sdkVersion: joi.string().optional(),
-        strategies: joi
-            .array()
-            .required()
-            .items(joi.string(), joi.any().strip()),
+        strategies: joi.array().items(joi.string(), joi.any().strip()),
         started: joi.date().required(),
         interval: joi.number().required(),
         environment: joi.string().optional(),

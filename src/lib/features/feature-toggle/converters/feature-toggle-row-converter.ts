@@ -1,23 +1,19 @@
+import type { ITag } from '../../../tags/index.js';
 import type {
     PartialDeep,
     IFeatureToggleClient,
     IStrategyConfig,
     IFeatureToggleQuery,
-    ITag,
     IFlagResolver,
     IFeatureToggleListItem,
-} from '../../../types';
+} from '../../../types/index.js';
 
-import { mapValues, ensureStringValue } from '../../../util';
-import { sortStrategies } from '../../../util/sortStrategies';
-import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
+import { mapValues, ensureStringValue } from '../../../util/index.js';
+import { sortStrategies } from '../../../util/sortStrategies.js';
+import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type.js';
 
 export class FeatureToggleRowConverter {
-    private flagResolver: IFlagResolver;
-
-    constructor(flagResolver: IFlagResolver) {
-        this.flagResolver = flagResolver;
-    }
+    constructor(_flagResolver: IFlagResolver) {}
 
     isUnseenStrategyRow = (
         feature: PartialDeep<IFeatureToggleClient>,
@@ -147,7 +143,7 @@ export class FeatureToggleRowConverter {
         feature.name = row.name;
         feature.description = row.description;
         feature.project = row.project;
-        feature.stale = row.stale;
+        feature.stale = row.stale || false;
         feature.type = row.type;
         feature.lastSeenAt = row.last_seen_at;
         feature.variants = row.variants || [];
@@ -171,18 +167,18 @@ export class FeatureToggleRowConverter {
     buildFeatureToggleListFromRows = (
         rows: any[],
         featureQuery?: IFeatureToggleQuery,
-        includeDisabledStrategies?: boolean,
+        _includeDisabledStrategies?: boolean,
     ): IFeatureToggleListItem[] => {
         const result = rows.reduce((acc, r) => {
             let feature: PartialDeep<IFeatureToggleListItem> = acc[r.name] ?? {
                 strategies: [],
+                stale: r.stale || false,
             };
 
             feature = this.createBaseFeature(r, feature, featureQuery);
 
             feature.createdAt = r.created_at;
             feature.favorite = r.favorite;
-
             this.addLastSeenByEnvironment(feature, r);
 
             acc[r.name] = feature;
@@ -219,31 +215,5 @@ export class FeatureToggleRowConverter {
         }, {});
 
         return this.formatToggles(result);
-    };
-
-    buildArchivedFeatureToggleListFromRows = (
-        rows: any[],
-    ): IFeatureToggleListItem[] => {
-        const result = rows.reduce((acc, row) => {
-            const feature: PartialDeep<IFeatureToggleListItem> =
-                acc[row.name] ?? {};
-
-            feature.name = row.name;
-            feature.description = row.description;
-            feature.type = row.type;
-            feature.project = row.project;
-            feature.stale = row.stale;
-            feature.createdAt = row.created_at;
-            feature.impressionData = row.impression_data;
-            feature.lastSeenAt = row.last_seen_at;
-            feature.archivedAt = row.archived_at;
-
-            this.addLastSeenByEnvironment(feature, row);
-
-            acc[row.name] = feature;
-            return acc;
-        }, {});
-
-        return Object.values(result);
     };
 }

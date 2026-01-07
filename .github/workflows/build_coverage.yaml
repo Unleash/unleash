@@ -1,6 +1,7 @@
 name: Coverage
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -13,9 +14,6 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [20.x]
     services:
       # Label used to access the service container
       postgres:
@@ -33,35 +31,26 @@ jobs:
 
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
         with:
-          node-version: 20.x
+          node-version: 22.x
           cache: 'yarn'
       - name: Enable corepack
         run: corepack enable
-      - run: yarn
-      - run: yarn build:frontend:if-needed
+      - run: yarn install --immutable
+        env:
+          YARN_ENABLE_SCRIPTS: false
+      - run: yarn run build:backend
       - run: yarn run test:coverage
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-      #- run: |
-      ##    git config --global user.name "${GH_NAME}"
-      #    git config --global user.email "${GH_EMAIL}"
-      #    GIT_USER="${GH_NAME}"
-      #    echo "machine github.com login ${GH_NAME} password ${GITHUB_TOKEN}" > ~/.netrc
-      #
-      #    git add coverage
-      #    git diff-index --quiet HEAD || git commit -m 'chore: update coverage reports'
-      #    git push origin main
-      #  env:
-      #      GH_NAME: 'ivarconr'
-      #      GH_EMAIL: 'ivarconr@gmail.com'
-      #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Coveralls
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          format: cobertura
+          file: coverage/cobertura-coverage.xml

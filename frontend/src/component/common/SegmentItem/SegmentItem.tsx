@@ -1,6 +1,5 @@
-import { useState, type VFC } from 'react';
+import { useId, useMemo, useState, type FC } from 'react';
 import { Link } from 'react-router-dom';
-import DonutLarge from '@mui/icons-material/DonutLarge';
 import type { ISegment } from 'interfaces/segment';
 import {
     Accordion,
@@ -8,133 +7,139 @@ import {
     AccordionSummary,
     Button,
     styled,
-    Typography,
 } from '@mui/material';
-import { ConstraintAccordionList } from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
+import { objectId } from 'utils/objectId';
+import {
+    ConstraintListItem,
+    ConstraintsList,
+} from 'component/common/ConstraintsList/ConstraintsList';
+import { ConstraintAccordionView } from '../NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView.tsx';
 
-interface ISegmentItemProps {
+type SegmentItemProps = {
     segment: Partial<ISegment>;
     isExpanded?: boolean;
     disabled?: boolean | null;
     constraintList?: JSX.Element;
     headerContent?: JSX.Element;
-}
+};
 
-const StyledAccordion = styled(Accordion, {
-    shouldForwardProp: (prop) => prop !== 'isDisabled',
-})<{ isDisabled: boolean | null }>(({ theme, isDisabled }) => ({
-    border: `1px solid ${theme.palette.divider}`,
-    '&.segment-accordion': {
-        borderRadius: theme.shape.borderRadiusMedium,
-    },
+const StyledConstraintListItem = styled(ConstraintListItem)(() => ({
+    padding: 0,
+}));
+
+const StyledAccordion = styled(Accordion)(() => ({
     boxShadow: 'none',
     margin: 0,
-    transition: 'all 0.1s ease',
-    '&:before': {
-        opacity: '0 !important',
+    padding: 0,
+    '::before': {
+        // MUI separator between accordions
+        display: 'none',
     },
-    '&.Mui-expanded': { backgroundColor: theme.palette.neutral.light },
-    backgroundColor: isDisabled
-        ? theme.palette.envAccordion.disabled
-        : theme.palette.background.paper,
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
-    margin: theme.spacing(0, 0.5),
     fontSize: theme.typography.body2.fontSize,
-    '.MuiAccordionSummary-content': {
-        display: 'flex',
-        alignItems: 'center',
+    minHeight: 'unset',
+    ':focus-within': {
+        backgroundColor: 'inherit',
     },
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    padding: theme.spacing(0.5, 3, 2.5),
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
-    marginLeft: theme.spacing(1),
+    paddingRight: theme.spacing(0.5),
     '&:hover': {
         textDecoration: 'underline',
     },
 }));
-const StyledText = styled('span', {
-    shouldForwardProp: (prop) => prop !== 'disabled',
-})<{ disabled: boolean | null }>(({ theme, disabled }) => ({
-    color: disabled ? theme.palette.text.secondary : 'inherit',
+
+const StyledActionsContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: 'auto',
 }));
 
-export const SegmentItem: VFC<ISegmentItemProps> = ({
+const StyledButton = styled(Button)(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+}));
+
+const StyledNoConstraintsText = styled('p')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
+}));
+
+export const SegmentItem: FC<SegmentItemProps> = ({
     segment,
     isExpanded,
     headerContent,
     constraintList,
-    disabled = false,
 }) => {
     const [isOpen, setIsOpen] = useState(isExpanded || false);
+    const segmentDetailsId = useId();
+
+    const constraints = useMemo(() => {
+        if (constraintList) {
+            return constraintList;
+        }
+
+        if (segment.constraints?.length) {
+            return (
+                <ConstraintsList>
+                    {segment.constraints.map((constraint, index) => (
+                        <ConstraintAccordionView
+                            key={`${objectId(constraint)}-${index}`}
+                            constraint={constraint}
+                        />
+                    ))}
+                </ConstraintsList>
+            );
+        }
+
+        return (
+            <StyledNoConstraintsText>
+                This segment has no constraints.
+            </StyledNoConstraintsText>
+        );
+    }, [constraintList, segment.constraints]);
 
     return (
-        <StyledAccordion
-            className='segment-accordion'
-            isDisabled={disabled}
-            expanded={isOpen}
-        >
-            <StyledAccordionSummary id={`segment-accordion-${segment.id}`}>
-                <DonutLarge
-                    sx={(theme) => ({
-                        mr: 1,
-                        color: disabled
-                            ? theme.palette.neutral.border
-                            : theme.palette.secondary.main,
-                    })}
-                />
-                <StyledText disabled={disabled}>Segment:</StyledText>
-                <StyledLink to={`/segments/edit/${segment.id}`}>
-                    {segment.name}
-                </StyledLink>
-                <ConditionallyRender
-                    condition={Boolean(headerContent)}
-                    show={headerContent}
-                />
-                <ConditionallyRender
-                    condition={!isExpanded}
-                    show={
-                        <Button
-                            size='small'
-                            variant='outlined'
-                            onClick={() => setIsOpen((value) => !value)}
-                            sx={{
-                                my: 0,
-                                ml: 'auto',
-                                fontSize: (theme) =>
-                                    theme.typography.body2.fontSize,
-                            }}
-                        >
-                            {isOpen ? 'Close preview' : 'Preview'}
-                        </Button>
-                    }
-                />
-            </StyledAccordionSummary>
-            <AccordionDetails sx={{ pt: 0 }}>
-                <ConditionallyRender
-                    condition={Boolean(constraintList)}
-                    show={constraintList}
-                    elseShow={
-                        <ConditionallyRender
-                            condition={(segment?.constraints?.length || 0) > 0}
-                            show={
-                                <ConstraintAccordionList
-                                    constraints={segment!.constraints!}
-                                    showLabel={false}
-                                />
-                            }
-                            elseShow={
-                                <Typography>
-                                    This segment has no constraints.
-                                </Typography>
-                            }
-                        />
-                    }
-                />
-            </AccordionDetails>
-        </StyledAccordion>
+        <StyledConstraintListItem>
+            <StyledAccordion
+                expanded={isOpen}
+                disableGutters
+                TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
+            >
+                <StyledAccordionSummary
+                    id={`segment-accordion-${segment.id}`}
+                    tabIndex={-1}
+                    aria-controls={segmentDetailsId}
+                >
+                    <StrategyEvaluationItem type='Segment'>
+                        <StyledLink to={`/segments/edit/${segment.id}`}>
+                            {segment.name}
+                        </StyledLink>
+                    </StrategyEvaluationItem>
+                    {headerContent ? headerContent : null}
+                    {!isExpanded ? (
+                        <StyledActionsContainer>
+                            <StyledButton
+                                aria-controls={segmentDetailsId}
+                                size='small'
+                                variant='outlined'
+                                onClick={() => setIsOpen((value) => !value)}
+                            >
+                                {isOpen ? 'Close preview' : 'Preview'}
+                            </StyledButton>
+                        </StyledActionsContainer>
+                    ) : null}
+                </StyledAccordionSummary>
+                <StyledAccordionDetails>{constraints}</StyledAccordionDetails>
+            </StyledAccordion>
+        </StyledConstraintListItem>
     );
 };

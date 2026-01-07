@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { RolesTable } from './RolesTable/RolesTable';
+import { RolesTable } from './RolesTable/RolesTable.tsx';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { Tab, Tabs, styled, useMediaQuery } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';

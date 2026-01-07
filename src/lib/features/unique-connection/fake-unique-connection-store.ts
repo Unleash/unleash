@@ -1,9 +1,9 @@
-import type { IUniqueConnectionStore } from '../../types';
+import type { IUniqueConnectionStore } from '../../types/index.js';
 import type {
     BucketId,
     TimedUniqueConnections,
     UniqueConnections,
-} from './unique-connection-store-type';
+} from './unique-connection-store-type.js';
 
 export class FakeUniqueConnectionStore implements IUniqueConnectionStore {
     private uniqueConnectionsRecord: Record<string, TimedUniqueConnections> =

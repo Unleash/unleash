@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { projectActivitySchema } from './project-activity-schema';
+import { projectActivitySchema } from './project-activity-schema.js';
 
 const stageDataWithAverageDaysSchema = {
     type: 'object',
@@ -32,6 +32,7 @@ export const projectStatusSchema = {
         'activityCountByDate',
         'resources',
         'health',
+        'technicalDebt',
         'lifecycleSummary',
         'staleFlags',
     ],
@@ -52,6 +53,21 @@ export const projectStatusSchema = {
                 current: {
                     type: 'integer',
                     minimum: 0,
+                    description: `The project's current health score, based on the ratio of healthy flags to stale and potentially stale flags.`,
+                    example: 100,
+                },
+            },
+        },
+        technicalDebt: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['current'],
+            description: "Information about the project's health rating",
+            properties: {
+                current: {
+                    type: 'integer',
+                    minimum: 0,
+                    maximum: 100,
                     description: `The project's current health score, based on the ratio of healthy flags to stale and potentially stale flags.`,
                     example: 100,
                 },

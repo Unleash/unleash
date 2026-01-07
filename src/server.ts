@@ -1,4 +1,4 @@
-import { start } from './lib/server-impl';
+import { start } from './lib/server-impl.js';
 
 try {
     start();

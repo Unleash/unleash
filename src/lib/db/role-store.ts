@@ -1,16 +1,16 @@
 import type EventEmitter from 'events';
-import type { Logger, LogProvider } from '../logger';
-import NotFoundError from '../error/notfound-error';
-import type { ICustomRole } from '../types/model';
+import type { Logger, LogProvider } from '../logger.js';
+import NotFoundError from '../error/notfound-error.js';
+import type { ICustomRole } from '../types/model.js';
 import type {
     ICustomRoleInsert,
     ICustomRoleUpdate,
     IRoleStore,
-} from '../types/stores/role-store';
-import type { IRole, IUserRole } from '../types/stores/access-store';
-import type { Db } from './db';
-import { PROJECT_ROLE_TYPES, ROOT_ROLE_TYPES } from '../util';
-import type { RoleSchema } from '../openapi';
+} from '../types/stores/role-store.js';
+import type { IRole, IUserRole } from '../types/stores/access-store.js';
+import type { Db } from './db.js';
+import { PROJECT_ROLE_TYPES, ROOT_ROLE_TYPES } from '../util/index.js';
+import type { RoleSchema } from '../openapi/index.js';
 
 const T = {
     ROLE_USER: 'role_user',

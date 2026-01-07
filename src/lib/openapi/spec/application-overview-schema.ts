@@ -1,7 +1,7 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { applicationOverviewEnvironmentSchema } from './application-overview-environment-schema';
-import { applicationOverviewIssuesSchema } from './application-overview-issues-schema';
-import { applicationEnvironmentIssuesSchema } from './application-environment-issues-schema';
+import { applicationOverviewEnvironmentSchema } from './application-overview-environment-schema.js';
+import { applicationOverviewIssuesSchema } from './application-overview-issues-schema.js';
+import { applicationEnvironmentIssuesSchema } from './application-environment-issues-schema.js';
 
 export const applicationOverviewSchema = {
     $id: '#/components/schemas/applicationOverviewSchema',

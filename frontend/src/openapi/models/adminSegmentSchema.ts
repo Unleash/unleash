@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema';
+import type { ConstraintSchema } from './constraintSchema.js';
 
 /**
- * A description of a [segment](https://docs.getunleash.io/reference/segments)
+ * A description of a [segment](https://docs.getunleash.io/concepts/segments)
  */
 export interface AdminSegmentSchema {
     /** The list of constraints that are used in this segment */

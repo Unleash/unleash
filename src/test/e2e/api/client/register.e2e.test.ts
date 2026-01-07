@@ -1,8 +1,9 @@
-import faker from 'faker';
-import { type IUnleashTest, setupApp } from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import version from '../../../../lib/util/version';
+import { faker } from '@faker-js/faker';
+import { type IUnleashTest, setupApp } from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import version from '../../../../lib/util/version.js';
+import { vi } from 'vitest';
 
 const asyncFilter = async (arr, predicate) => {
     const results = await Promise.all(arr.map(predicate));
@@ -14,9 +15,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('register_client', getLogger, {
-        dbInitMethod: 'legacy' as const,
-    });
+    db = await dbInit('register_client', getLogger);
     app = await setupApp(db.stores);
 });
 
@@ -41,7 +40,7 @@ test('should register client', async () => {
 
 test('should allow client to register multiple times', async () => {
     expect.assertions(2);
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const { clientInstanceStore, clientApplicationsStore } = db.stores;
 
     const clientRegistration = {
@@ -62,11 +61,13 @@ test('should allow client to register multiple times', async () => {
         .send(clientRegistration)
         .expect(202);
 
-    jest.advanceTimersByTime(6000);
-    // @ts-expect-error - Incomplete client registration
-    expect(clientApplicationsStore.exists(clientRegistration)).toBeTruthy();
-    expect(clientInstanceStore.exists(clientRegistration)).toBeTruthy();
-    jest.useRealTimers();
+    await app.services.clientInstanceService.bulkAdd();
+
+    expect(
+        await clientApplicationsStore.exists(clientRegistration.appName),
+    ).toBeTruthy();
+    expect(await clientInstanceStore.exists(clientRegistration)).toBeTruthy();
+    vi.useRealTimers();
 });
 
 test.skip('Should handle a massive bulk registration', async () => {
@@ -86,14 +87,14 @@ test.skip('Should handle a massive bulk registration', async () => {
     while (clients.length < 2000) {
         const clientRegistration = {
             appName: faker.internet.domainName(),
-            instanceId: faker.datatype.uuid(),
+            instanceId: faker.string.uuid(),
             strategies: ['default'],
             started: Date.now(),
-            interval: faker.datatype.number(),
+            interval: faker.number.int(),
             sdkVersion: version,
             icon: '',
             description: faker.company.catchPhrase(),
-            color: faker.internet.color(),
+            color: faker.color.rgb(),
         };
         clients.push(clientRegistration);
         // eslint-disable-next-line no-await-in-loop

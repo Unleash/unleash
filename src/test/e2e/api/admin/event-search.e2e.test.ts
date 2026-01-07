@@ -1,66 +1,33 @@
-import type { EventSearchQueryParameters } from '../../../../lib/openapi/spec/event-search-query-parameters';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
+import type { EventSearchQueryParameters } from '../../../../lib/openapi/spec/event-search-query-parameters.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 
 import {
-    FEATURE_CREATED,
     type IUnleashConfig,
     type IUnleashStores,
     RoleName,
-    USER_CREATED,
-} from '../../../../lib/types';
-import type { AccessService, EventService } from '../../../../lib/services';
-import getLogger from '../../../fixtures/no-logger';
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import { createEventsService } from '../../../../lib/features';
-import { createTestConfig } from '../../../config/test-config';
-import type { IRole } from '../../../../lib/types/stores/access-store';
+} from '../../../../lib/types/index.js';
+import type { EventService } from '../../../../lib/services/index.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import {
+    createUserWithRootRole,
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import { createEventsService } from '../../../../lib/features/index.js';
+import { createTestConfig } from '../../../config/test-config.js';
+import { FEATURE_CREATED, USER_CREATED } from '../../../../lib/events/index.js';
+import { withTransactional } from '../../../../lib/db/transaction.js';
+import { EventStore } from '../../../../lib/features/events/event-store.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let eventService: EventService;
 const TEST_USER_ID = -9999;
-const regularUserName = 'import-user';
-const adminUserName = 'admin-user';
+const regularEmail = 'import-user@getunleash.io';
+const adminEmail = 'admin-user@getunleash.io';
 
 const config: IUnleashConfig = createTestConfig();
-let adminRole: IRole;
 let stores: IUnleashStores;
-let accessService: AccessService;
-
-const loginRegularUser = () =>
-    app.request
-        .post(`/auth/demo/login`)
-        .send({
-            email: `${regularUserName}@getunleash.io`,
-        })
-        .expect(200);
-
-const loginAdminUser = () =>
-    app.request
-        .post(`/auth/demo/login`)
-        .send({
-            email: `${adminUserName}@getunleash.io`,
-        })
-        .expect(200);
-
-const createUserEditorAccess = async (name, email) => {
-    const { userStore } = stores;
-    const user = await userStore.insert({
-        name,
-        email,
-    });
-    return user;
-};
-
-const createUserAdminAccess = async (name, email) => {
-    const { userStore } = stores;
-    const user = await userStore.insert({
-        name,
-        email,
-    });
-    await accessService.addUserToRole(user.id, adminRole.id, 'default');
-    return user;
-};
 
 beforeAll(async () => {
     db = await dbInit('event_search', getLogger);
@@ -79,19 +46,18 @@ beforeAll(async () => {
 
     eventService = createEventsService(db.rawDatabase, config);
 
-    accessService = app.services.accessService;
+    await createUserWithRootRole({
+        app,
+        stores,
+        email: regularEmail,
+    });
 
-    const roles = await accessService.getRootRoles();
-    adminRole = roles.find((role) => role.name === RoleName.ADMIN)!;
-
-    await createUserEditorAccess(
-        regularUserName,
-        `${regularUserName}@getunleash.io`,
-    );
-    await createUserAdminAccess(
-        adminUserName,
-        `${adminUserName}@getunleash.io`,
-    );
+    await createUserWithRootRole({
+        app,
+        stores,
+        email: adminEmail,
+        roleName: RoleName.ADMIN,
+    });
 });
 
 afterAll(async () => {
@@ -100,7 +66,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-    await loginAdminUser();
+    await app.login({ email: adminEmail });
     await db.stores.featureToggleStore.deleteAll();
     await db.stores.segmentStore.deleteAll();
     await db.stores.eventStore.deleteAll();
@@ -517,7 +483,7 @@ test('should filter events by project using IS_ANY_OF', async () => {
 });
 
 test('should not show user creation events for non-admins', async () => {
-    await loginRegularUser();
+    await app.login({ email: regularEmail });
     await eventService.storeEvent({
         type: USER_CREATED,
         createdBy: 'test-user',
@@ -574,4 +540,320 @@ test('should show user creation events for admins', async () => {
         ],
         total: 2,
     });
+});
+
+test('should filter events by environment', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        environment: 'production',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        environment: 'staging',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body } = await searchEvents({ environment: 'IS:production' });
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: 'feature-created',
+                environment: 'production',
+            },
+        ],
+        total: 1,
+    });
+});
+
+test('should filter events by environment using IS_ANY_OF', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        environment: 'production',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        environment: 'staging',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        environment: 'development',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body } = await searchEvents({
+        environment: 'IS_ANY_OF:production,staging',
+    });
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: 'feature-created',
+                environment: 'staging',
+            },
+            {
+                type: 'feature-created',
+                environment: 'production',
+            },
+        ],
+        total: 2,
+    });
+});
+
+test('should filter events by ID', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature1' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature2' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature3' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body: allEventsResponse } = await searchEvents({});
+    const targetEvent = allEventsResponse.events.find(
+        (e: any) => e.data.name === 'feature2',
+    );
+
+    const { body } = await searchEvents({ id: `IS:${targetEvent.id}` });
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                id: targetEvent.id,
+                type: 'feature-created',
+                data: { name: 'feature2' },
+            },
+        ],
+        total: 1,
+    });
+});
+
+test('should filter events by multiple IDs using IS_ANY_OF', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature1' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature2' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature3' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body: allEventsResponse } = await searchEvents({});
+    const targetEvent1 = allEventsResponse.events.find(
+        (e: any) => e.data.name === 'feature1',
+    );
+    const targetEvent3 = allEventsResponse.events.find(
+        (e: any) => e.data.name === 'feature3',
+    );
+
+    const { body } = await searchEvents({
+        id: `IS_ANY_OF:${targetEvent1.id},${targetEvent3.id}`,
+    });
+
+    expect(body.total).toBe(2);
+    expect(body.events).toHaveLength(2);
+
+    const returnedIds = body.events.map((e: any) => e.id);
+    expect(returnedIds).toContain(targetEvent1.id);
+    expect(returnedIds).toContain(targetEvent3.id);
+
+    const feature2Event = allEventsResponse.events.find(
+        (e: any) => e.data.name === 'feature2',
+    );
+    expect(returnedIds).not.toContain(feature2Event.id);
+});
+
+test('should filter events by group ID', async () => {
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
+
+    const events = [
+        {
+            type: FEATURE_CREATED,
+            project: 'default',
+            data: { name: 'feature1' },
+            createdBy: 'test-user',
+            createdByUserId: TEST_USER_ID,
+            ip: '127.0.0.1',
+        },
+        {
+            type: FEATURE_CREATED,
+            project: 'default',
+            data: { name: 'feature2' },
+            createdBy: 'test-user',
+            createdByUserId: TEST_USER_ID,
+            ip: '127.0.0.1',
+        },
+    ];
+
+    await eventStoreService.transactional(
+        async (transactionalEventStore) => {
+            await transactionalEventStore.batchStore(events);
+        },
+        { type: 'transaction', id: '1' },
+    );
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature3' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body } = await searchEvents({ groupId: 'IS:1' });
+
+    expect(body.total).toBe(2);
+    expect(body.events).toHaveLength(2);
+    expect(body.events.every((e: any) => e.groupId === '1')).toBe(true);
+});
+
+test('should filter events by multiple group IDs using IS_ANY_OF', async () => {
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
+
+    const event1 = {
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature1' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    };
+    const event2 = {
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature2' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    };
+    const event3 = {
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { name: 'feature3' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    };
+
+    await eventStoreService.transactional(
+        async (transactionalEventStore) => {
+            await transactionalEventStore.store(event1);
+        },
+        { type: 'transaction', id: '10' },
+    );
+
+    await eventStoreService.transactional(
+        async (transactionalEventStore) => {
+            await transactionalEventStore.store(event2);
+        },
+        { type: 'transaction', id: '20' },
+    );
+
+    await eventStoreService.transactional(
+        async (transactionalEventStore) => {
+            await transactionalEventStore.store(event3);
+        },
+        { type: 'transaction', id: '30' },
+    );
+
+    const { body } = await searchEvents({ groupId: 'IS_ANY_OF:10,30' });
+
+    expect(body.total).toBe(2);
+    expect(body.events).toHaveLength(2);
+
+    const returnedGroupIds = body.events.map((e: any) => e.groupId);
+    expect(returnedGroupIds).toContain('10');
+    expect(returnedGroupIds).toContain('30');
+    expect(returnedGroupIds).not.toContain('20');
+});
+
+test('Should return empty result when filtering by non-existent group ID', async () => {
+    const eventStoreService = withTransactional(
+        (db) => new EventStore(db, getLogger),
+        db.rawDatabase,
+    );
+
+    await eventStoreService.transactional(
+        async (transactionalEventStore) => {
+            await transactionalEventStore.store({
+                type: FEATURE_CREATED,
+                project: 'default',
+                data: { name: 'feature1' },
+                createdBy: 'test-user',
+                createdByUserId: TEST_USER_ID,
+                ip: '127.0.0.1',
+            });
+        },
+        { type: 'transaction', id: '1' },
+    );
+
+    const { body } = await searchEvents({ groupId: 'IS:999' });
+
+    expect(body.total).toBe(0);
+    expect(body.events).toHaveLength(0);
 });

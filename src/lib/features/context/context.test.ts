@@ -1,10 +1,10 @@
 import supertest, { type Test } from 'supertest';
-import { createTestConfig } from '../../../test/config/test-config';
-import createStores from '../../../test/fixtures/store';
-import { createServices } from '../../services';
-import permissions from '../../../test/fixtures/permissions';
-import getApp from '../../app';
-import type TestAgent from 'supertest/lib/agent';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import createStores from '../../../test/fixtures/store.js';
+import { createServices } from '../../services/index.js';
+import permissions from '../../../test/fixtures/permissions.js';
+import getApp from '../../app.js';
+import type TestAgent from 'supertest/lib/agent.d.ts';
 
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;

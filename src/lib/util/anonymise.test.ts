@@ -1,4 +1,4 @@
-import { anonymise, anonymiseKeys } from './anonymise';
+import { anonymise, anonymiseKeys } from './anonymise.js';
 
 const REGEX_MATCH = /^[a-f0-9]{9}@unleash\.run$/;
 
@@ -16,10 +16,8 @@ describe('anonymiseKeys', () => {
         123,
         [1, 2, 3],
         { test: 'test' },
-    ])(
-        'A parameter without keys (non-object, non-array) should return the same value',
-        (obj) => expect(anonymiseKeys(obj!, [])).toStrictEqual(obj),
-    );
+    ])('A parameter without keys (non-object, non-array) should return the same value', (obj) =>
+        expect(anonymiseKeys(obj!, [])).toStrictEqual(obj));
 
     test('An object should anonymise the specified keys', () => {
         expect(

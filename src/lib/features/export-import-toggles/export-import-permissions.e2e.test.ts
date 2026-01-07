@@ -1,9 +1,11 @@
 import {
     type IUnleashTest,
     setupAppWithAuth,
-} from '../../../test/e2e/helpers/test-helper';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+} from '../../../test/e2e/helpers/test-helper.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     DEFAULT_PROJECT,
     type IContextFieldStore,
@@ -13,12 +15,15 @@ import {
     type IProjectStore,
     type IUnleashStores,
     RoleName,
-} from '../../types';
-import type { ImportTogglesSchema, VariantsSchema } from '../../openapi';
-import type { IContextFieldDto } from '../context/context-field-store-type';
-import type { AccessService } from '../../services';
-import { DEFAULT_ENV } from '../../util';
-import type { IRole } from '../../types/stores/access-store';
+} from '../../types/index.js';
+import type {
+    ImportTogglesSchema,
+    VariantsSchema,
+} from '../../openapi/index.js';
+import type { IContextFieldDto } from '../context/context-field-store-type.js';
+import type { AccessService } from '../../services/index.js';
+import { DEFAULT_ENV } from '../../util/index.js';
+import type { IRole } from '../../types/stores/access-store.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -262,7 +267,7 @@ beforeAll(async () => {
     contextFieldStore = db.stores.contextFieldStore;
 
     const roles = await accessService.getRootRoles();
-    adminRole = roles.find((role) => role.name === RoleName.ADMIN);
+    adminRole = roles.find((role) => role.name === RoleName.ADMIN)!;
 
     await createUserEditorAccess(
         regularUserName,

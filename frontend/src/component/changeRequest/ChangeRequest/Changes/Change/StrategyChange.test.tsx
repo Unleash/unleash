@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { StrategyChange } from './StrategyChange';
+import { StrategyChange } from './StrategyChange.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -107,19 +107,26 @@ test('Editing strategy before change request is applied diffs against current st
         { route: `/projects/${projectId}` },
     );
 
-    await screen.findByText('Editing strategy:');
+    await screen.findByText('Editing strategy');
     await screen.findByText('change_request_title');
     await screen.findByText('current_title');
     expect(screen.queryByText('snapshot_title')).not.toBeInTheDocument();
 
-    const viewDiff = await screen.findByText('View Diff');
-    await userEvent.hover(viewDiff);
-    await screen.findByText(`- parameters.rollout: "${currentRollout}"`);
-    await screen.findByText('- variants.0.name: "current_variant"');
-    await screen.findByText('+ variants.0.name: "change_variant"');
-
     await screen.findByText('Updating strategy variants to:');
-    await screen.findByText('change_variant');
+    const variants = await screen.findAllByText('change_variant');
+    expect(variants).toHaveLength(2);
+
+    const viewDiff = await screen.findByRole('tab', {
+        name: 'View diff',
+    });
+    await userEvent.click(viewDiff);
+
+    const rollout = await screen.findByText(`rollout: "${currentRollout}"`);
+    expect(rollout).toHaveClass('deletion');
+    const oldName = await screen.findByText('name: "current_variant"');
+    expect(oldName).toHaveClass('deletion');
+    const newName = await screen.findByText('name: "change_variant"');
+    expect(newName).toHaveClass('addition');
 });
 
 test('Editing strategy after change request is applied diffs against the snapshot', async () => {
@@ -176,20 +183,31 @@ test('Editing strategy after change request is applied diffs against the snapsho
         { route: `/projects/${projectId}` },
     );
 
-    await screen.findByText('Editing strategy:');
+    await screen.findByText('Editing strategy');
     await screen.findByText('change_request_title');
     await screen.findByText('snapshot_title');
     expect(screen.queryByText('current_title')).not.toBeInTheDocument();
 
-    const viewDiff = await screen.findByText('View Diff');
-    await userEvent.hover(viewDiff);
-    await screen.findByText(`- parameters.rollout: "${snapshotRollout}"`);
-    await screen.findByText(`+ parameters.rollout: "${changeRequestRollout}"`);
-    await screen.findByText('- variants.0.name: "snapshot_variant"');
-    await screen.findByText('+ variants.0.name: "change_variant"');
-
     await screen.findByText('Updating strategy variants to:');
-    await screen.findByText('change_variant');
+    const variants = await screen.findAllByText('change_variant');
+    expect(variants).toHaveLength(2);
+
+    const viewDiff = await screen.findByRole('tab', {
+        name: 'View diff',
+    });
+    await userEvent.click(viewDiff);
+
+    const oldRollout = await screen.findByText(`rollout: "${snapshotRollout}"`);
+    expect(oldRollout).toHaveClass('deletion');
+    const newRollout = await screen.findByText(
+        `rollout: "${changeRequestRollout}"`,
+    );
+
+    expect(newRollout).toHaveClass('addition');
+    const oldName = await screen.findByText('name: "snapshot_variant"');
+    expect(oldName).toHaveClass('deletion');
+    const newName = await screen.findByText('name: "change_variant"');
+    expect(newName).toHaveClass('addition');
 });
 
 test('Deleting strategy before change request is applied diffs against current strategy', async () => {
@@ -218,16 +236,17 @@ test('Deleting strategy before change request is applied diffs against current s
         { route: `/projects/${projectId}` },
     );
 
-    await screen.findByText('- Deleting strategy:');
-    await screen.findByText('Gradual rollout');
+    await screen.findByText('Deleting strategy');
     await screen.findByText('current_title');
 
-    const viewDiff = await screen.findByText('View Diff');
-    await userEvent.hover(viewDiff);
-    await screen.findByText('- constraints (deleted)');
-
-    await screen.findByText('Deleting strategy variants:');
     await screen.findByText('current_variant');
+
+    const viewDiff = await screen.findByRole('tab', {
+        name: 'View diff',
+    });
+    await userEvent.click(viewDiff);
+    const element = await screen.findByText('name: "flexibleRollout"');
+    expect(element).toHaveClass('deletion');
 });
 
 test('Deleting strategy after change request is applied diffs against the snapshot', async () => {
@@ -272,17 +291,19 @@ test('Deleting strategy after change request is applied diffs against the snapsh
         { route: `/projects/${projectId}` },
     );
 
-    await screen.findByText('- Deleting strategy:');
-    await screen.findByText('Gradual rollout');
+    await screen.findByText('Deleting strategy');
     await screen.findByText('snapshot_title');
     expect(screen.queryByText('current_title')).not.toBeInTheDocument();
 
-    const viewDiff = await screen.findByText('View Diff');
-    await userEvent.hover(viewDiff);
-    await screen.findByText('- constraints (deleted)');
-
-    await screen.findByText('Deleting strategy variants:');
     await screen.findByText('snapshot_variant');
+
+    const viewDiff = await screen.findByRole('tab', {
+        name: 'View diff',
+    });
+    await userEvent.click(viewDiff);
+
+    const element = await screen.findByText('name: "snapshot_variant"');
+    expect(element).toHaveClass('deletion');
 });
 
 test('Adding strategy always diffs against undefined strategy', async () => {
@@ -323,15 +344,19 @@ test('Adding strategy always diffs against undefined strategy', async () => {
         { route: `/projects/${projectId}` },
     );
 
-    await screen.findByText('+ Adding strategy:');
+    await screen.findByText('Adding strategy');
     await screen.findByText('change_request_title');
 
-    const viewDiff = await screen.findByText('View Diff');
-    await userEvent.hover(viewDiff);
-    await screen.findByText(`+ name: "flexibleRollout"`);
+    const variants = await screen.findAllByText('change_variant');
+    expect(variants).toHaveLength(2);
 
-    await screen.findByText('Setting strategy variants to:');
-    await screen.findByText('change_variant');
+    const viewDiff = await screen.findByRole('tab', {
+        name: 'View diff',
+    });
+    await userEvent.click(viewDiff);
+
+    const element = await screen.findByText('name: "flexibleRollout"');
+    expect(element).toHaveClass('addition');
 });
 
 test('Segments order does not matter for diff calculation', async () => {
@@ -364,7 +389,11 @@ test('Segments order does not matter for diff calculation', async () => {
         { route: `/projects/${projectId}` },
     );
 
-    const viewDiff = await screen.findByText('View Diff');
-    await userEvent.hover(viewDiff);
-    await screen.findByText('(no changes)');
+    const viewDiff = await screen.findByRole('tab', {
+        name: 'View diff',
+    });
+    await userEvent.click(viewDiff);
+
+    const segmentsChangeElement = screen.queryByText('segments: [');
+    expect(segmentsChangeElement).not.toBeInTheDocument();
 });

@@ -1,7 +1,7 @@
 import useSWR, { mutate } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 
 const PATH = formatApiPath('api/admin/client-metrics/features');

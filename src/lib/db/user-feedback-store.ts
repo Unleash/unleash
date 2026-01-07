@@ -1,11 +1,11 @@
 import type { EventEmitter } from 'events';
-import type { LogProvider, Logger } from '../logger';
+import type { LogProvider, Logger } from '../logger.js';
 import type {
     IUserFeedback,
     IUserFeedbackKey,
     IUserFeedbackStore,
-} from '../types/stores/user-feedback-store';
-import type { Db } from './db';
+} from '../types/stores/user-feedback-store.js';
+import type { Db } from './db.js';
 
 const COLUMNS = ['given', 'user_id', 'feedback_id', 'nevershow'];
 const TABLE = 'user_feedback';
@@ -25,7 +25,7 @@ const fieldToRow = (fields: IUserFeedback): IUserFeedbackTable => ({
 });
 
 const rowToField = (row: IUserFeedbackTable): IUserFeedback => ({
-    neverShow: row.nevershow,
+    neverShow: row.nevershow || false,
     feedbackId: row.feedback_id,
     given: row.given,
     userId: row.user_id,
@@ -36,7 +36,7 @@ export default class UserFeedbackStore implements IUserFeedbackStore {
 
     private logger: Logger;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, _eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('user-feedback-store.ts');
     }
@@ -71,7 +71,7 @@ export default class UserFeedbackStore implements IUserFeedbackStore {
             .merge()
             .returning(COLUMNS);
 
-        return rowToField(insertedFeedback[0]);
+        return rowToField(insertedFeedback[0] as IUserFeedbackTable);
     }
 
     async delete({ userId, feedbackId }: IUserFeedbackKey): Promise<void> {
@@ -110,5 +110,3 @@ export default class UserFeedbackStore implements IUserFeedbackStore {
         return userFeedbacks.map(rowToField);
     }
 }
-
-module.exports = UserFeedbackStore;

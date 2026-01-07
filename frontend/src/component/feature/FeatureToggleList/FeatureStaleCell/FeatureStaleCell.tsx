@@ -1,6 +1,6 @@
 import type { VFC } from 'react';
 import { Box, styled, type Theme, Typography } from '@mui/material';
-import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender.tsx';
 
 interface IFeatureStaleCellProps {
     value?: boolean;

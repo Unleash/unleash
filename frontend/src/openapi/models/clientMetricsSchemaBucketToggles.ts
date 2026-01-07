@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientMetricsSchemaBucketTogglesVariants } from './clientMetricsSchemaBucketTogglesVariants';
+import type { ClientMetricsSchemaBucketTogglesVariants } from './clientMetricsSchemaBucketTogglesVariants.js';
 
 /**
  * an object containing feature names with yes/no plus variant usage

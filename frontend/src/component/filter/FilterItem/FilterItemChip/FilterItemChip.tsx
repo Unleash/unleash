@@ -3,7 +3,7 @@ import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import Close from '@mui/icons-material/Close';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Chip, IconButton, styled } from '@mui/material';
-import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator';
+import { FilterItemOperator } from './FilterItemOperator/FilterItemOperator.tsx';
 import { FILTER_ITEM } from 'utils/testIds';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

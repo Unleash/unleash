@@ -4,6 +4,7 @@ import { ReactComponent as InstanceHealthIcon } from 'assets/icons/instance-heal
 
 interface IHealthStatsProps {
     value?: string | number;
+    technicalDebt?: string | number;
     healthy: number;
     stale: number;
     potentiallyStale: number;
@@ -65,47 +66,49 @@ const StyledMainValue = styled(StyledValue)(({ theme }) => ({
 
 export const HealthStats: FC<IHealthStatsProps> = ({
     value,
+    technicalDebt,
     healthy,
     stale,
     potentiallyStale,
     title,
-}) => (
-    <StyledContainer>
-        <StyledHeader>
-            <StyledSection>{title}</StyledSection>
-            <StyledSection>{/* TODO: trend */}</StyledSection>
-        </StyledHeader>
-        <Divider />
-        <StyledSection>
-            <StyledStatsRow>
-                <StyledIcon />
-                Instance health
-                <StyledMainValue>{`${value || 0}%`}</StyledMainValue>
-            </StyledStatsRow>
-        </StyledSection>
-        <Divider />
-        <FlagsSection>
-            <StyledStatsRow>
-                Healthy flags
-                <StyledValue>{healthy || 0}</StyledValue>
-            </StyledStatsRow>
-            <StyledStatsRow>
-                Stale flags
-                <StyledValue>{stale || 0}</StyledValue>
-            </StyledStatsRow>
-            <StyledStatsRow>
-                Potentially stale flags
-                <StyledValue>{potentiallyStale || 0}</StyledValue>
-            </StyledStatsRow>
-            <ExplanationRow>
-                <Link
-                    href='https://docs.getunleash.io/reference/technical-debt'
-                    target='_blank'
-                    rel='noreferrer'
-                >
-                    What affects instance health?
-                </Link>
-            </ExplanationRow>
-        </FlagsSection>
-    </StyledContainer>
-);
+}) => {
+    return (
+        <StyledContainer>
+            <StyledHeader>
+                <StyledSection>{title}</StyledSection>
+            </StyledHeader>
+            <Divider />
+            <StyledSection>
+                <StyledStatsRow>
+                    <StyledIcon />
+                    Technical debt
+                    <StyledMainValue>{`${technicalDebt}%`}</StyledMainValue>
+                </StyledStatsRow>
+            </StyledSection>
+            <Divider />
+            <FlagsSection>
+                <StyledStatsRow>
+                    Healthy flags
+                    <StyledValue>{healthy || 0}</StyledValue>
+                </StyledStatsRow>
+                <StyledStatsRow>
+                    Stale flags
+                    <StyledValue>{stale || 0}</StyledValue>
+                </StyledStatsRow>
+                <StyledStatsRow>
+                    Potentially stale flags
+                    <StyledValue>{potentiallyStale || 0}</StyledValue>
+                </StyledStatsRow>
+                <ExplanationRow>
+                    <Link
+                        href='https://docs.getunleash.io/concepts/insights#health'
+                        target='_blank'
+                        rel='noreferrer'
+                    >
+                        What affects technical debt?
+                    </Link>
+                </ExplanationRow>
+            </FlagsSection>
+        </StyledContainer>
+    );
+};

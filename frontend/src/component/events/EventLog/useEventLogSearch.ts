@@ -1,9 +1,4 @@
-import {
-    encodeQueryParams,
-    NumberParam,
-    StringParam,
-    withDefault,
-} from 'use-query-params';
+import { encodeQueryParams, StringParam, withDefault } from 'use-query-params';
 import { FilterItemParam } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
@@ -11,6 +6,8 @@ import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch'
 import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
 import { format, subYears } from 'date-fns';
+import { SafeNumberParam } from 'utils/safeNumberParam';
+import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 
 type Log =
     | { type: 'global' }
@@ -34,8 +31,6 @@ const extraParameters = (logType: Log) => {
     }
 };
 
-const DEFAULT_PAGE_SIZE = 25;
-
 export const calculatePaginationInfo = ({
     offset,
     pageSize,
@@ -58,8 +53,8 @@ export const useEventLogSearch = (
     refreshInterval = 15 * 1000,
 ) => {
     const stateConfig = {
-        offset: withDefault(NumberParam, 0),
-        limit: withDefault(NumberParam, DEFAULT_PAGE_SIZE),
+        offset: withDefault(SafeNumberParam, 0),
+        limit: withDefault(SafeNumberParam, DEFAULT_PAGE_LIMIT),
         query: StringParam,
         from: withDefault(FilterItemParam, {
             values: [format(subYears(new Date(), 1), 'yyyy-MM-dd')],
@@ -71,6 +66,9 @@ export const useEventLogSearch = (
         }),
         createdBy: FilterItemParam,
         type: FilterItemParam,
+        environment: FilterItemParam,
+        id: FilterItemParam,
+        groupId: FilterItemParam,
         ...extraParameters(logType),
     };
 

@@ -1,28 +1,31 @@
 import type { URL } from 'url';
 import EventEmitter from 'events';
-import { createTestConfig } from '../../../config/test-config';
-import type { IUnleashConfig } from '../../../../lib/types/option';
-import UserService from '../../../../lib/services/user-service';
-import { AccessService } from '../../../../lib/services/access-service';
-import ResetTokenService from '../../../../lib/services/reset-token-service';
-import type { IUser } from '../../../../lib/types/user';
+import { createTestConfig } from '../../../config/test-config.js';
+import type { IUnleashConfig } from '../../../../lib/types/option.js';
+import UserService from '../../../../lib/services/user-service.js';
+import { AccessService } from '../../../../lib/services/access-service.js';
+import ResetTokenService from '../../../../lib/services/reset-token-service.js';
+import type { IUser } from '../../../../lib/types/user.js';
 import {
     type IUnleashTest,
     setupApp,
     setupAppWithAuth,
-} from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import { EmailService } from '../../../../lib/services/email-service';
-import SessionStore from '../../../../lib/db/session-store';
-import SessionService from '../../../../lib/services/session-service';
-import { RoleName } from '../../../../lib/types/model';
-import SettingService from '../../../../lib/services/setting-service';
-import FakeSettingStore from '../../../fixtures/fake-setting-store';
-import { GroupService } from '../../../../lib/services/group-service';
-import { type IUnleashStores, TEST_AUDIT_USER } from '../../../../lib/types';
-import { createEventsService } from '../../../../lib/features';
-
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import { EmailService } from '../../../../lib/services/email-service.js';
+import SessionStore from '../../../../lib/db/session-store.js';
+import SessionService from '../../../../lib/services/session-service.js';
+import { RoleName } from '../../../../lib/types/model.js';
+import SettingService from '../../../../lib/services/setting-service.js';
+import FakeSettingStore from '../../../fixtures/fake-setting-store.js';
+import { GroupService } from '../../../../lib/services/group-service.js';
+import {
+    type IUnleashStores,
+    TEST_AUDIT_USER,
+} from '../../../../lib/types/index.js';
+import { createEventsService } from '../../../../lib/features/index.js';
+import { beforeAll, test, afterAll, expect } from 'vitest';
 let app: IUnleashTest;
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -107,9 +110,6 @@ beforeAll(async () => {
 
 afterAll(async () => {
     await stores.resetTokenStore.deleteAll();
-});
-
-afterAll(async () => {
     await app.destroy();
     await db.destroy();
 });

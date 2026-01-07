@@ -14,7 +14,7 @@ export const patchSchema = {
         },
         op: {
             type: 'string',
-            enum: ['add', 'remove', 'replace', 'copy', 'move'],
+            enum: ['add', 'remove', 'replace', 'copy', 'move', 'test'],
             description: 'The kind of operation to perform',
             example: 'replace',
         },

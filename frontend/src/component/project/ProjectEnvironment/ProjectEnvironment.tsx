@@ -11,7 +11,7 @@ import { Alert, styled, TableBody, TableRow, Link } from '@mui/material';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import type { IProjectEnvironment } from 'interfaces/environments';
-import { getEnabledEnvs } from './helpers';
+import { getEnabledEnvs } from './helpers.ts';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useGlobalFilter, useTable } from 'react-table';
@@ -26,13 +26,13 @@ import { Search } from 'component/common/Search/Search';
 import { EnvironmentNameCell } from 'component/environments/EnvironmentTable/EnvironmentNameCell/EnvironmentNameCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { EnvironmentHideDialog } from './EnvironmentHideDialog/EnvironmentHideDialog';
+import { EnvironmentHideDialog } from './EnvironmentHideDialog/EnvironmentHideDialog.tsx';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import useProjectOverview, {
     useProjectOverviewNameOrId,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { UpgradeMoreEnvironments } from './UpgradeMoreEnvironments';
+import { UpgradeMoreEnvironments } from './UpgradeMoreEnvironments.tsx';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -75,7 +75,9 @@ const ProjectEnvironmentList = () => {
             environments.map((environment) => ({
                 ...environment,
                 projectVisible: project?.environments
-                    .map((projectEnvironment) => projectEnvironment.environment)
+                    ?.map(
+                        (projectEnvironment) => projectEnvironment.environment,
+                    )
                     .includes(environment.name),
             })),
         [environments, project?.environments],
@@ -122,7 +124,7 @@ const ProjectEnvironmentList = () => {
                     text: 'Environment set as visible',
                     type: 'success',
                 });
-            } catch (error) {
+            } catch (_error) {
                 setToastApiError(errorMsg(true));
             }
         }
@@ -140,7 +142,7 @@ const ProjectEnvironmentList = () => {
                     text: 'Environment hidden',
                     type: 'success',
                 });
-            } catch (e) {
+            } catch (_e) {
                 setToastApiError(errorMsg(false));
             } finally {
                 setHideDialog(false);
@@ -148,8 +150,26 @@ const ProjectEnvironmentList = () => {
         }
     };
 
-    const envIsDisabled = (projectName: string) => {
-        return isOss() && projectName === 'default';
+    const envIsDisabled = (env: IProjectEnvironment) => {
+        return (
+            (isOss() && env.name === 'default') ||
+            (env.projectVisible && onlyOneEnvEnabled())
+        );
+    };
+
+    const onlyOneEnvEnabled = (): boolean => {
+        return (
+            projectEnvironments.filter((env) => env.projectVisible).length === 1
+        );
+    };
+
+    const buildToolTip = (env: IProjectEnvironment): string => {
+        if (env.projectVisible && onlyOneEnvEnabled()) {
+            return 'Cannot disable, at least one environment must be visible in the project';
+        }
+        return env.projectVisible
+            ? 'Hide environment and disable feature flags'
+            : 'Make it visible';
     };
 
     const COLUMNS = useMemo(
@@ -182,13 +202,9 @@ const ProjectEnvironmentList = () => {
                 Cell: ({ row: { original } }: any) => (
                     <ActionCell>
                         <PermissionSwitch
-                            tooltip={
-                                original.projectVisible
-                                    ? 'Hide environment and disable feature flags'
-                                    : 'Make it visible'
-                            }
+                            tooltip={buildToolTip(original)}
                             size='medium'
-                            disabled={envIsDisabled(original.name)}
+                            disabled={envIsDisabled(original)}
                             projectId={projectId}
                             permission={UPDATE_PROJECT}
                             checked={original.projectVisible}

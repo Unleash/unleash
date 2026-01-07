@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdminSegmentSchema } from './adminSegmentSchema';
+import type { AdminSegmentSchema } from './adminSegmentSchema.js';
 
 /**
- * Data containing a list of [segments](https://docs.getunleash.io/reference/segments)
+ * Data containing a list of [segments](https://docs.getunleash.io/concepts/segments)
  */
 export interface SegmentsSchema {
     /** A list of segments */

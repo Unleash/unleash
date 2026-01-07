@@ -1,22 +1,21 @@
 import type { Request, Response } from 'express';
-import Controller from '../controller';
-import type UserService from '../../services/user-service';
-import type { Logger } from '../../logger';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types';
-import { NONE } from '../../types/permissions';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import type { OpenApiService } from '../../services/openapi-service';
+import Controller from '../controller.js';
+import type UserService from '../../services/user-service.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import { NONE } from '../../types/permissions.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     tokenUserSchema,
     type TokenUserSchema,
-} from '../../openapi/spec/token-user-schema';
-import type { EmailSchema } from '../../openapi/spec/email-schema';
+} from '../../openapi/spec/token-user-schema.js';
+import type { EmailSchema } from '../../openapi/spec/email-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
+} from '../../openapi/util/standard-responses.js';
 import rateLimit from 'express-rate-limit';
 import { minutesToMilliseconds } from 'date-fns';
 
@@ -39,8 +38,6 @@ class ResetPasswordController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private logger: Logger;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -49,9 +46,6 @@ class ResetPasswordController extends Controller {
         }: Pick<IUnleashServices, 'userService' | 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger(
-            'lib/routes/auth/reset-password-controller.ts',
-        );
         this.openApiService = openApiService;
         this.userService = userService;
         this.route({
@@ -103,7 +97,7 @@ class ResetPasswordController extends Controller {
                     tags: ['Auth'],
                     summary: 'Validates password',
                     description:
-                        'Verifies that the password adheres to the [Unleash password guidelines](https://docs.getunleash.io/reference/deploy/securing-unleash#password-requirements)',
+                        'Verifies that the password adheres to the [Unleash password guidelines](https://docs.getunleash.io/using-unleash/deploy/configuring-unleash#securing-unleash)',
                     operationId: 'validatePassword',
                     requestBody: createRequestSchema('validatePasswordSchema'),
                     responses: {

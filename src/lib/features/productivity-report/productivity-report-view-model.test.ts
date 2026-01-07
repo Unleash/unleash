@@ -1,7 +1,7 @@
 import {
     productivityReportViewModel,
     type ProductivityReportMetrics,
-} from './productivity-report-view-model';
+} from './productivity-report-view-model.js';
 
 const mockData = {
     unleashUrl: 'http://example.com',
@@ -20,8 +20,20 @@ const mockMetrics = {
 };
 
 describe('productivityReportViewModel', () => {
+    it('should show technical debt', () => {
+        const viewModel = productivityReportViewModel({
+            ...mockData,
+            metrics: {
+                ...mockMetrics,
+                health: 85,
+            },
+        });
+
+        expect(viewModel.technicalDebt).toBe('15');
+    });
+
     describe('healthColor', () => {
-        it('returns RED for health between 0 and 24', () => {
+        it('returns RED for technical debt between 75 and 100', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
                 health: 20,
@@ -32,10 +44,10 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.healthColor()).toBe('#d93644');
+            expect(viewModel.technicalDebtColor()).toBe('#d93644');
         });
 
-        it('returns ORANGE for health between 25 and 74', () => {
+        it('returns ORANGE for technical debt between 25 and 74', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
                 health: 50,
@@ -46,10 +58,10 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.healthColor()).toBe('#d76500');
+            expect(viewModel.technicalDebtColor()).toBe('#d76500');
         });
 
-        it('returns GREEN for health 75 or above', () => {
+        it('returns GREEN for technical debt below 25', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
                 health: 80,
@@ -60,58 +72,57 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.healthColor()).toBe('#68a611');
+            expect(viewModel.technicalDebtColor()).toBe('#68a611');
         });
     });
 
-    describe('healthTrendMessage', () => {
-        it('returns correct trend message when health increased', () => {
+    describe('technicalDebtTrendMessage', () => {
+        it('returns correct trend message when technica debt decreased', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
                 health: 80,
                 previousMonth: { ...mockMetrics.previousMonth, health: 70 },
             };
-
             const viewModel = productivityReportViewModel({
                 ...mockData,
                 metrics,
             });
 
-            expect(viewModel.healthTrendMessage()).toBe(
-                "<span style='color: #68a611'>&#9650;</span> 10% more than previous month",
+            expect(viewModel.technicalDebtTrendMessage()).toMatchInlineSnapshot(
+                `"<span style='color: #68a611'>&#9660;</span> 10% less than previous month"`,
             );
         });
 
-        it('returns correct trend message when health decreased', () => {
+        it('returns correct trend message when technical debt increased', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
                 health: 60,
                 previousMonth: { ...mockMetrics.previousMonth, health: 70 },
             };
-
             const viewModel = productivityReportViewModel({
                 ...mockData,
                 metrics,
             });
 
-            expect(viewModel.healthTrendMessage()).toBe(
-                "<span style='color: #d93644'>&#9660;</span> 10% less than previous month",
+            expect(viewModel.technicalDebtTrendMessage()).toMatchInlineSnapshot(
+                `"<span style='color: #d93644'>&#9650;</span> 10% more than previous month"`,
             );
         });
 
-        it('returns correct message when health is the same', () => {
+        it('returns correct message when technical debt is the same', () => {
             const metrics: ProductivityReportMetrics = {
                 ...mockMetrics,
                 health: 70,
                 previousMonth: { ...mockMetrics.previousMonth, health: 70 },
             };
-
             const viewModel = productivityReportViewModel({
                 ...mockData,
                 metrics,
             });
 
-            expect(viewModel.healthTrendMessage()).toBe('Same as last month');
+            expect(viewModel.technicalDebtTrendMessage()).toMatchInlineSnapshot(
+                `"Same as last month"`,
+            );
         });
     });
 
@@ -125,18 +136,15 @@ describe('productivityReportViewModel', () => {
                     flagsCreated: 8,
                 },
             };
-
             const viewModel = productivityReportViewModel({
                 ...mockData,
                 metrics,
             });
-
-            expect(viewModel.flagsCreatedTrendMessage()).toBe(
-                "<span style='color: #68a611'>&#9650;</span> 2 more than previous month",
+            expect(viewModel.flagsCreatedTrendMessage()).toMatchInlineSnapshot(
+                `"<span style='color: #68a611'>&#9650;</span> 2 more than previous month"`,
             );
         });
     });
-
     describe('productionUpdatedTrendMessage', () => {
         it('returns correct trend message for productionUpdates decrease', () => {
             const metrics: ProductivityReportMetrics = {
@@ -147,18 +155,17 @@ describe('productivityReportViewModel', () => {
                     productionUpdates: 8,
                 },
             };
-
             const viewModel = productivityReportViewModel({
                 ...mockData,
                 metrics,
             });
-
-            expect(viewModel.productionUpdatedTrendMessage()).toBe(
-                "<span style='color: #d93644'>&#9660;</span> 3 less than previous month",
+            expect(
+                viewModel.productionUpdatedTrendMessage(),
+            ).toMatchInlineSnapshot(
+                `"<span style='color: #d93644'>&#9660;</span> 3 less than previous month"`,
             );
         });
     });
-
     describe('Missing previous month data', () => {
         it('returns no trends messages', () => {
             const metrics: ProductivityReportMetrics = {
@@ -167,13 +174,12 @@ describe('productivityReportViewModel', () => {
                 productionUpdates: 5,
                 previousMonth: null,
             };
-
             const viewModel = productivityReportViewModel({
                 ...mockData,
                 metrics,
             });
 
-            expect(viewModel.healthTrendMessage()).toBe(null);
+            expect(viewModel.technicalDebtTrendMessage()).toBe(null);
             expect(viewModel.flagsCreatedTrendMessage()).toBe(null);
             expect(viewModel.productionUpdatedTrendMessage()).toBe(null);
         });
@@ -213,8 +219,8 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.actionText()).toBe(
-                'Remember to archive stale flags to reduce technical debt and keep your project healthy',
+            expect(viewModel.actionText()).toMatchInlineSnapshot(
+                `"Remember to archive stale flags to reduce technical debt and keep your project healthy"`,
             );
         });
 
@@ -233,8 +239,8 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.actionText()).toBe(
-                'Remember to archive stale flags to reduce technical debt and keep your project healthy',
+            expect(viewModel.actionText()).toMatchInlineSnapshot(
+                `"Remember to archive stale flags to reduce technical debt and keep your project healthy"`,
             );
         });
 

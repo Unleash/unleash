@@ -12,6 +12,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     name: build # temporary solution to trick branch protection rules
 
     services:
@@ -31,31 +34,26 @@ jobs:
 
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v6
         with:
-          node-version: 20.x
+          node-version: 22.x
           cache: 'yarn'
       - name: Enable corepack
         run: corepack enable
-      - name: Tests on 20.x
+      - name: Install deps
+        run: yarn install
+      - name: Build backend
+        run: yarn build:backend
+      - name: Tests on 22.x
         id: coverage
-        uses: ArtiomTr/jest-coverage-report-action@v2
-        with:
-          annotations: none
-          package-manager: yarn
-          test-script: yarn run test:coverage:jest
-          base-coverage-file: ./coverage/report.json
-          output: report-markdown
+        run: yarn test:coverage
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           NODE_ENV: test
           PORT: 4243
-      # - name: Report coverage on ${{ matrix.node-version }}
-      #   uses: marocchino/sticky-pull-request-comment@v2
-      #   with:
-      #     # pass output from the previous step by id.
-      #     message: ${{ steps.coverage.outputs.report }}
+      - name: Report coverage
+        uses: davelosert/vitest-coverage-report-action@v2

@@ -5,7 +5,7 @@ import type {
     ChangeRequestType,
 } from '../changeRequest.types';
 import { render } from 'utils/testRenderer';
-import { ChangeRequestOverview } from './ChangeRequestOverview';
+import { ChangeRequestOverview } from './ChangeRequestOverview.tsx';
 import {
     ADMIN,
     APPLY_CHANGE_REQUEST,

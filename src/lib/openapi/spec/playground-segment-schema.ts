@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { playgroundConstraintSchema } from './playground-constraint-schema';
+import { playgroundConstraintSchema } from './playground-constraint-schema.js';
 
 export const playgroundSegmentSchema = {
     $id: '#/components/schemas/playgroundSegmentSchema',
@@ -35,5 +35,6 @@ export const playgroundSegmentSchema = {
 } as const;
 
 export type PlaygroundSegmentSchema = FromSchema<
-    typeof playgroundSegmentSchema
+    typeof playgroundSegmentSchema,
+    { keepDefaultedPropertiesOptional: true }
 >;

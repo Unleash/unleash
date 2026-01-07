@@ -1,23 +1,27 @@
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import EventDiff from './EventDiff';
+import { EventDiff } from './EventDiff.tsx';
 
 test('Show no changes', async () => {
-    render(<EventDiff entry={{ preData: [], data: [] }} />);
-
-    expect(screen.getByText('(no changes)')).toBeInTheDocument();
+    const { container } = render(
+        <EventDiff entry={{ preData: [{ a: 'b' }], data: [{ a: 'b' }] }} />,
+    );
+    const diff = container.querySelector('.diff');
+    expect(diff).toBeEmptyDOMElement();
 });
 
 test('Show new data added diff', async () => {
     render(<EventDiff entry={{ preData: {}, data: { segments: [] } }} />);
 
-    expect(screen.getByText('+ segments: []')).toBeInTheDocument();
+    const element = await screen.findByText(/segments:.*/);
+    expect(element).toHaveClass('addition');
 });
 
 test('Show new data removed diff', async () => {
     render(<EventDiff entry={{ preData: { segments: [] }, data: {} }} />);
 
-    expect(screen.getByText('- segments (deleted)')).toBeInTheDocument();
+    const element = await screen.findByText(/segments:.*/);
+    expect(element).toHaveClass('deletion');
 });
 
 test('Show new data changes diff', async () => {
@@ -27,8 +31,10 @@ test('Show new data changes diff', async () => {
         />,
     );
 
-    expect(screen.getByText('- segments: "a"')).toBeInTheDocument();
-    expect(screen.getByText('+ segments: "b"')).toBeInTheDocument();
+    const deleted = await screen.findByText(/segments: "a".*/);
+    expect(deleted).toHaveClass('deletion');
+    const added = await screen.findByText(/segments: "b".*/);
+    expect(added).toHaveClass('addition');
 });
 
 test('Show new data only', async () => {
@@ -36,7 +42,8 @@ test('Show new data only', async () => {
         <EventDiff entry={{ preData: undefined, data: { segments: [] } }} />,
     );
 
-    expect(screen.getByText('{ "segments": [] }')).toBeInTheDocument();
+    const element = await screen.findByText(/segments:.*/);
+    expect(element).toHaveClass('addition');
 });
 
 test('Show old data only', async () => {
@@ -44,5 +51,6 @@ test('Show old data only', async () => {
         <EventDiff entry={{ preData: { segments: [] }, data: undefined }} />,
     );
 
-    expect(screen.getByText('{ "segments": [] }')).toBeInTheDocument();
+    const element = await screen.findByText(/segments:.*/);
+    expect(element).toHaveClass('deletion');
 });

@@ -30,8 +30,10 @@ import {
     CHANGE_REQUEST_SCHEDULED,
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
     FEATURE_COMPLETED,
-} from '../types/events';
-import type { IAddonDefinition } from '../types/model';
+    RELEASE_PLAN_PROGRESSIONS_PAUSED,
+    RELEASE_PLAN_PROGRESSIONS_RESUMED,
+} from '../events/index.js';
+import type { IAddonDefinition } from '../types/model.js';
 
 const webhookDefinition: IAddonDefinition = {
     name: 'webhook',
@@ -91,7 +93,7 @@ const webhookDefinition: IAddonDefinition = {
   "json": {{{eventJson}}}
 }`,
             description:
-                '(Optional) You may format the body using a mustache template. If you don\'t specify anything, the format will be similar to the [events format](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events). You can use `{{{eventJson}}}` to include the entire serialized event, or `"{{eventMarkdown}}"` for the formatted description.',
+                '(Optional) You may format the body using a mustache template. If you don\'t specify anything, the format will be similar to the [events format](https://docs.getunleash.io/api/events). You can use `{{{eventJson}}}` to include the entire serialized event, or `"{{eventMarkdown}}"` for the formatted description.',
             type: 'textfield',
             required: false,
             sensitive: false,
@@ -129,6 +131,8 @@ const webhookDefinition: IAddonDefinition = {
         CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
         CHANGE_REQUEST_SCHEDULE_SUSPENDED,
         FEATURE_POTENTIALLY_STALE_ON,
+        RELEASE_PLAN_PROGRESSIONS_PAUSED,
+        RELEASE_PLAN_PROGRESSIONS_RESUMED,
     ],
 };
 

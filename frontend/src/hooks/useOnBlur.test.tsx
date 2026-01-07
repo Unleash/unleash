@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { useRef } from 'react';
-import { useOnBlur } from './useOnBlur';
+import { useOnBlur } from './useOnBlur.ts';
 
 function TestComponent(props: { onBlurHandler: () => void }) {
     const divRef = useRef(null);
@@ -8,11 +8,11 @@ function TestComponent(props: { onBlurHandler: () => void }) {
 
     return (
         <div data-testid='wrapper'>
-            {/* biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation> */}
+            {/* biome-ignore lint/a11y/noNoninteractiveTabindex: false positive / in a test */}
             <div tabIndex={0} data-testid='inside' ref={divRef}>
                 Inside
             </div>
-            {/* biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation> */}
+            {/* biome-ignore lint/a11y/noNoninteractiveTabindex: false positive / in a test */}
             <div tabIndex={0} data-testid='outside'>
                 Outside
             </div>

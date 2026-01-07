@@ -1,10 +1,13 @@
-import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
-import type { ApiTokenService } from '../../../../lib/services/api-token-service';
-import { ApiTokenType } from '../../../../lib/types/models/api-token';
-import { DEFAULT_ENV } from '../../../../lib/util/constants';
-import { TEST_AUDIT_USER } from '../../../../lib/types';
+import {
+    type IUnleashTest,
+    setupAppWithAuth,
+} from '../../helpers/test-helper.js';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
+import type { ApiTokenService } from '../../../../lib/services/api-token-service.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { DEFAULT_ENV } from '../../../../lib/util/constants.js';
+import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -15,7 +18,7 @@ const environment = 'testing';
 const project = 'default';
 const project2 = 'some';
 const tokenName = 'test';
-const tokenUserId = -9999;
+const _tokenUserId = -9999;
 const feature1 = 'f1.token.access';
 const feature2 = 'f2.token.access';
 const feature3 = 'f3.p2.token.access';
@@ -25,7 +28,7 @@ beforeAll(async () => {
     app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
     apiTokenService = app.services.apiTokenService;
 
-    const { featureToggleServiceV2, environmentService } = app.services;
+    const { featureToggleService, environmentService } = app.services;
     const { environmentStore, projectStore } = db.stores;
 
     await environmentStore.create({
@@ -51,7 +54,7 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await featureToggleServiceV2.createFeatureToggle(
+    await featureToggleService.createFeatureToggle(
         project,
         {
             name: feature1,
@@ -60,7 +63,7 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await featureToggleServiceV2.createStrategy(
+    await featureToggleService.createStrategy(
         {
             name: 'default',
             constraints: [],
@@ -69,7 +72,7 @@ beforeAll(async () => {
         { projectId: project, featureName: feature1, environment: DEFAULT_ENV },
         TEST_AUDIT_USER,
     );
-    await featureToggleServiceV2.createStrategy(
+    await featureToggleService.createStrategy(
         {
             name: 'flexibleRollout',
             constraints: [],
@@ -80,14 +83,14 @@ beforeAll(async () => {
     );
 
     // create feature 2
-    await featureToggleServiceV2.createFeatureToggle(
+    await featureToggleService.createFeatureToggle(
         project,
         {
             name: feature2,
         },
         TEST_AUDIT_USER,
     );
-    await featureToggleServiceV2.createStrategy(
+    await featureToggleService.createStrategy(
         {
             name: 'default',
             constraints: [],
@@ -98,14 +101,14 @@ beforeAll(async () => {
     );
 
     // create feature 3
-    await featureToggleServiceV2.createFeatureToggle(
+    await featureToggleService.createFeatureToggle(
         project2,
         {
             name: feature3,
         },
         TEST_AUDIT_USER,
     );
-    await featureToggleServiceV2.createStrategy(
+    await featureToggleService.createStrategy(
         {
             name: 'default',
             constraints: [],
@@ -122,11 +125,11 @@ afterAll(async () => {
 });
 
 test('returns feature flag with "default" config', async () => {
-    const token = await apiTokenService.createApiToken({
-        type: ApiTokenType.CLIENT,
+    const token = await apiTokenService.createApiTokenWithProjects({
+        type: ApiTokenType.BACKEND,
         tokenName,
         environment: DEFAULT_ENV,
-        project,
+        projects: [project],
     });
     await app.request
         .get('/api/client/features')
@@ -144,11 +147,11 @@ test('returns feature flag with "default" config', async () => {
 });
 
 test('returns feature flag with testing environment config', async () => {
-    const token = await apiTokenService.createApiToken({
-        type: ApiTokenType.CLIENT,
+    const token = await apiTokenService.createApiTokenWithProjects({
+        type: ApiTokenType.BACKEND,
         tokenName: tokenName,
         environment,
-        project,
+        projects: [project],
     });
     await app.request
         .get('/api/client/features')
@@ -170,11 +173,11 @@ test('returns feature flag with testing environment config', async () => {
 });
 
 test('returns feature flag for project2', async () => {
-    const token = await apiTokenService.createApiToken({
-        type: ApiTokenType.CLIENT,
+    const token = await apiTokenService.createApiTokenWithProjects({
+        type: ApiTokenType.BACKEND,
         tokenName: tokenName,
         environment,
-        project: project2,
+        projects: [project2],
     });
     await app.request
         .get('/api/client/features')
@@ -190,11 +193,11 @@ test('returns feature flag for project2', async () => {
 });
 
 test('returns feature flag for all projects', async () => {
-    const token = await apiTokenService.createApiToken({
-        type: ApiTokenType.CLIENT,
+    const token = await apiTokenService.createApiTokenWithProjects({
+        type: ApiTokenType.BACKEND,
         tokenName: tokenName,
         environment,
-        project: '*',
+        projects: ['*'],
     });
     await app.request
         .get('/api/client/features')

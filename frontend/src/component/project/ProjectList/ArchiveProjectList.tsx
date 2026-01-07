@@ -7,14 +7,14 @@ import ApiError from 'component/common/ApiError/ApiError';
 import { styled, useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import { ProjectGroup } from './ProjectGroup';
+import { ProjectGroup } from './ProjectGroup.tsx';
 import {
     ProjectArchiveCard,
     type ProjectArchiveCardProps,
-} from '../ProjectCard/ProjectArchiveCard';
+} from '../ProjectCard/ProjectArchiveCard.tsx';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { ReviveProjectDialog } from './ReviveProjectDialog/ReviveProjectDialog';
-import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue';
+import { ReviveProjectDialog } from './ReviveProjectDialog/ReviveProjectDialog.tsx';
+import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue.tsx';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { safeRegExp } from '@server/util/escape-regex';
 

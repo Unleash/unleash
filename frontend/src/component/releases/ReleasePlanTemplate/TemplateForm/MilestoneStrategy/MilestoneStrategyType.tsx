@@ -1,9 +1,8 @@
 import type { IFormErrors } from 'hooks/useFormErrors';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import type { IStrategy } from 'interfaces/strategy';
-import { MilestoneStrategyTypeFlexible } from './MilestoneStrategyTypeFlexible';
+import { MilestoneStrategyTypeFlexible } from './MilestoneStrategyTypeFlexible.tsx';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
-import UserWithIdStrategy from 'component/feature/StrategyTypes/UserWithIdStrategy/UserWithId';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
 
 interface IMilestoneStrategyTypeProps {
@@ -34,15 +33,6 @@ export const MilestoneStrategyType = ({
                     updateParameter={updateParameter}
                     errors={errors}
                     editable={true}
-                />
-            );
-        case 'userWithId':
-            return (
-                <UserWithIdStrategy
-                    editable={true}
-                    parameters={strategy.parameters ?? {}}
-                    updateParameter={updateParameter}
-                    errors={errors}
                 />
             );
         default:

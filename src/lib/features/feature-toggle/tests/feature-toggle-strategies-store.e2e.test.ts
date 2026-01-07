@@ -1,22 +1,22 @@
-import type { IFeatureStrategiesStore } from '../../../features/feature-toggle/types/feature-toggle-strategies-store-type';
-import type { IFeatureToggleStore } from '../../../features/feature-toggle/types/feature-toggle-store-type';
+import type { IFeatureStrategiesStore } from '../../../features/feature-toggle/types/feature-toggle-strategies-store-type.js';
+import type { IFeatureToggleStore } from '../../../features/feature-toggle/types/feature-toggle-store-type.js';
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
-import getLogger from '../../../../test/fixtures/no-logger';
+} from '../../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
 import type {
     IConstraint,
     IFeatureStrategiesReadModel,
     IProjectStore,
     IUnleashStores,
-} from '../../../types';
-import { randomId } from '../../../util';
+} from '../../../types/index.js';
+import { DEFAULT_ENV, randomId } from '../../../util/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
 let featureStrategiesStore: IFeatureStrategiesStore;
 let featureToggleStore: IFeatureToggleStore;
-let projectStore: IProjectStore;
+let _projectStore: IProjectStore;
 let featureStrategiesReadModel: IFeatureStrategiesReadModel;
 
 const featureName = 'test-strategies-move-project';
@@ -26,7 +26,7 @@ beforeAll(async () => {
     stores = db.stores;
     featureStrategiesStore = stores.featureStrategiesStore;
     featureToggleStore = stores.featureToggleStore;
-    projectStore = stores.projectStore;
+    _projectStore = stores.projectStore;
     featureStrategiesReadModel = stores.featureStrategiesReadModel;
     await featureToggleStore.create('default', {
         name: featureName,
@@ -45,7 +45,7 @@ afterAll(async () => {
 test('Can successfully update project for all strategies belonging to feature', async () => {
     const newProjectId = 'different-project';
     const oldProjectId = 'default';
-    const environment = 'default';
+    const environment = DEFAULT_ENV;
     await featureStrategiesStore.createStrategyFeatureEnv({
         strategyName: 'default',
         projectId: oldProjectId,
@@ -159,94 +159,24 @@ test('Can query for features with namePrefix and tags', async () => {
     expect(features).toHaveLength(1);
 });
 
-describe('strategy parameters default to sane defaults', () => {
-    test('Creating a gradualRollout strategy with no parameters uses the default for all necessary fields', async () => {
-        const toggle = await featureToggleStore.create('default', {
-            name: 'testing-strategy-parameters',
-            createdByUserId: 9999,
-        });
-        const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'flexibleRollout',
-            projectId: 'default',
-            environment: 'default',
-            featureName: toggle.name,
-            constraints: [],
-            sortOrder: 15,
-            parameters: {},
-        });
-        expect(strategy.parameters).toEqual({
-            rollout: '100',
-            groupId: toggle.name,
-            stickiness: 'default',
-        });
+test('Creating an applicationHostname strategy does not get unnecessary parameters set', async () => {
+    const toggle = await featureToggleStore.create('default', {
+        name: 'testing-strategy-parameters-for-applicationHostname',
+        createdByUserId: 9999,
     });
-    test('Creating a gradualRollout strategy with some parameters, only uses defaults for those not set', async () => {
-        const toggle = await featureToggleStore.create('default', {
-            name: 'testing-strategy-parameters-with-some-parameters',
-            createdByUserId: 9999,
-        });
-        const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'flexibleRollout',
-            projectId: 'default',
-            environment: 'default',
-            featureName: toggle.name,
-            constraints: [],
-            sortOrder: 15,
-            parameters: {
-                rollout: '60',
-                stickiness: 'userId',
-            },
-        });
-        expect(strategy.parameters).toEqual({
-            rollout: '60',
-            groupId: toggle.name,
-            stickiness: 'userId',
-        });
-    });
-    test('Creating an applicationHostname strategy does not get unnecessary parameters set', async () => {
-        const toggle = await featureToggleStore.create('default', {
-            name: 'testing-strategy-parameters-for-applicationHostname',
-            createdByUserId: 9999,
-        });
-        const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'applicationHostname',
-            projectId: 'default',
-            environment: 'default',
-            featureName: toggle.name,
-            constraints: [],
-            sortOrder: 15,
-            parameters: {
-                hostnames: 'myfantastichost',
-            },
-        });
-        expect(strategy.parameters).toEqual({
+    const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
+        strategyName: 'applicationHostname',
+        projectId: 'default',
+        environment: DEFAULT_ENV,
+        featureName: toggle.name,
+        constraints: [],
+        sortOrder: 15,
+        parameters: {
             hostnames: 'myfantastichost',
-        });
+        },
     });
-    test('Strategy picks the default stickiness set for the project', async () => {
-        const project = await projectStore.create({
-            name: 'customDefaultStickiness',
-            id: 'custom_default_stickiness',
-        });
-        const defaultStickiness = 'userId';
-        await db.rawDatabase.raw(
-            `UPDATE project_settings SET default_stickiness = ? WHERE project = ?`,
-            [defaultStickiness, project.id],
-        );
-        const toggle = await featureToggleStore.create(project.id, {
-            name: 'testing-default-strategy-on-project',
-            createdByUserId: 9999,
-        });
-        const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'flexibleRollout',
-            projectId: project.id,
-            environment: 'default',
-            featureName: toggle.name,
-            constraints: [],
-            sortOrder: 15,
-            parameters: {},
-        });
-        expect(strategy.parameters.stickiness).toBe(defaultStickiness);
+    expect(strategy.parameters).toEqual({
+        hostnames: 'myfantastichost',
     });
 });
 
@@ -267,7 +197,7 @@ describe('max metrics collection', () => {
         await featureStrategiesStore.createStrategyFeatureEnv({
             strategyName: 'gradualRollout',
             projectId: 'default',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             featureName: toggle.name,
             constraints: [],
             sortOrder: 0,
@@ -276,7 +206,7 @@ describe('max metrics collection', () => {
         await featureStrategiesStore.createStrategyFeatureEnv({
             strategyName: 'gradualRollout',
             projectId: 'default',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             featureName: toggle.name,
             constraints: [],
             sortOrder: 0,
@@ -290,7 +220,7 @@ describe('max metrics collection', () => {
         expect(maxStrategies).toEqual({ feature: 'featureA', count: 2 });
         expect(maxEnvStrategies).toEqual({
             feature: 'featureA',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             count: 2,
         });
     });
@@ -312,7 +242,7 @@ describe('max metrics collection', () => {
         return {
             strategyName: 'gradualRollout',
             projectId: 'default',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             featureName: feature,
             constraints: [constraint],
 
@@ -364,7 +294,7 @@ describe('max metrics collection', () => {
             await featureStrategiesReadModel.getMaxConstraintValues();
         expect(maxConstraintValues).toEqual({
             feature: flagA.name,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             count: maxValueCount,
         });
     });
@@ -387,7 +317,7 @@ describe('max metrics collection', () => {
         await featureStrategiesStore.createStrategyFeatureEnv({
             strategyName: 'gradualRollout',
             projectId: 'default',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             featureName: flagA.name,
             constraints: [
                 {
@@ -408,7 +338,7 @@ describe('max metrics collection', () => {
         await featureStrategiesStore.createStrategyFeatureEnv({
             strategyName: 'gradualRollout',
             projectId: 'default',
-            environment: 'default',
+            environment: DEFAULT_ENV,
             featureName: flagB.name,
             constraints: [],
             sortOrder: 0,
@@ -419,7 +349,7 @@ describe('max metrics collection', () => {
             await featureStrategiesReadModel.getMaxConstraintsPerStrategy();
         expect(maxConstraintValues).toEqual({
             feature: flagA.name,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             count: 2,
         });
     });

@@ -272,6 +272,32 @@ export const instanceAdminStatsSchema = {
             description:
                 'The highest number of constraint values used on a single constraint.',
         },
+        releaseTemplates: {
+            type: 'integer',
+            minimum: 0,
+            example: 2,
+            description: 'The number of release templates in this instance',
+        },
+        releasePlans: {
+            type: 'integer',
+            minimum: 0,
+            example: 1,
+            description: 'The number of release plans in this instance',
+        },
+        edgeInstanceUsage: {
+            type: 'object',
+            description:
+                'The average number of edge instances, per month, in the last 12 months, rounded to 3 decimal places',
+            additionalProperties: {
+                type: 'number',
+                minimum: 0,
+            },
+            example: {
+                '2025-09': 2.25,
+                '2025-08': 1.75,
+                '2024-10': 0.45,
+            },
+        },
         sum: {
             type: 'string',
             description:

@@ -1,4 +1,4 @@
-import { generateImageUrl } from './generateImageUrl';
+import { generateImageUrl } from './generateImageUrl.js';
 
 describe('Gravatar image url', () => {
     it('generates the correct sha-256 hash for gravatars test idents', () => {

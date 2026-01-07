@@ -2,7 +2,7 @@ import { Button, Divider, Menu, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IFeatureEnvironmentWithCrEnabled } from 'interfaces/featureToggle';
 import { useState } from 'react';
-import { PermissionCheckboxMenuItem } from './PermissionCheckboxMenuItem';
+import { PermissionCheckboxMenuItem } from './PermissionCheckboxMenuItem.tsx';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& > div > ul': {

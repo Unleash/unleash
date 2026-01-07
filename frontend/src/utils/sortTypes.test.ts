@@ -1,5 +1,5 @@
 import type { Row } from 'react-table';
-import { sortTypes } from './sortTypes';
+import { sortTypes } from './sortTypes.js';
 
 const data = [
     {

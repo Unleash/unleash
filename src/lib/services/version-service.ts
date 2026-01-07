@@ -1,9 +1,10 @@
-import fetch from 'make-fetch-happen';
-import type { IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import version from '../util/version';
-import type { Logger } from '../logger';
-import type { ISettingStore } from '../types/stores/settings-store';
+import ky from 'ky';
+import type { IUnleashStores } from '../types/stores.js';
+import type { IUnleashConfig } from '../types/option.js';
+import version from '../util/version.js';
+import type { Logger } from '../logger.js';
+import type { ISettingStore } from '../types/stores/settings-store.js';
+import type { EdgeInstanceUsage } from '../features/instance-stats/getEdgeInstances.js';
 
 export interface IVersionInfo {
     oss: string;
@@ -50,6 +51,17 @@ export interface IFeatureUsageInfo {
     productionChanges60: number;
     productionChanges90: number;
     postgresVersion: string;
+    licenseType: string;
+    hostedBy: string;
+    releaseTemplates: number;
+    releasePlans: number;
+    edgeInstanceUsage?: EdgeInstanceUsage;
+}
+
+export interface IInstanceInfo {
+    customerPlan?: string;
+    customerName?: string;
+    clientId: string;
 }
 
 export default class VersionService {
@@ -125,6 +137,7 @@ export default class VersionService {
 
     async checkLatestVersion(
         telemetryDataProvider: () => Promise<IFeatureUsageInfo>,
+        instanceInfoProvider?: () => Promise<IInstanceInfo | undefined>,
     ): Promise<void> {
         const instanceId = await this.getInstanceId();
         this.logger.debug(
@@ -139,11 +152,14 @@ export default class VersionService {
 
                 if (this.telemetryEnabled) {
                     versionPayload.featureInfo = await telemetryDataProvider();
+                    const instanceInfo = await instanceInfoProvider?.();
+                    if (instanceInfo) {
+                        versionPayload.instanceInfo = instanceInfo;
+                    }
                 }
                 if (this.versionCheckUrl) {
-                    const res = await fetch(this.versionCheckUrl, {
-                        method: 'POST',
-                        body: JSON.stringify(versionPayload),
+                    const res = await ky.post(this.versionCheckUrl, {
+                        json: versionPayload,
                         headers: { 'Content-Type': 'application/json' },
                     });
                     if (res.ok) {

@@ -1,21 +1,26 @@
-import ClientInstanceService from './instance-service';
-import type { IClientApp } from '../../../types/model';
-import FakeEventStore from '../../../../test/fixtures/fake-event-store';
-import { createTestConfig } from '../../../../test/config/test-config';
-import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker';
-import type { IClientApplicationsStore, IUnleashConfig } from '../../../types';
-import FakeClientMetricsStoreV2 from '../client-metrics/fake-client-metrics-store-v2';
-import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store';
-import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store';
-import type { IApplicationOverview } from './models';
+import ClientInstanceService from './instance-service.js';
+import type { IClientApp } from '../../../types/model.js';
+import FakeEventStore from '../../../../test/fixtures/fake-event-store.js';
+import { createTestConfig } from '../../../../test/config/test-config.js';
+import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker.js';
+import type {
+    IClientApplicationsStore,
+    IUnleashConfig,
+} from '../../../types/index.js';
+import FakeClientMetricsStoreV2 from '../client-metrics/fake-client-metrics-store-v2.js';
+import FakeStrategiesStore from '../../../../test/fixtures/fake-strategies-store.js';
+import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-toggle-store.js';
+import type { IApplicationOverview } from './models.js';
+
+import { vi } from 'vitest';
 
 let config: IUnleashConfig;
 beforeAll(() => {
     config = createTestConfig({});
 });
 test('Multiple registrations of same appname and instanceid within same time period should only cause one registration', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
@@ -41,17 +46,18 @@ test('Multiple registrations of same appname and instanceid within same time per
         started: new Date(),
         interval: 10,
     };
-    await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
     expect(appStoreSpy).toHaveBeenCalledTimes(1);
     expect(bulkSpy).toHaveBeenCalledTimes(1);
 
-    const registrations = appStoreSpy.mock.calls[0][0];
+    const registrations: IClientApp[] = appStoreSpy.mock
+        .calls[0][0] as IClientApp[];
 
     expect(registrations.length).toBe(1);
     expect(registrations[0].appName).toBe(client1.appName);
@@ -59,12 +65,12 @@ test('Multiple registrations of same appname and instanceid within same time per
     expect(registrations[0].started).toBe(client1.started);
     expect(registrations[0].interval).toBe(client1.interval);
 
-    jest.useRealTimers();
+    vi.useRealTimers();
 });
 
 test('Multiple unique clients causes multiple registrations', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
@@ -98,23 +104,23 @@ test('Multiple unique clients causes multiple registrations', async () => {
         started: new Date(),
         interval: 10,
     };
-    await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clientMetrics.registerClient(client2, '127.0.0.1');
-    await clientMetrics.registerClient(client2, '127.0.0.1');
-    await clientMetrics.registerClient(client2, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client2, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client2, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client2, '127.0.0.1');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
-
-    const registrations = appStoreSpy.mock.calls[0][0];
+    const registrations: IClientApp[] = appStoreSpy.mock
+        .calls[0][0] as IClientApp[];
 
     expect(registrations.length).toBe(2);
 });
 
 test('Same client registered outside of dedup interval will be registered twice', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
@@ -141,15 +147,15 @@ test('Same client registered outside of dedup interval will be registered twice'
         started: new Date(),
         interval: 10,
     };
-    await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
-    await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clientMetrics.registerClient(client1, '127.0.0.1');
-    await clientMetrics.registerClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
+    await clientMetrics.registerBackendClient(client1, '127.0.0.1');
 
     await clientMetrics.bulkAdd(); // in prod called by a SchedulerService
 
@@ -164,8 +170,8 @@ test('Same client registered outside of dedup interval will be registered twice'
 });
 
 test('No registrations during a time period will not call stores', async () => {
-    const appStoreSpy = jest.fn();
-    const bulkSpy = jest.fn();
+    const appStoreSpy = vi.fn();
+    const bulkSpy = vi.fn();
     const clientApplicationsStore: any = {
         bulkUpsert: appStoreSpy,
     };
@@ -194,7 +200,7 @@ test('No registrations during a time period will not call stores', async () => {
 test('filter out private projects from overview', async () => {
     const clientApplicationsStore = {
         async getApplicationOverview(
-            appName: string,
+            _appName: string,
         ): Promise<IApplicationOverview> {
             return {
                 environments: [
@@ -202,6 +208,8 @@ test('filter out private projects from overview', async () => {
                         name: 'development',
                         instanceCount: 1,
                         sdks: ['unleash-client-node:3.5.1'],
+                        backendSdks: ['unleash-client-node:3.5.1'],
+                        frontendSdks: [],
                         lastSeen: new Date(),
                         issues: {
                             missingFeatures: [],
@@ -219,7 +227,7 @@ test('filter out private projects from overview', async () => {
     } as IClientApplicationsStore;
     const privateProjectsChecker = {
         async filterUserAccessibleProjects(
-            userId: number,
+            _userId: number,
             projects: string[],
         ): Promise<string[]> {
             return projects.filter((project) => !project.includes('private'));
@@ -253,5 +261,131 @@ test('filter out private projects from overview', async () => {
             missingStrategies: [],
         },
         featureCount: 0,
+    });
+});
+
+test('`registerInstance` sets `instanceId` to `default` if it is not provided', async () => {
+    const instanceService = new ClientInstanceService(
+        {} as any,
+        config,
+        {} as any,
+    );
+
+    await instanceService.registerInstance(
+        {
+            appName: 'appName',
+            environment: '',
+        },
+        '::1',
+    );
+
+    expect(instanceService.seenClients.appName_default).toMatchObject({
+        appName: 'appName',
+        instanceId: 'default',
+    });
+});
+
+describe('upserting into `seenClients`', () => {
+    test('registerInstance merges its data', async () => {
+        const instanceService = new ClientInstanceService(
+            {} as any,
+            config,
+            {} as any,
+        );
+
+        const client = {
+            appName: 'appName',
+            instanceId: 'instanceId',
+        };
+
+        const key = instanceService.clientKey(client);
+
+        instanceService.seenClients = {
+            [key]: { ...client, sdkVersion: 'my-sdk' },
+        };
+
+        await instanceService.registerInstance(
+            {
+                ...client,
+                environment: 'blue',
+            },
+            '::1',
+        );
+
+        expect(instanceService.seenClients[key]).toMatchObject({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            environment: 'blue',
+            sdkVersion: 'my-sdk',
+        });
+    });
+    test('registerBackendClient merges its data', async () => {
+        const instanceService = new ClientInstanceService(
+            {} as any,
+            config,
+            {} as any,
+        );
+
+        const client = {
+            appName: 'appName',
+            instanceId: 'instanceId',
+        };
+
+        const key = instanceService.clientKey(client);
+
+        instanceService.seenClients = {
+            [key]: { ...client, environment: 'blue' },
+        };
+
+        await instanceService.registerBackendClient(
+            {
+                ...client,
+                sdkVersion: 'my-sdk',
+                started: new Date(),
+                interval: 5,
+            },
+            '::1',
+        );
+
+        expect(instanceService.seenClients[key]).toMatchObject({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            environment: 'blue',
+            sdkVersion: 'my-sdk',
+        });
+    });
+    test('registerFrontendClient merges its data', async () => {
+        const instanceService = new ClientInstanceService(
+            {} as any,
+            config,
+            {} as any,
+        );
+
+        const client = {
+            appName: 'appName',
+            instanceId: 'instanceId',
+        };
+
+        const key = instanceService.clientKey(client);
+
+        instanceService.seenClients = {
+            [key]: { ...client, metricsCount: 10 },
+        };
+
+        instanceService.registerFrontendClient({
+            ...client,
+            sdkVersion: 'my-sdk',
+            sdkType: 'frontend',
+            environment: 'black',
+        });
+
+        expect(instanceService.seenClients[key]).toMatchObject({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            sdkVersion: 'my-sdk',
+            sdkType: 'frontend',
+            environment: 'black',
+            metricsCount: 10,
+        });
     });
 });

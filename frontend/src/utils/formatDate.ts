@@ -14,7 +14,7 @@ export const formatDateYMDHMS = (
 
 export const formatDateYMDHM = (
     date: number | string | Date,
-    locale: string,
+    locale?: string,
     timeZone?: string,
 ): string => {
     return new Date(date).toLocaleString(locale, {

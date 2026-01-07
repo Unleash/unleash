@@ -1,19 +1,18 @@
 import owasp from 'owasp-password-strength-test';
 import type { ErrorObject } from 'ajv';
-import AuthenticationRequired from '../types/authentication-required';
-import type { ApiErrorSchema } from './unleash-error';
+import AuthenticationRequired from '../types/authentication-required.js';
+import type { ApiErrorSchema } from './unleash-error.js';
 import BadDataError, {
     fromOpenApiValidationError,
     fromOpenApiValidationErrors,
-} from './bad-data-error';
-import PermissionError from './permission-error';
-import OwaspValidationError from './owasp-validation-error';
-import IncompatibleProjectError from './incompatible-project-error';
-import PasswordUndefinedError from './password-undefined';
-import ProjectWithoutOwnerError from './project-without-owner-error';
-import NotFoundError from './notfound-error';
-import { validateString } from '../util/validators/constraint-types';
-import { fromLegacyError } from './from-legacy-error';
+} from './bad-data-error.js';
+import PermissionError from './permission-error.js';
+import OwaspValidationError from './owasp-validation-error.js';
+import IncompatibleProjectError from './incompatible-project-error.js';
+import PasswordUndefinedError from './password-undefined.js';
+import NotFoundError from './notfound-error.js';
+import { validateString } from '../util/validators/constraint-types.js';
+import { fromLegacyError } from './from-legacy-error.js';
 
 describe('v5 deprecation: backwards compatibility', () => {
     it(`Adds details to error types that don't specify it`, () => {
@@ -102,41 +101,41 @@ describe('OpenAPI error conversion', () => {
         expect(result.message).toContain(JSON.stringify(parameterValue));
     });
 
-    it.each(['/body', '/body/subObject'])(
-        'Gives useful error messages for oneOf errors in %s',
-        (instancePath) => {
-            const error = {
-                keyword: 'oneOf',
-                instancePath,
-                schemaPath: '#/components/schemas/createApiTokenSchema/oneOf',
-                params: {
-                    passingSchemas: null,
-                },
-                message: 'should match exactly one schema in oneOf',
-            };
+    it.each([
+        '/body',
+        '/body/subObject',
+    ])('Gives useful error messages for oneOf errors in %s', (instancePath) => {
+        const error = {
+            keyword: 'oneOf',
+            instancePath,
+            schemaPath: '#/components/schemas/createApiTokenSchema/oneOf',
+            params: {
+                passingSchemas: null,
+            },
+            message: 'should match exactly one schema in oneOf',
+        };
 
-            const result = fromOpenApiValidationError({
-                body: {
-                    secret: 'blah',
-                    username: 'string2',
-                    type: 'admin',
-                },
-                query: {},
-            })(error);
+        const result = fromOpenApiValidationError({
+            body: {
+                secret: 'blah',
+                username: 'string2',
+                type: 'admin',
+            },
+            query: {},
+        })(error);
 
-            expect(result).toMatchObject({
-                message:
-                    // it provides the message
-                    expect.stringContaining(error.message),
-                path: instancePath,
-            });
+        expect(result).toMatchObject({
+            message:
+                // it provides the message
+                expect.stringContaining(error.message),
+            path: instancePath,
+        });
 
-            // it tells the user what happened
-            expect(result.message).toContain('matches more than one option');
-            // it tells the user what part of the request body this pertains to
-            expect(result.message).toContain(`"${instancePath}" property`);
-        },
-    );
+        // it tells the user what happened
+        expect(result.message).toContain('matches more than one option');
+        // it tells the user what part of the request body this pertains to
+        expect(result.message).toContain(`"${instancePath}" property`);
+    });
 
     it('Gives useful pattern error messages', () => {
         const error = {
@@ -660,20 +659,6 @@ describe('Error serialization special cases', () => {
 
     it('PasswordUndefinedError: adds `validationErrors: []` to the `details` list', () => {
         const error = new PasswordUndefinedError();
-        const json = error.toJSON();
-
-        expect(json).toMatchObject({
-            details: [
-                {
-                    validationErrors: [],
-                    message: json.message,
-                },
-            ],
-        });
-    });
-
-    it('ProjectWithoutOwnerError: adds `validationErrors: []` to the `details` list', () => {
-        const error = new ProjectWithoutOwnerError();
         const json = error.toJSON();
 
         expect(json).toMatchObject({

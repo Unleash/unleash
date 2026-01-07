@@ -6,7 +6,7 @@ import type {
     UpdateProjectEnterpriseSettingsSchema,
     ProjectCreatedSchema,
 } from 'openapi';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 interface IAccessPayload {
     roles: number[];

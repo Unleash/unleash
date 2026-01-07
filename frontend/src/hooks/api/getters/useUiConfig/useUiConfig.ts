@@ -1,8 +1,8 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
-import { defaultValue } from './defaultValue';
+import { defaultValue } from './defaultValue.js';
 import type { IUiConfig } from 'interfaces/uiConfig';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import { useMemo, useCallback } from 'react';
 
 interface IUseUIConfigOutput {

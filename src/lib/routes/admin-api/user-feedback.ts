@@ -1,25 +1,25 @@
 import type { Response } from 'express';
-import Controller from '../controller';
-import type { Logger } from '../../logger';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import type UserFeedbackService from '../../services/user-feedback-service';
-import type { IAuthRequest } from '../unleash-types';
-import { NONE } from '../../types/permissions';
-import type { OpenApiService } from '../../services/openapi-service';
-import type { FeedbackCreateSchema } from '../../openapi/spec/feedback-create-schema';
-import type { FeedbackUpdateSchema } from '../../openapi/spec/feedback-update-schema';
-import type { FeedbackResponseSchema } from '../../openapi/spec/feedback-response-schema';
-import { serializeDates } from '../../types/serialize-dates';
+import Controller from '../controller.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import type UserFeedbackService from '../../services/user-feedback-service.js';
+import type { IAuthRequest } from '../unleash-types.js';
+import { NONE } from '../../types/permissions.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import type { FeedbackCreateSchema } from '../../openapi/spec/feedback-create-schema.js';
+import type { FeedbackUpdateSchema } from '../../openapi/spec/feedback-update-schema.js';
+import type { FeedbackResponseSchema } from '../../openapi/spec/feedback-response-schema.js';
+import { serializeDates } from '../../types/serialize-dates.js';
 import { parseISO } from 'date-fns';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import BadDataError from '../../error/bad-data-error';
-import { feedbackResponseSchema, getStandardResponses } from '../../openapi';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+import BadDataError from '../../error/bad-data-error.js';
+import {
+    feedbackResponseSchema,
+    getStandardResponses,
+} from '../../openapi/index.js';
 
 class UserFeedbackController extends Controller {
-    private logger: Logger;
-
     private userFeedbackService: UserFeedbackService;
 
     private openApiService: OpenApiService;
@@ -32,7 +32,6 @@ class UserFeedbackController extends Controller {
         }: Pick<IUnleashServices, 'userFeedbackService' | 'openApiService'>,
     ) {
         super(config);
-        this.logger = config.getLogger('feedback-controller.ts');
         this.userFeedbackService = userFeedbackService;
         this.openApiService = openApiService;
 
@@ -47,7 +46,7 @@ class UserFeedbackController extends Controller {
                     operationId: 'createFeedback',
                     summary: 'Send Unleash feedback',
                     description:
-                        'Sends feedback gathered from the Unleash UI to the Unleash server. Must be called with a token with an identifiable user (either from being sent from the UI or from using a [PAT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens)).',
+                        'Sends feedback gathered from the Unleash UI to the Unleash server. Must be called with a token with an identifiable user (either from being sent from the UI or from using a [PAT](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens)).',
                     requestBody: createRequestSchema('feedbackCreateSchema'),
                     responses: {
                         200: createResponseSchema('feedbackResponseSchema'),
@@ -68,7 +67,7 @@ class UserFeedbackController extends Controller {
                     operationId: 'updateFeedback',
                     summary: 'Update Unleash feedback',
                     description:
-                        'Updates the feedback with the provided ID. Only provided fields are updated. Fields left out are left untouched. Must be called with a token with an identifiable user (either from being sent from the UI or from using a [PAT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens)).',
+                        'Updates the feedback with the provided ID. Only provided fields are updated. Fields left out are left untouched. Must be called with a token with an identifiable user (either from being sent from the UI or from using a [PAT](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#personal-access-tokens)).',
                     requestBody: createRequestSchema('feedbackUpdateSchema'),
                     responses: {
                         200: createResponseSchema('feedbackResponseSchema'),
@@ -110,7 +109,7 @@ class UserFeedbackController extends Controller {
             feedbackId: req.params.id,
             userId: req.user.id,
             neverShow: req.body.neverShow || false,
-            given: req.body.given && parseISO(req.body.given),
+            given: (req.body.given && parseISO(req.body.given)) || new Date(),
         });
 
         this.openApiService.respondWithValidation(
@@ -121,6 +120,4 @@ class UserFeedbackController extends Controller {
         );
     }
 }
-
-module.exports = UserFeedbackController;
 export default UserFeedbackController;

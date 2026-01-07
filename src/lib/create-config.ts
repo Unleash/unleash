@@ -1,4 +1,5 @@
-import { parse } from 'pg-connection-string';
+import pgs from 'pg-connection-string';
+const { parse } = pgs;
 import merge from 'deepmerge';
 import { readFileSync, existsSync } from 'fs';
 import {
@@ -22,38 +23,39 @@ import {
     type IVersionOption,
     type ISSLOption,
     type UsernameAdminUser,
-} from './types/option';
-import { getDefaultLogProvider, LogLevel, validateLogProvider } from './logger';
-import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all';
-import { formatBaseUri } from './util/format-base-uri';
+} from './types/option.js';
+import {
+    getDefaultLogProvider,
+    LogLevel,
+    validateLogProvider,
+} from './logger.js';
+import { defaultCustomAuthDenyAll } from './default-custom-auth-deny-all.js';
+import { formatBaseUri } from './util/format-base-uri.js';
 import {
     hoursToMilliseconds,
     minutesToMilliseconds,
     secondsToMilliseconds,
 } from 'date-fns';
 import EventEmitter from 'events';
-import {
-    ApiTokenType,
-    mapLegacyToken,
-    validateApiToken,
-} from './types/models/api-token';
+import { validateApiToken } from './types/models/api-token.js';
 import {
     parseEnvVarBoolean,
     parseEnvVarJSON,
     parseEnvVarNumber,
     parseEnvVarStrings,
-} from './util/parseEnvVar';
+} from './util/parseEnvVar.js';
 import {
     defaultExperimentalOptions,
     type IExperimentalOptions,
-} from './types/experimental';
+} from './types/experimental.js';
 import {
     DEFAULT_SEGMENT_VALUES_LIMIT,
     DEFAULT_STRATEGY_SEGMENTS_LIMIT,
-} from './util/segments';
-import FlagResolver from './util/flag-resolver';
-import { validateOrigins } from './util/validateOrigin';
-import type { ResourceLimitsSchema } from './openapi/spec/resource-limits-schema';
+} from './util/segments.js';
+import FlagResolver from './util/flag-resolver.js';
+import { validateOrigins } from './util/validateOrigin.js';
+import type { ResourceLimitsSchema } from './openapi/spec/resource-limits-schema.js';
+import { ApiTokenType } from './internals.js';
 
 const safeToUpper = (s?: string) => (s ? s.toUpperCase() : s);
 
@@ -335,17 +337,22 @@ const parseEnvVarInitialAdminUser = (): UsernameAdminUser | undefined => {
     return username && password ? { username, password } : undefined;
 };
 
-const defaultAuthentication: IAuthOption = {
-    demoAllowAdminLogin: parseEnvVarBoolean(
-        process.env.AUTH_DEMO_ALLOW_ADMIN_LOGIN,
-        false,
-    ),
-    enableApiToken: parseEnvVarBoolean(process.env.AUTH_ENABLE_API_TOKEN, true),
-    type: authTypeFromString(process.env.AUTH_TYPE),
-    customAuthHandler: defaultCustomAuthDenyAll,
-    createAdminUser: true,
-    initialAdminUser: parseEnvVarInitialAdminUser(),
-    initApiTokens: [],
+const buildDefaultAuthOption = () => {
+    return {
+        demoAllowAdminLogin: parseEnvVarBoolean(
+            process.env.AUTH_DEMO_ALLOW_ADMIN_LOGIN,
+            false,
+        ),
+        enableApiToken: parseEnvVarBoolean(
+            process.env.AUTH_ENABLE_API_TOKEN,
+            true,
+        ),
+        type: authTypeFromString(process.env.AUTH_TYPE),
+        customAuthHandler: defaultCustomAuthDenyAll,
+        createAdminUser: true,
+        initialAdminUser: parseEnvVarInitialAdminUser(),
+        initApiTokens: [],
+    };
 };
 
 const defaultImport: WithOptional<IImportOption, 'file'> = {
@@ -410,13 +417,13 @@ const loadTokensFromString = (
         const [environment = '*'] = rest.split('.');
         const token = {
             createdAt: undefined,
-            project,
+            projects: [project],
             environment,
             secret,
             type: tokenType,
             tokenName: 'admin',
         };
-        validateApiToken(mapLegacyToken(token));
+        validateApiToken(token);
         return token;
     });
     return tokens;
@@ -429,8 +436,10 @@ const loadInitApiTokens = () => {
             ApiTokenType.ADMIN,
         ),
         ...loadTokensFromString(
-            process.env.INIT_CLIENT_API_TOKENS,
-            ApiTokenType.CLIENT,
+            process.env.INIT_BACKEND_API_TOKENS ??
+                // INIT_CLIENT_API_TOKENS is deprecated in favor of INIT_BACKEND_API_TOKENS
+                process.env.INIT_CLIENT_API_TOKENS,
+            ApiTokenType.BACKEND,
         ),
         ...loadTokensFromString(
             process.env.INIT_FRONTEND_API_TOKENS,
@@ -563,12 +572,30 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const initApiTokens = loadInitApiTokens();
 
     const authentication: IAuthOption = mergeAll([
-        defaultAuthentication,
+        buildDefaultAuthOption(),
         (options.authentication
             ? removeUndefinedKeys(options.authentication)
             : options.authentication) || {},
         { initApiTokens: initApiTokens },
     ]);
+    // make sure init tokens appear only once
+    authentication.initApiTokens = [
+        ...new Map(
+            authentication.initApiTokens.map((token) => [token.secret, token]),
+        ).values(),
+    ];
+
+    const customStrategySettings = options.customStrategySettings ?? {
+        disableCreation: parseEnvVarBoolean(
+            process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION,
+            false,
+        ),
+
+        disableEditing: parseEnvVarBoolean(
+            process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_EDITING,
+            false,
+        ),
+    };
 
     const environmentEnableOverrides = loadEnvironmentEnableOverrides();
 
@@ -602,7 +629,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.secureHeaders ||
         parseEnvVarBoolean(process.env.SECURE_HEADERS, false);
 
-    const enableOAS = parseEnvVarBoolean(process.env.ENABLE_OAS, true);
+    const enableOAS =
+        options.enableOAS === undefined
+            ? parseEnvVarBoolean(process.env.ENABLE_OAS, true)
+            : options.enableOAS;
 
     const additionalCspAllowedDomains: ICspDomainConfig =
         parseCspConfig(options.additionalCspAllowedDomains) ||
@@ -742,9 +772,19 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
                 options?.resourceLimits?.featureFlags ?? 5000,
             ),
         ),
+        releaseTemplates: Math.max(
+            0,
+            parseEnvVarNumber(
+                process.env.UNLEASH_RELEASE_TEMPLATES_LIMIT,
+                options?.resourceLimits?.releaseTemplates ?? 5,
+            ),
+        ),
     };
 
     const openAIAPIKey = process.env.OPENAI_API_KEY;
+
+    const unleashFrontendToken =
+        options.unleashFrontendToken || process.env.UNLEASH_FRONTEND_TOKEN;
 
     const defaultDaysToBeConsideredInactive = 180;
     const userInactivityThresholdInDays =
@@ -753,6 +793,14 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             process.env.USER_INACTIVITY_THRESHOLD_IN_DAYS,
             defaultDaysToBeConsideredInactive,
         );
+
+    const prometheusImpactMetricsApi =
+        options.prometheusImpactMetricsApi ||
+        process.env.PROMETHEUS_IMPACT_METRICS_API;
+
+    const checkDbOnReady =
+        Boolean(options.checkDbOnReady) ??
+        parseEnvVarBoolean(process.env.CHECK_DB_ON_READY, false);
 
     return {
         db,
@@ -785,6 +833,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         clientFeatureCaching,
         accessControlMaxAge,
         prometheusApi,
+        prometheusImpactMetricsApi,
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
         isEnterprise: isEnterprise,
@@ -796,11 +845,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         openAIAPIKey,
         userInactivityThresholdInDays,
         buildDate: process.env.BUILD_DATE,
+        unleashFrontendToken,
+        customStrategySettings,
+        checkDbOnReady,
     };
 }
-
-module.exports = {
-    createConfig,
-    resolveIsOss,
-    authTypeFromString,
-};

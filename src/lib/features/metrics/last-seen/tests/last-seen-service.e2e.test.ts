@@ -1,12 +1,13 @@
 import dbInit, {
     type ITestDb,
-} from '../../../../../test/e2e/helpers/database-init';
+} from '../../../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../../../test/fixtures/no-logger';
-import { TEST_AUDIT_USER } from '../../../../types';
+} from '../../../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../../../test/fixtures/no-logger.js';
+import { DEFAULT_ENV } from '../../../../server-impl.js';
+import { TEST_AUDIT_USER } from '../../../../types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -54,7 +55,7 @@ test('should clean unknown feature flag names from last seen store', async () =>
     const inserts = [...clean, ...dirty].map((feature) => {
         return {
             featureName: feature,
-            environment: 'default',
+            environment: DEFAULT_ENV,
             yes: 1,
             no: 0,
             appName: 'test',
@@ -90,8 +91,8 @@ test('should clean unknown feature flag environments from last seen store', asyn
     const { lastSeenService, featureToggleService } = app.services;
 
     const clean = [
-        { name: 'clean5', environment: 'default' },
-        { name: 'clean6', environment: 'default' },
+        { name: 'clean5', environment: DEFAULT_ENV },
+        { name: 'clean6', environment: DEFAULT_ENV },
         { name: 'clean7', environment: 'nonexisting' },
         { name: 'clean8', environment: 'nonexisting' },
     ];
@@ -138,9 +139,9 @@ test('should not fail with feature names longer than 255 chars', async () => {
     const { lastSeenService } = app.services;
 
     const longFeatureNames = [
-        { name: 'a'.repeat(254), environment: 'default' },
-        { name: 'b'.repeat(255), environment: 'default' },
-        { name: 'c'.repeat(256), environment: 'default' }, // this one should be filtered out
+        { name: 'a'.repeat(254), environment: DEFAULT_ENV },
+        { name: 'b'.repeat(255), environment: DEFAULT_ENV },
+        { name: 'c'.repeat(256), environment: DEFAULT_ENV }, // this one should be filtered out
     ];
 
     const inserts = [...longFeatureNames].map((feature) => {

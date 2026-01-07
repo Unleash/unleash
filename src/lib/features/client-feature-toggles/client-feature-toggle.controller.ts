@@ -2,45 +2,45 @@ import memoizee from 'memoizee';
 import type { Response } from 'express';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import hashSum from 'hash-sum';
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 import type {
     IClientSegment,
     IFlagResolver,
     IUnleashConfig,
-    IUnleashServices,
-} from '../../types';
-import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
-import type { Logger } from '../../logger';
-import { querySchema } from '../../schema/feature-schema';
-import type { IFeatureToggleQuery } from '../../types/model';
-import NotFoundError from '../../error/notfound-error';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import ApiUser from '../../types/api-user';
-import { ALL, isAllProjects } from '../../types/models/api-token';
-import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import type { ClientSpecService } from '../../services/client-spec-service';
-import type { OpenApiService } from '../../services/openapi-service';
-import { NONE } from '../../types/permissions';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import type { ClientFeaturesQuerySchema } from '../../openapi/spec/client-features-query-schema';
+} from '../../types/index.js';
+import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
+import type { Logger } from '../../logger.js';
+import { querySchema } from '../../schema/feature-schema.js';
+import type { IFeatureToggleQuery } from '../../types/model.js';
+import NotFoundError from '../../error/notfound-error.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import ApiUser from '../../types/api-user.js';
+import { ALL, isAllProjects } from '../../types/models/api-token.js';
+import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import type { ClientSpecService } from '../../services/client-spec-service.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { NONE } from '../../types/permissions.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+import type { ClientFeaturesQuerySchema } from '../../openapi/spec/client-features-query-schema.js';
 import type EventEmitter from 'events';
 import {
     clientFeatureSchema,
     type ClientFeatureSchema,
-} from '../../openapi/spec/client-feature-schema';
+} from '../../openapi/spec/client-feature-schema.js';
 import {
     clientFeaturesSchema,
     type ClientFeaturesSchema,
-} from '../../openapi/spec/client-features-schema';
-import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
-import type { ClientFeatureToggleService } from './client-feature-toggle-service';
+} from '../../openapi/spec/client-features-schema.js';
+import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service.js';
+import type { ClientFeatureToggleService } from './client-feature-toggle-service.js';
 import {
     CLIENT_FEATURES_MEMORY,
     CLIENT_METRICS_NAMEPREFIX,
     CLIENT_METRICS_TAGS,
-} from '../../internals';
+} from '../../internals.js';
 import isEqual from 'lodash.isequal';
 import { diff } from 'json-diff';
+import type { IUnleashServices } from '../../services/index.js';
 
 const version = 2;
 
@@ -147,15 +147,13 @@ export default class FeatureController extends Controller {
 
         if (clientFeatureCaching.enabled) {
             this.featuresAndSegments = memoizee(
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                (query: IFeatureToggleQuery, etag: string) =>
+                (query: IFeatureToggleQuery, _etag: string) =>
                     this.resolveFeaturesAndSegments(query),
                 {
                     promise: true,
                     maxAge: clientFeatureCaching.maxAge,
-                    normalizer(args) {
-                        // args is arguments object as accessible in memoized function
-                        return args[1];
+                    normalizer([_query, etag]) {
+                        return etag;
                     },
                 },
             );
@@ -167,7 +165,7 @@ export default class FeatureController extends Controller {
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
-        if (this.flagResolver.isEnabled('deltaApi')) {
+        if (this.flagResolver.isEnabled('deltaDiff')) {
             const features =
                 await this.clientFeatureToggleService.getClientFeatures(query);
 
@@ -320,13 +318,11 @@ export default class FeatureController extends Controller {
 
         if (etag === userVersion) {
             res.status(304);
-            res.getHeaderNames().forEach((header) => res.removeHeader(header));
+            res.getHeaderNames().forEach((header) => {
+                res.removeHeader(header);
+            });
             res.end();
             return;
-        } else {
-            this.logger.debug(
-                `Provided revision: ${userVersion}, calculated revision: ${etag}`,
-            );
         }
 
         const [features, segments] = await this.featuresAndSegments(
@@ -357,20 +353,14 @@ export default class FeatureController extends Controller {
     }
 
     async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {
-        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
         const revisionId =
-            await this.configurationRevisionService.getMaxRevisionId();
+            await this.configurationRevisionService.getMaxRevisionId(
+                query.environment,
+            );
 
-        // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
         const queryHash = hashSum(query);
-        const etagVariant = this.flagResolver.getVariant('etagVariant');
-        if (etagVariant.feature_enabled && etagVariant.enabled) {
-            const etag = `"${queryHash}:${revisionId}:${etagVariant.name}"`;
-            return { revisionId, etag, queryHash };
-        } else {
-            const etag = `"${queryHash}:${revisionId}"`;
-            return { revisionId, etag, queryHash };
-        }
+        const etag = `"${queryHash}:${revisionId}:v1"`;
+        return { revisionId, etag, queryHash };
     }
 
     async getFeatureToggle(

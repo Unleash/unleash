@@ -1,18 +1,23 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { parametersSchema } from './parameters-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { featureSchema } from './feature-schema';
-import { constraintSchema } from './constraint-schema';
-import { environmentSchema } from './environment-schema';
-import { featureEnvironmentSchema } from './feature-environment-schema';
-import { projectStatsSchema } from './project-stats-schema';
-import { createFeatureStrategySchema } from './create-feature-strategy-schema';
-import { projectEnvironmentSchema } from './project-environment-schema';
-import { createStrategyVariantSchema } from './create-strategy-variant-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
+import { parametersSchema } from './parameters-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { featureSchema } from './feature-schema.js';
+import { constraintSchema } from './constraint-schema.js';
+import { environmentSchema } from './environment-schema.js';
+import { featureEnvironmentSchema } from './feature-environment-schema.js';
+import { projectStatsSchema } from './project-stats-schema.js';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
+import { projectEnvironmentSchema } from './project-environment-schema.js';
+import { releasePlanSchema } from './release-plan-schema.js';
+import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
+import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
+import { transitionConditionSchema } from './transition-condition-schema.js';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema.js';
+import { tagSchema } from './tag-schema.js';
 
 export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
@@ -25,10 +30,11 @@ export const healthOverviewSchema = {
         'mode',
         'members',
         'health',
+        'technicalDebt',
         'environments',
         'features',
     ],
-    description: `An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)`,
+    description: `An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/concepts/technical-debt)`,
     properties: {
         version: {
             type: 'integer',
@@ -57,7 +63,7 @@ export const healthOverviewSchema = {
             enum: ['open', 'protected', 'private'],
             example: 'open',
             description:
-                "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
+                "The project's [collaboration mode](https://docs.getunleash.io/concepts/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
         },
         featureLimit: {
             type: 'number',
@@ -74,9 +80,17 @@ export const healthOverviewSchema = {
         },
         health: {
             type: 'integer',
-            description:
-                'The overall [health rating](https://docs.getunleash.io/reference/technical-debt#project-status) of the project.',
+            description: 'Use `technicalDebt` instead.',
             example: 95,
+            deprecated: true,
+        },
+        technicalDebt: {
+            type: 'number',
+            example: 25,
+            minimum: 0,
+            maximum: 100,
+            description:
+                "An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100",
         },
         environments: {
             type: 'array',
@@ -134,12 +148,20 @@ export const healthOverviewSchema = {
             overrideSchema,
             parametersSchema,
             featureStrategySchema,
+            releasePlanSchema,
+            releasePlanMilestoneSchema,
+            releasePlanMilestoneStrategySchema,
+            transitionConditionSchema,
             strategyVariantSchema,
             variantSchema,
             projectStatsSchema,
             createFeatureNamingPatternSchema,
+            tagSchema,
         },
     },
 } as const;
 
-export type HealthOverviewSchema = FromSchema<typeof healthOverviewSchema>;
+export type HealthOverviewSchema = FromSchema<
+    typeof healthOverviewSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

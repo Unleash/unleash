@@ -1,6 +1,6 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { ChangeRequestsTabs } from './ChangeRequestsTabs/ChangeRequestsTabs';
+import { ChangeRequestsTabs } from './ChangeRequestsTabs/ChangeRequestsTabs.tsx';
 import { useProjectChangeRequests } from 'hooks/api/getters/useProjectChangeRequests/useProjectChangeRequests';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PageContent } from 'component/common/PageContent/PageContent';

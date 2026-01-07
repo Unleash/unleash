@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectCreatedSchemaChangeRequestEnvironmentsItem } from './projectCreatedSchemaChangeRequestEnvironmentsItem';
-import type { ProjectCreatedSchemaMode } from './projectCreatedSchemaMode';
+import type { ProjectCreatedSchemaChangeRequestEnvironmentsItem } from './projectCreatedSchemaChangeRequestEnvironmentsItem.js';
+import type { ProjectCreatedSchemaMode } from './projectCreatedSchemaMode.js';
 
 /**
  * Details about the newly created project.
@@ -19,10 +19,7 @@ export interface ProjectCreatedSchema {
      * @nullable
      */
     description?: string | null;
-    /**
-     * The environments enabled for the project.
-     * @minItems 1
-     */
+    /** The environments enabled for the project. */
     environments?: string[];
     /**
      * A limit on the number of features allowed in the project. `null` if no limit.

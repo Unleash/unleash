@@ -1,13 +1,15 @@
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { useContextForm } from '../hooks/useContextForm';
-import { ContextForm } from '../ContextForm/ContextForm';
+import { useContextForm } from '../hooks/useContextForm.ts';
+import { ContextForm } from '../ContextForm/ContextForm.tsx';
 import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import { UPDATE_PROJECT } from '@server/types/permissions.ts';
 
 interface ICreateContextProps {
     onSubmit: () => void;
@@ -22,6 +24,7 @@ export const CreateUnleashContext = ({
 }: ICreateContextProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
+    const projectId = useOptionalPathParam('projectId');
     const {
         contextName,
         contextDesc,
@@ -36,9 +39,9 @@ export const CreateUnleashContext = ({
         clearErrors,
         setErrors,
         errors,
-    } = useContextForm();
-    const { createContext, loading } = useContextsApi();
-    const { refetchUnleashContext } = useUnleashContext();
+    } = useContextForm({ initialProject: projectId });
+    const { createContext, loading } = useContextsApi(projectId);
+    const { refetchUnleashContext } = useUnleashContext(undefined, projectId);
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -61,8 +64,12 @@ export const CreateUnleashContext = ({
         }
     };
 
+    const postTarget = projectId
+        ? `/api/admin/projects/${projectId}/context`
+        : '/api/admin/context';
+
     const formatApiCode = () => {
-        return `curl --location --request POST '${uiConfig.unleashUrl}/api/admin/context' \\
+        return `curl --location --request POST '${uiConfig.unleashUrl}${postTarget}' \\
 --header 'Authorization: INSERT_API_KEY' \\
 --header 'Content-Type: application/json' \\
 --data-raw '${JSON.stringify(getContextPayload(), undefined, 2)}'`;
@@ -74,7 +81,7 @@ export const CreateUnleashContext = ({
             title='Create context'
             description='Context fields are a basic building block used in Unleash to control roll-out.
             They can be used together with strategy constraints as part of the activation strategy evaluation.'
-            documentationLink='https://docs.getunleash.io/reference/unleash-context#custom-context-fields'
+            documentationLink='https://docs.getunleash.io/concepts/unleash-context#custom-context-fields'
             documentationLinkLabel='Context fields documentation'
             formatApiCode={formatApiCode}
             modal={modal}
@@ -98,7 +105,8 @@ export const CreateUnleashContext = ({
             >
                 <CreateButton
                     name='context'
-                    permission={CREATE_CONTEXT_FIELD}
+                    permission={[CREATE_CONTEXT_FIELD, UPDATE_PROJECT]}
+                    projectId={projectId}
                 />
             </ContextForm>
         </FormTemplate>

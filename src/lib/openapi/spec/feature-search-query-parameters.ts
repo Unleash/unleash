@@ -1,4 +1,4 @@
-import type { FromQueryParams } from '../util/from-query-params';
+import type { FromQueryParams } from '../util/from-query-params.js';
 
 export const featureSearchQueryParameters = [
     {
@@ -32,6 +32,18 @@ export const featureSearchQueryParameters = [
         },
         description:
             'The state of the feature active/stale. The state can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.',
+        in: 'query',
+    },
+    {
+        name: 'lifecycle',
+        schema: {
+            type: 'string',
+            example: 'IS:initial',
+            pattern:
+                '^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
+        },
+        description:
+            'The lifecycle stage of the feature. The stagee can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.',
         in: 'query',
     },
     {
@@ -151,9 +163,10 @@ export const featureSearchQueryParameters = [
         schema: {
             type: 'string',
             example: 'IS:true',
+            pattern: '^IS:(true|false)$',
         },
         description:
-            'Whether to get results for archived feature flags or active feature flags. If `true`, Unleash will return only archived flags. If `false`, it will return only active flags.',
+            'Whether to get results for archived feature flags or active feature flags. If `IS:true`, Unleash will return only archived flags. If `IS:false`, it will return only active flags.',
         in: 'query',
     },
     {
@@ -165,6 +178,17 @@ export const featureSearchQueryParameters = [
         },
         description:
             'The date the feature was created. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.',
+        in: 'query',
+    },
+    {
+        name: 'lastSeenAt',
+        schema: {
+            type: 'string',
+            example: 'IS_ON_OR_AFTER:2023-01-28',
+            pattern: '^(IS_BEFORE|IS_ON_OR_AFTER):\\d{4}-\\d{2}-\\d{2}$',
+        },
+        description:
+            'The date the feature was last seen from metrics. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.',
         in: 'query',
     },
 ] as const;

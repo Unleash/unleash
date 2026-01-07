@@ -2,15 +2,14 @@ import {
     UserPreferenceUpdatedEvent,
     type IUnleashConfig,
     type IUnleashStores,
-} from '../../types';
-import type { Logger } from '../../logger';
-import type { IAuditUser } from '../../types/user';
+} from '../../types/index.js';
+import type { IAuditUser } from '../../types/user.js';
 import type {
     IUserUnsubscribeStore,
     UnsubscribeEntry,
-} from './user-unsubscribe-store-type';
-import type EventService from '../events/event-service';
-import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type';
+} from './user-unsubscribe-store-type.js';
+import type EventService from '../events/event-service.js';
+import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type.js';
 
 export class UserSubscriptionsService {
     private userUnsubscribeStore: IUserUnsubscribeStore;
@@ -18,8 +17,6 @@ export class UserSubscriptionsService {
     private userSubscriptionsReadModel: IUserSubscriptionsReadModel;
 
     private eventService: EventService;
-
-    private logger: Logger;
 
     constructor(
         {
@@ -29,13 +26,12 @@ export class UserSubscriptionsService {
             IUnleashStores,
             'userUnsubscribeStore' | 'userSubscriptionsReadModel'
         >,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        { getLogger: _getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         eventService: EventService,
     ) {
         this.userUnsubscribeStore = userUnsubscribeStore;
         this.userSubscriptionsReadModel = userSubscriptionsReadModel;
         this.eventService = eventService;
-        this.logger = getLogger('services/user-subscription-service.ts');
     }
 
     async getUserSubscriptions(userId: number) {

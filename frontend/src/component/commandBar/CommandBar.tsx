@@ -16,29 +16,28 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import {
     CommandResultGroup,
     type CommandResultGroupItem,
-} from './RecentlyVisited/CommandResultGroup';
-import { CommandPageSuggestions } from './CommandPageSuggestions';
-import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
+} from './RecentlyVisited/CommandResultGroup.tsx';
+import { CommandPageSuggestions } from './CommandPageSuggestions.tsx';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import {
     type CommandQueryCounter,
     CommandSearchFeatures,
-} from './CommandSearchFeatures';
+} from './CommandSearchFeatures.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { CommandQuickSuggestions } from './CommandQuickSuggestions';
-import { CommandSearchPages } from './CommandSearchPages';
-import { CommandBarFeedback } from './CommandBarFeedback';
-import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { CommandQuickSuggestions } from './CommandQuickSuggestions.tsx';
+import { CommandSearchPages } from './CommandSearchPages.tsx';
+import { CommandBarFeedback } from './CommandBarFeedback.tsx';
+import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder.tsx';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import { useCommandBarRoutes } from './useCommandBarRoutes.ts';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
     width: '100%',
     left: 0,
     top: '39px',
-    zIndex: 4,
+    zIndex: theme.zIndex.drawer,
     borderTop: theme.spacing(0),
     padding: theme.spacing(1.5, 0, 1.5),
     borderRadius: 0,
@@ -52,20 +51,16 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const StyledContainer = styled('div', {
-    shouldForwardProp: (prop) =>
-        prop !== 'active' && prop !== 'frontendHeaderRedesign',
+    shouldForwardProp: (prop) => prop !== 'active',
 })<{
     active: boolean | undefined;
-    frontendHeaderRedesign?: boolean;
-}>(({ theme, active, frontendHeaderRedesign }) => ({
+}>(({ theme, active }) => ({
     border: `1px solid transparent`,
     display: 'flex',
     flexGrow: 1,
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: frontendHeaderRedesign
-        ? theme.palette.background.application
-        : theme.palette.background.paper,
+    backgroundColor: theme.palette.background.application,
     maxWidth: active ? '100%' : '400px',
     [theme.breakpoints.down('md')]: {
         marginTop: theme.spacing(1),
@@ -73,33 +68,32 @@ const StyledContainer = styled('div', {
     },
 }));
 
-const StyledSearch = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
-})<{
-    frontendHeaderRedesign?: boolean;
-}>(({ theme, frontendHeaderRedesign }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: frontendHeaderRedesign
-        ? theme.palette.background.paper
-        : theme.palette.background.elevation1,
-    border: `1px solid ${theme.palette.neutral.border}`,
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    padding: '3px 5px 3px 12px',
-    width: '100%',
-    zIndex: 3,
-}));
+const StyledSearch = styled('div')<{ isOpen?: boolean }>(
+    ({ theme, isOpen }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: theme.palette.background.paper,
+        border: `1px solid ${theme.palette.neutral.border}`,
+        borderRadius: theme.shape.borderRadiusExtraLarge,
+        padding: '3px 5px 3px 12px',
+        width: '100%',
+        zIndex: 3,
+        ...(isOpen
+            ? {
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
+                  borderBottom: '0px',
+                  paddingTop: theme.spacing(0.5),
+                  paddingBottom: theme.spacing(0.5),
+              }
+            : {}),
+    }),
+);
 
-const StyledInputBase = styled(InputBase, {
-    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
-})<{
-    frontendHeaderRedesign?: boolean;
-}>(({ theme, frontendHeaderRedesign }) => ({
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
     width: '100%',
     minWidth: '300px',
-    backgroundColor: frontendHeaderRedesign
-        ? theme.palette.background.paper
-        : theme.palette.background.elevation1,
+    backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledClose = styled(Close)(({ theme }) => ({
@@ -107,15 +101,8 @@ const StyledClose = styled(Close)(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
 }));
 
-interface IPageRouteInfo {
-    path: string;
-    route: string;
-    title: string;
-}
-
 export const CommandBar = () => {
     const { trackEvent } = usePlausibleTracker();
-    const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -131,19 +118,7 @@ export const CommandBar = () => {
         useState<CommandQueryCounter>({ query: '', count: 0 });
     const [hasNoResults, setHasNoResults] = useState(false);
     const [value, setValue] = useState<string>('');
-    const { routes } = useRoutes();
-    const allRoutes: Record<string, IPageRouteInfo> = {};
-    for (const route of [
-        ...routes.mainNavRoutes,
-        ...routes.adminRoutes,
-        ...routes.mobileRoutes,
-    ]) {
-        allRoutes[route.path] = {
-            path: route.path,
-            route: route.route,
-            title: route.title,
-        };
-    }
+    const { allRoutes } = useCommandBarRoutes();
 
     const hideSuggestions = () => {
         setShowSuggestions(false);
@@ -166,7 +141,7 @@ export const CommandBar = () => {
         setSearchedProjects(mappedProjects);
 
         const filteredPages = Object.values(allRoutes).filter((route) =>
-            route.title.toLowerCase().includes(query.toLowerCase()),
+            route.searchText.toLowerCase().includes(query.toLowerCase()),
         );
         const mappedPages = filteredPages.map((page) => ({
             name: page.title,
@@ -322,29 +297,9 @@ export const CommandBar = () => {
     };
 
     return (
-        <StyledContainer
-            ref={searchContainerRef}
-            active={showSuggestions}
-            frontendHeaderRedesign={frontendHeaderRedesign}
-        >
+        <StyledContainer ref={searchContainerRef} active={showSuggestions}>
             <RecentlyVisitedRecorder />
-            <StyledSearch
-                frontendHeaderRedesign={frontendHeaderRedesign}
-                sx={{
-                    borderBottomLeftRadius: (theme) =>
-                        showSuggestions
-                            ? 0
-                            : theme.shape.borderRadiusExtraLarge,
-                    borderBottomRightRadius: (theme) =>
-                        showSuggestions
-                            ? 0
-                            : theme.shape.borderRadiusExtraLarge,
-                    borderBottom: (theme) =>
-                        showSuggestions
-                            ? '0px'
-                            : `1px solid ${theme.palette.neutral.border}`,
-                }}
-            >
+            <StyledSearch isOpen={showSuggestions}>
                 <SearchIcon
                     sx={{
                         mr: 1,
@@ -357,12 +312,12 @@ export const CommandBar = () => {
                 </ScreenReaderOnly>
                 <StyledInputBase
                     id='command-bar-input'
-                    frontendHeaderRedesign={frontendHeaderRedesign}
                     inputRef={searchInputRef}
                     placeholder={placeholder}
                     inputProps={{
                         'data-testid': SEARCH_INPUT,
                     }}
+                    autoComplete='off'
                     value={value}
                     onChange={(e) => onSearchChange(e.target.value)}
                     onFocus={() => {

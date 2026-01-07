@@ -1,7 +1,7 @@
 import type {
     ISession,
     ISessionStore,
-} from '../../lib/types/stores/session-store';
+} from '../../lib/types/stores/session-store.js';
 
 export default class FakeSessionStore implements ISessionStore {
     private sessions: ISession[] = [];
@@ -43,8 +43,8 @@ export default class FakeSessionStore implements ISessionStore {
         );
     }
 
-    async get(sid: string): Promise<ISession> {
-        return this.sessions.find((s) => s.sid === sid);
+    async get(sid: string): Promise<ISession | undefined> {
+        return Promise.resolve(this.sessions.find((s) => s.sid === sid));
     }
 
     async insertSession(data: Omit<ISession, 'createdAt'>): Promise<ISession> {

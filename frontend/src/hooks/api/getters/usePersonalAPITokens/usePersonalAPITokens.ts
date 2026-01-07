@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { PatsSchema } from 'openapi';
 import type { IPersonalAPIToken } from 'interfaces/personalAPIToken';
 

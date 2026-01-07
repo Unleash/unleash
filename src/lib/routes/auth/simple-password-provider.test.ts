@@ -1,10 +1,10 @@
 import request from 'supertest';
 import express from 'express';
-import User from '../../types/user';
-import { SimplePasswordProvider } from './simple-password-provider';
-import PasswordMismatchError from '../../error/password-mismatch';
-import { createTestConfig } from '../../../test/config/test-config';
-import { OpenApiService } from '../../services/openapi-service';
+import User from '../../types/user.js';
+import { SimplePasswordProvider } from './simple-password-provider.js';
+import PasswordMismatchError from '../../error/password-mismatch.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { OpenApiService } from '../../services/openapi-service.js';
 
 test('Should require password', async () => {
     const config = createTestConfig();
@@ -37,7 +37,7 @@ test('Should login user', async () => {
 
     const app = express();
     app.use(express.json());
-    app.use((req, res, next) => {
+    app.use((req, _res, next) => {
         // @ts-expect-error
         req.session = {};
         next();
@@ -77,7 +77,7 @@ test('Should not login user with wrong password', async () => {
 
     const app = express();
     app.use(express.json());
-    app.use((req, res, next) => {
+    app.use((req, _res, next) => {
         // @ts-expect-error
         req.session = {};
         next();

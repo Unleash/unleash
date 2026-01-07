@@ -1,5 +1,5 @@
-import type { ITag } from '../model';
-import type { Store } from './store';
+import type { ITag } from '../../tags/index.js';
+import type { Store } from './store.js';
 
 export interface ITagStore extends Store<ITag, ITag> {
     getTagsByType(type: string): Promise<ITag[]>;

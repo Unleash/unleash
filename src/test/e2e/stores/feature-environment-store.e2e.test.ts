@@ -1,12 +1,12 @@
 import type {
     IFeatureStrategiesStore,
     IUnleashStores,
-} from '../../../lib/types';
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import type { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
-import type { IFeatureToggleStore } from '../../../lib/features/feature-toggle/types/feature-toggle-store-type';
-import type { IEnvironmentStore } from '../../../lib/features/project-environments/environment-store-type';
+} from '../../../lib/types/index.js';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import type { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store.js';
+import type { IFeatureToggleStore } from '../../../lib/features/feature-toggle/types/feature-toggle-store-type.js';
+import type { IEnvironmentStore } from '../../../lib/features/project-environments/environment-store-type.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -124,7 +124,7 @@ test('Copying features also copies variants', async () => {
         featureName: featureName,
         environment: 'clone',
     });
-    expect(cloned.variants).toMatchObject([variant]);
+    expect(cloned!.variants).toMatchObject([variant]);
 });
 
 test('Copying strategies also copies strategy variants', async () => {
@@ -165,7 +165,9 @@ test('Copying strategies also copies strategy variants', async () => {
     });
     await featureEnvironmentStore.connectProject('clone-2', 'default');
 
-    await featureEnvironmentStore.cloneStrategies(envName, 'clone-2');
+    await featureEnvironmentStore.cloneStrategies(envName, 'clone-2', [
+        'default',
+    ]);
 
     const clonedStrategy =
         await featureStrategiesStore.getStrategiesForFeatureEnv(

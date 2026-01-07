@@ -15,7 +15,7 @@ import {
 import Apps from '@mui/icons-material/Apps';
 
 import styles from './common.module.scss';
-import { ConditionallyRender } from './ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from './ConditionallyRender/ConditionallyRender.tsx';
 
 export { styles };
 
@@ -117,7 +117,7 @@ IconLink.propTypes = {
 };
 
 export const MenuItemWithIcon = React.forwardRef(
-    ({ icon: IconComponent, label, disabled, ...menuItemProps }, ref) => (
+    ({ icon: IconComponent, label, disabled, ...menuItemProps }, _ref) => (
         <MenuItem
             disabled={disabled}
             style={{ display: 'flex', alignItems: 'center' }}
@@ -132,43 +132,4 @@ MenuItemWithIcon.propTypes = {
     icon: PropTypes.object,
     label: PropTypes.string,
     disabled: PropTypes.bool,
-};
-
-const badNumbers = [
-    Number.NaN,
-    Number.POSITIVE_INFINITY,
-    Number.NEGATIVE_INFINITY,
-];
-export function calc(value, total, decimal) {
-    if (
-        typeof value !== 'number' ||
-        typeof total !== 'number' ||
-        typeof decimal !== 'number'
-    ) {
-        return null;
-    }
-
-    if (total === 0) {
-        return 0;
-    }
-
-    badNumbers.forEach((number) => {
-        if ([value, total, decimal].indexOf(number) > -1) {
-            return number;
-        }
-    });
-
-    return ((value / total) * 100).toFixed(decimal);
-}
-
-export const selectStyles = {
-    control: (provided) => ({
-        ...provided,
-        border: '1px solid #607d8b',
-        boxShadow: '0',
-        ':hover': {
-            borderColor: '#607d8b',
-            boxShadow: '0 0 0 1px #607d8b',
-        },
-    }),
 };

@@ -10,6 +10,7 @@ import {
     type ChangeEvent,
     type Dispatch,
     type SetStateAction,
+    useEffect,
     useState,
 } from 'react';
 import Visibility from '@mui/icons-material/Visibility';
@@ -93,6 +94,18 @@ const VARIANT_OPTIONS = [
 type IconOption = 'Default' | 'Custom' | 'None';
 type LinkOption = 'Link' | 'Dialog' | 'None';
 
+const deriveIconOption = (icon: string): IconOption => {
+    if (icon === '') return 'Default';
+    if (icon === 'none') return 'None';
+    return 'Custom';
+};
+
+const deriveLinkOption = (link: string): LinkOption => {
+    if (link === '') return 'None';
+    if (link === 'dialog') return 'Dialog';
+    return 'Link';
+};
+
 interface IBannerFormProps {
     enabled: boolean;
     message: string;
@@ -136,12 +149,17 @@ export const BannerForm = ({
 }: IBannerFormProps) => {
     const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
 
-    const [iconOption, setIconOption] = useState<IconOption>(
-        icon === '' ? 'Default' : icon === 'none' ? 'None' : 'Custom',
+    const [iconOption, setIconOption] = useState<IconOption>(() =>
+        deriveIconOption(icon),
     );
-    const [linkOption, setLinkOption] = useState<LinkOption>(
-        link === '' ? 'None' : link === 'dialog' ? 'Dialog' : 'Link',
+    const [linkOption, setLinkOption] = useState<LinkOption>(() =>
+        deriveLinkOption(link),
     );
+
+    useEffect(() => {
+        setIconOption(deriveIconOption(icon));
+        setLinkOption(deriveLinkOption(link));
+    }, [icon, link]);
 
     return (
         <StyledForm>

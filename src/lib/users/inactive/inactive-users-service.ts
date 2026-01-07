@@ -3,11 +3,11 @@ import {
     type IUnleashConfig,
     type IUnleashStores,
     serializeDates,
-} from '../../types';
-import type { IInactiveUsersStore } from './types/inactive-users-store-type';
-import type { Logger } from '../../logger';
-import type { InactiveUserSchema } from '../../openapi';
-import type { UserService } from '../../services';
+} from '../../types/index.js';
+import type { IInactiveUsersStore } from './types/inactive-users-store-type.js';
+import type { Logger } from '../../logger.js';
+import type { InactiveUserSchema } from '../../openapi/index.js';
+import type { UserService } from '../../services/index.js';
 
 export class InactiveUsersService {
     private inactiveUsersStore: IInactiveUsersStore;

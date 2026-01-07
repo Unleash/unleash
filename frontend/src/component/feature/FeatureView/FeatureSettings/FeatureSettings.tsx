@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { Box, List, ListItem, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import FeatureSettingsProject from './FeatureSettingsProject/FeatureSettingsProject';
-import { FeatureSettingsInformation } from './FeatureSettingsInformation/FeatureSettingsInformation';
+import FeatureSettingsProject from './FeatureSettingsProject/FeatureSettingsProject.tsx';
+import { FeatureSettingsInformation } from './FeatureSettingsInformation/FeatureSettingsInformation.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 

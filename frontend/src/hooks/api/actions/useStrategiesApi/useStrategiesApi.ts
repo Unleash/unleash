@@ -1,6 +1,6 @@
 import type { IStrategyPayload } from 'interfaces/strategy';
 import { useCallback } from 'react';
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 
 const URI = 'api/admin/strategies';
 

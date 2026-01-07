@@ -1,4 +1,4 @@
-import type { StorageProvider } from './storage-provider';
+import type { StorageProvider } from './storage-provider.js';
 
 export default class InMemStorageProvider<T> implements StorageProvider<T> {
     private store: Map<string, T> = new Map<string, T>();

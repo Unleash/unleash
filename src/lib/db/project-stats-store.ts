@@ -1,15 +1,15 @@
-import type { Logger, LogProvider } from '../logger';
+import type { LogProvider } from '../logger.js';
 
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
 import type EventEmitter from 'events';
-import type { IProjectStats } from '../features/project/project-service';
+import type { IProjectStats } from '../features/project/project-service.js';
 import type {
     ICreateEnabledDates,
     IProjectStatsStore,
-} from '../types/stores/project-stats-store-type';
-import type { Db } from './db';
-import type { DoraFeaturesSchema } from '../openapi';
+} from '../types/stores/project-stats-store-type.js';
+import type { Db } from './db.js';
+import type { DoraFeaturesSchema } from '../openapi/index.js';
 
 const TABLE = 'project_stats';
 
@@ -39,13 +39,10 @@ interface IProjectStatsRow {
 class ProjectStatsStore implements IProjectStatsStore {
     private db: Db;
 
-    private logger: Logger;
-
     private timer: Function;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, _getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('project-stats-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'project_stats',
@@ -117,6 +114,7 @@ class ProjectStatsStore implements IProjectStatsStore {
     async getTimeToProdDates(
         projectId: string,
     ): Promise<ICreateEnabledDates[]> {
+        const stopTimer = this.timer('getTimeToProdDates');
         const result = await this.db
             .select('events.feature_name')
             // select only first enabled event, distinct works with orderBy
@@ -143,6 +141,7 @@ class ProjectStatsStore implements IProjectStatsStore {
             .orderBy('events.feature_name')
             // first enabled event
             .orderBy('events.created_at', 'asc');
+        stopTimer();
         return result;
     }
 

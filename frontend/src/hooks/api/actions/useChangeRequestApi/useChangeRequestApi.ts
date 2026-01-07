@@ -1,5 +1,5 @@
-import useAPI from '../useApi/useApi';
-import { usePlausibleTracker } from '../../../usePlausibleTracker';
+import useAPI from '../useApi/useApi.js';
+import { usePlausibleTracker } from '../../../usePlausibleTracker.js';
 import type { PlausibleChangeRequestState } from 'component/changeRequest/changeRequest.types';
 import { getUniqueChangeRequestId } from 'utils/unique-change-request-id';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -21,7 +21,12 @@ export interface IChangeSchema {
         | 'deleteDependency'
         | 'addReleasePlan'
         | 'deleteReleasePlan'
-        | 'startMilestone';
+        | 'startMilestone'
+        | 'changeMilestoneProgression'
+        | 'deleteMilestoneProgression'
+        | 'changeSafeguard'
+        | 'deleteSafeguard'
+        | 'resumeMilestoneProgression';
     payload: string | boolean | object | number | undefined;
 }
 
@@ -190,6 +195,23 @@ export const useChangeRequestApi = () => {
 
         return makeRequest(req.caller, req.id);
     };
+    const updateRequestedApprovers = async (
+        project: string,
+        changeRequestId: number,
+        reviewers: number[],
+    ) => {
+        trackEvent('change_request', {
+            props: {
+                eventType: 'approvers updated',
+            },
+        });
+        const path = `api/admin/projects/${project}/change-requests/${changeRequestId}/approvers`;
+        const req = createRequest(path, {
+            method: 'PUT',
+            body: JSON.stringify({ reviewers }),
+        });
+        return makeRequest(req.caller, req.id);
+    };
 
     return {
         addChange,
@@ -200,6 +222,7 @@ export const useChangeRequestApi = () => {
         discardDraft,
         addComment,
         updateTitle,
+        updateRequestedApprovers,
         errors,
         loading,
     };

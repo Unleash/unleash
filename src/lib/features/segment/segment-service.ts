@@ -1,4 +1,4 @@
-import type { IUnleashConfig } from '../../types/option';
+import type { IUnleashConfig } from '../../types/option.js';
 import {
     type IAuditUser,
     type IFlagResolver,
@@ -7,30 +7,28 @@ import {
     SegmentDeletedEvent,
     SegmentUpdatedEvent,
     SKIP_CHANGE_REQUEST,
-} from '../../types';
-import type { Logger } from '../../logger';
-import NameExistsError from '../../error/name-exists-error';
-import type { ISegmentStore } from './segment-store-type';
-import type { ISegment } from '../../types/model';
-import { segmentSchema } from '../../services/segment-schema';
-import type User from '../../types/user';
-import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import BadDataError from '../../error/bad-data-error';
+} from '../../types/index.js';
+import NameExistsError from '../../error/name-exists-error.js';
+import type { ISegmentStore } from './segment-store-type.js';
+import type { ISegment } from '../../types/model.js';
+import { segmentSchema } from '../../services/segment-schema.js';
+import type User from '../../types/user.js';
+import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import BadDataError from '../../error/bad-data-error.js';
 import type {
     ISegmentService,
     StrategiesUsingSegment,
-} from './segment-service-interface';
-import { PermissionError } from '../../error';
-import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type EventService from '../events/event-service';
-import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
-import type { ResourceLimitsSchema, UpsertSegmentSchema } from '../../openapi';
-import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
+} from './segment-service-interface.js';
+import { NotFoundError, PermissionError } from '../../error/index.js';
+import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import type EventService from '../events/event-service.js';
+import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model.js';
+import type { UpsertSegmentSchema } from '../../openapi/index.js';
+import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
+import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 
 export class SegmentService implements ISegmentService {
-    private logger: Logger;
-
     private segmentStore: ISegmentStore;
 
     private featureStrategiesStore: IFeatureStrategiesStore;
@@ -47,7 +45,7 @@ export class SegmentService implements ISegmentService {
 
     private privateProjectChecker: IPrivateProjectChecker;
 
-    private resourceLimits: ResourceLimitsSchema;
+    private resourceLimitsService: ResourceLimitsService;
 
     constructor(
         {
@@ -59,6 +57,7 @@ export class SegmentService implements ISegmentService {
         config: IUnleashConfig,
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
+        resourceLimitsService: ResourceLimitsService,
     ) {
         this.segmentStore = segmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
@@ -67,18 +66,44 @@ export class SegmentService implements ISegmentService {
         this.changeRequestSegmentUsageReadModel =
             changeRequestSegmentUsageReadModel;
         this.privateProjectChecker = privateProjectChecker;
-        this.logger = config.getLogger('services/segment-service.ts');
         this.flagResolver = config.flagResolver;
-        this.resourceLimits = config.resourceLimits;
+        this.resourceLimitsService = resourceLimitsService;
         this.config = config;
     }
 
-    async get(id: number): Promise<ISegment> {
-        return this.segmentStore.get(id);
+    async get(id: number, userId?: number): Promise<ISegment> {
+        const segment = await this.segmentStore.get(id);
+        if (segment === undefined) {
+            throw new NotFoundError(`Could not find segment with id ${id}`);
+        }
+
+        await this.verifySegmentAccess(segment, id, userId);
+
+        return segment;
     }
 
-    async getAll(): Promise<ISegment[]> {
-        return this.segmentStore.getAll(this.config.isEnterprise);
+    async getAll(userId?: number): Promise<ISegment[]> {
+        const segments = await this.segmentStore.getAll(
+            this.config.isEnterprise,
+        );
+
+        if (!userId) {
+            return segments;
+        }
+
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+
+        if (accessibleProjects.mode === 'all') {
+            return segments;
+        }
+
+        return segments.filter((segment) => {
+            if (!segment.project) {
+                return true;
+            }
+            return accessibleProjects.projects.includes(segment.project);
+        });
     }
 
     async getByStrategy(strategyId: string): Promise<ISegment[]> {
@@ -89,6 +114,13 @@ export class SegmentService implements ISegmentService {
         id: number,
         userId: number,
     ): Promise<StrategiesUsingSegment> {
+        const segment = await this.segmentStore.get(id);
+        if (segment === undefined) {
+            throw new NotFoundError(`Could not find segment with id ${id}`);
+        }
+
+        await this.verifySegmentAccess(segment, id, userId);
+
         const allStrategies = await this.getAllStrategies(id);
         const accessibleProjects =
             await this.privateProjectChecker.getUserAccessibleProjects(userId);
@@ -102,6 +134,23 @@ export class SegmentService implements ISegmentService {
                 changeRequestStrategies:
                     allStrategies.changeRequestStrategies.filter(filter),
             };
+        }
+    }
+
+    private async verifySegmentAccess(
+        segment: ISegment,
+        id: number,
+        userId?: number,
+    ): Promise<void> {
+        if (segment.project && userId) {
+            const hasAccess =
+                await this.privateProjectChecker.hasAccessToProject(
+                    userId,
+                    segment.project,
+                );
+            if (!hasAccess) {
+                throw new NotFoundError(`Could not find segment with id ${id}`);
+            }
         }
     }
 
@@ -129,7 +178,8 @@ export class SegmentService implements ISegmentService {
     }
 
     async validateSegmentLimit() {
-        const limit = this.resourceLimits.segments;
+        const { segments: limit } =
+            await this.resourceLimitsService.getResourceLimits();
 
         const segmentCount = await this.segmentStore.count();
 
@@ -179,7 +229,11 @@ export class SegmentService implements ISegmentService {
         const input = await segmentSchema.validateAsync(data);
         this.validateSegmentValuesLimit(input);
         const preData = await this.segmentStore.get(id);
-
+        if (preData === undefined) {
+            throw new NotFoundError(
+                `Could not find segment with id ${id} to update`,
+            );
+        }
         if (preData.name !== input.name) {
             await this.validateName(input.name);
         }
@@ -200,6 +254,10 @@ export class SegmentService implements ISegmentService {
 
     async delete(id: number, user: User, auditUser: IAuditUser): Promise<void> {
         const segment = await this.segmentStore.get(id);
+        if (segment === undefined) {
+            /// Already deleted
+            return;
+        }
         await this.stopWhenChangeRequestsEnabled(segment.project, user);
         await this.segmentStore.delete(id);
         await this.eventService.storeEvent(

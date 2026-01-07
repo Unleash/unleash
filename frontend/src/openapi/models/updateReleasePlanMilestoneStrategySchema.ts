@@ -3,15 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema';
-import type { ParametersSchema } from './parametersSchema';
-import type { CreateStrategyVariantSchema } from './createStrategyVariantSchema';
+import type { ConstraintSchema } from './constraintSchema.js';
+import type { ParametersSchema } from './parametersSchema.js';
+import type { CreateStrategyVariantSchema } from './createStrategyVariantSchema.js';
 
 /**
  * Schema representing the update of a release plan milestone.
  */
 export interface UpdateReleasePlanMilestoneStrategySchema {
-    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints */
+    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/concepts/activation-strategies#constraints */
     constraints?: ConstraintSchema[];
     /** The milestone strategy's ID. Milestone strategy IDs are ulids. */
     id?: string;

@@ -3,7 +3,7 @@ import { Markdown } from 'component/common/Markdown/Markdown';
 import Paper from '@mui/material/Paper';
 import { Box, styled, Typography } from '@mui/material';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
-import { StyledAvatar } from './StyledAvatar';
+import { StyledAvatar } from './StyledAvatar.tsx';
 import type { IChangeRequestComment } from '../../changeRequest.types';
 
 const ChangeRequestCommentWrapper = styled(Box)(({ theme }) => ({

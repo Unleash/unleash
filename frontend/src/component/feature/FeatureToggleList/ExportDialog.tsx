@@ -1,5 +1,5 @@
 import { createRef, useState } from 'react';
-import { styled, Typography, Box } from '@mui/material';
+import { styled, Typography, Box, Alert } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { useExportApi } from 'hooks/api/actions/useExportApi/useExportApi';
@@ -7,11 +7,12 @@ import useToast from 'hooks/useToast';
 import type { FeatureSchema } from 'openapi';
 
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender.tsx';
+import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates.ts';
 
 interface IExportDialogProps {
     showExportDialog: boolean;
-    data: Pick<FeatureSchema, 'name'>[];
+    data: Pick<FeatureSchema, 'name' | 'environments'>[];
     project?: string;
     onClose: () => void;
     onConfirm?: () => void;
@@ -35,6 +36,8 @@ export const ExportDialog = ({
     const { createExport } = useExportApi();
     const ref = createRef<HTMLDivElement>();
     const { setToastApiError } = useToast();
+    const { templates } = useReleasePlanTemplates();
+    const hasReleaseTemplates = Boolean(templates.length);
 
     const getOptions = () =>
         environments.map((env) => ({
@@ -88,6 +91,13 @@ export const ExportDialog = ({
             secondaryButtonText='Cancel'
         >
             <Box ref={ref}>
+                {hasReleaseTemplates && (
+                    <Alert severity='warning' sx={{ mb: 4 }}>
+                        Exporting does not include release plans. You may need
+                        to set up new release plans for the imported feature
+                        flags.
+                    </Alert>
+                )}
                 <ConditionallyRender
                     condition={data.length > 0}
                     show={

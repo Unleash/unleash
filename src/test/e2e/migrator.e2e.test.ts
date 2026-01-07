@@ -1,11 +1,12 @@
-import dbInit, { type ITestDb } from '../../test/e2e/helpers/database-init';
+import dbInit, { type ITestDb } from '../../test/e2e/helpers/database-init.js';
 
-import getLogger from '../../test/fixtures/no-logger';
+import getLogger from '../../test/fixtures/no-logger.js';
 
 import { log } from 'db-migrate-shared';
-import { Client } from 'pg';
-import type { IDBOption } from '../../lib/types';
-import { resetDb } from '../../migrator';
+import postgresPkg from 'pg';
+const { Client } = postgresPkg;
+import type { IDBOption } from '../../lib/types/index.js';
+import { resetDb } from '../../migrator.js';
 
 log.setLogLevel('error');
 
@@ -13,15 +14,15 @@ async function validateTablesHavePrimaryKeys(db: IDBOption) {
     const client = new Client(db);
     await client.connect();
     const tables = await client.query<{ table_name: string }>(
-        `SELECT 
+        `SELECT
         t.table_name
-    FROM 
+    FROM
         information_schema.tables t
-    LEFT JOIN 
+    LEFT JOIN
         information_schema.table_constraints tc ON t.table_schema = tc.table_schema
         AND t.table_name = tc.table_name
         AND tc.constraint_type = 'PRIMARY KEY'
-    WHERE 
+    WHERE
         t.table_type = 'BASE TABLE'
         AND t.table_schema NOT IN ('pg_catalog', 'information_schema')
         AND tc.constraint_name IS NULL;

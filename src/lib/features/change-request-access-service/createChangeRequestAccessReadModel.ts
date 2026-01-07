@@ -1,8 +1,8 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
-import { ChangeRequestAccessReadModel } from './sql-change-request-access-read-model';
-import { createAccessService } from '../access/createAccessService';
-import { FakeChangeRequestAccessReadModel } from './fake-change-request-access-read-model';
-import type { IChangeRequestAccessReadModel } from './change-request-access-read-model';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import { ChangeRequestAccessReadModel } from './sql-change-request-access-read-model.js';
+import { createAccessService } from '../access/createAccessService.js';
+import { FakeChangeRequestAccessReadModel } from './fake-change-request-access-read-model.js';
+import type { IChangeRequestAccessReadModel } from './change-request-access-read-model.js';
 
 export const createChangeRequestAccessReadModel = (
     db: Db,

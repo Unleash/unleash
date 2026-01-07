@@ -1,7 +1,6 @@
-import * as permissions from '../types/permissions';
-import type { IAuditUser, IUser } from '../types/user';
+import * as permissions from '../types/permissions.js';
+import type { IAuditUser, IUser } from '../types/user.js';
 import type {
-    IAccessInfo,
     IAccessStore,
     IGroupWithProjectRoles,
     IProjectRoleUsage,
@@ -12,9 +11,9 @@ import type {
     IUserPermission,
     IUserRole,
     IUserWithProjectRoles,
-} from '../types/stores/access-store';
-import type { Logger } from '../logger';
-import type { IAccountStore, IUnleashStores } from '../types/stores';
+} from '../types/stores/access-store.js';
+import type { Logger } from '../logger.js';
+import type { IAccountStore, IUnleashStores } from '../types/stores.js';
 import {
     type IAvailablePermissions,
     type ICustomRole,
@@ -22,32 +21,33 @@ import {
     type IRoleData,
     type IUserWithRole,
     RoleName,
-} from '../types/model';
-import type { IRoleStore } from '../types/stores/role-store';
-import NameExistsError from '../error/name-exists-error';
-import type { IEnvironmentStore } from '../features/project-environments/environment-store-type';
-import RoleInUseError from '../error/role-in-use-error';
-import { roleSchema } from '../schema/role-schema';
+} from '../types/model.js';
+import type { IRoleStore } from '../types/stores/role-store.js';
+import NameExistsError from '../error/name-exists-error.js';
+import type { IEnvironmentStore } from '../features/project-environments/environment-store-type.js';
+import RoleInUseError from '../error/role-in-use-error.js';
+import { roleSchema } from '../schema/role-schema.js';
 import {
     ALL_ENVS,
     ALL_PROJECTS,
     CUSTOM_PROJECT_ROLE_TYPE,
     CUSTOM_ROOT_ROLE_TYPE,
     ROOT_ROLE_TYPES,
-} from '../util/constants';
-import { DEFAULT_PROJECT } from '../types/project';
-import InvalidOperationError from '../error/invalid-operation-error';
-import BadDataError from '../error/bad-data-error';
-import type { IGroup } from '../types/group';
-import type { GroupService } from './group-service';
+} from '../util/constants.js';
+import { DEFAULT_PROJECT } from '../types/project.js';
+import InvalidOperationError from '../error/invalid-operation-error.js';
+import BadDataError from '../error/bad-data-error.js';
+import type { IGroup } from '../types/group.js';
+import type { GroupService } from './group-service.js';
 import {
     type IUnleashConfig,
     type IUserAccessOverview,
     RoleCreatedEvent,
     RoleDeletedEvent,
     RoleUpdatedEvent,
-} from '../types';
-import type EventService from '../features/events/event-service';
+} from '../types/index.js';
+import type EventService from '../features/events/event-service.js';
+import { NotFoundError } from '../error/index.js';
 
 const { ADMIN } = permissions;
 
@@ -63,13 +63,13 @@ const PROJECT_ADMIN = [
 export type IdPermissionRef = Pick<IPermission, 'id' | 'environment'>;
 export type NamePermissionRef = Pick<IPermission, 'name' | 'environment'>;
 export type PermissionRef = IdPermissionRef | NamePermissionRef;
-type MatrixPermission = IPermission & {
+type AccessOverviewPermission = IPermission & {
     hasPermission: boolean;
 };
-type PermissionMatrix = {
-    root: MatrixPermission[];
-    project: MatrixPermission[];
-    environment: MatrixPermission[];
+type AccessOverview = {
+    root: AccessOverviewPermission[];
+    project: AccessOverviewPermission[];
+    environment: AccessOverviewPermission[];
 };
 
 type APIUser = Pick<IUser, 'id' | 'permissions'> & { isAPI: true };
@@ -244,14 +244,14 @@ export class AccessService {
      * Provided a project, project permissions will be checked against that project.
      * Provided an environment, environment permissions will be checked against that environment (and project).
      */
-    async permissionsMatrixForUser(
+    async getAccessOverviewForUser(
         user: APIUser | NonAPIUser,
         projectId?: string,
         environment?: string,
-    ): Promise<PermissionMatrix> {
+    ): Promise<AccessOverview> {
         const permissions = await this.getPermissions();
         const userP = await this.getPermissionsForUser(user);
-        const matrix: PermissionMatrix = {
+        const overview: AccessOverview = {
             root: permissions.root.map((p) => ({
                 ...p,
                 hasPermission: this.meetsAllPermissions(userP, [p.name]),
@@ -278,7 +278,7 @@ export class AccessService {
                     })) ?? [],
         };
 
-        return matrix;
+        return overview;
     }
 
     async getPermissionsForUser(
@@ -339,22 +339,6 @@ export class AccessService {
         projectId: string,
     ): Promise<void> {
         return this.store.addGroupToRole(groupId, roleId, createdBy, projectId);
-    }
-
-    async addRoleAccessToProject(
-        users: IAccessInfo[],
-        groups: IAccessInfo[],
-        projectId: string,
-        roleId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        return this.store.addRoleAccessToProject(
-            users,
-            groups,
-            projectId,
-            roleId,
-            auditUser.username,
-        );
     }
 
     async addAccessToProject(
@@ -456,8 +440,9 @@ export class AccessService {
     async getRootRoleForUser(userId: number): Promise<IRole> {
         const rootRole = await this.store.getRootRoleForUser(userId);
         if (!rootRole) {
-            const defaultRole = await this.getPredefinedRole(RoleName.VIEWER);
-            return defaultRole;
+            // this should never happen, but before breaking we want to know if it does.
+            this.logger.warn(`Could not find root role for user=${userId}.`);
+            return this.getPredefinedRole(RoleName.VIEWER);
         }
         return rootRole;
     }
@@ -470,28 +455,12 @@ export class AccessService {
         return this.store.removeUserFromRole(userId, roleId, projectId);
     }
 
-    async removeGroupFromRole(
-        groupId: number,
-        roleId: number,
-        projectId: string,
-    ): Promise<void> {
-        return this.store.removeGroupFromRole(groupId, roleId, projectId);
-    }
-
     async updateUserProjectRole(
         userId: number,
         roleId: number,
         projectId: string,
     ): Promise<void> {
         return this.store.updateUserProjectRole(userId, roleId, projectId);
-    }
-
-    async updateGroupProjectRole(
-        userId: number,
-        roleId: number,
-        projectId: string,
-    ): Promise<void> {
-        return this.store.updateGroupProjectRole(userId, roleId, projectId);
     }
 
     //This actually only exists for testing purposes
@@ -536,6 +505,9 @@ export class AccessService {
 
     async getRole(id: number): Promise<IRoleWithPermissions> {
         const role = await this.store.get(id);
+        if (role === undefined) {
+            throw new NotFoundError(`Could not find role with id ${id}`);
+        }
         const rolePermissions = await this.store.getPermissionsForRole(role.id);
         return {
             ...role,
@@ -549,6 +521,9 @@ export class AccessService {
             this.store.getPermissionsForRole(roleId),
             this.getUsersForRole(roleId),
         ]);
+        if (role === undefined) {
+            throw new NotFoundError(`Could not find role with id ${roleId}`);
+        }
         return { role, permissions: rolePerms, users };
     }
 
@@ -669,7 +644,7 @@ export class AccessService {
     }
 
     async removeDefaultProjectRoles(
-        owner: IUser,
+        _owner: IUser,
         projectId: string,
     ): Promise<void> {
         this.logger.info(`Removing project roles for ${projectId}`);
@@ -699,7 +674,7 @@ export class AccessService {
 
     /*
         This method is intended to give a predicable way to fetch
-        pre-defined roles defined in the RoleName enum. This method
+        predefined roles defined in the RoleName enum. This method
         should not be used to fetch custom root or project roles.
     */
     async getPredefinedRole(roleName: RoleName): Promise<IRole> {
@@ -707,7 +682,7 @@ export class AccessService {
         const role = roles.find((r) => r.name === roleName);
         if (!role) {
             throw new BadDataError(
-                `Could not find pre-defined role with name ${RoleName}`,
+                `Could not find predefined role with name ${RoleName}`,
             );
         }
         return role;
@@ -731,6 +706,8 @@ export class AccessService {
             ...(await this.validateRole(role)),
             roleType,
         };
+
+        await this.validatePermissions(role.permissions);
 
         const rolePermissions = cleanPermissionEnvironment(role.permissions);
         const newRole = await this.roleStore.create(baseRole);
@@ -781,6 +758,8 @@ export class AccessService {
             description: role.description,
             roleType,
         };
+
+        await this.validatePermissions(role.permissions);
         const rolePermissions = cleanPermissionEnvironment(role.permissions);
         const updatedRole = await this.roleStore.update(baseRole);
         const existingPermissions = await this.store.getPermissionsForRole(
@@ -873,6 +852,11 @@ export class AccessService {
 
     async validateRoleIsNotBuiltIn(roleId: number): Promise<void> {
         const role = await this.store.get(roleId);
+        if (role === undefined) {
+            throw new InvalidOperationError(
+                'You cannot change a non-existing role',
+            );
+        }
         if (
             role.type !== CUSTOM_PROJECT_ROLE_TYPE &&
             role.type !== CUSTOM_ROOT_ROLE_TYPE
@@ -897,5 +881,34 @@ export class AccessService {
 
     async getUserAccessOverview(): Promise<IUserAccessOverview[]> {
         return this.store.getUserAccessOverview();
+    }
+
+    async validatePermissions(permissions?: PermissionRef[]): Promise<void> {
+        if (!permissions?.length) {
+            return;
+        }
+        const availablePermissions = await this.store.getAvailablePermissions();
+        const invalidPermissions = permissions.filter(
+            (permission) =>
+                !availablePermissions.some((availablePermission) =>
+                    'id' in permission
+                        ? availablePermission.id === permission.id
+                        : availablePermission.name === permission.name,
+                ),
+        );
+
+        if (invalidPermissions.length > 0) {
+            const invalidPermissionList = invalidPermissions
+                .map((permission) =>
+                    'id' in permission
+                        ? `permission with ID: ${permission.id}`
+                        : permission.name,
+                )
+                .join(', ');
+
+            throw new BadDataError(
+                `Invalid permissions supplied. The following permissions don't exist: ${invalidPermissionList}.`,
+            );
+        }
     }
 }

@@ -1,21 +1,21 @@
 import type { Response } from 'express';
 
-import Controller from './controller';
-import { NONE } from '../types/permissions';
-import type { Logger } from '../logger';
-import type { IAuthRequest } from './unleash-types';
-import type { IUnleashConfig, IUnleashServices } from '../types';
-import type { OpenApiService } from '../services/openapi-service';
-import { createRequestSchema } from '../openapi/util/create-request-schema';
-import { createResponseSchema } from '../openapi/util/create-response-schema';
-import { serializeDates } from '../types/serialize-dates';
+import Controller from './controller.js';
+import { NONE } from '../types/permissions.js';
+import type { IAuthRequest } from './unleash-types.js';
+import type { IUnleashConfig } from '../types/index.js';
+import type { OpenApiService } from '../services/openapi-service.js';
+import { createRequestSchema } from '../openapi/util/create-request-schema.js';
+import { createResponseSchema } from '../openapi/util/create-response-schema.js';
+import { serializeDates } from '../types/serialize-dates.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../openapi/util/standard-responses';
-import type { PublicSignupTokenService } from '../services/public-signup-token-service';
-import { type UserSchema, userSchema } from '../openapi/spec/user-schema';
-import type { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema';
+} from '../openapi/util/standard-responses.js';
+import type { PublicSignupTokenService } from '../services/public-signup-token-service.js';
+import { type UserSchema, userSchema } from '../openapi/spec/user-schema.js';
+import type { CreateInvitedUserSchema } from '../openapi/spec/create-invited-user-schema.js';
+import type { IUnleashServices } from '../services/index.js';
 
 interface TokenParam {
     token: string;
@@ -25,8 +25,6 @@ export class PublicInviteController extends Controller {
     private publicSignupTokenService: PublicSignupTokenService;
 
     private openApiService: OpenApiService;
-
-    private logger: Logger;
 
     constructor(
         config: IUnleashConfig,
@@ -41,7 +39,6 @@ export class PublicInviteController extends Controller {
         super(config);
         this.publicSignupTokenService = publicSignupTokenService;
         this.openApiService = openApiService;
-        this.logger = config.getLogger('validate-invite-token-controller.js');
 
         this.route({
             method: 'get',
@@ -107,11 +104,12 @@ export class PublicInviteController extends Controller {
             res.status(400).end();
             return;
         }
-        const user = await this.publicSignupTokenService.addTokenUser(
-            token,
-            req.body,
-            req.audit,
-        );
+        const { isAPI, ...user } =
+            await this.publicSignupTokenService.addTokenUser(
+                token,
+                req.body,
+                req.audit,
+            );
         this.openApiService.respondWithValidation(
             201,
             res,

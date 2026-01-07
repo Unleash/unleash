@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useProjectsSearchAndSort } from './useProjectsSearchAndSort';
+import { useProjectsSearchAndSort } from './useProjectsSearchAndSort.js';
 import type { ProjectSchema } from 'openapi';
 
 const projects: ProjectSchema[] = [

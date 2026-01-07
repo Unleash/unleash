@@ -1,10 +1,10 @@
-import type { IUser } from '../../lib/types/user';
+import type { IUser } from '../../lib/types/user.js';
 import type {
     // ICreateUser,
     IUserLookup,
     IAccountStore,
     IAdminCount,
-} from '../../lib/types/stores/account-store';
+} from '../../lib/types/stores/account-store.js';
 
 export class FakeAccountStore implements IAccountStore {
     data: IUser[];
@@ -42,7 +42,7 @@ export class FakeAccountStore implements IAccountStore {
         return this.data.length;
     }
 
-    async get(key: number): Promise<IUser> {
+    async get(key: number): Promise<IUser | undefined> {
         return this.data.find((u) => u.id === key);
     }
 
@@ -85,12 +85,14 @@ export class FakeAccountStore implements IAccountStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getAccountByPersonalAccessToken(secret: string): Promise<IUser> {
+    getAccountByPersonalAccessToken(
+        _secret: string,
+    ): Promise<IUser | undefined> {
         return Promise.resolve(undefined);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async markSeenAt(secrets: string[]): Promise<void> {
+    async markSeenAt(_secrets: string[]): Promise<void> {
         throw new Error('Not implemented');
     }
 

@@ -21,55 +21,55 @@ import {
 //
 // type ReadmeData = Readme & { repoUrl: string };
 
-const CLIENT_SIDE_SDK = 'client-side';
-const SERVER_SIDE_SDK = 'server-side';
+const FRONTEND_SDKS = 'frontend';
+const BACKEND_SDKS = 'backend';
 
-const serverSideSdks = {
-    'unleash-client-go': {
+const backendSdks = {
+    'unleash-go-sdk': {
         sidebarName: 'Go',
-        branch: 'v4',
+        branch: 'v5',
     },
-    'unleash-client-java': {
+    'unleash-java-sdk': {
         sidebarName: 'Java',
     },
-    'unleash-client-node': {
+    'unleash-node-sdk': {
         sidebarName: 'Node',
     },
-    'unleash-client-php': {
+    'unleash-php-sdk': {
         sidebarName: 'PHP',
     },
-    'unleash-client-python': {
+    'unleash-python-sdk': {
         sidebarName: 'Python',
     },
-    'unleash-client-ruby': {
+    'unleash-ruby-sdk': {
         sidebarName: 'Ruby',
     },
-    'unleash-client-rust': {
+    'unleash-rust-sdk': {
         sidebarName: 'Rust',
     },
-    'unleash-client-dotnet': {
+    'unleash-dotnet-sdk': {
         sidebarName: '.NET',
         slugName: 'dotnet',
     },
 };
 
-const clientSideSdks = {
+const frontendSdks = {
     'unleash-android-proxy-sdk': {
         sidebarName: 'Android (legacy)',
         slugName: 'android-proxy-legacy',
     },
-    'unleash-android': {
+    'unleash-android-sdk': {
         sidebarName: 'Android',
-        slugName: 'android-proxy',
+        slugName: 'android',
     },
-    unleash_proxy_client_flutter: {
+    'unleash-flutter-sdk': {
         sidebarName: 'Flutter',
     },
-    'unleash-proxy-client-swift': {
+    'unleash-ios-sdk': {
         sidebarName: 'iOS',
-        slugName: 'ios-proxy',
+        slugName: 'ios',
     },
-    'unleash-proxy-client-js': {
+    'unleash-js-sdk': {
         sidebarName: 'JavaScript browser',
         slugName: 'javascript-browser',
     },
@@ -82,18 +82,18 @@ const clientSideSdks = {
     'proxy-client-vue': {
         sidebarName: 'Vue',
     },
-    'unleash-client-nextjs': {
+    'unleash-nextjs-sdk': {
         sidebarName: 'Next.js',
         slugName: 'next-js',
     },
 };
 
 const SDKS = (() => {
-    const serverSide = Object.entries(serverSideSdks).map(
-        enrichAdditional({ type: SERVER_SIDE_SDK }),
+    const serverSide = Object.entries(backendSdks).map(
+        enrichAdditional({ type: BACKEND_SDKS }),
     );
-    const clientSide = Object.entries(clientSideSdks).map(
-        enrichAdditional({ type: CLIENT_SIDE_SDK }),
+    const clientSide = Object.entries(frontendSdks).map(
+        enrichAdditional({ type: FRONTEND_SDKS }),
     );
 
     return Object.fromEntries(serverSide.concat(clientSide));
@@ -101,8 +101,8 @@ const SDKS = (() => {
 
 const getAdmonitions = (sdk) => {
     const admonitions = {
-        [CLIENT_SIDE_SDK]: `To connect to Unleash from a client-side context, you'll need to use the [Unleash front-end API](/reference/front-end-api) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)) or the [Unleash proxy](/reference/unleash-proxy) ([how do I create client keys?](/reference/api-tokens-and-client-keys#proxy-client-keys)).`,
-        [SERVER_SIDE_SDK]: `To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [server-side API token](/reference/api-tokens-and-client-keys.mdx#client-tokens) ([how do I create an API token?](/how-to/how-to-create-api-tokens.mdx)).`,
+        [FRONTEND_SDKS]: `To connect to Unleash from a frontend application, you'll need to use the [Unleash front-end API](/concepts/front-end-api) ([how do I create an API token?](/guides/how-to-create-api-tokens.mdx)) or [Unleash Edge](/unleash-edge) ([how do I create client keys?](/concepts/api-tokens-and-client-keys#proxy-client-keys)).`,
+        [BACKEND_SDKS]: `To connect to Unleash, you'll need your Unleash API url (e.g. \`https://<your-unleash>/api\`) and a [backend API token](/concepts/api-tokens-and-client-keys.mdx#backend-tokens) ([how do I create an API token?](/guides/how-to-create-api-tokens.mdx)).`,
     };
 
     const wrap = (text) => `:::tip\n${text}\n:::`;
@@ -112,7 +112,7 @@ const getAdmonitions = (sdk) => {
 
 const modifyContent2 = modifyContent({
     getRepoDataFn: getRepoData(SDKS),
-    urlPath: '/reference/sdks',
+    urlPath: '/sdks',
     filePath: (sdk) => `sdks/${sdk.type}`,
     getAdditionalAdmonitions: getAdmonitions,
 });

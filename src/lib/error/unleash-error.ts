@@ -1,14 +1,14 @@
-import { v4 as uuidV4 } from 'uuid';
 import type { FromSchema } from 'json-schema-to-ts';
+import { randomId } from '../util/random-id.js';
 
 export const UnleashApiErrorTypes = [
     'ContentTypeError',
+    'ConflictError',
     'DisabledError',
     'FeatureHasTagError',
     'IncompatibleProjectError',
     'InvalidOperationError',
     'InvalidTokenError',
-    'MinimumOneEnvironmentError',
     'NameExistsError',
     'NoAccessError',
     'NotFoundError',
@@ -48,7 +48,7 @@ export abstract class UnleashError extends Error {
 
     constructor(message: string, name?: string) {
         super();
-        this.id = uuidV4();
+        this.id = randomId();
         this.name = name || this.constructor.name;
         super.message = message;
     }

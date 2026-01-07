@@ -3,18 +3,18 @@ import {
     strategyConstraint,
     urlFriendlyString,
     variants,
-} from '../../../test/arbitraries.test';
-import { validateSchema } from '../validate';
-import type { PlaygroundConstraintSchema } from './playground-constraint-schema';
+} from '../../../test/arbitraries.test.js';
+import { validateSchema } from '../validate.js';
+import type { PlaygroundConstraintSchema } from './playground-constraint-schema.js';
 import {
     playgroundFeatureSchema,
     type PlaygroundFeatureSchema,
-} from './playground-feature-schema';
-import type { PlaygroundSegmentSchema } from './playground-segment-schema';
+} from './playground-feature-schema.js';
+import type { PlaygroundSegmentSchema } from './playground-segment-schema.js';
 import {
     playgroundStrategyEvaluation,
     type PlaygroundStrategySchema,
-} from './playground-strategy-schema';
+} from './playground-strategy-schema.js';
 
 const playgroundStrategyConstraint =
     (): Arbitrary<PlaygroundConstraintSchema> =>
@@ -95,14 +95,6 @@ const playgroundStrategies = (): Arbitrary<PlaygroundStrategySchema[]> =>
                 }),
             ),
 
-            playgroundStrategy(
-                'userWithId',
-                fc.record({
-                    userIds: fc
-                        .uniqueArray(fc.emailAddress())
-                        .map((ids) => ids.join(',')),
-                }),
-            ),
             playgroundStrategy(
                 'remoteAddress',
                 fc.record({

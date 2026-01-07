@@ -8,7 +8,7 @@ import {
     type ReactElement,
     type ReactNode,
 } from 'react';
-import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 
 type Color =
     | 'info'
@@ -97,14 +97,12 @@ export const Badge: FC<IBadgeProps> = forwardRef(
             className,
             sx,
             children,
-            tabIndex = 0,
             ...props
         }: IBadgeProps,
         ref: ForwardedRef<HTMLDivElement>,
     ) => (
         <StyledBadge
             as={as}
-            tabIndex={tabIndex}
             color={color}
             icon={icon}
             className={className}

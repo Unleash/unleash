@@ -1,65 +1,54 @@
-import type { Logger } from '../logger';
+import { FEATURE_CREATED, type IEvent } from '../events/index.js';
 
-import { FEATURE_CREATED, type IEvent } from '../types/events';
+import WebhookAddon from './webhook.js';
 
-import WebhookAddon from './webhook';
-
-import noLogger from '../../test/fixtures/no-logger';
+import noLogger from '../../test/fixtures/no-logger.js';
 import {
     type IAddonConfig,
     type IFlagKey,
     type IFlagResolver,
     serializeDates,
     SYSTEM_USER_ID,
-} from '../types';
-import type { IntegrationEventsService } from '../services';
+} from '../types/index.js';
+import type { IntegrationEventsService } from '../services/index.js';
 
-let fetchRetryCalls: any[] = [];
-const registerEventMock = jest.fn();
+import { vi } from 'vitest';
+import EventEmitter from 'node:events';
+import nock from 'nock';
 
 const INTEGRATION_ID = 1337;
-const ARGS: IAddonConfig = {
-    getLogger: noLogger,
-    unleashUrl: 'http://some-url.com',
-    integrationEventsService: {} as IntegrationEventsService,
-    flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
-    eventBus: {} as any,
+
+beforeEach(() => {
+    nock.disableNetConnect();
+});
+
+afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+});
+
+const setup = () => {
+    const registerEventMock = vi.fn();
+    const addonConfig: IAddonConfig = {
+        getLogger: noLogger,
+        unleashUrl: 'http://some-url.com',
+        integrationEventsService: {
+            registerEvent: registerEventMock,
+        } as unknown as IntegrationEventsService,
+        flagResolver: {
+            isEnabled: (_expName: IFlagKey) => false,
+        } as IFlagResolver,
+        eventBus: new EventEmitter(),
+    };
+    return {
+        addon: new WebhookAddon(addonConfig),
+        registerEventMock,
+    };
 };
 
-jest.mock(
-    './addon',
-    () =>
-        class Addon {
-            logger: Logger;
-
-            constructor(definition, { getLogger }) {
-                this.logger = getLogger('addon/test');
-                fetchRetryCalls = [];
-            }
-
-            async fetchRetry(url, options, retries, backoff) {
-                fetchRetryCalls.push({
-                    url,
-                    options,
-                    retries,
-                    backoff,
-                });
-                return Promise.resolve({ ok: true, status: 200 });
-            }
-
-            async registerEvent(event) {
-                return registerEventMock(event);
-            }
-        },
-);
-
 describe('Webhook integration', () => {
-    beforeEach(() => {
-        registerEventMock.mockClear();
-    });
-
-    test('Should handle event without "bodyTemplate"', () => {
-        const addon = new WebhookAddon(ARGS);
+    test('Should handle event without "bodyTemplate"', async () => {
+        const { addon } = setup();
         const event: IEvent = {
             id: 1,
             createdAt: new Date(),
@@ -77,15 +66,25 @@ describe('Webhook integration', () => {
         const parameters = {
             url: 'http://test.webhook.com',
         };
+        let callCount = 0;
+        let callBody: any;
+        nock('http://test.webhook.com')
+            .post('/')
+            .matchHeader('Content-Type', 'application/json')
+            .reply(200, (_uri, body) => {
+                callCount++;
+                callBody = body;
+                return { ok: true, status: 200 };
+            });
 
-        addon.handleEvent(event, parameters, INTEGRATION_ID);
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(fetchRetryCalls[0].url).toBe(parameters.url);
-        expect(fetchRetryCalls[0].options.body).toBe(JSON.stringify(event));
+        await addon.handleEvent(event, parameters, INTEGRATION_ID);
+        expect(callCount).toBe(1);
+        expect(JSON.stringify(callBody)).toBe(JSON.stringify(event));
+        expect(nock.isDone()).toBe(true);
     });
 
-    test('Should format event with "bodyTemplate"', () => {
-        const addon = new WebhookAddon(ARGS);
+    test('Should format event with "bodyTemplate"', async () => {
+        const { addon } = setup();
         const event: IEvent = {
             id: 1,
             createdAt: new Date(),
@@ -105,17 +104,18 @@ describe('Webhook integration', () => {
             bodyTemplate: '{{event.type}} on toggle {{event.data.name}}',
             contentType: 'text/plain',
         };
+        const expectedBody = 'feature-created on toggle some-toggle';
+        nock('http://test.webhook.com')
+            .post('/plain', expectedBody)
+            .matchHeader('Content-Type', 'text/plain')
+            .reply(200);
 
-        addon.handleEvent(event, parameters, INTEGRATION_ID);
-        const call = fetchRetryCalls[0];
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(call.url).toBe(parameters.url);
-        expect(call.options.headers['Content-Type']).toBe('text/plain');
-        expect(call.options.body).toBe('feature-created on toggle some-toggle');
+        await addon.handleEvent(event, parameters, INTEGRATION_ID);
+        expect(nock.isDone()).toBe(true);
     });
 
     test('should allow for eventJson and eventMarkdown in bodyTemplate', async () => {
-        const addon = new WebhookAddon(ARGS);
+        const { addon } = setup();
         const event: IEvent = {
             id: 1,
             createdAt: new Date('2024-07-24T00:00:00.000Z'),
@@ -137,20 +137,28 @@ describe('Webhook integration', () => {
                 '{\n  "json": {{{eventJson}}},\n  "markdown": "{{eventMarkdown}}"\n}',
             contentType: 'text/plain',
         };
+        let callBody: any;
+        nock('http://test.webhook.com')
+            .post('/plain')
+            .matchHeader('Content-Type', 'text/plain')
+            .reply(200, (_uri, body) => {
+                callBody = body;
+                return {
+                    status: 200,
+                    body: 'ok',
+                };
+            });
 
-        addon.handleEvent(event, parameters, INTEGRATION_ID);
-        const call = fetchRetryCalls[0];
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(call.url).toBe(parameters.url);
-        expect(call.options.headers['Content-Type']).toBe('text/plain');
-        expect(call.options.body).toMatchSnapshot();
-        expect(JSON.parse(JSON.parse(call.options.body).json)).toEqual(
+        await addon.handleEvent(event, parameters, INTEGRATION_ID);
+        expect(callBody).toMatchSnapshot();
+        expect(JSON.parse(JSON.parse(callBody).json)).toEqual(
             serializeDates(event),
         );
+        expect(nock.isDone()).toBe(true);
     });
 
-    test('Should format event with "authorization"', () => {
-        const addon = new WebhookAddon(ARGS);
+    test('Should format event with "authorization"', async () => {
+        const { addon } = setup();
         const event: IEvent = {
             id: 1,
             createdAt: new Date(),
@@ -171,19 +179,19 @@ describe('Webhook integration', () => {
             contentType: 'text/plain',
             authorization: 'API KEY 123abc',
         };
+        const expectedBody = 'feature-created on toggle some-toggle';
+        nock('http://test.webhook.com')
+            .post('/plain', expectedBody)
+            .matchHeader('Content-Type', 'text/plain')
+            .matchHeader('Authorization', 'API KEY 123abc')
+            .reply(200);
 
-        addon.handleEvent(event, parameters, INTEGRATION_ID);
-        const call = fetchRetryCalls[0];
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(call.url).toBe(parameters.url);
-        expect(call.options.headers.Authorization).toBe(
-            parameters.authorization,
-        );
-        expect(call.options.body).toBe('feature-created on toggle some-toggle');
+        await addon.handleEvent(event, parameters, INTEGRATION_ID);
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should handle custom headers', async () => {
-        const addon = new WebhookAddon(ARGS);
+        const { addon } = setup();
         const event: IEvent = {
             id: 1,
             createdAt: new Date(),
@@ -206,19 +214,19 @@ describe('Webhook integration', () => {
             customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
         };
 
-        addon.handleEvent(event, parameters, INTEGRATION_ID);
-        const call = fetchRetryCalls[0];
-        expect(fetchRetryCalls.length).toBe(1);
-        expect(call.url).toBe(parameters.url);
-        expect(call.options.headers.Authorization).toBe(
-            parameters.authorization,
-        );
-        expect(call.options.headers.MY_CUSTOM_HEADER).toBe('MY_CUSTOM_VALUE');
-        expect(call.options.body).toBe('feature-created on toggle some-toggle');
+        const expectedBody = 'feature-created on toggle some-toggle';
+        nock('http://test.webhook.com')
+            .post('/plain', expectedBody)
+            .matchHeader('Content-Type', 'text/plain')
+            .matchHeader('Authorization', 'API KEY 123abc')
+            .matchHeader('MY_CUSTOM_HEADER', 'MY_CUSTOM_VALUE')
+            .reply(200);
+        await addon.handleEvent(event, parameters, INTEGRATION_ID);
+        expect(nock.isDone()).toBe(true);
     });
 
     test('Should call registerEvent', async () => {
-        const addon = new WebhookAddon(ARGS);
+        const { addon, registerEventMock } = setup();
         const event: IEvent = {
             id: 1,
             createdAt: new Date(),
@@ -240,6 +248,13 @@ describe('Webhook integration', () => {
             authorization: 'API KEY 123abc',
             customHeaders: `{ "MY_CUSTOM_HEADER": "MY_CUSTOM_VALUE" }`,
         };
+        const expectedBody = 'feature-created on toggle some-toggle';
+        nock('http://test.webhook.com')
+            .post('/plain', expectedBody)
+            .matchHeader('Content-Type', 'text/plain')
+            .matchHeader('Authorization', 'API KEY 123abc')
+            .matchHeader('MY_CUSTOM_HEADER', 'MY_CUSTOM_VALUE')
+            .reply(200);
 
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
 
@@ -253,8 +268,9 @@ describe('Webhook integration', () => {
             details: {
                 url: parameters.url,
                 contentType: parameters.contentType,
-                body: 'feature-created on toggle some-toggle',
+                body: expectedBody,
             },
         });
+        expect(nock.isDone()).toBe(true);
     });
 });

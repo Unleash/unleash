@@ -1,53 +1,63 @@
-import { InstanceStatsService } from './instance-stats-service';
+import { InstanceStatsService } from './instance-stats-service.js';
 import {
     createFakeGetActiveUsers,
     createGetActiveUsers,
-} from './getActiveUsers';
+} from './getActiveUsers.js';
 import {
     createFakeGetProductionChanges,
     createGetProductionChanges,
-} from './getProductionChanges';
-import type { IUnleashConfig } from '../../types';
-import type { Db } from '../../db/db';
-import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
-import UserStore from '../../db/user-store';
-import ProjectStore from '../project/project-store';
-import EnvironmentStore from '../project-environments/environment-store';
-import StrategyStore from '../../db/strategy-store';
-import ContextFieldStore from '../context/context-field-store';
-import GroupStore from '../../db/group-store';
-import SegmentStore from '../segment/segment-store';
-import RoleStore from '../../db/role-store';
-import SettingStore from '../../db/setting-store';
-import ClientInstanceStore from '../../db/client-instance-store';
-import EventStore from '../events/event-store';
-import { ApiTokenStore } from '../../db/api-token-store';
-import { ClientMetricsStoreV2 } from '../metrics/client-metrics/client-metrics-store-v2';
-import VersionService from '../../services/version-service';
-import FeatureStrategyStore from '../feature-toggle/feature-toggle-strategies-store';
-import FakeUserStore from '../../../test/fixtures/fake-user-store';
-import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store';
-import FakeProjectStore from '../../../test/fixtures/fake-project-store';
-import FakeEnvironmentStore from '../project-environments/fake-environment-store';
-import FakeGroupStore from '../../../test/fixtures/fake-group-store';
-import FakeContextFieldStore from '../context/fake-context-field-store';
-import FakeRoleStore from '../../../test/fixtures/fake-role-store';
-import FakeClientInstanceStore from '../../../test/fixtures/fake-client-instance-store';
-import FakeClientMetricsStoreV2 from '../metrics/client-metrics/fake-client-metrics-store-v2';
-import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store';
-import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
-import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
-import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
-import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
-import { FeatureStrategiesReadModel } from '../feature-toggle/feature-strategies-read-model';
-import { FakeFeatureStrategiesReadModel } from '../feature-toggle/fake-feature-strategies-read-model';
-import { TrafficDataUsageStore } from '../traffic-data-usage/traffic-data-usage-store';
-import { FakeTrafficDataUsageStore } from '../traffic-data-usage/fake-traffic-data-usage-store';
+} from './getProductionChanges.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import type { Db } from '../../db/db.js';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
+import { UserStore } from '../users/user-store.js';
+import ProjectStore from '../project/project-store.js';
+import EnvironmentStore from '../project-environments/environment-store.js';
+import StrategyStore from '../../db/strategy-store.js';
+import ContextFieldStore from '../context/context-field-store.js';
+import GroupStore from '../../db/group-store.js';
+import SegmentStore from '../segment/segment-store.js';
+import RoleStore from '../../db/role-store.js';
+import SettingStore from '../../db/setting-store.js';
+import ClientInstanceStore from '../../db/client-instance-store.js';
+import { EventStore } from '../events/event-store.js';
+import { ApiTokenStore } from '../../db/api-token-store.js';
+import { ClientMetricsStoreV2 } from '../metrics/client-metrics/client-metrics-store-v2.js';
+import VersionService from '../../services/version-service.js';
+import FeatureStrategyStore from '../feature-toggle/feature-toggle-strategies-store.js';
+import FakeUserStore from '../../../test/fixtures/fake-user-store.js';
+import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store.js';
+import FakeProjectStore from '../../../test/fixtures/fake-project-store.js';
+import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
+import FakeGroupStore from '../../../test/fixtures/fake-group-store.js';
+import FakeContextFieldStore from '../context/fake-context-field-store.js';
+import FakeRoleStore from '../../../test/fixtures/fake-role-store.js';
+import FakeClientInstanceStore from '../../../test/fixtures/fake-client-instance-store.js';
+import FakeClientMetricsStoreV2 from '../metrics/client-metrics/fake-client-metrics-store-v2.js';
+import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store.js';
+import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
+import FakeSettingStore from '../../../test/fixtures/fake-setting-store.js';
+import FakeSegmentStore from '../../../test/fixtures/fake-segment-store.js';
+import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store.js';
+import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store.js';
+import { FeatureStrategiesReadModel } from '../feature-toggle/feature-strategies-read-model.js';
+import { FakeFeatureStrategiesReadModel } from '../feature-toggle/fake-feature-strategies-read-model.js';
+import { TrafficDataUsageStore } from '../traffic-data-usage/traffic-data-usage-store.js';
+import { FakeTrafficDataUsageStore } from '../traffic-data-usage/fake-traffic-data-usage-store.js';
 import {
     createFakeGetLicensedUsers,
     createGetLicensedUsers,
-} from './getLicensedUsers';
+} from './getLicensedUsers.js';
+import {
+    createFakeGetReadOnlyUsers,
+    createGetReadOnlyUsers,
+} from './getReadOnlyUsers.js';
+import { ReleasePlanStore } from '../release-plans/release-plan-store.js';
+import { ReleasePlanTemplateStore } from '../release-plans/release-plan-template-store.js';
+import {
+    createFakeGetEdgeInstances,
+    createGetEdgeInstances,
+} from './getEdgeInstances.js';
 
 export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     const { eventBus, getLogger, flagResolver } = config;
@@ -57,7 +67,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getLogger,
         flagResolver,
     );
-    const userStore = new UserStore(db, getLogger, flagResolver);
+    const userStore = new UserStore(db, getLogger);
     const projectStore = new ProjectStore(db, eventBus, config);
     const environmentStore = new EnvironmentStore(db, eventBus, config);
     const strategyStore = new StrategyStore(db, getLogger);
@@ -89,6 +99,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     );
     const clientMetricsStoreV2 = new ClientMetricsStoreV2(
         db,
+        eventBus,
         getLogger,
         flagResolver,
     );
@@ -103,6 +114,9 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getLogger,
         flagResolver,
     );
+
+    const releasePlanTemplateStore = new ReleasePlanTemplateStore(db, config);
+    const releasePlanStore = new ReleasePlanStore(db, config);
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -121,11 +135,15 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         featureStrategiesReadModel,
         featureStrategiesStore,
         trafficDataUsageStore,
+        releasePlanTemplateStore,
+        releasePlanStore,
     };
     const versionServiceStores = { settingStore };
     const getActiveUsers = createGetActiveUsers(db);
     const getProductionChanges = createGetProductionChanges(db);
     const getLicencedUsers = createGetLicensedUsers(db);
+    const getReadOnlyUsers = createGetReadOnlyUsers(db);
+    const getEdgeInstances = createGetEdgeInstances(db);
     const versionService = new VersionService(versionServiceStores, config);
 
     const instanceStatsService = new InstanceStatsService(
@@ -135,6 +153,8 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getActiveUsers,
         getProductionChanges,
         getLicencedUsers,
+        getReadOnlyUsers,
+        getEdgeInstances,
     );
 
     return instanceStatsService;
@@ -159,6 +179,12 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
     const featureStrategiesReadModel = new FakeFeatureStrategiesReadModel();
     const trafficDataUsageStore = new FakeTrafficDataUsageStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
+    const releasePlanTemplateStore = {
+        count: () => Promise.resolve(0),
+    } as ReleasePlanTemplateStore;
+    const releasePlanStore = {
+        count: () => Promise.resolve(0),
+    } as ReleasePlanStore;
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -177,12 +203,16 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         featureStrategiesReadModel,
         featureStrategiesStore,
         trafficDataUsageStore,
+        releasePlanTemplateStore,
+        releasePlanStore,
     };
 
     const versionServiceStores = { settingStore };
     const getActiveUsers = createFakeGetActiveUsers();
     const getLicensedUsers = createFakeGetLicensedUsers();
+    const getReadOnlyUsers = createFakeGetReadOnlyUsers();
     const getProductionChanges = createFakeGetProductionChanges();
+    const getEdgeInstances = createFakeGetEdgeInstances();
     const versionService = new VersionService(versionServiceStores, config);
 
     const instanceStatsService = new InstanceStatsService(
@@ -192,6 +222,8 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         getActiveUsers,
         getProductionChanges,
         getLicensedUsers,
+        getReadOnlyUsers,
+        getEdgeInstances,
     );
 
     return instanceStatsService;

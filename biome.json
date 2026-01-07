@@ -1,17 +1,22 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "a11y": {
-        "useSemanticElements": "off"
+        "useSemanticElements": "off",
+        "useKeyWithClickEvents": "off",
+        "noStaticElementInteractions": "off"
       },
       "correctness": {
         "noUnsafeOptionalChaining": "off",
         "useExhaustiveDependencies": "off",
         "noUnusedImports": "warn",
-        "useJsxKeyInIterable": "off"
+        "useJsxKeyInIterable": "off",
+        "useHookAtTopLevel": "off",
+        "noUnusedFunctionParameters": "off",
+        "noUnusedVariables": "off"
       },
       "complexity": {
         "noBannedTypes": "off",
@@ -37,55 +42,18 @@
         "noConfusingVoidType": "off",
         "noArrayIndexKey": "off",
         "noThenProperty": "off",
-        "noExportsInTest": "off"
+        "noExportsInTest": "off",
+        "noNonNullAssertedOptionalChain": "off"
       },
       "performance": {
         "noAccumulatingSpread": "off",
         "noDelete": "off"
       }
-    },
-    "ignore": [
-      "node_modules",
-      "docker",
-      "bundle.js",
-      "website/build",
-      "website/docs/generated",
-      "website/global.js",
-      "setupJest.js",
-      "dist",
-      "build",
-      "src/migrations/*.js",
-      "src/test/examples/*.json",
-      ".docusaurus",
-      "coverage",
-      "CHANGELOG.md",
-      "./package.json",
-      "./frontend/package.json"
-    ]
+    }
   },
-  "organizeImports": {
-    "enabled": false
-  },
+  "assist": { "actions": { "source": { "organizeImports": "off" } } },
   "formatter": {
     "indentStyle": "space",
-    "ignore": [
-      "node_modules",
-      "docker",
-      "bundle.js",
-      "setupJest.js",
-      "dist",
-      "build",
-      "src/migrations/*.js",
-      "src/migrations/*.json",
-      "src/test/examples/*.json",
-      "coverage",
-      "website/build",
-      "website/docs/generated",
-      "website/global.js",
-      ".docusaurus",
-      "./package.json",
-      "./frontend/package.json"
-    ],
     "indentWidth": 4
   },
   "javascript": {
@@ -100,5 +68,40 @@
     "formatter": {
       "indentWidth": 2
     }
+  },
+  "overrides": [
+    {
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useHookAtTopLevel": "off"
+          }
+        }
+      }
+    }
+  ],
+  "files": {
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/docker",
+      "!**/bundle.js",
+      "!**/website/build",
+      "!**/website/docs/generated",
+      "!**/website/global.js",
+      "!**/website",
+      "!**/setupJest.js",
+      "!**/dist",
+      "!**/build",
+      "!**/src/migrations/**/*.js",
+      "!**/src/test/examples/**/*.json",
+      "!**/.docusaurus",
+      "!**/coverage",
+      "!**/CHANGELOG.md",
+      "!package.json",
+      "!frontend/package.json",
+      "!src/migrations/package.json",
+      "!**/.vite"
+    ]
   }
 }

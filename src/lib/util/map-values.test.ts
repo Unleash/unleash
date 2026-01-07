@@ -1,4 +1,4 @@
-import { mapValues } from './map-values';
+import { mapValues } from './map-values.js';
 
 test('mapValues', () => {
     expect(

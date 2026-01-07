@@ -1,5 +1,5 @@
 import { Typography, Box, Divider } from '@mui/material';
-import { PlaygroundGuidanceSection } from './PlaygroundGuidanceSection/PlaygroundGuidanceSection';
+import { PlaygroundGuidanceSection } from './PlaygroundGuidanceSection/PlaygroundGuidanceSection.tsx';
 
 export const PlaygroundGuidance = () => {
     return (

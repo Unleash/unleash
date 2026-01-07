@@ -1,11 +1,11 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
-import { parametersSchema } from './parameters-schema';
-import { featureStrategySchema } from './feature-strategy-schema';
-import { variantSchema } from './variant-schema';
-import { overrideSchema } from './override-schema';
-import { strategyVariantSchema } from './strategy-variant-schema';
-import { dependentFeatureSchema } from './dependent-feature-schema';
+import { constraintSchema } from './constraint-schema.js';
+import { parametersSchema } from './parameters-schema.js';
+import { featureStrategySchema } from './feature-strategy-schema.js';
+import { variantSchema } from './variant-schema.js';
+import { overrideSchema } from './override-schema.js';
+import { strategyVariantSchema } from './strategy-variant-schema.js';
+import { dependentFeatureSchema } from './dependent-feature-schema.js';
 
 export const clientFeatureSchema = {
     $id: '#/components/schemas/clientFeatureSchema',
@@ -24,7 +24,7 @@ export const clientFeatureSchema = {
         type: {
             type: 'string',
             description:
-                'What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types) for more information',
+                'What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types) for more information',
             example: 'release',
         },
         description: {
@@ -47,7 +47,7 @@ export const clientFeatureSchema = {
         },
         impressionData: {
             description:
-                'Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/reference/impression-data) when this flag is evaluated',
+                'Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/concepts/impression-data) when this flag is evaluated',
             type: 'boolean',
             nullable: true,
             example: false,
@@ -68,7 +68,7 @@ export const clientFeatureSchema = {
         variants: {
             type: 'array',
             description:
-                '[Variants](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) configured for this flag',
+                '[Variants](https://docs.getunleash.io/concepts/feature-flag-variants#what-are-variants) configured for this flag',
             items: {
                 $ref: '#/components/schemas/variantSchema',
             },
@@ -95,4 +95,7 @@ export const clientFeatureSchema = {
     },
 } as const;
 
-export type ClientFeatureSchema = FromSchema<typeof clientFeatureSchema>;
+export type ClientFeatureSchema = FromSchema<
+    typeof clientFeatureSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

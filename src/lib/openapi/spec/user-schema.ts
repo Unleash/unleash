@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { AccountTypes } from '../../types';
+import { AccountTypes } from '../../events/index.js';
 
 export const userSchema = {
     $id: '#/components/schemas/userSchema',
@@ -12,13 +12,6 @@ export const userSchema = {
             description: 'The user id',
             type: 'integer',
             example: 123,
-        },
-        isAPI: {
-            description:
-                'Deprecated in v5. Used internally to know which operations the user should be allowed to perform',
-            type: 'boolean',
-            example: true,
-            deprecated: true,
         },
         name: {
             description: 'Name of the user',
@@ -61,7 +54,7 @@ export const userSchema = {
         },
         rootRole: {
             description:
-                'Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned',
+                'Which [root role](https://docs.getunleash.io/concepts/rbac#predefined-roles) this user is assigned',
             type: 'integer',
             example: 1,
             minimum: 0,

@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { PlaygroundEnvironmentTable } from './PlaygroundEnvironmentTable';
+import { PlaygroundEnvironmentTable } from './PlaygroundEnvironmentTable.tsx';
 
 test('should render environment table', async () => {
     render(

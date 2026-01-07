@@ -1,4 +1,4 @@
-import { median } from './median';
+import { median } from './median.js';
 
 test('calculateMedian with an odd number of elements', () => {
     expect(median([1, 3, 5])).toBe(3);

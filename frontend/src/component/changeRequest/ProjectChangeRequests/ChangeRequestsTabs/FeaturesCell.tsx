@@ -1,22 +1,19 @@
 import { Box, styled } from '@mui/material';
 import { Link } from 'react-router-dom';
-import type { VFC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { Truncator } from 'component/common/Truncator/Truncator';
+import type { FC } from 'react';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    width: '300px',
     padding: theme.spacing(1, 0, 1, 2),
 }));
 
-const StyledLink = styled(Link)(({ theme }) => ({
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+const StyledLink = styled(Link)(() => ({
     textDecoration: 'none',
     '&:hover, &:focus': {
         textDecoration: 'underline',
@@ -43,7 +40,7 @@ interface FeaturesCellProps {
     project: string;
 }
 
-export const FeaturesCell: VFC<FeaturesCellProps> = ({ value, project }) => {
+export const FeaturesCell: FC<FeaturesCellProps> = ({ value, project }) => {
     const { searchQuery } = useSearchHighlightContext();
     const featureNames = value?.map((feature: any) => feature.name);
     return (
@@ -53,12 +50,13 @@ export const FeaturesCell: VFC<FeaturesCellProps> = ({ value, project }) => {
                 show={featureNames?.map((featureName: string) => (
                     <StyledLink
                         key={featureName}
-                        title={featureName}
                         to={`/projects/${project}/features/${featureName}`}
                     >
-                        <Highlighter search={searchQuery}>
-                            {featureName}
-                        </Highlighter>
+                        <Truncator lines={1} title={featureName} arrow>
+                            <Highlighter search={searchQuery}>
+                                {featureName}
+                            </Highlighter>
+                        </Truncator>
                     </StyledLink>
                 ))}
                 elseShow={
@@ -69,18 +67,23 @@ export const FeaturesCell: VFC<FeaturesCellProps> = ({ value, project }) => {
                                 {featureNames?.map((featureName: string) => (
                                     <StyledTooltipLink
                                         key={featureName}
-                                        title={featureName}
                                         to={`/projects/${project}/features/${featureName}`}
                                     >
-                                        <Highlighter search={searchQuery}>
-                                            {featureName}
-                                        </Highlighter>
+                                        <Truncator
+                                            lines={1}
+                                            title={featureName}
+                                            arrow
+                                        >
+                                            <Highlighter search={searchQuery}>
+                                                {featureName}
+                                            </Highlighter>
+                                        </Truncator>
                                     </StyledTooltipLink>
                                 ))}
                             </StyledTooltipContainer>
                         }
                     >
-                        {featureNames?.length} toggles
+                        {featureNames?.length} flags
                     </TooltipLink>
                 }
             />

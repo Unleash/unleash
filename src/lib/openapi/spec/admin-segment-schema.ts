@@ -1,12 +1,12 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
+import { constraintSchema } from './constraint-schema.js';
 
 export const adminSegmentSchema = {
     $id: '#/components/schemas/adminSegmentSchema',
     type: 'object',
     required: ['id', 'name', 'constraints', 'createdAt'],
     description:
-        'A description of a [segment](https://docs.getunleash.io/reference/segments)',
+        'A description of a [segment](https://docs.getunleash.io/concepts/segments)',
     additionalProperties: false,
     properties: {
         id: {
@@ -77,4 +77,7 @@ export const adminSegmentSchema = {
     },
 } as const;
 
-export type AdminSegmentSchema = FromSchema<typeof adminSegmentSchema>;
+export type AdminSegmentSchema = FromSchema<
+    typeof adminSegmentSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

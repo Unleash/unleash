@@ -1,6 +1,6 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { ApplicationOverviewSchema } from 'openapi';
 
 const placeHolderApplication: ApplicationOverviewSchema = {
@@ -15,8 +15,9 @@ export const useApplicationOverview = (
     application: string,
     options: SWRConfiguration = {},
 ) => {
+    const encodedApplication = encodeURIComponent(application);
     const path = formatApiPath(
-        `api/admin/metrics/applications/${application}/overview`,
+        `api/admin/metrics/applications/${encodedApplication}/overview`,
     );
     const { data, error } = useSWR<ApplicationOverviewSchema>(
         path,

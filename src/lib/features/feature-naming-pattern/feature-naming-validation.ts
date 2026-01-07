@@ -1,4 +1,4 @@
-import type { IFeatureNaming } from '../../types/model';
+import type { IFeatureNaming } from '../../types/model.js';
 
 const compileRegex = (pattern: string) => new RegExp(`^${pattern}$`);
 

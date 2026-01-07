@@ -12,14 +12,12 @@ import {
     UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
-import type { IConstraint } from 'interfaces/strategy';
+
+import type { IConstraint, IConstraintWithId } from 'interfaces/strategy';
 import { useNavigate } from 'react-router-dom';
-import {
-    ConstraintAccordionList,
-    type IConstraintAccordionListRef,
-} from 'component/common/ConstraintAccordion/ConstraintAccordionList/ConstraintAccordionList';
-import type { SegmentFormStep, SegmentFormMode } from './SegmentForm';
+import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
+import type { IEditableConstraintsListRef } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
+import type { SegmentFormStep, SegmentFormMode } from './SegmentForm.tsx';
 import {
     AutocompleteBox,
     type IAutocompleteBoxOption,
@@ -32,10 +30,12 @@ import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValues
 import AccessContext from 'contexts/AccessContext';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { GO_BACK } from 'constants/navigate';
+import { useEffectiveProjectContext } from 'hooks/api/getters/useUnleashContext/useEffectiveProjectContext.ts';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
 interface ISegmentFormPartTwoProps {
     project?: string;
-    constraints: IConstraint[];
+    constraints: IConstraintWithId[];
     setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
     setCurrentStep: React.Dispatch<React.SetStateAction<SegmentFormStep>>;
     mode: SegmentFormMode;
@@ -111,10 +111,13 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     setCurrentStep,
     mode,
 }) => {
-    const constraintsAccordionListRef = useRef<IConstraintAccordionListRef>();
+    const constraintsAccordionListRef = useRef<IEditableConstraintsListRef>();
     const navigate = useNavigate();
     const { hasAccess } = useContext(AccessContext);
-    const { context = [] } = useUnleashContext();
+    const projectIdFromPath = useOptionalPathParam('projectId');
+    const { context = [] } = useEffectiveProjectContext(
+        project ?? projectIdFromPath,
+    );
     const [open, setOpen] = useState(false);
     const segmentValuesCount = useSegmentValuesCount(constraints);
     const modePermission =
@@ -201,15 +204,13 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                     }
                 />
                 <StyledConstraintContainer>
-                    <ConstraintAccordionList
-                        ref={constraintsAccordionListRef}
-                        constraints={constraints}
-                        setConstraints={
-                            hasAccess(modePermission, project)
-                                ? setConstraints
-                                : undefined
-                        }
-                    />
+                    {hasAccess(modePermission, project) && setConstraints ? (
+                        <EditableConstraintsList
+                            ref={constraintsAccordionListRef}
+                            constraints={constraints}
+                            setConstraints={setConstraints}
+                        />
+                    ) : null}
                 </StyledConstraintContainer>
             </StyledForm>
             <StyledButtonContainer>

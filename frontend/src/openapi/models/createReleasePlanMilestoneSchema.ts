@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateReleasePlanMilestoneStrategySchema } from './createReleasePlanMilestoneStrategySchema';
+import type { CreateReleasePlanMilestoneStrategySchema } from './createReleasePlanMilestoneStrategySchema.js';
 
 /**
  * Schema representing the creation of a release plan milestone.

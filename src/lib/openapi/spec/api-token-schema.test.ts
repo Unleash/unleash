@@ -1,10 +1,9 @@
-import { ApiTokenType } from '../../types/models/api-token';
-import { validateSchema } from '../validate';
-import type { ApiTokenSchema } from './api-token-schema';
+import { ApiTokenType } from '../../types/model.js';
+import { validateSchema } from '../validate.js';
+import type { ApiTokenSchema } from './api-token-schema.js';
 
 const defaultData: ApiTokenSchema = {
     secret: '',
-    username: '',
     tokenName: '',
     type: ApiTokenType.CLIENT,
     environment: '',
@@ -15,8 +14,12 @@ const defaultData: ApiTokenSchema = {
     project: '',
 };
 
-test('apiTokenSchema', () => {
-    const data: ApiTokenSchema = { ...defaultData };
+test.each([
+    ApiTokenType.CLIENT,
+    ApiTokenType.BACKEND,
+    ApiTokenType.FRONTEND,
+])('apiTokenSchema %s', (tokenType) => {
+    const data: ApiTokenSchema = { ...defaultData, type: tokenType };
 
     expect(
         validateSchema('#/components/schemas/apiTokenSchema', data),

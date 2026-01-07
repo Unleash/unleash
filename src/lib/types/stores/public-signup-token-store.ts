@@ -1,6 +1,6 @@
-import type { Store } from './store';
-import type { PublicSignupTokenSchema } from '../../openapi/spec/public-signup-token-schema';
-import type { IPublicSignupTokenCreate } from '../models/public-signup-token';
+import type { Store } from './store.js';
+import type { PublicSignupTokenSchema } from '../../openapi/spec/public-signup-token-schema.js';
+import type { IPublicSignupTokenCreate } from '../models/public-signup-token.js';
 
 export interface IPublicSignupTokenStore
     extends Store<PublicSignupTokenSchema, string> {

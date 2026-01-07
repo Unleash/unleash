@@ -3,7 +3,7 @@ import type {
     ProjectOwners,
     UserProjectOwner,
     WithProjectOwners,
-} from './project-owners-read-model.type';
+} from './project-owners-read-model.type.js';
 
 export class FakeProjectOwnersReadModel implements IProjectOwnersReadModel {
     async addOwners<T extends { id: string }>(

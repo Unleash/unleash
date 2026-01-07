@@ -15,12 +15,12 @@ export interface FeatureTagSchema {
     createdByUserId?: number | null;
     /** The name of the feature this tag is applied to */
     featureName: string;
-    /** The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag */
+    /** The [type](https://docs.getunleash.io/concepts/feature-flags#tags) of the tag */
     tagType?: string;
     /** The value of the tag */
     tagValue: string;
     /**
-     * The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagType` property.
+     * The [type](https://docs.getunleash.io/concepts/feature-flags#tags) of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagType` property.
      * @deprecated
      */
     type?: string;

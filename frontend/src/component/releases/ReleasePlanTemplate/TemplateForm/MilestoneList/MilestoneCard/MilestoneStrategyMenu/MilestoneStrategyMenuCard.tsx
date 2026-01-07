@@ -6,7 +6,6 @@ import { styled } from '@mui/material';
 import type { IStrategy } from 'interfaces/strategy';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
-import { v4 as uuidv4 } from 'uuid';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
 
 const StyledIcon = styled('div')(({ theme }) => ({
@@ -74,7 +73,7 @@ export const MilestoneStrategyMenuCard = ({
                     };
                 }
                 onClick({
-                    id: uuidv4(),
+                    id: crypto.randomUUID(),
                     name: strat.name,
                     strategyName: strat.name,
                     title: '',

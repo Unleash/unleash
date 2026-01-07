@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { constraintSchema } from './constraint-schema';
+import { constraintSchema } from './constraint-schema.js';
 
 export const upsertSegmentSchema = {
     $id: '#/components/schemas/upsertSegmentSchema',
@@ -39,4 +39,7 @@ export const upsertSegmentSchema = {
     },
 } as const;
 
-export type UpsertSegmentSchema = FromSchema<typeof upsertSegmentSchema>;
+export type UpsertSegmentSchema = FromSchema<
+    typeof upsertSegmentSchema,
+    { keepDefaultedPropertiesOptional: true }
+>;

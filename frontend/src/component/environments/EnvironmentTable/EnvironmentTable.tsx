@@ -18,16 +18,18 @@ import useEnvironmentApi, {
 } from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { EnvironmentRow } from './EnvironmentRow/EnvironmentRow';
-import { EnvironmentNameCell } from './EnvironmentNameCell/EnvironmentNameCell';
-import { EnvironmentActionCell } from './EnvironmentActionCell/EnvironmentActionCell';
-import { EnvironmentIconCell } from './EnvironmentIconCell/EnvironmentIconCell';
+import { EnvironmentRow } from './EnvironmentRow/EnvironmentRow.tsx';
+import { EnvironmentNameCell } from './EnvironmentNameCell/EnvironmentNameCell.tsx';
+import { EnvironmentActionCell } from './EnvironmentActionCell/EnvironmentActionCell.tsx';
+import { EnvironmentIconCell } from './EnvironmentIconCell/EnvironmentIconCell.tsx';
 import { Search } from 'component/common/Search/Search';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IEnvironment } from 'interfaces/environments';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
@@ -37,9 +39,10 @@ export const EnvironmentTable = () => {
     const { setToastApiError } = useToast();
     const { environments, mutateEnvironments } = useEnvironments();
     const isFeatureEnabled = useUiFlag('EEA');
+    const { isEnterprise } = useUiConfig();
 
     const onMoveItem: OnMoveItem = useCallback(
-        async (dragIndex: number, dropIndex: number, save = false) => {
+        async ({ dragIndex, dropIndex, save }) => {
             const oldEnvironments = environments || [];
             const newEnvironments = [...oldEnvironments];
             const movedEnvironment = newEnvironments.splice(dragIndex, 1)[0];
@@ -61,25 +64,37 @@ export const EnvironmentTable = () => {
     );
 
     const columnsWithActions = useMemo(() => {
-        if (isFeatureEnabled) {
-            return [
-                ...COLUMNS,
-                {
-                    Header: 'Actions',
-                    id: 'Actions',
-                    align: 'center',
-                    width: '1%',
-                    Cell: ({
-                        row: { original },
-                    }: { row: { original: IEnvironment } }) => (
-                        <EnvironmentActionCell environment={original} />
-                    ),
-                    disableGlobalFilter: true,
-                },
-            ];
+        const baseColumns = [
+            ...COLUMNS,
+            ...(isFeatureEnabled
+                ? [
+                      {
+                          Header: 'Actions',
+                          id: 'Actions',
+                          align: 'center',
+                          width: '1%',
+                          Cell: ({
+                              row: { original },
+                          }: {
+                              row: { original: IEnvironment };
+                          }) => (
+                              <EnvironmentActionCell environment={original} />
+                          ),
+                          disableGlobalFilter: true,
+                      },
+                  ]
+                : []),
+        ];
+        if (isEnterprise()) {
+            baseColumns.splice(2, 0, {
+                Header: 'Change request',
+                accessor: (row: IEnvironment) =>
+                    Number.isInteger(row.requiredApprovals) ? 'yes' : 'no',
+                Cell: TextCell,
+            });
         }
 
-        return COLUMNS;
+        return baseColumns;
     }, [isFeatureEnabled]);
 
     const {

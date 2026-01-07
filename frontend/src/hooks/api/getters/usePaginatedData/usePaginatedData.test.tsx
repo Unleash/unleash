@@ -1,7 +1,7 @@
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { createPaginatedHook } from './usePaginatedData';
+import { createPaginatedHook } from './usePaginatedData.ts';
 import type { FC } from 'react';
 import { http, HttpResponse } from 'msw';
 
@@ -36,5 +36,5 @@ test('Pass query params to server and return total', async () => {
     render(<TestComponent query='value' />);
 
     await screen.findByText('default (0)');
-    const element = await screen.findByText('resultvalue (10)');
+    const _element = await screen.findByText('resultvalue (10)');
 });

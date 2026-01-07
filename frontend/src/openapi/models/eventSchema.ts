@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EventSchemaData } from './eventSchemaData';
-import type { EventSchemaPreData } from './eventSchemaPreData';
-import type { TagSchema } from './tagSchema';
-import type { EventSchemaType } from './eventSchemaType';
+import type { EventSchemaData } from './eventSchemaData.js';
+import type { EventSchemaPreData } from './eventSchemaPreData.js';
+import type { TagSchema } from './tagSchema.js';
+import type { EventSchemaType } from './eventSchemaType.js';
 
 /**
  * An event describing something happening in the system
@@ -36,11 +36,20 @@ export interface EventSchema {
      * @nullable
      */
     featureName?: string | null;
+    /** The unique identifier for the transaction group this event belongs to, if applicable. */
+    groupId?: string;
+    /** The type of transaction group this event belongs to, if applicable. */
+    groupType?: string;
     /**
      * The ID of the event. An increasing natural number.
      * @minimum 1
      */
     id: number;
+    /**
+     * The IP address of the user that created the event. Only available in Enterprise.
+     * @nullable
+     */
+    ip?: string | null;
     /**
      * The concise, human-readable name of the event.
      * @nullable
@@ -66,6 +75,6 @@ export interface EventSchema {
      * @nullable
      */
     tags?: TagSchema[] | null;
-    /** What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is */
+    /** What [type](https://docs.getunleash.io/concepts/events#event-types) of event this is */
     type: EventSchemaType;
 }

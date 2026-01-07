@@ -7,12 +7,12 @@ import type {
     ChangeRequestAction,
     ChangeRequestType,
 } from 'component/changeRequest/changeRequest.types';
-import { EnvironmentVariantsCard } from './EnvironmentVariantsCard';
+import { EnvironmentVariantsCard } from './EnvironmentVariantsCard.tsx';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 
 const server = testServerSetup();
 
-const strategy = {
+const _strategy = {
     name: 'flexibleRollout',
     constraints: [],
     variants: [],

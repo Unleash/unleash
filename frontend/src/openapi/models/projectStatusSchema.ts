@@ -3,11 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectActivitySchema } from './projectActivitySchema';
-import type { ProjectStatusSchemaHealth } from './projectStatusSchemaHealth';
-import type { ProjectStatusSchemaLifecycleSummary } from './projectStatusSchemaLifecycleSummary';
-import type { ProjectStatusSchemaResources } from './projectStatusSchemaResources';
-import type { ProjectStatusSchemaStaleFlags } from './projectStatusSchemaStaleFlags';
+import type { ProjectActivitySchema } from './projectActivitySchema.js';
+import type { ProjectStatusSchemaHealth } from './projectStatusSchemaHealth.js';
+import type { ProjectStatusSchemaLifecycleSummary } from './projectStatusSchemaLifecycleSummary.js';
+import type { ProjectStatusSchemaResources } from './projectStatusSchemaResources.js';
+import type { ProjectStatusSchemaStaleFlags } from './projectStatusSchemaStaleFlags.js';
+import type { ProjectStatusSchemaTechnicalDebt } from './projectStatusSchemaTechnicalDebt.js';
 
 /**
  * Schema representing the overall status of a project, including an array of activity records. Each record in the activity array contains a date and a count, providing a snapshot of the project’s activity level over time.
@@ -23,4 +24,6 @@ export interface ProjectStatusSchema {
     resources: ProjectStatusSchemaResources;
     /** Information on stale and potentially stale flags in this project. */
     staleFlags: ProjectStatusSchemaStaleFlags;
+    /** Information about the project's health rating */
+    technicalDebt: ProjectStatusSchemaTechnicalDebt;
 }

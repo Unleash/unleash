@@ -1,41 +1,38 @@
 import type { Request, Response } from 'express';
-import Controller from '../../routes/controller';
+import Controller from '../../routes/controller.js';
 
 import {
     CREATE_TAG_TYPE,
     DELETE_TAG_TYPE,
     NONE,
     UPDATE_TAG_TYPE,
-} from '../../types/permissions';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types/services';
-import type TagTypeService from './tag-type-service';
-import type { Logger } from '../../logger';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
+} from '../../types/permissions.js';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import type TagTypeService from './tag-type-service.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
     resourceCreatedResponseSchema,
-} from '../../openapi/util/create-response-schema';
-import type { TagTypesSchema } from '../../openapi/spec/tag-types-schema';
+} from '../../openapi/util/create-response-schema.js';
+import type { TagTypesSchema } from '../../openapi/spec/tag-types-schema.js';
 import {
     validateTagTypeSchema,
     type ValidateTagTypeSchema,
-} from '../../openapi/spec/validate-tag-type-schema';
-import type { TagTypeSchema } from '../../openapi/spec/tag-type-schema';
-import type { UpdateTagTypeSchema } from '../../openapi/spec/update-tag-type-schema';
-import type { OpenApiService } from '../../services/openapi-service';
+} from '../../openapi/spec/validate-tag-type-schema.js';
+import type { TagTypeSchema } from '../../openapi/spec/tag-type-schema.js';
+import type { UpdateTagTypeSchema } from '../../openapi/spec/update-tag-type-schema.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import type { WithTransactional } from '../../db/transaction';
+} from '../../openapi/util/standard-responses.js';
+import type { WithTransactional } from '../../db/transaction.js';
 
 const version = 1;
 
 class TagTypeController extends Controller {
-    private logger: Logger;
-
     private tagTypeService: WithTransactional<TagTypeService>;
 
     private openApiService: OpenApiService;
@@ -51,7 +48,6 @@ class TagTypeController extends Controller {
         >,
     ) {
         super(config);
-        this.logger = config.getLogger('/admin-api/tag-type.js');
         this.tagTypeService = transactionalTagTypeService;
         this.openApiService = openApiService;
         this.route({
@@ -172,7 +168,7 @@ class TagTypeController extends Controller {
     }
 
     async getTagTypes(
-        req: Request,
+        _req: Request,
         res: Response<TagTypesSchema>,
     ): Promise<void> {
         const tagTypes = await this.tagTypeService.getAll();
@@ -212,11 +208,19 @@ class TagTypeController extends Controller {
         req: IAuthRequest<{ name: string }, unknown, UpdateTagTypeSchema>,
         res: Response,
     ): Promise<void> {
-        const { description, icon } = req.body;
+        const { description, icon, color } = req.body;
         const { name } = req.params;
 
         await this.tagTypeService.transactional((service) =>
-            service.updateTagType({ name, description, icon }, req.audit),
+            service.updateTagType(
+                {
+                    name,
+                    description,
+                    icon,
+                    color: color as string | null | undefined,
+                },
+                req.audit,
+            ),
         );
         res.status(200).end();
     }
@@ -238,4 +242,3 @@ class TagTypeController extends Controller {
 }
 
 export default TagTypeController;
-module.exports = TagTypeController;

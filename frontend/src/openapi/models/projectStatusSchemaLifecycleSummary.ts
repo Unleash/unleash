@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectStatusSchemaLifecycleSummaryArchived } from './projectStatusSchemaLifecycleSummaryArchived';
-import type { ProjectStatusSchemaLifecycleSummaryCompleted } from './projectStatusSchemaLifecycleSummaryCompleted';
-import type { ProjectStatusSchemaLifecycleSummaryInitial } from './projectStatusSchemaLifecycleSummaryInitial';
-import type { ProjectStatusSchemaLifecycleSummaryLive } from './projectStatusSchemaLifecycleSummaryLive';
-import type { ProjectStatusSchemaLifecycleSummaryPreLive } from './projectStatusSchemaLifecycleSummaryPreLive';
+import type { ProjectStatusSchemaLifecycleSummaryArchived } from './projectStatusSchemaLifecycleSummaryArchived.js';
+import type { ProjectStatusSchemaLifecycleSummaryCompleted } from './projectStatusSchemaLifecycleSummaryCompleted.js';
+import type { ProjectStatusSchemaLifecycleSummaryInitial } from './projectStatusSchemaLifecycleSummaryInitial.js';
+import type { ProjectStatusSchemaLifecycleSummaryLive } from './projectStatusSchemaLifecycleSummaryLive.js';
+import type { ProjectStatusSchemaLifecycleSummaryPreLive } from './projectStatusSchemaLifecycleSummaryPreLive.js';
 
 /**
  * Feature flag lifecycle statistics for this project.

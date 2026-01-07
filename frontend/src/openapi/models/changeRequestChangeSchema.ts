@@ -3,8 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestChangeSchemaCreatedBy } from './changeRequestChangeSchemaCreatedBy';
-import type { ChangeRequestChangeSchemaPayload } from './changeRequestChangeSchemaPayload';
+import type { ChangeRequestChangeSchemaCreatedBy } from './changeRequestChangeSchemaCreatedBy.js';
+import type { ChangeRequestChangeSchemaPayload } from './changeRequestChangeSchemaPayload.js';
+import type { ChangeRequestChangeSchemaScheduleConflicts } from './changeRequestChangeSchemaScheduleConflicts.js';
 
 /**
  * A change request change, containing info about the type of change and the specific changes.
@@ -21,5 +22,7 @@ export interface ChangeRequestChangeSchema {
     /** The ID of this change. */
     id: number;
     /** The data required to perform this action. */
-    payload: ChangeRequestChangeSchemaPayload;
+    payload?: ChangeRequestChangeSchemaPayload;
+    /** Information about scheduled change requests that would casue conflicts with this change if applied. */
+    scheduleConflicts?: ChangeRequestChangeSchemaScheduleConflicts;
 }

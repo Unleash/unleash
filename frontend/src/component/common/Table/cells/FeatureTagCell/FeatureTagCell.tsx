@@ -1,10 +1,11 @@
 import type { VFC } from 'react';
-import type { FeatureSchema } from 'openapi';
+import type { FeatureSchema, TagSchema } from 'openapi';
 import { styled, Typography } from '@mui/material';
-import { TextCell } from '../TextCell/TextCell';
+import { TextCell } from '../TextCell/TextCell.tsx';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
+import { formatTag } from 'utils/format-tag';
 
 const StyledTag = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
@@ -23,9 +24,8 @@ export const FeatureTagCell: VFC<IFeatureTagCellProps> = ({ row }) => {
         return <TextCell />;
 
     const value =
-        row.original.tags
-            ?.map(({ type, value }) => `${type}:${value}`)
-            .join('\n') || '';
+        row.original.tags?.map((tag: TagSchema) => formatTag(tag)).join('\n') ||
+        '';
 
     return (
         <TextCell>
@@ -39,7 +39,7 @@ export const FeatureTagCell: VFC<IFeatureTagCellProps> = ({ row }) => {
                         {row.original.tags?.map((tag) => (
                             <StyledTag key={tag.type + tag.value}>
                                 <Highlighter search={searchQuery}>
-                                    {`${tag.type}:${tag.value}`}
+                                    {formatTag(tag)}
                                 </Highlighter>
                             </StyledTag>
                         ))}

@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LegalValueSchema } from './legalValueSchema';
+import type { LegalValueSchema } from './legalValueSchema.js';
 
 /**
- * A representation of a [context field](https://docs.getunleash.io/reference/unleash-context).
+ * A representation of a [context field](https://docs.getunleash.io/concepts/unleash-context).
  */
 export interface ContextFieldSchema {
     /**
@@ -25,7 +25,7 @@ export interface ContextFieldSchema {
     name: string;
     /** Used when sorting a list of context fields. Is also used as a tiebreaker if a list of context fields is sorted alphabetically. */
     sortOrder?: number;
-    /** Does this context field support being used for [stickiness](https://docs.getunleash.io/reference/stickiness) calculations */
+    /** Does this context field support being used for [stickiness](https://docs.getunleash.io/concepts/stickiness) calculations */
     stickiness?: boolean;
     /**
      * Number of projects where this context field is used in

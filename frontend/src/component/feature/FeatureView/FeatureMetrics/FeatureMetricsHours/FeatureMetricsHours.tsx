@@ -4,6 +4,7 @@ import GeneralSelect, {
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureMetricsHoursProps {
     hoursBack: number;
@@ -21,7 +22,7 @@ export const FeatureMetricsHours = ({
     const { trackEvent } = usePlausibleTracker();
 
     const onChange: IGeneralSelectProps['onChange'] = (key) => {
-        setHoursBack(Number.parseInt(key));
+        setHoursBack(Number.parseInt(key, 10));
         trackEvent('feature-metrics', {
             props: {
                 eventType: 'change-period',
@@ -30,9 +31,11 @@ export const FeatureMetricsHours = ({
         });
     };
     const { isEnterprise } = useUiConfig();
-    const options = isEnterprise()
-        ? [...hourOptions, ...daysOptions]
-        : hourOptions;
+    const extendedUsageMetricsEnabled = useUiFlag('extendedUsageMetrics');
+    const options =
+        isEnterprise() && extendedUsageMetricsEnabled
+            ? [...hourOptions, ...daysOptions]
+            : hourOptions;
 
     const normalizedHoursBack = options
         .map((option) => Number(option.key))

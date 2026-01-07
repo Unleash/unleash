@@ -1,16 +1,17 @@
 import { subDays } from 'date-fns';
-import { ValidationError } from 'joi';
+import joi from 'joi';
+const { ValidationError } = joi;
 import createSlug from 'slug';
-import type { IAuditUser, IUser } from '../../types/user';
+import type { IAuditUser, IUser } from '../../types/user.js';
 import type {
     AccessService,
     AccessWithRoles,
-} from '../../services/access-service';
-import NameExistsError from '../../error/name-exists-error';
-import InvalidOperationError from '../../error/invalid-operation-error';
-import { nameType } from '../../routes/util';
-import { projectSchema } from '../../services/project-schema';
-import NotFoundError from '../../error/notfound-error';
+} from '../../services/access-service.js';
+import NameExistsError from '../../error/name-exists-error.js';
+import InvalidOperationError from '../../error/invalid-operation-error.js';
+import { nameType } from '../../routes/util.js';
+import { projectSchema } from '../../services/project-schema.js';
+import NotFoundError from '../../error/notfound-error.js';
 import {
     ADMIN,
     ADMIN_TOKEN_USER,
@@ -44,53 +45,48 @@ import {
     ProjectCreatedEvent,
     ProjectDeletedEvent,
     ProjectGroupAddedEvent,
-    ProjectGroupRemovedEvent,
-    ProjectGroupUpdateRoleEvent,
     ProjectRevivedEvent,
     ProjectUpdatedEvent,
-    ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
     RoleName,
     SYSTEM_USER_ID,
     type IProjectReadModel,
     type IOnboardingReadModel,
-} from '../../types';
+} from '../../types/index.js';
 import type {
-    IProjectAccessModel,
     IRoleDescriptor,
     IRoleWithProject,
-} from '../../types/stores/access-store';
-import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
-import IncompatibleProjectError from '../../error/incompatible-project-error';
-import ProjectWithoutOwnerError from '../../error/project-without-owner-error';
-import { arraysHaveSameItems } from '../../util';
-import type { GroupService } from '../../services/group-service';
-import type { IGroupRole } from '../../types/group';
-import type { FavoritesService } from '../../services/favorites-service';
-import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production';
-import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type';
-import { uniqueByKey } from '../../util/unique';
-import { BadDataError, PermissionError } from '../../error';
-import type {
-    ProjectDoraMetricsSchema,
-    ResourceLimitsSchema,
-} from '../../openapi';
-import { checkFeatureNamingData } from '../feature-naming-pattern/feature-naming-validation';
-import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type EventService from '../events/event-service';
+} from '../../types/stores/access-store.js';
+import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
+import IncompatibleProjectError from '../../error/incompatible-project-error.js';
+import { arraysHaveSameItems } from '../../util/index.js';
+import type { GroupService } from '../../services/group-service.js';
+import type { FavoritesService } from '../../services/favorites-service.js';
+import { calculateAverageTimeToProd } from '../feature-toggle/time-to-production/time-to-production.js';
+import type { IProjectStatsStore } from '../../types/stores/project-stats-store-type.js';
+import { uniqueByKey } from '../../util/unique.js';
+import { BadDataError, PermissionError } from '../../error/index.js';
+import type { ProjectDoraMetricsSchema } from '../../openapi/index.js';
+import { checkFeatureNamingData } from '../feature-naming-pattern/feature-naming-validation.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
+import type EventService from '../events/event-service.js';
 import type {
     IProjectApplicationsSearchParams,
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
     IProjectsQuery,
-} from './project-store-type';
-import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
-import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
+} from './project-store-type.js';
+import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type.js';
+import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
 import type EventEmitter from 'events';
-import type { ApiTokenService } from '../../services/api-token-service';
-import type { ProjectForUi } from './project-read-model-type';
-import { canGrantProjectRole } from './can-grant-project-role';
+import type { ApiTokenService } from '../../services/index.js';
+import type { ProjectForUi } from './project-read-model-type.js';
+import { canGrantProjectRole } from './can-grant-project-role.js';
+import { batchExecute } from '../../util/index.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { FUNCTION_TIME } from '../../metric-events.js';
+import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 
 type Days = number;
 type Count = number;
@@ -109,17 +105,6 @@ export interface IProjectStats {
 interface ICalculateStatus {
     projectId: string;
     updates: IProjectStats;
-}
-
-function includes(
-    list: number[],
-    {
-        id,
-    }: {
-        id: number;
-    },
-): boolean {
-    return list.some((l) => l === id);
 }
 
 export default class ProjectService {
@@ -161,13 +146,15 @@ export default class ProjectService {
 
     private isEnterprise: boolean;
 
-    private resourceLimits: ResourceLimitsSchema;
+    private resourceLimitsService: ResourceLimitsService;
 
     private eventBus: EventEmitter;
 
     private projectReadModel: IProjectReadModel;
 
     private onboardingReadModel: IOnboardingReadModel;
+
+    private timer: Function;
 
     constructor(
         {
@@ -204,6 +191,7 @@ export default class ProjectService {
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
         apiTokenService: ApiTokenService,
+        resourceLimitsService: ResourceLimitsService,
     ) {
         this.projectStore = projectStore;
         this.projectOwnersReadModel = projectOwnersReadModel;
@@ -224,10 +212,15 @@ export default class ProjectService {
         this.logger = config.getLogger('services/project-service.js');
         this.flagResolver = config.flagResolver;
         this.isEnterprise = config.isEnterprise;
-        this.resourceLimits = config.resourceLimits;
+        this.resourceLimitsService = resourceLimitsService;
         this.eventBus = config.eventBus;
         this.projectReadModel = projectReadModel;
         this.onboardingReadModel = onboardingReadModel;
+        this.timer = (functionName: string) =>
+            metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
+                className: 'ProjectService',
+                functionName,
+            });
     }
 
     async getProjects(
@@ -263,7 +256,11 @@ export default class ProjectService {
     }
 
     async getProject(id: string): Promise<IProject> {
-        return this.projectStore.get(id);
+        const project = await this.projectStore.get(id);
+        if (project === undefined) {
+            throw new NotFoundError(`Could not find project with id ${id}`);
+        }
+        return Promise.resolve(project);
     }
 
     private validateAndProcessFeatureNamingPattern = (
@@ -315,18 +312,14 @@ export default class ProjectService {
 
     async validateProjectEnvironments(environments: string[] | undefined) {
         if (environments) {
-            if (environments.length === 0) {
-                throw new BadDataError(
-                    'A project must always have at least one environment.',
-                );
-            }
-
             await this.validateEnvironmentsExist(environments);
         }
     }
 
     async validateProjectLimit() {
-        const limit = Math.max(this.resourceLimits.projects, 1);
+        const { projects } =
+            await this.resourceLimitsService.getResourceLimits();
+        const limit = Math.max(projects, 1);
         const projectCount = await this.projectStore.count();
 
         if (projectCount >= limit) {
@@ -348,6 +341,27 @@ export default class ProjectService {
             }
         };
         return generateUniqueId();
+    }
+
+    async getAllChangeRequestEnvironments(
+        newProject: CreateProject,
+    ): Promise<CreateProject['changeRequestEnvironments']> {
+        const predefinedChangeRequestEnvironments =
+            await this.environmentStore.getChangeRequestEnvironments(
+                newProject.environments || [],
+            );
+        const userSelectedChangeRequestEnvironments =
+            newProject.changeRequestEnvironments || [];
+        const allChangeRequestEnvironments = [
+            ...userSelectedChangeRequestEnvironments.filter(
+                (userEnv) =>
+                    !predefinedChangeRequestEnvironments.find(
+                        (predefinedEnv) => predefinedEnv.name === userEnv.name,
+                    ),
+            ),
+            ...predefinedChangeRequestEnvironments,
+        ];
+        return allChangeRequestEnvironments;
     }
 
     async createProject(
@@ -383,7 +397,7 @@ export default class ProjectService {
 
         await this.projectStore.create(data);
 
-        const envsToEnable = newProject.environments?.length
+        const envsToEnable = newProject.environments
             ? newProject.environments
             : (
                   await this.environmentStore.getAll({
@@ -402,9 +416,11 @@ export default class ProjectService {
                 await this.validateEnvironmentsExist(
                     newProject.changeRequestEnvironments.map((env) => env.name),
                 );
+                const allChangeRequestEnvironments =
+                    await this.getAllChangeRequestEnvironments(newProject);
                 const changeRequestEnvironments =
                     await enableChangeRequestsForSpecifiedEnvironments(
-                        newProject.changeRequestEnvironments,
+                        allChangeRequestEnvironments,
                     );
 
                 data.changeRequestEnvironments = changeRequestEnvironments;
@@ -511,7 +527,9 @@ export default class ProjectService {
         auditUser: IAuditUser,
     ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
-
+        if (feature === undefined) {
+            throw new NotFoundError(`Could not find feature ${featureName}`);
+        }
         if (feature.project !== currentProjectId) {
             throw new PermissionError(MOVE_FEATURE_TOGGLE);
         }
@@ -662,47 +680,6 @@ export default class ProjectService {
     }
 
     /**
-     * @deprecated see addAccess instead.
-     */
-    async addUser(
-        projectId: string,
-        roleId: number,
-        userId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        const { roles, users } =
-            await this.accessService.getProjectRoleAccess(projectId);
-        const user = await this.accountStore.get(userId);
-
-        const role = roles.find((r) => r.id === roleId);
-        if (!role) {
-            throw new NotFoundError(
-                `Could not find roleId=${roleId} on project=${projectId}`,
-            );
-        }
-
-        const alreadyHasAccess = users.some((u) => u.id === userId);
-        if (alreadyHasAccess) {
-            throw new Error(`User already has access to project=${projectId}`);
-        }
-
-        await this.accessService.addUserToRole(userId, role.id, projectId);
-
-        await this.eventService.storeEvent(
-            new ProjectUserAddedEvent({
-                project: projectId,
-                auditUser,
-                data: {
-                    roleId,
-                    userId,
-                    roleName: role.name,
-                    email: user.email,
-                },
-            }),
-        );
-    }
-
-    /**
      * @deprecated use removeUserAccess
      */
     async removeUser(
@@ -712,8 +689,6 @@ export default class ProjectService {
         auditUser: IAuditUser,
     ): Promise<void> {
         const role = await this.findProjectRole(projectId, roleId);
-
-        await this.validateAtLeastOneOwner(projectId, role);
 
         await this.accessService.removeUserFromRole(userId, role.id, projectId);
 
@@ -727,7 +702,7 @@ export default class ProjectService {
                     roleId,
                     userId,
                     roleName: role.name,
-                    email: user.email,
+                    email: user?.email,
                 },
             }),
         );
@@ -742,14 +717,6 @@ export default class ProjectService {
             projectId,
             userId,
         );
-
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-
-        if (existingRoles.includes(ownerRole.id)) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
 
         await this.accessService.removeUserAccess(projectId, userId);
 
@@ -774,14 +741,6 @@ export default class ProjectService {
             projectId,
             groupId,
         );
-
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-
-        if (existingRoles.includes(ownerRole.id)) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
 
         await this.accessService.removeGroupAccess(projectId, groupId);
 
@@ -828,75 +787,6 @@ export default class ProjectService {
                     groupId: group.id,
                     projectId: project.id,
                     roleName: role.name,
-                },
-            }),
-        );
-    }
-
-    /**
-     * @deprecated use removeGroupAccess
-     */
-    async removeGroup(
-        projectId: string,
-        roleId: number,
-        groupId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        const group = await this.groupService.getGroup(groupId);
-        const role = await this.accessService.getRole(roleId);
-        const project = await this.getProject(projectId);
-        if (group.id == null)
-            throw new ValidationError(
-                'Unexpected empty group id',
-                [],
-                undefined,
-            );
-
-        await this.validateAtLeastOneOwner(projectId, role);
-
-        await this.accessService.removeGroupFromRole(
-            group.id,
-            role.id,
-            project.id,
-        );
-
-        await this.eventService.storeEvent(
-            new ProjectGroupRemovedEvent({
-                project: projectId,
-                auditUser,
-                preData: {
-                    groupId: group.id,
-                    projectId: project.id,
-                    roleName: role.name,
-                },
-            }),
-        );
-    }
-
-    async addRoleAccess(
-        projectId: string,
-        roleId: number,
-        usersAndGroups: IProjectAccessModel,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        await this.accessService.addRoleAccessToProject(
-            usersAndGroups.users,
-            usersAndGroups.groups,
-            projectId,
-            roleId,
-            auditUser,
-        );
-
-        await this.eventService.storeEvent(
-            new ProjectAccessAddedEvent({
-                project: projectId,
-                auditUser,
-                data: {
-                    roles: {
-                        roleId,
-                        groupIds: usersAndGroups.groups.map(({ id }) => id),
-                        userIds: usersAndGroups.users.map(({ id }) => id),
-                    },
                 },
             }),
         );
@@ -1015,15 +905,6 @@ export default class ProjectService {
             projectId,
             userId,
         );
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-
-        const hasOwnerRole = includes(currentRoles, ownerRole);
-        const isRemovingOwnerRole = !includes(newRoles, ownerRole);
-        if (hasOwnerRole && isRemovingOwnerRole) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
         const isAllowedToAssignRoles = await this.isAllowedToAddAccess(
             auditUser,
             projectId,
@@ -1067,14 +948,6 @@ export default class ProjectService {
             groupId,
         );
 
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-        const hasOwnerRole = includes(currentRoles, ownerRole);
-        const isRemovingOwnerRole = !includes(newRoles, ownerRole);
-        if (hasOwnerRole && isRemovingOwnerRole) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
         const isAllowedToAssignRoles = await this.isAllowedToAddAccess(
             auditUser,
             projectId,
@@ -1108,20 +981,6 @@ export default class ProjectService {
         }
     }
 
-    async findProjectGroupRole(
-        projectId: string,
-        roleId: number,
-    ): Promise<IGroupRole> {
-        const roles = await this.groupService.getRolesForProject(projectId);
-        const role = roles.find((r) => r.roleId === roleId);
-        if (!role) {
-            throw new NotFoundError(
-                `Couldn't find roleId=${roleId} on project=${projectId}`,
-            );
-        }
-        return role;
-    }
-
     async findProjectRole(
         projectId: string,
         roleId: number,
@@ -1134,25 +993,6 @@ export default class ProjectService {
             );
         }
         return role;
-    }
-
-    async validateAtLeastOneOwner(
-        projectId: string,
-        currentRole: IRoleDescriptor,
-    ): Promise<void> {
-        if (currentRole.name === RoleName.OWNER) {
-            const users = await this.accessService.getProjectUsersForRole(
-                currentRole.id,
-                projectId,
-            );
-            const groups = await this.groupService.getProjectGroups(projectId);
-            const roleGroups = groups.filter((g) =>
-                g.roles?.includes(currentRole.id),
-            );
-            if (users.length + roleGroups.length < 2) {
-                throw new ProjectWithoutOwnerError();
-            }
-        }
     }
 
     /** @deprecated use projectInsightsService instead */
@@ -1228,7 +1068,6 @@ export default class ProjectService {
             // Nothing to do....
             return;
         }
-        await this.validateAtLeastOneOwner(projectId, currentRole);
 
         await this.accessService.updateUserProjectRole(
             userId,
@@ -1252,57 +1091,6 @@ export default class ProjectService {
                     roleId,
                     roleName: role.name,
                     email: user.email,
-                },
-            }),
-        );
-    }
-
-    async changeGroupRole(
-        projectId: string,
-        roleId: number,
-        userId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        const usersWithRoles = await this.getAccessToProject(projectId);
-        const userGroup = usersWithRoles.groups.find((u) => u.id === userId);
-        if (!userGroup)
-            throw new ValidationError('Unexpected empty user', [], undefined);
-        const currentRole = usersWithRoles.roles.find((r) =>
-            userGroup.roles?.includes(r.id),
-        );
-        if (!currentRole)
-            throw new ValidationError(
-                'Unexpected empty current role',
-                [],
-                undefined,
-            );
-
-        if (currentRole.id === roleId) {
-            // Nothing to do....
-            return;
-        }
-        await this.validateAtLeastOneOwner(projectId, currentRole);
-
-        await this.accessService.updateGroupProjectRole(
-            userId,
-            roleId,
-            projectId,
-        );
-        const role = await this.findProjectGroupRole(projectId, roleId);
-
-        await this.eventService.storeEvent(
-            new ProjectGroupUpdateRoleEvent({
-                project: projectId,
-                auditUser,
-                preData: {
-                    userId,
-                    roleId: currentRole.id,
-                    roleName: currentRole.name,
-                },
-                data: {
-                    userId,
-                    roleId,
-                    roleName: role.name,
                 },
             }),
         );
@@ -1349,21 +1137,18 @@ export default class ProjectService {
     async statusJob(): Promise<void> {
         const projects = await this.projectStore.getAll();
 
-        const statusUpdates = await Promise.all(
-            projects.map((project) => this.getStatusUpdates(project.id)),
-        );
-
-        await Promise.all(
-            statusUpdates.map((statusUpdate) => {
-                return this.projectStatsStore.updateProjectStats(
-                    statusUpdate.projectId,
-                    statusUpdate.updates,
-                );
-            }),
-        );
+        // run one project status update at a time every
+        void batchExecute(projects, 1, 30_000, async (project) => {
+            const statusUpdate = await this.getStatusUpdates(project.id);
+            await this.projectStatsStore.updateProjectStats(
+                statusUpdate.projectId,
+                statusUpdate.updates,
+            );
+        });
     }
 
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {
+        const stopTimer = this.timer('getStatusUpdates');
         const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
         const dateMinusSixtyDays = subDays(new Date(), 60).toISOString();
 
@@ -1437,6 +1222,7 @@ export default class ProjectService {
                 dateMinusThirtyDays,
             );
 
+        stopTimer();
         return {
             projectId,
             updates: {
@@ -1481,7 +1267,11 @@ export default class ProjectService {
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
-
+        if (project === undefined) {
+            throw new NotFoundError(
+                `Could not find project with id ${projectId}`,
+            );
+        }
         return {
             stats: projectStats,
             name: project.name,
@@ -1491,6 +1281,7 @@ export default class ProjectService {
             featureNaming: project.featureNaming,
             defaultStickiness: project.defaultStickiness,
             health: project.health || 0,
+            technicalDebt: 100 - (project.health || 0),
             favorite: favorite,
             updatedAt: project.updatedAt,
             createdAt: project.createdAt,
@@ -1533,6 +1324,12 @@ export default class ProjectService {
             this.onboardingReadModel.getOnboardingStatusForProject(projectId),
         ]);
 
+        if (project === undefined) {
+            throw new NotFoundError(
+                `Could not find project with id: ${projectId}`,
+            );
+        }
+
         return {
             stats: projectStats,
             name: project.name,
@@ -1540,8 +1337,10 @@ export default class ProjectService {
             mode: project.mode,
             featureLimit: project.featureLimit,
             featureNaming: project.featureNaming,
+            linkTemplates: project.linkTemplates,
             defaultStickiness: project.defaultStickiness,
             health: project.health || 0,
+            technicalDebt: 100 - (project.health || 0),
             favorite: favorite,
             updatedAt: project.updatedAt,
             archivedAt: project.archivedAt,

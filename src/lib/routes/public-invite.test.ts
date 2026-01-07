@@ -1,12 +1,13 @@
-import createStores from '../../test/fixtures/store';
-import { createTestConfig } from '../../test/config/test-config';
-import { createServices } from '../services';
-import getApp from '../app';
+import createStores from '../../test/fixtures/store.js';
+import { createTestConfig } from '../../test/config/test-config.js';
+import { createServices } from '../services/index.js';
+import getApp from '../app.js';
 import supertest, { type Test } from 'supertest';
-import permissions from '../../test/fixtures/permissions';
-import { RoleName, RoleType } from '../types/model';
-import type { IUnleashStores } from '../types';
-import type TestAgent from 'supertest/lib/agent';
+import permissions from '../../test/fixtures/permissions.js';
+import { RoleName, RoleType } from '../types/model.js';
+import type { IUnleashStores } from '../types/index.js';
+import type TestAgent from 'supertest/lib/agent.d.ts';
+import { vi } from 'vitest';
 
 describe('Public Signup API', () => {
     async function getSetup() {
@@ -18,8 +19,8 @@ describe('Public Signup API', () => {
 
         stores.accessStore = {
             ...stores.accessStore,
-            addUserToRole: jest.fn(),
-            removeRolesOfTypeForUser: jest.fn(),
+            addUserToRole: vi.fn() as () => Promise<void>,
+            removeRolesOfTypeForUser: vi.fn() as () => Promise<void>,
             getRolesForUserId: () => Promise.resolve([]),
             getRootRoleForUser: () =>
                 Promise.resolve({

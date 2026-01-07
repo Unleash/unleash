@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 import { Avatar, Box, Link, styled, Typography } from '@mui/material';
-import { SectionHeader, StepperBox } from './SharedComponents';
+import { SectionHeader, StepperBox } from './SharedComponents.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { allSdks, type Sdk } from './sharedTypes';
+import { allSdks, type Sdk } from './sharedTypes.ts';
 import { formatAssetPath } from 'utils/formatPath';
-import { Stepper } from './Stepper';
+import { Stepper } from './Stepper.tsx';
 import { Badge } from 'component/common/Badge/Badge';
 import { Markdown } from 'component/common/Markdown/Markdown';
-import { CodeRenderer, codeRenderSnippets } from './CodeRenderer';
+import { CodeRenderer, codeRenderSnippets } from './CodeRenderer.tsx';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 2, 8),

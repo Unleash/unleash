@@ -1,10 +1,10 @@
 import { type FC, useEffect } from 'react';
-import { ImportLayoutContainer } from '../ImportLayoutContainer';
+import { ImportLayoutContainer } from '../ImportLayoutContainer.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useImportApi } from 'hooks/api/actions/useImportApi/useImportApi';
 import useToast from 'hooks/useToast';
 import { Avatar, Button, styled, Typography } from '@mui/material';
-import { ActionsContainer } from '../ActionsContainer';
+import { ActionsContainer } from '../ActionsContainer.tsx';
 import Check from '@mui/icons-material/Check';
 import ErrorIcon from '@mui/icons-material/Error';
 import Pending from '@mui/icons-material/Pending';
@@ -13,7 +13,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { Box } from '@mui/system';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { useProjectFeatureSearch } from '../../PaginatedProjectFeatureToggles/useProjectFeatureSearch';
+import { useProjectFeatureSearch } from '../../PaginatedProjectFeatureToggles/useProjectFeatureSearch.ts';
 
 export const ImportStatusArea = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4, 2, 2, 2),

@@ -1,19 +1,20 @@
 import type { Response } from 'express';
-import Controller from '../controller';
-import type { IUnleashConfig, IUnleashServices } from '../../types';
-import type { Logger } from '../../logger';
-import { NONE } from '../../types/permissions';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
-import type { RequestBody } from '../unleash-types';
-import { createRequestSchema } from '../../openapi/util/create-request-schema';
+import Controller from '../controller.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import type { Logger } from '../../logger.js';
+import { NONE } from '../../types/permissions.js';
+import { createResponseSchema } from '../../openapi/util/create-response-schema.js';
+import type { RequestBody } from '../unleash-types.js';
+import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     validatedEdgeTokensSchema,
     type ValidatedEdgeTokensSchema,
-} from '../../openapi/spec/validated-edge-tokens-schema';
-import type EdgeService from '../../services/edge-service';
-import type { OpenApiService } from '../../services/openapi-service';
-import { getStandardResponses } from '../../openapi/util/standard-responses';
-import type { TokenStringListSchema } from '../../openapi';
+} from '../../openapi/spec/validated-edge-tokens-schema.js';
+import type EdgeService from '../../services/edge-service.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
+import { getStandardResponses } from '../../openapi/util/standard-responses.js';
+import type { TokenStringListSchema } from '../../openapi/index.js';
+import type { IUnleashServices } from '../../services/index.js';
 
 export default class EdgeController extends Controller {
     private readonly logger: Logger;
@@ -41,7 +42,7 @@ export default class EdgeController extends Controller {
             permission: NONE,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['Edge'],
+                    tags: ['Unleash Edge'],
                     security: [{}],
                     summary: 'Check which tokens are valid',
                     description:

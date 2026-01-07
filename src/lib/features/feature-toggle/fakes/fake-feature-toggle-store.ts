@@ -1,8 +1,8 @@
 import type {
     IFeatureToggleStore,
     IFeatureToggleStoreQuery,
-} from '../types/feature-toggle-store-type';
-import NotFoundError from '../../../error/notfound-error';
+} from '../types/feature-toggle-store-type.js';
+import NotFoundError from '../../../error/notfound-error.js';
 import type {
     FeatureToggle,
     FeatureToggleDTO,
@@ -10,14 +10,14 @@ import type {
     IFeatureToggleQuery,
     IFeatureTypeCount,
     IVariant,
-} from '../../../types/model';
-import type { LastSeenInput } from '../../metrics/last-seen/last-seen-service';
+} from '../../../types/model.js';
+import type { LastSeenInput } from '../../metrics/last-seen/last-seen-service.js';
 import type {
     EnvironmentFeatureNames,
     FeatureToggleInsert,
-} from '../feature-toggle-store';
-import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
-import type { IFeatureProjectUserParams } from '../feature-toggle-controller';
+} from '../feature-toggle-store.js';
+import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type.js';
+import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js';
 
 export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     features: FeatureToggle[] = [];
@@ -73,7 +73,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return features;
     }
 
-    disableAllEnvironmentsForFeatures(names: string[]): Promise<void> {
+    disableAllEnvironmentsForFeatures(_names: string[]): Promise<void> {
         throw new Error('Method not implemented.');
     }
 
@@ -87,8 +87,11 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return this.features.filter((f) => names.includes(f.name));
     }
 
-    async getProjectId(name: string): Promise<string> {
-        return this.get(name).then((f) => f.project);
+    async getProjectId(name: string | undefined): Promise<string | undefined> {
+        if (name === undefined) {
+            return Promise.resolve(undefined);
+        }
+        return Promise.resolve(this.get(name).then((f) => f.project));
     }
 
     private getFilterQuery(query: Partial<IFeatureToggleStoreQuery>) {
@@ -164,23 +167,19 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         if (revive) {
             revive.archived = false;
         }
-        return this.update(revive.project, revive);
+        return this.update(revive!.project, revive!);
     }
 
     async getFeatureToggleList(
-        query?: IFeatureToggleQuery,
-        userId?: number,
+        _query?: IFeatureToggleQuery,
+        _userId?: number,
         archived = false,
     ): Promise<FeatureToggle[]> {
         return this.features.filter((feature) => feature.archived !== archived);
     }
 
-    async getArchivedFeatures(project: string): Promise<FeatureToggle[]> {
-        return this.features.filter((feature) => feature.archived === true);
-    }
-
     async getPlaygroundFeatures(
-        query?: IFeatureToggleQuery,
+        _query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
         return this.features.filter(
             (feature) => feature,
@@ -195,7 +194,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         if (exists) {
             const id = this.features.findIndex((f) => f.name === data.name);
             const old = this.features.find((f) => f.name === data.name);
-            const updated = { ...old, ...data };
+            const updated = { project, ...old, ...data };
             this.features.splice(id, 1);
             this.features.push(updated);
             return updated;
@@ -232,11 +231,6 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         }
     }
 
-    async getVariants(featureName: string): Promise<IVariant[]> {
-        const feature = await this.get(featureName);
-        return feature.variants as IVariant[];
-    }
-
     async getAllVariants(): Promise<IFeatureEnvironment[]> {
         const features = await this.getAll();
         const variants = features.flatMap((feature) => ({
@@ -248,16 +242,17 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return Promise.resolve(variants);
     }
 
-    getVariantsForEnv(
+    async getVariantsForEnv(
         featureName: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment_name: string,
+        _environment_name: string,
     ): Promise<IVariant[]> {
-        return this.getVariants(featureName);
+        const feature = await this.get(featureName);
+        // there's no way to filter by environment in the fake store
+        return feature.variants as IVariant[];
     }
 
     async saveVariants(
-        project: string,
+        _project: string,
         featureName: string,
         newVariants: IVariant[],
     ): Promise<FeatureToggle> {
@@ -268,7 +263,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
 
     async saveVariantsOnEnv(
         featureName: string,
-        environment: string,
+        _environment: string,
         newVariants: IVariant[],
     ): Promise<IVariant[]> {
         await this.saveVariants('default', featureName, newVariants);
@@ -292,8 +287,9 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
             }
 
             if (
+                queryModifiers.date &&
                 new Date(feature[queryModifiers.dateAccessor]).getTime() >=
-                new Date(queryModifiers.date).getTime()
+                    new Date(queryModifiers.date).getTime()
             ) {
                 return true;
             }
@@ -301,12 +297,11 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
             const featureDate = new Date(
                 feature[queryModifiers.dateAccessor],
             ).getTime();
-            if (
+            return !!(
+                queryModifiers.range &&
                 featureDate >= new Date(queryModifiers.range[0]).getTime() &&
                 featureDate <= new Date(queryModifiers.range[1]).getTime()
-            ) {
-                return true;
-            }
+            );
         }).length;
     }
 
@@ -328,7 +323,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     }
 
     async getFeatureTypeCounts(
-        params: IFeatureProjectUserParams,
+        _params: IFeatureProjectUserParams,
     ): Promise<IFeatureTypeCount[]> {
         const typeCounts = this.features.reduce(
             (acc, feature) => {
@@ -349,7 +344,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return Object.values(typeCounts);
     }
 
-    setCreatedByUserId(batchSize: number): Promise<number | undefined> {
+    setCreatedByUserId(_batchSize: number): Promise<number | undefined> {
         throw new Error('Method not implemented.');
     }
 }

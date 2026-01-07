@@ -1,4 +1,4 @@
-ARG NODE_VERSION=20.18.3-alpine
+ARG NODE_VERSION=22.21-alpine3.23
 
 FROM node:$NODE_VERSION AS builder
 
@@ -25,11 +25,9 @@ ENV TZ=UTC
 
 WORKDIR /unleash
 
-COPY --from=builder /unleash/build /unleash/build
+COPY --from=builder /unleash/build /unleash/
 
 COPY --from=builder /unleash/node_modules /unleash/node_modules
-
-COPY ./docker/index.js /unleash/index.js
 
 RUN rm -rf /usr/local/lib/node_modules/npm/
 
@@ -37,4 +35,4 @@ EXPOSE 4242
 
 USER node
 
-CMD ["node", "index.js"]
+CMD ["node", "dist/server.js"]

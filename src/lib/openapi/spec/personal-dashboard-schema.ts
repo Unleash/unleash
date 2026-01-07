@@ -84,6 +84,7 @@ export const personalDashboardSchema = {
                     'id',
                     'name',
                     'health',
+                    'technicalDebt',
                     'memberCount',
                     'featureCount',
                 ],
@@ -102,8 +103,16 @@ export const personalDashboardSchema = {
                         type: 'integer',
                         example: 50,
                         minimum: 0,
+                        deprecated: true,
+                        description: 'Use `technicalDebt` instead.',
+                    },
+                    technicalDebt: {
+                        type: 'integer',
+                        example: 25,
+                        minimum: 0,
+                        maximum: 100,
                         description:
-                            "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100",
+                            "An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100",
                     },
                     memberCount: {
                         type: 'integer',

@@ -1,7 +1,7 @@
-import type { IFeatureTypeStore } from '../../../lib/types/stores/feature-type-store';
-import dbInit, { type ITestDb } from '../helpers/database-init';
-import getLogger from '../../fixtures/no-logger';
-import type { IUnleashStores } from '../../../lib/types';
+import type { IFeatureTypeStore } from '../../../lib/types/stores/feature-type-store.js';
+import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import getLogger from '../../fixtures/no-logger.js';
+import type { IUnleashStores } from '../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -52,8 +52,8 @@ describe('update lifetimes', () => {
             );
 
             expect(updated?.lifetimeDays).toBe(newLifetime);
-
-            expect(updated).toMatchObject(await featureTypeStore.get(type.id));
+            const fromStore = await featureTypeStore.get(type.id);
+            expect(updated).toMatchObject(fromStore!);
         }
     });
 

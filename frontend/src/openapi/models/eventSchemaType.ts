@@ -5,7 +5,7 @@
  */
 
 /**
- * What [type](https://docs.getunleash.io/reference/api/legacy/unleash/admin/events#event-type-description) of event this is
+ * What [type](https://docs.getunleash.io/concepts/events#event-types) of event this is
  */
 export type EventSchemaType =
     (typeof EventSchemaType)[keyof typeof EventSchemaType];
@@ -32,6 +32,9 @@ export const EventSchemaType = {
     'feature-type-updated': 'feature-type-updated',
     'feature-completed': 'feature-completed',
     'feature-uncompleted': 'feature-uncompleted',
+    'feature-link-added': 'feature-link-added',
+    'feature-link-removed': 'feature-link-removed',
+    'feature-link-updated': 'feature-link-updated',
     'strategy-order-changed': 'strategy-order-changed',
     'drop-feature-tags': 'drop-feature-tags',
     'feature-untagged': 'feature-untagged',
@@ -65,9 +68,7 @@ export const EventSchemaType = {
     'project-user-added': 'project-user-added',
     'project-user-removed': 'project-user-removed',
     'project-user-role-changed': 'project-user-role-changed',
-    'project-group-role-changed': 'project-group-role-changed',
     'project-group-added': 'project-group-added',
-    'project-group-removed': 'project-group-removed',
     'role-created': 'role-created',
     'role-updated': 'role-updated',
     'role-deleted': 'role-deleted',
@@ -149,6 +150,10 @@ export const EventSchemaType = {
     'banner-created': 'banner-created',
     'banner-updated': 'banner-updated',
     'banner-deleted': 'banner-deleted',
+    'safeguard-changed': 'safeguard-changed',
+    'safeguard-deleted': 'safeguard-deleted',
+    'release-plan-progressions-resumed': 'release-plan-progressions-resumed',
+    'release-plan-progressions-paused': 'release-plan-progressions-paused',
     'project-environment-added': 'project-environment-added',
     'project-environment-removed': 'project-environment-removed',
     'default-strategy-updated': 'default-strategy-updated',
@@ -165,8 +170,21 @@ export const EventSchemaType = {
     'release-plan-template-created': 'release-plan-template-created',
     'release-plan-template-updated': 'release-plan-template-updated',
     'release-plan-template-deleted': 'release-plan-template-deleted',
+    'release-plan-template-archived': 'release-plan-template-archived',
     'release-plan-added': 'release-plan-added',
     'release-plan-removed': 'release-plan-removed',
     'release-plan-milestone-started': 'release-plan-milestone-started',
+    'milestone-progression-created': 'milestone-progression-created',
+    'milestone-progression-updated': 'milestone-progression-updated',
+    'milestone-progression-deleted': 'milestone-progression-deleted',
+    'milestone-progression-changed': 'milestone-progression-changed',
     'user-preference-updated': 'user-preference-updated',
+    'scim-users-deleted': 'scim-users-deleted',
+    'scim-groups-deleted': 'scim-groups-deleted',
+    'cdn-token-created': 'cdn-token-created',
+    'change-request-requested-approvers-updated':
+        'change-request-requested-approvers-updated',
+    'impact-metric-created': 'impact-metric-created',
+    'impact-metric-updated': 'impact-metric-updated',
+    'impact-metric-deleted': 'impact-metric-deleted',
 } as const;

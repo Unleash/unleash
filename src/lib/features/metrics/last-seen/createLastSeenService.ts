@@ -1,7 +1,7 @@
-import type { Db, IUnleashConfig } from '../../../server-impl';
-import { FakeLastSeenStore } from './fake-last-seen-store';
-import { LastSeenService } from './last-seen-service';
-import LastSeenStore from './last-seen-store';
+import type { Db, IUnleashConfig } from '../../../types/index.js';
+import { FakeLastSeenStore } from './fake-last-seen-store.js';
+import { LastSeenService } from './last-seen-service.js';
+import LastSeenStore from './last-seen-store.js';
 
 export const createLastSeenService = (
     db: Db,

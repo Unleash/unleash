@@ -3,11 +3,11 @@ import type {
     IFeatureCollaboratorsReadModel,
     IUnleashStores,
     IUserStore,
-} from '../../../types';
-import getLogger from '../../../../test/fixtures/no-logger';
+} from '../../../types/index.js';
+import getLogger from '../../../../test/fixtures/no-logger.js';
 import dbInit, {
     type ITestDb,
-} from '../../../../test/e2e/helpers/database-init';
+} from '../../../../test/e2e/helpers/database-init.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

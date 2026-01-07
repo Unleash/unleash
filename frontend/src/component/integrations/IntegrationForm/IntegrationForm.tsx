@@ -18,8 +18,8 @@ import {
 import produce from 'immer';
 import { trim } from 'component/common/util';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
-import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters';
-import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall';
+import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters.tsx';
+import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall.tsx';
 import cloneDeep from 'lodash.clonedeep';
 import { useNavigate } from 'react-router-dom';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
@@ -27,14 +27,14 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import { IntegrationMultiSelector } from './IntegrationMultiSelector/IntegrationMultiSelector';
+import { IntegrationMultiSelector } from './IntegrationMultiSelector/IntegrationMultiSelector.tsx';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
     CREATE_ADDON,
     UPDATE_ADDON,
-} from '../../providers/AccessProvider/permissions';
+} from '../../providers/AccessProvider/permissions.ts';
 import {
     StyledForm,
     StyledAlerts,
@@ -48,11 +48,11 @@ import {
 } from './IntegrationForm.styles';
 import { GO_BACK } from 'constants/navigate';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete';
-import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch';
+import { IntegrationDelete } from './IntegrationDelete/IntegrationDelete.tsx';
+import { IntegrationStateSwitch } from './IntegrationStateSwitch/IntegrationStateSwitch.tsx';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
-import { IntegrationHowToSection } from '../IntegrationHowToSection/IntegrationHowToSection';
-import { IntegrationEventsModal } from '../IntegrationEvents/IntegrationEventsModal';
+import { IntegrationHowToSection } from '../IntegrationHowToSection/IntegrationHowToSection.tsx';
+import { IntegrationEventsModal } from '../IntegrationEvents/IntegrationEventsModal.tsx';
 import AccessContext from 'contexts/AccessContext';
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -276,7 +276,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         name,
         displayName,
         description,
-        documentationUrl = 'https://unleash.github.io/docs/addons',
+        documentationUrl = 'https://docs.getunleash.io/integrate',
         installation,
         alerts,
     } = provider ? provider : ({} as Partial<AddonTypeSchema>);

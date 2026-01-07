@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeedbackResponseSchema } from './feedbackResponseSchema';
-import type { PermissionSchema } from './permissionSchema';
-import type { MeSchemaSplash } from './meSchemaSplash';
-import type { UserSchema } from './userSchema';
+import type { FeedbackResponseSchema } from './feedbackResponseSchema.js';
+import type { PermissionSchema } from './permissionSchema.js';
+import type { MeSchemaSplash } from './meSchemaSplash.js';
+import type { UserSchema } from './userSchema.js';
 
 /**
  * Detailed user information

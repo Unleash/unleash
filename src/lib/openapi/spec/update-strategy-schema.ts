@@ -28,7 +28,7 @@ export const updateStrategySchema = {
                     type: {
                         type: 'string',
                         description:
-                            'The [type of the parameter](https://docs.getunleash.io/reference/custom-activation-strategies#parameter-types)',
+                            'The [type of the parameter](https://docs.getunleash.io/concepts/activation-strategies#parameters)',
                         enum: [
                             'string',
                             'percentage',

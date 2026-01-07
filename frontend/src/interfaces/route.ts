@@ -26,11 +26,12 @@ export interface INavigationMenuItem {
     configFlag?: keyof IUiConfig;
     group?: string;
     enterprise?: boolean;
+    isNew?: boolean;
 }
 
 interface IRouteMenu {
-    mobile?: boolean;
-    advanced?: boolean;
+    main?: boolean;
+    primary?: boolean;
     adminSettings?: boolean;
     mode?: Array<'pro' | 'enterprise'>;
     billing?: boolean;

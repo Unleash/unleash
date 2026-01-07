@@ -6,9 +6,9 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import type { FilterItemParams } from '../../filter/FilterItem/FilterItem';
+import type { FilterItemParams } from '../../filter/FilterItem/FilterItem.tsx';
 import type { FC } from 'react';
-import { calculateDateRange, type RangeType } from './calculateDateRange';
+import { calculateDateRange, type RangeType } from './calculateDateRange.ts';
 
 export const PresetsHeader = styled(Typography)(({ theme }) => ({
     paddingLeft: theme.spacing(2),

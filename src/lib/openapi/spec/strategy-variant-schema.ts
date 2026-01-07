@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { createStrategyVariantSchema } from './create-strategy-variant-schema';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 
 export const strategyVariantSchema = {
     $id: '#/components/schemas/strategyVariantSchema',

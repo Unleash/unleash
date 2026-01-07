@@ -1,4 +1,4 @@
-import type { IUnleashConfig } from '../option';
+import type { IUnleashConfig } from '../option.js';
 
 export const frontendSettingsKey = 'unleash.frontend';
 

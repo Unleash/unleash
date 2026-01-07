@@ -1,16 +1,22 @@
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
 import {
+    createUserWithRootRole,
     type IUnleashTest,
-    setupAppWithCustomConfig,
-} from '../../../test/e2e/helpers/test-helper';
-import getLogger from '../../../test/fixtures/no-logger';
+    setupAppWithAuth,
+} from '../../../test/e2e/helpers/test-helper.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import { RoleName } from '../../types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
 
+const adminEmail = 'admin-user@getunleash.io';
+
 beforeAll(async () => {
     db = await dbInit('tag_types_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(
+    app = await setupAppWithAuth(
         db.stores,
         {
             experimental: {
@@ -21,6 +27,17 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+
+    await createUserWithRootRole({
+        app,
+        stores: db.stores,
+        email: adminEmail,
+        roleName: RoleName.ADMIN,
+    });
+});
+
+beforeEach(async () => {
+    await app.login({ email: adminEmail });
 });
 
 afterAll(async () => {
@@ -79,6 +96,25 @@ test('Can create a new tag type', async () => {
         });
 });
 
+test('Can create a new tag type with color', async () => {
+    await app.request
+        .post('/api/admin/tag-types')
+        .send({
+            name: 'colored-tag',
+            description: 'A tag type with a color',
+            icon: 'icon',
+            color: '#FF5733',
+        })
+        .expect(201);
+    return app.request
+        .get('/api/admin/tag-types/colored-tag')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.tagType.color).toBe('#FF5733');
+        });
+});
+
 test('Invalid tag types gets rejected', async () => {
     await app.request
         .post('/api/admin/tag-types')
@@ -94,6 +130,20 @@ test('Invalid tag types gets rejected', async () => {
                 '"name" must be URL friendly',
             );
         });
+});
+
+test('Tag type with invalid color format gets rejected', async () => {
+    const res = await app.request
+        .post('/api/admin/tag-types')
+        .send({
+            name: 'invalid-color-tag',
+            description: 'A tag with invalid color',
+            color: 'not-a-color',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+
+    expect(res.body.details[0].message).toMatch(/color/);
 });
 
 test('Can update a tag types description and icon', async () => {
@@ -113,6 +163,32 @@ test('Can update a tag types description and icon', async () => {
             expect(res.body.tagType.icon).toBe('$');
         });
 });
+
+test('Can update a tag type color', async () => {
+    await app.request
+        .post('/api/admin/tag-types')
+        .send({
+            name: 'color-update-tag',
+            description: 'A tag type to test color updates',
+            color: '#FFFFFF',
+        })
+        .expect(201);
+
+    await app.request
+        .put('/api/admin/tag-types/color-update-tag')
+        .send({
+            color: '#00FF00',
+        })
+        .expect(200);
+
+    const res = await app.request
+        .get('/api/admin/tag-types/color-update-tag')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(res.body.tagType.color).toBe('#00FF00');
+});
+
 test('Numbers are coerced to strings for icons and descriptions', async () => {
     await app.request.get('/api/admin/tag-types/simple').expect(200);
     await app.request
@@ -137,6 +213,34 @@ test('Validation of tag-types returns 200 for valid tag-types', async () => {
         .expect((res) => {
             expect(res.body.valid).toBe(true);
         });
+});
+
+test('Validation of tag-types with valid color is successful', async () => {
+    const res = await app.request
+        .post('/api/admin/tag-types/validate')
+        .send({
+            name: 'color-validation',
+            description: 'A tag type with a valid color',
+            color: '#123ABC',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    expect(res.body.valid).toBe(true);
+});
+
+test('Validation of tag-types with invalid color format is unsuccessful', async () => {
+    const res = await app.request
+        .post('/api/admin/tag-types/validate')
+        .send({
+            name: 'invalid-color-validation',
+            description: 'A tag type with an invalid color',
+            color: 'not-a-color',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+
+    expect(res.body.details[0].message).toMatch(/color/);
 });
 
 test('Validation of tag types allows numbers for description and icons because of coercion', async () => {
@@ -215,4 +319,20 @@ test('Only required argument should be name', async () => {
         .expect((res) => {
             expect(res.body.name).toBe(name);
         });
+});
+
+test('Creating a tag type with null color is allowed', async () => {
+    const name = 'null-color-tag';
+    const res = await app.request
+        .post('/api/admin/tag-types')
+        .send({
+            name,
+            description: 'A tag with null color',
+            color: null,
+        })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+
+    expect(res.body.name).toBe(name);
+    expect(res.body.color).toBe(null);
 });

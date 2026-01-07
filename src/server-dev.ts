@@ -1,7 +1,7 @@
-import { start } from './lib/server-impl';
-import { createConfig } from './lib/create-config';
-import { LogLevel } from './lib/logger';
-import { ApiTokenType } from './lib/types/models/api-token';
+import { start } from './lib/server-impl.js';
+import { createConfig } from './lib/create-config.js';
+import { LogLevel } from './lib/logger.js';
+import { ApiTokenType } from './lib/types/model.js';
 
 process.nextTick(async () => {
     try {
@@ -36,43 +36,41 @@ process.nextTick(async () => {
                 experimental: {
                     // externalResolver: unleash,
                     flags: {
-                        embedProxy: true,
-                        embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        userAccessUIEnabled: true,
                         outdatedSdksBanner: true,
                         disableShowContextFieldSelectionValues: false,
                         feedbackPosting: true,
                         manyStrategiesPagination: true,
                         enableLegacyVariants: false,
                         extendedMetrics: true,
-                        originMiddlewareRequestLogging: true,
                         webhookDomainLogging: true,
-                        releasePlans: false,
-                        releasePlanChangeRequests: false,
                         showUserDeviceCount: true,
-                        flagOverviewRedesign: true,
-                        granularAdminPermissions: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
-                        frontendHeaderRedesign: true,
-                        dataUsageMultiMonthView: true,
-                        filterExistingFlagNames: true,
-                        teamsIntegrationChangeRequests: true,
+                        strictSchemaValidation: true,
+                        customMetrics: true,
+                        impactMetrics: true,
+                        milestoneProgression: true,
+                        featureReleasePlans: true,
+                        safeguards: true,
+                        gtmReleaseManagement: true,
+                        projectContextFields: true,
+                        readOnlyUsers: false,
                     },
                 },
                 authentication: {
                     initApiTokens: [
                         {
                             environment: '*',
-                            project: '*',
+                            projects: ['*'],
                             secret: '*:*.964a287e1b728cb5f4f3e0120df92cb5',
                             type: ApiTokenType.ADMIN,
                             tokenName: 'some-user',
                         },
                     ],
                 },
+                prometheusImpactMetricsApi: 'http://localhost:9090',
                 /* can be tweaked to control configuration caching for /api/client/features
                 clientFeatureCaching: {
                     enabled: true,

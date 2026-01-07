@@ -1,102 +1,41 @@
-import type { Request, Response } from 'express';
-import type { IUnleashConfig } from '../../types/option';
-import type { IUnleashServices } from '../../types';
-import Controller from '../../routes/controller';
-import {
-    extractUserIdFromUser,
-    extractUsername,
-} from '../../util/extract-user';
-import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
-import type FeatureToggleService from './feature-toggle-service';
-import type { IAuthRequest } from '../../routes/unleash-types';
-import { serializeDates } from '../../types/serialize-dates';
-import type { OpenApiService } from '../../services/openapi-service';
-import { createResponseSchema } from '../../openapi/util/create-response-schema';
+import type { Response } from 'express';
+import type { IUnleashConfig } from '../../types/option.js';
+import type { IUnleashServices } from '../../services/index.js';
+import Controller from '../../routes/controller.js';
+import { extractUsername } from '../../util/extract-user.js';
+import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions.js';
+import type { FeatureToggleService } from './feature-toggle-service.js';
+import type { IAuthRequest } from '../../routes/unleash-types.js';
+import type { OpenApiService } from '../../services/openapi-service.js';
 import {
     emptyResponse,
     getStandardResponses,
-} from '../../openapi/util/standard-responses';
-import type {
-    TransactionCreator,
-    UnleashTransaction,
-} from '../../db/transaction';
-import {
-    archivedFeaturesSchema,
-    type ArchivedFeaturesSchema,
-} from '../../openapi';
+} from '../../openapi/util/standard-responses.js';
+import type { WithTransactional } from '../../db/transaction.js';
 
 export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;
-    private transactionalFeatureToggleService: (
-        db: UnleashTransaction,
-    ) => FeatureToggleService;
-    private readonly startTransaction: TransactionCreator<UnleashTransaction>;
+    private transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
     private openApiService: OpenApiService;
 
     constructor(
         config: IUnleashConfig,
         {
             transactionalFeatureToggleService,
-            featureToggleServiceV2,
+            featureToggleService,
             openApiService,
         }: Pick<
             IUnleashServices,
             | 'transactionalFeatureToggleService'
-            | 'featureToggleServiceV2'
+            | 'featureToggleService'
             | 'openApiService'
         >,
-        startTransaction: TransactionCreator<UnleashTransaction>,
     ) {
         super(config);
-        this.featureService = featureToggleServiceV2;
+        this.featureService = featureToggleService;
         this.openApiService = openApiService;
         this.transactionalFeatureToggleService =
             transactionalFeatureToggleService;
-        this.startTransaction = startTransaction;
-
-        this.route({
-            method: 'get',
-            path: '/features',
-            handler: this.getArchivedFeatures,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Archive'],
-                    summary: 'Get archived features',
-                    description:
-                        'Retrieve a list of all [archived feature flags](https://docs.getunleash.io/reference/feature-toggles#archive-a-feature-flag).',
-                    operationId: 'getArchivedFeatures',
-                    responses: {
-                        200: createResponseSchema('archivedFeaturesSchema'),
-                        ...getStandardResponses(401, 403),
-                    },
-
-                    deprecated: true,
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'get',
-            path: '/features/:projectId',
-            handler: this.getArchivedFeaturesByProjectId,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    tags: ['Archive'],
-                    operationId: 'getArchivedFeaturesByProjectId',
-                    summary: 'Get archived features in project',
-                    description:
-                        'Retrieves a list of archived features that belong to the provided project.',
-                    responses: {
-                        200: createResponseSchema('archivedFeaturesSchema'),
-                        ...getStandardResponses(401, 403),
-                    },
-
-                    deprecated: true,
-                }),
-            ],
-        });
 
         this.route({
             method: 'delete',
@@ -141,47 +80,12 @@ export default class ArchiveController extends Controller {
         });
     }
 
-    async getArchivedFeatures(
-        req: IAuthRequest,
-        res: Response<ArchivedFeaturesSchema>,
-    ): Promise<void> {
-        const { user } = req;
-        const features = await this.featureService.getAllArchivedFeatures(
-            true,
-            extractUserIdFromUser(user),
-        );
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            archivedFeaturesSchema.$id,
-            { version: 2, features: serializeDates(features) },
-        );
-    }
-
-    async getArchivedFeaturesByProjectId(
-        req: Request<{ projectId: string }, any, any, any>,
-        res: Response<ArchivedFeaturesSchema>,
-    ): Promise<void> {
-        const { projectId } = req.params;
-        const features =
-            await this.featureService.getArchivedFeaturesByProjectId(
-                true,
-                projectId,
-            );
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            archivedFeaturesSchema.$id,
-            { version: 2, features: serializeDates(features) },
-        );
-    }
-
     async deleteFeature(
         req: IAuthRequest<{ featureName: string }>,
         res: Response<void>,
     ): Promise<void> {
         const { featureName } = req.params;
-        const user = extractUsername(req);
+        const _user = extractUsername(req);
         await this.featureService.deleteFeature(featureName, req.audit);
         res.status(200).end();
     }
@@ -192,14 +96,9 @@ export default class ArchiveController extends Controller {
     ): Promise<void> {
         const { featureName } = req.params;
 
-        await this.startTransaction(async (tx) =>
-            this.transactionalFeatureToggleService(tx).reviveFeature(
-                featureName,
-                req.audit,
-            ),
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.reviveFeature(featureName, req.audit),
         );
         res.status(200).end();
     }
 }
-
-module.exports = ArchiveController;

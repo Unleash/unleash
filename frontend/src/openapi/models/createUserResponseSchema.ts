@@ -3,14 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateUserResponseSchemaRootRole } from './createUserResponseSchemaRootRole';
+import type { CreateUserResponseSchemaAccountType } from './createUserResponseSchemaAccountType.js';
+import type { CreateUserResponseSchemaRootRole } from './createUserResponseSchemaRootRole.js';
 
 /**
  * An Unleash user after creation
  */
 export interface CreateUserResponseSchema {
     /** A user is either an actual User or a Service Account */
-    accountType?: string;
+    accountType?: CreateUserResponseSchemaAccountType;
     /**
      * Count of active browser sessions for this user
      * @nullable
@@ -31,11 +32,6 @@ export interface CreateUserResponseSchema {
     /** If the user is actively inviting other users, this is the link that can be shared with other users */
     inviteLink?: string;
     /**
-     * Deprecated in v5. Used internally to know which operations the user should be allowed to perform
-     * @deprecated
-     */
-    isAPI?: boolean;
-    /**
      * How many unsuccessful attempts at logging in has the user made
      * @minimum 0
      */
@@ -47,7 +43,7 @@ export interface CreateUserResponseSchema {
     name?: string | null;
     /** Deprecated */
     permissions?: string[];
-    /** Which [root role](https://docs.getunleash.io/reference/rbac#predefined-roles) this user is assigned. Usually a numeric role ID, but can be a string when returning newly created user with an explicit string role. */
+    /** Which [root role](https://docs.getunleash.io/concepts/rbac#predefined-roles) this user is assigned. Usually a numeric role ID, but can be a string when returning newly created user with an explicit string role. */
     rootRole?: CreateUserResponseSchemaRootRole;
     /**
      * The SCIM ID of the user, only present if managed by SCIM

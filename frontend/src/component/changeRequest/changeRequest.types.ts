@@ -1,9 +1,9 @@
 import type { IFeatureVariant } from 'interfaces/featureToggle';
 import type { ISegment } from 'interfaces/segment';
-import type { IFeatureStrategy } from '../../interfaces/strategy';
-import type { IUser } from '../../interfaces/user';
-import type { SetStrategySortOrderSchema } from '../../openapi';
-import type { IReleasePlan } from 'interfaces/releasePlans';
+import type { IFeatureStrategy } from '../../interfaces/strategy.js';
+import type { IUser } from '../../interfaces/user.js';
+import type { SetStrategySortOrderSchema } from 'openapi';
+import type { IReleasePlan, ISafeguard } from 'interfaces/releasePlans';
 
 type BaseChangeRequest = {
     id: number;
@@ -19,6 +19,7 @@ type BaseChangeRequest = {
     rejections: IChangeRequestApproval[];
     comments: IChangeRequestComment[];
     conflict?: string;
+    stateTimestamps?: Partial<Record<ChangeRequestState, string>>;
 };
 
 export type UnscheduledChangeRequest = BaseChangeRequest & {
@@ -130,7 +131,12 @@ type ChangeRequestPayload =
     | ChangeRequestAddDependency
     | ChangeRequestAddReleasePlan
     | ChangeRequestDeleteReleasePlan
-    | ChangeRequestStartMilestone;
+    | ChangeRequestStartMilestone
+    | ChangeRequestChangeMilestoneProgression
+    | ChangeRequestDeleteMilestoneProgression
+    | ChangeRequestChangeSafeguard
+    | ChangeRequestDeleteSafeguard
+    | ChangeRequestResumeMilestoneProgression;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
     action: 'addStrategy';
@@ -187,6 +193,36 @@ export interface IChangeRequestStartMilestone extends IChangeRequestChangeBase {
     payload: ChangeRequestStartMilestone;
 }
 
+export interface IChangeRequestChangeMilestoneProgression
+    extends IChangeRequestChangeBase {
+    action: 'changeMilestoneProgression';
+    payload: ChangeRequestChangeMilestoneProgression;
+}
+
+export interface IChangeRequestDeleteMilestoneProgression
+    extends IChangeRequestChangeBase {
+    action: 'deleteMilestoneProgression';
+    payload: ChangeRequestDeleteMilestoneProgression;
+}
+
+export interface IChangeRequestChangeSafeguard
+    extends IChangeRequestChangeBase {
+    action: 'changeSafeguard';
+    payload: ChangeRequestChangeSafeguard;
+}
+
+export interface IChangeRequestDeleteSafeguard
+    extends IChangeRequestChangeBase {
+    action: 'deleteSafeguard';
+    payload: ChangeRequestDeleteSafeguard;
+}
+
+export interface IChangeRequestResumeMilestoneProgression
+    extends IChangeRequestChangeBase {
+    action: 'resumeMilestoneProgression';
+    payload: ChangeRequestResumeMilestoneProgression;
+}
+
 export interface IChangeRequestReorderStrategy
     extends IChangeRequestChangeBase {
     action: 'reorderStrategy';
@@ -234,7 +270,12 @@ export type IFeatureChange =
     | IChangeRequestDeleteDependency
     | IChangeRequestAddReleasePlan
     | IChangeRequestDeleteReleasePlan
-    | IChangeRequestStartMilestone;
+    | IChangeRequestStartMilestone
+    | IChangeRequestChangeMilestoneProgression
+    | IChangeRequestDeleteMilestoneProgression
+    | IChangeRequestChangeSafeguard
+    | IChangeRequestDeleteSafeguard
+    | IChangeRequestResumeMilestoneProgression;
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment
@@ -264,6 +305,35 @@ type ChangeRequestDeleteReleasePlan = {
 
 type ChangeRequestStartMilestone = {
     milestoneId: string;
+    snapshot?: IReleasePlan;
+};
+
+type ChangeRequestChangeMilestoneProgression = {
+    sourceMilestone: string;
+    targetMilestone: string;
+    transitionCondition: { intervalMinutes: number };
+    snapshot?: IReleasePlan;
+};
+
+type ChangeRequestDeleteMilestoneProgression = {
+    sourceMilestone: string;
+    snapshot?: IReleasePlan;
+};
+
+type ChangeRequestChangeSafeguard = {
+    planId: string;
+    safeguard: ISafeguard;
+    snapshot?: IReleasePlan;
+};
+
+type ChangeRequestDeleteSafeguard = {
+    planId: string;
+    safeguardId: string;
+    snapshot?: IReleasePlan;
+};
+
+type ChangeRequestResumeMilestoneProgression = {
+    planId: string;
     snapshot?: IReleasePlan;
 };
 
@@ -304,4 +374,9 @@ export type ChangeRequestAction =
     | 'deleteDependency'
     | 'addReleasePlan'
     | 'deleteReleasePlan'
-    | 'startMilestone';
+    | 'startMilestone'
+    | 'changeMilestoneProgression'
+    | 'deleteMilestoneProgression'
+    | 'changeSafeguard'
+    | 'deleteSafeguard'
+    | 'resumeMilestoneProgression';

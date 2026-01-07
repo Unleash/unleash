@@ -1,4 +1,4 @@
-import type { IFeatureLifecycleStage, StageName } from '../../types';
+import type { IFeatureLifecycleStage, StageName } from '../../types/index.js';
 
 const preferredOrder: StageName[] = [
     'archived',

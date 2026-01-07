@@ -10,7 +10,7 @@ import type {
     ChangeRequestStrategy,
     ChangeRequestUpdatedStrategy,
 } from 'hooks/api/getters/useStrategiesBySegment/useStrategiesBySegment';
-import { sortStrategiesByFeature } from './sort-strategies';
+import { sortStrategiesByFeature } from './sort-strategies.ts';
 
 const StyledUl = styled('ul')({
     marginBottom: 0,

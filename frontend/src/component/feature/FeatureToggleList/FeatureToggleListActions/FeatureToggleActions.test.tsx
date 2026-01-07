@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
-import { FeatureToggleListActions } from './FeatureToggleListActions';
+import { FeatureToggleListActions } from './FeatureToggleListActions.tsx';
 import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 

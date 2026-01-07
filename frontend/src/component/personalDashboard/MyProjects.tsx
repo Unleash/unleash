@@ -1,4 +1,4 @@
-import type { RemoteData } from './RemoteData';
+import type { RemoteData } from './RemoteData.tsx';
 import {
     Box,
     IconButton,
@@ -7,12 +7,12 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import { ProjectIcon } from '../common/ProjectIcon/ProjectIcon';
+import { ProjectIcon } from '../common/ProjectIcon/ProjectIcon.tsx';
 import LinkIcon from '@mui/icons-material/ArrowForward';
-import { ProjectSetupComplete } from './ProjectSetupComplete';
-import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK';
-import { LatestProjectEvents } from './LatestProjectEvents';
-import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
+import { ProjectSetupComplete } from './ProjectSetupComplete.tsx';
+import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK.tsx';
+import { LatestProjectEvents } from './LatestProjectEvents.tsx';
+import { RoleAndOwnerInfo } from './RoleAndOwnerInfo.tsx';
 import { type ReactNode, useEffect, useRef, type FC } from 'react';
 import type {
     PersonalDashboardProjectDetailsSchema,
@@ -20,7 +20,7 @@ import type {
     PersonalDashboardSchemaAdminsItem,
     PersonalDashboardSchemaProjectOwnersItem,
     PersonalDashboardSchemaProjectsItem,
-} from '../../openapi';
+} from 'openapi';
 import {
     ContentGridContainer,
     EmptyGridItem,
@@ -31,18 +31,19 @@ import {
     SpacedGridItem,
     StyledList,
     StyledCardTitle,
-} from './SharedComponents';
-import { ContactAdmins, DataError } from './ProjectDetailsError';
+} from './SharedComponents.tsx';
+import { ContactAdmins, DataError } from './ProjectDetailsError.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Link } from 'react-router-dom';
-import { ActionBox } from './ActionBox';
+import { ActionBox } from './ActionBox.tsx';
 import useLoading from 'hooks/useLoading';
-import { NoProjectsContactAdmin } from './NoProjectsContactAdmin';
-import { AskOwnerToAddYouToTheirProject } from './AskOwnerToAddYouToTheirProject';
+import { NoProjectsContactAdmin } from './NoProjectsContactAdmin.tsx';
+import { AskOwnerToAddYouToTheirProject } from './AskOwnerToAddYouToTheirProject.tsx';
 
 const ActiveProjectDetails: FC<{
     project: PersonalDashboardSchemaProjectsItem;
 }> = ({ project }) => {
+    const techicalDebt = project.technicalDebt;
     return (
         <Box sx={{ display: 'flex', gap: 2 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -63,10 +64,10 @@ const ActiveProjectDetails: FC<{
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Typography variant='subtitle2' color='primary'>
-                    {project.health}%
+                    {techicalDebt}%
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>
-                    health
+                    technical debt
                 </Typography>
             </Box>
         </Box>

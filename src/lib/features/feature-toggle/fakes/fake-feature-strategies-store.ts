@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import type {
     FeatureToggleWithEnvironment,
     IFeatureOverview,
@@ -6,11 +6,11 @@ import type {
     IFeatureToggleQuery,
     IFeatureStrategy,
     FeatureToggle,
-} from '../../../types/model';
-import NotFoundError from '../../../error/notfound-error';
-import type { IFeatureStrategiesStore } from '../types/feature-toggle-strategies-store-type';
-import type { IFeatureProjectUserParams } from '../feature-toggle-controller';
-import { ALL_PROJECTS } from '../../../util';
+} from '../../../types/model.js';
+import NotFoundError from '../../../error/notfound-error.js';
+import type { IFeatureStrategiesStore } from '../types/feature-toggle-strategies-store-type.js';
+import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js';
+import { ALL_PROJECTS } from '../../../util/index.js';
 
 interface ProjectEnvironment {
     projectName: string;
@@ -67,7 +67,7 @@ export default class FakeFeatureStrategiesStore
         return this.featureStrategies.some((s) => s.id === id);
     }
 
-    async get(id: string): Promise<IFeatureStrategy> {
+    async get(id: string): Promise<IFeatureStrategy | undefined> {
         return this.featureStrategies.find((s) => s.id === id);
     }
 
@@ -140,7 +140,7 @@ export default class FakeFeatureStrategiesStore
     async getFeatureToggleForEnvironment(
         featureName: string,
         // eslint-disable-next-line
-        environment: string,
+        _environment: string,
     ): Promise<FeatureToggleWithEnvironment> {
         const toggle = this.featureToggles.find((f) => f.name === featureName);
         if (toggle) {
@@ -153,7 +153,7 @@ export default class FakeFeatureStrategiesStore
 
     async getFeatureToggleWithEnvs(
         featureName: string,
-        userId?: number,
+        _userId?: number,
         archived: boolean = false,
     ): Promise<FeatureToggleWithEnvironment> {
         const toggle = this.featureToggles.find(
@@ -180,8 +180,8 @@ export default class FakeFeatureStrategiesStore
         archived: boolean = false,
     ): Promise<IFeatureToggleClient[]> {
         const rows = this.featureToggles.filter((toggle) => {
-            if (featureQuery.namePrefix) {
-                if (featureQuery.project) {
+            if (featureQuery?.namePrefix) {
+                if (featureQuery?.project) {
                     return (
                         (toggle.name.startsWith(featureQuery.namePrefix) &&
                             featureQuery.project.some((project) =>
@@ -192,7 +192,7 @@ export default class FakeFeatureStrategiesStore
                 }
                 return toggle.name.startsWith(featureQuery.namePrefix);
             }
-            if (featureQuery.project) {
+            if (featureQuery?.project) {
                 return (
                     featureQuery.project.some((project) =>
                         project.includes(toggle.project),
@@ -205,7 +205,7 @@ export default class FakeFeatureStrategiesStore
             ...t,
             enabled: true,
             strategies: [],
-            description: t.description || '',
+            description: t.description || undefined,
             type: t.type || 'Release',
             stale: t.stale || false,
             variants: [],
@@ -233,7 +233,7 @@ export default class FakeFeatureStrategiesStore
             this.environmentAndFeature.set(environment, []);
         }
         this.environmentAndFeature
-            .get(environment)
+            .get(environment)!
             .push({ feature: feature_name, enabled });
         return Promise.resolve();
     }
@@ -245,7 +245,7 @@ export default class FakeFeatureStrategiesStore
         this.environmentAndFeature.set(
             environment,
             this.environmentAndFeature
-                .get(environment)
+                .get(environment)!
                 .filter((e) => e.featureName !== feature_name),
         );
         return Promise.resolve();
@@ -271,14 +271,16 @@ export default class FakeFeatureStrategiesStore
             }
             return f;
         });
-        return Promise.resolve(this.featureStrategies.find((f) => f.id === id));
+        return Promise.resolve(
+            this.featureStrategies.find((f) => f.id === id)!,
+        );
     }
 
     async deleteConfigurationsForProjectAndEnvironment(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        projectId: String,
+        _projectId: String,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        environment: String,
+        _environment: String,
     ): Promise<void> {
         return Promise.resolve();
     }
@@ -308,8 +310,8 @@ export default class FakeFeatureStrategiesStore
     }
 
     async setEnvironmentEnabledStatus(
-        environment: string,
-        featureName: string,
+        _environment: string,
+        _featureName: string,
         enabled: boolean,
     ): Promise<boolean> {
         return Promise.resolve(enabled);
@@ -321,7 +323,7 @@ export default class FakeFeatureStrategiesStore
 
     getFeatureOverview(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        params: IFeatureProjectUserParams,
+        _params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]> {
         return Promise.resolve([]);
     }
@@ -333,7 +335,8 @@ export default class FakeFeatureStrategiesStore
             this.featureStrategies.filter(
                 (strategy) =>
                     features.includes(strategy.featureName) &&
-                    strategy.environment === environment,
+                    strategy.environment === environment &&
+                    !strategy.milestoneId,
             ),
         );
     }
@@ -341,6 +344,8 @@ export default class FakeFeatureStrategiesStore
     getCustomStrategiesInUseCount(): Promise<number> {
         return Promise.resolve(3);
     }
-}
 
-module.exports = FakeFeatureStrategiesStore;
+    getDefaultStickiness(_projectId: string): Promise<string> {
+        return Promise.resolve('default');
+    }
+}

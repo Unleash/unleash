@@ -1,7 +1,7 @@
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { render } from 'utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';
-import { Search } from './Search';
+import { Search } from './Search.tsx';
 import { SEARCH_INPUT } from 'utils/testIds';
 
 const testDisplayComponent = (

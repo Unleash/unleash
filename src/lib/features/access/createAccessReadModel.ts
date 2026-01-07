@@ -1,10 +1,10 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
-import type { IAccessReadModel } from './access-read-model-type';
-import { AccessReadModel } from './access-read-model';
-import { AccessStore } from '../../db/access-store';
-import FakeRoleStore from '../../../test/fixtures/fake-role-store';
-import FakeAccessStore from '../../../test/fixtures/fake-access-store';
-import type { IAccessStore } from '../../types';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import type { IAccessReadModel } from './access-read-model-type.js';
+import { AccessReadModel } from './access-read-model.js';
+import { AccessStore } from '../../db/access-store.js';
+import FakeRoleStore from '../../../test/fixtures/fake-role-store.js';
+import FakeAccessStore from '../../../test/fixtures/fake-access-store.js';
+import type { IAccessStore } from '../../types/index.js';
 
 export const createAccessReadModel = (
     db: Db,

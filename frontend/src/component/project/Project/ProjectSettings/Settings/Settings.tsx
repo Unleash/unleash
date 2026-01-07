@@ -9,7 +9,7 @@ import {
 } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
-import EditProject from './EditProject/EditProject';
+import EditProject from './EditProject/EditProject.tsx';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
@@ -36,7 +36,8 @@ export const Settings = () => {
         return (
             <PageContent header={<PageHeader title='General settings' />}>
                 <Alert severity='error'>
-                    You need project owner permissions to access this section.
+                    You need project owner permissions or a custom role with
+                    "project setting access permission" to access this section.
                 </Alert>
             </PageContent>
         );

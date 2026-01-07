@@ -1,4 +1,4 @@
-import { calculateAverageTimeToProd } from './time-to-production';
+import { calculateAverageTimeToProd } from './time-to-production.js';
 
 describe('calculate average time to production', () => {
     test('should calculate average correctly', () => {

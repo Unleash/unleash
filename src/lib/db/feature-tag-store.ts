@@ -1,16 +1,16 @@
-import type { Logger, LogProvider } from '../logger';
-import type { ITag } from '../types';
+import type { Logger, LogProvider } from '../logger.js';
+import type { ITag } from '../tags/index.js';
 import type EventEmitter from 'events';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
 import type {
     IFeatureAndTag,
     IFeatureTag,
     IFeatureTagInsert,
     IFeatureTagStore,
-} from '../types/stores/feature-tag-store';
-import type { Db } from './db';
-import NotFoundError from '../error/notfound-error';
+} from '../types/stores/feature-tag-store.js';
+import type { Db } from './db.js';
+import NotFoundError from '../error/notfound-error.js';
 
 const COLUMNS = ['feature_name', 'tag_type', 'tag_value'];
 const TABLE = 'feature_tag';
@@ -102,11 +102,18 @@ class FeatureTagStore implements IFeatureTagStore {
         const stopTimer = this.timer('getAllForFeature');
         if (await this.featureExists(featureName)) {
             const rows = await this.db
-                .select(COLUMNS)
+                .select([...COLUMNS, 'tag_types.color as color'])
                 .from<FeatureTagTable>(TABLE)
+                .leftJoin('tag_types', 'tag_types.name', 'feature_tag.tag_type')
                 .where({ feature_name: featureName });
+
             stopTimer();
-            return rows.map(this.featureTagRowToTag);
+
+            return rows.map((row) => ({
+                type: row.tag_type,
+                value: row.tag_value,
+                color: row.color,
+            }));
         } else {
             throw new NotFoundError(
                 `Could not find feature with name ${featureName}`,
@@ -277,5 +284,4 @@ class FeatureTagStore implements IFeatureTagStore {
     }
 }
 
-module.exports = FeatureTagStore;
 export default FeatureTagStore;

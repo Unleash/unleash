@@ -1,22 +1,24 @@
-import type { Logger } from '../../logger';
+import type { Logger } from '../../logger.js';
 import type {
     IEventStore,
     IFlagResolver,
     IUnleashConfig,
     IUnleashStores,
-} from '../../types';
+} from '../../types/index.js';
 import EventEmitter from 'events';
 
 export const UPDATE_REVISION = 'UPDATE_REVISION';
 
 export default class ConfigurationRevisionService extends EventEmitter {
-    private static instance: ConfigurationRevisionService;
+    private static instance: ConfigurationRevisionService | undefined;
 
     private logger: Logger;
 
     private eventStore: IEventStore;
 
     private revisionId: number;
+
+    private maxRevisionId: Map<string, number> = new Map();
 
     private flagResolver: IFlagResolver;
 
@@ -51,12 +53,36 @@ export default class ConfigurationRevisionService extends EventEmitter {
         return ConfigurationRevisionService.instance;
     }
 
-    async getMaxRevisionId(): Promise<number> {
+    async getMaxRevisionId(environment?: string): Promise<number> {
+        if (environment) {
+            let maxEnvRevisionId = this.maxRevisionId.get(environment) ?? 0;
+            if (maxEnvRevisionId === 0) {
+                maxEnvRevisionId =
+                    await this.updateMaxEnvironmentRevisionId(environment);
+            }
+            if (maxEnvRevisionId > 0) {
+                return maxEnvRevisionId;
+            }
+        }
         if (this.revisionId > 0) {
             return this.revisionId;
         } else {
             return this.updateMaxRevisionId();
         }
+    }
+
+    async updateMaxEnvironmentRevisionId(environment: string): Promise<number> {
+        let maxRevId = this.maxRevisionId.get(environment) ?? 0;
+        const actualMax = await this.eventStore.getMaxRevisionId(
+            maxRevId,
+            environment,
+        );
+        if (maxRevId < actualMax) {
+            this.maxRevisionId.set(environment, actualMax);
+            maxRevId = actualMax;
+        }
+
+        return maxRevId;
     }
 
     async updateMaxRevisionId(emit: boolean = true): Promise<number> {
@@ -68,9 +94,14 @@ export default class ConfigurationRevisionService extends EventEmitter {
             this.revisionId,
         );
         if (this.revisionId !== revisionId) {
+            const knownEnvironments = [...this.maxRevisionId.keys()];
             this.logger.debug(
-                'Updating feature configuration with new revision Id',
-                revisionId,
+                `Updating feature configuration with new revision Id ${revisionId} and all envs: ${knownEnvironments.join(', ')}`,
+            );
+            await Promise.allSettled(
+                knownEnvironments.map((environment) =>
+                    this.updateMaxEnvironmentRevisionId(environment),
+                ),
             );
             this.revisionId = revisionId;
             if (emit) {
@@ -83,5 +114,6 @@ export default class ConfigurationRevisionService extends EventEmitter {
 
     destroy(): void {
         ConfigurationRevisionService.instance?.removeAllListeners();
+        ConfigurationRevisionService.instance = undefined;
     }
 }

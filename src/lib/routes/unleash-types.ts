@@ -1,6 +1,6 @@
 import type { Request } from 'express';
-import type { IAuditUser, IUser } from '../types/user';
-import type { IApiUser } from '../types';
+import type { IAuditUser, IUser } from '../types/user.js';
+import type { IApiUser } from '../types/index.js';
 
 export interface IAuthRequest<
     PARAM = any,

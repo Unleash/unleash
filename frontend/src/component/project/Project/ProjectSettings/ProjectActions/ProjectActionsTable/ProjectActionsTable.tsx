@@ -13,18 +13,18 @@ import { useActions } from 'hooks/api/getters/useActions/useActions';
 import { useActionsApi } from 'hooks/api/actions/useActionsApi/useActionsApi';
 import type { IActionSet } from 'interfaces/action';
 import { ToggleCell } from 'component/common/Table/cells/ToggleCell/ToggleCell';
-import { ProjectActionsSourceCell } from './ProjectActionsSourceCell';
-import { ProjectActionsFiltersCell } from './ProjectActionsFiltersCell';
-import { ProjectActionsActorCell } from './ProjectActionsActorCell';
-import { ProjectActionsActionsCell } from './ProjectActionsActionsCell/ProjectActionsActionsCell';
-import { ProjectActionsTableActionsCell } from './ProjectActionsTableActionsCell';
-import { ProjectActionsModal } from './ProjectActionsModal/ProjectActionsModal';
-import { ProjectActionsDeleteDialog } from './ProjectActionsDeleteDialog';
+import { ProjectActionsSourceCell } from './ProjectActionsSourceCell.tsx';
+import { ProjectActionsFiltersCell } from './ProjectActionsFiltersCell.tsx';
+import { ProjectActionsActorCell } from './ProjectActionsActorCell.tsx';
+import { ProjectActionsActionsCell } from './ProjectActionsActionsCell/ProjectActionsActionsCell.tsx';
+import { ProjectActionsTableActionsCell } from './ProjectActionsTableActionsCell.tsx';
+import { ProjectActionsModal } from './ProjectActionsModal/ProjectActionsModal.tsx';
+import { ProjectActionsDeleteDialog } from './ProjectActionsDeleteDialog.tsx';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
-import { ProjectActionsEventsModal } from './ProjectActionsEventsModal/ProjectActionsEventsModal';
+import { ProjectActionsEventsModal } from './ProjectActionsEventsModal/ProjectActionsEventsModal.tsx';
 
 interface IProjectActionsTableProps {
     modalOpen: boolean;
@@ -93,7 +93,9 @@ export const ProjectActionsTable = ({
                 minWidth: 60,
                 Cell: ({
                     row: { original: action },
-                }: { row: { original: IActionSet } }) => (
+                }: {
+                    row: { original: IActionSet };
+                }) => (
                     <LinkCell
                         title={action.name}
                         subtitle={action.description}
@@ -109,7 +111,9 @@ export const ProjectActionsTable = ({
                 Header: 'Source',
                 Cell: ({
                     row: { original: action },
-                }: { row: { original: IActionSet } }) => (
+                }: {
+                    row: { original: IActionSet };
+                }) => (
                     <ProjectActionsSourceCell
                         action={action}
                         signalEndpoints={signalEndpoints}
@@ -164,7 +168,9 @@ export const ProjectActionsTable = ({
                 accessor: 'enabled',
                 Cell: ({
                     row: { original: action },
-                }: { row: { original: IActionSet } }) => (
+                }: {
+                    row: { original: IActionSet };
+                }) => (
                     <ToggleCell
                         checked={action.enabled}
                         setChecked={(enabled) =>
@@ -182,7 +188,9 @@ export const ProjectActionsTable = ({
                 align: 'center',
                 Cell: ({
                     row: { original: action },
-                }: { row: { original: IActionSet } }) => (
+                }: {
+                    row: { original: IActionSet };
+                }) => (
                     <ProjectActionsTableActionsCell
                         actionId={action.id}
                         onOpenEvents={() => {

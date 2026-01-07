@@ -1,6 +1,6 @@
 import type { IRole } from 'interfaces/role';
-import { RoleDeleteDialogRootRole } from './RoleDeleteDialogRootRole/RoleDeleteDialogRootRole';
-import { RoleDeleteDialogProjectRole } from './RoleDeleteDialogProjectRole/RoleDeleteDialogProjectRole';
+import { RoleDeleteDialogRootRole } from './RoleDeleteDialogRootRole/RoleDeleteDialogRootRole.tsx';
+import { RoleDeleteDialogProjectRole } from './RoleDeleteDialogProjectRole/RoleDeleteDialogProjectRole.tsx';
 import { CUSTOM_PROJECT_ROLE_TYPE } from 'constants/roles';
 
 interface IRoleDeleteDialogProps {

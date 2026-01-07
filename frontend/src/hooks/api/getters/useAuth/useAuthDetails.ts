@@ -1,7 +1,7 @@
 import {
     type IAuthEndpointDetailsResponse,
     useAuthEndpoint,
-} from './useAuthEndpoint';
+} from './useAuthEndpoint.js';
 
 interface IUseAuthDetailsOutput {
     authDetails?: IAuthEndpointDetailsResponse;

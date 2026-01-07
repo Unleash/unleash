@@ -6,26 +6,59 @@ import {
 } from 'component/filter/Filters/Filters';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
-import {
-    EventSchemaType,
-    type FeatureSearchResponseSchema,
-    type SearchFeaturesParams,
-} from 'openapi';
+import { EventSchemaType, type FeatureSearchResponseSchema } from 'openapi';
 import type { ProjectSchema } from 'openapi';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
+import { useLocation } from 'react-router-dom';
+import { FilterItemParam } from 'utils/serializeQueryParams';
 
 export const useEventLogFilters = (
-    projectsHook: () => { projects: ProjectSchema[] },
-    featuresHook: (params: SearchFeaturesParams) => {
-        features: FeatureSearchResponseSchema[];
-    },
+    projects: ProjectSchema[],
+    features: FeatureSearchResponseSchema[],
 ) => {
-    const { projects } = projectsHook();
-    const { features } = featuresHook({});
+    const { environments } = useEnvironments();
     const { eventCreators } = useEventCreators();
-
+    const location = useLocation();
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
+
+    const createRemovableFilterOptions = (
+        searchParams: URLSearchParams,
+        paramNames: string[],
+    ) => {
+        return paramNames.reduce(
+            (acc, paramName) => {
+                const hasParam = searchParams.has(paramName);
+                const paramValue = searchParams.get(paramName);
+
+                acc[paramName] =
+                    hasParam && paramValue
+                        ? (() => {
+                              const parsed = FilterItemParam.decode(paramValue);
+                              return parsed
+                                  ? [
+                                        {
+                                            label: parsed.values[0],
+                                            value: parsed.values[0],
+                                        },
+                                    ]
+                                  : [];
+                          })()
+                        : [];
+                return acc;
+            },
+            {} as Record<string, Array<{ label: string; value: string }>>,
+        );
+    };
+
     useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+
+        const removableOptions = createRemovableFilterOptions(searchParams, [
+            'id',
+            'groupId',
+        ]);
+
         const projectOptions =
             projects?.map((project: ProjectSchema) => ({
                 label: project.name,
@@ -49,6 +82,12 @@ export const useEventLogFilters = (
                 value: value,
             }),
         );
+
+        const environmentOptions =
+            environments?.map((env) => ({
+                label: env.name,
+                value: env.name,
+            })) ?? [];
 
         const availableFilters: IFilterItem[] = [
             {
@@ -87,6 +126,32 @@ export const useEventLogFilters = (
                 singularOperators: ['IS'],
                 pluralOperators: ['IS_ANY_OF'],
             },
+            ...(removableOptions.id.length > 0
+                ? ([
+                      {
+                          label: 'Event ID',
+                          icon: 'tag',
+                          options: removableOptions.id,
+                          filterKey: 'id',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                          persistent: false,
+                      },
+                  ] as IFilterItem[])
+                : []),
+            ...(removableOptions.groupId.length > 0
+                ? ([
+                      {
+                          label: 'Group ID',
+                          icon: 'tag',
+                          options: removableOptions.groupId,
+                          filterKey: 'groupId',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                          persistent: false,
+                      },
+                  ] as IFilterItem[])
+                : []),
             ...(projectOptions.length > 1
                 ? ([
                       {
@@ -111,6 +176,18 @@ export const useEventLogFilters = (
                       },
                   ] as IFilterItem[])
                 : []),
+            ...(environmentOptions.length > 0
+                ? ([
+                      {
+                          label: 'Environment',
+                          icon: 'cloud',
+                          options: environmentOptions,
+                          filterKey: 'environment',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                      },
+                  ] as IFilterItem[])
+                : []),
         ];
 
         setAvailableFilters(availableFilters);
@@ -118,28 +195,14 @@ export const useEventLogFilters = (
         JSON.stringify(features),
         JSON.stringify(projects),
         JSON.stringify(eventCreators),
+        JSON.stringify(environments),
+        location.search,
     ]);
 
     return availableFilters;
 };
 
 type LogType = 'flag' | 'project' | 'global';
-const useEventLogFiltersFromLogType = (logType: LogType) => {
-    switch (logType) {
-        case 'flag':
-            return useEventLogFilters(
-                () => ({ projects: [] }),
-                () => ({ features: [] }),
-            );
-        case 'project':
-            return useEventLogFilters(
-                () => ({ projects: [] }),
-                useFeatureSearch,
-            );
-        case 'global':
-            return useEventLogFilters(useProjects, useFeatureSearch);
-    }
-};
 
 type EventLogFiltersProps = {
     logType: LogType;
@@ -154,7 +217,14 @@ export const EventLogFilters: FC<EventLogFiltersProps> = ({
     state,
     onChange,
 }) => {
-    const availableFilters = useEventLogFiltersFromLogType(logType);
+    const { features } = useFeatureSearch({});
+    const { projects } = useProjects();
+    const featuresToFilter = logType !== 'flag' ? features : [];
+    const projectsToFilter = logType === 'global' ? projects : [];
+    const availableFilters = useEventLogFilters(
+        projectsToFilter,
+        featuresToFilter,
+    );
 
     return (
         <Filters

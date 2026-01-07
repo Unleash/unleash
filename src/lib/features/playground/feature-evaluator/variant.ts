@@ -1,8 +1,8 @@
-import type { Context } from './context';
+import type { Context } from './context.js';
 // eslint-disable-next-line import/no-cycle
-import type { FeatureInterface } from './feature';
-import { normalizedVariantValue } from './strategy/util';
-import { resolveContextValue } from './helpers';
+import type { FeatureInterface } from './feature.js';
+import { normalizedVariantValue } from './strategy/util.js';
+import { resolveContextValue } from './helpers.js';
 
 interface Override {
     contextName: string;

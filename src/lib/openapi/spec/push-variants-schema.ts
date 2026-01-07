@@ -1,6 +1,6 @@
-import { variantSchema } from './variant-schema';
+import { variantSchema } from './variant-schema.js';
 import type { FromSchema } from 'json-schema-to-ts';
-import { overrideSchema } from './override-schema';
+import { overrideSchema } from './override-schema.js';
 
 export const pushVariantsSchema = {
     $id: '#/components/schemas/pushVariantsSchema',

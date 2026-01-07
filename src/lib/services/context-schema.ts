@@ -1,5 +1,5 @@
 import joi from 'joi';
-import { nameType } from '../routes/util';
+import { nameType } from '../routes/util.js';
 
 export const nameSchema = joi.object().keys({ name: nameType });
 
@@ -20,5 +20,6 @@ export const contextSchema = joi
             .optional()
             .items(legalValueSchema),
         stickiness: joi.boolean().optional().default(false),
+        project: joi.string().allow(null).optional(),
     })
     .options({ allowUnknown: false, stripUnknown: true });

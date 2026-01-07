@@ -1,6 +1,6 @@
-import type { Db } from '../../db/db';
-import { RoleName } from '../../types';
-import { generateImageUrl } from '../../util';
+import type { Db } from '../../db/db.js';
+import { RoleName } from '../../types/index.js';
+import { generateImageUrl } from '../../util/index.js';
 import type {
     GroupProjectOwner,
     IProjectOwnersReadModel,
@@ -8,7 +8,7 @@ import type {
     ProjectOwnersDictionary,
     UserProjectOwner,
     WithProjectOwners,
-} from './project-owners-read-model.type';
+} from './project-owners-read-model.type.js';
 
 const T = {
     ROLE_USER: 'role_user',

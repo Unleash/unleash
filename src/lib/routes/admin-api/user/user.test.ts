@@ -1,10 +1,10 @@
 import supertest from 'supertest';
-import { createServices } from '../../../services';
-import { createTestConfig } from '../../../../test/config/test-config';
+import { createServices } from '../../../services/index.js';
+import { createTestConfig } from '../../../../test/config/test-config.js';
 
-import createStores from '../../../../test/fixtures/store';
-import getApp from '../../../app';
-import User from '../../../types/user';
+import createStores from '../../../../test/fixtures/store.js';
+import getApp from '../../../app.js';
+import User from '../../../types/user.js';
 import bcrypt from 'bcryptjs';
 
 const currentUser = new User({ id: 1337, email: 'test@mail.com' });
@@ -22,7 +22,7 @@ async function getSetup() {
 
     const config = createTestConfig({
         preHook: (a) => {
-            a.use((req, res, next) => {
+            a.use((req, _res, next) => {
                 req.user = currentUser;
                 next();
             });
@@ -82,7 +82,7 @@ test('should allow user to change password', async () => {
         })
         .expect(200);
     const updated = await userStore.get(currentUser.id);
-    // @ts-ignore
+    // @ts-expect-error
     expect(updated.passwordHash).toBeTruthy();
 });
 

@@ -1,8 +1,8 @@
 import type {
     IFeatureType,
     IFeatureTypeStore,
-} from '../../lib/types/stores/feature-type-store';
-import NotFoundError from '../../lib/error/notfound-error';
+} from '../../lib/types/stores/feature-type-store.js';
+import NotFoundError from '../../lib/error/notfound-error.js';
 
 export default class FakeFeatureTypeStore implements IFeatureTypeStore {
     featureTypes: IFeatureType[] = [];

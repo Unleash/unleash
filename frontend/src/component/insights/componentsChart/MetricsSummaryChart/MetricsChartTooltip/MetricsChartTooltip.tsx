@@ -2,7 +2,7 @@ import type { VFC } from 'react';
 import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from 'openapi';
 import { Box, Divider, Paper, styled, Typography } from '@mui/material';
 import type { TooltipState } from 'component/insights/components/LineChart/ChartTooltip/ChartTooltip';
-import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../../../common/ConditionallyRender/ConditionallyRender.tsx';
 
 const StyledTooltipItemContainer = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -38,7 +38,9 @@ const InfoLine = ({
 
 export const InfoSummary = ({
     data,
-}: { data: { key: string; value: string | number }[] }) => (
+}: {
+    data: { key: string; value: string | number }[];
+}) => (
     <Box display={'flex'} flexDirection={'row'}>
         {data.map(({ key, value }) => (
             <div style={{ flex: 1, flexDirection: 'column' }} key={key}>

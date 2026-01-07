@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchemaMode } from './projectSchemaMode';
-import type { ProjectSchemaOwners } from './projectSchemaOwners';
+import type { ProjectSchemaMode } from './projectSchemaMode.js';
+import type { ProjectSchemaOwners } from './projectSchemaOwners.js';
 
 /**
  * A definition of the project used for projects listing purposes
@@ -37,7 +37,10 @@ export interface ProjectSchema {
     favorite?: boolean;
     /** The number of features this project has */
     featureCount?: number;
-    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
+    /**
+     * Use `technicalDebt` instead.
+     * @deprecated
+     */
     health?: number;
     /** The id of this project */
     id: string;
@@ -53,7 +56,7 @@ export interface ProjectSchema {
     lastUpdatedAt?: string | null;
     /** The number of members this project has */
     memberCount?: number;
-    /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
+    /** The project's [collaboration mode](https://docs.getunleash.io/concepts/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
     mode?: ProjectSchemaMode;
     /** The name of this project */
     name: string;
@@ -69,6 +72,12 @@ export interface ProjectSchema {
      * @deprecated
      */
     staleFeatureCount?: number;
+    /**
+     * An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100
+     * @minimum 0
+     * @maximum 100
+     */
+    technicalDebt?: number;
     /**
      * When this project was last updated.
      * @deprecated

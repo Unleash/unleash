@@ -2,18 +2,18 @@ import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ImportTimeline } from './ImportTimeline';
-import type { StageName } from './StageName';
+import { ImportTimeline } from './ImportTimeline.tsx';
+import type { StageName } from './StageName.tsx';
 import {
     Actions,
     ConfigurationStage,
     ConfigurationTabs,
     ImportArea,
     type ImportMode,
-} from './configure/ConfigurationStage';
-import { ValidationStage } from './validate/ValidationStage';
-import { ImportStage } from './import/ImportStage';
-import { ImportOptions } from './configure/ImportOptions';
+} from './configure/ConfigurationStage.tsx';
+import { ValidationStage } from './validate/ValidationStage.tsx';
+import { ImportStage } from './import/ImportStage.tsx';
+import { ImportOptions } from './configure/ImportOptions.tsx';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',
@@ -38,7 +38,7 @@ const isValidJSON = (json: string) => {
     try {
         JSON.parse(json);
         return true;
-    } catch (e) {
+    } catch (_e) {
         return false;
     }
 };

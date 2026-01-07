@@ -1,7 +1,7 @@
-import type { Db } from '../../server-impl';
-import { ChangeRequestSegmentUsageReadModel } from './sql-change-request-segment-usage-read-model';
-import { FakeChangeRequestSegmentUsageReadModel } from './fake-change-request-segment-usage-read-model';
-import type { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model';
+import type { Db } from '../../types/index.js';
+import { ChangeRequestSegmentUsageReadModel } from './sql-change-request-segment-usage-read-model.js';
+import { FakeChangeRequestSegmentUsageReadModel } from './fake-change-request-segment-usage-read-model.js';
+import type { IChangeRequestSegmentUsageReadModel } from './change-request-segment-usage-read-model.js';
 
 export const createChangeRequestSegmentUsageReadModel = (
     db: Db,

@@ -1,5 +1,5 @@
-import { Strategy } from './strategy';
-import type { Context } from '../context';
+import { Strategy } from './strategy.js';
+import type { Context } from '../context.js';
 import { Address4 } from 'ip-address';
 
 export default class RemoteAddressStrategy extends Strategy {
@@ -23,10 +23,11 @@ export default class RemoteAddressStrategy extends Strategy {
                             context.remoteAddress || '',
                         );
                         return remoteAddress.isInSubnet(subnetRange);
-                    } catch (err) {
+                    } catch (_err) {
                         return false;
                     }
                 }
+                return false;
             },
         );
     }

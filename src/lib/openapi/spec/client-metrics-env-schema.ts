@@ -1,4 +1,4 @@
-import { dateSchema } from './date-schema';
+import { dateSchema } from './date-schema.js';
 import type { FromSchema } from 'json-schema-to-ts';
 
 export const clientMetricsEnvSchema = {

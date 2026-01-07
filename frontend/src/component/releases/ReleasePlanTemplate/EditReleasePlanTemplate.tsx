@@ -1,9 +1,8 @@
-import { useUiFlag } from 'hooks/useUiFlag';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useReleasePlanTemplate } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplate';
-import { useTemplateForm } from '../hooks/useTemplateForm';
-import { TemplateForm } from './TemplateForm/TemplateForm';
+import { useTemplateForm } from '../hooks/useTemplateForm.ts';
+import { TemplateForm } from './TemplateForm/TemplateForm.tsx';
 import { Button, styled } from '@mui/material';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { RELEASE_PLAN_TEMPLATE_UPDATE } from '@server/types/permissions';
@@ -26,7 +25,6 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 
 export const EditReleasePlanTemplate = () => {
     const { uiConfig, isEnterprise } = useUiConfig();
-    const releasePlansEnabled = useUiFlag('releasePlans');
     const templateId = useRequiredPathParam('templateId');
     const { template, loading, error, refetch } =
         useReleasePlanTemplate(templateId);
@@ -53,7 +51,7 @@ export const EditReleasePlanTemplate = () => {
     );
 
     const handleCancel = () => {
-        navigate('/release-management');
+        navigate('/release-templates');
     };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -68,7 +66,7 @@ export const EditReleasePlanTemplate = () => {
                 await refetch();
                 setToastData({
                     type: 'success',
-                    text: 'Release plan template updated',
+                    text: 'Release template updated',
                 });
 
                 trackEvent('release-management', {
@@ -78,7 +76,7 @@ export const EditReleasePlanTemplate = () => {
                     },
                 });
 
-                navigate('/release-management');
+                navigate('/release-templates');
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -92,7 +90,7 @@ export const EditReleasePlanTemplate = () => {
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(getTemplatePayload(), undefined, 2)}'`;
 
-    if (!releasePlansEnabled || !isEnterprise()) {
+    if (!isEnterprise()) {
         return null;
     }
 
@@ -110,11 +108,13 @@ export const EditReleasePlanTemplate = () => {
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
             loading={loading}
+            archived={!!template.archivedAt}
         >
             <StyledButtonContainer>
                 <UpdateButton
                     name='template'
                     permission={RELEASE_PLAN_TEMPLATE_UPDATE}
+                    disabled={!!template.archivedAt}
                 >
                     Save changes
                 </UpdateButton>

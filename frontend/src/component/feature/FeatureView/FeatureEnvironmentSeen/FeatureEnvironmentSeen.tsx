@@ -6,8 +6,8 @@ import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolve
 import { Box, styled, type SxProps } from '@mui/material';
 import { ReactComponent as UsageLine } from 'assets/icons/usage-line.svg';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
-import { useLastSeenColors } from './useLastSeenColors';
-import { getLatestLastSeenAt } from './getLatestLastSeenAt';
+import { useLastSeenColors } from './useLastSeenColors.ts';
+import { getLatestLastSeenAt } from './getLatestLastSeenAt.ts';
 
 interface IFeatureEnvironmentSeenProps {
     featureLastSeen: string | undefined;

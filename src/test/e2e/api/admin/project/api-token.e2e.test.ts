@@ -1,10 +1,10 @@
-import dbInit, { type ITestDb } from '../../../helpers/database-init';
+import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../../helpers/test-helper';
-import getLogger from '../../../../fixtures/no-logger';
-import type { IApiTokenStore } from '../../../../../lib/types';
+} from '../../../helpers/test-helper.js';
+import getLogger from '../../../../fixtures/no-logger.js';
+import type { IApiTokenStore } from '../../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -43,7 +43,7 @@ test('Should always return token type in lowercase', async () => {
     });
 
     const storedToken = await apiTokenStore.get('some-secret');
-    expect(storedToken.type).toBe('frontend');
+    expect(storedToken!.type).toBe('frontend');
 
     const { body } = await app.request
         .get('/api/admin/projects/default/api-tokens')

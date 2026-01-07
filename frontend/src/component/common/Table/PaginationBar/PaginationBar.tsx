@@ -1,8 +1,9 @@
 import type React from 'react';
 import { Box, Typography, Button, styled } from '@mui/material';
-import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender';
+import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender.tsx';
 import { ReactComponent as ArrowRight } from 'assets/icons/arrowRight.svg';
 import { ReactComponent as ArrowLeft } from 'assets/icons/arrowLeft.svg';
+import { PAGINATION_OPTIONS } from 'utils/paginationConfig';
 
 const StyledPaginationButton = styled(Button)(({ theme }) => ({
     padding: `0 ${theme.spacing(0.8)}`,
@@ -127,10 +128,11 @@ export const PaginationBar: React.FC<PaginationBarProps> = ({
                         setPageLimit(Number(event.target.value))
                     }
                 >
-                    <option value={25}>25</option>
-                    <option value={50}>50</option>
-                    <option value={75}>75</option>
-                    <option value={100}>100</option>
+                    {PAGINATION_OPTIONS.map((option) => (
+                        <option key={option} value={option}>
+                            {option}
+                        </option>
+                    ))}
                 </StyledSelect>
             </StyledCenterBox>
         </StyledBoxContainer>

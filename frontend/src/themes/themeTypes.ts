@@ -40,16 +40,32 @@ declare module '@mui/material/styles' {
         };
     }
 
+    interface PaletteColor {
+        border?: string;
+    }
+
+    interface SimplePaletteColorOptions {
+        border?: string;
+    }
+
+    interface CustomTypeBackground {
+        application: string;
+        sidebar: string;
+        alternative: string;
+        elevation1: string;
+        elevation2: string;
+    }
+
     interface CustomPalette {
         /**
          * Generic neutral palette color
          */
-        neutral: PaletteColorOptions;
+        neutral: SimplePaletteColorOptions;
 
         /**
          * Sales-related palette color
          */
-        web: PaletteColorOptions;
+        web: SimplePaletteColorOptions;
 
         /**
          * Table colors
@@ -114,14 +130,6 @@ declare module '@mui/material/styles' {
         links: string;
 
         /**
-         * For Environment Accordion
-         */
-        envAccordion: {
-            disabled: string;
-            expanded: string;
-        };
-
-        /**
          * Variants, percentage split in strategies
          **/
         variants: string[];
@@ -130,26 +138,20 @@ declare module '@mui/material/styles' {
          * Dashboard and charts
          */
         charts: {
-            gauge: {
-                gradientStart: string;
-                gradientEnd: string;
-                background: string;
-                sectionLine: string;
-                text: string;
-            };
-            health: {
-                mainCircleBackground: string;
-                orbit: string;
-                circles: string;
-                text: string;
-                title: string;
-                healthy: string;
-                stale: string;
-                potentiallyStale: string;
-                gradientStale: string;
-                gradientPotentiallyStale: string;
-            };
+            A1: string;
+            A2: string;
+            A3: string;
+            A4: string;
+            B1: string;
+            C1: string;
+            D1: string;
+            E1: string;
             series: string[];
+        };
+
+        inverse: {
+            main: string;
+            contrastText: string;
         };
     }
     interface Theme extends CustomTheme {}
@@ -170,30 +172,6 @@ declare module '@mui/material/styles' {
     }
 
     interface TypeAction extends CustomTypeAction {}
-
-    /* Extend the background object from MUI */
-    interface CustomTypeBackground {
-        application: string;
-        sidebar: string;
-        alternative: string;
-        elevation1: string;
-        elevation2: string;
-    }
-
-    interface PaletteColor {
-        main: string;
-        light: string;
-        dark: string;
-        border?: string;
-        contrastText: string;
-    }
-    interface PaletteColorOptions {
-        main?: string;
-        light?: string;
-        dark?: string;
-        border?: string;
-        contrastText?: string;
-    }
 }
 
 declare module '@mui/system/createTheme/shape' {

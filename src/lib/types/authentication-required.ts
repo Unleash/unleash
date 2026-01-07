@@ -1,4 +1,4 @@
-import { type ApiErrorSchema, UnleashError } from '../error/unleash-error';
+import { type ApiErrorSchema, UnleashError } from '../error/unleash-error.js';
 
 interface IBaseOptions {
     type: string;
@@ -11,7 +11,7 @@ interface IOptions extends IBaseOptions {
     options?: IBaseOptions[];
 }
 
-class AuthenticationRequired extends UnleashError {
+export class AuthenticationRequired extends UnleashError {
     statusCode = 401;
 
     private type: string;
@@ -48,4 +48,3 @@ class AuthenticationRequired extends UnleashError {
 }
 
 export default AuthenticationRequired;
-module.exports = AuthenticationRequired;

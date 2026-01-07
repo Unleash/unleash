@@ -1,4 +1,4 @@
-import { baseRoutes, getRoute } from '../routes';
+import { baseRoutes, getRoute } from '../routes.ts';
 
 test('returns all baseRoutes', () => {
     expect(baseRoutes).toMatchSnapshot();

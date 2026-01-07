@@ -34,6 +34,7 @@ export const applicationEnvironmentInstancesSchema = {
                         description:
                             'An IP address identifying the instance of the application running the SDK',
                         example: '192.168.0.1',
+                        nullable: true,
                     },
                     lastSeen: {
                         type: 'string',

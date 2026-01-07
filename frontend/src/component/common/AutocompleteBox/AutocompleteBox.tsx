@@ -1,4 +1,3 @@
-import { useStyles } from 'component/common/AutocompleteBox/AutocompleteBox.styles';
 import Add from '@mui/icons-material/Add';
 import {
     Autocomplete,
@@ -8,7 +7,7 @@ import {
     useTheme,
 } from '@mui/material';
 import type { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
-import { useState } from 'react';
+import type { ReactNode } from 'react';
 
 interface IAutocompleteBoxProps {
     label: string;
@@ -16,6 +15,8 @@ interface IAutocompleteBoxProps {
     value?: IAutocompleteBoxOption[];
     onChange: (value: IAutocompleteBoxOption[]) => void;
     disabled?: boolean;
+    icon?: ReactNode | null;
+    width?: string | number;
 }
 
 export interface IAutocompleteBoxOption {
@@ -32,23 +33,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledIcon = styled('div', {
-    shouldForwardProp: (prop: string) => !prop.startsWith('$'),
-})<{ $disabled: boolean }>(({ theme, $disabled }) => ({
-    background: $disabled
-        ? theme.palette.primary.light
-        : theme.palette.primary.main,
-    height: '48px',
-    width: '48px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 6,
-    borderTopLeftRadius: '40px',
-    borderBottomLeftRadius: '40px',
-    color: theme.palette.primary.contrastText,
-}));
-
 const StyledAutocomplete = styled(Autocomplete)({
     flex: 1,
 }) as typeof Autocomplete;
@@ -59,37 +43,41 @@ export const AutocompleteBox = ({
     value = [],
     onChange,
     disabled,
+    icon,
+    width = '215px',
 }: IAutocompleteBoxProps) => {
-    const [placeHolder, setPlaceholder] = useState('Add Segments');
-    const { classes: styles } = useStyles();
     const theme = useTheme();
-
-    const renderInput = (params: AutocompleteRenderInputParams) => {
-        return <TextField {...params} variant='outlined' label={label} />;
-    };
 
     const renderCustomInput = (params: AutocompleteRenderInputParams) => {
         const { InputProps } = params;
+
+        let startAdornment: undefined | JSX.Element;
+        if (icon !== null) {
+            startAdornment = (
+                <InputAdornment position='start'>
+                    {icon || (
+                        <Add
+                            sx={{
+                                height: 20,
+                                width: 20,
+                                color: theme.palette.primary.main,
+                            }}
+                        />
+                    )}
+                </InputAdornment>
+            );
+        }
+
         return (
             <TextField
                 {...params}
                 InputProps={{
                     ...InputProps,
-                    startAdornment: (
-                        <InputAdornment position='start'>
-                            <Add
-                                sx={{
-                                    height: 20,
-                                    width: 20,
-                                    color: theme.palette.primary.main,
-                                }}
-                            />
-                        </InputAdornment>
-                    ),
+                    startAdornment,
                 }}
                 variant='outlined'
                 sx={{
-                    width: '215px',
+                    width,
                     '& .MuiOutlinedInput-root': {
                         '& .MuiInputBase-input': {
                             color: theme.palette.primary.main,
@@ -110,8 +98,6 @@ export const AutocompleteBox = ({
                     },
                 }}
                 placeholder={label}
-                onFocus={() => setPlaceholder('')}
-                onBlur={() => setPlaceholder(label)}
             />
         );
     };
@@ -120,7 +106,7 @@ export const AutocompleteBox = ({
             <StyledAutocomplete
                 options={options}
                 value={value}
-                onChange={(event, value) => onChange(value || [])}
+                onChange={(_, value) => onChange(value || [])}
                 renderInput={renderCustomInput}
                 getOptionLabel={(value) => value.label}
                 disabled={disabled}

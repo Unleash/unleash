@@ -1,4 +1,4 @@
-import type { ProjectOwners } from '../project/project-owners-read-model.type';
+import type { ProjectOwners } from '../project/project-owners-read-model.type.js';
 
 export type PersonalFeature = { name: string; type: string; project: string };
 export type BasePersonalProject = {
@@ -13,9 +13,13 @@ export type BasePersonalProject = {
 export type PersonalProject = BasePersonalProject & {
     owners?: ProjectOwners;
 } & {
-    health: number;
+    technicalDebt: number;
     memberCount: number;
     featureCount: number;
+    /**
+     * @deprecated
+     */
+    health: number;
 };
 
 export interface IPersonalDashboardReadModel {

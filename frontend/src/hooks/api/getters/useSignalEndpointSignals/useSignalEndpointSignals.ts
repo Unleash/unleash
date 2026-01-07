@@ -3,8 +3,8 @@ import useSWRInfinite, {
     type SWRInfiniteKeyLoader,
 } from 'swr/infinite';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
-import useUiConfig from '../useUiConfig/useUiConfig';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
 import type { ISignalEndpointSignal } from 'interfaces/signal';
 import { useUiFlag } from 'hooks/useUiFlag';
 

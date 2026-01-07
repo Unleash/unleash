@@ -1,8 +1,11 @@
 import 'chartjs-adapter-date-fns';
 import { type FC, useMemo } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
-import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip';
-import { useProjectChartData } from 'component/insights/hooks/useProjectChartData';
+import { HealthTooltip } from './HealthChartTooltip/HealthChartTooltip.tsx';
+import {
+    calculateTechDebt,
+    useProjectChartData,
+} from 'component/insights/hooks/useProjectChartData';
 import {
     fillGradientPrimary,
     LineChart,
@@ -80,9 +83,12 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
         return {
             datasets: [
                 {
-                    label: 'Health',
+                    label: 'Technical debt',
                     data: weeks.map((item) => ({
                         health: item.total ? calculateHealth(item) : undefined,
+                        technicalDebt: item.total
+                            ? calculateTechDebt(item)
+                            : undefined,
                         date: item.date,
                         total: item.total,
                         stale: item.stale,
@@ -117,7 +123,15 @@ export const ProjectHealthChart: FC<IProjectHealthChartProps> = ({
                 notEnoughData
                     ? {}
                     : {
-                          parsing: { yAxisKey: 'health', xAxisKey: 'date' },
+                          parsing: {
+                              yAxisKey: 'technicalDebt',
+                              xAxisKey: 'date',
+                          },
+                          plugins: {
+                              legend: {
+                                  display: !isAggregate,
+                              },
+                          },
                           scales: {
                               y: {
                                   min: 0,

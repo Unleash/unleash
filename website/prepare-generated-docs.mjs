@@ -43,6 +43,13 @@ const outputPath = path.join(outputDir, 'openapi.json');
 // Ensure directory exists
 await fs.mkdir(outputDir, { recursive: true });
 
-await fs.writeFile(outputPath, JSON.stringify(data, null, 2), 'utf8');
+await fs.writeFile(
+    outputPath,
+    JSON.stringify(data, null, 2).replace(
+        /\/ushosted\/openapi-static/g,
+        '/openapi-static',
+    ),
+    'utf8',
+);
 
 console.log(`OpenAPI spec saved to ${outputPath}`);

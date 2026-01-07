@@ -1,7 +1,7 @@
 import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { IApplication } from 'interfaces/application';
 
 interface IUseApplicationOutput {
@@ -16,7 +16,8 @@ const useApplication = (
     name: string,
     options: SWRConfiguration = {},
 ): IUseApplicationOutput => {
-    const path = formatApiPath(`api/admin/metrics/applications/${name}`);
+    const encodedName = encodeURIComponent(name);
+    const path = formatApiPath(`api/admin/metrics/applications/${encodedName}`);
 
     const fetcher = async () => {
         return fetch(path, {
@@ -26,7 +27,7 @@ const useApplication = (
             .then((res) => res.json());
     };
 
-    const APPLICATION_CACHE_KEY = `api/admin/metrics/applications/${name}`;
+    const APPLICATION_CACHE_KEY = `api/admin/metrics/applications/${encodedName}`;
 
     const { data, error } = useSWR(APPLICATION_CACHE_KEY, fetcher, {
         ...options,
@@ -44,7 +45,7 @@ const useApplication = (
 
     return {
         application: data || {
-            appName: name,
+            appName: encodedName,
             color: '',
             createdAt: '2022-02-02T21:04:00.268Z',
             description: '',

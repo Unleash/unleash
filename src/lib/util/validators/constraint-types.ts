@@ -2,10 +2,10 @@ import {
     constraintDateTypeSchema,
     constraintNumberTypeSchema,
     constraintStringTypeSchema,
-} from '../../schema/constraint-value-types';
-import BadDataError from '../../error/bad-data-error';
-import type { ILegalValue } from '../../features/context/context-field-store-type';
-import { parseStrictSemVer } from '../semver';
+} from '../../schema/constraint-value-types.js';
+import BadDataError from '../../error/bad-data-error.js';
+import type { ILegalValue } from '../../features/context/context-field-store-type.js';
+import { parseStrictSemVer } from '../semver.js';
 
 export const validateNumber = async (value: unknown): Promise<void> => {
     await constraintNumberTypeSchema.validateAsync(value);

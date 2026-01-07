@@ -1,5 +1,5 @@
 import type { IUser } from 'interfaces/user';
-import { useAuthEndpoint } from './useAuthEndpoint';
+import { useAuthEndpoint } from './useAuthEndpoint.js';
 
 interface IUseAuthUserOutput {
     user?: IUser;

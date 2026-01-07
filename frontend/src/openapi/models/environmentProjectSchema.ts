@@ -3,14 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateFeatureStrategySchema } from './createFeatureStrategySchema';
+import type { FeatureStrategySchema } from './featureStrategySchema.js';
 
 /**
  * Describes a project's configuration in a given environment.
  */
 export interface EnvironmentProjectSchema {
     /** The strategy configuration to add when enabling a feature environment by default */
-    defaultStrategy?: CreateFeatureStrategySchema;
+    defaultStrategy?: FeatureStrategySchema;
     /** `true` if the environment is enabled for the project, otherwise `false` */
     enabled: boolean;
     /** The name of the environment */
@@ -27,8 +27,16 @@ export interface EnvironmentProjectSchema {
     projectEnabledToggleCount?: number;
     /** `true` if the environment is protected, otherwise `false`. A *protected* environment can not be deleted. */
     protected: boolean;
+    /**
+     * Experimental field. The number of approvals required before a change request can be applied in this environment.
+     * @minimum 1
+     * @nullable
+     */
+    requiredApprovals?: number | null;
     /** Priority of the environment in a list of environments, the lower the value, the higher up in the list the environment will appear */
     sortOrder: number;
-    /** The [type of environment](https://docs.getunleash.io/reference/environments#environment-types). */
+    /** The [type of environment](https://docs.getunleash.io/concepts/environments#environment-types). */
     type: string;
+    /** Indicates whether the environment can be enabled for feature flags in the project */
+    visible?: boolean;
 }

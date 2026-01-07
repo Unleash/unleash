@@ -1,18 +1,17 @@
-import type { Db } from '../../db/db';
+import type { Db } from '../../db/db.js';
 import type {
     IFeatureLifecycleReadModel,
     StageCount,
     StageCountByProject,
-} from './feature-lifecycle-read-model-type';
-import { getCurrentStage } from './get-current-stage';
+} from './feature-lifecycle-read-model-type.js';
+import { getCurrentStage } from './get-current-stage.js';
 import type {
     IFeatureLifecycleStage,
-    IFlagResolver,
     IProjectLifecycleStageDuration,
     StageName,
-} from '../../types';
-import { calculateStageDurations } from './calculate-stage-durations';
-import type { FeatureLifecycleProjectItem } from './feature-lifecycle-store-type';
+} from '../../types/index.js';
+import { calculateStageDurations } from './calculate-stage-durations.js';
+import type { FeatureLifecycleProjectItem } from './feature-lifecycle-store-type.js';
 
 type DBType = {
     feature: string;
@@ -28,11 +27,8 @@ type DBProjectType = DBType & {
 export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
     private db: Db;
 
-    private flagResolver: IFlagResolver;
-
-    constructor(db: Db, flagResolver: IFlagResolver) {
+    constructor(db: Db) {
         this.db = db;
-        this.flagResolver = flagResolver;
     }
 
     async getStageCount(): Promise<StageCount[]> {

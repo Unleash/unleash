@@ -1,9 +1,9 @@
 import Input from 'component/common/Input/Input';
-import { styled, useTheme } from '@mui/material';
+import { Alert, Box, styled, useTheme } from '@mui/material';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { TemplateFormDescription } from './TemplateFormDescription';
-import { MilestoneList } from './MilestoneList/MilestoneList';
+import { TemplateFormDescription } from './TemplateFormDescription.tsx';
+import { MilestoneList } from './MilestoneList/MilestoneList.tsx';
 import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
 
 const StyledInput = styled(Input)(({ theme }) => ({
@@ -33,6 +33,14 @@ const StyledForm = styled('form')(({ theme }) => ({
     paddingTop: theme.spacing(5),
 }));
 
+const StyledLimitContainer = styled(Box)(({ theme }) => ({
+    flex: 1,
+    display: 'flex',
+    alignItems: 'flex-end',
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+}));
+
 interface ITemplateFormProps {
     name: string;
     setName: React.Dispatch<React.SetStateAction<string>>;
@@ -45,9 +53,11 @@ interface ITemplateFormProps {
     errors: { [key: string]: string };
     clearErrors: () => void;
     formTitle: string;
+    archived?: boolean;
     formatApiCode: () => string;
     handleSubmit: (e: React.FormEvent) => void;
     loading?: boolean;
+    Limit?: React.ReactNode;
     children?: React.ReactNode;
 }
 
@@ -61,8 +71,10 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     errors,
     clearErrors,
     formTitle,
+    archived,
     formatApiCode,
     handleSubmit,
+    Limit,
     children,
 }) => {
     const theme = useTheme();
@@ -81,6 +93,11 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
             description={<TemplateFormDescription />}
             formatApiCode={formatApiCode}
         >
+            {archived && (
+                <Alert severity='warning'>
+                    This template has been archived and can no longer be edited.
+                </Alert>
+            )}
             <StyledForm onSubmit={handleSubmit}>
                 <StyledInput
                     label='Template name'
@@ -127,6 +144,8 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     clearErrors={clearErrors}
                     milestoneChanged={milestoneChanged}
                 />
+
+                <StyledLimitContainer>{Limit}</StyledLimitContainer>
 
                 {children}
             </StyledForm>

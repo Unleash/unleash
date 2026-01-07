@@ -1,17 +1,17 @@
-import type { Db } from '../../db/db';
-import type { IUnleashConfig } from '../../types';
-import ContextService from './context-service';
-import ContextFieldStore from './context-field-store';
-import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
+import type { Db } from '../../db/db.js';
+import type { IUnleashConfig } from '../../types/index.js';
+import ContextService from './context-service.js';
+import ContextFieldStore from './context-field-store.js';
+import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store.js';
 import {
     createEventsService,
     createFakeEventsService,
-} from '../events/createEventsService';
-import { PrivateProjectChecker } from '../private-project/privateProjectChecker';
-import PrivateProjectStore from '../private-project/privateProjectStore';
-import FakeContextFieldStore from './fake-context-field-store';
-import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
-import { FakePrivateProjectChecker } from '../private-project/fakePrivateProjectChecker';
+} from '../events/createEventsService.js';
+import { PrivateProjectChecker } from '../private-project/privateProjectChecker.js';
+import PrivateProjectStore from '../private-project/privateProjectStore.js';
+import FakeContextFieldStore from './fake-context-field-store.js';
+import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store.js';
+import { FakePrivateProjectChecker } from '../private-project/fakePrivateProjectChecker.js';
 
 export const createContextService =
     (config: IUnleashConfig) =>

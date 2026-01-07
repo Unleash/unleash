@@ -26,7 +26,7 @@ import debounce from 'debounce';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor';
+import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor.tsx';
 import { parseDateValue, parseValidDate } from 'component/common/util';
 import {
     isStringOrStringArray,
@@ -118,7 +118,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
     };
 
     const changeContextValue = (
-        e: FormEvent,
+        _e: FormEvent,
         newValue: string | (string | string[])[] | null,
     ) => {
         if (!isStringOrStringArray(newValue)) return;

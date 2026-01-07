@@ -1,4 +1,4 @@
-import { validateSchema } from '../validate';
+import { validateSchema } from '../validate.js';
 
 test('segmentStrategiesSchema', () => {
     const validExamples = [

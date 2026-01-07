@@ -1,10 +1,10 @@
 import type { SWRConfiguration } from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
-import handleErrorResponses from '../httpErrorResponseHandler';
+import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { IRoleWithPermissions } from 'interfaces/role';
-import useUiConfig from '../useUiConfig/useUiConfig';
-import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 
 export interface IUseRoleOutput {
     role?: IRoleWithPermissions;

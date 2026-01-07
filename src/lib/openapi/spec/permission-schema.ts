@@ -9,7 +9,7 @@ export const permissionSchema = {
     properties: {
         permission: {
             description:
-                '[Project](https://docs.getunleash.io/reference/rbac#project-permissions) or [environment](https://docs.getunleash.io/reference/rbac#environment-permissions) permission name',
+                '[Project](https://docs.getunleash.io/concepts/rbac#project-level-permissions) or [environment](https://docs.getunleash.io/concepts/rbac#environment-level-permissions) permission name',
             type: 'string',
             example: 'UPDATE_FEATURE_STRATEGY',
         },

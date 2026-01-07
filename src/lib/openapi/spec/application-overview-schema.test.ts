@@ -1,4 +1,4 @@
-import { validateSchema } from '../validate';
+import { validateSchema } from '../validate.js';
 
 test('applicationOverviewSchema', () => {
     const app = {
@@ -12,6 +12,8 @@ test('applicationOverviewSchema', () => {
                 name: 'production',
                 instanceCount: 34,
                 sdks: ['unleash-client-node:5.4.0'],
+                backendSdks: ['unleash-client-node:5.4.0'],
+                frontendSdks: [],
                 lastSeen: '2021-10-01T12:00:00Z',
                 issues: {
                     missingFeatures: ['feature1'],
@@ -22,6 +24,8 @@ test('applicationOverviewSchema', () => {
                 name: 'development',
                 instanceCount: 16,
                 sdks: ['unleash-client-java:5.4.0'],
+                backendSdks: ['unleash-client-java:5.4.0'],
+                frontendSdks: [],
                 lastSeen: '2021-10-01T12:00:00Z',
                 issues: {
                     missingFeatures: [],

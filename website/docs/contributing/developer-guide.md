@@ -1,8 +1,9 @@
 ---
 title: Developer guide
+pagination_next: contributing/client-specification
 ---
 
-## Introduction {#introduction}
+## Introduction
 
 This repository consists of two main parts: the backend and frontend of Unleash. The backend is a Node.js application built with TypeScript, while the frontend is a React application also built with TypeScript. You can find code specific to the backend in the `src` lib folder and code specific to the frontend in the `frontend` folder.
 
@@ -29,5 +30,5 @@ We don't jump to implementation immediately. We think about the problem at hand,
 The following resources should be read before contributing to the project:
 
 * [Clean code javascript](https://github.com/ryanmcdermott/clean-code-javascript)
-* [frontend overview](./frontend/overview.md)
-* [backend overview](./backend/overview.md)
+* [frontend overview](/contributing/frontend/overview)
+* [backend overview](/contributing/backend/overview)

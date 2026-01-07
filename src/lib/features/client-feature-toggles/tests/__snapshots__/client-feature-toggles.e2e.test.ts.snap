@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`should match snapshot from /api/client/features 1`] = `
 {
@@ -63,12 +63,12 @@ exports[`should match snapshot from /api/client/features 1`] = `
     },
   ],
   "meta": {
-    "etag": ""61824cd0:11"",
-    "queryHash": "61824cd0",
-    "revisionId": 11,
+    "etag": ""76d8bb0e:19:v1"",
+    "queryHash": "76d8bb0e",
+    "revisionId": 19,
   },
   "query": {
-    "environment": "default",
+    "environment": "development",
     "inlineSegmentConstraints": true,
   },
   "version": 2,

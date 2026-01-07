@@ -3,7 +3,7 @@ import { IconButton, Popover, styled, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type React from 'react';
 import { useState, type VFC } from 'react';
-import { VariantInformation } from './VariantInformation/VariantInformation';
+import { VariantInformation } from './VariantInformation/VariantInformation.tsx';
 import type { IFeatureVariant } from 'interfaces/featureToggle';
 
 interface IVariantCellProps {

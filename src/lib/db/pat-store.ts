@@ -1,8 +1,8 @@
-import type { Logger, LogProvider } from '../logger';
-import type { IPatStore } from '../types/stores/pat-store';
-import NotFoundError from '../error/notfound-error';
-import type { Db } from './db';
-import type { CreatePatSchema, PatSchema } from '../openapi';
+import type { Logger, LogProvider } from '../logger.js';
+import type { IPatStore } from '../types/stores/pat-store.js';
+import NotFoundError from '../error/notfound-error.js';
+import type { Db } from './db.js';
+import type { CreatePatSchema, PatSchema } from '../openapi/index.js';
 
 const TABLE = 'personal_access_tokens';
 

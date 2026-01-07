@@ -1,5 +1,5 @@
 import express from 'express';
-import { conditionalMiddleware } from '../../../../lib/middleware/conditional-middleware';
+import { conditionalMiddleware } from '../../../../lib/middleware/conditional-middleware.js';
 import supertest from 'supertest';
 
 test('disabled middleware should not block paths that use the same path', async () => {
@@ -10,13 +10,13 @@ test('disabled middleware should not block paths that use the same path', async 
         path,
         conditionalMiddleware(
             () => false,
-            (req, res) => {
+            (_req, res) => {
                 res.send({ changeRequest: 'hello' });
             },
         ),
     );
 
-    app.get(path, (req, res) => {
+    app.get(path, (_req, res) => {
         res.json({ projects: [] });
     });
 
@@ -33,13 +33,13 @@ test('should return 404 when path is not enabled', async () => {
         `${path}/change-requests`,
         conditionalMiddleware(
             () => false,
-            (req, res) => {
+            (_req, res) => {
                 res.send({ changeRequest: 'hello' });
             },
         ),
     );
 
-    app.get(path, (req, res) => {
+    app.get(path, (_req, res) => {
         res.json({ projects: [] });
     });
 
@@ -54,13 +54,13 @@ test('should respect ordering of endpoints', async () => {
         path,
         conditionalMiddleware(
             () => true,
-            (req, res) => {
+            (_req, res) => {
                 res.json({ name: 'Request changes' });
             },
         ),
     );
 
-    app.get(path, (req, res) => {
+    app.get(path, (_req, res) => {
         res.json({ projects: [] });
     });
 
@@ -77,13 +77,13 @@ test('disabled middleware should not block paths that use the same basepath', as
         `${path}/change-requests`,
         conditionalMiddleware(
             () => false,
-            (req, res) => {
+            (_req, res) => {
                 res.json({ name: 'Request changes' });
             },
         ),
     );
 
-    app.get(path, (req, res) => {
+    app.get(path, (_req, res) => {
         res.json({ projects: [] });
     });
 

@@ -80,6 +80,11 @@ export const FeatureMetricsChips = ({
                             onClick={onClick(val)}
                             aria-pressed={selectedValues?.includes(val)}
                             sx={focusable}
+                            data-testid={
+                                selectedValues?.includes(val)
+                                    ? `selected-chip-${val}`
+                                    : `unselected-chip-${val}`
+                            }
                         />
                     </StyledItem>
                 ))}

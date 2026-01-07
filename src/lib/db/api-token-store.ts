@@ -1,19 +1,19 @@
 import type { EventEmitter } from 'events';
-import metricsHelper from '../util/metrics-helper';
-import { DB_TIME } from '../metric-events';
-import type { Logger, LogProvider } from '../logger';
-import NotFoundError from '../error/notfound-error';
-import type { IApiTokenStore } from '../types/stores/api-token-store';
+import metricsHelper from '../util/metrics-helper.js';
+import { DB_TIME } from '../metric-events.js';
+import type { Logger, LogProvider } from '../logger.js';
+import NotFoundError from '../error/notfound-error.js';
+import type { IApiTokenStore } from '../types/stores/api-token-store.js';
 import {
     ApiTokenType,
+    type Db,
     type IApiToken,
     type IApiTokenCreate,
-    isAllProjects,
-} from '../types/models/api-token';
-import { ALL_PROJECTS } from '../util/constants';
-import type { Db } from './db';
-import { inTransaction } from './transaction';
-import type { IFlagResolver } from '../types';
+    type IFlagResolver,
+} from '../types/index.js';
+import { ALL_PROJECTS } from '../internals.js';
+import { isAllProjects } from '../server-impl.js';
+import { inTransaction } from './transaction.js';
 
 const TABLE = 'api_tokens';
 const API_LINK_TABLE = 'api_token_project';
@@ -42,7 +42,11 @@ const tokenRowReducer = (acc, tokenRow) => {
         acc[tokenRow.secret] = {
             secret: token.secret,
             tokenName: token.token_name ? token.token_name : token.username,
-            type: token.type.toLowerCase(),
+            // backend token type needs to be supported in Edge before being able to return them in the API
+            type: (token.type === ApiTokenType.BACKEND
+                ? ApiTokenType.CLIENT
+                : token.type
+            ).toLowerCase(),
             project: ALL,
             projects: [ALL],
             environment: token.environment ? token.environment : ALL,
@@ -50,7 +54,6 @@ const tokenRowReducer = (acc, tokenRow) => {
             createdAt: token.created_at,
             alias: token.alias,
             seenAt: token.seen_at,
-            username: token.token_name ? token.token_name : token.username,
         };
     }
     const currentToken = acc[tokenRow.secret];
@@ -65,8 +68,8 @@ const tokenRowReducer = (acc, tokenRow) => {
 };
 
 const toRow = (newToken: IApiTokenCreate) => ({
-    username: newToken.tokenName ?? newToken.username,
-    token_name: newToken.tokenName ?? newToken.username,
+    username: newToken.tokenName,
+    token_name: newToken.tokenName,
     secret: newToken.secret,
     type: newToken.type,
     environment:
@@ -87,13 +90,11 @@ export class ApiTokenStore implements IApiTokenStore {
 
     private db: Db;
 
-    private readonly flagResolver: IFlagResolver;
-
     constructor(
         db: Db,
         eventBus: EventEmitter,
         getLogger: LogProvider,
-        flagResolver: IFlagResolver,
+        _flagResolver: IFlagResolver,
     ) {
         this.db = db;
         this.logger = getLogger('api-tokens.js');
@@ -102,7 +103,6 @@ export class ApiTokenStore implements IApiTokenStore {
                 store: 'api-tokens',
                 action,
             });
-        this.flagResolver = flagResolver;
     }
 
     // helper function that we can move to utils
@@ -192,7 +192,6 @@ export class ApiTokenStore implements IApiTokenStore {
             await Promise.all(updateProjectTasks);
             return {
                 ...newToken,
-                username: newToken.tokenName,
                 alias: newToken.alias || null,
                 project: newToken.projects?.join(',') || '*',
                 createdAt: row.created_at,
@@ -286,7 +285,8 @@ export class ApiTokenStore implements IApiTokenStore {
             .andWhere('tokens.secret', 'LIKE', '%:%') // Exclude legacy tokens
             .andWhere((builder) => {
                 builder
-                    .where('tokens.type', ApiTokenType.CLIENT)
+                    .where('tokens.type', ApiTokenType.BACKEND)
+                    .orWhere('tokens.type', ApiTokenType.CLIENT)
                     .orWhere('tokens.type', ApiTokenType.FRONTEND);
             });
 

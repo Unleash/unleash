@@ -1,8 +1,8 @@
 import fs from 'fs';
-import type { IUnleashConfig } from '../server-impl';
-import { rewriteHTML } from './rewriteHTML';
+import { rewriteHTML } from './rewriteHTML.js';
 import path from 'path';
-import fetch from 'make-fetch-happen';
+import ky from 'ky';
+import type { IUnleashConfig } from '../types/index.js';
 
 export async function loadIndexHTML(
     config: IUnleashConfig,
@@ -10,10 +10,11 @@ export async function loadIndexHTML(
 ): Promise<string> {
     const { cdnPrefix, baseUriPath = '' } = config.server;
     const uiFlags = encodeURI(JSON.stringify(config.ui.flags || '{}'));
+    const unleashToken = config.unleashFrontendToken;
 
     let indexHTML: string;
     if (cdnPrefix) {
-        const res = await fetch(`${cdnPrefix}/index.html`);
+        const res = await ky.get(`${cdnPrefix}/index.html`);
         indexHTML = await res.text();
     } else {
         indexHTML = fs
@@ -23,5 +24,11 @@ export async function loadIndexHTML(
             .toString();
     }
 
-    return rewriteHTML(indexHTML, baseUriPath, cdnPrefix, uiFlags);
+    return rewriteHTML(
+        indexHTML,
+        baseUriPath,
+        cdnPrefix,
+        uiFlags,
+        unleashToken,
+    );
 }

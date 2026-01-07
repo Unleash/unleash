@@ -37,35 +37,42 @@ export const EnvironmentNameCell = ({
                 },
             })}
         >
-            <Highlighter search={searchQuery}>{environment.name}</Highlighter>
-            <ConditionallyRender
-                condition={environment.protected}
-                show={<StyledBadge color='success'>Predefined</StyledBadge>}
-            />
-            <ConditionallyRender
-                condition={!environment.enabled}
-                show={
-                    <HtmlTooltip
-                        maxWidth='270px'
-                        title={
-                            <>
-                                <StyledTooltipTitle>
-                                    Deprecated environment
-                                </StyledTooltipTitle>
-                                <StyledTooltipDescription>
-                                    This environment is not auto-enabled for new
-                                    projects. The project owner will need to
-                                    manually enable it in the project.
-                                </StyledTooltipDescription>
-                            </>
-                        }
-                        describeChild
-                        arrow
-                    >
-                        <StyledBadge color='neutral'>Deprecated</StyledBadge>
-                    </HtmlTooltip>
-                }
-            />
+            <div>
+                <Highlighter search={searchQuery}>
+                    {environment.name}
+                </Highlighter>
+                <ConditionallyRender
+                    condition={environment.protected}
+                    show={<StyledBadge color='success'>Predefined</StyledBadge>}
+                />
+                <ConditionallyRender
+                    condition={!environment.enabled}
+                    show={
+                        <HtmlTooltip
+                            maxWidth='270px'
+                            title={
+                                <>
+                                    <StyledTooltipTitle>
+                                        Deprecated environment
+                                    </StyledTooltipTitle>
+                                    <StyledTooltipDescription>
+                                        This environment is not auto-enabled for
+                                        new projects. The project owner will
+                                        need to manually enable it in the
+                                        project.
+                                    </StyledTooltipDescription>
+                                </>
+                            }
+                            describeChild
+                            arrow
+                        >
+                            <StyledBadge color='neutral'>
+                                Deprecated
+                            </StyledBadge>
+                        </HtmlTooltip>
+                    }
+                />
+            </div>
         </TextCell>
     );
 };

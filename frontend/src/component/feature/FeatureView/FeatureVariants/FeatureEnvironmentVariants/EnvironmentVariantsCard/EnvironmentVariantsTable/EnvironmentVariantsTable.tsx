@@ -20,8 +20,8 @@ import type {
 import { useMemo } from 'react';
 import { useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
-import { PayloadCell } from './PayloadCell/PayloadCell';
-import { OverridesCell } from './OverridesCell/OverridesCell';
+import { PayloadCell } from './PayloadCell/PayloadCell.tsx';
+import { OverridesCell } from './OverridesCell/OverridesCell.tsx';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 interface IEnvironmentVariantsTableProps {

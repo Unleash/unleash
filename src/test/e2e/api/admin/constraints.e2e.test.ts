@@ -1,9 +1,9 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init';
-import getLogger from '../../../fixtures/no-logger';
+import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import getLogger from '../../../fixtures/no-logger.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
+} from '../../helpers/test-helper.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -42,4 +42,26 @@ test('should accept valid constraints', async () => {
         .post(PATH)
         .send({ contextName: 'environment', operator: 'IN', values: ['a'] })
         .expect(204);
+});
+
+test('should allow unknown constraints if their values are valid', async () => {
+    await app.request
+        .post(PATH)
+        .send({
+            contextName: 'not-a-default-context-value',
+            operator: 'NUM_EQ',
+            value: 1,
+        })
+        .expect(204);
+});
+
+test('should block unknown constraints if their values are invalid', async () => {
+    await app.request
+        .post(PATH)
+        .send({
+            contextName: 'not-a-default-context-value',
+            operator: 'IN',
+            value: 1,
+        })
+        .expect(400);
 });

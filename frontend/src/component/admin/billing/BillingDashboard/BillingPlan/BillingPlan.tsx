@@ -1,33 +1,28 @@
-import { Alert, Grid, styled } from '@mui/material';
+import { Alert, Grid, Paper, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { InstanceState, InstancePlan } from 'interfaces/instance';
+import { InstancePlan, InstanceState } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { trialHasExpired, isTrialInstance } from 'utils/instanceTrial';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { Badge } from 'component/common/Badge/Badge';
-import { BillingDetails } from './BillingDetails';
+import { BillingDetails } from './BillingDetails.tsx';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
-export const BILLING_PLAN_PRICES: Record<string, number> = {
-    [InstancePlan.PRO]: 80,
-};
+export const BILLING_PRO_BASE_PRICE = 80;
+export const BILLING_PRO_SEAT_PRICE = 15;
+export const BILLING_PAYG_SEAT_PRICE = 75;
+export const BILLING_TRAFFIC_PRICE = 5;
 
-export const BILLING_PAYG_USER_PRICE = 75;
 export const BILLING_PAYG_DEFAULT_MINIMUM_SEATS = 5;
-export const BILLING_PRO_USER_PRICE = 15;
 export const BILLING_PRO_DEFAULT_INCLUDED_SEATS = 5;
 export const BILLING_INCLUDED_REQUESTS = 53_000_000;
-export const BILLING_TRAFFIC_BUNDLE_PRICE = 5;
 
-const StyledPlanBox = styled('aside')(({ theme }) => ({
-    padding: theme.spacing(2.5),
+const StyledPlanBox = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(4),
     height: '100%',
     borderRadius: theme.shape.borderRadiusLarge,
-    boxShadow: theme.boxShadows.elevated,
-    [theme.breakpoints.up('md')]: {
-        padding: theme.spacing(6.5),
-    },
+    backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledPlanSpan = styled('span')(({ theme }) => ({
@@ -67,7 +62,10 @@ export const BillingPlan = () => {
     } = useUiConfig();
     const { instanceStatus } = useInstanceStatus();
 
+    const isPro =
+        instanceStatus?.plan && instanceStatus?.plan === InstancePlan.PRO;
     const isPAYG = billing === 'pay-as-you-go';
+    const isEnterpriseConsumption = billing === 'enterprise-consumption';
 
     if (!instanceStatus)
         return (
@@ -77,7 +75,8 @@ export const BillingPlan = () => {
         );
 
     const expired = trialHasExpired(instanceStatus);
-    const planPrice = BILLING_PLAN_PRICES[instanceStatus.plan] ?? 0;
+    const baseProPrice =
+        instanceStatus.prices?.pro?.base ?? BILLING_PRO_BASE_PRICE;
     const plan = `${instanceStatus.plan}${isPAYG ? ' Pay-as-You-Go' : ''}`;
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;
 
@@ -131,10 +130,10 @@ export const BillingPlan = () => {
                         </GridCol>
                         <GridCol>
                             <ConditionallyRender
-                                condition={planPrice > 0}
+                                condition={Boolean(isPro)}
                                 show={
                                     <StyledPriceSpan>
-                                        ${planPrice.toFixed(2)}
+                                        ${baseProPrice.toFixed(2)}
                                     </StyledPriceSpan>
                                 }
                             />
@@ -142,9 +141,14 @@ export const BillingPlan = () => {
                     </GridRow>
                     <GridRow>
                         <ConditionallyRender
-                            condition={isPAYG}
+                            condition={isPAYG || isEnterpriseConsumption}
                             show={
-                                <StyledPAYGSpan>Pay-as-You-Go</StyledPAYGSpan>
+                                <StyledPAYGSpan>
+                                    Pay-as-You-Go{' '}
+                                    {isEnterpriseConsumption
+                                        ? 'Consumption'
+                                        : ''}
+                                </StyledPAYGSpan>
                             }
                         />
                     </GridRow>
@@ -152,6 +156,7 @@ export const BillingPlan = () => {
                 <BillingDetails
                     instanceStatus={instanceStatus}
                     isPAYG={isPAYG}
+                    isEnterpriseConsumption={isEnterpriseConsumption}
                 />
             </StyledPlanBox>
         </Grid>

@@ -1,9 +1,9 @@
-import type { Store } from '../../types/stores/store';
-import type { Db, IUnleashConfig, Logger } from '../../server-impl';
-import metricsHelper from '../../util/metrics-helper';
-import { DB_TIME } from '../../metric-events';
-import type { Row } from '../../db/crud/row-type';
-import { defaultToRow } from '../../db/crud/default-mappings';
+import type { Store } from '../../types/stores/store.js';
+import type { Db, IUnleashConfig } from '../../types/index.js';
+import metricsHelper from '../../util/metrics-helper.js';
+import { DB_TIME } from '../../metric-events.js';
+import type { Row } from '../../db/crud/row-type.js';
+import { defaultToRow } from '../../db/crud/default-mappings.js';
 
 export type JobModel = {
     name: string;
@@ -19,7 +19,6 @@ const toRow = (data: Partial<JobModel>) =>
 export class JobStore
     implements Store<JobModel, { name: string; bucket: Date }>
 {
-    private logger: Logger;
     protected readonly timer: (action: string) => Function;
     private db: Db;
 
@@ -28,7 +27,6 @@ export class JobStore
         config: Pick<IUnleashConfig, 'eventBus' | 'getLogger'>,
     ) {
         this.db = db;
-        this.logger = config.getLogger('job-store');
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(config.eventBus, DB_TIME, {
                 store: TABLE,

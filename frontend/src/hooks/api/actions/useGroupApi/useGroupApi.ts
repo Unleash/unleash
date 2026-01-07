@@ -1,4 +1,4 @@
-import useAPI from '../useApi/useApi';
+import useAPI from '../useApi/useApi.js';
 import type { IGroupUserModel } from 'interfaces/group';
 
 interface ICreateGroupPayload {

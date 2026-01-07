@@ -1,7 +1,7 @@
-import { ApiTokenType } from '../types/models/api-token';
-import type { IUnleashConfig } from '../types/option';
-import type { IApiRequest, IAuthRequest } from '../routes/unleash-types';
-import type { IUnleashServices } from '../server-impl';
+import { ApiTokenType } from '../types/model.js';
+import type { IUnleashConfig } from '../types/option.js';
+import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
+import type { IUnleashServices } from '../services/index.js';
 
 const isClientApi = ({ path }) => {
     return path && path.indexOf('/api/client') > -1;
@@ -31,7 +31,8 @@ export const TOKEN_TYPE_ERROR_MESSAGE =
 
 export const NO_TOKEN_WHERE_TOKEN_WAS_REQUIRED =
     'This endpoint requires an API token. Please add an authorization header to your request with a valid token';
-const apiAccessMiddleware = (
+
+export const apiAccessMiddleware = (
     {
         getLogger,
         authentication,
@@ -43,7 +44,7 @@ const apiAccessMiddleware = (
     logger.debug('Enabling api-token middleware');
 
     if (!authentication.enableApiToken) {
-        return (req, res, next) => next();
+        return (_req, _res, next) => next();
     }
 
     return async (req: IAuthRequest | IApiRequest, res, next) => {
@@ -57,16 +58,15 @@ const apiAccessMiddleware = (
                 const apiUser = apiToken
                     ? await apiTokenService.getUserForToken(apiToken)
                     : undefined;
-                const { CLIENT, FRONTEND } = ApiTokenType;
+                const { CLIENT, BACKEND, FRONTEND } = ApiTokenType;
 
                 if (apiUser) {
                     if (
-                        (apiUser.type === CLIENT &&
+                        ((apiUser.type === CLIENT ||
+                            apiUser.type === BACKEND) &&
                             !isClientApi(req) &&
                             !isEdgeMetricsApi(req)) ||
-                        (apiUser.type === FRONTEND && !isProxyApi(req)) ||
-                        (apiUser.type === FRONTEND &&
-                            !flagResolver.isEnabled('embedProxy'))
+                        (apiUser.type === FRONTEND && !isProxyApi(req))
                     ) {
                         res.status(403).send({
                             message: TOKEN_TYPE_ERROR_MESSAGE,

@@ -1,4 +1,4 @@
-import { isSafeToArchive } from './isSafeToArchive'; // Update the import path accordingly
+import { isSafeToArchive } from './isSafeToArchive.js'; // Update the import path accordingly
 import { subDays } from 'date-fns';
 
 describe('isSafeToArchive', () => {

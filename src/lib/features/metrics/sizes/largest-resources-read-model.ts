@@ -1,5 +1,5 @@
-import type { Db } from '../../../db/db';
-import type { ILargestResourcesReadModel } from './largest-resources-read-model-type';
+import type { Db } from '../../../db/db.js';
+import type { ILargestResourcesReadModel } from './largest-resources-read-model-type.js';
 
 export class LargestResourcesReadModel implements ILargestResourcesReadModel {
     private db: Db;

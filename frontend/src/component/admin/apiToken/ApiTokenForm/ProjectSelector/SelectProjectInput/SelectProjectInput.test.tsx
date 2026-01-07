@@ -5,7 +5,7 @@ import { render } from 'utils/testRenderer';
 import {
     type ISelectProjectInputProps,
     SelectProjectInput,
-} from './SelectProjectInput';
+} from './SelectProjectInput.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const onChange = vi.fn();

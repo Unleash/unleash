@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchemaLifecycleStage } from './featureSchemaLifecycleStage';
+import type { FeatureSchemaLifecycleStage } from './featureSchemaLifecycleStage.js';
 
 /**
  * Current lifecycle stage of the feature
@@ -13,4 +13,9 @@ export type FeatureSchemaLifecycle = {
     enteredStageAt: string;
     /** The name of the current lifecycle stage */
     stage: FeatureSchemaLifecycleStage;
+    /**
+     * The name of the detailed status of a given stage. E.g. completed stage can be kept or discarded.
+     * @nullable
+     */
+    status?: string | null;
 };

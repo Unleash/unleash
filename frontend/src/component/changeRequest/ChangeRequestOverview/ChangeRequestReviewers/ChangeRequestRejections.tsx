@@ -1,7 +1,7 @@
 import type { IChangeRequestApproval } from '../../changeRequest.types';
 import type { FC } from 'react';
 import { Typography } from '@mui/material';
-import { ChangeRequestRejector } from './ChangeRequestReviewer';
+import { ChangeRequestRejector } from './ChangeRequestReviewer.tsx';
 
 interface ChangeRequestRejectionProps {
     rejections: IChangeRequestApproval[];

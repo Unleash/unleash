@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AddonSchema } from './addonSchema';
-import type { AddonTypeSchema } from './addonTypeSchema';
+import type { AddonSchema } from './addonSchema.js';
+import type { AddonTypeSchema } from './addonTypeSchema.js';
 
 /**
  * An object containing two things:
-1. A list of all [addons](https://docs.getunleash.io/reference/addons) defined on this Unleash instance
+1. A list of all [addons](https://docs.getunleash.io/integrate) defined on this Unleash instance
 2. A list of all addon providers defined on this instance
  */
 export interface AddonsSchema {

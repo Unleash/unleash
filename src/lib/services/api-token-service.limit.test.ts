@@ -1,8 +1,8 @@
-import { createTestConfig } from '../../test/config/test-config';
-import type { IUnleashConfig } from '../server-impl';
-import { ApiTokenType } from '../types/models/api-token';
-import { ExceedsLimitError } from '../error/exceeds-limit-error';
-import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService';
+import { createTestConfig } from '../../test/config/test-config.js';
+import type { IUnleashConfig } from '../types/index.js';
+import { ApiTokenType } from '../types/model.js';
+import { ExceedsLimitError } from '../error/exceeds-limit-error.js';
+import { createFakeApiTokenService } from '../features/api-tokens/createApiTokenService.js';
 
 const createServiceWithLimit = (limit: number) => {
     const config: IUnleashConfig = createTestConfig({
@@ -45,40 +45,41 @@ test('Should allow you to create tokens up to and including the limit', async ()
     }
 });
 
-test.each([ApiTokenType.ADMIN, ApiTokenType.CLIENT, ApiTokenType.FRONTEND])(
-    "Should prevent you from creating %s tokens when you're already at the limit",
-    async (tokenType) => {
-        const limit = 1;
-        const service = createServiceWithLimit(limit);
-        const auditUser = {
-            id: 1,
-            username: 'audit user',
-            ip: '127.0.0.1',
-        };
+test.each([
+    ApiTokenType.ADMIN,
+    ApiTokenType.CLIENT,
+    ApiTokenType.BACKEND,
+    ApiTokenType.FRONTEND,
+])("Should prevent you from creating %s tokens when you're already at the limit", async (tokenType) => {
+    const limit = 1;
+    const service = createServiceWithLimit(limit);
+    const auditUser = {
+        id: 1,
+        username: 'audit user',
+        ip: '127.0.0.1',
+    };
 
-        await service.createApiTokenWithProjects(
+    await service.createApiTokenWithProjects(
+        {
+            tokenName: `token-1-${tokenType}`,
+            type: ApiTokenType.CLIENT,
+            environment: 'production',
+            projects: ['*'],
+        },
+        auditUser,
+    );
+
+    const environment = tokenType === ApiTokenType.ADMIN ? '*' : 'production';
+
+    await expect(
+        service.createApiTokenWithProjects(
             {
-                tokenName: 'token-1',
-                type: ApiTokenType.CLIENT,
-                environment: 'production',
+                tokenName: 'exceeds-limit',
+                type: tokenType,
+                environment,
                 projects: ['*'],
             },
             auditUser,
-        );
-
-        const environment =
-            tokenType === ApiTokenType.ADMIN ? '*' : 'production';
-
-        await expect(
-            service.createApiTokenWithProjects(
-                {
-                    tokenName: 'exceeds-limit',
-                    type: tokenType,
-                    environment,
-                    projects: ['*'],
-                },
-                auditUser,
-            ),
-        ).rejects.toThrow(ExceedsLimitError);
-    },
-);
+        ),
+    ).rejects.toThrow(ExceedsLimitError);
+});

@@ -1,9 +1,9 @@
-import type { IUnleashConfig } from '../../types';
-import { GroupService } from '../../services';
-import type { Db } from '../../db/db';
-import GroupStore from '../../db/group-store';
-import { AccountStore } from '../../db/account-store';
-import { createEventsService } from '../events/createEventsService';
+import type { IUnleashConfig } from '../../types/index.js';
+import { GroupService } from '../../services/index.js';
+import type { Db } from '../../db/db.js';
+import GroupStore from '../../db/group-store.js';
+import { AccountStore } from '../../db/account-store.js';
+import { createEventsService } from '../events/createEventsService.js';
 
 export const createGroupService = (
     db: Db,

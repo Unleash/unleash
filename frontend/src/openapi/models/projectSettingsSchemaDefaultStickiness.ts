@@ -5,7 +5,7 @@
  */
 
 /**
- * The [default stickiness for this project](https://docs.getunleash.io/reference/stickiness#project-default-stickiness)
+ * The [default stickiness for this project](https://docs.getunleash.io/concepts/stickiness#project-default-stickiness)
  * @nullable
  */
 export type ProjectSettingsSchemaDefaultStickiness =

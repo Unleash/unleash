@@ -1,8 +1,8 @@
-import { AnyEventEmitter } from './anyEventEmitter';
+import { AnyEventEmitter } from './anyEventEmitter.js';
 
 test('AnyEventEmitter', () => {
-    const events = [];
-    const results = [];
+    const events: string[] = [];
+    const results: boolean[] = [];
 
     class MyEventEmitter extends AnyEventEmitter {}
     const myEventEmitter = new MyEventEmitter();

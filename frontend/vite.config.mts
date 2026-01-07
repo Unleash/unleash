@@ -78,6 +78,7 @@ export default defineConfig(({ mode }) => {
                 assetsInlineLimit: 0,
                 modulePreload: false,
                 cssCodeSplit: false,
+                ...(mode === "development" ? { sourcemap: true } : {}),
             },
             server: {
                 open: true,

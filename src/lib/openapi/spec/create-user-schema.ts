@@ -42,7 +42,14 @@ export const createUserSchema = {
                 {
                     type: 'string',
                     example: 'Admin',
-                    enum: ['Admin', 'Editor', 'Viewer', 'Owner', 'Member'],
+                    enum: [
+                        'Admin',
+                        'Editor',
+                        'Viewer',
+                        'Owner',
+                        'Member',
+                        'Reader',
+                    ],
                 },
             ],
         },

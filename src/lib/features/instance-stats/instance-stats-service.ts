@@ -73,9 +73,10 @@ export interface InstanceStats {
     maxEnvironmentStrategies: number;
     maxConstraints: number;
     maxConstraintValues: number;
-    releaseTemplates?: number;
-    releasePlans?: number;
-    edgeInstanceUsage?: Awaited<ReturnType<GetEdgeInstances>>;
+    releaseTemplates: number;
+    releasePlans: number;
+    edgeInstanceUsage: Awaited<ReturnType<GetEdgeInstances>>;
+    readOnlyUsers?: number;
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -363,6 +364,7 @@ export class InstanceStatsService {
             releaseTemplates,
             releasePlans,
             edgeInstanceUsage,
+            readOnlyUsers,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getArchivedToggleCount(),
@@ -410,6 +412,9 @@ export class InstanceStatsService {
             this.getReleaseTemplates(),
             this.getReleasePlans(),
             this.getEdgeInstances(),
+            this.flagResolver.isEnabled('readOnlyUsers')
+                ? this.getReadOnlyUsers()
+                : Promise.resolve(null),
         ]);
 
         return {
@@ -451,6 +456,7 @@ export class InstanceStatsService {
             releaseTemplates,
             releasePlans,
             edgeInstanceUsage,
+            ...(readOnlyUsers !== null ? { readOnlyUsers } : {}),
         };
     }
 
@@ -481,6 +487,7 @@ export class InstanceStatsService {
             releaseTemplates,
             releasePlans,
             edgeInstanceUsage,
+            readOnlyUsers,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getRegisteredUsers(),
@@ -507,6 +514,9 @@ export class InstanceStatsService {
             this.getReleaseTemplates(),
             this.getReleasePlans(),
             this.getEdgeInstances(),
+            this.flagResolver.isEnabled('readOnlyUsers')
+                ? this.getReadOnlyUsers()
+                : Promise.resolve(null),
         ]);
         const versionInfo = await this.versionService.getVersionInfo();
 
@@ -545,6 +555,7 @@ export class InstanceStatsService {
             releaseTemplates,
             releasePlans,
             edgeInstanceUsage,
+            ...(readOnlyUsers !== null ? { readOnlyUsers } : {}),
         };
         return featureInfo;
     }

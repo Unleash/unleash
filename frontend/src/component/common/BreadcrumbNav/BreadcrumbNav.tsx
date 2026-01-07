@@ -5,6 +5,8 @@ import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';
 import { styled } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 const StyledBreadcrumbContainer = styled('div')(({ theme }) => ({
     height: theme.spacing(2.5),
@@ -34,6 +36,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const BreadcrumbNav = () => {
     const { isAdmin } = useContext(AccessContext);
     const location = useLocation();
+
+    const projectId = useOptionalPathParam('projectId');
+    const { project } = useProjectOverview(projectId || '');
 
     let paths = location.pathname
         .split('/')
@@ -82,11 +87,13 @@ const BreadcrumbNav = () => {
                         show={
                             <StyledBreadcrumbs aria-label='Breadcrumbs'>
                                 {paths.map((path, index) => {
+                                    const isProjectPath = path === projectId && project.name !== '';
+                                    const pathName = isProjectPath ? project.name : path;
                                     const lastItem = index === paths.length - 1;
                                     if (lastItem) {
                                         return (
                                             <StyledCurrentPage key={path}>
-                                                {path}
+                                                {pathName}
                                             </StyledCurrentPage>
                                         );
                                     }
@@ -103,7 +110,7 @@ const BreadcrumbNav = () => {
 
                                     return (
                                         <StyledLink key={path} to={link}>
-                                            {path}
+                                            {pathName}
                                         </StyledLink>
                                     );
                                 })}

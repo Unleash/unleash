@@ -15,7 +15,7 @@ jobs:
       issue-lookup-label: automated-link-issue
       issue-content: ./lychee-out.md
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Restore lychee cache
         uses: actions/cache@v4
         with:

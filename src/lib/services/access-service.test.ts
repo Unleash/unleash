@@ -357,15 +357,14 @@ test('should return true if user has admin role', async () => {
 
     const userId = 1;
     let calledWithSameId = false;
-    // @ts-expect-error role is missing the project. Should admin have a project?
-    const role: IRoleWithProject = {
+    const role: IRole = {
         id: userId,
         name: 'ADMIN',
-        type: 'custom',
+        type: 'root',
     };
     accessStore.getRolesForUserId = (id: number) => {
         calledWithSameId = id === userId;
-        return Promise.resolve([role]);
+        return Promise.resolve([role as IRoleWithProject]);
     };
 
     const result = await accessReadModel.isRootAdmin(userId);

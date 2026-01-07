@@ -56,7 +56,8 @@ process.nextTick(async () => {
                         safeguards: true,
                         gtmReleaseManagement: true,
                         projectContextFields: true,
-                        readOnlyUsers: false,
+                        readOnlyUsers: true,
+                        readOnlyUsersUI: true,
                     },
                 },
                 authentication: {

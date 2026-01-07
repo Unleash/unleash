@@ -67,7 +67,8 @@ export type IFlagKey =
     | 'oidcPkceSupport'
     | 'gtmReleaseManagement'
     | 'projectContextFields'
-    | 'readOnlyUsers';
+    | 'readOnlyUsers'
+    | 'readOnlyUsersUI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -298,6 +299,10 @@ const flags: IFlags = {
     ),
     readOnlyUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS,
+        false,
+    ),
+    readOnlyUsersUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS_UI,
         false,
     ),
 };

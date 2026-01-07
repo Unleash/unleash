@@ -1,4 +1,8 @@
-// This loosens the unique name constraint in favor of a unique type + name constraint. This technically allows us to create custom roles with non-unique names (like e.g. Admin), but we're not making this change on Unleash's code level check at the time of this PR
+/*
+ * This loosens the unique name constraint in favor of a unique type + name constraint.
+ * This technically allows us to create custom roles with non-unique names (like e.g. Admin),
+ * but we're not making this change on Unleash's code level check at the time of this PR
+ */
 exports.up = (db, callback) => {
     db.runSql(
         `

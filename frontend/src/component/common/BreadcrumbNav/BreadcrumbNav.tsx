@@ -89,7 +89,7 @@ const BreadcrumbNav = () => {
                                 {paths.map((path, index) => {
                                     const isProjectPath =
                                         path === projectId &&
-                                        paths[index - 1] === 'projects' &&
+                                        index === 1 &&
                                         project.name !== '';
                                     const pathName = isProjectPath
                                         ? project.name

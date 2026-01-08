@@ -213,11 +213,9 @@ export class ClientFeatureToggleDelta extends EventEmitter {
     }
 
     public async onUpdateRevisionEvent() {
-        if (this.flagResolver.isEnabled('deltaApi')) {
-            await this.updateFeaturesDelta();
-            this.storeFootprint();
-            this.emit(UPDATE_DELTA);
-        }
+        await this.updateFeaturesDelta();
+        this.storeFootprint();
+        this.emit(UPDATE_DELTA);
     }
 
     /**

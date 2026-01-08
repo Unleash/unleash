@@ -49,7 +49,6 @@ export type IFlagKey =
     | 'memorizeStats'
     | 'streaming'
     | 'denyStreamingForNonEdge'
-    | 'deltaApi'
     | 'deltaDiff'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
@@ -221,10 +220,6 @@ const flags: IFlags = {
     ),
     showUserDeviceCount: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
-        false,
-    ),
-    deltaApi: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
         false,
     ),
     deltaDiff: parseEnvVarBoolean(

@@ -2,21 +2,9 @@ import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 import BreadcrumbNav from './BreadcrumbNav.tsx';
 import { screen } from '@testing-library/react';
-import { vi } from 'vitest';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
 
-vi.mock('hooks/api/getters/useProjectOverview/useProjectOverview', () => {
-    return {
-        default: vi.fn(() => ({
-            project: {
-                id: '/my-project',
-                name: 'My Test Project',
-            },
-            loading: false,
-            error: null,
-            refetch: vi.fn(),
-        })),
-    };
-});
+const server = testServerSetup();
 
 test('decode URI encoded path in breadcrumbs nav', async () => {
     render(
@@ -37,6 +25,12 @@ test('decode URI encoded path in breadcrumbs nav', async () => {
 });
 
 test('use project name when in a project path', async () => {
+    testServerRoute(server, '/api/admin/projects/my-project/overview', {
+        name: 'My Test Project',
+        onboardingStatus: { status: 'onboarded' },
+        version: '1.0.0',
+    });
+
     render(
         <Routes>
             <Route path={'/projects/:projectId'} element={<BreadcrumbNav />} />

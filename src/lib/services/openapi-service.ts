@@ -1,4 +1,5 @@
 import openapi, { type IExpressOpenApi } from '@wesleytodd/openapi';
+import generateDocument from '@wesleytodd/openapi/lib/generate-doc.js';
 import type { Express, RequestHandler, Response } from 'express';
 import type { IUnleashConfig } from '../types/option.js';
 import {
@@ -7,17 +8,24 @@ import {
     removeJsonSchemaProps,
     type SchemaId,
 } from '../openapi/index.js';
-import type { ApiOperation } from '../openapi/util/api-operation.js';
+import {
+    type ApiOperation,
+    calculateStability,
+} from '../openapi/util/api-operation.js';
 import type { Logger } from '../logger.js';
 import { validateSchema } from '../openapi/validate.js';
 import type { IFlagResolver } from '../types/index.js';
+import version from '../util/version.js';
 
+const defaultReleaseVersion = '7.0.0';
 export class OpenApiService {
     private readonly config: IUnleashConfig;
 
     private readonly logger: Logger;
 
     private readonly api: IExpressOpenApi;
+
+    private readonly isDevelopment = process.env.NODE_ENV === 'development';
 
     private flagResolver: IFlagResolver;
 
@@ -38,22 +46,31 @@ export class OpenApiService {
     }
 
     validPath(op: ApiOperation): RequestHandler {
-        const { beta, enterpriseOnly, ...rest } = op;
+        const {
+            releaseVersion = defaultReleaseVersion,
+            enterpriseOnly,
+            ...rest
+        } = op;
         const { baseUriPath = '' } = this.config.server ?? {};
         const openapiStaticAssets = `${baseUriPath}/openapi-static`;
-        const betaBadge = beta
-            ? `![Beta](${openapiStaticAssets}/Beta.svg) This is a beta endpoint and it may change or be removed in the future.
 
+        const stability = calculateStability(releaseVersion, version);
+        const summaryWithStability =
+            stability !== 'stable' && rest.summary
+                ? `[${stability.toUpperCase()}] ${rest.summary}`
+                : rest.summary;
+        const stabilityBadge =
+            stability !== 'stable'
+                ? `**[${stability.toUpperCase()}]** This is a ${stability} endpoint and it may change or be removed in the future.
             `
-            : '';
+                : '';
         const enterpriseBadge = enterpriseOnly
             ? `![Unleash Enterprise](${openapiStaticAssets}/Enterprise.svg) **Enterprise feature**
 
             `
             : '';
 
-        const failDeprecated =
-            (op.deprecated ?? false) && process.env.NODE_ENV === 'development';
+        const failDeprecated = (op.deprecated ?? false) && this.isDevelopment;
 
         if (failDeprecated) {
             return (req, res, _next) => {
@@ -67,8 +84,13 @@ export class OpenApiService {
         }
         return this.api.validPath({
             ...rest,
+            summary: summaryWithStability,
+            'x-stability-level': stability,
+            ...(releaseVersion !== defaultReleaseVersion
+                ? { 'x-release-version': releaseVersion }
+                : {}),
             description:
-                `${enterpriseBadge}${betaBadge}${op.description}`.replaceAll(
+                `${enterpriseBadge}${stabilityBadge}${op.description}`.replaceAll(
                     /\n\s*/g,
                     '\n\n',
                 ),
@@ -76,8 +98,51 @@ export class OpenApiService {
     }
 
     useDocs(app: Express): void {
+        // Serve a filtered OpenAPI document that hides alpha endpoints from Swagger UI.
+        app.get(`${this.docsPath()}.json`, (req, res, next) => {
+            try {
+                const doc = generateDocument(
+                    (this.api as any).document,
+                    req.app._router || req.app.router,
+                    this.config.server.baseUriPath,
+                );
+                res.json(
+                    this.isDevelopment ? doc : this.removeAlphaOperations(doc),
+                );
+            } catch (error) {
+                next(error);
+            }
+        });
+
         app.use(this.api);
         app.use(this.docsPath(), this.api.swaggerui());
+    }
+
+    // Remove operations explicitly marked as alpha to keep them out of the rendered docs.
+    // Paths with no remaining operations are dropped as well.
+    private removeAlphaOperations(doc: any): any {
+        if (!doc?.paths) {
+            return doc;
+        }
+
+        const filteredPaths = Object.fromEntries(
+            Object.entries(doc.paths)
+                .map(([path, methods]) => {
+                    const nonAlphaMethods = Object.fromEntries(
+                        Object.entries(
+                            methods as Record<string, unknown>,
+                        ).filter(
+                            ([, operation]) =>
+                                (operation as any)?.['x-stability-level'] !==
+                                'alpha',
+                        ),
+                    );
+                    return [path, nonAlphaMethods];
+                })
+                .filter(([, methods]) => Object.keys(methods).length > 0),
+        );
+
+        return { ...doc, paths: filteredPaths };
     }
 
     docsPath(): string {

@@ -24,6 +24,7 @@ export const USER_COLUMNS_PUBLIC = [
     'seen_at',
     'is_service',
     'scim_id',
+    'seat_type',
 ];
 
 const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];
@@ -59,6 +60,7 @@ const rowToUser = (row) => {
         createdAt: row.created_at,
         isService: row.is_service,
         scimId: row.scim_id,
+        seatType: row.seat_type,
     });
 };
 

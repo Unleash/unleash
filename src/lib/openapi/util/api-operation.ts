@@ -5,7 +5,7 @@ import semver from 'semver';
 /**
  * Calculate stability level based on comparing release and current versions.
  * - Alpha: release version is ahead of current (not yet released)
- * - Beta: current is 1-2 minor versions ahead of release version
+ * - Beta: current is 0-2 minor versions ahead of release version
  * - Stable: current is more than 2 minor versions ahead of release version
  */
 export function calculateStability(
@@ -57,7 +57,7 @@ export interface ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag>
      * The version when this API was introduced or last significantly changed.
      * Used to automatically calculate stability:
      * - Alpha: release version is ahead of current version (not yet released)
-     * - Beta: current version is 1-2 minor versions ahead of release version
+     * - Beta: current version is 0-2 minor versions ahead of release version
      * - Stable: current version is more than 2 minor versions ahead of release version
      *
      * When developing a new API, set this to your best estimate of when it will be released.

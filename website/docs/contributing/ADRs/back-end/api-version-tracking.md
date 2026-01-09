@@ -21,7 +21,7 @@ We've implemented an automated API stability tracking system based on semantic v
 ### Stability Calculation Heuristic
 
 - **Alpha** 🔴: Release version is ahead of current version (not yet released)
-- **Beta** 🟡: Current version is 1-2 minor versions ahead of release version
+- **Beta** 🟡: Current version is 0-2 minor versions ahead of release version
 - **Stable** 🟢: Current version is 3+ minor versions ahead of release version
 
 **Example:**
@@ -99,4 +99,4 @@ This gives us the best of both worlds: we can ship and test alpha APIs internall
 
 **Defaults to 7.0.0**: Endpoints without `releaseVersion` default to `'7.0.0'`, which may not be historically accurate but provides a reasonable baseline for the migration period.
 
-**Heuristic limitations**: The 2-minor-version threshold for beta→stable is somewhat arbitrary but provides a reasonable balance between caution and API maturity progression.
+**Heuristic limitations**: The more-than-2-minor-versions (3+ minor versions) threshold for beta→stable is somewhat arbitrary but provides a reasonable balance between caution and API maturity progression.

@@ -1,6 +1,6 @@
 import openapi, { type IExpressOpenApi } from '@wesleytodd/openapi';
-import generateDocument from '@wesleytodd/openapi/lib/generate-doc.js';
 import type { Express, RequestHandler, Response } from 'express';
+import type { OpenAPIV3 } from 'openapi-types';
 import type { IUnleashConfig } from '../types/option.js';
 import {
     createOpenApiSchema,
@@ -17,12 +17,33 @@ import { validateSchema } from '../openapi/validate.js';
 import type { IFlagResolver } from '../types/index.js';
 
 const defaultReleaseVersion = '7.0.0';
+const getStabilityLevel = (operation: unknown): string | undefined => {
+    if (!operation || typeof operation !== 'object') {
+        return undefined;
+    }
+
+    return (
+        operation as OpenAPIV3.OperationObject & {
+            'x-stability-level'?: string;
+        }
+    )['x-stability-level'];
+};
+type OpenApiDocument = OpenAPIV3.Document;
+type OpenApiMiddleware = IExpressOpenApi & {
+    document: OpenApiDocument;
+    generateDocument: (
+        baseDocument: OpenApiDocument,
+        router?: unknown,
+        basePath?: string,
+    ) => OpenApiDocument;
+};
+
 export class OpenApiService {
     private readonly config: IUnleashConfig;
 
     private readonly logger: Logger;
 
-    private readonly api: IExpressOpenApi;
+    private readonly api: OpenApiMiddleware;
 
     private readonly isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -41,7 +62,7 @@ export class OpenApiService {
                 extendRefs: true,
                 basePath: config.server.baseUriPath,
             },
-        );
+        ) as OpenApiMiddleware;
     }
 
     validPath(op: ApiOperation): RequestHandler {
@@ -54,8 +75,7 @@ export class OpenApiService {
         const { baseUriPath = '' } = this.config.server ?? {};
         const openapiStaticAssets = `${baseUriPath}/openapi-static`;
 
-        const currentVersion =
-            (this.api as any).document?.info?.version || '7.0.0';
+        const currentVersion = this.api.document?.info?.version || '7.0.0';
         const stability = beta
             ? 'beta'
             : calculateStability(releaseVersion, currentVersion);
@@ -105,8 +125,8 @@ export class OpenApiService {
         // Serve a filtered OpenAPI document that hides alpha endpoints from Swagger UI.
         app.get(`${this.docsPath()}.json`, (req, res, next) => {
             try {
-                const doc = generateDocument(
-                    (this.api as any).document,
+                const doc = this.api.generateDocument(
+                    this.api.document,
                     req.app._router || req.app.router,
                     this.config.server.baseUriPath,
                 );
@@ -123,28 +143,27 @@ export class OpenApiService {
     }
 
     // Remove operations explicitly marked as alpha to keep them out of the rendered docs.
-    // Paths with no remaining operations are dropped as well.
-    private removeAlphaOperations(doc: any): any {
+    private removeAlphaOperations(doc: OpenApiDocument): OpenApiDocument {
         if (!doc?.paths) {
             return doc;
         }
 
-        const filteredPaths = Object.fromEntries(
-            Object.entries(doc.paths)
-                .map(([path, methods]) => {
-                    const nonAlphaMethods = Object.fromEntries(
-                        Object.entries(
-                            methods as Record<string, unknown>,
-                        ).filter(
-                            ([, operation]) =>
-                                (operation as any)?.['x-stability-level'] !==
-                                'alpha',
-                        ),
-                    );
-                    return [path, nonAlphaMethods];
-                })
-                .filter(([, methods]) => Object.keys(methods).length > 0),
-        );
+        const filteredPaths: OpenAPIV3.PathsObject = {};
+        for (const [path, methods] of Object.entries(doc.paths)) {
+            if (!methods) {
+                continue;
+            }
+
+            const entries = Object.entries(methods).filter(
+                ([, operation]) => getStabilityLevel(operation) !== 'alpha',
+            );
+
+            if (entries.length > 0) {
+                filteredPaths[path] = Object.fromEntries(
+                    entries,
+                ) as OpenAPIV3.PathItemObject;
+            }
+        }
 
         return { ...doc, paths: filteredPaths };
     }

@@ -107,7 +107,7 @@ const sidebars: SidebarsConfig = {
                         id: 'concepts/release-templates',
                     },
                     items: [
-                        'concepts/getting-started-release-management',
+                        'concepts/release-management-overview',
                         'concepts/release-templates',
                         'concepts/impact-metrics',
                     ],
@@ -249,6 +249,10 @@ const sidebars: SidebarsConfig = {
                         {
                             type: 'doc',
                             id: 'guides/how-to-create-feature-flags',
+                        },
+                        {
+                            type: 'doc',
+                            id: 'guides/getting-started-release-management',
                         },
                         {
                             type: 'doc',

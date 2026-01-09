@@ -120,7 +120,7 @@ test('should remove selected item from the add filter list', async () => {
     );
 
     // initial selection list
-    const addFilterButton = await screen.findByText('Add Filter');
+    const addFilterButton = await screen.findByText('Add filter');
     fireEvent.click(addFilterButton);
     expect((await screen.findByTestId(FILTERS_MENU)).textContent).toBe(
         'StateTags',

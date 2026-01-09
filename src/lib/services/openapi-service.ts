@@ -15,7 +15,6 @@ import {
 import type { Logger } from '../logger.js';
 import { validateSchema } from '../openapi/validate.js';
 import type { IFlagResolver } from '../types/index.js';
-import version from '../util/version.js';
 
 const defaultReleaseVersion = '7.0.0';
 export class OpenApiService {
@@ -55,9 +54,11 @@ export class OpenApiService {
         const { baseUriPath = '' } = this.config.server ?? {};
         const openapiStaticAssets = `${baseUriPath}/openapi-static`;
 
+        const currentVersion =
+            (this.api as any).document?.info?.version || '7.0.0';
         const stability = beta
             ? 'beta'
-            : calculateStability(releaseVersion, version);
+            : calculateStability(releaseVersion, currentVersion);
         const summaryWithStability =
             stability !== 'stable' && rest.summary
                 ? `[${stability.toUpperCase()}] ${rest.summary}`

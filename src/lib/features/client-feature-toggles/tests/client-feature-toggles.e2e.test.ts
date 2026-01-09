@@ -156,7 +156,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    deltaApi: true,
                 },
             },
         },

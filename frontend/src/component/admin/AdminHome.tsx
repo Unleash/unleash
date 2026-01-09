@@ -11,6 +11,7 @@ import {
 import { useInstanceStats } from 'hooks/api/getters/useInstanceStats/useInstanceStats';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { formatAssetPath } from 'utils/formatPath';
 import easyToDeploy from 'assets/img/easyToDeploy.png';
 import { useNavigate } from 'react-router-dom';
@@ -25,6 +26,7 @@ const StyledContainer = styled(Grid)(({ theme }) => ({
 }));
 
 const StyledInstanceWidget = styled(Paper)(({ theme }) => ({
+    position: 'relative',
     height: theme.spacing(44),
     padding: theme.spacing(3),
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
@@ -33,10 +35,11 @@ const StyledInstanceWidget = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.web.main,
     overflow: 'hidden',
     [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
-        height: theme.spacing(24),
+        height: theme.spacing(28),
+        paddingBottom: theme.spacing(6),
     },
     [theme.breakpoints.down(800)]: {
-        height: theme.spacing(30),
+        height: theme.spacing(34),
     },
 }));
 
@@ -61,7 +64,7 @@ const StyledHeader = styled(Typography)(({ theme }) => ({
 const StyledLicenseSection = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(6),
     [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
-        marginBottom: theme.spacing(2),
+        marginBottom: theme.spacing(),
     },
 }));
 
@@ -139,6 +142,25 @@ const StyledLinkContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(3),
 }));
 
+const StyledHelpContainer = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    left: theme.spacing(2.5),
+    bottom: theme.spacing(3),
+    [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
+        position: 'static',
+        marginTop: theme.spacing(2),
+    },
+}));
+
+const StyledHelpLink = styled('a')(({ theme }) => ({
+    color: theme.palette.common.white,
+    textDecoration: 'underline !important',
+    fontSize: theme.typography.body2.fontSize,
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
 const ImageContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
@@ -147,6 +169,10 @@ const ImageContainer = styled('div')(({ theme }) => ({
     [theme.breakpoints.down(UI_SWITCH_WIDGET_RATIO_BREAKPOINT)]: {
         marginTop: theme.spacing(-22),
         marginRight: theme.spacing(-12),
+        paddingTop: theme.spacing(1),
+    },
+    [theme.breakpoints.down(800)]: {
+        paddingTop: 0,
     },
 }));
 
@@ -181,6 +207,18 @@ const InstanceWidget = ({
                 <StyledParamName>Unleash version</StyledParamName>
                 <StyledParamValue>{version}</StyledParamValue>
             </StyledParagraph>
+            <StyledHelpContainer>
+                <StyledHelpLink
+                    href='https://docs.getunleash.io/availability#versioning'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                >
+                    <HelpOutlineIcon
+                        sx={{ color: (theme) => theme.palette.common.white }}
+                    />
+                    Learn about versioning
+                </StyledHelpLink>
+            </StyledHelpContainer>
             <ImageContainer>
                 <StyledImg src={formatAssetPath(easyToDeploy)} />
             </ImageContainer>

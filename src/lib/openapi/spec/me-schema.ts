@@ -34,6 +34,10 @@ export const meSchema = {
                 type: 'boolean',
             },
         },
+        something: {
+            description: 'Something something',
+            type: 'string',
+        },
     },
     components: {
         schemas: {

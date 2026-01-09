@@ -1,5 +1,7 @@
 export const AccountTypes = ['User', 'Service Account'] as const;
 export type AccountType = (typeof AccountTypes)[number];
+export const SeatTypes = ['Regular', 'ReadOnly'] as const;
+export type SeatType = (typeof SeatTypes)[number];
 
 export interface IUser {
     id: number;
@@ -19,6 +21,7 @@ export interface IUser {
     accountType?: AccountType;
     scimId?: string;
     activeSessions?: number;
+    seatType?: SeatType;
 }
 
 export interface IPermission {

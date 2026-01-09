@@ -57,7 +57,7 @@ export const AddFilterButton = ({
     return (
         <div>
             <StyledButton onClick={handleClick} startIcon={<FilterList />}>
-                Filter
+                Add Filter
             </StyledButton>
 
             <Menu

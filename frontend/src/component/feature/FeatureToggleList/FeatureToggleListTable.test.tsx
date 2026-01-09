@@ -96,7 +96,7 @@ test('Filter table by project', async () => {
 
     await screen.findByPlaceholderText(/Search/);
     await screen.getByRole('button', {
-        name: 'Filter',
+        name: 'Add Filter',
     });
 
     await Promise.all(
@@ -109,7 +109,7 @@ test('Filter table by project', async () => {
 
     setupNoFeaturesReturned();
 
-    const addFilterButton = screen.getByText('Filter');
+    const addFilterButton = screen.getByText('Add Filter');
     addFilterButton.click();
 
     const projectItem = await screen.findByRole('menuitem', {

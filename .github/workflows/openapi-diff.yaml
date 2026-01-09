@@ -11,28 +11,66 @@ on:
       - .github/workflows/openapi-diff.yaml
   workflow_dispatch:
     inputs:
-      stable_version:
-        description: 'Stable Unleash version to compare against (e.g. unleash-server:6.9.3 or unleash-enterprise:6.10.0)'
-        required: false
-        default: 'unleash-server:latest'
+      baseline_version:
+        description: 'Stable Unleash version or commit SHA to compare against (e.g. v6.9.3, or a commit SHA).'
+        required: true
 
 jobs:
   generate-openapi-stable:
     name: Generate OpenAPI (stable)
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_INITDB_ARGS: "--no-sync"
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Determine baseline commit
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch origin "${{ github.event.pull_request.base.ref }}"
+            BASE_SHA=$(git merge-base "origin/${{ github.event.pull_request.base.ref }}" "${{ github.sha }}")
+          else
+            # workflow_dispatch: baseline_version is required
+            git fetch --tags origin
+            BASE_SHA=$(git rev-parse "${{ github.event.inputs.baseline_version }}")
+          fi
+          echo "BASE_SHA=$BASE_SHA" >> $GITHUB_ENV
+      - name: Checkout baseline commit
+        run: git checkout "${BASE_SHA}"
+      - name: Install node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+      - name: Install dependencies
+        run: |
+          yarn install --immutable
       - name: Start Unleash test instance
         run: |
-          docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
+          # fake frontend build
+          mkdir frontend/build
+          touch frontend/build/index.html
+          touch frontend/build/favicon.ico
+          # end fake frontend build
+
+          # start unleash in background
+          NODE_ENV=openapi yarn dev:backend &
         env:
-          FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
-          UNLEASH_VERSION: ${{ github.event.inputs.stable_version || 'unleash-server:main-edge' }}
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+          DATABASE_SSL: 'false'
           CHECK_VERSION: 'false'
       - name: Wait for Unleash to be ready
         run: |
           for i in {1..30}; do
-            if curl -sf http://localhost:3000/health; then
+            if curl -sf http://localhost:4242/health; then
               echo "Unleash is up!";
               exit 0
             fi
@@ -41,8 +79,8 @@ jobs:
           done
           echo "Unleash did not become ready in time."
           exit 1
-      - name: Download OpenAPI spec from (${{ github.event.inputs.stable_version || 'tip of main' }})
-        run: curl -sSL -o openapi-stable.json "localhost:3000/docs/openapi.json"
+      - name: Download OpenAPI spec from baseline
+        run: curl -sSL -o openapi-stable.json "localhost:4242/docs/openapi.json"
       - name: Upload openapi-stable.json
         uses: actions/upload-artifact@v4
         with:

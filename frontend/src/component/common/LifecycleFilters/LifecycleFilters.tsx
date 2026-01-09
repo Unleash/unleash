@@ -8,21 +8,48 @@ const StyledChip = styled(Chip, {
     shouldForwardProp: (prop) => prop !== 'isActive',
 })<{
     isActive?: boolean;
-}>(({ theme, isActive = false }) => ({
-    borderRadius: `${theme.shape.borderRadius}px`,
+}>(({ theme, label }) => ({
+    borderRadius: 0,
     padding: theme.spacing(0.5),
     fontSize: theme.typography.body2.fontSize,
     height: 'auto',
     fontWeight: theme.typography.fontWeightMedium,
-    ...(isActive && {
+    '&[data-selected="true"]': {
         backgroundColor: theme.palette.secondary.light,
         fontWeight: 'bold',
         borderColor: theme.palette.primary.main,
         color: theme.palette.primary.main,
-    }),
+    },
     ':focus-visible': {
         outline: `1px solid ${theme.palette.primary.main}`,
         borderColor: theme.palette.primary.main,
+    },
+    '&:first-of-type': {
+        borderTopLeftRadius: theme.shape.borderRadius,
+        borderBottomLeftRadius: theme.shape.borderRadius,
+    },
+    '&:last-of-type': {
+        borderTopRightRadius: theme.shape.borderRadius,
+        borderBottomRightRadius: theme.shape.borderRadius,
+    },
+    '&:not(&[data-selected="true"], :last-of-type)': {
+        borderRightWidth: 0,
+    },
+    '[data-selected="true"] + &': {
+        borderLeftWidth: 0,
+    },
+    '& .MuiChip-label': {
+        position: 'relative',
+        textAlign: 'center',
+        '&::before': {
+            content: `'${label}'`,
+            fontWeight: 'bold',
+            visibility: 'hidden',
+            height: 0,
+            display: 'block',
+            overflow: 'hidden',
+            userSelect: 'none',
+        },
     },
 }));
 
@@ -45,7 +72,6 @@ const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: theme.spacing(1),
 }));
 
 const lifecycleOptions: {
@@ -104,8 +130,8 @@ export const LifecycleFilters = ({
                             key={label}
                             label={dynamicLabel}
                             variant='outlined'
-                            isActive={isActive}
                             onClick={handleClick}
+                            data-selected={isActive}
                         />
                     );
                 })}

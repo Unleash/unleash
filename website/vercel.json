@@ -720,7 +720,7 @@
     {
       "source": "/deploy/",
       "destination": "/deploy/hosting-options",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/deploy",
@@ -730,12 +730,12 @@
     {
       "source": "/support/",
       "destination": "/support/troubleshooting",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/get-started/",
       "destination": "/get-started/quickstart",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/reference/deploy/getting-started",
@@ -745,6 +745,11 @@
     {
       "source": "/deploy/getting_started",
       "destination": "/deploy/getting-started",
+      "permanent": true
+    },
+    {
+      "source": "/concepts/getting-started-release-management",
+      "destination": "/guides/getting-started-release-management",
       "permanent": true
     },
     {

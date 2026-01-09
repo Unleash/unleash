@@ -16,7 +16,7 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 
 const VIDEO_URL = 'https://cdn.getunleash.io/impact-metrics.mp4';
 const GETTING_STARTED_DOCS_URL =
-    'https://docs.getunleash.io/concepts/getting-started-release-management';
+    'https://docs.getunleash.io/guides/getting-started-release-management';
 
 const DialogCard = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,

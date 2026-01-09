@@ -11,10 +11,9 @@ on:
       - .github/workflows/openapi-diff.yaml
   workflow_dispatch:
     inputs:
-      stable_version:
-        description: 'Stable Unleash version to compare against (e.g. unleash-server:6.9.3 or unleash-enterprise:6.10.0)'
-        required: false
-        default: 'unleash-server:latest'
+      baseline_version:
+        description: 'Stable Unleash version or commit SHA to compare against (e.g. v6.9.3, or a commit SHA).'
+        required: true
 
 jobs:
   generate-openapi-stable:
@@ -40,8 +39,9 @@ jobs:
             git fetch origin "${{ github.event.pull_request.base.ref }}"
             BASE_SHA=$(git merge-base "origin/${{ github.event.pull_request.base.ref }}" "${{ github.sha }}")
           else
-            git fetch origin main
-            BASE_SHA=$(git rev-parse "origin/main")
+            # workflow_dispatch: baseline_version is required
+            git fetch --tags origin
+            BASE_SHA=$(git rev-parse "${{ github.event.inputs.baseline_version }}")
           fi
           echo "BASE_SHA=$BASE_SHA" >> $GITHUB_ENV
       - name: Checkout baseline commit

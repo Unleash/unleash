@@ -58,7 +58,7 @@ export interface ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag>
      * Used to automatically calculate stability:
      * - Alpha: release version is ahead of current version (not yet released)
      * - Beta: current version is 0-2 minor versions ahead of release version
-     * - Stable: current version is more than 2 minor versions ahead of release version
+     * - Stable: current version is 3 or more minor versions ahead of release version
      *
      * When developing a new API, set this to your best estimate of when it will be released.
      * All APIs naturally progress through the beta -> stable lifecycle as versions advance.

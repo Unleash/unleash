@@ -169,11 +169,21 @@ When the time conditions are satisfied, Unleash automatically advances the relea
 
 Safeguards act as a safety net for your releases. They can automatically pause a rollout if metrics indicate system instability.
 
-:::info
+With metrics flowing into Unleash, you can [create a safeguard](/concepts/impact-metrics#configure-safeguards) that pauses the automated progression when something goes wrong.
 
-To experiment with safeguards during the early access phase, please reach out to beta@getunleash.io for configuration guidance.
+First, verify your metric is available by selecting **Add safeguard** and checking that your impact metric exists in the dropdown list. It may take some time for the impact metric to appear after starting your process, because it is sent to Unleash when the client reports metrics, which happens by default on a 60s interval.
 
-:::
+Then, add a safeguard to your release plan:
+
+1. Select **Add safeguard** on your release plan.
+2. Select your impact metric from the dropdown.
+3. Configure the threshold. For example:
+   - Metric: `analyze_feature_error`
+   - Aggregated by: Count
+   - Condition: More than 10 in the last 15 minutes
+4. Click **Save**.
+
+When the metric exceeds the threshold, Unleash will pause the automated progression.
 
 
 ## Technical implementation details

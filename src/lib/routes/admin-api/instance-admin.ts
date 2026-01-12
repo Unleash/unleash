@@ -130,6 +130,7 @@ class InstanceAdminController extends Controller {
                 '2022-07': 2.567,
                 '2022-08': 2.789,
             },
+            readOnlyUsers: 4,
         };
     }
 

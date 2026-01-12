@@ -188,6 +188,7 @@ export const PROJECT_PERMISSIONS_STRUCTURE: ProjectPermissionCategory[] = [
             [DELETE_FEATURE_STRATEGY],
             [UPDATE_FEATURE_ENVIRONMENT],
             [UPDATE_FEATURE_ENVIRONMENT_VARIANTS],
+            [UPDATE_PROJECT_CONTEXT],
             [UPDATE_PROJECT_SEGMENT],
         ],
     },

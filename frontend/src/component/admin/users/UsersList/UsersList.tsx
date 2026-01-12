@@ -61,6 +61,8 @@ const UsersList = () => {
     const showUserDeviceCount = useUiFlag('showUserDeviceCount');
     const showSSOUpgrade = isOss() && users.length > 3;
 
+    const showSeatTypes = isEnterprise() && useUiFlag('readOnlyUsersUI');
+
     const {
         settings: { enabled: scimEnabled },
     } = useScimSettings();
@@ -201,6 +203,14 @@ const UsersList = () => {
                 sortType: 'boolean',
             },
             {
+                id: 'seatType',
+                Header: 'Seat type',
+                accessor: 'seatType',
+                maxWidth: 100,
+                sortType: 'boolean',
+                Cell: TextCell,
+            },
+            {
                 Header: '',
                 id: 'Actions',
                 align: 'center',
@@ -239,17 +249,20 @@ const UsersList = () => {
                 searchable: true,
             },
         ],
-        [roles, navigate, isBillingUsers],
+        [roles, navigate, isBillingUsers, showSeatTypes],
     );
 
     const initialState = useMemo(() => {
         return {
             sortBy: [{ id: 'createdAt', desc: true }],
-            hiddenColumns: isBillingUsers
-                ? ['username', 'email']
-                : ['type', 'username', 'email'],
+            hiddenColumns: [
+                'username',
+                'email',
+                ...(isBillingUsers ? [] : ['type']),
+                ...(showSeatTypes ? [] : ['seatType']),
+            ],
         };
-    }, [isBillingUsers]);
+    }, [isBillingUsers, showSeatTypes]);
 
     const { data, getSearchText } = useSearch(
         columns,
@@ -280,6 +293,10 @@ const UsersList = () => {
             {
                 condition: !isBillingUsers || isSmallScreen,
                 columns: ['type'],
+            },
+            {
+                condition: !showSeatTypes || isSmallScreen,
+                columns: ['seatType'],
             },
             {
                 condition: isExtraSmallScreen,

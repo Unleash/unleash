@@ -30,7 +30,7 @@ export const StretchContainer = styled(Box, {
     backgroundColor: admin
         ? theme.palette.background.application
         : theme.palette.background.paper,
-    borderRight: admin ? `2px solid ${theme.palette.divider}` : 'none',
+    borderRight: `1px solid ${theme.palette.divider}`,
     padding: theme.spacing(2),
     alignSelf: 'stretch',
     display: 'flex',

@@ -20,7 +20,8 @@ const StyledTab = styled(Button)<{ selected: boolean }>(
             textAlign: 'left',
             padding: theme.spacing(0, 2),
             gap: theme.spacing(1),
-            fontSize: theme.fontSizes.bodySize,
+            // fontSize: theme.fontSizes.bodySize,
+            fontSize: theme.typography.body2.fontSize,
             fontWeight: selected
                 ? theme.fontWeight.bold
                 : theme.fontWeight.medium,

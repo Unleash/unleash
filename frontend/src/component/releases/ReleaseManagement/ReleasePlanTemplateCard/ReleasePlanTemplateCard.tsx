@@ -20,7 +20,6 @@ const StyledCardLink = styled(Link)(({ theme }) => ({
 const StyledCardTitle = styled('h3')(({ theme }) => ({
     margin: 0,
     marginRight: 'auto',
-    fontWeight: theme.typography.fontWeightRegular,
     fontSize: theme.typography.body1.fontSize,
     lineHeight: '1.2',
 }));

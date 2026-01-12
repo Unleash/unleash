@@ -24,3 +24,19 @@ test('calculateStability defaults to stable when versions are invalid', () => {
     expect(calculateStability('not-a-version', '7.4.0')).toBe('stable');
     expect(calculateStability('7.4.0', 'nope')).toBe('stable');
 });
+
+test.each([
+    ['7.5.0', '7.4.0-beta.1', 'alpha'],
+    ['7.5.0', '7.4.0+build.123', 'alpha'],
+    ['7.5.0', '7.4.0-beta.2+exp.sha.5114f85', 'alpha'],
+    // pre-releases are always alpha
+    ['7.5.0', '7.5.0-alpha.1', 'beta'],
+    ['7.5.0', '7.5.0+build.123', 'beta'],
+    ['7.5.0', '7.5.0-beta.2+exp.sha.5114f85', 'beta'],
+    // on next patch release it moves to beta
+    ['7.5.0', '7.5.1-beta.1', 'beta'],
+    ['7.5.0', '7.5.1+build.123', 'beta'],
+    ['7.5.0', '7.5.1-beta.2+exp.sha.5114f85', 'beta'],
+])('calculateStability returns beta for 0-2 minor versions ahead (release %s, current %s)', (releaseVersion, currentVersion, expected) => {
+    expect(calculateStability(releaseVersion, currentVersion)).toBe(expected);
+});

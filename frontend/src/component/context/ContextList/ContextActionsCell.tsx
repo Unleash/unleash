@@ -8,7 +8,7 @@ import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import {
     DELETE_CONTEXT_FIELD,
     UPDATE_CONTEXT_FIELD,
-    UPDATE_PROJECT,
+    UPDATE_PROJECT_CONTEXT,
 } from '@server/types/permissions.ts';
 
 interface IContextActionsCellProps {
@@ -31,7 +31,7 @@ export const ContextActionsCell: FC<IContextActionsCellProps> = ({
     return (
         <ActionCell>
             <PermissionIconButton
-                permission={[UPDATE_CONTEXT_FIELD, UPDATE_PROJECT]}
+                permission={[UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]}
                 projectId={projectId}
                 onClick={() => navigate(updateLocation)}
                 data-loading
@@ -43,7 +43,7 @@ export const ContextActionsCell: FC<IContextActionsCellProps> = ({
                 <Edit />
             </PermissionIconButton>
             <PermissionIconButton
-                permission={[DELETE_CONTEXT_FIELD, UPDATE_PROJECT]}
+                permission={[DELETE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]}
                 projectId={projectId}
                 onClick={onDelete}
                 data-loading

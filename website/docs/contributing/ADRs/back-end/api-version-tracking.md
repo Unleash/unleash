@@ -71,7 +71,7 @@ Alpha endpoints are **automatically hidden** from the public OpenAPI docs (`/doc
 - 📖 **Not advertised publicly** - they don't appear in the documentation portal
 - 🔍 **Visible in development** - when `NODE_ENV=development`, all alpha endpoints show up for internal testing
 
-This gives us the best of both worlds: we can ship and test alpha APIs internally or with select customers without formally documenting them, reducing support burden and managing expectations for unstable features.
+This gives us the best of both worlds: we can ship and test alpha APIs internally without formally documenting them, reducing support burden and managing expectations for unstable features.
 
 ## Consequences
 
@@ -83,7 +83,7 @@ This gives us the best of both worlds: we can ship and test alpha APIs internall
 
 **Flexible during development**: Developers estimate which version a new API will ship in. If priorities change or development takes longer, they simply update the version - it's okay to be wrong initially.
 
-**Selective disclosure**: Ship alpha features to production for testing with select customers without exposing them in public documentation.
+**Selective disclosure**: Ship alpha features to production for testing without exposing them to customers, until the API is ready to be moved to beta.
 
 **Consistency**: Every API follows the same maturity progression, eliminating confusion about stability levels.
 

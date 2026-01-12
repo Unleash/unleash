@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';
-import { styled } from '@mui/material';
+import { styled, Tooltip } from '@mui/material';
 import { textTruncated } from 'themes/themeStyles';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
@@ -25,12 +25,17 @@ const StyledBreadcrumbs = styled(Breadcrumbs)({
 const StyledCurrentPage = styled('span')(({ theme }) => ({
     ...textTruncated,
     fontWeight: theme.typography.fontWeightBold,
+    maxWidth: theme.spacing(25),
+    display: 'block',
 }));
 
 const StyledLink = styled(Link)(({ theme }) => ({
     '& > *': {
         maxWidth: theme.spacing(25),
     },
+    ...textTruncated,
+    maxWidth: theme.spacing(25),
+    display: 'block',
 }));
 
 const BreadcrumbNav = () => {
@@ -97,9 +102,11 @@ const BreadcrumbNav = () => {
                                     const lastItem = index === paths.length - 1;
                                     if (lastItem) {
                                         return (
-                                            <StyledCurrentPage key={path}>
-                                                {pathName}
-                                            </StyledCurrentPage>
+                                            <Tooltip title={pathName} arrow>
+                                                <StyledCurrentPage key={path}>
+                                                    {pathName}
+                                                </StyledCurrentPage>
+                                            </Tooltip>
                                         );
                                     }
 
@@ -114,9 +121,11 @@ const BreadcrumbNav = () => {
                                     });
 
                                     return (
-                                        <StyledLink key={path} to={link}>
-                                            {pathName}
-                                        </StyledLink>
+                                        <Tooltip title={pathName} arrow>
+                                            <StyledLink key={path} to={link}>
+                                                {pathName}
+                                            </StyledLink>
+                                        </Tooltip>
                                     );
                                 })}
                             </StyledBreadcrumbs>

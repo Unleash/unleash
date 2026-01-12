@@ -14,7 +14,7 @@ import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { formatAssetPath } from 'utils/formatPath';
 import easyToDeploy from 'assets/img/easyToDeploy.png';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { EnterpriseEdgeDismissibleAlert } from './enterprise-edge/EnterpriseEdgeDismissibleAlert.tsx';
 
 const UI_SWITCH_WIDGET_RATIO_BREAKPOINT = 1505;
@@ -152,7 +152,7 @@ const StyledHelpContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledHelpLink = styled('a')(({ theme }) => ({
+const StyledHelpLink = styled(Link)(({ theme }) => ({
     color: theme.palette.common.white,
     textDecoration: 'underline !important',
     fontSize: theme.typography.body2.fontSize,
@@ -209,7 +209,7 @@ const InstanceWidget = ({
             </StyledParagraph>
             <StyledHelpContainer>
                 <StyledHelpLink
-                    href='https://docs.getunleash.io/availability#versioning'
+                    to='https://docs.getunleash.io/availability#versioning'
                     target='_blank'
                     rel='noopener noreferrer'
                 >

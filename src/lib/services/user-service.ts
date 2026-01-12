@@ -202,26 +202,30 @@ export class UserService {
     }
 
     async getAll(): Promise<IUserWithRootRole[]> {
-        const users = await this.store.getAll();
+        const baseUsers = await this.store.getAll();
         const defaultRole = await this.accessService.getPredefinedRole(
             RoleName.VIEWER,
         );
         const userRoles = await this.accessService.getRootRoleForAllUsers();
-        const usersWithRootRole = users.map((u) => {
+        let users = baseUsers.map((u) => {
             const rootRole = userRoles.find((r) => r.userId === u.id);
             const roleId = rootRole ? rootRole.roleId : defaultRole.id;
             return { ...u, rootRole: roleId };
         });
+
         if (this.flagResolver.isEnabled('showUserDeviceCount')) {
             const sessionCounts = await this.sessionService.getSessionsCount();
-            const usersWithSessionCounts = usersWithRootRole.map((u) => ({
+            users = users.map((u) => ({
                 ...u,
                 activeSessions: sessionCounts[u.id] || 0,
             }));
-            return usersWithSessionCounts;
         }
 
-        return usersWithRootRole;
+        if (!this.flagResolver.isEnabled('readOnlyUsersUI')) {
+            users = users.map(({ seatType, ...user }) => user);
+        }
+
+        return users;
     }
 
     async getUser(id: number): Promise<IUserWithRootRole> {

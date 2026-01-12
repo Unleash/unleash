@@ -100,9 +100,13 @@ const BreadcrumbNav = () => {
                                         ? project.name
                                         : path;
                                     const lastItem = index === paths.length - 1;
+                                    const tooltipTitle =
+                                        isProjectPath && pathName.length > 25
+                                            ? pathName
+                                            : undefined;
                                     if (lastItem) {
                                         return (
-                                            <Tooltip title={pathName} arrow>
+                                            <Tooltip title={tooltipTitle} arrow>
                                                 <StyledCurrentPage key={path}>
                                                     {pathName}
                                                 </StyledCurrentPage>
@@ -121,7 +125,7 @@ const BreadcrumbNav = () => {
                                     });
 
                                     return (
-                                        <Tooltip title={pathName} arrow>
+                                        <Tooltip title={tooltipTitle} arrow>
                                             <StyledLink key={path} to={link}>
                                                 {pathName}
                                             </StyledLink>

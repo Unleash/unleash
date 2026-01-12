@@ -139,16 +139,40 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     minWidth: 0,
                                 }}
                             >
-                                <Header />
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        minHeight: '100vh',
+                                        flexShrink: 0,
+                                    }}
+                                >
+                                    <Header />
 
-                                <MainLayoutContent>
-                                    <SkipNavTarget />
-                                    <MainLayoutContentContainer ref={ref}>
-                                        <BreadcrumbNav />
-                                        <Proclamation toast={uiConfig.toast} />
-                                        {children}
-                                    </MainLayoutContentContainer>
-                                </MainLayoutContent>
+                                    <Box
+                                        sx={{
+                                            flex: 1,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            minHeight: 0,
+                                        }}
+                                    >
+                                        <MainLayoutContent
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                flex: 1,
+                                            }}
+                                        >
+                                            <SkipNavTarget />
+                                            <MainLayoutContentContainer ref={ref}>
+                                                <BreadcrumbNav />
+                                                <Proclamation toast={uiConfig.toast} />
+                                                {children}
+                                            </MainLayoutContentContainer>
+                                        </MainLayoutContent>
+                                    </Box>
+                                </Box>
 
                                 <Footer />
                             </Box>

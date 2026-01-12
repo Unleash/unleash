@@ -38,6 +38,10 @@ export const StretchContainer = styled(Box, {
     gap: theme.spacing(2),
     zIndex: 1,
     overflowAnchor: 'none',
+    position: 'sticky',
+    top: 0,
+    height: '100vh',
+    overflowY: 'auto',
     minWidth: mode === 'full' ? theme.spacing(34) : 'auto',
     width: mode === 'full' ? theme.spacing(34) : 'auto',
 }));

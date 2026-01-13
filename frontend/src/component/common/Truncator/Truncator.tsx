@@ -51,7 +51,10 @@ export const Truncator = ({
 
     const checkTruncation = () => {
         if (ref.current) {
-            setIsTruncated(ref.current.scrollHeight > ref.current.offsetHeight);
+            setIsTruncated(
+                ref.current.scrollHeight > ref.current.offsetHeight ||
+                    ref.current.scrollWidth > ref.current.offsetWidth,
+            );
         }
     };
     useEffect(() => {

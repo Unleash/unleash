@@ -117,14 +117,14 @@ function GeneralSelect<T extends string = string>({
                 {...rest}
             >
                 {isSelectOptionGroup(options)
-                    ? options?.flatMap((group, index) => {
+                    ? options.flatMap((group) => {
                           return [
                               <ListSubheader key={group.groupHeader}>
                                   {group.groupHeader}
                               </ListSubheader>,
-                          ].concat(group.options?.map(toMenuItem));
+                          ].concat(group.options.map(toMenuItem));
                       })
-                    : options?.map(toMenuItem)}
+                    : options.map(toMenuItem)}
             </Select>
         </StyledFormControl>
     );

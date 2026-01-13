@@ -44,7 +44,16 @@ export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
     }
 
     return (
-        <Box sx={{ marginRight: 'auto' }}>
+        <Box
+            sx={{
+                marginRight: 'auto',
+                overflowX: 'auto',
+                WebkitOverflowScrolling: 'touch',
+                '&::-webkit-scrollbar': {
+                    display: 'none',
+                },
+            }}
+        >
             <LifecycleFilters
                 state={state}
                 onChange={onChange}

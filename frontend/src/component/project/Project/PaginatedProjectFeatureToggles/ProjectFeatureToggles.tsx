@@ -110,7 +110,7 @@ export const ProjectFeatureToggles = ({
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isSmallerScreen = useMediaQuery(theme.breakpoints.down('xl'));
 
     const {
         features,
@@ -577,7 +577,7 @@ export const ProjectFeatureToggles = ({
                                     total={loading ? undefined : total}
                                 />
                             )}
-                            {isSmallScreen ? null : (
+                            {isSmallerScreen && !showArchived ? null : (
                                 <ProjectFlagsSearch
                                     searchQuery={tableState.query || ''}
                                     onChangeSearchQuery={(query) => {
@@ -601,7 +601,7 @@ export const ProjectFeatureToggles = ({
                                 />
                             </FilterRow>
                         )}
-                        {isSmallScreen ? (
+                        {isSmallerScreen && !showArchived ? (
                             <ProjectFlagsSearch
                                 searchQuery={tableState.query || ''}
                                 onChangeSearchQuery={(query) => {

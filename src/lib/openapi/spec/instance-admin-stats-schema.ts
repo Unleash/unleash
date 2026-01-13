@@ -298,6 +298,12 @@ export const instanceAdminStatsSchema = {
                 '2024-10': 0.45,
             },
         },
+        readOnlyUsers: {
+            type: 'integer',
+            minimum: 0,
+            example: 1,
+            description: 'The number of ReadOnly users in this instance',
+        },
         sum: {
             type: 'string',
             description:

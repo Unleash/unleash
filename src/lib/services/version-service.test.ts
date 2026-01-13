@@ -46,6 +46,7 @@ const fakeTelemetryData = {
     releaseTemplates: 2,
     releasePlans: 4,
     edgeInstanceUsage: {},
+    readOnlyUsers: 2,
 };
 
 test('yields current versions', async () => {

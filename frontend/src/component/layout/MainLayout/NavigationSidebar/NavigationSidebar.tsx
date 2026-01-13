@@ -31,7 +31,10 @@ export const StretchContainer = styled(Box, {
         ? theme.palette.background.application
         : theme.palette.background.paper,
     borderRight: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(2),
+    // padding: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingBottom: theme.spacing(0),
     alignSelf: 'stretch',
     display: 'flex',
     flexDirection: 'column',
@@ -71,8 +74,8 @@ const StickyContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'admin',
 })<{ admin: boolean }>(({ theme, admin }) => ({
     position: 'sticky',
-    paddingBottom: theme.spacing(1.5),
-    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(0.25),
+    paddingTop: theme.spacing(0.25),
     bottom: theme.spacing(0),
     backgroundColor: admin
         ? theme.palette.background.application

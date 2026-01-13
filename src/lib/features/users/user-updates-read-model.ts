@@ -14,6 +14,7 @@ type UpdatedUser = {
     createdAt?: Date;
     updatedAt?: Date | null;
     deletedAt?: Date | null;
+    seatType?: string;
 };
 const toResponse = (row: Row<UpdatedUser>): UpdatedUser => {
     return {
@@ -26,6 +27,7 @@ const toResponse = (row: Row<UpdatedUser>): UpdatedUser => {
         createdAt: row.created_at,
         updatedAt: row.updated_at,
         deletedAt: row.deleted_at,
+        seatType: row.seat_type,
     };
 };
 export class UserUpdatesReadModel {

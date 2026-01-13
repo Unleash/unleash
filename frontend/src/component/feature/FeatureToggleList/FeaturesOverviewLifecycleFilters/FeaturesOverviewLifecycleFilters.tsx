@@ -24,7 +24,7 @@ export const FeaturesOverviewLifecycleFilters: FC<
     );
 
     return (
-        <Box sx={(theme) => ({ padding: theme.spacing(1.5, 3, 0, 3) })}>
+        <Box sx={(theme) => ({ padding: theme.spacing(0, 3, 0, 3) })}>
             <LifecycleFilters
                 state={state}
                 onChange={onChange}

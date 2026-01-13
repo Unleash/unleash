@@ -3,10 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';
-import { styled, Tooltip } from '@mui/material';
-import { textTruncated } from 'themes/themeStyles';
+import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { Truncator } from '../Truncator/Truncator';
 
 const StyledBreadcrumbContainer = styled('div')(({ theme }) => ({
     height: theme.spacing(2.5),
@@ -23,7 +23,6 @@ const StyledBreadcrumbs = styled(Breadcrumbs)({
 });
 
 const StyledCurrentPage = styled('span')(({ theme }) => ({
-    ...textTruncated,
     fontWeight: theme.typography.fontWeightBold,
     maxWidth: theme.spacing(25),
     display: 'block',
@@ -33,9 +32,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
     '& > *': {
         maxWidth: theme.spacing(25),
     },
-    ...textTruncated,
-    maxWidth: theme.spacing(25),
-    display: 'block',
 }));
 
 const BreadcrumbNav = () => {
@@ -106,11 +102,14 @@ const BreadcrumbNav = () => {
                                             : undefined;
                                     if (lastItem) {
                                         return (
-                                            <Tooltip title={tooltipTitle} arrow>
-                                                <StyledCurrentPage key={path}>
+                                            <StyledCurrentPage key={path}>
+                                                <Truncator
+                                                    title={tooltipTitle}
+                                                    arrow
+                                                >
                                                     {pathName}
-                                                </StyledCurrentPage>
-                                            </Tooltip>
+                                                </Truncator>
+                                            </StyledCurrentPage>
                                         );
                                     }
 
@@ -125,11 +124,14 @@ const BreadcrumbNav = () => {
                                     });
 
                                     return (
-                                        <Tooltip title={tooltipTitle} arrow>
-                                            <StyledLink key={path} to={link}>
+                                        <StyledLink key={path} to={link}>
+                                            <Truncator
+                                                title={tooltipTitle}
+                                                arrow
+                                            >
                                                 {pathName}
-                                            </StyledLink>
-                                        </Tooltip>
+                                            </Truncator>
+                                        </StyledLink>
                                     );
                                 })}
                             </StyledBreadcrumbs>

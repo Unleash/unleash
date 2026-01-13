@@ -8,7 +8,7 @@ import type { FC } from 'react';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import {
     CREATE_CONTEXT_FIELD,
-    UPDATE_PROJECT,
+    UPDATE_PROJECT_CONTEXT,
 } from '@server/types/permissions.ts';
 
 type IAddContextButtonProps = {};
@@ -27,7 +27,7 @@ export const AddContextButton: FC<IAddContextButtonProps> = () => {
             condition={smallScreen}
             show={
                 <PermissionIconButton
-                    permission={[CREATE_CONTEXT_FIELD, UPDATE_PROJECT]}
+                    permission={[CREATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]}
                     projectId={projectId}
                     onClick={() => navigate(createLocation)}
                     size='large'
@@ -38,7 +38,7 @@ export const AddContextButton: FC<IAddContextButtonProps> = () => {
             }
             elseShow={
                 <PermissionButton
-                    permission={[CREATE_CONTEXT_FIELD, UPDATE_PROJECT]}
+                    permission={[CREATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]}
                     projectId={projectId}
                     onClick={() => navigate(createLocation)}
                     color='primary'

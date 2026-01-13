@@ -7,7 +7,7 @@ import {
     UPDATE_CONTEXT_FIELD,
     DELETE_CONTEXT_FIELD,
     NONE,
-    UPDATE_PROJECT,
+    UPDATE_PROJECT_CONTEXT,
 } from '../../types/permissions.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
@@ -149,7 +149,7 @@ export class ContextController extends Controller {
             method: 'post',
             path: prefix,
             handler: this.createContextField,
-            permission: [CREATE_CONTEXT_FIELD, UPDATE_PROJECT],
+            permission: [CREATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -174,7 +174,7 @@ export class ContextController extends Controller {
             method: 'put',
             path: `${prefix}/:contextField`,
             handler: this.updateContextField,
-            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
+            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -196,7 +196,7 @@ export class ContextController extends Controller {
             method: 'post',
             path: `${prefix}/:contextField/legal-values`,
             handler: this.updateLegalValue,
-            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
+            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -220,7 +220,7 @@ export class ContextController extends Controller {
             path: `${prefix}/:contextField/legal-values/:legalValue`,
             handler: this.deleteLegalValue,
             acceptAnyContentType: true,
-            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
+            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -243,7 +243,7 @@ export class ContextController extends Controller {
             path: `${prefix}/:contextField`,
             handler: this.deleteContextField,
             acceptAnyContentType: true,
-            permission: [DELETE_CONTEXT_FIELD, UPDATE_PROJECT],
+            permission: [DELETE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -263,7 +263,7 @@ export class ContextController extends Controller {
             method: 'post',
             path: `${prefix}/validate`,
             handler: this.validateContextFieldName,
-            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT],
+            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],

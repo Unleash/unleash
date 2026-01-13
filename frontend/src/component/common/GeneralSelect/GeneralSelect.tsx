@@ -85,13 +85,7 @@ function GeneralSelect<T extends string = string>({
                 label={visuallyHideLabel ? '' : label}
                 id={id}
                 value={value ?? ''}
-                MenuProps={{
-                    sx: {
-                        '.MuiPopover-paper.MuiMenu-paper': {
-                            width: 'min-content',
-                        },
-                    },
-                }}
+                autoWidth
                 IconComponent={KeyboardArrowDownOutlined}
                 labelId={labelId}
                 {...rest}

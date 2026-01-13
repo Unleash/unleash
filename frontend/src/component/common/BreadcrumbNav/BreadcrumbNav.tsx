@@ -4,7 +4,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';
 import { styled } from '@mui/material';
-import { textTruncated } from 'themes/themeStyles';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { Truncator } from '../Truncator/Truncator';
@@ -24,9 +23,8 @@ const StyledBreadcrumbs = styled(Breadcrumbs)({
 });
 
 const StyledCurrentPage = styled('span')(({ theme }) => ({
-    ...textTruncated,
     fontWeight: theme.typography.fontWeightBold,
-    maxWidth: theme.spacing(50),
+    maxWidth: theme.spacing(25),
     display: 'block',
 }));
 

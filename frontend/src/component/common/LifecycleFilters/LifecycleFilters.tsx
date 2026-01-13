@@ -3,6 +3,7 @@ import type { SxProps, Theme } from '@mui/material';
 import type { ReactNode } from 'react';
 import type { FilterItemParamHolder } from '../../filter/Filters/Filters.tsx';
 import type { LifecycleStage } from '../../feature/FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage.tsx';
+import { FeatureLifecycleStageIcon } from '../FeatureLifecycle/FeatureLifecycleStageIcon.tsx';
 
 const StyledChip = styled(Chip, {
     shouldForwardProp: (prop) => prop !== 'isActive',
@@ -13,7 +14,6 @@ const StyledChip = styled(Chip, {
     padding: theme.spacing(0.5),
     fontSize: theme.typography.body2.fontSize,
     height: 'auto',
-    fontWeight: theme.typography.fontWeightMedium,
     '&[data-selected="true"]': {
         backgroundColor: theme.palette.secondary.light,
         fontWeight: 'bold',
@@ -72,13 +72,40 @@ const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',
+    [theme.breakpoints.down('md')]: {
+        flexWrap: 'nowrap',
+        overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch',
+    },
+}));
+
+const CountBadge = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.background.elevation1,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    color: theme.palette.text.secondary,
+    padding: theme.spacing(0, 0.5),
+    minWidth: '1.5em',
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    variant: 'outlined',
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(-0.5),
+    fontWeight: 'bold',
+    '&[data-selected="true"]': {
+        backgroundColor: theme.palette.secondary.light,
+        borderColor: theme.palette.primary.main,
+        color: theme.palette.primary.main,
+    },
 }));
 
 const lifecycleOptions: {
     label: string;
     value: LifecycleStage['name'] | null;
 }[] = [
-    { label: 'All flags', value: null },
+    { label: 'All lifecycles', value: null },
     { label: 'Develop', value: 'pre-live' },
     { label: 'Rollout production', value: 'live' },
     { label: 'Cleanup', value: 'completed' },
@@ -108,10 +135,6 @@ export const LifecycleFilters = ({
                     const count = value
                         ? countData?.[value]
                         : allFlagsCount || undefined;
-                    const dynamicLabel =
-                        isActive && Number.isInteger(total)
-                            ? `${label} (${total === (count ?? 0) ? total : `${total} of ${count}`})`
-                            : `${label}${count !== undefined ? ` (${count})` : ''}`;
 
                     const handleClick = () =>
                         onChange(
@@ -128,10 +151,31 @@ export const LifecycleFilters = ({
                     return (
                         <StyledChip
                             key={label}
-                            label={dynamicLabel}
+                            label={
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        width: '100%',
+                                    }}
+                                >
+                                    <span>{label}</span>
+                                    {count !== undefined && (
+                                        <CountBadge>{count}</CountBadge>
+                                    )}
+                                </Box>
+                            }
                             variant='outlined'
                             onClick={handleClick}
                             data-selected={isActive}
+                            icon={
+                                value ? (
+                                    <FeatureLifecycleStageIcon
+                                        stage={{ name: value }}
+                                    />
+                                ) : undefined
+                            }
                         />
                     );
                 })}

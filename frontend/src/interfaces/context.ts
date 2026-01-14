@@ -7,6 +7,7 @@ export interface IUnleashContextDefinition {
     usedInProjects?: number;
     usedInFeatures?: number;
     legalValues?: ILegalValue[];
+    project?: string;
 }
 
 export interface ILegalValue {

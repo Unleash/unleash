@@ -16,6 +16,7 @@ import FakeSettingStore from '../../test/fixtures/fake-setting-store.js';
 import { extractAuditInfoFromUser } from '../util/index.js';
 import { createFakeEventsService } from '../features/index.js';
 import { vi, expect, test, describe, beforeEach } from 'vitest';
+import { ResourceLimitsService } from './index.js';
 const config: IUnleashConfig = createTestConfig();
 
 const systemUser = new User({ id: -1, username: 'system' });
@@ -43,6 +44,7 @@ test.each([
         config,
         eventService,
     );
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
@@ -51,6 +53,7 @@ test.each([
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
     const user = await service.createUser(
         {
@@ -103,6 +106,7 @@ describe('Default admin initialization', () => {
             config,
             eventService,
         );
+        const resourceLimitsService = new ResourceLimitsService(config);
 
         userService = new UserService({ userStore }, config, {
             accessService,
@@ -111,6 +115,7 @@ describe('Default admin initialization', () => {
             eventService,
             sessionService,
             settingService,
+            resourceLimitsService,
         });
     });
 
@@ -168,6 +173,7 @@ describe('Default admin initialization', () => {
             config,
             eventService,
         );
+        const resourceLimitsService = new ResourceLimitsService(config);
 
         const service = new UserService({ userStore }, config, {
             accessService,
@@ -176,6 +182,7 @@ describe('Default admin initialization', () => {
             eventService,
             sessionService,
             settingService,
+            resourceLimitsService,
         });
 
         await service.initAdminUser({});
@@ -220,6 +227,7 @@ test('Should be a valid password', async () => {
         config,
         eventService,
     );
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
@@ -228,6 +236,7 @@ test('Should be a valid password', async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
 
     const valid = service.validatePassword('this is a strong password!');
@@ -254,6 +263,7 @@ test('Password must be at least 10 chars', async () => {
         config,
         eventService,
     );
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
@@ -262,6 +272,7 @@ test('Password must be at least 10 chars', async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
     expect(() => service.validatePassword('admin')).toThrow(
         'The password must be at least 10 characters long.',
@@ -290,6 +301,7 @@ test('The password must contain at least one uppercase letter.', async () => {
         config,
         eventService,
     );
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
@@ -298,6 +310,7 @@ test('The password must contain at least one uppercase letter.', async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
 
     expect(() => service.validatePassword('qwertyabcde')).toThrowError(
@@ -328,6 +341,7 @@ test('The password must contain at least one number', async () => {
         config,
         eventService,
     );
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
@@ -336,6 +350,7 @@ test('The password must contain at least one number', async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
 
     expect(() => service.validatePassword('qwertyabcdE')).toThrowError(
@@ -365,6 +380,7 @@ test('The password must contain at least one special character', async () => {
         config,
         eventService,
     );
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
@@ -373,6 +389,7 @@ test('The password must contain at least one special character', async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
 
     expect(() => service.validatePassword('qwertyabcdE2')).toThrowError(
@@ -402,6 +419,7 @@ test('Should be a valid password with special chars', async () => {
         config,
         eventService,
     );
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
@@ -410,6 +428,7 @@ test('Should be a valid password with special chars', async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
 
     const valid = service.validatePassword('this is a strong password!');
@@ -436,6 +455,7 @@ test('Should send password reset email if user exists', async () => {
         config,
         eventService,
     );
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
@@ -444,6 +464,7 @@ test('Should send password reset email if user exists', async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
 
     const unknownUser = service.createResetPasswordEmail('unknown@example.com');
@@ -486,6 +507,7 @@ test('Should throttle password reset email', async () => {
         config,
         eventService,
     );
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     const service = new UserService({ userStore }, config, {
         accessService,
@@ -494,6 +516,7 @@ test('Should throttle password reset email', async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
 
     await userStore.insert({

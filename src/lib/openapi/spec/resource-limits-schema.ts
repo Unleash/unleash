@@ -124,6 +124,11 @@ export const resourceLimitsSchema = {
             example: 5,
             description: 'The maximum number of release templates allowed.',
         },
+        readOnlyUsers: {
+            type: 'integer',
+            example: 50,
+            description: 'The maximum number of read-only users allowed.',
+        }
     },
     components: {},
 } as const;

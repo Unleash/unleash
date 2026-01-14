@@ -17,6 +17,7 @@ import SettingService from '../../../../lib/services/setting-service.js';
 import { GroupService } from '../../../../lib/services/group-service.js';
 import ResetTokenService from '../../../../lib/services/reset-token-service.js';
 import { createEventsService } from '../../../../lib/features/index.js';
+import { ResourceLimitsService } from '../../../../lib/features/resource-limits/resource-limits-service.js';
 
 let app: IUnleashTest;
 let stores: IUnleashStores;
@@ -51,6 +52,7 @@ beforeAll(async () => {
     const emailService = new EmailService(config);
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config, eventService);
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     userService = new UserService(stores, config, {
         accessService,
@@ -59,6 +61,7 @@ beforeAll(async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
     const adminRole = await accessService.getPredefinedRole(RoleName.ADMIN);
     adminUser = await userService.createUser(

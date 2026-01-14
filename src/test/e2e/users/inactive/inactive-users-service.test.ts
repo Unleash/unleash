@@ -6,6 +6,7 @@ import {
     EmailService,
     type EventService,
     GroupService,
+    ResourceLimitsService,
 } from '../../../../lib/services/index.js';
 import ResetTokenService from '../../../../lib/services/reset-token-service.js';
 import SessionService from '../../../../lib/services/session-service.js';
@@ -54,6 +55,7 @@ beforeAll(async () => {
     const emailService = new EmailService(config);
     sessionService = new SessionService(stores, config);
     settingService = new SettingService(stores, config, eventService);
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     userService = new UserService(stores, config, {
         accessService,
@@ -62,6 +64,7 @@ beforeAll(async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
     inactiveUserService = createInactiveUsersService(
         db.rawDatabase,

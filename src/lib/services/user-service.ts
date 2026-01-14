@@ -52,6 +52,7 @@ import { PasswordPreviouslyUsedError } from '../error/password-previously-used.j
 import { RateLimitError } from '../error/rate-limit-error.js';
 import type EventEmitter from 'events';
 import { USER_LOGIN } from '../metric-events.js';
+import { ResourceLimitsService } from './index.js';
 
 export interface ICreateUserWithRole {
     name?: string;
@@ -97,6 +98,8 @@ export class UserService {
 
     private settingService: SettingService;
 
+    private resourceLimitsService: ResourceLimitsService;
+
     private flagResolver: IFlagResolver;
 
     private passwordResetTimeouts: { [key: string]: NodeJS.Timeout } = {};
@@ -126,6 +129,7 @@ export class UserService {
             eventService: EventService;
             sessionService: SessionService;
             settingService: SettingService;
+            resourceLimitsService: ResourceLimitsService;
         },
     ) {
         this.logger = getLogger('service/user-service.js');
@@ -137,6 +141,7 @@ export class UserService {
         this.emailService = services.emailService;
         this.sessionService = services.sessionService;
         this.settingService = services.settingService;
+        this.resourceLimitsService = services.resourceLimitsService;
         this.flagResolver = flagResolver;
         this.maxParallelSessions = session.maxParallelSessions;
         this.baseUriPath = server.baseUriPath || '';
@@ -221,7 +226,9 @@ export class UserService {
             }));
         }
 
-        if (!this.flagResolver.isEnabled('readOnlyUsersUI')) {
+        const { readOnlyUsers } =
+            await this.resourceLimitsService.getResourceLimits();
+        if (!this.flagResolver.isEnabled('readOnlyUsersUI') || !readOnlyUsers) {
             users = users.map(({ seatType, ...user }) => user);
         }
 

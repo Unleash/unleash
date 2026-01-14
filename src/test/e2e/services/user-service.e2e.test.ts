@@ -15,7 +15,10 @@ import { addDays, minutesToMilliseconds } from 'date-fns';
 import { GroupService } from '../../../lib/services/group-service.js';
 import { BadDataError } from '../../../lib/error/index.js';
 import PasswordMismatch from '../../../lib/error/password-mismatch.js';
-import { ResourceLimitsService, type EventService } from '../../../lib/services/index.js';
+import {
+    ResourceLimitsService,
+    type EventService,
+} from '../../../lib/services/index.js';
 import {
     CREATE_ADDON,
     type IUnleashStores,

@@ -18,7 +18,9 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 
 export const InstanceStats: FC = () => {
     const { stats } = useInstanceStats();
-    const { uiConfig: { resourceLimits } } = useUiConfig();
+    const {
+        uiConfig: { resourceLimits },
+    } = useUiConfig();
     const readOnlyUsersUIEnabled = useUiFlag('readOnlyUsersUI');
 
     let versionTitle: string;

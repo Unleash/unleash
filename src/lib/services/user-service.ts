@@ -52,7 +52,7 @@ import { PasswordPreviouslyUsedError } from '../error/password-previously-used.j
 import { RateLimitError } from '../error/rate-limit-error.js';
 import type EventEmitter from 'events';
 import { USER_LOGIN } from '../metric-events.js';
-import { ResourceLimitsService } from './index.js';
+import type { ResourceLimitsService } from './index.js';
 
 export interface ICreateUserWithRole {
     name?: string;

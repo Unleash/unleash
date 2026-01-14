@@ -53,6 +53,6 @@ export const createUserService = (
         eventService,
         sessionService,
         settingService,
-        resourceLimitsService
+        resourceLimitsService,
     });
 };

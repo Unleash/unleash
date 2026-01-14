@@ -128,7 +128,7 @@ export const resourceLimitsSchema = {
             type: 'integer',
             example: 50,
             description: 'The maximum number of read-only users allowed.',
-        }
+        },
     },
     components: {},
 } as const;

@@ -32,7 +32,7 @@ import type { ConstraintValidationResult } from './useEditableConstraint/constra
 import { useEffectiveProjectContext } from 'hooks/api/getters/useUnleashContext/useEffectiveProjectContext.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { createContextOptions } from './createContextOptions.ts';
+import { createContextFieldOptions } from './createContextFieldOptions.ts';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -221,7 +221,7 @@ export const EditableConstraint: FC<Props> = ({
     constraint,
     onUpdate,
 }) => {
-    const groupContextOptionsByType = useUiFlag('projectContextFields');
+    const groupContextFieldOptionsByType = useUiFlag('projectContextFields');
     const {
         constraint: localConstraint,
         updateConstraint,
@@ -266,10 +266,10 @@ export const EditableConstraint: FC<Props> = ({
         return null;
     }
 
-    const contextFieldOptions = createContextOptions(
+    const contextFieldOptions = createContextFieldOptions(
         localConstraint,
         context,
-        groupContextOptionsByType,
+        { groupOptions: groupContextFieldOptionsByType },
     );
 
     return (

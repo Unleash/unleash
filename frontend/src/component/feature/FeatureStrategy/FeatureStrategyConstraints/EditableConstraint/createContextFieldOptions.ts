@@ -2,23 +2,23 @@ import type { IUnleashContextDefinition } from 'interfaces/context.ts';
 import type { EditableConstraint } from './useEditableConstraint/editable-constraint-type';
 import type { SelectOptionGroup } from 'component/common/GeneralSelect/GeneralSelect';
 
-export const createContextOptions = (
+export const createContextFieldOptions = (
     localConstraint: EditableConstraint,
     context: IUnleashContextDefinition[],
-    groupOptions: boolean,
+    { groupOptions }: { groupOptions: boolean },
 ) => {
-    const extantContextFieldNames = context.map((context) => context.name);
-    const contextFieldHasBeenDeleted = !extantContextFieldNames.includes(
+    const existingContextFieldNames = context.map((context) => context.name);
+    const contextFieldHasBeenDeleted = !existingContextFieldNames.includes(
         localConstraint.contextName,
     );
 
     if (!groupOptions) {
         const availableContextFieldNames = contextFieldHasBeenDeleted
             ? [
-                  ...extantContextFieldNames,
+                  ...existingContextFieldNames,
                   localConstraint.contextName,
               ].toSorted()
-            : extantContextFieldNames;
+            : existingContextFieldNames;
 
         return availableContextFieldNames.map((option) => ({
             key: option,
@@ -60,12 +60,7 @@ export const createContextOptions = (
         },
         contextFieldHasBeenDeleted && {
             groupHeader: 'Deleted context fields',
-            options: [
-                {
-                    key: localConstraint.contextName,
-                    label: localConstraint.contextName,
-                },
-            ],
+            options: optList([{ name: localConstraint.contextName }]),
         },
     ].filter(Boolean) as SelectOptionGroup[];
 };

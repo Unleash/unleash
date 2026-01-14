@@ -1,5 +1,5 @@
 import { IN } from 'constants/operators';
-import { createContextOptions } from './createContextOptions';
+import { createContextFieldOptions } from './createContextFieldOptions';
 
 const contextField = (name: string, project?: string) => ({
     name,
@@ -23,7 +23,9 @@ it('groups options by project and global', () => {
         contextField('d', 'project1'),
     ];
 
-    const options = createContextOptions(localConstraint, context, true);
+    const options = createContextFieldOptions(localConstraint, context, {
+        groupOptions: true,
+    });
 
     expect(options).toEqual([
         {
@@ -52,10 +54,10 @@ it('does not include empty groups', () => {
     const onlyGlobalContext = [contextField('a')];
     const onlyProjectContext = [contextField('a', 'project1')];
 
-    const onlyGlobalOptions = createContextOptions(
+    const onlyGlobalOptions = createContextFieldOptions(
         localConstraint,
         onlyGlobalContext,
-        true,
+        { groupOptions: true },
     );
 
     expect(onlyGlobalOptions).toEqual([
@@ -65,10 +67,10 @@ it('does not include empty groups', () => {
         },
     ]);
 
-    const onlyProjectOptions = createContextOptions(
+    const onlyProjectOptions = createContextFieldOptions(
         localConstraint,
         onlyProjectContext,
-        true,
+        { groupOptions: true },
     );
 
     expect(onlyProjectOptions).toEqual([
@@ -87,10 +89,10 @@ it('puts deleted context fields in its own group', () => {
     };
     const onlyGlobalContext = [contextField('b')];
 
-    const options = createContextOptions(
+    const options = createContextFieldOptions(
         localConstraint,
         onlyGlobalContext,
-        true,
+        { groupOptions: true },
     );
 
     expect(options).toEqual([
@@ -112,7 +114,9 @@ it('groups options only when asked', () => {
     };
     const context = [contextField('a'), contextField('b', 'project1')];
 
-    const options = createContextOptions(localConstraint, context, false);
+    const options = createContextFieldOptions(localConstraint, context, {
+        groupOptions: false,
+    });
 
     expect(options).toEqual([
         { key: 'a', label: 'a' },

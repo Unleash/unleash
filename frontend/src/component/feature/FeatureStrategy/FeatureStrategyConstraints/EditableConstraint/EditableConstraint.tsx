@@ -31,6 +31,8 @@ import {
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
 import { useEffectiveProjectContext } from 'hooks/api/getters/useUnleashContext/useEffectiveProjectContext.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { createContextFieldOptions } from './createContextFieldOptions.ts';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -219,6 +221,7 @@ export const EditableConstraint: FC<Props> = ({
     constraint,
     onUpdate,
 }) => {
+    const groupContextFieldOptionsByType = useUiFlag('projectContextFields');
     const {
         constraint: localConstraint,
         updateConstraint,
@@ -263,19 +266,11 @@ export const EditableConstraint: FC<Props> = ({
         return null;
     }
 
-    const extantContextFieldNames = context.map((context) => context.name);
-    const contextFieldHasBeenDeleted = !extantContextFieldNames.includes(
-        localConstraint.contextName,
+    const contextFieldOptions = createContextFieldOptions(
+        localConstraint,
+        context,
+        { groupOptions: groupContextFieldOptionsByType },
     );
-
-    const availableContextFieldNames = contextFieldHasBeenDeleted
-        ? [...extantContextFieldNames, localConstraint.contextName].toSorted()
-        : extantContextFieldNames;
-
-    const contextFieldOptions = availableContextFieldNames.map((option) => ({
-        key: option,
-        label: option,
-    }));
 
     return (
         <Container>

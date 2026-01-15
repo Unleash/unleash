@@ -15,7 +15,10 @@ import { addDays, minutesToMilliseconds } from 'date-fns';
 import { GroupService } from '../../../lib/services/group-service.js';
 import { BadDataError } from '../../../lib/error/index.js';
 import PasswordMismatch from '../../../lib/error/password-mismatch.js';
-import type { EventService } from '../../../lib/services/index.js';
+import {
+    ResourceLimitsService,
+    type EventService,
+} from '../../../lib/services/index.js';
 import {
     CREATE_ADDON,
     type IUnleashStores,
@@ -75,6 +78,7 @@ beforeAll(async () => {
     const emailService = new EmailService(config);
     sessionService = new SessionService(stores, config);
     settingService = new SettingService(stores, config, eventService);
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     userService = new UserService(stores, config, {
         accessService,
@@ -83,6 +87,7 @@ beforeAll(async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
     userStore = stores.userStore;
     const rootRoles = await accessService.getRootRoles();

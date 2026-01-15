@@ -44,7 +44,11 @@ import { UpgradeSSO } from './UpgradeSSO.tsx';
 
 const UsersList = () => {
     const navigate = useNavigate();
-    const { isEnterprise, isOss } = useUiConfig();
+    const {
+        isEnterprise,
+        isOss,
+        uiConfig: { resourceLimits },
+    } = useUiConfig();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();
@@ -61,7 +65,8 @@ const UsersList = () => {
     const showUserDeviceCount = useUiFlag('showUserDeviceCount');
     const showSSOUpgrade = isOss() && users.length > 3;
 
-    const showSeatTypes = isEnterprise() && useUiFlag('readOnlyUsersUI');
+    const showSeatTypes =
+        useUiFlag('readOnlyUsersUI') && resourceLimits.readOnlyUsers;
 
     const {
         settings: { enabled: scimEnabled },

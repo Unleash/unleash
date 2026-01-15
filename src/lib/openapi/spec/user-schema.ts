@@ -97,7 +97,6 @@ export const userSchema = {
             description: 'The seat type of this user',
             type: 'string',
             nullable: true,
-            enum: SeatTypes,
             example: 'Regular',
         },
         activeSessions: {

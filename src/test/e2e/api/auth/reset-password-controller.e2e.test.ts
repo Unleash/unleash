@@ -25,7 +25,9 @@ import {
     TEST_AUDIT_USER,
 } from '../../../../lib/types/index.js';
 import { createEventsService } from '../../../../lib/features/index.js';
+import { ResourceLimitsService } from '../../../../lib/features/resource-limits/resource-limits-service.js';
 import { beforeAll, test, afterAll, expect } from 'vitest';
+
 let app: IUnleashTest;
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -79,6 +81,7 @@ beforeAll(async () => {
         config,
         eventService,
     );
+    const resourceLimitsService = new ResourceLimitsService(config);
     userService = new UserService(stores, config, {
         accessService,
         resetTokenService,
@@ -86,6 +89,7 @@ beforeAll(async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
     resetTokenService = new ResetTokenService(stores, config);
     const adminRole = (await accessService.getPredefinedRole(RoleName.ADMIN))!;

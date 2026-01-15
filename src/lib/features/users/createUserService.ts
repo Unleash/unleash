@@ -7,6 +7,7 @@ import {
     EmailService,
     type IUnleashConfig,
     ResetTokenService,
+    ResourceLimitsService,
     SessionService,
     SessionStore,
     SettingService,
@@ -43,6 +44,7 @@ export const createUserService = (
     );
     const accessService = createAccessService(db, config);
     const emailService = new EmailService(config);
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     return new UserService({ userStore }, config, {
         accessService,
@@ -51,5 +53,6 @@ export const createUserService = (
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
 };

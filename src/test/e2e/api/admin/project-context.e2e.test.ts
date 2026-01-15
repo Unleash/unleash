@@ -14,13 +14,12 @@ let db: ITestDb;
 let app: IUnleashTest;
 
 beforeAll(async () => {
-    db = await dbInit('context_api_serial', getLogger);
+    db = await dbInit('project_context_api_serial', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {
             experimental: {
                 flags: {
-                    strictSchemaValidation: true,
                     projectContextFields: true,
                 },
             },
@@ -97,7 +96,7 @@ describe('with UPDATE_PROJECT_CONTEXT permission', () => {
 
         await app.request
             .put(`/api/admin/projects/default/context/${context.name}`)
-            .send({ name: 'updated context' })
+            .send({ description: 'updated description' })
             .set('Content-Type', 'application/json')
             .expect(200);
 
@@ -108,7 +107,7 @@ describe('with UPDATE_PROJECT_CONTEXT permission', () => {
     });
 });
 
-describe('with Editor role', () => {
+describe('with Editor role (CREATE, UPDATE, DELETE_CONTEXT_FIELD permissions)', () => {
     it('allows to perform CRUD operations on a new project', async () => {
         const editorRole = await db.stores.roleStore.getRoleByName(
             RoleName.EDITOR,
@@ -155,7 +154,7 @@ describe('with Editor role', () => {
 
         await app.request
             .put(`/api/admin/projects/${newProject.id}/context/${context.name}`)
-            .send({ name: 'updated context' })
+            .send({ description: 'updated description' })
             .set('Content-Type', 'application/json')
             .expect(200);
 

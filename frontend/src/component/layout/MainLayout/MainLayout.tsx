@@ -104,13 +104,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                 <SkipNavLink />
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>
-                        <ConditionallyRender
-                            condition={Boolean(
-                                projectId &&
-                                    isChangeRequestConfiguredInAnyEnv(),
-                            )}
-                            show={<DraftBanner project={projectId || ''} />}
-                        />
+                        
 
                         <Box
                             sx={(_theme) => ({
@@ -130,7 +124,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     />
                                 }
                             />
-
+                            
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -139,6 +133,13 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     minWidth: 0,
                                 }}
                             >
+                                <ConditionallyRender
+                                    condition={Boolean(
+                                        projectId &&
+                                            isChangeRequestConfiguredInAnyEnv(),
+                                    )}
+                                    show={<DraftBanner project={projectId || ''} />}
+                                />
                                 <Box
                                     sx={{
                                         display: 'flex',

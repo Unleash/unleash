@@ -23,7 +23,6 @@ import {
 } from '@mui/material';
 
 import debounce from 'debounce';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { PlaygroundEditor } from './PlaygroundEditor/PlaygroundEditor.tsx';
@@ -34,6 +33,7 @@ import {
 } from '../../playground.utils';
 import CheckBoxOutlineBlank from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { useFullUnleashContext } from 'hooks/api/getters/useUnleashContext/useFullUnleashContext.ts';
 
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
@@ -47,7 +47,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
     const theme = useTheme();
 
     const { setToastData } = useToast();
-    const { context: contextData } = useUnleashContext();
+    const { context: contextData } = useFullUnleashContext();
     const contextOptions = contextData
         .sort((a, b) => a.sortOrder - b.sortOrder)
         .map(({ name }) => name);

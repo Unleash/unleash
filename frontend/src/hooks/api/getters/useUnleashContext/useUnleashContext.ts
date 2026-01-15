@@ -10,17 +10,34 @@ export interface IUnleashContextOutput {
     error?: Error;
 }
 
+type Query =
+    | { mode: 'root only' }
+    | { mode: 'all' }
+    | { mode: 'project only'; projectId: string }
+    | { mode: 'assignable in project'; projectId: string };
+
+const uriFromQuery = (query: Query) => {
+    switch (query.mode) {
+        case 'root only':
+            return 'api/admin/context';
+        case 'all':
+            return 'api/admin/context?include=project';
+        case 'project only':
+            return `api/admin/projects/${query.projectId}/context`;
+        case 'assignable in project':
+            return `api/admin/projects/${query.projectId}/context?include=global`;
+    }
+};
+
 const useUnleashContext = (
+    query: Query,
     options: SWRConfiguration = {
         revalidateOnFocus: true,
         revalidateOnReconnect: true,
         revalidateIfStale: true,
     },
-    projectId?: string,
 ): IUnleashContextOutput => {
-    const uri = projectId
-        ? `api/admin/projects/${projectId}/context`
-        : `api/admin/context`;
+    const uri = uriFromQuery(query);
 
     const fetcher = () => {
         const path = formatApiPath(uri);

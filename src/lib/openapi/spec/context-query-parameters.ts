@@ -1,0 +1,18 @@
+import type { FromQueryParams } from 'unleash-server';
+
+export const contextQueryParameters = [
+    {
+        name: 'include',
+        schema: {
+            type: 'string',
+            example: 'project',
+        },
+        description:
+            'Whether the response should include project-specific or root context fields in addition to the fields in the default response. When querying the root context API, `include=project` will yield a response that includes all project-specific context fields in addition to all root context fields. Conversely, when querying a project-specific context API, using `include=root` will yield a response that includes all root context fields in addition to the project-specific context fields. The other combinations have no effect, because the responses already include those fields.',
+        in: 'query',
+    },
+] as const;
+
+export type ContextQueryParameters = Partial<
+    FromQueryParams<typeof contextQueryParameters>
+>;

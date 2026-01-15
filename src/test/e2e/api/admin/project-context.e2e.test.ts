@@ -68,7 +68,7 @@ describe('with UPDATE_PROJECT_CONTEXT permission', () => {
                 TEST_AUDIT_USER,
             );
 
-        const email = 'user@test.com';
+        const email = 'updateprojectcontext@test.com';
         const user = await app.services.userService.createUser(
             { email, rootRole: viewerRole.id },
             TEST_AUDIT_USER,
@@ -132,7 +132,7 @@ describe('with Editor role', () => {
             TEST_AUDIT_USER,
         );
 
-        const email = 'user@test.com';
+        const email = 'editoruser@test.com';
         await app.services.userService.createUser(
             { email, rootRole: editorRole.id },
             TEST_AUDIT_USER,

@@ -13,9 +13,11 @@ import { useInstanceStats } from 'hooks/api/getters/useInstanceStats/useInstance
 import { formatApiPath } from '../../../../utils/formatPath.ts';
 import { PageContent } from '../../../common/PageContent/PageContent.tsx';
 import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export const InstanceStats: FC = () => {
     const { stats } = useInstanceStats();
+    const readOnlyUsersUIEnabled = useUiFlag('readOnlyUsersUI');
 
     let versionTitle: string;
     let version: string | undefined;
@@ -72,6 +74,13 @@ export const InstanceStats: FC = () => {
             { title: 'SAML enabled', value: stats?.SAMLenabled ? 'Yes' : 'No' },
             { title: 'OIDC enabled', value: stats?.OIDCenabled ? 'Yes' : 'No' },
         );
+
+        if (readOnlyUsersUIEnabled) {
+            rows.push({
+                title: 'ReadOnly users',
+                value: stats?.readOnlyUsers,
+            });
+        }
     }
 
     return (

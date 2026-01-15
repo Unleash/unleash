@@ -86,6 +86,11 @@ export interface InstanceAdminStatsSchema {
      */
     projects?: number;
     /**
+     * The number of ReadOnly users in this instance
+     * @minimum 0
+     */
+    readOnlyUsers?: number;
+    /**
      * The number of release plans in this instance
      * @minimum 0
      */

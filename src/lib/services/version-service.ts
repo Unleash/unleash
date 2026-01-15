@@ -56,6 +56,7 @@ export interface IFeatureUsageInfo {
     releaseTemplates: number;
     releasePlans: number;
     edgeInstanceUsage?: EdgeInstanceUsage;
+    readOnlyUsers?: number;
 }
 
 export interface IInstanceInfo {

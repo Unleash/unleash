@@ -5,6 +5,9 @@ import type { AccountTypes } from '../events/index.js';
 
 type AccountType = (typeof AccountTypes)[number];
 
+export const SeatTypes = ['Regular', 'ReadOnly'] as const;
+type SeatType = (typeof SeatTypes)[number];
+
 export interface UserData {
     id: number;
     name?: string;
@@ -16,6 +19,7 @@ export interface UserData {
     createdAt?: Date;
     isService?: boolean;
     scimId?: string;
+    seatType?: SeatType;
 }
 
 export interface IUser {
@@ -32,6 +36,7 @@ export interface IUser {
     imageUrl?: string;
     accountType?: AccountType;
     scimId?: string;
+    seatType?: SeatType;
     deletedSessions?: number;
     activeSessions?: number;
 }
@@ -76,6 +81,8 @@ export class User implements IUser {
 
     scimId?: string;
 
+    seatType?: SeatType;
+
     constructor({
         id,
         name,
@@ -87,6 +94,7 @@ export class User implements IUser {
         createdAt,
         isService,
         scimId,
+        seatType,
     }: UserData) {
         if (!id) {
             throw new ValidationError('Id is required', [], undefined);
@@ -102,6 +110,7 @@ export class User implements IUser {
         this.createdAt = createdAt;
         this.accountType = isService ? 'Service Account' : 'User';
         this.scimId = scimId;
+        this.seatType = seatType || 'Regular';
     }
 
     generateImageUrl(): string {

@@ -81,7 +81,7 @@ export class User implements IUser {
 
     scimId?: string;
 
-    seatType?: SeatType = 'Regular';
+    seatType?: SeatType;
 
     constructor({
         id,

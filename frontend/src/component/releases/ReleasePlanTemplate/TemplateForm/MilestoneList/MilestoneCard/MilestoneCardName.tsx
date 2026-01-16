@@ -4,10 +4,15 @@ import { styled } from '@mui/material';
 import { useState } from 'react';
 import Input from 'component/common/Input/Input';
 
-const StyledInput = styled(Input)(({ theme }) => ({
+const StyledInput = styled(Input)({
     width: '100%',
-}));
+});
 
+const StyledInputContainer = styled('div')(({ theme }) => ({
+    width: '100%',
+    height: 'auto',
+    marginRight: theme.spacing(2),
+}));
 const StyledMilestoneCardTitle = styled('span')(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
     fontSize: theme.fontSizes.bodySize,
@@ -17,12 +22,17 @@ const StyledEditIcon = styled(Edit, {
     shouldForwardProp: (prop) => prop !== 'hasError',
 })<{ hasError: boolean }>(({ theme, hasError = false }) => ({
     cursor: 'pointer',
-    marginTop: theme.spacing(-0.25),
+    marginTop: theme.spacing(-0.5),
     marginLeft: theme.spacing(0.5),
     height: theme.spacing(2.5),
     width: theme.spacing(2.5),
     color: hasError ? theme.palette.error.main : theme.palette.text.secondary,
 }));
+
+const StyledRow = styled('div')({
+    display: 'inline-flex',
+    alignItems: 'center',
+});
 
 interface IMilestoneCardNameProps {
     milestone: IReleasePlanMilestonePayload;
@@ -39,7 +49,7 @@ export const MilestoneCardName = ({
 }: IMilestoneCardNameProps) => {
     const [editMode, setEditMode] = useState(false);
     return (
-        <>
+        <StyledInputContainer>
             {editMode && (
                 <StyledInput
                     label=''
@@ -65,25 +75,27 @@ export const MilestoneCardName = ({
             )}
             {!editMode && (
                 <>
-                    <StyledMilestoneCardTitle
-                        onClick={(ev) => {
-                            setEditMode(true);
-                            ev.preventDefault();
-                            ev.stopPropagation();
-                        }}
-                    >
-                        {milestone.name}
-                    </StyledMilestoneCardTitle>
-                    <StyledEditIcon
-                        hasError={Boolean(errors?.[`${milestone.id}_name`])}
-                        onClick={(ev) => {
-                            setEditMode(true);
-                            ev.preventDefault();
-                            ev.stopPropagation();
-                        }}
-                    />
+                    <StyledRow>
+                        <StyledMilestoneCardTitle
+                            onClick={(ev) => {
+                                setEditMode(true);
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                            }}
+                        >
+                            {milestone.name}
+                        </StyledMilestoneCardTitle>
+                        <StyledEditIcon
+                            hasError={Boolean(errors?.[`${milestone.id}_name`])}
+                            onClick={(ev) => {
+                                setEditMode(true);
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                            }}
+                        />
+                    </StyledRow>
                 </>
             )}
-        </>
+        </StyledInputContainer>
     );
 };

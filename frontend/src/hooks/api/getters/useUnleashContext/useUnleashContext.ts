@@ -11,20 +11,20 @@ export interface IUnleashContextOutput {
 }
 
 type Query =
-    | { mode: 'root only' }
+    | { mode: 'root-only' }
     | { mode: 'all' }
-    | { mode: 'project only'; projectId: string }
-    | { mode: 'assignable in project'; projectId: string };
+    | { mode: 'project-only'; projectId: string }
+    | { mode: 'assignable-in-project'; projectId: string };
 
 const uriFromQuery = (query: Query) => {
     switch (query.mode) {
-        case 'root only':
+        case 'root-only':
             return 'api/admin/context';
         case 'all':
             return 'api/admin/context?include=project';
-        case 'project only':
+        case 'project-only':
             return `api/admin/projects/${query.projectId}/context`;
-        case 'assignable in project':
+        case 'assignable-in-project':
             return `api/admin/projects/${query.projectId}/context?include=global`;
     }
 };

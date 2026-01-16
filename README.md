@@ -50,7 +50,7 @@ Then point your browser to `localhost:4242` and log in using:
 - username: `admin`
 - password: `unleash4all`
 
-If you'd rather run the source code in this repo directly via Node.js, see the [step-by-step instructions to get up and running in the contributing guide](./CONTRIBUTING.md#how-to-run-the-project).
+If you'd rather run the source code in this repo directly via Node.js, see the [step-by-step instructions to get up and running in the contributing guide](./contributing/CONTRIBUTING.md#how-to-run-the-project).
 
 ### Connect your SDK
 
@@ -130,7 +130,7 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 
 Unleash is the largest [open-source feature flag solution](https://www.getunleash.io/) on GitHub. Building Unleash is a collaborative effort, and we owe a lot of gratitude to many smart and talented individuals. Building it together with the community ensures that we build a product that solves real problems for real people. We'd love to have your help too: Please feel free to open issues or provide pull requests.
 
-Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](./website/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
+Check out [the CONTRIBUTING.md file](./contributing/CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](./website/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
 
 ### Contributors
 

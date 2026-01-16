@@ -31,6 +31,11 @@ beforeAll(async () => {
     await setup();
 });
 
+afterAll(async () => {
+    await app.destroy();
+    await db.destroy();
+});
+
 const setup = async () => {
     const dummyAdmin = await app.services.userService.createUser(
         {
@@ -59,8 +64,8 @@ const setup = async () => {
     }
 };
 
-describe('Root and project-level context API respects the `include` query param', () => {
-    it('fetches only root context fields without include=project on root API', async () => {
+describe('Root-level context API respects the `include` query param', () => {
+    it('fetches only root context fields without include=project', async () => {
         const { body: contextFields } = await app.request
             .get(`/api/admin/context`)
             .set('Content-Type', 'application/json')
@@ -72,7 +77,7 @@ describe('Root and project-level context API respects the `include` query param'
         expect(contextFields.every(({ project }) => !project)).toBe(true);
     });
 
-    it('fetches all context fields with include=project on root API', async () => {
+    it('fetches all context fields with include=project', async () => {
         const { body: contextFields } = await app.request
             .get(`/api/admin/context?include=project`)
             .set('Content-Type', 'application/json')
@@ -86,8 +91,10 @@ describe('Root and project-level context API respects the `include` query param'
 
         expect(contextFields.some(({ project }) => !!project)).toBe(true);
     });
+});
 
-    it('fetches only project context fields without include=root on project API', async () => {
+describe('Project-level context API respects the `include` query param', () => {
+    it('fetches only project context fields without include=root', async () => {
         const { body: contextFields } = await app.request
             .get(`/api/admin/projects/${projectA.name}/context`)
             .set('Content-Type', 'application/json')
@@ -97,7 +104,7 @@ describe('Root and project-level context API respects the `include` query param'
         expect(contextFields[0].name).toBe(projectA.contextField);
     });
 
-    it('fetches root + project-specific context fields with include=root on project API', async () => {
+    it('fetches root + project-specific context fields with include=root', async () => {
         const { body: contextFields } = await app.request
             .get(`/api/admin/projects/${projectA.name}/context?include=root`)
             .set('Content-Type', 'application/json')

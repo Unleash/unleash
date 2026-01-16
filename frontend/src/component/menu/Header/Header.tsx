@@ -78,11 +78,12 @@ const Header = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
 
-    const smallScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const mediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const smallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
 
-    if (smallScreen) {
+    if (mediumScreen) {
         return (
             <HeaderComponent position='static'>
                 <ContainerComponent>
@@ -101,6 +102,7 @@ const Header = () => {
                     </Tooltip>
                     <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
                     <StyledUserContainer>
+                        {!smallScreen && <CommandBar />}
                         <UserProfile />
                     </StyledUserContainer>
                 </ContainerComponent>

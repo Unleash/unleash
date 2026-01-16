@@ -31,22 +31,63 @@ export const StretchContainer = styled(Box, {
         ? theme.palette.background.application
         : theme.palette.background.paper,
     borderRight: `1px solid ${theme.palette.divider}`,
-    // padding: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    paddingBottom: theme.spacing(0),
     alignSelf: 'stretch',
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(2),
     zIndex: 1,
     overflowAnchor: 'none',
     position: 'sticky',
     top: 0,
     height: '100vh',
-    overflowY: 'auto',
     minWidth: mode === 'full' ? theme.spacing(34) : 'auto',
     width: mode === 'full' ? theme.spacing(34) : 'auto',
+}));
+
+const TopContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'admin',
+})<{ admin: boolean }>(({ theme, admin }) => ({
+    position: 'sticky',
+    top: 0,
+    width: '100%',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
+    // borderBottom: `1px solid ${theme.palette.divider}`,
+    backgroundColor: admin
+        ? theme.palette.background.application
+        : theme.palette.background.paper,
+    zIndex: 2,
+}));
+
+const MidContainer = styled(Box)(({ theme }) => ({
+    flex: 1,
+    width: '100%',
+    overflowY: 'auto',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
+const BottomContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'admin',
+})<{ admin: boolean }>(({ theme, admin }) => ({
+    position: 'sticky',
+    bottom: 0,
+    width: '100%',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
+    backgroundColor: admin
+        ? theme.palette.background.application
+        : theme.palette.background.paper,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    zIndex: 2,
 }));
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
@@ -69,19 +110,6 @@ const StyledUnleashLogoOnlyWhite = styled(LogoOnlyWhite)(({ theme }) => ({
     margin: '0 auto',
 }));
 
-// This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
-const StickyContainer = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'admin',
-})<{ admin: boolean }>(({ theme, admin }) => ({
-    position: 'sticky',
-    paddingBottom: theme.spacing(0.25),
-    paddingTop: theme.spacing(0.25),
-    bottom: theme.spacing(0),
-    backgroundColor: admin
-        ? theme.palette.background.application
-        : theme.palette.background.paper,
-    borderTop: `1px solid ${theme.palette.divider}`,
-}));
 
 export const NavigationSidebar: FC<{
     NewInUnleash?: typeof LegacyNewInUnleash;
@@ -102,53 +130,70 @@ export const NavigationSidebar: FC<{
 
     return (
         <StretchContainer mode={mode} admin={showOnlyAdminMenu}>
-            <ConditionallyRender
-                condition={mode === 'full'}
-                show={
-                    <StyledLink to='/' sx={flexRow} aria-label='Home'>
-                        <ThemeMode
-                            darkmode={
-                                <ConditionallyRender
-                                    condition={celebrateUnleashFrontend}
-                                    show={<CelebatoryUnleashLogoWhite />}
-                                    elseShow={
-                                        <StyledUnleashLogoWhite aria-label='Unleash logo' />
-                                    }
-                                />
-                            }
-                            lightmode={
-                                <ConditionallyRender
-                                    condition={celebrateUnleashFrontend}
-                                    show={<StyledCelebatoryLogo />}
-                                    elseShow={
-                                        <StyledUnleashLogo aria-label='Unleash logo' />
-                                    }
-                                />
-                            }
-                        />
-                    </StyledLink>
-                }
-                elseShow={
-                    <StyledLink to='/' sx={flexRow} aria-label='Home'>
-                        <ThemeMode
-                            darkmode={<StyledUnleashLogoOnlyWhite />}
-                            lightmode={<StyledUnleashLogoOnly />}
-                        />
-                    </StyledLink>
-                }
-            />
+            <TopContainer admin={showOnlyAdminMenu}>
+                <ConditionallyRender
+                    condition={mode === 'full'}
+                    show={
+                        <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                            <ThemeMode
+                                darkmode={
+                                    <ConditionallyRender
+                                        condition={celebrateUnleashFrontend}
+                                        show={<CelebatoryUnleashLogoWhite />}
+                                        elseShow={
+                                            <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                                        }
+                                    />
+                                }
+                                lightmode={
+                                    <ConditionallyRender
+                                        condition={celebrateUnleashFrontend}
+                                        show={<StyledCelebatoryLogo />}
+                                        elseShow={
+                                            <StyledUnleashLogo aria-label='Unleash logo' />
+                                        }
+                                    />
+                                }
+                            />
+                        </StyledLink>
+                    }
+                    elseShow={
+                        <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                            <ThemeMode
+                                darkmode={<StyledUnleashLogoOnlyWhite />}
+                                lightmode={<StyledUnleashLogoOnly />}
+                            />
+                        </StyledLink>
+                    }
+                />
+            </TopContainer>
 
-            <ConditionallyRender
-                condition={!showOnlyAdminMenu}
-                show={
-                    <>
-                        <PrimaryNavigationList
-                            mode={mode}
-                            setMode={setMode}
-                            onClick={setActiveItem}
-                            activeItem={activeItem}
-                        />
+            <MidContainer>
+                <ConditionallyRender
+                    condition={!showOnlyAdminMenu}
+                    show={
+                        <>
+                            <PrimaryNavigationList
+                                mode={mode}
+                                setMode={setMode}
+                                onClick={setActiveItem}
+                                activeItem={activeItem}
+                            />
 
+                            <AdminSettingsNavigation
+                                onClick={setActiveItem}
+                                mode={mode}
+                                onSetFullMode={() => setMode('full')}
+                                activeItem={activeItem}
+                                onExpandChange={(expand) => {
+                                    changeExpanded('admin', expand);
+                                }}
+                                expanded={expanded.includes('admin')}
+                                routes={routes.adminRoutes}
+                            />
+                        </>
+                    }
+                    elseShow={
                         <AdminSettingsNavigation
                             onClick={setActiveItem}
                             mode={mode}
@@ -160,40 +205,24 @@ export const NavigationSidebar: FC<{
                             expanded={expanded.includes('admin')}
                             routes={routes.adminRoutes}
                         />
+                    }
+                />
+            </MidContainer>
 
-                        {/* this will push the show/hide to the bottom on short nav list */}
-                        <Box sx={{ flex: 1 }} />
-
-                        <StickyContainer admin={showOnlyAdminMenu}>
-                            {NewInUnleash ? (
-                                <NewInUnleash
-                                    mode={mode}
-                                    onMiniModeClick={() => setMode('full')}
-                                />
-                            ) : null}
-                            <ShowHide
-                                mode={mode}
-                                onChange={() => {
-                                    setMode(mode === 'full' ? 'mini' : 'full');
-                                }}
-                            />
-                        </StickyContainer>
-                    </>
-                }
-                elseShow={
-                    <AdminSettingsNavigation
-                        onClick={setActiveItem}
+            <BottomContainer admin={showOnlyAdminMenu}>
+                {NewInUnleash ? (
+                    <NewInUnleash
                         mode={mode}
-                        onSetFullMode={() => setMode('full')}
-                        activeItem={activeItem}
-                        onExpandChange={(expand) => {
-                            changeExpanded('admin', expand);
-                        }}
-                        expanded={expanded.includes('admin')}
-                        routes={routes.adminRoutes}
+                        onMiniModeClick={() => setMode('full')}
                     />
-                }
-            />
+                ) : null}
+                <ShowHide
+                    mode={mode}
+                    onChange={() => {
+                        setMode(mode === 'full' ? 'mini' : 'full');
+                    }}
+                />
+            </BottomContainer>
         </StretchContainer>
     );
 };

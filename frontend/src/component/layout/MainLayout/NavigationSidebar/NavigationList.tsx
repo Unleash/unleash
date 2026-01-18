@@ -20,7 +20,13 @@ export const OtherLinksList = () => {
     const { uiConfig } = useUiConfig();
 
     return (
-        <List>
+        <List
+            sx={(theme) => ({
+                display: 'flex',
+                flexDirection: 'column',
+                gap: theme.spacing(0.25),
+            })}
+        >
             {uiConfig.links.map((link) => (
                 <ExternalFullListItem
                     href={link.href}
@@ -72,7 +78,13 @@ export const PrimaryNavigationList: FC<{
     const showChangeRequestList = isEnterprise();
 
     return (
-        <List>
+        <List
+            sx={(theme) => ({
+                display: 'flex',
+                flexDirection: 'column',
+                gap: theme.spacing(0.25),
+            })}
+        >
             <PrimaryListItem href='/personal' text='Dashboard' />
             <PrimaryListItem href='/projects' text='Projects' />
             <PrimaryListItem href='/search' text='Flags overview' />
@@ -134,7 +146,13 @@ export const AdminSettingsLink: FC<{
     onClick: (activeItem: string) => void;
 }> = ({ mode, onClick }) => (
     <Box>
-        <List>
+        <List
+            sx={(theme) => ({
+                display: 'flex',
+                flexDirection: 'column',
+                gap: theme.spacing(0.25),
+            })}
+        >
             <MenuListItem
                 href='/admin'
                 text='Admin settings'

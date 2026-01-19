@@ -16,7 +16,7 @@ import type { Logger } from '../logger.js';
 import { validateSchema } from '../openapi/validate.js';
 import type { IFlagResolver } from '../types/index.js';
 
-const defaultReleaseVersion = '7.0.0';
+const defaultStableReleaseVersion = '7.0.0';
 const getStabilityLevel = (operation: unknown): string | undefined => {
     if (!operation || typeof operation !== 'object') {
         return undefined;
@@ -68,7 +68,8 @@ export class OpenApiService {
     validPath(op: ApiOperation): RequestHandler {
         const {
             beta,
-            releaseVersion = defaultReleaseVersion,
+            betaReleaseVersion,
+            stableReleaseVersion = defaultStableReleaseVersion,
             enterpriseOnly,
             ...rest
         } = op;
@@ -78,7 +79,11 @@ export class OpenApiService {
         const currentVersion = this.api.document?.info?.version || '7.0.0';
         const stability = beta
             ? 'beta'
-            : calculateStability(releaseVersion, currentVersion);
+            : calculateStability({
+                  betaReleaseVersion,
+                  stableReleaseVersion,
+                  currentVersion,
+              });
         const summaryWithStability =
             stability !== 'stable' && rest.summary
                 ? `[${stability.toUpperCase()}] ${rest.summary}`
@@ -110,9 +115,6 @@ export class OpenApiService {
             ...rest,
             summary: summaryWithStability,
             'x-stability-level': stability,
-            ...(releaseVersion !== defaultReleaseVersion
-                ? { 'x-release-version': releaseVersion }
-                : {}),
             description:
                 `${enterpriseBadge}${stabilityBadge}${op.description}`.replaceAll(
                     /\n\s*/g,

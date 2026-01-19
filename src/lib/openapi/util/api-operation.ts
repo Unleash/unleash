@@ -3,39 +3,40 @@ import type { OpenApiTag } from './openapi-tags.js';
 import semver from 'semver';
 
 /**
- * Calculate stability level based on comparing release and current versions.
- * - Alpha: release version is ahead of current (not yet released)
- * - Beta: current is 0-2 minor versions ahead of release version
- * - Stable: current is more than 2 minor versions ahead of release version
+ * Calculate stability level based on comparing beta/stable milestones
+ * against the current version.
+ * - Alpha: current version is before beta and before stable
+ * - Beta: current version is >= beta and < stable
+ * - Stable: current version is >= stable
  */
-export function calculateStability(
-    releaseVersion: string,
-    currentVersion: string,
-): 'alpha' | 'beta' | 'stable' {
-    const release = semver.coerce(releaseVersion);
-    const current = semver.coerce(currentVersion);
+type StabilityVersions = {
+    betaReleaseVersion?: string;
+    stableReleaseVersion: string;
+    currentVersion: string;
+};
 
-    if (!release || !current) {
+export function calculateStability({
+    betaReleaseVersion,
+    stableReleaseVersion,
+    currentVersion,
+}: StabilityVersions): 'alpha' | 'beta' | 'stable' {
+    const current = semver.coerce(currentVersion);
+    const beta = betaReleaseVersion ? semver.coerce(betaReleaseVersion) : null;
+    const stable = semver.coerce(stableReleaseVersion);
+
+    if (!current || !stable) {
         return 'stable'; // Default to stable if versions can't be parsed
     }
 
-    // If release is ahead of current, it's alpha (not yet released)
-    if (semver.gt(release, current)) {
-        return 'alpha';
+    if (semver.gte(current, stable)) {
+        return 'stable';
     }
 
-    // Calculate minor version difference
-    // For same major: just subtract minors
-    // For different major: consider major difference as many minors
-    const majorDiff = current.major - release.major;
-    const minorDiff = current.minor - release.minor;
-    const totalMinorDiff = majorDiff * 1000 + minorDiff; // Major version jump = 1000 minors (effectively always stable)
-
-    if (totalMinorDiff <= 2) {
+    if (beta && semver.gte(current, beta)) {
         return 'beta';
     }
 
-    return 'stable';
+    return 'alpha';
 }
 
 type DeprecatedOpenAPITag =
@@ -51,19 +52,17 @@ export interface ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag>
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
     operationId: string;
     tags: [Tag];
-    /** @deprecated use releaseVersion instead */
+    /** @deprecated use betaReleaseVersion/stableReleaseVersion instead */
     beta?: boolean;
     /**
-     * The version when this API was introduced or last significantly changed.
-     * Used to automatically calculate stability:
-     * - Alpha: release version is ahead of current version (not yet released)
-     * - Beta: current version is 0-2 minor versions ahead of release version
-     * - Stable: current version is 3 or more minor versions ahead of release version
-     *
-     * When developing a new API, set this to your best estimate of when it will be released.
-     * All APIs naturally progress through the beta -> stable lifecycle as versions advance.
+     * The first version where this API is expected to be beta.
+     * If omitted, the API stays alpha until it reaches stable.
+     */
+    betaReleaseVersion?: string;
+    /**
+     * The first version where this API is expected to be stable.
      * @default '7.0.0'
      */
-    releaseVersion?: string;
+    stableReleaseVersion?: string;
     enterpriseOnly?: boolean;
 }

@@ -16,13 +16,13 @@ Additionally, we wanted to ship and test new APIs with select customers before f
 
 ## Decision
 
-We've implemented an automated API stability tracking system based on semantic versioning. Each endpoint declares a `releaseVersion` field (the version when it was introduced or last significantly changed). The system automatically calculates stability levels based on version comparison:
+We've implemented an automated API stability tracking system based on semantic versioning. Each endpoint declares a `betaReleaseVersion` (optional) and a `stableReleaseVersion` (required). The system calculates stability levels by comparing those milestones against the current version:
 
 ### Stability Calculation Heuristic
 
-- **Alpha** 🔴: Release version is ahead of current version (not yet released)
-- **Beta** 🟡: Current version is 0-2 minor versions ahead of release version
-- **Stable** 🟢: Current version is 3+ minor versions ahead of release version
+- **Alpha** 🔴: Current version is before both beta and stable (if beta is omitted, stable is the only check)
+- **Beta** 🟡: Current version is at or after beta, but before stable
+- **Stable** 🟢: Current version is at or after stable
 
 **Example:**
 ```typescript
@@ -31,7 +31,8 @@ We've implemented an automated API stability tracking system based on semantic v
 openApiService.validPath({
     tags: ['Features'],
     summary: 'Create feature flag',
-    releaseVersion: '7.5.0',  // → Alpha (not yet released)
+    betaReleaseVersion: '7.5.0',
+    stableReleaseVersion: '7.7.0', // → Alpha (not yet released)
     operationId: 'createFeature',
     // ...
 })
@@ -39,7 +40,8 @@ openApiService.validPath({
 openApiService.validPath({
     tags: ['Projects'],
     summary: 'List projects',
-    releaseVersion: '7.3.0',  // → Beta (1 minor behind)
+    betaReleaseVersion: '7.3.0',
+    stableReleaseVersion: '7.5.0', // → Beta (between beta and stable)
     operationId: 'getProjects',
     // ...
 })
@@ -47,7 +49,7 @@ openApiService.validPath({
 openApiService.validPath({
     tags: ['Users'],
     summary: 'Get user info',
-    releaseVersion: '7.1.0',  // → Stable (3+ minors behind)
+    stableReleaseVersion: '7.1.0', // → Stable (already at/after stable)
     operationId: 'getUserInfo',
     // ...
 })
@@ -55,9 +57,9 @@ openApiService.validPath({
 
 ### Implementation
 
-1. **ApiOperation Interface**: Added `releaseVersion?: string` field (defaults to `'7.0.0'` so most/all APIs are stable now)
-2. **Stability Calculation**: `calculateStability()` function compares release version with current Unleash version
-3. **OpenAPI Extensions**: Automatically adds `x-stability-level` and `x-release-version` (only if defined) to OpenAPI spec
+1. **ApiOperation Interface**: Added `betaReleaseVersion?: string` and `stableReleaseVersion?: string` (defaults to `'7.0.0'` so most/all APIs are stable now)
+2. **Stability Calculation**: `calculateStability()` compares beta/stable milestones with the current Unleash version
+3. **OpenAPI Extensions**: Adds only `x-stability-level` to the OpenAPI spec (milestone versions stay in code as documentation)
 4. **Swagger UI Integration**: 
    - Alpha endpoints are hidden from public docs in production
    - Visible in development mode (`NODE_ENV=development`)
@@ -77,11 +79,11 @@ This gives us the best of both worlds: we can ship and test alpha APIs internall
 
 ### Positive
 
-**Zero maintenance**: As Unleash versions progress, APIs automatically transition from alpha → beta → stable without manual intervention.
+**Zero maintenance**: As Unleash versions progress, APIs automatically transition from alpha → beta → stable based on the declared milestones.
 
-**Built-in documentation**: The `releaseVersion` field serves as historical documentation. Anyone can see when an API was introduced and assess its maturity.
+**Built-in documentation**: The `betaReleaseVersion` and `stableReleaseVersion` fields serve as historical documentation. Anyone can see the intended lifecycle and assess maturity.
 
-**Flexible during development**: Developers estimate which version a new API will ship in. If priorities change or development takes longer, they simply update the version - it's okay to be wrong initially.
+**Flexible during development**: Developers estimate which versions a new API will reach beta and stable. If priorities change or development takes longer, they update the milestones.
 
 **Selective disclosure**: Ship alpha features to production for testing without exposing them to customers, until the API is ready to be moved to beta.
 
@@ -89,14 +91,14 @@ This gives us the best of both worlds: we can ship and test alpha APIs internall
 
 ### Migration Path
 
-1. **Immediate**: New endpoints should include `releaseVersion`
-2. **Gradual**: Add `releaseVersion` to existing endpoints as they're modified
+1. **Immediate**: New endpoints should include `stableReleaseVersion` and optionally `betaReleaseVersion`
+2. **Gradual**: Add `stableReleaseVersion` (and optional `betaReleaseVersion`) to existing endpoints as they're modified
 3. **Future**: AI-assisted bulk backfill from git history to document all existing APIs
 
 ### Trade-offs
 
-**Version guessing required**: Developers must estimate release versions during development. This is an acceptable trade-off given the version can be updated and the benefits of automation.
+**Milestone guessing required**: Developers must estimate beta/stable milestones during development. This is acceptable given the milestones can be updated.
 
-**Defaults to 7.0.0**: Endpoints without `releaseVersion` default to `'7.0.0'`, which may not be historically accurate but provides a reasonable baseline for the migration period.
+**Defaults to 7.0.0**: Endpoints without `stableReleaseVersion` default to `'7.0.0'`, which may not be historically accurate but provides a reasonable baseline for the migration period.
 
-**Heuristic limitations**: The more-than-2-minor-versions (3+ minor versions) threshold for beta→stable is somewhat arbitrary but provides a reasonable balance between caution and API maturity progression.
+**Explicit lifecycle**: Having two milestones is explicit, but it requires setting (and occasionally updating) both values.

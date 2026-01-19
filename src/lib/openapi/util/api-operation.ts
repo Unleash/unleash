@@ -52,8 +52,6 @@ export interface ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag>
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
     operationId: string;
     tags: [Tag];
-    /** @deprecated use betaReleaseVersion/stableReleaseVersion instead */
-    beta?: boolean;
     /**
      * The first version where this API is expected to be beta.
      * If omitted, the API stays alpha until it reaches stable.

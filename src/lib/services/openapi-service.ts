@@ -67,7 +67,6 @@ export class OpenApiService {
 
     validPath(op: ApiOperation): RequestHandler {
         const {
-            beta,
             betaReleaseVersion,
             stableReleaseVersion = defaultStableReleaseVersion,
             enterpriseOnly,
@@ -77,13 +76,11 @@ export class OpenApiService {
         const openapiStaticAssets = `${baseUriPath}/openapi-static`;
 
         const currentVersion = this.api.document?.info?.version || '7.0.0';
-        const stability = beta
-            ? 'beta'
-            : calculateStability({
-                  betaReleaseVersion,
-                  stableReleaseVersion,
-                  currentVersion,
-              });
+        const stability = calculateStability({
+            betaReleaseVersion,
+            stableReleaseVersion,
+            currentVersion,
+        });
         const summaryWithStability =
             stability !== 'stable' && rest.summary
                 ? `[${stability.toUpperCase()}] ${rest.summary}`

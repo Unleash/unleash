@@ -30,7 +30,6 @@ We are in the process of defining ADRs for the back end. At the time of writing 
 * [Write model vs Read models](/contributing/ADRs/back-end/write-model-vs-read-models)
 * [Frontend API Design](/contributing/ADRs/back-end/frontend-api-design)
 * [Correct type dependencies](/contributing/ADRs/back-end/correct-type-dependencies)
-* [API Version Tracking and Stability Lifecycle](/contributing/ADRs/back-end/api-version-tracking)
 
 ## Front-end ADRs
 

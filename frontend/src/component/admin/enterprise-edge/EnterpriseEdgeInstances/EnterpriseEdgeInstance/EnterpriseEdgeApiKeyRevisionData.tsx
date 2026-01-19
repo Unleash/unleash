@@ -21,17 +21,6 @@ const StyledTable = styled('table')(({ theme }) => ({
     },
 }));
 
-const StyledSectionHeader = styled('tr')(({ theme }) => ({
-    fontWeight: theme.fontWeight.bold,
-    '&&& > td': {
-        paddingTop: theme.spacing(1),
-        '& > div': {
-            display: 'flex',
-            alignItems: 'center',
-        },
-    },
-}));
-
 export const EnterpriseEdgeApiKeyRevisionData = ({
     apiKeys,
 }: IEnterpriseEdgeApiKeyRevisionProps) => {

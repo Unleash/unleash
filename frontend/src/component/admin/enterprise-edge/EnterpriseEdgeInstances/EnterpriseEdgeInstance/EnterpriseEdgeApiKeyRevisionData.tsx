@@ -1,7 +1,6 @@
-import { EdgeApiKeyRevisionId} from "../../../../../interfaces/connectedEdge.ts";
-import {formatDateYMDHMS} from "../../../../../utils/formatDate.ts";
-import {styled} from "@mui/material";
-import {HelpIcon} from "../../../../common/HelpIcon/HelpIcon.tsx";
+import type { EdgeApiKeyRevisionId } from '../../../../../interfaces/connectedEdge.ts';
+import { formatDateYMDHMS } from '../../../../../utils/formatDate.ts';
+import { styled } from '@mui/material';
 
 interface IEnterpriseEdgeApiKeyRevisionProps {
     apiKeys?: EdgeApiKeyRevisionId[];
@@ -34,9 +33,8 @@ const StyledSectionHeader = styled('tr')(({ theme }) => ({
 }));
 
 export const EnterpriseEdgeApiKeyRevisionData = ({
-    apiKeys
+    apiKeys,
 }: IEnterpriseEdgeApiKeyRevisionProps) => {
-
     return apiKeys && apiKeys.length > 0 ? (
         <StyledTable>
             <thead>
@@ -47,21 +45,21 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
                 </tr>
             </thead>
             <tbody>
-            {
-                apiKeys?.map(apiKey => {
+                {apiKeys?.map((apiKey) => {
                     return (
-                        <tr key={`${apiKey.environment}${apiKey.projects.join(",")}`}>
+                        <tr
+                            key={`${apiKey.environment}${apiKey.projects.join(',')}`}
+                        >
                             <td>{`${apiToken(apiKey)}`}</td>
                             <td>{apiKey.revisionId}</td>
                             <td>{formatDateYMDHMS(apiKey.lastUpdated)}</td>
                         </tr>
                     );
-                })
-            }
+                })}
             </tbody>
         </StyledTable>
-    ) : null
-}
+    ) : null;
+};
 
 function projectKey(projects: string[]): string {
     return projects.length === 1 ? projects[0] : '[]';

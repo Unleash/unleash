@@ -5,7 +5,7 @@ import semver from 'semver';
 /**
  * Calculate stability level based on comparing beta/stable milestones
  * against the current version.
- * - Alpha: current version is before beta and before stable
+ * - Alpha: current version is before beta (when beta is defined)
  * - Beta: current version is >= beta and < stable
  * - Stable: current version is >= stable
  */
@@ -58,7 +58,7 @@ export interface ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag>
     tags: [Tag];
     /**
      * The first version where this API is expected to be beta.
-     * If omitted, the API stays alpha until it reaches stable.
+     * If omitted, the API is treated as beta until it reaches stable.
      */
     betaReleaseVersion?: string;
     /**

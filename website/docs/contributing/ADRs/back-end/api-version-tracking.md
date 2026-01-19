@@ -20,7 +20,7 @@ We've implemented an automated API stability tracking system based on semantic v
 
 ### Stability Calculation Heuristic
 
-- **Alpha** 🔴: Current version is before both beta and stable (if beta is omitted, stable is the only check)
+- **Alpha** 🔴: Current version is before beta (when beta is defined)
 - **Beta** 🟡: Current version is at or after beta, but before stable
 - **Stable** 🟢: Current version is at or after stable
 
@@ -91,7 +91,7 @@ This gives us the best of both worlds: we can ship and test alpha APIs internall
 
 ### Migration Path
 
-1. **Immediate**: New endpoints should include `stableReleaseVersion` and optionally `betaReleaseVersion`
+1. **Immediate**: New endpoints should include `stableReleaseVersion` and optionally `betaReleaseVersion` (omit beta if you want beta until stable)
 2. **Gradual**: Add `stableReleaseVersion` (and optional `betaReleaseVersion`) to existing endpoints as they're modified
 3. **Future**: AI-assisted bulk backfill from git history to document all existing APIs
 

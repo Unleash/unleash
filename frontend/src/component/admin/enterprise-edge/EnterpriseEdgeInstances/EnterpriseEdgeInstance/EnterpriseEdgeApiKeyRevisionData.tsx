@@ -50,10 +50,10 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
     ) : null;
 };
 
-function projectKey(projects: string[]): string {
+function getProjectLabel(projects: string[]): string {
     return projects.length === 1 ? projects[0] : '[]';
 }
 
 function apiToken(revInfo: EdgeApiKeyRevisionId): string {
-    return `${projectKey(revInfo.projects)}:${revInfo.environment}.<redacted>`;
+    return `${getProjectLabel(revInfo.projects)}:${revInfo.environment}.<redacted>`;
 }

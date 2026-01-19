@@ -42,6 +42,8 @@ export interface ResourceLimitsSchema {
      * @minimum 1
      */
     projects: number;
+    /** The maximum number of read-only users allowed. */
+    readOnlyUsers?: number;
     /** The maximum number of release templates allowed. */
     releaseTemplates: number;
     /** The maximum number of segments allowed. */

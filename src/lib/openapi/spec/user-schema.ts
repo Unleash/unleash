@@ -1,6 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
 import { AccountTypes } from '../../events/index.js';
-import { SeatTypes } from '../../types/user.js';
 
 export const userSchema = {
     $id: '#/components/schemas/userSchema',
@@ -97,7 +96,6 @@ export const userSchema = {
             description: 'The seat type of this user',
             type: 'string',
             nullable: true,
-            enum: SeatTypes,
             example: 'Regular',
         },
         activeSessions: {

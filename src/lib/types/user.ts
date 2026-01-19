@@ -110,7 +110,7 @@ export class User implements IUser {
         this.createdAt = createdAt;
         this.accountType = isService ? 'Service Account' : 'User';
         this.scimId = scimId;
-        this.seatType = seatType || 'Regular';
+        this.seatType = seatType;
     }
 
     generateImageUrl(): string {

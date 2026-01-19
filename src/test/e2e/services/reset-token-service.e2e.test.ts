@@ -17,6 +17,7 @@ import {
     TEST_AUDIT_USER,
 } from '../../../lib/types/index.js';
 import { createEventsService } from '../../../lib/features/index.js';
+import { ResourceLimitsService } from '../../../lib/features/resource-limits/resource-limits-service.js';
 
 const config: IUnleashConfig = createTestConfig();
 let stores: IUnleashStores;
@@ -49,6 +50,7 @@ beforeAll(async () => {
         config,
         eventService,
     );
+    const resourceLimitsService = new ResourceLimitsService(config);
 
     userService = new UserService(stores, config, {
         accessService,
@@ -57,6 +59,7 @@ beforeAll(async () => {
         eventService,
         sessionService,
         settingService,
+        resourceLimitsService,
     });
 
     adminUser = await userService.createUser(

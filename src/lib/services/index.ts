@@ -262,6 +262,7 @@ export const createServices = (
                   eventService,
                   sessionService,
                   settingService,
+                  resourceLimitsService,
               }),
           );
     const accountService = new AccountService(stores, config, {

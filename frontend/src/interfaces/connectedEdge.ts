@@ -21,4 +21,12 @@ export type ConnectedEdge = {
     upstreamMetricsP99LatencyMs: string;
     upstreamEdgeAverageLatencyMs: string;
     upstreamEdgeP99LatencyMs: string;
+    apiKeyRevisionIds?: EdgeApiKeyRevisionId[]
 };
+
+export type EdgeApiKeyRevisionId = {
+    environment: string;
+    projects: string[];
+    revisionId: number;
+    lastUpdated: Date
+}

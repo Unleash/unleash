@@ -1,8 +1,8 @@
-import { useLocationSettings } from 'hooks/useLocationSettings';
-import type { ConnectedEdge } from 'interfaces/connectedEdge';
+import {useLocationSettings} from 'hooks/useLocationSettings';
+import type {ConnectedEdge} from 'interfaces/connectedEdge';
 import CircleIcon from '@mui/icons-material/Circle';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { formatDateYMDHMS } from 'utils/formatDate';
+import {formatDateYMDHMS} from 'utils/formatDate';
 import {
     Accordion,
     AccordionDetails,
@@ -10,11 +10,12 @@ import {
     styled,
     Tooltip,
 } from '@mui/material';
-import { Badge } from 'component/common/Badge/Badge';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { EnterpriseEdgeInstanceLatency } from './EnterpriseEdgeInstanceLatency.tsx';
+import {Badge} from 'component/common/Badge/Badge';
+import {HelpIcon} from 'component/common/HelpIcon/HelpIcon';
+import {EnterpriseEdgeInstanceLatency} from './EnterpriseEdgeInstanceLatency.tsx';
+import {EnterpriseEdgeApiKeyRevisionData} from "./EnterpriseEdgeApiKeyRevisionData.tsx";
 
-const StyledInstance = styled('div')(({ theme }) => ({
+const StyledInstance = styled('div')(({theme}) => ({
     width: '100%',
     borderRadius: theme.shape.borderRadiusMedium,
     border: '1px solid',
@@ -37,7 +38,7 @@ const StyledAccordion = styled(Accordion)({
 const StyledAccordionSummary = styled(AccordionSummary, {
     shouldForwardProp: (prop) => prop !== 'connectionStatus',
 })<{ connectionStatus: InstanceConnectionStatus }>(
-    ({ theme, connectionStatus }) => ({
+    ({theme, connectionStatus}) => ({
         fontSize: theme.fontSizes.smallBody,
         padding: theme.spacing(1),
         minHeight: theme.spacing(3),
@@ -54,21 +55,21 @@ const StyledAccordionSummary = styled(AccordionSummary, {
                     connectionStatus === 'Stale'
                         ? theme.palette.warning.main
                         : connectionStatus === 'Disconnected'
-                          ? theme.palette.error.main
-                          : theme.palette.success.main,
+                            ? theme.palette.error.main
+                            : theme.palette.success.main,
             },
         },
     }),
 );
 
-const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+const StyledAccordionDetails = styled(AccordionDetails)(({theme}) => ({
     display: 'flex',
     flexDirection: 'column',
     fontSize: theme.fontSizes.smallerBody,
     gap: theme.spacing(2),
 }));
 
-const StyledDetailRow = styled('div')(({ theme }) => ({
+const StyledDetailRow = styled('div')(({theme}) => ({
     display: 'flex',
     justifyContent: 'space-between',
     gap: theme.spacing(2),
@@ -78,13 +79,13 @@ const StyledDetailRow = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
+const StyledBadge = styled(Badge)(({theme}) => ({
     padding: theme.spacing(0, 1),
 }));
 
 const getHosting = ({
-    hosting,
-}: ConnectedEdge): 'Cloud' | 'Self-hosted' | 'Unknown' => {
+                        hosting,
+                    }: ConnectedEdge): 'Cloud' | 'Self-hosted' | 'Unknown' => {
     switch (hosting) {
         case 'hosted':
             return 'Cloud';
@@ -96,8 +97,8 @@ const getHosting = ({
 };
 
 const getConnectionStatus = ({
-    reportedAt,
-}: ConnectedEdge): InstanceConnectionStatus => {
+                                 reportedAt,
+                             }: ConnectedEdge): InstanceConnectionStatus => {
     const reportedTime = new Date(reportedAt).getTime();
     const reportedSecondsAgo = (Date.now() - reportedTime) / 1000;
 
@@ -108,10 +109,10 @@ const getConnectionStatus = ({
 };
 
 const getCPUPercentage = ({
-    started,
-    reportedAt,
-    cpuUsage,
-}: ConnectedEdge): string => {
+                              started,
+                              reportedAt,
+                              cpuUsage,
+                          }: ConnectedEdge): string => {
     const cpuUsageSeconds = Number(cpuUsage);
     if (!cpuUsageSeconds) return 'No usage';
 
@@ -124,7 +125,7 @@ const getCPUPercentage = ({
     return `${((cpuUsageSeconds / totalRuntimeSeconds) * 100).toFixed(2)} %`;
 };
 
-const getMemory = ({ memoryUsage }: ConnectedEdge): string => {
+const getMemory = ({memoryUsage}: ConnectedEdge): string => {
     if (!memoryUsage) return 'No usage';
 
     const units = ['B', 'KB', 'MB', 'GB'];
@@ -146,9 +147,9 @@ interface IEnterpriseEdgeInstanceProps {
 }
 
 export const EnterpriseEdgeInstance = ({
-    instance,
-}: IEnterpriseEdgeInstanceProps) => {
-    const { locationSettings } = useLocationSettings();
+                                           instance,
+                                       }: IEnterpriseEdgeInstanceProps) => {
+    const {locationSettings} = useLocationSettings();
 
     const connectionStatus = getConnectionStatus(instance);
     const start = formatDateYMDHMS(instance.started, locationSettings?.locale);
@@ -167,14 +168,14 @@ export const EnterpriseEdgeInstance = ({
         <StyledInstance>
             <StyledAccordion>
                 <StyledAccordionSummary
-                    expandIcon={<ExpandMore />}
+                    expandIcon={<ExpandMore/>}
                     connectionStatus={connectionStatus}
                 >
                     <Tooltip
                         arrow
                         title={`${connectionStatus}. Last reported: ${lastReport}`}
                     >
-                        <CircleIcon />
+                        <CircleIcon/>
                     </Tooltip>
                     {instance.id || instance.instanceId}
                 </StyledAccordionSummary>
@@ -206,8 +207,8 @@ export const EnterpriseEdgeInstance = ({
                                 connectionStatus === 'Disconnected'
                                     ? 'error'
                                     : connectionStatus === 'Stale'
-                                      ? 'warning'
-                                      : 'success'
+                                        ? 'warning'
+                                        : 'success'
                             }
                         >
                             {connectionStatus}
@@ -259,7 +260,10 @@ export const EnterpriseEdgeInstance = ({
                         <span>{instance.connectedStreamingClients}</span>
                     </StyledDetailRow>
                     <StyledDetailRow>
-                        <EnterpriseEdgeInstanceLatency instance={instance} />
+                        <EnterpriseEdgeInstanceLatency instance={instance}/>
+                    </StyledDetailRow>
+                    <StyledDetailRow>
+                        <EnterpriseEdgeApiKeyRevisionData apiKeys={instance.apiKeyRevisionIds}/>
                     </StyledDetailRow>
                 </StyledAccordionDetails>
             </StyledAccordion>

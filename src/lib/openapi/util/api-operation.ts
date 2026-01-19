@@ -32,11 +32,15 @@ export function calculateStability({
         return 'stable';
     }
 
-    if (beta && semver.gte(current, beta)) {
-        return 'beta';
+    if (beta) {
+        if (semver.lt(current, beta)) {
+            return 'alpha';
+        } else {
+            return 'beta';
+        }
     }
 
-    return 'alpha';
+    return semver.lt(current, stable) ? 'beta' : 'stable';
 }
 
 type DeprecatedOpenAPITag =

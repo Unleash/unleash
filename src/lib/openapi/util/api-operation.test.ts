@@ -37,13 +37,13 @@ test('calculateStability returns stable when current is at or after stable', () 
     ).toBe('stable');
 });
 
-test('calculateStability returns alpha when beta is omitted and current is before stable', () => {
+test('calculateStability returns beta when beta is omitted and current is before stable', () => {
     expect(
         calculateStability({
             stableReleaseVersion: '7.7.0',
             currentVersion: '7.6.0',
         }),
-    ).toBe('alpha');
+    ).toBe('beta');
 });
 
 test('calculateStability returns stable when beta is omitted and current is after stable', () => {
@@ -59,7 +59,7 @@ test('calculateStability defaults to stable when versions are invalid', () => {
     expect(
         calculateStability({
             betaReleaseVersion: 'not-a-version',
-            stableReleaseVersion: '7.7.0',
+            stableReleaseVersion: 'x.y.z',
             currentVersion: '7.4.0',
         }),
     ).toBe('stable');

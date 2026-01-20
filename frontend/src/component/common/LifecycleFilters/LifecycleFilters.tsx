@@ -29,6 +29,15 @@ const StyledContainer = styled(Box)(({ theme }) => ({
     flexWrap: 'wrap',
 }));
 
+const StyledMinimalChipContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: theme.spacing(0.5),
+    marginRight: theme.spacing(4),
+    width: '100%',
+}));
+
 const lifecycleOptions: {
     label: string;
     value: LifecycleStage['name'] | null;
@@ -48,16 +57,7 @@ const MinimalChip = ({
     value: LifecycleStage['name'] | null;
     count?: number;
 }) => (
-    <Box
-        sx={(theme) => ({
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            gap: theme.spacing(0.5),
-            marginRight: theme.spacing(4),
-            width: '100%',
-        })}
-    >
+    <StyledMinimalChipContainer>
         {value ? (
             <FeatureLifecycleStageIcon stage={{ name: value }} />
         ) : (
@@ -68,8 +68,8 @@ const MinimalChip = ({
             />
         )}
         <span>{label}</span>
-        {count !== undefined && <FlagsCountBadge count={count} />}
-    </Box>
+        <FlagsCountBadge isActive count={count ?? 0} />
+    </StyledMinimalChipContainer>
 );
 
 export const LifecycleFilters = ({
@@ -103,7 +103,7 @@ export const LifecycleFilters = ({
     };
 
     const selectedOption =
-        lifecycleOptions.find((o) => o.value === selectedLifecycle) ??
+        lifecycleOptions.find((option) => option.value === selectedLifecycle) ??
         lifecycleOptions[0];
 
     const renderChips = () =>
@@ -168,19 +168,18 @@ export const LifecycleFilters = ({
                             {children}
                         </Box>
                     )}
-                    buttonStyle={{
-                        border: `1px solid ${theme.palette.divider}`,
-                        paddingRight: theme.spacing(2),
+                    layout={{
                         width: theme.spacing(36),
+                        button: {
+                            border: `1px solid ${theme.palette.divider}`,
+                            paddingRight: theme.spacing(2),
+                        },
+                        menu: {
+                            '& .MuiMenu-list': {
+                                padding: 0,
+                            },
+                        },
                     }}
-                    menuSx={(theme) => ({
-                        '& .MuiMenu-list': {
-                            padding: 0,
-                        },
-                        '& .MuiPaper-root': {
-                            width: theme.spacing(36),
-                        },
-                    })}
                 />
             ) : (
                 <Wrapper>

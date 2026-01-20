@@ -103,9 +103,7 @@ export const LifecycleChip = ({
         label={
             <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
                 <span>{label}</span>
-                {flagsCount !== undefined && (
-                    <FlagsCountBadge isActive={isActive} count={flagsCount} />
-                )}
+                <FlagsCountBadge isActive={isActive} count={flagsCount ?? 0} />
             </Box>
         }
         variant='outlined'

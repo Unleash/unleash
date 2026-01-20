@@ -63,9 +63,8 @@ const StyledChip = styled(Chip, {
         },
 
         '&[data-selected="true"]': {
-            borderTop: `1px solid ${theme.palette.primary.main}`,
-            borderBottom: `1px solid ${theme.palette.primary.main}`,
-            zIndex: 1,
+            borderTop: `1px solid ${theme.palette.divider}`,
+            borderBottom: `1px solid ${theme.palette.divider}`,
         },
 
         '&[data-selected="true"] + &': {
@@ -73,6 +72,14 @@ const StyledChip = styled(Chip, {
         },
         '&:not(:has(.MuiChip-icon)) .MuiChip-label': {
             paddingLeft: theme.spacing(8),
+        },
+        '&:first-of-type': {
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
+        },
+        '&:last-of-type': {
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
         },
     },
 

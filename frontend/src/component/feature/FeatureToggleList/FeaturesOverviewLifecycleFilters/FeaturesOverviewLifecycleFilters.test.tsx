@@ -36,7 +36,7 @@ describe('LifecycleFilters', () => {
             <FeaturesOverviewLifecycleFilters state={{}} onChange={vi.fn()} />,
         );
 
-        expect(getByText('All flags')).toBeInTheDocument();
+        expect(getByText('All lifecycles')).toBeInTheDocument();
         expect(getByText('Develop')).toBeInTheDocument();
         expect(getByText('Rollout production')).toBeInTheDocument();
         expect(getByText('Cleanup')).toBeInTheDocument();
@@ -47,34 +47,14 @@ describe('LifecycleFilters', () => {
             <FeaturesOverviewLifecycleFilters state={{}} onChange={vi.fn()} />,
         );
 
-        expect(getByText('All flags (10)')).toBeInTheDocument();
-        expect(getByText('Develop (2)')).toBeInTheDocument();
-        expect(getByText('Rollout production (3)')).toBeInTheDocument();
-        expect(getByText('Cleanup (4)')).toBeInTheDocument();
-    });
-
-    it('renders dynamic label when total matches count', () => {
-        const total = 3;
-        const { getByText } = render(
-            <FeaturesOverviewLifecycleFilters
-                state={{ lifecycle: { operator: 'IS', values: ['live'] } }}
-                onChange={vi.fn()}
-                total={total}
-            />,
-        );
-        expect(getByText('Rollout production (3)')).toBeInTheDocument();
-    });
-
-    it('renders dynamic label when total does not match count', () => {
-        const total = 2;
-        const { getByText } = render(
-            <FeaturesOverviewLifecycleFilters
-                state={{ lifecycle: { operator: 'IS', values: ['live'] } }}
-                onChange={vi.fn()}
-                total={total}
-            />,
-        );
-        expect(getByText('Rollout production (2 of 3)')).toBeInTheDocument();
+        expect(getByText('All lifecycles')).toBeInTheDocument();
+        expect(getByText('10')).toBeInTheDocument();
+        expect(getByText('Develop')).toBeInTheDocument();
+        expect(getByText('2')).toBeInTheDocument();
+        expect(getByText('Rollout production')).toBeInTheDocument();
+        expect(getByText('3')).toBeInTheDocument();
+        expect(getByText('Cleanup')).toBeInTheDocument();
+        expect(getByText('4')).toBeInTheDocument();
     });
 
     it('will apply a correct filter for each stage', async () => {
@@ -83,22 +63,22 @@ describe('LifecycleFilters', () => {
             <FeaturesOverviewLifecycleFilters state={{}} onChange={onChange} />,
         );
 
-        await userEvent.click(getByText('Develop (2)'));
+        await userEvent.click(getByText('Develop'));
         expect(onChange).toHaveBeenCalledWith({
             lifecycle: { operator: 'IS', values: ['pre-live'] },
         });
 
-        await userEvent.click(getByText('Rollout production (3)'));
+        await userEvent.click(getByText('Rollout production'));
         expect(onChange).toHaveBeenCalledWith({
             lifecycle: { operator: 'IS', values: ['live'] },
         });
 
-        await userEvent.click(getByText('Cleanup (4)'));
+        await userEvent.click(getByText('Cleanup'));
         expect(onChange).toHaveBeenCalledWith({
             lifecycle: { operator: 'IS', values: ['completed'] },
         });
 
-        await userEvent.click(getByText('All flags (10)'));
+        await userEvent.click(getByText('All lifecycles'));
         expect(onChange).toHaveBeenCalledWith({ lifecycle: null });
     });
 });

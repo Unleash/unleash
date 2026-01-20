@@ -110,7 +110,6 @@ const StyledUnleashLogoOnlyWhite = styled(LogoOnlyWhite)(({ theme }) => ({
     margin: '0 auto',
 }));
 
-
 export const NavigationSidebar: FC<{
     NewInUnleash?: typeof LegacyNewInUnleash;
 }> = ({ NewInUnleash }) => {

@@ -145,9 +145,7 @@ export const MenuGroup = ({
                     {isActiveMenu ? activeIcon : icon}
                 </StyledListItemIcon>
                 <StyledListItemText>
-                    <CappedText bold={isActiveMenu}>
-                        {title}
-                    </CappedText>
+                    <CappedText bold={isActiveMenu}>{title}</CappedText>
                 </StyledListItemText>
             </StyledAccordionSummary>
             <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>

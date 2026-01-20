@@ -104,8 +104,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                 <SkipNavLink />
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>
-                        
-
                         <Box
                             sx={(_theme) => ({
                                 display: 'flex',
@@ -124,7 +122,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     />
                                 }
                             />
-                            
+
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -138,7 +136,11 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                         projectId &&
                                             isChangeRequestConfiguredInAnyEnv(),
                                     )}
-                                    show={<DraftBanner project={projectId || ''} />}
+                                    show={
+                                        <DraftBanner
+                                            project={projectId || ''}
+                                        />
+                                    }
                                 />
                                 <Box
                                     sx={{
@@ -166,9 +168,13 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                             }}
                                         >
                                             <SkipNavTarget />
-                                            <MainLayoutContentContainer ref={ref}>
+                                            <MainLayoutContentContainer
+                                                ref={ref}
+                                            >
                                                 <BreadcrumbNav />
-                                                <Proclamation toast={uiConfig.toast} />
+                                                <Proclamation
+                                                    toast={uiConfig.toast}
+                                                />
                                                 {children}
                                             </MainLayoutContentContainer>
                                         </MainLayoutContent>

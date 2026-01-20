@@ -1,34 +1,42 @@
 import {
     type CSSProperties,
+    type FC,
     type MouseEventHandler,
     type ReactNode,
     useState,
-    type VFC,
 } from 'react';
-import { Menu } from '@mui/material';
+import { Menu, type SxProps, type Theme } from '@mui/material';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import { DropdownButton } from './DropdownButton/DropdownButton.tsx';
 
 export interface IDropdownMenuProps {
-    renderOptions: () => ReactNode;
+    renderOptions: () => ReactNode | ReactNode[];
     id: string;
     title?: string;
     callback?: MouseEventHandler;
     icon?: ReactNode;
     label: string;
     startIcon?: ReactNode;
-    style?: CSSProperties;
+    selected?: ReactNode;
+    layout?: DropdownMenuLayout;
 }
 
-const DropdownMenu: VFC<IDropdownMenuProps> = ({
+type DropdownMenuLayout = {
+    width?: number | string;
+    button?: React.CSSProperties;
+    menu?: SxProps<Theme>;
+};
+
+export const DropdownMenu: FC<IDropdownMenuProps> = ({
     renderOptions,
     id,
     title,
     callback,
     icon = <ArrowDropDown titleAccess='Toggle' />,
     label,
-    style,
     startIcon,
+    selected,
+    layout,
     ...rest
 }) => {
     const [anchor, setAnchor] = useState<Element | null>(null);
@@ -49,14 +57,17 @@ const DropdownMenu: VFC<IDropdownMenuProps> = ({
         <>
             <DropdownButton
                 id={id}
-                label={label}
+                label={selected || label}
                 title={title}
                 startIcon={startIcon}
                 onClick={handleOpen}
-                style={style}
                 aria-controls={id}
                 aria-expanded={Boolean(anchor)}
                 icon={icon}
+                style={{
+                    width: layout?.width,
+                    ...layout?.button,
+                }}
                 {...rest}
             />
             <Menu
@@ -64,11 +75,15 @@ const DropdownMenu: VFC<IDropdownMenuProps> = ({
                 onClick={handleClose}
                 anchorEl={anchor}
                 open={Boolean(anchor)}
+                sx={{
+                    ...layout?.menu,
+                    '& .MuiPaper-root': {
+                        width: layout?.width,
+                    },
+                }}
             >
                 {renderOptions()}
             </Menu>
         </>
     );
 };
-
-export default DropdownMenu;

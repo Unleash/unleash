@@ -68,6 +68,7 @@ export const FeatureToggleListTable: FC = () => {
         .map((env) => env.name);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const isLargeScreen = useMediaQuery(theme.breakpoints.down('xl'));
     const [showExportDialog, setShowExportDialog] = useState(false);
 
     const { setToastApiError } = useToast();
@@ -298,48 +299,32 @@ export const FeatureToggleListTable: FC = () => {
                 />
             }
         >
-            <Box
-                sx={(theme) => ({
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    gap: 2,
-                    padding: theme.spacing(2, 0, 0, 0),
-                })}
+            <FeaturesOverviewLifecycleFilters
+                state={filterState}
+                onChange={setTableState}
             >
-                <Box sx={{ flex: '1 1 auto', minWidth: 0 }}>
-                    <FeaturesOverviewLifecycleFilters
-                        state={filterState}
-                        onChange={setTableState}
-                    />
-                </Box>
-
-                <Box
-                    sx={(theme) => ({
-                        padding: theme.spacing(0, 3, 0, 3),
-                        flex: '1 1 350px',
-                        minWidth: 220,
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                    })}
-                >
+                {!isLargeScreen ? (
                     <Search
                         placeholder='Search'
                         initialValue={tableState.query || ''}
                         onChange={setSearchValue}
                         id='globalFeatureFlags'
                     />
+                ) : null}
+            </FeaturesOverviewLifecycleFilters>
+            <FeaturesOverviewToggleFilters
+                onChange={setTableState}
+                state={filterState}
+            />
+            {isLargeScreen ? (
+                <Box sx={(theme) => ({ padding: theme.spacing(0, 3, 3) })}>
+                    <Search
+                        initialValue={tableState.query || ''}
+                        onChange={setSearchValue}
+                        id='globalFeatureFlags'
+                    />
                 </Box>
-            </Box>
-
-            <Box sx={{ width: '100%' }}>
-                <FeaturesOverviewToggleFilters
-                    onChange={setTableState}
-                    state={filterState}
-                />
-            </Box>
-
+            ) : null}
             <SearchHighlightProvider value={tableState.query || ''}>
                 <div ref={bodyLoadingRef}>
                     <PaginatedTable tableInstance={table} totalItems={total} />

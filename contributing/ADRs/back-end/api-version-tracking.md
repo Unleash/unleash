@@ -16,13 +16,13 @@ Additionally, we wanted to ship and test new APIs with select customers before f
 
 ## Decision
 
-We've implemented an automated API stability tracking system based on semantic versioning. Each endpoint declares a `betaReleaseVersion` (optional) and a `stableReleaseVersion` (required). The system calculates stability levels by comparing those milestones against the current version:
+We've implemented an automated API stability tracking system based on semantic versioning. Each endpoint can declare an `alphaUntilVersion` and/or a `betaUntilVersion` to define cutoffs. The system calculates stability levels by comparing those cutoffs against the current version:
 
 ### Stability Calculation Heuristic
 
-- **Alpha** 🔴: Current version is before beta (when beta is defined)
-- **Beta** 🟡: Current version is at or after beta, but before stable
-- **Stable** 🟢: Current version is at or after stable
+- **Alpha** 🔴: Current version is before `alphaUntilVersion` (when defined)
+- **Beta** 🟡: Current version is at or after `alphaUntilVersion` but before `betaUntilVersion` (when defined)
+- **Stable** 🟢: Current version is at or after `betaUntilVersion` (when defined); if `betaUntilVersion` is omitted, stability is reached once alpha is no longer in effect (or immediately if `alphaUntilVersion` is also omitted)
 
 **Example:**
 ```typescript
@@ -31,8 +31,8 @@ We've implemented an automated API stability tracking system based on semantic v
 openApiService.validPath({
     tags: ['Features'],
     summary: 'Create feature flag',
-    betaReleaseVersion: '7.5.0',
-    stableReleaseVersion: '7.7.0', // → Alpha (not yet released)
+    alphaUntilVersion: '7.5.0',
+    betaUntilVersion: '7.7.0', // → Alpha (not yet released)
     operationId: 'createFeature',
     // ...
 })
@@ -40,8 +40,8 @@ openApiService.validPath({
 openApiService.validPath({
     tags: ['Projects'],
     summary: 'List projects',
-    betaReleaseVersion: '7.3.0',
-    stableReleaseVersion: '7.5.0', // → Beta (between beta and stable)
+    alphaUntilVersion: '7.3.0',
+    betaUntilVersion: '7.5.0', // → Beta (between alpha and beta cutoffs)
     operationId: 'getProjects',
     // ...
 })
@@ -49,7 +49,7 @@ openApiService.validPath({
 openApiService.validPath({
     tags: ['Users'],
     summary: 'Get user info',
-    stableReleaseVersion: '7.1.0', // → Stable (already at/after stable)
+    betaUntilVersion: '7.1.0', // → Stable (already at/after beta cutoff)
     operationId: 'getUserInfo',
     // ...
 })
@@ -57,9 +57,9 @@ openApiService.validPath({
 
 ### Implementation
 
-1. **ApiOperation Interface**: Added `betaReleaseVersion?: string` and `stableReleaseVersion?: string` (defaults to `'7.0.0'` so most/all APIs are stable now)
-2. **Stability Calculation**: `calculateStability()` compares beta/stable milestones with the current Unleash version
-3. **OpenAPI Extensions**: Adds only `x-stability-level` to the OpenAPI spec (milestone versions stay in code as documentation)
+1. **ApiOperation Interface**: Added `alphaUntilVersion?: string` and `betaUntilVersion?: string` (omit both to mark stable). `releaseVersion?: string` is available for documentation only.
+2. **Stability Calculation**: `calculateStability()` compares alpha/beta cutoffs with the current Unleash version
+3. **OpenAPI Extensions**: Adds only `x-stability-level` to the OpenAPI spec (cutoff versions stay in code as documentation)
 4. **Swagger UI Integration**: 
    - Alpha endpoints are hidden from public docs in production
    - Visible in development mode (`NODE_ENV=development`)
@@ -81,7 +81,7 @@ This gives us the best of both worlds: we can ship and test alpha APIs internall
 
 **Zero maintenance**: As Unleash versions progress, APIs automatically transition from alpha → beta → stable based on the declared milestones.
 
-**Built-in documentation**: The `betaReleaseVersion` and `stableReleaseVersion` fields serve as historical documentation. Anyone can see the intended lifecycle and assess maturity.
+**Built-in documentation**: The cutoff versions (and optional `releaseVersion`) serve as lifecycle documentation. Anyone can see the intended lifecycle and assess maturity.
 
 **Flexible during development**: Developers estimate which versions a new API will reach beta and stable. If priorities change or development takes longer, they update the milestones.
 
@@ -91,14 +91,12 @@ This gives us the best of both worlds: we can ship and test alpha APIs internall
 
 ### Migration Path
 
-1. **Immediate**: New endpoints should include `stableReleaseVersion` and optionally `betaReleaseVersion` (omit beta if you want beta until stable)
-2. **Gradual**: Add `stableReleaseVersion` (and optional `betaReleaseVersion`) to existing endpoints as they're modified
+1. **Immediate**: New endpoints can include `alphaUntilVersion` and/or `betaUntilVersion` as needed
+2. **Gradual**: Add cutoffs to existing endpoints as they're modified
 3. **Future**: AI-assisted bulk backfill from git history to document all existing APIs
 
 ### Trade-offs
 
 **Milestone guessing required**: Developers must estimate beta/stable milestones during development. This is acceptable given the milestones can be updated.
 
-**Defaults to 7.0.0**: Endpoints without `stableReleaseVersion` default to `'7.0.0'`, which may not be historically accurate but provides a reasonable baseline for the migration period.
-
-**Explicit lifecycle**: Having two milestones is explicit, but it requires setting (and occasionally updating) both values.
+**Explicit lifecycle**: Cutoffs are explicit, but they require setting (and occasionally updating) the versions.

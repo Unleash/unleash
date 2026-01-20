@@ -1,55 +1,63 @@
 import { calculateStability } from './api-operation.js';
 
-test('calculateStability returns alpha when current is before beta and stable', () => {
+test('calculateStability returns alpha when current is before alpha cutoff', () => {
     expect(
         calculateStability({
-            betaReleaseVersion: '7.5.0',
-            stableReleaseVersion: '7.7.0',
+            alphaUntilVersion: '7.5.0',
+            betaUntilVersion: '7.7.0',
             currentVersion: '7.4.0',
         }),
     ).toBe('alpha');
 });
 
-test('calculateStability returns beta when current is between beta and stable', () => {
+test('calculateStability returns beta when current is between alpha and beta cutoffs', () => {
     expect(
         calculateStability({
-            betaReleaseVersion: '7.5.0',
-            stableReleaseVersion: '7.7.0',
+            alphaUntilVersion: '7.5.0',
+            betaUntilVersion: '7.7.0',
             currentVersion: '7.6.0',
         }),
     ).toBe('beta');
 });
 
-test('calculateStability returns stable when current is at or after stable', () => {
+test('calculateStability returns stable when current is at or after beta cutoff', () => {
     expect(
         calculateStability({
-            betaReleaseVersion: '7.5.0',
-            stableReleaseVersion: '7.7.0',
+            alphaUntilVersion: '7.5.0',
+            betaUntilVersion: '7.7.0',
             currentVersion: '7.7.0',
         }),
     ).toBe('stable');
     expect(
         calculateStability({
-            betaReleaseVersion: '7.5.0',
-            stableReleaseVersion: '7.7.0',
+            alphaUntilVersion: '7.5.0',
+            betaUntilVersion: '7.7.0',
             currentVersion: '7.8.0',
         }),
     ).toBe('stable');
 });
 
-test('calculateStability returns beta when beta is omitted and current is before stable', () => {
+test('calculateStability returns beta when beta cutoff is set without alpha', () => {
     expect(
         calculateStability({
-            stableReleaseVersion: '7.7.0',
-            currentVersion: '7.6.0',
+            betaUntilVersion: '7.6.0',
+            currentVersion: '7.4.0',
         }),
     ).toBe('beta');
 });
 
-test('calculateStability returns stable when beta is omitted and current is after stable', () => {
+test('calculateStability returns stable when beta cutoff is omitted and current is after alpha', () => {
     expect(
         calculateStability({
-            stableReleaseVersion: '7.7.0',
+            alphaUntilVersion: '7.5.0',
+            currentVersion: '7.6.0',
+        }),
+    ).toBe('stable');
+});
+
+test('calculateStability returns stable when alpha and beta cutoffs are omitted', () => {
+    expect(
+        calculateStability({
             currentVersion: '7.8.0',
         }),
     ).toBe('stable');
@@ -58,22 +66,15 @@ test('calculateStability returns stable when beta is omitted and current is afte
 test('calculateStability defaults to stable when versions are invalid', () => {
     expect(
         calculateStability({
-            betaReleaseVersion: 'not-a-version',
-            stableReleaseVersion: 'x.y.z',
+            alphaUntilVersion: 'not-a-version',
+            betaUntilVersion: 'x.y.z',
             currentVersion: '7.4.0',
         }),
     ).toBe('stable');
     expect(
         calculateStability({
-            betaReleaseVersion: '7.5.0',
-            stableReleaseVersion: 'nope',
-            currentVersion: '7.4.0',
-        }),
-    ).toBe('stable');
-    expect(
-        calculateStability({
-            betaReleaseVersion: '7.5.0',
-            stableReleaseVersion: '7.7.0',
+            alphaUntilVersion: '7.5.0',
+            betaUntilVersion: '7.7.0',
             currentVersion: 'nope',
         }),
     ).toBe('stable');

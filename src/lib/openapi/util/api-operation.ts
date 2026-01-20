@@ -3,44 +3,45 @@ import type { OpenApiTag } from './openapi-tags.js';
 import semver from 'semver';
 
 /**
- * Calculate stability level based on comparing beta/stable milestones
+ * Calculate stability level based on comparing alpha/beta cutoffs
  * against the current version.
- * - Alpha: current version is before beta (when beta is defined)
- * - Beta: current version is >= beta and < stable
- * - Stable: current version is >= stable
+ * - Alpha: current version is before alpha cutoff (when defined)
+ * - Beta: current version is at/after alpha cutoff and before beta cutoff (when defined)
+ * - Stable: current version is at/after beta cutoff (when defined), or when no cutoffs apply
  */
 type StabilityVersions = {
-    betaReleaseVersion?: string;
-    stableReleaseVersion: string;
+    alphaUntilVersion?: string;
+    betaUntilVersion?: string;
     currentVersion: string;
 };
 
 export function calculateStability({
-    betaReleaseVersion,
-    stableReleaseVersion,
+    alphaUntilVersion,
+    betaUntilVersion,
     currentVersion,
 }: StabilityVersions): 'alpha' | 'beta' | 'stable' {
-    const current = semver.coerce(currentVersion);
-    const beta = betaReleaseVersion ? semver.coerce(betaReleaseVersion) : null;
-    const stable = semver.coerce(stableReleaseVersion);
-
-    if (!current || !stable) {
-        return 'stable'; // Default to stable if versions can't be parsed
-    }
-
-    if (semver.gte(current, stable)) {
+    if (!alphaUntilVersion && !betaUntilVersion) {
         return 'stable';
     }
-
-    if (beta) {
-        if (semver.lt(current, beta)) {
-            return 'alpha';
-        } else {
-            return 'beta';
-        }
+    const current = semver.coerce(currentVersion);
+    if (!current) {
+        return 'stable'; // Default to stable if current can't be parsed
     }
 
-    return semver.lt(current, stable) ? 'beta' : 'stable';
+    const alphaUntil = alphaUntilVersion
+        ? semver.coerce(alphaUntilVersion)
+        : null;
+    const betaUntil = betaUntilVersion ? semver.coerce(betaUntilVersion) : null;
+
+    if (alphaUntil && semver.lt(current, alphaUntil)) {
+        return 'alpha';
+    }
+
+    if (betaUntil && semver.lt(current, betaUntil)) {
+        return 'beta';
+    }
+
+    return 'stable';
 }
 
 type DeprecatedOpenAPITag =
@@ -57,14 +58,19 @@ export interface ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag>
     operationId: string;
     tags: [Tag];
     /**
-     * The first version where this API is expected to be beta.
-     * If omitted, the API is treated as beta until it reaches stable.
+     * The version up to (but not including) which this API is alpha.
+     * If omitted, the API is never alpha.
      */
-    betaReleaseVersion?: string;
+    alphaUntilVersion?: string;
     /**
-     * The first version where this API is expected to be stable.
-     * @default '7.0.0'
+     * The version up to (but not including) which this API is beta.
+     * If omitted, the API is stable once it is no longer alpha.
      */
-    stableReleaseVersion?: string;
+    betaUntilVersion?: string;
+    /**
+     * The version when this API was introduced or last significantly changed.
+     * Documentation only; does not affect stability calculation.
+     */
+    releaseVersion?: string;
     enterpriseOnly?: boolean;
 }

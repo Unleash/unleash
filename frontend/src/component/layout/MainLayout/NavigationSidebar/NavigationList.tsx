@@ -6,7 +6,7 @@ import {
     MenuListItem,
     SignOutItem,
 } from './ListItems.tsx';
-import { Box, List } from '@mui/material';
+import { Box, List, styled } from '@mui/material';
 import { IconRenderer } from './IconRenderer.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
@@ -16,17 +16,17 @@ import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
 import { useRoutes } from './useRoutes.ts';
 
+const StyledNavigationList = styled(List)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.25),
+}));
+
 export const OtherLinksList = () => {
     const { uiConfig } = useUiConfig();
 
     return (
-        <List
-            sx={(theme) => ({
-                display: 'flex',
-                flexDirection: 'column',
-                gap: theme.spacing(0.25),
-            })}
-        >
+        <StyledNavigationList>
             {uiConfig.links.map((link) => (
                 <ExternalFullListItem
                     href={link.href}
@@ -37,7 +37,7 @@ export const OtherLinksList = () => {
                 </ExternalFullListItem>
             ))}
             <SignOutItem />
-        </List>
+        </StyledNavigationList>
     );
 };
 
@@ -78,13 +78,7 @@ export const PrimaryNavigationList: FC<{
     const showChangeRequestList = isEnterprise();
 
     return (
-        <List
-            sx={(theme) => ({
-                display: 'flex',
-                flexDirection: 'column',
-                gap: theme.spacing(0.25),
-            })}
-        >
+        <StyledNavigationList>
             <PrimaryListItem href='/personal' text='Dashboard' />
             <PrimaryListItem href='/projects' text='Projects' />
             <PrimaryListItem href='/search' text='Flags overview' />
@@ -107,7 +101,7 @@ export const PrimaryNavigationList: FC<{
                 activeItem={activeItem}
                 onClick={onClick}
             />
-        </List>
+        </StyledNavigationList>
     );
 };
 
@@ -146,13 +140,7 @@ export const AdminSettingsLink: FC<{
     onClick: (activeItem: string) => void;
 }> = ({ mode, onClick }) => (
     <Box>
-        <List
-            sx={(theme) => ({
-                display: 'flex',
-                flexDirection: 'column',
-                gap: theme.spacing(0.25),
-            })}
-        >
+        <StyledNavigationList>
             <MenuListItem
                 href='/admin'
                 text='Admin settings'
@@ -160,6 +148,6 @@ export const AdminSettingsLink: FC<{
                 mode={mode}
                 icon={<IconRenderer path='/admin' />}
             />
-        </List>
+        </StyledNavigationList>
     </Box>
 );

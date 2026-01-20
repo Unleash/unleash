@@ -53,7 +53,6 @@ const TopContainer = styled(Box, {
     paddingRight: theme.spacing(2),
     paddingTop: theme.spacing(0.5),
     paddingBottom: theme.spacing(0.5),
-    // borderBottom: `1px solid ${theme.palette.divider}`,
     backgroundColor: admin
         ? theme.palette.background.application
         : theme.palette.background.paper,

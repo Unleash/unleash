@@ -88,6 +88,38 @@ const MainLayoutContentContainer = styled('main')(({ theme }) => ({
     zIndex: 200,
 }));
 
+const LayoutFlexContainer = styled(Box)(() => ({
+    display: 'flex',
+    marginTop: 0,
+}));
+
+const MainContentWrapper = styled(Box)(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    minWidth: 0,
+}));
+
+const HeaderContentContainer = styled(Box)(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
+    flexShrink: 0,
+}));
+
+const ContentFlexContainer = styled(Box)(() => ({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: 0,
+}));
+
+const StyledMainLayoutContent = styled(MainLayoutContent)(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+}));
+
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
         const { uiConfig } = useUiConfig();
@@ -104,12 +136,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                 <SkipNavLink />
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>
-                        <Box
-                            sx={(_theme) => ({
-                                display: 'flex',
-                                mt: 0,
-                            })}
-                        >
+                        <LayoutFlexContainer>
                             <ConditionallyRender
                                 condition={!isSmallScreen}
                                 show={
@@ -123,14 +150,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 }
                             />
 
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    flexGrow: 1,
-                                    minWidth: 0,
-                                }}
-                            >
+                            <MainContentWrapper>
                                 <ConditionallyRender
                                     condition={Boolean(
                                         projectId &&
@@ -142,31 +162,11 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                         />
                                     }
                                 />
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        minHeight: '100vh',
-                                        flexShrink: 0,
-                                    }}
-                                >
+                                <HeaderContentContainer>
                                     <Header />
 
-                                    <Box
-                                        sx={{
-                                            flex: 1,
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            minHeight: 0,
-                                        }}
-                                    >
-                                        <MainLayoutContent
-                                            sx={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                flex: 1,
-                                            }}
-                                        >
+                                    <ContentFlexContainer>
+                                        <StyledMainLayoutContent>
                                             <SkipNavTarget />
                                             <MainLayoutContentContainer
                                                 ref={ref}
@@ -177,13 +177,13 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                                 />
                                                 {children}
                                             </MainLayoutContentContainer>
-                                        </MainLayoutContent>
-                                    </Box>
-                                </Box>
+                                        </StyledMainLayoutContent>
+                                    </ContentFlexContainer>
+                                </HeaderContentContainer>
 
                                 <Footer />
-                            </Box>
-                        </Box>
+                            </MainContentWrapper>
+                        </LayoutFlexContainer>
 
                         <ThemeMode
                             darkmode={

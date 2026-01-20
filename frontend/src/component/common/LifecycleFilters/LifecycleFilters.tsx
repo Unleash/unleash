@@ -56,11 +56,21 @@ const MinimalChip = ({
         sx={(theme) => ({
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'flex-start',
             gap: theme.spacing(0.5),
             marginRight: theme.spacing(4),
+            width: '100%',
         })}
     >
-        {value && <FeatureLifecycleStageIcon stage={{ name: value }} />}
+        {value ? (
+            <FeatureLifecycleStageIcon stage={{ name: value }} />
+        ) : (
+            <Box
+                sx={(theme) => ({
+                    marginLeft: theme.spacing(0.5),
+                })}
+            />
+        )}
         <span>{label}</span>
         {count !== undefined && <FlagsCountBadge count={count} />}
     </Box>
@@ -165,15 +175,16 @@ export const LifecycleFilters = ({
                     buttonStyle={{
                         border: `1px solid ${theme.palette.divider}`,
                         paddingRight: theme.spacing(2),
+                        width: theme.spacing(36),
                     }}
-                    menuSx={{
+                    menuSx={(theme) => ({
                         '& .MuiMenu-list': {
                             padding: 0,
                         },
                         '& .MuiPaper-root': {
-                            width: '100%',
+                            width: theme.spacing(36),
                         },
-                    }}
+                    })}
                 />
             ) : (
                 <Wrapper>

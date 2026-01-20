@@ -76,6 +76,7 @@ const StyledChip = styled(Chip, {
         '&:first-of-type': {
             borderTopLeftRadius: 0,
             borderBottomLeftRadius: 0,
+            borderTop: 0
         },
         '&:last-of-type': {
             borderTopRightRadius: 0,

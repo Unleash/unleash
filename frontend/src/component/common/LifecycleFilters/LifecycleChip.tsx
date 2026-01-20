@@ -65,7 +65,7 @@ const StyledChip = styled(Chip, {
         '&[data-selected="true"]': {
             borderTop: `1px solid ${theme.palette.divider}`,
             borderBottom: `1px solid ${theme.palette.divider}`,
-            backgroundColor: theme.palette.background.default
+            backgroundColor: theme.palette.background.default,
         },
 
         '&[data-selected="true"] + &': {
@@ -77,7 +77,7 @@ const StyledChip = styled(Chip, {
         '&:first-of-type': {
             borderTopLeftRadius: 0,
             borderBottomLeftRadius: 0,
-            borderTop: 0
+            borderTop: 0,
         },
         '&:last-of-type': {
             borderTopRightRadius: 0,

@@ -27,10 +27,6 @@ const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',
-    [theme.breakpoints.down('md')]: {
-        flexDirection: 'column',
-        alignItems: 'stretch',
-    },
 }));
 
 const lifecycleOptions: {

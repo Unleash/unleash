@@ -1,34 +1,38 @@
 import {
     type CSSProperties,
+    type FC,
     type MouseEventHandler,
     type ReactNode,
     useState,
-    type VFC,
 } from 'react';
-import { Menu } from '@mui/material';
+import { Menu, type SxProps, type Theme } from '@mui/material';
 import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
 import { DropdownButton } from './DropdownButton/DropdownButton.tsx';
 
 export interface IDropdownMenuProps {
-    renderOptions: () => ReactNode;
+    renderOptions: () => ReactNode | ReactNode[];
     id: string;
     title?: string;
     callback?: MouseEventHandler;
     icon?: ReactNode;
     label: string;
     startIcon?: ReactNode;
-    style?: CSSProperties;
+    buttonStyle?: CSSProperties;
+    menuSx?: SxProps<Theme>;
+    selected?: ReactNode;
 }
 
-const DropdownMenu: VFC<IDropdownMenuProps> = ({
+export const DropdownMenu: FC<IDropdownMenuProps> = ({
     renderOptions,
     id,
     title,
     callback,
     icon = <ArrowDropDown titleAccess='Toggle' />,
     label,
-    style,
+    buttonStyle,
+    menuSx,
     startIcon,
+    selected,
     ...rest
 }) => {
     const [anchor, setAnchor] = useState<Element | null>(null);
@@ -49,11 +53,11 @@ const DropdownMenu: VFC<IDropdownMenuProps> = ({
         <>
             <DropdownButton
                 id={id}
-                label={label}
+                label={selected || label}
                 title={title}
                 startIcon={startIcon}
                 onClick={handleOpen}
-                style={style}
+                style={buttonStyle}
                 aria-controls={id}
                 aria-expanded={Boolean(anchor)}
                 icon={icon}
@@ -64,11 +68,10 @@ const DropdownMenu: VFC<IDropdownMenuProps> = ({
                 onClick={handleClose}
                 anchorEl={anchor}
                 open={Boolean(anchor)}
+                sx={menuSx}
             >
                 {renderOptions()}
             </Menu>
         </>
     );
 };
-
-export default DropdownMenu;

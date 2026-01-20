@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import type { FilterItemParamHolder } from '../../../filter/Filters/Filters.tsx';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { LifecycleFilters } from 'component/common/LifecycleFilters/LifecycleFilters.tsx';
-import { Box, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 
 type ProjectLifecycleFiltersProps = {
     projectId: string;
@@ -17,11 +17,9 @@ export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
     projectId,
     state,
     onChange,
-    total,
     children,
 }) => {
     const { data } = useProjectStatus(projectId);
-    const _theme = useTheme();
     const lifecycleSummary = Object.entries(
         data?.lifecycleSummary || {},
     ).reduce(
@@ -44,20 +42,10 @@ export const ProjectLifecycleFilters: FC<ProjectLifecycleFiltersProps> = ({
     }
 
     return (
-        <Box
-            sx={{
-                marginRight: 'auto',
-                overflowX: 'auto',
-                WebkitOverflowScrolling: 'touch',
-                '&::-webkit-scrollbar': {
-                    display: 'none',
-                },
-            }}
-        >
+        <Box sx={{ marginRight: 'auto' }}>
             <LifecycleFilters
                 state={state}
                 onChange={onChange}
-                total={total}
                 countData={lifecycleSummary}
             >
                 {children}

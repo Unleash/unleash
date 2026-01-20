@@ -311,7 +311,6 @@ export const FeatureToggleListTable: FC = () => {
                     <FeaturesOverviewLifecycleFilters
                         state={filterState}
                         onChange={setTableState}
-                        total={loading ? undefined : total}
                     />
                 </Box>
 

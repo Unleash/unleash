@@ -7,13 +7,12 @@ import { LifecycleFilters } from 'component/common/LifecycleFilters/LifecycleFil
 type FeaturesOverviewLifecycleFiltersProps = {
     state: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
-    total?: number;
     children?: ReactNode;
 };
 
 export const FeaturesOverviewLifecycleFilters: FC<
     FeaturesOverviewLifecycleFiltersProps
-> = ({ state, onChange, total, children }) => {
+> = ({ state, onChange, children }) => {
     const { lifecycleCount } = useLifecycleCount();
     const countData = Object.entries(lifecycleCount || {}).reduce(
         (acc, [key, value]) => {
@@ -28,7 +27,6 @@ export const FeaturesOverviewLifecycleFilters: FC<
             <LifecycleFilters
                 state={state}
                 onChange={onChange}
-                total={total}
                 countData={countData}
             >
                 {children}

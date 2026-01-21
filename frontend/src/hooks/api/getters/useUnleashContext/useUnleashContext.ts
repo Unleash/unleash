@@ -25,7 +25,7 @@ const uriFromQuery = (query: Query) => {
         case 'project-only':
             return `api/admin/projects/${query.projectId}/context`;
         case 'assignable-in-project':
-            return `api/admin/projects/${query.projectId}/context?include=global`;
+            return `api/admin/projects/${query.projectId}/context?include=root`;
     }
 };
 

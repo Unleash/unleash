@@ -1,6 +1,9 @@
 import type { EdgeApiKeyRevisionId } from '../../../../../interfaces/connectedEdge.ts';
-import { formatDateYMDHMS } from '../../../../../utils/formatDate.ts';
 import { styled } from '@mui/material';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { formatDateYMDHMS } from '../../../../../utils/formatDate.ts';
+import { useLocationSettings } from '../../../../../hooks/useLocationSettings.ts';
+import { Truncator } from '../../../../common/Truncator/Truncator.tsx';
 
 interface IEnterpriseEdgeApiKeyRevisionProps {
     apiKeys?: EdgeApiKeyRevisionId[];
@@ -18,19 +21,33 @@ const StyledTable = styled('table')(({ theme }) => ({
         '& > th:first-of-type, td:first-of-type': {
             textAlign: 'left',
         },
+        paddingTop: theme.spacing(1),
+    },
+}));
+
+const StyledTableCell = styled('td')(({ theme }) => ({
+    paddingTop: theme.spacing(1),
+    maxWidth: '80px',
+    '& > div': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'end',
     },
 }));
 
 export const EnterpriseEdgeApiKeyRevisionData = ({
     apiKeys,
 }: IEnterpriseEdgeApiKeyRevisionProps) => {
-    return apiKeys && apiKeys.length > 0 ? (
+    const { locationSettings } = useLocationSettings();
+    if (!apiKeys || apiKeys.length === 0) {
+        return null;
+    }
+    return (
         <StyledTable>
             <thead>
                 <tr>
-                    <th>Key</th>
-                    <th>Revision ID</th>
-                    <th>Last updated</th>
+                    <th>Token</th>
+                    <th>Revision</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,21 +56,34 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
                         <tr
                             key={`${apiKey.environment}${apiKey.projects.join(',')}`}
                         >
-                            <td>{`${apiToken(apiKey)}`}</td>
-                            <td>{apiKey.revisionId}</td>
-                            <td>{formatDateYMDHMS(apiKey.lastUpdated)}</td>
+                            <StyledTableCell>
+                                <Truncator title={apiToken(apiKey)}>
+                                    {apiToken(apiKey)}
+                                </Truncator>
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                <div>
+                                    {apiKey.revisionId}
+                                    <HelpIcon
+                                        tooltip={`
+                                            Last updated: ${formatDateYMDHMS(apiKey.lastUpdated, locationSettings.locale)}
+                                        `}
+                                        size='14px'
+                                    />
+                                </div>
+                            </StyledTableCell>
                         </tr>
                     );
                 })}
             </tbody>
         </StyledTable>
-    ) : null;
+    );
 };
 
-function getProjectLabel(projects: string[]): string {
-    return projects.length === 1 ? projects[0] : '[]';
+function projectKey(projects: string[]): string {
+    return projects.length === 1 ? projects[0] : `[]`;
 }
 
 function apiToken(revInfo: EdgeApiKeyRevisionId): string {
-    return `${getProjectLabel(revInfo.projects)}:${revInfo.environment}.<redacted>`;
+    return `${projectKey(revInfo.projects)}:${revInfo.environment}.***`;
 }

@@ -36,7 +36,6 @@ export const LinkCell: React.FC<ILinkCellProps> = ({
             <Highlighter search={searchQuery}>{subtitle}</Highlighter>
         </StyledDescription>
     );
-
     const renderSubtitle = (
         <ConditionallyRender
             condition={Boolean(subtitle && subtitle.length > 40)}
@@ -44,7 +43,7 @@ export const LinkCell: React.FC<ILinkCellProps> = ({
                 !disableTooltip ? (
                     <HtmlTooltip
                         title={subtitle}
-                        placement="bottom-start"
+                        placement='bottom-start'
                         arrow
                     >
                         {subtitleContent}

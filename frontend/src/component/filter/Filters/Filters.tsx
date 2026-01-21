@@ -72,6 +72,7 @@ type RangeChangeHandler = (
 type RenderFilterProps = {
     onChipClose?: (label: string) => void;
     state: FilterItemParams | null | undefined;
+    allState: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     filter: ITextFilterItem | IDateFilterItem;
     rangeChangeHandler: RangeChangeHandler;
@@ -81,6 +82,7 @@ type RenderFilterProps = {
 const RenderFilter: FC<RenderFilterProps> = ({
     filter,
     onChipClose,
+    allState,
     onChange,
     state,
     rangeChangeHandler,
@@ -103,6 +105,9 @@ const RenderFilter: FC<RenderFilterProps> = ({
                 label={label}
                 name={filter.label}
                 state={state}
+                allState={allState}
+                fromFilterKey={filter.fromFilterKey}
+                toFilterKey={filter.toFilterKey}
                 onChange={(value) => {
                     onChange({ [filter.filterKey]: value });
                 }}
@@ -140,10 +145,12 @@ const RenderFilter: FC<RenderFilterProps> = ({
 type SingleFilterProps = Omit<IFilterProps, 'availableFilters'> & {
     filter: IFilterItem;
     rangeChangeHandler: RangeChangeHandler;
+    allState: FilterItemParamHolder;
 };
 
 const SingleFilter: FC<SingleFilterProps> = ({
     state,
+    allState,
     onChange,
     className,
     filter,
@@ -154,6 +161,7 @@ const SingleFilter: FC<SingleFilterProps> = ({
             <RenderFilter
                 filter={filter}
                 state={state[filter.filterKey]}
+                allState={allState}
                 onChange={onChange}
                 rangeChangeHandler={rangeChangeHandler}
                 onChipClose={undefined}
@@ -241,6 +249,7 @@ const MultiFilter: FC<MultiFilterProps> = ({
                         key={filter.filterKey}
                         filter={filter}
                         state={state[filter.filterKey]}
+                        allState={state}
                         onChange={onChange}
                         rangeChangeHandler={rangeChangeHandler}
                         onChipClose={() => deselectFilter(filter.label)}
@@ -279,8 +288,9 @@ export const Filters: FC<IFilterProps> = (props) => {
         const filter = props.availableFilters[0];
         return (
             <SingleFilter
-                rangeChangeHandler={rangeChangeHandler}
                 filter={filter}
+                allState={props.state}
+                rangeChangeHandler={rangeChangeHandler}
                 {...props}
             />
         );

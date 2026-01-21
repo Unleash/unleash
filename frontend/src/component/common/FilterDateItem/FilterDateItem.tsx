@@ -4,11 +4,12 @@ import { StyledPopover } from 'component/filter/FilterItem/FilterItem.styles';
 import { FilterItemChip } from 'component/filter/FilterItem/FilterItemChip/FilterItemChip';
 import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { format } from 'date-fns';
+import { format, isBefore, isAfter } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../util.ts';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
 import { DateRangePresets } from './DateRangePresets.tsx';
+import type { FilterItemParamHolder } from 'component/filter/Filters/Filters.tsx';
 
 export interface IFilterDateItemProps {
     name: string;
@@ -20,6 +21,9 @@ export interface IFilterDateItemProps {
     }) => void;
     onChipClose?: () => void;
     state: FilterItemParams | null | undefined;
+    allState?: FilterItemParamHolder;
+    fromFilterKey?: string;
+    toFilterKey?: string;
     operators: [string, ...string[]];
     initMode?: 'auto-open' | 'manual';
 }
@@ -31,6 +35,9 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     onRangeChange,
     onChipClose,
     state,
+    allState,
+    fromFilterKey,
+    toFilterKey,
     operators,
     initMode = 'auto-open',
 }) => {
@@ -38,19 +45,14 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const { locationSettings } = useLocationSettings();
 
-    const open = () => {
-        setAnchorEl(ref.current);
-    };
+    const open = () => setAnchorEl(ref.current);
+    const onClose = () => setAnchorEl(null);
 
     useEffect(() => {
         if (!state && initMode === 'auto-open') {
             open();
         }
     }, []);
-
-    const onClose = () => {
-        setAnchorEl(null);
-    };
 
     const selectedOptions = state
         ? [
@@ -78,6 +80,15 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
             });
         }
     }, [state]);
+
+    const minDate =
+        fromFilterKey && allState?.[fromFilterKey]?.values?.[0]
+            ? new Date(allState[fromFilterKey].values[0])
+            : undefined;
+    const maxDate =
+        toFilterKey && allState?.[toFilterKey]?.values?.[0]
+            ? new Date(allState[toFilterKey].values[0])
+            : undefined;
 
     return (
         <>
@@ -115,6 +126,15 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                     <DateCalendar
                         displayWeekNumber
                         value={selectedDate}
+                        minDate={name === 'Date To' ? minDate : undefined}
+                        maxDate={name === 'Date From' ? maxDate : undefined}
+                        shouldDisableDate={(date) => {
+                            if (name === 'Date To' && minDate)
+                                return isBefore(date, minDate);
+                            if (name === 'Date From' && maxDate)
+                                return isAfter(date, maxDate);
+                            return false;
+                        }}
                         onChange={(value) => {
                             const formattedValue = value
                                 ? format(value, 'yyyy-MM-dd')

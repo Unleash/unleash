@@ -1,11 +1,11 @@
 import {
     type Dispatch,
+    type FC,
     type FormEvent,
     type SetStateAction,
     useEffect,
     useMemo,
     useState,
-    type VFC,
 } from 'react';
 import {
     Box,
@@ -34,23 +34,75 @@ import {
 import CheckBoxOutlineBlank from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useFullUnleashContext } from 'hooks/api/getters/useUnleashContext/useFullUnleashContext.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import type { IUnleashContextDefinition } from 'interfaces/context.ts';
+import type {
+    ISelectOption,
+    SelectOptionGroup,
+} from 'component/common/GeneralSelect/GeneralSelect.tsx';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect.tsx';
 
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
     setContext: Dispatch<SetStateAction<string | undefined>>;
 }
 
-export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
+const createContextFieldOptions = (
+    context: IUnleashContextDefinition[],
+    { groupOptions }: { groupOptions: boolean },
+): ISelectOption[] | SelectOptionGroup[] => {
+    const optList = (opts: { name: string; sortOrder: number }[]) =>
+        opts
+            .toSorted((a, b) => a.sortOrder - b.sortOrder)
+            .map((option) => ({
+                key: option.name,
+                label: option.name,
+            }));
+
+    if (!groupOptions) {
+        return optList(context);
+    }
+
+    const fields = context.reduce(
+        ({ project, global }, next) => {
+            if (next.project) {
+                project.push(next);
+            } else {
+                global.push(next);
+            }
+            return { project: project, global: global };
+        },
+        {
+            project: [] as IUnleashContextDefinition[],
+            global: [] as IUnleashContextDefinition[],
+        },
+    );
+
+    return [
+        fields.project.length > 0 && {
+            groupHeader: 'Project context fields',
+            options: optList(fields.project),
+        },
+        fields.global.length > 0 && {
+            groupHeader: 'Global context fields',
+            options: optList(fields.global),
+        },
+    ].filter(Boolean) as SelectOptionGroup[];
+};
+
+export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
     context,
     setContext,
 }) => {
     const theme = useTheme();
-
     const { setToastData } = useToast();
     const { context: contextData } = useFullUnleashContext();
-    const contextOptions = contextData
-        .sort((a, b) => a.sortOrder - b.sortOrder)
-        .map(({ name }) => name);
+
+    const groupOptions = useUiFlag('projectContextFields');
+    const contextOptions = createContextFieldOptions(contextData, {
+        groupOptions,
+    });
+
     const [error, setError] = useState<string>();
     const [fieldExist, setFieldExist] = useState<boolean>(false);
     const [contextField, setContextField] = useState<string>('');
@@ -237,10 +289,10 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         );
     };
 
-    const changeContextField = (event: SelectChangeEvent) => {
-        setContextField(event.target.value || '');
+    const changeContextField = (value: string) => {
+        setContextField(value || '');
 
-        if (event.target.value === 'currentTime') {
+        if (value === 'currentTime') {
             return setContextValue(new Date().toISOString());
         }
 
@@ -260,27 +312,18 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
             </Box>
 
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2 }}>
-                <FormControl>
-                    <InputLabel id='context-field-label' size='small'>
-                        Context field
-                    </InputLabel>
-                    <Select
-                        label='Context field'
-                        labelId='context-field-label'
-                        id='context-field'
-                        value={contextField}
-                        onChange={changeContextField}
-                        variant='outlined'
-                        size='small'
-                        sx={{ width: 200, maxWidth: '100%' }}
-                    >
-                        {contextOptions.map((option) => (
-                            <MenuItem key={option} value={option}>
-                                {option}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <GeneralSelect
+                    label='Context field'
+                    labelId='context-field-label'
+                    id='context-field'
+                    value={contextField}
+                    onChange={changeContextField}
+                    variant='outlined'
+                    size='small'
+                    sx={{ width: 200, maxWidth: '100%' }}
+                    options={contextOptions}
+                />
+
                 {resolveInput()}
                 <Button
                     variant='outlined'

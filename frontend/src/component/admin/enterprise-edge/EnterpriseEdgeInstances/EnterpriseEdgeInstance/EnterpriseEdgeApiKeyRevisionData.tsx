@@ -5,10 +5,6 @@ import { formatDateYMDHMS } from '../../../../../utils/formatDate.ts';
 import { useLocationSettings } from '../../../../../hooks/useLocationSettings.ts';
 import { Truncator } from '../../../../common/Truncator/Truncator.tsx';
 
-interface IEnterpriseEdgeApiKeyRevisionProps {
-    apiKeys?: EdgeApiKeyRevisionId[];
-}
-
 const StyledTable = styled('table')(({ theme }) => ({
     width: '100%',
     borderCollapse: 'collapse',
@@ -35,6 +31,21 @@ const StyledTableCell = styled('td')(({ theme }) => ({
     },
 }));
 
+interface IEnterpriseEdgeApiKeyRevisionProps {
+    apiKeys?: EdgeApiKeyRevisionId[];
+}
+
+const projectKey = (projects: string[]): string => {
+    return projects.length === 1 ? projects[0] : `[]`;
+};
+
+const apiToken = (revInfo: EdgeApiKeyRevisionId): string => {
+    return `${projectKey(revInfo.projects)}:${revInfo.environment}.***`;
+};
+
+const listKey = (revInfo: EdgeApiKeyRevisionId): string => {
+    return `[${revInfo.projects.join(',')}]:${revInfo.environment}`;
+};
 export const EnterpriseEdgeApiKeyRevisionData = ({
     apiKeys,
 }: IEnterpriseEdgeApiKeyRevisionProps) => {
@@ -52,10 +63,9 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
             </thead>
             <tbody>
                 {apiKeys?.map((apiKey) => {
+                    const token = apiToken(apiKey);
                     return (
-                        <tr
-                            key={`${apiKey.environment}${apiKey.projects.join(',')}`}
-                        >
+                        <tr key={listKey(apiKey)}>
                             <StyledTableCell>
                                 <Truncator title={apiToken(apiKey)}>
                                     {apiToken(apiKey)}
@@ -79,11 +89,3 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
         </StyledTable>
     );
 };
-
-function projectKey(projects: string[]): string {
-    return projects.length === 1 ? projects[0] : `[]`;
-}
-
-function apiToken(revInfo: EdgeApiKeyRevisionId): string {
-    return `${projectKey(revInfo.projects)}:${revInfo.environment}.***`;
-}

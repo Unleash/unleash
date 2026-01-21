@@ -148,7 +148,6 @@ export const FeatureTypesList = () => {
             useSortBy,
         );
 
-    console.log('rows', rows);
     return (
         <PageContent
             isLoading={loading}

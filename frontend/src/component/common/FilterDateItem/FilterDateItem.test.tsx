@@ -19,8 +19,8 @@ const setup = (
     const recordedChanges: FilterItemParams[] = [];
 
     const mockProps: IFilterDateItemProps = {
-        name: name ?? 'Date To',
-        label: label ?? 'Date To',
+        name: name ?? 'Test Label',
+        label: label ?? 'irrelevant',
         onChange: (value: FilterItemParams) => {
             recordedChanges.push(value);
         },
@@ -168,7 +168,7 @@ describe('FilterDateItem date range constraints', () => {
     });
 
     it('disables dates after today', async () => {
-        setup(null);
+        setup(null, undefined, 'Date To', 'Date To');
 
         await userEvent.click(await screen.findByText('Date To'));
 

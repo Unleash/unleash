@@ -4,7 +4,7 @@ import { StyledPopover } from 'component/filter/FilterItem/FilterItem.styles';
 import { FilterItemChip } from 'component/filter/FilterItem/FilterItemChip/FilterItemChip';
 import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { format, isBefore, isAfter } from 'date-fns';
+import { format, isBefore, isAfter, endOfDay } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../util.ts';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
@@ -129,6 +129,10 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                         minDate={name === 'Date To' ? minDate : undefined}
                         maxDate={name === 'Date From' ? maxDate : undefined}
                         shouldDisableDate={(date) => {
+                            const today = endOfDay(new Date());
+                            if (isAfter(date, today)) {
+                                return true;
+                            }
                             if (name === 'Date To' && minDate)
                                 return isBefore(date, minDate);
                             if (name === 'Date From' && maxDate)

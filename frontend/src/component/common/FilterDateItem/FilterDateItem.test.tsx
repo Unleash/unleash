@@ -6,6 +6,7 @@ import {
     FilterDateItem,
     type IFilterDateItemProps,
 } from './FilterDateItem.tsx';
+import { addDays, format } from 'date-fns';
 
 const getDate = async (option: string) => screen.findByText(option);
 
@@ -161,6 +162,21 @@ describe('FilterDateItem date range constraints', () => {
             name: '15',
         });
         expect(disabledDate.className).toMatch(/Mui-disabled/);
+    });
+
+    it('disables dates after today', async () => {
+        setup(null);
+
+        await userEvent.click(await screen.findByText('Date To'));
+
+        const tomorrow = addDays(new Date(), 1);
+        const dayLabel = format(tomorrow, 'd');
+
+        const tomorrowCell = await screen.findByRole('gridcell', {
+            name: dayLabel,
+        });
+
+        expect(tomorrowCell.className).toMatch(/Mui-disabled/);
     });
 
     it('allows selecting valid dates', async () => {

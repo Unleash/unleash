@@ -64,6 +64,15 @@ class ContextService {
         return allFields.filter((field) => field.project === projectId);
     }
 
+    async getAssignableFieldsForProject(
+        projectId: string,
+    ): Promise<IContextField[]> {
+        const allFields = await this.contextFieldStore.getAll();
+        return allFields.filter(
+            (field) => field.project === projectId || !field.project,
+        );
+    }
+
     async getContextField(name: string): Promise<IContextField> {
         const field = await this.contextFieldStore.get(name);
         if (field === undefined) {

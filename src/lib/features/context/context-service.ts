@@ -74,13 +74,13 @@ class ContextService {
     }
 
     async getContextFields({
+        include,
         projectId,
         userId,
-        include,
     }: {
-        projectId?: string;
-        userId?: number;
         include?: string;
+        projectId?: string;
+        userId: number;
     }): Promise<IContextField[]> {
         if (projectId) {
             if (include?.match(/^root$/i)) {
@@ -92,9 +92,6 @@ class ContextService {
 
         if (include?.match(/^project$/i)) {
             const allFields = await this.getAll();
-            if (!userId) {
-                return allFields;
-            }
 
             const accessibleProjects =
                 await this.privateProjectChecker.getUserAccessibleProjects(

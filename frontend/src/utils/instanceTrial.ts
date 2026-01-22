@@ -1,5 +1,9 @@
 import { parseISO, isPast } from 'date-fns';
-import { type IInstanceStatus, InstanceState } from 'interfaces/instance';
+import {
+    type IInstanceStatus,
+    InstancePlan,
+    InstanceState,
+} from 'interfaces/instance';
 import differenceInDays from 'date-fns/differenceInDays';
 
 const TRIAL_EXPIRES_SOON_DAYS_THRESHOLD = 10;
@@ -19,7 +23,10 @@ export const trialHasExpired = (
 ): boolean => {
     if (
         instanceStatus?.state === InstanceState.EXPIRED ||
-        instanceStatus?.state === InstanceState.CHURNED
+        instanceStatus?.state === InstanceState.CHURNED ||
+        (instanceStatus?.plan === InstancePlan.ENTERPRISE &&
+            instanceStatus?.billing === 'pay-as-you-go' &&
+            instanceStatus?.state === InstanceState.DELETABLE)
     ) {
         return true;
     }

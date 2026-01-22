@@ -80,7 +80,8 @@ export type CustomEvents =
     | 'project-cleanup'
     | 'project-list-view-toggle'
     | 'impact-metrics'
-    | 'release-management-splash';
+    | 'release-management-splash'
+    | 'upgrade_trial_dialog';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

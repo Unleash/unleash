@@ -199,7 +199,9 @@ export const ReleaseManagementSplash = ({
                 </StyledTitle>
 
                 <StyledDescription>
-                     Define your milestones once and reuse everywhere. Add automations and watch them go from 5% canary to full release, while safeguards catch issues before your users do.
+                    Define your milestones once and reuse everywhere. Add
+                    automations and watch them go from 5% canary to full
+                    release, while safeguards catch issues before your users do.
                 </StyledDescription>
 
                 <VideoContainer>

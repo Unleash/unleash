@@ -290,7 +290,7 @@ export class ContextController extends Controller {
     }
 
     async getContextFields(
-        req: Request<
+        req: IAuthRequest<
             { projectId?: string },
             unknown,
             unknown,
@@ -299,30 +299,18 @@ export class ContextController extends Controller {
         res: Response<ContextFieldsSchema>,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('projectContextFields')) {
-            const { projectId } = req.params;
-
-            const getContextFields = () => {
-                if (projectId) {
-                    if (req.query.include?.match(/^root/i)) {
-                        return this.transactionalContextService.getAssignableFieldsForProject(
-                            projectId,
-                        );
-                    }
-
-                    return this.transactionalContextService.getAllForProject(
-                        projectId,
-                    );
-                }
-
-                if (req.query.include?.match(/^project$/i)) {
-                    return this.transactionalContextService.getAll();
-                }
-
-                return this.transactionalContextService.getAllWithoutProject();
-            };
-
             res.status(200)
-                .json(serializeDates(await getContextFields()))
+                .json(
+                    serializeDates(
+                        await this.transactionalContextService.getContextFields(
+                            {
+                                projectId: req.params.projectId,
+                                userId: req.user.id,
+                                include: req.query.include,
+                            },
+                        ),
+                    ),
+                )
                 .end();
         } else {
             res.status(200)

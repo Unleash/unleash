@@ -116,7 +116,7 @@ class ContextService {
 
         return this.getAllWithoutProject();
     }
-    
+
     async getContextField(name: string): Promise<IContextField> {
         const field = await this.contextFieldStore.get(name);
         if (field === undefined) {

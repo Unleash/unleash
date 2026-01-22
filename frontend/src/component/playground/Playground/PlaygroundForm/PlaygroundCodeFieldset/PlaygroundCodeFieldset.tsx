@@ -78,16 +78,16 @@ const createContextFieldOptions = (
         },
     );
 
-    return [
-        fields.project.length > 0 && {
-            groupHeader: 'Project context fields',
-            options: optList(fields.project),
-        },
-        fields.global.length > 0 && {
-            groupHeader: 'Global context fields',
-            options: optList(fields.global),
-        },
-    ].filter(Boolean) as SelectOptionGroup[];
+    const groups: SelectOptionGroup[] = [];
+
+    if (fields.project.length) {
+        groups.push({ groupHeader: 'Project context fields', options: optList(fields.project) });
+    }
+    if (fields.global.length) {
+        groups.push({ groupHeader: 'Global context fields', options: optList(fields.global) });
+    }
+
+    return groups;
 };
 
 export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({

@@ -68,7 +68,7 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
 
 const StyledDescription = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(3),
 }));
 
 const VideoContainer = styled(Box)(({ theme }) => ({
@@ -195,14 +195,11 @@ export const ReleaseManagementSplash = ({
 
             <ContentContainer>
                 <StyledTitle variant='h1'>
-                    Introducing release management
+                    Put your rollouts on autopilot
                 </StyledTitle>
 
                 <StyledDescription>
-                    Structure your feature rollouts with release plans,
-                    milestones, and automated progressions. Add safeguards to
-                    protect your deployments and roll out features with
-                    confidence.
+                     Define your milestones once and reuse everywhere. Add automations and watch them go from 5% canary to full release, while safeguards catch issues before your users do.
                 </StyledDescription>
 
                 <VideoContainer>

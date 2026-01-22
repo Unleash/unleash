@@ -108,7 +108,7 @@ export const ChartItem: FC<ChartItemProps> = ({
             {config.mode === 'read' ? <StyledShieldIcon /> : null}
             <StyledChartTitle>
                 {config.title && (
-                    <Typography variant='h6'>{config.title}</Typography>
+                    <Typography variant='h3'>{config.title}</Typography>
                 )}
                 <Typography variant='body2' color='text.secondary'>
                     {getConfigDescription(config)}

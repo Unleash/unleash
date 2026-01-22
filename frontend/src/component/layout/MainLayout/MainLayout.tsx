@@ -25,8 +25,6 @@ interface IMainLayoutProps {
 }
 
 const MainLayoutContainer = styled(Grid)(() => ({
-    height: '100%',
-    justifyContent: 'space-between',
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
@@ -58,7 +56,6 @@ const MainLayoutContent = styled(Grid)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         minWidth: '100%',
     },
-    minHeight: '94vh',
 }));
 
 const MainLayoutContentWrapper = styled('div')(({ theme }) => ({
@@ -67,6 +64,8 @@ const MainLayoutContentWrapper = styled('div')(({ theme }) => ({
     width: '100%',
     backgroundColor: theme.palette.background.application,
     position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
 }));
 
 const StyledImg = styled('img')(() => ({
@@ -77,16 +76,48 @@ const StyledImg = styled('img')(() => ({
     width: 400,
     pointerEvents: 'none',
     userSelect: 'none',
+    zIndex: 0,
 }));
 
 const MainLayoutContentContainer = styled('main')(({ theme }) => ({
-    height: '100%',
     padding: theme.spacing(0, 0, 6.5, 0),
     position: 'relative',
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(0, 1.5, 6.5, 1.5),
     },
     zIndex: 200,
+}));
+
+const LayoutFlexContainer = styled(Box)(() => ({
+    display: 'flex',
+    marginTop: 0,
+}));
+
+const MainContentWrapper = styled(Box)(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+    minWidth: 0,
+}));
+
+const HeaderContentContainer = styled(Box)(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
+    flexShrink: 0,
+}));
+
+const ContentFlexContainer = styled(Box)(() => ({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: 0,
+}));
+
+const StyledMainLayoutContent = styled(MainLayoutContent)(() => ({
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
 }));
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
@@ -105,20 +136,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                 <SkipNavLink />
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>
-                        <ConditionallyRender
-                            condition={Boolean(
-                                projectId &&
-                                    isChangeRequestConfiguredInAnyEnv(),
-                            )}
-                            show={<DraftBanner project={projectId || ''} />}
-                        />
-
-                        <Box
-                            sx={(_theme) => ({
-                                display: 'flex',
-                                mt: 0,
-                            })}
-                        >
+                        <LayoutFlexContainer>
                             <ConditionallyRender
                                 condition={!isSmallScreen}
                                 show={
@@ -132,26 +150,40 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 }
                             />
 
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    flexGrow: 1,
-                                    minWidth: 0,
-                                }}
-                            >
-                                <Header />
+                            <MainContentWrapper>
+                                <ConditionallyRender
+                                    condition={Boolean(
+                                        projectId &&
+                                            isChangeRequestConfiguredInAnyEnv(),
+                                    )}
+                                    show={
+                                        <DraftBanner
+                                            project={projectId || ''}
+                                        />
+                                    }
+                                />
+                                <HeaderContentContainer>
+                                    <Header />
 
-                                <MainLayoutContent>
-                                    <SkipNavTarget />
-                                    <MainLayoutContentContainer ref={ref}>
-                                        <BreadcrumbNav />
-                                        <Proclamation toast={uiConfig.toast} />
-                                        {children}
-                                    </MainLayoutContentContainer>
-                                </MainLayoutContent>
-                            </Box>
-                        </Box>
+                                    <ContentFlexContainer>
+                                        <StyledMainLayoutContent>
+                                            <SkipNavTarget />
+                                            <MainLayoutContentContainer
+                                                ref={ref}
+                                            >
+                                                <BreadcrumbNav />
+                                                <Proclamation
+                                                    toast={uiConfig.toast}
+                                                />
+                                                {children}
+                                            </MainLayoutContentContainer>
+                                        </StyledMainLayoutContent>
+                                    </ContentFlexContainer>
+                                </HeaderContentContainer>
+
+                                <Footer />
+                            </MainContentWrapper>
+                        </LayoutFlexContainer>
 
                         <ThemeMode
                             darkmode={
@@ -169,7 +201,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             }
                         />
                     </MainLayoutContentWrapper>
-                    <Footer />
                 </MainLayoutContainer>
                 {useNewNewInUnleash && <NewInUnleash />}
             </EventTimelineProvider>

@@ -30,8 +30,7 @@ import { useSegmentValuesCount } from 'component/segments/hooks/useSegmentValues
 import AccessContext from 'contexts/AccessContext';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { GO_BACK } from 'constants/navigate';
-import { useEffectiveProjectContext } from 'hooks/api/getters/useUnleashContext/useEffectiveProjectContext.ts';
-import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 
 interface ISegmentFormPartTwoProps {
     project?: string;
@@ -114,10 +113,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     const constraintsAccordionListRef = useRef<IEditableConstraintsListRef>();
     const navigate = useNavigate();
     const { hasAccess } = useContext(AccessContext);
-    const projectIdFromPath = useOptionalPathParam('projectId');
-    const { context = [] } = useEffectiveProjectContext(
-        project ?? projectIdFromPath,
-    );
+    const { context = [] } = useAssignableUnleashContext(project);
     const [open, setOpen] = useState(false);
     const segmentValuesCount = useSegmentValuesCount(constraints);
     const modePermission =

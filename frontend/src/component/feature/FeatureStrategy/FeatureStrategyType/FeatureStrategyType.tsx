@@ -2,7 +2,7 @@ import type { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
 import FlexibleStrategy from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext';
 import produce from 'immer';
 import type React from 'react';
 import type { IFormErrors } from 'hooks/useFormErrors';
@@ -26,7 +26,7 @@ export const FeatureStrategyType = ({
     validateParameter,
     errors,
 }: IFeatureStrategyTypeProps) => {
-    const { context } = useUnleashContext();
+    const { context } = useAssignableUnleashContext();
 
     const updateParameter = (name: string, value: string) => {
         setStrategy(

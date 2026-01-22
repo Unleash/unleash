@@ -13,6 +13,7 @@ import {
 import { Badge } from 'component/common/Badge/Badge';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { EnterpriseEdgeInstanceLatency } from './EnterpriseEdgeInstanceLatency.tsx';
+import { EnterpriseEdgeApiKeyRevisionData } from './EnterpriseEdgeApiKeyRevisionData.tsx';
 
 const StyledInstance = styled('div')(({ theme }) => ({
     width: '100%',
@@ -260,6 +261,11 @@ export const EnterpriseEdgeInstance = ({
                     </StyledDetailRow>
                     <StyledDetailRow>
                         <EnterpriseEdgeInstanceLatency instance={instance} />
+                    </StyledDetailRow>
+                    <StyledDetailRow>
+                        <EnterpriseEdgeApiKeyRevisionData
+                            apiKeys={instance.apiKeyRevisionIds}
+                        />
                     </StyledDetailRow>
                 </StyledAccordionDetails>
             </StyledAccordion>

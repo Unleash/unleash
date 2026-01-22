@@ -13,12 +13,14 @@ const getDate = async (option: string) => screen.findByText(option);
 const setup = (
     initialState: FilterItemParams | null,
     allState?: Record<string, FilterItemParams | null>,
+    name?: string,
+    label?: string,
 ) => {
     const recordedChanges: FilterItemParams[] = [];
 
     const mockProps: IFilterDateItemProps = {
-        name: 'Date To',
-        label: 'Date To',
+        name: name ?? 'Date To',
+        label: label ?? 'Date To',
         onChange: (value: FilterItemParams) => {
             recordedChanges.push(value);
         },
@@ -116,9 +118,9 @@ describe('FilterDateItem date range constraints', () => {
             to: toState,
         };
 
-        const recordedChanges = setup(toState, allState);
+        const recordedChanges = setup(toState, allState, 'Date To', 'Date To');
 
-        const dateToChip = await screen.findByTestId('FILTER_ITEM');
+        const dateToChip = await screen.findByText('Date To');
         await userEvent.click(dateToChip);
 
         const day10 = await screen.findByRole('gridcell', { name: '10' });
@@ -154,9 +156,10 @@ describe('FilterDateItem date range constraints', () => {
             to: toState,
         };
 
-        setup(toState, allState);
+        setup(toState, allState, 'Date From', 'Date From');
 
-        await userEvent.click(await screen.findByText('Date To'));
+        const dateFromChip = await screen.findByText('Date From');
+        await userEvent.click(dateFromChip);
 
         const disabledDate = await screen.findByRole('gridcell', {
             name: '15',
@@ -193,9 +196,10 @@ describe('FilterDateItem date range constraints', () => {
             to: toState,
         };
 
-        const recordedChanges = setup(toState, allState);
+        const recordedChanges = setup(toState, allState, 'Date To', 'Date To');
 
-        await userEvent.click(await screen.findByText('Date To'));
+        const dateToChip = await screen.findByText('Date To');
+        await userEvent.click(dateToChip);
 
         const validDate = await screen.findByRole('gridcell', { name: '19' });
 

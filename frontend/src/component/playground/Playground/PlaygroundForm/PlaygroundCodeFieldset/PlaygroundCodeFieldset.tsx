@@ -10,15 +10,10 @@ import {
 import {
     Box,
     Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
     TextField,
     Typography,
     useTheme,
     Autocomplete,
-    type SelectChangeEvent,
     Checkbox,
 } from '@mui/material';
 
@@ -81,10 +76,16 @@ const createContextFieldOptions = (
     const groups: SelectOptionGroup[] = [];
 
     if (fields.project.length) {
-        groups.push({ groupHeader: 'Project context fields', options: optList(fields.project) });
+        groups.push({
+            groupHeader: 'Project context fields',
+            options: optList(fields.project)
+        });
     }
     if (fields.global.length) {
-        groups.push({ groupHeader: 'Global context fields', options: optList(fields.global) });
+        groups.push({
+            groupHeader: 'Global context fields',
+            options: optList(fields.global)
+        });
     }
 
     return groups;

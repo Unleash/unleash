@@ -78,13 +78,13 @@ const createContextFieldOptions = (
     if (fields.project.length) {
         groups.push({
             groupHeader: 'Project context fields',
-            options: optList(fields.project)
+            options: optList(fields.project),
         });
     }
     if (fields.global.length) {
         groups.push({
             groupHeader: 'Global context fields',
-            options: optList(fields.global)
+            options: optList(fields.global),
         });
     }
 

@@ -1,5 +1,4 @@
 import {
-    type CSSProperties,
     type FC,
     type MouseEventHandler,
     type ReactNode,

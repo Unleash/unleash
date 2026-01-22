@@ -1,11 +1,20 @@
 import { Banner } from 'component/banners/Banner/Banner';
-import { useLicenseCheck } from 'hooks/api/getters/useLicense/useLicense';
+import {
+    useLicense,
+    useLicenseCheck,
+} from 'hooks/api/getters/useLicense/useLicense';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import type { BannerVariant } from 'interfaces/banner';
 
 export const LicenseBanner = () => {
-    const { isEnterprise } = useUiConfig();
+    const {
+        isEnterprise,
+        uiConfig: { billing },
+    } = useUiConfig();
     const licenseInfo = useLicenseCheck();
+    const { license } = useLicense();
+    const { users } = useUsers();
 
     // Only for enterprise
     if (
@@ -25,6 +34,12 @@ export const LicenseBanner = () => {
 
             return <Banner key={banner.message} banner={banner} />;
         } else {
+            // const isSeatsWarning = licenseInfo.message?.includes("seats");
+            const licensedSeats = license?.resources.seats ?? 0;
+            const isPAYG = billing === 'pay-as-you-go';
+            if (users.length === licensedSeats && isPAYG) {
+                return null;
+            }
             if (licenseInfo.message) {
                 const banner = {
                     message: licenseInfo.message,

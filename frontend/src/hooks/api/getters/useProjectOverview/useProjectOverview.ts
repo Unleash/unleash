@@ -31,6 +31,13 @@ const fallbackProject: ProjectOverviewSchema = {
 };
 
 const useProjectOverview = (id: string, options: SWRConfiguration = {}) => {
+    return useConditionalProjectOverview(id, options);
+};
+
+export const useConditionalProjectOverview = (
+    id: string = '',
+    options: SWRConfiguration = {},
+) => {
     const { KEY, fetcher } = getProjectOverviewFetcher(id);
     const { data, error, mutate } = useConditionalSWR<ProjectOverviewSchema>(
         !!id,

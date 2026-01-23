@@ -32,6 +32,7 @@ export enum InstanceState {
     ACTIVE = 'ACTIVE',
     EXPIRED = 'EXPIRED',
     CHURNED = 'CHURNED',
+    DELETABLE = 'DELETABLE',
 }
 
 export enum InstancePlan {

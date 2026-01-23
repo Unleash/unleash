@@ -1,11 +1,5 @@
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import React, {
-    type FC,
-    type VFC,
-    useEffect,
-    useState,
-    useContext,
-} from 'react';
+import React, { type FC, useEffect, useState, useContext } from 'react';
 import { InstanceStatusBar } from 'component/common/InstanceStatus/InstanceStatusBar';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
@@ -18,22 +12,28 @@ import useInstanceStatusApi from 'hooks/api/actions/useInstanceStatusApi/useInst
 import { trialHasExpired, canExtendTrial } from 'utils/instanceTrial';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { UpgradeTrialDialog } from './UpgradeTrialDialog';
 
 interface ITrialDialogProps {
+    dialogOpen: boolean;
+    setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
     instanceStatus: IInstanceStatus;
     onExtendTrial: () => Promise<void>;
 }
 
-const TrialDialog: VFC<ITrialDialogProps> = ({
+const TrialDialog = ({
+    dialogOpen,
+    setDialogOpen,
     instanceStatus,
     onExtendTrial,
-}) => {
+}: ITrialDialogProps) => {
     const { hasAccess } = useContext(AccessContext);
     const navigate = useNavigate();
-    const expired = trialHasExpired(instanceStatus);
-    const [dialogOpen, setDialogOpen] = useState(expired);
 
-    const onClose = (_event: React.SyntheticEvent, muiCloseReason?: string) => {
+    const onClickExtendTrial = (
+        _event: React.SyntheticEvent,
+        muiCloseReason?: string,
+    ) => {
         if (!muiCloseReason) {
             setDialogOpen(false);
             if (canExtendTrial(instanceStatus)) {
@@ -42,15 +42,17 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
         }
     };
 
-    useEffect(() => {
-        setDialogOpen(expired);
-        const interval = setInterval(() => {
-            setDialogOpen(expired);
-        }, 60000);
-        return () => clearInterval(interval);
-    }, [expired]);
-
     if (instanceStatus.plan === InstancePlan.ENTERPRISE) {
+        if (instanceStatus.billing === 'pay-as-you-go') {
+            return (
+                <UpgradeTrialDialog
+                    dialogOpen={dialogOpen}
+                    setDialogOpen={setDialogOpen}
+                    instanceStatus={instanceStatus}
+                />
+            );
+        }
+
         return (
             <Dialogue
                 open={dialogOpen}
@@ -82,7 +84,7 @@ const TrialDialog: VFC<ITrialDialogProps> = ({
                     navigate('/admin/billing');
                     setDialogOpen(false);
                 }}
-                onClose={onClose}
+                onClose={onClickExtendTrial}
                 title={`Your free ${instanceStatus.plan} trial has expired!`}
             >
                 <Typography>
@@ -116,6 +118,16 @@ export const InstanceStatus: FC<{ children?: React.ReactNode }> = ({
     const { instanceStatus, refetchInstanceStatus } = useInstanceStatus();
     const { extendTrial } = useInstanceStatusApi();
     const { setToastApiError } = useToast();
+    const expired = trialHasExpired(instanceStatus);
+    const [dialogOpen, setDialogOpen] = useState(expired);
+
+    useEffect(() => {
+        setDialogOpen(expired);
+        const interval = setInterval(() => {
+            setDialogOpen(expired);
+        }, 60000);
+        return () => clearInterval(interval);
+    }, [expired]);
 
     const onExtendTrial = async () => {
         try {
@@ -134,8 +146,11 @@ export const InstanceStatus: FC<{ children?: React.ReactNode }> = ({
                     <>
                         <InstanceStatusBarMemo
                             instanceStatus={instanceStatus!}
+                            setDialogOpen={setDialogOpen}
                         />
                         <TrialDialog
+                            dialogOpen={dialogOpen}
+                            setDialogOpen={setDialogOpen}
                             instanceStatus={instanceStatus!}
                             onExtendTrial={onExtendTrial}
                         />

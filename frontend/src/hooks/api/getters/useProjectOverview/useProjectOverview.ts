@@ -2,6 +2,7 @@ import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { getProjectOverviewFetcher } from './getProjectOverviewFetcher.js';
 import type { ProjectOverviewSchema } from 'openapi';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 
 const fallbackProject: ProjectOverviewSchema = {
     featureTypeCounts: [],
@@ -31,7 +32,9 @@ const fallbackProject: ProjectOverviewSchema = {
 
 const useProjectOverview = (id: string, options: SWRConfiguration = {}) => {
     const { KEY, fetcher } = getProjectOverviewFetcher(id);
-    const { data, error, mutate } = useSWR<ProjectOverviewSchema>(
+    const { data, error, mutate } = useConditionalSWR<ProjectOverviewSchema>(
+        !!id,
+        fallbackProject,
         KEY,
         fetcher,
         options,

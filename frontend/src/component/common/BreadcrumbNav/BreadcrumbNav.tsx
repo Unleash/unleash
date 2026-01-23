@@ -4,7 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';
 import { styled } from '@mui/material';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useConditionalProjectOverview } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { Truncator } from '../Truncator/Truncator';
 
@@ -39,7 +39,7 @@ const BreadcrumbNav = () => {
     const location = useLocation();
 
     const projectId = useOptionalPathParam('projectId');
-    const { project } = useProjectOverview(projectId || '');
+    const { project } = useConditionalProjectOverview(projectId);
 
     let paths = location.pathname
         .split('/')

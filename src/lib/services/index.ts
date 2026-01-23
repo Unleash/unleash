@@ -302,8 +302,8 @@ export const createServices = (
     const dependentFeaturesService = transactionalDependentFeaturesService;
 
     const featureSearchService = db
-        ? createFeatureSearchService(config)(db)
-        : createFakeFeatureSearchService(config);
+        ? createFeatureSearchService(config, privateProjectChecker)(db)
+        : createFakeFeatureSearchService(config, privateProjectChecker);
 
     const transactionalEnvironmentService = db
         ? withTransactional(createEnvironmentService(config), db)

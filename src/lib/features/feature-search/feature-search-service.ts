@@ -1,8 +1,8 @@
 import type {
-    IFeatureSearchStore,
+    IPrivateProjectChecker,
     IUnleashConfig,
-    IUnleashStores,
-} from '../../types/index.js';
+} from '../../server-impl.js';
+import type { IFeatureSearchStore, IUnleashStores } from '../../types/index.js';
 import type {
     IFeatureSearchParams,
     IQueryParam,
@@ -11,15 +11,19 @@ import { parseSearchOperatorValue } from './search-utils.js';
 
 export class FeatureSearchService {
     private featureSearchStore: IFeatureSearchStore;
+    private privateProjectChecker: IPrivateProjectChecker;
+
     constructor(
         { featureSearchStore }: Pick<IUnleashStores, 'featureSearchStore'>,
         _config: Pick<IUnleashConfig, 'getLogger'>,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.featureSearchStore = featureSearchStore;
+        this.privateProjectChecker = privateProjectChecker;
     }
 
-    async search(params: IFeatureSearchParams) {
-        const queryParams = this.convertToQueryParams(params);
+    async search(params: IFeatureSearchParams, userId: number) {
+        const queryParams = await this.convertToQueryParams(params, userId);
         const { features, total } =
             await this.featureSearchStore.searchFeatures(
                 {
@@ -36,7 +40,10 @@ export class FeatureSearchService {
         };
     }
 
-    convertToQueryParams = (params: IFeatureSearchParams): IQueryParam[] => {
+    convertToQueryParams = async (
+        params: IFeatureSearchParams,
+        userId: number,
+    ): Promise<IQueryParam[]> => {
         const queryParams: IQueryParam[] = [];
 
         if (params.state) {
@@ -85,6 +92,15 @@ export class FeatureSearchService {
             }
         });
 
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        if (accessibleProjects.mode === 'limited') {
+            queryParams.push({
+                field: 'features.project',
+                operator: 'IS_ANY_OF',
+                values: accessibleProjects.projects,
+            });
+        }
         return queryParams;
     };
 }

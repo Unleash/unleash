@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { InputAdornment, List, ListItemText } from '@mui/material';
 import { StyledDropdownSearch } from './shared.styles';
 import { StyledCheckbox, StyledListItem } from './DropdownList.styles';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 function useSelectionManagement<T>(handleToggle: (value: T) => () => void) {
     const listRefs = useRef<Array<HTMLInputElement | HTMLLIElement | null>>([]);
@@ -46,7 +47,7 @@ function useSelectionManagement<T>(handleToggle: (value: T) => () => void) {
 }
 
 export type DropdownListProps<T> = {
-    options: Array<{ label: string; value: T }>;
+    options: Array<{ label: string; description?: string; value: T }>;
     onChange: (value: T) => void;
     search: {
         label: string;
@@ -103,6 +104,9 @@ export function DropdownList<T = string>({
             <List sx={{ overflowY: 'auto' }} disablePadding>
                 {filteredOptions.map((option, index) => {
                     const labelId = `checkbox-list-label-${option.value}`;
+                    const listItemText = (
+                        <ListItemText id={labelId} primary={option.label} />
+                    );
 
                     return (
                         <StyledListItem
@@ -139,7 +143,13 @@ export function DropdownList<T = string>({
                                     disableRipple
                                 />
                             ) : null}
-                            <ListItemText id={labelId} primary={option.label} />
+                            {option.description ? (
+                                <HtmlTooltip title={option.description}>
+                                    {listItemText}
+                                </HtmlTooltip>
+                            ) : (
+                                listItemText
+                            )}
                         </StyledListItem>
                     );
                 })}

@@ -364,6 +364,7 @@ const CreateFeatureDialogContent = ({
                                     (type: FeatureTypeSchema) => ({
                                         label: type.name,
                                         value: type.id,
+                                        description: type.description,
                                     }),
                                 )}
                                 onChange={(value: any) => {

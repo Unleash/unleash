@@ -54,6 +54,7 @@ import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker.ts';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal.tsx';
+import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav.tsx';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -272,6 +273,7 @@ export const Project = () => {
 
     return (
         <div ref={ref}>
+            <BreadcrumbNav />
             <StyledHeader>
                 <StyledInnerContainer>
                     <StyledTopRow>

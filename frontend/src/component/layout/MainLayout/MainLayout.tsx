@@ -171,7 +171,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                             <MainLayoutContentContainer
                                                 ref={ref}
                                             >
-                                                <BreadcrumbNav />
                                                 <Proclamation
                                                     toast={uiConfig.toast}
                                                 />

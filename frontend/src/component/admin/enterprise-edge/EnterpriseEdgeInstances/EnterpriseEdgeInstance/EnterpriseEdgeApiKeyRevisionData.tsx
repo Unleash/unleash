@@ -2,11 +2,12 @@ import type {
     EdgeApiKeyRevisionId,
     EnvironmentRevisionId,
 } from '../../../../../interfaces/connectedEdge.ts';
-import { styled } from '@mui/material';
+import { styled, Tooltip } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { formatDateYMDHMS } from '../../../../../utils/formatDate.ts';
 import { useLocationSettings } from '../../../../../hooks/useLocationSettings.ts';
 import { Truncator } from '../../../../common/Truncator/Truncator.tsx';
+import { Badge } from '../../../../common/Badge/Badge.tsx';
 
 const StyledTable = styled('table')(({ theme }) => ({
     width: '100%',
@@ -32,6 +33,10 @@ const StyledTableCell = styled('td')(({ theme }) => ({
         alignItems: 'center',
         justifyContent: 'end',
     },
+}));
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    padding: theme.spacing(0, 1),
 }));
 
 interface IEnterpriseEdgeApiKeyRevisionProps {
@@ -66,45 +71,32 @@ type ApiRevisionIdArgs = {
     upstreamRevisionId: number;
 };
 
+const colorFromDiff = (diff: number) => {
+    if (diff <= 0) {
+        return 'success';
+    } else if (diff < 5) {
+        return 'warning';
+    }
+    return 'error';
+};
+
 const ApiRevisionId = ({
     edgeRevisionId,
     upstreamRevisionId,
 }: ApiRevisionIdArgs) => {
     const diff = upstreamRevisionId - edgeRevisionId;
-    if (edgeRevisionId >= upstreamRevisionId) {
-        // We're in sync, flag as green we might even be ahead of the cached revisionId
-        return (
-            <span
-                style={{
-                    color: '#2e7d32',
-                }}
-                title='Edge is in sync with upstream'
-            >
+    const inSync = diff <= 0;
+    const title = inSync
+        ? 'Edge feature configuration is up to date'
+        : `Edge is ${diff} revisions behind Unleash`;
+
+    return (
+        <Tooltip title={title}>
+            <StyledBadge color={colorFromDiff(diff)}>
                 {edgeRevisionId}
-            </span>
-        );
-    } else if (diff < 5) {
-        // We're behind, flag as orange if < 5 revisions behind, red if >= 5 revisions behind
-        return (
-            <span
-                style={{
-                    color: '#ed6c02',
-                }}
-                title={`Edge is ${diff} revisions behind upstream (${upstreamRevisionId})`}
-            >
-                {edgeRevisionId}
-            </span>
-        );
-    } else {
-        <span
-            style={{
-                color: '#d32f2f',
-            }}
-            title={`Edge is ${diff} revisions behind upstream (${upstreamRevisionId})`}
-        >
-            {edgeRevisionId}
-        </span>;
-    }
+            </StyledBadge>
+        </Tooltip>
+    );
 };
 
 export const EnterpriseEdgeApiKeyRevisionData = ({
@@ -145,7 +137,7 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
                                     />
                                     <HelpIcon
                                         tooltip={`
-                                            Last updated: ${formatDateYMDHMS(apiKey.lastUpdated, locationSettings.locale)}
+                                            Edge last updated this token: ${formatDateYMDHMS(apiKey.lastUpdated, locationSettings.locale)}
                                         `}
                                         size='14px'
                                     />

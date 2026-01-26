@@ -17,15 +17,33 @@ export const useEdgeObservability = (options?: SWRConfiguration) => {
         options,
     );
 
-    return useMemo(
-        () => ({
-            edgeObservability: data ?? DEFAULT_DATA,
-            loading: !error && !data,
+    return useMemo(() => {
+        const loading = !error && !data;
+        if (data?.connectedEdges !== undefined) {
+            return {
+                edgeObservability: data,
+                loading,
+                refetch: () => mutate(),
+                error,
+            };
+        } else if (Array.isArray(data)) {
+            return {
+                edgeObservability: {
+                    connectedEdges: data,
+                    revisionIds: [],
+                },
+                loading,
+                refetch: () => mutate(),
+                error,
+            };
+        }
+        return {
+            edgeObservability: DEFAULT_DATA,
+            loading,
             refetch: () => mutate(),
             error,
-        }),
-        [data, error, mutate],
-    );
+        };
+    }, [data, error, mutate]);
 };
 
 const fetcher = (path: string) => {

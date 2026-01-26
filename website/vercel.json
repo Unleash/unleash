@@ -897,7 +897,7 @@
       "destination": "/deploy/getting-started",
       "permanent": true
     },
-   { 
+   {
       "source": "/using-unleash/deploy/google-auth-hook",
       "destination": "/deploy/getting-started",
       "permanent": true

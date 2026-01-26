@@ -1,5 +1,6 @@
 import type { Logger } from '../../logger.js';
 import type {
+    EnvironmentRevisionId,
     IEventStore,
     IFlagResolver,
     IUnleashConfig,
@@ -51,6 +52,17 @@ export default class ConfigurationRevisionService extends EventEmitter {
                 );
         }
         return ConfigurationRevisionService.instance;
+    }
+
+    getCachedRevisionIdsPerEnvironment(): EnvironmentRevisionId[] {
+        return Array.from(this.maxRevisionId.entries()).map(
+            ([environment, revisionId]) => {
+                return {
+                    environment,
+                    revisionId,
+                };
+            },
+        );
     }
 
     async getMaxRevisionId(environment?: string): Promise<number> {

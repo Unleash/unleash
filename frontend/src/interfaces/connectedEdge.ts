@@ -1,3 +1,12 @@
+export type EnvironmentRevisionId = {
+    environment: string;
+    revisionId: number;
+};
+
+export type EdgeObservability = {
+    revisionIds: EnvironmentRevisionId[];
+    connectedEdges: ConnectedEdge[];
+};
 export type ConnectedEdge = {
     id?: string;
     appName: string;

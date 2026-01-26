@@ -1,4 +1,7 @@
-import type { EdgeApiKeyRevisionId } from '../../../../../interfaces/connectedEdge.ts';
+import type {
+    EdgeApiKeyRevisionId,
+    EnvironmentRevisionId,
+} from '../../../../../interfaces/connectedEdge.ts';
 import { styled } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { formatDateYMDHMS } from '../../../../../utils/formatDate.ts';
@@ -33,6 +36,7 @@ const StyledTableCell = styled('td')(({ theme }) => ({
 
 interface IEnterpriseEdgeApiKeyRevisionProps {
     apiKeys?: EdgeApiKeyRevisionId[];
+    revisionIds: EnvironmentRevisionId[];
 }
 
 const projectKey = (projects: string[]): string => {
@@ -46,10 +50,71 @@ const apiToken = (revInfo: EdgeApiKeyRevisionId): string => {
 const listKey = (revInfo: EdgeApiKeyRevisionId): string => {
     return `[${revInfo.projects.join(',')}]:${revInfo.environment}`;
 };
+
+const unleashRevisionIdFromArray = (
+    revisionIds: EnvironmentRevisionId[],
+    environment: string,
+): number => {
+    return (
+        revisionIds.find((rev) => rev.environment === environment)
+            ?.revisionId || 0
+    );
+};
+
+type ApiRevisionIdArgs = {
+    edgeRevisionId: number;
+    upstreamRevisionId: number;
+};
+
+const ApiRevisionId = ({
+    edgeRevisionId,
+    upstreamRevisionId,
+}: ApiRevisionIdArgs) => {
+    const diff = upstreamRevisionId - edgeRevisionId;
+    if (edgeRevisionId >= upstreamRevisionId) {
+        // We're in sync, flag as green we might even be ahead of the cached revisionId
+        return (
+            <span
+                style={{
+                    color: '#2e7d32',
+                }}
+                title='Edge is in sync with upstream'
+            >
+                {edgeRevisionId}
+            </span>
+        );
+    } else if (diff < 5) {
+        // We're behind, flag as orange if < 5 revisions behind, red if >= 5 revisions behind
+        return (
+            <span
+                style={{
+                    color: '#ed6c02',
+                }}
+                title={`Edge is ${diff} revisions behind upstream (${upstreamRevisionId})`}
+            >
+                {edgeRevisionId}
+            </span>
+        );
+    } else {
+        <span
+            style={{
+                color: '#d32f2f',
+            }}
+            title={`Edge is ${diff} revisions behind upstream (${upstreamRevisionId})`}
+        >
+            {edgeRevisionId}
+        </span>;
+    }
+};
+
 export const EnterpriseEdgeApiKeyRevisionData = ({
     apiKeys,
+    revisionIds,
 }: IEnterpriseEdgeApiKeyRevisionProps) => {
     const { locationSettings } = useLocationSettings();
+    const unleashRevisionId = (environment: string): number => {
+        return unleashRevisionIdFromArray(revisionIds, environment);
+    };
     if (!apiKeys || apiKeys.length === 0) {
         return null;
     }
@@ -64,16 +129,20 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
             <tbody>
                 {apiKeys?.map((apiKey) => {
                     const token = apiToken(apiKey);
+
                     return (
                         <tr key={listKey(apiKey)}>
                             <StyledTableCell>
-                                <Truncator title={apiToken(apiKey)}>
-                                    {apiToken(apiKey)}
-                                </Truncator>
+                                <Truncator title={token}>{token}</Truncator>
                             </StyledTableCell>
                             <StyledTableCell>
                                 <div>
-                                    {apiKey.revisionId}
+                                    <ApiRevisionId
+                                        edgeRevisionId={apiKey.revisionId}
+                                        upstreamRevisionId={unleashRevisionId(
+                                            apiKey.environment,
+                                        )}
+                                    />
                                     <HelpIcon
                                         tooltip={`
                                             Last updated: ${formatDateYMDHMS(apiKey.lastUpdated, locationSettings.locale)}

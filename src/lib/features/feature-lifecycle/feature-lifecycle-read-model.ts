@@ -31,24 +31,32 @@ export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
         this.db = db;
     }
 
-    async getStageCount(): Promise<StageCount[]> {
-        const { rows } = await this.db.raw(`
-            SELECT
-                stage,
-                COUNT(*) AS feature_count
-            FROM (
-                SELECT DISTINCT ON (feature)
-                    feature,
-                    stage,
-                    created_at
-                FROM
-                    feature_lifecycles
-                ORDER BY
-                    feature, created_at DESC
-            ) AS LatestStages
-            GROUP BY
-                stage;
-        `);
+    async getStageCount(accessibleProjects?: string[]): Promise<StageCount[]> {
+        const hasProjectFilter = !!accessibleProjects?.length;
+
+        const { rows } = await this.db.raw(
+            `
+        SELECT
+            ls.stage,
+            COUNT(*) AS feature_count
+        FROM (
+            SELECT DISTINCT ON (fl.feature)
+                fl.feature,
+                fl.stage,
+                fl.created_at
+            FROM
+                feature_lifecycles fl
+            ORDER BY
+                fl.feature, fl.created_at DESC
+        ) AS ls
+        JOIN
+            features f ON f.name = ls.feature
+        ${hasProjectFilter ? 'WHERE f.project = ANY (?)' : ''}
+        GROUP BY
+            ls.stage;
+        `,
+            hasProjectFilter ? [accessibleProjects] : [],
+        );
 
         return rows.map((row) => ({
             stage: row.stage,

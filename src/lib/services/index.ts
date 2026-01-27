@@ -590,6 +590,7 @@ export {
     UnknownFlagsService,
     UiConfigService,
     ResourceLimitsService,
+    ConfigurationRevisionService,
 };
 
 export interface IUnleashServices {

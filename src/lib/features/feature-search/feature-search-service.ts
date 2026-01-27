@@ -7,19 +7,24 @@ import type {
     IFeatureSearchParams,
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import { parseSearchOperatorValue } from './search-utils.js';
 
 export class FeatureSearchService {
     private featureSearchStore: IFeatureSearchStore;
+    private privateProjectChecker: IPrivateProjectChecker;
+
     constructor(
         { featureSearchStore }: Pick<IUnleashStores, 'featureSearchStore'>,
         _config: Pick<IUnleashConfig, 'getLogger'>,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.featureSearchStore = featureSearchStore;
+        this.privateProjectChecker = privateProjectChecker;
     }
 
     async search(params: IFeatureSearchParams) {
-        const queryParams = this.convertToQueryParams(params);
+        const queryParams = await this.convertToQueryParams(params);
         const { features, total } =
             await this.featureSearchStore.searchFeatures(
                 {
@@ -36,7 +41,9 @@ export class FeatureSearchService {
         };
     }
 
-    convertToQueryParams = (params: IFeatureSearchParams): IQueryParam[] => {
+    convertToQueryParams = async (
+        params: IFeatureSearchParams,
+    ): Promise<IQueryParam[]> => {
         const queryParams: IQueryParam[] = [];
 
         if (params.state) {
@@ -85,6 +92,17 @@ export class FeatureSearchService {
             }
         });
 
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(
+                params.userId,
+            );
+        if (accessibleProjects.mode === 'limited') {
+            queryParams.push({
+                field: 'features.project',
+                operator: 'IS_ANY_OF',
+                values: accessibleProjects.projects,
+            });
+        }
         return queryParams;
     };
 }

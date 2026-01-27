@@ -712,3 +712,8 @@ export interface ISdkHeartbeatMetadata {
     yggdrasilVersion?: string;
     specVersion?: string;
 }
+
+export interface EnvironmentRevisionId {
+    environment: string;
+    revisionId: number;
+}

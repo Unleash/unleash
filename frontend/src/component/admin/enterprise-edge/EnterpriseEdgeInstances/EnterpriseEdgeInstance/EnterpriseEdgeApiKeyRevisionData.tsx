@@ -1,9 +1,13 @@
-import type { EdgeApiKeyRevisionId } from '../../../../../interfaces/connectedEdge.ts';
-import { styled } from '@mui/material';
+import type {
+    EdgeApiKeyRevisionId,
+    EnvironmentRevisionId,
+} from '../../../../../interfaces/connectedEdge.ts';
+import { styled, Tooltip } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { formatDateYMDHMS } from '../../../../../utils/formatDate.ts';
 import { useLocationSettings } from '../../../../../hooks/useLocationSettings.ts';
 import { Truncator } from '../../../../common/Truncator/Truncator.tsx';
+import { Badge } from '../../../../common/Badge/Badge.tsx';
 
 const StyledTable = styled('table')(({ theme }) => ({
     width: '100%',
@@ -31,8 +35,13 @@ const StyledTableCell = styled('td')(({ theme }) => ({
     },
 }));
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    padding: theme.spacing(0, 1),
+}));
+
 interface IEnterpriseEdgeApiKeyRevisionProps {
     apiKeys?: EdgeApiKeyRevisionId[];
+    revisionIds: EnvironmentRevisionId[];
 }
 
 const projectKey = (projects: string[]): string => {
@@ -46,8 +55,53 @@ const apiToken = (revInfo: EdgeApiKeyRevisionId): string => {
 const listKey = (revInfo: EdgeApiKeyRevisionId): string => {
     return `[${revInfo.projects.join(',')}]:${revInfo.environment}`;
 };
+
+const unleashRevisionId = (
+    revisionIds: EnvironmentRevisionId[],
+    environment: string,
+): number => {
+    return (
+        revisionIds.find((rev) => rev.environment === environment)
+            ?.revisionId || 0
+    );
+};
+
+const colorFromDiff = (diff: number) => {
+    if (diff <= 0) {
+        return 'success';
+    } else if (diff < 5) {
+        return 'warning';
+    }
+    return 'error';
+};
+
+interface IApiRevisionIdProps {
+    edgeRevisionId: number;
+    upstreamRevisionId: number;
+}
+
+const ApiRevisionId = ({
+    edgeRevisionId,
+    upstreamRevisionId,
+}: IApiRevisionIdProps) => {
+    const diff = upstreamRevisionId - edgeRevisionId;
+    const inSync = diff <= 0;
+    const title = inSync
+        ? 'Edge feature configuration is up to date'
+        : `Edge is ${diff} revisions behind Unleash`;
+
+    return (
+        <Tooltip title={title}>
+            <StyledBadge color={colorFromDiff(diff)}>
+                {edgeRevisionId}
+            </StyledBadge>
+        </Tooltip>
+    );
+};
+
 export const EnterpriseEdgeApiKeyRevisionData = ({
     apiKeys,
+    revisionIds,
 }: IEnterpriseEdgeApiKeyRevisionProps) => {
     const { locationSettings } = useLocationSettings();
     if (!apiKeys || apiKeys.length === 0) {
@@ -64,19 +118,24 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
             <tbody>
                 {apiKeys?.map((apiKey) => {
                     const token = apiToken(apiKey);
+
                     return (
                         <tr key={listKey(apiKey)}>
                             <StyledTableCell>
-                                <Truncator title={apiToken(apiKey)}>
-                                    {apiToken(apiKey)}
-                                </Truncator>
+                                <Truncator title={token}>{token}</Truncator>
                             </StyledTableCell>
                             <StyledTableCell>
                                 <div>
-                                    {apiKey.revisionId}
+                                    <ApiRevisionId
+                                        edgeRevisionId={apiKey.revisionId}
+                                        upstreamRevisionId={unleashRevisionId(
+                                            revisionIds,
+                                            apiKey.environment,
+                                        )}
+                                    />
                                     <HelpIcon
                                         tooltip={`
-                                            Last updated: ${formatDateYMDHMS(apiKey.lastUpdated, locationSettings.locale)}
+                                            Edge last updated this token: ${formatDateYMDHMS(apiKey.lastUpdated, locationSettings.locale)}
                                         `}
                                         size='14px'
                                     />

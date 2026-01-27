@@ -1,4 +1,4 @@
-import useSWR, { type SWRConfiguration } from 'swr';
+import type { SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { getProjectOverviewFetcher } from './getProjectOverviewFetcher.js';
 import type { ProjectOverviewSchema } from 'openapi';

@@ -1,5 +1,8 @@
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import type { ConnectedEdge } from 'interfaces/connectedEdge';
+import type {
+    ConnectedEdge,
+    EnvironmentRevisionId,
+} from 'interfaces/connectedEdge';
 import CircleIcon from '@mui/icons-material/Circle';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { formatDateYMDHMS } from 'utils/formatDate';
@@ -144,10 +147,12 @@ type InstanceConnectionStatus = 'Connected' | 'Stale' | 'Disconnected';
 
 interface IEnterpriseEdgeInstanceProps {
     instance: ConnectedEdge;
+    revisionIds: EnvironmentRevisionId[];
 }
 
 export const EnterpriseEdgeInstance = ({
     instance,
+    revisionIds,
 }: IEnterpriseEdgeInstanceProps) => {
     const { locationSettings } = useLocationSettings();
 
@@ -265,6 +270,7 @@ export const EnterpriseEdgeInstance = ({
                     <StyledDetailRow>
                         <EnterpriseEdgeApiKeyRevisionData
                             apiKeys={instance.apiKeyRevisionIds}
+                            revisionIds={revisionIds}
                         />
                     </StyledDetailRow>
                 </StyledAccordionDetails>

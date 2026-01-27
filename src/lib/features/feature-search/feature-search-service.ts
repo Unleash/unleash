@@ -1,12 +1,13 @@
 import type {
-    IPrivateProjectChecker,
+    IFeatureSearchStore,
     IUnleashConfig,
-} from '../../server-impl.js';
-import type { IFeatureSearchStore, IUnleashStores } from '../../types/index.js';
+    IUnleashStores,
+} from '../../types/index.js';
 import type {
     IFeatureSearchParams,
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import { parseSearchOperatorValue } from './search-utils.js';
 
 export class FeatureSearchService {

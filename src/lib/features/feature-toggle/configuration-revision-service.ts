@@ -60,7 +60,7 @@ export default class ConfigurationRevisionService extends EventEmitter {
         }
         return ConfigurationRevisionService.instance;
     }
-
+    // Used in enterprise to give edge observability data
     getCachedRevisionIdsPerEnvironment(): EnvironmentRevisionId[] {
         return Array.from(this.maxRevisionId.entries()).map(
             ([environment, revisionId]) => {

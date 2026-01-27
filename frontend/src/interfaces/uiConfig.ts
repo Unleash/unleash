@@ -93,6 +93,7 @@ export type UiFlags = {
     gtmReleaseManagement?: boolean;
     projectContextFields?: boolean;
     readOnlyUsersUI?: boolean;
+    privateProjectMiddlewareMove?: boolean;
 };
 
 export interface IVersionInfo {

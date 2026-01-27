@@ -68,7 +68,8 @@ export type IFlagKey =
     | 'gtmReleaseManagement'
     | 'projectContextFields'
     | 'readOnlyUsers'
-    | 'readOnlyUsersUI';
+    | 'readOnlyUsersUI'
+    | 'privateProjectMiddlewareMove';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -303,6 +304,10 @@ const flags: IFlags = {
     ),
     readOnlyUsersUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS_UI,
+        false,
+    ),
+    privateProjectMiddlewareMove: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECT_MIDDLEWARE_MOVE,
         false,
     ),
 };

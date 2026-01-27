@@ -4,7 +4,7 @@ title: "ADR: API Audience Tiering"
 
 ## Background
 
-Our stability lifecycle (alpha/beta/stable) describes how mature an API is, but not who it is meant for. In practice, some stable endpoints are optimized for UI iteration and are not ideal for external integrations, even though we still aim for backward compatibility. Meanwhile, other endpoints serve integration-heavy clients (Terraform, Jira, ServiceNow) and require stronger guarantees and longer deprecation windows.
+Our stability lifecycle (alpha/beta/stable) describes how mature an API is, but not who it is meant for. In practice, some stable endpoints are optimized for UI iteration and are not ideal for external integrations, even though we still aim for backward compatibility. Meanwhile, other endpoints serve integration-heavy clients (Terraform, Jira and others in the future) and require stronger guarantees and longer deprecation windows.
 
 Relying on stability alone makes it hard to communicate intent, which creates mismatched expectations for customers and internal teams.
 
@@ -43,13 +43,8 @@ This ADR complements the stability lifecycle. Stability still answers **"how mat
 - Preserves UI velocity without weakening external contracts.
 - Supports a path for promoting APIs from UI/integration to core.
 
-### Trade-offs
-
-- Adds an extra label that must be maintained.
-- Requires agreement on default audience and promotion criteria.
-
 ## Open questions
 
 - **Naming**: Use `audience` or `supportLevel`? "Support level" may imply SLA commitments; confirm with CTO/sales.
-- **Default**: What should the default audience be if not specified?
+- **Default**: What should the default audience be if not specified? Suggestion is: `internal`
 - **Promotion**: What criteria and process should govern promotion to `core`?

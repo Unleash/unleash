@@ -94,6 +94,7 @@ This gives us the best of both worlds: we can ship and test alpha APIs internall
 1. **Immediate**: New endpoints can include `alphaUntilVersion` and/or `betaUntilVersion` as needed
 2. **Gradual**: Add cutoffs to existing endpoints as they're modified
 3. **Future**: AI-assisted bulk backfill from git history to document all existing APIs
+4. **Tag cleanup**: Remove legacy `Unstable` OpenAPI tags and replace them with stability cutoffs plus an appropriate existing tag
 
 ### Trade-offs
 

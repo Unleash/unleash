@@ -58,6 +58,7 @@ process.nextTick(async () => {
                         projectContextFields: true,
                         readOnlyUsers: true,
                         readOnlyUsersUI: true,
+                        privateProjectMiddlewareMove: true,
                     },
                 },
                 authentication: {

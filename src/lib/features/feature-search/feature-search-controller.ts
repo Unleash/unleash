@@ -138,29 +138,26 @@ export default class FeatureSearchController extends Controller {
             );
         const normalizedFavoritesFirst = favoritesFirst === 'true';
         const normalizedArchived = archived === 'IS:true';
-        const { features, total } = await this.featureSearchService.search(
-            {
-                searchParams: normalizedQuery,
-                project,
-                type,
-                userId,
-                tag,
-                segment,
-                state,
-                createdAt,
-                createdBy,
-                sortBy,
-                lifecycle,
-                lastSeenAt,
-                status: normalizedStatus,
-                offset: normalizedOffset,
-                limit: normalizedLimit,
-                sortOrder: normalizedSortOrder,
-                favoritesFirst: normalizedFavoritesFirst,
-                archived: normalizedArchived,
-            },
-            req.user.id,
-        );
+        const { features, total } = await this.featureSearchService.search({
+            searchParams: normalizedQuery,
+            project,
+            type,
+            userId,
+            tag,
+            segment,
+            state,
+            createdAt,
+            createdBy,
+            sortBy,
+            lifecycle,
+            lastSeenAt,
+            status: normalizedStatus,
+            offset: normalizedOffset,
+            limit: normalizedLimit,
+            sortOrder: normalizedSortOrder,
+            favoritesFirst: normalizedFavoritesFirst,
+            archived: normalizedArchived,
+        });
 
         this.openApiService.respondWithValidation(
             200,

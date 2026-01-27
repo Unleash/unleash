@@ -22,8 +22,8 @@ export class FeatureSearchService {
         this.privateProjectChecker = privateProjectChecker;
     }
 
-    async search(params: IFeatureSearchParams, userId: number) {
-        const queryParams = await this.convertToQueryParams(params, userId);
+    async search(params: IFeatureSearchParams) {
+        const queryParams = await this.convertToQueryParams(params);
         const { features, total } =
             await this.featureSearchStore.searchFeatures(
                 {
@@ -42,7 +42,6 @@ export class FeatureSearchService {
 
     convertToQueryParams = async (
         params: IFeatureSearchParams,
-        userId: number,
     ): Promise<IQueryParam[]> => {
         const queryParams: IQueryParam[] = [];
 
@@ -93,7 +92,9 @@ export class FeatureSearchService {
         });
 
         const accessibleProjects =
-            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+            await this.privateProjectChecker.getUserAccessibleProjects(
+                params.userId,
+            );
         if (accessibleProjects.mode === 'limited') {
             queryParams.push({
                 field: 'features.project',

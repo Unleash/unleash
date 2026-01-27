@@ -65,8 +65,13 @@ export class OpenApiService {
     }
 
     validPath(op: ApiOperation): RequestHandler {
-        const { alphaUntilVersion, betaUntilVersion, enterpriseOnly, ...rest } =
-            op;
+        const {
+            alphaUntilVersion,
+            betaUntilVersion,
+            audience = 'internal',
+            enterpriseOnly,
+            ...rest
+        } = op;
         const { baseUriPath = '' } = this.config.server ?? {};
         const openapiStaticAssets = `${baseUriPath}/openapi-static`;
 
@@ -108,6 +113,7 @@ export class OpenApiService {
             ...rest,
             summary: summaryWithStability,
             'x-stability-level': stability,
+            'x-audience': audience,
             description:
                 `${enterpriseBadge}${stabilityBadge}${op.description}`.replaceAll(
                     /\n\s*/g,

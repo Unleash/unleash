@@ -58,6 +58,11 @@ export interface ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag>
     operationId: string;
     tags: [Tag];
     /**
+     * Intended audience for the endpoint. Used for OpenAPI extensions only.
+     * @default 'internal'
+     */
+    audience?: 'core' | 'integration' | 'ui' | 'internal';
+    /**
      * The version up to (but not including) which this API is alpha.
      * If omitted, the API is never alpha.
      */

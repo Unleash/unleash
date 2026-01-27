@@ -18,6 +18,8 @@ Additionally, we wanted to ship and test new APIs with select customers before f
 
 We've implemented an automated API stability tracking system based on semantic versioning. Each endpoint can declare an `alphaUntilVersion` and/or a `betaUntilVersion` to define cutoffs. The system calculates stability levels by comparing those cutoffs against the current version:
 
+See also: [API Audience Tiering](/contributing/ADRs/back-end/api-audience-tiering), which separates intended consumers from lifecycle stability.
+
 ### Stability Calculation Heuristic
 
 - **Alpha** 🔴: Current version is before `alphaUntilVersion` (when defined)

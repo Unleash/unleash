@@ -1,6 +1,6 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import { styled } from '@mui/material';
-import { useEdgeObservability } from 'hooks/api/getters/useConnectedEdges/useEdgeObservability.ts';
+import { useEdgeObservability } from 'hooks/api/getters/useEdgeObservability/useEdgeObservability.ts';
 import { EnterpriseEdgeInstances } from './EnterpriseEdgeInstances/EnterpriseEdgeInstances.tsx';
 import { PageContent } from 'component/common/PageContent/PageContent.tsx';
 import { EnterpriseEdgeExplanation } from './EnterpriseEdgeExplanation.tsx';

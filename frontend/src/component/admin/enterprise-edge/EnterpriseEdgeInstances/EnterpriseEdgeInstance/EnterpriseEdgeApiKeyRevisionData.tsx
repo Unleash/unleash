@@ -56,7 +56,7 @@ const listKey = (revInfo: EdgeApiKeyRevisionId): string => {
     return `[${revInfo.projects.join(',')}]:${revInfo.environment}`;
 };
 
-const unleashRevisionIdFromArray = (
+const unleashRevisionId = (
     revisionIds: EnvironmentRevisionId[],
     environment: string,
 ): number => {
@@ -64,11 +64,6 @@ const unleashRevisionIdFromArray = (
         revisionIds.find((rev) => rev.environment === environment)
             ?.revisionId || 0
     );
-};
-
-type ApiRevisionIdArgs = {
-    edgeRevisionId: number;
-    upstreamRevisionId: number;
 };
 
 const colorFromDiff = (diff: number) => {
@@ -80,10 +75,15 @@ const colorFromDiff = (diff: number) => {
     return 'error';
 };
 
+interface IApiRevisionIdProps {
+    edgeRevisionId: number;
+    upstreamRevisionId: number;
+}
+
 const ApiRevisionId = ({
     edgeRevisionId,
     upstreamRevisionId,
-}: ApiRevisionIdArgs) => {
+}: IApiRevisionIdProps) => {
     const diff = upstreamRevisionId - edgeRevisionId;
     const inSync = diff <= 0;
     const title = inSync
@@ -104,9 +104,6 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
     revisionIds,
 }: IEnterpriseEdgeApiKeyRevisionProps) => {
     const { locationSettings } = useLocationSettings();
-    const unleashRevisionId = (environment: string): number => {
-        return unleashRevisionIdFromArray(revisionIds, environment);
-    };
     if (!apiKeys || apiKeys.length === 0) {
         return null;
     }
@@ -132,6 +129,7 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
                                     <ApiRevisionId
                                         edgeRevisionId={apiKey.revisionId}
                                         upstreamRevisionId={unleashRevisionId(
+                                            revisionIds,
                                             apiKey.environment,
                                         )}
                                     />

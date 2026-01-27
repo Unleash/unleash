@@ -34,31 +34,27 @@ export class FeatureLifecycleReadModel implements IFeatureLifecycleReadModel {
     async getStageCount(accessibleProjects?: string[]): Promise<StageCount[]> {
         const hasProjectFilter = !!accessibleProjects?.length;
 
-        const { rows } = await this.db.raw(
-            `
-        SELECT
-            ls.stage,
-            COUNT(*) AS feature_count
-        FROM (
-            SELECT DISTINCT ON (fl.feature)
-                fl.feature,
-                fl.stage,
-                fl.created_at
-            FROM
-                feature_lifecycles fl
-            ORDER BY
-                fl.feature, fl.created_at DESC
-        ) AS ls
-        JOIN
-            features f ON f.name = ls.feature
-        ${hasProjectFilter ? 'WHERE f.project = ANY (?)' : ''}
-        GROUP BY
-            ls.stage;
-        `,
-            hasProjectFilter ? [accessibleProjects] : [],
-        );
+        const query = this.db
+            .from(
+                this.db('feature_lifecycles as fl')
+                    .select('fl.feature', 'fl.stage', 'fl.created_at')
+                    .distinctOn('fl.feature')
+                    .orderBy('fl.feature')
+                    .orderBy('fl.created_at', 'desc')
+                    .as('latest_feature_lifecycle'),
+            )
+            .join('features as f', 'f.name', 'latest_feature_lifecycle.feature')
+            .groupBy('latest_feature_lifecycle.stage')
+            .select('latest_feature_lifecycle.stage')
+            .count('* as feature_count');
 
-        return rows.map((row) => ({
+        if (hasProjectFilter) {
+            query.whereIn('f.project', accessibleProjects);
+        }
+
+        const rows = await query;
+
+        return rows.map((row: any) => ({
             stage: row.stage,
             count: Number(row.feature_count),
         }));

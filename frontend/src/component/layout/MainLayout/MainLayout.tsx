@@ -2,7 +2,6 @@ import { forwardRef, type ReactNode } from 'react';
 import { Box, Grid, styled, useMediaQuery, useTheme } from '@mui/material';
 import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
-import Proclamation from 'component/common/Proclamation/Proclamation';
 import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';
 import textureImage from 'assets/img/texture.png';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -172,9 +171,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                                 ref={ref}
                                             >
                                                 <BreadcrumbNav />
-                                                <Proclamation
-                                                    toast={uiConfig.toast}
-                                                />
                                                 {children}
                                             </MainLayoutContentContainer>
                                         </StyledMainLayoutContent>

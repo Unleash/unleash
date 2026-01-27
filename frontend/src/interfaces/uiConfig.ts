@@ -27,20 +27,12 @@ export interface IUiConfig {
     emailEnabled?: boolean;
     prometheusAPIAvailable: boolean;
     maintenanceMode?: boolean;
-    toast?: IProclamationToast;
     frontendApiOrigins?: string[];
     resourceLimits: ResourceLimitsSchema;
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
     unleashContext?: IMutableContext;
-}
-
-export interface IProclamationToast {
-    message: string;
-    id: string;
-    severity: 'success' | 'info' | 'warning' | 'error';
-    link: string;
 }
 
 export type UiFlags = {

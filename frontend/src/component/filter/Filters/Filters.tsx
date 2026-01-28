@@ -46,6 +46,8 @@ export type IDateFilterItem = IBaseFilterItem & {
     dateOperators: [string, ...string[]];
     fromFilterKey?: string;
     toFilterKey?: string;
+    minDate?: Date;
+    maxDate?: Date;
 };
 
 export type IFilterItem = ITextFilterItem | IDateFilterItem;
@@ -72,6 +74,7 @@ type RangeChangeHandler = (
 type RenderFilterProps = {
     onChipClose?: (label: string) => void;
     state: FilterItemParams | null | undefined;
+    allState: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     filter: ITextFilterItem | IDateFilterItem;
     rangeChangeHandler: RangeChangeHandler;
@@ -81,6 +84,7 @@ type RenderFilterProps = {
 const RenderFilter: FC<RenderFilterProps> = ({
     filter,
     onChipClose,
+    allState,
     onChange,
     state,
     rangeChangeHandler,
@@ -96,6 +100,16 @@ const RenderFilter: FC<RenderFilterProps> = ({
     );
 
     if ('dateOperators' in filter) {
+        const fromValue = filter.fromFilterKey
+            ? allState?.[filter.fromFilterKey]?.values?.[0]
+            : undefined;
+        const toValue = filter.toFilterKey
+            ? allState?.[filter.toFilterKey]?.values?.[0]
+            : undefined;
+
+        const isFromPicker = filter.filterKey === filter.fromFilterKey;
+        const isToPicker = filter.filterKey === filter.toFilterKey;
+
         return (
             <FilterDateItem
                 key={filter.label}
@@ -103,11 +117,17 @@ const RenderFilter: FC<RenderFilterProps> = ({
                 label={label}
                 name={filter.label}
                 state={state}
+                minDate={
+                    isToPicker && fromValue ? new Date(fromValue) : undefined
+                }
+                maxDate={
+                    isFromPicker && toValue ? new Date(toValue) : undefined
+                }
+                operators={filter.dateOperators}
                 onChange={(value) => {
                     onChange({ [filter.filterKey]: value });
                 }}
                 onRangeChange={rangeChangeHandler?.(filter)}
-                operators={filter.dateOperators}
                 onChipClose={
                     filter.persistent
                         ? undefined
@@ -140,10 +160,12 @@ const RenderFilter: FC<RenderFilterProps> = ({
 type SingleFilterProps = Omit<IFilterProps, 'availableFilters'> & {
     filter: IFilterItem;
     rangeChangeHandler: RangeChangeHandler;
+    allState: FilterItemParamHolder;
 };
 
 const SingleFilter: FC<SingleFilterProps> = ({
     state,
+    allState,
     onChange,
     className,
     filter,
@@ -154,6 +176,7 @@ const SingleFilter: FC<SingleFilterProps> = ({
             <RenderFilter
                 filter={filter}
                 state={state[filter.filterKey]}
+                allState={allState}
                 onChange={onChange}
                 rangeChangeHandler={rangeChangeHandler}
                 onChipClose={undefined}
@@ -241,6 +264,7 @@ const MultiFilter: FC<MultiFilterProps> = ({
                         key={filter.filterKey}
                         filter={filter}
                         state={state[filter.filterKey]}
+                        allState={state}
                         onChange={onChange}
                         rangeChangeHandler={rangeChangeHandler}
                         onChipClose={() => deselectFilter(filter.label)}
@@ -279,8 +303,9 @@ export const Filters: FC<IFilterProps> = (props) => {
         const filter = props.availableFilters[0];
         return (
             <SingleFilter
-                rangeChangeHandler={rangeChangeHandler}
                 filter={filter}
+                allState={props.state}
+                rangeChangeHandler={rangeChangeHandler}
                 {...props}
             />
         );

@@ -1,12 +1,12 @@
-type InstancePrices = {
-    pro?: {
-        base?: number;
-        seat?: number;
-        traffic?: number;
+export type InstancePrices = {
+    pro: {
+        base: number;
+        seat: number;
+        traffic: number;
     };
-    payg?: {
-        seat?: number;
-        traffic?: number;
+    payg: {
+        seat: number;
+        traffic: number;
     };
 };
 
@@ -22,7 +22,6 @@ export interface IInstanceStatus {
     seats?: number;
     minSeats?: number;
     isCustomBilling?: boolean;
-    prices?: InstancePrices;
     billing?: InstanceBilling;
 }
 

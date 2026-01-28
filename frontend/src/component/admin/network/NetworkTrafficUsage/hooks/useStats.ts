@@ -15,11 +15,11 @@ import {
     calculateOverageCost,
     calculateTotalUsage,
 } from 'utils/traffic-calculations';
-import { BILLING_TRAFFIC_PRICE } from '../../../billing/BillingDashboard/BillingPlan/BillingPlan.jsx';
 import { averageTrafficPreviousMonths } from '../average-traffic-previous-months.js';
 import { useConnectionsConsumption } from 'hooks/api/getters/useConnectionsConsumption/useConnectionsConsumption';
 import { useRequestsConsumption } from 'hooks/api/getters/useRequestsConsumption/useRequestsConsumption';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import { useInstancePrices } from 'hooks/api/getters/useInstancePrices/useInstancePrices';
 
 export const useTrafficStats = (
     includedTraffic: number,
@@ -31,10 +31,8 @@ export const useTrafficStats = (
         toDateRange(chartDataSelection, currentDate),
     );
     const { instanceStatus } = useInstanceStatus();
-    const trafficPrice =
-        instanceStatus?.prices?.[
-            instanceStatus?.billing === 'pay-as-you-go' ? 'payg' : 'pro'
-        ]?.traffic ?? BILLING_TRAFFIC_PRICE;
+    const { instancePrices } = useInstancePrices();
+    const trafficPrice = instanceStatus?.billing === 'pay-as-you-go' ? instancePrices.payg.traffic : instancePrices.pro.traffic;
 
     const results = useMemo(() => {
         if (result.state !== 'success') {

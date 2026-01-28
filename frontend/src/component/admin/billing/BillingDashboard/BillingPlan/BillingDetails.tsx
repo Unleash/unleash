@@ -1,7 +1,7 @@
 import {
     type IInstanceStatus,
     InstancePlan,
-    InstancePrices,
+    type InstancePrices,
 } from 'interfaces/instance';
 import { BillingDetailsPro } from './BillingDetailsPro.tsx';
 import { BillingDetailsPAYG } from './BillingDetailsPAYG.tsx';

@@ -32,7 +32,10 @@ export const useTrafficStats = (
     );
     const { instanceStatus } = useInstanceStatus();
     const { instancePrices } = useInstancePrices();
-    const trafficPrice = instanceStatus?.billing === 'pay-as-you-go' ? instancePrices.payg.traffic : instancePrices.pro.traffic;
+    const trafficPrice =
+        instanceStatus?.billing === 'pay-as-you-go'
+            ? instancePrices.payg.traffic
+            : instancePrices.pro.traffic;
 
     const results = useMemo(() => {
         if (result.state !== 'success') {

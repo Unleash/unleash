@@ -3,7 +3,7 @@ import useUiConfig from '../useUiConfig/useUiConfig.js';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
-import { InstancePrices } from 'interfaces/instance.js';
+import type { InstancePrices } from 'interfaces/instance.js';
 import merge from 'deepmerge';
 
 const DEFAULT_DATA: InstancePrices = {
@@ -19,7 +19,11 @@ const DEFAULT_DATA: InstancePrices = {
 };
 
 export const useInstancePrices = () => {
-    const { uiConfig: { flags: { UNLEASH_CLOUD } } } = useUiConfig();
+    const {
+        uiConfig: {
+            flags: { UNLEASH_CLOUD },
+        },
+    } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR<InstancePrices>(
         Boolean(UNLEASH_CLOUD),
@@ -47,4 +51,4 @@ const fetcher = (path: string) => {
 
 const mergeAll = <T>(objects: Partial<T>[]): T => {
     return merge.all<T>(objects.filter((i) => i));
-}
+};

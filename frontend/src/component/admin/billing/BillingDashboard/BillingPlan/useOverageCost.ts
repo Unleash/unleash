@@ -16,7 +16,10 @@ export const useOverageCost = (includedTraffic: number) => {
 
     const { instanceStatus } = useInstanceStatus();
     const { instancePrices } = useInstancePrices();
-    const trafficPrice = instanceStatus?.billing === 'pay-as-you-go' ? instancePrices.payg.traffic : instancePrices.pro.traffic;
+    const trafficPrice =
+        instanceStatus?.billing === 'pay-as-you-go'
+            ? instancePrices.payg.traffic
+            : instancePrices.pro.traffic;
 
     const { result } = useTrafficSearch('daily', { from, to });
     const overageCost = useMemo(() => {

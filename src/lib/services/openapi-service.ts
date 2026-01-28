@@ -1,5 +1,6 @@
 import openapi, { type IExpressOpenApi } from '@wesleytodd/openapi';
 import type { Express, RequestHandler, Response } from 'express';
+import type { OpenAPIV3 } from 'openapi-types';
 import type { IUnleashConfig } from '../types/option.js';
 import {
     createOpenApiSchema,
@@ -7,17 +8,43 @@ import {
     removeJsonSchemaProps,
     type SchemaId,
 } from '../openapi/index.js';
-import type { ApiOperation } from '../openapi/util/api-operation.js';
+import {
+    type ApiOperation,
+    calculateStability,
+} from '../openapi/util/api-operation.js';
 import type { Logger } from '../logger.js';
 import { validateSchema } from '../openapi/validate.js';
 import type { IFlagResolver } from '../types/index.js';
+import packageVersion from '../util/version.js';
+const getStabilityLevel = (operation: unknown): string | undefined => {
+    if (!operation || typeof operation !== 'object') {
+        return undefined;
+    }
+
+    return (
+        operation as OpenAPIV3.OperationObject & {
+            'x-stability-level'?: string;
+        }
+    )['x-stability-level'];
+};
+type OpenApiDocument = OpenAPIV3.Document;
+type OpenApiMiddleware = IExpressOpenApi & {
+    document: OpenApiDocument;
+    generateDocument: (
+        baseDocument: OpenApiDocument,
+        router?: unknown,
+        basePath?: string,
+    ) => OpenApiDocument;
+};
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;
 
     private readonly logger: Logger;
 
-    private readonly api: IExpressOpenApi;
+    private readonly api: OpenApiMiddleware;
+
+    private readonly isDevelopment = process.env.NODE_ENV === 'development';
 
     private flagResolver: IFlagResolver;
 
@@ -34,26 +61,38 @@ export class OpenApiService {
                 extendRefs: true,
                 basePath: config.server.baseUriPath,
             },
-        );
+        ) as OpenApiMiddleware;
     }
 
     validPath(op: ApiOperation): RequestHandler {
-        const { beta, enterpriseOnly, ...rest } = op;
+        const { alphaUntilVersion, betaUntilVersion, enterpriseOnly, ...rest } =
+            op;
         const { baseUriPath = '' } = this.config.server ?? {};
         const openapiStaticAssets = `${baseUriPath}/openapi-static`;
-        const betaBadge = beta
-            ? `![Beta](${openapiStaticAssets}/Beta.svg) This is a beta endpoint and it may change or be removed in the future.
 
+        const currentVersion =
+            this.api.document?.info?.version || packageVersion || '7.0.0';
+        const stability = calculateStability({
+            alphaUntilVersion,
+            betaUntilVersion,
+            currentVersion,
+        });
+        const summaryWithStability =
+            stability !== 'stable' && rest.summary
+                ? `[${stability.toUpperCase()}] ${rest.summary}`
+                : rest.summary;
+        const stabilityBadge =
+            stability !== 'stable'
+                ? `**[${stability.toUpperCase()}]** This is a ${stability} endpoint and it may change or be removed in the future.
             `
-            : '';
+                : '';
         const enterpriseBadge = enterpriseOnly
             ? `![Unleash Enterprise](${openapiStaticAssets}/Enterprise.svg) **Enterprise feature**
 
             `
             : '';
 
-        const failDeprecated =
-            (op.deprecated ?? false) && process.env.NODE_ENV === 'development';
+        const failDeprecated = (op.deprecated ?? false) && this.isDevelopment;
 
         if (failDeprecated) {
             return (req, res, _next) => {
@@ -67,8 +106,10 @@ export class OpenApiService {
         }
         return this.api.validPath({
             ...rest,
+            summary: summaryWithStability,
+            'x-stability-level': stability,
             description:
-                `${enterpriseBadge}${betaBadge}${op.description}`.replaceAll(
+                `${enterpriseBadge}${stabilityBadge}${op.description}`.replaceAll(
                     /\n\s*/g,
                     '\n\n',
                 ),
@@ -76,8 +117,50 @@ export class OpenApiService {
     }
 
     useDocs(app: Express): void {
+        // Serve a filtered OpenAPI document that hides alpha endpoints from Swagger UI.
+        app.get(`${this.docsPath()}.json`, (req, res, next) => {
+            try {
+                const doc = this.api.generateDocument(
+                    this.api.document,
+                    req.app._router || req.app.router,
+                    this.config.server.baseUriPath,
+                );
+                res.json(
+                    this.isDevelopment ? doc : this.removeAlphaOperations(doc),
+                );
+            } catch (error) {
+                next(error);
+            }
+        });
+
         app.use(this.api);
         app.use(this.docsPath(), this.api.swaggerui());
+    }
+
+    // Remove operations explicitly marked as alpha to keep them out of the rendered docs.
+    private removeAlphaOperations(doc: OpenApiDocument): OpenApiDocument {
+        if (!doc?.paths) {
+            return doc;
+        }
+
+        const filteredPaths: OpenAPIV3.PathsObject = {};
+        for (const [path, methods] of Object.entries(doc.paths)) {
+            if (!methods) {
+                continue;
+            }
+
+            const entries = Object.entries(methods).filter(
+                ([, operation]) => getStabilityLevel(operation) !== 'alpha',
+            );
+
+            if (entries.length > 0) {
+                filteredPaths[path] = Object.fromEntries(
+                    entries,
+                ) as OpenAPIV3.PathItemObject;
+            }
+        }
+
+        return { ...doc, paths: filteredPaths };
     }
 
     docsPath(): string {

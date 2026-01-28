@@ -48,7 +48,6 @@ const TrialDialog = ({
                 <UpgradeTrialDialog
                     dialogOpen={dialogOpen}
                     setDialogOpen={setDialogOpen}
-                    instanceStatus={instanceStatus}
                 />
             );
         }

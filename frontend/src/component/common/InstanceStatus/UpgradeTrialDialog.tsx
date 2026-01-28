@@ -5,13 +5,12 @@ import { useContext, useEffect } from 'react';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { Alert, styled, Typography } from '@mui/material';
-import type { IInstanceStatus } from 'interfaces/instance';
-import { BILLING_PAYG_SEAT_PRICE } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 import { ReactComponent as LenovoLogo } from 'assets/logos/lenovo.svg';
 import { ReactComponent as DockerLogo } from 'assets/logos/docker.svg';
 import { ReactComponent as VisaLogo } from 'assets/logos/visa.svg';
 import { ReactComponent as SamsungLogo } from 'assets/logos/samsung.svg';
 import { ReactComponent as LloydsLogo } from 'assets/logos/lloyds.svg';
+import { useInstancePrices } from 'hooks/api/getters/useInstancePrices/useInstancePrices';
 
 const StyledBillingInformation = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(3),
@@ -48,21 +47,19 @@ const StyledLogoList = styled('div')(({ theme }) => ({
 interface IUpgradeTrialDialogProps {
     dialogOpen: boolean;
     setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    instanceStatus: IInstanceStatus;
 }
 
 export const UpgradeTrialDialog = ({
     dialogOpen,
     setDialogOpen,
-    instanceStatus,
 }: IUpgradeTrialDialogProps) => {
     const { hasAccess } = useContext(AccessContext);
     const { trackEvent } = usePlausibleTracker();
+    const { instancePrices } = useInstancePrices();
 
     const isAdmin = hasAccess(ADMIN);
 
-    const seatPrice =
-        instanceStatus.prices?.payg?.seat ?? BILLING_PAYG_SEAT_PRICE;
+    const seatPrice = instancePrices.payg.seat;
 
     useEffect(() => {
         if (dialogOpen) {

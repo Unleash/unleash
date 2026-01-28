@@ -46,6 +46,8 @@ export type IDateFilterItem = IBaseFilterItem & {
     dateOperators: [string, ...string[]];
     fromFilterKey?: string;
     toFilterKey?: string;
+    minDate?: Date;
+    maxDate?: Date;
 };
 
 export type IFilterItem = ITextFilterItem | IDateFilterItem;
@@ -98,6 +100,16 @@ const RenderFilter: FC<RenderFilterProps> = ({
     );
 
     if ('dateOperators' in filter) {
+        const fromValue = filter.fromFilterKey
+            ? allState?.[filter.fromFilterKey]?.values?.[0]
+            : undefined;
+        const toValue = filter.toFilterKey
+            ? allState?.[filter.toFilterKey]?.values?.[0]
+            : undefined;
+
+        const isFromPicker = filter.filterKey === filter.fromFilterKey;
+        const isToPicker = filter.filterKey === filter.toFilterKey;
+
         return (
             <FilterDateItem
                 key={filter.label}
@@ -105,14 +117,17 @@ const RenderFilter: FC<RenderFilterProps> = ({
                 label={label}
                 name={filter.label}
                 state={state}
-                allState={allState}
-                fromFilterKey={filter.fromFilterKey}
-                toFilterKey={filter.toFilterKey}
+                minDate={
+                    isToPicker && fromValue ? new Date(fromValue) : undefined
+                }
+                maxDate={
+                    isFromPicker && toValue ? new Date(toValue) : undefined
+                }
+                operators={filter.dateOperators}
                 onChange={(value) => {
                     onChange({ [filter.filterKey]: value });
                 }}
                 onRangeChange={rangeChangeHandler?.(filter)}
-                operators={filter.dateOperators}
                 onChipClose={
                     filter.persistent
                         ? undefined

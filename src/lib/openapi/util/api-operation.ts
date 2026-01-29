@@ -10,8 +10,8 @@ import semver from 'semver';
  * - Stable: current version is at/after beta cutoff (when defined), or when no cutoffs apply
  */
 type StabilityVersions = {
-    alphaUntilVersion?: string;
-    betaUntilVersion?: string;
+    alphaUntilVersion?: StrictXyzVersion;
+    betaUntilVersion?: StrictXyzVersion;
     currentVersion: string;
 };
 
@@ -53,6 +53,10 @@ type DeprecatedOpenAPITag =
     // of values, it would be breaking change to remove them completely.
     'client' | 'other' | 'auth' | 'admin';
 
+export type StrictXyzVersion =
+    | `${bigint}`
+    | `${bigint}.${bigint}`
+    | `${bigint}.${bigint}.${bigint}`;
 export interface ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag>
     extends Omit<OpenAPIV3.OperationObject, 'tags'> {
     operationId: string;
@@ -61,16 +65,16 @@ export interface ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag>
      * The version up to (but not including) which this API is alpha.
      * If omitted, the API is never alpha.
      */
-    alphaUntilVersion?: string;
+    alphaUntilVersion?: StrictXyzVersion;
     /**
      * The version up to (but not including) which this API is beta.
      * If omitted, the API is stable once it is no longer alpha.
      */
-    betaUntilVersion?: string;
+    betaUntilVersion?: StrictXyzVersion;
     /**
      * The version when this API was introduced or last significantly changed.
      * Documentation only; does not affect stability calculation.
      */
-    releaseVersion?: string;
+    releaseVersion?: StrictXyzVersion;
     enterpriseOnly?: boolean;
 }

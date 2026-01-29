@@ -66,13 +66,6 @@ test('calculateStability returns stable when alpha and beta cutoffs are omitted'
 test('calculateStability defaults to stable when versions are invalid', () => {
     expect(
         calculateStability({
-            alphaUntilVersion: 'not-a-version',
-            betaUntilVersion: 'x.y.z',
-            currentVersion: '7.4.0',
-        }),
-    ).toBe('stable');
-    expect(
-        calculateStability({
             alphaUntilVersion: '7.5.0',
             betaUntilVersion: '7.7.0',
             currentVersion: 'nope',

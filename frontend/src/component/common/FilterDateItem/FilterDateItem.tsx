@@ -9,6 +9,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../util.ts';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
 import { DateRangePresets } from './DateRangePresets.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export interface IFilterDateItemProps {
     name: string;
@@ -41,6 +42,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const { locationSettings } = useLocationSettings();
+    const dateConstraintsEnabled = useUiFlag('datePickerRangeConstraints');
 
     const open = () => setAnchorEl(ref.current);
     const onClose = () => setAnchorEl(null);
@@ -111,34 +113,50 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                 }}
             >
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DateCalendar
-                        displayWeekNumber
-                        value={selectedDate}
-                        minDate={minDate ? startOfDay(minDate) : undefined}
-                        maxDate={maxDate ? endOfDay(maxDate) : undefined}
-                        shouldDisableDate={(date) => {
-                            const today = endOfDay(new Date());
-                            if (isAfter(date, today)) {
-                                return true;
-                            }
-                            if (minDate && isBefore(date, minDate)) {
-                                return true;
-                            }
-                            if (maxDate && isAfter(date, maxDate)) {
-                                return true;
-                            }
-                            return false;
-                        }}
-                        onChange={(value) => {
-                            const formattedValue = value
-                                ? format(value, 'yyyy-MM-dd')
-                                : '';
-                            onChange({
-                                operator: currentOperator,
-                                values: [formattedValue],
-                            });
-                        }}
-                    />
+                    {dateConstraintsEnabled ? (
+                        <DateCalendar
+                            displayWeekNumber
+                            value={selectedDate}
+                            minDate={minDate ? startOfDay(minDate) : undefined}
+                            maxDate={maxDate ? endOfDay(maxDate) : undefined}
+                            shouldDisableDate={(date) => {
+                                const today = endOfDay(new Date());
+                                if (isAfter(date, today)) {
+                                    return true;
+                                }
+                                if (minDate && isBefore(date, minDate)) {
+                                    return true;
+                                }
+                                if (maxDate && isAfter(date, maxDate)) {
+                                    return true;
+                                }
+                                return false;
+                            }}
+                            onChange={(value) => {
+                                const formattedValue = value
+                                    ? format(value, 'yyyy-MM-dd')
+                                    : '';
+                                onChange({
+                                    operator: currentOperator,
+                                    values: [formattedValue],
+                                });
+                            }}
+                        />
+                    ) : (
+                        <DateCalendar
+                            displayWeekNumber
+                            value={selectedDate}
+                            onChange={(value) => {
+                                const formattedValue = value
+                                    ? format(value, 'yyyy-MM-dd')
+                                    : '';
+                                onChange({
+                                    operator: currentOperator,
+                                    values: [formattedValue],
+                                });
+                            }}
+                        />
+                    )}
                     {onRangeChange && (
                         <DateRangePresets onRangeChange={onRangeChange} />
                     )}

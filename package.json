@@ -187,7 +187,7 @@
     "ssh2": "^1.4.0",
     "json-schema": "^0.4.0",
     "ip": "^2.0.1",
-    "tar": "7.5.4",
+    "tar": "7.5.7",
     "semver": "^7.7.3",
     "tough-cookie": "4.1.4",
     "brace-expansion": "2.0.2",

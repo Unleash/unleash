@@ -25,7 +25,7 @@ import {
     featureSearchQueryParameters,
 } from '../../openapi/spec/feature-search-query-parameters.js';
 import { normalizeQueryParams } from './search-utils.js';
-import { anonymise } from '../../util/index.js';
+import { anonymise, extractUserId } from '../../util/index.js';
 
 type FeatureSearchServices = Pick<
     IUnleashServices,
@@ -110,7 +110,7 @@ export default class FeatureSearchController extends Controller {
             sortBy,
             lastSeenAt,
         } = req.query;
-        const userId = req.user.id;
+        const userId = extractUserId(req);
         const {
             normalizedQuery,
             normalizedSortOrder,

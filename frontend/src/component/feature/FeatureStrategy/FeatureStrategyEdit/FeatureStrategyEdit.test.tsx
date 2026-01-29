@@ -21,6 +21,7 @@ import {
 
 const featureName = 'my-new-feature';
 const variantName = 'Blue';
+const project = 'default';
 
 const setupComponent = () => {
     return {
@@ -34,21 +35,21 @@ const setupComponent = () => {
                 />
             </Routes>,
             {
-                route: `/projects/default/features/${featureName}/strategies/edit?environmentId=development&strategyId=1`,
+                route: `/projects/${project}/features/${featureName}/strategies/edit?environmentId=development&strategyId=1`,
                 permissions: [
                     {
                         permission: CREATE_FEATURE_STRATEGY,
-                        project: 'default',
+                        project,
                         environment: 'development',
                     },
                     {
                         permission: UPDATE_FEATURE_STRATEGY,
-                        project: 'default',
+                        project,
                         environment: 'development',
                     },
                     {
                         permission: UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
-                        project: 'default',
+                        project,
                         environment: 'development',
                     },
                 ],
@@ -66,7 +67,7 @@ beforeEach(() => {
     setupStrategyEndpoint();
     setupFeaturesEndpoint(featureName, variantName);
     setupUiConfigEndpoint();
-    setupContextEndpoint();
+    setupContextEndpoint(['default']);
 });
 
 describe('NewFeatureStrategyEdit', () => {

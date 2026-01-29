@@ -4,7 +4,7 @@ import Delete from '@mui/icons-material/Delete';
 import { Autocomplete } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { InputListField } from 'component/common/InputListField/InputListField';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext';
 import type { IOverride } from 'interfaces/featureToggle';
 import type { OverridesDispatchType } from './useOverrides.ts';
 import SelectMenu from 'component/common/select';
@@ -53,7 +53,7 @@ export const OverrideConfig: VFC<IOverrideConfigProps> = ({
     overrides,
     overridesDispatch,
 }) => {
-    const { context } = useUnleashContext();
+    const { context } = useAssignableUnleashContext();
     const contextNames = context.map(({ name }) => ({
         key: name,
         label: name,

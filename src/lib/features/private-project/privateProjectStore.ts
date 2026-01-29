@@ -46,7 +46,7 @@ class PrivateProjectStore implements IPrivateProjectStore {
                         'groups.root_role_id',
                         'group_roles.id',
                     )
-                    .whereRaw('group_user.user_id = role_user.user_id')
+                    .where('group_user.user_id', userId)
                     .whereIn('group_roles.name', ['Admin', 'Editor'])
                     .andWhere('group_roles.type', 'root');
             })

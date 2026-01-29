@@ -4,15 +4,12 @@ import CheckIcon from '@mui/icons-material/Check';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { GridColLink } from './GridColLink/GridColLink.tsx';
-import type { IInstanceStatus } from 'interfaces/instance';
+import type { InstancePrices } from 'interfaces/instance';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import {
     BILLING_INCLUDED_REQUESTS,
     BILLING_PRO_DEFAULT_INCLUDED_SEATS,
-    BILLING_PRO_BASE_PRICE,
-    BILLING_PRO_SEAT_PRICE,
-    BILLING_TRAFFIC_PRICE,
 } from './BillingPlan.tsx';
 import { useOverageCost } from './useOverageCost.ts';
 
@@ -31,22 +28,19 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 }));
 
 interface IBillingDetailsProProps {
-    instanceStatus: IInstanceStatus;
+    instancePrices: InstancePrices;
 }
 
 export const BillingDetailsPro = ({
-    instanceStatus,
+    instancePrices,
 }: IBillingDetailsProProps) => {
     const { users, loading } = useUsers();
 
     const eligibleUsers = users.filter((user) => user.email);
 
-    const planPrice =
-        instanceStatus.prices?.pro?.base ?? BILLING_PRO_BASE_PRICE;
-    const seatPrice =
-        instanceStatus.prices?.pro?.seat ?? BILLING_PRO_SEAT_PRICE;
-    const trafficPrice =
-        instanceStatus.prices?.pro?.traffic ?? BILLING_TRAFFIC_PRICE;
+    const planPrice = instancePrices.pro.base;
+    const seatPrice = instancePrices.pro.seat;
+    const trafficPrice = instancePrices.pro.traffic;
     const seats = BILLING_PRO_DEFAULT_INCLUDED_SEATS;
 
     const freeAssigned = Math.min(eligibleUsers.length, seats);

@@ -42,6 +42,10 @@ import { extractUserIdFromUser } from '../../util/index.js';
 import type { LegalValueSchema } from '../../openapi/index.js';
 import type { WithTransactional } from '../../db/transaction.js';
 import type { IFlagResolver } from '../../types/index.js';
+import {
+    type ContextQueryParameters,
+    contextQueryParameters,
+} from '../../openapi/spec/context-query-parameters.js';
 
 interface ContextParam {
     contextField: string;
@@ -95,6 +99,7 @@ export class ContextController extends Controller {
                     responses: {
                         200: createResponseSchema('contextFieldsSchema'),
                     },
+                    parameters: [...contextQueryParameters],
                 }),
             ],
         });
@@ -285,17 +290,27 @@ export class ContextController extends Controller {
     }
 
     async getContextFields(
-        req: Request<{ projectId?: string }>,
+        req: IAuthRequest<
+            { projectId?: string },
+            unknown,
+            unknown,
+            ContextQueryParameters
+        >,
         res: Response<ContextFieldsSchema>,
     ): Promise<void> {
         if (this.flagResolver.isEnabled('projectContextFields')) {
-            const { projectId } = req.params;
-            const getContextFields = projectId
-                ? this.transactionalContextService.getAllForProject(projectId)
-                : this.transactionalContextService.getAllWithoutProject();
-
             res.status(200)
-                .json(serializeDates(await getContextFields))
+                .json(
+                    serializeDates(
+                        await this.transactionalContextService.getContextFields(
+                            {
+                                projectId: req.params.projectId,
+                                userId: req.user.id,
+                                include: req.query.include,
+                            },
+                        ),
+                    ),
+                )
                 .end();
         } else {
             res.status(200)

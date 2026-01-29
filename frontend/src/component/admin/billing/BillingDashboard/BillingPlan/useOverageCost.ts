@@ -5,8 +5,8 @@ import {
     calculateOverageCost,
     calculateTotalUsage,
 } from 'utils/traffic-calculations';
-import { BILLING_TRAFFIC_PRICE } from './BillingPlan.jsx';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import { useInstancePrices } from 'hooks/api/getters/useInstancePrices/useInstancePrices';
 
 export const useOverageCost = (includedTraffic: number) => {
     const now = new Date();
@@ -15,10 +15,11 @@ export const useOverageCost = (includedTraffic: number) => {
     const to = formatDate(endOfMonth(now));
 
     const { instanceStatus } = useInstanceStatus();
+    const { instancePrices } = useInstancePrices();
     const trafficPrice =
-        instanceStatus?.prices?.[
-            instanceStatus?.billing === 'pay-as-you-go' ? 'payg' : 'pro'
-        ]?.traffic ?? BILLING_TRAFFIC_PRICE;
+        instanceStatus?.billing === 'pay-as-you-go'
+            ? instancePrices.payg.traffic
+            : instancePrices.pro.traffic;
 
     const { result } = useTrafficSearch('daily', { from, to });
     const overageCost = useMemo(() => {

@@ -117,7 +117,7 @@ export const StyledList = styled(List)(({ theme }) => ({
 
 export const StyledCardTitle = styled('div')<{ lines?: number }>(
     ({ theme, lines = 2 }) => ({
-        fontWeight: theme.typography.fontWeightRegular,
+        fontWeight: theme.typography.fontWeightBold,
         fontSize: theme.typography.body1.fontSize,
         lineClamp: `${lines}`,
         WebkitLineClamp: lines,

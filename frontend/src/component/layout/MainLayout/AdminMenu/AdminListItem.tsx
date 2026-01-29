@@ -65,12 +65,19 @@ const subListItemButtonStyle = (theme: Theme) => ({
     },
 });
 
-const CappedText = styled(Typography)(({ theme }) => ({
+const CappedText = styled(Typography, {
+    shouldForwardProp: (prop) => prop !== 'bold',
+})<{
+    bold?: boolean;
+}>(({ theme, bold }) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     width: '100%',
-    paddingTop: theme.spacing(0.25),
+    fontWeight: bold
+        ? theme.typography.fontWeightBold
+        : theme.typography.fontWeightMedium,
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
@@ -138,11 +145,7 @@ export const MenuGroup = ({
                     {isActiveMenu ? activeIcon : icon}
                 </StyledListItemIcon>
                 <StyledListItemText>
-                    <CappedText
-                        sx={{ fontWeight: isActiveMenu ? 'bold' : 'normal' }}
-                    >
-                        {title}
-                    </CappedText>
+                    <CappedText bold={isActiveMenu}>{title}</CappedText>
                 </StyledListItemText>
             </StyledAccordionSummary>
             <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>
@@ -170,7 +173,7 @@ export const AdminListItem: FC<{
             >
                 <StyledListItemIcon>{children}</StyledListItemIcon>
                 <StyledListItemText>
-                    <CappedText>{text}</CappedText>
+                    <CappedText bold={selected}>{text}</CappedText>
                 </StyledListItemText>
                 {badge}
             </ListItemButton>
@@ -198,7 +201,7 @@ export const AdminSubListItem: FC<{
             >
                 <StyledListItemIcon>{children}</StyledListItemIcon>
                 <StyledListItemText>
-                    <CappedText>{text}</CappedText>
+                    <CappedText bold={selected}>{text}</CappedText>
                 </StyledListItemText>
                 {badge}
             </ListItemButton>

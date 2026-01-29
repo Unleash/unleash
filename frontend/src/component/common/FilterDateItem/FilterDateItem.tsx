@@ -4,7 +4,7 @@ import { StyledPopover } from 'component/filter/FilterItem/FilterItem.styles';
 import { FilterItemChip } from 'component/filter/FilterItem/FilterItemChip/FilterItemChip';
 import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { format } from 'date-fns';
+import { format, isBefore, isAfter, endOfDay, startOfDay } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../util.ts';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
@@ -22,6 +22,9 @@ export interface IFilterDateItemProps {
     state: FilterItemParams | null | undefined;
     operators: [string, ...string[]];
     initMode?: 'auto-open' | 'manual';
+    minDate?: Date;
+    maxDate?: Date;
+    dateConstraintsEnabled?: boolean; // TODO: delete this prop with flag `datePickerRangeConstraints`
 }
 
 export const FilterDateItem: FC<IFilterDateItemProps> = ({
@@ -31,26 +34,24 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     onRangeChange,
     onChipClose,
     state,
+    minDate,
+    maxDate,
     operators,
+    dateConstraintsEnabled,
     initMode = 'auto-open',
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const { locationSettings } = useLocationSettings();
 
-    const open = () => {
-        setAnchorEl(ref.current);
-    };
+    const open = () => setAnchorEl(ref.current);
+    const onClose = () => setAnchorEl(null);
 
     useEffect(() => {
         if (!state && initMode === 'auto-open') {
             open();
         }
     }, []);
-
-    const onClose = () => {
-        setAnchorEl(null);
-    };
 
     const selectedOptions = state
         ? [
@@ -112,19 +113,37 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                 }}
             >
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DateCalendar
-                        displayWeekNumber
-                        value={selectedDate}
-                        onChange={(value) => {
-                            const formattedValue = value
-                                ? format(value, 'yyyy-MM-dd')
-                                : '';
-                            onChange({
-                                operator: currentOperator,
-                                values: [formattedValue],
-                            });
-                        }}
-                    />
+                    {dateConstraintsEnabled ? (
+                        <DateCalendar
+                            displayWeekNumber
+                            value={selectedDate}
+                            minDate={minDate ? startOfDay(minDate) : undefined}
+                            maxDate={maxDate ? endOfDay(maxDate) : undefined}
+                            onChange={(value) => {
+                                const formattedValue = value
+                                    ? format(value, 'yyyy-MM-dd')
+                                    : '';
+                                onChange({
+                                    operator: currentOperator,
+                                    values: [formattedValue],
+                                });
+                            }}
+                        />
+                    ) : (
+                        <DateCalendar
+                            displayWeekNumber
+                            value={selectedDate}
+                            onChange={(value) => {
+                                const formattedValue = value
+                                    ? format(value, 'yyyy-MM-dd')
+                                    : '';
+                                onChange({
+                                    operator: currentOperator,
+                                    values: [formattedValue],
+                                });
+                            }}
+                        />
+                    )}
                     {onRangeChange && (
                         <DateRangePresets onRangeChange={onRangeChange} />
                     )}

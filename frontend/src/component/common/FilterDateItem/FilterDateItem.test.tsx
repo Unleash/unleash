@@ -16,6 +16,7 @@ const setup = (
     label = 'irrelevant',
     minDate?: Date,
     maxDate?: Date,
+    dateConstraintsEnabled = true,
 ) => {
     const recordedChanges: FilterItemParams[] = [];
 
@@ -23,9 +24,10 @@ const setup = (
         name,
         label,
         onChange: (value: FilterItemParams) => recordedChanges.push(value),
-        operators: ['IS', 'IS_AFTER', 'IS_ON_OR_AFTER', 'IS_BEFORE'],
+        operators: ['IS', 'IS_ON_OR_AFTER', 'IS_BEFORE'],
         onChipClose: () => {},
         state: initialState,
+        dateConstraintsEnabled,
         minDate,
         maxDate,
     };

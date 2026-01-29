@@ -6,6 +6,7 @@ import {
     FilterItem,
     type FilterItemParams,
 } from '../FilterItem/FilterItem.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -90,6 +91,8 @@ const RenderFilter: FC<RenderFilterProps> = ({
     rangeChangeHandler,
     initMode,
 }) => {
+    const dateConstraintsEnabled = useUiFlag('datePickerRangeConstraints'); // TODO: delete this with flag `datePickerRangeConstraints`
+
     const label = (
         <>
             <StyledCategoryIconWrapper>
@@ -117,6 +120,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
                 label={label}
                 name={filter.label}
                 state={state}
+                dateConstraintsEnabled={dateConstraintsEnabled}
                 minDate={
                     isToPicker && fromValue ? new Date(fromValue) : undefined
                 }

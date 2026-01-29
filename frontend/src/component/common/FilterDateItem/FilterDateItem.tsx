@@ -9,7 +9,6 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../util.ts';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
 import { DateRangePresets } from './DateRangePresets.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 export interface IFilterDateItemProps {
     name: string;
@@ -25,6 +24,7 @@ export interface IFilterDateItemProps {
     initMode?: 'auto-open' | 'manual';
     minDate?: Date;
     maxDate?: Date;
+    dateConstraintsEnabled?: boolean; // TODO: delete this prop with flag `datePickerRangeConstraints`
 }
 
 export const FilterDateItem: FC<IFilterDateItemProps> = ({
@@ -37,12 +37,12 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     minDate,
     maxDate,
     operators,
+    dateConstraintsEnabled,
     initMode = 'auto-open',
 }) => {
     const ref = useRef<HTMLDivElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const { locationSettings } = useLocationSettings();
-    const dateConstraintsEnabled = useUiFlag('datePickerRangeConstraints');
 
     const open = () => setAnchorEl(ref.current);
     const onClose = () => setAnchorEl(null);

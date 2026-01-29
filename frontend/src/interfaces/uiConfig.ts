@@ -87,6 +87,7 @@ export type UiFlags = {
     projectContextFields?: boolean;
     readOnlyUsersUI?: boolean;
     privateProjectMiddlewareMove?: boolean;
+    datePickerRangeConstraints?: boolean;
 };
 
 export interface IVersionInfo {

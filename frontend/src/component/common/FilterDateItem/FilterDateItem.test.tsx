@@ -1,28 +1,38 @@
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
 import {
     FilterDateItem,
     type IFilterDateItemProps,
 } from './FilterDateItem.tsx';
+import { addDays, format } from 'date-fns';
 
 const getDate = async (option: string) => screen.findByText(option);
 
-const setup = (initialState: FilterItemParams | null) => {
+const setup = (
+    initialState: FilterItemParams | null,
+    name = 'Test Label',
+    label = 'irrelevant',
+    minDate?: Date,
+    maxDate?: Date,
+    dateConstraintsEnabled = true,
+) => {
     const recordedChanges: FilterItemParams[] = [];
+
     const mockProps: IFilterDateItemProps = {
-        name: 'Test Label',
-        label: 'irrelevant',
-        onChange: (value: FilterItemParams) => {
-            recordedChanges.push(value);
-        },
+        name,
+        label,
+        onChange: (value: FilterItemParams) => recordedChanges.push(value),
+        operators: ['IS', 'IS_ON_OR_AFTER', 'IS_BEFORE'],
         onChipClose: () => {},
-        operators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],
         state: initialState,
+        dateConstraintsEnabled,
+        minDate,
+        maxDate,
     };
 
     render(<FilterDateItem {...mockProps} />);
-
     return recordedChanges;
 };
 
@@ -88,6 +98,106 @@ describe('FilterDateItem Component', () => {
                 operator: 'IS_BEFORE',
                 values: ['2020-01-01'],
             },
+        ]);
+    });
+});
+
+describe('FilterDateItem date range constraints', () => {
+    it('disables dates before minDate', async () => {
+        const min = new Date('2025-01-15');
+        const max = new Date('2025-01-20');
+        const recordedChanges = setup(
+            { operator: 'IS', values: ['2025-01-16'] },
+            'Test',
+            'Test',
+            min,
+            max,
+        );
+
+        const chip = await screen.findByText('Test');
+        await userEvent.click(chip);
+
+        const day10 = await screen.findByRole('gridcell', { name: '10' });
+        expect(day10.className).toMatch(/Mui-disabled/);
+
+        const day15 = await screen.findByRole('gridcell', { name: '15' });
+        expect(day15).toBeDefined();
+        expect(day15.className).not.toMatch(/Mui-disabled/);
+
+        const day16 = await screen.findByRole('gridcell', { name: '16' });
+        expect(day16.className).not.toMatch(/Mui-disabled/);
+        await userEvent.click(day16!);
+
+        expect(recordedChanges).toEqual([
+            {
+                operator: 'IS',
+                values: ['2025-01-16'],
+            },
+        ]);
+    });
+
+    it('disables dates after maxDate', async () => {
+        const min = new Date('2025-01-10');
+        const max = new Date('2025-01-14');
+        const recordedChanges = setup(
+            { operator: 'IS', values: ['2025-01-12'] },
+            'Test',
+            'Test',
+            min,
+            max,
+        );
+
+        const chip = await screen.findByText('Test');
+        await userEvent.click(chip);
+
+        const day15 = await screen.findByRole('gridcell', { name: '15' });
+        expect(day15.className).toMatch(/Mui-disabled/);
+
+        const day12 = await screen.findByRole('gridcell', { name: '12' });
+        expect(day12.className).not.toMatch(/Mui-disabled/);
+        await userEvent.click(day12!);
+
+        expect(recordedChanges).toEqual([
+            { operator: 'IS', values: ['2025-01-12'] },
+        ]);
+    });
+
+    it('can disable dates after today', async () => {
+        setup(null, 'Test', 'Test', undefined, new Date());
+
+        const chip = await screen.findByText('Test');
+        await userEvent.click(chip);
+
+        const tomorrow = addDays(new Date(), 1);
+        const dayLabel = format(tomorrow, 'd');
+
+        const tomorrowCell = await screen.findByRole('gridcell', {
+            name: dayLabel,
+        });
+
+        expect(tomorrowCell.className).toMatch(/Mui-disabled/);
+    });
+
+    it('allows selecting valid dates within min/max', async () => {
+        const min = new Date('2025-01-12');
+        const max = new Date('2025-01-18');
+
+        const recordedChanges = setup(
+            { operator: 'IS', values: ['2025-01-12'] },
+            'Test',
+            'Test',
+            min,
+            max,
+        );
+
+        const chip = await screen.findByText('Test');
+        await userEvent.click(chip);
+
+        const validDate = await screen.findByRole('gridcell', { name: '15' });
+        await userEvent.click(validDate);
+
+        expect(recordedChanges).toEqual([
+            { operator: 'IS', values: ['2025-01-15'] },
         ]);
     });
 });

@@ -115,7 +115,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                         displayWeekNumber
                         value={selectedDate}
                         minDate={minDate ? startOfDay(minDate) : undefined}
-                        maxDate={maxDate ?? endOfDay(new Date())}
+                        maxDate={maxDate ? endOfDay(maxDate) : undefined}
                         shouldDisableDate={(date) => {
                             const today = endOfDay(new Date());
                             if (isAfter(date, today)) {

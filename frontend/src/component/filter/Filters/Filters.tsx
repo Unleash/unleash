@@ -121,7 +121,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
                     isToPicker && fromValue ? new Date(fromValue) : undefined
                 }
                 maxDate={
-                    isFromPicker && toValue ? new Date(toValue) : undefined
+                    isFromPicker && toValue ? new Date(toValue) : new Date()
                 }
                 operators={filter.dateOperators}
                 onChange={(value) => {

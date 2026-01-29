@@ -52,14 +52,9 @@ This ADR complements the stability lifecycle. Stability still answers **"how mat
 - **Allowed moves**: `internal` → `unleash-ui`/`integration`/`sdk`/`public`. Moves away from `public`/`sdk` require explicit review due to customer impact.
 - **Not allowed**: Silent demotions of `public`/`sdk` without deprecation and communication.
 
-## Downstream behavior
+## Downstream impact
 
-- `public`: Highlighted in docs; default recommendation for customer integrations.
-- `integration`: Visible in docs with an integration-specific note; caution about use outside stated clients.
-- `sdk`: Highlighted in SDK-related docs; strong compatibility messaging.
-- `unleash-ui`: Visible with a warning badge; discouraged for external integrations.
-- `internal`: Hidden from public docs by default (can be shown in dev).
-
+Mostly affects docs and how we present and organize our APIs.
 ## Consequences
 
 ### Positive

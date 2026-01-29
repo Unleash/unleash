@@ -161,7 +161,7 @@ describe('FilterDateItem date range constraints', () => {
     });
 
     it('disables dates after today', async () => {
-        setup(null, 'Date To', 'Date To');
+        setup(null, 'Test', 'Test');
 
         const chip = await screen.findByText('Test');
         await userEvent.click(chip);

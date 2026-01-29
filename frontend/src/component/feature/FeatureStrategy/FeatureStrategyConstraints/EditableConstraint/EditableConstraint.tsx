@@ -29,10 +29,9 @@ import {
     isSemVerConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
-import { useEffectiveProjectContext } from 'hooks/api/getters/useUnleashContext/useEffectiveProjectContext.ts';
-import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
+import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -254,8 +253,7 @@ export const EditableConstraint: FC<Props> = ({
         [updateConstraint],
     );
 
-    const projectId = useOptionalPathParam('projectId');
-    const { context } = useEffectiveProjectContext(projectId);
+    const { context } = useAssignableUnleashContext();
 
     const { contextName, operator } = localConstraint;
     const showCaseSensitiveButton = isStringOperator(operator);

@@ -1,11 +1,11 @@
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext';
 import { useMemo } from 'react';
 
 export const useConstraintTooltips = (
     contextName: string,
     values: string[],
 ) => {
-    const { context } = useUnleashContext();
+    const { context } = useAssignableUnleashContext();
     const contextDefinition = useMemo(
         () => context.find(({ name }) => name === contextName),
         [contextName, context],

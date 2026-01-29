@@ -316,7 +316,7 @@ export default class FeatureController extends Controller {
 
         res.setHeader('ETag', etag);
 
-        if (etag === userVersion) {
+        if (userVersion !== undefined && etag === userVersion) {
             res.status(304);
             res.getHeaderNames().forEach((header) => {
                 res.removeHeader(header);

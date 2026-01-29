@@ -1,4 +1,5 @@
 import {
+    type IAuthRequest,
     type IFeatureLifecycleReadModel,
     type IUnleashConfig,
     type IUnleashStores,
@@ -10,20 +11,26 @@ import {
     getStandardResponses,
 } from '../../openapi/index.js';
 import Controller from '../../routes/controller.js';
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import {
     type FeatureLifecycleCountSchema,
     featureLifecycleCountSchema,
 } from '../../openapi/spec/feature-lifecycle-count-schema.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 
 export default class FeatureLifecycleCountController extends Controller {
     private featureLifecycleReadModel: IFeatureLifecycleReadModel;
 
     private openApiService: OpenApiService;
 
+    private privateProjectChecker: IPrivateProjectChecker;
+
     constructor(
         config: IUnleashConfig,
-        { openApiService }: Pick<IUnleashServices, 'openApiService'>,
+        {
+            openApiService,
+            privateProjectChecker,
+        }: Pick<IUnleashServices, 'openApiService' | 'privateProjectChecker'>,
         {
             featureLifecycleReadModel,
         }: Pick<IUnleashStores, 'featureLifecycleReadModel'>,
@@ -31,6 +38,7 @@ export default class FeatureLifecycleCountController extends Controller {
         super(config);
         this.featureLifecycleReadModel = featureLifecycleReadModel;
         this.openApiService = openApiService;
+        this.privateProjectChecker = privateProjectChecker;
 
         this.route({
             method: 'get',
@@ -56,11 +64,22 @@ export default class FeatureLifecycleCountController extends Controller {
     }
 
     async getStageCount(
-        _: Request<any, any, any, any>,
+        req: IAuthRequest,
         res: Response<FeatureLifecycleCountSchema>,
     ): Promise<void> {
+        const user = req.user;
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(user.id);
+
+        const projectsToFilter =
+            accessibleProjects.mode === 'limited'
+                ? accessibleProjects.projects
+                : undefined;
+
         const stageCounts =
-            await this.featureLifecycleReadModel.getStageCount();
+            await this.featureLifecycleReadModel.getStageCount(
+                projectsToFilter,
+            );
 
         const result: Record<string, number> = stageCounts.reduce(
             (acc, { stage, count }) => {

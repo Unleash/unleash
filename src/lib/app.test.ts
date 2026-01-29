@@ -1,6 +1,6 @@
 import { createTestConfig } from '../test/config/test-config.js';
 import { type Mock, vi } from 'vitest';
-
+import * as promClient from 'prom-client';
 // This mock setup MUST be at the top-level, before any other code that might trigger imports.
 vi.mock('compression', () => ({
     default: vi.fn().mockImplementation(() => {
@@ -21,6 +21,10 @@ const openApiService = {
 
 const appModule = await import('./app.js');
 getApp = appModule.default;
+
+afterEach(async () => {
+    promClient.register.clear();
+});
 
 test('should not throw when valid config', async () => {
     const config = createTestConfig();

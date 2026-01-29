@@ -95,10 +95,18 @@ export const setupUiConfigEndpoint = () => {
     });
 };
 
-export const setupContextEndpoint = () => {
+export const setupContextEndpoint = (projects?: string[]) => {
     testServerRoute(server, '/api/admin/context', [
         {
             name: 'appName',
         },
     ]);
+
+    for (const project of projects ?? []) {
+        testServerRoute(server, `/api/admin/projects/${project}/context`, [
+            {
+                name: 'appName2',
+            },
+        ]);
+    }
 };

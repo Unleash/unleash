@@ -251,7 +251,7 @@ test('renders lifecycle quick filters', async () => {
         },
     );
 
-    await screen.findByText(/All flags/);
+    await screen.findByText(/All lifecycles/);
     await screen.findByText(/Develop/);
     await screen.findByText(/Rollout production/);
     await screen.findByText(/Cleanup/);

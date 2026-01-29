@@ -9,8 +9,7 @@ import { EditableConstraint } from 'component/feature/FeatureStrategy/FeatureStr
 import { createEmptyConstraint } from '../../../../utils/createEmptyConstraint.ts';
 import { constraintId } from 'constants/constraintId.ts';
 
-import { useEffectiveProjectContext } from 'hooks/api/getters/useUnleashContext/useEffectiveProjectContext.ts';
-import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 
 export interface IEditableConstraintsListRef {
     addConstraint?: (contextName: string) => void;
@@ -31,8 +30,7 @@ export const EditableConstraintsList = forwardRef<
     IEditableConstraintsListRef | undefined,
     IEditableConstraintsListProps
 >(({ constraints, setConstraints }, ref) => {
-    const projectId = useOptionalPathParam('projectId');
-    const { context } = useEffectiveProjectContext(projectId);
+    const { context } = useAssignableUnleashContext();
 
     useImperativeHandle(ref, () => ({
         addConstraint(contextName: string) {

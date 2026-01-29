@@ -2,6 +2,7 @@ import useSWR, { type SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { IUnleashContextDefinition } from 'interfaces/context';
+import { useUiFlag } from 'hooks/useUiFlag.js';
 
 export interface IUnleashContextOutput {
     context: IUnleashContextDefinition[];
@@ -10,17 +11,36 @@ export interface IUnleashContextOutput {
     error?: Error;
 }
 
+type Query =
+    | { mode: 'root-only' }
+    | { mode: 'all' }
+    | { mode: 'project-only'; projectId: string }
+    | { mode: 'assignable-in-project'; projectId: string };
+
+const uriFromQuery = (query: Query) => {
+    switch (query.mode) {
+        case 'root-only':
+            return 'api/admin/context';
+        case 'all':
+            return 'api/admin/context?include=project';
+        case 'project-only':
+            return `api/admin/projects/${query.projectId}/context`;
+        case 'assignable-in-project':
+            return `api/admin/projects/${query.projectId}/context?include=root`;
+    }
+};
+
 const useUnleashContext = (
+    query: Query,
     options: SWRConfiguration = {
         revalidateOnFocus: true,
         revalidateOnReconnect: true,
         revalidateIfStale: true,
     },
-    projectId?: string,
 ): IUnleashContextOutput => {
-    const uri = projectId
-        ? `api/admin/projects/${projectId}/context`
-        : `api/admin/context`;
+    const useProjectContext = useUiFlag('projectContextFields');
+
+    const uri = useProjectContext ? uriFromQuery(query) : `api/admin/context`;
 
     const fetcher = () => {
         const path = formatApiPath(uri);

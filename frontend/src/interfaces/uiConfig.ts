@@ -27,20 +27,13 @@ export interface IUiConfig {
     emailEnabled?: boolean;
     prometheusAPIAvailable: boolean;
     maintenanceMode?: boolean;
-    toast?: IProclamationToast;
     frontendApiOrigins?: string[];
     resourceLimits: ResourceLimitsSchema;
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
     unleashContext?: IMutableContext;
-}
-
-export interface IProclamationToast {
-    message: string;
-    id: string;
-    severity: 'success' | 'info' | 'warning' | 'error';
-    link: string;
+    datePickerRangeConstraints?: boolean;
 }
 
 export type UiFlags = {
@@ -93,6 +86,7 @@ export type UiFlags = {
     gtmReleaseManagement?: boolean;
     projectContextFields?: boolean;
     readOnlyUsersUI?: boolean;
+    privateProjectMiddlewareMove?: boolean;
 };
 
 export interface IVersionInfo {

@@ -2,15 +2,13 @@ import type { VFC } from 'react';
 import { Alert } from '@mui/material';
 import { useUsersPlan } from 'hooks/useUsersPlan';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import { BILLING_PRO_SEAT_PRICE } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
-import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import { useInstancePrices } from 'hooks/api/getters/useInstancePrices/useInstancePrices';
 
 export const SeatCostWarning: VFC = () => {
     const { users } = useUsers();
     const { isBillingUsers, seats, planUsers } = useUsersPlan(users);
-    const { instanceStatus } = useInstanceStatus();
-    const seatPrice =
-        instanceStatus?.prices?.pro?.seat ?? BILLING_PRO_SEAT_PRICE;
+    const { instancePrices } = useInstancePrices();
+    const seatPrice = instancePrices.pro.seat;
 
     if (!isBillingUsers || planUsers.length < seats) {
         return null;

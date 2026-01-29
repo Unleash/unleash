@@ -5,7 +5,7 @@ import { ContextForm } from '../ContextForm/ContextForm.tsx';
 import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useScopedUnleashContext } from 'hooks/api/getters/useUnleashContext/useScopedUnleashContext';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
@@ -41,7 +41,7 @@ export const CreateUnleashContext = ({
         errors,
     } = useContextForm({ initialProject: projectId });
     const { createContext, loading } = useContextsApi(projectId);
-    const { refetchUnleashContext } = useUnleashContext(undefined, projectId);
+    const { refetchUnleashContext } = useScopedUnleashContext();
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();

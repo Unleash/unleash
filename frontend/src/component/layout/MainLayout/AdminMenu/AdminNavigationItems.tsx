@@ -46,14 +46,20 @@ const SettingsHeader = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
 }));
 
-const CappedText = styled(Typography)(({ theme }) => ({
+const CappedText = styled(Typography, {
+    shouldForwardProp: (prop) => prop !== 'bold',
+})<{
+    bold?: boolean;
+}>(({ theme, bold }) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     width: '100%',
-    paddingTop: theme.spacing(0.25),
     marginLeft: theme.spacing(0.75),
-    fontWeight: theme.typography.fontWeightBold,
+    fontWeight: bold
+        ? theme.typography.fontWeightBold
+        : theme.typography.fontWeightMedium,
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 const StyledListItemText = styled(ListItemText)(({ theme }) => ({
@@ -107,7 +113,7 @@ export const DashboardLink = ({ onClick }: { onClick: () => void }) => {
                 >
                     <ArrowBackIcon />
                     <StyledListItemText>
-                        <CappedText>Back to Unleash</CappedText>
+                        <CappedText bold={false}>Back to Unleash</CappedText>
                     </StyledListItemText>
                 </ListItemButton>
             </ListItem>

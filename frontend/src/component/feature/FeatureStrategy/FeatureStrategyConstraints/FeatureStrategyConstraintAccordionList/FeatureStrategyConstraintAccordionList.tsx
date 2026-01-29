@@ -11,7 +11,7 @@ import { Limit } from 'component/common/Limit/Limit';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints.tsx';
 import { useWeakMap } from 'hooks/useWeakMap.ts';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext.ts';
+import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { createEmptyConstraint } from 'utils/createEmptyConstraint.ts';
 
 interface IConstraintAccordionListProps {
@@ -62,7 +62,7 @@ const useConstraintAccordionList = (
     ref: React.RefObject<IConstraintAccordionListRef>,
 ) => {
     const state = useWeakMap<IConstraint, IConstraintAccordionListItemState>();
-    const { context } = useUnleashContext();
+    const { context } = useAssignableUnleashContext();
 
     const addConstraint =
         setConstraints &&

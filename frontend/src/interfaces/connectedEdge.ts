@@ -1,3 +1,12 @@
+export type EnvironmentRevisionId = {
+    environment: string;
+    revisionId: number;
+};
+
+export type EdgeObservability = {
+    revisionIds: EnvironmentRevisionId[];
+    connectedEdges: ConnectedEdge[];
+};
 export type ConnectedEdge = {
     id?: string;
     appName: string;
@@ -21,4 +30,12 @@ export type ConnectedEdge = {
     upstreamMetricsP99LatencyMs: string;
     upstreamEdgeAverageLatencyMs: string;
     upstreamEdgeP99LatencyMs: string;
+    apiKeyRevisionIds?: EdgeApiKeyRevisionId[];
+};
+
+export type EdgeApiKeyRevisionId = {
+    environment: string;
+    projects: string[];
+    revisionId: number;
+    lastUpdated: Date;
 };

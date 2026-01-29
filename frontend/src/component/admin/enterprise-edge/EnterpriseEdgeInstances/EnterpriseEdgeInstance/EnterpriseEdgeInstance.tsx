@@ -1,5 +1,8 @@
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import type { ConnectedEdge } from 'interfaces/connectedEdge';
+import type {
+    ConnectedEdge,
+    EnvironmentRevisionId,
+} from 'interfaces/connectedEdge';
 import CircleIcon from '@mui/icons-material/Circle';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { formatDateYMDHMS } from 'utils/formatDate';
@@ -13,6 +16,7 @@ import {
 import { Badge } from 'component/common/Badge/Badge';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { EnterpriseEdgeInstanceLatency } from './EnterpriseEdgeInstanceLatency.tsx';
+import { EnterpriseEdgeApiKeyRevisionData } from './EnterpriseEdgeApiKeyRevisionData.tsx';
 
 const StyledInstance = styled('div')(({ theme }) => ({
     width: '100%',
@@ -143,10 +147,12 @@ type InstanceConnectionStatus = 'Connected' | 'Stale' | 'Disconnected';
 
 interface IEnterpriseEdgeInstanceProps {
     instance: ConnectedEdge;
+    revisionIds: EnvironmentRevisionId[];
 }
 
 export const EnterpriseEdgeInstance = ({
     instance,
+    revisionIds,
 }: IEnterpriseEdgeInstanceProps) => {
     const { locationSettings } = useLocationSettings();
 
@@ -260,6 +266,12 @@ export const EnterpriseEdgeInstance = ({
                     </StyledDetailRow>
                     <StyledDetailRow>
                         <EnterpriseEdgeInstanceLatency instance={instance} />
+                    </StyledDetailRow>
+                    <StyledDetailRow>
+                        <EnterpriseEdgeApiKeyRevisionData
+                            apiKeys={instance.apiKeyRevisionIds}
+                            revisionIds={revisionIds}
+                        />
                     </StyledDetailRow>
                 </StyledAccordionDetails>
             </StyledAccordion>

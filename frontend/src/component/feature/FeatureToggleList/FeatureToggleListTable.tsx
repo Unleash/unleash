@@ -68,6 +68,7 @@ export const FeatureToggleListTable: FC = () => {
         .map((env) => env.name);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const isLargeScreen = useMediaQuery(theme.breakpoints.down('xl'));
     const [showExportDialog, setShowExportDialog] = useState(false);
 
     const { setToastApiError } = useToast();
@@ -301,9 +302,8 @@ export const FeatureToggleListTable: FC = () => {
             <FeaturesOverviewLifecycleFilters
                 state={filterState}
                 onChange={setTableState}
-                total={loading ? undefined : total}
             >
-                {!isSmallScreen ? (
+                {!isLargeScreen ? (
                     <Search
                         placeholder='Search'
                         initialValue={tableState.query || ''}
@@ -316,7 +316,7 @@ export const FeatureToggleListTable: FC = () => {
                 onChange={setTableState}
                 state={filterState}
             />
-            {isSmallScreen ? (
+            {isLargeScreen ? (
                 <Box sx={(theme) => ({ padding: theme.spacing(0, 3, 3) })}>
                     <Search
                         initialValue={tableState.query || ''}

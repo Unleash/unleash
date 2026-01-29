@@ -9,12 +9,19 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();
 
+const mockSetDialogOpen = () => {};
+
 beforeEach(() => {
     testServerRoute(server, '/api/admin/ui-config', {});
 });
 
 test('InstanceStatusBar should be hidden by default', async () => {
-    render(<InstanceStatusBar instanceStatus={UNKNOWN_INSTANCE_STATUS} />);
+    render(
+        <InstanceStatusBar
+            instanceStatus={UNKNOWN_INSTANCE_STATUS}
+            setDialogOpen={mockSetDialogOpen}
+        />,
+    );
 
     expect(
         screen.queryByTestId(INSTANCE_STATUS_BAR_ID),
@@ -28,6 +35,7 @@ test('InstanceStatusBar should be hidden when state is active', async () => {
                 plan: InstancePlan.PRO,
                 state: InstanceState.ACTIVE,
             }}
+            setDialogOpen={mockSetDialogOpen}
         />,
     );
 
@@ -44,6 +52,7 @@ test('InstanceStatusBar should warn when the trial is far from expired', async (
                 state: InstanceState.TRIAL,
                 trialExpiry: addDays(new Date(), 15).toISOString(),
             }}
+            setDialogOpen={mockSetDialogOpen}
         />,
     );
 
@@ -59,6 +68,7 @@ test('InstanceStatusBar should warn when the trial is about to expire', async ()
                 state: InstanceState.TRIAL,
                 trialExpiry: addDays(new Date(), 5).toISOString(),
             }}
+            setDialogOpen={mockSetDialogOpen}
         />,
     );
 
@@ -74,6 +84,7 @@ test('InstanceStatusBar should warn when trialExpiry has passed', async () => {
                 state: InstanceState.TRIAL,
                 trialExpiry: subDays(new Date(), 1).toISOString(),
             }}
+            setDialogOpen={mockSetDialogOpen}
         />,
     );
 
@@ -88,6 +99,7 @@ test('InstanceStatusBar should warn when the trial has expired', async () => {
                 plan: InstancePlan.PRO,
                 state: InstanceState.EXPIRED,
             }}
+            setDialogOpen={mockSetDialogOpen}
         />,
     );
 
@@ -102,6 +114,7 @@ test('InstanceStatusBar should warn when the trial has expired for enterprise', 
                 plan: InstancePlan.ENTERPRISE,
                 state: InstanceState.EXPIRED,
             }}
+            setDialogOpen={mockSetDialogOpen}
         />,
     );
 
@@ -116,6 +129,7 @@ test('InstanceStatusBar should warn when the trial has churned', async () => {
                 plan: InstancePlan.PRO,
                 state: InstanceState.CHURNED,
             }}
+            setDialogOpen={mockSetDialogOpen}
         />,
     );
 

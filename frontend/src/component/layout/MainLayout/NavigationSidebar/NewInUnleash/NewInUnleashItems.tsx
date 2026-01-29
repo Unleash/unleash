@@ -26,7 +26,7 @@ export type NewInUnleashItem = {
 export const newInUnleashItems: NewInUnleashItem[] = [
     {
         label: 'Release templates',
-        summary: 'Faster and safer rollouts with release management',
+        summary: 'Put your rollouts on autopilot',
         preview: (
             <StyledImg
                 src={formatAssetPath(ReleaseTemplatePreviewImage)}

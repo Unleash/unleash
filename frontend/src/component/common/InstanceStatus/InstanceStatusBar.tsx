@@ -59,27 +59,47 @@ const StyledInfoIcon = styled(InfoOutlined)(({ theme }) => ({
 
 interface IInstanceStatusBarProps {
     instanceStatus: IInstanceStatus;
+    setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const InstanceStatusBar = ({
     instanceStatus,
+    setDialogOpen,
 }: IInstanceStatusBarProps) => {
     if (trialHasExpired(instanceStatus)) {
-        return <StatusBarExpired instanceStatus={instanceStatus} />;
+        return (
+            <StatusBarExpired
+                instanceStatus={instanceStatus}
+                setDialogOpen={setDialogOpen}
+            />
+        );
     }
 
     if (trialExpiresSoon(instanceStatus)) {
-        return <StatusBarExpiresSoon instanceStatus={instanceStatus} />;
+        return (
+            <StatusBarExpiresSoon
+                instanceStatus={instanceStatus}
+                setDialogOpen={setDialogOpen}
+            />
+        );
     }
 
     if (isTrialInstance(instanceStatus)) {
-        return <StatusBarExpiresLater instanceStatus={instanceStatus} />;
+        return (
+            <StatusBarExpiresLater
+                instanceStatus={instanceStatus}
+                setDialogOpen={setDialogOpen}
+            />
+        );
     }
 
     return null;
 };
 
-const StatusBarExpired = ({ instanceStatus }: IInstanceStatusBarProps) => {
+const StatusBarExpired = ({
+    instanceStatus,
+    setDialogOpen,
+}: IInstanceStatusBarProps) => {
     return (
         <StyledWarningBar data-testid={INSTANCE_STATUS_BAR_ID}>
             <StyledWarningIcon />
@@ -90,12 +110,18 @@ const StatusBarExpired = ({ instanceStatus }: IInstanceStatusBarProps) => {
                 has expired. <strong>Upgrade trial</strong> otherwise your{' '}
                 <strong>account will be deleted.</strong>
             </Typography>
-            <BillingLink instanceStatus={instanceStatus} />
+            <BillingLink
+                instanceStatus={instanceStatus}
+                setDialogOpen={setDialogOpen}
+            />
         </StyledWarningBar>
     );
 };
 
-const StatusBarExpiresSoon = ({ instanceStatus }: IInstanceStatusBarProps) => {
+const StatusBarExpiresSoon = ({
+    instanceStatus,
+    setDialogOpen,
+}: IInstanceStatusBarProps) => {
     const timeRemaining = formatDistanceToNowStrict(
         parseISO(instanceStatus.trialExpiry!),
         { roundingMethod: 'floor' },
@@ -111,12 +137,18 @@ const StatusBarExpiresSoon = ({ instanceStatus }: IInstanceStatusBarProps) => {
                 <strong>{timeRemaining}</strong> left of your free{' '}
                 {instanceStatus.plan} trial.
             </Typography>
-            <BillingLink instanceStatus={instanceStatus} />
+            <BillingLink
+                instanceStatus={instanceStatus}
+                setDialogOpen={setDialogOpen}
+            />
         </StyledInfoBar>
     );
 };
 
-const StatusBarExpiresLater = ({ instanceStatus }: IInstanceStatusBarProps) => {
+const StatusBarExpiresLater = ({
+    instanceStatus,
+    setDialogOpen,
+}: IInstanceStatusBarProps) => {
     return (
         <StyledInfoBar data-testid={INSTANCE_STATUS_BAR_ID}>
             <StyledInfoIcon />
@@ -126,12 +158,18 @@ const StatusBarExpiresLater = ({ instanceStatus }: IInstanceStatusBarProps) => {
                 <strong>Heads up!</strong> You're currently on a free{' '}
                 {instanceStatus.plan} trial account.
             </Typography>
-            <BillingLink instanceStatus={instanceStatus} />
+            <BillingLink
+                instanceStatus={instanceStatus}
+                setDialogOpen={setDialogOpen}
+            />
         </StyledInfoBar>
     );
 };
 
-const BillingLink = ({ instanceStatus }: IInstanceStatusBarProps) => {
+const BillingLink = ({
+    instanceStatus,
+    setDialogOpen,
+}: IInstanceStatusBarProps) => {
     const { hasAccess } = useContext(AccessContext);
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
@@ -147,11 +185,19 @@ const BillingLink = ({ instanceStatus }: IInstanceStatusBarProps) => {
         return null;
     }
 
+    const onClick = () => {
+        if (
+            instanceStatus.plan === InstancePlan.ENTERPRISE &&
+            instanceStatus.billing === 'pay-as-you-go'
+        ) {
+            setDialogOpen(true);
+        } else {
+            navigate('/admin/billing');
+        }
+    };
+
     return (
-        <StyledButton
-            onClick={() => navigate('/admin/billing')}
-            variant='outlined'
-        >
+        <StyledButton onClick={onClick} variant='outlined'>
             Upgrade trial
         </StyledButton>
     );

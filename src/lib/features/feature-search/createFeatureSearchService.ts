@@ -4,9 +4,10 @@ import type { IUnleashConfig } from '../../types/index.js';
 import { FeatureSearchService } from './feature-search-service.js';
 import FakeFeatureSearchStore from './fake-feature-search-store.js';
 import FeatureSearchStore from './feature-search-store.js';
+import type { IPrivateProjectChecker } from '../../server-impl.js';
 
 export const createFeatureSearchService =
-    (config: IUnleashConfig) =>
+    (config: IUnleashConfig, privateProjectChecker: IPrivateProjectChecker) =>
     (db: Db): FeatureSearchService => {
         const { getLogger, eventBus, flagResolver } = config;
         const featureSearchStore = new FeatureSearchStore(
@@ -19,11 +20,13 @@ export const createFeatureSearchService =
         return new FeatureSearchService(
             { featureSearchStore: featureSearchStore },
             config,
+            privateProjectChecker,
         );
     };
 
 export const createFakeFeatureSearchService = (
     config: IUnleashConfig,
+    privateProjectChecker: IPrivateProjectChecker,
 ): FeatureSearchService => {
     const fakeFeatureSearchStore = new FakeFeatureSearchStore();
 
@@ -32,5 +35,6 @@ export const createFakeFeatureSearchService = (
             featureSearchStore: fakeFeatureSearchStore,
         },
         config,
+        privateProjectChecker,
     );
 };

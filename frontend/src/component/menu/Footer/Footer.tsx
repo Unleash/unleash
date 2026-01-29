@@ -8,12 +8,46 @@ import { FooterTitle } from './FooterTitle.tsx';
 import { focusable } from 'themes/themeStyles';
 
 const StyledFooter = styled('footer')(({ theme }) => ({
-    padding: theme.spacing(4, 8),
     width: '100%',
     flexGrow: 1,
     position: 'relative',
     backgroundColor: theme.palette.background.paper,
     overflowY: 'hidden',
+    zIndex: 1,
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+}));
+
+const FooterContentWrapper = styled('div')(({ theme }) => ({
+    minWidth: 0,
+    maxWidth: `1512px`,
+    margin: '0 auto',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.up(1856)]: {
+        width: '100%',
+    },
+    [theme.breakpoints.down(1856)]: {
+        marginLeft: theme.spacing(7),
+        marginRight: theme.spacing(7),
+    },
+    [theme.breakpoints.down('lg')]: {
+        maxWidth: `1250px`,
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    [theme.breakpoints.down(1024)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
+    },
+}));
+
+const FooterGridContainer = styled(Grid)(({ theme }) => ({
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4),
 }));
 
 const StyledList = styled(List)({
@@ -39,314 +73,316 @@ export const Footer: VFC = () => {
 
     return (
         <StyledFooter>
-            <Grid
-                container
-                justifyContent='center'
-                spacing={10}
-                style={{ marginBottom: 0 }}
-            >
-                <Grid item md={4} xs={12}>
-                    <ApiDetails uiConfig={uiConfig} />
-                </Grid>
-                <Grid item xs={12} md='auto'>
-                    <Grid container spacing={7} direction='row'>
-                        <Grid item>
-                            <section title='Unleash SDK'>
-                                <FooterTitle>Server SDKs</FooterTitle>
-                                <StyledList dense>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/node'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Node.js
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/java'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Java
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/go'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Go
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>{' '}
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/rust'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Rust
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>{' '}
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/ruby'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Ruby
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>{' '}
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/python'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Python
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/dotnet'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    .NET
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/php'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    PHP
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    All SDKs
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                </StyledList>
-                            </section>
-                        </Grid>
-                        <Grid item>
-                            <section title='Unleash SDK'>
-                                <FooterTitle>Frontend SDKs</FooterTitle>
-                                <StyledList dense>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/javascript-browser'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    JavaScript
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/react'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    React
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/next-js'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Next.js
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/vue'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Vue
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/ios-proxy'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    iOS
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/android-proxy'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Android
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://docs.getunleash.io/sdks/flutter'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Flutter
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                </StyledList>
-                            </section>
-                        </Grid>
-                        <Grid item>
-                            <section>
-                                <FooterTitle>About</FooterTitle>
-                                <StyledList dense>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://www.getunleash.io/'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    getunleash.io
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://twitter.com/getunleash'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Twitter
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://www.linkedin.com/company/getunleash'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    LinkedIn
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://github.com/Unleash/unleash'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    GitHub
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                    <StyledListItem>
-                                        <ListItemText
-                                            primary={
-                                                <a
-                                                    href='https://slack.unleash.run'
-                                                    target='_blank'
-                                                    rel='noreferrer'
-                                                >
-                                                    Slack Community
-                                                </a>
-                                            }
-                                        />
-                                    </StyledListItem>
-                                </StyledList>
-                            </section>
+            <FooterContentWrapper>
+                <FooterGridContainer
+                    container
+                    justifyContent='space-between'
+                    spacing={10}
+                    style={{ marginBottom: 0 }}
+                >
+                    <Grid item md={4} xs={12}>
+                        <ApiDetails uiConfig={uiConfig} />
+                    </Grid>
+                    <Grid item xs={12} md='auto'>
+                        <Grid container spacing={7} direction='row'>
+                            <Grid item>
+                                <section title='Unleash SDK'>
+                                    <FooterTitle>Server SDKs</FooterTitle>
+                                    <StyledList dense>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/node'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Node.js
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/java'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Java
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/go'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Go
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>{' '}
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/rust'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Rust
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>{' '}
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/ruby'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Ruby
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>{' '}
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/python'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Python
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/dotnet'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        .NET
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/php'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        PHP
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        All SDKs
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                    </StyledList>
+                                </section>
+                            </Grid>
+                            <Grid item>
+                                <section title='Unleash SDK'>
+                                    <FooterTitle>Frontend SDKs</FooterTitle>
+                                    <StyledList dense>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/javascript-browser'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        JavaScript
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/react'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        React
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/next-js'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Next.js
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/vue'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Vue
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/ios-proxy'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        iOS
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/android-proxy'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Android
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://docs.getunleash.io/sdks/flutter'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Flutter
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                    </StyledList>
+                                </section>
+                            </Grid>
+                            <Grid item>
+                                <section>
+                                    <FooterTitle>About</FooterTitle>
+                                    <StyledList dense>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://www.getunleash.io/'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        getunleash.io
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://twitter.com/getunleash'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Twitter
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://www.linkedin.com/company/getunleash'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        LinkedIn
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://github.com/Unleash/unleash'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        GitHub
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                        <StyledListItem>
+                                            <ListItemText
+                                                primary={
+                                                    <a
+                                                        href='https://slack.unleash.run'
+                                                        target='_blank'
+                                                        rel='noreferrer'
+                                                    >
+                                                        Slack Community
+                                                    </a>
+                                                }
+                                            />
+                                        </StyledListItem>
+                                    </StyledList>
+                                </section>
+                            </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-            </Grid>
+                </FooterGridContainer>
+            </FooterContentWrapper>
         </StyledFooter>
     );
 };

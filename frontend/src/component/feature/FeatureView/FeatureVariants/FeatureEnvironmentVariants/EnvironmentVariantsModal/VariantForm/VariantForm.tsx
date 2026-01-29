@@ -15,7 +15,7 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IPayload } from 'interfaces/featureToggle';
 import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/useOverrides';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext';
 import { WeightType } from 'constants/variantTypes';
 import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
 import Delete from '@mui/icons-material/Delete';
@@ -198,7 +198,7 @@ export const VariantForm = ({
         'overrides' in variant ? variant.overrides || [] : [],
     );
 
-    const { context } = useUnleashContext();
+    const { context } = useAssignableUnleashContext();
 
     const [errors, setErrors] = useState<IVariantFormErrors>({});
 

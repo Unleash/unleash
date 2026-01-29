@@ -1,4 +1,4 @@
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext';
 
 type OptionType = {
     key: string;
@@ -10,7 +10,7 @@ const DEFAULT_RANDOM_OPTION = 'random';
 const DEFAULT_STICKINESS_OPTION = 'default';
 
 export const useStickinessOptions = (value: string | undefined) => {
-    const { context } = useUnleashContext();
+    const { context } = useAssignableUnleashContext();
 
     const options = context
         .filter((field) => field.stickiness)

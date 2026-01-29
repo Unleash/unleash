@@ -49,7 +49,7 @@ export const PlausibleChartItem: FC = () => (
     <StyledWidget>
         <StyledHeader>
             <StyledChartTitle>
-                <Typography variant='h6'>Plausible Analytics</Typography>
+                <Typography variant='h3'>Plausible Analytics</Typography>
                 <Typography variant='body2' color='text.secondary'>
                     Favorite events from Plausible analytics
                 </Typography>

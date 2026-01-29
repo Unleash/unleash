@@ -5,7 +5,10 @@ import { useMemo } from 'react';
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 import { ReactComponent as LogoIconWhite } from 'assets/icons/logoWhiteBg.svg';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
-import type { ConnectedEdge } from 'interfaces/connectedEdge';
+import type {
+    ConnectedEdge,
+    EnvironmentRevisionId,
+} from 'interfaces/connectedEdge';
 import { EnterpriseEdgeInstance } from './EnterpriseEdgeInstance/EnterpriseEdgeInstance.tsx';
 import { Badge } from 'component/common/Badge/Badge.tsx';
 
@@ -177,13 +180,14 @@ const getGroupHosting = (instances: ConnectedEdge[]) => {
 
 interface IEnterpriseEdgeInstancesProps {
     connectedEdges: ConnectedEdge[];
+    revisionIds: EnvironmentRevisionId[];
 }
 
 export const EnterpriseEdgeInstances = ({
     connectedEdges,
+    revisionIds,
 }: IEnterpriseEdgeInstancesProps) => {
     const theme = useTheme();
-
     const edgeLevels = useMemo(
         () => processEdges(connectedEdges),
         [connectedEdges],
@@ -250,6 +254,7 @@ export const EnterpriseEdgeInstances = ({
                                             <EnterpriseEdgeInstance
                                                 key={instance.instanceId}
                                                 instance={instance}
+                                                revisionIds={revisionIds}
                                             />
                                         ))}
                                     </StyledGroup>

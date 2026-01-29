@@ -12,7 +12,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue as ConfirmDialogue } from 'component/common/Dialogue/Dialogue';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useScopedUnleashContext } from 'hooks/api/getters/useUnleashContext/useScopedUnleashContext';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -31,10 +31,8 @@ const ContextList: FC = () => {
     const projectId = useOptionalPathParam('projectId');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     const [contextFieldToDelete, setContextFieldToDelete] = useState<string>();
-    const { context, refetchUnleashContext, loading } = useUnleashContext(
-        undefined,
-        projectId,
-    );
+    const { context, refetchUnleashContext, loading } =
+        useScopedUnleashContext();
     const { removeContext } = useContextsApi(projectId);
     const { setToastData, setToastApiError } = useToast();
 

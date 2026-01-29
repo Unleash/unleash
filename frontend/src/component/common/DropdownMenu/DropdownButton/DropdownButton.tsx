@@ -2,7 +2,7 @@ import type { ReactNode, VFC } from 'react';
 import { Button, type ButtonProps, Icon } from '@mui/material';
 
 interface IDropdownButtonProps {
-    label: string;
+    label: string | ReactNode;
     id?: string;
     title?: ButtonProps['title'];
     className?: string;

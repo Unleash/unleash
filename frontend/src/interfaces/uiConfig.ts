@@ -33,6 +33,7 @@ export interface IUiConfig {
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
     unleashContext?: IMutableContext;
+    datePickerRangeConstraints?: boolean;
 }
 
 export type UiFlags = {

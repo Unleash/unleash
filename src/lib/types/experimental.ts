@@ -69,7 +69,8 @@ export type IFlagKey =
     | 'projectContextFields'
     | 'readOnlyUsers'
     | 'readOnlyUsersUI'
-    | 'privateProjectMiddlewareMove';
+    | 'privateProjectMiddlewareMove'
+    | 'datePickerRangeConstraints';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -308,6 +309,10 @@ const flags: IFlags = {
     ),
     privateProjectMiddlewareMove: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECT_MIDDLEWARE_MOVE,
+        false,
+    ),
+    datePickerRangeConstraints: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DATEPICKER_RANGE_CONSTRAINTS,
         false,
     ),
 };

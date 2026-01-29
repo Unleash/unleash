@@ -15,7 +15,7 @@ import {
 import type { Logger } from '../logger.js';
 import { validateSchema } from '../openapi/validate.js';
 import type { IFlagResolver } from '../types/index.js';
-import packageVersion from '../util/version.js';
+
 const getStabilityLevel = (operation: unknown): string | undefined => {
     if (!operation || typeof operation !== 'object') {
         return undefined;
@@ -70,8 +70,7 @@ export class OpenApiService {
         const { baseUriPath = '' } = this.config.server ?? {};
         const openapiStaticAssets = `${baseUriPath}/openapi-static`;
 
-        const currentVersion =
-            this.api.document?.info?.version || packageVersion || '7.0.0';
+        const currentVersion = this.api.document.info.version;
         const stability = calculateStability({
             alphaUntilVersion,
             betaUntilVersion,

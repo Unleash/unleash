@@ -413,13 +413,15 @@ export const StrategiesList = () => {
             <PageContent
                 isLoading={loading}
                 header={
-                    <PageHeader>
-                        <Title
-                            title='Standard strategies'
-                            description='Standard strategies let you enable a feature only for a specified audience. Select a starting setup, then customize your strategy with targeting and variants.'
-                            link='https://docs.getunleash.io/concepts/activation-strategies'
-                        />
-                    </PageHeader>
+                    <PageHeader
+                        titleElement={
+                            <Title
+                                title='Standard strategies'
+                                description='Standard strategies let you enable a feature only for a specified audience. Select a starting setup, then customize your strategy with targeting and variants.'
+                                link='https://docs.getunleash.io/concepts/activation-strategies'
+                            />
+                        }
+                    />
                 }
             >
                 <Box>
@@ -475,13 +477,15 @@ export const StrategiesList = () => {
             <PageContent
                 isLoading={loading}
                 header={
-                    <PageHeader>
-                        <Title
-                            title='Advanced and custom strategies'
-                            description='Advanced strategies let you target based on specific properties. Custom activation strategies let you define your own activation strategies to use with Unleash.'
-                            link='https://docs.getunleash.io/concepts/activation-strategies#custom-strategies'
-                        />
-                    </PageHeader>
+                    <PageHeader
+                        titleElement={
+                            <Title
+                                title='Advanced and custom strategies'
+                                description='Advanced strategies let you target based on specific properties. Custom activation strategies let you define your own activation strategies to use with Unleash.'
+                                link='https://docs.getunleash.io/concepts/activation-strategies#custom-strategies'
+                            />
+                        }
+                    />
                 }
                 sx={{ mt: 2 }}
             >

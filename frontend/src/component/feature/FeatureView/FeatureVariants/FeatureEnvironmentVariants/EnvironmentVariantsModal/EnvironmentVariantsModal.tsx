@@ -18,7 +18,7 @@ import { VariantForm } from './VariantForm/VariantForm.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { WeightType } from 'constants/variantTypes';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext';
 import { updateWeightEdit } from 'component/common/util';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
@@ -149,7 +149,7 @@ export const EnvironmentVariantsModal = ({
     const featureId = useRequiredPathParam('featureId');
 
     const { uiConfig } = useUiConfig();
-    const { context } = useUnleashContext();
+    const { context } = useAssignableUnleashContext();
     const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
 
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);

@@ -64,6 +64,56 @@ class ContextService {
         return allFields.filter((field) => field.project === projectId);
     }
 
+    async getAssignableFieldsForProject(
+        projectId: string,
+    ): Promise<IContextField[]> {
+        const allFields = await this.contextFieldStore.getAll();
+        return allFields.filter(
+            (field) => field.project === projectId || !field.project,
+        );
+    }
+
+    async getContextFields({
+        include,
+        projectId,
+        userId,
+    }: {
+        include?: string;
+        projectId?: string;
+        userId: number;
+    }): Promise<IContextField[]> {
+        if (projectId) {
+            if (include?.match(/^root$/i)) {
+                return this.getAssignableFieldsForProject(projectId);
+            }
+
+            return this.getAllForProject(projectId);
+        }
+
+        if (include?.match(/^project$/i)) {
+            const allFields = await this.getAll();
+
+            const accessibleProjects =
+                await this.privateProjectChecker.getUserAccessibleProjects(
+                    userId,
+                );
+
+            if (accessibleProjects.mode === 'all') {
+                return allFields;
+            }
+
+            const projectSet = new Set(accessibleProjects.projects);
+
+            return allFields.filter(
+                (contextField) =>
+                    !contextField.project ||
+                    projectSet.has(contextField.project),
+            );
+        }
+
+        return this.getAllWithoutProject();
+    }
+
     async getContextField(name: string): Promise<IContextField> {
         const field = await this.contextFieldStore.get(name);
         if (field === undefined) {

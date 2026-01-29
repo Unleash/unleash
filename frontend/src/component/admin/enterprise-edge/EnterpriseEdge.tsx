@@ -1,6 +1,6 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import { styled } from '@mui/material';
-import { useConnectedEdges } from 'hooks/api/getters/useConnectedEdges/useConnectedEdges';
+import { useEdgeObservability } from 'hooks/api/getters/useEdgeObservability/useEdgeObservability.ts';
 import { EnterpriseEdgeInstances } from './EnterpriseEdgeInstances/EnterpriseEdgeInstances.tsx';
 import { PageContent } from 'component/common/PageContent/PageContent.tsx';
 import { EnterpriseEdgeExplanation } from './EnterpriseEdgeExplanation.tsx';
@@ -26,8 +26,10 @@ const StyledSeparator = styled('hr')(({ theme }) => ({
 export const EnterpriseEdge = () => {
     usePageTitle('Enterprise Edge');
 
-    const { connectedEdges } = useConnectedEdges({ refreshInterval: 30_000 });
-    const hasConnectedEdges = connectedEdges.length > 0;
+    const { edgeObservability } = useEdgeObservability({
+        refreshInterval: 30_000,
+    });
+    const hasConnectedEdges = edgeObservability.connectedEdges.length > 0;
 
     return (
         <StyledPageContent header='Enterprise Edge'>
@@ -35,7 +37,8 @@ export const EnterpriseEdge = () => {
                 <>
                     <StyledPageContentSection>
                         <EnterpriseEdgeInstances
-                            connectedEdges={connectedEdges}
+                            connectedEdges={edgeObservability.connectedEdges}
+                            revisionIds={edgeObservability.revisionIds}
                         />
                     </StyledPageContentSection>
                     <StyledSeparator />

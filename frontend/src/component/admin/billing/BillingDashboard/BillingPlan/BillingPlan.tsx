@@ -8,11 +8,7 @@ import { GridCol } from 'component/common/GridCol/GridCol';
 import { Badge } from 'component/common/Badge/Badge';
 import { BillingDetails } from './BillingDetails.tsx';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-
-export const BILLING_PRO_BASE_PRICE = 80;
-export const BILLING_PRO_SEAT_PRICE = 15;
-export const BILLING_PAYG_SEAT_PRICE = 75;
-export const BILLING_TRAFFIC_PRICE = 5;
+import { useInstancePrices } from 'hooks/api/getters/useInstancePrices/useInstancePrices';
 
 export const BILLING_PAYG_DEFAULT_MINIMUM_SEATS = 5;
 export const BILLING_PRO_DEFAULT_INCLUDED_SEATS = 5;
@@ -61,6 +57,7 @@ export const BillingPlan = () => {
         uiConfig: { billing },
     } = useUiConfig();
     const { instanceStatus } = useInstanceStatus();
+    const { instancePrices } = useInstancePrices();
 
     const isPro =
         instanceStatus?.plan && instanceStatus?.plan === InstancePlan.PRO;
@@ -75,8 +72,7 @@ export const BillingPlan = () => {
         );
 
     const expired = trialHasExpired(instanceStatus);
-    const baseProPrice =
-        instanceStatus.prices?.pro?.base ?? BILLING_PRO_BASE_PRICE;
+    const baseProPrice = instancePrices.pro.base;
     const plan = `${instanceStatus.plan}${isPAYG ? ' Pay-as-You-Go' : ''}`;
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;
 
@@ -155,6 +151,7 @@ export const BillingPlan = () => {
                 </Grid>
                 <BillingDetails
                     instanceStatus={instanceStatus}
+                    instancePrices={instancePrices}
                     isPAYG={isPAYG}
                     isEnterpriseConsumption={isEnterpriseConsumption}
                 />

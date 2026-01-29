@@ -17,7 +17,7 @@ export interface IFeatureLifecycleReadModel {
     findCurrentStage(
         feature: string,
     ): Promise<IFeatureLifecycleStage | undefined>;
-    getStageCount(): Promise<StageCount[]>;
+    getStageCount(accessibleProjects?: string[]): Promise<StageCount[]>;
     getStageCountByProject(): Promise<StageCountByProject[]>;
     getAllWithStageDuration(): Promise<IProjectLifecycleStageDuration[]>;
 }

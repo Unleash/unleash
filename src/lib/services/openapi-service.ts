@@ -83,7 +83,7 @@ export class OpenApiService {
                 : rest.summary;
         const stabilityBadge =
             stability !== 'stable'
-                ? `**[${stability.toUpperCase()}]** This is a ${stability} endpoint and it may change or be removed in the future.
+                ? `**[${stability.toUpperCase()}]** This API is in ${stability} state, which means it may change or be removed in the future.
             `
                 : '';
         const enterpriseBadge = enterpriseOnly

@@ -119,19 +119,6 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                             value={selectedDate}
                             minDate={minDate ? startOfDay(minDate) : undefined}
                             maxDate={maxDate ? endOfDay(maxDate) : undefined}
-                            shouldDisableDate={(date) => {
-                                const today = endOfDay(new Date());
-                                if (isAfter(date, today)) {
-                                    return true;
-                                }
-                                if (minDate && isBefore(date, minDate)) {
-                                    return true;
-                                }
-                                if (maxDate && isAfter(date, maxDate)) {
-                                    return true;
-                                }
-                                return false;
-                            }}
                             onChange={(value) => {
                                 const formattedValue = value
                                     ? format(value, 'yyyy-MM-dd')

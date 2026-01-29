@@ -64,3 +64,26 @@ test('can return stage count', async () => {
         { project: 'default', stage: 'initial', count: 2 },
     ]);
 });
+
+test('returns stage count only for accessible projects', async () => {
+    await featureToggleStore.create('projectA', {
+        name: 'featureA1',
+        createdByUserId: 1,
+    });
+    await featureToggleStore.create('projectB', {
+        name: 'featureB1',
+        createdByUserId: 2,
+    });
+
+    await featureLifecycleStore.insert([
+        { feature: 'featureA1', stage: 'pre-live' },
+        { feature: 'featureB1', stage: 'pre-live' },
+    ]);
+
+    const accessibleProjects = ['projectA'];
+
+    const stageCount =
+        await featureLifecycleReadModel.getStageCount(accessibleProjects);
+
+    expect(stageCount).toEqual([{ stage: 'pre-live', count: 1 }]);
+});

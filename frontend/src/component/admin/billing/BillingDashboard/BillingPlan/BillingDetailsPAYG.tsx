@@ -3,13 +3,11 @@ import { Divider, Grid, styled, Typography } from '@mui/material';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { GridColLink } from './GridColLink/GridColLink.tsx';
-import type { IInstanceStatus } from 'interfaces/instance';
+import type { IInstanceStatus, InstancePrices } from 'interfaces/instance';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import {
     BILLING_INCLUDED_REQUESTS,
     BILLING_PAYG_DEFAULT_MINIMUM_SEATS,
-    BILLING_PAYG_SEAT_PRICE,
-    BILLING_TRAFFIC_PRICE,
 } from './BillingPlan.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useOverageCost } from './useOverageCost.ts';
@@ -25,19 +23,19 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 
 interface IBillingDetailsPAYGProps {
     instanceStatus: IInstanceStatus;
+    instancePrices: InstancePrices;
 }
 
 export const BillingDetailsPAYG = ({
     instanceStatus,
+    instancePrices,
 }: IBillingDetailsPAYGProps) => {
     const { users, loading } = useUsers();
 
     const eligibleUsers = users.filter((user) => user.email);
 
-    const seatPrice =
-        instanceStatus.prices?.payg?.seat ?? BILLING_PAYG_SEAT_PRICE;
-    const trafficPrice =
-        instanceStatus.prices?.payg?.traffic ?? BILLING_TRAFFIC_PRICE;
+    const seatPrice = instancePrices.payg.seat;
+    const trafficPrice = instancePrices.payg.traffic;
 
     const minSeats =
         instanceStatus.minSeats ?? BILLING_PAYG_DEFAULT_MINIMUM_SEATS;

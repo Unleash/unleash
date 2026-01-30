@@ -6,6 +6,7 @@ import {
     FilterItem,
     type FilterItemParams,
 } from '../FilterItem/FilterItem.tsx';
+import { isAfter, isBefore } from 'date-fns';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -102,9 +103,14 @@ const RenderFilter: FC<RenderFilterProps> = ({
     ): void => {
         const dateFilter = filter as IDateFilterItem;
 
-        const shouldAdjustToDate = isFromPicker && toValue && newDate > toValue;
+        const shouldAdjustToDate =
+            isFromPicker &&
+            toValue &&
+            isAfter(new Date(newDate), new Date(toValue));
         const shouldAdjustFromDate =
-            isToPicker && fromValue && newDate < fromValue;
+            isToPicker &&
+            fromValue &&
+            isBefore(new Date(newDate), new Date(fromValue));
 
         const filterKeyToUpdate =
             shouldAdjustToDate && dateFilter.toFilterKey

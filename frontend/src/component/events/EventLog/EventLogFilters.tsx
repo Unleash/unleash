@@ -22,7 +22,7 @@ export const useEventLogFilters = (
     const { eventCreators } = useEventCreators();
     const location = useLocation();
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
-    const dateConstraintsEnabled = useUiFlag('datePickerRangeConstraints'); // TODO: delete this with flag `datePickerRangeConstraints`
+    const dateConstraintsEnabled = useUiFlag('datePickerRangeConstraints');
 
     const createRemovableFilterOptions = (
         searchParams: URLSearchParams,

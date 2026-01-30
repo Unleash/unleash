@@ -26,7 +26,7 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
     ...filterProps
 }) => {
     const { projects } = useProjects();
-    const dateConstraintsEnabled = useUiFlag('datePickerRangeConstraints'); // TODO: delete this with flag `datePickerRangeConstraints`
+    const dateConstraintsEnabled = useUiFlag('datePickerRangeConstraints');
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 

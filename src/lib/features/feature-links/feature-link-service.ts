@@ -11,6 +11,7 @@ import type {
     IFeatureLink,
     IFeatureLinkStore,
 } from './feature-link-store-type.js';
+import type { IFeaturesReadModel } from '../feature-toggle/types/features-read-model-type.js';
 import type EventService from '../events/event-service.js';
 import {
     BadDataError,
@@ -23,11 +24,13 @@ import { FEAUTRE_LINK_COUNT } from '../metrics/impact/define-impact-metrics.js';
 
 interface IFeatureLinkStoreObj {
     featureLinkStore: IFeatureLinkStore;
+    featuresReadModel: IFeaturesReadModel;
 }
 
 export default class FeatureLinkService {
     private logger: Logger;
     private featureLinkStore: IFeatureLinkStore;
+    private featuresReadModel: IFeaturesReadModel;
     private eventService: EventService;
     private flagResolver: IFlagResolver;
 
@@ -41,6 +44,7 @@ export default class FeatureLinkService {
     ) {
         this.logger = getLogger('feature-links/feature-link-service.ts');
         this.featureLinkStore = stores.featureLinkStore;
+        this.featuresReadModel = stores.featuresReadModel;
         this.eventService = eventService;
         this.flagResolver = flagResolver;
     }
@@ -62,6 +66,15 @@ export default class FeatureLinkService {
         newLink: Omit<IFeatureLink, 'id' | 'domain'>,
         auditUser: IAuditUser,
     ): Promise<IFeatureLink> {
+        const featureExists = await this.featuresReadModel.featureExists(
+            newLink.featureName,
+        );
+        if (!featureExists) {
+            throw new NotFoundError(
+                `Could not find feature with name ${newLink.featureName}`,
+            );
+        }
+
         const countLinks = await this.featureLinkStore.count({
             featureName: newLink.featureName,
         });

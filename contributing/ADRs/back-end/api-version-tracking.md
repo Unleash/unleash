@@ -16,13 +16,19 @@ Additionally, we wanted to ship and test new APIs with select customers before f
 
 ## Decision
 
-We've implemented an automated API stability tracking system based on semantic versioning. Each endpoint can declare an `alphaUntilVersion` and/or a `betaUntilVersion` to define cutoffs. The system calculates stability levels by comparing those cutoffs against the current version:
+We've implemented an automated API stability tracking system based on semantic versioning. Each endpoint declares a `release` object that captures the intended stability milestones. The system calculates stability levels by comparing those milestones against the current version:
 
 ### Stability Calculation Heuristic
 
-- **Alpha** 🔴: Current version is before `alphaUntilVersion` (when defined)
-- **Beta** 🟡: Current version is at or after `alphaUntilVersion` but before `betaUntilVersion` (when defined)
-- **Stable** 🟢: Current version is at or after `betaUntilVersion` (when defined); if `betaUntilVersion` is omitted, stability is reached once alpha is no longer in effect (or immediately if `alphaUntilVersion` is also omitted)
+- **Alpha** 🔴: Current version is before the first milestone.
+- **Beta** 🟡: Current version is at/after `release.beta` and before `release.stable` (when both are defined).
+- **Stable** 🟢: Current version is at/after `release.stable`, or at/after `release.beta` when only `release.beta` is defined.
+
+Supported release declarations:
+- `release: { alpha: true }` → explicitly remain alpha
+- `release: { beta: 'x.y.z' }` → alpha → beta
+- `release: { stable: 'x.y.z' }` → alpha → stable
+- `release: { beta: 'x.y.z', stable: 'a.b.c' }` → alpha → beta → stable (beta must be before stable)
 
 **Example:**
 ```typescript
@@ -31,8 +37,7 @@ We've implemented an automated API stability tracking system based on semantic v
 openApiService.validPath({
     tags: ['Features'],
     summary: 'Create feature flag',
-    alphaUntilVersion: '7.5.0',
-    betaUntilVersion: '7.7.0', // → Alpha (not yet released)
+    release: { beta: '7.5.0', stable: '7.7.0' }, // → Alpha (not yet released)
     operationId: 'createFeature',
     // ...
 })
@@ -40,8 +45,7 @@ openApiService.validPath({
 openApiService.validPath({
     tags: ['Projects'],
     summary: 'List projects',
-    alphaUntilVersion: '7.3.0',
-    betaUntilVersion: '7.5.0', // → Beta (between alpha and beta cutoffs)
+    release: { beta: '7.3.0', stable: '7.5.0' }, // → Beta (between beta and stable cutoffs)
     operationId: 'getProjects',
     // ...
 })
@@ -49,7 +53,7 @@ openApiService.validPath({
 openApiService.validPath({
     tags: ['Users'],
     summary: 'Get user info',
-    betaUntilVersion: '7.1.0', // → Stable (already at/after beta cutoff)
+    release: { beta: '7.1.0' }, // → Stable (already at/after beta cutoff)
     operationId: 'getUserInfo',
     // ...
 })
@@ -57,13 +61,17 @@ openApiService.validPath({
 
 ### Implementation
 
-1. **ApiOperation Interface**: Added `alphaUntilVersion?: string` and `betaUntilVersion?: string` (omit both to mark stable). `releaseVersion?: string` is available for documentation only.
-2. **Stability Calculation**: `calculateStability()` compares alpha/beta cutoffs with the current Unleash version
-3. **OpenAPI Extensions**: Adds only `x-stability-level` to the OpenAPI spec (cutoff versions stay in code as documentation)
+1. **ApiOperation Interface**: Added `release: StabilityRelease` to declare the stability milestones. Legacy operations are temporarily tolerated without `release` to allow backfill.
+2. **Stability Calculation**: `calculateStability()` compares the `release` milestones with the current Unleash version.
+3. **OpenAPI Extensions**: Adds only `x-stability-level` to the OpenAPI spec (milestones stay in code as documentation).
 4. **Swagger UI Integration**: 
    - Alpha endpoints are hidden from public docs in production
    - Visible in development mode (`NODE_ENV=development`)
    - Stability prefix added to endpoint summaries (e.g., `[BETA] List projects`)
+
+### Legacy Backfill Window
+
+Until all endpoints are updated to include `release`, we treat missing milestones as **stable** for versions **before 7.7.7**, and **alpha** starting at **7.7.7**. This is a temporary compatibility window to avoid reclassifying existing APIs while we backfill.
 
 ### Alpha API Behavior
 
@@ -91,13 +99,14 @@ This gives us the best of both worlds: we can ship and test alpha APIs internall
 
 ### Migration Path
 
-1. **Immediate**: New endpoints can include `alphaUntilVersion` and/or `betaUntilVersion` as needed
-2. **Gradual**: Add cutoffs to existing endpoints as they're modified
+1. **Immediate**: New endpoints must include `release` as needed
+2. **Gradual**: Add `release` to existing endpoints as they're modified
 3. **Future**: AI-assisted bulk backfill from git history to document all existing APIs
 4. **Tag cleanup**: Remove legacy `Unstable` OpenAPI tags and replace them with stability cutoffs plus an appropriate existing tag
+5. **Enforcement**: `release` property becomes mandatory.
 
 ### Trade-offs
 
-**Milestone guessing required**: Developers must estimate beta/stable milestones during development. This is acceptable given the milestones can be updated.
+**Milestone guessing optional**: Developers can estimate beta/stable milestones during development or do it before a release. Changing an estimate is acceptable because this information is not published. The benefit of guessing is that it automates the stage transitioning, while doing it before a release requires manual changes.
 
 **Explicit lifecycle**: Cutoffs are explicit, but they require setting (and occasionally updating) the versions.

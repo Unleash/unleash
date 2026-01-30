@@ -4,7 +4,7 @@ import { StyledPopover } from 'component/filter/FilterItem/FilterItem.styles';
 import { FilterItemChip } from 'component/filter/FilterItem/FilterItemChip/FilterItemChip';
 import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { format, isBefore, isAfter, endOfDay, startOfDay } from 'date-fns';
+import { format, endOfDay, startOfDay } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../util.ts';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
@@ -24,7 +24,6 @@ export interface IFilterDateItemProps {
     initMode?: 'auto-open' | 'manual';
     minDate?: Date;
     maxDate?: Date;
-    dateConstraintsEnabled?: boolean; // TODO: delete this prop with flag `datePickerRangeConstraints`
 }
 
 export const FilterDateItem: FC<IFilterDateItemProps> = ({
@@ -37,7 +36,6 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     minDate,
     maxDate,
     operators,
-    dateConstraintsEnabled,
     initMode = 'auto-open',
 }) => {
     const ref = useRef<HTMLDivElement>(null);
@@ -113,37 +111,22 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                 }}
             >
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    {dateConstraintsEnabled ? (
-                        <DateCalendar
-                            displayWeekNumber
-                            value={selectedDate}
-                            minDate={minDate ? startOfDay(minDate) : undefined}
-                            maxDate={maxDate ? endOfDay(maxDate) : undefined}
-                            onChange={(value) => {
-                                const formattedValue = value
-                                    ? format(value, 'yyyy-MM-dd')
-                                    : '';
-                                onChange({
-                                    operator: currentOperator,
-                                    values: [formattedValue],
-                                });
-                            }}
-                        />
-                    ) : (
-                        <DateCalendar
-                            displayWeekNumber
-                            value={selectedDate}
-                            onChange={(value) => {
-                                const formattedValue = value
-                                    ? format(value, 'yyyy-MM-dd')
-                                    : '';
-                                onChange({
-                                    operator: currentOperator,
-                                    values: [formattedValue],
-                                });
-                            }}
-                        />
-                    )}
+                    <DateCalendar
+                        displayWeekNumber
+                        value={selectedDate}
+                        disableFuture
+                        minDate={minDate ? startOfDay(minDate) : undefined}
+                        maxDate={maxDate ? endOfDay(maxDate) : undefined}
+                        onChange={(value) => {
+                            const formattedValue = value
+                                ? format(value, 'yyyy-MM-dd')
+                                : '';
+                            onChange({
+                                operator: currentOperator,
+                                values: [formattedValue],
+                            });
+                        }}
+                    />
                     {onRangeChange && (
                         <DateRangePresets onRangeChange={onRangeChange} />
                     )}

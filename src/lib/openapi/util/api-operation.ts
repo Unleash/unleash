@@ -16,21 +16,12 @@ export type StabilityRelease =
     | { beta: StrictXyzVersion; stable: StrictXyzVersion }
     | { stable: StrictXyzVersion };
 
-type DeprecatedOpenAPITag =
-    // Deprecated tag names. Please use a tag from the OpenAPITag type instead.
-    //
-    // These tag names were the original ones we used for OpenAPI, but they
-    // turned out to be too generic and/or didn't match the new tag naming
-    // schema. Because we require our operations to have one of a predefined set
-    // of values, it would be breaking change to remove them completely.
-    'client' | 'other' | 'auth' | 'admin';
-
 export type StrictXyzVersion =
     | `${bigint}`
     | `${bigint}.${bigint}`
     | `${bigint}.${bigint}.${bigint}`;
 
-export type ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag> = Omit<
+export type ApiOperation<Tag = OpenApiTag> = Omit<
     OpenAPIV3.OperationObject,
     'tags'
 > & {

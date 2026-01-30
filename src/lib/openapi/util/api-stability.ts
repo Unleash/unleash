@@ -15,13 +15,9 @@ export function calculateStability(
     }
 
     const betaVersion =
-        release && 'beta' in release
-            ? (release.beta as StrictXyzVersion)
-            : null;
+        release && 'beta' in release ? semver.coerce(release.beta) : null;
     const stableVersion =
-        release && 'stable' in release
-            ? (release.stable as StrictXyzVersion)
-            : null;
+        release && 'stable' in release ? semver.coerce(release.stable) : null;
     if (!betaVersion && !stableVersion) {
         // existing endpoints are stable, but until we backfill them they won't have these fields and therefore will be alpha, but because we don't want that, we default to stable for a period of time until we backfill all existing endpoints
         if (semver.lt(current, '7.7.7')) {

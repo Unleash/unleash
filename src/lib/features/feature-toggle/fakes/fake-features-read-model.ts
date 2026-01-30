@@ -4,15 +4,13 @@ export class FakeFeaturesReadModel implements IFeaturesReadModel {
     private existsValue: boolean;
     private sameProjectValue: boolean;
 
-    constructor(
-        {
-            featureExists = false,
-            featuresInTheSameProject = true,
-        }: {
-            featureExists?: boolean;
-            featuresInTheSameProject?: boolean;
-        } = {},
-    ) {
+    constructor({
+        featureExists = false,
+        featuresInTheSameProject = true,
+    }: {
+        featureExists?: boolean;
+        featuresInTheSameProject?: boolean;
+    } = {}) {
         this.existsValue = featureExists;
         this.sameProjectValue = featuresInTheSameProject;
     }

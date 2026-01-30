@@ -10,13 +10,17 @@ export function calculateStability(
         return 'stable'; // Default to stable if current can't be parsed
     }
 
+    if (release && 'alpha' in release) {
+        return 'alpha';
+    }
+
     const betaVersion =
-        'beta' in (release ?? {})
-            ? ((release as any).beta as StrictXyzVersion)
+        release && 'beta' in release
+            ? (release.beta as StrictXyzVersion)
             : null;
     const stableVersion =
-        'stable' in (release ?? {})
-            ? ((release as any).stable as StrictXyzVersion)
+        release && 'stable' in release
+            ? (release.stable as StrictXyzVersion)
             : null;
     if (!betaVersion && !stableVersion) {
         // existing endpoints are stable, but until we backfill them they won't have these fields and therefore will be alpha, but because we don't want that, we default to stable for a period of time until we backfill all existing endpoints

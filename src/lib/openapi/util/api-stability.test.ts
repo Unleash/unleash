@@ -79,9 +79,16 @@ test('calculateStability returns alpha before and stable at/after stableRelease 
         stable: '7.6.0' as const,
     };
     expect(calculateStability(stable760, '7.5.0')).toBe('alpha');
-    expect(calculateStability(stable760, '7.5.0')).toBe('alpha');
     expect(calculateStability(stable760, '7.6.0')).toBe('stable');
     expect(calculateStability(stable760, '7.7.0')).toBe('stable');
+});
+
+test('calculateStability returns alpha when explicit alpha is set', () => {
+    const alphaOnly = {
+        alpha: true as const,
+    };
+    expect(calculateStability(alphaOnly, '7.4.0')).toBe('alpha');
+    expect(calculateStability(alphaOnly, '7.8.0')).toBe('alpha');
 });
 
 test('calculateStability treats invalid beta/stable ordering as stable-only cutoff', () => {

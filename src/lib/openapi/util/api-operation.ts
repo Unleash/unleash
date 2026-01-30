@@ -1,48 +1,20 @@
 import type { OpenAPIV3 } from 'openapi-types';
 import type { OpenApiTag } from './openapi-tags.js';
-import semver from 'semver';
 
 /**
- * Calculate stability level based on comparing alpha/beta cutoffs
- * against the current version.
- * - Alpha: current version is before alpha cutoff (when defined)
- * - Beta: current version is at/after alpha cutoff and before beta cutoff (when defined)
- * - Stable: current version is at/after beta cutoff (when defined), or when no cutoffs apply
+ * Explicit stability declaration for each operation.
+ * - release.beta+stable: alpha before beta, beta before stable, stable after.
+ * - release.beta only: alpha before beta, beta after.
+ * - release.stable only: alpha before stable, stable after.
+ * - release.alpha: explicitly opt out of cutoffs (remains alpha).
+ * Note: legacy endpoints that omit release are temporarily tolerated in validPath,
+ * which defers to calculateStability (stable until version 7.7.7, then alpha) until backfill is complete.
  */
-type StabilityVersions = {
-    alphaUntilVersion?: StrictXyzVersion;
-    betaUntilVersion?: StrictXyzVersion;
-    currentVersion: string;
-};
-
-export function calculateStability({
-    alphaUntilVersion,
-    betaUntilVersion,
-    currentVersion,
-}: StabilityVersions): 'alpha' | 'beta' | 'stable' {
-    if (!alphaUntilVersion && !betaUntilVersion) {
-        return 'stable';
-    }
-    const current = semver.coerce(currentVersion);
-    if (!current) {
-        return 'stable'; // Default to stable if current can't be parsed
-    }
-
-    const alphaUntil = alphaUntilVersion
-        ? semver.coerce(alphaUntilVersion)
-        : null;
-    const betaUntil = betaUntilVersion ? semver.coerce(betaUntilVersion) : null;
-
-    if (alphaUntil && semver.lt(current, alphaUntil)) {
-        return 'alpha';
-    }
-
-    if (betaUntil && semver.lt(current, betaUntil)) {
-        return 'beta';
-    }
-
-    return 'stable';
-}
+export type StabilityRelease =
+    | { alpha: true }
+    | { beta: StrictXyzVersion }
+    | { beta: StrictXyzVersion; stable: StrictXyzVersion }
+    | { stable: StrictXyzVersion };
 
 type DeprecatedOpenAPITag =
     // Deprecated tag names. Please use a tag from the OpenAPITag type instead.
@@ -57,24 +29,13 @@ export type StrictXyzVersion =
     | `${bigint}`
     | `${bigint}.${bigint}`
     | `${bigint}.${bigint}.${bigint}`;
-export interface ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag>
-    extends Omit<OpenAPIV3.OperationObject, 'tags'> {
+
+export type ApiOperation<Tag = OpenApiTag | DeprecatedOpenAPITag> = Omit<
+    OpenAPIV3.OperationObject,
+    'tags'
+> & {
     operationId: string;
     tags: [Tag];
-    /**
-     * The version up to (but not including) which this API is alpha.
-     * If omitted, the API is never alpha.
-     */
-    alphaUntilVersion?: StrictXyzVersion;
-    /**
-     * The version up to (but not including) which this API is beta.
-     * If omitted, the API is stable once it is no longer alpha.
-     */
-    betaUntilVersion?: StrictXyzVersion;
-    /**
-     * The version when this API was introduced or last significantly changed.
-     * Documentation only; does not affect stability calculation.
-     */
-    releaseVersion?: StrictXyzVersion;
     enterpriseOnly?: boolean;
-}
+    release: StabilityRelease;
+};

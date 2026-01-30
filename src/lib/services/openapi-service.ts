@@ -8,13 +8,14 @@ import {
     removeJsonSchemaProps,
     type SchemaId,
 } from '../openapi/index.js';
-import {
-    type ApiOperation,
-    calculateStability,
+import type {
+    ApiOperation,
+    StabilityRelease,
 } from '../openapi/util/api-operation.js';
 import type { Logger } from '../logger.js';
 import { validateSchema } from '../openapi/validate.js';
 import type { IFlagResolver } from '../types/index.js';
+import { calculateStability } from '../openapi/util/api-stability.js';
 
 const getStabilityLevel = (operation: unknown): string | undefined => {
     if (!operation || typeof operation !== 'object') {
@@ -35,6 +36,11 @@ type OpenApiMiddleware = IExpressOpenApi & {
         router?: unknown,
         basePath?: string,
     ) => OpenApiDocument;
+};
+
+// Allow legacy operations that omit the release field until we backfill them.
+type LegacyApiOperation = Omit<ApiOperation, 'release'> & {
+    release?: StabilityRelease;
 };
 
 export class OpenApiService {
@@ -64,22 +70,18 @@ export class OpenApiService {
         ) as OpenApiMiddleware;
     }
 
-    validPath(op: ApiOperation): RequestHandler {
-        const { alphaUntilVersion, betaUntilVersion, enterpriseOnly, ...rest } =
-            op;
+    validPath(op: ApiOperation | LegacyApiOperation): RequestHandler {
+        // extract enterpriseOnly and release to avoid leaking into the OpenAPI spec
+        const { enterpriseOnly, release, ...openapiSpec } = op;
         const { baseUriPath = '' } = this.config.server ?? {};
         const openapiStaticAssets = `${baseUriPath}/openapi-static`;
 
         const currentVersion = this.api.document.info.version;
-        const stability = calculateStability({
-            alphaUntilVersion,
-            betaUntilVersion,
-            currentVersion,
-        });
+        const stability = calculateStability(release, currentVersion);
         const summaryWithStability =
-            stability !== 'stable' && rest.summary
-                ? `[${stability.toUpperCase()}] ${rest.summary}`
-                : rest.summary;
+            stability !== 'stable' && openapiSpec.summary
+                ? `[${stability.toUpperCase()}] ${openapiSpec.summary}`
+                : openapiSpec.summary;
         const stabilityBadge =
             stability !== 'stable'
                 ? `**[${stability.toUpperCase()}]** This API is in ${stability} state, which means it may change or be removed in the future.
@@ -104,7 +106,7 @@ export class OpenApiService {
             };
         }
         return this.api.validPath({
-            ...rest,
+            ...openapiSpec,
             summary: summaryWithStability,
             'x-stability-level': stability,
             description:

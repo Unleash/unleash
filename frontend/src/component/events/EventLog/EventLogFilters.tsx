@@ -12,6 +12,7 @@ import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCre
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useLocation } from 'react-router-dom';
 import { FilterItemParam } from 'utils/serializeQueryParams';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const useEventLogFilters = (
     projects: ProjectSchema[],
@@ -21,6 +22,7 @@ export const useEventLogFilters = (
     const { eventCreators } = useEventCreators();
     const location = useLocation();
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
+    const dateConstraintsEnabled = useUiFlag('datePickerRangeConstraints');
 
     const createRemovableFilterOptions = (
         searchParams: URLSearchParams,
@@ -99,6 +101,7 @@ export const useEventLogFilters = (
                 fromFilterKey: 'from',
                 toFilterKey: 'to',
                 persistent: true,
+                dateConstraintsEnabled,
             },
             {
                 label: 'Date To',
@@ -109,6 +112,7 @@ export const useEventLogFilters = (
                 fromFilterKey: 'from',
                 toFilterKey: 'to',
                 persistent: true,
+                dateConstraintsEnabled,
             },
             {
                 label: 'Created by',

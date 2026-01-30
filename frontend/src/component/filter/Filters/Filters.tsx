@@ -6,7 +6,7 @@ import {
     FilterItem,
     type FilterItemParams,
 } from '../FilterItem/FilterItem.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { isAfter, isBefore } from 'date-fns';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -25,6 +25,7 @@ interface IFilterProps {
     onChange: (value: FilterItemParamHolder) => void;
     availableFilters: IFilterItem[];
     className?: string;
+    dateConstraintsEnabled?: boolean;
 }
 
 type IBaseFilterItem = {
@@ -49,6 +50,7 @@ export type IDateFilterItem = IBaseFilterItem & {
     toFilterKey?: string;
     minDate?: Date;
     maxDate?: Date;
+    dateConstraintsEnabled?: boolean;
 };
 
 export type IFilterItem = ITextFilterItem | IDateFilterItem;
@@ -91,7 +93,39 @@ const RenderFilter: FC<RenderFilterProps> = ({
     rangeChangeHandler,
     initMode,
 }) => {
-    const dateConstraintsEnabled = useUiFlag('datePickerRangeConstraints'); // TODO: delete this with flag `datePickerRangeConstraints`
+    const autoAdjustDateRange = (
+        updates: FilterItemParamHolder,
+        newDate: string,
+        picker: 'from' | 'to',
+        valueToUpdate?: string,
+    ): void => {
+        const dateFilter = filter as IDateFilterItem;
+
+        const shouldAdjustToDate =
+            picker === 'from' &&
+            valueToUpdate &&
+            isAfter(new Date(newDate), new Date(valueToUpdate));
+        const shouldAdjustFromDate =
+            picker === 'to' &&
+            valueToUpdate &&
+            isBefore(new Date(newDate), new Date(valueToUpdate));
+
+        const filterKeyToUpdate =
+            shouldAdjustToDate && dateFilter.toFilterKey
+                ? dateFilter.toFilterKey
+                : shouldAdjustFromDate && dateFilter.fromFilterKey
+                  ? dateFilter.fromFilterKey
+                  : null;
+
+        if (filterKeyToUpdate) {
+            updates[filterKeyToUpdate] = {
+                operator:
+                    allState[filterKeyToUpdate]?.operator ||
+                    dateFilter.dateOperators[0],
+                values: [newDate],
+            };
+        }
+    };
 
     const label = (
         <>
@@ -110,8 +144,28 @@ const RenderFilter: FC<RenderFilterProps> = ({
             ? allState?.[filter.toFilterKey]?.values?.[0]
             : undefined;
 
-        const isFromPicker = filter.filterKey === filter.fromFilterKey;
-        const isToPicker = filter.filterKey === filter.toFilterKey;
+        const picker =
+            filter.filterKey === filter.fromFilterKey ? 'from' : 'to';
+
+        const getMinDate = () => {
+            if (filter.dateConstraintsEnabled) {
+                return undefined;
+            }
+            if (picker === 'to' && fromValue) {
+                return new Date(fromValue);
+            }
+            return undefined;
+        };
+
+        const getMaxDate = () => {
+            if (filter.dateConstraintsEnabled) {
+                return undefined;
+            }
+            if (picker === 'from' && toValue) {
+                return new Date(toValue);
+            }
+            return undefined;
+        };
 
         return (
             <FilterDateItem
@@ -120,17 +174,27 @@ const RenderFilter: FC<RenderFilterProps> = ({
                 label={label}
                 name={filter.label}
                 state={state}
-                dateConstraintsEnabled={dateConstraintsEnabled}
-                minDate={
-                    isToPicker && fromValue ? new Date(fromValue) : undefined
-                }
-                maxDate={
-                    isFromPicker && toValue ? new Date(toValue) : new Date()
-                }
+                minDate={getMinDate()}
+                maxDate={getMaxDate()}
                 operators={filter.dateOperators}
-                onChange={(value) => {
-                    onChange({ [filter.filterKey]: value });
-                }}
+                onChange={
+                    filter.dateConstraintsEnabled
+                        ? (value) => {
+                              const updates = {
+                                  [filter.filterKey]: value,
+                              };
+                              const valueToUpdate =
+                                  picker === 'from' ? toValue : fromValue;
+                              autoAdjustDateRange(
+                                  updates,
+                                  value.values[0],
+                                  picker,
+                                  valueToUpdate,
+                              );
+                              onChange(updates);
+                          }
+                        : (value) => onChange({ [filter.filterKey]: value })
+                }
                 onRangeChange={rangeChangeHandler?.(filter)}
                 onChipClose={
                     filter.persistent

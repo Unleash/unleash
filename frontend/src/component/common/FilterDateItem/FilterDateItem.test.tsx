@@ -16,7 +16,6 @@ const setup = (
     label = 'irrelevant',
     minDate?: Date,
     maxDate?: Date,
-    dateConstraintsEnabled = true,
 ) => {
     const recordedChanges: FilterItemParams[] = [];
 
@@ -27,7 +26,6 @@ const setup = (
         operators: ['IS', 'IS_ON_OR_AFTER', 'IS_BEFORE'],
         onChipClose: () => {},
         state: initialState,
-        dateConstraintsEnabled,
         minDate,
         maxDate,
     };
@@ -162,8 +160,8 @@ describe('FilterDateItem date range constraints', () => {
         ]);
     });
 
-    it('can disable dates after today', async () => {
-        setup(null, 'Test', 'Test', undefined, new Date());
+    it('disables dates after today', async () => {
+        setup(null, 'Test', 'Test');
 
         const chip = await screen.findByText('Test');
         await userEvent.click(chip);

@@ -30,32 +30,48 @@ Supported release declarations:
 - `release: { stable: 'x.y.z' }` → alpha → stable
 - `release: { beta: 'x.y.z', stable: 'a.b.c' }` → alpha → beta → stable (beta must be before stable)
 
-**Example:**
+**Examples:**
 ```typescript
 // Current Unleash version: 7.4.0
 
 openApiService.validPath({
-    tags: ['Features'],
-    summary: 'Create feature flag',
-    release: { beta: '7.5.0', stable: '7.7.0' }, // → Alpha (not yet released)
-    operationId: 'createFeature',
-    // ...
+   tags: ['Features'],
+   summary: 'Beta today',
+   release: { beta: '7.1.0' },
+   operationId: 'betaTodayExample',
+   // ...
 })
 
 openApiService.validPath({
-    tags: ['Projects'],
-    summary: 'List projects',
-    release: { beta: '7.3.0', stable: '7.5.0' }, // → Beta (between beta and stable cutoffs)
-    operationId: 'getProjects',
-    // ...
+   tags: ['Projects'],
+   summary: 'Beta now, stable later',
+   release: { beta: '7.3.0', stable: '7.6.0' },
+   operationId: 'betaNowStableLaterExample',
+   // ...
 })
 
 openApiService.validPath({
-    tags: ['Users'],
-    summary: 'Get user info',
-    release: { beta: '7.1.0' }, // → Stable (already at/after beta cutoff)
-    operationId: 'getUserInfo',
-    // ...
+   tags: ['Users'],
+   summary: 'Alpha now, then stable',
+   release: { stable: '7.6.0' },
+   operationId: 'alphaNowThenStableExample',
+   // ...
+})
+
+openApiService.validPath({
+   tags: ['Users'],
+   summary: 'Alpha now, then beta, then stable',
+   release: { beta: '7.6.0', stable: '7.7.0' },
+   operationId: 'alphaBetaStableExample',
+   // ...
+})
+
+openApiService.validPath({
+   tags: ['Admin'],
+   summary: 'Alpha until changed',
+   release: { alpha: true },
+   operationId: 'alphaUntilChangedExample',
+   // ...
 })
 ```
 

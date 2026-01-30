@@ -30,48 +30,42 @@ Supported release declarations:
 - `release: { stable: 'x.y.z' }` → alpha → stable
 - `release: { beta: 'x.y.z', stable: 'a.b.c' }` → alpha → beta → stable (beta must be before stable)
 
+### Developer Guidance (assume current version is 7.4.0)
+
+Prefer to **guess** beta/stable versions up front, even if you might change them later. These labels are hints for users, so adjusting them is low-risk. If you postpone the decision (e.g., only `alpha: true` or only `beta` with no `stable`), the API often stays in beta forever. A conservative future guess is usually better than no guess at all, and you can always revise it later.
+
+- `release` is required for new endpoints. It is not enforced yet, but will be once existing endpoints are backfilled.
+- `release: { beta: 'x.y.z' }` → alpha until beta, then beta thereafter.
+- `release: { stable: 'x.y.z' }` → alpha until stable, then stable thereafter.
+- `release: { beta: 'x.y.z', stable: 'a.b.c' }` → alpha → beta → stable (beta must be before stable).
+- `release: { alpha: true }` → explicitly remain alpha.
+
 **Examples:**
 ```typescript
 // Current Unleash version: 7.4.0
-
 openApiService.validPath({
-   tags: ['Features'],
    summary: 'Beta today',
    release: { beta: '7.1.0' },
-   operationId: 'betaTodayExample',
-   // ...
 })
 
 openApiService.validPath({
-   tags: ['Projects'],
    summary: 'Beta now, stable later',
    release: { beta: '7.3.0', stable: '7.6.0' },
-   operationId: 'betaNowStableLaterExample',
-   // ...
 })
 
 openApiService.validPath({
-   tags: ['Users'],
    summary: 'Alpha now, then stable',
    release: { stable: '7.6.0' },
-   operationId: 'alphaNowThenStableExample',
-   // ...
 })
 
 openApiService.validPath({
-   tags: ['Users'],
    summary: 'Alpha now, then beta, then stable',
    release: { beta: '7.6.0', stable: '7.7.0' },
-   operationId: 'alphaBetaStableExample',
-   // ...
 })
 
 openApiService.validPath({
-   tags: ['Admin'],
    summary: 'Alpha until changed',
    release: { alpha: true },
-   operationId: 'alphaUntilChangedExample',
-   // ...
 })
 ```
 

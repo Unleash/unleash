@@ -4,7 +4,7 @@ import type { OpenApiTag } from './openapi-tags.js';
 /**
  * Explicit stability declaration for each operation.
  * - release.beta+stable: alpha before beta, beta before stable, stable after.
- * - release.beta only: alpha before beta, beta after.
+ * - release.beta only: alpha before beta, beta after (stable is unknown, until someone defines it).
  * - release.stable only: alpha before stable, stable after.
  * - release.alpha: explicitly opt out of cutoffs (remains alpha).
  * Note: legacy endpoints that omit release are temporarily tolerated in validPath,

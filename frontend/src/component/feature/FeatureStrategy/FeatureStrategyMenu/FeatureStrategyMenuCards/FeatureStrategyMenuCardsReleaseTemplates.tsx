@@ -2,10 +2,11 @@ import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplat
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans.ts';
-import { Box, styled } from '@mui/material';
+import { Box, Button, styled } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import type { StrategyFilterValue } from './FeatureStrategyMenuCards.tsx';
-import type { Dispatch, SetStateAction } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useState, type Dispatch, type SetStateAction } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
     FeatureStrategyMenuCardsSection,
     StyledStrategyModalSectionHeader,
@@ -13,6 +14,10 @@ import {
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useHasRootAccess } from 'hooks/useHasAccess.ts';
+import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions.ts';
+import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
 
 const RELEASE_TEMPLATE_DISPLAY_LIMIT = 5;
 
@@ -96,6 +101,11 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
 }: IFeatureStrategyMenuCardsReleaseTemplatesProps) => {
     const { isEnterprise } = useUiConfig();
     const { templates } = useReleasePlanTemplates();
+    const navigate = useNavigate();
+    const { trackEvent } = usePlausibleTracker();
+
+    const [noAccessDialogOpen, setNoAccessDialogOpen] =
+        useState<boolean>(false);
 
     if (!isEnterprise()) {
         return null;
@@ -107,11 +117,43 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
         ? 0
         : RELEASE_TEMPLATE_DISPLAY_LIMIT;
 
+    const canCreateTemplate = useHasRootAccess(RELEASE_PLAN_TEMPLATE_CREATE);
+    const handleAddTemplateClick = () => {
+        if (canCreateTemplate) {
+            trackEvent('new-template-from-add-strategy', {
+                props: {
+                    eventType: 'navigate-to-create-template',
+                },
+            });
+            navigate('/release-templates/create-template');
+        } else {
+            setNoAccessDialogOpen(true);
+            trackEvent('new-template-from-add-strategy', {
+                props: {
+                    eventType: 'show-no-access-dialog',
+                },
+            });
+        }
+    };
+
+    const onClose = () => {
+        setNoAccessDialogOpen(false);
+    };
+
     return (
         <Box>
             {shouldShowHeader && (
-                <StyledStrategyModalSectionHeader>
+                <StyledStrategyModalSectionHeader
+                    sx={{ justifyContent: 'space-between' }}
+                >
                     Release templates
+                    <Button
+                        startIcon={<AddIcon />}
+                        onClick={handleAddTemplateClick}
+                        size='small'
+                    >
+                        New template
+                    </Button>
                 </StyledStrategyModalSectionHeader>
             )}
             {!templates.length ? (
@@ -170,6 +212,15 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                     ))}
                 </FeatureStrategyMenuCardsSection>
             )}
+            <Dialogue
+                open={noAccessDialogOpen}
+                secondaryButtonText='Close'
+                onClose={onClose}
+                title='Contact admin to create release templates'
+            >
+                You don&apos;t have the privileges to create release templates.
+                You must contact your organization admin to get access.{' '}
+            </Dialogue>
         </Box>
     );
 };

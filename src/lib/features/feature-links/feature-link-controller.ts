@@ -46,7 +46,8 @@ export default class FeatureLinkController extends Controller {
             permission: UPDATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Features'],
+                    release: { beta: '7', stable: '8' },
                     operationId: 'createFeatureLink',
                     summary: 'Create a feature link',
                     description: 'Create a new link for a feature.',
@@ -66,7 +67,8 @@ export default class FeatureLinkController extends Controller {
             permission: UPDATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Features'],
+                    release: { beta: '7', stable: '8' },
                     operationId: 'updateFeatureLink',
                     summary: 'Update a feature link',
                     description: 'Update an existing feature link.',
@@ -87,7 +89,8 @@ export default class FeatureLinkController extends Controller {
             permission: UPDATE_FEATURE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Features'],
+                    release: { beta: '7', stable: '8' },
                     operationId: 'deleteFeatureLink',
                     summary: 'Delete a feature link',
                     description: 'Delete a feature link by id.',

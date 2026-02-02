@@ -45,7 +45,8 @@ export default class PersonalDashboardController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Projects'],
+                    release: { beta: '7', stable: '8' },
                     summary: 'Get personal dashboard',
                     description:
                         'Return all projects and flags that are relevant to the user.',
@@ -65,7 +66,8 @@ export default class PersonalDashboardController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Projects'],
+                    release: { beta: '7', stable: '8' },
                     summary: 'Get personal project details',
                     description:
                         'Return personal dashboard project events, owners, user roles and onboarding status',

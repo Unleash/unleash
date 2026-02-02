@@ -1,5 +1,5 @@
 import semver from 'semver';
-import type { StabilityRelease, StrictXyzVersion } from './api-operation.js';
+import type { StabilityRelease } from './api-operation.js';
 
 export function calculateStability(
     release: StabilityRelease | undefined,

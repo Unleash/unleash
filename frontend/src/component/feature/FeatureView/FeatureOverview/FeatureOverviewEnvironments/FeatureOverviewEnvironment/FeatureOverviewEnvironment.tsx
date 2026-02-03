@@ -1,4 +1,5 @@
-import { Accordion, AccordionDetails, styled } from '@mui/material';
+import { useState } from 'react';
+import { Accordion, AccordionDetails, Box, styled } from '@mui/material';
 import type {
     IFeatureEnvironment,
     IFeatureEnvironmentMetrics,
@@ -14,10 +15,10 @@ import {
 } from './EnvironmentHeader/EnvironmentHeader.tsx';
 import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics.tsx';
 import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle.tsx';
-import { useState } from 'react';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { EnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
-import { Box } from '@mui/material';
+import type { StrategyFilterValue } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenuCards/FeatureStrategyMenuCards';
+import { FeatureStrategyMenuButton } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenuButton.tsx';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -73,12 +74,29 @@ export const FeatureOverviewEnvironment = ({
     const [isOpen, setIsOpen] = useState(false);
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { isOss } = useUiConfig();
+    const { isOss, isEnterprise } = useUiConfig();
     const hasActivations = Boolean(
         environment?.enabled ||
             (environment?.strategies && environment?.strategies.length > 0) ||
             (environment?.releasePlans && environment?.releasePlans.length > 0),
     );
+
+    const [filter, setFilter] = useState<StrategyFilterValue>(null);
+    const [isStrategyMenuDialogOpen, setIsStrategyMenuDialogOpen] =
+        useState<boolean>(false);
+
+    const dialogId = isStrategyMenuDialogOpen
+        ? 'FeatureStrategyMenuDialog'
+        : undefined;
+
+    const openMoreStrategies = (_event: React.SyntheticEvent) => {
+        setFilter(null);
+        setIsStrategyMenuDialogOpen(true);
+    };
+
+    const onClose = () => {
+        setIsStrategyMenuDialogOpen(false);
+    };
 
     return (
         <StyledFeatureOverviewEnvironment>
@@ -102,18 +120,39 @@ export const FeatureOverviewEnvironment = ({
                     featureId={featureId}
                     expandable={hasActivations}
                     hasActivations={hasActivations}
+                    onOpenReleaseTemplates={
+                        isEnterprise()
+                            ? () => {
+                                  setFilter('releaseTemplates');
+                                  setIsStrategyMenuDialogOpen(true);
+                              }
+                            : undefined
+                    }
                 >
                     <FeatureOverviewEnvironmentToggle
                         environment={environment}
                     />
                     {!hasActivations ? (
-                        <FeatureStrategyMenu
-                            label='Add strategy'
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={environment.name}
-                            variant='outlined'
-                        />
+                        <>
+                            <FeatureStrategyMenuButton
+                                label='Add strategy'
+                                dialogId={dialogId}
+                                projectId={projectId}
+                                environmentId={environment.name}
+                                onClick={openMoreStrategies}
+                                variant='outlined'
+                            />
+                            <FeatureStrategyMenu
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environment.name}
+                                isStrategyMenuDialogOpen={
+                                    isStrategyMenuDialogOpen
+                                }
+                                onClose={onClose}
+                                defaultFilter={filter}
+                            />
+                        </>
                     ) : (
                         <FeatureOverviewEnvironmentMetrics
                             environmentMetric={metrics}
@@ -131,11 +170,23 @@ export const FeatureOverviewEnvironment = ({
                     <StyledAccordionFooter>
                         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                             <Box ml='auto'>
-                                <FeatureStrategyMenu
+                                <FeatureStrategyMenuButton
                                     label='Add strategy'
+                                    dialogId={dialogId}
+                                    projectId={projectId}
+                                    environmentId={environment.name}
+                                    onClick={openMoreStrategies}
+                                    variant='outlined'
+                                />
+                                <FeatureStrategyMenu
                                     projectId={projectId}
                                     featureId={featureId}
                                     environmentId={environment.name}
+                                    isStrategyMenuDialogOpen={
+                                        isStrategyMenuDialogOpen
+                                    }
+                                    onClose={onClose}
+                                    defaultFilter={filter}
                                 />
                             </Box>
                         </Box>

@@ -10,6 +10,7 @@ import { useId } from 'hooks/useId';
 import { EnvironmentStrategySuggestion } from './EnvironmentStrategySuggestion/EnvironmentStrategySuggestion.js';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
+import { EnvironmentTemplateSuggestion } from './EnvironmentTemplateSuggestion/EnvironmentTemplateSuggestion';
 
 const StyledAccordionSummary = styled(AccordionSummary, {
     shouldForwardProp: (prop) => prop !== 'expandable' && prop !== 'empty',
@@ -109,6 +110,7 @@ type EnvironmentHeaderProps = {
     expandable?: boolean;
     environmentMetadata?: EnvironmentMetadata;
     hasActivations?: boolean;
+    onOpenReleaseTemplates?: any;
 } & AccordionSummaryProps;
 
 const MetadataChip = ({
@@ -162,6 +164,7 @@ export const EnvironmentHeader: FC<
     expandable = true,
     environmentMetadata,
     hasActivations = false,
+    onOpenReleaseTemplates,
     ...props
 }) => {
     const id = useId();
@@ -211,7 +214,7 @@ export const EnvironmentHeader: FC<
                 </StyledHeaderTitle>
                 {children}
             </StyledHeader>
-            {!hasActivations && (
+            {!hasActivations && environmentId !== 'production' && (
                 <EnvironmentStrategySuggestion
                     projectId={projectId}
                     featureId={featureId}
@@ -219,6 +222,13 @@ export const EnvironmentHeader: FC<
                     strategy={strategy}
                 />
             )}
+            {!hasActivations &&
+                environmentId === 'production' &&
+                onOpenReleaseTemplates && (
+                    <EnvironmentTemplateSuggestion
+                        onClick={onOpenReleaseTemplates}
+                    />
+                )}
         </StyledAccordionSummary>
     );
 };

@@ -1,4 +1,3 @@
-import { Box, styled } from '@mui/material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { Link } from 'react-router-dom';
 import { StrategyExecution } from '../../EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution.js';
@@ -12,40 +11,14 @@ import useToast from 'hooks/useToast.js';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests.js';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature.js';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi.js';
-
-const StyledSuggestion = styled('div')(({ theme }) => ({
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0.5, 3),
-    background: theme.palette.secondary.light,
-    borderBottomLeftRadius: theme.shape.borderRadiusLarge,
-    borderBottomRightRadius: theme.shape.borderRadiusLarge,
-    color: theme.palette.primary.main,
-    fontSize: theme.fontSizes.smallerBody,
-}));
-
-const StyledBold = styled('b')(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightBold,
-}));
-
-const StyledSpan = styled('span')(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightBold,
-    textDecoration: 'underline',
-}));
-
-const TooltipHeader = styled('div')(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightBold,
-}));
-
-const TooltipDescription = styled('div')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
-    paddingBottom: theme.spacing(1.5),
-}));
-
-const StyledBox = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(1.5),
-}));
+import {
+    StyledBold,
+    StyledBox,
+    StyledSpan,
+    StyledSuggestion,
+    TooltipDescription,
+    TooltipHeader,
+} from '../EnvironmentHeader.styles';
 
 type DefaultStrategySuggestionProps = {
     projectId: string;

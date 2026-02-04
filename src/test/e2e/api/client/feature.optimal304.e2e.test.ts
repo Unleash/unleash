@@ -1,4 +1,5 @@
 import {
+    createUserWithRootRole,
     type IUnleashTest,
     setupAppWithAuth,
 } from '../../helpers/test-helper.js';
@@ -47,6 +48,7 @@ const devTokenSecret = validTokens[0].secret;
 const devDefaultProjectTokenSecret = validTokens[1].secret;
 const prodTokenSecret = validTokens[2].secret;
 const allEnvsTokenSecret = validTokens[3].secret;
+let adminPat: string;
 
 async function setup(): Promise<{ app: IUnleashTest; db: ITestDb }> {
     const db = await dbInit(`ignored`, getLogger);
@@ -75,7 +77,7 @@ async function initialize({ app, db }: { app: IUnleashTest; db: ITestDb }) {
     const allEnvs = await app.services.environmentService.getAll();
     const nonDefaultEnv = allEnvs.find((env) => env.name !== DEFAULT_ENV)!.name;
 
-    await app.createFeature('X');
+    await app.createFeature('X', 'default');
     await app.createFeature('Y');
     await app.archiveFeature('Y');
     await app.createFeature('Z');
@@ -89,6 +91,22 @@ async function initialize({ app, db }: { app: IUnleashTest; db: ITestDb }) {
         ip: '127.0.0.1',
         featureName: `X`,
     });
+
+    await createUserWithRootRole({
+        app,
+        stores: db.stores,
+        email: 'admin@example.com',
+        roleName: RoleName.ADMIN,
+    });
+    const { secret } = await app.services.patService.createPat(
+        {
+            description: 'e2e test token',
+            expiresAt: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+        },
+        1,
+        TEST_AUDIT_USER,
+    );
+    adminPat = secret!;
 }
 
 describe('feature 304 api client', () => {
@@ -260,6 +278,45 @@ describe('feature 304 api client', () => {
         expect(second.body.features.map((f: any) => f.name)).not.toContain(
             featureName,
         );
+    });
+
+    test('favoriting/unfavoriting a feature does not change etag', async () => {
+        const featureName = 'X';
+        const baseline = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .expect(200);
+        const etag = baseline.headers.etag;
+
+        await app.request
+            .post(
+                `/api/admin/projects/default/features/${featureName}/favorites`,
+            )
+            .set('Authorization', `${adminPat}`)
+            .set('Content-Type', 'application/json')
+            .expect(200);
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .set('if-none-match', etag)
+            .expect(304);
+
+        await app.request
+            .delete(
+                `/api/admin/projects/default/features/${featureName}/favorites`,
+            )
+            .set('Authorization', `${adminPat}`)
+            .set('Content-Type', 'application/json')
+            .expect(200);
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .set('if-none-match', etag)
+            .expect(304);
     });
 
     test('deleting an archived feature updates etag', async () => {

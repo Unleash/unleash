@@ -2,6 +2,9 @@ import {
     FEATURE_CREATED,
     FEATURE_IMPORT,
     FEATURE_TAGGED,
+    FEATURE_UNTAGGED,
+    FEATURE_FAVORITED,
+    FEATURE_UNFAVORITED,
     FEATURES_IMPORTED,
     type IBaseEvent,
     type IEvent,
@@ -198,7 +201,12 @@ export class EventStore implements IEventStore {
                 .andWhere((inner) => {
                     inner
                         .whereNotNull('feature_name')
-                        .whereNotIn('type', [FEATURE_TAGGED])
+                        .whereNotIn('type', [
+                            FEATURE_TAGGED,
+                            FEATURE_UNTAGGED,
+                            FEATURE_FAVORITED,
+                            FEATURE_UNFAVORITED,
+                        ])
                         .whereNot('type', 'LIKE', 'change-%');
                     if (opts?.environment && opts.environment !== ALL_ENVS) {
                         inner.andWhere((envInner) => {

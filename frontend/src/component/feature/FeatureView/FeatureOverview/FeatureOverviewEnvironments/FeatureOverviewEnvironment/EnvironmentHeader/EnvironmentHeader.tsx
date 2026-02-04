@@ -169,9 +169,9 @@ export const EnvironmentHeader: FC<
 }) => {
     const id = useId();
     const { environments } = useProjectEnvironments(projectId);
-    const defaultStrategy = environments.find(
-        (env) => env.name === environmentId,
-    )?.defaultStrategy;
+    const environment = environments.find((env) => env.name === environmentId);
+    const defaultStrategy = environment?.defaultStrategy;
+    const environmentType = environment?.type;
 
     const strategy: Omit<IFeatureStrategy, 'id'> = useMemo(() => {
         const baseDefaultStrategy = {
@@ -214,7 +214,7 @@ export const EnvironmentHeader: FC<
                 </StyledHeaderTitle>
                 {children}
             </StyledHeader>
-            {!hasActivations && environmentId !== 'production' && (
+            {!hasActivations && environmentType !== 'production' && (
                 <EnvironmentStrategySuggestion
                     projectId={projectId}
                     featureId={featureId}
@@ -223,7 +223,7 @@ export const EnvironmentHeader: FC<
                 />
             )}
             {!hasActivations &&
-                environmentId === 'production' &&
+                environmentType === 'production' &&
                 onOpenReleaseTemplates && (
                     <EnvironmentTemplateSuggestion
                         onClick={onOpenReleaseTemplates}

@@ -39,13 +39,15 @@ const setupEnterpriseEndpoints = () => {
             description: 'A test release template',
         },
     ]);
-    testServerRoute(server, '/api/admin/environments/project/default', [
-        {
-            name: 'production',
-            enabled: true,
-            type: 'production',
-        },
-    ]);
+    testServerRoute(server, '/api/admin/environments/project/default', {
+        environments: [
+            {
+                name: 'production',
+                enabled: true,
+                type: 'production',
+            },
+        ],
+    });
 };
 
 const setupOssEndpoints = () => {
@@ -58,13 +60,15 @@ const setupOssEndpoints = () => {
             featureEnvironmentStrategies: 30,
         },
     });
-    testServerRoute(server, '/api/admin/environments/project/default', [
-        {
-            name: 'production',
-            enabled: true,
-            type: 'production',
-        },
-    ]);
+    testServerRoute(server, '/api/admin/environments/project/default', {
+        environments: [
+            {
+                name: 'production',
+                enabled: true,
+                type: 'production',
+            },
+        ],
+    });
 };
 
 describe('FeatureOverviewEnvironment', () => {
@@ -133,13 +137,16 @@ describe('FeatureOverviewEnvironment', () => {
 
     test('does not show release template suggestion for non-production environment on enterprise', async () => {
         setupEnterpriseEndpoints();
-        testServerRoute(server, '/api/admin/environments/project/default', [
-            {
-                name: 'development',
-                enabled: true,
-                type: 'development',
-            },
-        ]);
+        testServerRoute(server, '/api/admin/environments/project/default', {
+            environments: [
+                {
+                    name: 'development',
+                    enabled: true,
+                    type: 'development',
+                    sortOrder: 0,
+                },
+            ],
+        });
 
         renderRoute(
             <FeatureOverviewEnvironment

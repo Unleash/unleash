@@ -169,7 +169,7 @@ async function validateInitialState({
 describe('feature 304 api client', () => {
     let app: IUnleashTest;
     let db: ITestDb;
-    const expectedDevEventId = 16;
+    const expectedDevEventId = 13;
     beforeAll(async () => {
         ({ app, db } = await setup());
         await initialize({ app, db });
@@ -223,7 +223,7 @@ describe('feature 304 api client', () => {
             .expect(200);
 
         // it's a different hash than prod, but gets the max id
-        expect(headers.etag).toEqual(`"ae443048:15:v1"`);
+        expect(headers.etag).toEqual(`"ae443048:17:v1"`);
     });
 
     test('production environment gets a different etag than development', async () => {

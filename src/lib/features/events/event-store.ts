@@ -198,13 +198,13 @@ export class EventStore implements IEventStore {
                 .andWhere((inner) => {
                     inner
                         .whereNotNull('feature_name')
-                        .whereNotIn('type', [FEATURE_CREATED, FEATURE_TAGGED])
+                        .whereNotIn('type', [FEATURE_TAGGED])
                         .whereNot('type', 'LIKE', 'change-%');
                     if (opts?.environment && opts.environment !== ALL_ENVS) {
                         inner.andWhere((envInner) => {
                             envInner
                                 .where('environment', opts.environment)
-                                // Include feature-scoped events with NULL environment as well
+                                // Picks up events like archiving, which relate to a feature but have no specific environment set
                                 .orWhereNull('environment');
                         });
                     }

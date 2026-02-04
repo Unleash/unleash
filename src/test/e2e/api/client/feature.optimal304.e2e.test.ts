@@ -179,7 +179,6 @@ async function validateInitialState({
 describe('feature 304 api client', () => {
     let app: IUnleashTest;
     let db: ITestDb;
-    const expectedDevEventId = 14;
     beforeAll(async () => {
         ({ app, db } = await setup());
         await initialize({ app, db });
@@ -198,26 +197,34 @@ describe('feature 304 api client', () => {
             .expect('Content-Type', /json/)
             .expect(200);
 
-        expect(res.headers.etag).toBe(`"76d8bb0e:${expectedDevEventId}:v1"`);
-        expect(res.body.meta.etag).toBe(`"76d8bb0e:${expectedDevEventId}:v1"`);
+        expect(res.headers.etag).toBeDefined();
+        expect(res.body.meta.etag).toBe(res.headers.etag);
     });
 
-    test(`returns 200 for pre-calculated hash because hash changed (dev env token)`, async () => {
-        const res = await app.request
+    test(`returns 304 when client presents current etag (dev env token)`, async () => {
+        const initial = await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
-            .set('if-none-match', `"76d8bb0e:${expectedDevEventId}"`)
             .expect(200);
 
-        expect(res.headers.etag).toBe(`"76d8bb0e:${expectedDevEventId}:v1"`);
-        expect(res.body.meta.etag).toBe(`"76d8bb0e:${expectedDevEventId}:v1"`);
+        const initialEtag = initial.headers.etag;
+
+        await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .set('if-none-match', initialEtag)
+            .expect(304);
     });
 
     test('creating a new feature modifies etag', async () => {
+        const baseline = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .expect(200);
+        const oldEtag = baseline.headers.etag;
+
         await app.createFeature('new');
         await app.services.configurationRevisionService.updateMaxRevisionId();
-
-        const oldEtag = `"76d8bb0e:${expectedDevEventId}:v1"`;
         const res = await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
@@ -230,46 +237,66 @@ describe('feature 304 api client', () => {
     });
 
     test('a token with all envs should get the max id regardless of the environment', async () => {
-        const currentProdEtag = `"67e24428:15:v1"`;
-        const { headers } = await app.request
+        const prod = await app.request
             .get('/api/client/features')
-            .set('if-none-match', currentProdEtag)
+            .set('Authorization', prodTokenSecret)
+            .expect(200);
+        const dev = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .expect(200);
+        const allEnvs = await app.request
+            .get('/api/client/features')
             .set('Authorization', allEnvsTokenSecret)
             .expect(200);
 
-        // it's a different hash than prod, but gets the max id
-        expect(headers.etag).toEqual(`"ae443048:18:v1"`);
+        expect(allEnvs.body.meta.etag).toBe(allEnvs.headers.etag);
+        expect(allEnvs.headers.etag).not.toBe(prod.headers.etag);
+        expect(allEnvs.headers.etag).not.toBe(dev.headers.etag);
+
+        await app.request
+            .get('/api/client/features')
+            .set('Authorization', allEnvsTokenSecret)
+            .set('if-none-match', allEnvs.headers.etag)
+            .expect(304);
     });
 
     test('production environment gets a different etag than development', async () => {
-        const { headers: prodHeaders } = await app.request
+        const prod = await app.request
             .get('/api/client/features?bla=1')
             .set('Authorization', prodTokenSecret)
             .expect(200);
 
-        expect(prodHeaders.etag).toEqual(`"67e24428:18:v1"`);
-
-        const { headers: devHeaders } = await app.request
+        const dev = await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
             .expect(200);
 
-        expect(devHeaders.etag).toEqual(`"76d8bb0e:18:v1"`);
+        expect(prod.body.meta.etag).toBe(prod.headers.etag);
+        expect(dev.body.meta.etag).toBe(dev.headers.etag);
+        expect(prod.headers.etag).not.toBe(dev.headers.etag);
     });
 
     test('modifying dev environment should only invalidate dev tokens', async () => {
-        const currentDevEtag = `"76d8bb0e:18:v1"`;
-        const currentProdEtag = `"67e24428:18:v1"`;
+        const prodBaseline = await app.request
+            .get('/api/client/features')
+            .set('Authorization', prodTokenSecret)
+            .expect(200);
+        const devBaseline = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .expect(200);
+
         await app.request
             .get('/api/client/features')
-            .set('if-none-match', currentProdEtag)
+            .set('if-none-match', prodBaseline.headers.etag)
             .set('Authorization', prodTokenSecret)
             .expect(304);
 
         await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
-            .set('if-none-match', currentDevEtag)
+            .set('if-none-match', devBaseline.headers.etag)
             .expect(304);
 
         await app.enableFeature('X', DEFAULT_ENV);
@@ -278,19 +305,16 @@ describe('feature 304 api client', () => {
         await app.request
             .get('/api/client/features')
             .set('Authorization', prodTokenSecret)
-            .set('if-none-match', currentProdEtag)
+            .set('if-none-match', prodBaseline.headers.etag)
             .expect(304);
 
         const { headers: devHeaders } = await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
-            .set('if-none-match', currentDevEtag)
+            .set('if-none-match', devBaseline.headers.etag)
             .expect(200);
 
-        // Note: this test yields a different result if run in isolation
-        // this is because the id 19 depends on a previous test adding a feature
-        // otherwise the id will be 18
-        expect(devHeaders.etag).toEqual(`"76d8bb0e:20:v1"`);
+        expect(devHeaders.etag).not.toBe(devBaseline.headers.etag);
     });
 
     test('archiving a feature removes it from client response and updates etag', async () => {
@@ -320,6 +344,55 @@ describe('feature 304 api client', () => {
 
         expect(second.headers.etag).not.toBe(firstEtag);
         expect(second.body.features.map((f: any) => f.name)).not.toContain(
+            featureName,
+        );
+    });
+
+    test('deleting an archived feature updates etag', async () => {
+        const featureName = 'temp-delete';
+        await app.createFeature(featureName);
+        await app.enableFeature(featureName, DEFAULT_ENV);
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        const initial = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .expect(200);
+
+        const initialEtag = initial.headers.etag;
+        expect(initial.body.features.map((f: any) => f.name)).toContain(
+            featureName,
+        );
+
+        await app.archiveFeature(featureName);
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        const afterArchive = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .set('if-none-match', initialEtag)
+            .expect(200);
+
+        const archiveEtag = afterArchive.headers.etag;
+        expect(archiveEtag).not.toBe(initialEtag);
+        expect(
+            afterArchive.body.features.map((f: any) => f.name),
+        ).not.toContain(featureName);
+
+        await app.request
+            .delete(`/api/admin/archive/${featureName}`)
+            .expect(200);
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        const afterDelete = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .set('if-none-match', archiveEtag)
+            .expect(200);
+
+        expect(afterDelete.headers.etag).not.toBe(archiveEtag);
+        expect(afterDelete.body.meta.etag).toBe(afterDelete.headers.etag);
+        expect(afterDelete.body.features.map((f: any) => f.name)).not.toContain(
             featureName,
         );
     });

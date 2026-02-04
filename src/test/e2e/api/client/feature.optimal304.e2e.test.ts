@@ -77,7 +77,7 @@ async function initialize({ app, db }: { app: IUnleashTest; db: ITestDb }) {
     const allEnvs = await app.services.environmentService.getAll();
     const nonDefaultEnv = allEnvs.find((env) => env.name !== DEFAULT_ENV)!.name;
 
-    await app.createFeature('X', 'default');
+    await app.createFeature('X');
     await app.createFeature('Y');
     await app.archiveFeature('Y');
     await app.createFeature('Z');
@@ -92,7 +92,7 @@ async function initialize({ app, db }: { app: IUnleashTest; db: ITestDb }) {
         featureName: `X`,
     });
 
-    await createUserWithRootRole({
+    const user = await createUserWithRootRole({
         app,
         stores: db.stores,
         email: 'admin@example.com',
@@ -103,7 +103,7 @@ async function initialize({ app, db }: { app: IUnleashTest; db: ITestDb }) {
             description: 'e2e test token',
             expiresAt: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
         },
-        1,
+        user.id,
         TEST_AUDIT_USER,
     );
     adminPat = secret!;

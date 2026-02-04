@@ -278,23 +278,9 @@ test('Should get all events of type', async () => {
     expect(featureDeletedEvents).toHaveLength(3);
 });
 
-test('getMaxRevisionId should exclude FEATURE_CREATED and FEATURE_TAGGED events', async () => {
+test('getMaxRevisionId returns the latest id for relevant feature and segment events', async () => {
     const featureName = 'test-feature';
     const project = 'test-project';
-
-    const featureCreatedEvent = new FeatureCreatedEvent({
-        project,
-        featureName,
-        auditUser: testAudit,
-        data: { name: featureName, project },
-    });
-
-    const featureTaggedEvent = new FeatureTaggedEvent({
-        project,
-        featureName,
-        auditUser: testAudit,
-        data: { type: 'simple', value: 'test-tag' },
-    });
 
     const featureUpdatedEvent = new FeatureUpdatedEvent({
         project,
@@ -311,37 +297,37 @@ test('getMaxRevisionId should exclude FEATURE_CREATED and FEATURE_TAGGED events'
         data: { id: 1, name: 'test-segment' },
     };
 
-    await eventStore.store(featureCreatedEvent);
-    const maxRevisionAfterCreated = await eventStore.getMaxRevisionId();
-
-    await eventStore.store(featureTaggedEvent);
-    const maxRevisionAfterTagged = await eventStore.getMaxRevisionId();
+    const featureTaggedEvent = new FeatureTaggedEvent({
+        featureName,
+        project,
+        auditUser: testAudit,
+        data: { type: 'simple', value: 'crazy' },
+    });
 
     await eventStore.store(featureUpdatedEvent);
-    const maxRevisionAfterUpdated = await eventStore.getMaxRevisionId();
+    const maxAfterUpdate = await eventStore.getMaxRevisionId();
 
     await eventStore.store(segmentUpdatedEvent);
-    const maxRevisionAfterSegment = await eventStore.getMaxRevisionId();
+    const maxAfterSegment = await eventStore.getMaxRevisionId();
+
+    await eventStore.store(featureTaggedEvent);
+    const maxAfterTag = await eventStore.getMaxRevisionId();
 
     const allEvents = await eventStore.getAll();
-    const createdEvent = allEvents.find((e) => e.type === FEATURE_CREATED);
-    const taggedEvent = allEvents.find((e) => e.type === FEATURE_TAGGED);
     const updatedEvent = allEvents.find((e) => e.type === FEATURE_UPDATED);
     const segmentEvent = allEvents.find((e) => e.type === SEGMENT_UPDATED);
+    const taggedEvent = allEvents.find((e) => e.type === FEATURE_TAGGED);
 
-    expect(maxRevisionAfterCreated).toBe(0);
-    expect(maxRevisionAfterTagged).toBe(0);
-    expect(maxRevisionAfterUpdated).toBe(updatedEvent!.id);
-    expect(maxRevisionAfterSegment).toBe(segmentEvent!.id);
+    expect(maxAfterUpdate).toBe(updatedEvent!.id);
+    expect(maxAfterSegment).toBe(segmentEvent!.id);
+    expect(maxAfterTag).toBe(taggedEvent!.id);
 
-    expect(createdEvent).toBeDefined();
-    expect(taggedEvent).toBeDefined();
     expect(updatedEvent).toBeDefined();
     expect(segmentEvent).toBeDefined();
+    expect(taggedEvent).toBeDefined();
 
-    expect(updatedEvent!.id).toBeGreaterThan(createdEvent!.id);
-    expect(updatedEvent!.id).toBeGreaterThan(taggedEvent!.id);
     expect(segmentEvent!.id).toBeGreaterThan(updatedEvent!.id);
+    expect(taggedEvent!.id).toBeGreaterThan(segmentEvent!.id);
 });
 
 test('Should filter events by ID using IS operator', async () => {

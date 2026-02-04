@@ -275,6 +275,8 @@ export async function createApp(
         }
         services.schedulerService.stop();
         services.addonService.destroy();
+        services.configurationRevisionService.destroy();
+        config.eventBus.removeAllListeners();
         await db.destroy();
     };
 

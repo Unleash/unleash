@@ -169,7 +169,7 @@ async function validateInitialState({
 describe('feature 304 api client', () => {
     let app: IUnleashTest;
     let db: ITestDb;
-    const expectedDevEventId = 13;
+    const expectedDevEventId = 16;
     beforeAll(async () => {
         ({ app, db } = await setup());
         await initialize({ app, db });
@@ -203,7 +203,7 @@ describe('feature 304 api client', () => {
         expect(res.body.meta.etag).toBe(`"76d8bb0e:${expectedDevEventId}:v1"`);
     });
 
-    test('creating a new feature does not modify etag', async () => {
+    test('creating a new feature modifies etag', async () => {
         await app.createFeature('new');
         await app.services.configurationRevisionService.updateMaxRevisionId();
 
@@ -211,7 +211,7 @@ describe('feature 304 api client', () => {
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
             .set('if-none-match', `"76d8bb0e:${expectedDevEventId}:v1"`)
-            .expect(304);
+            .expect(200);
     });
 
     test('a token with all envs should get the max id regardless of the environment', async () => {
@@ -232,19 +232,19 @@ describe('feature 304 api client', () => {
             .set('Authorization', prodTokenSecret)
             .expect(200);
 
-        expect(prodHeaders.etag).toEqual(`"67e24428:15:v1"`);
+        expect(prodHeaders.etag).toEqual(`"67e24428:17:v1"`);
 
         const { headers: devHeaders } = await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
             .expect(200);
 
-        expect(devHeaders.etag).toEqual(`"76d8bb0e:13:v1"`);
+        expect(devHeaders.etag).toEqual(`"76d8bb0e:17:v1"`);
     });
 
     test('modifying dev environment should only invalidate dev tokens', async () => {
-        const currentDevEtag = `"76d8bb0e:13:v1"`;
-        const currentProdEtag = `"67e24428:15:v1"`;
+        const currentDevEtag = `"76d8bb0e:17:v1"`;
+        const currentProdEtag = `"67e24428:17:v1"`;
         await app.request
             .get('/api/client/features')
             .set('if-none-match', currentProdEtag)

@@ -201,7 +201,10 @@ export class EventStore implements IEventStore {
                         .whereNotIn('type', [FEATURE_CREATED, FEATURE_TAGGED])
                         .whereNot('type', 'LIKE', 'change-%');
                     if (opts?.environment && opts.environment !== ALL_ENVS) {
-                        inner.where('environment', opts.environment);
+                        inner
+                            .where('environment', opts.environment)
+                            // Include events with null environment and feature_name
+                            .orWhereNull('environment');
                     }
                     return inner;
                 })

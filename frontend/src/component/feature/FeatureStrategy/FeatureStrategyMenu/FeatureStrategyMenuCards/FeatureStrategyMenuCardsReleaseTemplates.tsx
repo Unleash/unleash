@@ -6,7 +6,7 @@ import { Box, Button, styled } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import type { StrategyFilterValue } from './FeatureStrategyMenuCards.tsx';
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import {
     FeatureStrategyMenuCardsSection,
     StyledStrategyModalSectionHeader,
@@ -101,8 +101,8 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
 }: IFeatureStrategyMenuCardsReleaseTemplatesProps) => {
     const { isEnterprise } = useUiConfig();
     const { templates } = useReleasePlanTemplates();
-    const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
+    const canCreateTemplate = useHasRootAccess(RELEASE_PLAN_TEMPLATE_CREATE);
 
     const [noAccessDialogOpen, setNoAccessDialogOpen] =
         useState<boolean>(false);
@@ -117,23 +117,21 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
         ? 0
         : RELEASE_TEMPLATE_DISPLAY_LIMIT;
 
-    const canCreateTemplate = useHasRootAccess(RELEASE_PLAN_TEMPLATE_CREATE);
-    const handleAddTemplateClick = () => {
-        if (canCreateTemplate) {
-            trackEvent('new-template-from-add-strategy', {
-                props: {
-                    eventType: 'navigate-to-create-template',
-                },
-            });
-            navigate('/release-templates/create-template');
-        } else {
-            setNoAccessDialogOpen(true);
-            trackEvent('new-template-from-add-strategy', {
-                props: {
-                    eventType: 'show-no-access-dialog',
-                },
-            });
-        }
+    const handleLinkClick = () => {
+        trackEvent('new-template-from-add-strategy', {
+            props: {
+                eventType: 'navigate-to-create-template',
+            },
+        });
+    };
+
+    const handleNoAccessClick = () => {
+        setNoAccessDialogOpen(true);
+        trackEvent('new-template-from-add-strategy', {
+            props: {
+                eventType: 'show-no-access-dialog',
+            },
+        });
     };
 
     const onClose = () => {
@@ -147,13 +145,25 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                     sx={{ justifyContent: 'space-between' }}
                 >
                     Release templates
-                    <Button
-                        startIcon={<AddIcon />}
-                        onClick={handleAddTemplateClick}
-                        size='small'
-                    >
-                        New template
-                    </Button>
+                    {canCreateTemplate ? (
+                        <Button
+                            component={RouterLink}
+                            to='/release-templates/create-template'
+                            startIcon={<AddIcon />}
+                            onClick={handleLinkClick}
+                            size='small'
+                        >
+                            New template
+                        </Button>
+                    ) : (
+                        <Button
+                            startIcon={<AddIcon />}
+                            onClick={handleNoAccessClick}
+                            size='small'
+                        >
+                            New template
+                        </Button>
+                    )}
                 </StyledStrategyModalSectionHeader>
             )}
             {!templates.length ? (
@@ -218,8 +228,9 @@ export const FeatureStrategyMenuCardsReleaseTemplates = ({
                 onClose={onClose}
                 title='Contact admin to create release templates'
             >
-                You don&apos;t have the privileges to create release templates.
-                You must contact your organization admin to get access.{' '}
+                You don&apos;t have the required permissions to create release
+                templates. You must contact your organization admin to get
+                access.{' '}
             </Dialogue>
         </Box>
     );

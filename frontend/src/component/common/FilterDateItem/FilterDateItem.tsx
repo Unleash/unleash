@@ -22,8 +22,6 @@ export interface IFilterDateItemProps {
     state: FilterItemParams | null | undefined;
     operators: [string, ...string[]];
     initMode?: 'auto-open' | 'manual';
-    minDate?: Date;
-    maxDate?: Date;
 }
 
 export const FilterDateItem: FC<IFilterDateItemProps> = ({
@@ -33,8 +31,6 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     onRangeChange,
     onChipClose,
     state,
-    minDate,
-    maxDate,
     operators,
     initMode = 'auto-open',
 }) => {
@@ -115,8 +111,6 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                         displayWeekNumber
                         value={selectedDate}
                         disableFuture
-                        minDate={minDate ? startOfDay(minDate) : undefined}
-                        maxDate={maxDate ? endOfDay(maxDate) : undefined}
                         onChange={(value) => {
                             const formattedValue = value
                                 ? format(value, 'yyyy-MM-dd')

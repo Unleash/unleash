@@ -25,7 +25,6 @@ interface IFilterProps {
     onChange: (value: FilterItemParamHolder) => void;
     availableFilters: IFilterItem[];
     className?: string;
-    dateConstraintsEnabled?: boolean;
 }
 
 type IBaseFilterItem = {
@@ -48,12 +47,28 @@ export type IDateFilterItem = IBaseFilterItem & {
     dateOperators: [string, ...string[]];
     fromFilterKey?: string;
     toFilterKey?: string;
-    minDate?: Date;
-    maxDate?: Date;
-    dateConstraintsEnabled?: boolean;
 };
 
-export type IFilterItem = ITextFilterItem | IDateFilterItem;
+export type IDateRangeFilterItem = IDateFilterItem & {
+    fromFilterKey: string;
+    toFilterKey: string;
+};
+
+export type IFilterItem =
+    | ITextFilterItem
+    | IDateFilterItem
+    | IDateRangeFilterItem;
+
+export const isDateFilterItem = (
+    filter: IFilterItem,
+): filter is IDateFilterItem => 'dateOperators' in filter;
+
+export const isDateRangeFilterItem = (
+    filter: IFilterItem,
+): filter is IDateRangeFilterItem =>
+    isDateFilterItem(filter) &&
+    'fromFilterKey' in filter &&
+    'toFilterKey' in filter;
 
 const StyledCategoryIconWrapper = styled('div')(({ theme }) => ({
     marginRight: theme.spacing(0.5),
@@ -69,7 +84,7 @@ const StyledIcon = styled(Icon)(({ theme }) => ({
 }));
 
 type RangeChangeHandler = (
-    filter: IDateFilterItem,
+    filter: IDateRangeFilterItem,
     changedPicker?: 'from' | 'to',
 ) =>
     | ((value: { from: FilterItemParams; to: FilterItemParams }) => void)
@@ -103,7 +118,8 @@ const RenderFilter: FC<RenderFilterProps> = ({
         </>
     );
 
-    if ('dateOperators' in filter) {
+    if (isDateFilterItem(filter)) {
+        const isRangeFilter = isDateRangeFilterItem(filter);
         const fromValue = filter.fromFilterKey
             ? allState?.[filter.fromFilterKey]?.values?.[0]
             : undefined;
@@ -123,26 +139,32 @@ const RenderFilter: FC<RenderFilterProps> = ({
                 state={state}
                 operators={filter.dateOperators}
                 onChange={(value) => {
-                    const isFromPicker = picker === 'from';
-                    const otherKey = isFromPicker
-                        ? filter.toFilterKey!
-                        : filter.fromFilterKey!;
-                    const otherValue = isFromPicker ? toValue : fromValue;
-                    const otherParams: FilterItemParams = {
-                        operator:
-                            allState[otherKey]?.operator ||
-                            filter.dateOperators[0],
-                        values: otherValue ? [otherValue] : [],
-                    };
-                    rangeChangeHandler(
-                        filter,
-                        picker,
-                    )?.({
-                        from: isFromPicker ? value : otherParams,
-                        to: isFromPicker ? otherParams : value,
-                    });
+                    if (isRangeFilter) {
+                        const isFromPicker = picker === 'from';
+                        const otherKey = isFromPicker
+                            ? filter.toFilterKey
+                            : filter.fromFilterKey;
+                        const otherValue = isFromPicker ? toValue : fromValue;
+                        const otherParams: FilterItemParams = {
+                            operator:
+                                allState[otherKey]?.operator ||
+                                filter.dateOperators[0],
+                            values: otherValue ? [otherValue] : [],
+                        };
+                        rangeChangeHandler(
+                            filter,
+                            picker,
+                        )?.({
+                            from: isFromPicker ? value : otherParams,
+                            to: isFromPicker ? otherParams : value,
+                        });
+                    } else {
+                        onChange({ [filter.filterKey]: value });
+                    }
                 }}
-                onRangeChange={rangeChangeHandler?.(filter)}
+                onRangeChange={
+                    isRangeFilter ? rangeChangeHandler(filter) : undefined
+                }
                 onChipClose={
                     filter.persistent
                         ? undefined
@@ -299,49 +321,35 @@ const MultiFilter: FC<MultiFilterProps> = ({
 };
 
 export const Filters: FC<IFilterProps> = (props) => {
-    const rangeChangeHandler = (
-        filter: IDateFilterItem,
-        changedPicker?: 'from' | 'to',
-    ) => {
-        const fromKey = filter.fromFilterKey;
-        const toKey = filter.toFilterKey;
-        if (fromKey && toKey) {
-            return (value: {
-                from: FilterItemParams;
-                to: FilterItemParams;
-            }) => {
-                let adjustedFrom = value.from;
-                let adjustedTo = value.to;
-                if (
-                    changedPicker &&
-                    value.from.values[0] &&
-                    value.to.values[0]
-                ) {
-                    const fromDate = new Date(value.from.values[0]);
-                    const toDate = new Date(value.to.values[0]);
+    const rangeChangeHandler: RangeChangeHandler = (filter, changedPicker) => {
+        const { fromFilterKey, toFilterKey } = filter;
+        return (value: { from: FilterItemParams; to: FilterItemParams }) => {
+            let { from: adjustedFrom, to: adjustedTo } = value;
 
-                    if (isAfter(fromDate, toDate)) {
-                        if (changedPicker === 'from') {
-                            adjustedTo = {
-                                ...value.to,
-                                values: [value.from.values[0]],
-                            };
-                        } else {
-                            adjustedFrom = {
-                                ...value.from,
-                                values: [value.to.values[0]],
-                            };
-                        }
+            if (changedPicker && value.from.values[0] && value.to.values[0]) {
+                const fromDate = new Date(value.from.values[0]);
+                const toDate = new Date(value.to.values[0]);
+
+                if (isAfter(fromDate, toDate)) {
+                    if (changedPicker === 'from') {
+                        adjustedTo = {
+                            ...value.to,
+                            values: [value.from.values[0]],
+                        };
+                    } else {
+                        adjustedFrom = {
+                            ...value.from,
+                            values: [value.to.values[0]],
+                        };
                     }
                 }
+            }
 
-                props.onChange({
-                    [fromKey]: adjustedFrom,
-                    [toKey]: adjustedTo,
-                });
-            };
-        }
-        return undefined;
+            props.onChange({
+                [fromFilterKey]: adjustedFrom,
+                [toFilterKey]: adjustedTo,
+            });
+        };
     };
 
     if (props.availableFilters.length === 1) {

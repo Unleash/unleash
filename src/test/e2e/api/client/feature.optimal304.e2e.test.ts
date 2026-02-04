@@ -207,11 +207,15 @@ describe('feature 304 api client', () => {
         await app.createFeature('new');
         await app.services.configurationRevisionService.updateMaxRevisionId();
 
-        await app.request
+        const oldEtag = `"76d8bb0e:${expectedDevEventId}:v1"`;
+        const res = await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
-            .set('if-none-match', `"76d8bb0e:${expectedDevEventId}:v1"`)
+            .set('if-none-match', `${oldEtag}`)
             .expect(200);
+
+        expect(res.headers.etag).not.toBe(oldEtag);
+        expect(res.body.meta.etag).not.toBe(oldEtag);
     });
 
     test('a token with all envs should get the max id regardless of the environment', async () => {

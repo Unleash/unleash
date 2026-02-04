@@ -6,7 +6,7 @@ import {
     FilterItem,
     type FilterItemParams,
 } from '../FilterItem/FilterItem.tsx';
-import { isAfter, isBefore } from 'date-fns';
+import { isAfter } from 'date-fns';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -70,6 +70,7 @@ const StyledIcon = styled(Icon)(({ theme }) => ({
 
 type RangeChangeHandler = (
     filter: IDateFilterItem,
+    changedPicker?: 'from' | 'to',
 ) =>
     | ((value: { from: FilterItemParams; to: FilterItemParams }) => void)
     | undefined;
@@ -93,40 +94,6 @@ const RenderFilter: FC<RenderFilterProps> = ({
     rangeChangeHandler,
     initMode,
 }) => {
-    const autoAdjustDateRange = (
-        updates: FilterItemParamHolder,
-        newDate: string,
-        picker: 'from' | 'to',
-        valueToUpdate?: string,
-    ): void => {
-        const dateFilter = filter as IDateFilterItem;
-
-        const shouldAdjustToDate =
-            picker === 'from' &&
-            valueToUpdate &&
-            isAfter(new Date(newDate), new Date(valueToUpdate));
-        const shouldAdjustFromDate =
-            picker === 'to' &&
-            valueToUpdate &&
-            isBefore(new Date(newDate), new Date(valueToUpdate));
-
-        const filterKeyToUpdate =
-            shouldAdjustToDate && dateFilter.toFilterKey
-                ? dateFilter.toFilterKey
-                : shouldAdjustFromDate && dateFilter.fromFilterKey
-                  ? dateFilter.fromFilterKey
-                  : null;
-
-        if (filterKeyToUpdate) {
-            updates[filterKeyToUpdate] = {
-                operator:
-                    allState[filterKeyToUpdate]?.operator ||
-                    dateFilter.dateOperators[0],
-                values: [newDate],
-            };
-        }
-    };
-
     const label = (
         <>
             <StyledCategoryIconWrapper>
@@ -147,26 +114,6 @@ const RenderFilter: FC<RenderFilterProps> = ({
         const picker =
             filter.filterKey === filter.fromFilterKey ? 'from' : 'to';
 
-        const getMinDate = () => {
-            if (filter.dateConstraintsEnabled) {
-                return undefined;
-            }
-            if (picker === 'to' && fromValue) {
-                return new Date(fromValue);
-            }
-            return undefined;
-        };
-
-        const getMaxDate = () => {
-            if (filter.dateConstraintsEnabled) {
-                return undefined;
-            }
-            if (picker === 'from' && toValue) {
-                return new Date(toValue);
-            }
-            return undefined;
-        };
-
         return (
             <FilterDateItem
                 key={filter.label}
@@ -174,27 +121,27 @@ const RenderFilter: FC<RenderFilterProps> = ({
                 label={label}
                 name={filter.label}
                 state={state}
-                minDate={getMinDate()}
-                maxDate={getMaxDate()}
                 operators={filter.dateOperators}
-                onChange={
-                    filter.dateConstraintsEnabled
-                        ? (value) => {
-                              const updates = {
-                                  [filter.filterKey]: value,
-                              };
-                              const valueToUpdate =
-                                  picker === 'from' ? toValue : fromValue;
-                              autoAdjustDateRange(
-                                  updates,
-                                  value.values[0],
-                                  picker,
-                                  valueToUpdate,
-                              );
-                              onChange(updates);
-                          }
-                        : (value) => onChange({ [filter.filterKey]: value })
-                }
+                onChange={(value) => {
+                    const isFromPicker = picker === 'from';
+                    const otherKey = isFromPicker
+                        ? filter.toFilterKey!
+                        : filter.fromFilterKey!;
+                    const otherValue = isFromPicker ? toValue : fromValue;
+                    const otherParams: FilterItemParams = {
+                        operator:
+                            allState[otherKey]?.operator ||
+                            filter.dateOperators[0],
+                        values: otherValue ? [otherValue] : [],
+                    };
+                    rangeChangeHandler(
+                        filter,
+                        picker,
+                    )?.({
+                        from: isFromPicker ? value : otherParams,
+                        to: isFromPicker ? otherParams : value,
+                    });
+                }}
                 onRangeChange={rangeChangeHandler?.(filter)}
                 onChipClose={
                     filter.persistent
@@ -352,7 +299,10 @@ const MultiFilter: FC<MultiFilterProps> = ({
 };
 
 export const Filters: FC<IFilterProps> = (props) => {
-    const rangeChangeHandler = (filter: IDateFilterItem) => {
+    const rangeChangeHandler = (
+        filter: IDateFilterItem,
+        changedPicker?: 'from' | 'to',
+    ) => {
         const fromKey = filter.fromFilterKey;
         const toKey = filter.toFilterKey;
         if (fromKey && toKey) {
@@ -360,8 +310,35 @@ export const Filters: FC<IFilterProps> = (props) => {
                 from: FilterItemParams;
                 to: FilterItemParams;
             }) => {
-                props.onChange({ [fromKey]: value.from });
-                props.onChange({ [toKey]: value.to });
+                let adjustedFrom = value.from;
+                let adjustedTo = value.to;
+                if (
+                    changedPicker &&
+                    value.from.values[0] &&
+                    value.to.values[0]
+                ) {
+                    const fromDate = new Date(value.from.values[0]);
+                    const toDate = new Date(value.to.values[0]);
+
+                    if (isAfter(fromDate, toDate)) {
+                        if (changedPicker === 'from') {
+                            adjustedTo = {
+                                ...value.to,
+                                values: [value.from.values[0]],
+                            };
+                        } else {
+                            adjustedFrom = {
+                                ...value.from,
+                                values: [value.to.values[0]],
+                            };
+                        }
+                    }
+                }
+
+                props.onChange({
+                    [fromKey]: adjustedFrom,
+                    [toKey]: adjustedTo,
+                });
             };
         }
         return undefined;

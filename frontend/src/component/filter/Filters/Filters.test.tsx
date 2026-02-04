@@ -186,7 +186,6 @@ test('should render filters in the order defined by the initial state', async ()
 describe('Date range auto-adjustment', () => {
     test('auto-adjusts to-date when from-date exceeds it', async () => {
         const onChange = vi.fn();
-        const dateConstraintsEnabled = true;
         const initialState: FilterItemParamHolder = {
             from: { operator: 'IS', values: ['2025-01-10'] },
             to: { operator: 'IS', values: ['2025-01-15'] },
@@ -202,7 +201,6 @@ describe('Date range auto-adjustment', () => {
                 fromFilterKey: 'from',
                 toFilterKey: 'to',
                 persistent: true,
-                dateConstraintsEnabled,
             },
             {
                 label: 'Date To',
@@ -213,7 +211,6 @@ describe('Date range auto-adjustment', () => {
                 fromFilterKey: 'from',
                 toFilterKey: 'to',
                 persistent: true,
-                dateConstraintsEnabled,
             },
         ];
 
@@ -239,7 +236,6 @@ describe('Date range auto-adjustment', () => {
 
     test('auto-adjusts from-date when to-date is before it', async () => {
         const onChange = vi.fn();
-        const dateConstraintsEnabled = true;
         const initialState: FilterItemParamHolder = {
             from: { operator: 'IS', values: ['2025-01-15'] },
             to: { operator: 'IS', values: ['2025-01-20'] },
@@ -255,7 +251,6 @@ describe('Date range auto-adjustment', () => {
                 fromFilterKey: 'from',
                 toFilterKey: 'to',
                 persistent: true,
-                dateConstraintsEnabled,
             },
             {
                 label: 'Date To',
@@ -266,7 +261,6 @@ describe('Date range auto-adjustment', () => {
                 fromFilterKey: 'from',
                 toFilterKey: 'to',
                 persistent: true,
-                dateConstraintsEnabled,
             },
         ];
 
@@ -292,7 +286,6 @@ describe('Date range auto-adjustment', () => {
 
     test('does not auto-adjust when date is within valid range', async () => {
         const onChange = vi.fn();
-        const dateConstraintsEnabled = true;
         const initialState: FilterItemParamHolder = {
             from: { operator: 'IS', values: ['2025-01-10'] },
             to: { operator: 'IS', values: ['2025-01-20'] },
@@ -308,7 +301,6 @@ describe('Date range auto-adjustment', () => {
                 fromFilterKey: 'from',
                 toFilterKey: 'to',
                 persistent: true,
-                dateConstraintsEnabled,
             },
             {
                 label: 'Date To',
@@ -319,7 +311,6 @@ describe('Date range auto-adjustment', () => {
                 fromFilterKey: 'from',
                 toFilterKey: 'to',
                 persistent: true,
-                dateConstraintsEnabled,
             },
         ];
 
@@ -339,6 +330,7 @@ describe('Date range auto-adjustment', () => {
 
         expect(onChange).toHaveBeenCalledWith({
             from: { operator: 'IS', values: ['2025-01-12'] },
+            to: { operator: 'IS', values: ['2025-01-20'] },
         });
     });
 });

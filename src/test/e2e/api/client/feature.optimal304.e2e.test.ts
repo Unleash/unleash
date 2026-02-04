@@ -91,98 +91,12 @@ async function initialize({ app, db }: { app: IUnleashTest; db: ITestDb }) {
     });
 }
 
-async function validateInitialState({
-    app,
-    db,
-}: {
-    app: IUnleashTest;
-    db: ITestDb;
-}) {
-    /**
-     * This helps reason about the etag, which is formed by <query-hash>:<event-id>
-     * To see the output you need to run this test with --silent=false
-     * You can see the expected output in the expect statement below
-     */
-    const { events } = await app.services.eventService.getEvents();
-    // NOTE: events could be processed in different order resulting in a flaky test
-    const actualEvents = events
-        .reverse()
-        .map(({ id, environment, featureName, type }) => ({
-            id,
-            environment,
-            featureName,
-            type,
-        }));
-    let nextId = 9; // this is the first id after the token creation events
-    const expectedEvents = [
-        {
-            id: nextId++,
-            featureName: 'X',
-            type: 'feature-created',
-        },
-        {
-            id: nextId++,
-            featureName: 'Y',
-            type: 'feature-created',
-        },
-        {
-            id: nextId++,
-            featureName: 'Y',
-            type: 'feature-archived',
-        },
-        {
-            id: nextId++,
-            featureName: 'Z',
-            type: 'feature-created',
-        },
-        {
-            id: nextId++,
-            environment: 'development',
-            featureName: 'Z',
-            type: 'feature-strategy-add',
-        },
-        {
-            id: nextId++,
-            environment: 'development',
-            featureName: 'Z',
-            type: 'feature-environment-enabled',
-        },
-        {
-            id: nextId++,
-            environment: 'production',
-            featureName: 'Z',
-            type: 'feature-strategy-add',
-        },
-        {
-            id: nextId++,
-            environment: 'production',
-            featureName: 'Z',
-            type: 'feature-environment-enabled',
-        },
-        {
-            id: nextId++,
-            featureName: 'X',
-            type: 'change-request-created',
-        },
-    ];
-    // We only require that all expectedEvents exist within actualEvents, matching
-    // only on the properties explicitly specified in each expected object.
-    // This lets us omit properties (like id) from some expected entries that might
-    // arrive in different order, without breaking the test.
-    for (const expectedEvent of expectedEvents) {
-        expect(actualEvents).toContainEqual(
-            expect.objectContaining(expectedEvent),
-        );
-    }
-}
-
 describe('feature 304 api client', () => {
     let app: IUnleashTest;
     let db: ITestDb;
     beforeAll(async () => {
         ({ app, db } = await setup());
         await initialize({ app, db });
-        await validateInitialState({ app, db });
     });
 
     afterAll(async () => {

@@ -7,6 +7,7 @@ import getLogger from '../../../fixtures/no-logger.js';
 import { CHANGE_REQUEST_CREATED } from '../../../../lib/events/index.js';
 import { CLIENT, DEFAULT_ENV } from '../../../../lib/server-impl.js';
 import { ApiTokenType } from '../../../../lib/types/model.js';
+import { RoleName, TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 
 const validTokens = [
     {
@@ -16,6 +17,14 @@ const validTokens = [
         environment: 'development',
         type: ApiTokenType.CLIENT,
         secret: '*:development.client',
+    },
+    {
+        tokenName: `client-dev-default-project`,
+        permissions: [CLIENT],
+        projects: ['default'],
+        environment: 'development',
+        type: ApiTokenType.CLIENT,
+        secret: 'default:development.default-only',
     },
     {
         tokenName: `client-prod-token`,
@@ -35,8 +44,9 @@ const validTokens = [
     },
 ];
 const devTokenSecret = validTokens[0].secret;
-const prodTokenSecret = validTokens[1].secret;
-const allEnvsTokenSecret = validTokens[2].secret;
+const devDefaultProjectTokenSecret = validTokens[1].secret;
+const prodTokenSecret = validTokens[2].secret;
+const allEnvsTokenSecret = validTokens[3].secret;
 
 async function setup(): Promise<{ app: IUnleashTest; db: ITestDb }> {
     const db = await dbInit(`ignored`, getLogger);
@@ -103,7 +113,7 @@ async function validateInitialState({
             featureName,
             type,
         }));
-    let nextId = 8; // this is the first id after the token creation events
+    let nextId = 9; // this is the first id after the token creation events
     const expectedEvents = [
         {
             id: nextId++,
@@ -169,7 +179,7 @@ async function validateInitialState({
 describe('feature 304 api client', () => {
     let app: IUnleashTest;
     let db: ITestDb;
-    const expectedDevEventId = 13;
+    const expectedDevEventId = 14;
     beforeAll(async () => {
         ({ app, db } = await setup());
         await initialize({ app, db });
@@ -216,6 +226,7 @@ describe('feature 304 api client', () => {
 
         expect(res.headers.etag).not.toBe(oldEtag);
         expect(res.body.meta.etag).not.toBe(oldEtag);
+        expect(res.body.features.map((f: any) => f.name)).toContain('new');
     });
 
     test('a token with all envs should get the max id regardless of the environment', async () => {
@@ -227,7 +238,7 @@ describe('feature 304 api client', () => {
             .expect(200);
 
         // it's a different hash than prod, but gets the max id
-        expect(headers.etag).toEqual(`"ae443048:17:v1"`);
+        expect(headers.etag).toEqual(`"ae443048:18:v1"`);
     });
 
     test('production environment gets a different etag than development', async () => {
@@ -236,19 +247,19 @@ describe('feature 304 api client', () => {
             .set('Authorization', prodTokenSecret)
             .expect(200);
 
-        expect(prodHeaders.etag).toEqual(`"67e24428:17:v1"`);
+        expect(prodHeaders.etag).toEqual(`"67e24428:18:v1"`);
 
         const { headers: devHeaders } = await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
             .expect(200);
 
-        expect(devHeaders.etag).toEqual(`"76d8bb0e:17:v1"`);
+        expect(devHeaders.etag).toEqual(`"76d8bb0e:18:v1"`);
     });
 
     test('modifying dev environment should only invalidate dev tokens', async () => {
-        const currentDevEtag = `"76d8bb0e:17:v1"`;
-        const currentProdEtag = `"67e24428:17:v1"`;
+        const currentDevEtag = `"76d8bb0e:18:v1"`;
+        const currentProdEtag = `"67e24428:18:v1"`;
         await app.request
             .get('/api/client/features')
             .set('if-none-match', currentProdEtag)
@@ -279,6 +290,91 @@ describe('feature 304 api client', () => {
         // Note: this test yields a different result if run in isolation
         // this is because the id 19 depends on a previous test adding a feature
         // otherwise the id will be 18
-        expect(devHeaders.etag).toEqual(`"76d8bb0e:19:v1"`);
+        expect(devHeaders.etag).toEqual(`"76d8bb0e:20:v1"`);
+    });
+
+    test('archiving a feature removes it from client response and updates etag', async () => {
+        const featureName = 'temp-archive';
+        await app.createFeature(featureName);
+        await app.enableFeature(featureName, DEFAULT_ENV);
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        const first = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .expect(200);
+
+        const firstEtag = first.headers.etag;
+        expect(first.body.features.map((f: any) => f.name)).toContain(
+            featureName,
+        );
+
+        await app.archiveFeature(featureName);
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        const second = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .set('if-none-match', firstEtag)
+            .expect(200);
+
+        expect(second.headers.etag).not.toBe(firstEtag);
+        expect(second.body.features.map((f: any) => f.name)).not.toContain(
+            featureName,
+        );
+    });
+
+    test('moving a feature to another project updates project field and etag', async () => {
+        const featureName = 'temp-move';
+        const targetProject = 'second-project';
+
+        // ensure target project exists
+        const adminUser = await app.services.userService.createUser(
+            {
+                name: 'Move Admin',
+                email: 'move-admin@getunleash.io',
+                rootRole: RoleName.ADMIN,
+            },
+            TEST_AUDIT_USER,
+        );
+        await app.services.projectService.createProject(
+            { id: targetProject, name: targetProject, mode: 'open' },
+            adminUser,
+            TEST_AUDIT_USER,
+        );
+
+        await app.createFeature(featureName);
+        await app.enableFeature(featureName, DEFAULT_ENV);
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        const initial = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devDefaultProjectTokenSecret)
+            .expect(200);
+
+        const initialEtag = initial.headers.etag;
+        const initialProject = initial.body.features.find(
+            (f: any) => f.name === featureName,
+        )?.project;
+        expect(initialProject).toBe('default');
+
+        await app.services.featureToggleService.changeProject(
+            featureName,
+            targetProject,
+            TEST_AUDIT_USER,
+        );
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        const afterMove = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devDefaultProjectTokenSecret)
+            .set('if-none-match', initialEtag)
+            .expect(200);
+
+        expect(afterMove.headers.etag).not.toBe(initialEtag);
+        const movedFeature = afterMove.body.features.find(
+            (f: any) => f.name === featureName,
+        );
+        expect(movedFeature).toBeUndefined();
     });
 });

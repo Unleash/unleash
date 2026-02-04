@@ -42,6 +42,9 @@ import type { SchedulerService } from './services/index.js';
 import type { IClientMetricsEnv } from './features/metrics/client-metrics/client-metrics-store-v2-type.js';
 import { DbMetricsMonitor } from './metrics-gauge.js';
 import * as impactMetrics from './features/metrics/impact/define-impact-metrics.js';
+import HyperLogLog from 'hyperloglog-lite';
+
+const DISTINCT_HLL_REGISTERS_EXPONENT = 14;
 
 export function registerPrometheusPostgresMetrics(
     db: Knex,
@@ -582,6 +585,25 @@ export function registerPrometheusMetrics(
         help: 'Count of tags usage in client api',
     });
 
+    const namePrefixDistinct = createGauge({
+        name: 'nameprefix_distinct_estimate',
+        help: 'Approximate number of distinct nameprefix values in client api',
+    });
+    const tagsDistinct = createGauge({
+        name: 'tags_distinct_estimate',
+        help: 'Approximate number of distinct tag values in client api',
+    });
+    const projectDistinct = createGauge({
+        name: 'project_distinct_estimate',
+        help: 'Approximate number of distinct project values in client api',
+    });
+    const namePrefixHll = HyperLogLog(DISTINCT_HLL_REGISTERS_EXPONENT);
+    const tagsHll = HyperLogLog(DISTINCT_HLL_REGISTERS_EXPONENT);
+    const projectHll = HyperLogLog(DISTINCT_HLL_REGISTERS_EXPONENT);
+    namePrefixDistinct.set(0);
+    tagsDistinct.set(0);
+    projectDistinct.set(0);
+
     const featureCreatedByMigration = createCounter({
         name: 'feature_created_by_migration_count',
         help: 'Feature createdBy migration count',
@@ -873,13 +895,44 @@ export function registerPrometheusMetrics(
         mapFeaturesForClientDuration.observe(duration);
     });
 
-    eventBus.on(events.CLIENT_METRICS_NAMEPREFIX, () => {
-        namePrefixUsed.inc();
+    eventBus.on(
+        events.CLIENT_METRICS_NAMEPREFIX,
+        (payload?: { namePrefix?: string }) => {
+            namePrefixUsed.inc();
+            if (!payload?.namePrefix) {
+                return;
+            }
+            const value = HyperLogLog.hash(payload.namePrefix);
+            namePrefixHll.add(value);
+            namePrefixDistinct.set(namePrefixHll.count());
+        },
+    );
+
+    eventBus.on(events.CLIENT_METRICS_TAGS, (payload?: { tags?: string[] }) => {
+        tagsUsed.inc();
+        if (!payload?.tags?.length) {
+            return;
+        }
+        for (const tag of payload.tags) {
+            const value = HyperLogLog.hash(tag);
+            tagsHll.add(value);
+        }
+        tagsDistinct.set(tagsHll.count());
     });
 
-    eventBus.on(events.CLIENT_METRICS_TAGS, () => {
-        tagsUsed.inc();
-    });
+    eventBus.on(
+        events.CLIENT_METRICS_PROJECT,
+        (payload?: { projects?: string[] }) => {
+            if (!payload?.projects?.length) {
+                return;
+            }
+            for (const project of payload.projects) {
+                const value = HyperLogLog.hash(project);
+                projectHll.add(value);
+            }
+            projectDistinct.set(projectHll.count());
+        },
+    );
 
     eventBus.on(events.CLIENT_FEATURES_MEMORY, (event: { memory: number }) => {
         clientFeaturesMemory.reset();

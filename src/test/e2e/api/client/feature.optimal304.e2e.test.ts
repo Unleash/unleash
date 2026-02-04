@@ -319,6 +319,32 @@ describe('feature 304 api client', () => {
             .expect(304);
     });
 
+    test('adding a feature link does not change etag', async () => {
+        const featureName = 'X';
+        const baseline = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .expect(200);
+        const etag = baseline.headers.etag;
+
+        await app.services.featureLinkService.createLink(
+            'default',
+            {
+                featureName,
+                title: 'Docs',
+                url: 'https://example.com/docs',
+            },
+            TEST_AUDIT_USER,
+        );
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .set('if-none-match', etag)
+            .expect(304);
+    });
+
     test('deleting an archived feature updates etag', async () => {
         const featureName = 'temp-delete';
         await app.createFeature(featureName);

@@ -5,6 +5,9 @@ import {
     FEATURE_UNTAGGED,
     FEATURE_FAVORITED,
     FEATURE_UNFAVORITED,
+    FEATURE_LINK_ADDED,
+    FEATURE_LINK_UPDATED,
+    FEATURE_LINK_REMOVED,
     FEATURES_IMPORTED,
     type IBaseEvent,
     type IEvent,
@@ -206,6 +209,9 @@ export class EventStore implements IEventStore {
                             FEATURE_UNTAGGED,
                             FEATURE_FAVORITED,
                             FEATURE_UNFAVORITED,
+                            FEATURE_LINK_ADDED,
+                            FEATURE_LINK_UPDATED,
+                            FEATURE_LINK_REMOVED,
                         ])
                         .whereNot('type', 'LIKE', 'change-%');
                     if (opts?.environment && opts.environment !== ALL_ENVS) {

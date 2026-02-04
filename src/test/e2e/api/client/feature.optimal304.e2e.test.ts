@@ -104,7 +104,7 @@ describe('feature 304 api client', () => {
         await db.destroy();
     });
 
-    test('returns calculated hash without if-none-match header (dev env token)', async () => {
+    test('returns etag and echoes it in meta (dev env token)', async () => {
         const res = await app.request
             .get('/api/client/features')
             .set('Authorization', devTokenSecret)
@@ -150,7 +150,7 @@ describe('feature 304 api client', () => {
         expect(res.body.features.map((f: any) => f.name)).toContain('new');
     });
 
-    test('a token with all envs should get the max id regardless of the environment', async () => {
+    test('all-env token has its own etag and caches correctly', async () => {
         const prod = await app.request
             .get('/api/client/features')
             .set('Authorization', prodTokenSecret)

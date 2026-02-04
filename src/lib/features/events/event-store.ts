@@ -1,7 +1,5 @@
 import {
     FEATURE_IMPORT,
-    FEATURE_TAGGED,
-    FEATURE_UNTAGGED,
     FEATURE_FAVORITED,
     FEATURE_UNFAVORITED,
     FEATURE_LINK_ADDED,
@@ -204,8 +202,6 @@ export class EventStore implements IEventStore {
                     inner
                         .whereNotNull('feature_name')
                         .whereNotIn('type', [
-                            FEATURE_TAGGED,
-                            FEATURE_UNTAGGED,
                             FEATURE_FAVORITED,
                             FEATURE_UNFAVORITED,
                             FEATURE_LINK_ADDED,

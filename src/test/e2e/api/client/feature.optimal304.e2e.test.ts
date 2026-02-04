@@ -345,6 +345,58 @@ describe('feature 304 api client', () => {
             .expect(304);
     });
 
+    test('tagging and untagging a feature updates etag for tag-filtered clients', async () => {
+        const featureName = 'X';
+        const tag = { type: 'simple', value: 'Crazy' };
+
+        const baseline = await app.request
+            .get('/api/client/features?tag=simple:Crazy')
+            .set('Authorization', devTokenSecret)
+            .expect(200);
+        const baselineEtag = baseline.headers.etag;
+        expect(baseline.body.features.map((f: any) => f.name)).not.toContain(
+            featureName,
+        );
+
+        await app.request
+            .post(`/api/admin/features/${featureName}/tags`)
+            .set('Authorization', `${adminPat}`)
+            .set('Content-Type', 'application/json')
+            .send(tag)
+            .expect(201);
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        const afterTag = await app.request
+            .get('/api/client/features?tag=simple:Crazy')
+            .set('Authorization', devTokenSecret)
+            .set('if-none-match', baselineEtag)
+            .expect(200);
+
+        expect(afterTag.body.features.map((f: any) => f.name)).toContain(
+            featureName,
+        );
+        const tagEtag = afterTag.headers.etag;
+
+        await app.request
+            .delete(
+                `/api/admin/features/${featureName}/tags/${tag.type}/${tag.value}`,
+            )
+            .set('Authorization', `${adminPat}`)
+            .expect(200);
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+
+        await app.request
+            .get('/api/client/features?tag=simple:Crazy')
+            .set('Authorization', devTokenSecret)
+            .set('if-none-match', tagEtag)
+            .expect(200)
+            .expect((res) =>
+                expect(res.body.features.map((f: any) => f.name)).not.toContain(
+                    featureName,
+                ),
+            );
+    });
+
     test('deleting an archived feature updates etag', async () => {
         const featureName = 'temp-delete';
         await app.createFeature(featureName);

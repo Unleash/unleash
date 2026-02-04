@@ -81,7 +81,8 @@ export type CustomEvents =
     | 'project-list-view-toggle'
     | 'impact-metrics'
     | 'release-management-splash'
-    | 'upgrade_trial_dialog';
+    | 'upgrade_trial_dialog'
+    | 'new-template-from-add-strategy';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

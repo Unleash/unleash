@@ -63,6 +63,7 @@ import type { IFeatureLinkStore } from '../features/feature-links/feature-link-s
 import type { IUnknownFlagsStore } from '../features/metrics/unknown-flags/unknown-flags-store.js';
 import type { IFeatureLinksReadModel } from '../features/feature-links/feature-links-read-model-type.js';
 import type { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
+import type { IEdgeTokenStore } from './stores/edge-store.js';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -130,6 +131,7 @@ export interface IUnleashStores {
     featureLinkStore: IFeatureLinkStore;
     unknownFlagsStore: IUnknownFlagsStore;
     featureLinkReadModel: IFeatureLinksReadModel;
+    edgeTokenStore: IEdgeTokenStore;
 }
 
 export {
@@ -194,4 +196,5 @@ export {
     type IFeatureLinkStore,
     type IUnknownFlagsStore,
     type IFeatureLinksReadModel,
+    type IEdgeTokenStore,
 };

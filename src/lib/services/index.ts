@@ -390,7 +390,11 @@ export const createServices = (
               clientInstanceService,
           );
 
-    const edgeService = new EdgeService({ apiTokenService }, config);
+    const edgeService = new EdgeService(
+        { edgeStore: stores.edgeTokenStore },
+        { apiTokenService },
+        config,
+    );
 
     const patService = new PatService(stores, config, eventService);
 

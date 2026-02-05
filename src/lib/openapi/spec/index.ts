@@ -65,6 +65,7 @@ export * from './date-schema.js';
 export * from './dependencies-exist-schema.js';
 export * from './dependent-feature-schema.js';
 export * from './dora-features-schema.js';
+export * from './edge-environment-projects-list-schema.js';
 export * from './edge-token-schema.js';
 export * from './email-schema.js';
 export * from './environment-project-schema.js';

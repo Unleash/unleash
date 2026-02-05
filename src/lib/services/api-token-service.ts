@@ -123,7 +123,13 @@ export class ApiTokenService {
     async getToken(secret: string): Promise<IApiToken | undefined> {
         return this.store.get(secret);
     }
-
+    async getTokenByName(name: string): Promise<IApiToken | undefined> {
+        const tokens = await this.store.getAll({ tokenName: name });
+        if (tokens.length <= 0) {
+            return undefined;
+        }
+        return tokens[0];
+    }
     async getTokenWithCache(secret: string): Promise<IApiToken | undefined> {
         if (!secret) {
             return undefined;

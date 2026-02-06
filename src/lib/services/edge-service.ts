@@ -170,7 +170,9 @@ export default class EdgeService {
                             },
                         );
 
-                    // Save edge token using a transactional store
+                    // Save edge token using a transactional store.
+                    // EdgeTokenStore is instantiated directly rather than using a factory
+                    // because it has minimal dependencies and is only used in this specific context.
                     const transactionalEdgeStore = new EdgeTokenStore(
                         trx,
                         this.eventBus,

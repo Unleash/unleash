@@ -8,7 +8,7 @@ import {
     AutocompleteBox,
     type IAutocompleteBoxOption,
 } from 'component/common/AutocompleteBox/AutocompleteBox';
-import { MilestoneStrategySegmentList } from './MilestoneStrategySegmentList.tsx';
+import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList.tsx';
 
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -91,7 +91,7 @@ export const MilestoneStrategySegment = ({
                 icon={null}
                 width={'175px'}
             />
-            <MilestoneStrategySegmentList
+            <FeatureStrategySegmentList
                 segments={selectedSegments}
                 setSegments={setSelectedSegments}
             />

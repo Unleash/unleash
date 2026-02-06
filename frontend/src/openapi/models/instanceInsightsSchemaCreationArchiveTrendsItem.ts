@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InstanceInsightsSchemaCreationArchiveTrendsItemCreatedFlags } from './instanceInsightsSchemaCreationArchiveTrendsItemCreatedFlags.js';
+import type { InstanceInsightsSchemaCreationArchiveTrendsItemCreatedFlags } from './instanceInsightsSchemaCreationArchiveTrendsItemCreatedFlags';
 
 export type InstanceInsightsSchemaCreationArchiveTrendsItem = {
     /**

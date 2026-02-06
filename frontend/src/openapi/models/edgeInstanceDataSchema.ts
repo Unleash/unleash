@@ -3,18 +3,24 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema.js';
-import type { EdgeInstanceDataSchemaHosting } from './edgeInstanceDataSchemaHosting.js';
-import type { EdgeUpstreamLatencySchema } from './edgeUpstreamLatencySchema.js';
-import type { EdgeProcessMetricsSchema } from './edgeProcessMetricsSchema.js';
-import type { RequestConsumptionSchema } from './requestConsumptionSchema.js';
-import type { EdgeRequestStatsSchema } from './edgeRequestStatsSchema.js';
-import type { EdgeInstanceTrafficSchema } from './edgeInstanceTrafficSchema.js';
+import type { EdgeApiKeyRevisionIdSchema } from './edgeApiKeyRevisionIdSchema';
+import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema';
+import type { EdgeInstanceDataSchemaHosting } from './edgeInstanceDataSchemaHosting';
+import type { EdgeUpstreamLatencySchema } from './edgeUpstreamLatencySchema';
+import type { EdgeProcessMetricsSchema } from './edgeProcessMetricsSchema';
+import type { RequestConsumptionSchema } from './requestConsumptionSchema';
+import type { EdgeRequestStatsSchema } from './edgeRequestStatsSchema';
+import type { EdgeInstanceTrafficSchema } from './edgeInstanceTrafficSchema';
 
 /**
  * Represents Edge instance observability data.
  */
 export interface EdgeInstanceDataSchema {
+    /**
+     * List of API keys (represented by their environment and projects) and revision ids to make it easier to track sync state of edge
+     * @nullable
+     */
+    apiKeyRevisionIds?: EdgeApiKeyRevisionIdSchema[] | null;
     /** The name of the application, configured by the user, typically persistent across restarts of Edge. */
     appName: string;
     /** A list of Edge instances connected to the Edge instance. */

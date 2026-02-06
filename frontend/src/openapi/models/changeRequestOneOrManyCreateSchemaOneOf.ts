@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestOneOrManyCreateSchemaOneOfAction } from './changeRequestOneOrManyCreateSchemaOneOfAction.js';
-import type { UpsertSegmentSchema } from './upsertSegmentSchema.js';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfAction } from './changeRequestOneOrManyCreateSchemaOneOfAction';
+import type { UpsertSegmentSchema } from './upsertSegmentSchema';
 
 export type ChangeRequestOneOrManyCreateSchemaOneOf = {
     /** The name of this action. */

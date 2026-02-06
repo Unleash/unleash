@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { DoraFeaturesSchema } from './doraFeaturesSchema.js';
+import type { DoraFeaturesSchema } from './doraFeaturesSchema';
 
 /**
  * A projects dora metrics

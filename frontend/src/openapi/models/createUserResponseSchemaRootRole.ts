@@ -13,4 +13,5 @@ export type CreateUserResponseSchemaRootRole =
     | 'Editor'
     | 'Viewer'
     | 'Owner'
-    | 'Member';
+    | 'Member'
+    | 'Reader';

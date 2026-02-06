@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RoleSchema } from './roleSchema.js';
-import type { ServiceAccountSchema } from './serviceAccountSchema.js';
+import type { RoleSchema } from './roleSchema';
+import type { ServiceAccountSchema } from './serviceAccountSchema';
 
 /**
  * Represents a list of service accounts, and includes a list of root roles they reference

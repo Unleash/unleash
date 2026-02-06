@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema.js';
+import type { ConstraintSchema } from './constraintSchema';
 
 /**
  * Data used to create or update a segment

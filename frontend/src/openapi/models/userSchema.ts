@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserSchemaAccountType } from './userSchemaAccountType.js';
+import type { UserSchemaAccountType } from './userSchemaAccountType';
 
 /**
  * An Unleash user
@@ -52,6 +52,11 @@ export interface UserSchema {
      * @nullable
      */
     scimId?: string | null;
+    /**
+     * The seat type of this user
+     * @nullable
+     */
+    seatType?: string | null;
     /**
      * The last time this user logged in
      * @nullable

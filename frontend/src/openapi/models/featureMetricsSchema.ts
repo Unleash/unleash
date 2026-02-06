@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureEnvironmentMetricsSchema } from './featureEnvironmentMetricsSchema.js';
+import type { FeatureEnvironmentMetricsSchema } from './featureEnvironmentMetricsSchema';
 
 /**
  * A batch of feature metrics

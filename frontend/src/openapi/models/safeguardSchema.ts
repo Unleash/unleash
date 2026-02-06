@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SafeguardSchemaAction } from './safeguardSchemaAction.js';
-import type { SafeguardSchemaImpactMetric } from './safeguardSchemaImpactMetric.js';
-import type { SafeguardTriggerConditionSchema } from './safeguardTriggerConditionSchema.js';
+import type { SafeguardSchemaAction } from './safeguardSchemaAction';
+import type { SafeguardSchemaImpactMetric } from './safeguardSchemaImpactMetric';
+import type { SafeguardTriggerConditionSchema } from './safeguardTriggerConditionSchema';
 
 /**
  * A safeguard configuration for a release plan.

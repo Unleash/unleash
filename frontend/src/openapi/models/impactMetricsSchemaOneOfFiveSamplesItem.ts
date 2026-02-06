@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ImpactMetricsSchemaOneOfFiveSamplesItemBucketsItem } from './impactMetricsSchemaOneOfFiveSamplesItemBucketsItem.js';
-import type { ImpactMetricsSchemaOneOfFiveSamplesItemLabels } from './impactMetricsSchemaOneOfFiveSamplesItemLabels.js';
+import type { ImpactMetricsSchemaOneOfFiveSamplesItemBucketsItem } from './impactMetricsSchemaOneOfFiveSamplesItemBucketsItem';
+import type { ImpactMetricsSchemaOneOfFiveSamplesItemLabels } from './impactMetricsSchemaOneOfFiveSamplesItemLabels';
 
 /**
  * A sample of a histogram metric with count, sum, buckets and optional labels

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionEventSchema } from './actionEventSchema.js';
-import type { ActionSetEventSchemaActionSetMatch } from './actionSetEventSchemaActionSetMatch.js';
+import type { ActionEventSchema } from './actionEventSchema';
+import type { ActionSetEventSchemaActionSetMatch } from './actionSetEventSchemaActionSetMatch';
 
 /**
  * The action set this action set event belongs to, where the individual actions are decorated with the respective action states.

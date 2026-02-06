@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ApplicationSchema } from './applicationSchema.js';
+import type { ApplicationSchema } from './applicationSchema';
 
 /**
  * An object containing a list of applications that have connected to Unleash via an SDK.

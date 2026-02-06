@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SignalQuerySignalSchema } from './signalQuerySignalSchema.js';
+import type { SignalQuerySignalSchema } from './signalQuerySignalSchema';
 
 /**
  * A list of signals that have been registered by the system

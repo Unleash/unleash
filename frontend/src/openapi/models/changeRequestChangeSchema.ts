@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestChangeSchemaCreatedBy } from './changeRequestChangeSchemaCreatedBy.js';
-import type { ChangeRequestChangeSchemaPayload } from './changeRequestChangeSchemaPayload.js';
-import type { ChangeRequestChangeSchemaScheduleConflicts } from './changeRequestChangeSchemaScheduleConflicts.js';
+import type { ChangeRequestChangeSchemaCreatedBy } from './changeRequestChangeSchemaCreatedBy';
+import type { ChangeRequestChangeSchemaPayload } from './changeRequestChangeSchemaPayload';
+import type { ChangeRequestChangeSchemaScheduleConflicts } from './changeRequestChangeSchemaScheduleConflicts';
 
 /**
  * A change request change, containing info about the type of change and the specific changes.

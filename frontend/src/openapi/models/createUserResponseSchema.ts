@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateUserResponseSchemaAccountType } from './createUserResponseSchemaAccountType.js';
-import type { CreateUserResponseSchemaRootRole } from './createUserResponseSchemaRootRole.js';
+import type { CreateUserResponseSchemaAccountType } from './createUserResponseSchemaAccountType';
+import type { CreateUserResponseSchemaRootRole } from './createUserResponseSchemaRootRole';
 
 /**
  * An Unleash user after creation
@@ -50,6 +50,11 @@ export interface CreateUserResponseSchema {
      * @nullable
      */
     scimId?: string | null;
+    /**
+     * The seat type of this user
+     * @nullable
+     */
+    seatType?: string | null;
     /**
      * The last time this user logged in
      * @nullable

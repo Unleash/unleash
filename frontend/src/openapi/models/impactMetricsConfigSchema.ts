@@ -3,12 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ImpactMetricsConfigSchemaAggregationMode } from './impactMetricsConfigSchemaAggregationMode.js';
-import type { ImpactMetricsConfigSchemaLabelSelectors } from './impactMetricsConfigSchemaLabelSelectors.js';
-import type { ImpactMetricsConfigSchemaMode } from './impactMetricsConfigSchemaMode.js';
-import type { ImpactMetricsConfigSchemaTimeRange } from './impactMetricsConfigSchemaTimeRange.js';
-import type { ImpactMetricsConfigSchemaType } from './impactMetricsConfigSchemaType.js';
-import type { ImpactMetricsConfigSchemaYAxisMin } from './impactMetricsConfigSchemaYAxisMin.js';
+import type { ImpactMetricsConfigSchemaAggregationMode } from './impactMetricsConfigSchemaAggregationMode';
+import type { ImpactMetricsConfigSchemaLabelSelectors } from './impactMetricsConfigSchemaLabelSelectors';
+import type { ImpactMetricsConfigSchemaMode } from './impactMetricsConfigSchemaMode';
+import type { ImpactMetricsConfigSchemaStep } from './impactMetricsConfigSchemaStep';
+import type { ImpactMetricsConfigSchemaTimeRange } from './impactMetricsConfigSchemaTimeRange';
+import type { ImpactMetricsConfigSchemaType } from './impactMetricsConfigSchemaType';
+import type { ImpactMetricsConfigSchemaYAxisMin } from './impactMetricsConfigSchemaYAxisMin';
 
 /**
  * Describes the configuration for a single impact metric chart.
@@ -26,6 +27,11 @@ export interface ImpactMetricsConfigSchema {
     metricName: string;
     /** The access mode for this impact metric configuration: "read" when referenced by a safeguard, "write" otherwise. */
     mode?: ImpactMetricsConfigSchemaMode;
+    /**
+     * The step interval for querying metrics data. This is automatically calculated from the timeRange and stored when the metric is created or updated.
+     * @nullable
+     */
+    step?: ImpactMetricsConfigSchemaStep;
     /** The time range for the metric data. */
     timeRange: ImpactMetricsConfigSchemaTimeRange;
     /**

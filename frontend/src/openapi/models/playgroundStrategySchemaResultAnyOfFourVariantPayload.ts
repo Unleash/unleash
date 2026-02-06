@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundStrategySchemaResultAnyOfFourVariantPayloadType } from './playgroundStrategySchemaResultAnyOfFourVariantPayloadType.js';
+import type { PlaygroundStrategySchemaResultAnyOfFourVariantPayloadType } from './playgroundStrategySchemaResultAnyOfFourVariantPayloadType';
 
 /**
  * An optional payload attached to the variant.

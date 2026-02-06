@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SegmentStrategiesSchemaChangeRequestStrategiesItem } from './segmentStrategiesSchemaChangeRequestStrategiesItem.js';
-import type { SegmentStrategiesSchemaStrategiesItem } from './segmentStrategiesSchemaStrategiesItem.js';
+import type { SegmentStrategiesSchemaChangeRequestStrategiesItem } from './segmentStrategiesSchemaChangeRequestStrategiesItem';
+import type { SegmentStrategiesSchemaStrategiesItem } from './segmentStrategiesSchemaStrategiesItem';
 
 /**
  * A collection of strategies belonging to a specified segment.

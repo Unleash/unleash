@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TrafficUsageApiMonthlyDataSchemaMonthsItem } from './trafficUsageApiMonthlyDataSchemaMonthsItem.js';
+import type { TrafficUsageApiMonthlyDataSchemaMonthsItem } from './trafficUsageApiMonthlyDataSchemaMonthsItem';
 
 /**
  * Contains the recorded data usage for each API path, segmented by month and type of traffic

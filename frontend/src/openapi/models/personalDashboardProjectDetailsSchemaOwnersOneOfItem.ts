@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOf } from './personalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOf.js';
-import type { PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfThree } from './personalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfThree.js';
+import type { PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOf } from './personalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOf';
+import type { PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfThree } from './personalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfThree';
 
 export type PersonalDashboardProjectDetailsSchemaOwnersOneOfItem =
     | PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOf

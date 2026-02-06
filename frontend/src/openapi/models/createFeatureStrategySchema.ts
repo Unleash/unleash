@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema.js';
-import type { ParametersSchema } from './parametersSchema.js';
-import type { CreateStrategyVariantSchema } from './createStrategyVariantSchema.js';
+import type { ConstraintSchema } from './constraintSchema';
+import type { ParametersSchema } from './parametersSchema';
+import type { CreateStrategyVariantSchema } from './createStrategyVariantSchema';
 
 /**
  * Create a strategy configuration in a feature

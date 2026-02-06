@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionSetEventSchemaActionSet } from './actionSetEventSchemaActionSet.js';
-import type { SignalSchema } from './signalSchema.js';
-import type { ActionSetEventSchemaState } from './actionSetEventSchemaState.js';
+import type { ActionSetEventSchemaActionSet } from './actionSetEventSchemaActionSet';
+import type { SignalSchema } from './signalSchema';
+import type { ActionSetEventSchemaState } from './actionSetEventSchemaState';
 
 /**
  * An object describing an action event.

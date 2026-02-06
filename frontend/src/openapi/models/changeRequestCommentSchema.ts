@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCommentSchemaCreatedBy } from './changeRequestCommentSchemaCreatedBy.js';
+import type { ChangeRequestCommentSchemaCreatedBy } from './changeRequestCommentSchemaCreatedBy';
 
 /**
  * A comment belonging to a [change request](https://docs.getunleash.io/concepts/change-requests).

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FrontendApiFeaturesPostSchemaContextProperties } from './frontendApiFeaturesPostSchemaContextProperties.js';
+import type { FrontendApiFeaturesPostSchemaContextProperties } from './frontendApiFeaturesPostSchemaContextProperties';
 
 /**
  * The Unleash context.

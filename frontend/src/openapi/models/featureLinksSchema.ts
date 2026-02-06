@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureLinkSchema } from './featureLinkSchema.js';
+import type { FeatureLinkSchema } from './featureLinkSchema';
 
 /**
  * A list of links for a feature

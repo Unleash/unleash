@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfStatus } from './personalDashboardProjectDetailsSchemaOnboardingStatusOneOfStatus.js';
+import type { PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfStatus } from './personalDashboardProjectDetailsSchemaOnboardingStatusOneOfStatus';
 
 export type PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOf = {
     status: PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfStatus;

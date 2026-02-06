@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ApplicationEnvironmentIssuesSchema } from './applicationEnvironmentIssuesSchema.js';
+import type { ApplicationEnvironmentIssuesSchema } from './applicationEnvironmentIssuesSchema';
 
 /**
  * Data about an application environment

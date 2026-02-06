@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { VersionSchemaCurrent } from './versionSchemaCurrent.js';
-import type { VersionSchemaLatest } from './versionSchemaLatest.js';
+import type { VersionSchemaCurrent } from './versionSchemaCurrent';
+import type { VersionSchemaLatest } from './versionSchemaLatest';
 
 /**
  * Detailed information about an Unleash version

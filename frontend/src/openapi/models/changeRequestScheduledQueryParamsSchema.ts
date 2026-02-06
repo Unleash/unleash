@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestScheduledQueryParamsSchemaFeature } from './changeRequestScheduledQueryParamsSchemaFeature.js';
-import type { ChangeRequestScheduledQueryParamsSchemaStrategyId } from './changeRequestScheduledQueryParamsSchemaStrategyId.js';
-import type { ChangeRequestScheduledQueryParamsSchemaVariantForFlag } from './changeRequestScheduledQueryParamsSchemaVariantForFlag.js';
+import type { ChangeRequestScheduledQueryParamsSchemaFeature } from './changeRequestScheduledQueryParamsSchemaFeature';
+import type { ChangeRequestScheduledQueryParamsSchemaStrategyId } from './changeRequestScheduledQueryParamsSchemaStrategyId';
+import type { ChangeRequestScheduledQueryParamsSchemaVariantForFlag } from './changeRequestScheduledQueryParamsSchemaVariantForFlag';
 
 /**
  * Query parameters used to modify the list of scheduled change requests returned. For each parameter you add, the list will add any scheduled change requests matching that parameter.

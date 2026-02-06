@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ApplicationOverviewEnvironmentSchema } from './applicationOverviewEnvironmentSchema.js';
-import type { ApplicationOverviewIssuesSchema } from './applicationOverviewIssuesSchema.js';
+import type { ApplicationOverviewEnvironmentSchema } from './applicationOverviewEnvironmentSchema';
+import type { ApplicationOverviewIssuesSchema } from './applicationOverviewIssuesSchema';
 
 /**
  * Data about an application that's connected to Unleash via an SDK.

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestSearchItemSchemaOneOf } from './changeRequestSearchItemSchemaOneOf.js';
-import type { ChangeRequestSearchItemSchemaOneOfFour } from './changeRequestSearchItemSchemaOneOfFour.js';
+import type { ChangeRequestSearchItemSchemaOneOf } from './changeRequestSearchItemSchemaOneOf';
+import type { ChangeRequestSearchItemSchemaOneOfFour } from './changeRequestSearchItemSchemaOneOfFour';
 
 /**
  * A single change request item in search results.

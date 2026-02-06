@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LifecycleTrendsSchemaLifecycleTrendsProductionCategories } from './lifecycleTrendsSchemaLifecycleTrendsProductionCategories.js';
+import type { LifecycleTrendsSchemaLifecycleTrendsProductionCategories } from './lifecycleTrendsSchemaLifecycleTrendsProductionCategories';
 
 export type LifecycleTrendsSchemaLifecycleTrendsProduction = {
     categories: LifecycleTrendsSchemaLifecycleTrendsProductionCategories;

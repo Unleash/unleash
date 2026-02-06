@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FrontendApiFeatureSchemaVariantPayload } from './frontendApiFeatureSchemaVariantPayload.js';
+import type { FrontendApiFeatureSchemaVariantPayload } from './frontendApiFeatureSchemaVariantPayload';
 
 /**
  * Variant details

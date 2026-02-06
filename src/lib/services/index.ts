@@ -391,7 +391,7 @@ export const createServices = (
           );
 
     const edgeService = new EdgeService(
-        { edgeStore: stores.edgeTokenStore },
+        { edgeStore: stores.edgeTokenStore, db: db! },
         { apiTokenService },
         config,
     );

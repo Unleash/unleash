@@ -22,6 +22,8 @@ import {
 } from '../features/edgetokens/edge-verification.js';
 import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
 import EventEmitter from 'events';
+import type { Knex } from 'knex';
+import { createApiTokenService } from '../features/api-tokens/createApiTokenService.js';
 
 type ReplayProtectionArgs = {
     clientId: string;
@@ -38,18 +40,24 @@ export default class EdgeService {
 
     private readonly edgeMasterSecret: string | undefined;
 
+    private db: Db;
+
+    private eventBus: EventEmitter;
+
+    private config: IUnleashConfig;
+
     constructor(
-        { edgeStore }: { edgeStore: IEdgeTokenStore },
+        { edgeStore, db }: { edgeStore: IEdgeTokenStore; db: Db },
         { apiTokenService }: { apiTokenService: ApiTokenService },
-        {
-            getLogger,
-            edgeMasterSecret,
-        }: Pick<IUnleashConfig, 'getLogger' | 'edgeMasterSecret'>,
+        config: IUnleashConfig,
     ) {
-        this.logger = getLogger('lib/services/edge-service.ts');
+        this.logger = config.getLogger('lib/services/edge-service.ts');
         this.apiTokenService = apiTokenService;
         this.edgeTokenStore = edgeStore;
-        this.edgeMasterSecret = edgeMasterSecret;
+        this.edgeMasterSecret = config.edgeMasterSecret;
+        this.db = db;
+        this.eventBus = config.eventBus;
+        this.config = config;
     }
 
     async getValidTokens(tokens: string[]): Promise<ValidatedEdgeTokensSchema> {
@@ -139,15 +147,35 @@ export default class EdgeService {
                     token: existing.secret,
                 });
             } else if (tokenReq.environment && tokenReq.projects) {
-                const newToken =
-                    await this.apiTokenService.createApiTokenWithProjects({
-                        tokenName: `enterprise_edge_${tokenReq.environment}_${tokenReq.projects.join('_')}`,
-                        alias: `ee_${tokenReq.environment}`,
-                        type: ApiTokenType.BACKEND,
-                        environment: tokenReq.environment,
-                        projects: tokenReq.projects,
-                    });
-                await this.edgeTokenStore.saveToken(clientId, newToken);
+                // Wrap both operations in a transaction to ensure atomicity
+                const newToken = await this.db.transaction(async (trx) => {
+                    // Create a transactional API token service
+                    const transactionalApiTokenService =
+                        createApiTokenService(trx, this.config);
+
+                    // Create API token using the transactional service
+                    const token =
+                        await transactionalApiTokenService.createApiTokenWithProjects(
+                            {
+                                tokenName: `enterprise_edge_${tokenReq.environment}_${tokenReq.projects.join('_')}`,
+                                alias: `ee_${tokenReq.environment}`,
+                                type: ApiTokenType.BACKEND,
+                                environment: tokenReq.environment,
+                                projects: tokenReq.projects,
+                            },
+                        );
+
+                    // Save edge token using a transactional store
+                    const transactionalEdgeStore = new EdgeTokenStore(
+                        trx,
+                        this.eventBus,
+                        this.config,
+                    );
+                    await transactionalEdgeStore.saveToken(clientId, token);
+
+                    return token;
+                });
+
                 tokens.push({
                     projects: newToken.projects,
                     type: newToken.type,

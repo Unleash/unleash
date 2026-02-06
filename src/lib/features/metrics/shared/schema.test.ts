@@ -103,3 +103,23 @@ test('clientMetricsSchema should use instanceId', () => {
 
     expect(value.instanceId).toBe('some');
 });
+
+test('clientMetricsSchema should accept null variants and default to empty object', () => {
+    const { error, value } = clientMetricsSchema.validate({
+        appName: 'test',
+        bucket: {
+            start: Date.now(),
+            stop: Date.now(),
+            toggles: {
+                Demo: {
+                    yes: 1,
+                    no: 2,
+                    variants: null,
+                },
+            },
+        },
+    });
+
+    expect(error).toBeUndefined();
+    expect(value.bucket.toggles.Demo.variants).toEqual({});
+});

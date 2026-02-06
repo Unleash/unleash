@@ -7,7 +7,11 @@ const countSchema = joi
     .keys({
         yes: joi.number().min(0).empty('').default(0),
         no: joi.number().min(0).empty('').default(0),
-        variants: joi.object().pattern(joi.string(), joi.number().min(0)),
+        variants: joi
+            .object()
+            .pattern(joi.string(), joi.number().min(0))
+            .empty(null)
+            .default({}),
     });
 
 // validated type from client-metrics-schema.ts with default values
@@ -45,7 +49,11 @@ export const clientMetricsEnvSchema = joi
         yes: joi.number().default(0),
         no: joi.number().default(0),
         timestamp: joi.date(),
-        variants: joi.object().pattern(joi.string(), joi.number().min(0)),
+        variants: joi
+            .object()
+            .pattern(joi.string(), joi.number().min(0))
+            .empty(null)
+            .default({}),
     });
 export const clientMetricsEnvBulkSchema = joi
     .array()

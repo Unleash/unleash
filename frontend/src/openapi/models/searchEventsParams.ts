@@ -11,34 +11,42 @@ export type SearchEventsParams = {
     query?: string;
     /**
      * Filter by event ID using supported operators: IS, IS_ANY_OF.
+     * @pattern ^(IS|IS_ANY_OF):(.*?)(,([0-9]+))*$
      */
     id?: string;
     /**
      * Filter by group ID using supported operators: IS, IS_ANY_OF.
+     * @pattern ^(IS|IS_ANY_OF):(.*?)(,([0-9]+))*$
      */
     groupId?: string;
     /**
      * Filter by feature name using supported operators: IS, IS_ANY_OF
+     * @pattern ^(IS|IS_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     feature?: string;
     /**
      * Filter by projects ID using supported operators: IS, IS_ANY_OF.
+     * @pattern ^(IS|IS_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     project?: string;
     /**
      * Filter by event type using supported operators: IS, IS_ANY_OF.
+     * @pattern ^(IS|IS_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     type?: string;
     /**
      * Filter by the ID of the event creator, using supported operators: IS, IS_ANY_OF.
+     * @pattern ^(IS|IS_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     createdBy?: string;
     /**
      * The starting date of the creation date range in IS:yyyy-MM-dd format
+     * @pattern ^(IS):\d{4}-\d{2}-\d{2}$
      */
     from?: string;
     /**
      * The ending date of the creation date range in IS:yyyy-MM-dd format
+     * @pattern ^(IS):\d{4}-\d{2}-\d{2}$
      */
     to?: string;
     /**
@@ -51,6 +59,7 @@ export type SearchEventsParams = {
     limit?: string;
     /**
      * Filter by environment name using supported operators: IS, IS_ANY_OF.
+     * @pattern ^(IS|IS_ANY_OF):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     environment?: string;
 };

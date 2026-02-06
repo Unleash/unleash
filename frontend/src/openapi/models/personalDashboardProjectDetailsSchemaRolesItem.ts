@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PersonalDashboardProjectDetailsSchemaRolesItemType } from './personalDashboardProjectDetailsSchemaRolesItemType.js';
+import type { PersonalDashboardProjectDetailsSchemaRolesItemType } from './personalDashboardProjectDetailsSchemaRolesItemType';
 
 /**
  * An Unleash role.

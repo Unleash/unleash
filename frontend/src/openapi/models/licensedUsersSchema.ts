@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LicensedUsersSchemaLicensedUsers } from './licensedUsersSchemaLicensedUsers.js';
+import type { LicensedUsersSchemaLicensedUsers } from './licensedUsersSchemaLicensedUsers';
 
 /**
  * A response model representing user license data.

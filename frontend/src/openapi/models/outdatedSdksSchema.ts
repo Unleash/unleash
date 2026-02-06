@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { OutdatedSdksSchemaSdksItem } from './outdatedSdksSchemaSdksItem.js';
+import type { OutdatedSdksSchemaSdksItem } from './outdatedSdksSchemaSdksItem';
 
 /**
  * Data about outdated SDKs that should be upgraded.

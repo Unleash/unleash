@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { MetricQuerySchemaAggregationMode } from './metricQuerySchemaAggregationMode.js';
-import type { MetricQuerySchemaLabelSelectors } from './metricQuerySchemaLabelSelectors.js';
-import type { MetricQuerySchemaTimeRange } from './metricQuerySchemaTimeRange.js';
+import type { MetricQuerySchemaAggregationMode } from './metricQuerySchemaAggregationMode';
+import type { MetricQuerySchemaLabelSelectors } from './metricQuerySchemaLabelSelectors';
+import type { MetricQuerySchemaTimeRange } from './metricQuerySchemaTimeRange';
 
 /**
  * Common metric query configuration for selecting and filtering metric data.

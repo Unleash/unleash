@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InvoicesSchemaItem } from './invoicesSchemaItem.js';
+import type { InvoicesSchemaItem } from './invoicesSchemaItem';
 
 /**
  * A list of invoices

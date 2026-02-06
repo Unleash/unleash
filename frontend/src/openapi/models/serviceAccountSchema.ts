@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PatSchema } from './patSchema.js';
+import type { PatSchema } from './patSchema';
 
 /**
  * Represents a [service account](https://docs.getunleash.io/concepts/service-accounts). Service accounts are used to let systems interact with the Unleash API.

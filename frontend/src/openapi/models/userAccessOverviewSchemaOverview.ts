@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserAccessOverviewSchemaOverviewEnvironmentItem } from './userAccessOverviewSchemaOverviewEnvironmentItem.js';
-import type { UserAccessOverviewSchemaOverviewProjectItem } from './userAccessOverviewSchemaOverviewProjectItem.js';
-import type { UserAccessOverviewSchemaOverviewRootItem } from './userAccessOverviewSchemaOverviewRootItem.js';
+import type { UserAccessOverviewSchemaOverviewEnvironmentItem } from './userAccessOverviewSchemaOverviewEnvironmentItem';
+import type { UserAccessOverviewSchemaOverviewProjectItem } from './userAccessOverviewSchemaOverviewProjectItem';
+import type { UserAccessOverviewSchemaOverviewRootItem } from './userAccessOverviewSchemaOverviewRootItem';
 
 /**
  * The access overview (list of permissions) for the user

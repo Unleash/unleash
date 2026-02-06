@@ -13,4 +13,5 @@ export type UpdateUserSchemaRootRole =
     | 'Editor'
     | 'Viewer'
     | 'Owner'
-    | 'Member';
+    | 'Member'
+    | 'Reader';

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserAccessOverviewSchemaProjectRolesItemPermissionsItem } from './userAccessOverviewSchemaProjectRolesItemPermissionsItem.js';
+import type { UserAccessOverviewSchemaProjectRolesItemPermissionsItem } from './userAccessOverviewSchemaProjectRolesItemPermissionsItem';
 
 export type UserAccessOverviewSchemaProjectRolesItem = {
     /** A more detailed description of the role and what use it's intended for */

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdminPermissionsSchemaPermissionsEnvironmentsItem } from './adminPermissionsSchemaPermissionsEnvironmentsItem.js';
-import type { AdminPermissionSchema } from './adminPermissionSchema.js';
+import type { AdminPermissionsSchemaPermissionsEnvironmentsItem } from './adminPermissionsSchemaPermissionsEnvironmentsItem';
+import type { AdminPermissionSchema } from './adminPermissionSchema';
 
 /**
  * Returns permissions available at all three levels (root|project|environment)

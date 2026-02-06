@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateSchemaOneOfNineAction } from './changeRequestCreateSchemaOneOfNineAction.js';
-import type { CreateFeatureStrategySchema } from './createFeatureStrategySchema.js';
+import type { ChangeRequestCreateSchemaOneOfNineAction } from './changeRequestCreateSchemaOneOfNineAction';
+import type { CreateFeatureStrategySchema } from './createFeatureStrategySchema';
 
 /**
  * Add a strategy to the feature

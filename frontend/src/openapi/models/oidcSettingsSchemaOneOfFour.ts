@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { OidcSettingsSchemaOneOfFourDefaultRootRole } from './oidcSettingsSchemaOneOfFourDefaultRootRole.js';
-import type { OidcSettingsSchemaOneOfFourIdTokenSigningAlgorithm } from './oidcSettingsSchemaOneOfFourIdTokenSigningAlgorithm.js';
+import type { OidcSettingsSchemaOneOfFourDefaultRootRole } from './oidcSettingsSchemaOneOfFourDefaultRootRole';
+import type { OidcSettingsSchemaOneOfFourIdTokenSigningAlgorithm } from './oidcSettingsSchemaOneOfFourIdTokenSigningAlgorithm';
 
 export type OidcSettingsSchemaOneOfFour = {
     /** Authentication Context Class Reference, used to request extra values in the acr claim returned from the server. If multiple values are required, they should be space separated. 

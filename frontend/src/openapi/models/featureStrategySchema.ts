@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema.js';
-import type { ParametersSchema } from './parametersSchema.js';
-import type { StrategyVariantSchema } from './strategyVariantSchema.js';
+import type { ConstraintSchema } from './constraintSchema';
+import type { ParametersSchema } from './parametersSchema';
+import type { StrategyVariantSchema } from './strategyVariantSchema';
 
 /**
  * A single activation strategy configuration schema for a feature

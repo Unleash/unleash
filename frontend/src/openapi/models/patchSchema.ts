@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PatchSchemaOp } from './patchSchemaOp.js';
+import type { PatchSchemaOp } from './patchSchemaOp';
 
 /**
  * A [JSON patch](https://www.rfc-editor.org/rfc/rfc6902) operation description

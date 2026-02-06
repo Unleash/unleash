@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { IntegrationEventSchemaDetails } from './integrationEventSchemaDetails.js';
-import type { EventSchema } from './eventSchema.js';
-import type { IntegrationEventSchemaState } from './integrationEventSchemaState.js';
+import type { IntegrationEventSchemaDetails } from './integrationEventSchemaDetails';
+import type { EventSchema } from './eventSchema';
+import type { IntegrationEventSchemaState } from './integrationEventSchemaState';
 
 /**
  * An object describing an integration event.

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionSchemaExecutionParams } from './actionSchemaExecutionParams.js';
+import type { ActionSchemaExecutionParams } from './actionSchemaExecutionParams';
 
 /**
  * Represents a single action response

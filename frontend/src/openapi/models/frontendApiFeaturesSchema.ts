@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FrontendApiFeatureSchema } from './frontendApiFeatureSchema.js';
+import type { FrontendApiFeatureSchema } from './frontendApiFeatureSchema';
 
 /**
  * Frontend SDK features list

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UpdateStrategySchemaParametersItem } from './updateStrategySchemaParametersItem.js';
+import type { UpdateStrategySchemaParametersItem } from './updateStrategySchemaParametersItem';
 
 /**
  * The data required to update a strategy type.

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { HealthCheckSchemaHealth } from './healthCheckSchemaHealth.js';
+import type { HealthCheckSchemaHealth } from './healthCheckSchemaHealth';
 
 /**
  * Used by service orchestrators to decide whether this Unleash instance should be marked as healthy or unhealthy

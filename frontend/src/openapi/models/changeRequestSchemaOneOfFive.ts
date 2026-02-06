@@ -3,14 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema.js';
-import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema.js';
-import type { ChangeRequestSchemaOneOfFiveCreatedBy } from './changeRequestSchemaOneOfFiveCreatedBy.js';
-import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema.js';
-import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema.js';
-import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema.js';
-import type { ChangeRequestSchemaOneOfFiveState } from './changeRequestSchemaOneOfFiveState.js';
-import type { ChangeRequestSchemaOneOfFiveStateTimestamps } from './changeRequestSchemaOneOfFiveStateTimestamps.js';
+import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
+import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
+import type { ChangeRequestSchemaOneOfFiveCreatedBy } from './changeRequestSchemaOneOfFiveCreatedBy';
+import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
+import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema';
+import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
+import type { ChangeRequestSchemaOneOfFiveState } from './changeRequestSchemaOneOfFiveState';
+import type { ChangeRequestSchemaOneOfFiveStateTimestamps } from './changeRequestSchemaOneOfFiveStateTimestamps';
 
 export type ChangeRequestSchemaOneOfFive = {
     /** A list of approvals that this change request has received. */

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateSchemaOneOfSixAction } from './changeRequestCreateSchemaOneOfSixAction.js';
-import type { ChangeRequestCreateSchemaOneOfSixPayload } from './changeRequestCreateSchemaOneOfSixPayload.js';
+import type { ChangeRequestCreateSchemaOneOfSixAction } from './changeRequestCreateSchemaOneOfSixAction';
+import type { ChangeRequestCreateSchemaOneOfSixPayload } from './changeRequestCreateSchemaOneOfSixPayload';
 
 /**
  * Update the enabled state for a feature.

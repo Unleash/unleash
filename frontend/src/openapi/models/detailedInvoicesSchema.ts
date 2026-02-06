@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { DetailedInvoicesSchemaInvoicesItem } from './detailedInvoicesSchemaInvoicesItem.js';
+import type { DetailedInvoicesSchemaInvoicesItem } from './detailedInvoicesSchemaInvoicesItem';
 
 /**
  * Detailed invoices response with nested line items

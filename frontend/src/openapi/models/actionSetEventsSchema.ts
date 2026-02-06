@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionSetEventSchema } from './actionSetEventSchema.js';
+import type { ActionSetEventSchema } from './actionSetEventSchema';
 
 /**
  * A response model with a list of action set events.

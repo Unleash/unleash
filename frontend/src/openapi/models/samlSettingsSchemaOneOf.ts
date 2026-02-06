@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SamlSettingsSchemaOneOfDefaultRootRole } from './samlSettingsSchemaOneOfDefaultRootRole.js';
+import type { SamlSettingsSchemaOneOfDefaultRootRole } from './samlSettingsSchemaOneOfDefaultRootRole';
 
 export type SamlSettingsSchemaOneOf = {
     /** Should Unleash create users based on the emails coming back in the authentication reply from the SAML server */

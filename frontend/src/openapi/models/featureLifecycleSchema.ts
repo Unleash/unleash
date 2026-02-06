@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureLifecycleSchemaItem } from './featureLifecycleSchemaItem.js';
+import type { FeatureLifecycleSchemaItem } from './featureLifecycleSchemaItem';
 
 /**
  * A list of lifecycle stages for a given feature

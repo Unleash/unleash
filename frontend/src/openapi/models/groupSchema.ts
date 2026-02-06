@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { GroupUserModelSchema } from './groupUserModelSchema.js';
+import type { GroupUserModelSchema } from './groupUserModelSchema';
 
 /**
  * A detailed information about a user group

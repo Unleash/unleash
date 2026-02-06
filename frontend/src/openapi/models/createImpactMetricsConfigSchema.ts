@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateImpactMetricsConfigSchemaAggregationMode } from './createImpactMetricsConfigSchemaAggregationMode.js';
-import type { CreateImpactMetricsConfigSchemaLabelSelectors } from './createImpactMetricsConfigSchemaLabelSelectors.js';
-import type { CreateImpactMetricsConfigSchemaTimeRange } from './createImpactMetricsConfigSchemaTimeRange.js';
-import type { CreateImpactMetricsConfigSchemaYAxisMin } from './createImpactMetricsConfigSchemaYAxisMin.js';
+import type { CreateImpactMetricsConfigSchemaAggregationMode } from './createImpactMetricsConfigSchemaAggregationMode';
+import type { CreateImpactMetricsConfigSchemaLabelSelectors } from './createImpactMetricsConfigSchemaLabelSelectors';
+import type { CreateImpactMetricsConfigSchemaTimeRange } from './createImpactMetricsConfigSchemaTimeRange';
+import type { CreateImpactMetricsConfigSchemaYAxisMin } from './createImpactMetricsConfigSchemaYAxisMin';
 
 /**
  * Describes the configuration for a single impact metric chart.

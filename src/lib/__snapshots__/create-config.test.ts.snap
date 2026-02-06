@@ -57,6 +57,7 @@ exports[`should create default config 1`] = `
     "version": undefined,
   },
   "disableScheduler": undefined,
+  "edgeMasterSecret": undefined,
   "email": {
     "host": undefined,
     "optionalHeaders": {},

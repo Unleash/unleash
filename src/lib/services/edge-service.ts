@@ -137,7 +137,7 @@ export default class EdgeService {
             } else if (tokenReq.environment && tokenReq.projects) {
                 const newToken =
                     await this.apiTokenService.createApiTokenWithProjects({
-                        tokenName: `enterprise_edge_${tokenReq.environment}`,
+                        tokenName: `enterprise_edge_${tokenReq.environment}_${tokenReq.projects.join('_')}`,
                         alias: `ee_${tokenReq.environment}`,
                         type: ApiTokenType.BACKEND,
                         environment: tokenReq.environment,

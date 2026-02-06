@@ -3,6 +3,8 @@ import type { EdgeService } from '../../services/index.js';
 import { createHash, createHmac } from 'node:crypto';
 import { timingSafeEqual } from 'crypto';
 
+const REQUEST_LIFETIME = 5 * 60 * 1000;
+
 export const hmacSignatureVerifyTokenRequest = (
     edgeService: EdgeService,
 ): RequestHandler => {
@@ -28,7 +30,7 @@ export const hmacSignatureVerifyTokenRequest = (
             }
             const now = Date.now();
             const ts = Date.parse(timestamp);
-            if (Math.abs(now - ts) > 5 * 60 * 1000) {
+            if (Math.abs(now - ts) > REQUEST_LIFETIME) {
                 res.status(401).json({ error: 'Stale request' });
                 return;
             }
@@ -49,9 +51,6 @@ export const hmacSignatureVerifyTokenRequest = (
                 return;
             }
 
-            const secret = edgeService
-                .decryptedClientSecret(client)
-                .toString('utf-8');
             const bodyAsString = JSON.stringify(req.body || '');
             const computedHash = createHash('sha256')
                 .update(bodyAsString)
@@ -71,6 +70,10 @@ export const hmacSignatureVerifyTokenRequest = (
                 nonce +
                 '\n' +
                 bodyHash;
+            const secret = edgeService
+                .decryptedClientSecret(client)
+                .toString('utf-8');
+
             const expectedSig = createHmac(
                 'sha256',
                 Buffer.from(secret, 'base64url'),

@@ -7,16 +7,14 @@ import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import { createHmac, randomBytes } from 'node:crypto';
 import type { EdgeEnvironmentsProjectsListSchema } from '../../../../lib/openapi/index.js';
 import { createHash } from 'crypto';
-import {
-    ApiTokenType,
-    SYSTEM_USER_AUDIT,
-} from '../../../../lib/server-impl.js';
+import { ApiTokenType } from '../../../../lib/server-impl.js';
 import { addMinutes } from 'date-fns';
 let app: IUnleashTest;
 let db: ITestDb;
 const clientId = 'enterprise-edge';
 const edgeSharedSecret = randomBytes(32).toString('base64url');
 const edgeMasterSecret = randomBytes(32).toString('base64');
+const environment = 'development';
 describe('HMAC authenticated create token requests', () => {
     beforeAll(async () => {
         db = await dbInit('edge_create_token_request', getLogger);
@@ -24,16 +22,13 @@ describe('HMAC authenticated create token requests', () => {
             edgeMasterSecret,
         });
         await app.services.edgeService.saveClient(clientId, edgeSharedSecret);
-        const exists =
-            await app.services.environmentService.exists('development');
-        console.error(exists);
     });
 
     test('Happy case, all headers in place and valid signature', async () => {
         const body: EdgeEnvironmentsProjectsListSchema = {
             tokens: [
                 {
-                    environment: 'development',
+                    environment,
                     projects: ['*'],
                 },
             ],
@@ -64,7 +59,7 @@ describe('HMAC authenticated create token requests', () => {
             .send({
                 tokens: [
                     {
-                        environment: 'development',
+                        environment,
                         projects: ['*'],
                     },
                 ],
@@ -81,7 +76,7 @@ describe('HMAC authenticated create token requests', () => {
         const body: EdgeEnvironmentsProjectsListSchema = {
             tokens: [
                 {
-                    environment: 'development',
+                    environment,
                     projects: ['*'],
                 },
             ],
@@ -142,7 +137,7 @@ describe('HMAC authenticated create token requests', () => {
         const signedBody: EdgeEnvironmentsProjectsListSchema = {
             tokens: [
                 {
-                    environment: 'development',
+                    environment,
                     projects: ['*'],
                 },
             ],
@@ -172,7 +167,7 @@ describe('HMAC authenticated create token requests', () => {
         const signedBody: EdgeEnvironmentsProjectsListSchema = {
             tokens: [
                 {
-                    environment: 'development',
+                    environment,
                     projects: ['*'],
                 },
             ],
@@ -190,7 +185,7 @@ describe('HMAC authenticated create token requests', () => {
             .send({
                 tokens: [
                     {
-                        environment: 'production',
+                        environment,
                         projects: ['*'],
                     },
                 ],

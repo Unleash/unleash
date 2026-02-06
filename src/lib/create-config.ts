@@ -804,6 +804,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const edgeMasterSecret =
         options.edgeMasterSecret ?? process.env.EDGE_MASTER_SECRET;
 
+    const edgeClientSecret =
+        options.edgeClientSecret ?? process.env.EDGE_CLIENT_SECRET;
     return {
         db,
         session,
@@ -851,5 +853,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         customStrategySettings,
         checkDbOnReady,
         edgeMasterSecret,
+        edgeClientSecret,
     };
 }

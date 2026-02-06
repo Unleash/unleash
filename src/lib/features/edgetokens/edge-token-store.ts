@@ -126,10 +126,13 @@ export class EdgeTokenStore implements IEdgeTokenStore {
 
     async saveClient(clientId: string, secretEnc: Buffer): Promise<void> {
         const stop = this.timer('save_client');
-        await this.db(T.edgeHmacClients).insert({
-            id: clientId,
-            secret_enc: secretEnc,
-        });
+        await this.db(T.edgeHmacClients)
+            .insert({
+                id: clientId,
+                secret_enc: secretEnc,
+            })
+            .onConflict(['id'])
+            .merge({ secret_enc: secretEnc, created_at: new Date() });
         stop();
     }
 }

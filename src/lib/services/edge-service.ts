@@ -1,5 +1,6 @@
 import {
     ApiTokenType,
+    type Db,
     type IApiToken,
     type IUnleashConfig,
 } from '../types/index.js';
@@ -19,6 +20,8 @@ import {
     decryptSecret,
     encryptSecret,
 } from '../features/edgetokens/edge-verification.js';
+import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
+import EventEmitter from 'events';
 
 type ReplayProtectionArgs = {
     clientId: string;
@@ -110,6 +113,7 @@ export default class EdgeService {
         }
         const secretEnc = encryptSecret(masterSecretBuffer, secret);
         await this.edgeTokenStore.saveClient(clientId, secretEnc);
+        this.logger.info('Successfully set client secret');
     }
 
     async getOrCreateTokens(

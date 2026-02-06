@@ -183,6 +183,7 @@ export interface IUnleashOptions {
     customStrategySettings?: ICustomStrategySettings;
     checkDbOnReady?: boolean;
     edgeMasterSecret?: string;
+    edgeClientSecret?: string;
 }
 
 export interface IEmailOption {
@@ -312,4 +313,5 @@ export interface IUnleashConfig {
     customStrategySettings?: ICustomStrategySettings;
     checkDbOnReady?: boolean;
     edgeMasterSecret?: string;
+    edgeClientSecret?: string;
 }

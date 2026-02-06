@@ -12,7 +12,7 @@ import { addMinutes } from 'date-fns';
 let app: IUnleashTest;
 let db: ITestDb;
 const clientId = 'enterprise-edge';
-const edgeSharedSecret = randomBytes(32).toString('base64url');
+const edgeClientSecret = randomBytes(32).toString('base64url');
 const edgeMasterSecret = randomBytes(32).toString('base64');
 const environment = 'development';
 describe('HMAC authenticated create token requests', () => {
@@ -20,8 +20,9 @@ describe('HMAC authenticated create token requests', () => {
         db = await dbInit('edge_create_token_request', getLogger);
         app = await setupAppWithCustomConfig(db.stores, {
             edgeMasterSecret,
+            edgeClientSecret,
         });
-        await app.services.edgeService.saveClient(clientId, edgeSharedSecret);
+        await app.services.edgeService.saveClient(clientId, edgeClientSecret);
     });
 
     test('Happy case, all headers in place and valid signature', async () => {
@@ -239,7 +240,7 @@ const buildRequest = ({
         bodyHash;
     const signature = createHmac(
         'sha256',
-        Buffer.from(edgeSharedSecret, 'base64url'),
+        Buffer.from(edgeClientSecret, 'base64url'),
     )
         .update(canonical)
         .digest('base64url');

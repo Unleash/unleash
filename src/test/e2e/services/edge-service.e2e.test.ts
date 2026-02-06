@@ -51,7 +51,7 @@ beforeAll(async () => {
     const apiTokenService = createApiTokenService(db.rawDatabase, config);
 
     edgeService = new EdgeService(
-        { edgeStore: db.stores.edgeTokenStore },
+        { edgeStore: db.stores.edgeTokenStore, db: db.rawDatabase },
         { apiTokenService },
         config,
     );

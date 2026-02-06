@@ -5,7 +5,7 @@ import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
-import { format, subYears } from 'date-fns';
+import { format, isAfter, isBefore, subYears } from 'date-fns';
 import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 
@@ -89,6 +89,33 @@ export const useEventLogSearch = (
         ['from', 'to', 'offset'],
     );
 
+    const setTableStateWithDateHandling = (newState: typeof tableState) => {
+        const { from, to, ...rest } = newState;
+        if (from && !to) {
+            const newFromDate = new Date(from.values[0]);
+            const oldToDate = new Date(tableState.to.values[0]);
+            if (isAfter(newFromDate, oldToDate)) {
+                setTableState({
+                    ...rest,
+                    from,
+                    to: from,
+                });
+            }
+        } else if (to && !from) {
+            const newToDate = new Date(to.values[0]);
+            const oldFromDate = new Date(tableState.from.values[0]);
+            if (isBefore(newToDate, oldFromDate)) {
+                setTableState({
+                    ...rest,
+                    to,
+                    from: to,
+                });
+            }
+        }
+
+        setTableState(newState);
+    };
+
     const filterState = (() => {
         const { offset, limit, query, ...fs } = tableState;
         switch (logType.type) {
@@ -127,7 +154,7 @@ export const useEventLogSearch = (
         loading,
         initialLoad,
         tableState,
-        setTableState,
+        setTableState: setTableStateWithDateHandling,
         filterState,
         pagination: {
             pageSize: tableState.limit ?? 0,

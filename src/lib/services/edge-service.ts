@@ -51,6 +51,11 @@ export default class EdgeService {
         { apiTokenService }: { apiTokenService: ApiTokenService },
         config: IUnleashConfig,
     ) {
+        if (!db) {
+            throw new InvalidOperationError(
+                'EdgeService requires a database connection',
+            );
+        }
         this.logger = config.getLogger('lib/services/edge-service.ts');
         this.apiTokenService = apiTokenService;
         this.edgeTokenStore = edgeStore;

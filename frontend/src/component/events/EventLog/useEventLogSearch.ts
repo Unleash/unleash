@@ -1,5 +1,5 @@
 import { encodeQueryParams, StringParam, withDefault } from 'use-query-params';
-import { FilterItemParam } from 'utils/serializeQueryParams';
+import { type FilterItem, FilterItemParam } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
@@ -47,6 +47,33 @@ export const calculatePaginationInfo = ({
     };
 };
 
+export const handleDateAdjustment = (oldState, stateUpdate) => {
+    const { from, to, ...rest } = stateUpdate;
+    if (from && !to) {
+        const newFromDate = new Date(from.values[0]);
+        const oldToDate = new Date(oldState.to.values[0]);
+        if (isAfter(newFromDate, oldToDate)) {
+            return {
+                ...rest,
+                from,
+                to: from,
+            };
+        }
+    } else if (to && !from) {
+        const newToDate = new Date(to.values[0]);
+        const oldFromDate = new Date(oldState.from.values[0]);
+        if (isBefore(newToDate, oldFromDate)) {
+            return {
+                ...rest,
+                to,
+                from: to,
+            };
+        }
+    }
+
+    return stateUpdate;
+};
+
 export const useEventLogSearch = (
     logType: Log,
     storageKey = 'event-log',
@@ -90,30 +117,7 @@ export const useEventLogSearch = (
     );
 
     const setTableStateWithDateHandling = (newState: typeof tableState) => {
-        const { from, to, ...rest } = newState;
-        if (from && !to) {
-            const newFromDate = new Date(from.values[0]);
-            const oldToDate = new Date(tableState.to.values[0]);
-            if (isAfter(newFromDate, oldToDate)) {
-                setTableState({
-                    ...rest,
-                    from,
-                    to: from,
-                });
-            }
-        } else if (to && !from) {
-            const newToDate = new Date(to.values[0]);
-            const oldFromDate = new Date(tableState.from.values[0]);
-            if (isBefore(newToDate, oldFromDate)) {
-                setTableState({
-                    ...rest,
-                    to,
-                    from: to,
-                });
-            }
-        }
-
-        setTableState(newState);
+        setTableState((oldState) => handleDateAdjustment(oldState, newState));
     };
 
     const filterState = (() => {

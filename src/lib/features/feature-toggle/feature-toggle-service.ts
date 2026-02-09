@@ -902,6 +902,19 @@ export class FeatureToggleService {
                     const milestoneStrategy =
                         await this.releasePlanMilestoneStrategyStore.get(id);
                     if (milestoneStrategy) {
+                        // Build preData from existing milestone strategy
+                        const preData: IStrategyConfig = {
+                            id,
+                            name: milestoneStrategy.strategyName,
+                            parameters: milestoneStrategy.parameters ?? {},
+                            constraints: milestoneStrategy.constraints ?? [],
+                            variants: milestoneStrategy.variants ?? [],
+                            segments: milestoneStrategy.segments ?? [],
+                            title: milestoneStrategy.title,
+                            sortOrder: milestoneStrategy.sortOrder,
+                            disabled: false,
+                        };
+
                         // Update only milestone_strategies (not yet activated)
                         await this.releasePlanMilestoneStrategyStore.updateWithSegments(
                             id,
@@ -915,8 +928,8 @@ export class FeatureToggleService {
                             updates.segments ?? [],
                         );
 
-                        // Return the updated milestone strategy in IStrategyConfig format
-                        return {
+                        // Build data (new state) from updates merged with existing
+                        const data: Saved<IStrategyConfig> = {
                             id,
                             name:
                                 updates.name ?? milestoneStrategy.strategyName,
@@ -933,6 +946,20 @@ export class FeatureToggleService {
                             sortOrder: milestoneStrategy.sortOrder,
                             disabled: false,
                         };
+
+                        // Emit event for CR conflict detection and audit
+                        await this.eventService.storeEvent(
+                            new FeatureStrategyUpdateEvent({
+                                project: projectId,
+                                featureName,
+                                environment,
+                                data,
+                                preData,
+                                auditUser,
+                            }),
+                        );
+
+                        return data;
                     }
                 } catch {
                     // Not found in milestone_strategies either
@@ -1668,10 +1695,37 @@ export class FeatureToggleService {
     }
 
     async getStrategy(strategyId: string): Promise<Saved<IStrategyConfig>> {
-        const strategy =
-            await this.featureStrategiesStore.getStrategyById(strategyId);
+        let strategy: IFeatureStrategy | undefined;
+        let segments: { id: number }[] = [];
 
-        const segments = await this.segmentService.getByStrategy(strategyId);
+        try {
+            strategy =
+                await this.featureStrategiesStore.getStrategyById(strategyId);
+            segments = await this.segmentService.getByStrategy(strategyId);
+        } catch {
+            // Strategy not in feature_strategies, check milestone_strategies
+            if (this.releasePlanMilestoneStrategyStore) {
+                const milestoneStrategy =
+                    await this.releasePlanMilestoneStrategyStore.get(strategyId);
+                if (milestoneStrategy) {
+                    return {
+                        id: milestoneStrategy.id,
+                        name: milestoneStrategy.strategyName,
+                        constraints: milestoneStrategy.constraints || [],
+                        parameters: milestoneStrategy.parameters,
+                        variants: milestoneStrategy.variants || [],
+                        segments: milestoneStrategy.segments || [],
+                        title: milestoneStrategy.title,
+                        disabled: false,
+                        sortOrder: milestoneStrategy.sortOrder,
+                    };
+                }
+            }
+            throw new NotFoundError(
+                `Could not find strategy with id ${strategyId}`,
+            );
+        }
+
         let result: Saved<IStrategyConfig> = {
             id: strategy.id,
             name: strategy.strategyName,

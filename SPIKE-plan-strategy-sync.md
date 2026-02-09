@@ -69,6 +69,8 @@ When CRs are enabled and applied:
 - Added optional `ReleasePlanMilestoneStrategyStore` dependency
 - In `unprotectedUpdateStrategy`, when strategy has `milestoneId`:
   - Uses `db.transaction()` to wrap both updates atomically
+- Modified `getStrategy()` to also check `milestone_strategies` if not found in `feature_strategies`
+  - This enables Change Requests for non-activated milestone strategies (enterprise code calls `getStrategy()` to capture snapshots)
 
 #### 5. [createFeatureToggleService.ts](src/lib/features/feature-toggle/createFeatureToggleService.ts)
 - Creates and wires up `ReleasePlanMilestoneStrategyStore`
@@ -89,12 +91,19 @@ To test:
 4. Verify both `feature_strategies` and `milestone_strategies` have the updated values
 5. Verify both segments tables are in sync
 
-### CR Testing
+### CR Testing (Activated Milestone)
 1. Enable change requests for an environment
 2. Create a release plan and activate milestone
 3. Create a CR to update the strategy
 4. Approve and apply the CR
 5. Verify both tables are updated
+
+### CR Testing (Non-Activated Milestone)
+1. Enable change requests for an environment
+2. Create a release plan with a strategy (do NOT activate the milestone)
+3. Create a CR to update the milestone strategy (using its ID)
+4. Approve and apply the CR
+5. Verify `milestone_strategies` is updated (no `feature_strategies` entry should exist)
 
 ## Notes
 
@@ -102,9 +111,9 @@ To test:
 - Feature strategy segments updated via segment service (outside transaction - future improvement)
 - CRs work automatically - they call `unprotectedUpdateStrategy` which has our sync logic
 - Conflict detection works - `FEATURE_STRATEGY_UPDATE` event triggers existing conflict detector
+- **Event emission**: `FEATURE_STRATEGY_UPDATE` is emitted for both activated and non-activated milestone strategy updates
 
 ## Future Work
 
 - Including feature_strategy_segment updates in the transaction
 - Flag to enable/disable milestone sync
-- Emit a different event type for milestone-only updates (currently no event emitted)

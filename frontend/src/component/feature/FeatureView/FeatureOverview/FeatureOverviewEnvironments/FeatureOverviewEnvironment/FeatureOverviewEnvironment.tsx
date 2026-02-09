@@ -18,6 +18,9 @@ import { useState } from 'react';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { EnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
 import { Box } from '@mui/material';
+import { AddMilestoneButton } from '../../ReleasePlan/AddMilestoneButton.tsx';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -64,6 +67,12 @@ type FeatureOverviewEnvironmentProps = {
     onToggleEnvOpen?: (isOpen: boolean) => void;
 };
 
+const StyledEmptyActions = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    flexWrap: 'wrap',
+}));
+
 export const FeatureOverviewEnvironment = ({
     environment,
     metrics = { yes: 0, no: 0 },
@@ -73,12 +82,16 @@ export const FeatureOverviewEnvironment = ({
     const [isOpen, setIsOpen] = useState(false);
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { isOss } = useUiConfig();
+    const { isOss, isEnterprise } = useUiConfig();
+    const { refetchFeature } = useFeature(projectId, featureId);
+    const inlineMilestonesEnabled = useUiFlag('inlineReleasePlanMilestones');
     const hasActivations = Boolean(
         environment?.enabled ||
             (environment?.strategies && environment?.strategies.length > 0) ||
             (environment?.releasePlans && environment?.releasePlans.length > 0),
     );
+    const hasReleasePlan =
+        environment?.releasePlans && environment.releasePlans.length > 0;
 
     return (
         <StyledFeatureOverviewEnvironment>
@@ -107,13 +120,24 @@ export const FeatureOverviewEnvironment = ({
                         environment={environment}
                     />
                     {!hasActivations ? (
-                        <FeatureStrategyMenu
-                            label='Add strategy'
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={environment.name}
-                            variant='outlined'
-                        />
+                        <StyledEmptyActions>
+                            <FeatureStrategyMenu
+                                label='Add strategy'
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environment.name}
+                                variant='outlined'
+                            />
+                            {isEnterprise() && inlineMilestonesEnabled && (
+                                <AddMilestoneButton
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={environment.name}
+                                    onMilestoneAdded={refetchFeature}
+                                    variant='outlined'
+                                />
+                            )}
+                        </StyledEmptyActions>
                     ) : (
                         <FeatureOverviewEnvironmentMetrics
                             environmentMetric={metrics}
@@ -129,8 +153,14 @@ export const FeatureOverviewEnvironment = ({
                         />
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
-                        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                            <Box ml='auto'>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                gap: 1,
+                            }}
+                        >
+                            <Box ml='auto' sx={{ display: 'flex', gap: 1 }}>
                                 <FeatureStrategyMenu
                                     label='Add strategy'
                                     projectId={projectId}

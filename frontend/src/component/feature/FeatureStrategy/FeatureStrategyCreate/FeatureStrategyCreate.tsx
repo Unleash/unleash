@@ -31,6 +31,8 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
+import { useUiFlag } from 'hooks/useUiFlag';
 import useQueryParams from 'hooks/useQueryParams';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy.tsx';
@@ -57,11 +59,14 @@ export const FeatureStrategyCreate = () => {
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyName = useRequiredQueryParam('strategyName');
+    const queryParams = useQueryParams();
     const { strategy: defaultStrategy, defaultStrategyFallback } =
         useDefaultStrategy(projectId, environmentId);
     const shouldUseDefaultStrategy: boolean = JSON.parse(
-        useQueryParams().get('defaultStrategy') || 'false',
+        queryParams.get('defaultStrategy') || 'false',
     );
+    const milestoneIdFromUrl = queryParams.get('milestoneId');
+    const releasePlanIdFromUrl = queryParams.get('releasePlanId');
 
     const { segments: allSegments } = useSegments();
     const strategySegments = (allSegments || []).filter((segment) => {
@@ -78,10 +83,15 @@ export const FeatureStrategyCreate = () => {
 
     const { addStrategyToFeature, loading } = useFeatureStrategyApi();
     const { addChange } = useChangeRequestApi();
+    const {
+        createReleasePlanWithMilestone,
+        addStrategyToMilestone,
+    } = useReleasePlansApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
+    const inlineMilestonesEnabled = useUiFlag('inlineReleasePlanMilestones');
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
     const featureEnvironment = feature?.environments.find(
@@ -143,12 +153,64 @@ export const FeatureStrategyCreate = () => {
     ]);
 
     const onAddStrategy = async (payload: IFeatureStrategyPayload) => {
-        await addStrategyToFeature(
-            projectId,
-            featureId,
-            environmentId,
-            payload,
-        );
+        // If milestone params are provided in URL, use them directly
+        if (milestoneIdFromUrl && releasePlanIdFromUrl) {
+            await addStrategyToMilestone(
+                projectId,
+                featureId,
+                environmentId,
+                releasePlanIdFromUrl,
+                milestoneIdFromUrl,
+                payload,
+            );
+            setToastData({
+                text: 'Strategy created',
+                type: 'success',
+            });
+            return;
+        }
+
+        // Check if we should wrap the strategy in a milestone
+        const releasePlan = featureEnvironment?.releasePlans?.[0];
+
+        if (inlineMilestonesEnabled) {
+            if (releasePlan && releasePlan.activeMilestoneId) {
+                // Add strategy to the active milestone of existing release plan
+                await addStrategyToMilestone(
+                    projectId,
+                    featureId,
+                    environmentId,
+                    releasePlan.id,
+                    releasePlan.activeMilestoneId,
+                    payload,
+                );
+            } else {
+                // Create a new release plan with a milestone and add the strategy
+                const newPlan = await createReleasePlanWithMilestone(
+                    projectId,
+                    featureId,
+                    environmentId,
+                    'Milestone 1',
+                );
+                if (newPlan.activeMilestoneId) {
+                    await addStrategyToMilestone(
+                        projectId,
+                        featureId,
+                        environmentId,
+                        newPlan.id,
+                        newPlan.activeMilestoneId,
+                        payload,
+                    );
+                }
+            }
+        } else {
+            await addStrategyToFeature(
+                projectId,
+                featureId,
+                environmentId,
+                payload,
+            );
+        }
 
         setToastData({
             text: 'Strategy created',
@@ -259,12 +321,21 @@ export const formatCreateStrategyPath = (
     environmentId: string,
     strategyName: string,
     defaultStrategy: boolean = false,
+    milestoneId?: string,
+    releasePlanId?: string,
 ): string => {
     const params = new URLSearchParams({
         environmentId,
         strategyName,
         defaultStrategy: String(defaultStrategy),
     });
+
+    if (milestoneId) {
+        params.set('milestoneId', milestoneId);
+    }
+    if (releasePlanId) {
+        params.set('releasePlanId', releasePlanId);
+    }
 
     return `/projects/${projectId}/features/${featureId}/strategies/create?${params}`;
 };

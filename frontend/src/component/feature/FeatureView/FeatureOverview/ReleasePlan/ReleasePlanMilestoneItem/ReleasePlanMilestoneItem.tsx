@@ -52,6 +52,8 @@ export interface IReleasePlanMilestoneItemProps {
     environment: string;
     featureName: string;
     onUpdate?: () => void;
+    releasePlanId?: string;
+    showAutomation?: boolean;
 }
 
 const getTimeUnit = (intervalMinutes: number): 'minutes' | 'hours' | 'days' => {
@@ -83,6 +85,8 @@ export const ReleasePlanMilestoneItem = ({
     environment,
     featureName,
     onUpdate,
+    releasePlanId,
+    showAutomation: showAutomationProp = true,
 }: IReleasePlanMilestoneItemProps) => {
     const { changeMilestoneProgression } = useMilestoneProgressionsApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
@@ -165,7 +169,10 @@ export const ReleasePlanMilestoneItem = ({
     const effectiveTransitionCondition = milestone.transitionCondition;
 
     const shouldShowAutomation =
-        isNotLastMilestone && milestoneProgressionsEnabled && !readonly;
+        isNotLastMilestone &&
+        milestoneProgressionsEnabled &&
+        !readonly &&
+        showAutomationProp;
 
     const automationSection = shouldShowAutomation ? (
         <MilestoneAutomation
@@ -196,6 +203,8 @@ export const ReleasePlanMilestoneItem = ({
                 previousMilestoneStatus={previousMilestoneStatus}
                 projectId={projectId}
                 environmentId={environment}
+                featureName={featureName}
+                releasePlanId={releasePlanId}
             />
             <ConditionallyRender
                 condition={isNotLastMilestone}

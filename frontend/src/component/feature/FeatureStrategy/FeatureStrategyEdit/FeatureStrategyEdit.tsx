@@ -3,7 +3,9 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import useQueryParams from 'hooks/useQueryParams';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
+import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
@@ -95,11 +97,16 @@ export const FeatureStrategyEdit = () => {
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyId = useRequiredQueryParam('strategyId');
+    const queryParams = useQueryParams();
+    const milestoneId = queryParams.get('milestoneId');
+    const releasePlanId = queryParams.get('releasePlanId');
+    const isMilestoneStrategy = Boolean(milestoneId && releasePlanId);
     const [tab, setTab] = useState(0);
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
+    const { updateStrategyInMilestone } = useReleasePlansApi();
     const { strategyDefinition } = useStrategy(strategy.name);
     const { setToastData, setToastApiError } = useToast();
     const errors = useFormErrors();
@@ -113,6 +120,23 @@ export const FeatureStrategyEdit = () => {
     const { setPreviousTitle } = useTitleTracking();
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
+
+    const onMilestoneStrategyEdit = async (payload: IFeatureStrategyPayload) => {
+        if (!releasePlanId || !milestoneId) return;
+        await updateStrategyInMilestone(
+            projectId,
+            featureId,
+            environmentId,
+            releasePlanId,
+            milestoneId,
+            strategyId,
+            payload,
+        );
+        setToastData({
+            text: 'Strategy updated',
+            type: 'success',
+        });
+    };
 
     const ref = useRef<IFeatureToggle>(feature);
 
@@ -176,9 +200,28 @@ export const FeatureStrategyEdit = () => {
     } = useSegments(strategyId);
 
     useEffect(() => {
-        const savedStrategy = data?.environments
-            .flatMap((environment) => environment.strategies)
-            .find((strategy) => strategy.id === strategyId);
+        let savedStrategy: IFeatureStrategy | undefined;
+
+        if (isMilestoneStrategy && releasePlanId && milestoneId) {
+            // Look for strategy in release plan milestones
+            const environment = data?.environments?.find(
+                (env) => env.name === environmentId,
+            );
+            const releasePlan = environment?.releasePlans?.find(
+                (plan) => plan.id === releasePlanId,
+            );
+            const milestone = releasePlan?.milestones?.find(
+                (m) => m.id === milestoneId,
+            );
+            savedStrategy = milestone?.strategies?.find(
+                (s) => s.id === strategyId,
+            );
+        } else {
+            // Look for strategy in regular environment strategies
+            savedStrategy = data?.environments
+                .flatMap((environment) => environment.strategies)
+                .find((strategy) => strategy.id === strategyId);
+        }
 
         const constraintsWithId = addIdSymbolToConstraints(savedStrategy);
 
@@ -189,7 +232,7 @@ export const FeatureStrategyEdit = () => {
 
         setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
         setPreviousTitle(savedStrategy?.title || '');
-    }, [strategyId, data]);
+    }, [strategyId, data, isMilestoneStrategy, releasePlanId, milestoneId, environmentId]);
 
     useEffect(() => {
         // Fill in the selected segments once they've been fetched.
@@ -230,7 +273,9 @@ export const FeatureStrategyEdit = () => {
 
     const onSubmit = async () => {
         try {
-            if (isChangeRequestConfigured(environmentId)) {
+            if (isMilestoneStrategy) {
+                await onMilestoneStrategyEdit(payload);
+            } else if (isChangeRequestConfigured(environmentId)) {
                 await onStrategyRequestEdit(payload);
             } else {
                 await onStrategyEdit(payload);
@@ -322,8 +367,16 @@ export const formatEditStrategyPath = (
     featureId: string,
     environmentId: string,
     strategyId: string,
+    milestoneId?: string,
+    releasePlanId?: string,
 ): string => {
     const params = new URLSearchParams({ environmentId, strategyId });
+    if (milestoneId) {
+        params.set('milestoneId', milestoneId);
+    }
+    if (releasePlanId) {
+        params.set('releasePlanId', releasePlanId);
+    }
 
     return `/projects/${projectId}/features/${featureId}/strategies/edit?${params}`;
 };

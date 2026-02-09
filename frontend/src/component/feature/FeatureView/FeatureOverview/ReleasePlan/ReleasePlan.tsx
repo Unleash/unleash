@@ -124,6 +124,45 @@ const StyledMilestones = styled('div', {
     }),
 }));
 
+const StyledAddMilestoneCard = styled('button')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '100%',
+    padding: theme.spacing(1.5, 2),
+    border: `1px dashed ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusLarge,
+    background: 'transparent',
+    cursor: 'pointer',
+    textAlign: 'left',
+    transition: 'all 0.2s ease',
+    gap: theme.spacing(0.5),
+    '&:hover': {
+        background: theme.palette.action.hover,
+        borderColor: theme.palette.primary.main,
+    },
+}));
+
+const StyledAddMilestoneLabel = styled('span')(({ theme }) => ({
+    fontSize: theme.typography.caption.fontSize,
+    color: theme.palette.text.secondary,
+}));
+
+const StyledAddMilestoneTitle = styled('span')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    fontWeight: theme.fontWeight.bold,
+    color: theme.palette.primary.main,
+}));
+
+const StyledAddMilestoneConnection = styled('div')(({ theme }) => ({
+    width: 2,
+    height: theme.spacing(2),
+    borderLeft: `2px dashed ${theme.palette.divider}`,
+    marginLeft: theme.spacing(3.5),
+}));
+
 const StyledResumeMilestoneProgressions = styled(Link)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -158,8 +197,11 @@ export const ReleasePlan = ({
     } = plan;
 
     const projectId = useRequiredPathParam('projectId');
-    const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
-        useReleasePlansApi();
+    const {
+        removeReleasePlanFromFeature,
+        startReleasePlanMilestone,
+        addMilestoneToReleasePlan,
+    } = useReleasePlansApi();
     const {
         deleteMilestoneProgression,
         resumeMilestoneProgressions,
@@ -274,6 +316,7 @@ export const ReleasePlan = ({
     };
     const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
     const safeguardsEnabled = useUiFlag('safeguards');
+    const inlineMilestonesEnabled = useUiFlag('inlineReleasePlanMilestones');
     const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
         number | null
     >(null);
@@ -517,6 +560,32 @@ export const ReleasePlan = ({
         (milestone) => milestone.id === activeMilestoneId,
     );
 
+    const milestonesWithStrategies = milestones.filter(
+        (m) => m.strategies.length > 0,
+    );
+    const hasMultipleMilestonesWithStrategies =
+        milestonesWithStrategies.length >= 2;
+
+    const onAddMilestone = async () => {
+        const newMilestoneName = `Milestone ${milestones.length + 1}`;
+        try {
+            await addMilestoneToReleasePlan(
+                projectId,
+                featureName,
+                environment,
+                id,
+                newMilestoneName,
+            );
+            setToastData({
+                text: `Milestone "${newMilestoneName}" has been added`,
+                type: 'success',
+            });
+            onAutomationChange?.();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     const handleSafeguardSubmit = async (data: CreateSafeguardSchema) => {
         if (isChangeRequestConfigured(environment)) {
             try {
@@ -663,7 +732,9 @@ export const ReleasePlan = ({
             ) : null}
 
             <StyledBody border={safeguardBorder}>
-                {onAutomationChange && safeguardsEnabled ? (
+                {onAutomationChange &&
+                safeguardsEnabled &&
+                hasMultipleMilestonesWithStrategies ? (
                     <StyledAddSafeguard border={safeguardBorder}>
                         {safeguardFormOpen ? (
                             <SafeguardForm
@@ -718,8 +789,24 @@ export const ReleasePlan = ({
                             environment={environment}
                             featureName={featureName}
                             onUpdate={onAutomationChange}
+                            releasePlanId={id}
+                            showAutomation={hasMultipleMilestonesWithStrategies}
                         />
                     ))}
+                    {inlineMilestonesEnabled && !readonly && (
+                        <>
+                            <StyledAddMilestoneConnection />
+                            <StyledAddMilestoneCard onClick={onAddMilestone}>
+                                <StyledAddMilestoneLabel>
+                                    Milestone
+                                </StyledAddMilestoneLabel>
+                                <StyledAddMilestoneTitle>
+                                    <Add fontSize='small' />
+                                    Add milestone
+                                </StyledAddMilestoneTitle>
+                            </StyledAddMilestoneCard>
+                        </>
+                    )}
                 </StyledMilestones>
             </StyledBody>
             <ReleasePlanRemoveDialog

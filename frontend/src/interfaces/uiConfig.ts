@@ -80,6 +80,7 @@ export type UiFlags = {
     milestoneProgression?: boolean;
     featureReleasePlans?: boolean;
     safeguards?: boolean;
+    inlineReleasePlanMilestones?: boolean;
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;

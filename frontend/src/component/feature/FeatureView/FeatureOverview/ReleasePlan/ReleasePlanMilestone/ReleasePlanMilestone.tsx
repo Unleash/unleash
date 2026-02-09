@@ -1,8 +1,11 @@
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import Add from '@mui/icons-material/Add';
+import Edit from '@mui/icons-material/Edit';
 import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    IconButton,
     styled,
 } from '@mui/material';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
@@ -18,6 +21,10 @@ import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewE
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import { useNavigate } from 'react-router-dom';
+import { formatCreateStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate.tsx';
+import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
@@ -98,6 +105,32 @@ const StyledMilestoneContainer = styled('div')({
     position: 'relative',
 });
 
+const StyledAddStrategyButton = styled('button')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    padding: theme.spacing(0.75, 1),
+    margin: theme.spacing(1, 2, 2, 2),
+    border: 'none',
+    borderRadius: theme.shape.borderRadiusMedium,
+    background: 'transparent',
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
+    fontSize: theme.typography.body2.fontSize,
+    transition: 'all 0.2s ease',
+    '&:hover': {
+        background: theme.palette.action.hover,
+    },
+}));
+
+const StyledEditButton = styled(IconButton)(({ theme }) => ({
+    padding: theme.spacing(0.5),
+    color: theme.palette.text.secondary,
+    '&:hover': {
+        color: theme.palette.primary.main,
+    },
+}));
+
 interface IReleasePlanMilestoneProps {
     milestone: IReleasePlanMilestone;
     status?: MilestoneStatus;
@@ -107,6 +140,8 @@ interface IReleasePlanMilestoneProps {
     previousMilestoneStatus?: MilestoneStatus;
     projectId?: string;
     environmentId?: string;
+    featureName?: string;
+    releasePlanId?: string;
 }
 
 export const ReleasePlanMilestone = ({
@@ -118,12 +153,40 @@ export const ReleasePlanMilestone = ({
     previousMilestoneStatus,
     projectId,
     environmentId,
+    featureName,
+    releasePlanId,
 }: IReleasePlanMilestoneProps) => {
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(true);
+    const navigate = useNavigate();
+    const inlineMilestonesEnabled = useUiFlag('inlineReleasePlanMilestones');
     const hasAutomation = Boolean(automationSection);
     const isPreviousMilestonePaused =
         previousMilestoneStatus?.type === 'paused' ||
         previousMilestoneStatus?.progression === 'paused';
+
+    const canAddStrategy =
+        inlineMilestonesEnabled &&
+        !readonly &&
+        projectId &&
+        featureName &&
+        environmentId &&
+        releasePlanId;
+
+    const onAddStrategy = () => {
+        if (projectId && featureName && environmentId && releasePlanId) {
+            navigate(
+                formatCreateStrategyPath(
+                    projectId,
+                    featureName,
+                    environmentId,
+                    'flexibleRollout',
+                    false,
+                    milestone.id,
+                    releasePlanId,
+                ),
+            );
+        }
+    };
 
     if (!milestone.strategies.length) {
         return (
@@ -173,6 +236,12 @@ export const ReleasePlanMilestone = ({
                             No strategies
                         </StyledSecondaryLabel>
                     </StyledAccordionSummary>
+                    {canAddStrategy && (
+                        <StyledAddStrategyButton onClick={onAddStrategy}>
+                            <Add fontSize='small' />
+                            Add strategy
+                        </StyledAddStrategyButton>
+                    )}
                 </StyledAccordion>
                 {automationSection}
             </StyledMilestoneContainer>
@@ -184,6 +253,7 @@ export const ReleasePlanMilestone = ({
             <StyledAccordion
                 status={status}
                 hasAutomation={hasAutomation}
+                expanded={expanded}
                 onChange={(_evt, expanded) => setExpanded(expanded)}
             >
                 <StyledAccordionSummary expandIcon={<ExpandMore />}>
@@ -241,10 +311,39 @@ export const ReleasePlanMilestone = ({
                                             strategy.strategyName ||
                                             '',
                                     }}
+                                    headerItemsRight={
+                                        canAddStrategy ? (
+                                            <StyledEditButton
+                                                size='small'
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(
+                                                        formatEditStrategyPath(
+                                                            projectId!,
+                                                            featureName!,
+                                                            environmentId!,
+                                                            strategy.id,
+                                                            milestone.id,
+                                                            releasePlanId!,
+                                                        ),
+                                                    );
+                                                }}
+                                                title='Edit strategy'
+                                            >
+                                                <Edit fontSize='small' />
+                                            </StyledEditButton>
+                                        ) : undefined
+                                    }
                                 />
                             </StrategyListItem>
                         ))}
                     </StrategyList>
+                    {canAddStrategy && (
+                        <StyledAddStrategyButton onClick={onAddStrategy}>
+                            <Add fontSize='small' />
+                            Add strategy
+                        </StyledAddStrategyButton>
+                    )}
                 </StyledAccordionDetails>
             </StyledAccordion>
             {automationSection}

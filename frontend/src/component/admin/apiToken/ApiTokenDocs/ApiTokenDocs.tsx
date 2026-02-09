@@ -14,13 +14,16 @@ const GridContainer = styled('div')(({ theme }) => ({
 export const ApiTokenDocs = () => {
     const { uiConfig } = useUiConfig();
 
-    const edgeUrls = uiConfig.edgeUrl ? {
-        edgeUrl: `${uiConfig.edgeUrl}/api/`,
-        edgeFrontendUrl: `${uiConfig.edgeUrl}/api/frontend/`
-    } : undefined;
+    const edgeUrls = uiConfig.edgeUrl
+        ? {
+              edgeUrl: `${uiConfig.edgeUrl}/api/`,
+              edgeFrontendUrl: `${uiConfig.edgeUrl}/api/frontend/`,
+          }
+        : undefined;
     const edgeUrl = uiConfig.edgeUrl ? `${uiConfig.edgeUrl}/api/` : undefined;
-    const edgeFrontendUrl = uiConfig.edgeUrl ? `${uiConfig.edgeUrl}/api/frontend/` : undefined;
-
+    const edgeFrontendUrl = uiConfig.edgeUrl
+        ? `${uiConfig.edgeUrl}/api/frontend/`
+        : undefined;
 
     const clientApiUrl = `${uiConfig.unleashUrl}/api/`;
     const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend/`;
@@ -44,14 +47,16 @@ export const ApiTokenDocs = () => {
                 {edgeUrls && (
                     <>
                         <ApiUrl title='EDGE API URL:' url={edgeUrls.edgeUrl} />
-                        <ApiUrl title='EDGE FRONTEND API URL:' url={edgeUrls.edgeFrontendUrl} />
+                        <ApiUrl
+                            title='EDGE FRONTEND API URL:'
+                            url={edgeUrls.edgeFrontendUrl}
+                        />
                     </>
                 )}
-                
+
                 <ApiUrl title='CLIENT API URL:' url={clientApiUrl} />
                 <ApiUrl title='FRONTEND API URL:' url={frontendApiUrl} />
-             </GridContainer>
+            </GridContainer>
         </Alert>
     );
-}
-
+};

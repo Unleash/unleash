@@ -7,7 +7,7 @@ import useToast from 'hooks/useToast';
 type IApiUrlProps = {
     title: string;
     url: string;
-}
+};
 
 export const ApiUrl: React.FC<IApiUrlProps> = ({ title, url }) => {
     const { setToastData } = useToast();
@@ -29,13 +29,11 @@ export const ApiUrl: React.FC<IApiUrlProps> = ({ title, url }) => {
             </Box>
             <Box>
                 <Tooltip title='Copy URL' arrow>
-                    <IconButton
-                        onClick={onCopyToClipboard(url)}
-                        size='small'
-                    >
+                    <IconButton onClick={onCopyToClipboard(url)} size='small'>
                         <CopyIcon />
                     </IconButton>
                 </Tooltip>
             </Box>
-        </>)
-}
+        </>
+    );
+};

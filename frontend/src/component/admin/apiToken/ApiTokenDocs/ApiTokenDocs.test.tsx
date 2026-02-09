@@ -26,7 +26,9 @@ describe('ApiTokenDocs', () => {
         ).toBeInTheDocument();
 
         expect(screen.queryByText('EDGE API URL:')).not.toBeInTheDocument();
-        expect(screen.queryByText('EDGE FRONTEND API URL:')).not.toBeInTheDocument();
+        expect(
+            screen.queryByText('EDGE FRONTEND API URL:'),
+        ).not.toBeInTheDocument();
     });
 
     test('renders with default state', async () => {
@@ -44,7 +46,9 @@ describe('ApiTokenDocs', () => {
             ),
         ).toBeInTheDocument();
 
-        expect(await screen.findByText('EDGE FRONTEND API URL:')).toBeInTheDocument();
+        expect(
+            await screen.findByText('EDGE FRONTEND API URL:'),
+        ).toBeInTheDocument();
         expect(
             await screen.findByText(
                 'https://yourcompany.edge.getunleash.io/api/frontend/',

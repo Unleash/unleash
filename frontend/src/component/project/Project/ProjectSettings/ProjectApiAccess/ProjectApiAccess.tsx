@@ -40,8 +40,6 @@ export const ProjectApiAccess = () => {
     usePageTitle(`Project api access – ${projectName}`);
 
     const {
-        getTableProps,
-        getTableBodyProps,
         headerGroups,
         rows,
         prepareRow,

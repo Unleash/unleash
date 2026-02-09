@@ -303,8 +303,6 @@ export default class DependentFeaturesController extends Controller {
         req: IAuthRequest,
         res: Response,
     ): Promise<void> {
-        const { child } = req.params;
-
         const exist =
             await this.dependentFeaturesService.checkDependenciesExist();
         res.send(exist);

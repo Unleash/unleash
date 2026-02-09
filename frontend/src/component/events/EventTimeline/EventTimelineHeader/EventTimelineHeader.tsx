@@ -4,7 +4,6 @@ import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironmen
 import { useEffect, useMemo } from 'react';
 import { timeSpanOptions } from '../EventTimelineProvider.tsx';
 import { useEventTimelineContext } from '../EventTimelineContext.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledCol = styled('div')(({ theme }) => ({
@@ -38,7 +37,7 @@ interface IEventTimelineHeaderProps {
 export const EventTimelineHeader = ({
     totalEvents,
 }: IEventTimelineHeaderProps) => {
-    const { timeSpan, environment, setOpen, setTimeSpan, setEnvironment } =
+    const { timeSpan, environment, setTimeSpan, setEnvironment } =
         useEventTimelineContext();
     const { environments } = useEnvironments();
 
@@ -46,7 +45,6 @@ export const EventTimelineHeader = ({
         () => environments.filter(({ enabled }) => enabled),
         [environments],
     );
-    const { trackEvent } = usePlausibleTracker();
 
     useEffect(() => {
         if (activeEnvironments.length > 0 && !environment) {

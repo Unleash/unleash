@@ -4,7 +4,7 @@ import { formatApiPath } from 'utils/formatPath';
 
 export const useOutdatedSdks = (project: string) => {
     const PATH = `api/admin/projects/${project}/sdks/outdated`;
-    const { data, refetch, loading, error } = useApiGetter<OutdatedSdksSchema>(
+    const { data, refetch, error } = useApiGetter<OutdatedSdksSchema>(
         formatApiPath(PATH),
         () => fetcher(formatApiPath(PATH), 'Outdated SDKs'),
         { refreshInterval: 60 * 1000 },

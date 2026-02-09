@@ -87,7 +87,7 @@ export const ProjectDefaultStrategyForm = ({
     const navigate = useNavigate();
 
     const {
-        uiConfig,
+        // TODO: should we even call useUiConfig?
         error: uiConfigError,
         loading: uiConfigLoading,
     } = useUiConfig();

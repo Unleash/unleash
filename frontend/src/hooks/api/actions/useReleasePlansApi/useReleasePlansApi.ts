@@ -1,9 +1,8 @@
 import useAPI from '../useApi/useApi.js';
 export const useReleasePlansApi = () => {
-    const { makeRequest, makeLightRequest, createRequest, errors, loading } =
-        useAPI({
-            propagateErrors: true,
-        });
+    const { makeRequest, createRequest } = useAPI({
+        propagateErrors: true,
+    });
 
     const addReleasePlanToFeature = async (
         featureName: string,

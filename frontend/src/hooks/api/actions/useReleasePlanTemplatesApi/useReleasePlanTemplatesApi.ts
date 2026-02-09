@@ -5,10 +5,9 @@ import type {
 import useAPI from '../useApi/useApi.js';
 
 export const useReleasePlanTemplatesApi = () => {
-    const { makeRequest, makeLightRequest, createRequest, errors, loading } =
-        useAPI({
-            propagateErrors: true,
-        });
+    const { makeRequest, createRequest } = useAPI({
+        propagateErrors: true,
+    });
 
     const deleteReleasePlanTemplate = async (id: string) => {
         const requestId = 'deleteReleasePlanTemplate';

@@ -4,7 +4,6 @@ import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
 import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';
 import textureImage from 'assets/img/texture.png';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SkipNavLink } from 'component/common/SkipNavLink/SkipNavLink';
 import { SkipNavTarget } from 'component/common/SkipNavLink/SkipNavTarget';
 import { formatAssetPath } from 'utils/formatPath';
@@ -121,7 +120,6 @@ const StyledMainLayoutContent = styled(MainLayoutContent)(() => ({
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const { uiConfig } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',

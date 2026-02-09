@@ -130,7 +130,11 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 
 Unleash is the largest [open-source feature flag solution](https://www.getunleash.io/) on GitHub. Building Unleash is a collaborative effort, and we owe a lot of gratitude to many smart and talented individuals. Building it together with the community ensures that we build a product that solves real problems for real people. We'd love to have your help too: Please feel free to open issues or provide pull requests.
 
-Check out [the CONTRIBUTING.md file](./contributing/CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](./website/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
+Check out [the CONTRIBUTING.md file](./contributing/CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](https://docs.getunleash.io/contributing) for tips on environment setup, running the tests, and running Unleash from source.
+
+### Documentation
+
+As of 2 February 2026, the Unleash documentation lives in its own repository: [Unleash/unleash-documentation](https://github.com/Unleash/unleash-documentation).
 
 ### Contributors
 

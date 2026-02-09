@@ -33,6 +33,7 @@
   "license": "Apache-2.0",
   "exports": "./dist/lib/server-impl.js",
   "scripts": {
+    "ci": "yarn lint:fix && yarn build:backend && yarn test",
     "start": "TZ=UTC node ./dist/server.js",
     "copy-templates": "copyfiles-fixed -u 1 src/mailtemplates/**/* dist/",
     "build:backend": "tsc --pretty && copyfiles-fixed -u 2 src/migrations/package.json dist/migrations",
@@ -47,8 +48,8 @@
     "prepare:backend": "concurrently \"yarn:copy-templates\" \"yarn:build:backend\"",
     "start:dev": "yarn run clean && yarn dev:backend",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",
-    "lint": "biome check .",
-    "lint:fix": "biome check . --write",
+    "lint": "biome check . --error-on-warnings",
+    "lint:fix": "biome check . --write --error-on-warnings",
     "local:package": "del-cli --force build && mkdir build && cp -r dist CHANGELOG.md LICENSE README.md package.json build",
     "build:watch": "tsc -w",
     "prepare": "husky && yarn --cwd ./frontend install && if [ ! -d ./dist ]; then yarn build; fi",

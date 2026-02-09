@@ -132,10 +132,6 @@ Unleash is the largest [open-source feature flag solution](https://www.getunleas
 
 Check out [the CONTRIBUTING.md file](./contributing/CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](https://docs.getunleash.io/contributing) for tips on environment setup, running the tests, and running Unleash from source.
 
-### Documentation
-
-As of 2 February 2026, the Unleash documentation lives in its own repository: [Unleash/unleash-documentation](https://github.com/Unleash/unleash-documentation).
-
 ### Contributors
 
 <div align="center">
@@ -145,6 +141,11 @@ As of 2 February 2026, the Unleash documentation lives in its own repository: [U
 </div>
 
 <br/>
+
+
+## Documentation
+
+You can visit the Unleash documentation at https://docs.getunleash.io. As of 2 February 2026, the Unleash documentation source code lives in its own repository: [Unleash/unleash-documentation](https://github.com/Unleash/unleash-documentation).
 
 ## Features our users love
 

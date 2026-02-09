@@ -126,7 +126,7 @@ exports[`should create default config 1`] = `
     "featureEnvironmentStrategies": 30,
     "featureFlags": 5000,
     "projects": 500,
-    "releaseTemplates": 5,
+    "releaseTemplates": 10,
     "segmentValues": 1000,
     "segments": 300,
     "signalEndpoints": 5,

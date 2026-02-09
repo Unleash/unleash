@@ -139,6 +139,7 @@ exports[`should create default config 1`] = `
     "baseUriPath": "",
     "cdnPrefix": undefined,
     "disableCompression": false,
+    "edgeUrl": undefined,
     "enableHeapSnapshotEnpoint": false,
     "enableRequestLogger": false,
     "enableScheduledCreatedByMigration": false,

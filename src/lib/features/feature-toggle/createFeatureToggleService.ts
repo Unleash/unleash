@@ -62,6 +62,7 @@ import {
     createFeatureLinkService,
 } from '../feature-links/createFeatureLinkService.js';
 import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import { ReleasePlanMilestoneStrategyStore } from '../release-plans/release-plan-milestone-strategy-store.js';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -135,6 +136,9 @@ export const createFeatureToggleService = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
+    const releasePlanMilestoneStrategyStore =
+        new ReleasePlanMilestoneStrategyStore(db, { eventBus });
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -159,6 +163,7 @@ export const createFeatureToggleService = (
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
+            releasePlanMilestoneStrategyStore,
         },
     );
     return featureToggleService;

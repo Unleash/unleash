@@ -175,6 +175,10 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             });
     }
 
+    getDb(): Db {
+        return this.db;
+    }
+
     async delete(key: string): Promise<void> {
         await this.db(T.featureStrategies).where({ id: key }).del();
     }
@@ -804,9 +808,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
     async updateStrategy(
         id: string,
         updates: Partial<IFeatureStrategy>,
+        trx?: Knex,
     ): Promise<IFeatureStrategy> {
+        const db = trx ?? this.db;
         const update = mapStrategyUpdate(updates);
-        const row = await this.db<IFeatureStrategiesTable>(T.featureStrategies)
+        const row = await db<IFeatureStrategiesTable>(T.featureStrategies)
             .where({ id })
             .update(update)
             .returning('*');

@@ -1,3 +1,4 @@
+import type { Knex } from 'knex';
 import { ulid } from 'ulidx';
 import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-strategy.js';
 import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
@@ -114,5 +115,68 @@ export class ReleasePlanMilestoneStrategyStore extends CRUDStore<
         await this.db('milestone_strategies')
             .where('milestone_id', milestoneId)
             .delete();
+    }
+
+    /**
+     * Update strategy fields and segments.
+     * If trx is provided, uses that transaction; otherwise creates a new one.
+     */
+    async updateWithSegments(
+        strategyId: string,
+        data: {
+            strategyName?: string;
+            parameters?: Record<string, string>;
+            constraints?: unknown[];
+            variants?: unknown[];
+            title?: string | null;
+        },
+        segmentIds: number[],
+        trx?: Knex,
+    ): Promise<void> {
+        const doUpdate = async (db: Knex) => {
+            // Update strategy fields
+            const updateData: Record<string, unknown> = {};
+
+            if (data.strategyName !== undefined) {
+                updateData.strategy_name = data.strategyName;
+            }
+            if (data.parameters !== undefined) {
+                updateData.parameters = data.parameters;
+            }
+            if (data.constraints !== undefined) {
+                updateData.constraints = JSON.stringify(data.constraints);
+            }
+            if (data.variants !== undefined) {
+                updateData.variants = JSON.stringify(data.variants);
+            }
+            if (data.title !== undefined) {
+                updateData.title = data.title;
+            }
+
+            if (Object.keys(updateData).length > 0) {
+                await db(this.tableName)
+                    .where({ id: strategyId })
+                    .update(updateData);
+            }
+
+            // Update segments
+            await db('milestone_strategy_segments')
+                .where('milestone_strategy_id', strategyId)
+                .delete();
+
+            if (segmentIds.length > 0) {
+                const rows = segmentIds.map((segmentId) => ({
+                    milestone_strategy_id: strategyId,
+                    segment_id: segmentId,
+                }));
+                await db('milestone_strategy_segments').insert(rows);
+            }
+        };
+
+        if (trx) {
+            await doUpdate(trx);
+        } else {
+            await this.db.transaction(async (newTrx) => doUpdate(newTrx));
+        }
     }
 }

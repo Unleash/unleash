@@ -1,3 +1,4 @@
+import type { Knex } from 'knex';
 import type {
     FeatureToggleWithEnvironment,
     IDependency,
@@ -63,6 +64,8 @@ export interface IQueryParam {
 
 export interface IFeatureStrategiesStore
     extends Store<IFeatureStrategy, string> {
+    getDb(): Knex;
+
     createStrategyFeatureEnv(
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy>;
@@ -99,6 +102,7 @@ export interface IFeatureStrategiesStore
     updateStrategy(
         id: string,
         updates: Partial<IFeatureStrategy>,
+        trx?: Knex,
     ): Promise<IFeatureStrategy>;
 
     deleteConfigurationsForProjectAndEnvironment(

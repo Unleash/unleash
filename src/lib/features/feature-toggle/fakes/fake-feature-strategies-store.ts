@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import type { Knex } from 'knex';
 import type {
     FeatureToggleWithEnvironment,
     IFeatureOverview,
@@ -27,6 +28,10 @@ export default class FakeFeatureStrategiesStore
     featureStrategies: IFeatureStrategy[] = [];
 
     featureToggles: FeatureToggle[] = [];
+
+    getDb(): Knex {
+        throw new Error('Not implemented in fake store');
+    }
 
     async createStrategyFeatureEnv(
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,

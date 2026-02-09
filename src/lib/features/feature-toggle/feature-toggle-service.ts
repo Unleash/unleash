@@ -116,6 +116,7 @@ import { sortStrategies } from '../../util/sortStrategies.js';
 import type FeatureLinkService from '../feature-links/feature-link-service.js';
 import type { IFeatureLink } from '../feature-links/feature-links-read-model-type.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import type { ReleasePlanMilestoneStrategyStore } from '../release-plans/release-plan-milestone-strategy-store.js';
 interface IFeatureContext {
     featureName: string;
     projectId: string;
@@ -175,6 +176,7 @@ export type ServicesAndReadModels = {
     featureLinkService: FeatureLinkService;
     featureLinksReadModel: IFeatureLinksReadModel;
     resourceLimitsService: ResourceLimitsService;
+    releasePlanMilestoneStrategyStore?: ReleasePlanMilestoneStrategyStore;
 };
 
 export class FeatureToggleService {
@@ -222,6 +224,8 @@ export class FeatureToggleService {
 
     private resourceLimitsService: ResourceLimitsService;
 
+    private releasePlanMilestoneStrategyStore?: ReleasePlanMilestoneStrategyStore;
+
     constructor(
         {
             featureStrategiesStore,
@@ -246,6 +250,7 @@ export class FeatureToggleService {
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
+            releasePlanMilestoneStrategyStore,
         }: ServicesAndReadModels,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
@@ -270,6 +275,8 @@ export class FeatureToggleService {
         this.featureLinkService = featureLinkService;
         this.eventBus = eventBus;
         this.resourceLimitsService = resourceLimitsService;
+        this.releasePlanMilestoneStrategyStore =
+            releasePlanMilestoneStrategyStore;
     }
 
     async validateFeaturesContext(
@@ -886,9 +893,55 @@ export class FeatureToggleService {
     ): Promise<Saved<IStrategyConfig>> {
         const { projectId, environment, featureName } = context;
         const existingStrategy = await this.featureStrategiesStore.get(id);
+
+        // Case 1: Strategy not found in feature_strategies
         if (existingStrategy === undefined) {
+            // Check if it exists in milestone_strategies (not yet activated)
+            if (this.releasePlanMilestoneStrategyStore) {
+                try {
+                    const milestoneStrategy =
+                        await this.releasePlanMilestoneStrategyStore.get(id);
+                    if (milestoneStrategy) {
+                        // Update only milestone_strategies (not yet activated)
+                        await this.releasePlanMilestoneStrategyStore.updateWithSegments(
+                            id,
+                            {
+                                strategyName: updates.name,
+                                parameters: updates.parameters,
+                                constraints: updates.constraints,
+                                variants: updates.variants,
+                                title: updates.title,
+                            },
+                            updates.segments ?? [],
+                        );
+
+                        // Return the updated milestone strategy in IStrategyConfig format
+                        return {
+                            id,
+                            name:
+                                updates.name ?? milestoneStrategy.strategyName,
+                            parameters:
+                                updates.parameters ??
+                                milestoneStrategy.parameters,
+                            constraints:
+                                updates.constraints ??
+                                milestoneStrategy.constraints,
+                            variants:
+                                updates.variants ?? milestoneStrategy.variants,
+                            segments: updates.segments ?? [],
+                            title: updates.title ?? milestoneStrategy.title,
+                            sortOrder: milestoneStrategy.sortOrder,
+                            disabled: false,
+                        };
+                    }
+                } catch {
+                    // Not found in milestone_strategies either
+                }
+            }
             throw new NotFoundError(`Could not find strategy with id ${id}`);
         }
+
+        // Case 2: Strategy found in feature_strategies
         this.validateUpdatedProperties(context, existingStrategy);
         await this.validateStrategyType(updates.name);
         await this.validateProjectCanAccessSegments(
@@ -904,10 +957,41 @@ export class FeatureToggleService {
                 { ...updates, name: updates.name! },
                 existingStrategy,
             );
-            const strategy = await this.featureStrategiesStore.updateStrategy(
-                id,
-                standardizedUpdates,
-            );
+
+            // If strategy has milestoneId, wrap both updates in a transaction
+            const shouldSyncToMilestone =
+                existingStrategy.milestoneId &&
+                this.releasePlanMilestoneStrategyStore;
+
+            const db = this.featureStrategiesStore.getDb();
+
+            const strategy = await db.transaction(async (trx) => {
+                const updatedStrategy =
+                    await this.featureStrategiesStore.updateStrategy(
+                        id,
+                        standardizedUpdates,
+                        trx,
+                    );
+
+                // Sync to milestone strategy if this strategy originated from a release plan
+                if (shouldSyncToMilestone) {
+                    const segmentIds = updates.segments ?? [];
+                    await this.releasePlanMilestoneStrategyStore!.updateWithSegments(
+                        id,
+                        {
+                            strategyName: updatedStrategy.strategyName,
+                            parameters: updatedStrategy.parameters,
+                            constraints: updatedStrategy.constraints,
+                            variants: updatedStrategy.variants,
+                            title: updatedStrategy.title,
+                        },
+                        segmentIds,
+                        trx,
+                    );
+                }
+
+                return updatedStrategy;
+            });
 
             if (updates.segments && Array.isArray(updates.segments)) {
                 await this.segmentService.updateStrategySegments(
@@ -936,6 +1020,7 @@ export class FeatureToggleService {
                     auditUser,
                 }),
             );
+
             await this.optionallyDisableFeature(
                 featureName,
                 environment,

@@ -63,6 +63,7 @@ export type IFlagKey =
     | 'featureReleasePlans'
     | 'plausibleMetrics'
     | 'safeguards'
+    | 'inlineReleasePlanMilestones'
     | 'newInUnleash'
     | 'oidcPkceSupport'
     | 'gtmReleaseManagement'
@@ -281,6 +282,10 @@ const flags: IFlags = {
     ),
     safeguards: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SAFEGUARDS,
+        false,
+    ),
+    inlineReleasePlanMilestones: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INLINE_RELEASE_PLAN_MILESTONES,
         false,
     ),
     oidcPkceSupport: parseEnvVarBoolean(

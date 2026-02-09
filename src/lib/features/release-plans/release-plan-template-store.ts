@@ -40,6 +40,7 @@ export class ReleasePlanTemplateStore extends CRUDStore<
         const templates = await this.db<ReleasePlanTemplate>(TABLE)
             .where('discriminator', 'template')
             .where('archived_at', null)
+            .whereNot('name', '__blank__') // Filter out system template for inline milestones
             .orderBy('created_at');
         endTimer();
         return templates.map(({ milestones, ...template }) =>
@@ -53,6 +54,7 @@ export class ReleasePlanTemplateStore extends CRUDStore<
         let countQuery = this.db(this.tableName)
             .where('discriminator', 'template')
             .whereNull('archived_at')
+            .whereNot('name', '__blank__') // Filter out system template for inline milestones
             .count('*');
         if (query) {
             countQuery = countQuery.where(this.toRow(query));
@@ -74,6 +76,24 @@ export class ReleasePlanTemplateStore extends CRUDStore<
             .select('id');
 
         return Boolean(exists);
+    }
+
+    async getByName(name: string): Promise<ReleasePlanTemplate | undefined> {
+        const endTimer = this.timer('getByName');
+        const template = await this.db<ReleasePlanTemplate>(TABLE)
+            .where('discriminator', 'template')
+            .where('name', name)
+            .first();
+        endTimer();
+        if (!template) {
+            return undefined;
+        }
+        const { milestones, ...rest } = template;
+        return fromRow(rest);
+    }
+
+    async getBlankSystemTemplate(): Promise<ReleasePlanTemplate | undefined> {
+        return this.getByName('__blank__');
     }
 
     processReleasePlanTemplateRows(templateRows): ReleasePlanTemplate {

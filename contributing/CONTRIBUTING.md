@@ -202,3 +202,8 @@ git push origin main --follow-tags
 ```
 
 This will push the new tag and a GitHub action will trigger on the new version tag, build the release and publish it to npm.
+
+
+## Contributing to Unleash Documention
+
+You can contribute to Unleash documentation in the [Unleash/unleash-documentation](https://github.com/Unleash/unleash-documentation) repository.

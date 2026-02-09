@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - website/**
   workflow_call:
     inputs:
       version:

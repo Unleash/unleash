@@ -39,6 +39,11 @@ export const uiConfigSchema = {
             example: 'subscription',
             enum: ['subscription', 'pay-as-you-go'],
         },
+        edgeUrl: {
+            type: 'string',
+            description: 'The URL of the Unleash Edge instance.',
+            example: 'https://yourcompany.edge.getunleash.io',
+        },
         unleashUrl: {
             type: 'string',
             description: 'The URL of the Unleash instance.',

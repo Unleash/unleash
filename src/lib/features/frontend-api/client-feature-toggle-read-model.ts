@@ -78,6 +78,14 @@ export default class ClientFeatureToggleReadModel
                     'fe.environment',
                 );
             })
+            .leftJoin('milestones as m', 'm.id', 'fs.milestone_id')
+            .leftJoin('release_plan_definitions as rpd', function () {
+                this.on('rpd.id', 'm.release_plan_definition_id').andOnVal(
+                    'rpd.discriminator',
+                    '=',
+                    'plan',
+                );
+            })
             .leftJoin(
                 'feature_strategy_segment as fss',
                 `fss.feature_strategy_id`,
@@ -85,7 +93,12 @@ export default class ClientFeatureToggleReadModel
             )
             .leftJoin('segments', `segments.id`, `fss.segment_id`)
             .leftJoin('dependent_features as df', 'df.child', 'features.name')
-            .where('fe.enabled', true);
+            .where('fe.enabled', true)
+            .andWhere(function () {
+                this.whereNull('fs.milestone_id').orWhereRaw(
+                    'fs.milestone_id = rpd.active_milestone_id',
+                );
+            });
 
         query = query.select(selectColumns);
         const rows = await query;

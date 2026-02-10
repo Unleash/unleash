@@ -5,12 +5,10 @@ on:
     branches:
       - main
     paths-ignore:
-      - website/**
       - coverage/**
   pull_request:
     paths-ignore:
       - frontend/**
-      - website/**
       - coverage/**
 
 jobs:

@@ -14,8 +14,6 @@ const setup = (
     initialState: FilterItemParams | null,
     name = 'Test Label',
     label = 'irrelevant',
-    minDate?: Date,
-    maxDate?: Date,
 ) => {
     const recordedChanges: FilterItemParams[] = [];
 
@@ -26,8 +24,6 @@ const setup = (
         operators: ['IS', 'IS_ON_OR_AFTER', 'IS_BEFORE'],
         onChipClose: () => {},
         state: initialState,
-        minDate,
-        maxDate,
     };
 
     render(<FilterDateItem {...mockProps} />);
@@ -100,102 +96,18 @@ describe('FilterDateItem Component', () => {
     });
 });
 
-describe('FilterDateItem date range constraints', () => {
-    it('disables dates before minDate', async () => {
-        const min = new Date('2025-01-15');
-        const max = new Date('2025-01-20');
-        const recordedChanges = setup(
-            { operator: 'IS', values: ['2025-01-16'] },
-            'Test',
-            'Test',
-            min,
-            max,
-        );
+it('disables dates after today', async () => {
+    setup(null, 'Test', 'Test');
 
-        const chip = await screen.findByText('Test');
-        await userEvent.click(chip);
+    const chip = await screen.findByText('Test');
+    await userEvent.click(chip);
 
-        const day10 = await screen.findByRole('gridcell', { name: '10' });
-        expect(day10.className).toMatch(/Mui-disabled/);
+    const tomorrow = addDays(new Date(), 1);
+    const dayLabel = format(tomorrow, 'd');
 
-        const day15 = await screen.findByRole('gridcell', { name: '15' });
-        expect(day15).toBeDefined();
-        expect(day15.className).not.toMatch(/Mui-disabled/);
-
-        const day16 = await screen.findByRole('gridcell', { name: '16' });
-        expect(day16.className).not.toMatch(/Mui-disabled/);
-        await userEvent.click(day16!);
-
-        expect(recordedChanges).toEqual([
-            {
-                operator: 'IS',
-                values: ['2025-01-16'],
-            },
-        ]);
+    const tomorrowCell = await screen.findByRole('gridcell', {
+        name: dayLabel,
     });
 
-    it('disables dates after maxDate', async () => {
-        const min = new Date('2025-01-10');
-        const max = new Date('2025-01-14');
-        const recordedChanges = setup(
-            { operator: 'IS', values: ['2025-01-12'] },
-            'Test',
-            'Test',
-            min,
-            max,
-        );
-
-        const chip = await screen.findByText('Test');
-        await userEvent.click(chip);
-
-        const day15 = await screen.findByRole('gridcell', { name: '15' });
-        expect(day15.className).toMatch(/Mui-disabled/);
-
-        const day12 = await screen.findByRole('gridcell', { name: '12' });
-        expect(day12.className).not.toMatch(/Mui-disabled/);
-        await userEvent.click(day12!);
-
-        expect(recordedChanges).toEqual([
-            { operator: 'IS', values: ['2025-01-12'] },
-        ]);
-    });
-
-    it('disables dates after today', async () => {
-        setup(null, 'Test', 'Test');
-
-        const chip = await screen.findByText('Test');
-        await userEvent.click(chip);
-
-        const tomorrow = addDays(new Date(), 1);
-        const dayLabel = format(tomorrow, 'd');
-
-        const tomorrowCell = await screen.findByRole('gridcell', {
-            name: dayLabel,
-        });
-
-        expect(tomorrowCell.className).toMatch(/Mui-disabled/);
-    });
-
-    it('allows selecting valid dates within min/max', async () => {
-        const min = new Date('2025-01-12');
-        const max = new Date('2025-01-18');
-
-        const recordedChanges = setup(
-            { operator: 'IS', values: ['2025-01-12'] },
-            'Test',
-            'Test',
-            min,
-            max,
-        );
-
-        const chip = await screen.findByText('Test');
-        await userEvent.click(chip);
-
-        const validDate = await screen.findByRole('gridcell', { name: '15' });
-        await userEvent.click(validDate);
-
-        expect(recordedChanges).toEqual([
-            { operator: 'IS', values: ['2025-01-15'] },
-        ]);
-    });
+    expect(tomorrowCell.className).toMatch(/Mui-disabled/);
 });

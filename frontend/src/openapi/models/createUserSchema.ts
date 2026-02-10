@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateUserSchemaRootRole } from './createUserSchemaRootRole.js';
+import type { CreateUserSchemaRootRole } from './createUserSchemaRootRole';
 
 /**
  * The payload must contain at least one of the name and email properties, though which one is up to you. For the user to be able to log in to the system, the user must have an email.

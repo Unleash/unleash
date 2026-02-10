@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CustomMetricSchema } from './customMetricSchema.js';
+import type { CustomMetricSchema } from './customMetricSchema';
 
 /**
  * A collection of custom metrics

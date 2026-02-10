@@ -1,6 +1,7 @@
-export type DeepOmit<T, K extends keyof any> = T extends Record<string, any>
-    ? { [P in Exclude<keyof T, K>]: DeepOmit<T[P], K> }
-    : T;
+export type DeepOmit<T, K extends keyof any> =
+    T extends Record<string, any>
+        ? { [P in Exclude<keyof T, K>]: DeepOmit<T[P], K> }
+        : T;
 
 export function deepOmit<T, K extends keyof any>(
     obj: T,

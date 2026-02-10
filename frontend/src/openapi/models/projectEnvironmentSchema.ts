@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateFeatureStrategySchema } from './createFeatureStrategySchema.js';
+import type { CreateFeatureStrategySchema } from './createFeatureStrategySchema';
 
 /**
  * Add an environment to a project, optionally also sets if change requests are enabled for this environment on the project

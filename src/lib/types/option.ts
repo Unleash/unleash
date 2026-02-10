@@ -103,6 +103,7 @@ export interface IServerOption {
     headersTimeout: number;
     baseUriPath: string;
     cdnPrefix?: string;
+    edgeUrl?: string;
     unleashUrl: string;
     serverMetrics: boolean;
     enableHeapSnapshotEnpoint: boolean;

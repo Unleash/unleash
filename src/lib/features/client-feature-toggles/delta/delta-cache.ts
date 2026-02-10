@@ -97,5 +97,22 @@ export class DeltaCache {
             }
             this.hydrationEvent.eventId = appliedEvent.eventId;
         }
+        // small perf hit here but this is a cold path and this is absolutely critical to ensure
+        // that down stream Edge instances receive the data in predictable orders because that
+        // affects how they calculate their etags
+        this.sortHydrationEvent();
+    }
+
+    private sortHydrationEvent(): void {
+        this.hydrationEvent.features.sort((a, b) =>
+            a.name.localeCompare(b.name),
+        );
+        this.hydrationEvent.segments.sort((a, b) => {
+            const byName = a.name.localeCompare(b.name);
+            if (byName !== 0) {
+                return byName;
+            }
+            return a.id - b.id;
+        });
     }
 }

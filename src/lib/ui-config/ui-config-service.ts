@@ -113,6 +113,7 @@ export class UiConfigService {
             flags,
             version,
             emailEnabled: this.emailService.isEnabled(),
+            edgeUrl: this.config.server.edgeUrl,
             unleashUrl: this.config.server.unleashUrl,
             baseUriPath: this.config.server.baseUriPath,
             authenticationType: this.config.authentication?.type,

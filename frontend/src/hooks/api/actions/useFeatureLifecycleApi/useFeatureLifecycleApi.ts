@@ -2,10 +2,9 @@ import useAPI from '../useApi/useApi.js';
 import type { FeatureLifecycleCompletedSchema } from 'openapi';
 
 const useFeatureLifecycleApi = () => {
-    const { makeRequest, makeLightRequest, createRequest, errors, loading } =
-        useAPI({
-            propagateErrors: true,
-        });
+    const { makeRequest, createRequest, errors, loading } = useAPI({
+        propagateErrors: true,
+    });
 
     const markFeatureCompleted = async (
         name: string,

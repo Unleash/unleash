@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestOneOrManyCreateSchemaOneOfThreeAction } from './changeRequestOneOrManyCreateSchemaOneOfThreeAction.js';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfThreePayload } from './changeRequestOneOrManyCreateSchemaOneOfThreePayload.js';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfThreeAction } from './changeRequestOneOrManyCreateSchemaOneOfThreeAction';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfThreePayload } from './changeRequestOneOrManyCreateSchemaOneOfThreePayload';
 
 export type ChangeRequestOneOrManyCreateSchemaOneOfThree = {
     /** The name of this action. */

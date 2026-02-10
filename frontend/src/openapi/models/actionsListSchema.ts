@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionsSchema } from './actionsSchema.js';
+import type { ActionsSchema } from './actionsSchema';
 
 /**
  * A response model with a list of action sets.

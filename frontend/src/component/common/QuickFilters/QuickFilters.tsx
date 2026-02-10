@@ -47,6 +47,7 @@ export const QuickFilters = <T extends string | null>({
                 label={label}
                 variant='outlined'
                 isActive={value === currentValue}
+                aria-pressed={value === currentValue}
                 onClick={() => onChange(value)}
             />
         ))}

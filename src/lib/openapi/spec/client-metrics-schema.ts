@@ -115,6 +115,7 @@ export const clientMetricsSchema = {
                                 description:
                                     'An object describing how many times each variant was returned. Variant names are used as properties, and the number of times they were exposed is the corresponding value (i.e. `{ [variantName]: number }`).',
                                 type: 'object',
+                                nullable: true,
                                 additionalProperties: {
                                     type: 'integer',
                                     minimum: 0,

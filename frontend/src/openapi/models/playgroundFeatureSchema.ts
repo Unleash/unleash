@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundFeatureSchemaStrategies } from './playgroundFeatureSchemaStrategies.js';
-import type { PlaygroundFeatureSchemaVariant } from './playgroundFeatureSchemaVariant.js';
-import type { VariantSchema } from './variantSchema.js';
+import type { PlaygroundFeatureSchemaStrategies } from './playgroundFeatureSchemaStrategies';
+import type { PlaygroundFeatureSchemaVariant } from './playgroundFeatureSchemaVariant';
+import type { VariantSchema } from './variantSchema';
 
 /**
  * A simplified feature flag model intended for the Unleash playground.

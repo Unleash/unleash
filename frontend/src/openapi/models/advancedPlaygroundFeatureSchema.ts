@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdvancedPlaygroundFeatureSchemaEnvironments } from './advancedPlaygroundFeatureSchemaEnvironments.js';
+import type { AdvancedPlaygroundFeatureSchemaEnvironments } from './advancedPlaygroundFeatureSchemaEnvironments';
 
 /**
  * A simplified feature flag model intended for the Unleash playground.

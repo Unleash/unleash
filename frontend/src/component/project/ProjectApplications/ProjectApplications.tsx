@@ -87,8 +87,7 @@ export const ProjectApplications = () => {
 
     const bodyLoadingRef = useLoading(loading);
 
-    const { offset, limit, query, sortBy, sortOrder, ...filterState } =
-        tableState;
+    const { query } = tableState;
 
     const columns = useMemo(
         () => [

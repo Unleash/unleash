@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdminPermissionSchema } from './adminPermissionSchema.js';
+import type { AdminPermissionSchema } from './adminPermissionSchema';
 
 /**
  * A read model for the role and permissions to allow Unleash to decide what actions a role holder is allowed to perform

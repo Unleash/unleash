@@ -19,7 +19,10 @@ const uiConfig = {
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const config = createTestConfig({
-        server: { baseUriPath: base },
+        server: {
+            baseUriPath: base,
+            edgeUrl: 'https://yourcompany.edge.getunleash.io',
+        },
         ui: uiConfig,
     });
     const stores = createStores();
@@ -59,6 +62,7 @@ test('should get ui config', async () => {
     expect(body.resourceLimits!.strategySegments).toEqual(
         DEFAULT_STRATEGY_SEGMENTS_LIMIT,
     );
+    expect(body.edgeUrl).toEqual('https://yourcompany.edge.getunleash.io');
 });
 
 test('should update CORS settings', async () => {

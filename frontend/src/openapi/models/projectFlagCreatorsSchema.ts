@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectFlagCreatorsSchemaItem } from './projectFlagCreatorsSchemaItem.js';
+import type { ProjectFlagCreatorsSchemaItem } from './projectFlagCreatorsSchemaItem';
 
 /**
  * A list of project flag creators

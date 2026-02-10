@@ -293,6 +293,7 @@ const defaultServerOption: IServerOption = {
     port: parseEnvVarNumber(process.env.HTTP_PORT || process.env.PORT, 4242),
     baseUriPath: formatBaseUri(process.env.BASE_URI_PATH),
     cdnPrefix: process.env.CDN_PREFIX,
+    edgeUrl: process.env.EDGE_URL,
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
     serverMetrics: true,
     enableHeapSnapshotEnpoint: parseEnvVarBoolean(
@@ -776,7 +777,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             0,
             parseEnvVarNumber(
                 process.env.UNLEASH_RELEASE_TEMPLATES_LIMIT,
-                options?.resourceLimits?.releaseTemplates ?? 5,
+                options?.resourceLimits?.releaseTemplates ?? 10,
             ),
         ),
     };

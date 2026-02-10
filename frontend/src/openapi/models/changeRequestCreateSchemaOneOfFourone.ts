@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateSchemaOneOfFouroneAction } from './changeRequestCreateSchemaOneOfFouroneAction.js';
-import type { ChangeRequestCreateSchemaOneOfFouronePayload } from './changeRequestCreateSchemaOneOfFouronePayload.js';
+import type { ChangeRequestCreateSchemaOneOfFouroneAction } from './changeRequestCreateSchemaOneOfFouroneAction';
+import type { ChangeRequestCreateSchemaOneOfFouronePayload } from './changeRequestCreateSchemaOneOfFouronePayload';
 
 /**
  * Resume paused milestone progressions for a release plan.

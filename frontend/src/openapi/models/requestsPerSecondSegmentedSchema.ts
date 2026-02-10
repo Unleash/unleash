@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RequestsPerSecondSchema } from './requestsPerSecondSchema.js';
+import type { RequestsPerSecondSchema } from './requestsPerSecondSchema';
 
 /**
  * Get usage metrics separated by client and admin paths

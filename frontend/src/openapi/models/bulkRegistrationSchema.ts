@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { BulkRegistrationSchemaConnectViaItem } from './bulkRegistrationSchemaConnectViaItem.js';
-import type { BulkRegistrationSchemaSdkType } from './bulkRegistrationSchemaSdkType.js';
-import type { DateSchema } from './dateSchema.js';
+import type { BulkRegistrationSchemaConnectViaItem } from './bulkRegistrationSchemaConnectViaItem';
+import type { BulkRegistrationSchemaSdkType } from './bulkRegistrationSchemaSdkType';
+import type { DateSchema } from './dateSchema';
 
 /**
  * An application registration. Defines the format POSTed by our backend SDKs when they're starting up

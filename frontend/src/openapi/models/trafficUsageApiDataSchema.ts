@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TrafficUsageApiDataSchemaDaysItem } from './trafficUsageApiDataSchemaDaysItem.js';
+import type { TrafficUsageApiDataSchemaDaysItem } from './trafficUsageApiDataSchemaDaysItem';
 
 /**
  * Contains the recorded data usage for each API path, segmented by day and type of traffic

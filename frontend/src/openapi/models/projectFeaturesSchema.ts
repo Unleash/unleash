@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectFeatureSchema } from './projectFeatureSchema.js';
+import type { ProjectFeatureSchema } from './projectFeatureSchema';
 
 /**
  * A list of features in a project

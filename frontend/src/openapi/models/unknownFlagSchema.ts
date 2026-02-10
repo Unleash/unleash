@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UnknownFlagSchemaReportsItem } from './unknownFlagSchemaReportsItem.js';
+import type { UnknownFlagSchemaReportsItem } from './unknownFlagSchemaReportsItem';
 
 /**
  * An unknown flag report

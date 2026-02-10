@@ -27,7 +27,7 @@ jobs:
         uses: lycheeverse/lychee-action@v2
         with:
           fail: true
-          args: '"./website/docs/**/*.md" "./website/docs/**/*.mdx" "./src/mailtemplates/*.mustache" --scheme http --scheme https --cache --max-cache-age 7d --verbose --accept 100..=103,200..=299,429' # other excludes are in .lycheeignore
+          args: '"./src/mailtemplates/*.mustache" --scheme http --scheme https --cache --max-cache-age 7d --verbose --accept 100..=103,200..=299,429' # other excludes are in .lycheeignore
           output: ${{ env.issue-content }}
 
       # Permissions (issues: read)

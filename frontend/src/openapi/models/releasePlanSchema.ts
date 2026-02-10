@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReleasePlanSchemaDiscriminator } from './releasePlanSchemaDiscriminator.js';
-import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema.js';
-import type { SafeguardSchema } from './safeguardSchema.js';
+import type { ReleasePlanSchemaDiscriminator } from './releasePlanSchemaDiscriminator';
+import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema';
+import type { SafeguardSchema } from './safeguardSchema';
 
 /**
  * Schema representing the creation of a release plan.

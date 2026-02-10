@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ExportQuerySchemaAnyOf } from './exportQuerySchemaAnyOf.js';
-import type { ExportQuerySchemaAnyOfTwo } from './exportQuerySchemaAnyOfTwo.js';
-import type { ExportQuerySchemaAnyOfThree } from './exportQuerySchemaAnyOfThree.js';
+import type { ExportQuerySchemaAnyOf } from './exportQuerySchemaAnyOf';
+import type { ExportQuerySchemaAnyOfTwo } from './exportQuerySchemaAnyOfTwo';
+import type { ExportQuerySchemaAnyOfThree } from './exportQuerySchemaAnyOfThree';
 
 /**
  * Available query parameters for  the deprecated export/import functionality.

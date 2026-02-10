@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema.js';
+import type { ConstraintSchema } from './constraintSchema';
 
 /**
  * A description of a [segment](https://docs.getunleash.io/concepts/segments)

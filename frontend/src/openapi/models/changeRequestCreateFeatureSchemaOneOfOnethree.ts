@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOfOnethreeAction } from './changeRequestCreateFeatureSchemaOneOfOnethreeAction.js';
-import type { ChangeRequestCreateFeatureSchemaOneOfOnethreePayload } from './changeRequestCreateFeatureSchemaOneOfOnethreePayload.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfOnethreeAction } from './changeRequestCreateFeatureSchemaOneOfOnethreeAction';
+import type { ChangeRequestCreateFeatureSchemaOneOfOnethreePayload } from './changeRequestCreateFeatureSchemaOneOfOnethreePayload';
 
 /**
  * Update variants for this feature.

@@ -1,8 +1,6 @@
-import { Alert, Box, IconButton, styled, Tooltip } from '@mui/material';
+import { Alert, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import CopyIcon from '@mui/icons-material/FileCopy';
-import copy from 'copy-to-clipboard';
-import useToast from 'hooks/useToast';
+import { ApiUrl } from './ApiUrl/ApiUrl';
 
 const GridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -12,19 +10,16 @@ const GridContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     marginTop: theme.spacing(1.5),
 }));
-const GridItem = Box;
 
 export const ApiTokenDocs = () => {
     const { uiConfig } = useUiConfig();
-    const { setToastData } = useToast();
 
-    const onCopyToClipboard = (url: string) => () => {
-        copy(url);
-        setToastData({
-            type: 'success',
-            text: 'Copied to clipboard',
-        });
-    };
+    const edgeUrls = uiConfig.edgeUrl
+        ? {
+              edgeUrl: `${uiConfig.edgeUrl}/api/`,
+              edgeFrontendUrl: `${uiConfig.edgeUrl}/api/frontend/`,
+          }
+        : undefined;
 
     const clientApiUrl = `${uiConfig.unleashUrl}/api/`;
     const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend/`;
@@ -45,38 +40,18 @@ export const ApiTokenDocs = () => {
                 activated.
             </p>
             <GridContainer>
-                <GridItem>
-                    <strong>CLIENT API URL: </strong>
-                </GridItem>
-                <GridItem>
-                    <pre style={{ display: 'inline' }}>{clientApiUrl}</pre>
-                </GridItem>
-                <GridItem>
-                    <Tooltip title='Copy URL' arrow>
-                        <IconButton
-                            onClick={onCopyToClipboard(clientApiUrl)}
-                            size='small'
-                        >
-                            <CopyIcon />
-                        </IconButton>
-                    </Tooltip>
-                </GridItem>
-                <GridItem>
-                    <strong>FRONTEND API URL: </strong>
-                </GridItem>
-                <GridItem>
-                    <pre style={{ display: 'inline' }}>{frontendApiUrl}</pre>
-                </GridItem>
-                <GridItem>
-                    <Tooltip title='Copy URL' arrow>
-                        <IconButton
-                            onClick={onCopyToClipboard(frontendApiUrl)}
-                            size='small'
-                        >
-                            <CopyIcon />
-                        </IconButton>
-                    </Tooltip>
-                </GridItem>
+                {edgeUrls && (
+                    <>
+                        <ApiUrl title='EDGE API URL:' url={edgeUrls.edgeUrl} />
+                        <ApiUrl
+                            title='EDGE FRONTEND API URL:'
+                            url={edgeUrls.edgeFrontendUrl}
+                        />
+                    </>
+                )}
+
+                <ApiUrl title='CLIENT API URL:' url={clientApiUrl} />
+                <ApiUrl title='FRONTEND API URL:' url={frontendApiUrl} />
             </GridContainer>
         </Alert>
     );

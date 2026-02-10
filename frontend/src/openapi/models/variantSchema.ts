@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { OverrideSchema } from './overrideSchema.js';
-import type { VariantSchemaPayload } from './variantSchemaPayload.js';
-import type { VariantSchemaWeightType } from './variantSchemaWeightType.js';
+import type { OverrideSchema } from './overrideSchema';
+import type { VariantSchemaPayload } from './variantSchemaPayload';
+import type { VariantSchemaWeightType } from './variantSchemaWeightType';
 
 /**
  * A variant allows for further separation of users into segments. See [our excellent documentation](https://docs.getunleash.io/concepts/feature-flag-variants#what-are-variants) for a more detailed description

@@ -17,6 +17,7 @@ const REQUEST_ORIGIN = 'request_origin' as const;
 const ADDON_EVENTS_HANDLED = 'addon-event-handled' as const;
 const CLIENT_METRICS_NAMEPREFIX = 'client-api-nameprefix';
 const CLIENT_METRICS_TAGS = 'client-api-tags';
+const CLIENT_METRICS_PROJECT = 'client-api-project';
 const CLIENT_FEATURES_MEMORY = 'client_features_memory';
 const CLIENT_DELTA_MEMORY = 'client_delta_memory';
 const CLIENT_REGISTERED = 'client_registered';
@@ -38,6 +39,7 @@ type MetricEvent =
     | typeof REQUEST_ORIGIN
     | typeof CLIENT_METRICS_NAMEPREFIX
     | typeof CLIENT_METRICS_TAGS
+    | typeof CLIENT_METRICS_PROJECT
     | typeof CLIENT_FEATURES_MEMORY
     | typeof CLIENT_DELTA_MEMORY;
 
@@ -47,9 +49,24 @@ type RequestOriginEventPayload = {
     source?: string;
 };
 
+type ClientMetricsNamePrefixPayload = {
+    namePrefix: string;
+};
+
+type ClientMetricsTagsPayload = {
+    tags: string[];
+};
+
+type ClientMetricsProjectPayload = {
+    projects: string[];
+};
+
 type MetricEventPayloads = {
     [key: string]: unknown;
     [REQUEST_ORIGIN]: RequestOriginEventPayload;
+    [CLIENT_METRICS_NAMEPREFIX]: ClientMetricsNamePrefixPayload;
+    [CLIENT_METRICS_TAGS]: ClientMetricsTagsPayload;
+    [CLIENT_METRICS_PROJECT]: ClientMetricsProjectPayload;
 };
 
 type MetricEventPayload<T extends MetricEvent> = MetricEventPayloads[T];
@@ -90,6 +107,7 @@ export {
     ADDON_EVENTS_HANDLED,
     CLIENT_METRICS_NAMEPREFIX,
     CLIENT_METRICS_TAGS,
+    CLIENT_METRICS_PROJECT,
     CLIENT_FEATURES_MEMORY,
     CLIENT_DELTA_MEMORY,
     CLIENT_REGISTERED,

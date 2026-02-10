@@ -7,7 +7,6 @@ import {
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 import { styled } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureToggleFiltersProps {
     state: FilterItemParamHolder;
@@ -26,7 +25,6 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
     ...filterProps
 }) => {
     const { projects } = useProjects();
-    const dateConstraintsEnabled = useUiFlag('datePickerRangeConstraints');
 
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
 
@@ -50,7 +48,6 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
                 fromFilterKey: `${prefix}from`,
                 toFilterKey: `${prefix}to`,
                 persistent: true,
-                dateConstraintsEnabled,
             } as IDateFilterItem,
             {
                 label: 'Date To',
@@ -61,7 +58,6 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
                 fromFilterKey: `${prefix}from`,
                 toFilterKey: `${prefix}to`,
                 persistent: true,
-                dateConstraintsEnabled,
             } as IDateFilterItem,
             ...(hasMultipleProjects
                 ? ([

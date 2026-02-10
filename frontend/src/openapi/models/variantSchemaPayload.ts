@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { VariantSchemaPayloadType } from './variantSchemaPayloadType.js';
+import type { VariantSchemaPayloadType } from './variantSchemaPayloadType';
 
 /**
  * Extra data configured for this variant

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ApiTokenSchema } from './apiTokenSchema.js';
+import type { ApiTokenSchema } from './apiTokenSchema';
 
 /**
  * An object with [Unleash API tokens](https://docs.getunleash.io/concepts/api-tokens-and-client-keys)

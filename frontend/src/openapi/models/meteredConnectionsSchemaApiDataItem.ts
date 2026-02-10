@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { MeteredConnectionsSchemaApiDataItemDataPointsItem } from './meteredConnectionsSchemaApiDataItemDataPointsItem.js';
+import type { MeteredConnectionsSchemaApiDataItemDataPointsItem } from './meteredConnectionsSchemaApiDataItemDataPointsItem';
 
 export type MeteredConnectionsSchemaApiDataItem = {
     /** The recorded data points for the metered group */

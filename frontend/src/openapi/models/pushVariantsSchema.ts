@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { VariantSchema } from './variantSchema.js';
+import type { VariantSchema } from './variantSchema';
 
 /**
  * Data used when copying variants into a new environment.

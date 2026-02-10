@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema.js';
-import type { ProjectLinkTemplateSchema } from './projectLinkTemplateSchema.js';
-import type { UpdateProjectEnterpriseSettingsSchemaMode } from './updateProjectEnterpriseSettingsSchemaMode.js';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
+import type { ProjectLinkTemplateSchema } from './projectLinkTemplateSchema';
+import type { UpdateProjectEnterpriseSettingsSchemaMode } from './updateProjectEnterpriseSettingsSchemaMode';
 
 /**
  * Data used to update a [project](https://docs.getunleash.io/concepts/projects) settings

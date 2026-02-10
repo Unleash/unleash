@@ -8,8 +8,6 @@ import { ManageTags } from './ManageTags.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { BulkDisableDialog } from 'component/feature/FeatureToggleList/BulkDisableDialog';
 import { BulkEnableDialog } from 'component/feature/FeatureToggleList/BulkEnableDialog';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-
 interface IProjectFeaturesBatchActionsProps {
     selectedIds: string[];
     data: FeatureSchema[];
@@ -21,7 +19,6 @@ interface IProjectFeaturesBatchActionsProps {
 export const ProjectFeaturesBatchActions: FC<
     IProjectFeaturesBatchActionsProps
 > = ({ selectedIds, data, projectId, onResetSelection, onChange }) => {
-    const { uiConfig } = useUiConfig();
     const [showExportDialog, setShowExportDialog] = useState(false);
     const [showBulkEnableDialog, setShowBulkEnableDialog] = useState(false);
     const [showBulkDisableDialog, setShowBulkDisableDialog] = useState(false);

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TagSchema } from './tagSchema.js';
+import type { TagSchema } from './tagSchema';
 
 /**
  * A list of tags with a version number

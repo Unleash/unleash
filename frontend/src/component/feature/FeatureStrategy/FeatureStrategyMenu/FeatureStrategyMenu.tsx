@@ -1,9 +1,4 @@
-import type React from 'react';
 import { useEffect, useState } from 'react';
-import PermissionButton, {
-    type IPermissionButtonProps,
-} from 'component/common/PermissionButton/PermissionButton';
-import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Box, Dialog, IconButton, styled, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -23,21 +18,13 @@ import {
 import { ReleasePlanConfirmationDialog } from './ReleasePlanConfirmationDialog.tsx';
 
 interface IFeatureStrategyMenuProps {
-    label: string;
     projectId: string;
     featureId: string;
     environmentId: string;
-    variant?: IPermissionButtonProps['variant'];
-    matchWidth?: boolean;
-    disableReason?: string;
+    isStrategyMenuDialogOpen: boolean;
+    onClose: any;
+    defaultFilter?: StrategyFilterValue;
 }
-
-const StyledStrategyMenu = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'row',
-    justifyContent: 'flex-end',
-    gap: theme.spacing(1),
-}));
 
 const StyledHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -47,26 +34,20 @@ const StyledHeader = styled(Box)(({ theme }) => ({
 }));
 
 export const FeatureStrategyMenu = ({
-    label,
     projectId,
     featureId,
     environmentId,
-    variant,
-    matchWidth,
-    disableReason,
+    isStrategyMenuDialogOpen,
+    onClose,
+    defaultFilter = null,
 }: IFeatureStrategyMenuProps) => {
-    const [isStrategyMenuDialogOpen, setIsStrategyMenuDialogOpen] =
-        useState<boolean>(false);
-    const [filter, setFilter] = useState<StrategyFilterValue>(null);
+    const [filter, setFilter] = useState<StrategyFilterValue>(defaultFilter);
     const { trackEvent } = usePlausibleTracker();
     const [selectedTemplate, setSelectedTemplate] =
         useState<IReleasePlanTemplate>();
     const [releasePlanPreview, setReleasePlanPreview] = useState(false);
     const [addReleasePlanConfirmationOpen, setAddReleasePlanConfirmationOpen] =
         useState(false);
-    const dialogId = isStrategyMenuDialogOpen
-        ? 'FeatureStrategyMenuDialog'
-        : undefined;
     const { setToastApiError, setToastData } = useToast();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { addChange } = useChangeRequestApi();
@@ -82,18 +63,11 @@ export const FeatureStrategyMenu = ({
 
     const activeReleasePlan = releasePlans[0];
 
-    const onClose = () => {
-        setIsStrategyMenuDialogOpen(false);
-    };
-
     useEffect(() => {
         if (!isStrategyMenuDialogOpen) return;
         setReleasePlanPreview(false);
-    }, [isStrategyMenuDialogOpen]);
-
-    const openMoreStrategies = (_event: React.SyntheticEvent) => {
-        setIsStrategyMenuDialogOpen(true);
-    };
+        setFilter(defaultFilter);
+    }, [isStrategyMenuDialogOpen, defaultFilter]);
 
     const addReleasePlan = async (
         template: IReleasePlanTemplate,
@@ -150,23 +124,7 @@ export const FeatureStrategyMenu = ({
     };
 
     return (
-        <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
-            <PermissionButton
-                data-testid='ADD_STRATEGY_BUTTON'
-                permission={CREATE_FEATURE_STRATEGY}
-                projectId={projectId}
-                environmentId={environmentId}
-                onClick={openMoreStrategies}
-                aria-labelledby={dialogId}
-                variant={variant}
-                sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
-                disabled={Boolean(disableReason)}
-                tooltipProps={{
-                    title: disableReason ? disableReason : undefined,
-                }}
-            >
-                Add strategy
-            </PermissionButton>
+        <>
             <Dialog
                 open={isStrategyMenuDialogOpen}
                 onClose={onClose}
@@ -235,6 +193,6 @@ export const FeatureStrategyMenu = ({
                     }}
                 />
             )}
-        </StyledStrategyMenu>
+        </>
     );
 };

@@ -3,15 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchemaCollaborators } from './featureSchemaCollaborators.js';
-import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy.js';
-import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem.js';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema.js';
-import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle.js';
-import type { FeatureSchemaLinksItem } from './featureSchemaLinksItem.js';
-import type { FeatureSchemaStrategiesItem } from './featureSchemaStrategiesItem.js';
-import type { TagSchema } from './tagSchema.js';
-import type { VariantSchema } from './variantSchema.js';
+import type { FeatureSchemaCollaborators } from './featureSchemaCollaborators';
+import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy';
+import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem';
+import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
+import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle';
+import type { FeatureSchemaLinksItem } from './featureSchemaLinksItem';
+import type { FeatureSchemaStrategiesItem } from './featureSchemaStrategiesItem';
+import type { TagSchema } from './tagSchema';
+import type { VariantSchema } from './variantSchema';
 
 /**
  * A feature flag definition

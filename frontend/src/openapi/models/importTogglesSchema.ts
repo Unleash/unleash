@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ExportResultSchema } from './exportResultSchema.js';
+import type { ExportResultSchema } from './exportResultSchema';
 
 /**
  * The result of the export operation for a project and environment, used at import

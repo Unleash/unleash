@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SearchChangeRequestsState } from './searchChangeRequestsState.js';
+import type { SearchChangeRequestsState } from './searchChangeRequestsState';
 
 export type SearchChangeRequestsParams = {
     /**
@@ -20,10 +20,13 @@ export type SearchChangeRequestsParams = {
     state?: SearchChangeRequestsState;
     /**
      * The number of change requests to skip when returning a page. By default it is set to 0.
+     * @minimum 0
      */
     offset?: number;
     /**
      * The number of change requests to return in a page. By default it is set to 50. The maximum is 1000.
+     * @minimum 1
+     * @maximum 1000
      */
     limit?: number;
 };

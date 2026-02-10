@@ -11,15 +11,9 @@ export const urlFriendlyString = (): Arbitrary<string> =>
     fc
         .array(
             fc.oneof(
-                fc
-                    .integer({ min: 0x30, max: 0x39 })
-                    .map(String.fromCharCode), // numbers
-                fc
-                    .integer({ min: 0x41, max: 0x5a })
-                    .map(String.fromCharCode), // UPPERCASE LETTERS
-                fc
-                    .integer({ min: 0x61, max: 0x7a })
-                    .map(String.fromCharCode), // lowercase letters
+                fc.integer({ min: 0x30, max: 0x39 }).map(String.fromCharCode), // numbers
+                fc.integer({ min: 0x41, max: 0x5a }).map(String.fromCharCode), // UPPERCASE LETTERS
+                fc.integer({ min: 0x61, max: 0x7a }).map(String.fromCharCode), // lowercase letters
                 fc.constantFrom('-', '_', '~', '.'), // rest
                 fc.lorem({ maxCount: 1 }), // random words for more 'realistic' names
             ),

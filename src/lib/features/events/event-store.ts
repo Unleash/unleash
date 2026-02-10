@@ -1,7 +1,10 @@
 import {
-    FEATURE_CREATED,
     FEATURE_IMPORT,
-    FEATURE_TAGGED,
+    FEATURE_FAVORITED,
+    FEATURE_UNFAVORITED,
+    FEATURE_LINK_ADDED,
+    FEATURE_LINK_UPDATED,
+    FEATURE_LINK_REMOVED,
     FEATURES_IMPORTED,
     type IBaseEvent,
     type IEvent,
@@ -198,10 +201,21 @@ export class EventStore implements IEventStore {
                 .andWhere((inner) => {
                     inner
                         .whereNotNull('feature_name')
-                        .whereNotIn('type', [FEATURE_CREATED, FEATURE_TAGGED])
+                        .whereNotIn('type', [
+                            FEATURE_FAVORITED,
+                            FEATURE_UNFAVORITED,
+                            FEATURE_LINK_ADDED,
+                            FEATURE_LINK_UPDATED,
+                            FEATURE_LINK_REMOVED,
+                        ])
                         .whereNot('type', 'LIKE', 'change-%');
                     if (opts?.environment && opts.environment !== ALL_ENVS) {
-                        inner.where('environment', opts.environment);
+                        inner.andWhere((envInner) => {
+                            envInner
+                                .where('environment', opts.environment)
+                                // Picks up events like archiving, which relate to a feature but have no specific environment set
+                                .orWhereNull('environment');
+                        });
                     }
                     return inner;
                 })

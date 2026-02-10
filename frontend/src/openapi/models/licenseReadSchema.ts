@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LicenseReadSchemaResources } from './licenseReadSchemaResources.js';
+import type { LicenseReadSchemaResources } from './licenseReadSchemaResources';
 
 /**
  * A model representing a license response.

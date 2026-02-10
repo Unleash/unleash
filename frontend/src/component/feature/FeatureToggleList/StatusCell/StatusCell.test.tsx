@@ -71,7 +71,7 @@ describe('StatusCell', () => {
                 ]}
             />
         );
-        const { getByTestId, getByText, rerender } = render(ui);
+        const { getByTestId, getByText } = render(ui);
 
         expect(await screen.queryByText('Change requests:')).toBeNull();
         await userEvent.hover(getByTestId('change-requests-icon'));

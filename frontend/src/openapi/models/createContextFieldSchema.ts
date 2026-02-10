@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LegalValueSchema } from './legalValueSchema.js';
+import type { LegalValueSchema } from './legalValueSchema';
 
 /**
  * Data used to create a context field configuration.
@@ -15,6 +15,8 @@ export interface CreateContextFieldSchema {
     legalValues?: LegalValueSchema[];
     /** The name of the context field. */
     name: string;
+    /** The project this context field belongs to (if it is project-specific) */
+    project?: string;
     /** How this context field should be sorted if no other sort order is selected */
     sortOrder?: number;
     /** `true` if this field should be available for use with [custom stickiness](https://docs.getunleash.io/concepts/stickiness#custom-stickiness), otherwise `false` */

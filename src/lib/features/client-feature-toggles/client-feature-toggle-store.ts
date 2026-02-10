@@ -103,8 +103,26 @@ export default class FeatureToggleClientStore
             .modify(FeatureToggleStore.filterByArchived, archived)
             .leftJoin(
                 this.db('feature_strategies')
-                    .select('*')
-                    .where({ environment })
+                    .select('feature_strategies.*')
+                    .leftJoin(
+                        'milestones as m',
+                        'm.id',
+                        'feature_strategies.milestone_id',
+                    )
+                    .leftJoin('release_plan_definitions as rpd', function () {
+                        this.on(
+                            'rpd.id',
+                            'm.release_plan_definition_id',
+                        ).andOnVal('rpd.discriminator', '=', 'plan');
+                    })
+                    .where('feature_strategies.environment', environment)
+                    .andWhere(function () {
+                        this.whereNull(
+                            'feature_strategies.milestone_id',
+                        ).orWhereRaw(
+                            'feature_strategies.milestone_id = rpd.active_milestone_id',
+                        );
+                    })
                     .as('fs'),
                 'fs.feature_name',
                 'features.name',

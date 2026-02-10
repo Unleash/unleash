@@ -1,29 +1,6 @@
-import { Alert, styled } from '@mui/material';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ApiUrl } from './ApiUrl/ApiUrl';
-
-const GridContainer = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'auto auto 1fr',
-    gridAutoRows: 'min-content',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    marginTop: theme.spacing(1.5),
-}));
+import { Alert } from '@mui/material';
 
 export const ApiTokenDocs = () => {
-    const { uiConfig } = useUiConfig();
-
-    const edgeUrls = uiConfig.edgeUrl
-        ? {
-              edgeUrl: `${uiConfig.edgeUrl}/api/`,
-              edgeFrontendUrl: `${uiConfig.edgeUrl}/api/frontend/`,
-          }
-        : undefined;
-
-    const clientApiUrl = `${uiConfig.unleashUrl}/api/`;
-    const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend/`;
-
     return (
         <Alert severity='info'>
             <p>
@@ -39,20 +16,6 @@ export const ApiTokenDocs = () => {
                 up to <strong>1 minute</strong> before a new API key is
                 activated.
             </p>
-            <GridContainer>
-                {edgeUrls && (
-                    <>
-                        <ApiUrl title='EDGE API URL:' url={edgeUrls.edgeUrl} />
-                        <ApiUrl
-                            title='EDGE FRONTEND API URL:'
-                            url={edgeUrls.edgeFrontendUrl}
-                        />
-                    </>
-                )}
-
-                <ApiUrl title='CLIENT API URL:' url={clientApiUrl} />
-                <ApiUrl title='FRONTEND API URL:' url={frontendApiUrl} />
-            </GridContainer>
         </Alert>
     );
 };

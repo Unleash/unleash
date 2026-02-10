@@ -20,7 +20,7 @@ exports.up = function(db, cb) {
             environment TEXT NOT NULL,
             projects JSONB NOT NULL,
             scope_hash TEXT NOT NULL,
-            token_value TEXT NOT NULL REFERENCES api_tokens(secret) ON UPDATE CASCADE ON DELETE CASCADE,
+            token_value TEXT NOT NULL REFERENCES api_tokens(secret) ON DELETE CASCADE,
             created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT (now() at time zone 'utc'),
             revoked_at TIMESTAMP WITH TIME ZONE
         );

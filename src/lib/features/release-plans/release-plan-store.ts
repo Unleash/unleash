@@ -213,10 +213,10 @@ export class ReleasePlanStore extends CRUDStore<
                 'mi.release_plan_definition_id',
                 'rpd.id',
             )
-            .leftJoin('milestone_strategies AS ms', 'ms.milestone_id', 'mi.id')
+            .leftJoin('feature_strategies AS ms', 'ms.milestone_id', 'mi.id')
             .leftJoin(
-                'milestone_strategy_segments AS mss',
-                'mss.milestone_strategy_id',
+                'feature_strategy_segment AS mss',
+                'mss.feature_strategy_id',
                 'ms.id',
             )
             .orderBy('mi.sort_order', 'asc')
@@ -236,10 +236,10 @@ export class ReleasePlanStore extends CRUDStore<
                 'mi.release_plan_definition_id',
                 'rpd.id',
             )
-            .leftJoin('milestone_strategies AS ms', 'ms.milestone_id', 'mi.id')
+            .leftJoin('feature_strategies AS ms', 'ms.milestone_id', 'mi.id')
             .leftJoin(
-                'milestone_strategy_segments AS mss',
-                'mss.milestone_strategy_id',
+                'feature_strategy_segment AS mss',
+                'mss.feature_strategy_id',
                 'ms.id',
             )
             .orderBy('mi.sort_order', 'asc')
@@ -419,10 +419,10 @@ export class ReleasePlanStore extends CRUDStore<
                 'mi.release_plan_definition_id',
                 'rpd.id',
             )
-            .leftJoin('milestone_strategies AS ms', 'ms.milestone_id', 'mi.id')
+            .leftJoin('feature_strategies AS ms', 'ms.milestone_id', 'mi.id')
             .leftJoin(
-                'milestone_strategy_segments AS mss',
-                'mss.milestone_strategy_id',
+                'feature_strategy_segment AS mss',
+                'mss.feature_strategy_id',
                 'ms.id',
             )
             .orderBy('mi.sort_order', 'asc')

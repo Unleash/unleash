@@ -24,6 +24,7 @@ import { Demo } from './demo/Demo.tsx';
 import { LoginRedirect } from './common/LoginRedirect/LoginRedirect.tsx';
 import { SecurityBanner } from './banners/internalBanners/SecurityBanner.tsx';
 import { MonthsOldVersionBanner } from './banners/internalBanners/MonthsOldVersionBanner.tsx';
+import { SignupDialog } from './signup/SignupDialog/SignupDialog.tsx';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -114,6 +115,8 @@ export const App = () => {
                                     <FeedbackNPS openUrl='http://feedback.unleash.run' />
 
                                     <SplashOverlay />
+
+                                    <SignupDialog />
                                 </StyledContainer>
                             </>
                         </Demo>

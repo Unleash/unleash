@@ -54,6 +54,10 @@ import type EventEmitter from 'events';
 import { USER_LOGIN } from '../metric-events.js';
 import type { ResourceLimitsService } from './index.js';
 
+owasp.config({
+    allowPassphrases: false,
+});
+
 export interface ICreateUserWithRole {
     name?: string;
     email?: string;

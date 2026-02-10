@@ -11,7 +11,7 @@
   },
   "type": "module",
   "scripts": {
-    "ci": "yarn lint && yarn ts:check && yarn build && yarn test --reporter=dot",
+    "ci": "yarn fmt && yarn lint && yarn ts:check && yarn build --logLevel=error && yarn test --reporter=dot",
     "build": "yarn run lint:material:icons && vite build",
     "dev": "vite",
     "start": "vite",

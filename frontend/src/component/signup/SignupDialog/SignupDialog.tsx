@@ -112,6 +112,7 @@ const steps: SignupStep[] = [
 
 export const SignupDialog = () => {
     // TODO: Add something to instanceStatus telling us we're signing up, which will control the open state
+    // biome-ignore lint/correctness/noUnusedVariables: WIP
     const { instanceStatus } = useInstanceStatus();
     const [open, setOpen] = useState(false);
     const [data, setData] = useState<SignupData>({

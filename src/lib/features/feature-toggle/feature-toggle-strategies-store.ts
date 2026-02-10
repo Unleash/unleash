@@ -664,10 +664,25 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         selectColumns = [
             ...selectColumns,
             this.db.raw(
-                'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment) as has_strategies',
+                `EXISTS (
+                    SELECT 1 FROM feature_strategies fs
+                    LEFT JOIN milestones m ON m.id = fs.milestone_id
+                    LEFT JOIN release_plan_definitions rpd ON rpd.id = m.release_plan_definition_id AND rpd.discriminator = 'plan'
+                    WHERE fs.feature_name = features.name
+                    AND fs.environment = feature_environments.environment
+                    AND (fs.milestone_id IS NULL OR fs.milestone_id = rpd.active_milestone_id)
+                ) as has_strategies`,
             ),
             this.db.raw(
-                'EXISTS (SELECT 1 FROM feature_strategies WHERE feature_strategies.feature_name = features.name AND feature_strategies.environment = feature_environments.environment AND (feature_strategies.disabled IS NULL OR feature_strategies.disabled = false)) as has_enabled_strategies',
+                `EXISTS (
+                    SELECT 1 FROM feature_strategies fs
+                    LEFT JOIN milestones m ON m.id = fs.milestone_id
+                    LEFT JOIN release_plan_definitions rpd ON rpd.id = m.release_plan_definition_id AND rpd.discriminator = 'plan'
+                    WHERE fs.feature_name = features.name
+                    AND fs.environment = feature_environments.environment
+                    AND (fs.milestone_id IS NULL OR fs.milestone_id = rpd.active_milestone_id)
+                    AND (fs.disabled IS NULL OR fs.disabled = false)
+                ) as has_enabled_strategies`,
             ),
         ];
 

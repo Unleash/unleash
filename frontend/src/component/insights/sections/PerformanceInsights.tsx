@@ -6,6 +6,7 @@ import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import type { FC } from 'react';
 import { withDefault } from 'use-query-params';
 import { FilterItemParam } from 'utils/serializeQueryParams';
+import { handleDateAdjustment } from 'component/events/EventLog/useEventLogSearch';
 import { WidgetTitle } from 'component/insights/components/WidgetTitle/WidgetTitle';
 import { FlagsChart } from 'component/insights/componentsChart/FlagsChart/FlagsChart';
 import { FlagsProjectChart } from 'component/insights/componentsChart/FlagsProjectChart/FlagsProjectChart';
@@ -71,10 +72,17 @@ export const PerformanceInsights: FC = () => {
             operator: 'IS',
         }),
     };
-    const [state, setState] = usePersistentTableState('insights', stateConfig, [
-        'performance-from',
-        'performance-to',
-    ]);
+    const [state, setStateRaw] = usePersistentTableState(
+        'insights',
+        stateConfig,
+        ['performance-from', 'performance-to'],
+    );
+
+    const setState = (newState: typeof state) => {
+        setStateRaw((oldState) =>
+            handleDateAdjustment(oldState, newState, statePrefix),
+        );
+    };
 
     const { insights, loading } = useInsights(
         state[`${statePrefix}from`]?.values[0],

@@ -5,6 +5,7 @@ import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import type { FC } from 'react';
 import { withDefault } from 'use-query-params';
 import { FilterItemParam } from 'utils/serializeQueryParams';
+import { handleDateAdjustment } from 'component/events/EventLog/useEventLogSearch';
 import { WidgetTitle } from 'component/insights/components/WidgetTitle/WidgetTitle';
 import { UsersChart } from 'component/insights/componentsChart/UsersChart/UsersChart';
 import { UsersPerProjectChart } from 'component/insights/componentsChart/UsersPerProjectChart/UsersPerProjectChart';
@@ -31,11 +32,17 @@ export const UserInsights: FC = () => {
             operator: 'IS',
         }),
     };
-    const [state, setState] = usePersistentTableState(
+    const [state, setStateRaw] = usePersistentTableState(
         'insights-users',
         stateConfig,
         ['users-from', 'users-to'],
     );
+
+    const setState = (newState: typeof state) => {
+        setStateRaw((oldState) =>
+            handleDateAdjustment(oldState, newState, statePrefix),
+        );
+    };
 
     const { insights, loading } = useInsights(
         state['users-from']?.values[0],

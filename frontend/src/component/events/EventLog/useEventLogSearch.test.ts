@@ -97,4 +97,24 @@ describe('setState date handling', () => {
         const updateResult = handleDateAdjustment(oldState, stateUpdate);
         expect(updateResult).toStrictEqual(stateUpdate);
     });
+
+    test('a key prefix is respected when provided', () => {
+        const oldState = {
+            from: dateFilterItem('2022-01-01'),
+            to: dateFilterItem('2023-01-01'),
+            'prefix-from': dateFilterItem('2022-01-01'),
+            'prefix-to': dateFilterItem('2023-01-01'),
+        };
+        const stateUpdate = { 'prefix-from': dateFilterItem('2024-01-01') };
+
+        const updateResult = handleDateAdjustment(
+            oldState,
+            stateUpdate,
+            'prefix-',
+        );
+        expect(updateResult).toMatchObject({
+            'prefix-from': dateFilterItem('2024-01-01'),
+            'prefix-to': dateFilterItem('2024-01-01'),
+        });
+    });
 });

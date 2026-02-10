@@ -47,26 +47,26 @@ export const calculatePaginationInfo = ({
     };
 };
 
-export const handleDateAdjustment = (oldState, stateUpdate) => {
-    const { from, to, ...rest } = stateUpdate;
+export const handleDateAdjustment = (oldState, stateUpdate, prefix = '') => {
+    const fromKey = `${prefix}from`;
+    const toKey = `${prefix}to`;
+    const { [fromKey]: from, [toKey]: to } = stateUpdate;
     if (from && !to) {
         const newFromDate = new Date(from.values[0]);
-        const oldToDate = new Date(oldState.to.values[0]);
+        const oldToDate = new Date(oldState[toKey].values[0]);
         if (isAfter(newFromDate, oldToDate)) {
             return {
-                ...rest,
-                from,
-                to: from,
+                ...stateUpdate,
+                [toKey]: from,
             };
         }
     } else if (to && !from) {
         const newToDate = new Date(to.values[0]);
-        const oldFromDate = new Date(oldState.from.values[0]);
+        const oldFromDate = new Date(oldState[fromKey].values[0]);
         if (isBefore(newToDate, oldFromDate)) {
             return {
-                ...rest,
-                to,
-                from: to,
+                ...stateUpdate,
+                [fromKey]: to,
             };
         }
     }

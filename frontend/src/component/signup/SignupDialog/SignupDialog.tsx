@@ -5,6 +5,7 @@ import { ThemeMode } from '../../common/ThemeMode/ThemeMode.tsx';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus.ts';
 import { type ComponentType, useState } from 'react';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
+import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 
 const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({
     height: '56px',
@@ -107,6 +108,11 @@ const steps: SignupStep[] = [
         title: 'Set password',
         description: `Create a secure password, and you're good to go!`,
         content: SignupDialogSetPassword,
+    },
+    {
+        title: 'Set up your account',
+        description: 'Tell us a few more details to get started.',
+        content: SignupDialogAccountDetails,
     },
 ];
 

@@ -80,7 +80,14 @@ export class ContextController extends Controller {
         this.openApiService = openApiService;
         this.transactionalContextService = transactionalContextService;
         const prefix = mode === 'global' ? '' : '/:projectId/context';
-        const beta = mode === 'project';
+        const rootLevelContextFieldsRelease = undefined; // this represents the legacy behavior
+        const projectLevelContextFieldsRelease = {
+            beta: '7.4.0' as const, // project context fields introduced in 7.4.0
+        };
+        const release =
+            mode === 'project'
+                ? projectLevelContextFieldsRelease
+                : rootLevelContextFieldsRelease;
         this.flagResolver = config.flagResolver;
 
         this.route({
@@ -91,7 +98,7 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta,
+                    release,
                     summary: 'Gets configured context fields',
                     description:
                         'Returns all configured [Context fields](https://docs.getunleash.io/concepts/unleash-context) that have been created.',
@@ -112,7 +119,7 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta,
+                    release,
                     summary: 'Gets context field',
                     description:
                         'Returns specific [context field](https://docs.getunleash.io/concepts/unleash-context) identified by the name in the path',
@@ -132,7 +139,7 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Strategies'],
-                    beta,
+                    release,
                     operationId: resolveOperationId(
                         'getStrategiesByContextField',
                         mode,
@@ -158,7 +165,7 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta,
+                    release,
                     operationId: resolveOperationId('createContextField', mode),
                     summary: 'Create a context field',
                     description:
@@ -183,7 +190,7 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta,
+                    release,
                     summary: 'Update an existing context field',
                     description: `Endpoint that allows updating a custom context field. Used to toggle stickiness and add/remove legal values for this context field`,
                     operationId: resolveOperationId('updateContextField', mode),
@@ -205,7 +212,7 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta,
+                    release,
                     summary: 'Add or update legal value for the context field',
                     description: `Endpoint that allows adding or updating a single custom context field legal value. If the legal value already exists, it will be updated with the new description`,
                     operationId: resolveOperationId(
@@ -229,7 +236,7 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta,
+                    release,
                     summary: 'Delete legal value for the context field',
                     description: `Removes the specified custom context field legal value. Does not validate that the legal value is not in use and does not remove usage from constraints that use it.`,
                     operationId: resolveOperationId(
@@ -252,7 +259,7 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta,
+                    release,
                     summary: 'Delete an existing context field',
                     description:
                         'Endpoint that allows deletion of a custom context field. Does not validate that context field is not in use, but since context field configuration is stored in a json blob for the strategy, existing strategies are safe.',
@@ -272,7 +279,7 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    beta,
+                    release,
                     summary: 'Validate a context field',
                     description:
                         'Check whether the provided data can be used to create a context field. If the data is not valid, returns a 400 status code with the reason why it is not valid.',

@@ -327,6 +327,69 @@ export class ReleasePlanStore extends CRUDStore<
         return rows.rows.map((row) => row.segment_id);
     }
 
+    async insertAllMilestoneStrategiesForPlan(
+        planId: string,
+        auditUser: IAuditUser,
+    ): Promise<ReleasePlanMilestoneStrategy[]> {
+        const endTimer = this.timer('insertAllMilestoneStrategiesForPlan');
+        const rows = await this.db.raw(
+            `
+            INSERT INTO feature_strategies(id, feature_name, project_name, environment, strategy_name, parameters, constraints, sort_order, title, variants, created_by_user_id, milestone_id)
+            SELECT ms.id, rpd.feature_name, feature.project, rpd.environment, ms.strategy_name, ms.parameters, ms.constraints, ms.sort_order, ms.title, ms.variants, :userId, ms.milestone_id
+                   FROM milestone_strategies AS ms
+                   LEFT JOIN milestones AS m ON m.id = ms.milestone_id
+                   LEFT JOIN release_plan_definitions AS rpd ON rpd.id = m.release_plan_definition_id AND rpd.discriminator = 'plan'
+                   LEFT JOIN features AS feature ON rpd.feature_name = feature.name
+                   WHERE rpd.id = :planId AND rpd.discriminator = 'plan'
+                   ON CONFLICT DO NOTHING
+            RETURNING *
+        `,
+            { userId: auditUser.id, planId },
+        );
+        endTimer();
+        return processMilestoneStrategyRows(rows.rows);
+    }
+
+    async insertAllMilestoneSegmentsForPlan(planId: string): Promise<number[]> {
+        const endTimer = this.timer('insertAllMilestoneSegmentsForPlan');
+        const rows = await this.db.raw(
+            `
+            INSERT INTO feature_strategy_segment(feature_strategy_id, segment_id)
+            SELECT mss.milestone_strategy_id, mss.segment_id
+            FROM milestone_strategy_segments AS mss
+            INNER JOIN milestone_strategies AS ms ON ms.id = mss.milestone_strategy_id
+            INNER JOIN milestones AS m ON m.id = ms.milestone_id
+            INNER JOIN release_plan_definitions AS rpd ON rpd.id = m.release_plan_definition_id AND rpd.discriminator = 'plan'
+            WHERE rpd.id = :planId
+            ON CONFLICT DO NOTHING
+            RETURNING mss.segment_id
+        `,
+            { planId },
+        );
+        endTimer();
+        return rows.rows.map((row: { segment_id: number }) => row.segment_id);
+    }
+
+    async getStrategiesForMilestone(
+        milestoneId: string,
+    ): Promise<ReleasePlanMilestoneStrategy[]> {
+        const endTimer = this.timer('getStrategiesForMilestone');
+        const rows = await this.db
+            .select(
+                'id',
+                'strategy_name',
+                'sort_order',
+                'title',
+                'parameters',
+                'variants',
+                'constraints',
+            )
+            .from('feature_strategies')
+            .where('milestone_id', milestoneId);
+        endTimer();
+        return processMilestoneStrategyRows(rows);
+    }
+
     async featureAndEnvironmentHasPlan(
         featureName: string,
         environment: string,

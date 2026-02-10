@@ -1,7 +1,7 @@
 import type { FromSchema } from 'json-schema-to-ts';
 
 export const edgeEnvironmentProjectsListSchema = {
-    $id: '#components/schemas/edgeEnvironmentProjectsListSchema',
+    $id: '#/components/schemas/edgeEnvironmentProjectsListSchema',
     type: 'object',
     description:
         'Schema to request api tokens for a list of environment -> projects tuples',
@@ -9,9 +9,12 @@ export const edgeEnvironmentProjectsListSchema = {
     properties: {
         tokens: {
             type: 'array',
+            description: 'A list of requested api tokens.',
             items: {
                 type: 'object',
                 additionalProperties: false,
+                description:
+                    'A list of requested environment -> projects tuples.',
                 required: ['environment', 'projects'],
                 properties: {
                     environment: {

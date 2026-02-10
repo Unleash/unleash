@@ -19,11 +19,12 @@ import type {
 } from '../../openapi/index.js';
 import type { IUnleashServices } from '../../services/index.js';
 import { hmacSignatureVerifyTokenRequest } from '../../features/edgetokens/edge-hmac-verifier.js';
+import { WithTransactional } from '../../db/transaction.js';
 
 export default class EdgeController extends Controller {
     private readonly logger: Logger;
 
-    private edgeService: EdgeService;
+    private edgeService: WithTransactional<EdgeService>;
 
     private openApiService: OpenApiService;
 
@@ -105,10 +106,9 @@ export default class EdgeController extends Controller {
         req: RequestBody<EdgeEnvironmentsProjectsListSchema>,
         res: Response<ValidatedEdgeTokensSchema>,
     ): Promise<void> {
-        const tokens = await this.edgeService.getOrCreateTokens(
-            res.locals.clientId,
-            req.body,
-        );
+        const tokens = await this.edgeService.transactional((svc) => {
+            return svc.getOrCreateTokens(res.locals.clientId, req.body);
+        });
         res.status(200).json(tokens);
     }
 }

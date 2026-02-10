@@ -18,10 +18,14 @@ const environment = 'development';
 describe('HMAC authenticated create token requests', () => {
     beforeAll(async () => {
         db = await dbInit('edge_create_token_request', getLogger);
-        app = await setupAppWithCustomConfig(db.stores, {
-            edgeMasterSecret,
-            edgeClientSecret,
-        });
+        app = await setupAppWithCustomConfig(
+            db.stores,
+            {
+                edgeMasterSecret,
+                edgeClientSecret,
+            },
+            db.rawDatabase,
+        );
         await app.services.edgeService.saveClient(clientId, edgeClientSecret);
     });
 

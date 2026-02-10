@@ -1,4 +1,10 @@
-import { ApiTokenType, type IUnleashConfig } from '../types/index.js';
+import {
+    ApiTokenType,
+    Db,
+    IApiTokenStore,
+    type IUnleashConfig,
+    IUnleashStores,
+} from '../types/index.js';
 import type { Logger } from '../logger.js';
 import type { EdgeTokenSchema } from '../openapi/spec/edge-token-schema.js';
 import type { ValidatedEdgeTokensSchema } from '../openapi/spec/validated-edge-tokens-schema.js';
@@ -13,11 +19,44 @@ import {
     decryptSecret,
     encryptSecret,
 } from '../features/edgetokens/edge-verification.js';
+import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
+import { ApiTokenStore } from '../db/api-token-store.js';
+import EnvironmentStore from '../features/project-environments/environment-store.js';
+import {
+    createApiTokenService,
+    createFakeApiTokenService,
+} from '../features/api-tokens/createApiTokenService.js';
+import { WithTransactional } from '../db/transaction.js';
+import { IUnleashServices } from './index.js';
+import { FakeEdgeTokenStore } from '../features/edgetokens/fake-edge-token-store.js';
 
 type ReplayProtectionArgs = {
     clientId: string;
     nonce: string;
     expiresAt: Date;
+};
+
+export const createTransactionalEdgeService = (
+    db: Db,
+    config: IUnleashConfig,
+) => {
+    const edgeTokenStore = new EdgeTokenStore(db, config.eventBus, config);
+    const transactionalApiTokenService = createApiTokenService(db, config);
+    return new EdgeService(
+        { edgeTokenStore },
+        { apiTokenService: transactionalApiTokenService },
+        config,
+    );
+};
+
+export const createFakeEdgeService = (config: IUnleashConfig) => {
+    const fakeEdgeTokenStore = new FakeEdgeTokenStore();
+    const fakeApiTokenService = createFakeApiTokenService(config);
+    return new EdgeService(
+        { edgeTokenStore: fakeEdgeTokenStore },
+        fakeApiTokenService,
+        config,
+    );
 };
 
 export default class EdgeService {
@@ -30,8 +69,8 @@ export default class EdgeService {
     private readonly edgeMasterSecret: string | undefined;
 
     constructor(
-        { edgeStore }: { edgeStore: IEdgeTokenStore },
-        { apiTokenService }: { apiTokenService: ApiTokenService },
+        { edgeTokenStore }: Pick<IUnleashStores, 'edgeTokenStore'>,
+        { apiTokenService }: Pick<IUnleashServices, 'apiTokenService'>,
         {
             getLogger,
             edgeMasterSecret,
@@ -39,7 +78,7 @@ export default class EdgeService {
     ) {
         this.logger = getLogger('lib/services/edge-service.ts');
         this.apiTokenService = apiTokenService;
-        this.edgeTokenStore = edgeStore;
+        this.edgeTokenStore = edgeTokenStore;
         this.edgeMasterSecret = edgeMasterSecret;
     }
 

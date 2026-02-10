@@ -32,7 +32,10 @@ import { ClientSpecService } from './client-spec-service.js';
 import { PlaygroundService } from '../features/playground/playground-service.js';
 import { GroupService } from './group-service.js';
 import { FrontendApiService } from '../features/frontend-api/frontend-api-service.js';
-import EdgeService from './edge-service.js';
+import EdgeService, {
+    createFakeEdgeService,
+    createTransactionalEdgeService,
+} from './edge-service.js';
 import PatService from './pat-service.js';
 import { PublicSignupTokenService } from './public-signup-token-service.js';
 import { LastSeenService } from '../features/metrics/last-seen/last-seen-service.js';
@@ -390,11 +393,12 @@ export const createServices = (
               clientInstanceService,
           );
 
-    const edgeService = new EdgeService(
-        { edgeStore: stores.edgeTokenStore },
-        { apiTokenService },
-        config,
-    );
+    const edgeService = db
+        ? withTransactional(
+              (db) => createTransactionalEdgeService(db, config),
+              db,
+          )
+        : withFakeTransactional(createFakeEdgeService(config));
 
     const patService = new PatService(stores, config, eventService);
 
@@ -612,7 +616,7 @@ export interface IUnleashServices {
     environmentService: EnvironmentService;
     transactionalEnvironmentService: WithTransactional<EnvironmentService>;
     eventService: EventService;
-    edgeService: EdgeService;
+    edgeService: WithTransactional<EdgeService>;
     featureTagService: FeatureTagService;
     featureToggleService: FeatureToggleService;
     featureTypeService: FeatureTypeService;

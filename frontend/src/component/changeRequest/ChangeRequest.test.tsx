@@ -241,7 +241,9 @@ const UnleashUiSetup: FC<{
                                         <Route
                                             path={pathTemplate}
                                             element={
-                                                <MainLayout>{children}</MainLayout>
+                                                <MainLayout>
+                                                    {children}
+                                                </MainLayout>
                                             }
                                         />
                                     </Routes>

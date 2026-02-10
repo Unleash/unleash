@@ -26,8 +26,7 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 export const EditReleasePlanTemplate = () => {
     const { uiConfig, isEnterprise } = useUiConfig();
     const templateId = useRequiredPathParam('templateId');
-    const { template, loading, error, refetch } =
-        useReleasePlanTemplate(templateId);
+    const { template, loading, refetch } = useReleasePlanTemplate(templateId);
     const { trackEvent } = usePlausibleTracker();
     usePageTitle(`Edit release template`);
     const navigate = useNavigate();

@@ -69,7 +69,7 @@ describe('useFilteredFlagTrends', () => {
     });
 
     it('should work with project with zero users', () => {
-        const { result, rerender } = renderHook(() =>
+        const { result } = renderHook(() =>
             useFilteredFlagsSummary([
                 {
                     week: '2024-01',

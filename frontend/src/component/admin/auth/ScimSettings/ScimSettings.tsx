@@ -40,8 +40,7 @@ export const ScimSettings = () => {
         setEnabled(settings.enabled ?? false);
     }, [settings]);
 
-    const { saveSettings, generateNewToken, errors, loading } =
-        useScimSettingsApi();
+    const { saveSettings, generateNewToken, loading } = useScimSettingsApi();
 
     const onGenerateNewToken = async () => {
         setTokenGenerationDialog(true);

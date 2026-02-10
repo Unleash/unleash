@@ -6,7 +6,6 @@ import type {
     IFeatureStrategyParameters,
     IStrategyParameter,
 } from 'interfaces/strategy';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
@@ -86,17 +85,7 @@ export const ProjectDefaultStrategyForm = ({
 
     const navigate = useNavigate();
 
-    const {
-        uiConfig,
-        error: uiConfigError,
-        loading: uiConfigLoading,
-    } = useUiConfig();
-
-    if (uiConfigError) {
-        throw uiConfigError;
-    }
-
-    if (uiConfigLoading || !strategyDefinition) {
+    if (!strategyDefinition) {
         return null;
     }
 

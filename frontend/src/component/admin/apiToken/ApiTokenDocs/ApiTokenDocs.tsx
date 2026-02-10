@@ -20,10 +20,6 @@ export const ApiTokenDocs = () => {
               edgeFrontendUrl: `${uiConfig.edgeUrl}/api/frontend/`,
           }
         : undefined;
-    const edgeUrl = uiConfig.edgeUrl ? `${uiConfig.edgeUrl}/api/` : undefined;
-    const edgeFrontendUrl = uiConfig.edgeUrl
-        ? `${uiConfig.edgeUrl}/api/frontend/`
-        : undefined;
 
     const clientApiUrl = `${uiConfig.unleashUrl}/api/`;
     const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend/`;

@@ -1,9 +1,8 @@
 import {
     ApiTokenType,
-    Db,
-    IApiTokenStore,
+    type Db,
     type IUnleashConfig,
-    IUnleashStores,
+    type IUnleashStores,
 } from '../types/index.js';
 import type { Logger } from '../logger.js';
 import type { EdgeTokenSchema } from '../openapi/spec/edge-token-schema.js';
@@ -20,14 +19,11 @@ import {
     encryptSecret,
 } from '../features/edgetokens/edge-verification.js';
 import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
-import { ApiTokenStore } from '../db/api-token-store.js';
-import EnvironmentStore from '../features/project-environments/environment-store.js';
 import {
     createApiTokenService,
     createFakeApiTokenService,
 } from '../features/api-tokens/createApiTokenService.js';
-import { WithTransactional } from '../db/transaction.js';
-import { IUnleashServices } from './index.js';
+import type { IUnleashServices } from './index.js';
 import { FakeEdgeTokenStore } from '../features/edgetokens/fake-edge-token-store.js';
 
 type ReplayProtectionArgs = {
@@ -108,7 +104,7 @@ export default class EdgeService {
         try {
             await this.edgeTokenStore.checkNonce(clientId, nonce, expiresAt);
             return true;
-        } catch (e) {}
+        } catch (_e) {}
         return false;
     }
     async loadClient(clientId: string): Promise<EdgeClient | undefined> {

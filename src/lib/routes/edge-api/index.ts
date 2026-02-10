@@ -19,7 +19,7 @@ import type {
 } from '../../openapi/index.js';
 import type { IUnleashServices } from '../../services/index.js';
 import { hmacSignatureVerifyTokenRequest } from '../../features/edgetokens/edge-hmac-verifier.js';
-import { WithTransactional } from '../../db/transaction.js';
+import type { WithTransactional } from '../../db/transaction.js';
 
 export default class EdgeController extends Controller {
     private readonly logger: Logger;

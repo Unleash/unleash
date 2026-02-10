@@ -207,43 +207,6 @@ describe('Default admin initialization', () => {
     });
 });
 
-test('Should be a valid password', async () => {
-    const userStore = new UserStoreMock();
-    const accessService = new AccessServiceMock();
-    const resetTokenStore = new FakeResetTokenStore();
-    const resetTokenService = new ResetTokenService(
-        { resetTokenStore },
-        config,
-    );
-
-    const emailService = new EmailService(config);
-    const sessionStore = new FakeSessionStore();
-    const sessionService = new SessionService({ sessionStore }, config);
-    const eventService = createFakeEventsService(config);
-    const settingService = new SettingService(
-        {
-            settingStore: new FakeSettingStore(),
-        },
-        config,
-        eventService,
-    );
-    const resourceLimitsService = new ResourceLimitsService(config);
-
-    const service = new UserService({ userStore }, config, {
-        accessService,
-        resetTokenService,
-        emailService,
-        eventService,
-        sessionService,
-        settingService,
-        resourceLimitsService,
-    });
-
-    const valid = service.validatePassword('this is a strong password!');
-
-    expect(valid).toBe(true);
-});
-
 test('Password must be at least 10 chars', async () => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
@@ -400,7 +363,7 @@ test('The password must contain at least one special character', async () => {
     );
 });
 
-test('Should be a valid password with special chars', async () => {
+test('The password should not be considered valid just because it is long', async () => {
     const userStore = new UserStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new FakeResetTokenStore();
@@ -431,9 +394,14 @@ test('Should be a valid password with special chars', async () => {
         resourceLimitsService,
     });
 
-    const valid = service.validatePassword('this is a strong password!');
+    const longPassword = 'aiaiaiaiaiaiaiaiaiaia';
 
-    expect(valid).toBe(true);
+    expect(() => service.validatePassword(longPassword)).toThrowError(
+        'The password must contain at least one uppercase letter.',
+    );
+    expect(() => service.validatePassword(longPassword)).toThrowError(
+        OwaspValidationError,
+    );
 });
 
 test('Should send password reset email if user exists', async () => {

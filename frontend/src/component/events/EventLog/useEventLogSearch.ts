@@ -1,5 +1,5 @@
 import { encodeQueryParams, StringParam, withDefault } from 'use-query-params';
-import { type FilterItem, FilterItemParam } from 'utils/serializeQueryParams';
+import { FilterItemParam } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
@@ -47,23 +47,40 @@ export const calculatePaginationInfo = ({
     };
 };
 
-export const handleDateAdjustment = (oldState, stateUpdate, prefix = '') => {
+type DateFilterValue = { values: string[] };
+
+const isDateFilter = (value: unknown): value is DateFilterValue =>
+    typeof value === 'object' &&
+    value !== null &&
+    'values' in value &&
+    Array.isArray((value as DateFilterValue).values);
+
+export const handleDateAdjustment = <T extends Record<string, unknown>>(
+    oldState: Record<string, unknown>,
+    stateUpdate: T,
+    prefix = '',
+): T => {
     const fromKey = `${prefix}from`;
     const toKey = `${prefix}to`;
-    const { [fromKey]: from, [toKey]: to } = stateUpdate;
-    if (from && !to) {
-        const newFromDate = new Date(from.values[0]);
-        const oldToDate = new Date(oldState[toKey].values[0]);
-        if (isAfter(newFromDate, oldToDate)) {
+    const from = stateUpdate[fromKey];
+    const to = stateUpdate[toKey];
+    if (isDateFilter(from) && !to) {
+        const oldTo = oldState[toKey];
+        if (
+            isDateFilter(oldTo) &&
+            isAfter(new Date(from.values[0]), new Date(oldTo.values[0]))
+        ) {
             return {
                 ...stateUpdate,
                 [toKey]: from,
             };
         }
-    } else if (to && !from) {
-        const newToDate = new Date(to.values[0]);
-        const oldFromDate = new Date(oldState[fromKey].values[0]);
-        if (isBefore(newToDate, oldFromDate)) {
+    } else if (isDateFilter(to) && !from) {
+        const oldFrom = oldState[fromKey];
+        if (
+            isDateFilter(oldFrom) &&
+            isBefore(new Date(to.values[0]), new Date(oldFrom.values[0]))
+        ) {
             return {
                 ...stateUpdate,
                 [fromKey]: to,

@@ -165,7 +165,7 @@ export default class EdgeService {
             } else if (tokenReq.environment && tokenReq.projects) {
                 const newToken =
                     await this.apiTokenService.createApiTokenWithProjects({
-                        tokenName: `enterprise_edge_${tokenReq.environment}_${tokenReq.projects.join('_')}`,
+                        tokenName: `enterprise_edge_${tokenReq.environment}_${truncate(tokenReq.projects, 3)}`,
                         alias: `ee_${tokenReq.environment}`,
                         type: ApiTokenType.BACKEND,
                         environment: tokenReq.environment,
@@ -183,3 +183,6 @@ export default class EdgeService {
         return { tokens };
     }
 }
+
+const truncate = (projects: string[], max_length: number) =>
+    projects.length > max_length ? `[]` : projects.join('_');

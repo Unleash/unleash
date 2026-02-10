@@ -386,12 +386,27 @@ class FeatureSearchStore implements IFeatureSearchStore {
         queryBuilder
             .leftJoin(
                 this.db
-                    .select('feature_name', 'environment')
-                    .from('feature_strategies')
-                    .groupBy('feature_name', 'environment')
-                    .where(function () {
-                        this.whereNull('disabled').orWhere('disabled', false);
+                    .select('fs.feature_name', 'fs.environment')
+                    .from('feature_strategies as fs')
+                    .leftJoin('milestones as m', 'm.id', 'fs.milestone_id')
+                    .leftJoin('release_plan_definitions as rpd', function () {
+                        this.on(
+                            'rpd.id',
+                            'm.release_plan_definition_id',
+                        ).andOnVal('rpd.discriminator', '=', 'plan');
                     })
+                    .where(function () {
+                        this.whereNull('fs.milestone_id').orWhereRaw(
+                            'fs.milestone_id = rpd.active_milestone_id',
+                        );
+                    })
+                    .andWhere(function () {
+                        this.whereNull('fs.disabled').orWhere(
+                            'fs.disabled',
+                            false,
+                        );
+                    })
+                    .groupBy('fs.feature_name', 'fs.environment')
                     .as('enabled_strategies'),
                 function () {
                     this.on(
@@ -407,9 +422,21 @@ class FeatureSearchStore implements IFeatureSearchStore {
             )
             .leftJoin(
                 this.db
-                    .select('feature_name', 'environment')
-                    .from('feature_strategies')
-                    .groupBy('feature_name', 'environment')
+                    .select('fs.feature_name', 'fs.environment')
+                    .from('feature_strategies as fs')
+                    .leftJoin('milestones as m', 'm.id', 'fs.milestone_id')
+                    .leftJoin('release_plan_definitions as rpd', function () {
+                        this.on(
+                            'rpd.id',
+                            'm.release_plan_definition_id',
+                        ).andOnVal('rpd.discriminator', '=', 'plan');
+                    })
+                    .where(function () {
+                        this.whereNull('fs.milestone_id').orWhereRaw(
+                            'fs.milestone_id = rpd.active_milestone_id',
+                        );
+                    })
+                    .groupBy('fs.feature_name', 'fs.environment')
                     .as('has_strategies'),
                 function () {
                     this.on(

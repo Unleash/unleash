@@ -8,7 +8,8 @@ import { createHmac, randomBytes } from 'node:crypto';
 import type { EdgeEnvironmentsProjectsListSchema } from '../../../../lib/openapi/index.js';
 import { createHash } from 'crypto';
 import { ApiTokenType } from '../../../../lib/server-impl.js';
-import { addMinutes } from 'date-fns';
+import { subMinutes } from 'date-fns';
+
 let app: IUnleashTest;
 let db: ITestDb;
 const clientId = 'enterprise-edge';
@@ -178,7 +179,7 @@ describe('HMAC authenticated create token requests', () => {
             ],
         };
         const headers = buildRequest({
-            timestamp: addMinutes(new Date(), -10),
+            timestamp: subMinutes(new Date(), 10),
             body: signedBody,
         });
         await app.request

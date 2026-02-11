@@ -18,4 +18,5 @@ export interface IEdgeTokenStore {
         projects: string[],
     ): Promise<IApiToken | undefined>;
     saveToken(clientId: string, token: IApiToken): Promise<void>;
+    cleanExpiredNonces(): Promise<void>;
 }

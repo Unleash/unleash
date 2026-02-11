@@ -131,4 +131,10 @@ export class EdgeTokenStore implements IEdgeTokenStore {
             .merge({ secret_enc: secretEnc, created_at: new Date() });
         stop();
     }
+
+    async cleanExpiredNonces(): Promise<void> {
+        const stop = this.timer('clean_expired_nonces');
+        await this.db(T.edgeHmacNonces).where('expiresAt', '<', new Date());
+        stop();
+    }
 }

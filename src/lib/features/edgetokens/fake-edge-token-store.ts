@@ -29,4 +29,8 @@ export class FakeEdgeTokenStore implements IEdgeTokenStore {
     saveClient(clientId: string, secretEnc: Buffer): Promise<void> {
         return Promise.resolve(undefined);
     }
+
+    cleanExpiredNonces(): Promise<void> {
+        return Promise.resolve(undefined);
+    }
 }

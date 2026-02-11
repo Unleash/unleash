@@ -5,8 +5,10 @@ import {
     type IUnleashStores,
 } from '../types/index.js';
 import type { Logger } from '../logger.js';
-import type { EdgeTokenSchema } from '../openapi/spec/edge-token-schema.js';
-import type { ValidatedEdgeTokensSchema } from '../openapi/spec/validated-edge-tokens-schema.js';
+import type {
+    EdgeTokenSchema,
+    ValidatedEdgeTokensSchema,
+} from '../openapi/index.js';
 import type { ApiTokenService } from './api-token-service.js';
 import type { EdgeEnvironmentsProjectsListSchema } from '../openapi/index.js';
 import type {
@@ -181,6 +183,10 @@ export default class EdgeService {
         }
 
         return { tokens };
+    }
+
+    async deleteExpiredNonces() {
+        await this.edgeTokenStore.cleanExpiredNonces();
     }
 }
 

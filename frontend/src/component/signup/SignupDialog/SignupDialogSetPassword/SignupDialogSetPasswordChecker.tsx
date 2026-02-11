@@ -210,8 +210,8 @@ export const SignupDialogSetPasswordChecker = ({
                     </li>
                 );
             })}
-            {serverExtraErrors.map((msg) => (
-                <li key={msg}>
+            {serverExtraErrors.map((msg, i) => (
+                <li key={`${msg}-${i}`}>
                     <StyledRequirementIcon />
                     {msg}
                 </li>

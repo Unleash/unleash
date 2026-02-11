@@ -7,25 +7,27 @@ import produce from 'immer';
 import type React from 'react';
 import type { IFormErrors } from 'hooks/useFormErrors';
 
-interface IFeatureStrategyTypeProps {
+interface IFeatureStrategyTypeProps<
+    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+> {
     hasAccess: boolean;
-    strategy: Partial<IFeatureStrategy>;
+    strategy: T;
     strategyDefinition: IStrategy;
-    setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
-    >;
+    setStrategy: React.Dispatch<React.SetStateAction<T>>;
     validateParameter: (name: string, value: string) => boolean;
     errors: IFormErrors;
 }
 
-export const FeatureStrategyType = ({
+export const FeatureStrategyType = <
+    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+>({
     hasAccess,
     strategy,
     strategyDefinition,
     setStrategy,
     validateParameter,
     errors,
-}: IFeatureStrategyTypeProps) => {
+}: IFeatureStrategyTypeProps<T>) => {
     const { context } = useAssignableUnleashContext();
 
     const updateParameter = (name: string, value: string) => {

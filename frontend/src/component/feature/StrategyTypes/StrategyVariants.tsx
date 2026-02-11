@@ -1,7 +1,7 @@
 import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
 import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
-import { type FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
@@ -18,23 +18,27 @@ const StyledVariantForms = styled('div')({
     flexDirection: 'column',
 });
 
-export const StrategyVariants: FC<{
-    setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
-    >;
-    strategy: Partial<IFeatureStrategy>;
+interface StrategyVariantsProps<
+    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+> {
+    setStrategy: React.Dispatch<React.SetStateAction<T>>;
+    strategy: T;
     projectId: string;
     environment: string;
     editable?: boolean;
     permission?: string | string[];
-}> = ({
+}
+
+export const StrategyVariants = <
+    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+>({
     strategy,
     setStrategy,
     projectId,
     environment,
     editable,
     permission = UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
-}) => {
+}: StrategyVariantsProps<T>) => {
     const { trackEvent } = usePlausibleTracker();
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
     const theme = useTheme();
@@ -57,7 +61,7 @@ export const StrategyVariants: FC<{
     }, []);
 
     useEffect(() => {
-        setStrategy((prev) => ({
+        setStrategy((prev: T) => ({
             ...prev,
             variants: variantsEdit.map((variant) => ({
                 stickiness,

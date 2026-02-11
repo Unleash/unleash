@@ -1,7 +1,7 @@
 import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
 import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
-import { type FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
@@ -27,15 +27,25 @@ const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-export const NewStrategyVariants: FC<{
-    setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
-    >;
-    strategy: Partial<IFeatureStrategy>;
+interface NewStrategyVariantsProps<
+    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+> {
+    setStrategy: React.Dispatch<React.SetStateAction<T>>;
+    strategy: T;
     projectId: string;
     environment: string;
     editable?: boolean;
-}> = ({ strategy, setStrategy, projectId, environment, editable }) => {
+}
+
+export const NewStrategyVariants = <
+    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+>({
+    strategy,
+    setStrategy,
+    projectId,
+    environment,
+    editable,
+}: NewStrategyVariantsProps<T>) => {
     const { trackEvent } = usePlausibleTracker();
     const initialVariants = (strategy.variants || []).map((variant) => ({
         ...variant,
@@ -55,7 +65,7 @@ export const NewStrategyVariants: FC<{
 
     useEffect(() => {
         return () => {
-            setStrategy((prev) => ({
+            setStrategy((prev: T) => ({
                 ...prev,
                 variants: variantsEdit.filter((variant) =>
                     Boolean(variant.name),
@@ -65,7 +75,7 @@ export const NewStrategyVariants: FC<{
     }, [JSON.stringify(variantsEdit)]);
 
     useEffect(() => {
-        setStrategy((prev) => ({
+        setStrategy((prev: T) => ({
             ...prev,
             variants: variantsEdit.map((variant) => ({
                 stickiness,

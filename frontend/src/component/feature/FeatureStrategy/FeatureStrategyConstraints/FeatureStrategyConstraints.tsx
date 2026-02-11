@@ -3,11 +3,11 @@ import type React from 'react';
 import { useEffect } from 'react';
 import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList/FeatureStrategyConstraintAccordionList.tsx';
 
-interface IFeatureStrategyConstraintsProps {
-    strategy: Partial<IFeatureStrategy>;
-    setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
-    >;
+interface IFeatureStrategyConstraintsProps<
+    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+> {
+    strategy: T;
+    setStrategy: React.Dispatch<React.SetStateAction<T>>;
     permissions?: {
         create: boolean;
         edit: boolean;
@@ -27,11 +27,13 @@ const filterConstraints = (constraint: any) => {
     }
 };
 
-export const FeatureStrategyConstraints = ({
+export const FeatureStrategyConstraints = <
+    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+>({
     strategy,
     setStrategy,
     permissions = { create: true, edit: true },
-}: IFeatureStrategyConstraintsProps) => {
+}: IFeatureStrategyConstraintsProps<T>) => {
     useEffect(() => {
         return () => {
             if (!strategy.constraints) {
@@ -40,7 +42,7 @@ export const FeatureStrategyConstraints = ({
 
             // If the component is unmounting we want to remove all constraints that do not have valid single value or
             // valid multivalues
-            setStrategy((prev) => ({
+            setStrategy((prev: T) => ({
                 ...prev,
                 constraints: prev.constraints?.filter(filterConstraints),
             }));
@@ -50,15 +52,13 @@ export const FeatureStrategyConstraints = ({
     const constraints = strategy.constraints || [];
 
     const setConstraints = (value: React.SetStateAction<IConstraint[]>) => {
-        setStrategy((prev) => {
-            return {
-                ...prev,
-                constraints:
-                    value instanceof Function
-                        ? value(prev.constraints || [])
-                        : value,
-            };
-        });
+        setStrategy((prev: T) => ({
+            ...prev,
+            constraints:
+                value instanceof Function
+                    ? value(prev.constraints || [])
+                    : value,
+        }));
     };
 
     return (

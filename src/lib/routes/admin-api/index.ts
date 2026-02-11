@@ -181,6 +181,5 @@ export class AdminApi extends Controller {
             '/record-ui-error',
             new UiObservabilityController(config, services).router,
         );
-
     }
 }

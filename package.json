@@ -73,7 +73,6 @@
   "dependencies": {
     "@json2csv/plainjs": "^7.0.6",
     "@slack/web-api": "^7.13.0",
-    "@unleash/mcp": "0.3.0-beta.0",
     "@wesleytodd/openapi": "^1.1.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",

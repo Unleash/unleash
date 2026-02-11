@@ -1,4 +1,11 @@
-import { Box, Button, Dialog, styled, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    Dialog,
+    styled,
+    TextField,
+    Typography,
+} from '@mui/material';
 import { ReactComponent as UnleashLogo } from 'assets/img/unleash_logo_dark_no_label.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/unleash_logo_white_no_label.svg';
 import { ThemeMode } from '../../common/ThemeMode/ThemeMode.tsx';
@@ -6,6 +13,7 @@ import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstan
 import { type ComponentType, useState } from 'react';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
+import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
 
 const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({
     height: '56px',
@@ -75,6 +83,13 @@ export const StyledSignupDialogLabel = styled('label')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
+export const StyledSignupDialogTextField = styled(TextField)(({ theme }) => ({
+    '& .MuiFormHelperText-root': {
+        marginLeft: 0,
+        marginTop: theme.spacing(1),
+    },
+}));
+
 export const StyledSignupDialogButton = styled(Button)(({ theme }) => ({
     width: '100%',
 }));
@@ -113,6 +128,11 @@ const steps: SignupStep[] = [
         title: 'Set up your account',
         description: 'Tell us a few more details to get started.',
         content: SignupDialogAccountDetails,
+    },
+    {
+        title: 'Invite others to join',
+        description: 'Help us make Unleash better for you.',
+        content: SignupDialogInviteOthers,
     },
 ];
 

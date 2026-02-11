@@ -128,6 +128,7 @@ export const SignupDialog = () => {
 
     const [step, setStep] = useState(0);
     const currentStep = steps[step];
+    const StepContent = currentStep.content;
 
     const onNext = () => {
         if (step < steps.length - 1) {
@@ -153,7 +154,7 @@ export const SignupDialog = () => {
                     </Typography>
                 </StyledHeader>
                 <StyledContent>
-                    <currentStep.content
+                    <StepContent
                         data={data}
                         setData={setData}
                         onNext={onNext}

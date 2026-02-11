@@ -5,7 +5,8 @@ import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
-import { format, isAfter, isBefore, subYears } from 'date-fns';
+import { format, subYears } from 'date-fns';
+import { handleDateAdjustment } from 'component/filter/handleDateAdjustment';
 import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 
@@ -45,53 +46,6 @@ export const calculatePaginationInfo = ({
         nextPageOffset: pageSize * (currentPage + 1),
         previousPageOffset: pageSize * Math.max(currentPage - 1, 0),
     };
-};
-
-type DateFilterValue = { values: string[] };
-
-const isDateFilter = (value: unknown): value is DateFilterValue =>
-    typeof value === 'object' &&
-    value !== null &&
-    'values' in value &&
-    Array.isArray((value as DateFilterValue).values);
-
-type HandleDateAdjustmentOptions = {
-    keyPrefix?: string;
-};
-
-export const handleDateAdjustment = <T extends Record<string, unknown>>(
-    oldState: Record<string, unknown>,
-    stateUpdate: T,
-    { keyPrefix }: HandleDateAdjustmentOptions = { keyPrefix: '' },
-): T => {
-    const fromKey = `${keyPrefix}from`;
-    const toKey = `${keyPrefix}to`;
-    const { [fromKey]: from, [toKey]: to } = stateUpdate;
-    if (isDateFilter(from) && !to) {
-        const oldTo = oldState[toKey];
-        if (
-            isDateFilter(oldTo) &&
-            isAfter(new Date(from.values[0]), new Date(oldTo.values[0]))
-        ) {
-            return {
-                ...stateUpdate,
-                [toKey]: from,
-            };
-        }
-    } else if (isDateFilter(to) && !from) {
-        const oldFrom = oldState[fromKey];
-        if (
-            isDateFilter(oldFrom) &&
-            isBefore(new Date(to.values[0]), new Date(oldFrom.values[0]))
-        ) {
-            return {
-                ...stateUpdate,
-                [fromKey]: to,
-            };
-        }
-    }
-
-    return stateUpdate;
 };
 
 export const useEventLogSearch = (

@@ -6,7 +6,7 @@ import type { FC } from 'react';
 import { withDefault } from 'use-query-params';
 import { FilterItemParam } from 'utils/serializeQueryParams';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
-import { handleDateAdjustment } from 'component/events/EventLog/useEventLogSearch';
+
 import { WidgetTitle } from 'component/insights/components/WidgetTitle/WidgetTitle';
 import { UsersChart } from 'component/insights/componentsChart/UsersChart/UsersChart';
 import { UsersPerProjectChart } from 'component/insights/componentsChart/UsersPerProjectChart/UsersPerProjectChart';
@@ -19,16 +19,19 @@ import {
 } from 'component/insights/InsightsCharts.styles';
 import { InsightsSection } from 'component/insights/sections/InsightsSection';
 import { InsightsFilters } from 'component/insights/InsightsFilters';
+import { handleDateAdjustment } from 'component/filter/handleDateAdjustment';
 
 export const UserInsights: FC = () => {
     const statePrefix = 'users-';
+    const fromKey = `${statePrefix}from`;
+    const toKey = `${statePrefix}to`;
     const stateConfig = {
         [`${statePrefix}project`]: FilterItemParam,
-        [`${statePrefix}from`]: withDefault(FilterItemParam, {
+        [fromKey]: withDefault(FilterItemParam, {
             values: [format(subMonths(new Date(), 1), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
-        [`${statePrefix}to`]: withDefault(FilterItemParam, {
+        [toKey]: withDefault(FilterItemParam, {
             values: [format(new Date(), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
@@ -36,20 +39,18 @@ export const UserInsights: FC = () => {
     const [state, setStateRaw] = usePersistentTableState(
         'insights-users',
         stateConfig,
-        ['users-from', 'users-to'],
+        [fromKey, toKey],
     );
 
     const setState = (newState: FilterItemParamHolder) => {
         setStateRaw((oldState) =>
-            handleDateAdjustment(oldState, newState, {
-                keyPrefix: statePrefix,
-            }),
+            handleDateAdjustment(oldState, newState, { fromKey, toKey }),
         );
     };
 
     const { insights, loading } = useInsights(
-        state['users-from']?.values[0],
-        state['users-to']?.values[0],
+        state[fromKey]?.values[0],
+        state[toKey]?.values[0],
     );
 
     const projects = state['users-project']?.values ?? [allOption.id];

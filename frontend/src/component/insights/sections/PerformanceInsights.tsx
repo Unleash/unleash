@@ -7,7 +7,6 @@ import type { FC } from 'react';
 import { withDefault } from 'use-query-params';
 import { FilterItemParam } from 'utils/serializeQueryParams';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
-import { handleDateAdjustment } from 'component/events/EventLog/useEventLogSearch';
 import { WidgetTitle } from 'component/insights/components/WidgetTitle/WidgetTitle';
 import { FlagsChart } from 'component/insights/componentsChart/FlagsChart/FlagsChart';
 import { FlagsProjectChart } from 'component/insights/componentsChart/FlagsProjectChart/FlagsProjectChart';
@@ -30,6 +29,7 @@ import { CreationArchiveChart } from '../componentsChart/CreationArchiveChart/Cr
 import { CreationArchiveStats } from '../componentsStat/CreationArchiveStats/CreationArchiveStats.tsx';
 import { NewProductionFlagsStats } from '../componentsStat/NewProductionFlagsStats/NewProductionFlagsStats.tsx';
 import { useProductionFlagsData } from '../componentsChart/NewProductionFlagsChart/useNewProductionFlagsData.ts';
+import { handleDateAdjustment } from 'component/filter/handleDateAdjustment.ts';
 
 const NewProductionFlagsWidget = ({
     groupedLifecycleData,
@@ -62,13 +62,15 @@ const NewProductionFlagsWidget = ({
 
 export const PerformanceInsights: FC = () => {
     const statePrefix = 'performance-';
+    const fromKey = `${statePrefix}from`;
+    const toKey = `${statePrefix}to`;
     const stateConfig = {
         [`${statePrefix}project`]: FilterItemParam,
-        [`${statePrefix}from`]: withDefault(FilterItemParam, {
+        [fromKey]: withDefault(FilterItemParam, {
             values: [format(subMonths(new Date(), 1), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
-        [`${statePrefix}to`]: withDefault(FilterItemParam, {
+        [toKey]: withDefault(FilterItemParam, {
             values: [format(new Date(), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
@@ -76,20 +78,18 @@ export const PerformanceInsights: FC = () => {
     const [state, setStateRaw] = usePersistentTableState(
         'insights',
         stateConfig,
-        ['performance-from', 'performance-to'],
+        [fromKey, toKey],
     );
 
     const setState = (newState: FilterItemParamHolder) => {
         setStateRaw((oldState) =>
-            handleDateAdjustment(oldState, newState, {
-                keyPrefix: statePrefix,
-            }),
+            handleDateAdjustment(oldState, newState, { fromKey, toKey }),
         );
     };
 
     const { insights, loading } = useInsights(
-        state[`${statePrefix}from`]?.values[0],
-        state[`${statePrefix}to`]?.values[0],
+        state[fromKey]?.values[0],
+        state[toKey]?.values[0],
     );
 
     const projects = state[`${statePrefix}project`]?.values ?? [allOption.id];

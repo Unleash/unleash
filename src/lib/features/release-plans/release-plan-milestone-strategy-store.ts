@@ -4,7 +4,10 @@ import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-stra
 import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
 import type { Row } from '../../db/crud/row-type.js';
 import type { Db } from '../../db/db.js';
-import type { IReleasePlanMilestoneStrategyStore, MilestoneStrategyColumnUpdate } from './types/release-plan-milestone-strategy-store-type.js';
+import type {
+    IReleasePlanMilestoneStrategyStore,
+    MilestoneStrategyColumnUpdate,
+} from './types/release-plan-milestone-strategy-store-type.js';
 
 const TABLE = 'milestone_strategies';
 
@@ -52,13 +55,16 @@ const toUpdateRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
     };
 };
 
-export class ReleasePlanMilestoneStrategyStore extends CRUDStore<
-    ReleasePlanMilestoneStrategy,
-    ReleasePlanMilestoneStrategyWriteModel,
-    Row<ReleasePlanMilestoneStrategy>,
-    ReleasePlanMilestoneStrategy,
-    string
-> implements IReleasePlanMilestoneStrategyStore {
+export class ReleasePlanMilestoneStrategyStore
+    extends CRUDStore<
+        ReleasePlanMilestoneStrategy,
+        ReleasePlanMilestoneStrategyWriteModel,
+        Row<ReleasePlanMilestoneStrategy>,
+        ReleasePlanMilestoneStrategy,
+        string
+    >
+    implements IReleasePlanMilestoneStrategyStore
+{
     constructor(db: Db, config: CrudStoreConfig) {
         super(TABLE, db, config);
     }

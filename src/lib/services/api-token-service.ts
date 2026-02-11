@@ -313,7 +313,6 @@ export class ApiTokenService {
 
         const exists = await this.environmentStore.exists(environment);
         if (!exists) {
-            console.error(this.environmentStore);
             throw new BadDataError(`Environment=${environment} does not exist`);
         }
     }

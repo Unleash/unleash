@@ -62,6 +62,8 @@ import {
     createFeatureLinkService,
 } from '../feature-links/createFeatureLinkService.js';
 import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import { ReleasePlanMilestoneStrategyStore } from '../release-plans/release-plan-milestone-strategy-store.js';
+import { FakeReleasePlanMilestoneStrategyStore } from '../../../test/fixtures/fake-release-plan-milestone-strategy-store.js';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -135,6 +137,9 @@ export const createFeatureToggleService = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
+    const releasePlanMilestoneStrategyStore =
+        new ReleasePlanMilestoneStrategyStore(db, { eventBus });
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -145,6 +150,8 @@ export const createFeatureToggleService = (
             featureEnvironmentStore,
             contextFieldStore,
             strategyStore,
+            releasePlanMilestoneStrategyStore,
+            db,
         },
         { getLogger, flagResolver, eventBus },
         {
@@ -204,6 +211,9 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
+    const releasePlanMilestoneStrategyStore =
+        new FakeReleasePlanMilestoneStrategyStore();
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -214,6 +224,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             featureEnvironmentStore,
             contextFieldStore,
             strategyStore,
+            releasePlanMilestoneStrategyStore,
         },
         {
             getLogger,

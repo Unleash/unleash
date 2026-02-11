@@ -21,7 +21,7 @@ import type {
     IPrivateProjectStore,
     IUnleashStores,
     ReleasePlanMilestoneStore,
-    ReleasePlanMilestoneStrategyStore,
+    IReleasePlanMilestoneStrategyStore,
     ReleasePlanStore,
     ReleasePlanTemplateStore,
 } from '../../lib/types/index.js';
@@ -150,7 +150,7 @@ const createStores: () => IUnleashStores = () => {
             count: () => Promise.resolve(0),
         } as ReleasePlanTemplateStore,
         releasePlanMilestoneStrategyStore:
-            {} as ReleasePlanMilestoneStrategyStore,
+            {} as IReleasePlanMilestoneStrategyStore,
         featureLinkStore: new FakeFeatureLinkStore(),
         unknownFlagsStore,
         featureLinkReadModel: new FakeFeatureLinksReadModel(),

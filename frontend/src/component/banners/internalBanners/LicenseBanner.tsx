@@ -20,7 +20,7 @@ export const LicenseBanner = () => {
                     licenseInfo.message ||
                     'You have an invalid Unleash license.',
                 variant: 'error' as BannerVariant,
-                sticky: true,
+                sticky: false,
             };
 
             return <Banner key={banner.message} banner={banner} />;
@@ -29,7 +29,7 @@ export const LicenseBanner = () => {
                 const banner = {
                     message: licenseInfo.message,
                     variant: mapToVariant(licenseInfo.messageType),
-                    sticky: true,
+                    sticky: false,
                 };
                 return <Banner key={banner.message} banner={banner} />;
             }

@@ -57,6 +57,9 @@ export const createFakeFrontendApiService = (
     configurationRevisionService: ConfigurationRevisionService,
     clientInstanceService: ClientInstanceService,
 ): FrontendApiService => {
+    // MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 200 UPDATE_REVISION listeners added to [ConfigurationRevisionService]. MaxListeners is 199. Use emitter.setMaxListeners() to increase limit
+    configurationRevisionService.setMaxListeners(200);
+
     const segmentReadModel = new FakeSegmentReadModel();
     const settingStore = new FakeSettingStore();
     const eventService = createFakeEventsService(config);

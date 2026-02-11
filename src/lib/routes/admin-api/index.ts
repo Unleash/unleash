@@ -38,6 +38,7 @@ import PersonalDashboardController from '../../features/personal-dashboard/perso
 import FeatureLifecycleCountController from '../../features/feature-lifecycle/feature-lifecycle-count-controller.js';
 import type { IUnleashServices } from '../../services/index.js';
 import CustomMetricsController from '../../features/metrics/custom/custom-metrics-controller.js';
+import McpRemoteController from './mcp-remote.js';
 
 export class AdminApi extends Controller {
     constructor(
@@ -181,5 +182,7 @@ export class AdminApi extends Controller {
             '/record-ui-error',
             new UiObservabilityController(config, services).router,
         );
+
+        this.app.use('/mcp', new McpRemoteController(config).router);
     }
 }

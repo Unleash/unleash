@@ -71,6 +71,10 @@ export default class EdgeController extends Controller {
                 this.openApiService.validPath({
                     tags: ['Unleash Edge'],
                     security: [{}],
+                    release: {
+                        beta: '7.5.0',
+                        stable: '7.6.0',
+                    },
                     summary:
                         'Get or create valid tokens for the requested environment',
                     description:

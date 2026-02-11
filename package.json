@@ -33,7 +33,7 @@
   "license": "Apache-2.0",
   "exports": "./dist/lib/server-impl.js",
   "scripts": {
-    "ci": "yarn lint:fix && yarn build:backend && yarn test",
+    "ci": "yarn lint:fix && yarn build:backend --logLevel=error && yarn test --reporter=dot",
     "start": "TZ=UTC node ./dist/server.js",
     "copy-templates": "copyfiles-fixed -u 1 src/mailtemplates/**/* dist/",
     "build:backend": "tsc --pretty && copyfiles-fixed -u 2 src/migrations/package.json dist/migrations",
@@ -63,6 +63,7 @@
     "test:coverage": "PORT=4243 vitest run --coverage --outputFile=\"coverage/report.json\"",
     "test:updateSnapshot": "PORT=4243 vitest run -u",
     "test:ui": "vitest --ui",
+    "test:trace": "NODE_OPTIONS=--trace-warnings yarn test --no-file-parallelism",
     "seed:setup": "ts-node src/test/e2e/seed/segment.seed.ts",
     "seed:serve": "UNLEASH_DATABASE_NAME=unleash_test UNLEASH_DATABASE_SCHEMA=seed yarn run start:dev",
     "clean": "del-cli --force dist",

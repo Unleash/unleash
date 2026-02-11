@@ -45,6 +45,10 @@ describe('responseTimeMetrics new behavior', () => {
         getAppCountSnapshot: vi.fn() as () => number | undefined,
     };
     const eventBus = new EventEmitter();
+    afterEach(() => {
+        // (node:16735) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 request_time listeners added to [EventEmitter]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+        eventBus.removeAllListeners();
+    });
 
     test('uses baseUrl and route path to report metrics with flag enabled, but no res.locals.route', async () => {
         let timeInfo: any;

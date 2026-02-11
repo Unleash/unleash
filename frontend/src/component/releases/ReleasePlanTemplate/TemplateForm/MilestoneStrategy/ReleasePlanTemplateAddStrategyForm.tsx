@@ -20,7 +20,6 @@ import produce from 'immer';
 import { MilestoneStrategySegment } from './MilestoneStrategySegment.tsx';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints.tsx';
 import { MilestoneStrategyVariants } from './MilestoneStrategyVariants.tsx';
 import { MilestoneStrategyType } from './MilestoneStrategyType.tsx';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
@@ -30,6 +29,7 @@ import {
     featureStrategyHelp,
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle.tsx';
+import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -293,7 +293,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                             <StyledDivider />
                             <StyledConstraintSeparator />
                         </StyledBox>
-                        <MilestoneStrategyConstraints
+                        <FeatureStrategyConstraints
                             strategy={currentStrategy}
                             setStrategy={setCurrentStrategy}
                         />

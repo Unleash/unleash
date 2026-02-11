@@ -154,10 +154,9 @@ export const ProjectDefaultStrategyForm = ({
                 projectId={projectId}
             />
             <FeatureStrategyConstraints
-                projectId={projectId}
-                environmentId={environmentId}
                 strategy={strategy as any}
                 setStrategy={setStrategy}
+                permissions={{ create: access, edit: access }}
             />
             <StyledHr />
             <FeatureStrategyType

@@ -107,11 +107,9 @@ describe('setState date handling', () => {
         };
         const stateUpdate = { 'prefix-from': dateFilterItem('2024-01-01') };
 
-        const updateResult = handleDateAdjustment(
-            oldState,
-            stateUpdate,
-            'prefix-',
-        );
+        const updateResult = handleDateAdjustment(oldState, stateUpdate, {
+            keyPrefix: 'prefix-',
+        });
         expect(updateResult).toMatchObject({
             'prefix-from': dateFilterItem('2024-01-01'),
             'prefix-to': dateFilterItem('2024-01-01'),

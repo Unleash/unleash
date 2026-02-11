@@ -55,15 +55,18 @@ const isDateFilter = (value: unknown): value is DateFilterValue =>
     'values' in value &&
     Array.isArray((value as DateFilterValue).values);
 
+type HandleDateAdjustmentOptions = {
+    keyPrefix?: string;
+};
+
 export const handleDateAdjustment = <T extends Record<string, unknown>>(
     oldState: Record<string, unknown>,
     stateUpdate: T,
-    prefix = '',
+    { keyPrefix }: HandleDateAdjustmentOptions = { keyPrefix: '' },
 ): T => {
-    const fromKey = `${prefix}from`;
-    const toKey = `${prefix}to`;
-    const from = stateUpdate[fromKey];
-    const to = stateUpdate[toKey];
+    const fromKey = `${keyPrefix}from`;
+    const toKey = `${keyPrefix}to`;
+    const { [fromKey]: from, [toKey]: to } = stateUpdate;
     if (isDateFilter(from) && !to) {
         const oldTo = oldState[toKey];
         if (

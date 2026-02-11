@@ -81,7 +81,9 @@ export const PerformanceInsights: FC = () => {
 
     const setState = (newState: FilterItemParamHolder) => {
         setStateRaw((oldState) =>
-            handleDateAdjustment(oldState, newState, statePrefix),
+            handleDateAdjustment(oldState, newState, {
+                keyPrefix: statePrefix,
+            }),
         );
     };
 

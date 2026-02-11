@@ -90,14 +90,10 @@ export const useEventLogSearch = (
         ['from', 'to', 'offset'],
     );
 
-    const setTableStateWithDateHandling = (newState) => {
-        if (typeof newState === 'function') {
-            setTableState(newState);
-        } else {
-            setTableState((oldState) =>
-                handleDateAdjustment(oldState, newState),
-            );
-        }
+    const setTableStateWithDateHandling = (
+        newState: Record<string, unknown>,
+    ) => {
+        setTableState((oldState) => handleDateAdjustment(oldState, newState));
     };
 
     const filterState = (() => {

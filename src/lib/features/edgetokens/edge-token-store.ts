@@ -47,7 +47,7 @@ export class EdgeTokenStore implements IEdgeTokenStore {
             });
     }
 
-    async checkNonce(
+    async registerNonce(
         clientId: string,
         nonce: string,
         expiresAt: Date,

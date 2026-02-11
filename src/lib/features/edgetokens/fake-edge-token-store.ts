@@ -2,7 +2,7 @@ import type { IApiToken, IEdgeTokenStore } from '../../types/index.js';
 import type { EdgeClient } from '../../types/stores/edge-store.js';
 
 export class FakeEdgeTokenStore implements IEdgeTokenStore {
-    checkNonce(
+    registerNonce(
         clientId: string,
         nonce: string,
         expiresAt: Date,

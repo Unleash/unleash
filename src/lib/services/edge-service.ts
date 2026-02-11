@@ -102,7 +102,7 @@ export default class EdgeService {
         expiresAt,
     }: ReplayProtectionArgs): Promise<boolean> {
         try {
-            await this.edgeTokenStore.checkNonce(clientId, nonce, expiresAt);
+            await this.edgeTokenStore.registerNonce(clientId, nonce, expiresAt);
             return true;
         } catch (_e) {}
         return false;

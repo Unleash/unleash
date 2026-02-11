@@ -5,7 +5,11 @@ export type EdgeClient = {
 };
 
 export interface IEdgeTokenStore {
-    checkNonce(clientId: string, nonce: string, expiresAt: Date): Promise<void>;
+    registerNonce(
+        clientId: string,
+        nonce: string,
+        expiresAt: Date,
+    ): Promise<void>;
     saveClient(clientId: string, secretEnc: Buffer): Promise<void>;
     loadClient(clientId: string): Promise<EdgeClient | undefined>;
     getToken(

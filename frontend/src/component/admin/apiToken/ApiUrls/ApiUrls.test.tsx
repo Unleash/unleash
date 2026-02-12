@@ -12,7 +12,7 @@ describe('ApiUrls', () => {
             unleashUrl: 'http://localhost:4242',
         });
 
-        render(<ApiUrls />);
+        render(<ApiUrls compact />);
 
         expect(await screen.findByText('Backend')).toBeInTheDocument();
         expect(
@@ -26,13 +26,13 @@ describe('ApiUrls', () => {
         expect(screen.queryByText('Edge')).not.toBeInTheDocument();
     });
 
-    test('renders with default state', async () => {
+    test('renders with edgeUrl', async () => {
         testServerRoute(server, '/api/admin/ui-config', {
             unleashUrl: 'http://localhost:4242',
             edgeUrl: 'https://yourcompany.edge.getunleash.io',
         });
 
-        render(<ApiUrls />);
+        render(<ApiUrls compact={false} />);
 
         expect(await screen.findByText('Edge Backend')).toBeInTheDocument();
         expect(
@@ -58,5 +58,43 @@ describe('ApiUrls', () => {
                 'https://yourcompany.edge.getunleash.io/api/frontend/',
             ),
         ).toBeInTheDocument();
+    });
+
+    test('renders edgeUrl but hides unleashUrl under compact mode', async () => {
+        testServerRoute(server, '/api/admin/ui-config', {
+            unleashUrl: 'http://localhost:4242',
+            edgeUrl: 'https://yourcompany.edge.getunleash.io',
+        });
+
+        render(<ApiUrls compact={true} />);
+
+        expect(await screen.findByText('Edge Backend')).toBeInTheDocument();
+        expect(
+            await screen.findByText(
+                'https://yourcompany.edge.getunleash.io/api/',
+            ),
+        ).toBeInTheDocument();
+
+        expect(await screen.findByText('Edge Frontend')).toBeInTheDocument();
+        expect(
+            await screen.findByText(
+                'https://yourcompany.edge.getunleash.io/api/frontend/',
+            ),
+        ).toBeInTheDocument();
+
+        await (await screen.findByText('Show all')).click();
+
+        expect(await screen.findByText('Backend')).toBeInTheDocument();
+        expect(
+            await screen.findByText('http://localhost:4242/api/'),
+        ).toBeInTheDocument();
+        expect(await screen.findByText('Frontend')).toBeInTheDocument();
+        expect(
+            await screen.findByText(
+                'https://yourcompany.edge.getunleash.io/api/frontend/',
+            ),
+        ).toBeInTheDocument();
+
+        expect(await screen.findByText('Show less')).toBeInTheDocument();
     });
 });

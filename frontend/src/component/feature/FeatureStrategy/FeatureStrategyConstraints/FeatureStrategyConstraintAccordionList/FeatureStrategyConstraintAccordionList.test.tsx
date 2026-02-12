@@ -33,7 +33,6 @@ test('show limit reached and disable adding new constraints', async () => {
     render(
         <FeatureStrategyConstraintAccordionList
             constraints={constraints(LIMIT)}
-            showCreateButton={true}
             setConstraints={() => {}}
         />,
     );
@@ -50,7 +49,6 @@ test('show nearing limit', async () => {
     render(
         <FeatureStrategyConstraintAccordionList
             constraints={constraints(LIMIT - 1)}
-            showCreateButton={true}
             setConstraints={() => {}}
         />,
     );

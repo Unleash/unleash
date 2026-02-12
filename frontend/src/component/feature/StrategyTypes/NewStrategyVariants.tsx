@@ -7,7 +7,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
 import { WeightType } from '../../../constants/variantTypes.ts';
 import { Box, styled, Typography, useTheme, Alert } from '@mui/material';
-import type { IStrategyFormState } from 'interfaces/strategy';
+import type { StrategyFormState } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
@@ -27,9 +27,7 @@ const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-interface NewStrategyVariantsProps<
-    T extends IStrategyFormState = IStrategyFormState,
-> {
+interface NewStrategyVariantsProps<T extends StrategyFormState> {
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
     strategy: T;
     projectId: string;
@@ -37,9 +35,7 @@ interface NewStrategyVariantsProps<
     editable?: boolean;
 }
 
-export const NewStrategyVariants = <
-    T extends IStrategyFormState = IStrategyFormState,
->({
+export const NewStrategyVariants = <T extends StrategyFormState>({
     strategy,
     setStrategy,
     projectId,

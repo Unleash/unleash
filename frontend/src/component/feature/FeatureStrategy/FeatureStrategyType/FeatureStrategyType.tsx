@@ -1,4 +1,4 @@
-import type { IStrategy, IStrategyFormState } from 'interfaces/strategy';
+import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
 import FlexibleStrategy from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
@@ -7,9 +7,7 @@ import produce from 'immer';
 import type React from 'react';
 import type { IFormErrors } from 'hooks/useFormErrors';
 
-interface IFeatureStrategyTypeProps<
-    T extends IStrategyFormState = IStrategyFormState,
-> {
+interface IFeatureStrategyTypeProps<T extends StrategyFormState> {
     hasAccess: boolean;
     strategy: T;
     strategyDefinition: IStrategy;
@@ -18,9 +16,7 @@ interface IFeatureStrategyTypeProps<
     errors: IFormErrors;
 }
 
-export const FeatureStrategyType = <
-    T extends IStrategyFormState = IStrategyFormState,
->({
+export const FeatureStrategyType = <T extends StrategyFormState>({
     hasAccess,
     strategy,
     strategyDefinition,

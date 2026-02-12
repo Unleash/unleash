@@ -39,10 +39,6 @@ import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit.ts
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
-import {
-    CREATE_FEATURE_STRATEGY,
-    UPDATE_FEATURE_STRATEGY,
-} from 'component/providers/AccessProvider/permissions';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle.tsx';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -187,16 +183,6 @@ export const FeatureStrategyForm = ({
     const access = useHasProjectEnvironmentAccess(
         permission,
         projectId,
-        environmentId,
-    );
-    const canCreateConstraints = useHasProjectEnvironmentAccess(
-        CREATE_FEATURE_STRATEGY,
-        feature.project,
-        environmentId,
-    );
-    const canEditConstraints = useHasProjectEnvironmentAccess(
-        UPDATE_FEATURE_STRATEGY,
-        feature.project,
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
@@ -453,10 +439,6 @@ export const FeatureStrategyForm = ({
                             <FeatureStrategyConstraints
                                 strategy={strategy}
                                 setStrategy={setStrategy}
-                                permissions={{
-                                    create: canCreateConstraints,
-                                    edit: canEditConstraints,
-                                }}
                             />
                         </>
                     }

@@ -1,17 +1,11 @@
-import type { IConstraint, IStrategyFormState } from 'interfaces/strategy';
+import type { IConstraint, StrategyFormState } from 'interfaces/strategy';
 import type React from 'react';
 import { useEffect } from 'react';
 import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList/FeatureStrategyConstraintAccordionList.tsx';
 
-interface IFeatureStrategyConstraintsProps<
-    T extends IStrategyFormState = IStrategyFormState,
-> {
+interface IFeatureStrategyConstraintsProps<T extends StrategyFormState> {
     strategy: T;
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
-    permissions?: {
-        create: boolean;
-        edit: boolean;
-    };
 }
 
 const filterConstraints = (constraint: any) => {
@@ -27,12 +21,9 @@ const filterConstraints = (constraint: any) => {
     }
 };
 
-export const FeatureStrategyConstraints = <
-    T extends IStrategyFormState = IStrategyFormState,
->({
+export const FeatureStrategyConstraints = <T extends StrategyFormState>({
     strategy,
     setStrategy,
-    permissions = { create: true, edit: true },
 }: IFeatureStrategyConstraintsProps<T>) => {
     useEffect(() => {
         return () => {
@@ -64,8 +55,7 @@ export const FeatureStrategyConstraints = <
     return (
         <FeatureStrategyConstraintAccordionList
             constraints={constraints}
-            setConstraints={permissions.edit ? setConstraints : undefined}
-            showCreateButton={permissions.create}
+            setConstraints={setConstraints}
         />
     );
 };

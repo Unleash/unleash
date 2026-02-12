@@ -1,6 +1,6 @@
 import type { Row, HeaderGroup } from 'react-table';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
-import { Box, useMediaQuery, Link, styled } from '@mui/material';
+import { Box, useMediaQuery, Link, styled, Typography } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
 
@@ -24,12 +24,11 @@ interface IApiTokenTableProps {
     globalFilter: any;
 }
 
-const StyledTitle = styled('h2')(({ theme }) => ({
+const StyledTitle = styled(Typography)(({ theme }) => ({
     margin: 0,
     marginBottom: theme.spacing(1.5),
     fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.fontWeight.thin,
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
 }));
 
 export const ApiTokenTable = ({
@@ -67,14 +66,14 @@ export const ApiTokenTable = ({
                     <Box sx={{ mb: 4 }}>
                         <ApiTokenDocs />
                         <Box sx={{ marginBlock: 4 }}>
-                            <StyledTitle>API URLs</StyledTitle>
-                            <ApiUrls />
+                            <StyledTitle variant='h2'>API URLs</StyledTitle>
+                            <ApiUrls compact={compact} />
                         </Box>
                     </Box>
                 }
             />
             <Box sx={{ overflowX: 'auto' }}>
-                <StyledTitle>API Tokens</StyledTitle>
+                <StyledTitle variant='h2'>API Tokens</StyledTitle>
                 <SearchHighlightProvider value={globalFilter}>
                     <VirtualizedTable
                         rows={rows}

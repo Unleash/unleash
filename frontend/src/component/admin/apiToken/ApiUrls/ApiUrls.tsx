@@ -1,4 +1,5 @@
 import {
+    Button,
     Table,
     TableBody,
     TableCell,
@@ -9,13 +10,25 @@ import {
 } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ApiUrlTableRow } from './ApiUrlTableRow/ApiUrlTableRow';
+import { useState } from 'react';
 
 const StyledTableCellHeader = styled(TableCell)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-export const ApiUrls = () => {
+type ApiUrlsProps = {
+    compact: boolean;
+};
+
+export const ApiUrls = ({ compact }: ApiUrlsProps) => {
     const { uiConfig } = useUiConfig();
+    const [showAll, setShowAll] = useState(!compact);
+
+    const shouldShowUnleashUrls =
+        uiConfig.unleashUrl && (showAll || !uiConfig.edgeUrl);
+
+    const shouldShowLessMoreButton =
+        compact && uiConfig.edgeUrl && uiConfig.unleashUrl;
 
     const edgeUrls = uiConfig.edgeUrl
         ? {
@@ -28,8 +41,8 @@ export const ApiUrls = () => {
     const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend/`;
 
     return (
-        <TableContainer>
-            <Table aria-label='API URLs'>
+        <TableContainer role='region' aria-live='polite'>
+            <Table aria-label='API URLs' id='api-urls-table'>
                 <TableHead>
                     <TableRow>
                         <StyledTableCellHeader>Type</StyledTableCellHeader>
@@ -52,10 +65,32 @@ export const ApiUrls = () => {
                             />
                         </>
                     )}
-                    <ApiUrlTableRow title='Backend' url={clientApiUrl} />
-                    <ApiUrlTableRow title='Frontend' url={frontendApiUrl} />
+                    {shouldShowUnleashUrls && (
+                        <>
+                            <ApiUrlTableRow
+                                title='Backend'
+                                url={clientApiUrl}
+                            />
+                            <ApiUrlTableRow
+                                title='Frontend'
+                                url={frontendApiUrl}
+                            />
+                        </>
+                    )}
                 </TableBody>
             </Table>
+            {shouldShowLessMoreButton && (
+                <Button
+                    sx={{ mt: 1, marginInline: 1.5 }}
+                    variant='text'
+                    size='small'
+                    aria-expanded={showAll}
+                    aria-controls='api-urls-table'
+                    onClick={() => setShowAll(!showAll)}
+                >
+                    {showAll ? 'Show less' : 'Show all'}
+                </Button>
+            )}
         </TableContainer>
     );
 };

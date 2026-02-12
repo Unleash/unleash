@@ -28,7 +28,6 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
     margin: 0,
     marginBottom: theme.spacing(1.5),
     fontSize: theme.fontSizes.smallBody,
-    // fontWeight: theme.fontWeight.thin,
     color: theme.palette.text.primary,
 }));
 

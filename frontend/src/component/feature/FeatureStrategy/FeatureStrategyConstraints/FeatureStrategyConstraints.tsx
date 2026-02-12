@@ -1,10 +1,10 @@
-import type { IConstraint, IFeatureStrategy } from 'interfaces/strategy';
+import type { IConstraint, IStrategyFormState } from 'interfaces/strategy';
 import type React from 'react';
 import { useEffect } from 'react';
 import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList/FeatureStrategyConstraintAccordionList.tsx';
 
 interface IFeatureStrategyConstraintsProps<
-    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+    T extends IStrategyFormState = IStrategyFormState,
 > {
     strategy: T;
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
@@ -28,7 +28,7 @@ const filterConstraints = (constraint: any) => {
 };
 
 export const FeatureStrategyConstraints = <
-    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+    T extends IStrategyFormState = IStrategyFormState,
 >({
     strategy,
     setStrategy,

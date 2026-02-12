@@ -1,4 +1,4 @@
-import type { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
+import type { IStrategy, IStrategyFormState } from 'interfaces/strategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
 import FlexibleStrategy from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
@@ -8,7 +8,7 @@ import type React from 'react';
 import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IFeatureStrategyTypeProps<
-    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+    T extends IStrategyFormState = IStrategyFormState,
 > {
     hasAccess: boolean;
     strategy: T;
@@ -19,7 +19,7 @@ interface IFeatureStrategyTypeProps<
 }
 
 export const FeatureStrategyType = <
-    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+    T extends IStrategyFormState = IStrategyFormState,
 >({
     hasAccess,
     strategy,

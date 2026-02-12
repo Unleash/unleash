@@ -7,7 +7,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
 import { WeightType } from '../../../constants/variantTypes.ts';
 import { Link, styled, Typography, useTheme } from '@mui/material';
-import type { IFeatureStrategy } from 'interfaces/strategy';
+import type { IStrategyFormState } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
@@ -19,7 +19,7 @@ const StyledVariantForms = styled('div')({
 });
 
 interface StrategyVariantsProps<
-    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+    T extends IStrategyFormState = IStrategyFormState,
 > {
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
     strategy: T;
@@ -30,7 +30,7 @@ interface StrategyVariantsProps<
 }
 
 export const StrategyVariants = <
-    T extends Partial<IFeatureStrategy> = Partial<IFeatureStrategy>,
+    T extends IStrategyFormState = IStrategyFormState,
 >({
     strategy,
     setStrategy,

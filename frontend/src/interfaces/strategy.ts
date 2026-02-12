@@ -18,6 +18,8 @@ export interface IFeatureStrategy {
     sortOrder?: number;
 }
 
+export type IStrategyFormState = Partial<IFeatureStrategy>;
+
 export interface IFeatureStrategyParameters {
     [key: string]: string | number | undefined;
 }

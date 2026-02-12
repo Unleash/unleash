@@ -6,9 +6,8 @@ import type {
 } from '../../types/index.js';
 import type { IUser } from '../../types/user.js';
 import type { Logger } from '../../logger.js';
-import type { ReleasePlanMilestoneStrategyStore } from './release-plan-milestone-strategy-store.js';
+import type { IReleasePlanMilestoneStrategyStore } from './types/release-plan-milestone-strategy-store-type.js';
 import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
-import type { WithTransactional } from '../../db/transaction.js';
 
 export interface IReleasePlanMilestoneStrategyService {
     updateStrategy(
@@ -39,19 +38,19 @@ export class ReleasePlanMilestoneStrategyService
     implements IReleasePlanMilestoneStrategyService
 {
     private readonly logger: Logger;
-    private readonly milestoneStrategyStore: ReleasePlanMilestoneStrategyStore;
-    private readonly transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
+    private readonly milestoneStrategyStore: IReleasePlanMilestoneStrategyStore;
+    private readonly featureToggleService: FeatureToggleService;
 
     constructor(
         {
             milestoneStrategyStore,
         }: {
-            milestoneStrategyStore: ReleasePlanMilestoneStrategyStore;
+            milestoneStrategyStore: IReleasePlanMilestoneStrategyStore;
         },
         {
             featureToggleService,
         }: {
-            featureToggleService: WithTransactional<FeatureToggleService>;
+            featureToggleService: FeatureToggleService;
         },
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
     ) {
@@ -59,7 +58,7 @@ export class ReleasePlanMilestoneStrategyService
             'services/release-plan-milestone-strategy-service.ts',
         );
         this.milestoneStrategyStore = milestoneStrategyStore;
-        this.transactionalFeatureToggleService = featureToggleService;
+        this.featureToggleService = featureToggleService;
     }
 
     async updateStrategy(
@@ -74,9 +73,7 @@ export class ReleasePlanMilestoneStrategyService
         let isActive: boolean;
         try {
             isActive = Boolean(
-                await this.transactionalFeatureToggleService.getStrategy(
-                    strategyId,
-                ),
+                await this.featureToggleService.getStrategy(strategyId),
             );
         } catch {
             isActive = false;
@@ -84,31 +81,28 @@ export class ReleasePlanMilestoneStrategyService
 
         const shouldSyncStrategies = isActive;
         if (shouldSyncStrategies) {
-            await this.transactionalFeatureToggleService.transactional(
-                (service) =>
-                    service.updateStrategy(
-                        strategyId,
-                        {
-                            name: updates.name,
-                            title: updates.title,
-                            parameters: updates.parameters,
-                            constraints: updates.constraints,
-                            variants: updates.variants,
-                            segments: updates.segments,
-                        },
-                        { projectId, environment, featureName },
-                        auditUser,
-                        user,
-                    ),
-            );
-        } else {
-            await this.updateMilestoneStrategy(
+            await this.featureToggleService.updateStrategy(
                 strategyId,
-                updates,
-                context,
+                {
+                    name: updates.name,
+                    title: updates.title,
+                    parameters: updates.parameters,
+                    constraints: updates.constraints,
+                    variants: updates.variants,
+                    segments: updates.segments,
+                },
+                { projectId, environment, featureName },
                 auditUser,
+                user,
             );
         }
+
+        await this.updateMilestoneStrategy(
+            strategyId,
+            updates,
+            context,
+            auditUser,
+        );
     }
 
     private async updateMilestoneStrategy(
@@ -140,7 +134,7 @@ export class ReleasePlanMilestoneStrategyService
         );
 
         this.logger.info(
-            `${auditUser.username} updates inactive milestone strategy ${strategyId} for feature ${context.featureName}`,
+            `${auditUser.username} updates milestone strategy ${strategyId} for feature ${context.featureName}`,
         );
     }
 }

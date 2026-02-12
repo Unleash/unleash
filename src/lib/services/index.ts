@@ -175,6 +175,11 @@ import type FeatureLinkService from '../features/feature-links/feature-link-serv
 import { createUserService } from '../features/users/createUserService.js';
 import { UiConfigService } from '../ui-config/ui-config-service.js';
 import { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
+import {
+    createFakeReleasePlanMilestoneStrategyService,
+    createReleasePlanMilestoneStrategyService,
+} from '../features/release-plans/createReleasePlanMilestoneStrategyService.js';
+import type { ReleasePlanMilestoneStrategyService } from '../features/release-plans/release-plan-milestone-strategy-service.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -361,6 +366,18 @@ export const createServices = (
         : withFakeTransactional(
               createFakeFeatureToggleService(config).featureToggleService,
           );
+
+    const releasePlanMilestoneStrategyService = db
+        ? withTransactional(
+              (db) => createReleasePlanMilestoneStrategyService(db, config),
+              db,
+          )
+        : withFakeTransactional(
+              createFakeReleasePlanMilestoneStrategyService(config)
+                  .releasePlanMilestoneStrategyService,
+          );
+    const transactionalReleasePlanMilestoneStrategyService =
+        releasePlanMilestoneStrategyService;
     const transactionalFeatureToggleService = featureToggleService;
     const transactionalGroupService = (txDb: Knex.Transaction) =>
         createGroupService(txDb, config);
@@ -517,6 +534,7 @@ export const createServices = (
         schedulerService,
         configurationRevisionService,
         transactionalFeatureToggleService,
+        transactionalReleasePlanMilestoneStrategyService,
         transactionalGroupService,
         privateProjectChecker,
         dependentFeaturesService,
@@ -653,6 +671,7 @@ export interface IUnleashServices {
     schedulerService: SchedulerService;
     eventAnnouncerService: EventAnnouncerService;
     transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
+    transactionalReleasePlanMilestoneStrategyService: WithTransactional<ReleasePlanMilestoneStrategyService>;
     transactionalGroupService: (db: Knex.Transaction) => GroupService;
     privateProjectChecker: IPrivateProjectChecker;
     dependentFeaturesService: DependentFeaturesService;

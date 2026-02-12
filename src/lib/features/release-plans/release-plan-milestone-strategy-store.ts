@@ -1,5 +1,4 @@
 import { ulid } from 'ulidx';
-import type { Knex } from 'knex';
 import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-strategy.js';
 import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
 import type { Row } from '../../db/crud/row-type.js';
@@ -128,11 +127,8 @@ export class ReleasePlanMilestoneStrategyStore
         strategyId: string,
         updates: MilestoneStrategyColumnUpdate,
         segments?: number[],
-        existingTrx?: Knex.Transaction,
     ): Promise<ReleasePlanMilestoneStrategy> {
-        const performUpdate = async (
-            trx: Knex.Transaction,
-        ): Promise<ReleasePlanMilestoneStrategy> => {
+        return this.db.transaction(async (trx) => {
             let updatedStrategy: ReleasePlanMilestoneStrategy;
             if (Object.keys(updates).length > 0) {
                 const rows = await trx(this.tableName)
@@ -187,11 +183,6 @@ export class ReleasePlanMilestoneStrategyStore
             }
 
             return updatedStrategy;
-        };
-
-        if (existingTrx) {
-            return performUpdate(existingTrx);
-        }
-        return this.db.transaction(async (trx) => performUpdate(trx));
+        });
     }
 }

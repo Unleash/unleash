@@ -1,4 +1,3 @@
-import type { Knex } from 'knex';
 import {
     CREATE_FEATURE_STRATEGY,
     EnvironmentVariantEvent,
@@ -157,8 +156,7 @@ export type Stores = Pick<
     | 'featureEnvironmentStore'
     | 'contextFieldStore'
     | 'strategyStore'
-    | 'releasePlanMilestoneStrategyStore'
-> & { db?: Knex };
+>;
 
 export type Config = Pick<
     IUnleashConfig,
@@ -224,10 +222,6 @@ export class FeatureToggleService {
 
     private resourceLimitsService: ResourceLimitsService;
 
-    private releasePlanMilestoneStrategyStore: IUnleashStores['releasePlanMilestoneStrategyStore'];
-
-    private db?: Knex;
-
     constructor(
         {
             featureStrategiesStore,
@@ -238,8 +232,6 @@ export class FeatureToggleService {
             featureEnvironmentStore,
             contextFieldStore,
             strategyStore,
-            releasePlanMilestoneStrategyStore,
-            db,
         }: Stores,
         { getLogger, flagResolver, eventBus }: Config,
         {
@@ -278,9 +270,6 @@ export class FeatureToggleService {
         this.featureLinkService = featureLinkService;
         this.eventBus = eventBus;
         this.resourceLimitsService = resourceLimitsService;
-        this.releasePlanMilestoneStrategyStore =
-            releasePlanMilestoneStrategyStore;
-        this.db = db;
     }
 
     async validateFeaturesContext(
@@ -924,34 +913,6 @@ export class FeatureToggleService {
                 await this.segmentService.updateStrategySegments(
                     strategy.id,
                     updates.segments,
-                );
-            }
-
-            const shouldSyncMilestoneStrategy =
-                existingStrategy.milestoneId && this.db;
-            if (shouldSyncMilestoneStrategy) {
-                const columnUpdates = {
-                    ...(updates.title !== undefined && {
-                        title: updates.title,
-                    }),
-                    ...(updates.name !== undefined && {
-                        strategy_name: updates.name,
-                    }),
-                    ...(updates.parameters !== undefined && {
-                        parameters: updates.parameters,
-                    }),
-                    ...(updates.constraints !== undefined && {
-                        constraints: JSON.stringify(updates.constraints),
-                    }),
-                    ...(updates.variants !== undefined && {
-                        variants: JSON.stringify(updates.variants),
-                    }),
-                };
-                await this.releasePlanMilestoneStrategyStore.updateWithSegments(
-                    id,
-                    columnUpdates,
-                    updates.segments,
-                    this.db as Knex.Transaction,
                 );
             }
 

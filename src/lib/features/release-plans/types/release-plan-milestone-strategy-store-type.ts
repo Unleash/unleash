@@ -1,4 +1,3 @@
-import type { Knex } from 'knex';
 import type { ReleasePlanMilestoneStrategy } from '../release-plan-milestone-strategy.js';
 
 export type MilestoneStrategyColumnUpdate = Partial<{
@@ -14,6 +13,5 @@ export interface IReleasePlanMilestoneStrategyStore {
         strategyId: string,
         updates: MilestoneStrategyColumnUpdate,
         segments?: number[],
-        existingTrx?: Knex.Transaction,
     ): Promise<ReleasePlanMilestoneStrategy>;
 }

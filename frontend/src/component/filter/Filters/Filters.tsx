@@ -6,7 +6,6 @@ import {
     FilterItem,
     type FilterItemParams,
 } from '../FilterItem/FilterItem.tsx';
-import { isAfter } from 'date-fns';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -93,7 +92,6 @@ type RangeChangeHandler = (
 type RenderFilterProps = {
     onChipClose?: (label: string) => void;
     state: FilterItemParams | null | undefined;
-    allState: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     filter: ITextFilterItem | IDateFilterItem;
     rangeChangeHandler: RangeChangeHandler;
@@ -103,7 +101,6 @@ type RenderFilterProps = {
 const RenderFilter: FC<RenderFilterProps> = ({
     filter,
     onChipClose,
-    allState,
     onChange,
     state,
     rangeChangeHandler,
@@ -119,17 +116,6 @@ const RenderFilter: FC<RenderFilterProps> = ({
     );
 
     if (isDateFilterItem(filter)) {
-        const isRangeFilter = isDateRangeFilterItem(filter);
-        const fromValue = filter.fromFilterKey
-            ? allState?.[filter.fromFilterKey]?.values?.[0]
-            : undefined;
-        const toValue = filter.toFilterKey
-            ? allState?.[filter.toFilterKey]?.values?.[0]
-            : undefined;
-
-        const picker =
-            filter.filterKey === filter.fromFilterKey ? 'from' : 'to';
-
         return (
             <FilterDateItem
                 key={filter.label}
@@ -138,32 +124,11 @@ const RenderFilter: FC<RenderFilterProps> = ({
                 name={filter.label}
                 state={state}
                 operators={filter.dateOperators}
-                onChange={(value) => {
-                    if (isRangeFilter) {
-                        const isFromPicker = picker === 'from';
-                        const otherKey = isFromPicker
-                            ? filter.toFilterKey
-                            : filter.fromFilterKey;
-                        const otherValue = isFromPicker ? toValue : fromValue;
-                        const otherParams: FilterItemParams = {
-                            operator:
-                                allState[otherKey]?.operator ||
-                                filter.dateOperators[0],
-                            values: otherValue ? [otherValue] : [],
-                        };
-                        rangeChangeHandler(
-                            filter,
-                            picker,
-                        )?.({
-                            from: isFromPicker ? value : otherParams,
-                            to: isFromPicker ? otherParams : value,
-                        });
-                    } else {
-                        onChange({ [filter.filterKey]: value });
-                    }
-                }}
+                onChange={(value) => onChange({ [filter.filterKey]: value })}
                 onRangeChange={
-                    isRangeFilter ? rangeChangeHandler(filter) : undefined
+                    isDateRangeFilterItem(filter)
+                        ? rangeChangeHandler(filter)
+                        : undefined
                 }
                 onChipClose={
                     filter.persistent
@@ -197,12 +162,10 @@ const RenderFilter: FC<RenderFilterProps> = ({
 type SingleFilterProps = Omit<IFilterProps, 'availableFilters'> & {
     filter: IFilterItem;
     rangeChangeHandler: RangeChangeHandler;
-    allState: FilterItemParamHolder;
 };
 
 const SingleFilter: FC<SingleFilterProps> = ({
     state,
-    allState,
     onChange,
     className,
     filter,
@@ -213,7 +176,6 @@ const SingleFilter: FC<SingleFilterProps> = ({
             <RenderFilter
                 filter={filter}
                 state={state[filter.filterKey]}
-                allState={allState}
                 onChange={onChange}
                 rangeChangeHandler={rangeChangeHandler}
                 onChipClose={undefined}
@@ -301,7 +263,6 @@ const MultiFilter: FC<MultiFilterProps> = ({
                         key={filter.filterKey}
                         filter={filter}
                         state={state[filter.filterKey]}
-                        allState={state}
                         onChange={onChange}
                         rangeChangeHandler={rangeChangeHandler}
                         onChipClose={() => deselectFilter(filter.label)}
@@ -321,29 +282,10 @@ const MultiFilter: FC<MultiFilterProps> = ({
 };
 
 export const Filters: FC<IFilterProps> = (props) => {
-    const rangeChangeHandler: RangeChangeHandler = (filter, changedPicker) => {
+    const rangeChangeHandler: RangeChangeHandler = (filter) => {
         const { fromFilterKey, toFilterKey } = filter;
         return (value: { from: FilterItemParams; to: FilterItemParams }) => {
-            let { from: adjustedFrom, to: adjustedTo } = value;
-
-            if (changedPicker && value.from.values[0] && value.to.values[0]) {
-                const fromDate = new Date(value.from.values[0]);
-                const toDate = new Date(value.to.values[0]);
-
-                if (isAfter(fromDate, toDate)) {
-                    if (changedPicker === 'from') {
-                        adjustedTo = {
-                            ...value.to,
-                            values: [value.from.values[0]],
-                        };
-                    } else {
-                        adjustedFrom = {
-                            ...value.from,
-                            values: [value.to.values[0]],
-                        };
-                    }
-                }
-            }
+            const { from: adjustedFrom, to: adjustedTo } = value;
 
             props.onChange({
                 [fromFilterKey]: adjustedFrom,
@@ -357,7 +299,6 @@ export const Filters: FC<IFilterProps> = (props) => {
         return (
             <SingleFilter
                 filter={filter}
-                allState={props.state}
                 rangeChangeHandler={rangeChangeHandler}
                 {...props}
             />

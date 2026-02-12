@@ -92,9 +92,9 @@ export const hmacSignatureVerifyTokenRequest = (
             res.locals.clientId = clientId;
             next();
         } catch (e) {
+            console.error('Error authenticating HMAC request:', e);
             res.status(401).json({
                 error: 'Authenticating request failed',
-                stack: e,
             });
             return;
         }

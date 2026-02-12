@@ -36,6 +36,7 @@ export const scheduleServices = (
         integrationEventsService,
         uniqueConnectionService,
         unknownFlagsService,
+        edgeService,
     } = services;
 
     schedulerService.schedule(
@@ -206,5 +207,10 @@ export const scheduleServices = (
         unknownFlagsService.clear.bind(unknownFlagsService, 24),
         hoursToMilliseconds(6),
         'clearUnknownFlags',
+    );
+    schedulerService.schedule(
+        edgeService.deleteExpiredNonces.bind(edgeService),
+        hoursToMilliseconds(1),
+        'clearExpiredEdgeNonces',
     );
 };

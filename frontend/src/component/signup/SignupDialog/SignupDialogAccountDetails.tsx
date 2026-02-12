@@ -12,13 +12,6 @@ import {
     type SignupStepContent,
 } from './SignupDialog';
 
-const StyledRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    gap: theme.spacing(2),
-    width: '100%',
-}));
-
 const StyledCheckboxContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -33,49 +26,28 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
     onNext,
 }) => {
     const isValidForm =
-        data.firstName.trim() !== '' &&
-        data.lastName.trim() !== '' &&
+        data.name.trim() !== '' &&
         data.companyRole.trim() !== '' &&
         data.companyName.trim() !== '';
 
     return (
         <>
-            <StyledRow>
-                <StyledSignupDialogField>
-                    <StyledSignupDialogLabel>
-                        First name
-                    </StyledSignupDialogLabel>
-                    <StyledSignupDialogTextField
-                        variant='outlined'
-                        placeholder='First name'
-                        name='given-name'
-                        autoComplete='given-name'
-                        value={data.firstName}
-                        onChange={(e) =>
-                            setData((prev) => ({
-                                ...prev,
-                                firstName: e.target.value,
-                            }))
-                        }
-                    />
-                </StyledSignupDialogField>
-                <StyledSignupDialogField>
-                    <StyledSignupDialogLabel>Last name</StyledSignupDialogLabel>
-                    <StyledSignupDialogTextField
-                        variant='outlined'
-                        placeholder='Last name'
-                        name='family-name'
-                        autoComplete='family-name'
-                        value={data.lastName}
-                        onChange={(e) =>
-                            setData((prev) => ({
-                                ...prev,
-                                lastName: e.target.value,
-                            }))
-                        }
-                    />
-                </StyledSignupDialogField>
-            </StyledRow>
+            <StyledSignupDialogField>
+                <StyledSignupDialogLabel>Name</StyledSignupDialogLabel>
+                <StyledSignupDialogTextField
+                    variant='outlined'
+                    placeholder='Name'
+                    name='name'
+                    autoComplete='name'
+                    value={data.name}
+                    onChange={(e) =>
+                        setData((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                        }))
+                    }
+                />
+            </StyledSignupDialogField>
             <StyledSignupDialogField>
                 <StyledSignupDialogLabel>
                     What's your role?

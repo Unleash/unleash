@@ -28,6 +28,8 @@ const isTagFocused = () => {
     return !!el?.closest?.('.MuiAutocomplete-tag');
 };
 
+const SEPARATOR_KEYS = ['Enter', ',', ' '];
+
 export const SignupDialogInviteOthers: SignupStepContent = ({
     data,
     setData,
@@ -105,11 +107,7 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
                             placeholder='Enter email addresses'
                             helperText='Separate emails by comma'
                             onKeyDown={(e) => {
-                                if (
-                                    e.key === 'Enter' ||
-                                    e.key === ',' ||
-                                    e.key === ' '
-                                ) {
+                                if (SEPARATOR_KEYS.includes(e.key)) {
                                     if (inputValue.trim() !== '') {
                                         e.preventDefault();
                                         addEmailsFromRaw(inputValue);

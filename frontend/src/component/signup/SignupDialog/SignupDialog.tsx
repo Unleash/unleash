@@ -31,7 +31,6 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusMedium,
         width: '65vw',
-        maxWidth: '1800px',
         background: 'transparent',
     },
     padding: 0,
@@ -78,7 +77,7 @@ export const StyledSignupDialogField = styled(Box)(({ theme }) => ({
     width: '100%',
 }));
 
-export const StyledSignupDialogLabel = styled('label')(({ theme }) => ({
+export const StyledSignupDialogLabel = styled('span')(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
     fontWeight: theme.typography.fontWeightBold,
 }));
@@ -90,9 +89,9 @@ export const StyledSignupDialogTextField = styled(TextField)(({ theme }) => ({
     },
 }));
 
-export const StyledSignupDialogButton = styled(Button)(({ theme }) => ({
+export const StyledSignupDialogButton = styled(Button)({
     width: '100%',
-}));
+});
 
 export type SignupData = {
     password: string;

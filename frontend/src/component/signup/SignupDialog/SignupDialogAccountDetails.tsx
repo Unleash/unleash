@@ -20,6 +20,8 @@ const StyledRow = styled('div')(({ theme }) => ({
 }));
 
 const StyledCheckboxContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
     '& .MuiFormControlLabel-label': {
         fontWeight: theme.typography.fontWeightBold,
     },

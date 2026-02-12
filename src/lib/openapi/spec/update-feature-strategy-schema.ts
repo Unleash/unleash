@@ -37,6 +37,21 @@ export const updateFeatureStrategySchema = {
             example: false,
             nullable: true,
         },
+        variants: {
+            type: 'array',
+            description: 'Strategy level variants',
+            items: {
+                $ref: '#/components/schemas/strategyVariantSchema',
+            },
+        },
+        segments: {
+            type: 'array',
+            description: 'A list of segment ids attached to the strategy',
+            example: [1, 2],
+            items: {
+                type: 'number',
+            },
+        },
         parameters: {
             $ref: '#/components/schemas/parametersSchema',
         },

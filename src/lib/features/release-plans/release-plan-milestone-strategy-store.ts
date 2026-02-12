@@ -3,6 +3,10 @@ import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-stra
 import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
 import type { Row } from '../../db/crud/row-type.js';
 import type { Db } from '../../db/db.js';
+import type {
+    IReleasePlanMilestoneStrategyStore,
+    MilestoneStrategyColumnUpdate,
+} from './types/release-plan-milestone-strategy-store-type.js';
 
 const TABLE = 'milestone_strategies';
 
@@ -50,13 +54,16 @@ const toUpdateRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
     };
 };
 
-export class ReleasePlanMilestoneStrategyStore extends CRUDStore<
-    ReleasePlanMilestoneStrategy,
-    ReleasePlanMilestoneStrategyWriteModel,
-    Row<ReleasePlanMilestoneStrategy>,
-    ReleasePlanMilestoneStrategy,
-    string
-> {
+export class ReleasePlanMilestoneStrategyStore
+    extends CRUDStore<
+        ReleasePlanMilestoneStrategy,
+        ReleasePlanMilestoneStrategyWriteModel,
+        Row<ReleasePlanMilestoneStrategy>,
+        ReleasePlanMilestoneStrategy,
+        string
+    >
+    implements IReleasePlanMilestoneStrategyStore
+{
     constructor(db: Db, config: CrudStoreConfig) {
         super(TABLE, db, config);
     }
@@ -114,5 +121,68 @@ export class ReleasePlanMilestoneStrategyStore extends CRUDStore<
         await this.db('milestone_strategies')
             .where('milestone_id', milestoneId)
             .delete();
+    }
+
+    async updateWithSegments(
+        strategyId: string,
+        updates: MilestoneStrategyColumnUpdate,
+        segments?: number[],
+    ): Promise<ReleasePlanMilestoneStrategy> {
+        return this.db.transaction(async (trx) => {
+            let updatedStrategy: ReleasePlanMilestoneStrategy;
+            if (Object.keys(updates).length > 0) {
+                const rows = await trx(this.tableName)
+                    .where({ id: strategyId })
+                    .update(updates)
+                    .returning('*');
+                updatedStrategy = this.fromRow(
+                    rows[0],
+                ) as ReleasePlanMilestoneStrategy;
+            } else {
+                const rows = await trx(this.tableName).where({
+                    id: strategyId,
+                });
+                updatedStrategy = this.fromRow(
+                    rows[0],
+                ) as ReleasePlanMilestoneStrategy;
+            }
+
+            if (segments !== undefined) {
+                const currentRows = await trx('milestone_strategy_segments')
+                    .where('milestone_strategy_id', strategyId)
+                    .select('segment_id');
+                const currentIds = currentRows.map(
+                    (r) => r.segment_id as number,
+                );
+
+                const toRemove = currentIds.filter(
+                    (segId) => !segments.includes(segId),
+                );
+
+                if (toRemove.length > 0) {
+                    await trx('milestone_strategy_segments')
+                        .where('milestone_strategy_id', strategyId)
+                        .whereIn('segment_id', toRemove)
+                        .delete();
+                }
+
+                const toAdd = segments.filter(
+                    (segId) => !currentIds.includes(segId),
+                );
+
+                if (toAdd.length > 0) {
+                    await trx('milestone_strategy_segments').insert(
+                        toAdd.map((segmentId) => ({
+                            milestone_strategy_id: strategyId,
+                            segment_id: segmentId,
+                        })),
+                    );
+                }
+
+                updatedStrategy.segments = segments;
+            }
+
+            return updatedStrategy;
+        });
     }
 }

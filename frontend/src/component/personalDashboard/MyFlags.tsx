@@ -19,7 +19,7 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import LinkIcon from '@mui/icons-material/ArrowForward';
+import SettingsIcon from '@mui/icons-material/Settings';
 import React from 'react';
 import type { PersonalDashboardSchemaFlagsItem } from 'openapi';
 
@@ -76,7 +76,7 @@ const FlagListItem: FC<{
                         size='small'
                         sx={{ ml: 'auto' }}
                     >
-                        <LinkIcon titleAccess={flagLink} />
+                        <SettingsIcon titleAccess={`Go to flag ${flag.name}`} />
                     </IconButton>
                 </ListItemBox>
             </ListItemButton>

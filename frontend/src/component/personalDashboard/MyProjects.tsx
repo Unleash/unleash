@@ -8,7 +8,7 @@ import {
     styled,
 } from '@mui/material';
 import { ProjectIcon } from '../common/ProjectIcon/ProjectIcon.tsx';
-import LinkIcon from '@mui/icons-material/ArrowForward';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { ProjectSetupComplete } from './ProjectSetupComplete.tsx';
 import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK.tsx';
 import { LatestProjectEvents } from './LatestProjectEvents.tsx';
@@ -123,7 +123,9 @@ const ProjectListItem: FC<{
                             });
                         }}
                     >
-                        <LinkIcon titleAccess={`projects/${project.id}`} />
+                        <SettingsIcon
+                            titleAccess={`Go to project ${project.id}`}
+                        />
                     </IconButton>
                 </ListItemBox>
                 {selected ? <ActiveProjectDetails project={project} /> : null}

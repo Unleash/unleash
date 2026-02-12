@@ -14,6 +14,7 @@ import {
     TEST_AUDIT_USER,
 } from '../../../lib/types/index.js';
 import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService.js';
+import { randomBytes } from 'node:crypto';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -195,5 +196,20 @@ describe('Enterprise Edge - Generated tokens', () => {
         const first = tokens.tokens[0];
         const second = refetched.tokens[0];
         expect(first.token).toStrictEqual(second.token);
+    });
+    test(`Deletes nonces that have expired`, async () => {
+        const nonce = randomBytes(16).toString('hex');
+        const expiry = subDays(new Date(), 1);
+        await expect(
+            stores.edgeTokenStore.registerNonce(clientId, nonce, expiry),
+        ).resolves.not.toThrow();
+        await expect(
+            stores.edgeTokenStore.registerNonce(clientId, nonce, expiry),
+        ).rejects.toThrowError();
+        await edgeService.deleteExpiredNonces();
+
+        await expect(
+            stores.edgeTokenStore.registerNonce(clientId, nonce, expiry),
+        ).resolves.not.toThrow();
     });
 });

@@ -134,7 +134,9 @@ export class EdgeTokenStore implements IEdgeTokenStore {
 
     async cleanExpiredNonces(): Promise<void> {
         const stop = this.timer('clean_expired_nonces');
-        await this.db(T.edgeHmacNonces).where('expiresAt', '<', new Date());
+        await this.db(T.edgeHmacNonces)
+            .where('expires_at', '<', new Date())
+            .delete();
         stop();
     }
 }

@@ -3,8 +3,6 @@ import { forwardRef, useImperativeHandle, type RefObject } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import type { IConstraint } from 'interfaces/strategy';
-
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
 import { Limit } from 'component/common/Limit/Limit';
@@ -16,8 +14,7 @@ import { createEmptyConstraint } from 'utils/createEmptyConstraint.ts';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];
-    setConstraints?: React.Dispatch<React.SetStateAction<IConstraint[]>>;
-    showCreateButton?: boolean;
+    setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
 }
 
 const StyledContainer = styled('div')({
@@ -56,21 +53,17 @@ interface IConstraintAccordionListItemState {
 }
 
 const useConstraintAccordionList = (
-    setConstraints:
-        | React.Dispatch<React.SetStateAction<IConstraint[]>>
-        | undefined,
+    setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>,
     ref: React.RefObject<IConstraintAccordionListRef>,
 ) => {
     const state = useWeakMap<IConstraint, IConstraintAccordionListItemState>();
     const { context } = useAssignableUnleashContext();
 
-    const addConstraint =
-        setConstraints &&
-        ((contextName: string) => {
-            const constraint = createEmptyConstraint(contextName);
-            state.set(constraint, { editing: true, new: true });
-            setConstraints((prev) => [...prev, constraint]);
-        });
+    const addConstraint = (contextName: string) => {
+        const constraint = createEmptyConstraint(contextName);
+        state.set(constraint, { editing: true, new: true });
+        setConstraints((prev) => [...prev, constraint]);
+    };
 
     useImperativeHandle(ref, () => ({
         addConstraint,
@@ -88,7 +81,7 @@ const useConstraintAccordionList = (
 export const FeatureStrategyConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
->(({ constraints, setConstraints, showCreateButton }, ref) => {
+>(({ constraints, setConstraints }, ref) => {
     const { onAdd, context } = useConstraintAccordionList(
         setConstraints,
         ref as RefObject<IConstraintAccordionListRef>,
@@ -101,72 +94,67 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
 
     return (
         <StyledContainer>
-            <ConditionallyRender
-                condition={Boolean(showCreateButton && onAdd)}
-                show={
-                    <div>
-                        <StyledHelpIconBox>
-                            <Typography>Constraints</Typography>
-                            <HelpIcon
-                                htmlTooltip
-                                tooltip={
-                                    <Box>
-                                        <Typography variant='body2'>
-                                            Constraints are advanced targeting
-                                            rules that you can use to enable a
-                                            feature flag for a subset of your
-                                            users. Read more about constraints{' '}
-                                            <a
-                                                href='https://docs.getunleash.io/concepts/activation-strategies#constraints'
-                                                target='_blank'
-                                                rel='noopener noreferrer'
-                                            >
-                                                here
-                                            </a>
-                                        </Typography>
-                                    </Box>
-                                }
-                            />
-                        </StyledHelpIconBox>
-                        {setConstraints ? (
-                            <EditableConstraintsList
-                                ref={ref}
-                                setConstraints={setConstraints}
-                                constraints={constraints}
-                            />
-                        ) : null}
-                        <Box
-                            sx={(theme) => ({
-                                marginTop: theme.spacing(2),
-                                marginBottom: theme.spacing(2),
-                            })}
-                        >
-                            <Limit
-                                name='constraints in this strategy'
-                                shortName='constraints'
-                                currentValue={constraints.length}
-                                limit={limit}
-                            />
-                        </Box>
+            <div>
+                <StyledHelpIconBox>
+                    <Typography>Constraints</Typography>
+                    <HelpIcon
+                        htmlTooltip
+                        tooltip={
+                            <Box>
+                                <Typography variant='body2'>
+                                    Constraints are advanced targeting rules
+                                    that you can use to enable a feature flag
+                                    for a subset of your users. Read more about
+                                    constraints{' '}
+                                    <a
+                                        href='https://docs.getunleash.io/concepts/activation-strategies#constraints'
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                    >
+                                        here
+                                    </a>
+                                </Typography>
+                            </Box>
+                        }
+                    />
+                </StyledHelpIconBox>
+                {setConstraints ? (
+                    <EditableConstraintsList
+                        ref={ref}
+                        setConstraints={setConstraints}
+                        constraints={constraints}
+                    />
+                ) : null}
+                <Box
+                    sx={(theme) => ({
+                        marginTop: theme.spacing(2),
+                        marginBottom: theme.spacing(2),
+                    })}
+                >
+                    <Limit
+                        name='constraints in this strategy'
+                        shortName='constraints'
+                        currentValue={constraints.length}
+                        limit={limit}
+                    />
+                </Box>
 
-                        <Button
-                            type='button'
-                            onClick={onAdd}
-                            startIcon={<Add />}
-                            variant='outlined'
-                            color='primary'
-                            data-testid='ADD_CONSTRAINT_BUTTON'
-                            disabled={Boolean(limitReached)}
-                        >
-                            Add constraint
-                        </Button>
-                        <RecentlyUsedConstraints
-                            setConstraints={setConstraints}
-                            constraints={constraints}
-                        />
-                    </div>
-                }
-            />
+                <Button
+                    type='button'
+                    onClick={onAdd}
+                    startIcon={<Add />}
+                    variant='outlined'
+                    color='primary'
+                    data-testid='ADD_CONSTRAINT_BUTTON'
+                    disabled={Boolean(limitReached)}
+                >
+                    Add constraint
+                </Button>
+                <RecentlyUsedConstraints
+                    setConstraints={setConstraints}
+                    constraints={constraints}
+                />
+            </div>
         </StyledContainer>
     );
 });

@@ -154,8 +154,6 @@ export const ProjectDefaultStrategyForm = ({
                 projectId={projectId}
             />
             <FeatureStrategyConstraints
-                projectId={projectId}
-                environmentId={environmentId}
                 strategy={strategy as any}
                 setStrategy={setStrategy}
             />

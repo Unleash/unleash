@@ -437,8 +437,6 @@ export const FeatureStrategyForm = ({
                                 <StyledConstraintSeparator />
                             </StyledBox>
                             <FeatureStrategyConstraints
-                                projectId={feature.project}
-                                environmentId={environmentId}
                                 strategy={strategy}
                                 setStrategy={setStrategy}
                             />

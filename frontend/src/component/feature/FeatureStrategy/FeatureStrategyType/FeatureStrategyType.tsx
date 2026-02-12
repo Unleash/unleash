@@ -1,4 +1,4 @@
-import type { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
+import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
 import FlexibleStrategy from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
@@ -7,25 +7,23 @@ import produce from 'immer';
 import type React from 'react';
 import type { IFormErrors } from 'hooks/useFormErrors';
 
-interface IFeatureStrategyTypeProps {
+interface IFeatureStrategyTypeProps<T extends StrategyFormState> {
     hasAccess: boolean;
-    strategy: Partial<IFeatureStrategy>;
+    strategy: T;
     strategyDefinition: IStrategy;
-    setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
-    >;
+    setStrategy: React.Dispatch<React.SetStateAction<T>>;
     validateParameter: (name: string, value: string) => boolean;
     errors: IFormErrors;
 }
 
-export const FeatureStrategyType = ({
+export const FeatureStrategyType = <T extends StrategyFormState>({
     hasAccess,
     strategy,
     strategyDefinition,
     setStrategy,
     validateParameter,
     errors,
-}: IFeatureStrategyTypeProps) => {
+}: IFeatureStrategyTypeProps<T>) => {
     const { context } = useAssignableUnleashContext();
 
     const updateParameter = (name: string, value: string) => {

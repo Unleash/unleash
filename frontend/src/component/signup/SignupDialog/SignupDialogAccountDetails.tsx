@@ -3,12 +3,12 @@ import {
     Checkbox,
     FormControlLabel,
     styled,
-    TextField,
 } from '@mui/material';
 import {
     StyledSignupDialogButton,
     StyledSignupDialogField,
     StyledSignupDialogLabel,
+    StyledSignupDialogTextField,
     type SignupStepContent,
 } from './SignupDialog';
 
@@ -19,14 +19,9 @@ const StyledRow = styled('div')(({ theme }) => ({
     width: '100%',
 }));
 
-const StyledTextFieldWithHelperText = styled(TextField)(({ theme }) => ({
-    '& .MuiFormHelperText-root': {
-        marginLeft: 0,
-        marginTop: theme.spacing(1),
-    },
-}));
-
 const StyledCheckboxContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
     '& .MuiFormControlLabel-label': {
         fontWeight: theme.typography.fontWeightBold,
     },
@@ -50,7 +45,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                     <StyledSignupDialogLabel>
                         First name
                     </StyledSignupDialogLabel>
-                    <TextField
+                    <StyledSignupDialogTextField
                         variant='outlined'
                         placeholder='First name'
                         name='given-name'
@@ -66,7 +61,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                 </StyledSignupDialogField>
                 <StyledSignupDialogField>
                     <StyledSignupDialogLabel>Last name</StyledSignupDialogLabel>
-                    <TextField
+                    <StyledSignupDialogTextField
                         variant='outlined'
                         placeholder='Last name'
                         name='family-name'
@@ -102,7 +97,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                         'Other',
                     ]}
                     renderInput={(params) => (
-                        <StyledTextFieldWithHelperText
+                        <StyledSignupDialogTextField
                             {...params}
                             placeholder='Please select'
                             helperText='We use this to customize your onboarding'
@@ -112,7 +107,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
             </StyledSignupDialogField>
             <StyledSignupDialogField>
                 <StyledSignupDialogLabel>Company name</StyledSignupDialogLabel>
-                <StyledTextFieldWithHelperText
+                <StyledSignupDialogTextField
                     variant='outlined'
                     placeholder='Company name'
                     helperText='This is displayed when people join your workspace'

@@ -29,7 +29,7 @@ import { CreationArchiveChart } from '../componentsChart/CreationArchiveChart/Cr
 import { CreationArchiveStats } from '../componentsStat/CreationArchiveStats/CreationArchiveStats.tsx';
 import { NewProductionFlagsStats } from '../componentsStat/NewProductionFlagsStats/NewProductionFlagsStats.tsx';
 import { useProductionFlagsData } from '../componentsChart/NewProductionFlagsChart/useNewProductionFlagsData.ts';
-import { handleDateAdjustment } from 'component/filter/handleDateAdjustment.ts';
+import { autocorrectDateRange } from 'component/filter/autocorrectDateRange.ts';
 
 const NewProductionFlagsWidget = ({
     groupedLifecycleData,
@@ -83,7 +83,7 @@ export const PerformanceInsights: FC = () => {
 
     const setState = (newState: FilterItemParamHolder) => {
         setStateRaw((oldState) =>
-            handleDateAdjustment(oldState, newState, { fromKey, toKey }),
+            autocorrectDateRange(oldState, newState, { fromKey, toKey }),
         );
     };
 

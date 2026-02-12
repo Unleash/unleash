@@ -6,7 +6,7 @@ import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch'
 import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
 import { format, subYears } from 'date-fns';
-import { handleDateAdjustment } from 'component/filter/handleDateAdjustment';
+import { autocorrectDateRange } from 'component/filter/autocorrectDateRange';
 import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
 
@@ -93,7 +93,7 @@ export const useEventLogSearch = (
     const setTableStateWithDateHandling = (
         newState: Record<string, unknown>,
     ) => {
-        setTableState((oldState) => handleDateAdjustment(oldState, newState));
+        setTableState((oldState) => autocorrectDateRange(oldState, newState));
     };
 
     const filterState = (() => {

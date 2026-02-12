@@ -1,19 +1,20 @@
 import { isAfter, isBefore } from 'date-fns';
 
-type DateFilterValue = { values: string[] };
+type DateFilterValue = { values: [string, ...string[]] };
 
 const isDateFilter = (value: unknown): value is DateFilterValue =>
     typeof value === 'object' &&
     value !== null &&
     'values' in value &&
-    Array.isArray((value as DateFilterValue).values);
+    Array.isArray((value as DateFilterValue).values) &&
+    (value as DateFilterValue).values.length > 0;
 
 type HandleDateAdjustmentOptions = {
     fromKey: string;
     toKey: string;
 };
 
-export const handleDateAdjustment = <T extends Record<string, unknown>>(
+export const autocorrectDateRange = <T extends Record<string, unknown>>(
     oldState: Record<string, unknown>,
     stateUpdate: T,
     { fromKey, toKey }: HandleDateAdjustmentOptions = {

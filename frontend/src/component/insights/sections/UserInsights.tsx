@@ -19,7 +19,7 @@ import {
 } from 'component/insights/InsightsCharts.styles';
 import { InsightsSection } from 'component/insights/sections/InsightsSection';
 import { InsightsFilters } from 'component/insights/InsightsFilters';
-import { handleDateAdjustment } from 'component/filter/handleDateAdjustment';
+import { autocorrectDateRange } from 'component/filter/autocorrectDateRange';
 
 export const UserInsights: FC = () => {
     const statePrefix = 'users-';
@@ -44,7 +44,7 @@ export const UserInsights: FC = () => {
 
     const setState = (newState: FilterItemParamHolder) => {
         setStateRaw((oldState) =>
-            handleDateAdjustment(oldState, newState, { fromKey, toKey }),
+            autocorrectDateRange(oldState, newState, { fromKey, toKey }),
         );
     };
 

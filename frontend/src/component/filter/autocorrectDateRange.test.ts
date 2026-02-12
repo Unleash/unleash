@@ -1,4 +1,4 @@
-import { handleDateAdjustment } from './handleDateAdjustment';
+import { autocorrectDateRange } from './autocorrectDateRange';
 
 describe('setState date handling', () => {
     const dateFilterItem = (date: string) => ({
@@ -13,7 +13,7 @@ describe('setState date handling', () => {
         };
         const stateUpdate = { from: dateFilterItem('2024-01-01') };
 
-        const updateResult = handleDateAdjustment(oldState, stateUpdate);
+        const updateResult = autocorrectDateRange(oldState, stateUpdate);
         expect(updateResult).toMatchObject({
             from: dateFilterItem('2024-01-01'),
             to: dateFilterItem('2024-01-01'),
@@ -27,7 +27,7 @@ describe('setState date handling', () => {
         };
         const stateUpdate = { to: dateFilterItem('2021-01-01') };
 
-        const updateResult = handleDateAdjustment(oldState, stateUpdate);
+        const updateResult = autocorrectDateRange(oldState, stateUpdate);
         expect(updateResult).toMatchObject({
             from: dateFilterItem('2021-01-01'),
             to: dateFilterItem('2021-01-01'),
@@ -44,7 +44,7 @@ describe('setState date handling', () => {
             to: dateFilterItem('2024-01-01'),
         };
 
-        const updateResult = handleDateAdjustment(oldState, stateUpdate);
+        const updateResult = autocorrectDateRange(oldState, stateUpdate);
         expect(updateResult).toStrictEqual(stateUpdate);
     });
 
@@ -57,7 +57,7 @@ describe('setState date handling', () => {
         const stateUpdate = {
             createdBy: { operator: ['IS'], values: ['user1'] },
         };
-        const updateResult = handleDateAdjustment(oldState, stateUpdate);
+        const updateResult = autocorrectDateRange(oldState, stateUpdate);
         expect(updateResult).toStrictEqual(stateUpdate);
     });
 
@@ -70,7 +70,7 @@ describe('setState date handling', () => {
         };
         const stateUpdate = { 'prefix-from': dateFilterItem('2024-01-01') };
 
-        const updateResult = handleDateAdjustment(oldState, stateUpdate, {
+        const updateResult = autocorrectDateRange(oldState, stateUpdate, {
             fromKey: 'prefix-from',
             toKey: 'prefix-to',
         });

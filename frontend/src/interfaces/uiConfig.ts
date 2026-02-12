@@ -89,6 +89,7 @@ export type UiFlags = {
     readOnlyUsersUI?: boolean;
     privateProjectMiddlewareMove?: boolean;
     datePickerRangeConstraints?: boolean;
+    signupDialog?: boolean;
 };
 
 export interface IVersionInfo {

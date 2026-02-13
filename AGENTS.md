@@ -108,22 +108,10 @@ We follow three core principles:
 
 ## Coding Standards
 
-Detailed standards are documented as Architectural Decision Records (ADRs):
-
-### Backend ADRs (`/contributing/ADRs/back-end/`)
-- Naming conventions (files named after main class)
-- Preferred exports (named exports, not default)
-
-### Frontend ADRs (`/contributing/ADRs/front-end/`)
-- Component and interface naming
-- Preferred data fetching (SWR hooks)
-- Styling methods (MUI styled/sx)
-- Form architecture (lift state to parent)
-
-### Overarching ADRs (`/contributing/ADRs/overarching/`)
-- Domain language
-- Error logging (always pass error as second argument)
-- Logging levels (INFO for user actions, WARN for recoverable, ERROR with stack)
+Detailed standards are documented as Architectural Decision Records (ADRs). They can be located:
+- /contributing/ADRs/back-end/
+- /contributing/ADRs/front-end/
+- /contributing/ADRs/overarching/
 
 ## Database Migrations
 

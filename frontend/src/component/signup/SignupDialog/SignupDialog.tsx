@@ -96,8 +96,7 @@ export const StyledSignupDialogButton = styled(Button)({
 
 export type SignupData = {
     password: string;
-    firstName: string;
-    lastName: string;
+    name: string;
     companyRole: string;
     companyName: string;
     companyIsNA: boolean;
@@ -144,8 +143,7 @@ export const SignupDialog = () => {
     const [open, setOpen] = useState(false);
     const [data, setData] = useState<SignupData>({
         password: '',
-        firstName: '',
-        lastName: '',
+        name: '',
         companyRole: '',
         companyName: '',
         companyIsNA: false,

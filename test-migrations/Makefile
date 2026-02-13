@@ -31,7 +31,7 @@ default:
 	@echo "If you just want to test one version and then another one you can simply run these two commands one after the other:"
 	@echo "  UNLEASH_DOCKER_IMAGE=unleashorg/unleash-server:4.12.6 make start-unleash"
 	@echo "  UNLEASH_DOCKER_IMAGE=unleashorg/unleash-server:5.6.10 make start-another-unleash"
-	@echo "The old version will run on http://localhost:4242 and the new one on http://localhost:4243"
+	@echo "The old version will run on http://localhost:4242 and the new one on http://localhost:4242"
 	@echo ""
 	@echo "Commands available (you can manually run them one by one in this specific order):"
 	@echo "  1. clean: clean up before or after the test"
@@ -88,10 +88,10 @@ start-unleash:
 .PHONY: start-another-unleash
 start-another-unleash:
 	@echo "Starting docker..."
-	@EXPOSED_PORT=$${EXPOSED_PORT:-4243} UNLEASH_DOCKER_IMAGE=$(UNLEASH_DOCKER_IMAGE) docker compose up db another-unleash -d
-	@echo "Waiting for Unleash to be healthy at port $${EXPOSED_PORT:-4243}..."
-	@while ! curl -s "http://localhost:$${EXPOSED_PORT:-4243}/health"; do sleep 0.1; done
-	@echo "\n$(UNLEASH_DOCKER_IMAGE) is now running at http://localhost:$${EXPOSED_PORT:-4243}"
+	@EXPOSED_PORT=$${EXPOSED_PORT:-4242} UNLEASH_DOCKER_IMAGE=$(UNLEASH_DOCKER_IMAGE) docker compose up db another-unleash -d
+	@echo "Waiting for Unleash to be healthy at port $${EXPOSED_PORT:-4242}..."
+	@while ! curl -s "http://localhost:$${EXPOSED_PORT:-4242}/health"; do sleep 0.1; done
+	@echo "\n$(UNLEASH_DOCKER_IMAGE) is now running at http://localhost:$${EXPOSED_PORT:-4242}"
 
 .PHONY: start-db
 start-db:

@@ -29,6 +29,8 @@ services:
       INIT_FRONTEND_API_TOKENS: "default:development.unleash-insecure-frontend-api-token"
       # The default API token is insecure and should not be used in production.
       INIT_BACKEND_API_TOKENS: "default:development.unleash-insecure-api-token"
+      # Admin API token for creating flags (e.g. site-sense create-unleash-flags.sh).
+      INIT_ADMIN_API_TOKENS: "*:*.unleash-insecure-admin-api-token"
     depends_on:
       db:
         condition: service_healthy

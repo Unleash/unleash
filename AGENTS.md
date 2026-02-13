@@ -24,7 +24,7 @@ The backend follows a **CSR (Controller, Service, Repository/Store)** pattern. W
 **Feature-based modules** live in `/src/lib/features/` where each domain contains its own controller, service, store, and types. Examples: `feature-toggle`, `project`, `segment`, `change-request`, `release-plans`.
 
 **Key Patterns**:
-- **Event-driven**: Services emit typed events (`FeatureCreatedEvent`, etc.) for audit trails and read model updates
+- **Audit-log**: Services emit typed events (`FeatureCreatedEvent`, etc.) for audit trails and read model updates
 - **Transaction wrapper**: Use `withTransactional()` for atomic operations across services. The common pattern is initiating transactions at the controller level.
 - **Fake implementations**: Every store/service has a Fake variant for testing (prefer over mocking)
 - **Internal feature flags**: `flagResolver.isEnabled()` controls operational features
@@ -85,7 +85,7 @@ To avoid overloading stores with complex queries, we separate read and write con
 - Located in `/src/lib/db/` or feature directories
 - Example: `FeatureToggleStore` handles basic feature CRUD
 
-**Read Models**: Handle complex queries, aggregations, and denormalized views
+**Read Models**: Handle complex queries, aggregations, cross-domain queries and denormalized views
 - Optimized for specific read use cases (dashboards, lists, reports)
 - Located in feature `/read-models/` directories
 - Example: `FeatureStrategiesReadModel`, `ProjectOwnersReadModel`, `FeatureSearchReadModel`
@@ -95,6 +95,7 @@ To avoid overloading stores with complex queries, we separate read and write con
 - Need denormalized data for performance
 - Building dashboard/overview endpoints
 - Query doesn't map to a single entity's lifecycle
+- You don't want to expose the entire write model and only need one value from another module
 
 **Pattern**: Services coordinate between stores (writes) and read models (reads). Controllers call services, never stores/read models directly.
 

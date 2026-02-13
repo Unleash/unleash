@@ -22,6 +22,8 @@ export interface IUser {
     scimId?: string;
     activeSessions?: number;
     seatType?: SeatType;
+    companyRole?: string;
+    productUpdatesEmailConsent?: boolean;
 }
 
 export interface IPermission {

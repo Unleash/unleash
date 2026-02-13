@@ -15,9 +15,9 @@ Unleash is an open-source feature flagging platform. This repository (OSS) is a 
 
 ### Backend (`/src`)
 
-The backend follows a **CSR (Controller, Service, Repository/Store)** pattern:
+The backend follows a **CSR (Controller, Service, Repository/Store)** pattern. We promote packages by feature, not by layer (see feature-based modules below), although the legacy components are still packed by layer:
 
-- **Controllers** (`/src/lib/routes/`): Handle HTTP requests, validate input, delegate to services
+- **Controllers** (`/src/lib/routes/`): Handle HTTP requests, validate input, delegate business logic to services, and demarcate transactions.
 - **Services** (`/src/lib/services/`): Business logic layer, emit events, manage transactions
 - **Stores** (`/src/lib/db/`): Data access layer using Knex query builder
 
@@ -25,7 +25,7 @@ The backend follows a **CSR (Controller, Service, Repository/Store)** pattern:
 
 **Key Patterns**:
 - **Event-driven**: Services emit typed events (`FeatureCreatedEvent`, etc.) for audit trails and read model updates
-- **Transaction wrapper**: Use `withTransactional()` for atomic operations across services
+- **Transaction wrapper**: Use `withTransactional()` for atomic operations across services. The common pattern is initiating transactions at the controller level.
 - **Fake implementations**: Every store/service has a Fake variant for testing (prefer over mocking)
 - **Internal feature flags**: `flagResolver.isEnabled()` controls operational features
 
@@ -178,7 +178,7 @@ yarn test:backend  # Backend only
 
 ## Required Reading
 
-Before contributing, review:
+Before contributing to an area, get familiar with the area you're contributing to:
 
 - [Clean Code JavaScript](https://github.com/ryanmcdermott/clean-code-javascript)
 - [Backend Overview](/contributing/backend/overview.md)

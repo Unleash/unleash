@@ -23,6 +23,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
         fontSize: theme.typography.body1.fontSize,
         lineHeight: 1.1,
         border: 'none',
+        outline: 'none',
         background: 'transparent',
         width: '100%',
         color: 'inherit',
@@ -37,22 +38,24 @@ export const SignupDialogSetPassword: SignupStepContent = ({
 }) => {
     const { user } = useAuthUser();
     const [isValidPassword, setIsValidPassword] = useState(false);
+    const emailOrUsername = user?.email || user?.username;
 
     return (
         <>
-            {user?.email && (
+            {emailOrUsername && (
                 <StyledSignupDialogField>
                     <StyledSignupDialogLabel>
-                        Verified email
+                        {user.email ? 'Verified email' : 'Username'}
                     </StyledSignupDialogLabel>
                     <StyledBadge color='success' icon={<CheckCircle />}>
                         <input
-                            type='email'
-                            id='email'
-                            name='email'
-                            autoComplete='email'
-                            value={user.email}
-                            disabled
+                            type={user.email ? 'email' : 'text'}
+                            id={user.email ? 'email' : 'username'}
+                            name={user.email ? 'email' : 'username'}
+                            autoComplete={user.email ? 'email' : 'username'}
+                            value={emailOrUsername}
+                            readOnly
+                            tabIndex={-1}
                         />
                     </StyledBadge>
                 </StyledSignupDialogField>

@@ -14,6 +14,7 @@ import { type ComponentType, useState } from 'react';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({
     height: '56px',
@@ -136,6 +137,7 @@ const steps: SignupStep[] = [
 ];
 
 export const SignupDialog = () => {
+    const signupDialogEnabled = useUiFlag('signupDialog');
     // TODO: Add something to instanceStatus telling us we're signing up, which will control the open state
     // biome-ignore lint/correctness/noUnusedVariables: WIP
     const { instanceStatus } = useInstanceStatus();
@@ -164,6 +166,8 @@ export const SignupDialog = () => {
         // TODO: Submit data to backend
         setOpen(false);
     };
+
+    if (!signupDialogEnabled) return null;
 
     return (
         <StyledDialog open={open}>

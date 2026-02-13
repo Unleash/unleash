@@ -98,6 +98,19 @@ export const userSchema = {
             nullable: true,
             example: 'Regular',
         },
+        companyRole: {
+            description: 'The role of the user within the company.',
+            type: 'string',
+            nullable: true,
+            example: 'Developer',
+        },
+        productUpdatesEmailConsent: {
+            type: 'boolean',
+            description:
+                'Whether the user has consented to receive product update emails.',
+            nullable: true,
+            example: false,
+        },
         activeSessions: {
             description: 'Count of active browser sessions for this user',
             type: 'integer',

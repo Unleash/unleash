@@ -17,6 +17,8 @@ export interface IUserLookup {
 export interface IUserUpdateFields {
     name?: string;
     email?: string;
+    companyRole?: string;
+    productUpdatesEmailConsent?: boolean;
 }
 
 export interface IUserStore extends Store<IUser, number> {

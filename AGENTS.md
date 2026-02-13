@@ -9,7 +9,7 @@ Unleash is an open-source feature flagging platform. This repository (OSS) is a 
 - **Backend**: Node.js/TypeScript REST API (`/src`)
 - **Frontend**: React/TypeScript single-page application (`/frontend`)
 
-**Enterprise** extends OSS via a separate repository (`unleash-enterprise`) using a hook-based architecture. Enterprise does not fork OSS; it injects additional functionality through `preRouterHook`.
+**Enterprise** extends OSS via a separate repository (`unleash-enterprise`) using a hook-based architecture. Enterprise does not fork OSS; it injects additional functionality through `preRouterHook`. If the user says that this is an enterprise feature, you need to ask where the enterprise repository is located and work across both this repository and the enterprise repository. 
 
 ## Architecture
 
@@ -29,7 +29,7 @@ The backend follows a **CSR (Controller, Service, Repository/Store)** pattern. W
 - **Fake implementations**: Every store/service has a Fake variant for testing (prefer over mocking)
 - **Internal feature flags**: `flagResolver.isEnabled()` controls operational features
 
-**Stack**: Express 4.x, PostgreSQL 14+ with Knex, TypeScript with ES modules
+**Stack**: Express, PostgreSQL with Knex, TypeScript with ES modules
 
 ### Frontend (`/frontend/src`)
 
@@ -62,7 +62,7 @@ Enterprise extends OSS through hooks without forking:
 
 ## Composition Root Pattern
 
-All dependencies are wired at application startup, not scattered throughout the codebase:
+All dependencies are wired at application startup, not scattered throughout the codebase. All services have a dedicated composition root function to stand up the service.:
 
 **OSS Composition**:
 - `/src/lib/db/index.ts` → `createStores()` instantiates all stores with Knex connection
@@ -104,7 +104,7 @@ We follow three core principles:
 
 1. **Test code always** - We test our code and prefer automation over manual testing
 2. **Write maintainable code** - Code is communication; clarity and readability are paramount
-3. **Think before committing** - Consider impact across scenarios; balance paid features with open source
+3. **Think before committing** 
 
 ## Coding Standards
 
@@ -156,14 +156,6 @@ yarn test:backend  # Backend only
 | `/src/lib/services/index.ts` | Service factory |
 | `/src/lib/db/index.ts` | Store factory |
 
-### Enterprise Entry Points
-| File | Purpose |
-|------|---------|
-| `enterprise/src/index.ts` | Wraps OSS start/create |
-| `enterprise/src/create-enterprise-routes.ts` | Hook implementation |
-| `enterprise/src/util/setup-services.ts` | Enterprise service factory |
-| `enterprise/src/util/setup-stores.ts` | Enterprise store factory |
-
 ### Pattern References
 | Pattern | Example Location |
 |---------|-----------------|
@@ -176,11 +168,3 @@ yarn test:backend  # Backend only
 | API Hook (mutation) | `/frontend/src/hooks/api/actions/useFeatureApi.ts` |
 | Fake Store | `/src/test/fixtures/fake-feature-toggle-store.ts` |
 
-## Required Reading
-
-Before contributing to an area, get familiar with the area you're contributing to:
-
-- [Clean Code JavaScript](https://github.com/ryanmcdermott/clean-code-javascript)
-- [Backend Overview](/contributing/backend/overview.md)
-- [Frontend Overview](/contributing/frontend/overview.md)
-- [Contributing Guide](/contributing/CONTRIBUTING.md)

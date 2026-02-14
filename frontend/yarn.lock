@@ -8796,14 +8796,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:3.1.4":
-  version: 3.1.4
-  resolution: "react-error-boundary@npm:3.1.4"
-  dependencies:
-    "@babel/runtime": "npm:^7.12.5"
+"react-error-boundary@npm:6.1.1":
+  version: 6.1.1
+  resolution: "react-error-boundary@npm:6.1.1"
   peerDependencies:
-    react: ">=16.13.1"
-  checksum: 10c0/f977ca61823e43de2381d53dd7aa8b4d79ff6a984c9afdc88dc44f9973b99de7fd382d2f0f91f2688e24bb987c0185bf45d0b004f22afaaab0f990a830253bfb
+    react: ^18.0.0 || ^19.0.0
+  checksum: 10c0/4c72112bd930629e73015515804f95e375f9d83bea07cbc0557eb44752c8e8fc57ce141126b8eed2d9301d3bd1e030ce1f59d0e71f70fc0d10a29b31ec2cf2c5
   languageName: node
   linkType: hard
 
@@ -10635,7 +10633,7 @@ __metadata:
     react-confetti: "npm:^6.1.0"
     react-dom: "npm:18.3.1"
     react-dropzone: "npm:14.3.8"
-    react-error-boundary: "npm:3.1.4"
+    react-error-boundary: "npm:6.1.1"
     react-github-calendar: "npm:^4.5.1"
     react-grid-layout: "npm:^1.5.2"
     react-hooks-global-state: "npm:2.1.0"

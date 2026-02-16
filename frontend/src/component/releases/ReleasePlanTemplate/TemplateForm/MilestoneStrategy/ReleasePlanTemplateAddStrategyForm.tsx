@@ -17,7 +17,6 @@ import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useFormErrors } from 'hooks/useFormErrors';
 import produce from 'immer';
-import { MilestoneStrategySegment } from './MilestoneStrategySegment.tsx';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { MilestoneStrategyVariants } from './MilestoneStrategyVariants.tsx';
@@ -30,6 +29,7 @@ import {
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle.tsx';
 import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
+import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment.tsx';
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -285,9 +285,10 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                             be evaluated for users and applications that match
                             the specified preconditions.
                         </Alert>
-                        <MilestoneStrategySegment
+                        <FeatureStrategySegment
                             segments={segments}
                             setSegments={setSegments}
+                            selectableSegmentFilter={({ project }) => !project}
                         />
                         <StyledBox>
                             <StyledDivider />

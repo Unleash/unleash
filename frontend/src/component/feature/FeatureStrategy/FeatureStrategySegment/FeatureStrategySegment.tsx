@@ -10,13 +10,12 @@ import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { Box, styled, Typography } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-
 import { RecentlyUsedSegments } from './RecentlyUsedSegments/RecentlyUsedSegments.tsx';
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
-    projectId: string;
+    selectableSegmentFilter?: (segment: ISegment) => boolean;
 }
 
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
@@ -29,7 +28,7 @@ const StyledHelpIconBox = styled(Box)(({ theme }) => ({
 export const FeatureStrategySegment = ({
     segments: selectedSegments,
     setSegments: setSelectedSegments,
-    projectId,
+    selectableSegmentFilter,
 }: IFeatureStrategySegmentProps) => {
     const { segments: allSegments } = useSegments();
     const { strategySegmentsLimit } = useSegmentLimits();
@@ -43,9 +42,9 @@ export const FeatureStrategySegment = ({
         return null;
     }
 
-    const allSelectableSegments = allSegments.filter(
-        ({ project }) => !project || project === projectId,
-    );
+    const allSelectableSegments = selectableSegmentFilter
+        ? allSegments.filter(selectableSegmentFilter)
+        : allSegments;
 
     const unusedSegments = allSelectableSegments.filter((segment) => {
         return !selectedSegments.find((selected) => selected.id === segment.id);
@@ -57,7 +56,7 @@ export const FeatureStrategySegment = ({
     }));
 
     const onChange = ([option]: IAutocompleteBoxOption[]) => {
-        const selectedSegment = allSegments.find((segment) => {
+        const selectedSegment = allSelectableSegments.find((segment) => {
             return String(segment.id) === option.value;
         });
         if (selectedSegment) {

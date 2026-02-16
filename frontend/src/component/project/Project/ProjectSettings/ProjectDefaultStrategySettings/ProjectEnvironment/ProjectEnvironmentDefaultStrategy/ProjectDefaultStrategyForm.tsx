@@ -151,7 +151,9 @@ export const ProjectDefaultStrategyForm = ({
             <FeatureStrategySegment
                 segments={segments}
                 setSegments={setSegments}
-                projectId={projectId}
+                selectableSegmentFilter={({ project }) =>
+                    !project || project === projectId
+                }
             />
             <FeatureStrategyConstraints
                 strategy={strategy as any}

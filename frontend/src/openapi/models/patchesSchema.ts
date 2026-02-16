@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PatchSchema } from './patchSchema.js';
+import type { PatchSchema } from './patchSchema';
 
 /**
  * A list of patches

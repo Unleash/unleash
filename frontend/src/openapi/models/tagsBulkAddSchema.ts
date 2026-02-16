@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UpdateTagsSchema } from './updateTagsSchema.js';
+import type { UpdateTagsSchema } from './updateTagsSchema';
 
 /**
  * Represents tag changes to be applied to a list of features.

@@ -659,6 +659,11 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                     'favorite_features.feature is not null as favorite',
                 ),
             ];
+        } else {
+            selectColumns = [
+                ...selectColumns,
+                this.db.raw('false as favorite'),
+            ];
         }
 
         selectColumns = [

@@ -471,7 +471,7 @@ export const ReleasePlanChange: FC<{
     feature,
     onRefetch,
 }) => {
-    const { releasePlans, refetch } = useFeatureReleasePlans(
+    const { releasePlans } = useFeatureReleasePlans(
         projectId,
         featureName,
         environmentName,

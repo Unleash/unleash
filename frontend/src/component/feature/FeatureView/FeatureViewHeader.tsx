@@ -208,7 +208,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
     const featureId = useRequiredPathParam('featureId');
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
-    const { setToastData, setToastApiError } = useToast();
+    const { setToastApiError } = useToast();
 
     const [openTagDialog, setOpenTagDialog] = useState(false);
     const [showDelDialog, setShowDelDialog] = useState(false);

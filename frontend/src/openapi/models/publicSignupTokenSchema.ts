@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RoleSchema } from './roleSchema.js';
-import type { UserSchema } from './userSchema.js';
+import type { RoleSchema } from './roleSchema';
+import type { UserSchema } from './userSchema';
 
 /**
  * Used for transporting a [public invite link](https://docs.getunleash.io/concepts/public-signup#public-sign-up-tokens)

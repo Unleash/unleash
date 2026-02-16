@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { BannerSchema } from './bannerSchema.js';
+import type { BannerSchema } from './bannerSchema';
 
 /**
  * A response model with a list of banners.

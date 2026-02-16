@@ -20,6 +20,7 @@ export interface IUiConfig {
     environment?: string;
     billing?: 'subscription' | 'pay-as-you-go' | 'enterprise-consumption';
     unleashUrl?: string;
+    edgeUrl?: string;
     version: string;
     versionInfo?: IVersionInfo;
     links: ILinks[];
@@ -88,6 +89,7 @@ export type UiFlags = {
     readOnlyUsersUI?: boolean;
     privateProjectMiddlewareMove?: boolean;
     datePickerRangeConstraints?: boolean;
+    signupDialog?: boolean;
 };
 
 export interface IVersionInfo {

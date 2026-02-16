@@ -1,4 +1,4 @@
-import { type RequestHandler, Router } from 'express';
+import type { RequestHandler } from 'express';
 
 export const conditionalMiddleware = (
     condition: () => boolean,

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ContextFieldStrategiesSchemaStrategiesItem } from './contextFieldStrategiesSchemaStrategiesItem.js';
+import type { ContextFieldStrategiesSchemaStrategiesItem } from './contextFieldStrategiesSchemaStrategiesItem';
 
 /**
  * A wrapper object containing all strategies that use a specific context field

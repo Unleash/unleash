@@ -66,7 +66,10 @@ export const CreateReleasePlanTemplate = () => {
                 scrollToTop();
                 setToastData({
                     type: 'success',
-                    text: 'Release template created',
+                    text: !canCreateMore
+                        ? 'You have reached the limit of release templates.'
+                        : 'Release template created',
+                    persist: !canCreateMore,
                 });
 
                 trackEvent('release-management', {
@@ -108,11 +111,13 @@ export const CreateReleasePlanTemplate = () => {
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
             Limit={
-                <Limit
-                    name='release templates'
-                    limit={releaseTemplateLimit}
-                    currentValue={templates.length}
-                />
+                !canCreateMore && (
+                    <Limit
+                        name='release templates'
+                        limit={releaseTemplateLimit}
+                        currentValue={templates.length}
+                    />
+                )
             }
         >
             <StyledButtonContainer>

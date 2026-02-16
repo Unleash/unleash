@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientApplicationSchemaStarted } from './clientApplicationSchemaStarted.js';
+import type { ClientApplicationSchemaStarted } from './clientApplicationSchemaStarted';
 
 /**
  * A client application is an instance of one of our SDKs

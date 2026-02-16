@@ -14,7 +14,7 @@ export const useStrategyParameters = (
     >,
     displayGroupId?: boolean,
 ) => {
-    const { constraints, variants } = strategy;
+    const { constraints } = strategy;
     const { parameters } = strategy;
     const hasConstraints = Boolean(constraints?.length);
     const parameterKeys = parameters ? Object.keys(parameters) : [];

@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InstanceAdminStatsSchemaActiveUsers } from './instanceAdminStatsSchemaActiveUsers.js';
-import type { InstanceAdminStatsSchemaApiTokens } from './instanceAdminStatsSchemaApiTokens.js';
-import type { InstanceAdminStatsSchemaClientAppsItem } from './instanceAdminStatsSchemaClientAppsItem.js';
-import type { InstanceAdminStatsSchemaEdgeInstanceUsage } from './instanceAdminStatsSchemaEdgeInstanceUsage.js';
-import type { InstanceAdminStatsSchemaPreviousDayMetricsBucketsCount } from './instanceAdminStatsSchemaPreviousDayMetricsBucketsCount.js';
-import type { InstanceAdminStatsSchemaProductionChanges } from './instanceAdminStatsSchemaProductionChanges.js';
+import type { InstanceAdminStatsSchemaActiveUsers } from './instanceAdminStatsSchemaActiveUsers';
+import type { InstanceAdminStatsSchemaApiTokens } from './instanceAdminStatsSchemaApiTokens';
+import type { InstanceAdminStatsSchemaClientAppsItem } from './instanceAdminStatsSchemaClientAppsItem';
+import type { InstanceAdminStatsSchemaEdgeInstanceUsage } from './instanceAdminStatsSchemaEdgeInstanceUsage';
+import type { InstanceAdminStatsSchemaPreviousDayMetricsBucketsCount } from './instanceAdminStatsSchemaPreviousDayMetricsBucketsCount';
+import type { InstanceAdminStatsSchemaProductionChanges } from './instanceAdminStatsSchemaProductionChanges';
 
 /**
  * Information about an instance and statistics about usage of various features of Unleash

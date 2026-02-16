@@ -197,15 +197,25 @@ import { fakeImpactMetricsResolver } from '../test/fixtures/fake-impact-metrics.
 import { register as defaultMetricsRegister } from 'prom-client';
 
 export async function initialServiceSetup(
-    { authentication }: Pick<IUnleashConfig, 'authentication'>,
+    {
+        authentication,
+        edgeClientSecret,
+    }: Pick<IUnleashConfig, 'authentication' | 'edgeClientSecret'>,
     {
         userService,
         apiTokenService,
-    }: Pick<IUnleashServices, 'userService' | 'apiTokenService'>,
+        edgeService,
+    }: Pick<
+        IUnleashServices,
+        'userService' | 'apiTokenService' | 'edgeService'
+    >,
 ) {
     await userService.initAdminUser(authentication);
     if (authentication.initApiTokens.length > 0) {
         await apiTokenService.initApiTokens(authentication.initApiTokens);
+    }
+    if (edgeClientSecret && edgeClientSecret.length > 0) {
+        await edgeService.saveClient('enterprise-edge', edgeClientSecret);
     }
 }
 export type UnleashFactoryMethods = {

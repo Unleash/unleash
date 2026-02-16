@@ -42,7 +42,10 @@ export interface ResourceLimitsSchema {
      * @minimum 1
      */
     projects: number;
-    /** The maximum number of read-only users allowed. */
+    /**
+     * The maximum number of read-only users allowed.
+     * @minimum 0
+     */
     readOnlyUsers?: number;
     /** The maximum number of release templates allowed. */
     releaseTemplates: number;

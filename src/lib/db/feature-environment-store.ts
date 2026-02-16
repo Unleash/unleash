@@ -24,11 +24,6 @@ interface IFeatureEnvironmentRow {
     variants?: [];
 }
 
-interface ISegmentRow {
-    id: string;
-    segment_id: number;
-}
-
 export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     private db: Db;
 

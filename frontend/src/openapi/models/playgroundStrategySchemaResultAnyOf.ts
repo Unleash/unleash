@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundStrategySchemaResultAnyOfEnabled } from './playgroundStrategySchemaResultAnyOfEnabled.js';
-import type { PlaygroundStrategySchemaResultAnyOfEvaluationStatus } from './playgroundStrategySchemaResultAnyOfEvaluationStatus.js';
+import type { PlaygroundStrategySchemaResultAnyOfEnabled } from './playgroundStrategySchemaResultAnyOfEnabled';
+import type { PlaygroundStrategySchemaResultAnyOfEvaluationStatus } from './playgroundStrategySchemaResultAnyOfEvaluationStatus';
 
 export type PlaygroundStrategySchemaResultAnyOf = {
     /** Whether this strategy resolves to `false` or if it might resolve to `true`. Because Unleash can't evaluate the strategy, it can't say for certain whether it will be `true`, but if you have failing constraints or segments, it _can_ determine that your strategy would be `false`. */

@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateSafeguardSchemaImpactMetricAggregationMode } from './createSafeguardSchemaImpactMetricAggregationMode.js';
-import type { CreateSafeguardSchemaImpactMetricLabelSelectors } from './createSafeguardSchemaImpactMetricLabelSelectors.js';
-import type { CreateSafeguardSchemaImpactMetricTimeRange } from './createSafeguardSchemaImpactMetricTimeRange.js';
+import type { CreateSafeguardSchemaImpactMetricAggregationMode } from './createSafeguardSchemaImpactMetricAggregationMode';
+import type { CreateSafeguardSchemaImpactMetricLabelSelectors } from './createSafeguardSchemaImpactMetricLabelSelectors';
+import type { CreateSafeguardSchemaImpactMetricTimeRange } from './createSafeguardSchemaImpactMetricTimeRange';
 
 /**
  * Metric configuration that should be evaluated for the safeguard.

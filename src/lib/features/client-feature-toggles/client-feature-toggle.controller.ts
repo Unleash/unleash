@@ -36,6 +36,7 @@ import type { ClientFeatureToggleService } from './client-feature-toggle-service
 import {
     CLIENT_FEATURES_MEMORY,
     CLIENT_METRICS_NAMEPREFIX,
+    CLIENT_METRICS_PROJECT,
     CLIENT_METRICS_TAGS,
 } from '../../internals.js';
 import isEqual from 'lodash.isequal';
@@ -279,16 +280,24 @@ export default class FeatureController extends Controller {
             return {};
         }
 
-        if (namePrefix) {
-            this.eventBus.emit(CLIENT_METRICS_NAMEPREFIX);
-        }
-
-        if (tag) {
-            this.eventBus.emit(CLIENT_METRICS_TAGS);
-        }
-
         const tagQuery = this.paramToArray(tag);
         const projectQuery = this.paramToArray(project);
+
+        if (namePrefix) {
+            this.eventBus.emit(CLIENT_METRICS_NAMEPREFIX, { namePrefix });
+        }
+
+        if (tagQuery?.length) {
+            this.eventBus.emit(CLIENT_METRICS_TAGS, {
+                tags: tagQuery.map(String),
+            });
+        }
+
+        if (projectQuery?.length) {
+            this.eventBus.emit(CLIENT_METRICS_PROJECT, {
+                projects: projectQuery.map(String),
+            });
+        }
         const query = await querySchema.validateAsync({
             tag: tagQuery,
             project: projectQuery,

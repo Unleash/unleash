@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { StrategySchemaParametersItem } from './strategySchemaParametersItem.js';
+import type { StrategySchemaParametersItem } from './strategySchemaParametersItem';
 
 /**
  * The [activation strategy](https://docs.getunleash.io/concepts/activation-strategies) schema

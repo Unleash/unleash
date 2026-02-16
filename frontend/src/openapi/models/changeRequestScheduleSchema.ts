@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestScheduleSchemaOneOf } from './changeRequestScheduleSchemaOneOf.js';
-import type { ChangeRequestScheduleSchemaOneOfThree } from './changeRequestScheduleSchemaOneOfThree.js';
-import type { ChangeRequestScheduleSchemaOneOfFive } from './changeRequestScheduleSchemaOneOfFive.js';
+import type { ChangeRequestScheduleSchemaOneOf } from './changeRequestScheduleSchemaOneOf';
+import type { ChangeRequestScheduleSchemaOneOfThree } from './changeRequestScheduleSchemaOneOfThree';
+import type { ChangeRequestScheduleSchemaOneOfFive } from './changeRequestScheduleSchemaOneOfFive';
 
 /**
  * A schedule for a change request's application. The schedule can either be pending, failed, or suspended. The schedule will always contain the state of the schedule and the last scheduled time, but other data varies between the different states.

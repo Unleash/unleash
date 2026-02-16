@@ -1,5 +1,6 @@
 import type { DeltaEvent } from './client-feature-toggle-delta-types.js';
 import { filterEventsByQuery } from './client-feature-toggle-delta.js';
+import { DeltaCache } from './delta-cache.js';
 
 describe('filterEventsByQuery', () => {
     const mockEvents: DeltaEvent[] = [
@@ -104,6 +105,65 @@ describe('filterEventsByQuery', () => {
                 segment: { id: 1, name: 'my-segment', constraints: [] },
             },
             { eventId: 5, type: 'segment-removed', segmentId: 2 },
+        ]);
+    });
+});
+
+describe('DeltaCache hydration ordering', () => {
+    test('keeps hydration features sorted after updates', () => {
+        const cache = new DeltaCache({
+            eventId: 1,
+            type: 'hydration',
+            features: [
+                { name: 'bravo', enabled: true },
+                { name: 'charlie', enabled: true },
+            ],
+            segments: [{ id: 2, name: 'segment-b', constraints: [] }],
+        });
+
+        cache.addEvents([
+            {
+                eventId: 2,
+                type: 'feature-updated',
+                feature: { name: 'alpha', enabled: true },
+            },
+        ]);
+
+        const hydration = cache.getHydrationEvent();
+        expect(hydration.features.map((feature) => feature.name)).toEqual([
+            'alpha',
+            'bravo',
+            'charlie',
+        ]);
+    });
+
+    test('keeps hydration segments sorted after updates', () => {
+        const cache = new DeltaCache({
+            eventId: 1,
+            type: 'hydration',
+            features: [{ name: 'alpha', enabled: true }],
+            segments: [
+                { id: 3, name: 'segment-c', constraints: [] },
+                { id: 4, name: 'segment-d', constraints: [] },
+            ],
+        });
+
+        cache.addEvents([
+            {
+                eventId: 2,
+                type: 'segment-updated',
+                segment: { id: 2, name: 'segment-b', constraints: [] },
+            },
+            {
+                eventId: 3,
+                type: 'segment-updated',
+                segment: { id: 1, name: 'segment-b', constraints: [] },
+            },
+        ]);
+
+        const hydration = cache.getHydrationEvent();
+        expect(hydration.segments.map((segment) => segment.id)).toEqual([
+            1, 2, 3, 4,
         ]);
     });
 });

@@ -348,9 +348,7 @@ test('should show context field usage for active flags', async () => {
 
     expect(postArchiveBody.strategies).toHaveLength(0);
 
-    const { body: getContextBody } = await app.request.get(
-        `/api/admin/context/${context}/strategies`,
-    );
+    await app.request.get(`/api/admin/context/${context}/strategies`);
 
     const { body: postArchiveGetAllBody } = await app.request
         .get(`/api/admin/context`)

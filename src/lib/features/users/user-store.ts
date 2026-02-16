@@ -61,6 +61,8 @@ const rowToUser = (row) => {
         isService: row.is_service,
         scimId: row.scim_id,
         seatType: row.seat_type,
+        companyRole: row.company_role,
+        productUpdatesEmailConsent: row.product_updates_email_consent,
     });
 };
 

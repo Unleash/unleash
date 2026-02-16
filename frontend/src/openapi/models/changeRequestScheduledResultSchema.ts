@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ScheduledChangeRequestViewModelSchema } from './scheduledChangeRequestViewModelSchema.js';
+import type { ScheduledChangeRequestViewModelSchema } from './scheduledChangeRequestViewModelSchema';
 
 /**
  * A list of scheduled change request view models

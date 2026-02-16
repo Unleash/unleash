@@ -1,6 +1,6 @@
 import type { Row, HeaderGroup } from 'react-table';
 import { TablePlaceholder, VirtualizedTable } from 'component/common/Table';
-import { Box, useMediaQuery, Link } from '@mui/material';
+import { Box, useMediaQuery, Link, styled, Typography } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ApiTokenDocs } from 'component/admin/apiToken/ApiTokenDocs/ApiTokenDocs';
 
@@ -8,6 +8,7 @@ import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
+import { ApiUrls } from 'component/admin/apiToken/ApiUrls/ApiUrls';
 
 const hiddenColumnsNotExtraLarge = ['Icon', 'createdAt', 'seenAt'];
 const hiddenColumnsCompact = ['Icon', 'project', 'seenAt'];
@@ -22,6 +23,13 @@ interface IApiTokenTableProps {
     headerGroups: HeaderGroup<object>[];
     globalFilter: any;
 }
+
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    margin: 0,
+    marginBottom: theme.spacing(1.5),
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.primary,
+}));
 
 export const ApiTokenTable = ({
     compact = false,
@@ -57,10 +65,15 @@ export const ApiTokenTable = ({
                 show={
                     <Box sx={{ mb: 4 }}>
                         <ApiTokenDocs />
+                        <Box sx={{ marginBlock: 4 }}>
+                            <StyledTitle variant='h2'>API URLs</StyledTitle>
+                            <ApiUrls compact={compact} />
+                        </Box>
                     </Box>
                 }
             />
             <Box sx={{ overflowX: 'auto' }}>
+                <StyledTitle variant='h2'>API Tokens</StyledTitle>
                 <SearchHighlightProvider value={globalFilter}>
                     <VirtualizedTable
                         rows={rows}

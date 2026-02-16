@@ -10,6 +10,8 @@
 export type LicenseReadSchemaResources = {
     /** Number of Edge instances in the license. */
     edgeInstances?: number;
+    /** Number of read-only users in the license. */
+    readOnlyUsers?: number;
     /** Number of release templates in the license. */
     releaseTemplates?: number;
     /** Number of seats in the license. */

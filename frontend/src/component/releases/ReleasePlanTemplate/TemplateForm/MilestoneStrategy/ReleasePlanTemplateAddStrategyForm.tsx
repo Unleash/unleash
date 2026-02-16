@@ -20,8 +20,6 @@ import produce from 'immer';
 import { MilestoneStrategySegment } from './MilestoneStrategySegment.tsx';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { MilestoneStrategyTitle } from './MilestoneStrategyTitle.tsx';
-import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints.tsx';
 import { MilestoneStrategyVariants } from './MilestoneStrategyVariants.tsx';
 import { MilestoneStrategyType } from './MilestoneStrategyType.tsx';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
@@ -30,6 +28,8 @@ import {
     featureStrategyDocsLinkLabel,
     featureStrategyHelp,
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle.tsx';
+import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -126,7 +126,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
 }: IReleasePlanTemplateAddStrategyFormProps) => {
     const [currentStrategy, setCurrentStrategy] = useState(strategy);
     const [activeTab, setActiveTab] = useState(0);
-    const { segments: allSegments, refetchSegments } = useSegments();
+    const { segments: allSegments } = useSegments();
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { strategyDefinition } = useStrategy(strategy?.strategyName);
     const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
@@ -261,7 +261,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
             <StyledContentDiv>
                 {activeTab === 0 && (
                     <>
-                        <MilestoneStrategyTitle
+                        <FeatureStrategyTitle
                             title={currentStrategy.title || ''}
                             setTitle={(title) =>
                                 updateParameter('title', title)
@@ -293,7 +293,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                             <StyledDivider />
                             <StyledConstraintSeparator />
                         </StyledBox>
-                        <MilestoneStrategyConstraints
+                        <FeatureStrategyConstraints
                             strategy={currentStrategy}
                             setStrategy={setCurrentStrategy}
                         />

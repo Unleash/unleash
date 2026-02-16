@@ -13,4 +13,5 @@ export type CreateUserSchemaRootRole =
     | 'Editor'
     | 'Viewer'
     | 'Owner'
-    | 'Member';
+    | 'Member'
+    | 'Reader';

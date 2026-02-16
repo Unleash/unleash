@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSettingsSchemaDefaultStickiness } from './projectSettingsSchemaDefaultStickiness.js';
-import type { ProjectSettingsSchemaMode } from './projectSettingsSchemaMode.js';
+import type { ProjectSettingsSchemaDefaultStickiness } from './projectSettingsSchemaDefaultStickiness';
+import type { ProjectSettingsSchemaMode } from './projectSettingsSchemaMode';
 
 /**
  * Project settings for a given project

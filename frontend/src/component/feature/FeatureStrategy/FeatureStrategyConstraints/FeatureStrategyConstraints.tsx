@@ -1,20 +1,11 @@
-import type { IConstraint, IFeatureStrategy } from 'interfaces/strategy';
+import type { IConstraint, StrategyFormState } from 'interfaces/strategy';
 import type React from 'react';
 import { useEffect } from 'react';
-import {
-    UPDATE_FEATURE_STRATEGY,
-    CREATE_FEATURE_STRATEGY,
-} from 'component/providers/AccessProvider/permissions';
-import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList/FeatureStrategyConstraintAccordionList.tsx';
 
-interface IFeatureStrategyConstraintsProps {
-    projectId: string;
-    environmentId: string;
-    strategy: Partial<IFeatureStrategy>;
-    setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
-    >;
+interface IFeatureStrategyConstraintsProps<T extends StrategyFormState> {
+    strategy: T;
+    setStrategy: React.Dispatch<React.SetStateAction<T>>;
 }
 
 const filterConstraints = (constraint: any) => {
@@ -30,12 +21,10 @@ const filterConstraints = (constraint: any) => {
     }
 };
 
-export const FeatureStrategyConstraints = ({
-    projectId,
-    environmentId,
+export const FeatureStrategyConstraints = <T extends StrategyFormState>({
     strategy,
     setStrategy,
-}: IFeatureStrategyConstraintsProps) => {
+}: IFeatureStrategyConstraintsProps<T>) => {
     useEffect(() => {
         return () => {
             if (!strategy.constraints) {
@@ -44,7 +33,7 @@ export const FeatureStrategyConstraints = ({
 
             // If the component is unmounting we want to remove all constraints that do not have valid single value or
             // valid multivalues
-            setStrategy((prev) => ({
+            setStrategy((prev: T) => ({
                 ...prev,
                 constraints: prev.constraints?.filter(filterConstraints),
             }));
@@ -54,34 +43,19 @@ export const FeatureStrategyConstraints = ({
     const constraints = strategy.constraints || [];
 
     const setConstraints = (value: React.SetStateAction<IConstraint[]>) => {
-        setStrategy((prev) => {
-            return {
-                ...prev,
-                constraints:
-                    value instanceof Function
-                        ? value(prev.constraints || [])
-                        : value,
-            };
-        });
+        setStrategy((prev: T) => ({
+            ...prev,
+            constraints:
+                value instanceof Function
+                    ? value(prev.constraints || [])
+                    : value,
+        }));
     };
-
-    const showCreateButton = useHasProjectEnvironmentAccess(
-        CREATE_FEATURE_STRATEGY,
-        projectId,
-        environmentId,
-    );
-
-    const allowEditAndDelete = useHasProjectEnvironmentAccess(
-        UPDATE_FEATURE_STRATEGY,
-        projectId,
-        environmentId,
-    );
 
     return (
         <FeatureStrategyConstraintAccordionList
             constraints={constraints}
-            setConstraints={allowEditAndDelete ? setConstraints : undefined}
-            showCreateButton={showCreateButton}
+            setConstraints={setConstraints}
         />
     );
 };

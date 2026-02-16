@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SearchFeaturesSortOrder } from './searchFeaturesSortOrder.js';
+import type { SearchFeaturesSortOrder } from './searchFeaturesSortOrder';
 
 export type SearchFeaturesParams = {
     /**
@@ -12,30 +12,37 @@ export type SearchFeaturesParams = {
     query?: string;
     /**
      * Id of the project where search and filter is performed. The project id can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
+     * @pattern ^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     project?: string;
     /**
      * The state of the feature active/stale. The state can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
+     * @pattern ^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     state?: string;
     /**
      * The lifecycle stage of the feature. The stagee can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
+     * @pattern ^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     lifecycle?: string;
     /**
      * The feature flag type to filter by. The type can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
+     * @pattern ^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     type?: string;
     /**
      * The feature flag creator to filter by. The creators can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.
+     * @pattern ^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     createdBy?: string;
     /**
      * The list of feature tags to filter by. Feature tag has to specify a type and a value joined with a colon.
+     * @pattern ^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):([^:,]+:.+?)(,\s*[^:,]+:.+?)*$
      */
     tag?: string;
     /**
      * The list of segments with operators to filter by. The segment valid operators are INCLUDE, DO_NOT_INCLUDE, INCLUDE_ALL_OF, INCLUDE_ANY_OF, EXCLUDE_IF_ANY_OF, EXCLUDE_ALL.
+     * @pattern ^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(.*?)(,([a-zA-Z0-9_]+))*$
      */
     segment?: string;
     /**
@@ -64,14 +71,17 @@ export type SearchFeaturesParams = {
     favoritesFirst?: string;
     /**
      * Whether to get results for archived feature flags or active feature flags. If `IS:true`, Unleash will return only archived flags. If `IS:false`, it will return only active flags.
+     * @pattern ^IS:(true|false)$
      */
     archived?: string;
     /**
      * The date the feature was created. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.
+     * @pattern ^(IS_BEFORE|IS_ON_OR_AFTER):\d{4}-\d{2}-\d{2}$
      */
     createdAt?: string;
     /**
      * The date the feature was last seen from metrics. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.
+     * @pattern ^(IS_BEFORE|IS_ON_OR_AFTER):\d{4}-\d{2}-\d{2}$
      */
     lastSeenAt?: string;
 };

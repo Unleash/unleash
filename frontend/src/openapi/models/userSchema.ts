@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserSchemaAccountType } from './userSchemaAccountType.js';
+import type { UserSchemaAccountType } from './userSchemaAccountType';
 
 /**
  * An Unleash user
@@ -16,6 +16,11 @@ export interface UserSchema {
      * @nullable
      */
     activeSessions?: number | null;
+    /**
+     * The role of the user within the company.
+     * @nullable
+     */
+    companyRole?: string | null;
     /** The user was created at this time */
     createdAt?: string;
     /** Experimental. The number of deleted browser sessions after last login */
@@ -43,6 +48,11 @@ export interface UserSchema {
     /** Deprecated */
     permissions?: string[];
     /**
+     * Whether the user has consented to receive product update emails.
+     * @nullable
+     */
+    productUpdatesEmailConsent?: boolean | null;
+    /**
      * Which [root role](https://docs.getunleash.io/concepts/rbac#predefined-roles) this user is assigned
      * @minimum 0
      */
@@ -52,6 +62,11 @@ export interface UserSchema {
      * @nullable
      */
     scimId?: string | null;
+    /**
+     * The seat type of this user
+     * @nullable
+     */
+    seatType?: string | null;
     /**
      * The last time this user logged in
      * @nullable

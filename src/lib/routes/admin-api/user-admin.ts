@@ -656,7 +656,7 @@ export default class UserAdminController extends Controller {
         >,
         res: Response<CreateUserResponseSchema>,
     ): Promise<void> {
-        const { user, params, body } = req;
+        const { params, body } = req;
         const { id } = params;
         const { name, email, rootRole } = body;
 
@@ -690,8 +690,7 @@ export default class UserAdminController extends Controller {
         req: IAuthRequest<{ id: number }>,
         res: Response,
     ): Promise<void> {
-        const { user, params } = req;
-        const { id } = params;
+        const { id } = req.params;
 
         await this.userService.deleteUser(+id, req.audit);
         res.status(200).send();

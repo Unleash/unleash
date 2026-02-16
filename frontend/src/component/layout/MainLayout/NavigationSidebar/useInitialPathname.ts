@@ -18,7 +18,7 @@ export const normalizeTopLevelPath = (pathname: string) => {
 };
 
 export const useInitialPathname = () => {
-    const { pathname, state } = useLocation();
+    const { pathname } = useLocation();
 
     return normalizeTopLevelPath(pathname);
 };

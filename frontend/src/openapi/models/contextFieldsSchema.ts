@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ContextFieldSchema } from './contextFieldSchema.js';
+import type { ContextFieldSchema } from './contextFieldSchema';
 
 /**
  * A list of context fields

@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema.js';
-import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema.js';
-import type { FeatureTypeCountSchema } from './featureTypeCountSchema.js';
-import type { ProjectLinkTemplateSchema } from './projectLinkTemplateSchema.js';
-import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode.js';
-import type { ProjectOverviewSchemaOnboardingStatus } from './projectOverviewSchemaOnboardingStatus.js';
-import type { ProjectStatsSchema } from './projectStatsSchema.js';
+import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
+import type { FeatureTypeCountSchema } from './featureTypeCountSchema';
+import type { ProjectLinkTemplateSchema } from './projectLinkTemplateSchema';
+import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode';
+import type { ProjectOverviewSchemaOnboardingStatus } from './projectOverviewSchemaOnboardingStatus';
+import type { ProjectStatsSchema } from './projectStatsSchema';
 
 /**
  * A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.

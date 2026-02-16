@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReleasePlanSchema } from './releasePlanSchema.js';
-import type { FeatureStrategySchema } from './featureStrategySchema.js';
-import type { VariantSchema } from './variantSchema.js';
+import type { ReleasePlanSchema } from './releasePlanSchema';
+import type { FeatureStrategySchema } from './featureStrategySchema';
+import type { VariantSchema } from './variantSchema';
 
 /**
  * A detailed description of the feature environment

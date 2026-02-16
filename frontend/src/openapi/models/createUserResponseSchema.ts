@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateUserResponseSchemaAccountType } from './createUserResponseSchemaAccountType.js';
-import type { CreateUserResponseSchemaRootRole } from './createUserResponseSchemaRootRole.js';
+import type { CreateUserResponseSchemaAccountType } from './createUserResponseSchemaAccountType';
+import type { CreateUserResponseSchemaRootRole } from './createUserResponseSchemaRootRole';
 
 /**
  * An Unleash user after creation
@@ -17,6 +17,11 @@ export interface CreateUserResponseSchema {
      * @nullable
      */
     activeSessions?: number | null;
+    /**
+     * The role of the user within the company.
+     * @nullable
+     */
+    companyRole?: string | null;
     /** The user was created at this time */
     createdAt?: string;
     /** Experimental. The number of deleted browser sessions after last login */
@@ -43,6 +48,11 @@ export interface CreateUserResponseSchema {
     name?: string | null;
     /** Deprecated */
     permissions?: string[];
+    /**
+     * Whether the user has consented to receive product update emails.
+     * @nullable
+     */
+    productUpdatesEmailConsent?: boolean | null;
     /** Which [root role](https://docs.getunleash.io/concepts/rbac#predefined-roles) this user is assigned. Usually a numeric role ID, but can be a string when returning newly created user with an explicit string role. */
     rootRole?: CreateUserResponseSchemaRootRole;
     /**
@@ -50,6 +60,11 @@ export interface CreateUserResponseSchema {
      * @nullable
      */
     scimId?: string | null;
+    /**
+     * The seat type of this user
+     * @nullable
+     */
+    seatType?: string | null;
     /**
      * The last time this user logged in
      * @nullable

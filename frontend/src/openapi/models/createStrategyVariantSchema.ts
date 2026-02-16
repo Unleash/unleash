@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateStrategyVariantSchemaPayload } from './createStrategyVariantSchemaPayload.js';
-import type { CreateStrategyVariantSchemaWeightType } from './createStrategyVariantSchemaWeightType.js';
+import type { CreateStrategyVariantSchemaPayload } from './createStrategyVariantSchemaPayload';
+import type { CreateStrategyVariantSchemaWeightType } from './createStrategyVariantSchemaWeightType';
 
 /**
  * This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. A strategy variant allows you to attach any data to strategies instead of only returning `true`/`false`. Strategy variants take precedence over feature variants.

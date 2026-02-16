@@ -6,7 +6,6 @@ import {
     FilterItem,
     type FilterItemParams,
 } from '../FilterItem/FilterItem.tsx';
-import { isAfter, isBefore } from 'date-fns';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -25,7 +24,6 @@ interface IFilterProps {
     onChange: (value: FilterItemParamHolder) => void;
     availableFilters: IFilterItem[];
     className?: string;
-    dateConstraintsEnabled?: boolean;
 }
 
 type IBaseFilterItem = {
@@ -48,12 +46,28 @@ export type IDateFilterItem = IBaseFilterItem & {
     dateOperators: [string, ...string[]];
     fromFilterKey?: string;
     toFilterKey?: string;
-    minDate?: Date;
-    maxDate?: Date;
-    dateConstraintsEnabled?: boolean;
 };
 
-export type IFilterItem = ITextFilterItem | IDateFilterItem;
+export type IDateRangeFilterItem = IDateFilterItem & {
+    fromFilterKey: string;
+    toFilterKey: string;
+};
+
+export type IFilterItem =
+    | ITextFilterItem
+    | IDateFilterItem
+    | IDateRangeFilterItem;
+
+export const isDateFilterItem = (
+    filter: IFilterItem,
+): filter is IDateFilterItem => 'dateOperators' in filter;
+
+export const isDateRangeFilterItem = (
+    filter: IFilterItem,
+): filter is IDateRangeFilterItem =>
+    isDateFilterItem(filter) &&
+    'fromFilterKey' in filter &&
+    'toFilterKey' in filter;
 
 const StyledCategoryIconWrapper = styled('div')(({ theme }) => ({
     marginRight: theme.spacing(0.5),
@@ -69,7 +83,8 @@ const StyledIcon = styled(Icon)(({ theme }) => ({
 }));
 
 type RangeChangeHandler = (
-    filter: IDateFilterItem,
+    filter: IDateRangeFilterItem,
+    changedPicker?: 'from' | 'to',
 ) =>
     | ((value: { from: FilterItemParams; to: FilterItemParams }) => void)
     | undefined;
@@ -77,7 +92,6 @@ type RangeChangeHandler = (
 type RenderFilterProps = {
     onChipClose?: (label: string) => void;
     state: FilterItemParams | null | undefined;
-    allState: FilterItemParamHolder;
     onChange: (value: FilterItemParamHolder) => void;
     filter: ITextFilterItem | IDateFilterItem;
     rangeChangeHandler: RangeChangeHandler;
@@ -87,46 +101,11 @@ type RenderFilterProps = {
 const RenderFilter: FC<RenderFilterProps> = ({
     filter,
     onChipClose,
-    allState,
     onChange,
     state,
     rangeChangeHandler,
     initMode,
 }) => {
-    const autoAdjustDateRange = (
-        updates: FilterItemParamHolder,
-        newDate: string,
-        picker: 'from' | 'to',
-        valueToUpdate?: string,
-    ): void => {
-        const dateFilter = filter as IDateFilterItem;
-
-        const shouldAdjustToDate =
-            picker === 'from' &&
-            valueToUpdate &&
-            isAfter(new Date(newDate), new Date(valueToUpdate));
-        const shouldAdjustFromDate =
-            picker === 'to' &&
-            valueToUpdate &&
-            isBefore(new Date(newDate), new Date(valueToUpdate));
-
-        const filterKeyToUpdate =
-            shouldAdjustToDate && dateFilter.toFilterKey
-                ? dateFilter.toFilterKey
-                : shouldAdjustFromDate && dateFilter.fromFilterKey
-                  ? dateFilter.fromFilterKey
-                  : null;
-
-        if (filterKeyToUpdate) {
-            updates[filterKeyToUpdate] = {
-                operator:
-                    allState[filterKeyToUpdate]?.operator ||
-                    dateFilter.dateOperators[0],
-                values: [newDate],
-            };
-        }
-    };
-
     const label = (
         <>
             <StyledCategoryIconWrapper>
@@ -136,37 +115,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
         </>
     );
 
-    if ('dateOperators' in filter) {
-        const fromValue = filter.fromFilterKey
-            ? allState?.[filter.fromFilterKey]?.values?.[0]
-            : undefined;
-        const toValue = filter.toFilterKey
-            ? allState?.[filter.toFilterKey]?.values?.[0]
-            : undefined;
-
-        const picker =
-            filter.filterKey === filter.fromFilterKey ? 'from' : 'to';
-
-        const getMinDate = () => {
-            if (filter.dateConstraintsEnabled) {
-                return undefined;
-            }
-            if (picker === 'to' && fromValue) {
-                return new Date(fromValue);
-            }
-            return undefined;
-        };
-
-        const getMaxDate = () => {
-            if (filter.dateConstraintsEnabled) {
-                return undefined;
-            }
-            if (picker === 'from' && toValue) {
-                return new Date(toValue);
-            }
-            return undefined;
-        };
-
+    if (isDateFilterItem(filter)) {
         return (
             <FilterDateItem
                 key={filter.label}
@@ -174,28 +123,13 @@ const RenderFilter: FC<RenderFilterProps> = ({
                 label={label}
                 name={filter.label}
                 state={state}
-                minDate={getMinDate()}
-                maxDate={getMaxDate()}
                 operators={filter.dateOperators}
-                onChange={
-                    filter.dateConstraintsEnabled
-                        ? (value) => {
-                              const updates = {
-                                  [filter.filterKey]: value,
-                              };
-                              const valueToUpdate =
-                                  picker === 'from' ? toValue : fromValue;
-                              autoAdjustDateRange(
-                                  updates,
-                                  value.values[0],
-                                  picker,
-                                  valueToUpdate,
-                              );
-                              onChange(updates);
-                          }
-                        : (value) => onChange({ [filter.filterKey]: value })
+                onChange={(value) => onChange({ [filter.filterKey]: value })}
+                onRangeChange={
+                    isDateRangeFilterItem(filter)
+                        ? rangeChangeHandler(filter)
+                        : undefined
                 }
-                onRangeChange={rangeChangeHandler?.(filter)}
                 onChipClose={
                     filter.persistent
                         ? undefined
@@ -228,12 +162,10 @@ const RenderFilter: FC<RenderFilterProps> = ({
 type SingleFilterProps = Omit<IFilterProps, 'availableFilters'> & {
     filter: IFilterItem;
     rangeChangeHandler: RangeChangeHandler;
-    allState: FilterItemParamHolder;
 };
 
 const SingleFilter: FC<SingleFilterProps> = ({
     state,
-    allState,
     onChange,
     className,
     filter,
@@ -244,7 +176,6 @@ const SingleFilter: FC<SingleFilterProps> = ({
             <RenderFilter
                 filter={filter}
                 state={state[filter.filterKey]}
-                allState={allState}
                 onChange={onChange}
                 rangeChangeHandler={rangeChangeHandler}
                 onChipClose={undefined}
@@ -332,7 +263,6 @@ const MultiFilter: FC<MultiFilterProps> = ({
                         key={filter.filterKey}
                         filter={filter}
                         state={state[filter.filterKey]}
-                        allState={state}
                         onChange={onChange}
                         rangeChangeHandler={rangeChangeHandler}
                         onChipClose={() => deselectFilter(filter.label)}
@@ -352,19 +282,16 @@ const MultiFilter: FC<MultiFilterProps> = ({
 };
 
 export const Filters: FC<IFilterProps> = (props) => {
-    const rangeChangeHandler = (filter: IDateFilterItem) => {
-        const fromKey = filter.fromFilterKey;
-        const toKey = filter.toFilterKey;
-        if (fromKey && toKey) {
-            return (value: {
-                from: FilterItemParams;
-                to: FilterItemParams;
-            }) => {
-                props.onChange({ [fromKey]: value.from });
-                props.onChange({ [toKey]: value.to });
-            };
-        }
-        return undefined;
+    const rangeChangeHandler: RangeChangeHandler = (filter) => {
+        const { fromFilterKey, toFilterKey } = filter;
+        return (value: { from: FilterItemParams; to: FilterItemParams }) => {
+            const { from: adjustedFrom, to: adjustedTo } = value;
+
+            props.onChange({
+                [fromFilterKey]: adjustedFrom,
+                [toFilterKey]: adjustedTo,
+            });
+        };
     };
 
     if (props.availableFilters.length === 1) {
@@ -372,7 +299,6 @@ export const Filters: FC<IFilterProps> = (props) => {
         return (
             <SingleFilter
                 filter={filter}
-                allState={props.state}
                 rangeChangeHandler={rangeChangeHandler}
                 {...props}
             />

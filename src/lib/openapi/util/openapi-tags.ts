@@ -155,11 +155,6 @@ const OPENAPI_TAGS = [
         description:
             'Endpoints related to [Unleash Edge](https://docs.getunleash.io/unleash-edge).',
     },
-    {
-        name: 'Unstable',
-        description:
-            'Experimental endpoints that may change or disappear at any time.',
-    },
     { name: 'Users', description: 'Manage users and passwords.' },
 ] as const;
 

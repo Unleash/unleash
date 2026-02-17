@@ -10,6 +10,7 @@ import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentL
 import { Box, styled, Typography } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { RecentlyUsedSegments } from './RecentlyUsedSegments/RecentlyUsedSegments.tsx';
+import { useRecentlyUsedSegments } from './RecentlyUsedSegments/useRecentlyUsedSegments.ts';
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
@@ -30,6 +31,12 @@ export const FeatureStrategySegment = ({
     availableSegments,
 }: IFeatureStrategySegmentProps) => {
     const { strategySegmentsLimit } = useSegmentLimits();
+    const { items: recentlyUsedSegmentIds } = useRecentlyUsedSegments();
+    const availableRecentlyUsedSegments = availableSegments.filter(
+        (segment) =>
+            recentlyUsedSegmentIds.includes(segment.id) &&
+            !selectedSegments.find((selected) => selected.id === segment.id),
+    );
 
     const atStrategySegmentsLimit: boolean = Boolean(
         strategySegmentsLimit &&
@@ -94,10 +101,12 @@ export const FeatureStrategySegment = ({
                 segments={selectedSegments}
                 setSegments={setSelectedSegments}
             />
-            <RecentlyUsedSegments
-                setSegments={setSelectedSegments}
-                segments={selectedSegments}
-            />
+            {availableRecentlyUsedSegments.length > 0 ? (
+                <RecentlyUsedSegments
+                    setSegments={setSelectedSegments}
+                    segments={availableRecentlyUsedSegments}
+                />
+            ) : null}
         </>
     );
 };

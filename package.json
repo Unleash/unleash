@@ -122,6 +122,7 @@
     "pg-connection-string": "^2.5.0",
     "pkginfo": "^0.4.1",
     "prom-client": "^15.0.0",
+    "re2": "^1.23.3",
     "sanitize-filename": "^1.6.3",
     "semver": "^7.7.3",
     "serve-favicon": "^2.5.0",

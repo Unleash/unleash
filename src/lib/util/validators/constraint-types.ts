@@ -6,6 +6,7 @@ import {
 import BadDataError from '../../error/bad-data-error.js';
 import type { ILegalValue } from '../../features/context/context-field-store-type.js';
 import { parseStrictSemVer } from '../semver.js';
+import RE2 from 're2';
 
 export const validateNumber = async (value: unknown): Promise<void> => {
     await constraintNumberTypeSchema.validateAsync(value);
@@ -23,6 +24,22 @@ export const validateSemver = (value: unknown): void => {
     if (!parseStrictSemVer(value)) {
         throw new BadDataError(
             `the provided value is not a valid semver format. The value provided was: ${value}`,
+        );
+    }
+};
+
+export const validateRegex = (value: unknown): void => {
+    if (typeof value !== 'string') {
+        throw new BadDataError(
+            `the provided value is not a valid regex string.`,
+        );
+    }
+
+    try {
+        new RE2(value);
+    } catch (e) {
+        throw new BadDataError(
+            `the provided value is not a valid regex string. Error: ${e.message}`,
         );
     }
 };

@@ -45,8 +45,8 @@ jobs:
       - name: Enable corepack
         run: corepack enable
       - run: yarn install --immutable
-        env:
-          YARN_ENABLE_SCRIPTS: false
+        # env:
+        #   YARN_ENABLE_SCRIPTS: false
       - run: yarn lint
       - run: yarn build:backend
       - run: yarn run test

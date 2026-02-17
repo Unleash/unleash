@@ -124,7 +124,7 @@ test('regex validation should throw with invalid regex', () => {
         validateRegex(badRegex);
     } catch (e) {
         expect(e.message).toContain(
-            `the provided value is not a valid regex string. Error: missing ): (unclosed`,
+            `Request validation failed: your request body or params contain invalid data: the provided value is not a valid regex string. Error: error parsing regexp: missing closing ): \`(unclosed\``,
         );
     }
 });

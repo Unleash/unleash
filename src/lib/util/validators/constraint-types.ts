@@ -6,7 +6,7 @@ import {
 import BadDataError from '../../error/bad-data-error.js';
 import type { ILegalValue } from '../../features/context/context-field-store-type.js';
 import { parseStrictSemVer } from '../semver.js';
-import RE2 from 're2';
+import { RE2JS } from 're2js';
 
 export const validateNumber = async (value: unknown): Promise<void> => {
     await constraintNumberTypeSchema.validateAsync(value);
@@ -36,7 +36,8 @@ export const validateRegex = (value: unknown): void => {
     }
 
     try {
-        new RE2(value);
+        const regex = RE2JS.compile(value);
+        console.log('Regex compiled successfully:', regex);
     } catch (e) {
         throw new BadDataError(
             `the provided value is not a valid regex string. Error: ${e.message}`,

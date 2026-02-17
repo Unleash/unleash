@@ -65,6 +65,7 @@ export const variantsSchema = joi.object().keys({
             value: variantValueSchema,
         })
         .optional(),
+    jsonSchemaId: joi.string().optional().allow(null),
     stickiness: joi.string().default('default'),
     overrides: joi.array().items(
         joi

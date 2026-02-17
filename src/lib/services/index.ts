@@ -75,11 +75,13 @@ import {
     createFakeEventsService,
     createFakeFeatureLinkService,
     createFakeFeatureToggleService,
+    createFakeProjectJsonSchemaService,
     createFakeProjectService,
     createFakeUserSubscriptionsService,
     createFeatureLifecycleService,
     createFeatureLinkService,
     createFeatureToggleService,
+    createProjectJsonSchemaService,
     createProjectService,
     createUserSubscriptionsService,
 } from '../features/index.js';
@@ -172,6 +174,7 @@ import type {
 import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType.js';
 import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service.js';
 import type FeatureLinkService from '../features/feature-links/feature-link-service.js';
+import type ProjectJsonSchemaService from '../features/project-json-schemas/project-json-schema-service.js';
 import { createUserService } from '../features/users/createUserService.js';
 import { UiConfigService } from '../ui-config/ui-config-service.js';
 import { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
@@ -355,6 +358,10 @@ export const createServices = (
           );
 
     const featureLinkService = transactionalFeatureLinkService;
+
+    const projectJsonSchemaService = db
+        ? createProjectJsonSchemaService(config)(db)
+        : createFakeProjectJsonSchemaService(config).projectJsonSchemaService;
 
     const featureToggleService = db
         ? withTransactional((db) => createFeatureToggleService(db, config), db)
@@ -540,6 +547,7 @@ export const createServices = (
         unknownFlagsService,
         uiConfigService,
         resourceLimitsService,
+        projectJsonSchemaService,
     };
 };
 
@@ -676,4 +684,5 @@ export interface IUnleashServices {
     unknownFlagsService: UnknownFlagsService;
     uiConfigService: UiConfigService;
     resourceLimitsService: ResourceLimitsService;
+    projectJsonSchemaService: ProjectJsonSchemaService;
 }

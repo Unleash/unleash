@@ -157,6 +157,7 @@ export interface IVariant {
         type: 'json' | 'csv' | 'string' | 'number';
         value: string;
     };
+    jsonSchemaId?: string;
     stickiness: string;
     overrides?: {
         contextName: string;

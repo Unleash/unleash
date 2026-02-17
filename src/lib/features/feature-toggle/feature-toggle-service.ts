@@ -116,6 +116,7 @@ import { sortStrategies } from '../../util/sortStrategies.js';
 import type FeatureLinkService from '../feature-links/feature-link-service.js';
 import type { IFeatureLink } from '../feature-links/feature-links-read-model-type.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import type ProjectJsonSchemaService from '../project-json-schemas/project-json-schema-service.js';
 interface IFeatureContext {
     featureName: string;
     projectId: string;
@@ -175,6 +176,7 @@ export type ServicesAndReadModels = {
     featureLinkService: FeatureLinkService;
     featureLinksReadModel: IFeatureLinksReadModel;
     resourceLimitsService: ResourceLimitsService;
+    projectJsonSchemaService?: ProjectJsonSchemaService;
 };
 
 export class FeatureToggleService {
@@ -222,6 +224,8 @@ export class FeatureToggleService {
 
     private resourceLimitsService: ResourceLimitsService;
 
+    private projectJsonSchemaService?: ProjectJsonSchemaService;
+
     constructor(
         {
             featureStrategiesStore,
@@ -246,6 +250,7 @@ export class FeatureToggleService {
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
+            projectJsonSchemaService,
         }: ServicesAndReadModels,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
@@ -270,6 +275,7 @@ export class FeatureToggleService {
         this.featureLinkService = featureLinkService;
         this.eventBus = eventBus;
         this.resourceLimitsService = resourceLimitsService;
+        this.projectJsonSchemaService = projectJsonSchemaService;
     }
 
     async validateFeaturesContext(
@@ -727,6 +733,23 @@ export class FeatureToggleService {
             await variantsArraySchema.validateAsync(variants);
             const fixedVariants = this.fixVariantWeights(variants);
             variants = fixedVariants;
+
+            if (
+                this.flagResolver.isEnabled('jsonSchemaValidation') &&
+                this.projectJsonSchemaService
+            ) {
+                for (const variant of variants) {
+                    if (
+                        variant.payload?.type === 'json' &&
+                        variant.jsonSchemaId
+                    ) {
+                        await this.projectJsonSchemaService.validatePayloadAgainstSchema(
+                            variant.jsonSchemaId,
+                            variant.payload.value,
+                        );
+                    }
+                }
+            }
         }
 
         return {

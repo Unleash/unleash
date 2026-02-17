@@ -122,6 +122,7 @@ afterEach(async () => {
                 ),
             ),
     );
+    await db.stores.projectJsonSchemaStore.deleteAll();
 });
 
 afterAll(async () => {
@@ -2489,6 +2490,149 @@ test('should handle strategy variants', async () => {
             variants: [updatedVariant1, updatedVariant2],
         },
     ]);
+});
+
+test('should store and retrieve jsonSchemaId on strategy variants', async () => {
+    const feature = { name: randomId(), impressionData: false };
+    await app.createFeature(feature.name);
+
+    const schema = await app.services.projectJsonSchemaService.createSchema(
+        DEFAULT_PROJECT,
+        {
+            name: 'Test Schema',
+            schema: {
+                type: 'object',
+                properties: {
+                    key: { type: 'string' },
+                },
+                required: ['key'],
+            },
+        },
+    );
+
+    const variantWithSchema = {
+        name: 'schemaVariant',
+        weight: 1000,
+        stickiness: 'default',
+        weightType: 'variable' as const,
+        payload: { type: 'json' as const, value: '{"key":"value"}' },
+        jsonSchemaId: schema.id,
+    };
+
+    const strategy = {
+        name: 'flexibleRollout',
+        constraints: [],
+        variants: [variantWithSchema],
+    };
+
+    const featureStrategiesPath = `/api/admin/projects/default/features/${feature.name}/environments/${DEFAULT_ENV}/strategies`;
+
+    await createStrategy(feature.name, strategy);
+
+    const { body: strategies } = await app.request.get(featureStrategiesPath);
+
+    expect(strategies).toMatchObject([
+        {
+            variants: [
+                {
+                    name: 'schemaVariant',
+                    payload: { type: 'json', value: '{"key":"value"}' },
+                    jsonSchemaId: schema.id,
+                },
+            ],
+        },
+    ]);
+});
+
+test('should update jsonSchemaId on strategy variants', async () => {
+    const feature = { name: randomId(), impressionData: false };
+    await app.createFeature(feature.name);
+
+    const schema1 = await app.services.projectJsonSchemaService.createSchema(
+        DEFAULT_PROJECT,
+        {
+            name: 'Test Schema',
+            schema: {
+                type: 'object',
+                properties: {
+                    key: { type: 'string' },
+                },
+                required: ['key'],
+            },
+        },
+    );
+
+    const variantWithSchema = {
+        name: 'schemaVariant',
+        weight: 1000,
+        stickiness: 'default',
+        weightType: 'variable' as const,
+        payload: { type: 'json' as const, value: '{"key":"value"}' },
+        jsonSchemaId: schema1.id,
+    };
+
+    const strategy = {
+        name: 'flexibleRollout',
+        constraints: [],
+        variants: [variantWithSchema],
+    };
+
+    const featureStrategiesPath = `/api/admin/projects/default/features/${feature.name}/environments/${DEFAULT_ENV}/strategies`;
+
+    await createStrategy(feature.name, strategy);
+
+    const { body: strategies } = await app.request.get(featureStrategiesPath);
+
+    // Update variant with a different jsonSchemaId
+
+    const schema2 = await app.services.projectJsonSchemaService.createSchema(
+        DEFAULT_PROJECT,
+        {
+            name: 'Test Schema 2',
+            schema: {
+                type: 'object',
+                properties: {
+                    anotherKey: { type: 'string' },
+                },
+            },
+        },
+    );
+
+    await updateStrategy(feature.name, strategies[0].id, {
+        ...strategies[0],
+        variants: [
+            {
+                ...variantWithSchema,
+                jsonSchemaId: schema2.id,
+            },
+        ],
+    });
+
+    const { body: updatedStrategies } = await app.request.get(
+        featureStrategiesPath,
+    );
+
+    expect(updatedStrategies[0].variants[0].jsonSchemaId).toBe(schema2.id);
+
+    // Update variant without jsonSchemaId to verify it can be removed
+    await updateStrategy(feature.name, updatedStrategies[0].id, {
+        ...updatedStrategies[0],
+        variants: [
+            {
+                name: 'schemaVariant',
+                weight: 1000,
+                weightType: 'variable' as const,
+                stickiness: 'default',
+                payload: { type: 'json', value: '{"key":"value"}' },
+            },
+        ],
+    });
+
+    const { body: finalStrategies } = await app.request.get(
+        featureStrategiesPath,
+    );
+
+    expect(finalStrategies[0].variants[0].jsonSchemaId).toBeUndefined();
 });
 
 test('should reject invalid constraint values for multi-valued constraints', async () => {

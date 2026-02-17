@@ -70,6 +70,7 @@ import { UnknownFlagsStore } from '../features/metrics/unknown-flags/unknown-fla
 import { FeatureLinksReadModel } from '../features/feature-links/feature-links-read-model.js';
 import { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
 import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
+import { ProjectJsonSchemaStore } from '../features/project-json-schemas/project-json-schema-store.js';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -211,5 +212,6 @@ export const createStores = (
         unknownFlagsStore: new UnknownFlagsStore(db, getLogger),
         featureLinkReadModel: new FeatureLinksReadModel(db, eventBus),
         edgeTokenStore: new EdgeTokenStore(db, eventBus, config),
+        projectJsonSchemaStore: new ProjectJsonSchemaStore(db, config),
     };
 };

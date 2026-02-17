@@ -62,6 +62,10 @@ import {
     createFeatureLinkService,
 } from '../feature-links/createFeatureLinkService.js';
 import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import {
+    createProjectJsonSchemaService,
+    createFakeProjectJsonSchemaService,
+} from '../project-json-schemas/createProjectJsonSchemaService.js';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -135,6 +139,8 @@ export const createFeatureToggleService = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
+    const projectJsonSchemaService = createProjectJsonSchemaService(config)(db);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -159,6 +165,7 @@ export const createFeatureToggleService = (
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
+            projectJsonSchemaService,
         },
     );
     return featureToggleService;
@@ -204,6 +211,9 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
+    const { projectJsonSchemaService } =
+        createFakeProjectJsonSchemaService(config);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -232,6 +242,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
+            projectJsonSchemaService,
         },
     );
     return {

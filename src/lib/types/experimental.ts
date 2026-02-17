@@ -72,7 +72,8 @@ export type IFlagKey =
     | 'privateProjectMiddlewareMove'
     | 'remoteMcpServer'
     | 'datePickerRangeConstraints'
-    | 'signupDialog';
+    | 'signupDialog'
+    | 'jsonSchemaValidation';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -323,6 +324,10 @@ const flags: IFlags = {
     ),
     signupDialog: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SIGNUP_DIALOG,
+        false,
+    ),
+    jsonSchemaValidation: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_JSON_SCHEMA_VALIDATION,
         false,
     ),
 };

@@ -67,6 +67,7 @@ import { FakeFeatureLinksReadModel } from '../../lib/features/feature-links/fake
 import { FakeUnknownFlagsStore } from '../../lib/features/metrics/unknown-flags/fake-unknown-flags-store.js';
 import type { UserUpdatesReadModel } from '../../lib/features/users/user-updates-read-model.js';
 import { FakeEdgeTokenStore } from '../../lib/features/edgetokens/fake-edge-token-store.js';
+import FakeProjectJsonSchemaStore from '../../lib/features/project-json-schemas/fake-project-json-schema-store.js';
 
 const db = {
     select: () => ({
@@ -155,6 +156,7 @@ const createStores: () => IUnleashStores = () => {
         unknownFlagsStore,
         featureLinkReadModel: new FakeFeatureLinksReadModel(),
         edgeTokenStore: new FakeEdgeTokenStore(),
+        projectJsonSchemaStore: new FakeProjectJsonSchemaStore(),
     };
 };
 

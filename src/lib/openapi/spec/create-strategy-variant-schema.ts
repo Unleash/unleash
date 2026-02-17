@@ -51,6 +51,12 @@ export const createStrategyVariantSchema = {
             },
             example: { type: 'json', value: '{"color": "red"}' },
         },
+        jsonSchemaId: {
+            type: 'string',
+            description:
+                'Optional ID of a project JSON schema to validate this variant payload against.',
+            example: '01HXYZ1234567890ABCDEFGHJK',
+        },
     },
     components: {},
 } as const;

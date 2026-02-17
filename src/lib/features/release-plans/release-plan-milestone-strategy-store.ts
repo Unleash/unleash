@@ -4,17 +4,23 @@ import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
 import type { Row } from '../../db/crud/row-type.js';
 import type { Db } from '../../db/db.js';
 import type { MilestoneStrategyConfig } from '../../types/index.js';
+import type { Store } from '../../types/stores/store.js';
 const TABLE = 'milestone_strategies';
 
 export type ReleasePlanMilestoneStrategyWriteModel = Omit<
     ReleasePlanMilestoneStrategy,
     'id'
 >;
-export interface IReleasePlanMilestoneStrategyStore {
+export interface IReleasePlanMilestoneStrategyStore
+    extends Store<ReleasePlanMilestoneStrategy, string> {
+    insert(
+        item: ReleasePlanMilestoneStrategyWriteModel,
+    ): Promise<ReleasePlanMilestoneStrategy>;
     upsert(
         id: string,
         updates: MilestoneStrategyConfig,
     ): Promise<ReleasePlanMilestoneStrategy>;
+    deleteStrategiesForMilestone(milestoneId: string): Promise<void>;
 }
 
 const fromRow = (row: any): ReleasePlanMilestoneStrategy => {

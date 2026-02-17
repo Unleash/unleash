@@ -79,6 +79,7 @@ export const NewStrategyVariants = <T extends StrategyFormState>({
                 weight: variant.weight,
                 payload: variant.payload,
                 weightType: variant.weightType,
+                jsonSchemaId: variant.jsonSchemaId,
             })),
         }));
     }, [stickiness, JSON.stringify(variantsEdit)]);
@@ -185,6 +186,7 @@ export const NewStrategyVariants = <T extends StrategyFormState>({
                             ]
                         }
                         weightsError={variantWeightsError}
+                        projectId={projectId}
                     />
                 ))}
             </StyledVariantForms>

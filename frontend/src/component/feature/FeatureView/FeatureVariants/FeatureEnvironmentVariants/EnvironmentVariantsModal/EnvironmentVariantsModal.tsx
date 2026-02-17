@@ -381,6 +381,7 @@ export const EnvironmentVariantsModal = ({
                                 key={variant.id}
                                 variant={variant}
                                 variants={variantsEdit}
+                                projectId={projectId}
                                 updateVariant={(updatedVariant) =>
                                     updateVariant(updatedVariant, variant.id)
                                 }

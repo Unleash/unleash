@@ -22,6 +22,7 @@ import { Box, styled } from '@mui/material';
 import { ProjectActions } from './ProjectActions/ProjectActions.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectContextFields } from './ProjectContextFields.tsx';
+import { ProjectJsonSchemas } from './ProjectJsonSchemas/ProjectJsonSchemas';
 
 const StyledBadgeContainer = styled(Box)({
     marginLeft: 'auto',
@@ -36,6 +37,7 @@ export const ProjectSettings = () => {
 
     const actionsEnabled = useUiFlag('automatedActions');
     const contextFieldsEnabled = useUiFlag('projectContextFields');
+    const jsonSchemaValidationEnabled = useUiFlag('jsonSchemaValidation');
 
     const paidTabs = (...tabs: ITab[]) =>
         isPro() || isEnterprise() ? tabs : [];
@@ -98,6 +100,13 @@ export const ProjectSettings = () => {
         });
     }
 
+    if (jsonSchemaValidationEnabled) {
+        tabs.push({
+            id: 'json-schemas',
+            label: 'JSON schemas',
+        });
+    }
+
     const onChange = (tab: ITab) => {
         navigate(tab.id);
     };
@@ -137,6 +146,12 @@ export const ProjectSettings = () => {
                     element={<ProjectDefaultStrategySettings />}
                 />
                 <Route path='actions/*' element={<ProjectActions />} />
+                {jsonSchemaValidationEnabled && (
+                    <Route
+                        path='json-schemas/*'
+                        element={<ProjectJsonSchemas />}
+                    />
+                )}
                 <Route
                     path='*'
                     element={<Navigate replace to={tabs[0].id} />}

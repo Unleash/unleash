@@ -1,16 +1,19 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import Input from 'component/common/Input/Input';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import SelectMenu from 'component/common/select';
 import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/VariantOverrides';
 import {
+    Autocomplete,
     Button,
     FormControlLabel,
     IconButton,
     InputAdornment,
     styled,
     Switch,
+    TextField,
     Tooltip,
+    Typography,
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IPayload } from 'interfaces/featureToggle';
@@ -19,6 +22,8 @@ import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext
 import { WeightType } from 'constants/variantTypes';
 import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
 import Delete from '@mui/icons-material/Delete';
+import { useProjectJsonSchemas } from 'hooks/api/getters/useProjectJsonSchemas/useProjectJsonSchemas';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const LazyReactJSONEditor = React.lazy(
     () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
@@ -174,6 +179,7 @@ interface IVariantFormProps {
     disableOverrides?: boolean;
     decorationColor?: string;
     weightsError?: boolean;
+    projectId?: string;
 }
 
 export const VariantForm = ({
@@ -185,6 +191,7 @@ export const VariantForm = ({
     disableOverrides = false,
     decorationColor,
     weightsError,
+    projectId,
 }: IVariantFormProps) => {
     const [name, setName] = useState(variant.name);
     const [customPercentage, setCustomPercentage] = useState(
@@ -197,6 +204,59 @@ export const VariantForm = ({
     const [overrides, overridesDispatch] = useOverrides(
         'overrides' in variant ? variant.overrides || [] : [],
     );
+    const [jsonSchemaId, setJsonSchemaId] = useState<string | undefined>(
+        variant.jsonSchemaId,
+    );
+    const [schemaValidationError, setSchemaValidationError] = useState('');
+
+    const jsonSchemaValidationEnabled = useUiFlag('jsonSchemaValidation');
+    const showSchemaDropdown =
+        jsonSchemaValidationEnabled &&
+        payload.type === 'json' &&
+        Boolean(projectId);
+    const { jsonSchemas } = useProjectJsonSchemas(projectId || '', {
+        isPaused: () => !showSchemaDropdown,
+    });
+
+    const selectedSchema = useMemo(
+        () => jsonSchemas.find((s) => s.id === jsonSchemaId) ?? null,
+        [jsonSchemas, jsonSchemaId],
+    );
+
+    useEffect(() => {
+        if (!showSchemaDropdown || !jsonSchemaId || !payload.value) {
+            setSchemaValidationError('');
+            return;
+        }
+        let parsed: unknown;
+        try {
+            parsed = JSON.parse(payload.value);
+        } catch {
+            return;
+        }
+        const schema = jsonSchemas.find((s) => s.id === jsonSchemaId);
+        if (!schema) return;
+
+        import('ajv').then(({ default: Ajv }) => {
+            const ajv = new Ajv({ allErrors: true });
+            try {
+                const validate = ajv.compile(schema.schema);
+                const valid = validate(parsed);
+                if (!valid && validate.errors) {
+                    const msgs = validate.errors
+                        .map((e) => `${e.instancePath || '/'} ${e.message}`)
+                        .join('; ');
+                    setSchemaValidationError(
+                        `Schema validation failed: ${msgs}`,
+                    );
+                } else {
+                    setSchemaValidationError('');
+                }
+            } catch {
+                setSchemaValidationError('');
+            }
+        });
+    }, [payload.value, jsonSchemaId, jsonSchemas, showSchemaDropdown]);
 
     const { context } = useAssignableUnleashContext();
 
@@ -311,11 +371,13 @@ export const VariantForm = ({
             stickiness:
                 variants?.length > 0 ? variants[0].stickiness : 'default',
             payload: payload.value ? payload : undefined,
+            jsonSchemaId: jsonSchemaId || undefined,
             isValid:
                 isNameNotEmpty(name) &&
                 isNameUnique(name, variant.id) &&
                 isValidPercentage(percentage) &&
                 isValidPayload(payload) &&
+                !schemaValidationError &&
                 !error,
         };
         if (!disableOverrides) {
@@ -327,7 +389,15 @@ export const VariantForm = ({
                 .filter((o) => o.values && o.values.length > 0);
         }
         updateVariant(newVariant);
-    }, [name, customPercentage, percentage, payload, overrides]);
+    }, [
+        name,
+        customPercentage,
+        percentage,
+        payload,
+        overrides,
+        jsonSchemaId,
+        schemaValidationError,
+    ]);
 
     useEffect(() => {
         if (!customPercentage) {
@@ -493,6 +563,44 @@ export const VariantForm = ({
                     />
                 </StyledFieldColumn>
             </StyledRow>
+            <ConditionallyRender
+                condition={showSchemaDropdown}
+                show={
+                    <div style={{ marginBottom: 16 }}>
+                        <Autocomplete
+                            size='small'
+                            value={selectedSchema}
+                            onChange={(_e, newValue) => {
+                                setJsonSchemaId(newValue?.id ?? undefined);
+                            }}
+                            options={jsonSchemas}
+                            getOptionLabel={(option) => option.name}
+                            isOptionEqualToValue={(option, value) =>
+                                option.id === value.id
+                            }
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label='Validate against JSON schema'
+                                    placeholder='None (no validation)'
+                                />
+                            )}
+                        />
+                        <ConditionallyRender
+                            condition={Boolean(schemaValidationError)}
+                            show={
+                                <Typography
+                                    variant='body2'
+                                    color='error'
+                                    sx={{ mt: 0.5 }}
+                                >
+                                    {schemaValidationError}
+                                </Typography>
+                            }
+                        />
+                    </div>
+                }
+            />
             {!disableOverrides ? (
                 <>
                     <StyledMarginLabel>

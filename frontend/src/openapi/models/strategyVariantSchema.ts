@@ -24,4 +24,7 @@ export interface StrategyVariantSchema {
     weight: number;
     /** Set to `fix` if this variant must have exactly the weight allocated to it. If the type is `variable`, the weight will adjust so that the total weight of all variants adds up to 1000. Refer to the [variant weight documentation](https://docs.getunleash.io/concepts/feature-flag-variants#variant-weight). */
     weightType: StrategyVariantSchemaWeightType;
+
+    /** Optional ID of a project JSON schema to validate this variant payload against. */
+    jsonSchemaId?: string;
 }

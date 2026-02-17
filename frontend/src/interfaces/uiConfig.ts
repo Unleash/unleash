@@ -90,6 +90,7 @@ export type UiFlags = {
     privateProjectMiddlewareMove?: boolean;
     datePickerRangeConstraints?: boolean;
     signupDialog?: boolean;
+    jsonSchemaValidation?: boolean;
 };
 
 export interface IVersionInfo {

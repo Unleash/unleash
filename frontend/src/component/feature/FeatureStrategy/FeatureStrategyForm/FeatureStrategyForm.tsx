@@ -209,6 +209,7 @@ export const FeatureStrategyForm = ({
                 weight: variant.weight,
                 payload: variant.payload,
                 weightType: variant.weightType,
+                jsonSchemaId: variant.jsonSchemaId,
             })),
         }));
     }, [stickiness, JSON.stringify(strategy.variants)]);

@@ -65,6 +65,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                 weight: variant.weight,
                 payload: variant.payload,
                 weightType: variant.weightType,
+                jsonSchemaId: variant.jsonSchemaId,
             })),
         }));
     }, [stickiness, JSON.stringify(variantsEdit)]);
@@ -136,6 +137,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                         key={variant.id}
                         variant={variant}
                         variants={variantsEdit}
+                        projectId={projectId}
                         updateVariant={(updatedVariant) =>
                             updateVariant(updatedVariant, variant.id)
                         }

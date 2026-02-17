@@ -114,6 +114,7 @@ export interface IFeatureVariant {
     weightType: 'fix' | 'variable';
     overrides?: IOverride[];
     payload?: IPayload;
+    jsonSchemaId?: string;
 }
 
 export interface IOverride {

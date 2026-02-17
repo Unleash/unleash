@@ -2,7 +2,7 @@ import { styled, Typography } from '@mui/material';
 import { useRecentlyUsedSegments } from './useRecentlyUsedSegments.ts';
 import type { ISegment } from 'interfaces/segment';
 import { RecentlyUsedSegmentChip } from './RecentlyUsedSegmentChip.tsx';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
 
 type RecentlyUsedSegmentsProps = {
     setSegments?: React.Dispatch<React.SetStateAction<ISegment[]>>;
@@ -30,13 +30,17 @@ export const RecentlyUsedSegments = ({
     segments = [],
 }: RecentlyUsedSegmentsProps) => {
     const { items: recentlyUsedSegmentIds } = useRecentlyUsedSegments();
-    const { segments: allSegments } = useSegments();
-    if (recentlyUsedSegmentIds.length === 0 || !setSegments || !allSegments) {
+    const { segments: assignableSegments } = useAssignableSegments();
+    if (
+        recentlyUsedSegmentIds.length === 0 ||
+        !setSegments ||
+        !assignableSegments
+    ) {
         return null;
     }
 
     const segmentObjects = recentlyUsedSegmentIds
-        .map((id) => allSegments.find((segment) => segment.id === id))
+        .map((id) => assignableSegments.find((segment) => segment.id === id))
         .filter((segment) => segment !== undefined) as ISegment[];
 
     const nonSelectedRecentSegments = segmentObjects.filter(

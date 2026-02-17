@@ -16,6 +16,10 @@ export interface IReleasePlanMilestoneStrategyStore
     insert(
         item: ReleasePlanMilestoneStrategyWriteModel,
     ): Promise<ReleasePlanMilestoneStrategy>;
+    update(
+        id: string,
+        item: Partial<ReleasePlanMilestoneStrategyWriteModel>,
+    ): Promise<ReleasePlanMilestoneStrategy>;
     upsert(
         id: string,
         updates: MilestoneStrategyConfig,

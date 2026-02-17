@@ -36,8 +36,7 @@ export const validateRegex = (value: unknown): void => {
     }
 
     try {
-        const regex = RE2JS.compile(value);
-        console.log('Regex compiled successfully:', regex);
+        RE2JS.compile(value);
     } catch (e) {
         throw new BadDataError(
             `the provided value is not a valid regex string. Error: ${e.message}`,

@@ -24,6 +24,7 @@ exports[`constraintSchema invalid operator name 1`] = `
           "SEMVER_EQ",
           "SEMVER_GT",
           "SEMVER_LT",
+          "REGEX",
         ],
       },
       "schemaPath": "#/properties/operator/enum",

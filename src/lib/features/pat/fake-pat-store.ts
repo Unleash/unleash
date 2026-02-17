@@ -49,7 +49,7 @@ export default class FakePatStore implements IPatStore {
         userId: number,
     ): Promise<boolean> {
         return this.pats.some(
-            (p) => p.description === description && p.userId === userId,
+            (pat) => pat.description === description && pat.userId === userId,
         );
     }
 

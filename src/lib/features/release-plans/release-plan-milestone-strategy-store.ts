@@ -3,7 +3,7 @@ import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-stra
 import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
 import type { Row } from '../../db/crud/row-type.js';
 import type { Db } from '../../db/db.js';
-import type { IStrategyConfig } from '../../types/index.js';
+import type { MilestoneStrategyConfig } from '../../types/index.js';
 const TABLE = 'milestone_strategies';
 
 export type ReleasePlanMilestoneStrategyWriteModel = Omit<
@@ -13,7 +13,7 @@ export type ReleasePlanMilestoneStrategyWriteModel = Omit<
 export interface IReleasePlanMilestoneStrategyStore {
     upsert(
         id: string,
-        updates: IStrategyConfig,
+        updates: MilestoneStrategyConfig,
     ): Promise<ReleasePlanMilestoneStrategy>;
 }
 
@@ -44,7 +44,7 @@ const toRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
     };
 };
 
-const toUpdateRow = (item: IStrategyConfig & { strategyName: string }) => {
+const toUpdateRow = (item: MilestoneStrategyConfig) => {
     return {
         milestone_id: item.milestoneId,
         sort_order: item.sortOrder,
@@ -88,7 +88,7 @@ export class ReleasePlanMilestoneStrategyStore
 
     private async updateStrategy(
         strategyId: string,
-        { segments, ...strategy }: IStrategyConfig & { strategyName: string },
+        { segments, ...strategy }: MilestoneStrategyConfig,
     ): Promise<ReleasePlanMilestoneStrategy> {
         const rows = await this.db(this.tableName)
             .where({ id: strategyId })
@@ -99,7 +99,7 @@ export class ReleasePlanMilestoneStrategyStore
 
     async upsert(
         strategyId: string,
-        { segments, ...strategy }: IStrategyConfig & { strategyName: string },
+        { segments, ...strategy }: MilestoneStrategyConfig,
     ): Promise<ReleasePlanMilestoneStrategy> {
         const releasePlanMilestoneStrategy = await this.updateStrategy(
             strategyId,

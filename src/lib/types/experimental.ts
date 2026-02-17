@@ -71,7 +71,6 @@ export type IFlagKey =
     | 'readOnlyUsersUI'
     | 'privateProjectMiddlewareMove'
     | 'remoteMcpServer'
-    | 'datePickerRangeConstraints'
     | 'signupDialog';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -315,10 +314,6 @@ const flags: IFlags = {
     ),
     remoteMcpServer: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REMOTE_MCP_SERVER,
-        false,
-    ),
-    datePickerRangeConstraints: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DATEPICKER_RANGE_CONSTRAINTS,
         false,
     ),
     signupDialog: parseEnvVarBoolean(

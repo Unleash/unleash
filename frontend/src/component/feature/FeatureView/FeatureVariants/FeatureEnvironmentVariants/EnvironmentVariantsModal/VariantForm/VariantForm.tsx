@@ -23,6 +23,7 @@ import { WeightType } from 'constants/variantTypes';
 import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
 import Delete from '@mui/icons-material/Delete';
 import { useProjectJsonSchemas } from 'hooks/api/getters/useProjectJsonSchemas/useProjectJsonSchemas';
+import { useProjectJsonSchemasApi } from 'hooks/api/actions/useProjectJsonSchemasApi/useProjectJsonSchemasApi';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const LazyReactJSONEditor = React.lazy(
@@ -223,40 +224,38 @@ export const VariantForm = ({
         [jsonSchemas, jsonSchemaId],
     );
 
+    const { validatePayload: validatePayloadApi } = useProjectJsonSchemasApi();
+
     useEffect(() => {
         if (!showSchemaDropdown || !jsonSchemaId || !payload.value) {
             setSchemaValidationError('');
             return;
         }
-        let parsed: unknown;
+
         try {
-            parsed = JSON.parse(payload.value);
+            JSON.parse(payload.value);
         } catch {
             return;
         }
-        const schema = jsonSchemas.find((s) => s.id === jsonSchemaId);
-        if (!schema) return;
 
-        import('ajv').then(({ default: Ajv }) => {
-            const ajv = new Ajv({ allErrors: true });
-            try {
-                const validate = ajv.compile(schema.schema);
-                const valid = validate(parsed);
-                if (!valid && validate.errors) {
-                    const msgs = validate.errors
-                        .map((e) => `${e.instancePath || '/'} ${e.message}`)
-                        .join('; ');
-                    setSchemaValidationError(
-                        `Schema validation failed: ${msgs}`,
-                    );
-                } else {
+        const timer = setTimeout(() => {
+            validatePayloadApi(projectId!, jsonSchemaId, payload.value)
+                .then((result) => {
+                    if (!result.valid && result.errors?.length) {
+                        setSchemaValidationError(
+                            `Schema validation failed: ${result.errors.join('; ')}`,
+                        );
+                    } else {
+                        setSchemaValidationError('');
+                    }
+                })
+                .catch(() => {
                     setSchemaValidationError('');
-                }
-            } catch {
-                setSchemaValidationError('');
-            }
-        });
-    }, [payload.value, jsonSchemaId, jsonSchemas, showSchemaDropdown]);
+                });
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [payload.value, jsonSchemaId, showSchemaDropdown]);
 
     const { context } = useAssignableUnleashContext();
 

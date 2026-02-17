@@ -18,9 +18,12 @@ import {
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import type { IFlagResolver } from '../../types/index.js';
 import type { CreateProjectJsonSchemaSchema } from '../../openapi/spec/create-project-json-schema-schema.js';
+import type { ValidateJsonSchemaPayloadSchema } from '../../openapi/spec/validate-json-schema-payload-schema.js';
+import type { JsonSchemaValidationResultSchema } from '../../openapi/spec/json-schema-validation-result-schema.js';
 import { serializeDates } from '../../types/serialize-dates.js';
 import { projectJsonSchemaSchema } from '../../openapi/spec/project-json-schema-schema.js';
 import { projectJsonSchemasSchema } from '../../openapi/spec/project-json-schemas-schema.js';
+import { jsonSchemaValidationResultSchema } from '../../openapi/spec/json-schema-validation-result-schema.js';
 
 interface ProjectJsonSchemaControllerServices {
     projectJsonSchemaService: ProjectJsonSchemaService;
@@ -29,6 +32,7 @@ interface ProjectJsonSchemaControllerServices {
 
 const PATH = '/:projectId/json-schemas';
 const PATH_SCHEMA = '/:projectId/json-schemas/:schemaId';
+const PATH_VALIDATE = '/:projectId/json-schemas/:schemaId/validate';
 
 export default class ProjectJsonSchemaController extends Controller {
     private projectJsonSchemaService: ProjectJsonSchemaService;
@@ -156,6 +160,31 @@ export default class ProjectJsonSchemaController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'post',
+            path: PATH_VALIDATE,
+            handler: this.validatePayload,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Unstable'],
+                    operationId: 'validateJsonSchemaPayload',
+                    summary: 'Validate a payload against a JSON schema.',
+                    description:
+                        'Validate a JSON string payload against the specified project JSON schema. Returns whether the payload is valid and any validation errors.',
+                    requestBody: createRequestSchema(
+                        'validateJsonSchemaPayloadSchema',
+                    ),
+                    responses: {
+                        200: createResponseSchema(
+                            'jsonSchemaValidationResultSchema',
+                        ),
+                        ...getStandardResponses(401, 403, 404, 415),
+                    },
+                }),
+            ],
+        });
     }
 
     async getProjectJsonSchemas(
@@ -242,5 +271,28 @@ export default class ProjectJsonSchemaController extends Controller {
         const { projectId, schemaId } = req.params;
         await this.projectJsonSchemaService.deleteSchema(schemaId, projectId);
         res.status(204).end();
+    }
+
+    async validatePayload(
+        req: IAuthRequest<
+            { projectId: string; schemaId: string },
+            unknown,
+            ValidateJsonSchemaPayloadSchema
+        >,
+        res: Response<JsonSchemaValidationResultSchema>,
+    ): Promise<void> {
+        const { schemaId } = req.params;
+        const { payload } = req.body;
+        const result = await this.projectJsonSchemaService.validatePayload(
+            schemaId,
+            payload,
+        );
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            jsonSchemaValidationResultSchema.$id,
+            result,
+        );
     }
 }

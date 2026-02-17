@@ -105,20 +105,30 @@ export default class ProjectJsonSchemaService {
         schemaId: string,
         payloadValue: string,
     ): Promise<void> {
+        const result = await this.validatePayload(schemaId, payloadValue);
+        if (!result.valid) {
+            const schemaRecord =
+                await this.projectJsonSchemaStore.get(schemaId);
+            throw new BadDataError(
+                `Variant payload does not match JSON schema "${schemaRecord?.name ?? schemaId}": ${result.errors.join('; ')}`,
+            );
+        }
+    }
+
+    async validatePayload(
+        schemaId: string,
+        payloadValue: string,
+    ): Promise<{ valid: boolean; errors: string[] }> {
         const schemaRecord = await this.projectJsonSchemaStore.get(schemaId);
         if (!schemaRecord) {
-            throw new BadDataError(
-                `JSON schema with id ${schemaId} does not exist`,
-            );
+            throw new BadDataError(`JSON schema with id ${schemaId} not found`);
         }
 
         let parsed: unknown;
         try {
             parsed = JSON.parse(payloadValue);
         } catch {
-            throw new BadDataError(
-                `Variant payload is not valid JSON: ${payloadValue}`,
-            );
+            return { valid: false, errors: ['Payload is not valid JSON'] };
         }
 
         const ajv = new Ajv({ allErrors: true });
@@ -126,19 +136,21 @@ export default class ProjectJsonSchemaService {
         let validate;
         try {
             validate = ajv.compile(schemaRecord.schema);
-        } catch (e: unknown) {
-            throw new BadDataError(
-                `The referenced JSON schema (${schemaRecord.name}) is invalid and could not be compiled`,
-            );
+        } catch {
+            return {
+                valid: false,
+                errors: ['Schema could not be compiled'],
+            };
         }
 
         const valid = validate(parsed);
-        if (!valid) {
-            const errors = ajv.errorsText(validate.errors);
-            throw new BadDataError(
-                `Variant payload does not match JSON schema "${schemaRecord.name}": ${errors}`,
+        if (!valid && validate.errors) {
+            const errors = validate.errors.map(
+                (e) => `${e.instancePath || '/'} ${e.message}`,
             );
+            return { valid: false, errors };
         }
+        return { valid: true, errors: [] };
     }
 
     private validateJsonSchema(schema: Record<string, unknown>): void {

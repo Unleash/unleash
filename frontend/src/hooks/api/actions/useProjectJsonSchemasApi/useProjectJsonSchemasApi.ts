@@ -39,10 +39,26 @@ export const useProjectJsonSchemasApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const validatePayload = async (
+        project: string,
+        schemaId: string,
+        payload: string,
+    ): Promise<{ valid: boolean; errors: string[] }> => {
+        const path = `api/admin/projects/${project}/json-schemas/${schemaId}/validate`;
+        const req = createRequest(path, {
+            method: 'POST',
+            body: JSON.stringify({ payload }),
+        });
+
+        const res = await makeRequest(req.caller, req.id);
+        return res.json();
+    };
+
     return {
         createJsonSchema,
         updateJsonSchema,
         deleteJsonSchema,
+        validatePayload,
         errors,
         loading,
     };

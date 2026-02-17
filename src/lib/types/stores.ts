@@ -26,7 +26,7 @@ import type { IUserSplashStore } from './stores/user-splash-store.js';
 import type { IRoleStore } from './stores/role-store.js';
 import type { ISegmentStore } from '../features/segment/segment-store-type.js';
 import type { IGroupStore } from './stores/group-store.js';
-import type { IPatStore } from './stores/pat-store.js';
+import type { IPatStore } from '../features/pat/pat-store-type.js';
 import type { IPublicSignupTokenStore } from './stores/public-signup-token-store.js';
 import type { IFavoriteFeaturesStore } from './stores/favorite-features.js';
 import type { IFavoriteProjectsStore } from './stores/favorite-projects.js';

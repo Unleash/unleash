@@ -13,7 +13,7 @@ import {
 } from '../../../openapi/util/standard-responses.js';
 import type { OpenApiService } from '../../../services/openapi-service.js';
 
-import type PatService from '../../../services/pat-service.js';
+import type PatService from '../../../features/pat/pat-service.js';
 import { NONE } from '../../../types/permissions.js';
 import type { IAuthRequest } from '../../unleash-types.js';
 import { serializeDates } from '../../../types/serialize-dates.js';

@@ -36,7 +36,7 @@ import FakeUserSplashStore from './fake-user-splash-store.js';
 import FakeRoleStore from './fake-role-store.js';
 import FakeSegmentStore from './fake-segment-store.js';
 import FakeGroupStore from './fake-group-store.js';
-import FakePatStore from './fake-pat-store.js';
+import FakePatStore from '../../lib/features/pat/fake-pat-store.js';
 import FakePublicSignupStore from './fake-public-signup-store.js';
 import FakeFavoriteFeaturesStore from './fake-favorite-features-store.js';
 import FakeFavoriteProjectsStore from './fake-favorite-projects-store.js';

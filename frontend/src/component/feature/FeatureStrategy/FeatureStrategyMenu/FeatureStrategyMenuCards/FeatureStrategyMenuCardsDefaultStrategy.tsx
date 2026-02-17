@@ -5,9 +5,11 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi.ts';
 import useToast from 'hooks/useToast.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard.tsx';
 import { FeatureStrategyMenuCardAction } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardAction.tsx';
 import { FeatureStrategyMenuCardIcon } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCardIcon.tsx';
+import { formatStrategyName } from 'utils/strategyNames';
 
 interface IFeatureStrategyMenuCardsDefaultStrategyProps {
     projectId: string;
@@ -40,6 +42,7 @@ export const FeatureStrategyMenuCardsDefaultStrategy = ({
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
     const { refetchFeature } = useFeature(projectId, featureId);
+    const { trackEvent } = usePlausibleTracker();
 
     const projectDefaultStrategy = project?.environments?.find(
         (env) => env.environment === environmentId,
@@ -49,6 +52,12 @@ export const FeatureStrategyMenuCardsDefaultStrategy = ({
     };
 
     const onApply = async () => {
+        trackEvent('strategy-add', {
+            props: {
+                buttonTitle: formatStrategyName(projectDefaultStrategy.name),
+            },
+        });
+
         const payload = {
             name: projectDefaultStrategy.name,
             title: projectDefaultStrategy.title ?? '',

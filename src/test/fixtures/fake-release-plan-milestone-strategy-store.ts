@@ -10,7 +10,10 @@ export class FakeReleasePlanMilestoneStrategyStore
     async insert(
         _item: Omit<ReleasePlanMilestoneStrategy, 'id'>,
     ): Promise<ReleasePlanMilestoneStrategy> {
-        const strategy = { ..._item, id: String(this.items.length + 1) } as ReleasePlanMilestoneStrategy;
+        const strategy = {
+            ..._item,
+            id: String(this.items.length + 1),
+        } as ReleasePlanMilestoneStrategy;
         this.items.push(strategy);
         return strategy;
     }

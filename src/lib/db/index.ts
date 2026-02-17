@@ -2,7 +2,6 @@ import {
     type IUnleashConfig,
     type IUnleashStores,
     ReleasePlanMilestoneStore,
-    ReleasePlanMilestoneStrategyStore,
     ReleasePlanStore,
     ReleasePlanTemplateStore,
 } from '../types/index.js';
@@ -70,6 +69,7 @@ import { UnknownFlagsStore } from '../features/metrics/unknown-flags/unknown-fla
 import { FeatureLinksReadModel } from '../features/feature-links/feature-links-read-model.js';
 import { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
 import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
+import { ReleasePlanMilestoneStrategyStore } from '../features/release-plans/release-plan-milestone-strategy-store.js';
 
 export const createStores = (
     config: IUnleashConfig,

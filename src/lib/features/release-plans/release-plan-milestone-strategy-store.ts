@@ -3,13 +3,19 @@ import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-stra
 import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
 import type { Row } from '../../db/crud/row-type.js';
 import type { Db } from '../../db/db.js';
-
+import type { MilestoneStrategyConfig } from '../../types/index.js';
 const TABLE = 'milestone_strategies';
 
 export type ReleasePlanMilestoneStrategyWriteModel = Omit<
     ReleasePlanMilestoneStrategy,
     'id'
 >;
+export interface IReleasePlanMilestoneStrategyStore {
+    upsert(
+        id: string,
+        updates: MilestoneStrategyConfig,
+    ): Promise<ReleasePlanMilestoneStrategy>;
+}
 
 const fromRow = (row: any): ReleasePlanMilestoneStrategy => {
     return {
@@ -38,7 +44,7 @@ const toRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
     };
 };
 
-const toUpdateRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
+const toUpdateRow = (item: MilestoneStrategyConfig) => {
     return {
         milestone_id: item.milestoneId,
         sort_order: item.sortOrder,
@@ -50,13 +56,16 @@ const toUpdateRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
     };
 };
 
-export class ReleasePlanMilestoneStrategyStore extends CRUDStore<
-    ReleasePlanMilestoneStrategy,
-    ReleasePlanMilestoneStrategyWriteModel,
-    Row<ReleasePlanMilestoneStrategy>,
-    ReleasePlanMilestoneStrategy,
-    string
-> {
+export class ReleasePlanMilestoneStrategyStore
+    extends CRUDStore<
+        ReleasePlanMilestoneStrategy,
+        ReleasePlanMilestoneStrategyWriteModel,
+        Row<ReleasePlanMilestoneStrategy>,
+        ReleasePlanMilestoneStrategy,
+        string
+    >
+    implements IReleasePlanMilestoneStrategyStore
+{
     constructor(db: Db, config: CrudStoreConfig) {
         super(TABLE, db, config);
     }
@@ -79,7 +88,7 @@ export class ReleasePlanMilestoneStrategyStore extends CRUDStore<
 
     private async updateStrategy(
         strategyId: string,
-        { segments, ...strategy }: ReleasePlanMilestoneStrategyWriteModel,
+        { segments, ...strategy }: MilestoneStrategyConfig,
     ): Promise<ReleasePlanMilestoneStrategy> {
         const rows = await this.db(this.tableName)
             .where({ id: strategyId })
@@ -90,7 +99,7 @@ export class ReleasePlanMilestoneStrategyStore extends CRUDStore<
 
     async upsert(
         strategyId: string,
-        { segments, ...strategy }: ReleasePlanMilestoneStrategyWriteModel,
+        { segments, ...strategy }: MilestoneStrategyConfig,
     ): Promise<ReleasePlanMilestoneStrategy> {
         const releasePlanMilestoneStrategy = await this.updateStrategy(
             strategyId,

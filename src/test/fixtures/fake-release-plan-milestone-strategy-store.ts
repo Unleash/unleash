@@ -18,6 +18,18 @@ export class FakeReleasePlanMilestoneStrategyStore
         return strategy;
     }
 
+    async update(
+        id: string,
+        item: Partial<Omit<ReleasePlanMilestoneStrategy, 'id'>>,
+    ): Promise<ReleasePlanMilestoneStrategy> {
+        const idx = this.items.findIndex((s) => s.id === id);
+        if (idx >= 0) {
+            this.items[idx] = { ...this.items[idx], ...item };
+            return this.items[idx];
+        }
+        return {} as ReleasePlanMilestoneStrategy;
+    }
+
     async upsert(
         _strategyId: string,
         _strategy: MilestoneStrategyConfig,

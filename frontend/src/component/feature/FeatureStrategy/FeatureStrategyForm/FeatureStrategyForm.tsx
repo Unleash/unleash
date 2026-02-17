@@ -47,6 +47,8 @@ import { Badge } from 'component/common/Badge/Badge';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 
+import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
+
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
     projectId: string;
@@ -186,6 +188,7 @@ export const FeatureStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
+    const { segments: availableSegments } = useAssignableSegments();
 
     useEffect(() => {
         trackEvent('new-strategy-form', {
@@ -429,9 +432,7 @@ export const FeatureStrategyForm = ({
                             <FeatureStrategySegment
                                 segments={segments}
                                 setSegments={setSegments}
-                                selectableSegmentFilter={({ project }) =>
-                                    !project || project === projectId
-                                }
+                                availableSegments={availableSegments}
                             />
 
                             <StyledBox>

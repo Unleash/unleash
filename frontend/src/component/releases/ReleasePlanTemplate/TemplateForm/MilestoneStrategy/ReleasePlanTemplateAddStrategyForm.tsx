@@ -30,6 +30,7 @@ import {
 import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle.tsx';
 import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment.tsx';
+import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -127,6 +128,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     const [currentStrategy, setCurrentStrategy] = useState(strategy);
     const [activeTab, setActiveTab] = useState(0);
     const { segments: allSegments } = useSegments();
+    const { segments: availableSegments } = useAssignableSegments();
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { strategyDefinition } = useStrategy(strategy?.strategyName);
     const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
@@ -288,7 +290,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                         <FeatureStrategySegment
                             segments={segments}
                             setSegments={setSegments}
-                            selectableSegmentFilter={({ project }) => !project}
+                            availableSegments={availableSegments}
                         />
                         <StyledBox>
                             <StyledDivider />

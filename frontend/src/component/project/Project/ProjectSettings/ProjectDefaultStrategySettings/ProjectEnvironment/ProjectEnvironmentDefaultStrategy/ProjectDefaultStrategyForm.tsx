@@ -24,6 +24,7 @@ import {
     PROJECT_DEFAULT_STRATEGY_WRITE,
     UPDATE_PROJECT,
 } from '@server/types/permissions';
+import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments';
 
 interface IProjectDefaultStrategyFormProps {
     projectId: string;
@@ -82,6 +83,7 @@ export const ProjectDefaultStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
+    const { segments: availableSegments } = useAssignableSegments();
 
     const navigate = useNavigate();
 
@@ -151,9 +153,7 @@ export const ProjectDefaultStrategyForm = ({
             <FeatureStrategySegment
                 segments={segments}
                 setSegments={setSegments}
-                selectableSegmentFilter={({ project }) =>
-                    !project || project === projectId
-                }
+                availableSegments={availableSegments}
             />
             <FeatureStrategyConstraints
                 strategy={strategy as any}

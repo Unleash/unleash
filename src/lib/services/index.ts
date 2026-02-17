@@ -36,7 +36,7 @@ import EdgeService, {
     createFakeEdgeService,
     createTransactionalEdgeService,
 } from './edge-service.js';
-import PatService from './pat-service.js';
+import PatService from '../features/pat/pat-service.js';
 import { PublicSignupTokenService } from './public-signup-token-service.js';
 import { LastSeenService } from '../features/metrics/last-seen/last-seen-service.js';
 import { InstanceStatsService } from '../features/instance-stats/instance-stats-service.js';

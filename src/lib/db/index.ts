@@ -35,7 +35,7 @@ import UserSplashStore from './user-splash-store.js';
 import RoleStore from './role-store.js';
 import SegmentStore from '../features/segment/segment-store.js';
 import GroupStore from './group-store.js';
-import PatStore from './pat-store.js';
+import PatStore from '../features/pat/pat-store.js';
 import { PublicSignupTokenStore } from './public-signup-token-store.js';
 import { FavoriteFeaturesStore } from './favorite-features-store.js';
 import { FavoriteProjectsStore } from './favorite-projects-store.js';

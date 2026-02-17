@@ -4,16 +4,16 @@ import {
     type IUnleashStores,
     PatCreatedEvent,
     PatDeletedEvent,
-} from '../types/index.js';
-import type { Logger } from '../logger.js';
-import type { IPatStore } from '../types/stores/pat-store.js';
+} from '../../types/index.js';
+import type { Logger } from '../../logger.js';
+import type { IPatStore } from './pat-store-type.js';
 import crypto from 'crypto';
-import BadDataError from '../error/bad-data-error.js';
-import NameExistsError from '../error/name-exists-error.js';
-import { OperationDeniedError } from '../error/operation-denied-error.js';
-import { PAT_LIMIT } from '../util/constants.js';
-import type EventService from '../features/events/event-service.js';
-import type { CreatePatSchema, PatSchema } from '../openapi/index.js';
+import BadDataError from '../../error/bad-data-error.js';
+import NameExistsError from '../../error/name-exists-error.js';
+import { OperationDeniedError } from '../../error/operation-denied-error.js';
+import { PAT_LIMIT } from '../../util/constants.js';
+import type EventService from '../events/event-service.js';
+import type { CreatePatSchema, PatSchema } from '../../openapi/index.js';
 
 export default class PatService {
     private config: IUnleashConfig;

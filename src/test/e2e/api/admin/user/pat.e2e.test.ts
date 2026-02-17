@@ -4,7 +4,7 @@ import {
 } from '../../../helpers/test-helper.js';
 import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
 import getLogger from '../../../../fixtures/no-logger.js';
-import type { IPatStore } from '../../../../../lib/types/stores/pat-store.js';
+import type { IPatStore } from '../../../../../lib/features/pat/pat-store-type.js';
 
 let app: IUnleashTest;
 let db: ITestDb;

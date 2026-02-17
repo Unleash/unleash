@@ -1,4 +1,4 @@
-import type { Store } from './store.js';
+import type { Store } from '../../types/stores/store.js';
 import type { CreatePatSchema, PatSchema } from '../../openapi/index.js';
 
 export interface IPatStore extends Store<PatSchema, number> {

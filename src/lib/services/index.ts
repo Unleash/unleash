@@ -601,6 +601,7 @@ export {
     FrontendApiService,
     EdgeService,
     PatService,
+    createFakePatService,
     PublicSignupTokenService,
     LastSeenService,
     InstanceStatsService,

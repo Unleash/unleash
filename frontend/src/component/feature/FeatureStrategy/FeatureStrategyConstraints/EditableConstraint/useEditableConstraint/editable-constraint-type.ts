@@ -7,8 +7,10 @@ import {
     type NumOperator,
     type SemVerOperator,
     type MultiValueOperator,
+    type RegexOperator,
     isNumOperator,
     isSemVerOperator,
+    isRegexOperator,
 } from 'constants/operators';
 import type { IConstraint } from 'interfaces/strategy';
 
@@ -30,6 +32,11 @@ export type EditableSemVerConstraint = EditableConstraintBase & {
     value: string;
 };
 
+export type EditableRegexConstraint = EditableConstraintBase & {
+    operator: RegexOperator;
+    value: string;
+};
+
 export type EditableMultiValueConstraint = EditableConstraintBase & {
     operator: MultiValueOperator;
     values: Set<string>;
@@ -38,7 +45,8 @@ export type EditableMultiValueConstraint = EditableConstraintBase & {
 export type EditableSingleValueConstraint =
     | EditableNumberConstraint
     | EditableDateConstraint
-    | EditableSemVerConstraint;
+    | EditableSemVerConstraint
+    | EditableRegexConstraint;
 
 export type EditableConstraint =
     | EditableSingleValueConstraint
@@ -66,6 +74,11 @@ export const isSemVerConstraint = (
     constraint: EditableConstraint,
 ): constraint is EditableSemVerConstraint =>
     isSemVerOperator(constraint.operator);
+
+export const isRegexConstraint = (
+    constraint: EditableConstraint,
+): constraint is EditableRegexConstraint =>
+    isRegexOperator(constraint.operator);
 
 export const fromIConstraint = (
     constraint: IConstraint,

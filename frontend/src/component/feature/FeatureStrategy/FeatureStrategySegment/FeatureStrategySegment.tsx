@@ -14,7 +14,7 @@ import { RecentlyUsedSegments } from './RecentlyUsedSegments/RecentlyUsedSegment
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
-    availableSegments?: ISegment[];
+    availableSegments: ISegment[];
 }
 
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
@@ -30,9 +30,6 @@ export const FeatureStrategySegment = ({
     availableSegments,
 }: IFeatureStrategySegmentProps) => {
     const { strategySegmentsLimit } = useSegmentLimits();
-    if (!availableSegments || availableSegments.length === 0) {
-        return null;
-    }
 
     const atStrategySegmentsLimit: boolean = Boolean(
         strategySegmentsLimit &&

@@ -83,7 +83,9 @@ export const ProjectDefaultStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
-    const { segments: availableSegments } = useAssignableSegments();
+    const { segments: assignableSegments = [] } = useAssignableSegments();
+    const showSegmentSelector =
+        assignableSegments.length > 0 || segments.length > 0;
 
     const navigate = useNavigate();
 
@@ -150,11 +152,14 @@ export const ProjectDefaultStrategyForm = ({
                     }));
                 }}
             />
-            <FeatureStrategySegment
-                segments={segments}
-                setSegments={setSegments}
-                availableSegments={availableSegments}
-            />
+
+            {showSegmentSelector ? (
+                <FeatureStrategySegment
+                    segments={segments}
+                    setSegments={setSegments}
+                    availableSegments={assignableSegments}
+                />
+            ) : null}
             <FeatureStrategyConstraints
                 strategy={strategy as any}
                 setStrategy={setStrategy}

@@ -188,7 +188,9 @@ export const FeatureStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
-    const { segments: availableSegments } = useAssignableSegments();
+    const { segments: assignableSegments = [] } = useAssignableSegments();
+    const showSegmentSelector =
+        assignableSegments.length > 0 || segments.length > 0;
 
     useEffect(() => {
         trackEvent('new-strategy-form', {
@@ -429,16 +431,21 @@ export const FeatureStrategyForm = ({
                                 only be evaluated for users and applications
                                 that match the specified preconditions.
                             </Alert>
-                            <FeatureStrategySegment
-                                segments={segments}
-                                setSegments={setSegments}
-                                availableSegments={availableSegments}
-                            />
 
-                            <StyledBox>
-                                <StyledDivider />
-                                <StyledConstraintSeparator />
-                            </StyledBox>
+                            {showSegmentSelector ? (
+                                <>
+                                    <FeatureStrategySegment
+                                        segments={segments}
+                                        setSegments={setSegments}
+                                        availableSegments={assignableSegments}
+                                    />
+
+                                    <StyledBox>
+                                        <StyledDivider />
+                                        <StyledConstraintSeparator />
+                                    </StyledBox>
+                                </>
+                            ) : null}
                             <FeatureStrategyConstraints
                                 strategy={strategy}
                                 setStrategy={setStrategy}

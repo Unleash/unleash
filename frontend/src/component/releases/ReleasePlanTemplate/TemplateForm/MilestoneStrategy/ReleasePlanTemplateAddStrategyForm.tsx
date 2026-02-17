@@ -128,7 +128,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     const [currentStrategy, setCurrentStrategy] = useState(strategy);
     const [activeTab, setActiveTab] = useState(0);
     const { segments: allSegments } = useSegments();
-    const { segments: availableSegments } = useAssignableSegments();
+    const { segments: assignableSegments = [] } = useAssignableSegments();
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { strategyDefinition } = useStrategy(strategy?.strategyName);
     const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
@@ -137,6 +137,9 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         currentStrategy?.parameters &&
             'stickiness' in currentStrategy?.parameters,
     );
+
+    const showSegmentSelector =
+        assignableSegments.length > 0 || segments.length > 0;
 
     const stickiness =
         currentStrategy?.parameters &&
@@ -287,15 +290,20 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                             be evaluated for users and applications that match
                             the specified preconditions.
                         </Alert>
-                        <FeatureStrategySegment
-                            segments={segments}
-                            setSegments={setSegments}
-                            availableSegments={availableSegments}
-                        />
-                        <StyledBox>
-                            <StyledDivider />
-                            <StyledConstraintSeparator />
-                        </StyledBox>
+                        {showSegmentSelector ? (
+                            <>
+                                <FeatureStrategySegment
+                                    segments={segments}
+                                    setSegments={setSegments}
+                                    availableSegments={assignableSegments}
+                                />
+
+                                <StyledBox>
+                                    <StyledDivider />
+                                    <StyledConstraintSeparator />
+                                </StyledBox>
+                            </>
+                        ) : null}
                         <FeatureStrategyConstraints
                             strategy={currentStrategy}
                             setStrategy={setCurrentStrategy}

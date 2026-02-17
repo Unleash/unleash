@@ -194,8 +194,8 @@
     "semver": "^7.7.3",
     "tough-cookie": "4.1.4",
     "brace-expansion": "2.0.2",
-    "@wesleytodd/openapi/path-to-regexp": "6.3.0",
-    "router/path-to-regexp": "1.9.0",
+    "@wesleytodd/openapi/path-to-regexp": "8.3.0",
+    "router/path-to-regexp": "8.3.0",
     "prompt": "link:./node_modules/.cache/null"
   },
   "lint-staged": {

@@ -1,11 +1,10 @@
 import type { ReleasePlanMilestoneStrategy } from '../../lib/features/release-plans/release-plan-milestone-strategy.js';
-import type { MilestoneStrategyColumnUpdate } from '../../lib/features/release-plans/types/release-plan-milestone-strategy-store-type.js';
+import type { IStrategyConfig } from '../../lib/types/model.js';
 
 export class FakeReleasePlanMilestoneStrategyStore {
-    async updateWithSegments(
+    async upsert(
         _strategyId: string,
-        _updates: MilestoneStrategyColumnUpdate,
-        _segments?: number[],
+        _strategy: IStrategyConfig & { strategyName: string },
     ): Promise<ReleasePlanMilestoneStrategy> {
         return {} as ReleasePlanMilestoneStrategy;
     }

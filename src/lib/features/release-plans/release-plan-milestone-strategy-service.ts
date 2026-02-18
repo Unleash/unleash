@@ -45,7 +45,7 @@ export class ReleasePlanMilestoneStrategyService {
         context: MilestoneStrategyContext,
         auditUser: IAuditUser,
         user?: IUser,
-    ): Promise<void> {
+    ): Promise<MilestoneStrategyConfig> {
         const { projectId, environment, featureName } = context;
 
         let isActive: boolean;
@@ -66,10 +66,15 @@ export class ReleasePlanMilestoneStrategyService {
             );
         }
 
-        await this.milestoneStrategyStore.upsert(id, strategy);
+        const updatedStrategy = await this.milestoneStrategyStore.upsert(
+            id,
+            strategy,
+        );
 
         this.logger.info(
             `${auditUser.username} updates milestone strategy ${id} for feature ${context.featureName}`,
         );
+
+        return updatedStrategy;
     }
 }

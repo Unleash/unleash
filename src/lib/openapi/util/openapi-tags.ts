@@ -133,6 +133,10 @@ const OPENAPI_TAGS = [
             'Endpoints for managing [Service Accounts](https://docs.getunleash.io/concepts/service-accounts), which enable programmatic access to the Unleash API.',
     },
     {
+        name: 'Signup',
+        description: 'Endpoints related to signup and account setup.',
+    },
+    {
         name: 'Strategies',
         description:
             'Create, update, delete, manage [custom strategies](https://docs.getunleash.io/concepts/activation-strategies#custom-strategies).',

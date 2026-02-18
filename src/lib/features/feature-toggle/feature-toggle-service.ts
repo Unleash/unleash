@@ -504,7 +504,7 @@ export class FeatureToggleService {
         }
 
         if (operator === REGEX) {
-            await validateRegex(constraint.value);
+            validateRegex(constraint.value);
         }
 
         if (await this.contextFieldStore.exists(constraint.contextName)) {

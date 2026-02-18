@@ -59,7 +59,6 @@ process.nextTick(async () => {
                         readOnlyUsers: true,
                         readOnlyUsersUI: true,
                         privateProjectMiddlewareMove: true,
-                        datePickerRangeConstraints: true,
                     },
                 },
                 authentication: {

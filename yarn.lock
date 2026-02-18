@@ -6457,10 +6457,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"re2js@npm:^1.2.1":
-  version: 1.2.1
-  resolution: "re2js@npm:1.2.1"
-  checksum: 10c0/efd8a3c47754f27e40feb2e2801c3622f009423eb3987f12ab4a8e52f3da4677590474499f181cc375e13d66634ac02d6b99ef0d9000fa327e9186dcd750e692
+"re2js@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "re2js@npm:1.2.2"
+  checksum: 10c0/423b058c205cb35b5d89b401268f0587798d33cefe94e43863c428b9bd0eb993102658201b52ffd13338e657a8e81d4a99a2de11d43a71303ad155065d8ea95c
   languageName: node
   linkType: hard
 
@@ -7861,7 +7861,7 @@ __metadata:
     pkginfo: "npm:^0.4.1"
     prom-client: "npm:^15.0.0"
     proxyquire: "npm:2.1.3"
-    re2js: "npm:^1.2.1"
+    re2js: "npm:^1.2.2"
     sanitize-filename: "npm:^1.6.3"
     semver: "npm:^7.7.3"
     serve-favicon: "npm:^2.5.0"

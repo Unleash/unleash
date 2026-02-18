@@ -61,6 +61,7 @@ process.nextTick(async () => {
                         privateProjectMiddlewareMove: true,
                         datePickerRangeConstraints: true,
                         regexConstraintOperator: true,
+                        updateMilestoneStrategy: true,
                     },
                 },
                 authentication: {

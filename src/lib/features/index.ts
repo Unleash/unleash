@@ -16,3 +16,4 @@ export * from './user-subscriptions/createUserSubscriptionsService.js';
 export * from './context/createContextService.js';
 export * from './feature-links/createFeatureLinkService.js';
 export * from './metrics/impact/impact-register.js';
+export * from './pat/createPatService.js';

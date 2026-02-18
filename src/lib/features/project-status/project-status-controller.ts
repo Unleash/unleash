@@ -38,7 +38,8 @@ export default class ProjectStatusController extends Controller {
             permission: NONE,
             middleware: [
                 this.openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Projects'],
+                    release: { beta: '7', stable: '8' },
                     operationId: 'getProjectStatus',
                     summary: 'Get project status',
                     description:

@@ -36,7 +36,11 @@ import EdgeService, {
     createFakeEdgeService,
     createTransactionalEdgeService,
 } from './edge-service.js';
-import PatService from './pat-service.js';
+import PatService from '../features/pat/pat-service.js';
+import {
+    createPatService,
+    createFakePatService,
+} from '../features/pat/createPatService.js';
 import { PublicSignupTokenService } from './public-signup-token-service.js';
 import { LastSeenService } from '../features/metrics/last-seen/last-seen-service.js';
 import { InstanceStatsService } from '../features/instance-stats/instance-stats-service.js';
@@ -175,6 +179,11 @@ import type FeatureLinkService from '../features/feature-links/feature-link-serv
 import { createUserService } from '../features/users/createUserService.js';
 import { UiConfigService } from '../ui-config/ui-config-service.js';
 import { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
+import {
+    createFakeReleasePlanMilestoneStrategyService,
+    createReleasePlanMilestoneStrategyService,
+} from '../features/release-plans/createReleasePlanMilestoneStrategyService.js';
+import type { ReleasePlanMilestoneStrategyService } from '../features/release-plans/release-plan-milestone-strategy-service.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -361,6 +370,18 @@ export const createServices = (
         : withFakeTransactional(
               createFakeFeatureToggleService(config).featureToggleService,
           );
+
+    const releasePlanMilestoneStrategyService = db
+        ? withTransactional(
+              (db) => createReleasePlanMilestoneStrategyService(db, config),
+              db,
+          )
+        : withFakeTransactional(
+              createFakeReleasePlanMilestoneStrategyService(config)
+                  .releasePlanMilestoneStrategyService,
+          );
+    const transactionalReleasePlanMilestoneStrategyService =
+        releasePlanMilestoneStrategyService;
     const transactionalFeatureToggleService = featureToggleService;
     const transactionalGroupService = (txDb: Knex.Transaction) =>
         createGroupService(txDb, config);
@@ -400,7 +421,9 @@ export const createServices = (
           )
         : withFakeTransactional(createFakeEdgeService(config));
 
-    const patService = new PatService(stores, config, eventService);
+    const patService = db
+        ? createPatService(db, config)
+        : createFakePatService(config);
 
     const publicSignupTokenService = new PublicSignupTokenService(
         stores,
@@ -517,6 +540,7 @@ export const createServices = (
         schedulerService,
         configurationRevisionService,
         transactionalFeatureToggleService,
+        transactionalReleasePlanMilestoneStrategyService,
         transactionalGroupService,
         privateProjectChecker,
         dependentFeaturesService,
@@ -577,6 +601,7 @@ export {
     FrontendApiService,
     EdgeService,
     PatService,
+    createFakePatService,
     PublicSignupTokenService,
     LastSeenService,
     InstanceStatsService,
@@ -653,6 +678,7 @@ export interface IUnleashServices {
     schedulerService: SchedulerService;
     eventAnnouncerService: EventAnnouncerService;
     transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
+    transactionalReleasePlanMilestoneStrategyService: WithTransactional<ReleasePlanMilestoneStrategyService>;
     transactionalGroupService: (db: Knex.Transaction) => GroupService;
     privateProjectChecker: IPrivateProjectChecker;
     dependentFeaturesService: DependentFeaturesService;

@@ -73,7 +73,8 @@ export type IFlagKey =
     | 'remoteMcpServer'
     | 'datePickerRangeConstraints'
     | 'regexConstraintOperator'
-    | 'signupDialog';
+    | 'signupDialog'
+    | 'updateMilestoneStrategy';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -328,6 +329,10 @@ const flags: IFlags = {
     ),
     signupDialog: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SIGNUP_DIALOG,
+        false,
+    ),
+    updateMilestoneStrategy: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_UPDATE_MILESTONE_STRATEGY,
         false,
     ),
 };

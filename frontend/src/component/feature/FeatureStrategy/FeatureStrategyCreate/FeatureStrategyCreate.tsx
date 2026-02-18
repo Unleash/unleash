@@ -233,9 +233,7 @@ export const FeatureStrategyCreate = () => {
                     <NewStrategyVariants
                         strategy={strategy}
                         setStrategy={setStrategy}
-                        environment={environmentId}
-                        projectId={projectId}
-                        editable
+                        canRenamePreexistingVariants
                     />
                 }
                 Limit={

@@ -91,6 +91,7 @@ export type UiFlags = {
     datePickerRangeConstraints?: boolean;
     regexConstraintOperator?: boolean;
     signupDialog?: boolean;
+    updateMilestoneStrategy?: boolean;
 };
 
 export interface IVersionInfo {

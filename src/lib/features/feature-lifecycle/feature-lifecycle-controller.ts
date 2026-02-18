@@ -57,7 +57,8 @@ export default class FeatureLifecycleController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Features'],
+                    release: { beta: '7', stable: '8' },
                     summary: 'Get feature lifecycle',
                     description:
                         'Information about the lifecycle stages of the feature.',
@@ -78,7 +79,8 @@ export default class FeatureLifecycleController extends Controller {
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Features'],
+                    release: { beta: '7', stable: '8' },
                     summary: 'Set feature completed',
                     description: 'This will set the feature as completed.',
                     operationId: 'complete',
@@ -101,7 +103,8 @@ export default class FeatureLifecycleController extends Controller {
             acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Features'],
+                    release: { beta: '7', stable: '8' },
                     summary: 'Set feature uncompleted',
                     description: 'This will set the feature as uncompleted.',
                     operationId: 'uncomplete',

@@ -287,8 +287,6 @@ export const FeatureStrategyEdit = () => {
                     <NewStrategyVariants
                         strategy={strategy}
                         setStrategy={setStrategy}
-                        environment={environmentId}
-                        projectId={projectId}
                     />
                 }
             />

@@ -184,8 +184,6 @@ export const EditChange = ({
                         <NewStrategyVariants
                             strategy={strategy}
                             setStrategy={setStrategy}
-                            environment={environment}
-                            projectId={projectId}
                         />
                     }
                 />

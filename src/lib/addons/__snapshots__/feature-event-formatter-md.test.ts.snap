@@ -32,46 +32,6 @@ exports[`Should format specialised text for events when constraints and rollout 
 }
 `;
 
-exports[`Should format specialised text for events when default strategy updated 1`] = `
-{
-  "label": "Flag strategy updated",
-  "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is one of (x,y), appName not is one of (x)]",
-  "url": "unleashUrl/projects/default/features/aaa",
-}
-`;
-
-exports[`Should format specialised text for events when default strategy updated 2`] = `
-{
-  "label": "Flag strategy updated",
-  "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is not one of (x,y), appName not is not one of (x)]",
-  "url": "unleashUrl/projects/default/features/aaa",
-}
-`;
-
-exports[`Should format specialised text for events when default strategy updated 3`] = `
-{
-  "label": "Flag strategy updated",
-  "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is a string that contains (x,y), appName not is a string that contains (x)]",
-  "url": "unleashUrl/projects/default/features/aaa",
-}
-`;
-
-exports[`Should format specialised text for events when default strategy updated 4`] = `
-{
-  "label": "Flag strategy updated",
-  "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is a string that starts with (x,y), appName not is a string that starts with (x)]",
-  "url": "unleashUrl/projects/default/features/aaa",
-}
-`;
-
-exports[`Should format specialised text for events when default strategy updated 5`] = `
-{
-  "label": "Flag strategy updated",
-  "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is a string that ends with (x,y), appName not is a string that ends with (x)]",
-  "url": "unleashUrl/projects/default/features/aaa",
-}
-`;
-
 exports[`Should format specialised text for events when default strategy updated with numeric constraint DATE_AFTER 1`] = `
 {
   "label": "Flag strategy updated",
@@ -148,6 +108,54 @@ exports[`Should format specialised text for events when default strategy updated
 {
   "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a SemVer less than 4] to empty set of constraints",
+  "url": "unleashUrl/projects/default/features/aaa",
+}
+`;
+
+exports[`Should format specialised text for events when default strategy updated with operator IN 1`] = `
+{
+  "label": "Flag strategy updated",
+  "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is one of (x,y), appName not is one of (x)]",
+  "url": "unleashUrl/projects/default/features/aaa",
+}
+`;
+
+exports[`Should format specialised text for events when default strategy updated with operator NOT_IN 1`] = `
+{
+  "label": "Flag strategy updated",
+  "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is not one of (x,y), appName not is not one of (x)]",
+  "url": "unleashUrl/projects/default/features/aaa",
+}
+`;
+
+exports[`Should format specialised text for events when default strategy updated with operator REGEX 1`] = `
+{
+  "label": "Flag strategy updated",
+  "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName matches regex [x|y], appName not matches regex x]",
+  "url": "unleashUrl/projects/default/features/aaa",
+}
+`;
+
+exports[`Should format specialised text for events when default strategy updated with operator STR_CONTAINS 1`] = `
+{
+  "label": "Flag strategy updated",
+  "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is a string that contains (x,y), appName not is a string that contains (x)]",
+  "url": "unleashUrl/projects/default/features/aaa",
+}
+`;
+
+exports[`Should format specialised text for events when default strategy updated with operator STR_ENDS_WITH 1`] = `
+{
+  "label": "Flag strategy updated",
+  "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is a string that ends with (x,y), appName not is a string that ends with (x)]",
+  "url": "unleashUrl/projects/default/features/aaa",
+}
+`;
+
+exports[`Should format specialised text for events when default strategy updated with operator STR_STARTS_WITH 1`] = `
+{
+  "label": "Flag strategy updated",
+  "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is a string that starts with (x,y), appName not is a string that starts with (x)]",
   "url": "unleashUrl/projects/default/features/aaa",
 }
 `;

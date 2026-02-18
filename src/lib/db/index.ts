@@ -2,7 +2,6 @@ import {
     type IUnleashConfig,
     type IUnleashStores,
     ReleasePlanMilestoneStore,
-    ReleasePlanMilestoneStrategyStore,
     ReleasePlanStore,
     ReleasePlanTemplateStore,
 } from '../types/index.js';
@@ -35,7 +34,7 @@ import UserSplashStore from './user-splash-store.js';
 import RoleStore from './role-store.js';
 import SegmentStore from '../features/segment/segment-store.js';
 import GroupStore from './group-store.js';
-import PatStore from './pat-store.js';
+import PatStore from '../features/pat/pat-store.js';
 import { PublicSignupTokenStore } from './public-signup-token-store.js';
 import { FavoriteFeaturesStore } from './favorite-features-store.js';
 import { FavoriteProjectsStore } from './favorite-projects-store.js';
@@ -69,6 +68,8 @@ import { FeatureLinkStore } from '../features/feature-links/feature-link-store.j
 import { UnknownFlagsStore } from '../features/metrics/unknown-flags/unknown-flags-store.js';
 import { FeatureLinksReadModel } from '../features/feature-links/feature-links-read-model.js';
 import { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
+import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
+import { ReleasePlanMilestoneStrategyStore } from '../features/release-plans/release-plan-milestone-strategy-store.js';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -209,5 +210,6 @@ export const createStores = (
         featureLinkStore: new FeatureLinkStore(db, config),
         unknownFlagsStore: new UnknownFlagsStore(db, getLogger),
         featureLinkReadModel: new FeatureLinksReadModel(db, eventBus),
+        edgeTokenStore: new EdgeTokenStore(db, eventBus, config),
     };
 };

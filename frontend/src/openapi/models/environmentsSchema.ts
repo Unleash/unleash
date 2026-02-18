@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EnvironmentSchema } from './environmentSchema.js';
+import type { EnvironmentSchema } from './environmentSchema';
 
 /**
  * A versioned list of environments

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOfTwosevenAction } from './changeRequestCreateFeatureSchemaOneOfTwosevenAction.js';
-import type { ChangeRequestCreateFeatureSchemaOneOfTwosevenPayload } from './changeRequestCreateFeatureSchemaOneOfTwosevenPayload.js';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwosevenAction } from './changeRequestCreateFeatureSchemaOneOfTwosevenAction';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwosevenPayload } from './changeRequestCreateFeatureSchemaOneOfTwosevenPayload';
 
 /**
  * Remove a release plan from feature environment.

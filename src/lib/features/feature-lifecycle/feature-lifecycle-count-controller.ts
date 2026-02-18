@@ -47,7 +47,8 @@ export default class FeatureLifecycleCountController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Unstable'],
+                    tags: ['Features'],
+                    release: { beta: '7', stable: '8' },
                     summary: 'Get all features lifecycle stage count',
                     description:
                         'Information about the number of features in each lifecycle stage.',

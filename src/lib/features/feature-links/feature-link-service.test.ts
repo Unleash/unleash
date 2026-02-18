@@ -7,14 +7,20 @@ import {
     OperationDeniedError,
 } from '../../error/index.js';
 import { fakeImpactMetricsResolver } from '../../../test/fixtures/fake-impact-metrics.js';
+import { FakeFeaturesReadModel } from '../feature-toggle/fakes/fake-features-read-model.js';
+
+const existingFeature = new FakeFeaturesReadModel({ featureExists: true });
 
 test('create, update and delete feature link', async () => {
     const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
     const { featureLinkStore, featureLinkService } =
-        createFakeFeatureLinkService({
-            getLogger,
-            flagResolver,
-        } as unknown as IUnleashConfig);
+        createFakeFeatureLinkService(
+            {
+                getLogger,
+                flagResolver,
+            } as unknown as IUnleashConfig,
+            { featuresReadModel: existingFeature },
+        );
 
     flagResolver.impactMetrics.defineCounter(
         'feature_link_count',
@@ -92,10 +98,13 @@ test('cannot delete/update non existent link', async () => {
 
 test('cannot create/update invalid link', async () => {
     const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
-    const { featureLinkService } = createFakeFeatureLinkService({
-        getLogger,
-        flagResolver,
-    } as unknown as IUnleashConfig);
+    const { featureLinkService } = createFakeFeatureLinkService(
+        {
+            getLogger,
+            flagResolver,
+        } as unknown as IUnleashConfig,
+        { featuresReadModel: existingFeature },
+    );
 
     await expect(
         featureLinkService.createLink(
@@ -122,12 +131,41 @@ test('cannot create/update invalid link', async () => {
     ).rejects.toThrow(BadDataError);
 });
 
+test('cannot create link for non-existent feature', async () => {
+    const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
+    const nonExistingFeature = new FakeFeaturesReadModel({
+        featureExists: false,
+    });
+    const { featureLinkService } = createFakeFeatureLinkService(
+        {
+            getLogger,
+            flagResolver,
+        } as unknown as IUnleashConfig,
+        { featuresReadModel: nonExistingFeature },
+    );
+
+    await expect(
+        featureLinkService.createLink(
+            'default',
+            {
+                featureName: 'non-existent-feature',
+                url: 'example.com',
+                title: 'some title',
+            },
+            {} as IAuditUser,
+        ),
+    ).rejects.toThrow(NotFoundError);
+});
+
 test('cannot exceed allowed link count', async () => {
     const flagResolver = { impactMetrics: fakeImpactMetricsResolver() };
-    const { featureLinkService } = createFakeFeatureLinkService({
-        getLogger,
-        flagResolver,
-    } as unknown as IUnleashConfig);
+    const { featureLinkService } = createFakeFeatureLinkService(
+        {
+            getLogger,
+            flagResolver,
+        } as unknown as IUnleashConfig,
+        { featuresReadModel: existingFeature },
+    );
 
     for (let i = 0; i < 10; i++) {
         await featureLinkService.createLink(

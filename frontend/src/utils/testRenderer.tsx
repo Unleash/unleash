@@ -16,6 +16,7 @@ import { FeedbackProvider } from 'component/feedbackNew/FeedbackProvider';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
+import { UnleashFlagProvider } from 'component/providers/UnleashFlagProvider/UnleashFlagProvider.tsx';
 
 export const render = (
     ui: JSX.Element,
@@ -51,13 +52,15 @@ export const render = (
                             <QueryParamProvider adapter={ReactRouter6Adapter}>
                                 <ThemeProvider>
                                     <AnnouncerProvider>
-                                        <StickyProvider>
-                                            <HighlightProvider>
-                                                <EventTimelineProvider>
-                                                    {children}
-                                                </EventTimelineProvider>
-                                            </HighlightProvider>
-                                        </StickyProvider>
+                                        <UnleashFlagProvider>
+                                            <StickyProvider>
+                                                <HighlightProvider>
+                                                    <EventTimelineProvider>
+                                                        {children}
+                                                    </EventTimelineProvider>
+                                                </HighlightProvider>
+                                            </StickyProvider>
+                                        </UnleashFlagProvider>
                                     </AnnouncerProvider>
                                 </ThemeProvider>
                             </QueryParamProvider>

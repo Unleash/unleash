@@ -48,7 +48,7 @@ export const createContextService =
 export const createFakeContextService = (
     config: IUnleashConfig,
 ): ContextService => {
-    const { getLogger, flagResolver, eventBus, isEnterprise } = config;
+    const { getLogger, flagResolver } = config;
     const contextFieldStore = new FakeContextFieldStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const eventService = createFakeEventsService(config);

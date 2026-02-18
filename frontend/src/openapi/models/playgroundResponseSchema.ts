@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundFeatureSchema } from './playgroundFeatureSchema.js';
-import type { PlaygroundRequestSchema } from './playgroundRequestSchema.js';
+import type { PlaygroundFeatureSchema } from './playgroundFeatureSchema';
+import type { PlaygroundRequestSchema } from './playgroundRequestSchema';
 
 /**
  * The state of all features given the provided input.

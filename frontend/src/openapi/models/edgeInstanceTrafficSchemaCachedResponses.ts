@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EdgeLatencyMetricsSchema } from './edgeLatencyMetricsSchema.js';
+import type { EdgeLatencyMetricsSchema } from './edgeLatencyMetricsSchema';
 
 /**
  * A map containing requests that had cached responses.

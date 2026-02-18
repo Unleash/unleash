@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchemaOwnersOneOfItemAnyOf } from './projectSchemaOwnersOneOfItemAnyOf.js';
-import type { ProjectSchemaOwnersOneOfItemAnyOfThree } from './projectSchemaOwnersOneOfItemAnyOfThree.js';
+import type { ProjectSchemaOwnersOneOfItemAnyOf } from './projectSchemaOwnersOneOfItemAnyOf';
+import type { ProjectSchemaOwnersOneOfItemAnyOfThree } from './projectSchemaOwnersOneOfItemAnyOfThree';
 
 export type ProjectSchemaOwnersOneOfItem =
     | ProjectSchemaOwnersOneOfItemAnyOf

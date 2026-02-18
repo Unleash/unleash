@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureTypeSchema } from './featureTypeSchema.js';
-import type { FeatureTypesSchemaVersion } from './featureTypesSchemaVersion.js';
+import type { FeatureTypeSchema } from './featureTypeSchema';
+import type { FeatureTypesSchemaVersion } from './featureTypesSchemaVersion';
 
 /**
  * A list of [feature flag types](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types) and the schema version used to represent those feature types.

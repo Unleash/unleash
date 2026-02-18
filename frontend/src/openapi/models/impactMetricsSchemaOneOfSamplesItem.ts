@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ImpactMetricsSchemaOneOfSamplesItemLabels } from './impactMetricsSchemaOneOfSamplesItemLabels.js';
+import type { ImpactMetricsSchemaOneOfSamplesItemLabels } from './impactMetricsSchemaOneOfSamplesItemLabels';
 
 /**
  * A sample of a numeric metric with a value and optional labels

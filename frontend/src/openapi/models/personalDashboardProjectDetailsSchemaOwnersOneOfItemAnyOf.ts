@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfOwnerType } from './personalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfOwnerType.js';
+import type { PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfOwnerType } from './personalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOfOwnerType';
 
 export type PersonalDashboardProjectDetailsSchemaOwnersOneOfItemAnyOf = {
     /** @nullable */

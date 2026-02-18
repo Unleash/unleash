@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RequestsPerSecondSchemaDataResultItemMetric } from './requestsPerSecondSchemaDataResultItemMetric.js';
-import type { RequestsPerSecondSchemaDataResultItemValuesItemItem } from './requestsPerSecondSchemaDataResultItemValuesItemItem.js';
+import type { RequestsPerSecondSchemaDataResultItemMetric } from './requestsPerSecondSchemaDataResultItemMetric';
+import type { RequestsPerSecondSchemaDataResultItemValuesItemItem } from './requestsPerSecondSchemaDataResultItemValuesItemItem';
 
 /**
  * A representation of a single metric to build a line in a graph

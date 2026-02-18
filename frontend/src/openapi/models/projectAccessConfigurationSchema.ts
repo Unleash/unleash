@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectAccessConfigurationSchemaRolesItem } from './projectAccessConfigurationSchemaRolesItem.js';
+import type { ProjectAccessConfigurationSchemaRolesItem } from './projectAccessConfigurationSchemaRolesItem';
 
 /**
  * An object describing roles for a project and what users and groups are part of that role.

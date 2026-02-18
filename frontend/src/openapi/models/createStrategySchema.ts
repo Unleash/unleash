@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateStrategySchemaParametersItem } from './createStrategySchemaParametersItem.js';
+import type { CreateStrategySchemaParametersItem } from './createStrategySchemaParametersItem';
 
 /**
  * The data required to create a strategy type. Refer to the docs on [custom strategy types](https://docs.getunleash.io/concepts/activation-strategies#custom-strategies) for more information.

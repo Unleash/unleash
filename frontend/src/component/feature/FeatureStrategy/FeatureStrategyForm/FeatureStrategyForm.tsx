@@ -47,6 +47,8 @@ import { Badge } from 'component/common/Badge/Badge';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 
+import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
+
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
     projectId: string;
@@ -186,6 +188,9 @@ export const FeatureStrategyForm = ({
         environmentId,
     );
     const { strategyDefinition } = useStrategy(strategy?.name);
+    const { segments: assignableSegments = [] } = useAssignableSegments();
+    const showSegmentSelector =
+        assignableSegments.length > 0 || segments.length > 0;
 
     useEffect(() => {
         trackEvent('new-strategy-form', {
@@ -426,19 +431,22 @@ export const FeatureStrategyForm = ({
                                 only be evaluated for users and applications
                                 that match the specified preconditions.
                             </Alert>
-                            <FeatureStrategySegment
-                                segments={segments}
-                                setSegments={setSegments}
-                                projectId={projectId}
-                            />
 
-                            <StyledBox>
-                                <StyledDivider />
-                                <StyledConstraintSeparator />
-                            </StyledBox>
+                            {showSegmentSelector ? (
+                                <>
+                                    <FeatureStrategySegment
+                                        segments={segments}
+                                        setSegments={setSegments}
+                                        availableSegments={assignableSegments}
+                                    />
+
+                                    <StyledBox>
+                                        <StyledDivider />
+                                        <StyledConstraintSeparator />
+                                    </StyledBox>
+                                </>
+                            ) : null}
                             <FeatureStrategyConstraints
-                                projectId={feature.project}
-                                environmentId={environmentId}
                                 strategy={strategy}
                                 setStrategy={setStrategy}
                             />

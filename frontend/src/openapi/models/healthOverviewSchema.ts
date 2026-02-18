@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema.js';
-import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema.js';
-import type { FeatureSchema } from './featureSchema.js';
-import type { HealthOverviewSchemaMode } from './healthOverviewSchemaMode.js';
-import type { ProjectStatsSchema } from './projectStatsSchema.js';
+import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
+import type { FeatureSchema } from './featureSchema';
+import type { HealthOverviewSchemaMode } from './healthOverviewSchemaMode';
+import type { ProjectStatsSchema } from './projectStatsSchema';
 
 /**
  * An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/concepts/technical-debt)

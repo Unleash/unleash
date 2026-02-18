@@ -2,6 +2,242 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.4.1] - 2026-02-05
+
+### Bug Fixes
+
+- Don't attempt to get fetch strategies for new context fields on every key stroke ([#11152](https://github.com/Unleash/unleash/issues/11152))
+
+- Revert breaking UI change context fields ([#11156](https://github.com/Unleash/unleash/issues/11156))
+
+- Update the UI to use project-based context endpoints when on a project endpoint ([#11160](https://github.com/Unleash/unleash/issues/11160))
+
+- Add tracking ([#11162](https://github.com/Unleash/unleash/issues/11162))
+
+- Add cdn.getunleash.io to media-src ([#11168](https://github.com/Unleash/unleash/issues/11168))
+
+- Correctly list legal values for project context fields ([#11183](https://github.com/Unleash/unleash/issues/11183))
+
+- Context field link in project context list takes you to flags list ([#11184](https://github.com/Unleash/unleash/issues/11184))
+
+- Validate that environment exists before linking to project ([#11186](https://github.com/Unleash/unleash/issues/11186))
+
+- Asset path ([#11195](https://github.com/Unleash/unleash/issues/11195))
+
+- This improves the way we do opena api diffing ([#11208](https://github.com/Unleash/unleash/issues/11208))
+
+- Truncate breadcrumb path name with super long project name ([#11217](https://github.com/Unleash/unleash/issues/11217))
+
+- Include horizontal truncation in Truncator ([#11218](https://github.com/Unleash/unleash/issues/11218))
+
+- Avoid querying for project overviews if we don't have a project ([#11253](https://github.com/Unleash/unleash/issues/11253))
+
+- Don't use project-based context API unless the flag is enabled ([#11256](https://github.com/Unleash/unleash/issues/11256))
+
+- Check that userVersion is defined before comparing to etag ([#11259](https://github.com/Unleash/unleash/issues/11259))
+
+- Private project inner query ([#11270](https://github.com/Unleash/unleash/issues/11270))
+
+- Use universal id extract for feature search ([#11273](https://github.com/Unleash/unleash/issues/11273))
+
+- Client error on feature link missing feature ([#11275](https://github.com/Unleash/unleash/issues/11275))
+
+- Force ordering of hydration events in delta api ([#11284](https://github.com/Unleash/unleash/issues/11284))
+
+- 304 updates when non-environment events change a flag ([#11282](https://github.com/Unleash/unleash/issues/11282))
+
+
+### Documentation
+
+- Add release management overview ([#11212](https://github.com/Unleash/unleash/issues/11212))
+
+- Update rbac.md ([#11227](https://github.com/Unleash/unleash/issues/11227))
+
+- Add SDK compatibility table for impact metrics ([#11260](https://github.com/Unleash/unleash/issues/11260))
+
+
+### Feat
+
+- Group project and global context fields ([#11224](https://github.com/Unleash/unleash/issues/11224))
+
+
+### Features
+
+- Plausible impact metrics add chart ([#11140](https://github.com/Unleash/unleash/issues/11140))
+
+- Initial splash setup ([#11146](https://github.com/Unleash/unleash/issues/11146))
+
+- Add db migration ([#11118](https://github.com/Unleash/unleash/issues/11118))
+
+- Add splash overlay ([#11147](https://github.com/Unleash/unleash/issues/11147))
+
+- Project level context api ([#11149](https://github.com/Unleash/unleash/issues/11149))
+
+- Export project specific context fields ([#11159](https://github.com/Unleash/unleash/issues/11159))
+
+- Import project context fields ([#11161](https://github.com/Unleash/unleash/issues/11161))
+
+- Project context field adoption ([#11166](https://github.com/Unleash/unleash/issues/11166))
+
+- Project context field import with different project ([#11169](https://github.com/Unleash/unleash/issues/11169))
+
+- Trigger the splash screen from new in unleash ([#11170](https://github.com/Unleash/unleash/issues/11170))
+
+- Allow selection of project-scoped context fields in strategy edits ([#11171](https://github.com/Unleash/unleash/issues/11171))
+
+- Impact metrics empty state ([#11179](https://github.com/Unleash/unleash/issues/11179))
+
+- Filter out private project segments from global list ([#11187](https://github.com/Unleash/unleash/issues/11187))
+
+- Add private project guard to segment endpoints ([#11189](https://github.com/Unleash/unleash/issues/11189))
+
+- Do not propagate scheduledAt when environment paused ([#11190](https://github.com/Unleash/unleash/issues/11190))
+
+- Use splash to navigate to new guide ([#11194](https://github.com/Unleash/unleash/issues/11194))
+
+- Add UPDATE_PROJECT_CONTEXT permission and migration. ([#11214](https://github.com/Unleash/unleash/issues/11214))
+
+- Make create/edit project context show up in correct category ([#11215](https://github.com/Unleash/unleash/issues/11215))
+
+- Make generalselect component also accept option groups ([#11223](https://github.com/Unleash/unleash/issues/11223))
+
+- Give project owner UPDATE_PROJECT_CONTEXT permissions ([#11231](https://github.com/Unleash/unleash/issues/11231))
+
+- Give project owner UPDATE_PROJECT_SEGMENT permissions ([#11232](https://github.com/Unleash/unleash/issues/11232))
+
+- Add edgeApiKeyRevision to frontend and sql ([#11241](https://github.com/Unleash/unleash/issues/11241))
+
+- Add include query param to context api to allow different combinations ([#11234](https://github.com/Unleash/unleash/issues/11234))
+
+- Suggest release templates for production environments ([#11279](https://github.com/Unleash/unleash/issues/11279))
+
+
+### Miscellaneous Tasks
+
+- Add safeguards to slack integration ([#11145](https://github.com/Unleash/unleash/issues/11145))
+
+- Update the UI to use project-based context endpoints when on a project endpoint ([#11153](https://github.com/Unleash/unleash/issues/11153))
+
+- Add permission guard to license page ([#11163](https://github.com/Unleash/unleash/issues/11163))
+
+- Change token rate limit log to debug ([#11167](https://github.com/Unleash/unleash/issues/11167))
+
+- Add readOnlyUsers feature flag ([#11173](https://github.com/Unleash/unleash/issues/11173))
+
+- Tweaks to typography ([#11103](https://github.com/Unleash/unleash/issues/11103))
+
+- Delete file that was commited by accident ([#11182](https://github.com/Unleash/unleash/issues/11182))
+
+- Align on url (context-fields -> context) ([#11185](https://github.com/Unleash/unleash/issues/11185))
+
+- Update dependencies to match enterprise ([#11191](https://github.com/Unleash/unleash/issues/11191))
+
+- Add initial RO query and gauge ([#11175](https://github.com/Unleash/unleash/issues/11175))
+
+- Add RO users to instance stats ([#11176](https://github.com/Unleash/unleash/issues/11176))
+
+- Create Reader project role ([#11178](https://github.com/Unleash/unleash/issues/11178))
+
+- Bump docker image to newest node v22 ([#11180](https://github.com/Unleash/unleash/issues/11180))
+
+- Check also role type when checking admin role ([#11197](https://github.com/Unleash/unleash/issues/11197))
+
+- Add seat_type col to users table ([#11196](https://github.com/Unleash/unleash/issues/11196))
+
+- Add readOnlyUsersUI feature flag ([#11199](https://github.com/Unleash/unleash/issues/11199))
+
+- Use project name in breadcrumbs ([#11201](https://github.com/Unleash/unleash/issues/11201))
+
+- Simplify getReadOnlyUsers query ([#11204](https://github.com/Unleash/unleash/issues/11204))
+
+- Add user seatType property ([#11209](https://github.com/Unleash/unleash/issues/11209))
+
+- Show seat type in users table ([#11210](https://github.com/Unleash/unleash/issues/11210))
+
+- Update AddFilterButton text ([#11207](https://github.com/Unleash/unleash/issues/11207))
+
+- Replace update_project permission with update_project_context for project context actions ([#11216](https://github.com/Unleash/unleash/issues/11216))
+
+- Sync read only users total to auth-app ([#11220](https://github.com/Unleash/unleash/issues/11220))
+
+- Use `autoWidth` prop instead of `min-content` and css hacks ([#11222](https://github.com/Unleash/unleash/issues/11222))
+
+- Use Truncator in breadcrumbs ([#11219](https://github.com/Unleash/unleash/issues/11219))
+
+- Sync users seat type to auth app ([#11225](https://github.com/Unleash/unleash/issues/11225))
+
+- Add link to versioning info in admin widget ([#11213](https://github.com/Unleash/unleash/issues/11213))
+
+- Do not assume seat type ([#11229](https://github.com/Unleash/unleash/issues/11229))
+
+- Add tests for project context field permission ([#11226](https://github.com/Unleash/unleash/issues/11226))
+
+- Add readOnlyUsers to resource limits ([#11228](https://github.com/Unleash/unleash/issues/11228))
+
+- No longer default to Regular seat type
+
+- Keep command bar visible in smaller viewports ([#11233](https://github.com/Unleash/unleash/issues/11233))
+
+- Remove unused import in user schema ([#11236](https://github.com/Unleash/unleash/issues/11236))
+
+- Increase size of Milestone name input ([#11239](https://github.com/Unleash/unleash/issues/11239))
+
+- Update lifecycle filters appearance  ([#11221](https://github.com/Unleash/unleash/issues/11221))
+
+- Split useUnleashContext into more specialized, targeted hooks ([#11230](https://github.com/Unleash/unleash/issues/11230))
+
+- Prevent information on private projects from leaking into full context field overview ([#11237](https://github.com/Unleash/unleash/issues/11237))
+
+- Make userId required for new context service method ([#11249](https://github.com/Unleash/unleash/issues/11249))
+
+- Update PAYG trial expiration dialog and banner ([#11252](https://github.com/Unleash/unleash/issues/11252))
+
+- Mount project-level context API unconditionally ([#11258](https://github.com/Unleash/unleash/issues/11258))
+
+- Delete Proclamation component ([#11255](https://github.com/Unleash/unleash/issues/11255))
+
+- Filter stage count by accessible projects ([#11261](https://github.com/Unleash/unleash/issues/11261))
+
+- Add unleash revision id handling ([#11262](https://github.com/Unleash/unleash/issues/11262))
+
+- Export ConfigurationRevisionService from services declaration ([#11266](https://github.com/Unleash/unleash/issues/11266))
+
+- Instance prices endpoint ([#11267](https://github.com/Unleash/unleash/issues/11267))
+
+- Add flag for datepickers invalid dates constraints ([#11269](https://github.com/Unleash/unleash/issues/11269))
+
+- Don't mount a separate router for the conditional middleware ([#11268](https://github.com/Unleash/unleash/issues/11268))
+
+- Prevent invalid date range selection in date calendar ([#11245](https://github.com/Unleash/unleash/issues/11245))
+
+- Bump tar dependency ([#11272](https://github.com/Unleash/unleash/issues/11272))
+
+- Auto adjust date range ([#11274](https://github.com/Unleash/unleash/issues/11274))
+
+- Remove tags that were deprecated and unused ([#11276](https://github.com/Unleash/unleash/issues/11276))
+
+- Update base image to node22.22-alpine3.23 ([#11280](https://github.com/Unleash/unleash/issues/11280))
+
+- Add template from Add strategy modal ([#11278](https://github.com/Unleash/unleash/issues/11278))
+
+- Adds a way to get a measure of distinct counts of types of sdk filters ([#11288](https://github.com/Unleash/unleash/issues/11288))
+
+
+### Refactor
+
+- Test case matching ([#11148](https://github.com/Unleash/unleash/issues/11148))
+
+
+### Styling
+
+- Lint sourcemap line in vite config ([#11200](https://github.com/Unleash/unleash/issues/11200))
+
+
+### Testing
+
+- Add tests for context API include param ([#11235](https://github.com/Unleash/unleash/issues/11235))
+
+
 ## [7.4.0] - 2025-12-12
 
 ### Bug Fixes

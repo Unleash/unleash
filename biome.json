@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
@@ -16,7 +16,7 @@
         "useJsxKeyInIterable": "off",
         "useHookAtTopLevel": "off",
         "noUnusedFunctionParameters": "off",
-        "noUnusedVariables": "off"
+        "noUnusedVariables": "warn"
       },
       "complexity": {
         "noBannedTypes": "off",

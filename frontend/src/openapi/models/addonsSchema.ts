@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AddonSchema } from './addonSchema.js';
-import type { AddonTypeSchema } from './addonTypeSchema.js';
+import type { AddonSchema } from './addonSchema';
+import type { AddonTypeSchema } from './addonTypeSchema';
 
 /**
  * An object containing two things:

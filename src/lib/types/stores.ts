@@ -26,7 +26,7 @@ import type { IUserSplashStore } from './stores/user-splash-store.js';
 import type { IRoleStore } from './stores/role-store.js';
 import type { ISegmentStore } from '../features/segment/segment-store-type.js';
 import type { IGroupStore } from './stores/group-store.js';
-import type { IPatStore } from './stores/pat-store.js';
+import type { IPatStore } from '../features/pat/pat-store-type.js';
 import type { IPublicSignupTokenStore } from './stores/public-signup-token-store.js';
 import type { IFavoriteFeaturesStore } from './stores/favorite-features.js';
 import type { IFavoriteProjectsStore } from './stores/favorite-projects.js';
@@ -58,11 +58,15 @@ import type { IUniqueConnectionReadModel } from '../features/unique-connection/u
 import { ReleasePlanStore } from '../features/release-plans/release-plan-store.js';
 import { ReleasePlanTemplateStore } from '../features/release-plans/release-plan-template-store.js';
 import { ReleasePlanMilestoneStore } from '../features/release-plans/release-plan-milestone-store.js';
-import { ReleasePlanMilestoneStrategyStore } from '../features/release-plans/release-plan-milestone-strategy-store.js';
+import {
+    type IReleasePlanMilestoneStrategyStore,
+    ReleasePlanMilestoneStrategyStore,
+} from '../features/release-plans/release-plan-milestone-strategy-store.js';
 import type { IFeatureLinkStore } from '../features/feature-links/feature-link-store-type.js';
 import type { IUnknownFlagsStore } from '../features/metrics/unknown-flags/unknown-flags-store.js';
 import type { IFeatureLinksReadModel } from '../features/feature-links/feature-links-read-model-type.js';
 import type { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
+import type { IEdgeTokenStore } from './stores/edge-store.js';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -126,10 +130,11 @@ export interface IUnleashStores {
     releasePlanStore: ReleasePlanStore;
     releasePlanTemplateStore: ReleasePlanTemplateStore;
     releasePlanMilestoneStore: ReleasePlanMilestoneStore;
-    releasePlanMilestoneStrategyStore: ReleasePlanMilestoneStrategyStore;
+    releasePlanMilestoneStrategyStore: IReleasePlanMilestoneStrategyStore;
     featureLinkStore: IFeatureLinkStore;
     unknownFlagsStore: IUnknownFlagsStore;
     featureLinkReadModel: IFeatureLinksReadModel;
+    edgeTokenStore: IEdgeTokenStore;
 }
 
 export {
@@ -190,8 +195,10 @@ export {
     ReleasePlanStore,
     ReleasePlanTemplateStore,
     ReleasePlanMilestoneStore,
+    type IReleasePlanMilestoneStrategyStore,
     ReleasePlanMilestoneStrategyStore,
     type IFeatureLinkStore,
     type IUnknownFlagsStore,
     type IFeatureLinksReadModel,
+    type IEdgeTokenStore,
 };

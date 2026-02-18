@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LifecycleTrendsSchemaLifecycleTrends } from './lifecycleTrendsSchemaLifecycleTrends.js';
+import type { LifecycleTrendsSchemaLifecycleTrends } from './lifecycleTrendsSchemaLifecycleTrends';
 
 /**
  * Aggregated view of feature flag lifecycle trends across environments

@@ -4,7 +4,6 @@ on:
   # pull_request:
   #   paths-ignore:
   #     - frontend/**
-  #     - website/**
   schedule: # Run every day
     - cron: '0 8 * * *'
   workflow_dispatch:

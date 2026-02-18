@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ApplicationEnvironmentInstancesSchemaInstancesItem } from './applicationEnvironmentInstancesSchemaInstancesItem.js';
+import type { ApplicationEnvironmentInstancesSchemaInstancesItem } from './applicationEnvironmentInstancesSchemaInstancesItem';
 
 /**
  * Data about an application environment instances that are connected to Unleash via an SDK.

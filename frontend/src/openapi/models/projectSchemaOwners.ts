@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchemaOwnersOneOfItem } from './projectSchemaOwnersOneOfItem.js';
-import type { ProjectSchemaOwnersOneOfSixItem } from './projectSchemaOwnersOneOfSixItem.js';
+import type { ProjectSchemaOwnersOneOfItem } from './projectSchemaOwnersOneOfItem';
+import type { ProjectSchemaOwnersOneOfSixItem } from './projectSchemaOwnersOneOfSixItem';
 
 /**
  * The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead.

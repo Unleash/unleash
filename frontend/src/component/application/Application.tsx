@@ -70,7 +70,7 @@ export const Application = () => {
     const navigate = useNavigate();
     const name = useRequiredPathParam('name');
     const { application, loading } = useApplication(name);
-    const { appName, url, description, icon = 'apps', createdAt } = application;
+    const { appName, url, createdAt } = application;
     const { hasAccess } = useContext(AccessContext);
     const { deleteApplication } = useApplicationsApi();
     const { locationSettings } = useLocationSettings();

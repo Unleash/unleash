@@ -107,7 +107,7 @@ interface FeatureLinksProps {
 const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
     const [showAddLinkDialogue, setShowAddLinkDialogue] = useState(false);
     const [editLink, setEditLink] = useState<FeatureLink | null>(null);
-    const { deleteLink, loading } = useFeatureLinkApi(project, feature);
+    const { deleteLink } = useFeatureLinkApi(project, feature);
     const { setToastData, setToastApiError } = useToast();
     const { refetchFeature } = useFeature(project, feature);
 

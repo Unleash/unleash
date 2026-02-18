@@ -20,6 +20,8 @@ export interface UserData {
     isService?: boolean;
     scimId?: string;
     seatType?: SeatType;
+    companyRole?: string;
+    productUpdatesEmailConsent?: boolean;
 }
 
 export interface IUser {
@@ -37,6 +39,9 @@ export interface IUser {
     accountType?: AccountType;
     scimId?: string;
     seatType?: SeatType;
+    companyRole?: string;
+    productUpdatesEmailConsent?: boolean;
+    shouldSetPassword?: boolean;
     deletedSessions?: number;
     activeSessions?: number;
 }

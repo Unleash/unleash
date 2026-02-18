@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestOneOrManyCreateSchemaOneOfTwonineAction } from './changeRequestOneOrManyCreateSchemaOneOfTwonineAction.js';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfTwoninePayload } from './changeRequestOneOrManyCreateSchemaOneOfTwoninePayload.js';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfTwonineAction } from './changeRequestOneOrManyCreateSchemaOneOfTwonineAction';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfTwoninePayload } from './changeRequestOneOrManyCreateSchemaOneOfTwoninePayload';
 
 /**
  * Start milestone of feature environment release plan.

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AddonTypeSchemaAlertsItemType } from './addonTypeSchemaAlertsItemType.js';
+import type { AddonTypeSchemaAlertsItemType } from './addonTypeSchemaAlertsItemType';
 
 export type AddonTypeSchemaAlertsItem = {
     /** The text of the alert. This is what will be displayed to the user. */

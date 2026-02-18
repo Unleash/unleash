@@ -37,15 +37,8 @@ export const InactiveUsersList = () => {
     const { deleteInactiveUsers, errors: inactiveUsersApiErrors } =
         useInactiveUsersApi();
     const { setToastData, setToastApiError } = useToast();
-    const { inactiveUsers, refetchInactiveUsers, loading, error } =
-        useInactiveUsers();
-    const {
-        users,
-        roles,
-        loading: usersLoading,
-        refetch,
-        error: usersError,
-    } = useUsers();
+    const { inactiveUsers, refetchInactiveUsers, loading } = useInactiveUsers();
+    const { users, roles, loading: usersLoading } = useUsers();
     const [delDialog, setDelDialog] = useState(false);
     const [delUser, setDelUser] = useState<IInactiveUser>();
     const [showDelInactiveDialog, setShowDelInactiveDialog] = useState(false);

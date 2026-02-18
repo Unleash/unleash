@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestsSchemaItemOneOf } from './changeRequestsSchemaItemOneOf.js';
-import type { ChangeRequestsSchemaItemOneOfFour } from './changeRequestsSchemaItemOneOfFour.js';
+import type { ChangeRequestsSchemaItemOneOf } from './changeRequestsSchemaItemOneOf';
+import type { ChangeRequestsSchemaItemOneOfFour } from './changeRequestsSchemaItemOneOfFour';
 
 /**
  * A simplified change request overview

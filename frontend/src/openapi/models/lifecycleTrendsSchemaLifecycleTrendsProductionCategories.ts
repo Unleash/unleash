@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LifecycleTrendsSchemaLifecycleTrendsProductionCategoriesExperimental } from './lifecycleTrendsSchemaLifecycleTrendsProductionCategoriesExperimental.js';
-import type { LifecycleTrendsSchemaLifecycleTrendsProductionCategoriesPermanent } from './lifecycleTrendsSchemaLifecycleTrendsProductionCategoriesPermanent.js';
-import type { LifecycleTrendsSchemaLifecycleTrendsProductionCategoriesRelease } from './lifecycleTrendsSchemaLifecycleTrendsProductionCategoriesRelease.js';
+import type { LifecycleTrendsSchemaLifecycleTrendsProductionCategoriesExperimental } from './lifecycleTrendsSchemaLifecycleTrendsProductionCategoriesExperimental';
+import type { LifecycleTrendsSchemaLifecycleTrendsProductionCategoriesPermanent } from './lifecycleTrendsSchemaLifecycleTrendsProductionCategoriesPermanent';
+import type { LifecycleTrendsSchemaLifecycleTrendsProductionCategoriesRelease } from './lifecycleTrendsSchemaLifecycleTrendsProductionCategoriesRelease';
 
 export type LifecycleTrendsSchemaLifecycleTrendsProductionCategories = {
     experimental: LifecycleTrendsSchemaLifecycleTrendsProductionCategoriesExperimental;

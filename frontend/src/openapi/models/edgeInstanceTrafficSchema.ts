@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EdgeInstanceTrafficSchemaAccessDenied } from './edgeInstanceTrafficSchemaAccessDenied.js';
-import type { EdgeInstanceTrafficSchemaCachedResponses } from './edgeInstanceTrafficSchemaCachedResponses.js';
-import type { EdgeInstanceTrafficSchemaGet } from './edgeInstanceTrafficSchemaGet.js';
-import type { EdgeInstanceTrafficSchemaPost } from './edgeInstanceTrafficSchemaPost.js';
+import type { EdgeInstanceTrafficSchemaAccessDenied } from './edgeInstanceTrafficSchemaAccessDenied';
+import type { EdgeInstanceTrafficSchemaCachedResponses } from './edgeInstanceTrafficSchemaCachedResponses';
+import type { EdgeInstanceTrafficSchemaGet } from './edgeInstanceTrafficSchemaGet';
+import type { EdgeInstanceTrafficSchemaPost } from './edgeInstanceTrafficSchemaPost';
 
 /**
  * Represents requests to the Edge instance (/api/client/features, /api/frontend, etc.)

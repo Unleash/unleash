@@ -276,7 +276,7 @@ test('Can get strategies for specific environment', async () => {
 });
 
 test('Can use multiple filters', async () => {
-    expect.assertions(3);
+    expect.assertions(6);
 
     await app.request.post('/api/admin/projects/default/features').send({
         name: 'test.feature',
@@ -298,6 +298,13 @@ test('Can use multiple filters', async () => {
     });
     const tag = { value: 'Crazy', type: 'simple' };
     const tag2 = { value: 'tagb', type: 'simple' };
+
+    await app.request
+        .get('/api/client/features?tag=simple:Crazy')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => expect(res.body.features).toHaveLength(0));
+
     await app.request
         .post('/api/admin/features/test.feature/tags')
         .send(tag)
@@ -314,7 +321,17 @@ test('Can use multiple filters', async () => {
         .get('/api/client/features?tag=simple:Crazy')
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect((res) => expect(res.body.features).toHaveLength(2));
+        .expect((res) => {
+            expect(res.body.features).toHaveLength(2);
+            const names = res.body.features.map((f) => f.name);
+            expect(names).toEqual(
+                expect.arrayContaining([
+                    'test.feature',
+                    'notestprefix.feature3',
+                ]),
+            );
+            expect(names).not.toContain('test.feature2');
+        });
     await app.request
         .get('/api/client/features?namePrefix=test&tag=simple:Crazy')
         .expect('Content-Type', /json/)

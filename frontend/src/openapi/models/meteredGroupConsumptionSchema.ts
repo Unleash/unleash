@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConsumptionDataPointSchema } from './consumptionDataPointSchema.js';
+import type { ConsumptionDataPointSchema } from './consumptionDataPointSchema';
 
 export interface MeteredGroupConsumptionSchema {
     /** Array of consumption data points */

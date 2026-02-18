@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { DependentFeatureSchema } from './dependentFeatureSchema.js';
+import type { DependentFeatureSchema } from './dependentFeatureSchema';
 
 /**
  * Feature dependency connection between a child feature and its dependencies

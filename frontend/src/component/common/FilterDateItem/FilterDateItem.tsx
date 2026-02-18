@@ -38,19 +38,14 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const { locationSettings } = useLocationSettings();
 
-    const open = () => {
-        setAnchorEl(ref.current);
-    };
+    const open = () => setAnchorEl(ref.current);
+    const onClose = () => setAnchorEl(null);
 
     useEffect(() => {
         if (!state && initMode === 'auto-open') {
             open();
         }
     }, []);
-
-    const onClose = () => {
-        setAnchorEl(null);
-    };
 
     const selectedOptions = state
         ? [
@@ -115,6 +110,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                     <DateCalendar
                         displayWeekNumber
                         value={selectedDate}
+                        disableFuture
                         onChange={(value) => {
                             const formattedValue = value
                                 ? format(value, 'yyyy-MM-dd')

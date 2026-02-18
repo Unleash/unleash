@@ -161,7 +161,6 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
 };
 
 export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
-    const { eventBus, getLogger, flagResolver } = config;
     const featureToggleStore = new FakeFeatureToggleStore();
     const userStore = new FakeUserStore();
     const projectStore = new FakeProjectStore();

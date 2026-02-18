@@ -62,7 +62,7 @@ test('should keep filters order when adding a new filter', async () => {
             label: 'Tags',
             icon: '',
             options: [],
-            filterKey: 'irrelevantKey',
+            filterKey: 'irrelevantKey2',
             singularOperators: ['IRRELEVANT'],
             pluralOperators: ['IRRELEVANT'],
         },

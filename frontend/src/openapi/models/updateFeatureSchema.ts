@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UpdateFeatureSchemaType } from './updateFeatureSchemaType.js';
+import type { UpdateFeatureSchemaType } from './updateFeatureSchemaType';
 
 /**
  * Data used for updating a feature flag

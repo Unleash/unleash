@@ -281,9 +281,7 @@ describe('withTableState', () => {
             );
         };
 
-        const { getByTestId, findByTestId, getByRole, findByRole } = render(
-            <Component />,
-        );
+        const { getByTestId, findByTestId, findByRole } = render(<Component />);
 
         expect(getByTestId('page')).toHaveValue('8');
         expect(getByTestId('pageSize')).toHaveValue('5');

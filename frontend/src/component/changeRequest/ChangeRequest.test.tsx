@@ -11,6 +11,7 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer.tsx';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
+import { UnleashFlagProvider } from 'component/providers/UnleashFlagProvider/UnleashFlagProvider.tsx';
 
 const server = testServerSetup();
 
@@ -235,14 +236,18 @@ const UnleashUiSetup: FC<{
                     <AnnouncerProvider>
                         <StickyProvider>
                             <HighlightProvider>
-                                <Routes>
-                                    <Route
-                                        path={pathTemplate}
-                                        element={
-                                            <MainLayout>{children}</MainLayout>
-                                        }
-                                    />
-                                </Routes>
+                                <UnleashFlagProvider>
+                                    <Routes>
+                                        <Route
+                                            path={pathTemplate}
+                                            element={
+                                                <MainLayout>
+                                                    {children}
+                                                </MainLayout>
+                                            }
+                                        />
+                                    </Routes>
+                                </UnleashFlagProvider>
                             </HighlightProvider>
                         </StickyProvider>
                     </AnnouncerProvider>

@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSearchResponseSchemaCreatedBy } from './featureSearchResponseSchemaCreatedBy.js';
-import type { FeatureSearchResponseSchemaDependencyType } from './featureSearchResponseSchemaDependencyType.js';
-import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema.js';
-import type { FeatureSearchResponseSchemaLifecycle } from './featureSearchResponseSchemaLifecycle.js';
-import type { FeatureSearchResponseSchemaStrategiesItem } from './featureSearchResponseSchemaStrategiesItem.js';
-import type { TagSchema } from './tagSchema.js';
-import type { VariantSchema } from './variantSchema.js';
+import type { FeatureSearchResponseSchemaCreatedBy } from './featureSearchResponseSchemaCreatedBy';
+import type { FeatureSearchResponseSchemaDependencyType } from './featureSearchResponseSchemaDependencyType';
+import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema';
+import type { FeatureSearchResponseSchemaLifecycle } from './featureSearchResponseSchemaLifecycle';
+import type { FeatureSearchResponseSchemaStrategiesItem } from './featureSearchResponseSchemaStrategiesItem';
+import type { TagSchema } from './tagSchema';
+import type { VariantSchema } from './variantSchema';
 
 /**
  * A feature flag definition

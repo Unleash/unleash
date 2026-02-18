@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundConstraintSchema } from './playgroundConstraintSchema.js';
+import type { PlaygroundConstraintSchema } from './playgroundConstraintSchema';
 
 /**
  * The evaluated result of a segment as used by the Playground.

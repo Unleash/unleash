@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectCreatedSchemaChangeRequestEnvironmentsItem } from './projectCreatedSchemaChangeRequestEnvironmentsItem.js';
-import type { ProjectCreatedSchemaMode } from './projectCreatedSchemaMode.js';
+import type { ProjectCreatedSchemaChangeRequestEnvironmentsItem } from './projectCreatedSchemaChangeRequestEnvironmentsItem';
+import type { ProjectCreatedSchemaMode } from './projectCreatedSchemaMode';
 
 /**
  * Details about the newly created project.

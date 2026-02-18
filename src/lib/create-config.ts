@@ -293,6 +293,7 @@ const defaultServerOption: IServerOption = {
     port: parseEnvVarNumber(process.env.HTTP_PORT || process.env.PORT, 4242),
     baseUriPath: formatBaseUri(process.env.BASE_URI_PATH),
     cdnPrefix: process.env.CDN_PREFIX,
+    edgeUrl: process.env.EDGE_URL,
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
     serverMetrics: true,
     enableHeapSnapshotEnpoint: parseEnvVarBoolean(
@@ -776,7 +777,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             0,
             parseEnvVarNumber(
                 process.env.UNLEASH_RELEASE_TEMPLATES_LIMIT,
-                options?.resourceLimits?.releaseTemplates ?? 5,
+                options?.resourceLimits?.releaseTemplates ?? 10,
             ),
         ),
     };
@@ -801,7 +802,11 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const checkDbOnReady =
         Boolean(options.checkDbOnReady) ??
         parseEnvVarBoolean(process.env.CHECK_DB_ON_READY, false);
+    const edgeMasterSecret =
+        options.edgeMasterSecret ?? process.env.EDGE_MASTER_SECRET;
 
+    const edgeClientSecret =
+        options.edgeClientSecret ?? process.env.EDGE_CLIENT_SECRET;
     return {
         db,
         session,
@@ -848,5 +853,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         unleashFrontendToken,
         customStrategySettings,
         checkDbOnReady,
+        edgeMasterSecret,
+        edgeClientSecret,
     };
 }

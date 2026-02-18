@@ -3,7 +3,6 @@ import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { ISegment } from 'interfaces/segment';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export interface IUseSegmentsOutput {
     segments?: ISegment[];
@@ -13,8 +12,6 @@ export interface IUseSegmentsOutput {
 }
 
 export const useSegments = (strategyId?: string): IUseSegmentsOutput => {
-    const { uiConfig } = useUiConfig();
-
     const url = strategyId
         ? formatApiPath(`api/admin/segments/strategies/${strategyId}`)
         : formatApiPath('api/admin/segments');

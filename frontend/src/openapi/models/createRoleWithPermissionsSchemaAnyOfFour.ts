@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateRoleWithPermissionsSchemaAnyOfFourPermissionsItem } from './createRoleWithPermissionsSchemaAnyOfFourPermissionsItem.js';
-import type { CreateRoleWithPermissionsSchemaAnyOfFourType } from './createRoleWithPermissionsSchemaAnyOfFourType.js';
+import type { CreateRoleWithPermissionsSchemaAnyOfFourPermissionsItem } from './createRoleWithPermissionsSchemaAnyOfFourPermissionsItem';
+import type { CreateRoleWithPermissionsSchemaAnyOfFourType } from './createRoleWithPermissionsSchemaAnyOfFourType';
 
 export type CreateRoleWithPermissionsSchemaAnyOfFour = {
     /** A more detailed description of the custom role and what use it's intended for */

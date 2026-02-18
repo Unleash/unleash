@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { MeteredConnectionsSchemaApiDataItem } from './meteredConnectionsSchemaApiDataItem.js';
-import type { MeteredConnectionsSchemaDateRange } from './meteredConnectionsSchemaDateRange.js';
-import type { MeteredConnectionsSchemaGrouping } from './meteredConnectionsSchemaGrouping.js';
+import type { MeteredConnectionsSchemaApiDataItem } from './meteredConnectionsSchemaApiDataItem';
+import type { MeteredConnectionsSchemaDateRange } from './meteredConnectionsSchemaDateRange';
+import type { MeteredConnectionsSchemaGrouping } from './meteredConnectionsSchemaGrouping';
 
 /**
  * Contains the recorded metered groups connections segmented by day/month

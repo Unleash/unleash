@@ -54,6 +54,10 @@ import type EventEmitter from 'events';
 import { USER_LOGIN } from '../metric-events.js';
 import type { ResourceLimitsService } from './index.js';
 
+owasp.config({
+    allowPassphrases: false,
+});
+
 export interface ICreateUserWithRole {
     name?: string;
     email?: string;
@@ -569,7 +573,11 @@ export class UserService {
         return user;
     }
 
-    async changePassword(userId: number, password: string): Promise<void> {
+    async changePassword(
+        userId: number,
+        password: string,
+        { logoutUser }: { logoutUser?: boolean } = { logoutUser: true },
+    ): Promise<void> {
         this.validatePassword(password);
         const passwordHash = await bcrypt.hash(password, saltRounds);
 
@@ -578,8 +586,11 @@ export class UserService {
             passwordHash,
             disallowNPreviousPasswords,
         );
-        await this.sessionService.deleteSessionsForUser(userId);
         await this.resetTokenService.expireExistingTokensForUser(userId);
+
+        if (logoutUser) {
+            await this.sessionService.deleteSessionsForUser(userId);
+        }
     }
 
     async changePasswordWithPreviouslyUsedPasswordCheck(

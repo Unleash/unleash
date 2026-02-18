@@ -17,12 +17,8 @@ import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useFormErrors } from 'hooks/useFormErrors';
 import produce from 'immer';
-import { MilestoneStrategySegment } from './MilestoneStrategySegment.tsx';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { MilestoneStrategyTitle } from './MilestoneStrategyTitle.tsx';
-import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints.tsx';
-import { MilestoneStrategyVariants } from './MilestoneStrategyVariants.tsx';
 import { MilestoneStrategyType } from './MilestoneStrategyType.tsx';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import {
@@ -30,6 +26,11 @@ import {
     featureStrategyDocsLinkLabel,
     featureStrategyHelp,
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle.tsx';
+import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
+import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment.tsx';
+import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants.tsx';
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -126,7 +127,8 @@ export const ReleasePlanTemplateAddStrategyForm = ({
 }: IReleasePlanTemplateAddStrategyFormProps) => {
     const [currentStrategy, setCurrentStrategy] = useState(strategy);
     const [activeTab, setActiveTab] = useState(0);
-    const { segments: allSegments, refetchSegments } = useSegments();
+    const { segments: allSegments } = useSegments();
+    const { segments: assignableSegments = [] } = useAssignableSegments();
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { strategyDefinition } = useStrategy(strategy?.strategyName);
     const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
@@ -135,6 +137,9 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         currentStrategy?.parameters &&
             'stickiness' in currentStrategy?.parameters,
     );
+
+    const showSegmentSelector =
+        assignableSegments.length > 0 || segments.length > 0;
 
     const stickiness =
         currentStrategy?.parameters &&
@@ -261,7 +266,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
             <StyledContentDiv>
                 {activeTab === 0 && (
                     <>
-                        <MilestoneStrategyTitle
+                        <FeatureStrategyTitle
                             title={currentStrategy.title || ''}
                             setTitle={(title) =>
                                 updateParameter('title', title)
@@ -285,24 +290,31 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                             be evaluated for users and applications that match
                             the specified preconditions.
                         </Alert>
-                        <MilestoneStrategySegment
-                            segments={segments}
-                            setSegments={setSegments}
-                        />
-                        <StyledBox>
-                            <StyledDivider />
-                            <StyledConstraintSeparator />
-                        </StyledBox>
-                        <MilestoneStrategyConstraints
+                        {showSegmentSelector ? (
+                            <>
+                                <FeatureStrategySegment
+                                    segments={segments}
+                                    setSegments={setSegments}
+                                    availableSegments={assignableSegments}
+                                />
+
+                                <StyledBox>
+                                    <StyledDivider />
+                                    <StyledConstraintSeparator />
+                                </StyledBox>
+                            </>
+                        ) : null}
+                        <FeatureStrategyConstraints
                             strategy={currentStrategy}
                             setStrategy={setCurrentStrategy}
                         />
                     </>
                 )}
                 {activeTab === 2 && showVariants && (
-                    <MilestoneStrategyVariants
+                    <NewStrategyVariants
                         strategy={currentStrategy}
                         setStrategy={setCurrentStrategy}
+                        canRenamePreexistingVariants={true}
                     />
                 )}
             </StyledContentDiv>

@@ -1,28 +1,32 @@
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
 import {
     FilterDateItem,
     type IFilterDateItemProps,
 } from './FilterDateItem.tsx';
+import { addDays, format } from 'date-fns';
 
 const getDate = async (option: string) => screen.findByText(option);
 
-const setup = (initialState: FilterItemParams | null) => {
+const setup = (
+    initialState: FilterItemParams | null,
+    name = 'Test Label',
+    label = 'irrelevant',
+) => {
     const recordedChanges: FilterItemParams[] = [];
+
     const mockProps: IFilterDateItemProps = {
-        name: 'Test Label',
-        label: 'irrelevant',
-        onChange: (value: FilterItemParams) => {
-            recordedChanges.push(value);
-        },
+        name,
+        label,
+        onChange: (value: FilterItemParams) => recordedChanges.push(value),
+        operators: ['IS', 'IS_ON_OR_AFTER', 'IS_BEFORE'],
         onChipClose: () => {},
-        operators: ['IS_ON_OR_AFTER', 'IS_BEFORE'],
         state: initialState,
     };
 
     render(<FilterDateItem {...mockProps} />);
-
     return recordedChanges;
 };
 
@@ -90,4 +94,20 @@ describe('FilterDateItem Component', () => {
             },
         ]);
     });
+});
+
+it('disables dates after today', async () => {
+    setup(null, 'Test', 'Test');
+
+    const chip = await screen.findByText('Test');
+    await userEvent.click(chip);
+
+    const tomorrow = addDays(new Date(), 1);
+    const dayLabel = format(tomorrow, 'd');
+
+    const tomorrowCell = await screen.findByRole('gridcell', {
+        name: dayLabel,
+    });
+
+    expect(tomorrowCell.className).toMatch(/Mui-disabled/);
 });

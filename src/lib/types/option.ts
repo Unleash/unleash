@@ -103,6 +103,7 @@ export interface IServerOption {
     headersTimeout: number;
     baseUriPath: string;
     cdnPrefix?: string;
+    edgeUrl?: string;
     unleashUrl: string;
     serverMetrics: boolean;
     enableHeapSnapshotEnpoint: boolean;
@@ -182,6 +183,8 @@ export interface IUnleashOptions {
     unleashFrontendToken?: string;
     customStrategySettings?: ICustomStrategySettings;
     checkDbOnReady?: boolean;
+    edgeMasterSecret?: string;
+    edgeClientSecret?: string;
 }
 
 export interface IEmailOption {
@@ -310,4 +313,6 @@ export interface IUnleashConfig {
     unleashFrontendToken?: string;
     customStrategySettings?: ICustomStrategySettings;
     checkDbOnReady?: boolean;
+    edgeMasterSecret?: string;
+    edgeClientSecret?: string;
 }

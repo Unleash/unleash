@@ -1,19 +1,23 @@
 import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
 import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
-import { type FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
 import { WeightType } from '../../../constants/variantTypes.ts';
-import { Box, styled, Typography, useTheme, Alert } from '@mui/material';
-import type { IFeatureStrategy } from 'interfaces/strategy';
+import {
+    Box,
+    styled,
+    Typography,
+    useTheme,
+    Alert,
+    Button,
+} from '@mui/material';
+import type { StrategyFormState } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import Add from '@mui/icons-material/Add';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
@@ -27,19 +31,21 @@ const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-export const NewStrategyVariants: FC<{
-    setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
-    >;
-    strategy: Partial<IFeatureStrategy>;
-    projectId: string;
-    environment: string;
-    editable?: boolean;
-}> = ({ strategy, setStrategy, projectId, environment, editable }) => {
+interface NewStrategyVariantsProps<T extends StrategyFormState> {
+    setStrategy: React.Dispatch<React.SetStateAction<T>>;
+    strategy: T;
+    canRenamePreexistingVariants?: boolean;
+}
+
+export const NewStrategyVariants = <T extends StrategyFormState>({
+    strategy,
+    setStrategy,
+    canRenamePreexistingVariants,
+}: NewStrategyVariantsProps<T>) => {
     const { trackEvent } = usePlausibleTracker();
     const initialVariants = (strategy.variants || []).map((variant) => ({
         ...variant,
-        new: editable || false,
+        new: canRenamePreexistingVariants || false,
         isValid: true,
         id: crypto.randomUUID(),
         overrides: [],
@@ -55,7 +61,7 @@ export const NewStrategyVariants: FC<{
 
     useEffect(() => {
         return () => {
-            setStrategy((prev) => ({
+            setStrategy((prev: T) => ({
                 ...prev,
                 variants: variantsEdit.filter((variant) =>
                     Boolean(variant.name),
@@ -65,7 +71,7 @@ export const NewStrategyVariants: FC<{
     }, [JSON.stringify(variantsEdit)]);
 
     useEffect(() => {
-        setStrategy((prev) => ({
+        setStrategy((prev: T) => ({
             ...prev,
             variants: variantsEdit.map((variant) => ({
                 stickiness,
@@ -149,10 +155,7 @@ export const NewStrategyVariants: FC<{
                 />
             </StyledHelpIconBox>
             <StyledVariantForms>
-                <ConditionallyRender
-                    condition={variantsEdit.length > 0}
-                    show={<StrategyVariantsUpgradeAlert />}
-                />
+                {variantsEdit.length > 0 && <StrategyVariantsUpgradeAlert />}
 
                 {variantsEdit.map((variant, i) => (
                     <VariantForm
@@ -182,17 +185,16 @@ export const NewStrategyVariants: FC<{
                     />
                 ))}
             </StyledVariantForms>
-            <PermissionButton
+
+            <Button
+                sx={{ width: 'fit-content' }}
                 onClick={addVariant}
                 variant='outlined'
-                permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
-                projectId={projectId}
-                environmentId={environment}
                 data-testid='ADD_STRATEGY_VARIANT_BUTTON'
                 startIcon={<Add />}
             >
                 Add variant
-            </PermissionButton>
+            </Button>
             <VariantsSplitPreview
                 variants={variantsEdit}
                 weightsError={variantWeightsError}

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ConstraintSchema } from './constraintSchema.js';
-import type { ParametersSchema } from './parametersSchema.js';
+import type { ConstraintSchema } from './constraintSchema';
+import type { ParametersSchema } from './parametersSchema';
 
 /**
  * Update a strategy configuration in a feature

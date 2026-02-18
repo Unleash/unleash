@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientFeaturesDeltaSchemaEventsItem } from './clientFeaturesDeltaSchemaEventsItem.js';
+import type { ClientFeaturesDeltaSchemaEventsItem } from './clientFeaturesDeltaSchemaEventsItem';
 
 /**
  * Schema for delta updates of feature configurations.

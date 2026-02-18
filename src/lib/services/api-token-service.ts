@@ -123,7 +123,6 @@ export class ApiTokenService {
     async getToken(secret: string): Promise<IApiToken | undefined> {
         return this.store.get(secret);
     }
-
     async getTokenWithCache(secret: string): Promise<IApiToken | undefined> {
         if (!secret) {
             return undefined;

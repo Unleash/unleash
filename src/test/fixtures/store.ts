@@ -21,7 +21,6 @@ import type {
     IPrivateProjectStore,
     IUnleashStores,
     ReleasePlanMilestoneStore,
-    ReleasePlanMilestoneStrategyStore,
     ReleasePlanStore,
     ReleasePlanTemplateStore,
 } from '../../lib/types/index.js';
@@ -36,7 +35,7 @@ import FakeUserSplashStore from './fake-user-splash-store.js';
 import FakeRoleStore from './fake-role-store.js';
 import FakeSegmentStore from './fake-segment-store.js';
 import FakeGroupStore from './fake-group-store.js';
-import FakePatStore from './fake-pat-store.js';
+import FakePatStore from '../../lib/features/pat/fake-pat-store.js';
 import FakePublicSignupStore from './fake-public-signup-store.js';
 import FakeFavoriteFeaturesStore from './fake-favorite-features-store.js';
 import FakeFavoriteProjectsStore from './fake-favorite-projects-store.js';
@@ -65,7 +64,9 @@ import { UniqueConnectionReadModel } from '../../lib/features/unique-connection/
 import FakeFeatureLinkStore from '../../lib/features/feature-links/fake-feature-link-store.js';
 import { FakeFeatureLinksReadModel } from '../../lib/features/feature-links/fake-feature-links-read-model.js';
 import { FakeUnknownFlagsStore } from '../../lib/features/metrics/unknown-flags/fake-unknown-flags-store.js';
+import { FakeReleasePlanMilestoneStrategyStore } from './fake-release-plan-milestone-strategy-store.js';
 import type { UserUpdatesReadModel } from '../../lib/features/users/user-updates-read-model.js';
+import { FakeEdgeTokenStore } from '../../lib/features/edgetokens/fake-edge-token-store.js';
 
 const db = {
     select: () => ({
@@ -149,10 +150,11 @@ const createStores: () => IUnleashStores = () => {
             count: () => Promise.resolve(0),
         } as ReleasePlanTemplateStore,
         releasePlanMilestoneStrategyStore:
-            {} as ReleasePlanMilestoneStrategyStore,
+            new FakeReleasePlanMilestoneStrategyStore(),
         featureLinkStore: new FakeFeatureLinkStore(),
         unknownFlagsStore,
         featureLinkReadModel: new FakeFeatureLinksReadModel(),
+        edgeTokenStore: new FakeEdgeTokenStore(),
     };
 };
 

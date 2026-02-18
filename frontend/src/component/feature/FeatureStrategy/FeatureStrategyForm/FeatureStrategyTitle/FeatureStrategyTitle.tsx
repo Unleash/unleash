@@ -1,13 +1,13 @@
 import { Box, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 
 interface IFeatureStrategyTitleProps {
     title: string;
     setTitle: (title: string) => void;
 }
 
-export const FeatureStrategyTitle: VFC<IFeatureStrategyTitleProps> = ({
+export const FeatureStrategyTitle: FC<IFeatureStrategyTitleProps> = ({
     title,
     setTitle,
 }) => {

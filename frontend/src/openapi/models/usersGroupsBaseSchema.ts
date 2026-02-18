@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { GroupSchema } from './groupSchema.js';
-import type { UserSchema } from './userSchema.js';
+import type { GroupSchema } from './groupSchema';
+import type { UserSchema } from './userSchema';
 
 /**
  * An overview of user groups and users.

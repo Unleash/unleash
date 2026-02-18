@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { IntegrationEventSchema } from './integrationEventSchema.js';
+import type { IntegrationEventSchema } from './integrationEventSchema';
 
 /**
  * A response model with a list of integration events.

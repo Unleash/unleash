@@ -26,7 +26,7 @@ const constraintOperatorDescriptions: Record<Operator, string> = {
     SEMVER_EQ: 'is a SemVer equal to',
     SEMVER_GT: 'is a SemVer greater than',
     SEMVER_LT: 'is a SemVer less than',
-    REGEX: 'regex matches',
+    REGEX: 'matches regex',
 };
 
 const invertedConstraintOperatorDescriptions: Record<Operator, string> = {

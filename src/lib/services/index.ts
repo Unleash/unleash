@@ -184,6 +184,7 @@ import {
     createReleasePlanMilestoneStrategyService,
 } from '../features/release-plans/createReleasePlanMilestoneStrategyService.js';
 import type { ReleasePlanMilestoneStrategyService } from '../features/release-plans/release-plan-milestone-strategy-service.js';
+import { SignupService } from '../features/signup/signup-service.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -488,6 +489,12 @@ export const createServices = (
         resourceLimitsService,
     });
 
+    const signupService = new SignupService(
+        stores,
+        { userService, settingService },
+        config,
+    );
+
     return {
         transactionalAccessService,
         accessService,
@@ -564,6 +571,7 @@ export const createServices = (
         unknownFlagsService,
         uiConfigService,
         resourceLimitsService,
+        signupService,
     };
 };
 
@@ -702,4 +710,5 @@ export interface IUnleashServices {
     unknownFlagsService: UnknownFlagsService;
     uiConfigService: UiConfigService;
     resourceLimitsService: ResourceLimitsService;
+    signupService: SignupService;
 }

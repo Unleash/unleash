@@ -38,6 +38,8 @@ import PersonalDashboardController from '../../features/personal-dashboard/perso
 import FeatureLifecycleCountController from '../../features/feature-lifecycle/feature-lifecycle-count-controller.js';
 import type { IUnleashServices } from '../../services/index.js';
 import CustomMetricsController from '../../features/metrics/custom/custom-metrics-controller.js';
+import { conditionalMiddleware } from '../../server-impl.js';
+import SignupController from '../../features/signup/signup-controller.js';
 
 export class AdminApi extends Controller {
     constructor(
@@ -118,6 +120,13 @@ export class AdminApi extends Controller {
         this.app.use(
             '/user-admin',
             new UserAdminController(config, services).router,
+        );
+        this.app.use(
+            '/signup',
+            conditionalMiddleware(
+                () => config.flagResolver.isEnabled('signupDialog'),
+                new SignupController(config, services).router,
+            ),
         );
 
         this.app.use(

@@ -198,7 +198,9 @@ const TopRowInput: FC<{
                 onAddValue={addValues}
                 removeValue={clearValues}
                 currentValue={localConstraint.value}
-                helpText={'A regex value should be a valid regular expression'}
+                helpText={
+                    'A regex value should be a valid RE2 regular expression'
+                }
                 inputType={'text'}
             />
         );

@@ -129,6 +129,19 @@ test('regex validation should throw with invalid regex', () => {
     }
 });
 
+test('regex validation should throw with invalid regex type', () => {
+    const badRegex = 500;
+    expect.assertions(1);
+
+    try {
+        validateRegex(badRegex);
+    } catch (e) {
+        expect(e.message).toContain(
+            `Request validation failed: your request body or params contain invalid data: the provided value is not a valid regex string.`,
+        );
+    }
+});
+
 test('regex validation should accept a valid regex', () => {
     const goodRegex = '^[a-zA-Z0-9]+$';
 

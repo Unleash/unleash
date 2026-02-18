@@ -1,0 +1,83 @@
+name: OpenAPI Client Validation
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    paths:
+      - src/lib/**
+      - frontend/src/openapi/**
+      - frontend/orval.config.ts
+      - .github/workflows/openapi-client-check.yaml
+
+jobs:
+  check-openapi-client:
+    name: Check generated OpenAPI client is up to date
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_INITDB_ARGS: "--no-sync"
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Start Unleash
+        run: |
+          mkdir -p frontend/build
+          touch frontend/build/index.html
+          touch frontend/build/favicon.ico
+          NODE_ENV=openapi yarn dev:backend &
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+          DATABASE_SSL: 'false'
+          CHECK_VERSION: 'false'
+
+      - name: Wait for Unleash to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://localhost:4242/health; then
+              echo "Unleash is up!"
+              exit 0
+            fi
+            echo "Waiting for Unleash..."
+            sleep 2
+          done
+          echo "Unleash did not become ready in time."
+          exit 1
+
+      - name: Generate OpenAPI client
+        working-directory: frontend
+        run: yarn gen:api
+
+      - name: Check for changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Generated OpenAPI client is out of date. Run 'cd frontend && yarn gen:api' locally and commit the changes."
+            echo ""
+            echo "Changed files:"
+            git status --short
+            echo ""
+            echo "Diff:"
+            git diff
+            exit 1
+          fi
+          echo "OpenAPI client is up to date."

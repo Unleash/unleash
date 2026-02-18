@@ -12,7 +12,6 @@ export interface Constraint {
     caseInsensitive?: boolean;
 }
 
-// TODO: why is this different type?
 export enum Operator {
     IN = 'IN',
     NOT_IN = 'NOT_IN',

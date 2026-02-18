@@ -2,6 +2,7 @@ import { gt as semverGt, lt as semverLt, eq as semverEq } from 'semver';
 import type { Context } from './context.js';
 import { resolveContextValue } from './helpers.js';
 import { RE2JS } from 're2js';
+import { ALL_OPERATORS } from '../../../util/constants.js';
 
 export interface Constraint {
     contextName: string;
@@ -12,25 +13,10 @@ export interface Constraint {
     caseInsensitive?: boolean;
 }
 
-// TODO: why is this different type?
-export enum Operator {
-    IN = 'IN',
-    NOT_IN = 'NOT_IN',
-    STR_ENDS_WITH = 'STR_ENDS_WITH',
-    STR_STARTS_WITH = 'STR_STARTS_WITH',
-    STR_CONTAINS = 'STR_CONTAINS',
-    NUM_EQ = 'NUM_EQ',
-    NUM_GT = 'NUM_GT',
-    NUM_GTE = 'NUM_GTE',
-    NUM_LT = 'NUM_LT',
-    NUM_LTE = 'NUM_LTE',
-    DATE_AFTER = 'DATE_AFTER',
-    DATE_BEFORE = 'DATE_BEFORE',
-    SEMVER_EQ = 'SEMVER_EQ',
-    SEMVER_GT = 'SEMVER_GT',
-    SEMVER_LT = 'SEMVER_LT',
-    REGEX = 'REGEX',
-}
+export type Operator = (typeof ALL_OPERATORS)[number];
+export const Operator = Object.fromEntries(
+    ALL_OPERATORS.map((op) => [op, op]),
+) as { [K in Operator]: K };
 
 export type OperatorImpl = (
     constraint: Constraint,

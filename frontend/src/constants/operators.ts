@@ -1,56 +1,44 @@
-export type Operator =
-    | 'NOT_IN'
-    | 'IN'
-    | 'STR_ENDS_WITH'
-    | 'STR_STARTS_WITH'
-    | 'STR_CONTAINS'
-    | 'NUM_EQ'
-    | 'NUM_GT'
-    | 'NUM_GTE'
-    | 'NUM_LT'
-    | 'NUM_LTE'
-    | 'DATE_AFTER'
-    | 'DATE_BEFORE'
-    | 'SEMVER_EQ'
-    | 'SEMVER_GT'
-    | 'SEMVER_LT'
-    | 'REGEX';
-
-export const NOT_IN = 'NOT_IN' as const;
-export const IN = 'IN' as const;
-export const STR_ENDS_WITH = 'STR_ENDS_WITH' as const;
-export const STR_STARTS_WITH = 'STR_STARTS_WITH' as const;
-export const STR_CONTAINS = 'STR_CONTAINS' as const;
-export const NUM_EQ = 'NUM_EQ' as const;
-export const NUM_GT = 'NUM_GT' as const;
-export const NUM_GTE = 'NUM_GTE' as const;
-export const NUM_LT = 'NUM_LT' as const;
-export const NUM_LTE = 'NUM_LTE' as const;
-export const DATE_AFTER = 'DATE_AFTER' as const;
-export const DATE_BEFORE = 'DATE_BEFORE' as const;
-export const SEMVER_EQ = 'SEMVER_EQ' as const;
-export const SEMVER_GT = 'SEMVER_GT' as const;
-export const SEMVER_LT = 'SEMVER_LT' as const;
-export const REGEX = 'REGEX' as const;
-
-export const allOperators: Operator[] = [
-    IN,
+export {
     NOT_IN,
-    STR_CONTAINS,
-    STR_STARTS_WITH,
+    IN,
     STR_ENDS_WITH,
+    STR_STARTS_WITH,
+    STR_CONTAINS,
     NUM_EQ,
     NUM_GT,
     NUM_GTE,
     NUM_LT,
     NUM_LTE,
-    DATE_BEFORE,
     DATE_AFTER,
+    DATE_BEFORE,
     SEMVER_EQ,
     SEMVER_GT,
     SEMVER_LT,
     REGEX,
-];
+} from '@server/util/constants';
+import {
+    ALL_OPERATORS,
+    NOT_IN,
+    IN,
+    STR_ENDS_WITH,
+    STR_STARTS_WITH,
+    STR_CONTAINS,
+    NUM_EQ,
+    NUM_GT,
+    NUM_GTE,
+    NUM_LT,
+    NUM_LTE,
+    DATE_AFTER,
+    DATE_BEFORE,
+    SEMVER_EQ,
+    SEMVER_GT,
+    SEMVER_LT,
+    REGEX,
+} from '@server/util/constants';
+
+export type Operator = (typeof ALL_OPERATORS)[number];
+
+export const allOperators = ALL_OPERATORS;
 
 const isOperator =
     <T extends string>(operators: T[]) =>

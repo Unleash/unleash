@@ -19,22 +19,22 @@ export const PROJECT_ROLE_TYPES = [PROJECT_ROLE_TYPE, CUSTOM_PROJECT_ROLE_TYPE];
 
 /* CONTEXT FIELD OPERATORS */
 
-export const NOT_IN = 'NOT_IN';
-export const IN = 'IN';
-export const STR_ENDS_WITH = 'STR_ENDS_WITH';
-export const STR_STARTS_WITH = 'STR_STARTS_WITH';
-export const STR_CONTAINS = 'STR_CONTAINS';
-export const NUM_EQ = 'NUM_EQ';
-export const NUM_GT = 'NUM_GT';
-export const NUM_GTE = 'NUM_GTE';
-export const NUM_LT = 'NUM_LT';
-export const NUM_LTE = 'NUM_LTE';
-export const DATE_AFTER = 'DATE_AFTER';
-export const DATE_BEFORE = 'DATE_BEFORE';
-export const SEMVER_EQ = 'SEMVER_EQ';
-export const SEMVER_GT = 'SEMVER_GT';
-export const SEMVER_LT = 'SEMVER_LT';
-export const REGEX = 'REGEX';
+export const NOT_IN = 'NOT_IN' as const;
+export const IN = 'IN' as const;
+export const STR_ENDS_WITH = 'STR_ENDS_WITH' as const;
+export const STR_STARTS_WITH = 'STR_STARTS_WITH' as const;
+export const STR_CONTAINS = 'STR_CONTAINS' as const;
+export const NUM_EQ = 'NUM_EQ' as const;
+export const NUM_GT = 'NUM_GT' as const;
+export const NUM_GTE = 'NUM_GTE' as const;
+export const NUM_LT = 'NUM_LT' as const;
+export const NUM_LTE = 'NUM_LTE' as const;
+export const DATE_AFTER = 'DATE_AFTER' as const;
+export const DATE_BEFORE = 'DATE_BEFORE' as const;
+export const SEMVER_EQ = 'SEMVER_EQ' as const;
+export const SEMVER_GT = 'SEMVER_GT' as const;
+export const SEMVER_LT = 'SEMVER_LT' as const;
+export const REGEX = 'REGEX' as const;
 
 export const ALL_OPERATORS = [
     NOT_IN,

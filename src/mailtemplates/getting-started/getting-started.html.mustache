@@ -29,7 +29,12 @@
             </tr>
             <tr>
               <td style="padding:32px 24px 24px; text-align:left;">
+                {{# name }}
                 <h1 style="font-size:24px; font-weight:bold; margin:16px 0;">Welcome to Unleash {{ name }}!</h1>
+                {{/ name }}
+                {{^ name }}
+                <h1 style="font-size:24px; font-weight:bold; margin:16px 0;">Welcome to Unleash!</h1>
+                {{/ name }}
                 <p style="font-size:16px; line-height:1.6; margin:16px 0;">You have been invited to your organization’s Unleash account.</p>
                 {{# passwordLink }}
                 <p style="font-size:16px; line-height:1.6; margin:16px 0;">Start using Unleash by clicking the sign-up link below. Follow the steps provided to set your password and get started.</p>

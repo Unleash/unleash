@@ -1,6 +1,7 @@
 import { gt as semverGt, lt as semverLt, eq as semverEq } from 'semver';
 import type { Context } from './context.js';
 import { resolveContextValue } from './helpers.js';
+import { RE2JS } from 're2js';
 
 export interface Constraint {
     contextName: string;
@@ -11,6 +12,7 @@ export interface Constraint {
     caseInsensitive?: boolean;
 }
 
+// TODO: why is this different type?
 export enum Operator {
     IN = 'IN',
     NOT_IN = 'NOT_IN',
@@ -27,6 +29,7 @@ export enum Operator {
     SEMVER_EQ = 'SEMVER_EQ',
     SEMVER_GT = 'SEMVER_GT',
     SEMVER_LT = 'SEMVER_LT',
+    REGEX = 'REGEX',
 }
 
 export type OperatorImpl = (
@@ -141,6 +144,27 @@ const NumberOperator = (constraint: Constraint, context: Context) => {
     return false;
 };
 
+const RegexOperator = (constraint: Constraint, context: Context) => {
+    const field = constraint.contextName;
+    const value = constraint.value as string;
+    const contextValue = resolveContextValue(context, field);
+
+    if (typeof contextValue !== 'string') {
+        return false;
+    }
+
+    try {
+        const regex = RE2JS.compile(
+            value,
+            constraint.caseInsensitive ? RE2JS.CASE_INSENSITIVE : undefined,
+        );
+
+        return regex.matcher(contextValue).find() as boolean;
+    } catch (_e) {
+        return false;
+    }
+};
+
 export const operators = new Map<Operator, OperatorImpl>();
 operators.set(Operator.IN, InOperator);
 operators.set(Operator.NOT_IN, InOperator);
@@ -157,3 +181,4 @@ operators.set(Operator.DATE_BEFORE, DateOperator);
 operators.set(Operator.SEMVER_EQ, SemverOperator);
 operators.set(Operator.SEMVER_GT, SemverOperator);
 operators.set(Operator.SEMVER_LT, SemverOperator);
+operators.set(Operator.REGEX, RegexOperator);

@@ -117,6 +117,113 @@ describe('offline client', () => {
         expect(client.isEnabled(disabledFeature).result).toBeFalsy();
     });
 
+    it('regex constrains on appName', async () => {
+        const enabledFeature = 'toggle-name';
+        const notMatchingRegexFeature = 'not-matching-regex-toggle';
+        const matchIgnoreCaseFeature = 'match-ignore-case-toggle';
+        const invertedRegexFeature = 'inverted-regex-toggle';
+        const appName = 'test';
+        const client = await offlineUnleashClient({
+            features: [
+                {
+                    name: enabledFeature,
+                    enabled: true,
+                    project: 'default',
+                    strategies: [
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    contextName: 'appName',
+                                    operator: 'REGEX',
+                                    value: 'test',
+                                    inverted: false,
+                                    caseInsensitive: false,
+                                },
+                            ],
+                        },
+                    ],
+                    variants: [],
+                    type: '',
+                    stale: false,
+                },
+                {
+                    name: notMatchingRegexFeature,
+                    enabled: true,
+                    project: 'default',
+                    strategies: [
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    contextName: 'appName',
+                                    operator: 'REGEX',
+                                    value: 'match-some-other-app-name',
+                                    inverted: false,
+                                    caseInsensitive: false,
+                                },
+                            ],
+                        },
+                    ],
+                    variants: [],
+                    type: '',
+                    stale: false,
+                },
+                {
+                    name: matchIgnoreCaseFeature,
+                    enabled: true,
+                    project: 'default',
+                    strategies: [
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    contextName: 'appName',
+                                    operator: 'REGEX',
+                                    value: 'TEST',
+                                    inverted: false,
+                                    caseInsensitive: true,
+                                },
+                            ],
+                        },
+                    ],
+                    variants: [],
+                    type: '',
+                    stale: false,
+                },
+                {
+                    name: invertedRegexFeature,
+                    enabled: true,
+                    project: 'default',
+                    strategies: [
+                        {
+                            name: 'default',
+                            constraints: [
+                                {
+                                    contextName: 'appName',
+                                    operator: 'REGEX',
+                                    value: 'TEST',
+                                    inverted: true,
+                                    caseInsensitive: true,
+                                },
+                            ],
+                        },
+                    ],
+                    variants: [],
+                    type: '',
+                    stale: false,
+                },
+            ],
+            context: { appName, environment: DEFAULT_ENV },
+            logError: console.log,
+        });
+
+        expect(client.isEnabled(enabledFeature).result).toBeTruthy();
+        expect(client.isEnabled(notMatchingRegexFeature).result).toBeFalsy();
+        expect(client.isEnabled(matchIgnoreCaseFeature).result).toBeTruthy();
+        expect(client.isEnabled(invertedRegexFeature).result).toBeFalsy();
+    });
+
     it('considers disabled features with a default strategy to be enabled', async () => {
         const name = 'toggle-name';
         const context = { appName: 'client-test' };

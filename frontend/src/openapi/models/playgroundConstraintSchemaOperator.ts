@@ -27,4 +27,5 @@ export const PlaygroundConstraintSchemaOperator = {
     SEMVER_EQ: 'SEMVER_EQ',
     SEMVER_GT: 'SEMVER_GT',
     SEMVER_LT: 'SEMVER_LT',
+    REGEX: 'REGEX',
 } as const;

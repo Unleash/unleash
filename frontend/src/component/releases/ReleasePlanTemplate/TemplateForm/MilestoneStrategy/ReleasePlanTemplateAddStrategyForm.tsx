@@ -19,7 +19,6 @@ import { useFormErrors } from 'hooks/useFormErrors';
 import produce from 'immer';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { MilestoneStrategyVariants } from './MilestoneStrategyVariants.tsx';
 import { MilestoneStrategyType } from './MilestoneStrategyType.tsx';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import {
@@ -31,6 +30,7 @@ import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureS
 import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment.tsx';
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants.tsx';
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -311,9 +311,10 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                     </>
                 )}
                 {activeTab === 2 && showVariants && (
-                    <MilestoneStrategyVariants
+                    <NewStrategyVariants
                         strategy={currentStrategy}
                         setStrategy={setCurrentStrategy}
+                        canRenamePreexistingVariants={true}
                     />
                 )}
             </StyledContentDiv>

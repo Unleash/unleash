@@ -1,6 +1,8 @@
 import type { Request, Response } from 'express';
 import Controller from '../../routes/controller.js';
 
+import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
+
 import type { IAuthRequest, IUnleashConfig } from '../../types/index.js';
 import {
     type AdminSegmentSchema,
@@ -56,15 +58,21 @@ export class SegmentsController extends Controller {
 
     private openApiService: OpenApiService;
 
+    private featureToggleService: FeatureToggleService;
+
     constructor(
         config: IUnleashConfig,
         {
             segmentService,
             accessService,
             openApiService,
+            featureToggleService,
         }: Pick<
             IUnleashServices,
-            'segmentService' | 'accessService' | 'openApiService'
+            | 'segmentService'
+            | 'accessService'
+            | 'openApiService'
+            | 'featureToggleService'
         >,
     ) {
         super(config);
@@ -73,6 +81,7 @@ export class SegmentsController extends Controller {
         this.segmentService = segmentService;
         this.accessService = accessService;
         this.openApiService = openApiService;
+        this.featureToggleService = featureToggleService;
 
         this.route({
             method: 'post',
@@ -443,6 +452,11 @@ export class SegmentsController extends Controller {
         res: Response,
     ): Promise<void> {
         const id = req.params.id;
+
+        await this.featureToggleService.validateConstraint(
+            req.body.constraints,
+        );
+
         const updateRequest: UpsertSegmentSchema = {
             name: req.body.name,
             description: req.body.description,
@@ -478,6 +492,9 @@ export class SegmentsController extends Controller {
         res: Response<AdminSegmentSchema>,
     ): Promise<void> {
         const createRequest = req.body;
+        await this.featureToggleService.validateConstraints(
+            createRequest.constraints,
+        );
         const segment = await this.segmentService.create(
             createRequest,
             req.audit,

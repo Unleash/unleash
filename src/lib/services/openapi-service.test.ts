@@ -1,6 +1,7 @@
 import type { OpenAPIV3 } from 'openapi-types';
 import { OpenApiService } from './openapi-service.js';
 import { createTestConfig } from '../../test/config/test-config.js';
+import type { ApiOperation } from '../internals.js';
 
 const okResponse = { '200': { description: 'ok' } };
 type OperationWithStability = OpenAPIV3.OperationObject & {
@@ -67,10 +68,10 @@ test('validPath emits x-audience and defaults to public', () => {
 
     const operationBase = {
         operationId: 'audience-operation',
-        tags: ['Operational'] as const,
+        tags: ['Admin UI'] as const,
         responses: okResponse,
         release: { stable: '7.0.0' as const },
-    };
+    } satisfies ApiOperation;
 
     openApiService.validPath(operationBase);
     expect(validPathSpy).toHaveBeenCalledWith(

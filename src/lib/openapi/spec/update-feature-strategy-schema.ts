@@ -9,7 +9,9 @@ export const updateFeatureStrategySchema = {
     properties: {
         name: {
             type: 'string',
-            description: 'The name of the strategy type',
+            description:
+                "The name of the strategy type. This property is deprecated and the ability to change a strategy's type will be removed in a future release.",
+            deprecated: true,
         },
         sortOrder: {
             type: 'number',

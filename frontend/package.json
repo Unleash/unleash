@@ -163,6 +163,7 @@
   "dependencies": {
     "chartjs-plugin-datalabels": "^2.2.0",
     "json-2-csv": "^5.5.5",
-    "json-diff-react": "^1.0.1"
+    "json-diff-react": "^1.0.1",
+    "re2js": "^1.2.2"
   }
 }

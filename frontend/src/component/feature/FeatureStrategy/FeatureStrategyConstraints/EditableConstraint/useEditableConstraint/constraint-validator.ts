@@ -1,9 +1,13 @@
 import { isValid, parseISO } from 'date-fns';
+import { RE2JS } from 're2js';
 import semver from 'semver';
 import {
     isDateOperator,
+    isInOperator,
     isNumOperator,
+    isRegexOperator,
     isSemVerOperator,
+    isStringOperator,
     type Operator,
 } from 'constants/operators.js';
 export type ConstraintValidationResult = [boolean, string];
@@ -59,6 +63,27 @@ const dateValidator = (value: string): ConstraintValidationResult => {
     return [true, ''];
 };
 
+const formatRegexError = (e: unknown): string => {
+    const staticMessage = 'Value must be a valid RE2 regex';
+    const rawMessage = e instanceof Error ? e.message : '';
+    if (!rawMessage) {
+        return staticMessage;
+    }
+    const capitalizedMessage = rawMessage.startsWith('error')
+        ? `Error${rawMessage.slice('error'.length)}`
+        : rawMessage;
+    return `${staticMessage}. ${capitalizedMessage}`;
+};
+
+const regexValidator = (value: string): ConstraintValidationResult => {
+    try {
+        RE2JS.compile(value);
+    } catch (e: unknown) {
+        return [false, formatRegexError(e)];
+    }
+    return [true, ''];
+};
+
 export const constraintValidator = (operator: Operator) => {
     if (isDateOperator(operator)) {
         return dateValidator;
@@ -69,5 +94,11 @@ export const constraintValidator = (operator: Operator) => {
     if (isNumOperator(operator)) {
         return numberValidator;
     }
-    return stringListValidator;
+    if (isRegexOperator(operator)) {
+        return regexValidator;
+    }
+    if (isStringOperator(operator) || isInOperator(operator)) {
+        return stringListValidator;
+    }
+    throw new Error(`Unknown operator: ${operator}`);
 };

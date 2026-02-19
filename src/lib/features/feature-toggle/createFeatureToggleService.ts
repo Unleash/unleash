@@ -239,5 +239,6 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
         featureToggleStore,
         projectStore,
         featureStrategiesStore,
+        contextFieldStore,
     };
 };

@@ -22,7 +22,6 @@ import type { IFormErrors } from 'hooks/useFormErrors';
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;
     updateParameter: (field: string, value: string) => void;
-    context: any;
     editable: boolean;
     errors?: IFormErrors;
 }

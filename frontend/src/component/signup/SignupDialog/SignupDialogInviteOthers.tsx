@@ -5,7 +5,7 @@ import {
     StyledSignupDialogTextField,
     type SignupStepContent,
 } from './SignupDialog';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 const StyledButtonRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -65,15 +65,18 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
         setInputValue(last);
     }, [data.inviteEmails, setInviteEmails]);
 
-    const isValidForm = useMemo(
-        () =>
-            data.inviteEmails.length > 0 &&
-            data.inviteEmails.every((e) => isEmail(e.trim())),
-        [data.inviteEmails],
-    );
+    const trimmedInput = inputValue.trim();
+    const canInvite =
+        isEmail(trimmedInput) ||
+        (trimmedInput === '' && data.inviteEmails.length > 0);
 
     const onLater = () => {
         setInviteEmails([]);
+        onNext();
+    };
+
+    const onInvite = () => {
+        addEmailsFromRaw(trimmedInput);
         onNext();
     };
 
@@ -110,9 +113,9 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
                             helperText='Separate emails by comma'
                             onKeyDown={(e) => {
                                 if (SEPARATOR_KEYS.includes(e.key)) {
-                                    if (inputValue.trim() !== '') {
+                                    if (trimmedInput) {
                                         e.preventDefault();
-                                        addEmailsFromRaw(inputValue);
+                                        addEmailsFromRaw(trimmedInput);
                                     } else if (e.key !== 'Enter') {
                                         e.preventDefault();
                                     }
@@ -128,7 +131,7 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
                                     removeLastChipIntoInput();
                                 }
                             }}
-                            onBlur={() => addEmailsFromRaw(inputValue)}
+                            onBlur={() => addEmailsFromRaw(trimmedInput)}
                             onPaste={(e) => {
                                 const text = e.clipboardData.getData('text');
                                 if (text && /[,\s]/.test(text)) {
@@ -150,8 +153,8 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
                 </Button>
                 <Button
                     variant='contained'
-                    onClick={onNext}
-                    disabled={!isValidForm || isSubmitting}
+                    onClick={onInvite}
+                    disabled={!canInvite || isSubmitting}
                 >
                     Invite
                 </Button>

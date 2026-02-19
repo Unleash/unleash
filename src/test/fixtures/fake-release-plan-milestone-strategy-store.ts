@@ -1,6 +1,6 @@
 import type { ReleasePlanMilestoneStrategy } from '../../lib/features/release-plans/release-plan-milestone-strategy.js';
 import type { IReleasePlanMilestoneStrategyStore } from '../../lib/features/release-plans/release-plan-milestone-strategy-store.js';
-import type { MilestoneStrategyConfig } from '../../lib/types/model.js';
+import type { MilestoneStrategyConfigUpdate } from '../../lib/types/model.js';
 
 export class FakeReleasePlanMilestoneStrategyStore
     implements IReleasePlanMilestoneStrategyStore
@@ -32,7 +32,7 @@ export class FakeReleasePlanMilestoneStrategyStore
 
     async upsert(
         _strategyId: string,
-        _strategy: Partial<MilestoneStrategyConfig>,
+        _strategy: Partial<MilestoneStrategyConfigUpdate>,
     ): Promise<ReleasePlanMilestoneStrategy> {
         return {} as ReleasePlanMilestoneStrategy;
     }

@@ -44,6 +44,11 @@ export type MilestoneStrategyConfig = Omit<IStrategyConfig, 'name'> & {
     strategyName: string;
 };
 
+export type MilestoneStrategyConfigUpdate = Omit<
+    MilestoneStrategyConfig,
+    'strategyName'
+>;
+
 export interface IFeatureStrategy {
     id: string;
     featureName: string;

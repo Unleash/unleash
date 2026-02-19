@@ -517,7 +517,12 @@ export class FeatureToggleService {
                 contextDefinition.legalValues.length > 0
             ) {
                 const valuesToValidate = oneOf(
-                    [...DATE_OPERATORS, ...SEMVER_OPERATORS, ...NUM_OPERATORS],
+                    [
+                        ...DATE_OPERATORS,
+                        ...SEMVER_OPERATORS,
+                        ...NUM_OPERATORS,
+                        REGEX,
+                    ],
                     operator,
                 )
                     ? constraint.value

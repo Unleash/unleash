@@ -14,7 +14,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 const clientId = 'enterprise-edge';
 const edgeClientSecret = randomBytes(32).toString('base64url');
-const edgeMasterSecret = randomBytes(32).toString('base64');
+const edgeMasterKey = randomBytes(32).toString('base64');
 const environment = 'development';
 describe('HMAC authenticated create token requests', () => {
     beforeAll(async () => {
@@ -22,7 +22,7 @@ describe('HMAC authenticated create token requests', () => {
         app = await setupAppWithCustomConfig(
             db.stores,
             {
-                edgeMasterSecret,
+                edgeMasterKey,
                 edgeClientSecret,
             },
             db.rawDatabase,

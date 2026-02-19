@@ -802,8 +802,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const checkDbOnReady =
         Boolean(options.checkDbOnReady) ??
         parseEnvVarBoolean(process.env.CHECK_DB_ON_READY, false);
-    const edgeMasterSecret =
-        options.edgeMasterSecret ?? process.env.EDGE_MASTER_SECRET;
+    const edgeMasterKey = options.edgeMasterKey ?? process.env.EDGE_MASTER_KEY;
 
     const edgeClientSecret =
         options.edgeClientSecret ?? process.env.EDGE_CLIENT_SECRET;
@@ -853,7 +852,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         unleashFrontendToken,
         customStrategySettings,
         checkDbOnReady,
-        edgeMasterSecret,
+        edgeMasterKey,
         edgeClientSecret,
     };
 }

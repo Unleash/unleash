@@ -25,6 +25,8 @@ export const USER_COLUMNS_PUBLIC = [
     'is_service',
     'scim_id',
     'seat_type',
+    'company_role',
+    'product_updates_email_consent',
 ];
 
 const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];

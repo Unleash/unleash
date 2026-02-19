@@ -15,6 +15,8 @@ type UpdatedUser = {
     updatedAt?: Date | null;
     deletedAt?: Date | null;
     seatType?: string;
+    companyRole?: string;
+    productUpdatesEmailConsent?: boolean;
 };
 const toResponse = (row: Row<UpdatedUser>): UpdatedUser => {
     return {
@@ -28,6 +30,8 @@ const toResponse = (row: Row<UpdatedUser>): UpdatedUser => {
         updatedAt: row.updated_at,
         deletedAt: row.deleted_at,
         seatType: row.seat_type,
+        companyRole: row.company_role,
+        productUpdatesEmailConsent: row.product_updates_email_consent,
     };
 };
 export class UserUpdatesReadModel {

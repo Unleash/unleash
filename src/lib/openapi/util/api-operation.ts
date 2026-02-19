@@ -31,7 +31,7 @@ export type ApiOperation<Tag = OpenApiTag> = Omit<
     release: StabilityRelease;
     /**
      * Intended audience for the endpoint. Used for OpenAPI extensions only.
-     * @default 'internal'
+     * @default 'public'
      */
-    audience?: 'core' | 'integration' | 'ui' | 'internal';
+    audience?: 'public' | 'integration' | 'sdk' | 'unleash-ui' | 'internal';
 };

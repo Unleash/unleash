@@ -53,3 +53,35 @@ test('removeAlphaOperations removes alpha operations and empty paths', () => {
     expect(filtered.paths?.['/mixed']?.post).toBeDefined();
     expect(filtered.paths?.['/stable']).toBeDefined();
 });
+
+test('validPath emits x-audience and defaults to public', () => {
+    const openApiService = new OpenApiService(createTestConfig());
+    const api = (
+        openApiService as unknown as {
+            api: { validPath: ReturnType<typeof vi.fn> };
+        }
+    ).api;
+    const validPathSpy = vi
+        .spyOn(api, 'validPath')
+        .mockReturnValue(vi.fn() as any);
+
+    const operationBase = {
+        operationId: 'audience-operation',
+        tags: ['Operational'] as const,
+        responses: okResponse,
+        release: { stable: '7.0.0' as const },
+    };
+
+    openApiService.validPath(operationBase);
+    expect(validPathSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ 'x-audience': 'public' }),
+    );
+
+    openApiService.validPath({
+        ...operationBase,
+        audience: 'integration',
+    });
+    expect(validPathSpy).toHaveBeenLastCalledWith(
+        expect.objectContaining({ 'x-audience': 'integration' }),
+    );
+});

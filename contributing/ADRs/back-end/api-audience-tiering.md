@@ -16,15 +16,30 @@ Introduce a second, independent classification for intended consumers. We will l
 audience: 'public' | 'integration' | 'sdk' | 'unleash-ui' | 'internal'
 ```
 
-Rationale:
+**Rationale:**
 - Industry usage tends to treat "support level" as a contractual/SLA concept, which can be misleading for customers.
 - "Audience" more directly conveys who the endpoint is intended for, and can coexist with stability without implying support guarantees.
+- The primary intent of audience is communication and organization of APIs into logical groups for a given purpose, not URL design.
+- `public` is our default catch-all bucket for existing or not-yet-classified external endpoints; it is intentionally generic.
 
 This ADR complements the stability lifecycle. Stability still answers **"how mature is it?"**, while audience answers **"who should use it?"**.
 
+**Audience and base URL policy:**
+- Audience does **not** require a dedicated base URL.
+- We should avoid coupling audience to URL design by default.
+- For net-new API surfaces, we may choose a dedicated base URL when it materially improves clarity (for example, `/api/integrations`, `/api/service-now`, or `/api/integrations/service-now`).
+- For existing/legacy APIs, backward compatibility constraints mean we generally cannot change established base URLs.
+- Creating a dedicated base URL couples audience and URL structure. This can simplify discoverability today, but makes later audience reclassification more expensive.
+
+**Classification rules:**
+- Each operation has exactly one audience label.
+- The audience label communicates intended use; it does not by itself enforce runtime or architectural isolation.
+- Audience changes are generally safe when URL contracts and behavior remain unchanged.
+- For audiences requiring stronger guarantees (especially `sdk`/`integration`), we may add explicit architectural boundaries for net-new surfaces (for example dedicated routes, ownership, or stricter review gates).
+
 ## Audience definitions
 
-- `public`: General external API surface for customer-built integrations. This is the default for existing APIs when we cannot confidently classify them as a more specific audience.
+- `public`: General external API surface for customer-built integrations.
 - `integration`: Intended for specific supported integrations (Terraform, Jira, etc.). Tailored to those clients.
 - `sdk`: Intended for Unleash SDKs. Strictest validation and long-term backward compatibility due to slow SDK upgrade cadence.
 - `unleash-ui`: Intended to serve the Unleash UI. May evolve faster; not recommended for external integrations.
@@ -42,7 +57,8 @@ This ADR complements the stability lifecycle. Stability still answers **"how mat
 
 - Add `audience?: 'public' | 'integration' | 'sdk' | 'unleash-ui' | 'internal'` to API metadata.
 - Emit `x-audience` in OpenAPI output and surface it in docs.
-- Default when omitted: `public`, representing our existing external API surface that hasn’t been further classified.
+- Default when omitted: `public`.
+- Defaulting to `public` introduces classification debt; teams should reclassify endpoints to a more specific audience (`integration`, `sdk`, or `unleash-ui`) once intent is clear.
 - Use a lightweight handover process to move endpoints between audiences as ownership/intent shifts.
 
 ## Audience changes (promotion/demotion)
@@ -68,6 +84,13 @@ This ADR complements the stability lifecycle. Stability still answers **"how mat
 - Preserves UI velocity without weakening external contracts.
 - Supports a path for moving APIs between audiences as intent changes.
 
+### Trade-offs
+
+- Audience labels improve communication and organization, but do not enforce architectural isolation by themselves.
+- If we introduce dedicated audience-specific base URLs for net-new surfaces, we gain discoverability but increase audience/URL coupling.
+- For legacy endpoints, preserving existing URLs keeps backward compatibility; decoupling audience from URL keeps relabeling simpler over time.
+
 ## Open questions
 
 - **Process**: Define criteria, reviewers, and required evidence for moving endpoints into/out of `public` or `sdk`.
+- **Governance**: Should we introduce a periodic review of `public` endpoints to reduce long-term catch-all usage?

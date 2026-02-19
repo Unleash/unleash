@@ -75,7 +75,7 @@ export class OpenApiService {
         const {
             enterpriseOnly,
             release,
-            audience = 'internal',
+            audience = 'public',
             ...openapiSpec
         } = op;
         const { baseUriPath = '' } = this.config.server ?? {};

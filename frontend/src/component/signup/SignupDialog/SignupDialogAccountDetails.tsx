@@ -24,11 +24,12 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
     data,
     setData,
     onNext,
+    hasCompanyData,
 }) => {
     const isValidForm =
         data.name.trim() !== '' &&
         data.companyRole.trim() !== '' &&
-        data.companyName.trim() !== '';
+        (hasCompanyData || data.companyName.trim() !== '');
 
     return (
         <>
@@ -54,11 +55,11 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                 </StyledSignupDialogLabel>
                 <Autocomplete
                     openOnFocus
-                    value={data.companyRole}
+                    value={data.companyRole === '' ? null : data.companyRole}
                     onChange={(_, role) =>
                         setData((prev) => ({
                             ...prev,
-                            companyRole: role || '',
+                            companyRole: role ?? '',
                         }))
                     }
                     options={[
@@ -77,47 +78,54 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                     )}
                 />
             </StyledSignupDialogField>
-            <StyledSignupDialogField>
-                <StyledSignupDialogLabel>Company name</StyledSignupDialogLabel>
-                <StyledSignupDialogTextField
-                    variant='outlined'
-                    placeholder='Company name'
-                    helperText='This is displayed when people join your workspace'
-                    name='organization'
-                    autoComplete='organization'
-                    value={data.companyName}
-                    onChange={(e) =>
-                        setData((prev) => ({
-                            ...prev,
-                            companyName: e.target.value,
-                        }))
-                    }
-                />
-            </StyledSignupDialogField>
+            {!hasCompanyData && (
+                <StyledSignupDialogField>
+                    <StyledSignupDialogLabel>
+                        Company name
+                    </StyledSignupDialogLabel>
+                    <StyledSignupDialogTextField
+                        variant='outlined'
+                        placeholder='Company name'
+                        helperText='This is displayed when people join your workspace'
+                        name='organization'
+                        autoComplete='organization'
+                        value={data.companyName}
+                        onChange={(e) =>
+                            setData((prev) => ({
+                                ...prev,
+                                companyName: e.target.value,
+                            }))
+                        }
+                    />
+                </StyledSignupDialogField>
+            )}
             <StyledCheckboxContainer>
+                {!hasCompanyData && (
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={data.companyIsNA}
+                                onChange={() =>
+                                    setData((prev) => ({
+                                        ...prev,
+                                        companyIsNA: !prev.companyIsNA,
+                                    }))
+                                }
+                                color='primary'
+                            />
+                        }
+                        label='My company is based in North America'
+                    />
+                )}
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={data.companyIsNA}
+                            checked={data.productUpdatesEmailConsent}
                             onChange={() =>
                                 setData((prev) => ({
                                     ...prev,
-                                    companyIsNA: !prev.companyIsNA,
-                                }))
-                            }
-                            color='primary'
-                        />
-                    }
-                    label='My company is based in North America'
-                />
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={data.emailSubscription}
-                            onChange={() =>
-                                setData((prev) => ({
-                                    ...prev,
-                                    emailSubscription: !prev.emailSubscription,
+                                    productUpdatesEmailConsent:
+                                        !prev.productUpdatesEmailConsent,
                                 }))
                             }
                             color='primary'

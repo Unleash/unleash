@@ -9,12 +9,12 @@ import {
 import { ReactComponent as UnleashLogo } from 'assets/img/unleash_logo_dark_no_label.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/unleash_logo_white_no_label.svg';
 import { ThemeMode } from '../../common/ThemeMode/ThemeMode.tsx';
-import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus.ts';
-import { type ComponentType, useState } from 'react';
+import { type ComponentType, useEffect, useRef, useState } from 'react';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { useSignup } from '../hooks/useSignup.ts';
+import { type SignupData, useSignupApi } from '../hooks/useSignupApi.ts';
 
 const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({
     height: '56px',
@@ -94,30 +94,21 @@ export const StyledSignupDialogButton = styled(Button)({
     width: '100%',
 });
 
-export type SignupData = {
-    password: string;
-    name: string;
-    companyRole: string;
-    companyName: string;
-    companyIsNA: boolean;
-    emailSubscription: boolean;
-    inviteEmails: string[];
-};
-
 export type SignupStepContent = ComponentType<{
     data: SignupData;
     setData: React.Dispatch<React.SetStateAction<SignupData>>;
     onNext: () => void;
+    hasCompanyData?: boolean;
 }>;
 
 type SignupStep = {
-    title: string;
+    title: 'Set password' | 'Set up your account' | 'Invite others to join';
     description: string;
     content: SignupStepContent;
     nextText?: string;
 };
 
-const steps: SignupStep[] = [
+const SIGNUP_STEPS: SignupStep[] = [
     {
         title: 'Set password',
         description: `Create a secure password, and you're good to go!`,
@@ -136,39 +127,64 @@ const steps: SignupStep[] = [
 ];
 
 export const SignupDialog = () => {
-    const signupDialogEnabled = useUiFlag('signupDialog');
-    // TODO: Add something to instanceStatus telling us we're signing up, which will control the open state
-    // biome-ignore lint/correctness/noUnusedVariables: WIP
-    const { instanceStatus } = useInstanceStatus();
-    const [open, setOpen] = useState(false);
+    const { signupData, signupRequired, refetch } = useSignup();
+    const { submitSignupData } = useSignupApi();
+
     const [data, setData] = useState<SignupData>({
         password: '',
         name: '',
         companyRole: '',
         companyName: '',
         companyIsNA: false,
-        emailSubscription: false,
+        productUpdatesEmailConsent: false,
         inviteEmails: [],
     });
-
     const [step, setStep] = useState(0);
+
+    const hydratedRef = useRef(false);
+
+    useEffect(() => {
+        if (!signupData || hydratedRef.current) return;
+
+        hydratedRef.current = true;
+
+        setData({
+            password: '',
+            name: signupData.name ?? '',
+            companyRole: signupData.companyRole ?? '',
+            companyName: signupData.companyName ?? '',
+            companyIsNA: signupData.companyIsNA ?? false,
+            productUpdatesEmailConsent:
+                signupData.productUpdatesEmailConsent ?? false,
+            inviteEmails: [],
+        });
+    }, [signupData]);
+
+    const steps = SIGNUP_STEPS.filter(
+        ({ title }) =>
+            title !== 'Set password' || signupData?.shouldSetPassword,
+    );
+
+    useEffect(() => {
+        setStep((s) => Math.min(s, steps.length - 1));
+    }, [steps.length]);
+
     const currentStep = steps[step];
     const StepContent = currentStep.content;
 
-    const onNext = () => {
+    const onNext = async () => {
         if (step < steps.length - 1) {
             setStep(step + 1);
             return;
         }
 
-        // TODO: Submit data to backend
-        setOpen(false);
+        await submitSignupData(data);
+        refetch();
     };
-
-    if (!signupDialogEnabled) return null;
+    if (!signupRequired) return null;
 
     return (
-        <StyledDialog open={open}>
+        <StyledDialog open>
             <StyledBody>
                 <StyledHeader>
                     <ThemeMode
@@ -185,6 +201,7 @@ export const SignupDialog = () => {
                         data={data}
                         setData={setData}
                         onNext={onNext}
+                        hasCompanyData={Boolean(signupData?.companyName)}
                     />
                 </StyledContent>
             </StyledBody>

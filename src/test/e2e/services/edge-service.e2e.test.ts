@@ -30,7 +30,7 @@ beforeAll(async () => {
                 useMemoizedActiveTokens: true,
             },
         },
-        edgeMasterSecret: '5ja3QXrqi4T2A+V+0QOw8eTA68lsHQE81vNO80MGrhw=',
+        edgeMasterKey: '5ja3QXrqi4T2A+V+0QOw8eTA68lsHQE81vNO80MGrhw=',
     });
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;

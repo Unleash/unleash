@@ -183,7 +183,7 @@ export interface IUnleashOptions {
     unleashFrontendToken?: string;
     customStrategySettings?: ICustomStrategySettings;
     checkDbOnReady?: boolean;
-    edgeMasterSecret?: string;
+    edgeMasterKey?: string;
     edgeClientSecret?: string;
 }
 
@@ -313,6 +313,6 @@ export interface IUnleashConfig {
     unleashFrontendToken?: string;
     customStrategySettings?: ICustomStrategySettings;
     checkDbOnReady?: boolean;
-    edgeMasterSecret?: string;
+    edgeMasterKey?: string;
     edgeClientSecret?: string;
 }

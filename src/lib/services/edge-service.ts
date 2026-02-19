@@ -64,20 +64,20 @@ export default class EdgeService {
 
     private edgeTokenStore: IEdgeTokenStore;
 
-    private readonly edgeMasterSecret: string | undefined;
+    private readonly edgeMasterKey: string | undefined;
 
     constructor(
         { edgeTokenStore }: Pick<IUnleashStores, 'edgeTokenStore'>,
         { apiTokenService }: Pick<IUnleashServices, 'apiTokenService'>,
         {
             getLogger,
-            edgeMasterSecret,
-        }: Pick<IUnleashConfig, 'getLogger' | 'edgeMasterSecret'>,
+            edgeMasterKey,
+        }: Pick<IUnleashConfig, 'getLogger' | 'edgeMasterKey'>,
     ) {
         this.logger = getLogger('lib/services/edge-service.ts');
         this.apiTokenService = apiTokenService;
         this.edgeTokenStore = edgeTokenStore;
-        this.edgeMasterSecret = edgeMasterSecret;
+        this.edgeMasterKey = edgeMasterKey;
     }
 
     async getValidTokens(tokens: string[]): Promise<ValidatedEdgeTokensSchema> {
@@ -114,24 +114,22 @@ export default class EdgeService {
     }
 
     decryptedClientSecret(client: EdgeClient): Buffer {
-        if (this.edgeMasterSecret === undefined) {
+        if (this.edgeMasterKey === undefined) {
             throw new InvalidOperationError(
                 'You have to define an EDGE_MASTER_SECRET for this to be supported',
             );
         }
         return decryptSecret(
-            Buffer.from(this.edgeMasterSecret, 'base64'),
+            Buffer.from(this.edgeMasterKey, 'base64'),
             client.secret_enc,
         );
     }
 
     async saveClient(clientId: string, secret: string): Promise<void> {
-        if (this.edgeMasterSecret === undefined) {
-            throw new InvalidOperationError(
-                'EDGE_MASTER_SECRET was not defined',
-            );
+        if (this.edgeMasterKey === undefined) {
+            throw new InvalidOperationError('EDGE_MASTER_KEY was not defined');
         }
-        const masterSecretBuffer = Buffer.from(this.edgeMasterSecret, 'base64');
+        const masterSecretBuffer = Buffer.from(this.edgeMasterKey, 'base64');
         if (masterSecretBuffer.length !== 32) {
             throw new InvalidOperationError(
                 'You must define a 32 byte secret in the EDGE_MASTER_SECRET environment variable',
@@ -146,7 +144,7 @@ export default class EdgeService {
         clientId: string,
         tokenRequest: EdgeEnvironmentsProjectsListSchema,
     ): Promise<ValidatedEdgeTokensSchema> {
-        if (!this.edgeMasterSecret) {
+        if (!this.edgeMasterKey) {
             throw new InvalidOperationError(
                 'You must define a secret in the EDGE_MASTER_SECRET environment variable',
             );

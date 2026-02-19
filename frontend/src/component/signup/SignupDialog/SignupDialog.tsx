@@ -15,6 +15,8 @@ import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
 import { type SignupData, useSignup } from '../hooks/useSignup.ts';
 import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
+import useToast from 'hooks/useToast.tsx';
+import { formatUnknownError } from 'utils/formatUnknownError.ts';
 
 const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({
     height: '56px',
@@ -130,6 +132,7 @@ const SIGNUP_STEPS: SignupStep[] = [
 ];
 
 export const SignupDialog = () => {
+    const { setToastApiError } = useToast();
     const { signupData, signupRequired, refetch } = useSignup();
     const { submitSignupData } = useSignupApi();
 
@@ -178,8 +181,12 @@ export const SignupDialog = () => {
             return;
         }
 
-        await submitSignupData(data);
-        refetch();
+        try {
+            await submitSignupData(data);
+            refetch();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
     if (!signupRequired) return null;
 

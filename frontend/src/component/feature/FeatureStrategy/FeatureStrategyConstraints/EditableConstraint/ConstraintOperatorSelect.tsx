@@ -105,12 +105,7 @@ export const ConstraintOperatorSelect = ({
 
     const operators = isRegexOperatorEnabled
         ? options
-        : options.filter((operator) => {
-              if (isRegexOperator(operator)) {
-                  return false;
-              }
-              return true;
-          });
+        : options.filter((operator) => !isRegexOperator(operator));
 
     return (
         <FormControl variant='standard' size='small' hiddenLabel>

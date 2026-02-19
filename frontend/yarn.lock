@@ -8712,6 +8712,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"re2js@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "re2js@npm:1.2.2"
+  checksum: 10c0/423b058c205cb35b5d89b401268f0587798d33cefe94e43863c428b9bd0eb993102658201b52ffd13338e657a8e81d4a99a2de11d43a71303ad155065d8ea95c
+  languageName: node
+  linkType: hard
+
 "react-activity-calendar@npm:^2.7.11":
   version: 2.7.12
   resolution: "react-activity-calendar@npm:2.7.12"
@@ -10629,6 +10636,7 @@ __metadata:
     pkginfo: "npm:0.4.1"
     plausible-tracker: "npm:0.3.9"
     prop-types: "npm:15.8.1"
+    re2js: "npm:^1.2.2"
     react: "npm:18.3.1"
     react-archer: "npm:4.4.0"
     react-chartjs-2: "npm:4.3.1"

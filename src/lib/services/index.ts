@@ -624,6 +624,7 @@ export {
     UiConfigService,
     ResourceLimitsService,
     ConfigurationRevisionService,
+    type ReleasePlanMilestoneStrategyService,
 };
 
 export interface IUnleashServices {

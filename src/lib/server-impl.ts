@@ -126,6 +126,7 @@ import {
 import SessionStore from './db/session-store.js';
 import metricsHelper from './util/metrics-helper.js';
 import type { ReleasePlanMilestoneStrategyWriteModel } from './features/release-plans/release-plan-milestone-strategy-store.js';
+import type { ReleasePlanMilestoneStrategyService } from './features/release-plans/release-plan-milestone-strategy-service.js';
 import type { IChangeRequestAccessReadModel } from './features/change-request-access-service/change-request-access-read-model.js';
 import { EventStore } from './db/event-store.js';
 import RoleStore from './db/role-store.js';
@@ -572,6 +573,7 @@ export type {
     UnleashTransaction,
     ReleasePlanMilestoneWriteModel,
     ReleasePlanMilestoneStrategyWriteModel,
+    ReleasePlanMilestoneStrategyService,
     IChangeRequestAccessReadModel,
     IRoleWithProject,
     ISchemaValidationErrors,

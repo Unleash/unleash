@@ -1,6 +1,6 @@
 import useAPI from 'hooks/api/actions/useApi/useApi';
 
-export type SignupData = {
+export type SubmitSignupData = {
     password: string;
     name: string;
     companyRole: string;
@@ -17,10 +17,10 @@ export const useSignupApi = () => {
         propagateErrors: true,
     });
 
-    const submitSignupData = async (subscriptionData: SignupData) => {
+    const submitSignupData = async (signupData: SubmitSignupData) => {
         const req = createRequest(ENDPOINT, {
             method: 'POST',
-            body: JSON.stringify(subscriptionData),
+            body: JSON.stringify(signupData),
         });
 
         await makeRequest(req.caller, req.id);

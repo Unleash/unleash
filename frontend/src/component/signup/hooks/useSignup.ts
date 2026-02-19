@@ -6,7 +6,7 @@ import { useConditionalSWR } from 'hooks/api/getters/useConditionalSWR/useCondit
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 
-type SignupDataResponse = {
+export type SignupData = {
     shouldSetPassword?: boolean;
     name?: string;
     companyRole?: string;
@@ -25,9 +25,7 @@ export const useSignup = (options?: SWRConfiguration) => {
     const isPAYG = isEnterprise() && billing === 'pay-as-you-go';
     const signupDialogEnabled = useUiFlag('signupDialog');
 
-    const { data, error, mutate } = useConditionalSWR<
-        SignupDataResponse | undefined
-    >(
+    const { data, error, mutate } = useConditionalSWR<SignupData | undefined>(
         isPAYG && signupDialogEnabled,
         undefined,
         formatApiPath(ENDPOINT),

@@ -13,8 +13,8 @@ import { type ComponentType, useEffect, useRef, useState } from 'react';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
-import { useSignup } from '../hooks/useSignup.ts';
-import { type SignupData, useSignupApi } from '../hooks/useSignupApi.ts';
+import { type SignupData, useSignup } from '../hooks/useSignup.ts';
+import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
 
 const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({
     height: '56px',
@@ -95,10 +95,10 @@ export const StyledSignupDialogButton = styled(Button)({
 });
 
 export type SignupStepContent = ComponentType<{
-    data: SignupData;
-    setData: React.Dispatch<React.SetStateAction<SignupData>>;
+    data: SubmitSignupData;
+    setData: React.Dispatch<React.SetStateAction<SubmitSignupData>>;
     onNext: () => void;
-    hasCompanyData?: boolean;
+    signupData?: SignupData;
 }>;
 
 type SignupStep = {
@@ -106,6 +106,7 @@ type SignupStep = {
     description: string;
     content: SignupStepContent;
     nextText?: string;
+    show?: (signupData?: SignupData) => boolean;
 };
 
 const SIGNUP_STEPS: SignupStep[] = [
@@ -113,6 +114,8 @@ const SIGNUP_STEPS: SignupStep[] = [
         title: 'Set password',
         description: `Create a secure password, and you're good to go!`,
         content: SignupDialogSetPassword,
+        show: (signupData?: SignupData) =>
+            Boolean(signupData?.shouldSetPassword),
     },
     {
         title: 'Set up your account',
@@ -130,7 +133,7 @@ export const SignupDialog = () => {
     const { signupData, signupRequired, refetch } = useSignup();
     const { submitSignupData } = useSignupApi();
 
-    const [data, setData] = useState<SignupData>({
+    const [data, setData] = useState<SubmitSignupData>({
         password: '',
         name: '',
         companyRole: '',
@@ -160,10 +163,7 @@ export const SignupDialog = () => {
         });
     }, [signupData]);
 
-    const steps = SIGNUP_STEPS.filter(
-        ({ title }) =>
-            title !== 'Set password' || signupData?.shouldSetPassword,
-    );
+    const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
 
     useEffect(() => {
         setStep((s) => Math.min(s, steps.length - 1));
@@ -201,7 +201,7 @@ export const SignupDialog = () => {
                         data={data}
                         setData={setData}
                         onNext={onNext}
-                        hasCompanyData={Boolean(signupData?.companyName)}
+                        signupData={signupData}
                     />
                 </StyledContent>
             </StyledBody>

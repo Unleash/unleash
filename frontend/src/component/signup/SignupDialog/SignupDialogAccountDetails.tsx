@@ -24,12 +24,14 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
     data,
     setData,
     onNext,
-    hasCompanyData,
+    signupData,
 }) => {
+    const requestCompanyData = !signupData?.companyName;
+
     const isValidForm =
         data.name.trim() !== '' &&
         data.companyRole.trim() !== '' &&
-        (hasCompanyData || data.companyName.trim() !== '');
+        (!requestCompanyData || data.companyName.trim() !== '');
 
     return (
         <>
@@ -78,7 +80,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                     )}
                 />
             </StyledSignupDialogField>
-            {!hasCompanyData && (
+            {requestCompanyData && (
                 <StyledSignupDialogField>
                     <StyledSignupDialogLabel>
                         Company name
@@ -100,7 +102,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                 </StyledSignupDialogField>
             )}
             <StyledCheckboxContainer>
-                {!hasCompanyData && (
+                {requestCompanyData && (
                     <FormControlLabel
                         control={
                             <Checkbox

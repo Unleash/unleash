@@ -1,6 +1,7 @@
 import { randomId } from '../../util/random-id.js';
 import type { ISegment } from '../../types/model.js';
 import { collectIds } from '../../util/collect-ids.js';
+import { vi } from 'vitest';
 import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';
@@ -187,6 +188,33 @@ test('should fail on missing properties', async () => {
         });
 
     expect(res.status).toBe(400);
+});
+
+test('should return 403 when user lacks permission to update strategy segments', async () => {
+    await app.createSegment({
+        name: 'S1',
+        constraints: [],
+    });
+    const flag = mockFeatureFlag();
+    await createFeatureFlag(app, flag);
+    const [segment] = await fetchSegments();
+
+    await addStrategyToFeatureEnv(
+        app,
+        { ...flag.strategies[0] },
+        DEFAULT_ENV,
+        flag.name,
+    );
+    const [feature] = await fetchFeatures();
+    const [strategy] = await fetchFeatureStrategies(feature.name);
+
+    const hasPermissionSpy = vi
+        .spyOn(app.services.accessService, 'hasPermission')
+        .mockResolvedValueOnce(false);
+
+    await addSegmentsToStrategy([segment.id], strategy.id, 403);
+
+    expect(hasPermissionSpy).toHaveBeenCalledTimes(1);
 });
 
 test('should create segments', async () => {

@@ -342,12 +342,13 @@ export class SegmentsController extends Controller {
     ): Promise<void> {
         const { projectId, environmentId, strategyId, segmentIds } = req.body;
 
-        const hasFeatureStrategyPermission = this.accessService.hasPermission(
-            req.user,
-            UPDATE_FEATURE_STRATEGY,
-            projectId,
-            environmentId,
-        );
+        const hasFeatureStrategyPermission =
+            await this.accessService.hasPermission(
+                req.user,
+                UPDATE_FEATURE_STRATEGY,
+                projectId,
+                environmentId,
+            );
 
         if (!hasFeatureStrategyPermission) {
             res.status(403).send();

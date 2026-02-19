@@ -41,7 +41,7 @@ export class ReleasePlanMilestoneStrategyService {
 
     async updateStrategy(
         id: string,
-        strategy: MilestoneStrategyConfig,
+        strategy: Partial<MilestoneStrategyConfig>,
         context: MilestoneStrategyContext,
         auditUser: IAuditUser,
         user?: IUser,

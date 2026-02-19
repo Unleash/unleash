@@ -32,7 +32,7 @@ export class FakeReleasePlanMilestoneStrategyStore
 
     async upsert(
         _strategyId: string,
-        _strategy: MilestoneStrategyConfig,
+        _strategy: Partial<MilestoneStrategyConfig>,
     ): Promise<ReleasePlanMilestoneStrategy> {
         return {} as ReleasePlanMilestoneStrategy;
     }

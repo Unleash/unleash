@@ -22,7 +22,7 @@ export interface IReleasePlanMilestoneStrategyStore
     ): Promise<ReleasePlanMilestoneStrategy>;
     upsert(
         id: string,
-        updates: MilestoneStrategyConfig,
+        updates: Partial<MilestoneStrategyConfig>,
     ): Promise<ReleasePlanMilestoneStrategy>;
     deleteStrategiesForMilestone(milestoneId: string): Promise<void>;
 }
@@ -54,7 +54,7 @@ const toRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
     };
 };
 
-const toUpdateRow = (item: MilestoneStrategyConfig) => {
+const toUpdateRow = (item: Partial<MilestoneStrategyConfig>) => {
     return {
         milestone_id: item.milestoneId,
         sort_order: item.sortOrder,
@@ -98,7 +98,7 @@ export class ReleasePlanMilestoneStrategyStore
 
     private async updateStrategy(
         strategyId: string,
-        { segments, ...strategy }: MilestoneStrategyConfig,
+        { segments, ...strategy }: Partial<MilestoneStrategyConfig>,
     ): Promise<ReleasePlanMilestoneStrategy> {
         const rows = await this.db(this.tableName)
             .where({ id: strategyId })
@@ -109,7 +109,7 @@ export class ReleasePlanMilestoneStrategyStore
 
     async upsert(
         strategyId: string,
-        { segments, ...strategy }: MilestoneStrategyConfig,
+        { segments, ...strategy }: Partial<MilestoneStrategyConfig>,
     ): Promise<ReleasePlanMilestoneStrategy> {
         const releasePlanMilestoneStrategy = await this.updateStrategy(
             strategyId,

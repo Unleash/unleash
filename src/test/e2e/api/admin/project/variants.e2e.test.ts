@@ -68,6 +68,37 @@ test('Can get variants for a feature', async () => {
         });
 });
 
+test('Cannot get variants for a feature through a different project path', async () => {
+    const featureName = 'feature-variants-cross-project';
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+        createdByUserId: 9999,
+    });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        DEFAULT_ENV,
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        DEFAULT_ENV,
+        [
+            {
+                name: 'variant-hidden-by-project-scope',
+                stickiness: 'default',
+                weight: 1000,
+                weightType: WeightType.VARIABLE,
+            },
+        ],
+    );
+
+    await app.request
+        .get(
+            `/api/admin/projects/not-default/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
+        )
+        .expect(404);
+});
+
 test('Trying to do operations on a non-existing feature yields 404', async () => {
     await app.request
         .get(

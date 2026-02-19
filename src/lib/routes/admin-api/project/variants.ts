@@ -214,7 +214,11 @@ The backend will also distribute remaining weight up to 1000 after adding the va
         req: Request<FeatureEnvironmentParams, any, any, any>,
         res: Response<FeatureVariantsSchema>,
     ): Promise<void> {
-        const { featureName, environment } = req.params;
+        const { projectId, featureName, environment } = req.params;
+        await this.featureService.validateFeatureBelongsToProject({
+            featureName,
+            projectId,
+        });
         const variants = await this.featureService.getVariantsForEnv(
             featureName,
             environment,

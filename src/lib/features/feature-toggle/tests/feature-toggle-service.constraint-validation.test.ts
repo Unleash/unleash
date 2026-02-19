@@ -1,8 +1,5 @@
 import { createFakeFeatureToggleService } from '../createFeatureToggleService.js';
-import type {
-    IFlagResolver,
-    IUnleashConfig,
-} from '../../../types/index.js';
+import type { IFlagResolver, IUnleashConfig } from '../../../types/index.js';
 import getLogger from '../../../../test/fixtures/no-logger.js';
 import { REGEX } from '../../../util/constants.js';
 import { describe, test, expect } from 'vitest';

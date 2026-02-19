@@ -266,7 +266,10 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         newConstraints: IConstraint[] = [],
     ) {
         const formatConstraints = (constraints: IConstraint[]) => {
-            const constraintOperatorDescriptions = {
+            const constraintOperatorDescriptions: Record<
+                IConstraint['operator'],
+                string
+            > = {
                 IN: 'is one of',
                 NOT_IN: 'is not one of',
                 STR_CONTAINS: 'is a string that contains',
@@ -282,6 +285,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 SEMVER_EQ: 'is a SemVer equal to',
                 SEMVER_GT: 'is a SemVer greater than',
                 SEMVER_LT: 'is a SemVer less than',
+                REGEX: 'matches regex',
             };
             const formatConstraint = (constraint: IConstraint) => {
                 const val = constraint.hasOwnProperty('value')

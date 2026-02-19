@@ -75,6 +75,7 @@ import {
     DATE_OPERATORS,
     DEFAULT_ENV,
     NUM_OPERATORS,
+    REGEX,
     SEMVER_OPERATORS,
     STRING_OPERATORS,
 } from '../../util/index.js';
@@ -87,6 +88,7 @@ import {
     validateNumber,
     validateSemver,
     validateString,
+    validateRegex,
 } from '../../util/validators/constraint-types.js';
 import type { IContextFieldStore } from '../context/context-field-store-type.js';
 import type { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema.js';
@@ -499,6 +501,10 @@ export class FeatureToggleService {
 
         if (oneOf(DATE_OPERATORS, operator)) {
             await validateDate(constraint.value);
+        }
+
+        if (operator === REGEX) {
+            validateRegex(constraint.value);
         }
 
         if (await this.contextFieldStore.exists(constraint.contextName)) {

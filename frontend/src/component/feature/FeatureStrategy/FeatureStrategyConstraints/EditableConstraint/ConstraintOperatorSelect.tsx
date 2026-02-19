@@ -12,12 +12,15 @@ import {
     semVerOperators,
     dateOperators,
     numOperators,
+    regexOperators,
     inOperators,
+    isRegexOperator,
 } from 'constants/operators';
 import { useId } from 'react';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { formatOperatorDescription } from 'utils/formatOperatorDescription';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IConstraintOperatorSelectProps {
     options: Operator[];
@@ -98,6 +101,17 @@ export const ConstraintOperatorSelect = ({
         );
     };
 
+    const isRegexOperatorEnabled = useUiFlag('regexConstraintOperator');
+
+    const operators = isRegexOperatorEnabled
+        ? options
+        : options.filter((operator) => {
+              if (isRegexOperator(operator)) {
+                  return false;
+              }
+              return true;
+          });
+
     return (
         <FormControl variant='standard' size='small' hiddenLabel>
             <ScreenReaderOnly>
@@ -115,11 +129,11 @@ export const ConstraintOperatorSelect = ({
                 renderValue={renderValue}
                 IconComponent={KeyboardArrowDownOutlined}
             >
-                {options.map((operator) => (
+                {operators.map((operator) => (
                     <StyledMenuItem
                         key={operator}
                         value={operator}
-                        separator={needSeparatorAbove(options, operator)}
+                        separator={needSeparatorAbove(operators, operator)}
                     >
                         {formatOperatorDescription(operator, inverted)}
                     </StyledMenuItem>
@@ -145,4 +159,5 @@ const operatorGroups = [
     numOperators,
     dateOperators,
     semVerOperators,
+    regexOperators,
 ];

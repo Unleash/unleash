@@ -34,6 +34,7 @@ export const DATE_BEFORE = 'DATE_BEFORE';
 export const SEMVER_EQ = 'SEMVER_EQ';
 export const SEMVER_GT = 'SEMVER_GT';
 export const SEMVER_LT = 'SEMVER_LT';
+export const REGEX = 'REGEX';
 
 export const ALL_OPERATORS = [
     NOT_IN,
@@ -51,6 +52,7 @@ export const ALL_OPERATORS = [
     SEMVER_EQ,
     SEMVER_GT,
     SEMVER_LT,
+    REGEX,
 ] as const;
 
 export const STRING_OPERATORS = [

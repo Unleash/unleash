@@ -403,6 +403,18 @@ test('clientFeaturesSchema client specification test 15', () => {
               "value": "4"
             }
           ]
+        },
+        {
+          "id": 6,
+          "constraints": [
+            {
+              "contextName": "customName",
+              "operator": "REGEX",
+              "value": "[a-z]+",
+              "inverted": false,
+              "caseInsensitive": true
+            }
+          ]
         }
       ]
     }`;

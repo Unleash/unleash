@@ -22,6 +22,7 @@ import {
     NUM_GTE,
     NUM_LT,
     NUM_LTE,
+    REGEX,
     SEMVER_EQ,
     SEMVER_GT,
     SEMVER_LT,
@@ -255,10 +256,56 @@ const testCases: [string, IEvent][] = [
             environment: 'production',
         },
     ],
+    ...[REGEX].map(
+        (operator) =>
+            <[string, IEvent]>[
+                `when default strategy updated with operator ${operator}`,
+                {
+                    id: 39,
+                    type: FEATURE_STRATEGY_UPDATE,
+                    createdBy: 'admin',
+                    createdByUserId: SYSTEM_USER_ID,
+                    createdAt: new Date('2023-02-20T20:23:28.791Z'),
+                    data: {
+                        id: 'f2d34aac-52ec-49d2-82d3-08d710e89eaa',
+                        name: 'default',
+                        constraints: [
+                            {
+                                value: '[x|y]',
+                                inverted: false,
+                                operator: operator,
+                                contextName: 'appName',
+                                caseInsensitive: false,
+                            },
+                            {
+                                value: 'x',
+                                inverted: true,
+                                operator: operator,
+                                contextName: 'appName',
+                                caseInsensitive: false,
+                            },
+                        ],
+                        parameters: {},
+                        segments: [],
+                    },
+                    preData: {
+                        id: 'f2d34aac-52ec-49d2-82d3-08d710e89eaa',
+                        name: 'default',
+                        segments: [],
+                        parameters: {},
+                        constraints: [],
+                    },
+                    tags: [],
+                    featureName: 'aaa',
+                    project: 'default',
+                    environment: 'production',
+                },
+            ],
+    ),
     ...[IN, NOT_IN, STR_CONTAINS, STR_STARTS_WITH, STR_ENDS_WITH].map(
         (operator) =>
             <[string, IEvent]>[
-                'when default strategy updated',
+                `when default strategy updated with operator ${operator}`,
                 {
                     id: 39,
                     type: FEATURE_STRATEGY_UPDATE,

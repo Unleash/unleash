@@ -122,6 +122,7 @@
     "pg-connection-string": "^2.5.0",
     "pkginfo": "^0.4.1",
     "prom-client": "^15.0.0",
+    "re2js": "^1.2.2",
     "sanitize-filename": "^1.6.3",
     "semver": "^7.7.3",
     "serve-favicon": "^2.5.0",
@@ -131,7 +132,7 @@
     "ts-toolbelt": "^9.6.0",
     "type-is": "^2.0.0",
     "ulidx": "^2.4.1",
-    "unleash-client": "^6.9.0"
+    "unleash-client": "^6.9.7-beta.0"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "12.1.0",

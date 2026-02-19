@@ -10,7 +10,7 @@ export const formatOperatorDescription = (
     return constraintOperatorDescriptions[operator];
 };
 
-const constraintOperatorDescriptions = {
+const constraintOperatorDescriptions: Record<Operator, string> = {
     IN: 'is one of',
     NOT_IN: 'is not one of',
     STR_CONTAINS: 'is a string that contains',
@@ -26,9 +26,10 @@ const constraintOperatorDescriptions = {
     SEMVER_EQ: 'is a SemVer equal to',
     SEMVER_GT: 'is a SemVer greater than',
     SEMVER_LT: 'is a SemVer less than',
+    REGEX: 'matches regex',
 };
 
-const invertedConstraintOperatorDescriptions = {
+const invertedConstraintOperatorDescriptions: Record<Operator, string> = {
     IN: 'is not one of',
     NOT_IN: 'is one of',
     STR_CONTAINS: 'is a string that does not contain',
@@ -44,4 +45,5 @@ const invertedConstraintOperatorDescriptions = {
     SEMVER_EQ: 'is a SemVer not equal to',
     SEMVER_GT: 'is a SemVer not greater than',
     SEMVER_LT: 'is a SemVer not less than',
+    REGEX: 'does not match regex',
 };

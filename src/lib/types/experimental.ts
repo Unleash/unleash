@@ -72,6 +72,7 @@ export type IFlagKey =
     | 'privateProjectMiddlewareMove'
     | 'remoteMcpServer'
     | 'datePickerRangeConstraints'
+    | 'regexConstraintOperator'
     | 'signupDialog'
     | 'updateMilestoneStrategy';
 
@@ -320,6 +321,10 @@ const flags: IFlags = {
     ),
     datePickerRangeConstraints: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DATEPICKER_RANGE_CONSTRAINTS,
+        false,
+    ),
+    regexConstraintOperator: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_REGEX_CONSTRAINT_OPERATOR,
         false,
     ),
     signupDialog: parseEnvVarBoolean(

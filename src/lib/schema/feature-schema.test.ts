@@ -361,7 +361,7 @@ test('constraint schema should only allow specified operators', async () => {
         await constraintSchema.validateAsync(invalidConstraint);
     } catch (error) {
         expect(error.message).toBe(
-            '"operator" must be one of [NOT_IN, IN, STR_ENDS_WITH, STR_STARTS_WITH, STR_CONTAINS, NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE, DATE_AFTER, DATE_BEFORE, SEMVER_EQ, SEMVER_GT, SEMVER_LT]',
+            '"operator" must be one of [NOT_IN, IN, STR_ENDS_WITH, STR_STARTS_WITH, STR_CONTAINS, NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE, DATE_AFTER, DATE_BEFORE, SEMVER_EQ, SEMVER_GT, SEMVER_LT, REGEX]',
         );
     }
 });

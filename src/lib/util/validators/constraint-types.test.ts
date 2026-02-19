@@ -1,4 +1,8 @@
-import { validateSemver, validateLegalValues } from './constraint-types.js';
+import {
+    validateSemver,
+    validateLegalValues,
+    validateRegex,
+} from './constraint-types.js';
 import type { ILegalValue } from '../../features/context/context-field-store-type.js';
 
 const legalValues: Readonly<ILegalValue[]> = [
@@ -110,4 +114,36 @@ test('should pass validation if all of the values exists in legal values', () =>
             `input values are not specified as a legal value on this context field`,
         );
     }
+});
+
+test('regex validation should throw with invalid regex', () => {
+    const badRegex = '(unclosed';
+    expect.assertions(1);
+
+    try {
+        validateRegex(badRegex);
+    } catch (e) {
+        expect(e.message).toContain(
+            `Request validation failed: your request body or params contain invalid data: the provided value is not a valid regex string. Error: error parsing regexp: missing closing ): \`(unclosed\``,
+        );
+    }
+});
+
+test('regex validation should throw with invalid regex type', () => {
+    const badRegex = 500;
+    expect.assertions(1);
+
+    try {
+        validateRegex(badRegex);
+    } catch (e) {
+        expect(e.message).toContain(
+            `Request validation failed: your request body or params contain invalid data: the provided value is not a valid regex string.`,
+        );
+    }
+});
+
+test('regex validation should accept a valid regex', () => {
+    const goodRegex = '^[a-zA-Z0-9]+$';
+
+    expect(() => validateRegex(goodRegex)).not.toThrow();
 });

@@ -60,6 +60,10 @@ export const ConstraintExecution: FC<IConstraintExecutionProps> = ({
     const errorText = () => {
         const value = input?.context[constraint.contextName];
 
+        if (constraint.operator === 'REGEX' && value && constraint.value) {
+            return `Constraint not met – the value in the context ${constraint.contextName}: { ${value} } is not matching ${constraint.operator} ${constraint.value}`;
+        }
+
         if (value) {
             return `Constraint not met – the value in the context: { ${value} } is not ${constraint.operator} ${constraint.contextName}`;
         }

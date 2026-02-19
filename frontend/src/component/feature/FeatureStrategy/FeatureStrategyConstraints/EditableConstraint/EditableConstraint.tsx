@@ -1,6 +1,10 @@
 import { IconButton, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { isStringOperator, type Operator } from 'constants/operators';
+import {
+    isRegexOperator,
+    isStringOperator,
+    type Operator,
+} from 'constants/operators';
 import { useCallback, useRef, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
@@ -26,6 +30,7 @@ import {
     isDateConstraint,
     isMultiValueConstraint,
     isNumberConstraint,
+    isRegexConstraint,
     isSemVerConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
@@ -186,6 +191,20 @@ const TopRowInput: FC<{
             />
         );
     }
+    if (isRegexConstraint(localConstraint)) {
+        return (
+            <AddSingleValueWidget
+                validator={validator}
+                onAddValue={addValues}
+                removeValue={clearValues}
+                currentValue={localConstraint.value}
+                helpText={
+                    'A regex value should be a valid RE2 regular expression'
+                }
+                inputType={'text'}
+            />
+        );
+    }
     if (isNumberConstraint(localConstraint)) {
         return (
             <AddSingleValueWidget
@@ -256,7 +275,8 @@ export const EditableConstraint: FC<Props> = ({
     const { context } = useAssignableUnleashContext();
 
     const { contextName, operator } = localConstraint;
-    const showCaseSensitiveButton = isStringOperator(operator);
+    const showCaseSensitiveButton =
+        isStringOperator(operator) || isRegexOperator(operator);
     const deleteButtonRef = useRef<HTMLButtonElement>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
 

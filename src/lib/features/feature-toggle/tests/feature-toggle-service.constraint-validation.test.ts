@@ -179,7 +179,8 @@ describe('Constraint validation via create strategy', () => {
 
 describe('Constraint validation via update strategy', () => {
     test('should reject invalid regex', async () => {
-        const { featureToggleService, featureStrategiesStore } = createService();
+        const { featureToggleService, featureStrategiesStore } =
+            createService();
 
         await featureStrategiesStore.createFeature({
             name: 'feature',
@@ -219,7 +220,8 @@ describe('Constraint validation via update strategy', () => {
     });
 
     test('should accept valid regex', async () => {
-        const { featureToggleService, featureStrategiesStore } = createService();
+        const { featureToggleService, featureStrategiesStore } =
+            createService();
 
         await featureStrategiesStore.createFeature({
             name: 'feature',

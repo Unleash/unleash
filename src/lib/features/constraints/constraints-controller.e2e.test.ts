@@ -33,7 +33,11 @@ describe('ConstraintsController - POST /validate', () => {
     test('returns 400 for an invalid constraint', async () => {
         await app.request
             .post(PATH)
-            .send({ contextName: 'environment', operator: 'NUM_EQ', value: 'not-a-number' })
+            .send({
+                contextName: 'environment',
+                operator: 'NUM_EQ',
+                value: 'not-a-number',
+            })
             .expect(400);
     });
 });

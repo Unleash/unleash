@@ -169,6 +169,7 @@ export const SignupDialog = () => {
     const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
 
     useEffect(() => {
+        if (steps.length === 0) return;
         setStep((s) => Math.min(s, steps.length - 1));
     }, [steps.length]);
 
@@ -188,7 +189,8 @@ export const SignupDialog = () => {
             setToastApiError(formatUnknownError(error));
         }
     };
-    if (!signupRequired) return null;
+
+    if (!signupRequired || steps.length === 0) return null;
 
     return (
         <StyledDialog open>

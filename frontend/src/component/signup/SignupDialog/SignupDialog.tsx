@@ -9,12 +9,14 @@ import {
 import { ReactComponent as UnleashLogo } from 'assets/img/unleash_logo_dark_no_label.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/unleash_logo_white_no_label.svg';
 import { ThemeMode } from '../../common/ThemeMode/ThemeMode.tsx';
-import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus.ts';
-import { type ComponentType, useState } from 'react';
+import { type ComponentType, useEffect, useRef, useState } from 'react';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { type SignupData, useSignup } from '../hooks/useSignup.ts';
+import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
+import useToast from 'hooks/useToast.tsx';
+import { formatUnknownError } from 'utils/formatUnknownError.ts';
 
 const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({
     height: '56px',
@@ -94,34 +96,29 @@ export const StyledSignupDialogButton = styled(Button)({
     width: '100%',
 });
 
-export type SignupData = {
-    password: string;
-    name: string;
-    companyRole: string;
-    companyName: string;
-    companyIsNA: boolean;
-    emailSubscription: boolean;
-    inviteEmails: string[];
-};
-
 export type SignupStepContent = ComponentType<{
-    data: SignupData;
-    setData: React.Dispatch<React.SetStateAction<SignupData>>;
+    data: SubmitSignupData;
+    setData: React.Dispatch<React.SetStateAction<SubmitSignupData>>;
     onNext: () => void;
+    signupData?: SignupData;
+    isSubmitting?: boolean;
 }>;
 
 type SignupStep = {
-    title: string;
+    title: 'Set password' | 'Set up your account' | 'Invite others to join';
     description: string;
     content: SignupStepContent;
     nextText?: string;
+    show?: (signupData?: SignupData) => boolean;
 };
 
-const steps: SignupStep[] = [
+const SIGNUP_STEPS: SignupStep[] = [
     {
         title: 'Set password',
         description: `Create a secure password, and you're good to go!`,
         content: SignupDialogSetPassword,
+        show: (signupData?: SignupData) =>
+            Boolean(signupData?.shouldSetPassword),
     },
     {
         title: 'Set up your account',
@@ -136,39 +133,73 @@ const steps: SignupStep[] = [
 ];
 
 export const SignupDialog = () => {
-    const signupDialogEnabled = useUiFlag('signupDialog');
-    // TODO: Add something to instanceStatus telling us we're signing up, which will control the open state
-    // biome-ignore lint/correctness/noUnusedVariables: WIP
-    const { instanceStatus } = useInstanceStatus();
-    const [open, setOpen] = useState(false);
-    const [data, setData] = useState<SignupData>({
+    const { setToastApiError } = useToast();
+    const { signupData, signupRequired, refetch } = useSignup();
+    const { submitSignupData } = useSignupApi();
+
+    const [data, setData] = useState<SubmitSignupData>({
         password: '',
         name: '',
         companyRole: '',
         companyName: '',
         companyIsNA: false,
-        emailSubscription: false,
+        productUpdatesEmailConsent: false,
         inviteEmails: [],
     });
-
     const [step, setStep] = useState(0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const hydratedRef = useRef(false);
+
+    useEffect(() => {
+        if (!signupData || hydratedRef.current) return;
+
+        hydratedRef.current = true;
+
+        setData({
+            password: '',
+            name: signupData.name ?? '',
+            companyRole: signupData.companyRole ?? '',
+            companyName: signupData.companyName ?? '',
+            companyIsNA: signupData.companyIsNA ?? false,
+            productUpdatesEmailConsent:
+                signupData.productUpdatesEmailConsent ?? false,
+            inviteEmails: [],
+        });
+    }, [signupData]);
+
+    const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
+
+    useEffect(() => {
+        if (steps.length === 0) return;
+        setStep((s) => Math.min(s, steps.length - 1));
+    }, [steps.length]);
+
     const currentStep = steps[step];
     const StepContent = currentStep.content;
 
-    const onNext = () => {
+    const onNext = async () => {
+        if (isSubmitting) return;
+
         if (step < steps.length - 1) {
             setStep(step + 1);
             return;
         }
 
-        // TODO: Submit data to backend
-        setOpen(false);
+        try {
+            setIsSubmitting(true);
+            await submitSignupData(data);
+            refetch();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
-    if (!signupDialogEnabled) return null;
+    if (!signupRequired || steps.length === 0) return null;
 
     return (
-        <StyledDialog open={open}>
+        <StyledDialog open>
             <StyledBody>
                 <StyledHeader>
                     <ThemeMode
@@ -185,6 +216,8 @@ export const SignupDialog = () => {
                         data={data}
                         setData={setData}
                         onNext={onNext}
+                        signupData={signupData}
+                        isSubmitting={isSubmitting}
                     />
                 </StyledContent>
             </StyledBody>

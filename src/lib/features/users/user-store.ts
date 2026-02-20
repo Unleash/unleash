@@ -45,6 +45,8 @@ const mapUserToColumns = (user: ICreateUser) => ({
     username: user.username,
     email: safeToLower(user.email),
     image_url: user.imageUrl,
+    company_role: user.companyRole,
+    product_updates_email_consent: user.productUpdatesEmailConsent,
 });
 
 const rowToUser = (row) => {

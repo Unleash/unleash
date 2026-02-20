@@ -88,6 +88,10 @@ export class User implements IUser {
 
     seatType?: SeatType;
 
+    companyRole?: string;
+
+    productUpdatesEmailConsent?: boolean;
+
     constructor({
         id,
         name,
@@ -100,6 +104,8 @@ export class User implements IUser {
         isService,
         scimId,
         seatType,
+        companyRole,
+        productUpdatesEmailConsent,
     }: UserData) {
         if (!id) {
             throw new ValidationError('Id is required', [], undefined);
@@ -116,6 +122,8 @@ export class User implements IUser {
         this.accountType = isService ? 'Service Account' : 'User';
         this.scimId = scimId;
         this.seatType = seatType;
+        this.companyRole = companyRole;
+        this.productUpdatesEmailConsent = productUpdatesEmailConsent;
     }
 
     generateImageUrl(): string {

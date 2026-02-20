@@ -37,9 +37,13 @@ This ADR complements the stability lifecycle. Stability still answers **"how mat
 - Audience changes are generally safe when URL contracts and behavior remain unchanged.
 - For audiences requiring stronger guarantees (especially `sdk`/`integration`), we may add explicit architectural boundaries for net-new surfaces (for example dedicated routes, ownership, or stricter review gates).
 
+**Audience naming convention:**
+- Audience identifiers must use lowercase kebab-case (for example `unleash-ui`).
+- New audience names should be short, purpose-oriented labels, and avoid embedding URL or ownership details.
+
 ## Audience definitions
 
-- `public`: General external API surface for customer-built integrations.
+- `public`: Legacy/default external API audience. Historically most endpoints lived here with similar support expectations. It remains our generic external audience, and endpoints may move to more specific audiences (`integration`, `sdk`, `unleash-ui`) as intent becomes clearer.
 - `integration`: Intended for specific supported integrations (Terraform, Jira, etc.). Tailored to those clients.
 - `sdk`: Intended for Unleash SDKs. Strictest validation and long-term backward compatibility due to slow SDK upgrade cadence.
 - `unleash-ui`: Intended to serve the Unleash UI. May evolve faster; not recommended for external integrations.

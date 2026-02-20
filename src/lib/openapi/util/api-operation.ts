@@ -1,5 +1,6 @@
 import type { OpenAPIV3 } from 'openapi-types';
 import type { OpenApiTag } from './openapi-tags.js';
+import type { ApiAudience } from './api-audiences.js';
 
 /**
  * Explicit stability declaration for each operation.
@@ -33,5 +34,5 @@ export type ApiOperation<Tag = OpenApiTag> = Omit<
      * Intended audience for the endpoint. Used for OpenAPI extensions only.
      * @default 'public'
      */
-    audience?: 'public' | 'integration' | 'sdk' | 'unleash-ui' | 'internal';
+    audience?: ApiAudience;
 };

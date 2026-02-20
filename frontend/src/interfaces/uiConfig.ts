@@ -92,6 +92,7 @@ export type UiFlags = {
     regexConstraintOperator?: boolean;
     signupDialog?: boolean;
     updateMilestoneStrategy?: boolean;
+    impactMetricsFlagPage?: boolean;
 };
 
 export interface IVersionInfo {

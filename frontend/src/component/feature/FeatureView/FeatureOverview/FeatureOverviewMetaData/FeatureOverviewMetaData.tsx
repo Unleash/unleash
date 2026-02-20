@@ -184,12 +184,7 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
 
     const emptyStateContent = (
         <>
-            <StyledTitle>
-                You can now add links{' '}
-                <Badge color='success' sx={{ ml: 1 }}>
-                    New
-                </Badge>
-            </StyledTitle>
+            <StyledTitle>Add links</StyledTitle>
             <StyledMetaDataItem>
                 Gather relevant links for external resources such as issue
                 trackers, code repositories or analytics tooling

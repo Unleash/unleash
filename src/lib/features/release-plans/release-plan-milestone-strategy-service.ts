@@ -2,6 +2,7 @@ import type {
     IAuditUser,
     IUnleashConfig,
     MilestoneStrategyConfig,
+    MilestoneStrategyConfigUpdate,
 } from '../../types/index.js';
 import type { IUser } from '../../types/user.js';
 import type { Logger } from '../../logger.js';
@@ -41,7 +42,7 @@ export class ReleasePlanMilestoneStrategyService {
 
     async updateStrategy(
         id: string,
-        strategy: MilestoneStrategyConfig,
+        strategy: Partial<MilestoneStrategyConfigUpdate>,
         context: MilestoneStrategyContext,
         auditUser: IAuditUser,
         user?: IUser,

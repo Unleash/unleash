@@ -3,7 +3,7 @@ import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-stra
 import { CRUDStore, type CrudStoreConfig } from '../../db/crud/crud-store.js';
 import type { Row } from '../../db/crud/row-type.js';
 import type { Db } from '../../db/db.js';
-import type { MilestoneStrategyConfig } from '../../types/index.js';
+import type { MilestoneStrategyConfigUpdate } from '../../types/index.js';
 import type { Store } from '../../types/stores/store.js';
 const TABLE = 'milestone_strategies';
 
@@ -22,7 +22,7 @@ export interface IReleasePlanMilestoneStrategyStore
     ): Promise<ReleasePlanMilestoneStrategy>;
     upsert(
         id: string,
-        updates: MilestoneStrategyConfig,
+        updates: Partial<MilestoneStrategyConfigUpdate>,
     ): Promise<ReleasePlanMilestoneStrategy>;
     deleteStrategiesForMilestone(milestoneId: string): Promise<void>;
 }
@@ -54,12 +54,11 @@ const toRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
     };
 };
 
-const toUpdateRow = (item: MilestoneStrategyConfig) => {
+const toUpdateRow = (item: Partial<MilestoneStrategyConfigUpdate>) => {
     return {
         milestone_id: item.milestoneId,
         sort_order: item.sortOrder,
         title: item.title,
-        strategy_name: item.strategyName,
         parameters: item.parameters ?? {},
         constraints: JSON.stringify(item.constraints ?? []),
         variants: JSON.stringify(item.variants ?? []),
@@ -98,7 +97,7 @@ export class ReleasePlanMilestoneStrategyStore
 
     private async updateStrategy(
         strategyId: string,
-        { segments, ...strategy }: MilestoneStrategyConfig,
+        { segments, ...strategy }: Partial<MilestoneStrategyConfigUpdate>,
     ): Promise<ReleasePlanMilestoneStrategy> {
         const rows = await this.db(this.tableName)
             .where({ id: strategyId })
@@ -109,7 +108,7 @@ export class ReleasePlanMilestoneStrategyStore
 
     async upsert(
         strategyId: string,
-        { segments, ...strategy }: MilestoneStrategyConfig,
+        { segments, ...strategy }: Partial<MilestoneStrategyConfigUpdate>,
     ): Promise<ReleasePlanMilestoneStrategy> {
         const releasePlanMilestoneStrategy = await this.updateStrategy(
             strategyId,

@@ -136,10 +136,7 @@ export const createFeatureToggleService = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
-    const constraintsReadModel = createConstraintsReadModel(
-        db,
-        contextFieldStore,
-    );
+    const constraintsReadModel = createConstraintsReadModel(contextFieldStore);
 
     const featureToggleService = new FeatureToggleService(
         {
@@ -209,10 +206,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     const { featureLinkService } = createFakeFeatureLinkService(config);
     // not using fake as validation is checked in tests.
     // TODO: think if this should be refactored
-    const constraintsReadModel = createConstraintsReadModel(
-        null as any,
-        contextFieldStore,
-    );
+    const constraintsReadModel = createConstraintsReadModel(contextFieldStore);
 
     const resourceLimitsService = new ResourceLimitsService(config);
 

@@ -4,10 +4,7 @@ import type { IConstraint } from '../../types/index.js';
 
 const createReadModel = (contextFieldStore?: FakeContextFieldStore) => {
     const store = contextFieldStore ?? new FakeContextFieldStore();
-    const readModel = new ConstraintsReadModel(
-        {} as any, // db not used in validation
-        store,
-    );
+    const readModel = new ConstraintsReadModel(store);
     return { readModel, store };
 };
 

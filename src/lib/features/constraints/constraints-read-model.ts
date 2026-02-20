@@ -1,4 +1,3 @@
-import type { Db } from '../../db/db.js';
 import type { IConstraint, IContextFieldStore } from '../../types/index.js';
 import { constraintSchema } from '../../schema/feature-schema.js';
 import {
@@ -23,12 +22,9 @@ const oneOf = (values: string[], match: string) => {
 };
 
 export class ConstraintsReadModel implements IConstraintsReadModel {
-    // biome-ignore lint/correctness/noUnusedPrivateClassMembers: should be useful later on.
-    private db: Db;
     private contextFieldStore: IContextFieldStore;
 
-    constructor(db: Db, contextFieldStore: IContextFieldStore) {
-        this.db = db;
+    constructor(contextFieldStore: IContextFieldStore) {
         this.contextFieldStore = contextFieldStore;
     }
 

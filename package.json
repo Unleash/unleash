@@ -141,7 +141,7 @@
     "@faker-js/faker": "^10.1.0",
     "@fast-check/vitest": "^0.2.4",
     "@types/cors": "2.8.19",
-    "@types/express": "4.17.23",
+    "@types/express": "4.17.25",
     "@types/express-session": "1.18.2",
     "@types/hash-sum": "^1.0.2",
     "@types/js-yaml": "4.0.9",

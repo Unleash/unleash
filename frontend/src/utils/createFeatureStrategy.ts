@@ -9,6 +9,7 @@ import type {
 export const createFeatureStrategy = (
     featureId: string,
     strategyDefinition: IStrategy,
+    defaultStickiness: string = 'default',
 ): Omit<IFeatureStrategy, 'id'> => {
     const parameters: IFeatureStrategyParameters = {};
 
@@ -16,6 +17,7 @@ export const createFeatureStrategy = (
         parameters[parameter.name] = createFeatureStrategyParameterValue(
             featureId,
             parameter,
+            defaultStickiness,
         );
     });
 
@@ -30,6 +32,7 @@ export const createFeatureStrategy = (
 const createFeatureStrategyParameterValue = (
     featureId: string,
     parameter: IStrategyParameter,
+    defaultStickiness: string,
 ): string => {
     if (
         parameter.name === 'rollout' ||
@@ -40,7 +43,7 @@ const createFeatureStrategyParameterValue = (
     }
 
     if (parameter.name === 'stickiness') {
-        return '';
+        return defaultStickiness;
     }
 
     if (parameter.name === 'groupId') {

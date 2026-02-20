@@ -36,7 +36,6 @@ test('manipulates the rollout slider', async () => {
                         <FlexibleStrategy
                             parameters={parameters}
                             updateParameter={updateParameter}
-                            context={{}}
                             editable={true}
                         />
                     }
@@ -76,7 +75,6 @@ test('if stickiness or groupId not present, fill it with defaults', async () => 
                             rollout: '50',
                         }}
                         updateParameter={updateParameter}
-                        context={{}}
                         editable={true}
                     />
                 }
@@ -111,7 +109,6 @@ test('displays groupId error', async () => {
                             _parameter: string,
                             _value: string,
                         ) => {}}
-                        context={{}}
                         editable={true}
                         errors={
                             {

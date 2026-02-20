@@ -2,7 +2,6 @@ import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
 import FlexibleStrategy from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
-import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext';
 import produce from 'immer';
 import type React from 'react';
 import type { IFormErrors } from 'hooks/useFormErrors';
@@ -24,8 +23,6 @@ export const FeatureStrategyType = <T extends StrategyFormState>({
     validateParameter,
     errors,
 }: IFeatureStrategyTypeProps<T>) => {
-    const { context } = useAssignableUnleashContext();
-
     const updateParameter = (name: string, value: string) => {
         setStrategy(
             produce((draft) => {
@@ -42,7 +39,6 @@ export const FeatureStrategyType = <T extends StrategyFormState>({
         case 'flexibleRollout':
             return (
                 <FlexibleStrategy
-                    context={context}
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
                     editable={hasAccess}

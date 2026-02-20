@@ -69,7 +69,39 @@ test('createFeatureStrategy with parameters', () => {
           "groupId": "a",
           "rollout": "50",
           "s": "",
-          "stickiness": "",
+          "stickiness": "default",
+        },
+      }
+    `);
+});
+
+test('createFeatureStrategy with custom default stickiness', () => {
+    expect(
+        createFeatureStrategy(
+            'a',
+            {
+                name: 'flexibleRollout',
+                displayName: 'Gradual rollout',
+                editable: true,
+                deprecated: false,
+                description: '',
+                parameters: [
+                    {
+                        name: 'stickiness',
+                        type: 'string',
+                        description: '',
+                        required: true,
+                    },
+                ],
+            },
+            'userId',
+        ),
+    ).toMatchInlineSnapshot(`
+      {
+        "constraints": [],
+        "name": "flexibleRollout",
+        "parameters": {
+          "stickiness": "userId",
         },
       }
     `);

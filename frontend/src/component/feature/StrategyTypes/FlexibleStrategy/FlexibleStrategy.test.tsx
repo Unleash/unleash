@@ -1,17 +1,7 @@
-import { vi } from 'vitest';
 import { useState } from 'react';
-import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import FlexibleStrategy from './FlexibleStrategy.tsx';
 import { render } from 'utils/testRenderer';
-import { Route, Routes } from 'react-router-dom';
-import { testServerSetup, testServerRoute } from 'utils/testServer';
-
-const server = testServerSetup();
-
-const setupApi = () => {
-    testServerRoute(server, '/api/admin/projects/default', {});
-    testServerRoute(server, '/api/admin/projects/default/overview', {});
-};
 
 test('manipulates the rollout slider', async () => {
     const Wrapper = () => {
@@ -29,29 +19,18 @@ test('manipulates the rollout slider', async () => {
         };
 
         return (
-            <Routes>
-                <Route
-                    path='/projects/:projectId/features/:featureId'
-                    element={
-                        <FlexibleStrategy
-                            parameters={parameters}
-                            updateParameter={updateParameter}
-                            editable={true}
-                        />
-                    }
-                />
-            </Routes>
+            <FlexibleStrategy
+                parameters={parameters}
+                updateParameter={updateParameter}
+                editable={true}
+            />
         );
     };
 
-    setupApi();
-
-    render(<Wrapper />, {
-        route: '/projects/default/features/test',
-    });
+    render(<Wrapper />);
 
     const slider = await screen.findByRole('slider', { name: /rollout/i });
-    const groupIdInput = await screen.getByLabelText('groupId');
+    const groupIdInput = screen.getByLabelText('groupId');
 
     expect(slider).toHaveValue('0');
     expect(groupIdInput).toHaveValue('testid');
@@ -63,72 +42,39 @@ test('manipulates the rollout slider', async () => {
     expect(groupIdInput).toHaveValue('newGroupId');
 });
 
-test('if stickiness or groupId not present, fill it with defaults', async () => {
-    const updateParameter = vi.fn();
-    const Wrapper = () => (
-        <Routes>
-            <Route
-                path='/projects/:projectId/features/:featureId'
-                element={
-                    <FlexibleStrategy
-                        parameters={{
-                            rollout: '50',
-                        }}
-                        updateParameter={updateParameter}
-                        editable={true}
-                    />
-                }
-            />
-        </Routes>
+test('displays groupId error', async () => {
+    render(
+        <FlexibleStrategy
+            parameters={{
+                rollout: '50',
+                stickiness: 'default',
+            }}
+            updateParameter={() => {}}
+            editable={true}
+            errors={
+                {
+                    getFormError: () => 'Field required test',
+                } as any
+            }
+        />,
     );
 
-    setupApi();
-
-    render(<Wrapper />, {
-        route: '/projects/default/features/test',
-    });
-
-    await waitFor(() => {
-        expect(updateParameter).toHaveBeenCalledWith('stickiness', 'default');
-        expect(updateParameter).toHaveBeenCalledWith('groupId', 'test');
-    });
+    const errorText = await screen.findByText('Field required test');
+    expect(errorText).toBeInTheDocument();
 });
 
-test('displays groupId error', async () => {
-    const Wrapper = () => (
-        <Routes>
-            <Route
-                path='/projects/:projectId/features/:featureId'
-                element={
-                    <FlexibleStrategy
-                        parameters={{
-                            rollout: '50',
-                            stickiness: 'default',
-                        }}
-                        updateParameter={(
-                            _parameter: string,
-                            _value: string,
-                        ) => {}}
-                        editable={true}
-                        errors={
-                            {
-                                getFormError: () => 'Field required test',
-                            } as any
-                        }
-                    />
-                }
-            />
-        </Routes>
+test('renders without crashing when stickiness is not provided', () => {
+    render(
+        <FlexibleStrategy
+            parameters={{
+                rollout: '50',
+                groupId: 'test',
+            }}
+            updateParameter={() => {}}
+            editable={true}
+        />,
     );
 
-    setupApi();
-
-    render(<Wrapper />, {
-        route: '/projects/default/features/test',
-    });
-
-    await waitFor(async () => {
-        const errorText = await screen.queryByText('Field required test');
-        expect(errorText).toBeInTheDocument();
-    });
+    const slider = screen.getByRole('slider', { name: /rollout/i });
+    expect(slider).toBeInTheDocument();
 });

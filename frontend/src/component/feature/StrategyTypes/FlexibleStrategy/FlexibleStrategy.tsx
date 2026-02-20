@@ -1,4 +1,3 @@
-import { useEffect, useMemo } from 'react';
 import { Box, styled } from '@mui/material';
 import type { IFeatureStrategyParameters } from 'interfaces/strategy';
 import ConditionalRolloutSlider from '../RolloutSlider/ConditionalRolloutSlider.tsx';
@@ -12,11 +11,6 @@ import {
     parseParameterString,
 } from 'utils/parseParameter';
 import { StickinessSelect } from './StickinessSelect/StickinessSelect.tsx';
-import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
-import Loader from '../../../common/Loader/Loader.tsx';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { useLocation } from 'react-router';
 import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IFlexibleStrategyProps {
@@ -57,13 +51,6 @@ const FlexibleStrategy = ({
     editable = true,
     errors,
 }: IFlexibleStrategyProps) => {
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useOptionalPathParam('featureId');
-    const { defaultStickiness, loading } = useDefaultProjectSettings(projectId);
-    const { pathname } = useLocation();
-
-    const isDefaultStrategyEdit = pathname.includes('default-strategy');
-
     const updateRollout = (_e: Event, value: number | number[]) => {
         updateParameter('rollout', value.toString());
     };
@@ -73,29 +60,8 @@ const FlexibleStrategy = ({
             ? parseParameterNumber(parameters.rollout)
             : 100;
 
-    const stickiness = useMemo(() => {
-        if (!parameters.stickiness && !loading) {
-            updateParameter('stickiness', defaultStickiness);
-        }
-
-        return parseParameterString(parameters.stickiness);
-    }, [loading, defaultStickiness, parameters.stickiness]);
-
-    useEffect(() => {
-        if (!parameters.groupId && !loading) {
-            if (isDefaultStrategyEdit || !featureId) {
-                updateParameter('groupId', '');
-            } else {
-                updateParameter('groupId', featureId);
-            }
-        }
-    }, [isDefaultStrategyEdit, featureId, loading]);
-
+    const stickiness = parseParameterString(parameters.stickiness) || 'default';
     const groupId = parseParameterString(parameters.groupId);
-
-    if (loading) {
-        return <Loader />;
-    }
 
     return (
         <StyledBox>

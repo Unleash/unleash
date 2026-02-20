@@ -146,7 +146,7 @@ export const SignupDialog = () => {
         inviteEmails: [],
     });
     const [step, setStep] = useState(0);
-
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const hydratedRef = useRef(false);
 
     useEffect(() => {
@@ -177,16 +177,21 @@ export const SignupDialog = () => {
     const StepContent = currentStep.content;
 
     const onNext = async () => {
+        if (isSubmitting) return;
+
         if (step < steps.length - 1) {
             setStep(step + 1);
             return;
         }
 
         try {
+            setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setIsSubmitting(false);
         }
     };
 

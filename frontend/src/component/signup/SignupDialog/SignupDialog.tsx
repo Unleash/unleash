@@ -101,6 +101,7 @@ export type SignupStepContent = ComponentType<{
     setData: React.Dispatch<React.SetStateAction<SubmitSignupData>>;
     onNext: () => void;
     signupData?: SignupData;
+    isSubmitting?: boolean;
 }>;
 
 type SignupStep = {
@@ -216,6 +217,7 @@ export const SignupDialog = () => {
                         setData={setData}
                         onNext={onNext}
                         signupData={signupData}
+                        isSubmitting={isSubmitting}
                     />
                 </StyledContent>
             </StyledBody>

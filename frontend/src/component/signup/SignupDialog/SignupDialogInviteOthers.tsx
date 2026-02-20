@@ -34,6 +34,7 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
     data,
     setData,
     onNext,
+    isSubmitting,
 }) => {
     const [inputValue, setInputValue] = useState('');
 
@@ -140,13 +141,17 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
                 />
             </StyledSignupDialogField>
             <StyledButtonRow>
-                <Button variant='text' onClick={onLater}>
+                <Button
+                    variant='text'
+                    onClick={onLater}
+                    disabled={isSubmitting}
+                >
                     Later
                 </Button>
                 <Button
                     variant='contained'
                     onClick={onNext}
-                    disabled={!isValidForm}
+                    disabled={!isValidForm || isSubmitting}
                 >
                     Invite
                 </Button>

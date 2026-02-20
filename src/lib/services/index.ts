@@ -183,6 +183,7 @@ import {
     createConstraintsReadModel,
     createFakeConstraintsReadModel,
 } from '../features/constraints/createConstraintsReadModel.js';
+import type { IConstraintsReadModel } from '../features/constraints/constraints-read-model-type.js';
 import {
     createFakeReleasePlanMilestoneStrategyService,
     createReleasePlanMilestoneStrategyService,
@@ -573,6 +574,7 @@ export const createServices = (
         unknownFlagsService,
         uiConfigService,
         resourceLimitsService,
+        constraintsReadModel,
     };
 };
 
@@ -712,4 +714,5 @@ export interface IUnleashServices {
     unknownFlagsService: UnknownFlagsService;
     uiConfigService: UiConfigService;
     resourceLimitsService: ResourceLimitsService;
+    constraintsReadModel: IConstraintsReadModel;
 }

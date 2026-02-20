@@ -452,17 +452,6 @@ export class FeatureToggleService {
         }
     }
 
-    // deprecated use ConstraintsReadModel.validateConstraints instead
-    async validateConstraints(
-        constraints: IConstraint[],
-    ): Promise<IConstraint[]> {
-        return this.constraintsReadModel.validateConstraints(constraints);
-    }
-
-    async validateConstraint(input: IConstraint): Promise<IConstraint> {
-        return this.constraintsReadModel.validateConstraint(input);
-    }
-
     async patchFeature(
         project: string,
         featureName: string,
@@ -651,7 +640,10 @@ export class FeatureToggleService {
                 updated: constraints,
                 existing: existing?.constraints ?? [],
             });
-            constraints = await this.validateConstraints(constraints);
+            constraints =
+                await this.constraintsReadModel.validateConstraints(
+                    constraints,
+                );
         }
 
         parameters = await this.parametersWithDefaults(

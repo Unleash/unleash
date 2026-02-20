@@ -61,7 +61,6 @@ import {
     InvalidOperationError,
 } from '../../error/index.js';
 import {
-    constraintSchema,
     featureMetadataSchema,
     nameSchema,
     variantsArraySchema,
@@ -71,26 +70,11 @@ import type {
     FeatureConfigurationClient,
     IFeatureStrategiesStore,
 } from './types/feature-toggle-strategies-store-type.js';
-import {
-    DATE_OPERATORS,
-    DEFAULT_ENV,
-    NUM_OPERATORS,
-    REGEX,
-    SEMVER_OPERATORS,
-    STRING_OPERATORS,
-} from '../../util/index.js';
+import { DEFAULT_ENV } from '../../util/index.js';
 import type { Operation } from 'fast-json-patch';
 import fastJsonPatch from 'fast-json-patch';
 const { applyPatch, deepClone } = fastJsonPatch;
-import {
-    validateDate,
-    validateLegalValues,
-    validateNumber,
-    validateSemver,
-    validateString,
-    validateRegex,
-} from '../../util/validators/constraint-types.js';
-import type { IContextFieldStore } from '../context/context-field-store-type.js';
+import type { IConstraintsReadModel } from '../constraints/constraints-read-model-type.js';
 import type { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema.js';
 import {
     getDefaultStrategy,
@@ -144,10 +128,6 @@ export type FeatureNameCheckResultWithFeaturePattern =
           featureNaming: IFeatureNaming;
       };
 
-const oneOf = (values: string[], match: string) => {
-    return values.some((value) => value === match);
-};
-
 export type Stores = Pick<
     IUnleashStores,
     | 'featureStrategiesStore'
@@ -156,7 +136,6 @@ export type Stores = Pick<
     | 'projectStore'
     | 'featureTagStore'
     | 'featureEnvironmentStore'
-    | 'contextFieldStore'
     | 'strategyStore'
 >;
 
@@ -177,6 +156,7 @@ export type ServicesAndReadModels = {
     featureLinkService: FeatureLinkService;
     featureLinksReadModel: IFeatureLinksReadModel;
     resourceLimitsService: ResourceLimitsService;
+    constraintsReadModel: IConstraintsReadModel;
 };
 
 export class FeatureToggleService {
@@ -196,7 +176,7 @@ export class FeatureToggleService {
 
     private projectStore: IProjectStore;
 
-    private contextFieldStore: IContextFieldStore;
+    private constraintsReadModel: IConstraintsReadModel;
 
     private segmentService: ISegmentService;
 
@@ -232,7 +212,6 @@ export class FeatureToggleService {
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
-            contextFieldStore,
             strategyStore,
         }: Stores,
         { getLogger, flagResolver, eventBus }: Config,
@@ -248,6 +227,7 @@ export class FeatureToggleService {
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
+            constraintsReadModel,
         }: ServicesAndReadModels,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
@@ -258,7 +238,7 @@ export class FeatureToggleService {
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
-        this.contextFieldStore = contextFieldStore;
+        this.constraintsReadModel = constraintsReadModel;
         this.segmentService = segmentService;
         this.accessService = accessService;
         this.eventService = eventService;
@@ -472,69 +452,15 @@ export class FeatureToggleService {
         }
     }
 
+    // deprecated use ConstraintsReadModel.validateConstraints instead
     async validateConstraints(
         constraints: IConstraint[],
     ): Promise<IConstraint[]> {
-        const validations = constraints.map((constraint) => {
-            return this.validateConstraint(constraint);
-        });
-
-        return Promise.all(validations);
+        return this.constraintsReadModel.validateConstraints(constraints);
     }
 
     async validateConstraint(input: IConstraint): Promise<IConstraint> {
-        const constraint = await constraintSchema.validateAsync(input);
-        const { operator } = constraint;
-        if (oneOf(NUM_OPERATORS, operator)) {
-            await validateNumber(constraint.value);
-        }
-
-        if (oneOf(STRING_OPERATORS, operator)) {
-            await validateString(constraint.values);
-        }
-
-        if (oneOf(SEMVER_OPERATORS, operator)) {
-            // Semver library is not asynchronous, so we do not
-            // need to await here.
-            validateSemver(constraint.value);
-        }
-
-        if (oneOf(DATE_OPERATORS, operator)) {
-            await validateDate(constraint.value);
-        }
-
-        if (operator === REGEX) {
-            validateRegex(constraint.value);
-        }
-
-        if (await this.contextFieldStore.exists(constraint.contextName)) {
-            const contextDefinition = await this.contextFieldStore.get(
-                constraint.contextName,
-            );
-
-            if (
-                contextDefinition?.legalValues &&
-                contextDefinition.legalValues.length > 0
-            ) {
-                const valuesToValidate = oneOf(
-                    [
-                        ...DATE_OPERATORS,
-                        ...SEMVER_OPERATORS,
-                        ...NUM_OPERATORS,
-                        REGEX,
-                    ],
-                    operator,
-                )
-                    ? constraint.value
-                    : constraint.values;
-                validateLegalValues(
-                    contextDefinition.legalValues,
-                    valuesToValidate,
-                );
-            }
-        }
-
-        return constraint;
+        return this.constraintsReadModel.validateConstraint(input);
     }
 
     async patchFeature(

@@ -62,6 +62,7 @@ import {
     createFeatureLinkService,
 } from '../feature-links/createFeatureLinkService.js';
 import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import { createConstraintsReadModel } from '../constraints/createConstraintsReadModel.js';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -135,6 +136,8 @@ export const createFeatureToggleService = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
+    const constraintsReadModel = createConstraintsReadModel(contextFieldStore);
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -143,7 +146,6 @@ export const createFeatureToggleService = (
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
-            contextFieldStore,
             strategyStore,
         },
         { getLogger, flagResolver, eventBus },
@@ -159,6 +161,7 @@ export const createFeatureToggleService = (
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
+            constraintsReadModel,
         },
     );
     return featureToggleService;
@@ -201,6 +204,9 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
         new FakeFeatureCollaboratorsReadModel();
     const featureLinksReadModel = new FakeFeatureLinksReadModel();
     const { featureLinkService } = createFakeFeatureLinkService(config);
+    // not using fake as validation is checked in tests.
+    // TODO: think if this should be refactored
+    const constraintsReadModel = createConstraintsReadModel(contextFieldStore);
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
@@ -212,7 +218,6 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
-            contextFieldStore,
             strategyStore,
         },
         {
@@ -232,6 +237,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
+            constraintsReadModel,
         },
     );
     return {

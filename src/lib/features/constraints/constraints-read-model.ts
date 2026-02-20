@@ -1,5 +1,5 @@
 import type { Db } from '../../db/db.js';
-import type { IConstraint, IContextFieldStore } from '../../internals.js';
+import type { IConstraint, IContextFieldStore } from '../../types/index.js';
 import { constraintSchema } from '../../schema/feature-schema.js';
 import {
     DATE_OPERATORS,

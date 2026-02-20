@@ -1,6 +1,6 @@
 import { ConstraintsReadModel } from './constraints-read-model.js';
 import FakeContextFieldStore from '../context/fake-context-field-store.js';
-import type { IConstraint } from '../../internals.js';
+import type { IConstraint } from '../../types/index.js';
 
 const createReadModel = (contextFieldStore?: FakeContextFieldStore) => {
     const store = contextFieldStore ?? new FakeContextFieldStore();

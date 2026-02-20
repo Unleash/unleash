@@ -1,4 +1,4 @@
-import type { IConstraint } from '../../internals.js';
+import type { IConstraint } from '../../types/index.js';
 import type { IConstraintsReadModel } from './constraints-read-model-type.js';
 
 export class FakeConstraintsReadModel implements IConstraintsReadModel {

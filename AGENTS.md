@@ -144,6 +144,7 @@ yarn test:backend  # Backend only
 | `/src/lib/routes/index.ts` | Route registration |
 | `/src/lib/services/index.ts` | Service factory |
 | `/src/lib/db/index.ts` | Store factory |
+| `/src/lib/types/index.js` | Importing types | 
 
 ### Pattern References
 | Pattern | Example Location |

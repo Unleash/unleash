@@ -180,6 +180,10 @@ import { createUserService } from '../features/users/createUserService.js';
 import { UiConfigService } from '../ui-config/ui-config-service.js';
 import { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
 import {
+    createConstraintsReadModel,
+    createFakeConstraintsReadModel,
+} from '../features/constraints/createConstraintsReadModel.js';
+import {
     createFakeReleasePlanMilestoneStrategyService,
     createReleasePlanMilestoneStrategyService,
 } from '../features/release-plans/createReleasePlanMilestoneStrategyService.js';
@@ -292,6 +296,10 @@ export const createServices = (
         ? createChangeRequestSegmentUsageReadModel(db)
         : createFakeChangeRequestSegmentUsageReadModel();
 
+    const constraintsReadModel = db
+        ? createConstraintsReadModel(stores.contextFieldStore)
+        : createFakeConstraintsReadModel();
+
     const segmentService = new SegmentService(
         stores,
         changeRequestAccessReadModel,
@@ -300,6 +308,7 @@ export const createServices = (
         eventService,
         privateProjectChecker,
         resourceLimitsService,
+        constraintsReadModel,
     );
 
     const clientInstanceService = new ClientInstanceService(

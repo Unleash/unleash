@@ -21,6 +21,11 @@ import {
     createEventsService,
     createFakeEventsService,
 } from '../events/createEventsService.js';
+import {
+    createConstraintsReadModel,
+    createFakeConstraintsReadModel,
+} from '../constraints/createConstraintsReadModel.js';
+import ContextFieldStore from '../context/context-field-store.js';
 
 export const createSegmentService = (
     db: Db,
@@ -53,6 +58,13 @@ export const createSegmentService = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
+    const contextFieldStore = new ContextFieldStore(
+        db,
+        getLogger,
+        flagResolver,
+    );
+    const constraintsReadModel = createConstraintsReadModel(contextFieldStore);
+
     return new SegmentService(
         { segmentStore, featureStrategiesStore },
         changeRequestAccessReadModel,
@@ -61,6 +73,7 @@ export const createSegmentService = (
         eventService,
         privateProjectChecker,
         resourceLimitsService,
+        constraintsReadModel,
     );
 };
 
@@ -79,6 +92,8 @@ export const createFakeSegmentService = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
+    const constraintsReadModel = createFakeConstraintsReadModel();
+
     return new SegmentService(
         { segmentStore, featureStrategiesStore },
         changeRequestAccessReadModel,
@@ -87,5 +102,6 @@ export const createFakeSegmentService = (
         eventService,
         privateProjectChecker,
         resourceLimitsService,
+        constraintsReadModel,
     );
 };

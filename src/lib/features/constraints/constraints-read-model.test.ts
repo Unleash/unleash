@@ -294,10 +294,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 description: 'Country',
                 sortOrder: 0,
                 stickiness: false,
-                legalValues: [
-                    { value: 'US' },
-                    { value: 'UK' },
-                ],
+                legalValues: [{ value: 'US' }, { value: 'UK' }],
             });
             const { readModel } = createReadModel(store);
 
@@ -321,11 +318,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 description: 'Priority',
                 sortOrder: 0,
                 stickiness: false,
-                legalValues: [
-                    { value: '1' },
-                    { value: '2' },
-                    { value: '3' },
-                ],
+                legalValues: [{ value: '1' }, { value: '2' }, { value: '3' }],
             });
             const { readModel } = createReadModel(store);
 
@@ -349,10 +342,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 description: 'Priority',
                 sortOrder: 0,
                 stickiness: false,
-                legalValues: [
-                    { value: '1' },
-                    { value: '2' },
-                ],
+                legalValues: [{ value: '1' }, { value: '2' }],
             });
             const { readModel } = createReadModel(store);
 
@@ -415,10 +405,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 description: 'Version',
                 sortOrder: 0,
                 stickiness: false,
-                legalValues: [
-                    { value: '1.0.0' },
-                    { value: '2.0.0' },
-                ],
+                legalValues: [{ value: '1.0.0' }, { value: '2.0.0' }],
             });
             const { readModel } = createReadModel(store);
 
@@ -467,10 +454,7 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 description: 'Pattern',
                 sortOrder: 0,
                 stickiness: false,
-                legalValues: [
-                    { value: '^abc$' },
-                    { value: '^def$' },
-                ],
+                legalValues: [{ value: '^abc$' }, { value: '^def$' }],
             });
             const { readModel } = createReadModel(store);
 

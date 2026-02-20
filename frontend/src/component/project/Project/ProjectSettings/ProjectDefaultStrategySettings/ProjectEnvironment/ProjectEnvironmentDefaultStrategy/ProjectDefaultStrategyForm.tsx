@@ -19,12 +19,8 @@ import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints';
 import { FeatureStrategyType } from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
-import {
-    PROJECT_DEFAULT_STRATEGY_WRITE,
-    UPDATE_PROJECT,
-} from '@server/types/permissions';
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 
 interface IProjectDefaultStrategyFormProps {
     projectId: string;
@@ -179,15 +175,9 @@ export const ProjectDefaultStrategyForm = ({
                     'stickiness' in strategy.parameters
                 }
                 show={
-                    <StrategyVariants
+                    <NewStrategyVariants
                         strategy={strategy}
                         setStrategy={setStrategy}
-                        environment={environmentId}
-                        projectId={projectId}
-                        permission={[
-                            PROJECT_DEFAULT_STRATEGY_WRITE,
-                            UPDATE_PROJECT,
-                        ]}
                     />
                 }
             />

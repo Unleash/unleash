@@ -142,6 +142,136 @@ afterEach(async () => {
     await db.stores.featureToggleStore.deleteAll();
 });
 
+test('should reject constraints with invalid operators', async () => {
+    await app.createSegment(
+        {
+            name: randomId(),
+            constraints: [
+                {
+                    contextName: 'userId',
+                    operator: 'INVALID_OPERATOR',
+                    values: ['x'],
+                },
+            ],
+        },
+        400,
+    );
+});
+
+test('should reject constraints with invalid regex values', async () => {
+    await app.createSegment(
+        {
+            name: randomId(),
+            constraints: [
+                {
+                    contextName: 'userId',
+                    operator: 'REGEX',
+                    value: '(unclosed',
+                },
+            ],
+        },
+        400,
+    );
+});
+
+test('should reject constraints with invalid semver values', async () => {
+    await app.createSegment(
+        {
+            name: randomId(),
+            constraints: [
+                {
+                    contextName: 'appVersion',
+                    operator: 'SEMVER_EQ',
+                    value: 'not-a-semver',
+                },
+            ],
+        },
+        400,
+    );
+});
+
+test('should reject constraints with non-numeric values for numeric operators', async () => {
+    await app.createSegment(
+        {
+            name: randomId(),
+            constraints: [
+                {
+                    contextName: 'userId',
+                    operator: 'NUM_EQ',
+                    value: 'not-a-number',
+                },
+            ],
+        },
+        400,
+    );
+});
+
+test('should reject constraint updates with invalid regex values', async () => {
+    await app.createSegment({
+        name: randomId(),
+        constraints: [],
+    });
+    const [segment] = await fetchSegments();
+    await updateSegment(
+        segment.id,
+        {
+            ...segment,
+            constraints: [
+                {
+                    contextName: 'userId',
+                    operator: 'REGEX',
+                    value: '(unclosed',
+                },
+            ],
+        },
+        400,
+    );
+});
+
+test('should reject constraint updates with invalid semver values', async () => {
+    await app.createSegment({
+        name: randomId(),
+        constraints: [],
+    });
+    const [segment] = await fetchSegments();
+    await updateSegment(
+        segment.id,
+        {
+            ...segment,
+            constraints: [
+                {
+                    contextName: 'appVersion',
+                    operator: 'SEMVER_EQ',
+                    value: 'not-a-semver',
+                },
+            ],
+        },
+        400,
+    );
+});
+
+test('should reject constraint updates with non-numeric values for numeric operators', async () => {
+    await app.createSegment({
+        name: randomId(),
+        constraints: [],
+    });
+    const [segment] = await fetchSegments();
+    await updateSegment(
+        segment.id,
+        {
+            ...segment,
+            constraints: [
+                {
+                    contextName: 'userId',
+                    operator: 'NUM_EQ',
+                    value: 'not-a-number',
+                },
+            ],
+        },
+        400,
+    );
+});
+
 test('should validate segments', async () => {
     await app.createSegment({ something: 'a' }, 400);
     await app.createSegment(

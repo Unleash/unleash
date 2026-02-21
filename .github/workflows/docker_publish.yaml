@@ -3,7 +3,7 @@ name: Publish to dockerhub
 on:
   push:
     branches:
-      - main
+    - main
   workflow_call:
     inputs:
       version:
@@ -17,6 +17,7 @@ on:
         default: true
   workflow_dispatch:
 
+
 permissions:
   id-token: write
   contents: read
@@ -26,59 +27,59 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [22.21-alpine3.23]
+        version: [ 22.22-alpine3.23 ]
     steps:
-      - name: Checkout tag v${{ inputs.version }}
-        if: ${{ inputs.version != '' }}
-        uses: actions/checkout@v6
-        with:
-          ref: v${{ inputs.version }} # tag that should be created by the caller workflow
-      - name: Checkout
-        if: ${{ inputs.version == '' }}
-        uses: actions/checkout@v6
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::726824350591:role/unleash-github-ecr-public-publish-role
-          role-session-name: unleash-actions-push-to-ecr-public
-          aws-region: us-east-1
-      - name: Login to AWS ECR
-        id: login-ecr-public
-        uses: aws-actions/amazon-ecr-login@v2
-        with:
-          registry-type: public
-      - name: Setup QEmu so we can build multiplatform
-        uses: docker/setup-qemu-action@v3
-      - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Docker meta configuration
-        uses: docker/metadata-action@v5
-        id: meta
-        with:
-          images: |
-            unleashorg/unleash-server
-            public.ecr.aws/unleashorg/unleash-server
-          flavor: latest=${{ github.event.inputs.is-latest-version || 'auto' }}
-          tags: |
-            # only enabled for workflow dispatch except main (assume its a release):
-            type=semver,pattern={{ version }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
-            type=semver,pattern={{ major }}.{{ minor }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
-            type=semver,pattern={{ major }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
-            # only enabled in main:
-            type=edge,prefix=main-,enable=${{ github.ref == 'refs/heads/main' }}
-      - name: Login to docker hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build tag and push image to Docker hub
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: NODE_VERSION=${{ matrix.version }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+    - name: Checkout tag v${{ inputs.version }}
+      if: ${{ inputs.version != '' }}
+      uses: actions/checkout@v6
+      with:
+        ref: v${{ inputs.version }} # tag that should be created by the caller workflow
+    - name: Checkout
+      if: ${{ inputs.version == '' }}
+      uses: actions/checkout@v6
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::726824350591:role/unleash-github-ecr-public-publish-role
+        role-session-name: unleash-actions-push-to-ecr-public
+        aws-region: us-east-1
+    - name: Login to AWS ECR
+      id: login-ecr-public
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registry-type: public
+    - name: Setup QEmu so we can build multiplatform
+      uses: docker/setup-qemu-action@v3
+    - name: Setup Docker buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Docker meta configuration
+      uses: docker/metadata-action@v5
+      id: meta
+      with:
+        images: |
+          unleashorg/unleash-server
+          public.ecr.aws/unleashorg/unleash-server
+        flavor: latest=${{ github.event.inputs.is-latest-version || 'auto' }}
+        tags: |
+          # only enabled for workflow dispatch except main (assume its a release):
+          type=semver,pattern={{ version }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
+          type=semver,pattern={{ major }}.{{ minor }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
+          type=semver,pattern={{ major }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
+          # only enabled in main:
+          type=edge,prefix=main-,enable=${{ github.ref == 'refs/heads/main' }}
+    - name: Login to docker hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build tag and push image to Docker hub
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        build-args: NODE_VERSION=${{ matrix.version }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max

@@ -21,10 +21,11 @@ const oneOf = (values: string[], match: string) => {
     return values.some((value) => value === match);
 };
 
+type IContextFieldStoreReadModel = Pick<IContextFieldStore, 'get' | 'exists'>;
 export class ConstraintsReadModel implements IConstraintsReadModel {
-    private contextFieldStore: IContextFieldStore;
+    private contextFieldStore: IContextFieldStoreReadModel;
 
-    constructor(contextFieldStore: IContextFieldStore) {
+    constructor(contextFieldStore: IContextFieldStoreReadModel) {
         this.contextFieldStore = contextFieldStore;
     }
 

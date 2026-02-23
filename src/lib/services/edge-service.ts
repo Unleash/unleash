@@ -92,6 +92,7 @@ export default class EdgeService {
                     token: token,
                     type: found.type,
                     projects: found.projects,
+                    environment: found.environment,
                 });
             }
         }
@@ -161,6 +162,7 @@ export default class EdgeService {
                     projects: existing.projects,
                     type: existing.type,
                     token: existing.secret,
+                    environment: existing.environment,
                 });
             } else if (tokenReq.environment && tokenReq.projects) {
                 const newToken =
@@ -176,6 +178,7 @@ export default class EdgeService {
                     projects: newToken.projects,
                     type: newToken.type,
                     token: newToken.secret,
+                    environment: newToken.environment,
                 });
             }
         }

@@ -1,9 +1,11 @@
-import dbInit, { type ITestDb } from '../../helpers/database-init.js';
-import getLogger from '../../../fixtures/no-logger.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
 import {
     type IUnleashTest,
     setupAppWithCustomConfig,
-} from '../../helpers/test-helper.js';
+} from '../../../test/e2e/helpers/test-helper.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -12,13 +14,17 @@ const PATH = '/api/admin/constraints/validate';
 
 beforeAll(async () => {
     db = await dbInit('constraints', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {

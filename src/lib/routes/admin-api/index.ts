@@ -21,7 +21,7 @@ import UserFeedbackController from './user-feedback.js';
 import UserSplashController from './user-splash.js';
 import ProjectController from '../../features/project/project-controller.js';
 import { EnvironmentsController } from '../../features/environments/environments-controller.js';
-import ConstraintsController from './constraints.js';
+import ConstraintsController from '../../features/constraints/constraints-controller.js';
 import PatController from './user/pat.js';
 import { PublicSignupController } from './public-signup.js';
 import InstanceAdminController from './instance-admin.js';

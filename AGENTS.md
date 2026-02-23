@@ -97,7 +97,7 @@ To avoid overloading stores with complex queries, we separate read and write con
 - Query doesn't map to a single entity's lifecycle
 - You don't want to expose the entire write model and only need one value from another module
 
-**Pattern**: Services coordinate between stores (writes) and read models (reads). Controllers call services, never stores/read models directly.
+**Pattern**: Services coordinate between stores (writes) and read models (reads). Controllers call services or read models, never stores directly.
 
 ## Development Philosophy
 

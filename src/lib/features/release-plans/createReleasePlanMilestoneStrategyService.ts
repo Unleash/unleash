@@ -28,7 +28,8 @@ export const createFakeReleasePlanMilestoneStrategyService = (
     config: IUnleashConfig,
 ) => {
     const milestoneStrategyStore = new FakeReleasePlanMilestoneStrategyStore();
-    const { featureToggleService } = createFakeFeatureToggleService(config);
+    const { featureToggleService, projectStore } =
+        createFakeFeatureToggleService(config);
 
     const releasePlanMilestoneStrategyService =
         new ReleasePlanMilestoneStrategyService(
@@ -38,6 +39,7 @@ export const createFakeReleasePlanMilestoneStrategyService = (
         );
 
     return {
+        projectStore,
         milestoneStrategyStore,
         featureToggleService,
         releasePlanMilestoneStrategyService,

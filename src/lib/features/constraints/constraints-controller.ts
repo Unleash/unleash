@@ -1,9 +1,9 @@
 import type { Request, Response } from 'express';
-import type { FeatureToggleService } from '../../features/feature-toggle/feature-toggle-service.js';
+import type { IConstraintsReadModel } from './constraints-read-model-type.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import { NONE } from '../../types/permissions.js';
-import Controller from '../controller.js';
+import Controller from '../../routes/controller.js';
 import type { Logger } from '../../logger.js';
 import type { OpenApiService } from '../../services/openapi-service.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
@@ -12,8 +12,8 @@ import {
     getStandardResponses,
 } from '../../openapi/index.js';
 
-export default class ConstraintController extends Controller {
-    private featureService: FeatureToggleService;
+export default class ConstraintsController extends Controller {
+    private constraintsReadModel: IConstraintsReadModel;
 
     private openApiService: OpenApiService;
 
@@ -22,12 +22,12 @@ export default class ConstraintController extends Controller {
     constructor(
         config: IUnleashConfig,
         {
-            featureToggleService,
+            constraintsReadModel,
             openApiService,
-        }: Pick<IUnleashServices, 'featureToggleService' | 'openApiService'>,
+        }: Pick<IUnleashServices, 'constraintsReadModel' | 'openApiService'>,
     ) {
         super(config);
-        this.featureService = featureToggleService;
+        this.constraintsReadModel = constraintsReadModel;
         this.openApiService = openApiService;
         this.logger = config.getLogger('/admin-api/validation.ts');
 
@@ -57,7 +57,7 @@ export default class ConstraintController extends Controller {
         req: Request<void, void, ConstraintSchema>,
         res: Response,
     ): Promise<void> {
-        await this.featureService.validateConstraint(req.body);
+        await this.constraintsReadModel.validateConstraint(req.body);
         res.status(204).send();
     }
 }

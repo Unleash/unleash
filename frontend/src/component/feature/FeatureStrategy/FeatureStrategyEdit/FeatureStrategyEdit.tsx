@@ -206,7 +206,7 @@ export const FeatureStrategyEdit = () => {
 
         setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
         setPreviousTitle(savedStrategy?.title || '');
-    }, [strategyId, data, defaultStickiness, strategyDefinition]);
+    }, [strategyId, data, defaultStickiness, strategyDefinition?.name]);
 
     useEffect(() => {
         // Fill in the selected segments once they've been fetched.

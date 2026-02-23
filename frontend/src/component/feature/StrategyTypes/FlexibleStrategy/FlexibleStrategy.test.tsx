@@ -63,7 +63,7 @@ test('displays groupId error', async () => {
     expect(errorText).toBeInTheDocument();
 });
 
-test('renders without crashing when stickiness is not provided', () => {
+test('renders without crashing when stickiness/groupId is not provided', () => {
     render(
         <FlexibleStrategy
             parameters={{

@@ -6,6 +6,8 @@ export interface ICreateUser {
     username?: string;
     email?: string;
     imageUrl?: string;
+    companyRole?: string;
+    productUpdatesEmailConsent?: boolean;
 }
 
 export interface IUserLookup {

@@ -9,8 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import type {
     IFeatureStrategy,
+    IFeatureStrategyParameters,
     IFeatureStrategyPayload,
     IStrategy,
+    IStrategyParameter,
 } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import type { ISegment } from 'interfaces/segment';
@@ -36,6 +38,7 @@ import {
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
+import { createFeatureStrategy } from 'utils/createFeatureStrategy.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -178,29 +181,32 @@ export const FeatureStrategyEdit = () => {
     } = useSegments(strategyId);
 
     useEffect(() => {
+        const defaultParameters = strategyDefinition
+            ? createFeatureStrategy(
+                  featureId,
+                  strategyDefinition,
+                  defaultStickiness,
+              ).parameters
+            : {};
+
         const savedStrategy = data?.environments
             .flatMap((environment) => environment.strategies)
             .find((strategy) => strategy.id === strategyId);
 
         const constraintsWithId = addIdSymbolToConstraints(savedStrategy);
 
-        const parameters = { ...savedStrategy?.parameters };
-        if (!parameters.stickiness) {
-            parameters.stickiness = defaultStickiness;
-        }
-        if (!parameters.groupId) {
-            parameters.groupId = featureId;
-        }
-
         const formattedStrategy = {
             ...savedStrategy,
+            parameters: {
+                ...defaultParameters,
+                ...savedStrategy?.parameters,
+            },
             constraints: constraintsWithId,
-            parameters,
         };
 
         setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
         setPreviousTitle(savedStrategy?.title || '');
-    }, [strategyId, data, defaultStickiness]);
+    }, [strategyId, data, defaultStickiness, strategyDefinition]);
 
     useEffect(() => {
         // Fill in the selected segments once they've been fetched.

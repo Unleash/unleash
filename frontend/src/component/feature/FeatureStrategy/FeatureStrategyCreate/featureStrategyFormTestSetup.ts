@@ -53,6 +53,12 @@ export const setupStrategyEndpoint = () => {
             },
         ],
     });
+    testServerRoute(server, '/api/admin/strategies/default', {
+        displayName: 'Standard',
+        name: 'default',
+        description: 'The standard strategy is strictly on / off for your entire userbase.',
+        parameters: [],
+    });
 };
 
 export const setupFeaturesEndpoint = (
@@ -111,6 +117,37 @@ export const setupFeaturesEndpointWithBrokenStrategy = (
                             segments: [],
                             sortOrder: 1,
                             title: 'broken strategy',
+                            disabled: false,
+                        },
+                    ],
+                },
+            ],
+            name: featureName,
+            project: 'default',
+        },
+    );
+};
+
+export const setupFeaturesEndpointWithDefaultStrategy = (
+    featureName: string,
+) => {
+    testServerRoute(
+        server,
+        `/api/admin/projects/default/features/${featureName}`,
+        {
+            environments: [
+                {
+                    name: 'development',
+                    type: 'development',
+                    strategies: [
+                        {
+                            id: '1',
+                            constraints: [],
+                            parameters: {},
+                            name: 'default',
+                            variants: [],
+                            segments: [],
+                            sortOrder: 1,
                             disabled: false,
                         },
                     ],

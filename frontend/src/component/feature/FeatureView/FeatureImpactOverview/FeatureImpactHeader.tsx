@@ -10,7 +10,6 @@ import {
 import { Badge } from 'component/common/Badge/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import InsightsIcon from '@mui/icons-material/Insights';
 import Add from '@mui/icons-material/Add';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics';
 import { DemoImpactDashboard } from './ImpactDashboard/DemoImpactDashboard';
@@ -30,7 +29,7 @@ const StyledHeaderBar = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(2),
-    padding: theme.spacing(1.5, 2),
+    padding: theme.spacing(1.5, 3),
     minHeight: 48,
 }));
 
@@ -53,14 +52,9 @@ const StyledImpactLabel = styled('div')(({ theme }) => ({
     gap: theme.spacing(0.75),
 }));
 
-const StyledImpactIcon = styled(InsightsIcon)(({ theme }) => ({
-    fontSize: 18,
-    color: theme.palette.primary.main,
-}));
-
 const StyledImpactTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.typography.fontWeightMedium,
+    fontSize: theme.fontSizes.bodySize,
+    fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.primary,
 }));
 
@@ -110,7 +104,7 @@ const StyledEmptyContent = styled('div')(({ theme }) => ({
 
 const StyledEmptyTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
-    fontWeight: theme.typography.fontWeightMedium,
+    fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.primary,
 }));
 
@@ -155,7 +149,6 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
             <StyledContainer>
                 <StyledHeaderBar>
                     <StyledImpactLabel>
-                        <StyledImpactIcon />
                         <StyledImpactTitle>Impact metrics</StyledImpactTitle>
                         <Badge color='success' sx={{ ml: 1 }}>
                             New

@@ -36,9 +36,9 @@ const StyledChartHeader = styled('div')(({ theme }) => ({
 }));
 
 const StyledChartTitle = styled(Typography)(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightMedium,
+    fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.disabled,
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.fontSizes.bodySize,
 }));
 
 const StyledChartSubtitle = styled(Typography)(({ theme }) => ({

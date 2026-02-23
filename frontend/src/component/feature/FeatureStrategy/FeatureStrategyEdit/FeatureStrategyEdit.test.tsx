@@ -194,7 +194,9 @@ describe('NewFeatureStrategyEdit', () => {
         const stickinessSelect = screen.getByTestId(
             FLEXIBLE_STRATEGY_STICKINESS_ID,
         );
-        expect(within(stickinessSelect).getByText('Default')).toBeInTheDocument();
+        expect(
+            within(stickinessSelect).getByText('Default'),
+        ).toBeInTheDocument();
     });
 
     it('should not add stickiness or groupId to non-flexibleRollout strategies', async () => {
@@ -223,9 +225,7 @@ describe('NewFeatureStrategyEdit', () => {
 
         await waitFor(() => {
             expect(
-                screen.getByText(
-                    /The standard strategy is strictly on/,
-                ),
+                screen.getByText(/The standard strategy is strictly on/),
             ).toBeInTheDocument();
         });
 

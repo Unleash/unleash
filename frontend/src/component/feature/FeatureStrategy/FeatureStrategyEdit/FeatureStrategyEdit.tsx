@@ -9,10 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import useToast from 'hooks/useToast';
 import type {
     IFeatureStrategy,
-    IFeatureStrategyParameters,
     IFeatureStrategyPayload,
     IStrategy,
-    IStrategyParameter,
 } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import type { ISegment } from 'interfaces/segment';

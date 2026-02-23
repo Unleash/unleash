@@ -56,7 +56,8 @@ export const setupStrategyEndpoint = () => {
     testServerRoute(server, '/api/admin/strategies/default', {
         displayName: 'Standard',
         name: 'default',
-        description: 'The standard strategy is strictly on / off for your entire userbase.',
+        description:
+            'The standard strategy is strictly on / off for your entire userbase.',
         parameters: [],
     });
 };

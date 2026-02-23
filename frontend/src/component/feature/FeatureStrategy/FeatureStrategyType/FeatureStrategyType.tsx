@@ -1,15 +1,21 @@
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
-import OldFlexibleStrategy, {
+import LegacyFlexibleStrategy, {
     FlexibleStrategy,
 } from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
-import produce from 'immer';
-import type React from 'react';
 import type { IFormErrors } from 'hooks/useFormErrors';
-import { useUiFlag } from 'hooks/useUiFlag';
+import produce from 'immer';
 
 interface IFeatureStrategyTypeProps<T extends StrategyFormState> {
+    strategy: T;
+    strategyDefinition: IStrategy;
+    updateParameter: (field: string, value: string) => void;
+    errors: IFormErrors;
+}
+
+// todo: delete with flag `strategyFormConsolidation`
+interface ILegacyFeatureStrategyTypeProps<T extends StrategyFormState> {
     strategy: T;
     strategyDefinition: IStrategy;
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
@@ -17,14 +23,14 @@ interface IFeatureStrategyTypeProps<T extends StrategyFormState> {
     errors: IFormErrors;
 }
 
-export const FeatureStrategyType = <T extends StrategyFormState>({
+// todo: delete with flag `strategyFormConsolidation`
+export const LegacyFeatureStrategyType = <T extends StrategyFormState>({
     strategy,
     strategyDefinition,
     setStrategy,
     validateParameter,
     errors,
-}: IFeatureStrategyTypeProps<T>) => {
-    const useNewFlexibleStrategy = useUiFlag('strategyFormConsolidation');
+}: ILegacyFeatureStrategyTypeProps<T>) => {
     const updateParameter = (name: string, value: string) => {
         setStrategy(
             produce((draft) => {
@@ -39,14 +45,37 @@ export const FeatureStrategyType = <T extends StrategyFormState>({
         case 'default':
             return <DefaultStrategy strategyDefinition={strategyDefinition} />;
         case 'flexibleRollout':
-            return useNewFlexibleStrategy ? (
-                <FlexibleStrategy
+            return (
+                <LegacyFlexibleStrategy
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
                     errors={errors}
                 />
-            ) : (
-                <OldFlexibleStrategy
+            );
+        default:
+            return (
+                <GeneralStrategy
+                    strategyDefinition={strategyDefinition}
+                    parameters={strategy.parameters ?? {}}
+                    updateParameter={updateParameter}
+                    errors={errors}
+                />
+            );
+    }
+};
+
+export const FeatureStrategyType = <T extends StrategyFormState>({
+    strategy,
+    strategyDefinition,
+    updateParameter,
+    errors,
+}: IFeatureStrategyTypeProps<T>) => {
+    switch (strategy.name) {
+        case 'default':
+            return <DefaultStrategy strategyDefinition={strategyDefinition} />;
+        case 'flexibleRollout':
+            return (
+                <FlexibleStrategy
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
                     errors={errors}

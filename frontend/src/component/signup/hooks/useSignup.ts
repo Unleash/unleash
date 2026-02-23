@@ -5,6 +5,7 @@ import type { SWRConfiguration } from 'swr';
 import { useConditionalSWR } from 'hooks/api/getters/useConditionalSWR/useConditionalSWR';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
 export type SignupData = {
     shouldSetPassword?: boolean;
@@ -22,6 +23,7 @@ export const useSignup = (options?: SWRConfiguration) => {
         isEnterprise,
         uiConfig: { billing },
     } = useUiConfig();
+    const { instanceStatus } = useInstanceStatus();
     const isPAYG = isEnterprise() && billing === 'pay-as-you-go';
     const signupDialogEnabled = useUiFlag('signupDialog');
 
@@ -37,7 +39,8 @@ export const useSignup = (options?: SWRConfiguration) => {
         () => ({
             signupData: data,
             signupRequired: Boolean(
-                data &&
+                instanceStatus?.ucaSignup &&
+                    data &&
                     (data.shouldSetPassword ||
                         !data.companyRole ||
                         !data.companyName),
@@ -46,7 +49,7 @@ export const useSignup = (options?: SWRConfiguration) => {
             refetch: () => mutate(),
             error,
         }),
-        [data, error, mutate],
+        [data, instanceStatus, error, mutate],
     );
 };
 

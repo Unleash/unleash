@@ -74,7 +74,8 @@ export type IFlagKey =
     | 'datePickerRangeConstraints'
     | 'regexConstraintOperator'
     | 'signupDialog'
-    | 'updateMilestoneStrategy';
+    | 'updateMilestoneStrategy'
+    | 'impactMetricsFlagPage';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -333,6 +334,10 @@ const flags: IFlags = {
     ),
     updateMilestoneStrategy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_UPDATE_MILESTONE_STRATEGY,
+        false,
+    ),
+    impactMetricsFlagPage: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS_FLAG_PAGE,
         false,
     ),
 };

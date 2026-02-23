@@ -14,6 +14,7 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import Add from '@mui/icons-material/Add';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics';
 import { DemoImpactDashboard } from './ImpactDashboard/DemoImpactDashboard';
+import { PlaceholderChart } from './ImpactDashboard/PlaceholderChart';
 
 // Demo mode flag - set to true to see mock data
 const DEMO_MODE = false;
@@ -84,10 +85,21 @@ const StyledEmptyStateContainer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
     padding: theme.spacing(2, 3),
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     gap: theme.spacing(3),
     backgroundColor: theme.palette.background.elevation1,
+}));
+
+const StyledChartRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+}));
+
+const StyledEmptyTopRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing(2),
 }));
 
 const StyledEmptyContent = styled('div')(({ theme }) => ({
@@ -105,7 +117,7 @@ const StyledEmptyTitle = styled(Typography)(({ theme }) => ({
 const StyledEmptyDescription = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
-    maxWidth: 450,
+    maxWidth: 500,
 }));
 
 const StyledConnectButton = styled(Button)(({ theme }) => ({
@@ -151,23 +163,42 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                     </StyledImpactLabel>
                 </StyledHeaderBar>
                 <StyledEmptyStateContainer>
-                    <StyledEmptyContent>
-                        <StyledEmptyTitle>
-                            Measure the impact of this feature
-                        </StyledEmptyTitle>
-                        <StyledEmptyDescription>
-                            Connect your analytics to see how this feature
-                            affects conversion rates, error rates, and other key
-                            metrics during rollout.
-                        </StyledEmptyDescription>
-                    </StyledEmptyContent>
-                    <StyledConnectButton
-                        variant='outlined'
-                        startIcon={<Add />}
-                        onClick={onAddChart}
-                    >
-                        Connect metrics
-                    </StyledConnectButton>
+                    <StyledEmptyTopRow>
+                        <StyledEmptyContent>
+                            <StyledEmptyTitle>
+                                Measure the impact of this feature
+                            </StyledEmptyTitle>
+                            <StyledEmptyDescription>
+                                Connect your analytics to see how this feature
+                                affects conversion rates, error rates, and other
+                                key metrics during rollout.
+                            </StyledEmptyDescription>
+                        </StyledEmptyContent>
+                        <StyledConnectButton
+                            variant='outlined'
+                            startIcon={<Add />}
+                            onClick={onAddChart}
+                        >
+                            Connect metrics
+                        </StyledConnectButton>
+                    </StyledEmptyTopRow>
+                    <StyledChartRow>
+                        <PlaceholderChart
+                            title='Conversion Rate'
+                            change='+12.4%'
+                            variant='upward'
+                        />
+                        <PlaceholderChart
+                            title='Error Rate'
+                            change='-0.8%'
+                            variant='downward'
+                        />
+                        <PlaceholderChart
+                            title='Latency (ms)'
+                            change='+2ms'
+                            variant='stable'
+                        />
+                    </StyledChartRow>
                 </StyledEmptyStateContainer>
             </StyledContainer>
         );

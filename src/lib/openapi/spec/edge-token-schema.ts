@@ -21,7 +21,7 @@ export const edgeTokenSchema = {
         environment: {
             description: 'The environment this token as access to',
             type: 'string',
-            example: ['development'],
+            example: 'development',
         },
         type: {
             description: `The [API token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys)'s **type**. Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#backend-tokens), [FRONTEND](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#frontend-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with`,

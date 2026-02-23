@@ -60,7 +60,7 @@ const FlexibleStrategy = ({
             ? parseParameterNumber(parameters.rollout)
             : 100;
 
-    const stickiness = parseParameterString(parameters.stickiness) || 'default';
+    const stickiness = parseParameterString(parameters.stickiness);
     const groupId = parseParameterString(parameters.groupId);
 
     return (

@@ -5,7 +5,7 @@ export const edgeTokenSchema = {
     $id: '#/components/schemas/edgeTokenSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['token', 'projects', 'type'],
+    required: ['token', 'projects', 'type', 'environment'],
     description:
         'A representation of a client token, limiting access to [CLIENT](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#backend-tokens) (used by serverside SDKs) or [FRONTEND](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#frontend-tokens) (used by proxy SDKs)',
     properties: {
@@ -17,6 +17,11 @@ export const edgeTokenSchema = {
                 type: 'string',
             },
             example: ['developerexperience', 'enterprisegrowth'],
+        },
+        environment: {
+            description: 'The environment this token as access to',
+            type: 'string',
+            example: ['development'],
         },
         type: {
             description: `The [API token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys)'s **type**. Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#backend-tokens), [FRONTEND](https://docs.getunleash.io/concepts/api-tokens-and-client-keys#frontend-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with`,

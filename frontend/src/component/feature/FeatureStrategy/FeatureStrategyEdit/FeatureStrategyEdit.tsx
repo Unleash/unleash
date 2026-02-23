@@ -35,6 +35,7 @@ import {
 } from './change-request-conflict-data.ts';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -101,6 +102,7 @@ export const FeatureStrategyEdit = () => {
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
     const { strategyDefinition } = useStrategy(strategy.name);
+    const { defaultStickiness } = useDefaultProjectSettings(projectId);
     const { setToastData, setToastApiError } = useToast();
     const errors = useFormErrors();
     const { uiConfig } = useUiConfig();
@@ -182,14 +184,23 @@ export const FeatureStrategyEdit = () => {
 
         const constraintsWithId = addIdSymbolToConstraints(savedStrategy);
 
+        const parameters = { ...savedStrategy?.parameters };
+        if (!parameters.stickiness) {
+            parameters.stickiness = defaultStickiness;
+        }
+        if (!parameters.groupId) {
+            parameters.groupId = featureId;
+        }
+
         const formattedStrategy = {
             ...savedStrategy,
             constraints: constraintsWithId,
+            parameters,
         };
 
         setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
         setPreviousTitle(savedStrategy?.title || '');
-    }, [strategyId, data]);
+    }, [strategyId, data, defaultStickiness]);
 
     useEffect(() => {
         // Fill in the selected segments once they've been fetched.

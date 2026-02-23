@@ -49,7 +49,7 @@ export const useSignup = (options?: SWRConfiguration) => {
             refetch: () => mutate(),
             error,
         }),
-        [data, instanceStatus, error, mutate],
+        [data, instanceStatus?.ucaSignup, error, mutate],
     );
 };
 

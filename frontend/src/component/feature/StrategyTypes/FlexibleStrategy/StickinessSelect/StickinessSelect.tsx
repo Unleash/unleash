@@ -14,7 +14,6 @@ import type { ReactNode } from 'react';
 interface IStickinessSelectProps {
     label: string;
     value: string | undefined;
-    editable: boolean;
     onChange: (event: SelectChangeEvent<string>) => void;
     dataTestId?: string;
 }
@@ -52,7 +51,6 @@ const StyledOptionContainer = styled('div')(({ theme }) => ({
 
 export const StickinessSelect = ({
     label,
-    editable,
     value,
     onChange,
     dataTestId,
@@ -87,7 +85,6 @@ export const StickinessSelect = ({
                 name='stickiness'
                 label={label}
                 value={value || ''}
-                disabled={!editable}
                 data-testid={dataTestId}
                 onChange={onChange}
                 renderValue={renderValue}

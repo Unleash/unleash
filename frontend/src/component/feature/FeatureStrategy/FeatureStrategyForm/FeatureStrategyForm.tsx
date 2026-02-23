@@ -38,7 +38,6 @@ import {
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle.tsx';
 import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -182,11 +181,6 @@ export const FeatureStrategyForm = ({
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
-    const access = useHasProjectEnvironmentAccess(
-        permission,
-        projectId,
-        environmentId,
-    );
     const { strategyDefinition } = useStrategy(strategy?.name);
     const { segments: assignableSegments = [] } = useAssignableSegments();
     const showSegmentSelector =
@@ -395,7 +389,6 @@ export const FeatureStrategyForm = ({
                                 setStrategy={setStrategy}
                                 validateParameter={validateParameter}
                                 errors={errors}
-                                hasAccess={access}
                             />
                             <FeatureStrategyEnabledDisabled
                                 enabled={!strategy?.disabled}

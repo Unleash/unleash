@@ -18,7 +18,6 @@ interface IStrategyParameterProps {
     definition: IStrategyParameter;
     parameters: IFeatureStrategyParameters;
     updateParameter: (field: string, value: string) => void;
-    editable: boolean;
     errors: IFormErrors;
 }
 
@@ -26,7 +25,6 @@ export const StrategyParameter = ({
     definition,
     parameters,
     updateParameter,
-    editable,
     errors,
 }: IStrategyParameterProps) => {
     const { type, name, description, required } = definition;
@@ -60,7 +58,6 @@ export const StrategyParameter = ({
                 <ConditionalRolloutSlider
                     name={name}
                     onChange={onChangePercentage}
-                    disabled={!editable}
                     value={parseParameterNumber(parameters[name])}
                     minLabel='off'
                     maxLabel='on'
@@ -76,7 +73,6 @@ export const StrategyParameter = ({
                 <StrategyInputList
                     name={name}
                     list={parseParameterStrings(parameters[name])}
-                    disabled={!editable}
                     setConfig={onSetListConfig}
                     errors={errors}
                 />
@@ -95,7 +91,6 @@ export const StrategyParameter = ({
                     size='small'
                     aria-required={required}
                     style={{ width: '100%' }}
-                    disabled={!editable}
                     label={label}
                     onChange={onChange}
                     value={value}
@@ -134,7 +129,6 @@ export const StrategyParameter = ({
                 size='small'
                 style={{ width: '100%' }}
                 aria-required={required}
-                disabled={!editable}
                 error={Boolean(error)}
                 helperText={error}
                 name={name}

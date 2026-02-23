@@ -431,7 +431,6 @@ export const EnvironmentVariantsModal = ({
                                     <StyledStickinessSelect
                                         value={stickiness}
                                         label={''}
-                                        editable
                                         onChange={(e) =>
                                             onStickinessChange(e.target.value)
                                         }

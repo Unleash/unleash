@@ -68,7 +68,6 @@ test('renders without crashing when stickiness is not provided', () => {
         <FlexibleStrategy
             parameters={{
                 rollout: '50',
-                groupId: 'test',
             }}
             updateParameter={() => {}}
             editable={true}

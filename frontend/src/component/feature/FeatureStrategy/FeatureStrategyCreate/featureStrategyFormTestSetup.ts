@@ -12,6 +12,17 @@ export const setupProjectEndpoint = () => {
             },
         ],
     });
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        environments: [
+            {
+                environment: 'development',
+                enabled: true,
+                type: 'development',
+            },
+        ],
+        defaultStickiness: 'default',
+        name: 'default',
+    });
 };
 
 export const setupSegmentsEndpoint = () => {
@@ -67,6 +78,40 @@ export const setupFeaturesEndpoint = (
                             },
                             name: 'flexibleRollout',
                             variants: [{ name: variantName, weight: 50 }],
+                        },
+                    ],
+                },
+            ],
+            name: featureName,
+            project: 'default',
+        },
+    );
+};
+
+export const setupFeaturesEndpointWithBrokenStrategy = (
+    featureName: string,
+) => {
+    testServerRoute(
+        server,
+        `/api/admin/projects/default/features/${featureName}`,
+        {
+            environments: [
+                {
+                    name: 'development',
+                    type: 'development',
+                    strategies: [
+                        {
+                            id: '1',
+                            constraints: [],
+                            parameters: {
+                                rollout: '66',
+                            },
+                            name: 'flexibleRollout',
+                            variants: [],
+                            segments: [],
+                            sortOrder: 1,
+                            title: 'broken strategy',
+                            disabled: false,
                         },
                     ],
                 },

@@ -3,7 +3,7 @@ import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import type { IStrategy } from 'interfaces/strategy';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
-import FlexibleStrategy from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy.tsx';
+import { FlexibleStrategy } from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy.tsx';
 
 interface IMilestoneStrategyTypeProps {
     strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>;

@@ -31,34 +31,44 @@ const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
-    padding: theme.spacing(1),
 }));
 
 const StyledChartsGrid = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: theme.spacing(3),
-    [theme.breakpoints.down('md')]: {
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: theme.spacing(2),
+    [theme.breakpoints.down('lg')]: {
+        gridTemplateColumns: 'repeat(2, 1fr)',
+    },
+    [theme.breakpoints.down('sm')]: {
         gridTemplateColumns: '1fr',
     },
 }));
 
 const StyledChartCard = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusMedium,
     border: `1px solid ${theme.palette.divider}`,
     boxShadow: 'none',
+    backgroundColor: theme.palette.background.paper,
+    minWidth: 0,
 }));
 
 const StyledChartHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'baseline',
     marginBottom: theme.spacing(2),
 }));
 
+const StyledChartChange = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.bodySize,
+    fontWeight: theme.typography.fontWeightBold,
+}));
+
 const StyledChartTitle = styled(Typography)(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightMedium,
+    fontSize: theme.fontSizes.bodySize,
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 const StyledChartSubtitle = styled(Typography)(({ theme }) => ({
@@ -232,15 +242,11 @@ export const DemoImpactDashboard: FC = () => {
                                 Last 7 days · Avg aggregation
                             </StyledChartSubtitle>
                         </div>
-                        <Typography
-                            variant='h6'
-                            color='success.main'
-                            sx={{ fontWeight: 600 }}
-                        >
+                        <StyledChartChange color='success.main'>
                             +12.4%
-                        </Typography>
+                        </StyledChartChange>
                     </StyledChartHeader>
-                    <Box sx={{ height: 200 }}>
+                    <Box sx={{ aspectRatio: '16 / 9', minHeight: 0 }}>
                         <Line
                             data={conversionData}
                             options={chartOptions('Conversion Rate')}
@@ -258,15 +264,11 @@ export const DemoImpactDashboard: FC = () => {
                                 Last 7 days · Avg aggregation
                             </StyledChartSubtitle>
                         </div>
-                        <Typography
-                            variant='h6'
-                            color='success.main'
-                            sx={{ fontWeight: 600 }}
-                        >
+                        <StyledChartChange color='success.main'>
                             -34.2%
-                        </Typography>
+                        </StyledChartChange>
                     </StyledChartHeader>
-                    <Box sx={{ height: 200 }}>
+                    <Box sx={{ aspectRatio: '16 / 9', minHeight: 0 }}>
                         <Line
                             data={errorData}
                             options={chartOptions('Error Rate')}

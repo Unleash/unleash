@@ -22,8 +22,8 @@ const StyledHeaderBar = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(2),
-    padding: theme.spacing(1.5, 3),
-    minHeight: 48,
+    padding: theme.spacing(2, 3),
+    minHeight: theme.spacing(8),
     cursor: 'pointer',
 }));
 
@@ -45,6 +45,7 @@ const StyledImpactLabel = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.75),
+    minHeight: theme.spacing(5),
 }));
 
 const StyledImpactTitle = styled(Typography)(({ theme }) => ({
@@ -60,15 +61,16 @@ const StyledChartCount = styled(Typography)(({ theme }) => ({
 
 const StyledExpandedContent = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(3),
+    padding: theme.spacing(3, 3),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
+    backgroundColor: theme.palette.background.elevation2,
 }));
 
 const StyledEmptyStateContainer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing(2, 3),
+    padding: theme.spacing(3, 3),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),

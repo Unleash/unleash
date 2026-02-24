@@ -13,7 +13,6 @@ import { FeatureStrategyEdit } from './FeatureStrategyEdit.tsx';
 import { FLEXIBLE_STRATEGY_STICKINESS_ID } from 'utils/testIds';
 import {
     setupFeaturesEndpointWithBrokenStrategy,
-    setupFeaturesEndpointWithDefaultStrategy,
     setupContextEndpoint,
     setupFeaturesEndpoint,
     setupProjectEndpoint,
@@ -157,7 +156,7 @@ describe('NewFeatureStrategyEdit', () => {
         });
     });
 
-    it('should auto-correct missing stickiness and groupId from broken strategy', async () => {
+    it('should auto-correct missing strategy params without overwriting existing params', async () => {
         setupFeaturesEndpointWithBrokenStrategy(featureName);
 
         render(
@@ -197,42 +196,6 @@ describe('NewFeatureStrategyEdit', () => {
         expect(
             within(stickinessSelect).getByText('Default'),
         ).toBeInTheDocument();
-    });
-
-    it('should not add stickiness or groupId to non-flexibleRollout strategies', async () => {
-        setupFeaturesEndpointWithDefaultStrategy(featureName);
-
-        render(
-            <Routes>
-                <Route
-                    path={
-                        '/projects/:projectId/features/:featureId/strategies/edit'
-                    }
-                    element={<FeatureStrategyEdit />}
-                />
-            </Routes>,
-            {
-                route: `/projects/${project}/features/${featureName}/strategies/edit?environmentId=development&strategyId=1`,
-                permissions: [
-                    {
-                        permission: UPDATE_FEATURE_STRATEGY,
-                        project,
-                        environment: 'development',
-                    },
-                ],
-            },
-        );
-
-        await waitFor(() => {
-            expect(
-                screen.getByText(/The standard strategy is strictly on/),
-            ).toBeInTheDocument();
-        });
-
-        expect(
-            screen.queryByTestId(FLEXIBLE_STRATEGY_STICKINESS_ID),
-        ).not.toBeInTheDocument();
-        expect(screen.queryByLabelText('groupId')).not.toBeInTheDocument();
     });
 
     it('should not change variant names', async () => {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { screen, fireEvent } from '@testing-library/react';
-import FlexibleStrategy from './FlexibleStrategy.tsx';
+import { FlexibleStrategy } from './FlexibleStrategy.tsx';
 import { render } from 'utils/testRenderer';
 
 test('manipulates the rollout slider', async () => {

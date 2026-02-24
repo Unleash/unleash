@@ -1,12 +1,5 @@
 import { type FC, useState } from 'react';
-import {
-    Button,
-    Collapse,
-    IconButton,
-    styled,
-    Tooltip,
-    Typography,
-} from '@mui/material';
+import { Button, Collapse, styled, Typography } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -64,10 +57,6 @@ const StyledChartCount = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
 }));
-
-const StyledExpandButton = styled(IconButton)({
-    padding: 0,
-});
 
 const StyledExpandedContent = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -149,9 +138,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
         featureName,
     });
 
-    // Use demo data or real data
-    // Set to 0 to preview empty state, 2 for charts, or use impactMetrics.configs.length for real data
-    const chartCount: number = 0;
+    const chartCount = DEMO_MODE ? 2 : 0;
     const hasMetrics = chartCount > 0;
 
     if (!hasMetrics) {
@@ -220,9 +207,8 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
 
     return (
         <StyledContainer>
-            <StyledHeaderBar>
+            <StyledHeaderBar onClick={() => setExpanded(!expanded)}>
                 <StyledImpactLabel>
-                    <StyledImpactIcon />
                     <StyledImpactTitle>Impact metrics</StyledImpactTitle>
                     <Badge color='success' sx={{ ml: 1 }}>
                         New
@@ -234,20 +220,11 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                         <StyledChartCount>
                             {chartCount} chart{chartCount !== 1 ? 's' : ''}
                         </StyledChartCount>
-                        <Tooltip
-                            title={expanded ? 'Hide metrics' : 'Show metrics'}
-                        >
-                            <StyledExpandButton
-                                size='small'
-                                onClick={() => setExpanded(!expanded)}
-                            >
-                                {expanded ? (
-                                    <ExpandLessIcon />
-                                ) : (
-                                    <ExpandMoreIcon />
-                                )}
-                            </StyledExpandButton>
-                        </Tooltip>
+                        {expanded ? (
+                            <ExpandLessIcon />
+                        ) : (
+                            <ExpandMoreIcon />
+                        )}
                     </StyledImpactSection>
                 </StyledRightSection>
             </StyledHeaderBar>

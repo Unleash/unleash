@@ -7,19 +7,29 @@ import {
     createFakeFeatureToggleService,
 } from '../feature-toggle/createFeatureToggleService.js';
 import { FakeReleasePlanMilestoneStrategyStore } from '../../../test/fixtures/fake-release-plan-milestone-strategy-store.js';
+import {
+    createChangeRequestAccessReadModel,
+    createFakeChangeRequestAccessService,
+} from '../change-request-access-service/createChangeRequestAccessReadModel.js';
 
 export const createReleasePlanMilestoneStrategyService = (
     db: Db,
     config: IUnleashConfig,
 ): ReleasePlanMilestoneStrategyService => {
-    const milestoneStrategyStore = new ReleasePlanMilestoneStrategyStore(db, {
-        eventBus: config.eventBus,
-    });
+    const releasePlanMilestoneStrategyStore =
+        new ReleasePlanMilestoneStrategyStore(db, {
+            eventBus: config.eventBus,
+        });
     const featureToggleService = createFeatureToggleService(db, config);
+    const changeRequestAccessReadModel = createChangeRequestAccessReadModel(
+        db,
+        config,
+    );
 
     return new ReleasePlanMilestoneStrategyService(
-        { milestoneStrategyStore },
+        { releasePlanMilestoneStrategyStore },
         { featureToggleService },
+        changeRequestAccessReadModel,
         config,
     );
 };
@@ -31,10 +41,12 @@ export const createFakeReleasePlanMilestoneStrategyService = (
     const { featureToggleService, projectStore } =
         createFakeFeatureToggleService(config);
 
+    const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
     const releasePlanMilestoneStrategyService =
         new ReleasePlanMilestoneStrategyService(
-            { milestoneStrategyStore },
+            { releasePlanMilestoneStrategyStore: milestoneStrategyStore },
             { featureToggleService },
+            changeRequestAccessReadModel,
             config,
         );
 

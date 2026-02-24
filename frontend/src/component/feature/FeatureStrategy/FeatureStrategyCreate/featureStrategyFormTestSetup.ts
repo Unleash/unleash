@@ -12,6 +12,17 @@ export const setupProjectEndpoint = () => {
             },
         ],
     });
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        environments: [
+            {
+                environment: 'development',
+                enabled: true,
+                type: 'development',
+            },
+        ],
+        defaultStickiness: 'default',
+        name: 'default',
+    });
 };
 
 export const setupSegmentsEndpoint = () => {
@@ -41,6 +52,13 @@ export const setupStrategyEndpoint = () => {
                 name: 'groupId',
             },
         ],
+    });
+    testServerRoute(server, '/api/admin/strategies/default', {
+        displayName: 'Standard',
+        name: 'default',
+        description:
+            'The standard strategy is strictly on / off for your entire userbase.',
+        parameters: [],
     });
 };
 
@@ -77,6 +95,71 @@ export const setupFeaturesEndpoint = (
     );
 };
 
+export const setupFeaturesEndpointWithBrokenStrategy = (
+    featureName: string,
+) => {
+    testServerRoute(
+        server,
+        `/api/admin/projects/default/features/${featureName}`,
+        {
+            environments: [
+                {
+                    name: 'development',
+                    type: 'development',
+                    strategies: [
+                        {
+                            id: '1',
+                            constraints: [],
+                            parameters: {
+                                rollout: '66',
+                            },
+                            name: 'flexibleRollout',
+                            variants: [],
+                            segments: [],
+                            sortOrder: 1,
+                            title: 'broken strategy',
+                            disabled: false,
+                        },
+                    ],
+                },
+            ],
+            name: featureName,
+            project: 'default',
+        },
+    );
+};
+
+export const setupFeaturesEndpointWithDefaultStrategy = (
+    featureName: string,
+) => {
+    testServerRoute(
+        server,
+        `/api/admin/projects/default/features/${featureName}`,
+        {
+            environments: [
+                {
+                    name: 'development',
+                    type: 'development',
+                    strategies: [
+                        {
+                            id: '1',
+                            constraints: [],
+                            parameters: {},
+                            name: 'default',
+                            variants: [],
+                            segments: [],
+                            sortOrder: 1,
+                            disabled: false,
+                        },
+                    ],
+                },
+            ],
+            name: featureName,
+            project: 'default',
+        },
+    );
+};
+
 export const setupUiConfigEndpoint = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: {
@@ -87,6 +170,7 @@ export const setupUiConfigEndpoint = () => {
         environment: 'enterprise',
         flags: {
             newStrategyConfiguration: true,
+            strategyFormConsolidation: true,
         },
         resourceLimits: {
             featureEnvironmentStrategies: 2,

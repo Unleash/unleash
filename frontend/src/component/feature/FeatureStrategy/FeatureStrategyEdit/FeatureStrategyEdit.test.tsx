@@ -1,6 +1,6 @@
 import { formatUpdateStrategyApiCode } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import type { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
-import { screen, waitFor, fireEvent } from '@testing-library/react';
+import { screen, waitFor, within, fireEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 
@@ -10,7 +10,9 @@ import {
     UPDATE_FEATURE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
 import { FeatureStrategyEdit } from './FeatureStrategyEdit.tsx';
+import { FLEXIBLE_STRATEGY_STICKINESS_ID } from 'utils/testIds';
 import {
+    setupFeaturesEndpointWithBrokenStrategy,
     setupContextEndpoint,
     setupFeaturesEndpoint,
     setupProjectEndpoint,
@@ -152,6 +154,48 @@ describe('NewFeatureStrategyEdit', () => {
             // strategy stickiness and variant stickiness
             expect(count).toBe(2);
         });
+    });
+
+    it('should auto-correct missing strategy params without overwriting existing params', async () => {
+        setupFeaturesEndpointWithBrokenStrategy(featureName);
+
+        render(
+            <Routes>
+                <Route
+                    path={
+                        '/projects/:projectId/features/:featureId/strategies/edit'
+                    }
+                    element={<FeatureStrategyEdit />}
+                />
+            </Routes>,
+            {
+                route: `/projects/${project}/features/${featureName}/strategies/edit?environmentId=development&strategyId=1`,
+                permissions: [
+                    {
+                        permission: UPDATE_FEATURE_STRATEGY,
+                        project,
+                        environment: 'development',
+                    },
+                ],
+            },
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+        });
+
+        const slider = await screen.findByRole('slider', { name: /rollout/i });
+        expect(slider).toHaveValue('66');
+
+        const groupIdInput = await screen.findByLabelText('groupId');
+        expect(groupIdInput).toHaveValue(featureName);
+
+        const stickinessSelect = screen.getByTestId(
+            FLEXIBLE_STRATEGY_STICKINESS_ID,
+        );
+        expect(
+            within(stickinessSelect).getByText('Default'),
+        ).toBeInTheDocument();
     });
 
     it('should not change variant names', async () => {

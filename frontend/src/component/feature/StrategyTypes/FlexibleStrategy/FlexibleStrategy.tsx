@@ -51,7 +51,69 @@ const StyledInnerBox2 = styled(Box)(({ theme }) => ({
     marginLeft: theme.spacing(0.5),
 }));
 
-const FlexibleStrategy = ({
+export const FlexibleStrategy = ({
+    updateParameter,
+    parameters,
+    editable = true,
+    errors,
+}: IFlexibleStrategyProps) => {
+    const updateRollout = (_e: Event, value: number | number[]) => {
+        updateParameter('rollout', value.toString());
+    };
+
+    const rollout =
+        parameters.rollout !== undefined
+            ? parseParameterNumber(parameters.rollout)
+            : 100;
+
+    const stickiness = parseParameterString(parameters.stickiness);
+    const groupId = parseParameterString(parameters.groupId);
+
+    return (
+        <StyledBox>
+            <ConditionalRolloutSlider
+                name='Rollout'
+                value={rollout}
+                disabled={!editable}
+                onChange={updateRollout}
+            />
+            <StyledOuterBox>
+                <StyledInnerBox1>
+                    <StickinessSelect
+                        label='Stickiness'
+                        value={stickiness}
+                        editable={editable}
+                        dataTestId={FLEXIBLE_STRATEGY_STICKINESS_ID}
+                        onChange={(e) =>
+                            updateParameter('stickiness', e.target.value)
+                        }
+                    />
+                </StyledInnerBox1>
+                <StyledInnerBox2>
+                    <Input
+                        label='groupId'
+                        sx={{ width: '100%' }}
+                        id='groupId-input'
+                        value={groupId}
+                        disabled={!editable}
+                        onChange={(e) =>
+                            updateParameter(
+                                'groupId',
+                                parseParameterString(e.target.value),
+                            )
+                        }
+                        data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
+                        error={Boolean(errors?.getFormError('groupId'))}
+                        helperText={errors?.getFormError('groupId')}
+                    />
+                </StyledInnerBox2>
+            </StyledOuterBox>
+        </StyledBox>
+    );
+};
+
+// todo: delete component and dependents with flag `strategyFormConsolidation`
+const OldFlexibleStrategy = ({
     updateParameter,
     parameters,
     editable = true,
@@ -140,4 +202,4 @@ const FlexibleStrategy = ({
     );
 };
 
-export default FlexibleStrategy;
+export default OldFlexibleStrategy;

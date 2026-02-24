@@ -35,6 +35,9 @@ import {
 } from './change-request-conflict-data.ts';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
+import { createFeatureStrategy } from 'utils/createFeatureStrategy.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -101,6 +104,7 @@ export const FeatureStrategyEdit = () => {
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
     const { strategyDefinition } = useStrategy(strategy.name);
+    const { defaultStickiness } = useDefaultProjectSettings(projectId);
     const { setToastData, setToastApiError } = useToast();
     const errors = useFormErrors();
     const { uiConfig } = useUiConfig();
@@ -195,6 +199,29 @@ export const FeatureStrategyEdit = () => {
         // Fill in the selected segments once they've been fetched.
         savedStrategySegments && setSegments(savedStrategySegments);
     }, [JSON.stringify(savedStrategySegments)]);
+
+    const handleMissingParameters = useUiFlag('strategyFormConsolidation');
+    useEffect(() => {
+        if (!strategyDefinition || !handleMissingParameters) {
+            return;
+        }
+
+        const defaultParameters = createFeatureStrategy(
+            featureId,
+            strategyDefinition,
+            defaultStickiness,
+        ).parameters;
+
+        setStrategy((prev) => {
+            return {
+                ...prev,
+                parameters: {
+                    ...defaultParameters,
+                    ...prev.parameters,
+                },
+            };
+        });
+    }, [handleMissingParameters, defaultStickiness, strategyDefinition?.name]);
 
     const payload = createStrategyPayload(strategy, segments);
 

@@ -109,7 +109,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
         <>
             <DemoBanner />
             {children}
-            {interactiveDemoKillSwitch ? (
+            {interactiveDemoKillSwitch && welcomeOpen ? (
                 <DemoDialogWelcome
                     open={welcomeOpen}
                     onClose={onWelcomeClose}

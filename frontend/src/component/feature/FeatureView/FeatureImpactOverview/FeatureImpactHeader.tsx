@@ -148,12 +148,24 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                     onClick={() => setExpanded(!expanded)}
                 >
                     <StyledImpactLabel>
-                        <StyledImpactTitle>Impact metrics</StyledImpactTitle>
+                        <StyledImpactTitle>
+                            Measure the impact of this feature
+                        </StyledImpactTitle>
                         <Badge color='success' sx={{ ml: 1 }}>
                             New
                         </Badge>
                     </StyledImpactLabel>
                     <StyledRightSection>
+                        <StyledConnectButton
+                            variant='outlined'
+                            startIcon={<Add />}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onAddChart?.();
+                            }}
+                        >
+                            Connect metrics
+                        </StyledConnectButton>
                         {expanded ? (
                             <ExpandLessIcon />
                         ) : (
@@ -163,25 +175,11 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 </StyledHeaderBar>
                 <Collapse in={expanded}>
                     <StyledEmptyStateContainer>
-                        <StyledEmptyTopRow>
-                            <StyledEmptyContent>
-                                <StyledEmptyTitle>
-                                    Measure the impact of this feature
-                                </StyledEmptyTitle>
-                                <StyledEmptyDescription>
-                                    Connect your analytics to see how this
-                                    feature affects conversion rates, error
-                                    rates, and other key metrics during rollout.
-                                </StyledEmptyDescription>
-                            </StyledEmptyContent>
-                            <StyledConnectButton
-                                variant='outlined'
-                                startIcon={<Add />}
-                                onClick={onAddChart}
-                            >
-                                Connect metrics
-                            </StyledConnectButton>
-                        </StyledEmptyTopRow>
+                        <StyledEmptyDescription>
+                            Connect your analytics to see how this feature
+                            affects conversion rates, error rates, and other
+                            key metrics during rollout.
+                        </StyledEmptyDescription>
                         <StyledChartRow>
                             <PlaceholderChart
                                 title='Conversion Rate'

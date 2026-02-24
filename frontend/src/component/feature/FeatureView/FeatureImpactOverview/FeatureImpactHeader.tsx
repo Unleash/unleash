@@ -1,15 +1,22 @@
-import { type FC, useState } from 'react';
-import { Button, Collapse, styled, Typography } from '@mui/material';
+import { type FC, useMemo, useState } from 'react';
+import {
+    Button,
+    Collapse,
+    MenuItem,
+    Select,
+    styled,
+    Typography,
+} from '@mui/material';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { Badge } from 'component/common/Badge/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Add from '@mui/icons-material/Add';
+import { Link } from 'react-router-dom';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics';
-import { DemoImpactDashboard } from './ImpactDashboard/DemoImpactDashboard';
 import { PlaceholderChart } from './ImpactDashboard/PlaceholderChart';
-
-// Demo mode flag - set to true to see mock data
-const DEMO_MODE = false;
+import { CompactChartCard } from './CompactChartCard';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -37,7 +44,6 @@ const StyledRightSection = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(2),
-    marginLeft: 'auto',
     color: theme.palette.action.active,
 }));
 
@@ -89,26 +95,6 @@ const StyledChartRow = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledEmptyTopRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: theme.spacing(2),
-    flexWrap: 'wrap',
-}));
-
-const StyledEmptyContent = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(0.5),
-}));
-
-const StyledEmptyTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.bodySize,
-    fontWeight: theme.typography.fontWeightBold,
-    color: theme.palette.text.primary,
-}));
-
 const StyledEmptyDescription = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
@@ -119,6 +105,26 @@ const StyledConnectButton = styled(Button)(({ theme }) => ({
     textTransform: 'none',
     whiteSpace: 'nowrap',
     flexShrink: 0,
+}));
+
+const StyledEnvDropdown = styled('div')({});
+
+const StyledToolbar = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing(2),
+    marginBottom: theme.spacing(-1.5),
+    marginTop: theme.spacing(-1.5),
+}));
+
+const StyledMetricsLink = styled(Link)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.primary.main,
+    textDecoration: 'none',
+    '&:hover': {
+        textDecoration: 'underline',
+    },
 }));
 
 interface FeatureImpactHeaderProps {
@@ -134,14 +140,50 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
 }) => {
     const [expanded, setExpanded] = useState(false);
 
-    // Fetch impact metrics count
+    const { feature } = useFeature(projectId, featureName);
+    const envOptions = useMemo(() => {
+        const sorted = [...feature.environments].sort((a, b) => {
+            if (a.type === 'production' && b.type !== 'production') return -1;
+            if (a.type !== 'production' && b.type === 'production') return 1;
+            return 0;
+        });
+        return sorted.map((env) => ({
+            key: env.name,
+            label: env.name,
+        }));
+    }, [feature.environments]);
+
+    const defaultEnv = envOptions[0]?.key ?? '';
+    const [selectedEnv, setSelectedEnv] = useState<string>('');
+    const activeEnv = selectedEnv || defaultEnv;
+
     const { impactMetrics } = useFeatureImpactMetrics({
         projectId,
         featureName,
     });
 
-    const chartCount = DEMO_MODE ? 2 : 0;
+    const chartCount = impactMetrics.configs.length;
     const hasMetrics = chartCount > 0;
+
+    const envDropdown = (
+        <StyledEnvDropdown>
+            <Select
+                value={activeEnv}
+                onChange={(e) => setSelectedEnv(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+                size='small'
+                variant='outlined'
+                IconComponent={KeyboardArrowDownOutlined}
+                sx={{ width: 'fit-content' }}
+            >
+                {envOptions.map((opt) => (
+                    <MenuItem key={opt.key} value={opt.key}>
+                        {opt.label}
+                    </MenuItem>
+                ))}
+            </Select>
+        </StyledEnvDropdown>
+    );
 
     if (!hasMetrics) {
         return (
@@ -157,7 +199,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                             New
                         </Badge>
                     </StyledImpactLabel>
-                    <StyledRightSection>
+                    <StyledRightSection sx={{ marginLeft: 'auto' }}>
                         <StyledConnectButton
                             variant='outlined'
                             startIcon={<Add />}
@@ -210,12 +252,8 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
             <StyledHeaderBar onClick={() => setExpanded(!expanded)}>
                 <StyledImpactLabel>
                     <StyledImpactTitle>Impact metrics</StyledImpactTitle>
-                    <Badge color='success' sx={{ ml: 1 }}>
-                        New
-                    </Badge>
                 </StyledImpactLabel>
-
-                <StyledRightSection>
+                <StyledRightSection sx={{ marginLeft: 'auto' }}>
                     <StyledImpactSection>
                         <StyledChartCount>
                             {chartCount} chart{chartCount !== 1 ? 's' : ''}
@@ -231,7 +269,23 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
 
             <Collapse in={expanded}>
                 <StyledExpandedContent>
-                    <DemoImpactDashboard />
+                    <StyledToolbar>
+                        {envDropdown}
+                        <StyledMetricsLink
+                            to={`/projects/${projectId}/features/${featureName}/metrics`}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            View all metrics
+                        </StyledMetricsLink>
+                    </StyledToolbar>
+                    <StyledChartRow>
+                        {impactMetrics.configs.map((config) => (
+                            <CompactChartCard
+                                key={config.id}
+                                config={config}
+                            />
+                        ))}
+                    </StyledChartRow>
                 </StyledExpandedContent>
             </Collapse>
         </StyledContainer>

@@ -107,6 +107,15 @@ const StyledConnectButton = styled(Button)(({ theme }) => ({
     flexShrink: 0,
 }));
 
+const StyledFooter = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2, 3, 2),
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+    background: theme.palette.background.elevation1,
+    borderTop: `1px solid ${theme.palette.divider}`,
+}));
+
 const StyledEnvDropdown = styled('div')({});
 
 const StyledToolbar = styled('div')(({ theme }) => ({
@@ -270,13 +279,14 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
             <Collapse in={expanded}>
                 <StyledExpandedContent>
                     <StyledToolbar>
-                        {envDropdown}
+                        {/* NOT SURE IF WE SHOULD KEEP THIS DROPDOWN FOR SELECTING ENVIRONMENT OR NOT */}
+                        {/* {envDropdown}
                         <StyledMetricsLink
                             to={`/projects/${projectId}/features/${featureName}/metrics`}
                             onClick={(e) => e.stopPropagation()}
                         >
-                            View all metrics
-                        </StyledMetricsLink>
+                            All metrics 
+                        </StyledMetricsLink> */}
                     </StyledToolbar>
                     <StyledChartRow>
                         {impactMetrics.configs.map((config) => (
@@ -287,6 +297,19 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                         ))}
                     </StyledChartRow>
                 </StyledExpandedContent>
+                <StyledFooter>
+                    <Button
+                        variant='outlined'
+                        startIcon={<Add />}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onAddChart?.();
+                        }}
+                        sx={{ textTransform: 'none', marginLeft: 'auto' }}
+                    >
+                        Add impact metric
+                    </Button>
+                </StyledFooter>
             </Collapse>
         </StyledContainer>
     );

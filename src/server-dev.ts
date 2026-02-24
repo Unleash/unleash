@@ -62,6 +62,7 @@ process.nextTick(async () => {
                         datePickerRangeConstraints: true,
                         regexConstraintOperator: true,
                         updateMilestoneStrategy: true,
+                        strategyFormConsolidation: true,
                     },
                 },
                 authentication: {

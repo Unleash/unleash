@@ -74,6 +74,7 @@ export type IFlagKey =
     | 'datePickerRangeConstraints'
     | 'regexConstraintOperator'
     | 'signupDialog'
+    | 'strategyFormConsolidation'
     | 'updateMilestoneStrategy';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -333,6 +334,10 @@ const flags: IFlags = {
     ),
     updateMilestoneStrategy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_UPDATE_MILESTONE_STRATEGY,
+        false,
+    ),
+    strategyFormConsolidation: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_STRATEGY_FORM_CONSOLIDATION,
         false,
     ),
 };

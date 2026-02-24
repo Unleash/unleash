@@ -93,6 +93,7 @@ export const createStores = (
             eventBus,
             getLogger,
             config.flagResolver,
+            config.clientApplicationSeenAtUpdateIntervalSeconds,
         ),
         clientInstanceStore: new ClientInstanceStore(db, eventBus, getLogger),
         clientMetricsStoreV2: new ClientMetricsStoreV2(

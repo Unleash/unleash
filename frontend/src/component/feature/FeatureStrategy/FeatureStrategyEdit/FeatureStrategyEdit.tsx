@@ -37,6 +37,7 @@ import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -179,14 +180,6 @@ export const FeatureStrategyEdit = () => {
     } = useSegments(strategyId);
 
     useEffect(() => {
-        const defaultParameters = strategyDefinition
-            ? createFeatureStrategy(
-                  featureId,
-                  strategyDefinition,
-                  defaultStickiness,
-              ).parameters
-            : {};
-
         const savedStrategy = data?.environments
             .flatMap((environment) => environment.strategies)
             .find((strategy) => strategy.id === strategyId);
@@ -195,21 +188,40 @@ export const FeatureStrategyEdit = () => {
 
         const formattedStrategy = {
             ...savedStrategy,
-            parameters: {
-                ...defaultParameters,
-                ...savedStrategy?.parameters,
-            },
             constraints: constraintsWithId,
         };
 
         setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
         setPreviousTitle(savedStrategy?.title || '');
-    }, [strategyId, data, defaultStickiness, strategyDefinition?.name]);
+    }, [strategyId, data]);
 
     useEffect(() => {
         // Fill in the selected segments once they've been fetched.
         savedStrategySegments && setSegments(savedStrategySegments);
     }, [JSON.stringify(savedStrategySegments)]);
+
+    const handleMissingParameters = useUiFlag('strategyFormConsolidation');
+    useEffect(() => {
+        if (!strategyDefinition || !handleMissingParameters) {
+            return;
+        }
+
+        const defaultParameters = createFeatureStrategy(
+            featureId,
+            strategyDefinition,
+            defaultStickiness,
+        ).parameters;
+
+        setStrategy((prev) => {
+            return {
+                ...prev,
+                parameters: {
+                    ...defaultParameters,
+                    ...prev.parameters,
+                },
+            };
+        });
+    }, [handleMissingParameters, defaultStickiness, strategyDefinition?.name]);
 
     const payload = createStrategyPayload(strategy, segments);
 

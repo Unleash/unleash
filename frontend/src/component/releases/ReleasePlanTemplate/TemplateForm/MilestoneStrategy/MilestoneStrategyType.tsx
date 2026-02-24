@@ -1,9 +1,9 @@
 import type { IFormErrors } from 'hooks/useFormErrors';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import type { IStrategy } from 'interfaces/strategy';
-import { MilestoneStrategyTypeFlexible } from './MilestoneStrategyTypeFlexible.tsx';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
+import { FlexibleStrategy } from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy.tsx';
 
 interface IMilestoneStrategyTypeProps {
     strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>;
@@ -28,7 +28,7 @@ export const MilestoneStrategyType = ({
             return <DefaultStrategy strategyDefinition={strategyDefinition} />;
         case 'flexibleRollout':
             return (
-                <MilestoneStrategyTypeFlexible
+                <FlexibleStrategy
                     parameters={parameters}
                     updateParameter={updateParameter}
                     errors={errors}

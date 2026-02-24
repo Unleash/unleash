@@ -133,7 +133,13 @@ export const FeatureStrategyCreate = () => {
                 setStrategy(strategyTemplate as any);
             }
         } else if (strategyDefinition) {
-            setStrategy(createFeatureStrategy(featureId, strategyDefinition));
+            setStrategy(
+                createFeatureStrategy(
+                    featureId,
+                    strategyDefinition,
+                    defaultStrategyFallback.parameters?.stickiness,
+                ),
+            );
         }
     }, [
         featureId,

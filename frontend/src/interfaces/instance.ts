@@ -23,6 +23,7 @@ export interface IInstanceStatus {
     minSeats?: number;
     isCustomBilling?: boolean;
     billing?: InstanceBilling;
+    ucaSignup?: boolean;
 }
 
 export enum InstanceState {

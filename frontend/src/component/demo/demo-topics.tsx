@@ -39,8 +39,8 @@ const StyledImg = styled('img')(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
 }));
 
-const PROJECT = 'demo-app';
-const ENVIRONMENT = 'dev';
+export const DEMO_PROJECT = 'demo-app';
+const DEMO_ENVIRONMENT = 'dev';
 
 export const TOPICS: ITutorialTopic[] = [
     {
@@ -48,7 +48,7 @@ export const TOPICS: ITutorialTopic[] = [
         steps: [
             {
                 title: 'How to enable/disable a feature flag',
-                href: `/projects/${PROJECT}?sort=name`,
+                href: `/projects/${DEMO_PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -80,8 +80,8 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Control the flag',
-                href: `/projects/${PROJECT}?sort=name`,
-                target: `div[data-testid="TOGGLE-demoApp.step1-${ENVIRONMENT}"]`,
+                href: `/projects/${DEMO_PROJECT}?sort=name`,
+                target: `div[data-testid="TOGGLE-demoApp.step1-${DEMO_ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
@@ -103,7 +103,7 @@ export const TOPICS: ITutorialTopic[] = [
         steps: [
             {
                 title: 'Next: How to enable for a specific user',
-                href: `/projects/${PROJECT}?sort=name`,
+                href: `/projects/${DEMO_PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -129,8 +129,8 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Select a flag',
-                href: `/projects/${PROJECT}?sort=name`,
-                target: `table a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2"]`,
+                href: `/projects/${DEMO_PROJECT}?sort=name`,
+                target: `table a[href="${basePath}/projects/${DEMO_PROJECT}/features/demoApp.step2"]`,
                 content: (
                     <Description>
                         First, open the feature flag configuration for{' '}
@@ -142,8 +142,8 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Select an environment',
-                href: `/projects/${PROJECT}/features/demoApp.step2`,
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
+                href: `/projects/${DEMO_PROJECT}/features/demoApp.step2`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${DEMO_ENVIRONMENT}"] > div[aria-expanded="false"]`,
                 content: (
                     <Description>
                         Expand the environment card to see all the defined
@@ -155,7 +155,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Add a strategy',
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button[data-testid="ADD_STRATEGY_BUTTON"]`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${DEMO_ENVIRONMENT}"] button[data-testid="ADD_STRATEGY_BUTTON"]`,
                 content: (
                     <Description>
                         Add a new strategy to this environment by using this
@@ -167,7 +167,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Select a strategy',
-                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
+                target: `a[href="${basePath}/projects/${DEMO_PROJECT}/features/demoApp.step2/strategies/create?environmentId=${DEMO_ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
                 content: (
                     <Description>Select the default strategy.</Description>
                 ),
@@ -347,8 +347,8 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Control the flag',
-                href: `/projects/${PROJECT}?sort=name`,
-                target: `div[data-testid="TOGGLE-demoApp.step2-${ENVIRONMENT}"]`,
+                href: `/projects/${DEMO_PROJECT}?sort=name`,
+                target: `div[data-testid="TOGGLE-demoApp.step2-${DEMO_ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
@@ -371,7 +371,7 @@ export const TOPICS: ITutorialTopic[] = [
         steps: [
             {
                 title: 'Next: How to adjust gradual rollout',
-                href: `/projects/${PROJECT}?sort=name`,
+                href: `/projects/${DEMO_PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -404,8 +404,8 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Select a flag',
-                href: `/projects/${PROJECT}?sort=name`,
-                target: `table a[href="${basePath}/projects/${PROJECT}/features/demoApp.step3"]`,
+                href: `/projects/${DEMO_PROJECT}?sort=name`,
+                target: `table a[href="${basePath}/projects/${DEMO_PROJECT}/features/demoApp.step3"]`,
                 content: (
                     <Description>
                         First, open the feature flag configuration for{' '}
@@ -417,8 +417,8 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Select an environment',
-                href: `/projects/${PROJECT}/features/demoApp.step3`,
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
+                href: `/projects/${DEMO_PROJECT}/features/demoApp.step3`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${DEMO_ENVIRONMENT}"] > div[aria-expanded="false"]`,
                 content: (
                     <Description>
                         Expand the environment card to see all the defined
@@ -430,7 +430,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Edit strategy',
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${DEMO_ENVIRONMENT}"] a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
                 content: (
                     <Description>
                         Edit the existing gradual rollout strategy by using the
@@ -479,8 +479,8 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Control the flag',
-                href: `/projects/${PROJECT}?sort=name`,
-                target: `div[data-testid="TOGGLE-demoApp.step3-${ENVIRONMENT}"]`,
+                href: `/projects/${DEMO_PROJECT}?sort=name`,
+                target: `div[data-testid="TOGGLE-demoApp.step3-${DEMO_ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>
@@ -504,7 +504,7 @@ export const TOPICS: ITutorialTopic[] = [
         steps: [
             {
                 title: 'Next: How to adjust variants',
-                href: `/projects/${PROJECT}?sort=name`,
+                href: `/projects/${DEMO_PROJECT}?sort=name`,
                 target: 'body',
                 placement: 'center',
                 content: (
@@ -530,8 +530,8 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Select a flag',
-                href: `/projects/${PROJECT}?sort=name`,
-                target: `table a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4"]`,
+                href: `/projects/${DEMO_PROJECT}?sort=name`,
+                target: `table a[href="${basePath}/projects/${DEMO_PROJECT}/features/demoApp.step4"]`,
                 content: (
                     <Description>
                         First, open the feature flag configuration for{' '}
@@ -543,8 +543,8 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Select an environment',
-                href: `/projects/${PROJECT}/features/demoApp.step4`,
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] > div[aria-expanded="false"]`,
+                href: `/projects/${DEMO_PROJECT}/features/demoApp.step4`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${DEMO_ENVIRONMENT}"] > div[aria-expanded="false"]`,
                 content: (
                     <Description>
                         Expand the environment card to see all the defined
@@ -556,7 +556,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Add a strategy',
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button[data-testid="ADD_STRATEGY_BUTTON"]`,
+                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${DEMO_ENVIRONMENT}"] button[data-testid="ADD_STRATEGY_BUTTON"]`,
                 content: (
                     <Description>
                         Add a new strategy to this environment by using this
@@ -568,7 +568,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Select a strategy',
-                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
+                target: `a[href="${basePath}/projects/${DEMO_PROJECT}/features/demoApp.step4/strategies/create?environmentId=${DEMO_ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
                 content: (
                     <Description>Select the default strategy.</Description>
                 ),
@@ -830,8 +830,8 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 title: 'Control the flag',
-                href: `/projects/${PROJECT}?sort=name`,
-                target: `div[data-testid="TOGGLE-demoApp.step4-${ENVIRONMENT}"]`,
+                href: `/projects/${DEMO_PROJECT}?sort=name`,
+                target: `div[data-testid="TOGGLE-demoApp.step4-${DEMO_ENVIRONMENT}"]`,
                 content: (
                     <>
                         <Description>

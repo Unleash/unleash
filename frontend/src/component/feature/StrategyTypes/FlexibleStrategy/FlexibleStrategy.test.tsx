@@ -30,7 +30,7 @@ test('manipulates the rollout slider', async () => {
     render(<Wrapper />);
 
     const slider = await screen.findByRole('slider', { name: /rollout/i });
-    const groupIdInput = screen.getByLabelText('groupId');
+    const groupIdInput = await screen.findByLabelText('groupId');
 
     expect(slider).toHaveValue('0');
     expect(groupIdInput).toHaveValue('testid');

@@ -31,6 +31,7 @@ const StyledHeaderBar = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
     padding: theme.spacing(1.5, 3),
     minHeight: 48,
+    cursor: 'pointer',
 }));
 
 const StyledImpactSection = styled('div')(({ theme }) => ({
@@ -44,6 +45,7 @@ const StyledRightSection = styled('div')(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(2),
     marginLeft: 'auto',
+    color: theme.palette.action.active,
 }));
 
 const StyledImpactLabel = styled('div')(({ theme }) => ({
@@ -63,9 +65,9 @@ const StyledChartCount = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledExpandButton = styled(IconButton)(({ theme }) => ({
-    padding: theme.spacing(0.5),
-}));
+const StyledExpandButton = styled(IconButton)({
+    padding: 0,
+});
 
 const StyledExpandedContent = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -81,12 +83,19 @@ const StyledEmptyStateContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
-    backgroundColor: theme.palette.background.elevation1,
+    backgroundColor: theme.palette.background.elevation2,
 }));
 
 const StyledChartRow = styled('div')(({ theme }) => ({
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
     gap: theme.spacing(2),
+    [theme.breakpoints.down('lg')]: {
+        gridTemplateColumns: 'repeat(2, 1fr)',
+    },
+    [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: '1fr',
+    },
 }));
 
 const StyledEmptyTopRow = styled('div')(({ theme }) => ({
@@ -94,6 +103,7 @@ const StyledEmptyTopRow = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: theme.spacing(2),
+    flexWrap: 'wrap',
 }));
 
 const StyledEmptyContent = styled('div')(({ theme }) => ({
@@ -111,7 +121,7 @@ const StyledEmptyTitle = styled(Typography)(({ theme }) => ({
 const StyledEmptyDescription = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
-    maxWidth: 500,
+    maxWidth: '100%',
 }));
 
 const StyledConnectButton = styled(Button)(({ theme }) => ({
@@ -147,52 +157,63 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     if (!hasMetrics) {
         return (
             <StyledContainer>
-                <StyledHeaderBar>
+                <StyledHeaderBar
+                    onClick={() => setExpanded(!expanded)}
+                >
                     <StyledImpactLabel>
                         <StyledImpactTitle>Impact metrics</StyledImpactTitle>
                         <Badge color='success' sx={{ ml: 1 }}>
                             New
                         </Badge>
                     </StyledImpactLabel>
+                    <StyledRightSection>
+                        {expanded ? (
+                            <ExpandLessIcon />
+                        ) : (
+                            <ExpandMoreIcon />
+                        )}
+                    </StyledRightSection>
                 </StyledHeaderBar>
-                <StyledEmptyStateContainer>
-                    <StyledEmptyTopRow>
-                        <StyledEmptyContent>
-                            <StyledEmptyTitle>
-                                Measure the impact of this feature
-                            </StyledEmptyTitle>
-                            <StyledEmptyDescription>
-                                Connect your analytics to see how this feature
-                                affects conversion rates, error rates, and other
-                                key metrics during rollout.
-                            </StyledEmptyDescription>
-                        </StyledEmptyContent>
-                        <StyledConnectButton
-                            variant='outlined'
-                            startIcon={<Add />}
-                            onClick={onAddChart}
-                        >
-                            Connect metrics
-                        </StyledConnectButton>
-                    </StyledEmptyTopRow>
-                    <StyledChartRow>
-                        <PlaceholderChart
-                            title='Conversion Rate'
-                            change='+12.4%'
-                            variant='upward'
-                        />
-                        <PlaceholderChart
-                            title='Error Rate'
-                            change='-0.8%'
-                            variant='downward'
-                        />
-                        <PlaceholderChart
-                            title='Latency (ms)'
-                            change='+2ms'
-                            variant='stable'
-                        />
-                    </StyledChartRow>
-                </StyledEmptyStateContainer>
+                <Collapse in={expanded}>
+                    <StyledEmptyStateContainer>
+                        <StyledEmptyTopRow>
+                            <StyledEmptyContent>
+                                <StyledEmptyTitle>
+                                    Measure the impact of this feature
+                                </StyledEmptyTitle>
+                                <StyledEmptyDescription>
+                                    Connect your analytics to see how this
+                                    feature affects conversion rates, error
+                                    rates, and other key metrics during rollout.
+                                </StyledEmptyDescription>
+                            </StyledEmptyContent>
+                            <StyledConnectButton
+                                variant='outlined'
+                                startIcon={<Add />}
+                                onClick={onAddChart}
+                            >
+                                Connect metrics
+                            </StyledConnectButton>
+                        </StyledEmptyTopRow>
+                        <StyledChartRow>
+                            <PlaceholderChart
+                                title='Conversion Rate'
+                                change='+12.4%'
+                                variant='upward'
+                            />
+                            <PlaceholderChart
+                                title='Error Rate'
+                                change='-0.8%'
+                                variant='downward'
+                            />
+                            <PlaceholderChart
+                                title='Latency (ms)'
+                                change='+2ms'
+                                variant='stable'
+                            />
+                        </StyledChartRow>
+                    </StyledEmptyStateContainer>
+                </Collapse>
             </StyledContainer>
         );
     }

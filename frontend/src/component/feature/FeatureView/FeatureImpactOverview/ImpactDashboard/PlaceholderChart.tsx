@@ -24,7 +24,6 @@ const StyledChartCard = styled(Paper)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     boxShadow: 'none',
     backgroundColor: theme.palette.background.paper,
-    flex: 1,
     minWidth: 0,
 }));
 

@@ -8,6 +8,7 @@ import { ScreenReaderOnly } from '../common/ScreenReaderOnly/ScreenReaderOnly.ts
 import { formatAssetPath } from 'utils/formatPath';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
+    zIndex: theme.zIndex.modal + 1,
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusLarge,
         width: '65vw',

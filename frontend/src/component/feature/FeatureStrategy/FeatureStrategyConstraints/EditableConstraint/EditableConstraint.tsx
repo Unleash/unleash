@@ -1,4 +1,5 @@
-import { IconButton, styled } from '@mui/material';
+import { IconButton, Link, styled } from '@mui/material';
+import OpenInNew from '@mui/icons-material/OpenInNew';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import {
     isRegexOperator,
@@ -11,12 +12,9 @@ import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
 import { ValueList } from './ValueList.tsx';
-import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
-import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
 import { AddValuesWidget } from './AddValuesWidget.tsx';
+import { ToggleConstraintCaseSensitivity } from './ToggleConstraintCaseSensitivity.tsx';
 
-import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
-import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
 import { AddSingleValueWidget } from './AddSingleValueWidget.tsx';
 import { ConstraintDateInput } from './ConstraintDateInput.tsx';
 import {
@@ -37,6 +35,8 @@ import type { ConstraintValidationResult } from './useEditableConstraint/constra
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
+import { AddRegexConstraintValueWidget } from './AddRegexConstraintValueWidget.tsx';
+import { ToggleConstraintInverted } from '../ToggleConstraintInverted.tsx';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -104,37 +104,6 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     right: theme.spacing(1),
 }));
 
-const StyledButton = styled('button')(({ theme }) => ({
-    display: 'grid',
-    placeItems: 'center',
-    padding: 0,
-    borderRadius: theme.shape.borderRadius,
-    fontSize: theme.fontSizes.smallerBody,
-    background: theme.palette.secondary.light,
-    border: `1px solid ${theme.palette.secondary.border}`,
-    color: theme.palette.secondary.dark,
-    fontWeight: theme.typography.fontWeightBold,
-    transition: 'all 0.03s ease',
-    '&:is(:hover, :focus-visible)': {
-        outline: `1px solid ${theme.palette.primary.main}`,
-    },
-}));
-
-const StyledEqualsIcon = styled(EqualsIcon)(({ theme }) => ({
-    path: {
-        fill: 'currentcolor',
-    },
-}));
-
-const StyledNotEqualsIcon = styled(NotEqualsIcon)(({ theme }) => ({
-    path: {
-        fill: theme.palette.text.disabled,
-    },
-    rect: {
-        fill: theme.palette.text.secondary,
-    },
-}));
-
 const ButtonPlaceholder = styled('div')(({ theme }) => ({
     // this is a trick that lets us use absolute positioning for the button so
     // that it can go over the operator context fields when necessary (narrow
@@ -143,32 +112,22 @@ const ButtonPlaceholder = styled('div')(({ theme }) => ({
     width: theme.spacing(2),
 }));
 
-const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({
-    path: {
-        fill: theme.palette.text.disabled,
-    },
-    rect: {
-        fill: theme.palette.text.secondary,
-    },
-}));
-const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
-    path: {
-        fill: 'currentColor',
-    },
-}));
-
 const TopRowInput: FC<{
     addValues: (value: string | string[]) => void;
     clearValues: () => void;
     localConstraint: EditableConstraintType;
     validator: (value: string) => ConstraintValidationResult;
     addValuesButtonRef: React.RefObject<HTMLButtonElement>;
+    onToggleCaseSensitivity: () => void;
+    onToggleInverted: () => void;
 }> = ({
     addValues,
     clearValues,
     localConstraint,
     validator,
     addValuesButtonRef,
+    onToggleCaseSensitivity,
+    onToggleInverted,
 }) => {
     if (isDateConstraint(localConstraint)) {
         return (
@@ -193,15 +152,33 @@ const TopRowInput: FC<{
     }
     if (isRegexConstraint(localConstraint)) {
         return (
-            <AddSingleValueWidget
+            <AddRegexConstraintValueWidget
                 validator={validator}
                 onAddValue={addValues}
                 removeValue={clearValues}
                 currentValue={localConstraint.value}
+                caseInsensitive={!!localConstraint.caseInsensitive}
+                inverted={!!localConstraint.inverted}
+                onToggleCaseSensitivity={onToggleCaseSensitivity}
+                onToggleInverted={onToggleInverted}
                 helpText={
-                    'A regex value should be a valid RE2 regular expression'
+                    <>
+                        A regex value should be a valid{' '}
+                        <Link
+                            href='https://github.com/google/re2/wiki/Syntax'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            sx={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 0.25,
+                            }}
+                        >
+                            RE2 regular expression
+                            <OpenInNew sx={{ fontSize: 'inherit' }} />
+                        </Link>
+                    </>
                 }
-                inputType={'text'}
             />
         );
     }
@@ -272,6 +249,15 @@ export const EditableConstraint: FC<Props> = ({
         [updateConstraint],
     );
 
+    const onToggleInverted = useCallback(
+        () => updateConstraint({ type: 'toggle inverted operator' }),
+        [updateConstraint],
+    );
+
+    const onToggleCaseSensitivity = useCallback(() => {
+        updateConstraint({ type: 'toggle case sensitivity' });
+    }, [updateConstraint]);
+
     const { context } = useAssignableUnleashContext();
 
     const { contextName, operator } = localConstraint;
@@ -312,26 +298,10 @@ export const EditableConstraint: FC<Props> = ({
                         />
 
                         <OperatorOptions>
-                            <HtmlTooltip
-                                title={`Make the selected operator${localConstraint.inverted ? ' inclusive' : ' exclusive'}`}
-                                arrow
-                                describeChild
-                            >
-                                <StyledButton
-                                    type='button'
-                                    onClick={() =>
-                                        updateConstraint({
-                                            type: 'toggle inverted operator',
-                                        })
-                                    }
-                                >
-                                    {localConstraint.inverted ? (
-                                        <StyledNotEqualsIcon aria-label='The constraint operator is exclusive.' />
-                                    ) : (
-                                        <StyledEqualsIcon aria-label='The constraint operator is inclusive.' />
-                                    )}
-                                </StyledButton>
-                            </HtmlTooltip>
+                            <ToggleConstraintInverted
+                                inverted={localConstraint.inverted}
+                                onToggleInverted={onToggleInverted}
+                            />
 
                             <ConstraintOperatorSelect
                                 options={operatorsForContext(contextName)}
@@ -341,26 +311,14 @@ export const EditableConstraint: FC<Props> = ({
                             />
 
                             {showCaseSensitiveButton ? (
-                                <HtmlTooltip
-                                    title={`Make match${localConstraint.caseInsensitive ? ' ' : ' not '}case sensitive`}
-                                    arrow
-                                    describeChild
-                                >
-                                    <StyledButton
-                                        type='button'
-                                        onClick={() =>
-                                            updateConstraint({
-                                                type: 'toggle case sensitivity',
-                                            })
-                                        }
-                                    >
-                                        {localConstraint.caseInsensitive ? (
-                                            <StyledCaseInsensitiveIcon aria-label='The match is not case sensitive.' />
-                                        ) : (
-                                            <StyledCaseSensitiveIcon aria-label='The match is case sensitive.' />
-                                        )}
-                                    </StyledButton>
-                                </HtmlTooltip>
+                                <ToggleConstraintCaseSensitivity
+                                    caseInsensitive={
+                                        !!localConstraint.caseInsensitive
+                                    }
+                                    onToggleCaseSensitivity={
+                                        onToggleCaseSensitivity
+                                    }
+                                />
                             ) : null}
                         </OperatorOptions>
                     </ConstraintOptions>
@@ -385,6 +343,10 @@ export const EditableConstraint: FC<Props> = ({
                                 clearValues={clearAll}
                                 validator={validator}
                                 addValuesButtonRef={addValuesButtonRef}
+                                onToggleCaseSensitivity={
+                                    onToggleCaseSensitivity
+                                }
+                                onToggleInverted={onToggleInverted}
                             />
                         )}
                     </ValueList>

@@ -1,4 +1,4 @@
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, createEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { describe, expect, test, vi } from 'vitest';
 import { AddRegexValuePopover } from './AddRegexValuePopover';
@@ -289,6 +289,69 @@ describe('AddRegexValuePopover – test string management', () => {
         expect(
             screen.getAllByPlaceholderText('Enter test context field value'),
         ).toHaveLength(1);
+    });
+});
+
+describe('AddRegexValuePopover – keyboard interactions', () => {
+    test('pressing Enter submits the form and calls onAdd', () => {
+        const onAdd = vi.fn();
+        render(<AddRegexValuePopover {...defaultProps} onAdd={onAdd} />);
+
+        const regexInput = screen.getByPlaceholderText('Enter RE2 regex value');
+        fireEvent.change(regexInput, { target: { value: '^foo$' } });
+        fireEvent.keyDown(regexInput, { key: 'Enter' });
+
+        expect(onAdd).toHaveBeenCalledWith(
+            '^foo$',
+            expect.objectContaining({
+                setError: expect.any(Function),
+                clearInput: expect.any(Function),
+            }),
+        );
+    });
+
+    test('pressing Shift+Enter does not submit the form', () => {
+        const onAdd = vi.fn();
+        render(<AddRegexValuePopover {...defaultProps} onAdd={onAdd} />);
+
+        const regexInput = screen.getByPlaceholderText('Enter RE2 regex value');
+        fireEvent.change(regexInput, { target: { value: '^foo$' } });
+        fireEvent.keyDown(regexInput, { key: 'Enter', shiftKey: true });
+
+        expect(onAdd).not.toHaveBeenCalled();
+    });
+
+    test('pressing ArrowDown calls stopPropagation to preserve native cursor movement', () => {
+        render(<AddRegexValuePopover {...defaultProps} />);
+
+        const regexInput = screen.getByPlaceholderText('Enter RE2 regex value');
+        const event = createEvent.keyDown(regexInput, { key: 'ArrowDown' });
+        const stopPropSpy = vi.spyOn(event, 'stopPropagation');
+        fireEvent(regexInput, event);
+
+        expect(stopPropSpy).toHaveBeenCalled();
+    });
+
+    test('pressing ArrowUp calls stopPropagation to preserve native cursor movement', () => {
+        render(<AddRegexValuePopover {...defaultProps} />);
+
+        const regexInput = screen.getByPlaceholderText('Enter RE2 regex value');
+        const event = createEvent.keyDown(regexInput, { key: 'ArrowUp' });
+        const stopPropSpy = vi.spyOn(event, 'stopPropagation');
+        fireEvent(regexInput, event);
+
+        expect(stopPropSpy).toHaveBeenCalled();
+    });
+
+    test('pressing other keys does not call stopPropagation', () => {
+        render(<AddRegexValuePopover {...defaultProps} />);
+
+        const regexInput = screen.getByPlaceholderText('Enter RE2 regex value');
+        const event = createEvent.keyDown(regexInput, { key: 'a' });
+        const stopPropSpy = vi.spyOn(event, 'stopPropagation');
+        fireEvent(regexInput, event);
+
+        expect(stopPropSpy).not.toHaveBeenCalled();
     });
 });
 

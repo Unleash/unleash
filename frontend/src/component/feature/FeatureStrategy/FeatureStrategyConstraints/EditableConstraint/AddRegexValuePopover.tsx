@@ -321,6 +321,21 @@ export const AddRegexValuePopover: FC<AddRegexValuePopoverProps> = ({
                                     placeholder='Enter RE2 regex value'
                                     value={inputValue}
                                     onChange={handleRegexInputChange}
+                                    onKeyDown={(e) => {
+                                        if (
+                                            e.key === 'ArrowUp' ||
+                                            e.key === 'ArrowDown'
+                                        ) {
+                                            e.stopPropagation();
+                                            return;
+                                        }
+                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                            e.preventDefault();
+                                            e.currentTarget
+                                                .closest('form')
+                                                ?.requestSubmit();
+                                        }
+                                    }}
                                     size='small'
                                     variant='standard'
                                     fullWidth

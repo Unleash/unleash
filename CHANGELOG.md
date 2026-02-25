@@ -2,6 +2,181 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.4.2] - 2026-02-25
+
+### Bug Fixes
+
+- Toggle -> flag ([#11295](https://github.com/Unleash/unleash/issues/11295))
+
+- Allow the SDK metrics API to ingest null variants ([#11296](https://github.com/Unleash/unleash/issues/11296))
+
+- Only show assignable segments in recently used segments ([#11340](https://github.com/Unleash/unleash/issues/11340))
+
+- Export ReleasePlanMilestoneStrategyStore for enterprise usage ([#11345](https://github.com/Unleash/unleash/issues/11345))
+
+- Release plan types ([#11347](https://github.com/Unleash/unleash/issues/11347))
+
+- Include update in IReleasePlanMilestoneStrategyStore ([#11348](https://github.com/Unleash/unleash/issues/11348))
+
+- Add plausible tracking to Apply button ([#11344](https://github.com/Unleash/unleash/issues/11344))
+
+- Await in permission check ([#11359](https://github.com/Unleash/unleash/issues/11359))
+
+- Does not allow to get variants from a different feature ([#11360](https://github.com/Unleash/unleash/issues/11360))
+
+- Validate segment constraints ([#11377](https://github.com/Unleash/unleash/issues/11377))
+
+- Edge token validation requires environment ([#11382](https://github.com/Unleash/unleash/issues/11382))
+
+- Bump docker workflow node version to 22.22-alpine3.23 to address CVE-2025-15467 ([#11388](https://github.com/Unleash/unleash/issues/11388))
+
+- Render projects only as list past 500 projects ([#11401](https://github.com/Unleash/unleash/issues/11401))
+
+- Axios transitive dependency ([#11405](https://github.com/Unleash/unleash/issues/11405))
+
+- Upgrade @types/nodemailer ([#11406](https://github.com/Unleash/unleash/issues/11406))
+
+
+### Documentation
+
+- Delete the docusaurus site ([#11303](https://github.com/Unleash/unleash/issues/11303))
+
+- Add agent files ([#11325](https://github.com/Unleash/unleash/issues/11325))
+
+
+### Features
+
+- Explicit API stability ([#11211](https://github.com/Unleash/unleash/issues/11211))
+
+- New API URLs table for Edge API URLs ([#11310](https://github.com/Unleash/unleash/issues/11310))
+
+- Remote mcp server setup ([#11317](https://github.com/Unleash/unleash/issues/11317))
+
+- Edge hmac issue token request ([#11290](https://github.com/Unleash/unleash/issues/11290))
+
+- Add ReleasePlanMilestoneStrategyService + plan strategy update ([#11319](https://github.com/Unleash/unleash/issues/11319))
+
+- Add CR support for milestone strategy update ([#11386](https://github.com/Unleash/unleash/issues/11386))
+
+
+### Miscellaneous Tasks
+
+- Always enable auto adjust date range + refactor ([#11287](https://github.com/Unleash/unleash/issues/11287))
+
+- Update orval version and generate types ([#11293](https://github.com/Unleash/unleash/issues/11293))
+
+- Replace duplicated components with feat_strat versions ([#11297](https://github.com/Unleash/unleash/issues/11297))
+
+- Increase soft limit for release templates + hide warning when approaching limit ([#11305](https://github.com/Unleash/unleash/issues/11305))
+
+- Disable passphrases in password check ([#11308](https://github.com/Unleash/unleash/issues/11308))
+
+- Cleanup link checker ([#11311](https://github.com/Unleash/unleash/issues/11311))
+
+- New signup password checker ([#11312](https://github.com/Unleash/unleash/issues/11312))
+
+- New signup dialog ([#11314](https://github.com/Unleash/unleash/issues/11314))
+
+- Signup dialog account details ([#11315](https://github.com/Unleash/unleash/issues/11315))
+
+- Move mcp to another repo ([#11318](https://github.com/Unleash/unleash/issues/11318))
+
+- Add mcp server flag ([#11321](https://github.com/Unleash/unleash/issues/11321))
+
+- Date handling into the state ([#11292](https://github.com/Unleash/unleash/issues/11292))
+
+- Signup dialog invite others ([#11322](https://github.com/Unleash/unleash/issues/11322))
+
+- Share constraints between milestones and feature strategies ([#11324](https://github.com/Unleash/unleash/issues/11324))
+
+- Add signupDialog flag ([#11331](https://github.com/Unleash/unleash/issues/11331))
+
+- Adapt signup name fields to single name ([#11328](https://github.com/Unleash/unleash/issues/11328))
+
+- Better username support in signup set password ([#11329](https://github.com/Unleash/unleash/issues/11329))
+
+- DB migration for signup data ([#11330](https://github.com/Unleash/unleash/issues/11330))
+
+- Update user entity to include the new properties ([#11332](https://github.com/Unleash/unleash/issues/11332))
+
+- Update update-strategy-schema ([#11326](https://github.com/Unleash/unleash/issues/11326))
+
+- Make logout optional when changing password ([#11335](https://github.com/Unleash/unleash/issues/11335))
+
+- Update user schema ([#11333](https://github.com/Unleash/unleash/issues/11333))
+
+- Add signup OpenAPI schemas ([#11336](https://github.com/Unleash/unleash/issues/11336))
+
+- Remove unstable tag from OpenAPI ([#11277](https://github.com/Unleash/unleash/issues/11277))
+
+- Remove milestone strategy segment, merge with feature strategy segment ([#11338](https://github.com/Unleash/unleash/issues/11338))
+
+- Re-export composition root for pat ([#11342](https://github.com/Unleash/unleash/issues/11342))
+
+- Merge milestone strategy variants and feature strategy variants ([#11350](https://github.com/Unleash/unleash/issues/11350))
+
+- Add flag for update milestone strategy ([#11351](https://github.com/Unleash/unleash/issues/11351))
+
+- Return updated milestone strategy from service method ([#11353](https://github.com/Unleash/unleash/issues/11353))
+
+- Add new signup openapi tag ([#11357](https://github.com/Unleash/unleash/issues/11357))
+
+- Adapt getting started email template to no name ([#11356](https://github.com/Unleash/unleash/issues/11356))
+
+- Deprecate update feature strategy name ([#11361](https://github.com/Unleash/unleash/issues/11361))
+
+- Export ReleasePlanMilestoneStrategyService type ([#11369](https://github.com/Unleash/unleash/issues/11369))
+
+- Use EDGE_MASTER_KEY for master key ([#11368](https://github.com/Unleash/unleash/issues/11368))
+
+- Accept partial MilestoneStrategyConfig updates ([#11370](https://github.com/Unleash/unleash/issues/11370))
+
+- Add new signup cols to User ([#11372](https://github.com/Unleash/unleash/issues/11372))
+
+- Delete unused code ([#11362](https://github.com/Unleash/unleash/issues/11362))
+
+- Show signup dialog when relevant ([#11373](https://github.com/Unleash/unleash/issues/11373))
+
+- UX improvements to the invite others step ([#11374](https://github.com/Unleash/unleash/issues/11374))
+
+- Include company role and email consent in user update ([#11379](https://github.com/Unleash/unleash/issues/11379))
+
+- Add ReleasePlanMilestoneStrategyService unit test ([#11380](https://github.com/Unleash/unleash/issues/11380))
+
+- One constraints validation used everywhere ([#11378](https://github.com/Unleash/unleash/issues/11378))
+
+- Add strategyFormConsolidation flag to Unleash ([#11389](https://github.com/Unleash/unleash/issues/11389))
+
+- Only show signup dialog when uca signup ([#11387](https://github.com/Unleash/unleash/issues/11387))
+
+- Merge flexible strategy impls (feature/default strategy & milestone strategy forms) ([#11376](https://github.com/Unleash/unleash/issues/11376))
+
+- Slight updates to getting started email ([#11393](https://github.com/Unleash/unleash/issues/11393))
+
+- InteractiveDemoKillSwitch that disables interactive demo steps ([#11391](https://github.com/Unleash/unleash/issues/11391))
+
+- Update instance add scheduler to 20s from 10s ([#11400](https://github.com/Unleash/unleash/issues/11400))
+
+- Add interactiveDemoKillSwitch to experimental ([#11398](https://github.com/Unleash/unleash/issues/11398))
+
+- Fix signup-related dialog zIndex ([#11396](https://github.com/Unleash/unleash/issues/11396))
+
+- Update text for the upgrade trial dialog ([#11397](https://github.com/Unleash/unleash/issues/11397))
+
+- Fix interactiveDemoKillSwitch still showing steps ([#11402](https://github.com/Unleash/unleash/issues/11402))
+
+- Remove redundant "access"/disabled setting ([#11392](https://github.com/Unleash/unleash/issues/11392))
+
+- Remove copyfiles-fixed ([#11408](https://github.com/Unleash/unleash/issues/11408))
+
+- Merge strategy type (milestone vs feature strategy) ([#11385](https://github.com/Unleash/unleash/issues/11385))
+
+
+### Refactor
+
+- PAT in feature oriented structure ([#11341](https://github.com/Unleash/unleash/issues/11341))
+
+
 ## [7.4.1] - 2026-02-05
 
 ### Bug Fixes

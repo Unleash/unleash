@@ -13,7 +13,7 @@ import { ProjectSetupComplete } from './ProjectSetupComplete.tsx';
 import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK.tsx';
 import { LatestProjectEvents } from './LatestProjectEvents.tsx';
 import { RoleAndOwnerInfo } from './RoleAndOwnerInfo.tsx';
-import { type ReactNode, useEffect, useRef, type FC } from 'react';
+import type { ReactNode, FC } from 'react';
 import type {
     PersonalDashboardProjectDetailsSchema,
     PersonalDashboardProjectDetailsSchemaRolesItem,
@@ -29,8 +29,8 @@ import {
     ProjectGrid,
     GridItem,
     SpacedGridItem,
-    StyledList,
     StyledCardTitle,
+    VirtualizedList,
 } from './SharedComponents.tsx';
 import { ContactAdmins, DataError } from './ProjectDetailsError.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -83,25 +83,10 @@ const ProjectListItem: FC<{
     selected: boolean;
     onClick: () => void;
 }> = ({ project, selected, onClick }) => {
-    const activeProjectRef = useRef<HTMLLIElement>(null);
     const { trackEvent } = usePlausibleTracker();
 
-    useEffect(() => {
-        if (activeProjectRef.current) {
-            activeProjectRef.current.scrollIntoView({
-                block: 'start',
-                inline: 'start',
-            });
-            window.scrollTo({ top: 0 });
-        }
-    }, []);
-
     return (
-        <ListItem
-            disablePadding={true}
-            sx={{ mb: 1 }}
-            ref={selected ? activeProjectRef : null}
-        >
+        <ListItem disablePadding={true} sx={{ mb: 1 }}>
             <ListItemButton
                 sx={listItemStyle}
                 selected={selected}
@@ -177,17 +162,20 @@ export const MyProjects: React.FC<{
             };
         }
 
+        const activeIndex = projects.findIndex((p) => p.id === activeProject);
         const list = (
-            <StyledList>
-                {projects.map((project) => (
+            <VirtualizedList
+                items={projects}
+                activeIndex={activeIndex}
+                itemKey={(p) => p.id}
+                renderItem={(project) => (
                     <ProjectListItem
-                        key={project.id}
                         project={project}
                         selected={project.id === activeProject}
                         onClick={() => setActiveProject(project.id)}
                     />
-                ))}
-            </StyledList>
+                )}
+            />
         );
 
         const [box1, box2] = (() => {

@@ -1,11 +1,11 @@
-import { type FC, useEffect, useRef } from 'react';
+import type { FC } from 'react';
 import {
     ContentGridContainer,
     FlagGrid,
     ListItemBox,
     SpacedGridItem,
     StyledCardTitle,
-    StyledList,
+    VirtualizedList,
     listItemStyle,
 } from './SharedComponents.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -34,27 +34,11 @@ const FlagListItem: FC<{
     selected: boolean;
     onClick: () => void;
 }> = ({ flag, selected, onClick }) => {
-    const activeFlagRef = useRef<HTMLLIElement>(null);
     const { trackEvent } = usePlausibleTracker();
-
-    useEffect(() => {
-        if (activeFlagRef.current) {
-            activeFlagRef.current.scrollIntoView({
-                block: 'start',
-                inline: 'start',
-            });
-            window.scrollTo({ top: 0 });
-        }
-    }, []);
     const IconComponent = getFeatureTypeIcons(flag.type);
     const flagLink = `projects/${flag.project}/features/${flag.name}`;
     return (
-        <ListItem
-            key={flag.name}
-            disablePadding={true}
-            sx={{ mb: 1 }}
-            ref={selected ? activeFlagRef : null}
-        >
+        <ListItem key={flag.name} disablePadding={true} sx={{ mb: 1 }}>
             <ListItemButton
                 sx={listItemStyle}
                 selected={selected}
@@ -107,28 +91,33 @@ export const MyFlags: FC<Props> = ({
     setActiveFlag,
     refetchDashboard,
 }) => {
+    const getActiveIndex = (data: Extract<FlagData, { state: 'flags' }>) => {
+        const { activeFlag } = data;
+        if (activeFlag) {
+            return data.flags.findIndex((f) => f.name === activeFlag.name);
+        }
+        return -1;
+    };
+
     return (
         <ContentGridContainer>
             <FlagGrid>
                 <SpacedGridItem gridArea='flags'>
                     {flagData.state === 'flags' ? (
-                        <StyledList
-                            disablePadding={true}
-                            sx={{
-                                height: '100%',
-                            }}
-                        >
-                            {flagData.flags.map((flag) => (
+                        <VirtualizedList
+                            items={flagData.flags}
+                            activeIndex={getActiveIndex(flagData)}
+                            itemKey={(f) => f.name}
+                            renderItem={(flag) => (
                                 <FlagListItem
-                                    key={flag.name}
                                     flag={flag}
                                     selected={
                                         flag.name === flagData.activeFlag?.name
                                     }
                                     onClick={() => setActiveFlag(flag)}
                                 />
-                            ))}
-                        </StyledList>
+                            )}
+                        />
                     ) : hasProjects ? (
                         <NoActiveFlagsInfo>
                             <Typography>

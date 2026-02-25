@@ -188,6 +188,8 @@ export const AddRegexValuePopover: FC<AddRegexValuePopoverProps> = ({
         Array<HTMLTextAreaElement | HTMLInputElement | null>
     >([]);
     const pendingFocusIndex = useRef<number | null>(null);
+    const addTestStringButtonRef = useRef<HTMLButtonElement>(null);
+    const arrowDownSelectionStart = useRef<number | null>(null);
 
     useEffect(() => {
         if (!open) return;
@@ -225,7 +227,11 @@ export const AddRegexValuePopover: FC<AddRegexValuePopoverProps> = ({
     };
     useEffect(() => {
         if (pendingFocusIndex.current !== null) {
-            regexTestInputRefs.current[pendingFocusIndex.current]?.focus();
+            if (pendingFocusIndex.current === -1) {
+                addTestStringButtonRef.current?.focus();
+            } else {
+                regexTestInputRefs.current[pendingFocusIndex.current]?.focus();
+            }
             pendingFocusIndex.current = null;
         }
     }, [regexTestInputs]);
@@ -322,11 +328,18 @@ export const AddRegexValuePopover: FC<AddRegexValuePopoverProps> = ({
                                     value={inputValue}
                                     onChange={handleRegexInputChange}
                                     onKeyDown={(e) => {
-                                        if (
-                                            e.key === 'ArrowUp' ||
-                                            e.key === 'ArrowDown'
-                                        ) {
+                                        if (e.key === 'ArrowUp') {
                                             e.stopPropagation();
+                                            return;
+                                        }
+                                        if (e.key === 'ArrowDown') {
+                                            e.stopPropagation();
+                                            // Save position before the browser moves the
+                                            // cursor. We compare in onKeyUp: if it hasn't
+                                            // moved, we were on the last visual line.
+                                            arrowDownSelectionStart.current =
+                                                inputRef.current?.selectionStart ??
+                                                null;
                                             return;
                                         }
                                         if (e.key === 'Enter' && !e.shiftKey) {
@@ -334,6 +347,24 @@ export const AddRegexValuePopover: FC<AddRegexValuePopoverProps> = ({
                                             e.currentTarget
                                                 .closest('form')
                                                 ?.requestSubmit();
+                                        }
+                                    }}
+                                    onKeyUp={(e) => {
+                                        if (e.key === 'ArrowDown') {
+                                            const textarea = inputRef.current;
+                                            const before =
+                                                arrowDownSelectionStart.current;
+                                            arrowDownSelectionStart.current =
+                                                null;
+                                            if (
+                                                textarea &&
+                                                before !== null &&
+                                                textarea.selectionStart ===
+                                                    before
+                                            ) {
+                                                // Cursor didn't move → already on last visual line
+                                                regexTestInputRefs.current[0]?.focus();
+                                            }
                                         }
                                     }}
                                     size='small'
@@ -411,9 +442,24 @@ export const AddRegexValuePopover: FC<AddRegexValuePopoverProps> = ({
                                                 }
                                             } else if (e.key === 'ArrowUp') {
                                                 e.preventDefault();
-                                                regexTestInputRefs.current[
-                                                    index - 1
-                                                ]?.focus();
+                                                if (index === 0) {
+                                                    const textarea =
+                                                        inputRef.current;
+                                                    if (textarea) {
+                                                        textarea.focus();
+                                                        const len =
+                                                            textarea.value
+                                                                .length;
+                                                        textarea.setSelectionRange(
+                                                            len,
+                                                            len,
+                                                        );
+                                                    }
+                                                } else {
+                                                    regexTestInputRefs.current[
+                                                        index - 1
+                                                    ]?.focus();
+                                                }
                                             }
                                         }}
                                         onChange={(e) => {
@@ -454,11 +500,20 @@ export const AddRegexValuePopover: FC<AddRegexValuePopoverProps> = ({
                                             size='small'
                                             aria-label={`Remove test string ${index}: ${regexInput.testString ?? 'empty string'}`}
                                             sx={{ ml: 'auto' }}
-                                            onClick={() =>
+                                            onClick={() => {
+                                                const newLength =
+                                                    regexTestInputs.length - 1;
+                                                pendingFocusIndex.current =
+                                                    newLength === 0
+                                                        ? -1
+                                                        : Math.min(
+                                                              index,
+                                                              newLength - 1,
+                                                          );
                                                 handleRemoveTestString(
                                                     regexInput.id,
-                                                )
-                                            }
+                                                );
+                                            }}
                                         >
                                             <Delete fontSize='inherit' />
                                         </IconButton>
@@ -467,6 +522,7 @@ export const AddRegexValuePopover: FC<AddRegexValuePopoverProps> = ({
                             ))}
                         </StyledList>
                         <Button
+                            ref={addTestStringButtonRef}
                             type='button'
                             variant='text'
                             size='small'

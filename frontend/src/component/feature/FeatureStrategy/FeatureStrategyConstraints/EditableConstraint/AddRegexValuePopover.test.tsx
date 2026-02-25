@@ -290,6 +290,59 @@ describe('AddRegexValuePopover – test string management', () => {
             screen.getAllByPlaceholderText('Enter test context field value'),
         ).toHaveLength(1);
     });
+
+    test('removing a non-last row focuses the row that took its place', () => {
+        render(<AddRegexValuePopover {...defaultProps} />);
+
+        fireEvent.click(
+            screen.getByRole('button', { name: /add test string/i }),
+        );
+        fireEvent.click(
+            screen.getByRole('button', { name: /add test string/i }),
+        );
+        // 3 rows: indices 0, 1, 2
+        const removeButtons = () =>
+            screen.getAllByRole('button', { name: /remove test string/i });
+
+        fireEvent.click(removeButtons()[0]); // remove index 0, index 1 shifts into 0
+
+        const remaining = screen.getAllByPlaceholderText(
+            'Enter test context field value',
+        );
+        expect(remaining).toHaveLength(2);
+        expect(remaining[0]).toHaveFocus();
+    });
+
+    test('removing the last row focuses the new last row', () => {
+        render(<AddRegexValuePopover {...defaultProps} />);
+
+        fireEvent.click(
+            screen.getByRole('button', { name: /add test string/i }),
+        );
+        // 2 rows: indices 0, 1
+        const removeButtons = () =>
+            screen.getAllByRole('button', { name: /remove test string/i });
+
+        fireEvent.click(removeButtons()[1]); // remove index 1 (last)
+
+        const remaining = screen.getAllByPlaceholderText(
+            'Enter test context field value',
+        );
+        expect(remaining).toHaveLength(1);
+        expect(remaining[0]).toHaveFocus();
+    });
+
+    test('removing the only remaining row focuses the "Add test string" button', () => {
+        render(<AddRegexValuePopover {...defaultProps} />);
+
+        fireEvent.click(
+            screen.getByRole('button', { name: /remove test string/i }),
+        );
+
+        expect(
+            screen.getByRole('button', { name: /add test string/i }),
+        ).toHaveFocus();
+    });
 });
 
 describe('AddRegexValuePopover – keyboard interactions', () => {
@@ -325,11 +378,60 @@ describe('AddRegexValuePopover – keyboard interactions', () => {
         render(<AddRegexValuePopover {...defaultProps} />);
 
         const regexInput = screen.getByPlaceholderText('Enter RE2 regex value');
+        // Give it multi-line content so cursor is NOT on last line
+        fireEvent.change(regexInput, {
+            target: { value: 'line1\nline2', selectionStart: 0 },
+        });
         const event = createEvent.keyDown(regexInput, { key: 'ArrowDown' });
         const stopPropSpy = vi.spyOn(event, 'stopPropagation');
         fireEvent(regexInput, event);
 
         expect(stopPropSpy).toHaveBeenCalled();
+    });
+
+    test('pressing ArrowDown on the last line moves focus to the first test input', () => {
+        render(<AddRegexValuePopover {...defaultProps} />);
+
+        const regexInput = screen.getByPlaceholderText('Enter RE2 regex value');
+        fireEvent.change(regexInput, { target: { value: '^foo$' } });
+        // jsdom places cursor at end after change and does not process the
+        // default cursor-movement action for ArrowDown, so selectionStart
+        // remains unchanged between keyDown and keyUp – the "didn't move" signal.
+        fireEvent.keyDown(regexInput, { key: 'ArrowDown' });
+        fireEvent.keyUp(regexInput, { key: 'ArrowDown' });
+
+        expect(
+            screen.getByPlaceholderText('Enter test context field value'),
+        ).toHaveFocus();
+    });
+
+    test('pressing ArrowDown on a non-last line does not move focus to the test input', () => {
+        render(<AddRegexValuePopover {...defaultProps} />);
+
+        const regexInput = screen.getByPlaceholderText('Enter RE2 regex value');
+        fireEvent.change(regexInput, { target: { value: 'line1\nline2' } });
+        // Place cursor at position 0 before keyDown so the saved position is 0.
+        (regexInput as HTMLTextAreaElement).setSelectionRange(0, 0);
+        fireEvent.keyDown(regexInput, { key: 'ArrowDown' });
+        // Simulate the browser moving the cursor to a different position.
+        (regexInput as HTMLTextAreaElement).setSelectionRange(6, 6);
+        fireEvent.keyUp(regexInput, { key: 'ArrowDown' });
+
+        expect(regexInput).toHaveFocus();
+    });
+
+    test('pressing ArrowUp in the first test input moves focus back to the regex input', () => {
+        render(<AddRegexValuePopover {...defaultProps} />);
+
+        const testInput = screen.getByPlaceholderText(
+            'Enter test context field value',
+        );
+        testInput.focus();
+        fireEvent.keyDown(testInput, { key: 'ArrowUp' });
+
+        expect(
+            screen.getByPlaceholderText('Enter RE2 regex value'),
+        ).toHaveFocus();
     });
 
     test('pressing ArrowUp calls stopPropagation to preserve native cursor movement', () => {

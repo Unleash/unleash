@@ -10,7 +10,6 @@ import type { IFormErrors } from 'hooks/useFormErrors';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureStrategyTypeProps<T extends StrategyFormState> {
-    hasAccess: boolean;
     strategy: T;
     strategyDefinition: IStrategy;
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
@@ -19,7 +18,6 @@ interface IFeatureStrategyTypeProps<T extends StrategyFormState> {
 }
 
 export const FeatureStrategyType = <T extends StrategyFormState>({
-    hasAccess,
     strategy,
     strategyDefinition,
     setStrategy,
@@ -45,14 +43,12 @@ export const FeatureStrategyType = <T extends StrategyFormState>({
                 <FlexibleStrategy
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
-                    editable={hasAccess}
                     errors={errors}
                 />
             ) : (
                 <OldFlexibleStrategy
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
-                    editable={hasAccess}
                     errors={errors}
                 />
             );
@@ -62,7 +58,6 @@ export const FeatureStrategyType = <T extends StrategyFormState>({
                     strategyDefinition={strategyDefinition}
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
-                    editable={hasAccess}
                     errors={errors}
                 />
             );

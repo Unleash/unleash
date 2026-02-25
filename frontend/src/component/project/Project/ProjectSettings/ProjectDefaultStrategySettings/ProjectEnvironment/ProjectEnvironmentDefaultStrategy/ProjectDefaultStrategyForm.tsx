@@ -15,7 +15,6 @@ import type { ISegment } from 'interfaces/segment';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints';
 import { FeatureStrategyType } from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle';
@@ -77,11 +76,6 @@ export const ProjectDefaultStrategyForm = ({
     errors,
 }: IProjectDefaultStrategyFormProps) => {
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
-    const access = useHasProjectEnvironmentAccess(
-        permission,
-        projectId,
-        environmentId,
-    );
     const { strategyDefinition } = useStrategy(strategy?.name);
     const { segments: assignableSegments = [] } = useAssignableSegments();
     const showSegmentSelector =
@@ -171,7 +165,6 @@ export const ProjectDefaultStrategyForm = ({
                 setStrategy={setStrategy}
                 validateParameter={validateParameter}
                 errors={errors}
-                hasAccess={access}
             />
             <ConditionallyRender
                 condition={

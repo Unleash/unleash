@@ -172,7 +172,6 @@ const ProjectForm: React.FC<IProjectForm> = ({
                             onChange={(e) =>
                                 setProjectStickiness?.(e.target.value)
                             }
-                            editable
                         />
                     </>
                 }

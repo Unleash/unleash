@@ -17,7 +17,6 @@ interface IStrategyInputList {
     name: string;
     list: string[];
     setConfig: (field: string, value: string) => void;
-    disabled: boolean;
     errors: IFormErrors;
 }
 
@@ -42,7 +41,6 @@ const StrategyInputList = ({
     name,
     list,
     setConfig,
-    disabled,
     errors,
 }: IStrategyInputList) => {
     const [input, setInput] = useState('');
@@ -110,48 +108,41 @@ const StrategyInputList = ({
                                         maxLength={50}
                                     />
                                 }
-                                onDelete={
-                                    disabled ? undefined : () => onClose(index)
-                                }
+                                onDelete={() => onClose(index)}
                                 title='Remove value'
                             />
                         ))}
                     </ChipsList>
                 }
             />
-            <ConditionallyRender
-                condition={!disabled}
-                show={
-                    <InputContainer>
-                        <TextField
-                            error={Boolean(errors.getFormError(name))}
-                            helperText={errors.getFormError(name)}
-                            name={`input_field`}
-                            variant='outlined'
-                            label='Add items'
-                            id='input-add-items'
-                            value={input}
-                            size='small'
-                            placeholder=''
-                            onBlur={onBlur}
-                            onChange={onChange}
-                            // @ts-expect-error
-                            onKeyDown={onKeyDown}
-                            data-testid={STRATEGY_INPUT_LIST}
-                        />
-                        {/* @ts-expect-error */}
-                        <Button
-                            onClick={setValue}
-                            data-testid={ADD_TO_STRATEGY_INPUT_LIST}
-                            variant='outlined'
-                            color='secondary'
-                            startIcon={<Add />}
-                        >
-                            Add
-                        </Button>
-                    </InputContainer>
-                }
-            />
+            <InputContainer>
+                <TextField
+                    error={Boolean(errors.getFormError(name))}
+                    helperText={errors.getFormError(name)}
+                    name={`input_field`}
+                    variant='outlined'
+                    label='Add items'
+                    id='input-add-items'
+                    value={input}
+                    size='small'
+                    placeholder=''
+                    onBlur={onBlur}
+                    onChange={onChange}
+                    // @ts-expect-error
+                    onKeyDown={onKeyDown}
+                    data-testid={STRATEGY_INPUT_LIST}
+                />
+                {/* @ts-expect-error */}
+                <Button
+                    onClick={setValue}
+                    data-testid={ADD_TO_STRATEGY_INPUT_LIST}
+                    variant='outlined'
+                    color='secondary'
+                    startIcon={<Add />}
+                >
+                    Add
+                </Button>
+            </InputContainer>
         </Container>
     );
 };

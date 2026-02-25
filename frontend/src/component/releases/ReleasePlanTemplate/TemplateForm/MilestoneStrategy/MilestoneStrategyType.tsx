@@ -32,7 +32,6 @@ export const MilestoneStrategyType = ({
                     parameters={parameters}
                     updateParameter={updateParameter}
                     errors={errors}
-                    editable={true}
                 />
             );
         default:
@@ -41,7 +40,6 @@ export const MilestoneStrategyType = ({
                     strategyDefinition={strategyDefinition}
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
-                    editable={true}
                     errors={errors}
                 />
             );

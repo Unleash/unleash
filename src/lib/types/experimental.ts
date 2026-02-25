@@ -19,6 +19,7 @@ export type IFlagKey =
     | 'personalAccessTokensKillSwitch'
     | 'migrationLock'
     | 'demo'
+    | 'interactiveDemoKillSwitch'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
@@ -112,6 +113,10 @@ const flags: IFlags = {
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, true),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
+    interactiveDemoKillSwitch: parseEnvVarBoolean(
+        process.env.UNLEASH_INTERACTIVE_DEMO_KILL_SWITCH,
+        false,
+    ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,

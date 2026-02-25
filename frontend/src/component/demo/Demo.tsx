@@ -109,12 +109,14 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
         <>
             <DemoBanner />
             {children}
-            {interactiveDemoKillSwitch && welcomeOpen ? (
-                <DemoDialogWelcome
-                    open={welcomeOpen}
-                    onClose={onWelcomeClose}
-                    onStart={onWelcomeStart}
-                />
+            {interactiveDemoKillSwitch ? (
+                welcomeOpen && (
+                    <DemoDialogWelcome
+                        open={welcomeOpen}
+                        onClose={onWelcomeClose}
+                        onStart={onWelcomeStart}
+                    />
+                )
             ) : (
                 <ConditionallyRender
                     condition={!isSmallScreen}

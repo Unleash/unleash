@@ -11,6 +11,7 @@ import { useConstraintTooltips } from './hooks/useConstraintTooltips.ts';
 import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
 import { isCaseSensitive } from './isCaseSensitive.ts';
 import { formatOperatorDescription } from 'utils/formatOperatorDescription.ts';
+import { FeatureSdkWarning } from 'component/common/FeatureSdkWarning/FeatureSdkWarning.tsx';
 
 const Operator: FC<{
     label: ConstraintSchema['operator'];
@@ -118,6 +119,9 @@ export const ConstraintItemHeader: FC<ConstraintItemHeaderProps> = ({
                 </StyledConstraintName>
                 <StyledOperatorGroup>
                     <Operator label={operator} inverted={inverted} />
+                    {operator === 'REGEX' && (
+                        <FeatureSdkWarning featureName='regexOperator' />
+                    )}
                     {isCaseSensitive(operator, caseInsensitive) ? (
                         <CaseSensitive />
                     ) : null}

@@ -21,6 +21,7 @@ import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReader
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { formatOperatorDescription } from 'utils/formatOperatorDescription';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { FeatureSdkWarning } from 'component/common/FeatureSdkWarning/FeatureSdkWarning';
 
 interface IConstraintOperatorSelectProps {
     options: Operator[];
@@ -97,6 +98,9 @@ export const ConstraintOperatorSelect = ({
         return (
             <StyledValue>
                 {formatOperatorDescription(value, inverted)}
+                {value === 'REGEX' && (
+                    <FeatureSdkWarning featureName='regexOperator' />
+                )}
             </StyledValue>
         );
     };
@@ -131,6 +135,9 @@ export const ConstraintOperatorSelect = ({
                         separator={needSeparatorAbove(operators, operator)}
                     >
                         {formatOperatorDescription(operator, inverted)}
+                        {operator === 'REGEX' && (
+                            <FeatureSdkWarning featureName='regexOperator' />
+                        )}
                     </StyledMenuItem>
                 ))}
             </StyledSelect>

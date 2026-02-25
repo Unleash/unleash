@@ -338,8 +338,8 @@ export const AddRegexValuePopover: FC<AddRegexValuePopoverProps> = ({
                                             // cursor. We compare in onKeyUp: if it hasn't
                                             // moved, we were on the last visual line.
                                             arrowDownSelectionStart.current =
-                                                inputRef.current?.selectionStart ??
-                                                null;
+                                                inputRef.current
+                                                    ?.selectionStart ?? null;
                                             return;
                                         }
                                         if (e.key === 'Enter' && !e.shiftKey) {

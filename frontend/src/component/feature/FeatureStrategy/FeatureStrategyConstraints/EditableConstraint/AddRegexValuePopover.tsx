@@ -425,8 +425,8 @@ export const AddRegexValuePopover: FC<AddRegexValuePopoverProps> = ({
                                             passes={!regexInput.matches}
                                             label={
                                                 regexInput.matches
-                                                    ? 'Exclusive operator: does not match'
-                                                    : 'Exclusive operator: matches'
+                                                    ? 'Exclusive constraint operator: does not match'
+                                                    : 'Exclusive constraint operator: matches'
                                             }
                                         />
                                     )}

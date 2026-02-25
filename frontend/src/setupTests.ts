@@ -4,9 +4,37 @@ import 'regenerator-runtime';
 import { beforeAll, vi } from 'vitest';
 
 class ResizeObserver {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
+    callback: ResizeObserverCallback;
+    observedTargets = new Set<Element>();
+    constructor(callback: ResizeObserverCallback) {
+        this.callback = callback;
+    }
+    observe(target: Element) {
+        // Only fire once per target to avoid infinite loops when
+        // @tanstack/react-virtual re-measures elements.
+        if (this.observedTargets.has(target)) {
+            return;
+        }
+        this.observedTargets.add(target);
+        this.callback(
+            [
+                {
+                    target,
+                    contentRect: { width: 800, height: 800 },
+                    borderBoxSize: [{ inlineSize: 800, blockSize: 800 }],
+                    contentBoxSize: [{ inlineSize: 800, blockSize: 800 }],
+                    devicePixelContentBoxSize: [],
+                },
+            ] as any,
+            this as any,
+        );
+    }
+    unobserve(target: Element) {
+        this.observedTargets.delete(target);
+    }
+    disconnect() {
+        this.observedTargets.clear();
+    }
 }
 
 class IntersectionObserver {

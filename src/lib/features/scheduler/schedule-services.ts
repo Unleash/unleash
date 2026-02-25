@@ -89,7 +89,7 @@ export const scheduleServices = (
 
     schedulerService.schedule(
         clientInstanceService.bulkAdd.bind(clientInstanceService),
-        secondsToMilliseconds(10),
+        secondsToMilliseconds(20),
         'bulkAddInstances',
     );
 

@@ -43,7 +43,6 @@ export const FeatureStrategyType = <T extends StrategyFormState>({
                 <FlexibleStrategy
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
-                    editable={hasAccess}
                     errors={errors}
                 />
             ) : (

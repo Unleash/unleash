@@ -4,6 +4,7 @@ import { formatAssetPath } from 'utils/formatPath';
 import Launch from '@mui/icons-material/Launch';
 import { DemoDialog } from '../DemoDialog.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledDemoPane = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -65,6 +66,7 @@ export const DemoDialogWelcome = ({
     onClose,
     onStart,
 }: IDemoDialogWelcomeProps) => {
+    const interactiveDemoKillSwitch = useUiFlag('interactiveDemoKillSwitch');
     const { trackEvent } = usePlausibleTracker();
 
     return (
@@ -101,22 +103,35 @@ export const DemoDialogWelcome = ({
                     (we recommend you keep the pages open side by side)
                 </Typography>
             </StyledDemoPane>
+            {interactiveDemoKillSwitch && (
+                <Typography color='textSecondary' sx={{ mb: 4 }}>
+                    The demo website can be controlled using the flags in the
+                    demoApp project. You can find your userId on the demo page,
+                    so you can experiment with targeting rules and see the
+                    results in real time!
+                </Typography>
+            )}
             <StyledButtons>
                 <StyledButton
-                    variant='outlined'
+                    variant={
+                        interactiveDemoKillSwitch ? 'contained' : 'outlined'
+                    }
                     color='primary'
                     onClick={onClose}
                 >
-                    Explore on your own
+                    Explore{' '}
+                    {interactiveDemoKillSwitch ? 'Unleash' : 'on your own'}
                 </StyledButton>
-                <StyledButton
-                    variant='contained'
-                    color='primary'
-                    onClick={onStart}
-                    data-testid='DEMO_START_BUTTON'
-                >
-                    Go for a guided tour
-                </StyledButton>
+                {!interactiveDemoKillSwitch && (
+                    <StyledButton
+                        variant='contained'
+                        color='primary'
+                        onClick={onStart}
+                        data-testid='DEMO_START_BUTTON'
+                    >
+                        Go for a guided tour
+                    </StyledButton>
+                )}
             </StyledButtons>
         </DemoDialog>
     );

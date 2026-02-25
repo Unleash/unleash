@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { DemoTopics } from './DemoTopics/DemoTopics.tsx';
 import { DemoSteps } from './DemoSteps/DemoSteps.tsx';
 import { createLocalStorage } from 'utils/createLocalStorage';
-import { TOPICS } from './demo-topics.js';
+import { DEMO_PROJECT, TOPICS } from './demo-topics.js';
 import { DemoDialogWelcome } from './DemoDialog/DemoDialogWelcome/DemoDialogWelcome.tsx';
 import { DemoDialogFinish } from './DemoDialog/DemoDialogFinish/DemoDialogFinish.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -11,6 +11,8 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { useNavigate } from 'react-router-dom';
 
 const defaultProgress = {
     welcomeOpen: true,
@@ -25,6 +27,8 @@ interface IDemoProps {
 }
 
 export const Demo = ({ children }: IDemoProps): JSX.Element => {
+    const interactiveDemoKillSwitch = useUiFlag('interactiveDemoKillSwitch');
+    const navigate = useNavigate();
     const { uiConfig } = useUiConfig();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down(768));
     const { trackEvent } = usePlausibleTracker();
@@ -78,90 +82,102 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
         setStep(0);
     };
 
+    const onWelcomeClose = () => {
+        setWelcomeOpen(false);
+        setExpanded(false);
+        trackEvent('demo-close', {
+            props: {
+                topic: 'welcome',
+                step: 'welcome',
+            },
+        });
+
+        if (interactiveDemoKillSwitch) {
+            navigate(`/projects/${DEMO_PROJECT}?sort=name`);
+        }
+    };
+
+    const onWelcomeStart = () => {
+        setWelcomeOpen(false);
+        onStart();
+        trackEvent('demo-start');
+    };
+
     if (!uiConfig.flags.demo) return children;
 
     return (
         <>
             <DemoBanner />
             {children}
-            <ConditionallyRender
-                condition={!isSmallScreen}
-                show={
-                    <>
-                        <DemoDialogWelcome
-                            open={welcomeOpen}
-                            onClose={() => {
-                                setWelcomeOpen(false);
+            {interactiveDemoKillSwitch && welcomeOpen ? (
+                <DemoDialogWelcome
+                    open={welcomeOpen}
+                    onClose={onWelcomeClose}
+                    onStart={onWelcomeStart}
+                />
+            ) : (
+                <ConditionallyRender
+                    condition={!isSmallScreen}
+                    show={
+                        <>
+                            <DemoDialogWelcome
+                                open={welcomeOpen}
+                                onClose={onWelcomeClose}
+                                onStart={onWelcomeStart}
+                            />
+                            <DemoDialogFinish
+                                open={finishOpen}
+                                onClose={() => {
+                                    setFinishOpen(false);
+                                }}
+                                onRestart={() => {
+                                    setFinishOpen(false);
+                                    onStart();
 
-                                setExpanded(false);
+                                    trackEvent('demo-restart');
+                                }}
+                            />
+                            <DemoTopics
+                                expanded={expanded}
+                                setExpanded={setExpanded}
+                                stepsCompletion={stepsCompletion}
+                                currentTopic={topic}
+                                setCurrentTopic={(topic: number) => {
+                                    setTopic(topic);
+                                    setStep(0);
 
-                                trackEvent('demo-close', {
-                                    props: {
-                                        topic: 'welcome',
-                                        step: 'welcome',
-                                    },
-                                });
-                            }}
-                            onStart={() => {
-                                setWelcomeOpen(false);
+                                    setWelcomeOpen(false);
 
-                                onStart();
+                                    trackEvent('demo-start-topic', {
+                                        props: {
+                                            topic: TOPICS[topic].title,
+                                        },
+                                    });
+                                }}
+                                topics={TOPICS}
+                                onWelcome={() => {
+                                    closeGuide();
 
-                                trackEvent('demo-start');
-                            }}
-                        />
-                        <DemoDialogFinish
-                            open={finishOpen}
-                            onClose={() => {
-                                setFinishOpen(false);
-                            }}
-                            onRestart={() => {
-                                setFinishOpen(false);
-                                onStart();
+                                    setWelcomeOpen(true);
 
-                                trackEvent('demo-restart');
-                            }}
-                        />
-                        <DemoTopics
-                            expanded={expanded}
-                            setExpanded={setExpanded}
-                            stepsCompletion={stepsCompletion}
-                            currentTopic={topic}
-                            setCurrentTopic={(topic: number) => {
-                                setTopic(topic);
-                                setStep(0);
-
-                                setWelcomeOpen(false);
-
-                                trackEvent('demo-start-topic', {
-                                    props: {
-                                        topic: TOPICS[topic].title,
-                                    },
-                                });
-                            }}
-                            topics={TOPICS}
-                            onWelcome={() => {
-                                closeGuide();
-
-                                setWelcomeOpen(true);
-
-                                trackEvent('demo-view-demo-link');
-                            }}
-                        />
-                        <DemoSteps
-                            setExpanded={setExpanded}
-                            step={step}
-                            setStep={setStep}
-                            stepsCompletion={stepsCompletion}
-                            setStepsCompletion={setStepsCompletion}
-                            topic={topic}
-                            setTopic={setTopic}
-                            topics={TOPICS}
-                            onFinish={onFinish}
-                        />
-                    </>
-                }
-            />
+                                    trackEvent('demo-view-demo-link');
+                                }}
+                            />
+                            <DemoSteps
+                                setExpanded={setExpanded}
+                                step={step}
+                                setStep={setStep}
+                                stepsCompletion={stepsCompletion}
+                                setStepsCompletion={setStepsCompletion}
+                                topic={topic}
+                                setTopic={setTopic}
+                                topics={TOPICS}
+                                onFinish={onFinish}
+                            />
+                        </>
+                    }
+                />
+            )}
         </>
     );
 };

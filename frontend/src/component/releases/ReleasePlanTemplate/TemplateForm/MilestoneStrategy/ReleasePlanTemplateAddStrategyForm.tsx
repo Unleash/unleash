@@ -1,12 +1,10 @@
 import { Button, styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
-import type { ISegment } from 'interfaces/segment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useFormErrors } from 'hooks/useFormErrors';
 import produce from 'immer';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import {
     featureStrategyDocsLink,
     featureStrategyDocsLinkLabel,
@@ -65,35 +63,8 @@ const NewReleasePlanTemplateAddStrategyForm = ({
         ...strategy,
         name: strategy.name || strategy.strategyName || '',
     });
-    const { segments: allSegments } = useSegments();
-    const [segments, setSegments] = useState<ISegment[]>([]);
     const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
     const errors = useFormErrors();
-
-    const segmentsMap = allSegments?.reduce(
-        (acc, segment) => {
-            acc[segment.id] = segment;
-            return acc;
-        },
-        {} as Record<string, ISegment>,
-    );
-
-    useEffect(() => {
-        if (segmentsMap) {
-            setSegments(
-                (currentStrategy?.segments || []).map((segment) => {
-                    return segmentsMap[segment];
-                }),
-            );
-        }
-    }, []);
-
-    useEffect(() => {
-        setCurrentStrategy((prev) => ({
-            ...prev,
-            segments: segments.map((segment) => segment.id),
-        }));
-    }, [segments]);
 
     if (!strategy || !currentStrategy) {
         return null;
@@ -122,8 +93,6 @@ const NewReleasePlanTemplateAddStrategyForm = ({
             <StrategyFormBody
                 strategy={currentStrategy}
                 setStrategy={setCurrentStrategy}
-                segments={segments}
-                setSegments={setSegments}
                 errors={errors}
                 updateParameter={updateParameter}
                 onTitleChange={(title) => {

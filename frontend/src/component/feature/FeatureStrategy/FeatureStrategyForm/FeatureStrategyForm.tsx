@@ -14,7 +14,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import type { ISegment } from 'interfaces/segment';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
@@ -31,9 +30,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 
 import produce from 'immer';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { StrategyFormBody } from './StrategyFormBody.tsx';
-import { LegacyFeatureStrategyForm } from './LegacyFeatureStrategyForm.tsx';
 
 export interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -47,11 +44,7 @@ export interface IFeatureStrategyFormProps {
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
     >;
-    segments: ISegment[];
-    setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
     errors: IFormErrors;
-    tab: number;
-    setTab: React.Dispatch<React.SetStateAction<number>>;
     StrategyVariants: JSX.Element;
     Limit?: JSX.Element;
     disabled?: boolean;
@@ -94,7 +87,7 @@ const StyledAlertBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-const NewFeatureStrategyForm = ({
+export const FeatureStrategyForm = ({
     feature,
     environmentId,
     permission,
@@ -103,8 +96,6 @@ const NewFeatureStrategyForm = ({
     loading,
     strategy,
     setStrategy,
-    segments,
-    setSegments,
     errors,
     isChangeRequest,
     StrategyVariants,
@@ -230,8 +221,6 @@ const NewFeatureStrategyForm = ({
         <StrategyFormBody
             strategy={strategy}
             setStrategy={setStrategy}
-            segments={segments}
-            setSegments={setSegments}
             errors={errors}
             updateParameter={updateParameter}
             StrategyVariants={StrategyVariants}
@@ -334,14 +323,5 @@ const NewFeatureStrategyForm = ({
                 </StyledForm>
             )}
         />
-    );
-};
-
-export const FeatureStrategyForm = (props: IFeatureStrategyFormProps) => {
-    const useConsolidated = useUiFlag('strategyFormConsolidation');
-    return useConsolidated ? (
-        <NewFeatureStrategyForm {...props} />
-    ) : (
-        <LegacyFeatureStrategyForm {...props} />
     );
 };

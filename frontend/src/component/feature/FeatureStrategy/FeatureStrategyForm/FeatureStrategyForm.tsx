@@ -45,7 +45,7 @@ export interface IFeatureStrategyFormProps {
         React.SetStateAction<Partial<IFeatureStrategy>>
     >;
     errors: IFormErrors;
-    StrategyVariants: JSX.Element;
+    canRenamePreexistingVariants?: boolean;
     Limit?: JSX.Element;
     disabled?: boolean;
 }
@@ -98,7 +98,7 @@ export const FeatureStrategyForm = ({
     setStrategy,
     errors,
     isChangeRequest,
-    StrategyVariants,
+    canRenamePreexistingVariants,
     Limit,
     disabled,
 }: IFeatureStrategyFormProps) => {
@@ -223,7 +223,7 @@ export const FeatureStrategyForm = ({
             setStrategy={setStrategy}
             errors={errors}
             updateParameter={updateParameter}
-            StrategyVariants={StrategyVariants}
+            canRenamePreexistingVariants={canRenamePreexistingVariants}
             alertContent={
                 <StyledAlertBox>
                     <ConditionallyRender

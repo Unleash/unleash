@@ -428,13 +428,7 @@ const NewFeatureStrategyCreate = () => {
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
                 isChangeRequest={isChangeRequestConfigured(environmentId)}
-                StrategyVariants={
-                    <NewStrategyVariants
-                        strategy={strategy}
-                        setStrategy={setStrategy}
-                        canRenamePreexistingVariants
-                    />
-                }
+                canRenamePreexistingVariants
                 Limit={
                     <Limit
                         name='strategies in this environment'

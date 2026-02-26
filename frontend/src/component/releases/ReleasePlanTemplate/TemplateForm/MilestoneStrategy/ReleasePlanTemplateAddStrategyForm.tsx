@@ -10,7 +10,6 @@ import {
     featureStrategyDocsLinkLabel,
     featureStrategyHelp,
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
-import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
 import { LegacyReleasePlanTemplateAddStrategyForm } from './LegacyReleasePlanTemplateAddStrategyForm.tsx';
@@ -101,13 +100,7 @@ const NewReleasePlanTemplateAddStrategyForm = ({
                         title,
                     }));
                 }}
-                StrategyVariants={
-                    <NewStrategyVariants
-                        strategy={currentStrategy}
-                        setStrategy={setCurrentStrategy}
-                        canRenamePreexistingVariants={true}
-                    />
-                }
+                canRenamePreexistingVariants
                 renderContentWrapper={(tabContent) => (
                     <StyledContentDiv>{tabContent}</StyledContentDiv>
                 )}

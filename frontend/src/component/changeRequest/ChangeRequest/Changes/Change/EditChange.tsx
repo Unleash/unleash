@@ -302,12 +302,6 @@ const NewEditChange = ({
                     permission={UPDATE_FEATURE_STRATEGY}
                     errors={errors}
                     isChangeRequest={isChangeRequestConfigured(environment)}
-                    StrategyVariants={
-                        <NewStrategyVariants
-                            strategy={strategy}
-                            setStrategy={setStrategy}
-                        />
-                    }
                 />
 
                 {staleDataNotification}

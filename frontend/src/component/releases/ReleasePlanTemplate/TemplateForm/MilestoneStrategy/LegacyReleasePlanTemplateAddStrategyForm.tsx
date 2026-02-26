@@ -125,7 +125,10 @@ export const LegacyReleasePlanTemplateAddStrategyForm = ({
     onAddUpdateStrategy,
     editMode,
 }: IReleasePlanTemplateAddStrategyFormProps) => {
-    const [currentStrategy, setCurrentStrategy] = useState(strategy);
+    const [currentStrategy, setCurrentStrategy] = useState({
+        ...strategy,
+        name: strategy.name || strategy.strategyName || '',
+    });
     const [activeTab, setActiveTab] = useState(0);
     const { segments: allSegments } = useSegments();
     const { segments: assignableSegments = [] } = useAssignableSegments();

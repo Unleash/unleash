@@ -22,6 +22,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 
 export interface StrategyFormBodyProps<T extends StrategyFormState> {
     strategy: T;
@@ -30,7 +31,7 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
 
     updateParameter: (name: string, value: string) => void;
     onTitleChange?: (title: string) => void;
-    StrategyVariants: JSX.Element;
+    canRenamePreexistingVariants?: boolean;
 
     alertContent?: React.ReactNode;
     generalTabExtras?: React.ReactNode;
@@ -95,7 +96,7 @@ export const StrategyFormBody = <
     errors,
     updateParameter,
     onTitleChange,
-    StrategyVariants,
+    canRenamePreexistingVariants,
     alertContent,
     generalTabExtras,
     renderContentWrapper,
@@ -261,7 +262,15 @@ export const StrategyFormBody = <
                         </>
                     )}
 
-                    {tab === 2 && showVariants && StrategyVariants}
+                    {tab === 2 && showVariants && (
+                        <NewStrategyVariants
+                            strategy={strategy}
+                            setStrategy={setStrategy}
+                            canRenamePreexistingVariants={
+                                canRenamePreexistingVariants
+                            }
+                        />
+                    )}
                 </>,
             )}
         </>

@@ -21,14 +21,11 @@ import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
+import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 
-export interface StrategyFormBodyProps<
-    T extends StrategyFormState = StrategyFormState,
-> {
+export interface StrategyFormBodyProps<T extends StrategyFormState> {
     strategy: T;
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
-    segments: ISegment[];
-    setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
     errors: IFormErrors;
 
     updateParameter: (name: string, value: string) => void;
@@ -95,8 +92,6 @@ export const StrategyFormBody = <
 >({
     strategy,
     setStrategy,
-    segments,
-    setSegments,
     errors,
     updateParameter,
     onTitleChange,
@@ -109,6 +104,28 @@ export const StrategyFormBody = <
     const strategyName = strategy?.name || strategy?.strategyName;
     const { strategyDefinition } = useStrategy(strategyName);
     const { segments: assignableSegments = [] } = useAssignableSegments();
+
+    const { segments: allSegments } = useSegments();
+    const [segments, setSegments] = useState<ISegment[]>([]);
+
+    useEffect(() => {
+        if (allSegments) {
+            const segmentMap = new Map(allSegments.map((s) => [s.id, s]));
+            setSegments(
+                (strategy.segments || [])
+                    .map((id) => segmentMap.get(id))
+                    .filter((s): s is ISegment => Boolean(s)),
+            );
+        }
+    }, []);
+
+    useEffect(() => {
+        setStrategy((prev) => ({
+            ...prev,
+            segments: segments.map((s) => s.id),
+        }));
+    }, [segments]);
+
     const showSegmentSelector =
         assignableSegments.length > 0 || segments.length > 0;
 

@@ -23,9 +23,11 @@ import type {
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
+import { LegacyFeatureStrategyForm } from '../../../../feature/FeatureStrategy/FeatureStrategyForm/LegacyFeatureStrategyForm.tsx';
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IEditChangeProps {
     change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;
@@ -47,7 +49,7 @@ const addIdSymbolToConstraints = (
     });
 };
 
-export const EditChange = ({
+const LegacyEditChange = ({
     change,
     changeRequestId,
     environment,
@@ -164,7 +166,7 @@ export const EditChange = ({
                     )
                 }
             >
-                <FeatureStrategyForm
+                <LegacyFeatureStrategyForm
                     feature={data}
                     strategy={strategy}
                     setStrategy={setStrategy}
@@ -190,6 +192,136 @@ export const EditChange = ({
                 {staleDataNotification}
             </FormTemplate>
         </SidebarModal>
+    );
+};
+
+const NewEditChange = ({
+    change,
+    changeRequestId,
+    environment,
+    open,
+    onSubmit,
+    onClose,
+    featureId,
+}: IEditChangeProps) => {
+    const projectId = useRequiredPathParam('projectId');
+    const { editChange } = useChangeRequestApi();
+
+    const constraintsWithId = addIdSymbolToConstraints(change.payload);
+
+    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({
+        ...change.payload,
+        constraints: constraintsWithId,
+    });
+
+    const { setToastData, setToastApiError } = useToast();
+    const errors = useFormErrors();
+    const { uiConfig } = useUiConfig();
+    const { unleashUrl } = uiConfig;
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+
+    const { feature, refetchFeature } = useFeature(projectId, featureId);
+
+    const ref = useRef<IFeatureToggle>(feature);
+
+    const { data, staleDataNotification, forceRefreshCache } =
+        useCollaborateData<IFeatureToggle>(
+            {
+                unleashGetter: useFeature,
+                params: [projectId, featureId],
+                dataKey: 'feature',
+                refetchFunctionKey: 'refetchFeature',
+                options: {},
+            },
+            feature,
+            {
+                afterSubmitAction: refetchFeature,
+            },
+            comparisonModerator,
+        );
+
+    useEffect(() => {
+        if (ref.current.name === '' && feature.name) {
+            forceRefreshCache(feature);
+            ref.current = feature;
+        }
+    }, [feature]);
+
+    const onInternalSubmit = async () => {
+        try {
+            await editChange(projectId, changeRequestId, change.id, {
+                action: strategy.id ? 'updateStrategy' : 'addStrategy',
+                feature: featureId,
+                payload: strategy,
+            });
+            onSubmit();
+            setToastData({
+                text: 'Change updated',
+                type: 'success',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    if (!data) return null;
+
+    return (
+        <SidebarModal
+            open={open}
+            onClose={onClose}
+            label='Edit change'
+            onClick={(e) => {
+                e.stopPropagation();
+            }}
+        >
+            <FormTemplate
+                modal
+                disablePadding
+                description={featureStrategyHelp}
+                documentationLink={featureStrategyDocsLink}
+                documentationLinkLabel={featureStrategyDocsLinkLabel}
+                formatApiCode={() =>
+                    formatUpdateStrategyApiCode(
+                        projectId,
+                        changeRequestId,
+                        change.id,
+                        strategy,
+                        unleashUrl,
+                    )
+                }
+            >
+                <FeatureStrategyForm
+                    feature={data}
+                    strategy={strategy}
+                    setStrategy={setStrategy}
+                    environmentId={environment}
+                    onSubmit={onInternalSubmit}
+                    onCancel={onClose}
+                    loading={false}
+                    permission={UPDATE_FEATURE_STRATEGY}
+                    errors={errors}
+                    isChangeRequest={isChangeRequestConfigured(environment)}
+                    StrategyVariants={
+                        <NewStrategyVariants
+                            strategy={strategy}
+                            setStrategy={setStrategy}
+                        />
+                    }
+                />
+
+                {staleDataNotification}
+            </FormTemplate>
+        </SidebarModal>
+    );
+};
+
+export const EditChange = (props: IEditChangeProps) => {
+    const consolidate = useUiFlag('strategyFormConsolidation');
+    return consolidate ? (
+        <NewEditChange {...props} />
+    ) : (
+        <LegacyEditChange {...props} />
     );
 };
 

@@ -427,7 +427,9 @@ const NewFeatureStrategyCreate = () => {
                 loading={loading}
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
-                isChangeRequest={isChangeRequestConfigured(environmentId)}
+                areChangeRequestsEnabled={isChangeRequestConfigured(
+                    environmentId,
+                )}
                 canRenamePreexistingVariants
                 Limit={
                     <Limit

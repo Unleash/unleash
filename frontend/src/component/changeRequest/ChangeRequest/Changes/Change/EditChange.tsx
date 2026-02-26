@@ -301,7 +301,9 @@ const NewEditChange = ({
                     loading={false}
                     permission={UPDATE_FEATURE_STRATEGY}
                     errors={errors}
-                    isChangeRequest={isChangeRequestConfigured(environment)}
+                    areChangeRequestsEnabled={isChangeRequestConfigured(
+                        environment,
+                    )}
                 />
 
                 {staleDataNotification}

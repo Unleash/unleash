@@ -16,21 +16,15 @@ import type {
     IFeatureStrategyParameters,
     IStrategyParameter,
 } from 'interfaces/strategy';
-import {
-    FeatureStrategyType,
-    LegacyFeatureStrategyType,
-} from '../FeatureStrategyType/FeatureStrategyType.tsx';
+import { LegacyFeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';
 import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled.tsx';
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
-import type { IFeatureToggle } from 'interfaces/featureToggle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
-import type { ISegment } from 'interfaces/segment';
-import type { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { FeatureStrategyChangeRequestAlert } from './FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert.tsx';
@@ -50,12 +44,11 @@ import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/Feature
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
-import produce from 'immer';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
+import type { IFeatureToggle } from 'interfaces/featureToggle.ts';
+import type { ISegment } from 'interfaces/segment.ts';
+import type { IFormErrors } from 'hooks/useFormErrors.ts';
 
-import { LegacyFeatureStrategyForm } from './LegacyFeatureStrategyForm.tsx';
-
-interface IFeatureStrategyFormProps {
+export interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
     environmentId: string;
     permission: string;
@@ -163,7 +156,7 @@ const StyledConstraintSeparator = styled(ConstraintSeparator)({
     transform: 'translateY(0)',
 });
 
-const _NewFeatureStrategyForm = ({
+export const LegacyFeatureStrategyForm = ({
     feature,
     environmentId,
     permission,
@@ -182,7 +175,6 @@ const _NewFeatureStrategyForm = ({
     Limit,
     disabled,
 }: IFeatureStrategyFormProps) => {
-    const useNewStrategyTypeComponent = useUiFlag('strategyFormConsolidation');
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
@@ -324,16 +316,6 @@ const _NewFeatureStrategyForm = ({
         strategy.parameters && 'stickiness' in strategy.parameters,
     );
 
-    const updateParameter = (name: string, value: string) => {
-        setStrategy(
-            produce((draft) => {
-                draft.parameters = draft.parameters ?? {};
-                draft.parameters[name] = value;
-            }),
-        );
-        validateParameter(name, value);
-    };
-
     return (
         <>
             <StyledHeaderBox>
@@ -399,22 +381,13 @@ const _NewFeatureStrategyForm = ({
                                 }}
                             />
 
-                            {useNewStrategyTypeComponent ? (
-                                <FeatureStrategyType
-                                    strategy={strategy}
-                                    strategyDefinition={strategyDefinition}
-                                    updateParameter={updateParameter}
-                                    errors={errors}
-                                />
-                            ) : (
-                                <LegacyFeatureStrategyType
-                                    strategy={strategy}
-                                    setStrategy={setStrategy}
-                                    strategyDefinition={strategyDefinition}
-                                    validateParameter={validateParameter}
-                                    errors={errors}
-                                />
-                            )}
+                            <LegacyFeatureStrategyType
+                                strategy={strategy}
+                                setStrategy={setStrategy}
+                                strategyDefinition={strategyDefinition}
+                                validateParameter={validateParameter}
+                                errors={errors}
+                            />
                             <FeatureStrategyEnabledDisabled
                                 enabled={!strategy?.disabled}
                                 onToggleEnabled={() =>
@@ -527,8 +500,4 @@ const _NewFeatureStrategyForm = ({
             </StyledForm>
         </>
     );
-};
-
-export const FeatureStrategyForm = (props: IFeatureStrategyFormProps) => {
-    return <LegacyFeatureStrategyForm {...props} />;
 };

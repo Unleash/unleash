@@ -94,7 +94,9 @@ export const MyFlags: FC<Props> = ({
     const getActiveIndex = (data: Extract<FlagData, { state: 'flags' }>) => {
         const { activeFlag } = data;
         if (activeFlag) {
-            return data.flags.findIndex((f) => f.name === activeFlag.name);
+            return data.flags.findIndex(
+                (flag) => flag.name === activeFlag.name,
+            );
         }
         return -1;
     };
@@ -107,7 +109,7 @@ export const MyFlags: FC<Props> = ({
                         <VirtualizedList
                             items={flagData.flags}
                             activeIndex={getActiveIndex(flagData)}
-                            itemKey={(f) => f.name}
+                            itemKey={(flag) => flag.name}
                             renderItem={(flag) => (
                                 <FlagListItem
                                     flag={flag}

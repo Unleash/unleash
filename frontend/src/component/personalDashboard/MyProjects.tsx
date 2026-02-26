@@ -167,7 +167,7 @@ export const MyProjects: React.FC<{
             <VirtualizedList
                 items={projects}
                 activeIndex={activeIndex}
-                itemKey={(p) => p.id}
+                itemKey={(project) => project.id}
                 renderItem={(project) => (
                     <ProjectListItem
                         project={project}

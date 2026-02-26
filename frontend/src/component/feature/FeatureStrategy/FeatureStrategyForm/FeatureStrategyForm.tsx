@@ -55,7 +55,6 @@ import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
-    projectId: string;
     environmentId: string;
     permission: string;
     onSubmit: () => void;
@@ -163,7 +162,6 @@ const StyledConstraintSeparator = styled(ConstraintSeparator)({
 });
 
 export const FeatureStrategyForm = ({
-    projectId,
     feature,
     environmentId,
     permission,

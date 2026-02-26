@@ -348,4 +348,11 @@ export default class FakeFeatureStrategiesStore
     getDefaultStickiness(_projectId: string): Promise<string> {
         return Promise.resolve('default');
     }
+
+    async insertStrategy(
+        strategy: IFeatureStrategy,
+    ): Promise<IFeatureStrategy> {
+        this.featureStrategies.push(strategy);
+        return Promise.resolve(strategy);
+    }
 }

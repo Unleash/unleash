@@ -518,7 +518,9 @@ const NewFeatureStrategyEdit = () => {
                 loading={loading}
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
-                isChangeRequest={isChangeRequestConfigured(environmentId)}
+                areChangeRequestsEnabled={isChangeRequestConfigured(
+                    environmentId,
+                )}
             />
             {staleDataNotification}
         </FormTemplate>

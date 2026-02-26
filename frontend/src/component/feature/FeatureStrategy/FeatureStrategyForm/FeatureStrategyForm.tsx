@@ -39,7 +39,7 @@ export interface IFeatureStrategyFormProps {
     onSubmit: () => void;
     onCancel?: () => void;
     loading: boolean;
-    isChangeRequest: boolean;
+    areChangeRequestsEnabled: boolean;
     strategy: Partial<IFeatureStrategy>;
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
@@ -97,7 +97,7 @@ export const FeatureStrategyForm = ({
     strategy,
     setStrategy,
     errors,
-    isChangeRequest,
+    areChangeRequestsEnabled,
     canRenamePreexistingVariants,
     Limit,
     disabled,
@@ -200,7 +200,7 @@ export const FeatureStrategyForm = ({
             },
         });
 
-        if (enableProdGuard && !isChangeRequest) {
+        if (enableProdGuard && !areChangeRequestsEnabled) {
             setShowProdGuard(true);
         } else {
             onSubmit();
@@ -231,7 +231,7 @@ export const FeatureStrategyForm = ({
                         show={alert}
                         elseShow={
                             <ConditionallyRender
-                                condition={isChangeRequest}
+                                condition={areChangeRequestsEnabled}
                                 show={
                                     <FeatureStrategyChangeRequestAlert
                                         environment={environmentId}
@@ -255,7 +255,7 @@ export const FeatureStrategyForm = ({
                     />
 
                     <ConditionallyRender
-                        condition={!isChangeRequest}
+                        condition={!areChangeRequestsEnabled}
                         show={
                             <FeatureStrategyEnabled
                                 projectId={feature.project}
@@ -300,7 +300,7 @@ export const FeatureStrategyForm = ({
                             }
                             data-testid={STRATEGY_FORM_SUBMIT_ID}
                         >
-                            {isChangeRequest
+                            {areChangeRequestsEnabled
                                 ? changeRequestButtonText
                                 : 'Save strategy'}
                         </PermissionButton>

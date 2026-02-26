@@ -121,7 +121,7 @@ class UserController extends Controller {
                         'Detailed information about the current user root role and project membership',
                     responses: {
                         200: createResponseSchema('profileSchema'),
-                        ...getStandardResponses(401),
+                        ...getStandardResponses(400, 401),
                     },
                 }),
             ],

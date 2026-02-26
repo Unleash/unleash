@@ -1,16 +1,8 @@
 import Add from '@mui/icons-material/Add';
 import { styled } from '@mui/material';
-import {
-    type ReactNode,
-    forwardRef,
-    useImperativeHandle,
-    useRef,
-    useState,
-} from 'react';
+import type { FC } from 'react';
 import { ValueChip } from './ValueList.tsx';
-import type { OnAddActions } from './AddValuesPopover.tsx';
 import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
-import { AddRegexValuePopover } from './AddRegexValuePopover.tsx';
 
 // No, escape handling doesn't work correctly with chips and popovers in MUI v5.
 // This is an intentional trade-off for now because the chip makes it easy to
@@ -33,81 +25,43 @@ const StyledChip = styled(ValueChip, {
 }));
 
 type Props = {
-    onAddValue: (newValue: string) => void;
     removeValue: () => void;
     currentValue?: string;
-    helpText?: ReactNode;
+    helpText?: string;
+    editingOpen: boolean;
+    setEditingOpen: (open: boolean) => void;
     validator: (value: string) => ConstraintValidatorOutput;
-    caseInsensitive: boolean;
-    onToggleCaseSensitivity: () => void;
-    inverted: boolean;
-    onToggleInverted: () => void;
 };
 
-export const AddRegexConstraintValueWidget = forwardRef<HTMLDivElement, Props>(
-    (
-        {
-            currentValue,
-            caseInsensitive,
-            onAddValue,
-            removeValue,
-            helpText,
-            validator,
-            onToggleCaseSensitivity,
-            inverted,
-            onToggleInverted,
-        },
-        ref,
-    ) => {
-        const [open, setOpen] = useState(false);
-        const positioningRef = useRef<HTMLDivElement>(null);
-        useImperativeHandle(
-            ref,
-            () => positioningRef.current as HTMLDivElement,
-        );
+export const AddRegexConstraintValueWidget: FC<Props> = ({
+    currentValue,
+    removeValue,
+    setEditingOpen,
+    editingOpen,
+    validator,
+}) => {
+    const handleClick = () => {
+        if (!currentValue) {
+            setEditingOpen(true);
+            return;
+        }
+        const [isValid] = validator(currentValue);
 
-        const handleAdd = (newValue: string, { setError }: OnAddActions) => {
-            if (newValue.length > 100) {
-                setError(
-                    `Values cannot be longer than 100 characters (current: ${newValue.length})`,
-                );
-                return;
-            }
+        if (!isValid) {
+            setEditingOpen(true);
+            return;
+        }
 
-            const [isValid, errorMessage] = validator(newValue);
-            if (isValid) {
-                onAddValue(newValue);
-                setError('');
-                setOpen(false);
-            } else {
-                setError(errorMessage);
-                return;
-            }
-        };
+        setEditingOpen(!editingOpen);
+    };
 
-        return (
-            <>
-                <StyledChip
-                    hasValue={!!currentValue}
-                    ref={positioningRef}
-                    label={currentValue || 'Add value'}
-                    onClick={() => setOpen(true)}
-                    icon={currentValue ? undefined : <Add />}
-                    onDelete={currentValue ? removeValue : undefined}
-                />
-                <AddRegexValuePopover
-                    initialValue={currentValue}
-                    caseInsensitive={caseInsensitive}
-                    onToggleCaseSensitivity={onToggleCaseSensitivity}
-                    onAdd={handleAdd}
-                    helpText={helpText}
-                    open={open}
-                    anchorEl={positioningRef.current}
-                    onClose={() => setOpen(false)}
-                    inverted={inverted}
-                    onToggleInverted={onToggleInverted}
-                />
-            </>
-        );
-    },
-);
+    return (
+        <StyledChip
+            hasValue={!!currentValue}
+            label={currentValue || 'Add value'}
+            onClick={handleClick}
+            icon={currentValue ? undefined : <Add />}
+            onDelete={currentValue ? removeValue : undefined}
+        />
+    );
+};

@@ -4,136 +4,167 @@ import { describe, expect, test, vi } from 'vitest';
 import { AddRegexConstraintValueWidget } from './AddRegexConstraintValueWidget';
 import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput';
 
-const validValidator = (_value: string): ConstraintValidatorOutput => [
-    true,
-    '',
-];
-const invalidValidator = (_value: string): ConstraintValidatorOutput => [
+const validValidator = (_: string): ConstraintValidatorOutput => [true, ''];
+const invalidValidator = (_: string): ConstraintValidatorOutput => [
     false,
     'Invalid regex',
 ];
 
 const defaultProps = {
-    onAddValue: vi.fn(),
     removeValue: vi.fn(),
+    editingOpen: false,
+    setEditingOpen: vi.fn(),
     validator: validValidator,
-    caseInsensitive: false,
-    onToggleCaseSensitivity: vi.fn(),
-    inverted: false,
-    onToggleInverted: vi.fn(),
 };
 
-describe('AddRegexConstraintValueWidget – chip display', () => {
-    test('shows "Add value" label and no delete button when there is no current value', () => {
-        render(<AddRegexConstraintValueWidget {...defaultProps} />);
-        expect(screen.getByText('Add value')).toBeInTheDocument();
-        expect(
-            screen.queryByRole('button', { name: /delete/i }),
-        ).not.toBeInTheDocument();
+describe('AddRegexConstraintValueWidget', () => {
+    describe('without a currentValue', () => {
+        test('renders "Add value" label', () => {
+            render(<AddRegexConstraintValueWidget {...defaultProps} />);
+
+            expect(screen.getByText('Add value')).toBeInTheDocument();
+        });
+
+        test('renders an add (+) icon', () => {
+            render(<AddRegexConstraintValueWidget {...defaultProps} />);
+
+            expect(screen.getByTestId('AddIcon')).toBeInTheDocument();
+        });
+
+        test('does not render a delete button', () => {
+            render(<AddRegexConstraintValueWidget {...defaultProps} />);
+
+            expect(screen.queryByTestId('ClearIcon')).not.toBeInTheDocument();
+        });
+
+        test('calls setEditingOpen(true) when clicked', () => {
+            const setEditingOpen = vi.fn();
+            render(
+                <AddRegexConstraintValueWidget
+                    {...defaultProps}
+                    setEditingOpen={setEditingOpen}
+                />,
+            );
+
+            fireEvent.click(screen.getByText('Add value'));
+
+            expect(setEditingOpen).toHaveBeenCalledWith(true);
+        });
     });
 
-    test('shows the current value as chip label when currentValue is set', () => {
-        render(
-            <AddRegexConstraintValueWidget
-                {...defaultProps}
-                currentValue='^foo.*'
-            />,
-        );
-        expect(screen.getByText('^foo.*')).toBeInTheDocument();
-    });
+    describe('with a currentValue', () => {
+        test('renders the current value as the chip label', () => {
+            render(
+                <AddRegexConstraintValueWidget
+                    {...defaultProps}
+                    currentValue='[abc]+'
+                />,
+            );
 
-    test('shows a delete icon when currentValue is set', () => {
-        render(
-            <AddRegexConstraintValueWidget
-                {...defaultProps}
-                currentValue='^foo.*'
-            />,
-        );
-        // MUI Chip renders a delete icon (ClearIcon) with aria-hidden. Query by data-testid.
-        expect(screen.getByTestId('ClearIcon')).toBeInTheDocument();
-    });
+            expect(screen.getByText('[abc]+')).toBeInTheDocument();
+        });
 
-    test('calls removeValue when the chip delete icon is clicked', () => {
-        const removeValue = vi.fn();
-        render(
-            <AddRegexConstraintValueWidget
-                {...defaultProps}
-                currentValue='^foo.*'
-                removeValue={removeValue}
-            />,
-        );
-        fireEvent.click(screen.getByTestId('ClearIcon'));
-        expect(removeValue).toHaveBeenCalledOnce();
-    });
+        test('does not render the add (+) icon', () => {
+            render(
+                <AddRegexConstraintValueWidget
+                    {...defaultProps}
+                    currentValue='[abc]+'
+                />,
+            );
 
-    test('clicking the chip opens the popover (regex input becomes visible)', () => {
-        render(<AddRegexConstraintValueWidget {...defaultProps} />);
-        // Before clicking: popover is closed, regex input not in DOM
-        expect(
-            screen.queryByPlaceholderText('Enter RE2 regex value'),
-        ).not.toBeInTheDocument();
+            expect(screen.queryByTestId('AddIcon')).not.toBeInTheDocument();
+        });
 
-        fireEvent.click(screen.getByText('Add value'));
+        test('renders a delete button', () => {
+            render(
+                <AddRegexConstraintValueWidget
+                    {...defaultProps}
+                    currentValue='[abc]+'
+                />,
+            );
 
-        expect(
-            screen.getByPlaceholderText('Enter RE2 regex value'),
-        ).toBeInTheDocument();
-    });
-});
+            expect(screen.getByTestId('ClearIcon')).toBeInTheDocument();
+        });
 
-describe('AddRegexConstraintValueWidget – handleAdd validation', () => {
-    test('shows error when value exceeds 100 characters', () => {
-        render(<AddRegexConstraintValueWidget {...defaultProps} />);
+        test('clicking delete calls removeValue', () => {
+            const removeValue = vi.fn();
+            render(
+                <AddRegexConstraintValueWidget
+                    {...defaultProps}
+                    currentValue='[abc]+'
+                    removeValue={removeValue}
+                />,
+            );
 
-        fireEvent.click(screen.getByText('Add value'));
+            fireEvent.click(screen.getByTestId('ClearIcon'));
 
-        const regexInput = screen.getByPlaceholderText('Enter RE2 regex value');
-        const longValue = 'a'.repeat(101);
-        fireEvent.change(regexInput, { target: { value: longValue } });
+            expect(removeValue).toHaveBeenCalledOnce();
+        });
 
-        fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'));
+        test('clicking the label opens the editor when editingOpen=false', () => {
+            const setEditingOpen = vi.fn();
+            render(
+                <AddRegexConstraintValueWidget
+                    {...defaultProps}
+                    currentValue='[abc]+'
+                    editingOpen={false}
+                    setEditingOpen={setEditingOpen}
+                />,
+            );
 
-        expect(
-            screen.getByText(/Values cannot be longer than 100 characters/),
-        ).toBeInTheDocument();
-    });
+            fireEvent.click(screen.getByText('[abc]+'));
 
-    test('shows error message from validator when it returns invalid', () => {
-        render(
-            <AddRegexConstraintValueWidget
-                {...defaultProps}
-                validator={invalidValidator}
-            />,
-        );
+            expect(setEditingOpen).toHaveBeenCalledWith(true);
+        });
 
-        fireEvent.click(screen.getByText('Add value'));
+        test('clicking the label closes the editor when editingOpen=true', () => {
+            const setEditingOpen = vi.fn();
+            render(
+                <AddRegexConstraintValueWidget
+                    {...defaultProps}
+                    currentValue='[abc]+'
+                    editingOpen={true}
+                    setEditingOpen={setEditingOpen}
+                />,
+            );
 
-        const regexInput = screen.getByPlaceholderText('Enter RE2 regex value');
-        fireEvent.change(regexInput, { target: { value: '[invalid' } });
+            fireEvent.click(screen.getByText('[abc]+'));
 
-        fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'));
+            expect(setEditingOpen).toHaveBeenCalledWith(false);
+        });
 
-        expect(screen.getByText('Invalid regex')).toBeInTheDocument();
-    });
+        test('clicking the label opens the editor when validator returns invalid and editingOpen=false', () => {
+            const setEditingOpen = vi.fn();
+            render(
+                <AddRegexConstraintValueWidget
+                    {...defaultProps}
+                    currentValue='['
+                    editingOpen={false}
+                    setEditingOpen={setEditingOpen}
+                    validator={invalidValidator}
+                />,
+            );
 
-    test('calls onAddValue and closes the popover when the value is valid', () => {
-        const onAddValue = vi.fn();
-        render(
-            <AddRegexConstraintValueWidget
-                {...defaultProps}
-                onAddValue={onAddValue}
-            />,
-        );
+            fireEvent.click(screen.getByText('['));
 
-        fireEvent.click(screen.getByText('Add value'));
+            expect(setEditingOpen).toHaveBeenCalledWith(true);
+        });
 
-        const regexInput = screen.getByPlaceholderText('Enter RE2 regex value');
-        fireEvent.change(regexInput, { target: { value: '^foo$' } });
+        test('clicking the label opens the editor when validator returns invalid and editingOpen=true', () => {
+            const setEditingOpen = vi.fn();
+            render(
+                <AddRegexConstraintValueWidget
+                    {...defaultProps}
+                    currentValue='['
+                    editingOpen={true}
+                    setEditingOpen={setEditingOpen}
+                    validator={invalidValidator}
+                />,
+            );
 
-        // fireEvent.click on a submit button does not trigger form submission in jsdom;
-        // use fireEvent.submit on the form element instead.
-        fireEvent.submit(regexInput.closest('form')!);
+            fireEvent.click(screen.getByText('['));
 
-        expect(onAddValue).toHaveBeenCalledWith('^foo$');
+            expect(setEditingOpen).toHaveBeenCalledWith(true);
+        });
     });
 });

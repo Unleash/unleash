@@ -6,7 +6,7 @@ import {
     isStringOperator,
     type Operator,
 } from 'constants/operators';
-import { useCallback, useRef, type FC } from 'react';
+import { useCallback, useRef, useState, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -21,7 +21,10 @@ import {
     LegalValuesSelector,
     SingleLegalValueSelector,
 } from './LegalValuesSelector.tsx';
-import { useEditableConstraint } from './useEditableConstraint/useEditableConstraint.js';
+import {
+    type LegalValueData,
+    useEditableConstraint,
+} from './useEditableConstraint/useEditableConstraint.js';
 import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint as EditableConstraintType,
@@ -37,6 +40,7 @@ import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { AddRegexConstraintValueWidget } from './AddRegexConstraintValueWidget.tsx';
 import { ToggleConstraintInverted } from '../ToggleConstraintInverted.tsx';
+import { AddRegexValueEditor } from './AddRegexValueEditor.tsx';
 
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
@@ -120,6 +124,8 @@ const TopRowInput: FC<{
     addValuesButtonRef: React.RefObject<HTMLButtonElement>;
     onToggleCaseSensitivity: () => void;
     onToggleInverted: () => void;
+    editingOpen: boolean;
+    setEditingOpen: (open: boolean) => void;
 }> = ({
     addValues,
     clearValues,
@@ -128,6 +134,8 @@ const TopRowInput: FC<{
     addValuesButtonRef,
     onToggleCaseSensitivity,
     onToggleInverted,
+    setEditingOpen,
+    editingOpen,
 }) => {
     if (isDateConstraint(localConstraint)) {
         return (
@@ -153,32 +161,11 @@ const TopRowInput: FC<{
     if (isRegexConstraint(localConstraint)) {
         return (
             <AddRegexConstraintValueWidget
-                validator={validator}
-                onAddValue={addValues}
                 removeValue={clearValues}
                 currentValue={localConstraint.value}
-                caseInsensitive={!!localConstraint.caseInsensitive}
-                inverted={!!localConstraint.inverted}
-                onToggleCaseSensitivity={onToggleCaseSensitivity}
-                onToggleInverted={onToggleInverted}
-                helpText={
-                    <>
-                        A regex value should be a valid{' '}
-                        <Link
-                            href='https://github.com/google/re2/wiki/Syntax'
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            sx={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: 0.25,
-                            }}
-                        >
-                            RE2 regular expression
-                            <OpenInNew sx={{ fontSize: 'inherit' }} />
-                        </Link>
-                    </>
-                }
+                validator={validator}
+                editingOpen={editingOpen}
+                setEditingOpen={setEditingOpen}
             />
         );
     }
@@ -205,6 +192,78 @@ const TopRowInput: FC<{
     );
 };
 
+const InlineEdit: FC<{
+    addValues: (value: string | string[]) => void;
+    localConstraint: EditableConstraintType;
+    setEditingOpen: (open: boolean) => void;
+    editingOpen: boolean;
+    legalValueData?: LegalValueData;
+    toggleValue: (value: string) => void;
+    clearAll: () => void;
+    validator: (value: string) => ConstraintValidationResult;
+}> = ({
+    addValues,
+    localConstraint,
+    setEditingOpen,
+    legalValueData,
+    toggleValue,
+    clearAll,
+    editingOpen,
+    validator,
+}) => {
+    if (legalValueData) {
+        return (
+            <LegalValuesContainer>
+                {isMultiValueConstraint(localConstraint) ? (
+                    <LegalValuesSelector
+                        values={localConstraint.values}
+                        toggleValue={toggleValue}
+                        clearAll={clearAll}
+                        addValues={addValues}
+                        {...legalValueData}
+                    />
+                ) : (
+                    <SingleLegalValueSelector
+                        toggleValue={toggleValue}
+                        value={localConstraint.value}
+                        {...legalValueData}
+                    />
+                )}
+            </LegalValuesContainer>
+        );
+    }
+
+    if (isRegexConstraint(localConstraint) && editingOpen) {
+        return (
+            <AddRegexValueEditor
+                initialValue={localConstraint.value}
+                caseInsensitive={!!localConstraint.caseInsensitive}
+                addValue={addValues}
+                validator={validator}
+                setEditingOpen={setEditingOpen}
+                helpText={
+                    <>
+                        A regex value should be a valid{' '}
+                        <Link
+                            href='https://github.com/google/re2/wiki/Syntax'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            sx={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 0.25,
+                            }}
+                        >
+                            RE2 regular expression
+                            <OpenInNew sx={{ fontSize: 'inherit' }} />
+                        </Link>
+                    </>
+                }
+            />
+        );
+    }
+};
+
 type Props = {
     constraint: IConstraint;
     onDelete: () => void;
@@ -217,6 +276,11 @@ export const EditableConstraint: FC<Props> = ({
     onUpdate,
 }) => {
     const groupContextFieldOptionsByType = useUiFlag('projectContextFields');
+
+    const editingShouldBeOpenByDefaultForNewConstraints = !constraint.value;
+    const [editingOpen, setEditingOpen] = useState(
+        editingShouldBeOpenByDefaultForNewConstraints,
+    );
     const {
         constraint: localConstraint,
         updateConstraint,
@@ -347,6 +411,8 @@ export const EditableConstraint: FC<Props> = ({
                                     onToggleCaseSensitivity
                                 }
                                 onToggleInverted={onToggleInverted}
+                                editingOpen={editingOpen}
+                                setEditingOpen={setEditingOpen}
                             />
                         )}
                     </ValueList>
@@ -364,25 +430,16 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {legalValueData ? (
-                <LegalValuesContainer>
-                    {isMultiValueConstraint(localConstraint) ? (
-                        <LegalValuesSelector
-                            values={localConstraint.values}
-                            toggleValue={toggleValue}
-                            clearAll={clearAll}
-                            addValues={addValues}
-                            {...legalValueData}
-                        />
-                    ) : (
-                        <SingleLegalValueSelector
-                            toggleValue={toggleValue}
-                            value={localConstraint.value}
-                            {...legalValueData}
-                        />
-                    )}
-                </LegalValuesContainer>
-            ) : null}
+            <InlineEdit
+                localConstraint={localConstraint}
+                legalValueData={legalValueData}
+                editingOpen={editingOpen}
+                toggleValue={toggleValue}
+                addValues={addValues}
+                clearAll={clearAll}
+                setEditingOpen={setEditingOpen}
+                validator={validator}
+            />
         </Container>
     );
 };

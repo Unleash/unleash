@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -32,6 +32,8 @@ const StyledContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(4),
 }));
 
+const projectCardDisplayLimit = 500;
+
 export const ProjectList = () => {
     const { projects, loading, error, refetch } = useProjects();
     const { isOss } = useUiConfig();
@@ -39,6 +41,16 @@ export const ProjectList = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const [state, setState] = useProjectsListState();
+
+    const forceListView = projects.length > projectCardDisplayLimit;
+    useEffect(() => {
+        if (forceListView && state.view !== 'list') {
+            setState({ view: 'list' });
+        }
+    }, [forceListView, state.view]);
+
+    const showViewToggleButton = !(isOss() || forceListView);
+    const safeView = forceListView ? 'list' : state.view;
 
     const myProfileProjects = new Set(useProfile().profile?.projects || []);
 
@@ -128,7 +140,7 @@ export const ProjectList = () => {
                                 helpText='Favorite projects, projects you own, and projects you are a member of'
                                 actions={
                                     <>
-                                        {!isOss() && (
+                                        {showViewToggleButton && (
                                             <ProjectsListViewToggle
                                                 view={state.view}
                                                 setView={(view) =>
@@ -151,7 +163,7 @@ export const ProjectList = () => {
                             </ProjectsListHeader>
                             <ProjectGroup
                                 loading={loading}
-                                view={state.view}
+                                view={safeView}
                                 projects={
                                     isOss()
                                         ? sortedProjects
@@ -167,7 +179,7 @@ export const ProjectList = () => {
                             </ProjectsListHeader>
                             <ProjectGroup
                                 loading={loading}
-                                view={state.view}
+                                view={safeView}
                                 projects={otherProjects}
                             />
                         </div>

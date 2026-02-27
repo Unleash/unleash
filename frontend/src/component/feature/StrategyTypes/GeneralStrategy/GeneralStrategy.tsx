@@ -10,7 +10,6 @@ interface IGeneralStrategyProps {
     parameters: IFeatureStrategyParameters;
     strategyDefinition: IStrategy;
     updateParameter: (field: string, value: string) => void;
-    editable: boolean;
     errors: IFormErrors;
 }
 
@@ -23,7 +22,6 @@ const GeneralStrategy = ({
     parameters,
     strategyDefinition,
     updateParameter,
-    editable,
     errors,
 }: IGeneralStrategyProps) => {
     if (!strategyDefinition || strategyDefinition.parameters.length === 0) {
@@ -38,7 +36,6 @@ const GeneralStrategy = ({
                         definition={definition}
                         parameters={parameters}
                         updateParameter={updateParameter}
-                        editable={editable}
                         errors={errors}
                     />
                 </div>

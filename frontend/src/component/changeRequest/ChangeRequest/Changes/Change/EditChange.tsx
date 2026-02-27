@@ -165,7 +165,6 @@ export const EditChange = ({
                 }
             >
                 <FeatureStrategyForm
-                    projectId={projectId}
                     feature={data}
                     strategy={strategy}
                     setStrategy={setStrategy}

@@ -28,6 +28,7 @@ const StyledUnleashLogo = styled(UnleashLogo)({
 });
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
+    zIndex: theme.zIndex.modal + 2,
     '.MuiBackdrop-root': {
         backdropFilter: 'blur(8px)',
     },

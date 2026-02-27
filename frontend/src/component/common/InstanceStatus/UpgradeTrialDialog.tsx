@@ -11,6 +11,8 @@ import { ReactComponent as VisaLogo } from 'assets/logos/visa.svg';
 import { ReactComponent as SamsungLogo } from 'assets/logos/samsung.svg';
 import { ReactComponent as LloydsLogo } from 'assets/logos/lloyds.svg';
 import { useInstancePrices } from 'hooks/api/getters/useInstancePrices/useInstancePrices';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import { trialHasExpired } from 'utils/instanceTrial';
 
 const StyledBillingInformation = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(3),
@@ -53,6 +55,7 @@ export const UpgradeTrialDialog = ({
     dialogOpen,
     setDialogOpen,
 }: IUpgradeTrialDialogProps) => {
+    const { instanceStatus } = useInstanceStatus();
     const { hasAccess } = useContext(AccessContext);
     const { trackEvent } = usePlausibleTracker();
     const { instancePrices } = useInstancePrices();
@@ -93,6 +96,10 @@ export const UpgradeTrialDialog = ({
         setDialogOpen(false);
     };
 
+    const text = trialHasExpired(instanceStatus)
+        ? 'Your free trial has expired and your account is scheduled for deletion. Upgrade to preserve your projects and feature flags.'
+        : 'Upgrade now to unlock all features and keep your projects and feature flags after your trial ends.';
+
     return (
         <Dialogue
             open={dialogOpen}
@@ -103,8 +110,7 @@ export const UpgradeTrialDialog = ({
             title='Upgrade to continue using Unleash'
             maxWidth='sm'
         >
-            Your free trial has expired and your account is scheduled for
-            deletion. Upgrade to preserve your projects and feature flags.
+            {text}
             {isAdmin ? (
                 <StyledBillingInformation>
                     <Typography>

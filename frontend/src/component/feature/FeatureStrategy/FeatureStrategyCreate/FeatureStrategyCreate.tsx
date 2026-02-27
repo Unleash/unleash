@@ -221,7 +221,6 @@ export const FeatureStrategyCreate = () => {
             }
         >
             <FeatureStrategyForm
-                projectId={projectId}
                 feature={data}
                 strategy={strategy}
                 setStrategy={setStrategy}

@@ -22,7 +22,6 @@ import type { IFormErrors } from 'hooks/useFormErrors';
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;
     updateParameter: (field: string, value: string) => void;
-    editable: boolean;
     errors?: IFormErrors;
 }
 
@@ -54,7 +53,6 @@ const StyledInnerBox2 = styled(Box)(({ theme }) => ({
 export const FlexibleStrategy = ({
     updateParameter,
     parameters,
-    editable = true,
     errors,
 }: IFlexibleStrategyProps) => {
     const updateRollout = (_e: Event, value: number | number[]) => {
@@ -74,7 +72,6 @@ export const FlexibleStrategy = ({
             <ConditionalRolloutSlider
                 name='Rollout'
                 value={rollout}
-                disabled={!editable}
                 onChange={updateRollout}
             />
             <StyledOuterBox>
@@ -82,7 +79,6 @@ export const FlexibleStrategy = ({
                     <StickinessSelect
                         label='Stickiness'
                         value={stickiness}
-                        editable={editable}
                         dataTestId={FLEXIBLE_STRATEGY_STICKINESS_ID}
                         onChange={(e) =>
                             updateParameter('stickiness', e.target.value)
@@ -95,7 +91,6 @@ export const FlexibleStrategy = ({
                         sx={{ width: '100%' }}
                         id='groupId-input'
                         value={groupId}
-                        disabled={!editable}
                         onChange={(e) =>
                             updateParameter(
                                 'groupId',
@@ -116,7 +111,6 @@ export const FlexibleStrategy = ({
 const OldFlexibleStrategy = ({
     updateParameter,
     parameters,
-    editable = true,
     errors,
 }: IFlexibleStrategyProps) => {
     const projectId = useRequiredPathParam('projectId');
@@ -164,7 +158,6 @@ const OldFlexibleStrategy = ({
             <ConditionalRolloutSlider
                 name='Rollout'
                 value={rollout}
-                disabled={!editable}
                 onChange={updateRollout}
             />
             <StyledOuterBox>
@@ -172,7 +165,6 @@ const OldFlexibleStrategy = ({
                     <StickinessSelect
                         label='Stickiness'
                         value={stickiness}
-                        editable={editable}
                         dataTestId={FLEXIBLE_STRATEGY_STICKINESS_ID}
                         onChange={(e) =>
                             updateParameter('stickiness', e.target.value)
@@ -185,7 +177,6 @@ const OldFlexibleStrategy = ({
                         sx={{ width: '100%' }}
                         id='groupId-input'
                         value={groupId}
-                        disabled={!editable}
                         onChange={(e) =>
                             updateParameter(
                                 'groupId',

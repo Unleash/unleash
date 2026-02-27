@@ -110,7 +110,7 @@ const StyledConstraintSeparator = styled(ConstraintSeparator)(({ theme }) => ({
     transform: 'translateY(0)',
 }));
 
-interface IReleasePlanTemplateAddStrategyFormProps {
+export interface IReleasePlanTemplateAddStrategyFormProps {
     onCancel: () => void;
     strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>;
     onAddUpdateStrategy: (
@@ -119,7 +119,7 @@ interface IReleasePlanTemplateAddStrategyFormProps {
     editMode: boolean;
 }
 
-const _NewReleasePlanTemplateAddStrategyForm = ({
+export const LegacyReleasePlanTemplateAddStrategyForm = ({
     onCancel,
     strategy,
     onAddUpdateStrategy,
@@ -336,12 +336,4 @@ const _NewReleasePlanTemplateAddStrategyForm = ({
             </StyledButtonContainer>
         </FormTemplate>
     );
-};
-
-import { LegacyReleasePlanTemplateAddStrategyForm } from './LegacyReleasePlanTemplateAddStrategyForm';
-
-export const ReleasePlanTemplateAddStrategyForm = (
-    props: IReleasePlanTemplateAddStrategyFormProps,
-) => {
-    return <LegacyReleasePlanTemplateAddStrategyForm {...props} />;
 };

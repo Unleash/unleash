@@ -33,6 +33,8 @@ import {
 } from '../../../openapi/spec/roles-schema.js';
 import type { IFlagResolver } from '../../../types/index.js';
 import type { UserSubscriptionsService } from '../../../features/user-subscriptions/user-subscriptions-service.js';
+import { BadDataError } from '../../../server-impl.js';
+import type { Logger } from '../../../logger.js';
 
 class UserController extends Controller {
     private accessService: AccessService;
@@ -50,6 +52,8 @@ class UserController extends Controller {
     private flagResolver: IFlagResolver;
 
     private userSubscriptionsService: UserSubscriptionsService;
+
+    private readonly logger: Logger;
 
     constructor(
         config: IUnleashConfig,
@@ -81,6 +85,7 @@ class UserController extends Controller {
         this.projectService = projectService;
         this.userSubscriptionsService = transactionalUserSubscriptionsService;
         this.flagResolver = config.flagResolver;
+        this.logger = config.getLogger('/admin-api/user/user.ts');
 
         this.route({
             method: 'get',
@@ -116,7 +121,7 @@ class UserController extends Controller {
                         'Detailed information about the current user root role and project membership',
                     responses: {
                         200: createResponseSchema('profileSchema'),
-                        ...getStandardResponses(401),
+                        ...getStandardResponses(400, 401),
                     },
                 }),
             ],
@@ -243,6 +248,18 @@ class UserController extends Controller {
         res: Response<ProfileSchema>,
     ): Promise<void> {
         const { user } = req;
+
+        if (!user.id) {
+            const errorData = {
+                sessionID: req.sessionID,
+                ip: req.ip,
+                user,
+            };
+            this.logger.error(
+                `[DEBUG:UNDEFINED_COL] User id is missing in request user object: ${JSON.stringify(errorData, null, 2)}`,
+            );
+            throw new BadDataError('User id is missing in request user object');
+        }
 
         const [projects, rootRole, subscriptions] = await Promise.all([
             this.projectService.getProjectsByUser(user.id),

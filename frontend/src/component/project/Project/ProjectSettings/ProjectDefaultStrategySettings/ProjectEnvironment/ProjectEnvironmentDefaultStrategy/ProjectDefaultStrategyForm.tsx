@@ -15,9 +15,11 @@ import type { ISegment } from 'interfaces/segment';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints';
-import { FeatureStrategyType } from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
+import {
+    FeatureStrategyType,
+    LegacyFeatureStrategyType,
+} from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle';
 import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 import {
@@ -25,6 +27,8 @@ import {
     UPDATE_PROJECT,
 } from '@server/types/permissions';
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments';
+import { useUiFlag } from 'hooks/useUiFlag';
+import produce from 'immer';
 
 interface IProjectDefaultStrategyFormProps {
     projectId: string;
@@ -76,12 +80,8 @@ export const ProjectDefaultStrategyForm = ({
     setSegments,
     errors,
 }: IProjectDefaultStrategyFormProps) => {
+    const useNewStrategyTypeComponent = useUiFlag('strategyFormConsolidation');
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
-    const access = useHasProjectEnvironmentAccess(
-        permission,
-        projectId,
-        environmentId,
-    );
     const { strategyDefinition } = useStrategy(strategy?.name);
     const { segments: assignableSegments = [] } = useAssignableSegments();
     const showSegmentSelector =
@@ -141,6 +141,16 @@ export const ProjectDefaultStrategyForm = ({
             onSubmit();
         }
     };
+
+    const updateParameter = (name: string, value: string) => {
+        setStrategy(
+            produce((draft) => {
+                draft.parameters = draft.parameters ?? {};
+                draft.parameters[name] = value;
+            }),
+        );
+        validateParameter(name, value);
+    };
     return (
         <StyledForm onSubmit={onSubmitWithValidation}>
             <FeatureStrategyTitle
@@ -165,14 +175,23 @@ export const ProjectDefaultStrategyForm = ({
                 setStrategy={setStrategy}
             />
             <StyledHr />
-            <FeatureStrategyType
-                strategy={strategy as any}
-                strategyDefinition={strategyDefinition}
-                setStrategy={setStrategy}
-                validateParameter={validateParameter}
-                errors={errors}
-                hasAccess={access}
-            />
+
+            {useNewStrategyTypeComponent ? (
+                <FeatureStrategyType
+                    strategy={strategy}
+                    strategyDefinition={strategyDefinition}
+                    updateParameter={updateParameter}
+                    errors={errors}
+                />
+            ) : (
+                <LegacyFeatureStrategyType
+                    strategy={strategy as any}
+                    strategyDefinition={strategyDefinition}
+                    setStrategy={setStrategy}
+                    validateParameter={validateParameter}
+                    errors={errors}
+                />
+            )}
             <ConditionallyRender
                 condition={
                     strategy.parameters != null &&

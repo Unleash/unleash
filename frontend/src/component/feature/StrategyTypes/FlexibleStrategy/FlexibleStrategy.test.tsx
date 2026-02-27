@@ -22,7 +22,6 @@ test('manipulates the rollout slider', async () => {
             <FlexibleStrategy
                 parameters={parameters}
                 updateParameter={updateParameter}
-                editable={true}
             />
         );
     };
@@ -50,7 +49,6 @@ test('displays groupId error', async () => {
                 stickiness: 'default',
             }}
             updateParameter={() => {}}
-            editable={true}
             errors={
                 {
                     getFormError: () => 'Field required test',
@@ -70,7 +68,6 @@ test('renders without crashing when stickiness/groupId is not provided', () => {
                 rollout: '50',
             }}
             updateParameter={() => {}}
-            editable={true}
         />,
     );
 

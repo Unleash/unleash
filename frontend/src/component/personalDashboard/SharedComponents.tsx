@@ -1,4 +1,6 @@
 import { Box, List, type Theme, styled } from '@mui/material';
+import { type ReactNode, useEffect, useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 
 export const ContentGridContainer = styled('div')({
     containerType: 'inline-size',
@@ -109,11 +111,79 @@ export const listItemStyle = (theme: Theme) => ({
 
 export const StyledList = styled(List)(({ theme }) => ({
     maxHeight: '400px',
+    overflowY: 'auto',
 
     ...onWideContainer({
         maxHeight: '100%',
     })({ theme }),
 }));
+
+const ESTIMATED_ITEM_SIZE = 48;
+
+export function VirtualizedList<T>({
+    items,
+    activeIndex,
+    itemKey,
+    renderItem,
+}: {
+    items: T[];
+    activeIndex: number;
+    itemKey: (item: T) => string;
+    renderItem: (item: T) => ReactNode;
+}) {
+    const listRef = useRef<HTMLUListElement>(null);
+    const hasMounted = useRef(false);
+
+    const virtualizer = useVirtualizer({
+        count: items.length,
+        getScrollElement: () => listRef.current,
+        estimateSize: () => ESTIMATED_ITEM_SIZE,
+        overscan: 5,
+    });
+
+    useEffect(() => {
+        if (activeIndex >= 0) {
+            if (!hasMounted.current) {
+                hasMounted.current = true;
+                virtualizer.scrollToIndex(activeIndex, { align: 'start' });
+            } else {
+                virtualizer.scrollToIndex(activeIndex, { align: 'auto' });
+            }
+        }
+    }, [activeIndex, virtualizer]);
+
+    return (
+        <StyledList ref={listRef}>
+            <div
+                style={{
+                    height: `${virtualizer.getTotalSize()}px`,
+                    position: 'relative',
+                    width: '100%',
+                }}
+            >
+                {virtualizer.getVirtualItems().map((virtualItem) => {
+                    const item = items[virtualItem.index];
+                    return (
+                        <div
+                            key={itemKey(item)}
+                            ref={virtualizer.measureElement}
+                            data-index={virtualItem.index}
+                            style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                transform: `translateY(${virtualItem.start}px)`,
+                            }}
+                        >
+                            {renderItem(item)}
+                        </div>
+                    );
+                })}
+            </div>
+        </StyledList>
+    );
+}
 
 export const StyledCardTitle = styled('div')<{ lines?: number }>(
     ({ theme, lines = 2 }) => ({

@@ -1,6 +1,7 @@
 export * from './access/createAccessService.js';
 export * from './export-import-toggles/createExportImportService.js';
 export * from './feature-toggle/createFeatureToggleService.js';
+export * from './release-plans/createReleasePlanMilestoneStrategyService.js';
 export * from './project/createProjectService.js';
 export * from './change-request-access-service/createChangeRequestAccessReadModel.js';
 export * from './segment/createSegmentService.js';

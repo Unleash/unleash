@@ -6,7 +6,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import type { ISegment } from 'interfaces/segment';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -21,11 +20,11 @@ import type {
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
-import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { LegacyEditChange } from './LegacyEditChange.tsx';
 
 interface IEditChangeProps {
     change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;
@@ -47,7 +46,7 @@ const addIdSymbolToConstraints = (
     });
 };
 
-export const EditChange = ({
+const NewEditChange = ({
     change,
     changeRequestId,
     environment,
@@ -58,7 +57,6 @@ export const EditChange = ({
 }: IEditChangeProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { editChange } = useChangeRequestApi();
-    const [tab, setTab] = useState(0);
 
     const constraintsWithId = addIdSymbolToConstraints(change.payload);
 
@@ -67,17 +65,6 @@ export const EditChange = ({
         constraints: constraintsWithId,
     });
 
-    const { segments: allSegments } = useSegments();
-    const strategySegments = (allSegments || []).filter((segment) => {
-        return change.payload.segments?.includes(segment.id);
-    });
-
-    const [segments, setSegments] = useState<ISegment[]>(strategySegments);
-
-    const strategyDefinition = {
-        parameters: change.payload.parameters,
-        name: change.payload.name,
-    };
     const { setToastData, setToastApiError } = useToast();
     const errors = useFormErrors();
     const { uiConfig } = useUiConfig();
@@ -111,17 +98,12 @@ export const EditChange = ({
         }
     }, [feature]);
 
-    const payload = {
-        ...strategy,
-        segments: segments.map((segment) => segment.id),
-    };
-
     const onInternalSubmit = async () => {
         try {
             await editChange(projectId, changeRequestId, change.id, {
                 action: strategy.id ? 'updateStrategy' : 'addStrategy',
                 feature: featureId,
-                payload,
+                payload: strategy,
             });
             onSubmit();
             setToastData({
@@ -132,10 +114,6 @@ export const EditChange = ({
             setToastApiError(formatUnknownError(error));
         }
     };
-
-    if (!strategyDefinition) {
-        return null;
-    }
 
     if (!data) return null;
 
@@ -159,7 +137,7 @@ export const EditChange = ({
                         projectId,
                         changeRequestId,
                         change.id,
-                        payload,
+                        strategy,
                         unleashUrl,
                     )
                 }
@@ -168,28 +146,29 @@ export const EditChange = ({
                     feature={data}
                     strategy={strategy}
                     setStrategy={setStrategy}
-                    segments={segments}
-                    setSegments={setSegments}
                     environmentId={environment}
                     onSubmit={onInternalSubmit}
                     onCancel={onClose}
                     loading={false}
                     permission={UPDATE_FEATURE_STRATEGY}
                     errors={errors}
-                    isChangeRequest={isChangeRequestConfigured(environment)}
-                    tab={tab}
-                    setTab={setTab}
-                    StrategyVariants={
-                        <NewStrategyVariants
-                            strategy={strategy}
-                            setStrategy={setStrategy}
-                        />
-                    }
+                    areChangeRequestsEnabled={isChangeRequestConfigured(
+                        environment,
+                    )}
                 />
 
                 {staleDataNotification}
             </FormTemplate>
         </SidebarModal>
+    );
+};
+
+export const EditChange = (props: IEditChangeProps) => {
+    const consolidate = useUiFlag('strategyFormConsolidation');
+    return consolidate ? (
+        <NewEditChange {...props} />
+    ) : (
+        <LegacyEditChange {...props} />
     );
 };
 

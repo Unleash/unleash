@@ -19,7 +19,6 @@ import {
     formatFeaturePath,
 } from '../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import type { ISegment } from 'interfaces/segment';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
@@ -32,12 +31,12 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useQueryParams from 'hooks/useQueryParams';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/ProjectDefaultStrategySettings/ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy.tsx';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
-import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { Limit } from 'component/common/Limit/Limit';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { LegacyFeatureStrategyCreate } from './LegacyFeatureStrategyCreate.tsx';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -51,8 +50,7 @@ const useStrategyLimit = (strategyCount: number) => {
     };
 };
 
-export const FeatureStrategyCreate = () => {
-    const [tab, setTab] = useState(0);
+const NewFeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
@@ -63,16 +61,8 @@ export const FeatureStrategyCreate = () => {
         useQueryParams().get('defaultStrategy') || 'false',
     );
 
-    const { segments: allSegments } = useSegments();
-    const strategySegments = (allSegments || []).filter((segment) => {
-        return defaultStrategy?.segments?.includes(segment.id);
-    });
-
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
 
-    const [segments, setSegments] = useState<ISegment[]>(
-        shouldUseDefaultStrategy ? strategySegments : [],
-    );
     const { strategyDefinition } = useStrategy(strategyName);
     const errors = useFormErrors();
 
@@ -168,7 +158,6 @@ export const FeatureStrategyCreate = () => {
             feature: featureId,
             payload,
         });
-        // FIXME: segments in change requests
         setToastData({
             text: 'Strategy added to draft',
             type: 'success',
@@ -176,7 +165,7 @@ export const FeatureStrategyCreate = () => {
         refetchChangeRequests();
     };
 
-    const payload = createStrategyPayload(strategy, segments);
+    const payload = createStrategyPayload(strategy);
 
     const onSubmit = async () => {
         trackEvent('strategyTitle', {
@@ -224,23 +213,15 @@ export const FeatureStrategyCreate = () => {
                 feature={data}
                 strategy={strategy}
                 setStrategy={setStrategy}
-                segments={segments}
-                setSegments={setSegments}
                 environmentId={environmentId}
                 onSubmit={onSubmit}
                 loading={loading}
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
-                isChangeRequest={isChangeRequestConfigured(environmentId)}
-                tab={tab}
-                setTab={setTab}
-                StrategyVariants={
-                    <NewStrategyVariants
-                        strategy={strategy}
-                        setStrategy={setStrategy}
-                        canRenamePreexistingVariants
-                    />
-                }
+                areChangeRequestsEnabled={isChangeRequestConfigured(
+                    environmentId,
+                )}
+                canRenamePreexistingVariants
                 Limit={
                     <Limit
                         name='strategies in this environment'
@@ -253,6 +234,15 @@ export const FeatureStrategyCreate = () => {
             />
             {staleDataNotification}
         </FormTemplate>
+    );
+};
+
+export const FeatureStrategyCreate = () => {
+    const consolidate = useUiFlag('strategyFormConsolidation');
+    return consolidate ? (
+        <NewFeatureStrategyCreate />
+    ) : (
+        <LegacyFeatureStrategyCreate />
     );
 };
 

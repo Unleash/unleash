@@ -13,8 +13,7 @@ import type {
     IStrategy,
 } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import type { ISegment } from 'interfaces/segment';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
@@ -27,7 +26,6 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
-import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
     getChangeRequestConflictCreatedData,
@@ -38,6 +36,7 @@ import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-repla
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { LegacyFeatureStrategyEdit } from './LegacyFeatureStrategyEdit.tsx';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -93,15 +92,13 @@ const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
     });
 };
 
-export const FeatureStrategyEdit = () => {
+const NewFeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyId = useRequiredQueryParam('strategyId');
-    const [tab, setTab] = useState(0);
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
-    const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
     const { strategyDefinition } = useStrategy(strategy.name);
     const { defaultStickiness } = useDefaultProjectSettings(projectId);
@@ -174,11 +171,6 @@ export const FeatureStrategyEdit = () => {
             });
         });
 
-    const {
-        segments: savedStrategySegments,
-        refetchSegments: refetchSavedStrategySegments,
-    } = useSegments(strategyId);
-
     useEffect(() => {
         const savedStrategy = data?.environments
             .flatMap((environment) => environment.strategies)
@@ -196,13 +188,7 @@ export const FeatureStrategyEdit = () => {
     }, [strategyId, data]);
 
     useEffect(() => {
-        // Fill in the selected segments once they've been fetched.
-        savedStrategySegments && setSegments(savedStrategySegments);
-    }, [JSON.stringify(savedStrategySegments)]);
-
-    const handleMissingParameters = useUiFlag('strategyFormConsolidation');
-    useEffect(() => {
-        if (!strategyDefinition || !handleMissingParameters) {
+        if (!strategyDefinition) {
             return;
         }
 
@@ -221,9 +207,9 @@ export const FeatureStrategyEdit = () => {
                 },
             };
         });
-    }, [handleMissingParameters, defaultStickiness, strategyDefinition?.name]);
+    }, [defaultStickiness, strategyDefinition?.name]);
 
-    const payload = createStrategyPayload(strategy, segments);
+    const payload = createStrategyPayload(strategy);
 
     const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
         await updateStrategyOnFeature(
@@ -234,7 +220,6 @@ export const FeatureStrategyEdit = () => {
             payload,
         );
 
-        await refetchSavedStrategySegments();
         setToastData({
             text: 'Strategy updated',
             type: 'success',
@@ -247,7 +232,6 @@ export const FeatureStrategyEdit = () => {
             feature: featureId,
             payload: { ...payload, id: strategyId },
         });
-        // FIXME: segments in change requests
         setToastData({
             text: 'Change added to draft',
             type: 'success',
@@ -299,38 +283,38 @@ export const FeatureStrategyEdit = () => {
                 feature={data}
                 strategy={strategy}
                 setStrategy={setStrategy}
-                segments={segments}
-                setSegments={setSegments}
                 environmentId={environmentId}
                 onSubmit={onSubmit}
                 loading={loading}
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
-                isChangeRequest={isChangeRequestConfigured(environmentId)}
-                tab={tab}
-                setTab={setTab}
-                StrategyVariants={
-                    <NewStrategyVariants
-                        strategy={strategy}
-                        setStrategy={setStrategy}
-                    />
-                }
+                areChangeRequestsEnabled={isChangeRequestConfigured(
+                    environmentId,
+                )}
             />
             {staleDataNotification}
         </FormTemplate>
     );
 };
 
+export const FeatureStrategyEdit = () => {
+    const consolidate = useUiFlag('strategyFormConsolidation');
+    return consolidate ? (
+        <NewFeatureStrategyEdit />
+    ) : (
+        <LegacyFeatureStrategyEdit />
+    );
+};
+
 export const createStrategyPayload = (
     strategy: Partial<IFeatureStrategy>,
-    segments: ISegment[],
 ): IFeatureStrategyPayload => ({
     name: strategy.name,
     title: strategy.title,
     constraints: strategy.constraints ?? [],
     parameters: strategy.parameters ?? {},
     variants: strategy.variants ?? [],
-    segments: segments.map((segment) => segment.id),
+    segments: strategy.segments ?? [],
     disabled: strategy.disabled ?? false,
 });
 

@@ -41,7 +41,8 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
 
     alertContent?: React.ReactNode;
     generalTabExtras?: React.ReactNode;
-    footer?: React.ReactNode;
+    beforeFooter?: React.ReactNode;
+    children?: React.ReactNode;
 
     onSubmit?: (event: React.FormEvent) => void;
 }
@@ -107,6 +108,22 @@ const StyledForm = styled('form')(({ theme }) => ({
     height: '100%',
 }));
 
+const StyledButtons = styled('div')(({ theme }) => ({
+    bottom: 0,
+    right: 0,
+    left: 0,
+    position: 'absolute',
+    display: 'flex',
+    gap: theme.spacing(1),
+    paddingTop: theme.spacing(3),
+    paddingRight: theme.spacing(6),
+    paddingLeft: theme.spacing(6),
+    paddingBottom: theme.spacing(6),
+    backgroundColor: theme.palette.background.paper,
+    justifyContent: 'end',
+    borderTop: `1px solid ${theme.palette.divider}`,
+}));
+
 export const StrategyFormBody = <
     T extends StrategyFormState = StrategyFormState,
 >({
@@ -117,7 +134,8 @@ export const StrategyFormBody = <
     canRenamePreexistingVariants,
     alertContent,
     generalTabExtras,
-    footer,
+    beforeFooter,
+    children,
     onSubmit,
 }: StrategyFormBodyProps<T>) => {
     const [tab, setTab] = useState(0);
@@ -298,7 +316,9 @@ export const StrategyFormBody = <
                     />
                 )}
 
-                {footer}
+                {beforeFooter}
+
+                <StyledButtons>{children}</StyledButtons>
             </StyledForm>
         </>
     );

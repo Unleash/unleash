@@ -49,22 +49,6 @@ export interface IFeatureStrategyFormProps {
     disabled?: boolean;
 }
 
-const StyledButtons = styled('div')(({ theme }) => ({
-    bottom: 0,
-    right: 0,
-    left: 0,
-    position: 'absolute',
-    display: 'flex',
-    gap: theme.spacing(1),
-    paddingTop: theme.spacing(3),
-    paddingRight: theme.spacing(6),
-    paddingLeft: theme.spacing(6),
-    paddingBottom: theme.spacing(6),
-    backgroundColor: theme.palette.background.paper,
-    justifyContent: 'end',
-    borderTop: `1px solid ${theme.palette.divider}`,
-}));
-
 const StyledAlertBox = styled(Box)(({ theme }) => ({
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),
@@ -244,7 +228,7 @@ export const FeatureStrategyForm = ({
                 </>
             }
             onSubmit={onSubmitWithValidation}
-            footer={
+            beforeFooter={
                 <>
                     <Box
                         sx={{
@@ -259,45 +243,43 @@ export const FeatureStrategyForm = ({
                     {showChangeRequestUpgrade ? (
                         <UpgradeChangeRequests />
                     ) : null}
-
-                    <StyledButtons>
-                        <PermissionButton
-                            permission={permission}
-                            projectId={feature.project}
-                            environmentId={environmentId}
-                            variant='contained'
-                            color='primary'
-                            type='submit'
-                            disabled={
-                                disabled ||
-                                loading ||
-                                !hasValidConstraints ||
-                                errors.hasFormErrors()
-                            }
-                            data-testid={STRATEGY_FORM_SUBMIT_ID}
-                        >
-                            {areChangeRequestsEnabled
-                                ? changeRequestButtonText
-                                : 'Save strategy'}
-                        </PermissionButton>
-                        <Button
-                            type='button'
-                            color='primary'
-                            onClick={onCancel ? onCancel : onDefaultCancel}
-                            disabled={loading}
-                        >
-                            Cancel
-                        </Button>
-                        <FeatureStrategyProdGuard
-                            open={showProdGuard}
-                            onClose={() => setShowProdGuard(false)}
-                            onClick={onSubmit}
-                            loading={loading}
-                            label='Save strategy'
-                        />
-                    </StyledButtons>
                 </>
             }
-        />
+        >
+            <PermissionButton
+                permission={permission}
+                projectId={feature.project}
+                environmentId={environmentId}
+                variant='contained'
+                color='primary'
+                type='submit'
+                disabled={
+                    disabled ||
+                    loading ||
+                    !hasValidConstraints ||
+                    errors.hasFormErrors()
+                }
+                data-testid={STRATEGY_FORM_SUBMIT_ID}
+            >
+                {areChangeRequestsEnabled
+                    ? changeRequestButtonText
+                    : 'Save strategy'}
+            </PermissionButton>
+            <Button
+                type='button'
+                color='primary'
+                onClick={onCancel ? onCancel : onDefaultCancel}
+                disabled={loading}
+            >
+                Cancel
+            </Button>
+            <FeatureStrategyProdGuard
+                open={showProdGuard}
+                onClose={() => setShowProdGuard(false)}
+                onClick={onSubmit}
+                loading={loading}
+                label='Save strategy'
+            />
+        </StrategyFormBody>
     );
 };

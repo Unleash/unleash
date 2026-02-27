@@ -133,7 +133,7 @@ type AddRegexValueEditorProps = {
     initialValue?: string;
     helpText?: ReactNode;
     caseInsensitive: boolean;
-    setEditingOpen: (open: boolean) => void;
+    editingOpen: boolean;
     validator: (value: string) => ConstraintValidatorOutput;
 };
 
@@ -143,7 +143,7 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
     helpText,
     caseInsensitive,
     validator,
-    setEditingOpen,
+    editingOpen,
 }) => {
     const [inputValue, setInputValue] = useState(initialValue || '');
     const [error, setError] = useState('');
@@ -179,7 +179,7 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
     const addTestStringButtonRef = useRef<HTMLButtonElement>(null);
     const arrowDownSelectionStart = useRef<number | null>(null);
 
-    const validateValue = (newValue) => {
+    const validateValue = (newValue: string): string => {
         if (newValue.length > 100) {
             return `Values cannot be longer than 100 characters (current: ${newValue.length})`;
         }
@@ -193,19 +193,19 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
     };
 
     useEffect(() => {
-        if (!open) return;
+        if (!editingOpen) return;
         // Reset state when opening the popover.
         // Reset button could be better, but we're not using it in other popoovers.
         setInputValue(initialValue || '');
         setError(validateValue(initialValue || ''));
-    }, [open, initialValue]);
+    }, [editingOpen, initialValue]);
 
     const handleOnEnterInRegexInput = () => {
         if (!inputValue?.trim()) {
             setError('Value cannot be empty or whitespace');
             return;
         }
-        // othewrise move to the test input
+        // otherwise move to the test input
         regexTestInputRefs.current[0]?.focus();
     };
 
@@ -253,6 +253,7 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                 (max, input) => Math.max(max, input.id),
                 0,
             );
+            pendingFocusIndex.current = prev.length;
             return [
                 ...prev,
                 {
@@ -265,7 +266,8 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
     };
 
     const handleAddTestStringAfter = (afterIndex: number) => {
-        pendingFocusIndex.current = afterIndex + 1;
+        const newIndex = afterIndex + 1;
+        pendingFocusIndex.current = newIndex;
         setRegexTestInputs((prev) => {
             const maxId = prev.reduce(
                 (max, input) => Math.max(max, input.id),
@@ -277,7 +279,7 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                 match: false,
             };
             const next = [...prev];
-            next.splice(afterIndex + 1, 0, newItem);
+            next.splice(newIndex, 0, newItem);
             return next;
         });
     };
@@ -440,12 +442,10 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                                                     return;
                                                 }
                                                 pendingFocusIndex.current =
-                                                    newLength === 0
-                                                        ? -1
-                                                        : Math.min(
-                                                              index,
-                                                              newLength - 1,
-                                                          );
+                                                    Math.min(
+                                                        index,
+                                                        newLength - 1,
+                                                    );
                                                 handleRemoveTestString(
                                                     regexTestInput.id,
                                                 );

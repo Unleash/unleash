@@ -32,7 +32,15 @@
         "noUnusedTemplateLiteral": "off",
         "useSingleVarDeclarator": "off",
         "noUselessElse": "off",
-        "useNodejsImportProtocol": "off"
+        "useNodejsImportProtocol": "off",
+        "noRestrictedGlobals": {
+          "level": "error",
+          "options": {
+            "deniedGlobals": {
+              "open": "Did you mean a local variable? `open` is `window.open`. Declare a local variable instead."
+            }
+          }
+        }
       },
       "suspicious": {
         "noExplicitAny": "off",

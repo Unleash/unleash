@@ -12,7 +12,7 @@ const invalidValidator =
 const defaultProps = {
     addValue: vi.fn(),
     caseInsensitive: false,
-    setEditingOpen: vi.fn(),
+    editingOpen: true,
     validator: validValidator,
 };
 

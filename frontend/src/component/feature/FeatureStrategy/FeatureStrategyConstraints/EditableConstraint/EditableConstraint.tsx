@@ -122,8 +122,6 @@ const TopRowInput: FC<{
     localConstraint: EditableConstraintType;
     validator: (value: string) => ConstraintValidationResult;
     addValuesButtonRef: React.RefObject<HTMLButtonElement>;
-    onToggleCaseSensitivity: () => void;
-    onToggleInverted: () => void;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
 }> = ({
@@ -132,8 +130,6 @@ const TopRowInput: FC<{
     localConstraint,
     validator,
     addValuesButtonRef,
-    onToggleCaseSensitivity,
-    onToggleInverted,
     setEditingOpen,
     editingOpen,
 }) => {
@@ -195,7 +191,6 @@ const TopRowInput: FC<{
 const InlineEdit: FC<{
     addValues: (value: string | string[]) => void;
     localConstraint: EditableConstraintType;
-    setEditingOpen: (open: boolean) => void;
     editingOpen: boolean;
     legalValueData?: LegalValueData;
     toggleValue: (value: string) => void;
@@ -204,7 +199,6 @@ const InlineEdit: FC<{
 }> = ({
     addValues,
     localConstraint,
-    setEditingOpen,
     legalValueData,
     toggleValue,
     clearAll,
@@ -240,7 +234,7 @@ const InlineEdit: FC<{
                 caseInsensitive={!!localConstraint.caseInsensitive}
                 addValue={addValues}
                 validator={validator}
-                setEditingOpen={setEditingOpen}
+                editingOpen={editingOpen}
                 helpText={
                     <>
                         A regex value should be a valid{' '}
@@ -262,6 +256,7 @@ const InlineEdit: FC<{
             />
         );
     }
+    return null;
 };
 
 type Props = {
@@ -407,10 +402,6 @@ export const EditableConstraint: FC<Props> = ({
                                 clearValues={clearAll}
                                 validator={validator}
                                 addValuesButtonRef={addValuesButtonRef}
-                                onToggleCaseSensitivity={
-                                    onToggleCaseSensitivity
-                                }
-                                onToggleInverted={onToggleInverted}
                                 editingOpen={editingOpen}
                                 setEditingOpen={setEditingOpen}
                             />
@@ -437,7 +428,6 @@ export const EditableConstraint: FC<Props> = ({
                 toggleValue={toggleValue}
                 addValues={addValues}
                 clearAll={clearAll}
-                setEditingOpen={setEditingOpen}
                 validator={validator}
             />
         </Container>

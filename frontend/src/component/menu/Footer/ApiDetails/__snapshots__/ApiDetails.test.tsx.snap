@@ -7,7 +7,7 @@ exports[`renders correctly with empty version 1`] = `
       title="API details"
     >
       <h2
-        class="css-wc53hr"
+        class="mui-wc53hr"
       >
         Unleash
          
@@ -23,7 +23,7 @@ exports[`renders correctly with empty version 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="css-gqbqkz"
+      class="mui-gqbqkz"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />
@@ -38,7 +38,7 @@ exports[`renders correctly with ui-config 1`] = `
       title="API details"
     >
       <h2
-        class="css-wc53hr"
+        class="mui-wc53hr"
       >
         Unleash
          
@@ -55,7 +55,7 @@ exports[`renders correctly with ui-config 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="css-gqbqkz"
+      class="mui-gqbqkz"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />
@@ -70,7 +70,7 @@ exports[`renders correctly with versionInfo 1`] = `
       title="API details"
     >
       <h2
-        class="css-wc53hr"
+        class="mui-wc53hr"
       >
         Unleash
          
@@ -91,7 +91,7 @@ exports[`renders correctly with versionInfo 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="css-gqbqkz"
+      class="mui-gqbqkz"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />
@@ -106,7 +106,7 @@ exports[`renders correctly without uiConfig 1`] = `
       title="API details"
     >
       <h2
-        class="css-wc53hr"
+        class="mui-wc53hr"
       >
         Unleash
          
@@ -120,7 +120,7 @@ exports[`renders correctly without uiConfig 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="css-gqbqkz"
+      class="mui-gqbqkz"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />

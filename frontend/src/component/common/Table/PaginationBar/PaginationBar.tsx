@@ -1,8 +1,8 @@
 import type React from 'react';
 import { Box, Typography, Button, styled } from '@mui/material';
 import { ConditionallyRender } from '../../ConditionallyRender/ConditionallyRender.tsx';
-import { ReactComponent as ArrowRight } from 'assets/icons/arrowRight.svg';
-import { ReactComponent as ArrowLeft } from 'assets/icons/arrowLeft.svg';
+import ArrowRight from 'assets/icons/arrowRight.svg?react';
+import ArrowLeft from 'assets/icons/arrowLeft.svg?react';
 import { PAGINATION_OPTIONS } from 'utils/paginationConfig';
 
 const StyledPaginationButton = styled(Button)(({ theme }) => ({

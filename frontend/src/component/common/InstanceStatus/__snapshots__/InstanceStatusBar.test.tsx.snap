@@ -2,12 +2,12 @@
 
 exports[`InstanceStatusBar should warn when the trial has churned 1`] = `
 <aside
-  class="css-163g6kh"
+  class="mui-163g6kh"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-prk1jy-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
     data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -20,7 +20,7 @@ exports[`InstanceStatusBar should warn when the trial has churned 1`] = `
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 css-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
   >
     <strong>
       Warning!
@@ -42,12 +42,12 @@ exports[`InstanceStatusBar should warn when the trial has churned 1`] = `
 
 exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
 <aside
-  class="css-163g6kh"
+  class="mui-163g6kh"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-prk1jy-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
     data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -60,7 +60,7 @@ exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 css-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
   >
     <strong>
       Warning!
@@ -82,12 +82,12 @@ exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
 
 exports[`InstanceStatusBar should warn when the trial has expired for enterprise 1`] = `
 <aside
-  class="css-163g6kh"
+  class="mui-163g6kh"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-prk1jy-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
     data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -100,7 +100,7 @@ exports[`InstanceStatusBar should warn when the trial has expired for enterprise
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 css-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
   >
     <strong>
       Warning!
@@ -122,12 +122,12 @@ exports[`InstanceStatusBar should warn when the trial has expired for enterprise
 
 exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
 <aside
-  class="css-f22srx"
+  class="mui-f22srx"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-cle2im-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-cle2im-MuiSvgIcon-root"
     data-testid="InfoOutlinedIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -137,7 +137,7 @@ exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 css-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
   >
     <strong>
       Heads up!
@@ -157,12 +157,12 @@ exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
 
 exports[`InstanceStatusBar should warn when the trial is far from expired 1`] = `
 <aside
-  class="css-f22srx"
+  class="mui-f22srx"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-cle2im-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-cle2im-MuiSvgIcon-root"
     data-testid="InfoOutlinedIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -172,7 +172,7 @@ exports[`InstanceStatusBar should warn when the trial is far from expired 1`] = 
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 css-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
   >
     <strong>
       Heads up!
@@ -187,12 +187,12 @@ exports[`InstanceStatusBar should warn when the trial is far from expired 1`] = 
 
 exports[`InstanceStatusBar should warn when trialExpiry has passed 1`] = `
 <aside
-  class="css-163g6kh"
+  class="mui-163g6kh"
   data-testid="INSTANCE_STATUS_BAR_ID"
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-prk1jy-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
     data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
@@ -205,7 +205,7 @@ exports[`InstanceStatusBar should warn when trialExpiry has passed 1`] = `
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 css-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
   >
     <strong>
       Warning!

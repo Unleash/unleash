@@ -16,7 +16,7 @@ import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import React from 'react';
 import { type ReactNode, useState } from 'react';
-import { ReactComponent as MobileGuidanceBG } from 'assets/img/mobileGuidanceBg.svg';
+import MobileGuidanceBG from 'assets/img/mobileGuidanceBg.svg?react';
 import {
     formTemplateFixedSidebarWidth,
     formTemplateFormWidth,

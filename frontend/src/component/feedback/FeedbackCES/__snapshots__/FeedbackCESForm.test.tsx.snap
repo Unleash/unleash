@@ -4,32 +4,32 @@ exports[`FeedbackCESForm 1`] = `
 <body>
   <div>
     <div
-      class="css-kaq1dv"
+      class="mui-kaq1dv"
     >
       <h1
-        class="css-tb1je1"
+        class="mui-tb1je1"
       >
         Please help us improve
       </h1>
       <form
         aria-live="polite"
-        class="css-518ok6"
+        class="mui-518ok6"
       >
         <p
-          class="css-114cem8"
+          class="mui-114cem8"
         >
           a
         </p>
         <div
-          class="css-1klv5bg"
+          class="mui-1klv5bg"
         >
           <span
-            class="css-9f5hh8"
+            class="mui-9f5hh8"
           >
             Very difficult
           </span>
           <label
-            class="css-ruqihc"
+            class="mui-ruqihc"
           >
             <input
               name="score"
@@ -41,7 +41,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-ruqihc"
+            class="mui-ruqihc"
           >
             <input
               name="score"
@@ -53,7 +53,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-ruqihc"
+            class="mui-ruqihc"
           >
             <input
               name="score"
@@ -65,7 +65,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-ruqihc"
+            class="mui-ruqihc"
           >
             <input
               name="score"
@@ -77,7 +77,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-ruqihc"
+            class="mui-ruqihc"
           >
             <input
               name="score"
@@ -89,7 +89,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-ruqihc"
+            class="mui-ruqihc"
           >
             <input
               name="score"
@@ -101,7 +101,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <label
-            class="css-ruqihc"
+            class="mui-ruqihc"
           >
             <input
               name="score"
@@ -113,7 +113,7 @@ exports[`FeedbackCESForm 1`] = `
             </span>
           </label>
           <span
-            class="css-9f5hh8"
+            class="mui-9f5hh8"
           >
             Very easy
           </span>
@@ -122,37 +122,37 @@ exports[`FeedbackCESForm 1`] = `
           hidden=""
         >
           <label
-            class="css-1lg26qb"
+            class="mui-1lg26qb"
             for="comment"
           >
             b
           </label>
           <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root mui-wb57ya-MuiFormControl-root-MuiTextField-root"
           >
             <div
-              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline css-103sgwy-MuiInputBase-root-MuiOutlinedInput-root"
+              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline mui-103sgwy-MuiInputBase-root-MuiOutlinedInput-root"
             >
               <textarea
                 aria-invalid="false"
-                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1wvz5kg-MuiInputBase-input-MuiOutlinedInput-input"
+                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline mui-1wvz5kg-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r0:"
                 rows="3"
                 style="height: 0px; overflow: hidden;"
               />
               <textarea
                 aria-hidden="true"
-                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1wvz5kg-MuiInputBase-input-MuiOutlinedInput-input"
+                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline mui-1wvz5kg-MuiInputBase-input-MuiOutlinedInput-input"
                 readonly=""
                 style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
                 tabindex="-1"
               />
               <fieldset
                 aria-hidden="true"
-                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+                class="MuiOutlinedInput-notchedOutline mui-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
                 <legend
-                  class="css-ihdtdm"
+                  class="mui-ihdtdm"
                 >
                   <span
                     class="notranslate"
@@ -165,11 +165,11 @@ exports[`FeedbackCESForm 1`] = `
           </div>
         </div>
         <div
-          class="MuiBox-root css-xi606m"
+          class="MuiBox-root mui-xi606m"
           hidden=""
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1391whm-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium mui-1391whm-MuiButtonBase-root-MuiButton-root"
             disabled=""
             tabindex="-1"
             type="submit"
@@ -182,7 +182,7 @@ exports[`FeedbackCESForm 1`] = `
     <div
       aria-atomic="true"
       aria-live="polite"
-      class="css-gqbqkz"
+      class="mui-gqbqkz"
       data-testid="ANNOUNCER_ELEMENT_TEST_ID"
       role="status"
     />

@@ -1,5 +1,5 @@
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
+import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import { styled } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Card } from 'component/common/Card/Card';

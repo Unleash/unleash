@@ -1,5 +1,5 @@
 import { type FC, useState } from 'react';
-import { ReactComponent as ImportSvg } from 'assets/icons/import.svg';
+import ImportSvg from 'assets/icons/import.svg?react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { UPDATE_FEATURE } from '@server/types/permissions';

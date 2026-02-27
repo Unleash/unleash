@@ -1,6 +1,7 @@
 import { Box, Button, Dialog, styled, Typography } from '@mui/material';
-import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
-import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
+import type { FC } from 'react';
+import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
+import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import { ThemeMode } from '../common/ThemeMode/ThemeMode.tsx';
 import onboardingConcepts from 'assets/img/onboardingConcepts.png';
 import { ScreenReaderOnly } from '../common/ScreenReaderOnly/ScreenReaderOnly.tsx';

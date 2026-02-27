@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import type {
     IFeatureStrategyParameters,
+    IStrategy,
     StrategyFormState,
 } from 'interfaces/strategy';
 import produce from 'immer';
@@ -19,7 +20,6 @@ import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/Featur
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
 import type { ISegment } from 'interfaces/segment';
 import type { IFormErrors } from 'hooks/useFormErrors';
-import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle.tsx';
 import { formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
@@ -31,6 +31,7 @@ import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategy
 export interface StrategyFormBodyProps<T extends StrategyFormState> {
     strategy: T;
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
+    strategyDefinition: IStrategy;
     errors: IFormErrors;
 
     validateParameter?: (
@@ -129,6 +130,7 @@ export const StrategyFormBody = <
 >({
     strategy,
     setStrategy,
+    strategyDefinition,
     errors,
     validateParameter,
     canRenamePreexistingVariants,
@@ -140,7 +142,6 @@ export const StrategyFormBody = <
 }: StrategyFormBodyProps<T>) => {
     const [tab, setTab] = useState(0);
     const strategyName = strategy?.name || strategy?.strategyName;
-    const { strategyDefinition } = useStrategy(strategyName);
     const { segments: assignableSegments = [] } = useAssignableSegments();
 
     const { segments: allSegments } = useSegments();
@@ -216,10 +217,6 @@ export const StrategyFormBody = <
             title,
         }));
     };
-
-    if (!strategyDefinition) {
-        return null;
-    }
 
     return (
         <>

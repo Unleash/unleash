@@ -10,6 +10,7 @@ import {
     featureStrategyHelp,
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
 import { LegacyReleasePlanTemplateAddStrategyForm } from './LegacyReleasePlanTemplateAddStrategyForm.tsx';
 
@@ -34,8 +35,11 @@ const NewReleasePlanTemplateAddStrategyForm = ({
     });
     const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
     const errors = useFormErrors();
+    const { strategyDefinition } = useStrategy(
+        strategy.name || strategy.strategyName,
+    );
 
-    if (!strategy || !currentStrategy) {
+    if (!strategy || !currentStrategy || !strategyDefinition) {
         return null;
     }
 
@@ -50,6 +54,7 @@ const NewReleasePlanTemplateAddStrategyForm = ({
             <StrategyFormBody
                 strategy={currentStrategy}
                 setStrategy={setCurrentStrategy}
+                strategyDefinition={strategyDefinition}
                 errors={errors}
                 canRenamePreexistingVariants
                 onSubmit={(e) => {

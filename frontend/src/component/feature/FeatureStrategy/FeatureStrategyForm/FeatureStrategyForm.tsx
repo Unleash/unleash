@@ -182,6 +182,7 @@ export const FeatureStrategyForm = ({
         <StrategyFormBody
             strategy={strategy}
             setStrategy={setStrategy}
+            strategyDefinition={strategyDefinition}
             errors={errors}
             validateParameter={validateParameter}
             canRenamePreexistingVariants={canRenamePreexistingVariants}

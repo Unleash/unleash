@@ -76,7 +76,8 @@ export type IFlagKey =
     | 'regexConstraintOperator'
     | 'signupDialog'
     | 'strategyFormConsolidation'
-    | 'updateMilestoneStrategy';
+    | 'updateMilestoneStrategy'
+    | 'enterpriseEdgeTokensList';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -343,6 +344,10 @@ const flags: IFlags = {
     ),
     strategyFormConsolidation: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_STRATEGY_FORM_CONSOLIDATION,
+        false,
+    ),
+    enterpriseEdgeTokensList: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_EDGE_TOKENS_LIST,
         false,
     ),
 };

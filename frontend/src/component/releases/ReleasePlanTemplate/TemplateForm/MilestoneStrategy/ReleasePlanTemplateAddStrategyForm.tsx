@@ -39,7 +39,7 @@ const NewReleasePlanTemplateAddStrategyForm = ({
         strategy.name || strategy.strategyName,
     );
 
-    if (!strategy || !currentStrategy || !strategyDefinition) {
+    if (!strategyDefinition) {
         return null;
     }
 

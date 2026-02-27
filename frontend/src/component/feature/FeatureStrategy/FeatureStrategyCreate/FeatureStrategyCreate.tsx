@@ -239,7 +239,6 @@ const NewFeatureStrategyCreate = () => {
 
 export const FeatureStrategyCreate = () => {
     const consolidate = useUiFlag('strategyFormConsolidation');
-    console.log('flag is ', consolidate);
     return consolidate ? (
         <NewFeatureStrategyCreate />
     ) : (

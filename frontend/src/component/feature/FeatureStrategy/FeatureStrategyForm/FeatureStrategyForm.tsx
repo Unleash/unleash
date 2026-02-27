@@ -10,7 +10,7 @@ import type {
 import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled.tsx';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -92,8 +92,10 @@ export const FeatureStrategyForm = ({
     );
 
     const { data } = usePendingChangeRequests(feature.project);
-    const { changeRequestInReviewOrApproved, alert } =
-        useChangeRequestInReviewWarning(data);
+    const {
+        changeRequestInReviewOrApproved,
+        alert: changeRequestInReviewOrApprovedAlert,
+    } = useChangeRequestInReviewWarning(data);
 
     const hasChangeRequestInReviewForEnvironment =
         changeRequestInReviewOrApproved(environmentId || '');
@@ -178,6 +180,12 @@ export const FeatureStrategyForm = ({
         }
     };
 
+    const changeRequestAlert = hasChangeRequestInReviewForEnvironment ? (
+        changeRequestInReviewOrApprovedAlert
+    ) : areChangeRequestsEnabled ? (
+        <FeatureStrategyChangeRequestAlert environment={environmentId} />
+    ) : null;
+
     return (
         <StrategyFormBody
             strategy={strategy}
@@ -187,22 +195,9 @@ export const FeatureStrategyForm = ({
             validateParameter={validateParameter}
             canRenamePreexistingVariants={canRenamePreexistingVariants}
             alertContent={
-                <StyledAlertBox>
-                    <ConditionallyRender
-                        condition={hasChangeRequestInReviewForEnvironment}
-                        show={alert}
-                        elseShow={
-                            <ConditionallyRender
-                                condition={areChangeRequestsEnabled}
-                                show={
-                                    <FeatureStrategyChangeRequestAlert
-                                        environment={environmentId}
-                                    />
-                                }
-                            />
-                        }
-                    />
-                </StyledAlertBox>
+                changeRequestAlert ? (
+                    <StyledAlertBox>{changeRequestAlert}</StyledAlertBox>
+                ) : null
             }
             generalTabExtras={
                 <>
@@ -216,16 +211,13 @@ export const FeatureStrategyForm = ({
                         }
                     />
 
-                    <ConditionallyRender
-                        condition={!areChangeRequestsEnabled}
-                        show={
-                            <FeatureStrategyEnabled
-                                projectId={feature.project}
-                                featureId={feature.name}
-                                environmentId={environmentId}
-                            />
-                        }
-                    />
+                    {areChangeRequestsEnabled ? null : (
+                        <FeatureStrategyEnabled
+                            projectId={feature.project}
+                            featureId={feature.name}
+                            environmentId={environmentId}
+                        />
+                    )}
                 </>
             }
             onSubmit={onSubmitWithValidation}

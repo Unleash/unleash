@@ -29,7 +29,6 @@ import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 
-import produce from 'immer';
 import { StrategyFormBody } from './StrategyFormBody.tsx';
 
 export interface IFeatureStrategyFormProps {
@@ -207,22 +206,12 @@ export const FeatureStrategyForm = ({
         }
     };
 
-    const updateParameter = (name: string, value: string) => {
-        setStrategy(
-            produce((draft) => {
-                draft.parameters = draft.parameters ?? {};
-                draft.parameters[name] = value;
-            }),
-        );
-        validateParameter(name, value);
-    };
-
     return (
         <StrategyFormBody
             strategy={strategy}
             setStrategy={setStrategy}
             errors={errors}
-            updateParameter={updateParameter}
+            validateParameter={validateParameter}
             canRenamePreexistingVariants={canRenamePreexistingVariants}
             alertContent={
                 <StyledAlertBox>

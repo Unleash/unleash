@@ -9,7 +9,11 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import type { StrategyFormState } from 'interfaces/strategy';
+import type {
+    IFeatureStrategyParameters,
+    StrategyFormState,
+} from 'interfaces/strategy';
+import produce from 'immer';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';
 import { FeatureStrategyConstraints } from '../FeatureStrategyConstraints/FeatureStrategyConstraints.tsx';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegment';
@@ -29,7 +33,10 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
     errors: IFormErrors;
 
-    updateParameter: (name: string, value: string) => void;
+    validateParameter?: (
+        name: string,
+        value: IFeatureStrategyParameters[string],
+    ) => void;
     canRenamePreexistingVariants?: boolean;
 
     alertContent?: React.ReactNode;
@@ -93,7 +100,7 @@ export const StrategyFormBody = <
     strategy,
     setStrategy,
     errors,
-    updateParameter,
+    validateParameter,
     canRenamePreexistingVariants,
     alertContent,
     generalTabExtras,
@@ -159,6 +166,16 @@ export const StrategyFormBody = <
         const segmentCount = segments.length || 0;
 
         return constraintCount + segmentCount;
+    };
+
+    const updateParameter = (name: string, value: string) => {
+        setStrategy(
+            produce((draft) => {
+                draft.parameters = draft.parameters ?? {};
+                draft.parameters[name] = value;
+            }),
+        );
+        validateParameter?.(name, value);
     };
 
     const handleTitleChange = (title: string) => {

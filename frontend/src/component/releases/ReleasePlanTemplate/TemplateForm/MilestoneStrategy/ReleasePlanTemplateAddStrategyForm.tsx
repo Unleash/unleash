@@ -3,7 +3,6 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import { useState } from 'react';
 import { useFormErrors } from 'hooks/useFormErrors';
-import produce from 'immer';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import {
     featureStrategyDocsLink,
@@ -69,18 +68,6 @@ const NewReleasePlanTemplateAddStrategyForm = ({
         return null;
     }
 
-    const updateParameter = (name: string, value: string) => {
-        setCurrentStrategy(
-            produce((draft) => {
-                if (!draft) {
-                    return;
-                }
-                draft.parameters = draft.parameters ?? {};
-                draft.parameters[name] = value;
-            }),
-        );
-    };
-
     return (
         <FormTemplate
             modal
@@ -93,7 +80,6 @@ const NewReleasePlanTemplateAddStrategyForm = ({
                 strategy={currentStrategy}
                 setStrategy={setCurrentStrategy}
                 errors={errors}
-                updateParameter={updateParameter}
                 canRenamePreexistingVariants
                 renderContentWrapper={(tabContent) => (
                     <StyledContentDiv>{tabContent}</StyledContentDiv>

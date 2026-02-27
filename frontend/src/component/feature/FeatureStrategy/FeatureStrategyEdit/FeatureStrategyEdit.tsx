@@ -13,7 +13,7 @@ import type {
     IStrategy,
 } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import type { ISegment } from 'interfaces/segment';
+
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
@@ -315,19 +315,6 @@ export const createStrategyPayload = (
     parameters: strategy.parameters ?? {},
     variants: strategy.variants ?? [],
     segments: strategy.segments ?? [],
-    disabled: strategy.disabled ?? false,
-});
-
-export const legacyCreateStrategyPayload = (
-    strategy: Partial<IFeatureStrategy>,
-    segments: ISegment[],
-): IFeatureStrategyPayload => ({
-    name: strategy.name,
-    title: strategy.title,
-    constraints: strategy.constraints ?? [],
-    parameters: strategy.parameters ?? {},
-    variants: strategy.variants ?? [],
-    segments: segments.map((segment) => segment.id),
     disabled: strategy.disabled ?? false,
 });
 

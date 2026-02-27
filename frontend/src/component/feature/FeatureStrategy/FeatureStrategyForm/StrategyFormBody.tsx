@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     Alert,
     Tab,
@@ -142,29 +142,33 @@ export const StrategyFormBody = <T extends StrategyFormState>({
     const strategyName = strategy?.name || strategy?.strategyName;
     const { segments: assignableSegments = [] } = useAssignableSegments();
 
-    const { segments: allSegments } = useSegments();
-    const [segments, setSegments] = useState<ISegment[]>([]);
+    const { segments: allSegments = [] } = useSegments();
 
-    useEffect(() => {
-        if (allSegments) {
-            const segmentMap = new Map(allSegments.map((s) => [s.id, s]));
-            setSegments(
-                (strategy.segments || [])
-                    .map((id) => segmentMap.get(id))
-                    .filter((s): s is ISegment => Boolean(s)),
-            );
-        }
-    }, []);
+    const segmentMap = useMemo(
+        () => new Map(allSegments.map((s) => [s.id, s])),
+        [allSegments],
+    );
 
-    useEffect(() => {
-        setStrategy((prev) => ({
-            ...prev,
-            segments: segments.map((s) => s.id),
-        }));
-    }, [segments]);
+    const resolveSegments = (ids: number[]) =>
+        ids
+            .map((id) => segmentMap.get(id))
+            .filter((s): s is ISegment => Boolean(s));
+
+    const segments = resolveSegments(strategy.segments || []);
+
+    const setSegments: React.Dispatch<React.SetStateAction<ISegment[]>> = (
+        action,
+    ) => {
+        setStrategy((prev) => {
+            const prevSegments = resolveSegments(prev.segments || []);
+            const next =
+                typeof action === 'function' ? action(prevSegments) : action;
+            return { ...prev, segments: next.map((s) => s.id) };
+        });
+    };
 
     const showSegmentSelector =
-        assignableSegments.length > 0 || segments.length > 0;
+        assignableSegments.length > 0 || (strategy.segments?.length ?? 0) > 0;
 
     const stickiness =
         strategy?.parameters && 'stickiness' in strategy?.parameters
@@ -188,13 +192,16 @@ export const StrategyFormBody = <T extends StrategyFormState>({
         strategy.parameters && 'stickiness' in strategy.parameters,
     );
 
-    const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
+    const handleTabChange = (
+        _event: React.ChangeEvent<{}>,
+        newValue: number,
+    ) => {
         setTab(newValue);
     };
 
     const getTargetingCount = () => {
         const constraintCount = strategy.constraints?.length || 0;
-        const segmentCount = segments.length || 0;
+        const segmentCount = strategy.segments?.length || 0;
 
         return constraintCount + segmentCount;
     };
@@ -226,7 +233,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
 
             {alertContent}
 
-            <StyledTabs value={tab} onChange={handleChange}>
+            <StyledTabs value={tab} onChange={handleTabChange}>
                 <StyledTab label='General' />
                 <Tab
                     data-testid='STRATEGY_TARGETING_TAB'

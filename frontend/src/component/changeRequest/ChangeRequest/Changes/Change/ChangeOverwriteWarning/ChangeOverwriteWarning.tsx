@@ -1,6 +1,7 @@
 import type {
     ChangeRequestState,
     IChangeRequestPatchVariant,
+    IChangeRequestUpdateMilestoneStrategy,
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
@@ -28,7 +29,9 @@ type ChangeData =
     | {
           changeType: 'strategy';
           current?: IFeatureStrategy;
-          change: IChangeRequestUpdateStrategy;
+          change:
+              | IChangeRequestUpdateStrategy
+              | IChangeRequestUpdateMilestoneStrategy;
       };
 
 export const ChangeOverwriteWarning: React.FC<{

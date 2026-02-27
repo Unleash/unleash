@@ -177,7 +177,8 @@ export const FeatureChange: FC<{
 
                 {change.action === 'addStrategy' ||
                 change.action === 'deleteStrategy' ||
-                change.action === 'updateStrategy' ? (
+                change.action === 'updateStrategy' ||
+                change.action === 'updateMilestoneStrategy' ? (
                     <StrategyChange
                         actions={actions}
                         isDefaultChange={isDefaultChange}

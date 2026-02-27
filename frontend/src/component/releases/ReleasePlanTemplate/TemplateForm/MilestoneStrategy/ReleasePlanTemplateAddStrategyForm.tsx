@@ -94,12 +94,6 @@ const NewReleasePlanTemplateAddStrategyForm = ({
                 setStrategy={setCurrentStrategy}
                 errors={errors}
                 updateParameter={updateParameter}
-                onTitleChange={(title) => {
-                    setCurrentStrategy((prev) => ({
-                        ...prev,
-                        title,
-                    }));
-                }}
                 canRenamePreexistingVariants
                 renderContentWrapper={(tabContent) => (
                     <StyledContentDiv>{tabContent}</StyledContentDiv>

@@ -30,7 +30,6 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
     errors: IFormErrors;
 
     updateParameter: (name: string, value: string) => void;
-    onTitleChange?: (title: string) => void;
     canRenamePreexistingVariants?: boolean;
 
     alertContent?: React.ReactNode;
@@ -95,7 +94,6 @@ export const StrategyFormBody = <
     setStrategy,
     errors,
     updateParameter,
-    onTitleChange,
     canRenamePreexistingVariants,
     alertContent,
     generalTabExtras,
@@ -163,14 +161,12 @@ export const StrategyFormBody = <
         return constraintCount + segmentCount;
     };
 
-    const defaultTitleChange = (title: string) => {
+    const handleTitleChange = (title: string) => {
         setStrategy((prev) => ({
             ...prev,
             title,
         }));
     };
-
-    const handleTitleChange = onTitleChange ?? defaultTitleChange;
 
     if (!strategyDefinition) {
         return null;

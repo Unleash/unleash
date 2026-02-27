@@ -185,6 +185,7 @@ export interface IUnleashOptions {
     checkDbOnReady?: boolean;
     edgeMasterKey?: string;
     edgeClientSecret?: string;
+    clientApplicationSeenAtUpdateIntervalSeconds?: number;
 }
 
 export interface IEmailOption {
@@ -315,4 +316,5 @@ export interface IUnleashConfig {
     checkDbOnReady?: boolean;
     edgeMasterKey?: string;
     edgeClientSecret?: string;
+    clientApplicationSeenAtUpdateIntervalSeconds: number;
 }

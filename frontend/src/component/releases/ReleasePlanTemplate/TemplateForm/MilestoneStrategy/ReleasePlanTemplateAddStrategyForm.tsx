@@ -34,7 +34,9 @@ const NewReleasePlanTemplateAddStrategyForm = ({
         ...strategy,
         name: normalizedStrategyName || '',
     });
-    const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
+    const hasValidConstraints = useConstraintsValidation(
+        currentStrategy?.constraints,
+    );
     const errors = useFormErrors();
     const { strategyDefinition } = useStrategy(normalizedStrategyName);
 

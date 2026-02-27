@@ -7,15 +7,11 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import { WelcomeDialog } from './WelcomeDialog.tsx';
-import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 import { MyProjects } from './MyProjects.tsx';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
-import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { useDashboardState } from './useDashboardState.ts';
 import { MyFlags } from './MyFlags.tsx';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -28,6 +24,7 @@ import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
 import { Link } from 'react-router-dom';
 import { ReleaseTemplatesBanner } from 'component/common/ReleaseTemplatesBanner/ReleaseTemplatesBanner';
+import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -274,20 +271,12 @@ const ProjectPanel = () => {
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
     const { trackEvent } = usePlausibleTracker();
-    const { setSplashSeen } = useSplashApi();
-    const { splash } = useAuthSplash();
+    const { setWelcomeDialog } = useWelcomeDialogContext();
     const { isOss, isEnterprise } = useUiConfig();
     const gtmReleaseManagementEnabled = useUiFlag('gtmReleaseManagement');
     const name = user?.name || '';
 
     usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
-
-    const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
-        'open' | 'closed'
-    >(
-        'welcome-dialog:v1',
-        splash?.personalDashboardKeyConcepts ? 'closed' : 'open',
-    );
 
     useEffect(() => {
         trackEvent('personal-dashboard', {
@@ -333,14 +322,6 @@ export const PersonalDashboard = () => {
             <ProjectPanel />
 
             <FlagPanel />
-
-            <WelcomeDialog
-                open={welcomeDialog === 'open'}
-                onClose={() => {
-                    setSplashSeen('personalDashboardKeyConcepts');
-                    setWelcomeDialog('closed');
-                }}
-            />
         </MainContent>
     );
 };

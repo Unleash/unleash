@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.4.3] - 2026-02-27
+
+### Bug Fixes
+
+- Missing strategy name in editing release plan strategies ([#11416](https://github.com/Unleash/unleash/issues/11416))
+
+
+### Miscellaneous Tasks
+
+- Export createReleasePlanMilestoneStrategyService  ([#11407](https://github.com/Unleash/unleash/issues/11407))
+
+- Virtualize dashboard lists ([#11403](https://github.com/Unleash/unleash/issues/11403))
+
+- Debug undefined col error in getProfile ([#11414](https://github.com/Unleash/unleash/issues/11414))
+
+- Remove unused project id prop ([#11412](https://github.com/Unleash/unleash/issues/11412))
+
+- Bump biome to 2.4.5 ([#11417](https://github.com/Unleash/unleash/issues/11417))
+
+
+### Refactor
+
+- Move old implementations into legacy files; remove flag ([#11411](https://github.com/Unleash/unleash/issues/11411))
+
+
 ## [7.4.2] - 2026-02-25
 
 ### Bug Fixes

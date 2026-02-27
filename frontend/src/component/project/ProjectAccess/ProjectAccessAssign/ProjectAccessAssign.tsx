@@ -7,7 +7,6 @@ import {
     Chip,
     styled,
     TextField,
-    Tooltip,
 } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -278,12 +277,6 @@ export const ProjectAccessAssign = ({
 --data-raw '${JSON.stringify(payload, undefined, 2)}'`;
     };
 
-    const createRootGroupWarning = (group?: IGroup): string | undefined => {
-        if (group && Boolean(group.rootRole)) {
-            return 'This group has a root role associated with it. Groups with a root role association cannot be assigned to projects, and users in this group already have the role applied globally.';
-        }
-    };
-
     const renderOption = (
         { key, ...props }: React.HTMLAttributes<HTMLLIElement> & { key?: any },
         option: IAccessOption,
@@ -297,43 +290,35 @@ export const ProjectAccessAssign = ({
         }
         return (
             <li key={key} {...props}>
-                <Tooltip title={createRootGroupWarning(optionGroup)}>
-                    <>
-                        <Checkbox
-                            icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
-                            checkedIcon={<CheckBoxIcon fontSize='small' />}
-                            style={{ marginRight: 8 }}
-                            checked={selected}
-                        />
-                        <ConditionallyRender
-                            condition={option.type === ENTITY_TYPE.GROUP}
-                            show={
-                                <span>
-                                    <StyledGroupOption>
-                                        <span>{optionGroup?.name}</span>
-                                        <span>
-                                            {optionGroup?.userCount} users
-                                        </span>
-                                    </StyledGroupOption>
-                                </span>
-                            }
-                            elseShow={
-                                <StyledUserOption>
-                                    <span>
-                                        {optionUser?.name ||
-                                            optionUser?.username}
-                                    </span>
-                                    <span>
-                                        {optionUser?.name &&
-                                        optionUser?.username
-                                            ? optionUser?.username
-                                            : optionUser?.email}
-                                    </span>
-                                </StyledUserOption>
-                            }
-                        />
-                    </>
-                </Tooltip>
+                <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
+                    checkedIcon={<CheckBoxIcon fontSize='small' />}
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                />
+                <ConditionallyRender
+                    condition={option.type === ENTITY_TYPE.GROUP}
+                    show={
+                        <span>
+                            <StyledGroupOption>
+                                <span>{optionGroup?.name}</span>
+                                <span>{optionGroup?.userCount} users</span>
+                            </StyledGroupOption>
+                        </span>
+                    }
+                    elseShow={
+                        <StyledUserOption>
+                            <span>
+                                {optionUser?.name || optionUser?.username}
+                            </span>
+                            <span>
+                                {optionUser?.name && optionUser?.username
+                                    ? optionUser?.username
+                                    : optionUser?.email}
+                            </span>
+                        </StyledUserOption>
+                    }
+                />
             </li>
         );
     };
@@ -387,14 +372,6 @@ export const ProjectAccessAssign = ({
                                 disableCloseOnSelect
                                 disabled={edit}
                                 value={selectedOptions}
-                                getOptionDisabled={(option) => {
-                                    if (option.type === ENTITY_TYPE.GROUP) {
-                                        const optionGroup =
-                                            option.entity as IGroup;
-                                        return Boolean(optionGroup.rootRole);
-                                    }
-                                    return false;
-                                }}
                                 onChange={(event, newValue, reason) => {
                                     if (
                                         event.type === 'keydown' &&

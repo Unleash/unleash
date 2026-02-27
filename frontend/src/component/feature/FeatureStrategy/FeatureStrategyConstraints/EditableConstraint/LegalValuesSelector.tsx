@@ -16,8 +16,8 @@ import type { ILegalValue } from 'interfaces/context';
 import React from 'react';
 
 const StyledValuesContainer = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+    display: 'flex',
+    flexWrap: 'wrap',
     gap: theme.spacing(1),
     maxHeight: '378px',
     overflow: 'auto',

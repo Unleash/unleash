@@ -23,6 +23,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRecordUiErrorApi';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 import { UnleashFlagProvider } from 'component/providers/UnleashFlagProvider/UnleashFlagProvider';
+import { WelcomeDialogProvider } from 'component/personalDashboard/WelcomeDialogProvider.tsx';
 
 window.global ||= window;
 
@@ -60,10 +61,12 @@ const ApplicationRoot = () => {
                                                 <FeedbackCESProvider>
                                                     <StickyProvider>
                                                         <HighlightProvider>
-                                                            <InstanceStatus>
-                                                                <ScrollTop />
-                                                                <App />
-                                                            </InstanceStatus>
+                                                            <WelcomeDialogProvider>
+                                                                <InstanceStatus>
+                                                                    <ScrollTop />
+                                                                    <App />
+                                                                </InstanceStatus>
+                                                            </WelcomeDialogProvider>
                                                         </HighlightProvider>
                                                     </StickyProvider>
                                                 </FeedbackCESProvider>

@@ -125,9 +125,7 @@ const StyledButtons = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-export const StrategyFormBody = <
-    T extends StrategyFormState = StrategyFormState,
->({
+export const StrategyFormBody = <T extends StrategyFormState>({
     strategy,
     setStrategy,
     strategyDefinition,

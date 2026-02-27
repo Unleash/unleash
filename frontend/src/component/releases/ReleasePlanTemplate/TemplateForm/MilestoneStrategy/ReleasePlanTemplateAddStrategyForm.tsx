@@ -29,15 +29,14 @@ const NewReleasePlanTemplateAddStrategyForm = ({
     onAddUpdateStrategy,
     editMode,
 }: IReleasePlanTemplateAddStrategyFormProps) => {
+    const normalizedStrategyName = strategy.name || strategy.strategyName;
     const [currentStrategy, setCurrentStrategy] = useState({
         ...strategy,
-        name: strategy.name || strategy.strategyName || '',
+        name: normalizedStrategyName || '',
     });
     const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
     const errors = useFormErrors();
-    const { strategyDefinition } = useStrategy(
-        strategy.name || strategy.strategyName,
-    );
+    const { strategyDefinition } = useStrategy(normalizedStrategyName);
 
     if (!strategyDefinition) {
         return null;

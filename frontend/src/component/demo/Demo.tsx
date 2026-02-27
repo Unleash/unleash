@@ -13,6 +13,7 @@ import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { useNavigate } from 'react-router-dom';
+import { DemoNotice } from './DemoNotice.tsx';
 
 const defaultProgress = {
     welcomeOpen: true,
@@ -91,15 +92,15 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                 step: 'welcome',
             },
         });
-
-        if (interactiveDemoKillSwitch) {
-            navigate(`/projects/${DEMO_PROJECT}?sort=name`);
-        }
     };
 
     const onWelcomeStart = () => {
         setWelcomeOpen(false);
-        onStart();
+        if (interactiveDemoKillSwitch) {
+            navigate(`/projects/${DEMO_PROJECT}?sort=name`);
+        } else {
+            onStart();
+        }
         trackEvent('demo-start');
     };
 
@@ -110,13 +111,21 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
             <DemoBanner />
             {children}
             {interactiveDemoKillSwitch ? (
-                welcomeOpen && (
-                    <DemoDialogWelcome
-                        open={welcomeOpen}
-                        onClose={onWelcomeClose}
-                        onStart={onWelcomeStart}
+                <>
+                    {welcomeOpen && (
+                        <DemoDialogWelcome
+                            open={welcomeOpen}
+                            onClose={onWelcomeClose}
+                            onStart={onWelcomeStart}
+                        />
+                    )}
+                    <DemoNotice
+                        onClick={() => {
+                            setWelcomeOpen(true);
+                            trackEvent('demo-view-demo-link');
+                        }}
                     />
-                )
+                </>
             ) : (
                 <ConditionallyRender
                     condition={!isSmallScreen}

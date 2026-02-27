@@ -1,6 +1,6 @@
 import { PersonalDashboard } from './PersonalDashboard.tsx';
 import { render } from 'utils/testRenderer';
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { WelcomeDialogProvider } from './WelcomeDialogProvider.tsx';
 

@@ -38,6 +38,7 @@ export type CustomEvents =
     | 'demo-start-topic'
     | 'demo-ask-questions'
     | 'demo-open-demo-web'
+    | 'demo-open-walkthrough-guide'
     | 'context-usage'
     | 'segment-usage'
     | 'strategy-add'

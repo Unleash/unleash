@@ -12,8 +12,8 @@ const StyledDemoPane = styled('div')(({ theme }) => ({
     alignItems: 'center',
     backgroundColor: theme.palette.neutral.light,
     borderRadius: theme.shape.borderRadiusLarge,
-    padding: theme.spacing(4),
-    margin: theme.spacing(4, 0),
+    padding: theme.spacing(2),
+    margin: theme.spacing(2, 0),
 }));
 
 const StyledScanMessage = styled(Typography)(({ theme }) => ({
@@ -28,8 +28,8 @@ const StyledQRCode = styled('img')(({ theme }) => ({
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
-    margin: theme.spacing(4, 0),
-    padding: theme.spacing(0, 4),
+    margin: theme.spacing(2, 0),
+    padding: theme.spacing(0, 2),
     width: '100%',
     color: theme.palette.text.secondary,
 }));
@@ -73,9 +73,30 @@ export const DemoDialogWelcome = ({
         <DemoDialog open={open} onClose={onClose} preventCloseOnBackdropClick>
             <DemoDialog.Header>Explore Unleash</DemoDialog.Header>
             <Typography color='textSecondary' sx={{ mt: 2 }}>
-                You can explore Unleash on your own, however for the best
-                experience it's recommended you follow our interactive demo. To
-                get started, you will need to open the demo website below.
+                {interactiveDemoKillSwitch ? (
+                    <>
+                        You can explore Unleash on your own, or follow our{' '}
+                        <StyledLink
+                            href='https://docs.getunleash.io/guides/demo-walkthrough'
+                            target='_blank'
+                            rel='noreferrer'
+                            onClick={() => {
+                                trackEvent('demo-open-walkthrough-guide');
+                            }}
+                        >
+                            demo walkthrough guide
+                        </StyledLink>{' '}
+                        alongside to get the most out of it. To get started, you
+                        will need to open the demo website below.
+                    </>
+                ) : (
+                    <>
+                        You can explore Unleash on your own, however for the
+                        best experience it's recommended you follow our
+                        interactive demo. To get started, you will need to open
+                        the demo website below.
+                    </>
+                )}
             </Typography>
             <StyledDemoPane>
                 <StyledScanMessage>
@@ -104,33 +125,53 @@ export const DemoDialogWelcome = ({
                 </Typography>
             </StyledDemoPane>
             {interactiveDemoKillSwitch && (
-                <Typography color='textSecondary' sx={{ mb: 4 }}>
-                    The demo website can be controlled using the flags in the
-                    demoApp project. You can find your userId on the demo page,
-                    so you can experiment with targeting rules and see the
-                    results in real time!
-                </Typography>
+                <>
+                    <Typography color='textSecondary' sx={{ mb: 1 }}>
+                        The demo website can be controlled using the flags in
+                        the demoApp project.
+                    </Typography>
+                    <Typography color='textSecondary' sx={{ mb: 2 }}>
+                        Need guidance?{' '}
+                        <StyledLink
+                            href='https://docs.getunleash.io/guides/demo-walkthrough'
+                            target='_blank'
+                            rel='noreferrer'
+                            onClick={() => {
+                                trackEvent('demo-open-walkthrough-guide');
+                            }}
+                        >
+                            Follow the demo walkthrough →
+                        </StyledLink>
+                    </Typography>
+                </>
             )}
             <StyledButtons>
-                <StyledButton
-                    variant={
-                        interactiveDemoKillSwitch ? 'contained' : 'outlined'
-                    }
-                    color='primary'
-                    onClick={onClose}
-                >
-                    Explore{' '}
-                    {interactiveDemoKillSwitch ? 'Unleash' : 'on your own'}
-                </StyledButton>
-                {!interactiveDemoKillSwitch && (
+                {interactiveDemoKillSwitch ? (
                     <StyledButton
                         variant='contained'
                         color='primary'
                         onClick={onStart}
-                        data-testid='DEMO_START_BUTTON'
                     >
-                        Go for a guided tour
+                        Explore Unleash
                     </StyledButton>
+                ) : (
+                    <>
+                        <StyledButton
+                            variant='outlined'
+                            color='primary'
+                            onClick={onClose}
+                        >
+                            Explore on your own
+                        </StyledButton>
+                        <StyledButton
+                            variant='contained'
+                            color='primary'
+                            onClick={onStart}
+                            data-testid='DEMO_START_BUTTON'
+                        >
+                            Go for a guided tour
+                        </StyledButton>
+                    </>
                 )}
             </StyledButtons>
         </DemoDialog>

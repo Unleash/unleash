@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import type { Link as RouterLink } from 'react-router-dom';
 import OpenInNew from '@mui/icons-material/OpenInNew';
-import { ReactComponent as UnleashLogo } from 'assets/img/logoWithWhiteText.svg';
+import UnleashLogo from 'assets/img/logoWithWhiteText.svg?react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 

@@ -5,8 +5,8 @@ import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import Add from '@mui/icons-material/Add';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
-import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
+import ProPlanIcon from 'assets/icons/pro-enterprise-feature-badge.svg?react';
+import ProPlanIconLight from 'assets/icons/pro-enterprise-feature-badge-light.svg?react';
 import { CreateProjectDialog } from '../../Project/CreateProject/NewCreateProjectForm/CreateProjectDialog.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

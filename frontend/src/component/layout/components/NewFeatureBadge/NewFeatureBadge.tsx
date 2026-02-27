@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 
-import { ReactComponent as NewFeatureIcon } from 'assets/icons/new-feature-badge.svg';
+import NewFeatureIcon from 'assets/icons/new-feature-badge.svg?react';
 
 const StyledBadgeContainer = styled('span')({
     width: '24px',

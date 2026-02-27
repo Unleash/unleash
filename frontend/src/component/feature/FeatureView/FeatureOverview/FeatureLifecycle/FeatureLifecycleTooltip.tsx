@@ -3,7 +3,7 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import type * as React from 'react';
 import type { FC } from 'react';
 import CloudCircle from '@mui/icons-material/CloudCircle';
-import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
+import UsageRate from 'assets/icons/usage-rate.svg?react';
 import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen.tsx';

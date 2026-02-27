@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ReactComponent as ProjectStatusSvg } from 'assets/icons/projectStatus.svg';
+import ProjectStatusSvg from 'assets/icons/projectStatus.svg?react';
 import {
     StyledDiv,
     StyledFavoriteIconButton,

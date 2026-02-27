@@ -1,3 +1,4 @@
+// todo: delete this file (and its dependents) with flag `strategyFormConsoliditon`
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

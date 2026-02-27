@@ -1,14 +1,15 @@
 import { createTestConfig } from '../../../test/config/test-config.js';
 import { createFakeReleasePlanMilestoneStrategyService } from './createReleasePlanMilestoneStrategyService.js';
 import { TEST_AUDIT_USER } from '../../types/core.js';
-import type { IStrategyConfig } from '../../types/index.js';
 import { DEFAULT_ENV } from '../../util/constants.js';
-import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
-import type FakeProjectStore from '../../../test/fixtures/fake-project-store.js';
 import type { FakeReleasePlanMilestoneStrategyStore } from '../../../test/fixtures/fake-release-plan-milestone-strategy-store.js';
 import { ReleasePlanMilestoneStrategyService } from './release-plan-milestone-strategy-service.js';
 import { FakeChangeRequestAccessReadModel } from '../change-request-access-service/fake-change-request-access-read-model.js';
-import { SKIP_CHANGE_REQUEST } from '../../server-impl.js';
+import {
+    type FeatureToggleService,
+    SKIP_CHANGE_REQUEST,
+} from '../../server-impl.js';
+import type FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store.js';
 
 const defaultContext = {
     projectId: 'default',
@@ -17,43 +18,20 @@ const defaultContext = {
 };
 
 let featureToggleService: FeatureToggleService;
-let projectStore: FakeProjectStore;
 let milestoneStrategyStore: FakeReleasePlanMilestoneStrategyStore;
 let milestoneStrategyService: ReleasePlanMilestoneStrategyService;
+let featureStrategiesStore: FakeFeatureStrategiesStore;
 
 beforeAll(() => {
     const config = createTestConfig();
     const fakeService = createFakeReleasePlanMilestoneStrategyService(config);
     featureToggleService = fakeService.featureToggleService;
-    projectStore = fakeService.projectStore;
+    featureStrategiesStore = fakeService.featureStrategiesStore;
     milestoneStrategyStore = fakeService.milestoneStrategyStore;
     milestoneStrategyService = fakeService.releasePlanMilestoneStrategyService;
 });
 
-const createFeatureStrategy = async (milestoneStrategy) => {
-    return await featureToggleService.createStrategy(
-        {
-            id: milestoneStrategy.id,
-            name: milestoneStrategy.strategyName,
-            ...milestoneStrategy,
-        } as IStrategyConfig,
-        defaultContext,
-        TEST_AUDIT_USER,
-    );
-};
-
 test('also updates feature strategy when present', async () => {
-    await projectStore.create({
-        id: defaultContext.projectId,
-        name: 'Default',
-    });
-
-    await featureToggleService.createFeatureToggle(
-        defaultContext.projectId,
-        { name: defaultContext.featureName },
-        TEST_AUDIT_USER,
-    );
-
     const milestoneStrategy = await milestoneStrategyStore.insert({
         milestoneId: 'milestone-1',
         strategyName: 'default',
@@ -63,10 +41,21 @@ test('also updates feature strategy when present', async () => {
         variants: [],
     });
 
-    const featureStrategy = await createFeatureStrategy(milestoneStrategy);
+    await featureStrategiesStore.insertStrategy({
+        id: milestoneStrategy.id,
+        projectId: defaultContext.projectId,
+        featureName: defaultContext.featureName,
+        environment: defaultContext.environment,
+        strategyName: milestoneStrategy.strategyName,
+        parameters: milestoneStrategy.parameters!,
+        constraints: milestoneStrategy.constraints!,
+        variants: milestoneStrategy.variants!,
+        sortOrder: milestoneStrategy.sortOrder,
+        createdAt: new Date(),
+    });
 
     await milestoneStrategyService.updateStrategy(
-        featureStrategy.id,
+        milestoneStrategy.id,
         {
             title: 'updated-title',
             parameters: { rollout: '50' },
@@ -77,8 +66,8 @@ test('also updates feature strategy when present', async () => {
         TEST_AUDIT_USER,
     );
 
-    const updatedFeatureStrategy = await featureToggleService.getStrategy(
-        featureStrategy.id,
+    const updatedFeatureStrategy = await featureStrategiesStore.get(
+        milestoneStrategy.id,
     );
     expect(updatedFeatureStrategy).toEqual(
         expect.objectContaining({

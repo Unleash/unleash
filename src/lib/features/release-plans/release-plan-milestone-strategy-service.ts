@@ -9,6 +9,7 @@ import type { Logger } from '../../logger.js';
 import type { IReleasePlanMilestoneStrategyStore } from './release-plan-milestone-strategy-store.js';
 import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
 import {
+    NotFoundError,
     PermissionError,
     SKIP_CHANGE_REQUEST,
     type IChangeRequestAccessReadModel,
@@ -92,6 +93,13 @@ export class ReleasePlanMilestoneStrategyService {
         user?: IUser,
     ): Promise<MilestoneStrategyConfig> {
         const { projectId, environment, featureName } = context;
+
+        const existingStrategy = await this.milestoneStrategyStore.get(id);
+        if (!existingStrategy) {
+            throw new NotFoundError(
+                `Could not find milestone strategy with id=${id}`,
+            );
+        }
 
         let isActive: boolean;
         try {

@@ -122,6 +122,7 @@ type ChangeRequestPayload =
     | ChangeRequestEnabled
     | ChangeRequestAddStrategy
     | ChangeRequestEditStrategy
+    | ChangeRequestEditMilestoneStrategy
     | ChangeRequestDeleteStrategy
     | ChangeRequestVariantPatch
     | IChangeRequestUpdateSegment
@@ -151,6 +152,17 @@ export interface IChangeRequestDeleteStrategy extends IChangeRequestChangeBase {
 export interface IChangeRequestUpdateStrategy extends IChangeRequestChangeBase {
     action: 'updateStrategy';
     payload: ChangeRequestEditStrategy;
+}
+
+export type ChangeRequestEditMilestoneStrategy = Omit<
+    ChangeRequestEditStrategy,
+    'name'
+>;
+
+export interface IChangeRequestUpdateMilestoneStrategy
+    extends IChangeRequestChangeBase {
+    action: 'updateMilestoneStrategy';
+    payload: ChangeRequestEditMilestoneStrategy;
 }
 
 export interface IChangeRequestEnabled extends IChangeRequestChangeBase {
@@ -275,7 +287,8 @@ export type IFeatureChange =
     | IChangeRequestDeleteMilestoneProgression
     | IChangeRequestChangeSafeguard
     | IChangeRequestDeleteSafeguard
-    | IChangeRequestResumeMilestoneProgression;
+    | IChangeRequestResumeMilestoneProgression
+    | IChangeRequestUpdateMilestoneStrategy;
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment
@@ -379,4 +392,5 @@ export type ChangeRequestAction =
     | 'deleteMilestoneProgression'
     | 'changeSafeguard'
     | 'deleteSafeguard'
-    | 'resumeMilestoneProgression';
+    | 'resumeMilestoneProgression'
+    | 'updateMilestoneStrategy';

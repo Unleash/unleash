@@ -6,9 +6,9 @@ import { ThemeMode } from '../common/ThemeMode/ThemeMode.tsx';
 import onboardingConcepts from 'assets/img/onboardingConcepts.png';
 import { ScreenReaderOnly } from '../common/ScreenReaderOnly/ScreenReaderOnly.tsx';
 import { formatAssetPath } from 'utils/formatPath';
+import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
-    zIndex: theme.zIndex.modal + 1,
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusLarge,
         width: '65vw',
@@ -44,14 +44,11 @@ const StyledImg = styled('img')({
     width: '100%',
 });
 
-interface IWelcomeDialogProps {
-    open: boolean;
-    onClose: () => void;
-}
+export const WelcomeDialog = () => {
+    const { welcomeDialog, onClose } = useWelcomeDialogContext();
 
-export const WelcomeDialog: FC<IWelcomeDialogProps> = ({ open, onClose }) => {
     return (
-        <StyledDialog open={open} onClose={onClose}>
+        <StyledDialog open={welcomeDialog === 'open'} onClose={onClose}>
             <ContentWrapper>
                 <WelcomeLine>
                     <Typography variant='h2'>Welcome to</Typography>

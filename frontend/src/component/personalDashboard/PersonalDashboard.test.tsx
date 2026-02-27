@@ -1,7 +1,8 @@
 import { PersonalDashboard } from './PersonalDashboard.tsx';
 import { render } from 'utils/testRenderer';
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { WelcomeDialogProvider } from './WelcomeDialogProvider.tsx';
 
 const server = testServerSetup();
 
@@ -130,13 +131,11 @@ HTMLElement.prototype.scrollIntoView = () => {};
 
 test('Render personal dashboard for a long running project', async () => {
     setupLongRunningProject();
-    render(<PersonalDashboard />);
-
-    const welcomeDialogClose = await screen.findByText(
-        "Got it, let's get started!",
+    render(
+        <WelcomeDialogProvider>
+            <PersonalDashboard />
+        </WelcomeDialogProvider>,
     );
-
-    fireEvent.click(welcomeDialogClose);
 
     await screen.findByText('Welcome Unleash User');
     await screen.findByText('projectName');
@@ -155,7 +154,11 @@ test('Render personal dashboard for a long running project', async () => {
 
 test('Render personal dashboard for a new project', async () => {
     setupNewProject();
-    render(<PersonalDashboard />);
+    render(
+        <WelcomeDialogProvider>
+            <PersonalDashboard />
+        </WelcomeDialogProvider>,
+    );
 
     await screen.findByText('Welcome Unleash User');
     await screen.findByText('projectName');

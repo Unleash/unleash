@@ -39,18 +39,6 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-const StyledContentDiv = styled('div')(({ theme }) => ({
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-    padding: theme.spacing(6),
-    paddingBottom: theme.spacing(16),
-    paddingTop: theme.spacing(4),
-    overflow: 'auto',
-    height: '100%',
-}));
-
 const NewReleasePlanTemplateAddStrategyForm = ({
     onCancel,
     strategy,
@@ -81,24 +69,28 @@ const NewReleasePlanTemplateAddStrategyForm = ({
                 setStrategy={setCurrentStrategy}
                 errors={errors}
                 canRenamePreexistingVariants
-                renderContentWrapper={(tabContent) => (
-                    <StyledContentDiv>{tabContent}</StyledContentDiv>
-                )}
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    onAddUpdateStrategy(currentStrategy);
+                }}
+                footer={
+                    <StyledButtonContainer>
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            type='submit'
+                            disabled={
+                                !hasValidConstraints || errors.hasFormErrors()
+                            }
+                        >
+                            {editMode ? 'Add changes' : 'Add strategy'}
+                        </Button>
+                        <StyledCancelButton onClick={onCancel}>
+                            Cancel
+                        </StyledCancelButton>
+                    </StyledButtonContainer>
+                }
             />
-            <StyledButtonContainer>
-                <Button
-                    variant='contained'
-                    color='primary'
-                    type='submit'
-                    disabled={!hasValidConstraints || errors.hasFormErrors()}
-                    onClick={() => onAddUpdateStrategy(currentStrategy)}
-                >
-                    {editMode ? 'Add changes' : 'Add strategy'}
-                </Button>
-                <StyledCancelButton onClick={onCancel}>
-                    Cancel
-                </StyledCancelButton>
-            </StyledButtonContainer>
         </FormTemplate>
     );
 };

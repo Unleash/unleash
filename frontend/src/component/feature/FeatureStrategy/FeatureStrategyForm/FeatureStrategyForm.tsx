@@ -49,18 +49,6 @@ export interface IFeatureStrategyFormProps {
     disabled?: boolean;
 }
 
-const StyledForm = styled('form')(({ theme }) => ({
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-    padding: theme.spacing(6),
-    paddingBottom: theme.spacing(16),
-    paddingTop: theme.spacing(4),
-    overflow: 'auto',
-    height: '100%',
-}));
-
 const StyledButtons = styled('div')(({ theme }) => ({
     bottom: 0,
     right: 0,
@@ -255,10 +243,9 @@ export const FeatureStrategyForm = ({
                     />
                 </>
             }
-            renderContentWrapper={(tabContent) => (
-                <StyledForm onSubmit={onSubmitWithValidation}>
-                    {tabContent}
-
+            onSubmit={onSubmitWithValidation}
+            footer={
+                <>
                     <Box
                         sx={{
                             flex: 1,
@@ -309,8 +296,8 @@ export const FeatureStrategyForm = ({
                             label='Save strategy'
                         />
                     </StyledButtons>
-                </StyledForm>
-            )}
+                </>
+            }
         />
     );
 };

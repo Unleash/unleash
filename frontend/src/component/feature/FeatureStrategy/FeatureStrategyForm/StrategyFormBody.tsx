@@ -41,8 +41,9 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
 
     alertContent?: React.ReactNode;
     generalTabExtras?: React.ReactNode;
+    footer?: React.ReactNode;
 
-    renderContentWrapper: (tabContent: React.ReactNode) => React.ReactNode;
+    onSubmit?: (event: React.FormEvent) => void;
 }
 
 const StyledHeaderBox = styled(Box)(({ theme }) => ({
@@ -94,6 +95,18 @@ const StyledConstraintSeparator = styled(ConstraintSeparator)({
     transform: 'translateY(0)',
 });
 
+const StyledForm = styled('form')(({ theme }) => ({
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+    padding: theme.spacing(6),
+    paddingBottom: theme.spacing(16),
+    paddingTop: theme.spacing(4),
+    overflow: 'auto',
+    height: '100%',
+}));
+
 export const StrategyFormBody = <
     T extends StrategyFormState = StrategyFormState,
 >({
@@ -104,7 +117,8 @@ export const StrategyFormBody = <
     canRenamePreexistingVariants,
     alertContent,
     generalTabExtras,
-    renderContentWrapper,
+    footer,
+    onSubmit,
 }: StrategyFormBodyProps<T>) => {
     const [tab, setTab] = useState(0);
     const strategyName = strategy?.name || strategy?.strategyName;
@@ -225,67 +239,67 @@ export const StrategyFormBody = <
                 )}
             </StyledTabs>
 
-            {renderContentWrapper(
-                <>
-                    {tab === 0 && (
-                        <>
-                            <FeatureStrategyTitle
-                                title={strategy.title || ''}
-                                setTitle={handleTitleChange}
-                            />
+            <StyledForm onSubmit={onSubmit}>
+                {tab === 0 && (
+                    <>
+                        <FeatureStrategyTitle
+                            title={strategy.title || ''}
+                            setTitle={handleTitleChange}
+                        />
 
-                            <FeatureStrategyType
-                                strategy={strategy}
-                                strategyDefinition={strategyDefinition}
-                                updateParameter={updateParameter}
-                                errors={errors}
-                            />
+                        <FeatureStrategyType
+                            strategy={strategy}
+                            strategyDefinition={strategyDefinition}
+                            updateParameter={updateParameter}
+                            errors={errors}
+                        />
 
-                            {generalTabExtras}
-                        </>
-                    )}
+                        {generalTabExtras}
+                    </>
+                )}
 
-                    {tab === 1 && (
-                        <>
-                            <Alert severity='info' sx={{ mb: 2 }} icon={false}>
-                                Segmentation and constraints allow you to set
-                                filters on your strategies, so that they will
-                                only be evaluated for users and applications
-                                that match the specified preconditions.
-                            </Alert>
+                {tab === 1 && (
+                    <>
+                        <Alert severity='info' sx={{ mb: 2 }} icon={false}>
+                            Segmentation and constraints allow you to set
+                            filters on your strategies, so that they will only
+                            be evaluated for users and applications that match
+                            the specified preconditions.
+                        </Alert>
 
-                            {showSegmentSelector ? (
-                                <>
-                                    <FeatureStrategySegment
-                                        segments={segments}
-                                        setSegments={setSegments}
-                                        availableSegments={assignableSegments}
-                                    />
+                        {showSegmentSelector ? (
+                            <>
+                                <FeatureStrategySegment
+                                    segments={segments}
+                                    setSegments={setSegments}
+                                    availableSegments={assignableSegments}
+                                />
 
-                                    <StyledBox>
-                                        <StyledDivider />
-                                        <StyledConstraintSeparator />
-                                    </StyledBox>
-                                </>
-                            ) : null}
-                            <FeatureStrategyConstraints
-                                strategy={strategy}
-                                setStrategy={setStrategy}
-                            />
-                        </>
-                    )}
-
-                    {tab === 2 && showVariants && (
-                        <NewStrategyVariants
+                                <StyledBox>
+                                    <StyledDivider />
+                                    <StyledConstraintSeparator />
+                                </StyledBox>
+                            </>
+                        ) : null}
+                        <FeatureStrategyConstraints
                             strategy={strategy}
                             setStrategy={setStrategy}
-                            canRenamePreexistingVariants={
-                                canRenamePreexistingVariants
-                            }
                         />
-                    )}
-                </>,
-            )}
+                    </>
+                )}
+
+                {tab === 2 && showVariants && (
+                    <NewStrategyVariants
+                        strategy={strategy}
+                        setStrategy={setStrategy}
+                        canRenamePreexistingVariants={
+                            canRenamePreexistingVariants
+                        }
+                    />
+                )}
+
+                {footer}
+            </StyledForm>
         </>
     );
 };

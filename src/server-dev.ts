@@ -63,6 +63,7 @@ process.nextTick(async () => {
                         regexConstraintOperator: true,
                         updateMilestoneStrategy: true,
                         strategyFormConsolidation: true,
+                        enterpriseEdgeTokensList: true,
                     },
                 },
                 authentication: {

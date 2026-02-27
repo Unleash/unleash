@@ -106,7 +106,7 @@
     "react-confetti": "^6.1.0",
     "react-dom": "18.3.1",
     "react-dropzone": "14.3.8",
-    "react-error-boundary": "3.1.4",
+    "react-error-boundary": "6.1.1",
     "react-github-calendar": "^4.5.1",
     "react-grid-layout": "^1.5.2",
     "react-hooks-global-state": "2.1.0",

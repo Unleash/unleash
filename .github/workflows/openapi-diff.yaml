@@ -62,7 +62,7 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn dev:backend &
+          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
@@ -77,6 +77,7 @@ jobs:
             echo "Waiting for Unleash...";
             sleep 2
           done
+          cat /tmp/unleash-server.log
           echo "Unleash did not become ready in time."
           exit 1
       - name: Download OpenAPI spec from baseline
@@ -122,7 +123,7 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn dev:backend &
+          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
@@ -137,6 +138,7 @@ jobs:
             echo "Waiting for Unleash...";
             sleep 2
           done
+          cat /tmp/unleash-server.log
           echo "Unleash did not become ready in time."
           exit 1
       - name: Download OpenAPI spec (current branch)

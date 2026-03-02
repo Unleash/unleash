@@ -414,9 +414,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
     private updateVisibleRevisions(
         environment: string,
         revisionId: number,
-        featureEvents: Array<
-            Extract<DeltaEvent, { type: 'feature-updated' | 'feature-removed' }>
-        >,
+        featureEvents: DeltaEvent[],
         hasSegmentChanges: boolean,
     ) {
         const revisionState =

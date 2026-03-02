@@ -201,7 +201,12 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 projects,
                 namePrefix,
             );
-            filteredEvent.eventId = visibleRevision;
+            const effectiveEventId =
+                visibleRevision === 0
+                    ? hydrationEvent.eventId
+                    : visibleRevision;
+
+            filteredEvent.eventId = effectiveEventId;
 
             const response: ClientFeaturesDeltaSchema = {
                 events: [filteredEvent],

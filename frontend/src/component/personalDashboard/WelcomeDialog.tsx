@@ -44,7 +44,9 @@ const StyledImg = styled('img')({
 });
 
 export const WelcomeDialog = () => {
-    const { welcomeDialog, onClose } = useWelcomeDialogContext();
+    const { welcomeDialog, onClose, isLoggedIn } = useWelcomeDialogContext();
+
+    if (!isLoggedIn) return null;
 
     return (
         <StyledDialog open={welcomeDialog === 'open'} onClose={onClose}>

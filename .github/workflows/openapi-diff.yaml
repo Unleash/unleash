@@ -132,11 +132,13 @@ jobs:
           for i in {1..30}; do
             if curl -sf http://localhost:4242/health; then
               echo "Unleash is up!";
-              break;
+              exit 0
             fi
             echo "Waiting for Unleash...";
             sleep 2
           done
+          echo "Unleash did not become ready in time."
+          exit 1
       - name: Download OpenAPI spec (current branch)
         run: curl -sSL -o openapi-current.json localhost:4242/docs/openapi.json
       - name: Upload openapi-current.json

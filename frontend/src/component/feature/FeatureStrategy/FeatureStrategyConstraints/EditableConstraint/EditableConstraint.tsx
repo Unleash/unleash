@@ -108,6 +108,12 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     right: theme.spacing(1),
 }));
 
+const StyledHelpLink = styled(Link)(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 0.25,
+}));
+
 const ButtonPlaceholder = styled('div')(({ theme }) => ({
     // this is a trick that lets us use absolute positioning for the button so
     // that it can go over the operator context fields when necessary (narrow
@@ -238,19 +244,14 @@ const InlineEdit: FC<{
                 helpText={
                     <>
                         A regex value should be a valid{' '}
-                        <Link
+                        <StyledHelpLink
                             href='https://github.com/google/re2/wiki/Syntax'
                             target='_blank'
                             rel='noopener noreferrer'
-                            sx={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: 0.25,
-                            }}
                         >
                             RE2 regular expression
                             <OpenInNew sx={{ fontSize: 'inherit' }} />
-                        </Link>
+                        </StyledHelpLink>
                     </>
                 }
             />

@@ -69,18 +69,19 @@ jobs:
           CHECK_VERSION: 'false'
       - name: Wait for Unleash to be ready
         run: |
+          sleep 10
           for i in {1..256}; do
             if curl -sf http://localhost:4242/health; then
               echo "Unleash is up!";
               exit 0
             fi
-            echo "Waiting for Unleash...";
+            echo "Waiting for Unleash... attempt $i";
             sleep 2
           done
           echo "Unleash did not become ready in time."
           exit 1
       - name: Download OpenAPI spec from baseline
-        run: curl -sSL -o openapi-stable.json "localhost:4242/docs/openapi.json"
+        run: curl -sSL -o openapi-stable.json "http://localhost:4242/docs/openapi.json"
       - name: Upload openapi-stable.json
         uses: actions/upload-artifact@v4
         with:
@@ -129,16 +130,18 @@ jobs:
           CHECK_VERSION: 'false'
       - name: Wait for Unleash to be ready
         run: |
-          for i in {1..30}; do
+          for i in {1..256}; do
             if curl -sf http://localhost:4242/health; then
               echo "Unleash is up!";
-              break;
+              exit 0
             fi
-            echo "Waiting for Unleash...";
+            echo "Waiting for Unleash... attempt $i/256 ($(date -u '+%H:%M:%S') UTC)";
             sleep 2
           done
+          echo "Unleash did not become ready in time."
+          exit 1
       - name: Download OpenAPI spec (current branch)
-        run: curl -sSL -o openapi-current.json localhost:4242/docs/openapi.json
+        run: curl -sSL -o openapi-current.json http://localhost:4242/docs/openapi.json
       - name: Upload openapi-current.json
         uses: actions/upload-artifact@v4
         with:

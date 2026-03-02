@@ -363,6 +363,7 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
 
     const handleRegexInputChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
+            setInputValue(e.target.value);
             addValue(e.target.value);
         },
         [addValue],

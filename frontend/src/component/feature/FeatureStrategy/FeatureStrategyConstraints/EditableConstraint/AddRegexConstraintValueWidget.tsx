@@ -27,7 +27,6 @@ const StyledChip = styled(ValueChip, {
 type Props = {
     removeValue: () => void;
     currentValue?: string;
-    helpText?: string;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
     validator: (value: string) => ConstraintValidatorOutput;

@@ -119,11 +119,6 @@ const MatchIndicator: FC<{ match: boolean; testString: string }> = ({
     );
 };
 
-export type OnAddActions = {
-    setError: (error: string) => void;
-    clearInput: () => void;
-};
-
 const HelpText = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.typography.caption.fontSize,

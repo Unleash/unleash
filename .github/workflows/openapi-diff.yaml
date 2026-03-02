@@ -62,23 +62,27 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn dev:backend &
+          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
           CHECK_VERSION: 'false'
       - name: Wait for Unleash to be ready
         run: |
+          tail -f /tmp/unleash-server.log &
+          TAIL_PID=$!
           sleep 10
           for i in {1..256}; do
             if curl -sf http://localhost:4242/health; then
               echo "Unleash is up!";
+              kill $TAIL_PID
               exit 0
             fi
             echo "Waiting for Unleash... attempt $i";
             sleep 2
           done
           echo "Unleash did not become ready in time."
+          kill $TAIL_PID
           exit 1
       - name: Download OpenAPI spec from baseline
         run: curl -sSL -o openapi-stable.json "http://localhost:4242/docs/openapi.json"
@@ -123,22 +127,26 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn dev:backend &
+          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
           CHECK_VERSION: 'false'
       - name: Wait for Unleash to be ready
         run: |
+          tail -f /tmp/unleash-server.log &
+          TAIL_PID=$!
           for i in {1..256}; do
             if curl -sf http://localhost:4242/health; then
               echo "Unleash is up!";
+              kill $TAIL_PID
               exit 0
             fi
             echo "Waiting for Unleash... attempt $i/256 ($(date -u '+%H:%M:%S') UTC)";
             sleep 2
           done
           echo "Unleash did not become ready in time."
+          kill $TAIL_PID
           exit 1
       - name: Download OpenAPI spec (current branch)
         run: curl -sSL -o openapi-current.json http://localhost:4242/docs/openapi.json

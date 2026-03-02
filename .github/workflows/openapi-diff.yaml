@@ -71,7 +71,7 @@ jobs:
           CHECK_VERSION: 'false'
       - name: Wait for Unleash to be ready
         run: |
-          tail -f /tmp/unleash-server.log &
+          tail -f -n +1 /tmp/unleash-server.log &
           TAIL_PID=$!
           for i in {1..30}; do
             if curl -sf http://localhost:4242/health; then

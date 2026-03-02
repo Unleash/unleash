@@ -64,7 +64,7 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn start > /tmp/unleash-server.log 2>&1 &
+          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
@@ -130,7 +130,7 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn start > /tmp/unleash-server.log 2>&1 &
+          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'

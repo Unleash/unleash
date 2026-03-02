@@ -53,8 +53,6 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install --immutable
-      - name: Build backend
-        run: yarn build:backend
       - name: Start Unleash test instance
         run: |
           # fake frontend build
@@ -116,8 +114,6 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install --immutable
-      - name: Build backend
-        run: yarn build:backend
       - name: Start Unleash test instance
         run: |
           # fake frontend build

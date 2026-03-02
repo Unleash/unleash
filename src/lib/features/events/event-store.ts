@@ -5,6 +5,7 @@ import {
     FEATURE_LINK_ADDED,
     FEATURE_LINK_UPDATED,
     FEATURE_LINK_REMOVED,
+    FEATURE_PROJECT_CHANGE,
     FEATURES_IMPORTED,
     type IBaseEvent,
     type IEvent,
@@ -260,6 +261,91 @@ export class EventStore implements IEventStore {
         const rows = await query;
         stopTimer();
         return rows.map(this.rowToEvent);
+    }
+
+    async getDeltaRevisionState(
+        environment: string | undefined,
+        upperBound: number,
+    ): Promise<{
+        projectRevisions: Map<string, number>;
+        globalSegmentRevision: number;
+    }> {
+        const stopTimer = this.metricTimer('getDeltaRevisionState');
+        const applyEnvironmentFilter = (query: Knex.QueryBuilder) => {
+            if (environment && environment !== ALL_ENVS) {
+                query.andWhere((envInner) => {
+                    envInner
+                        .where('environment', environment)
+                        .orWhereNull('environment');
+                });
+            }
+
+            return query;
+        };
+
+        const projectRows: Array<{
+            project?: string;
+            revisionId?: number | string;
+        }> = await this.db(TABLE)
+            .select('project')
+            .max({ revisionId: 'id' })
+            .where((builder) => {
+                builder
+                    .whereNotNull('feature_name')
+                    .whereNotIn('type', [
+                        FEATURE_FAVORITED,
+                        FEATURE_UNFAVORITED,
+                        FEATURE_LINK_ADDED,
+                        FEATURE_LINK_UPDATED,
+                        FEATURE_LINK_REMOVED,
+                    ])
+                    .whereNot('type', 'LIKE', 'change-%');
+
+                return applyEnvironmentFilter(builder);
+            })
+            .andWhere('id', '<=', upperBound)
+            .whereNotNull('project')
+            .groupBy('project');
+
+        const movedRows: Array<{
+            project?: string;
+            revisionId?: number | string;
+        }> = await this.db(TABLE)
+            .select(this.db.raw(`data->>'oldProject' as project`))
+            .max({ revisionId: 'id' })
+            .where({ type: FEATURE_PROJECT_CHANGE })
+            .andWhere('id', '<=', upperBound)
+            .modify(applyEnvironmentFilter)
+            .groupByRaw(`data->>'oldProject'`);
+
+        const segmentRow: { revisionId?: number | string } | undefined =
+            await this.db(TABLE)
+                .max({ revisionId: 'id' })
+                .where({ type: SEGMENT_UPDATED })
+                .andWhere('id', '<=', upperBound)
+                .first();
+
+        stopTimer();
+
+        const projectRevisions = new Map<string, number>();
+
+        for (const row of [...projectRows, ...movedRows]) {
+            if (!row.project) {
+                continue;
+            }
+
+            const revisionId = Number(row.revisionId ?? 0);
+            const currentRevision = projectRevisions.get(row.project) ?? 0;
+
+            if (revisionId > currentRevision) {
+                projectRevisions.set(row.project, revisionId);
+            }
+        }
+
+        return {
+            projectRevisions,
+            globalSegmentRevision: Number(segmentRow?.revisionId ?? 0),
+        };
     }
 
     async delete(key: number): Promise<void> {

@@ -42,6 +42,13 @@ export interface IEventStore
         currentMax?: number,
         environment?: string,
     ): Promise<number>;
+    getDeltaRevisionState(
+        environment: string | undefined,
+        upperBound: number,
+    ): Promise<{
+        projectRevisions: Map<string, number>;
+        globalSegmentRevision: number;
+    }>;
     getRevisionRange(start: number, end: number): Promise<IEvent[]>;
     query(operations: IQueryOperations[]): Promise<IEvent[]>;
     queryCount(operations: IQueryOperations[]): Promise<number>;

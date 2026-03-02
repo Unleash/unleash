@@ -139,7 +139,7 @@ jobs:
         run: |
           tail -f /tmp/unleash-server.log &
           TAIL_PID=$!
-          for i in {1..256}; do
+          for i in {1..30}; do
             if curl -sf http://localhost:4242/health; then
               echo "Unleash is up!";
               kill $TAIL_PID

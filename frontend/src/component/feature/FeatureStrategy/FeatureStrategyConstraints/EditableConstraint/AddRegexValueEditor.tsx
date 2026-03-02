@@ -137,59 +137,18 @@ type RegexTestInputItemProps = {
     totalCount: number;
     onEdit: (id: number, testString: string) => void;
     onRemove: (id: number) => void;
-    onAddAfter: (index: number) => void;
-    focusTestInput: (index: number) => void;
-    focusRegexInput: () => void;
     inputRefs: MutableRefObject<
         Array<HTMLTextAreaElement | HTMLInputElement | null>
     >;
 };
 
 const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
-    ({
-        input,
-        index,
-        totalCount,
-        onEdit,
-        onRemove,
-        onAddAfter,
-        focusTestInput,
-        focusRegexInput,
-        inputRefs,
-    }) => {
+    ({ input, index, totalCount, onEdit, onRemove, inputRefs }) => {
         const setInputRef = useCallback(
             (el: HTMLTextAreaElement | HTMLInputElement | null) => {
                 inputRefs.current[index] = el;
             },
             [inputRefs, index],
-        );
-
-        const handleKeyDown = useCallback(
-            (e: React.KeyboardEvent) => {
-                if (e.key === 'ArrowDown' || e.key === 'Enter') {
-                    e.preventDefault();
-                    if (index + 1 < totalCount) {
-                        focusTestInput(index + 1);
-                    } else if (input.testString.trim()) {
-                        onAddAfter(index);
-                    }
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    if (index === 0) {
-                        focusRegexInput();
-                    } else {
-                        focusTestInput(index - 1);
-                    }
-                }
-            },
-            [
-                index,
-                totalCount,
-                input.testString,
-                focusTestInput,
-                onAddAfter,
-                focusRegexInput,
-            ],
         );
 
         const handleChange = useCallback(
@@ -213,7 +172,6 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
                             'aria-describedby': 'test-strings-description',
                         }}
                         inputRef={setInputRef}
-                        onKeyDown={handleKeyDown}
                         onChange={handleChange}
                     />
                     {totalCount > 1 && (
@@ -238,6 +196,105 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
         );
     },
 );
+
+const RegexTestValues: FC<{
+    matchesRegex: (testString: string) => boolean;
+}> = ({ matchesRegex }) => {
+    const [regexTestInputs, setRegexTestInputs] = useState<RegexTestInput[]>([
+        { id: 1, testString: '', match: false },
+    ]);
+    const regexTestInputRefs = useRef<
+        Array<HTMLTextAreaElement | HTMLInputElement | null>
+    >([]);
+    const pendingFocusIndex = useRef<number | null>(null);
+
+    useEffect(() => {
+        setRegexTestInputs((prev) =>
+            prev.map((input) => ({
+                ...input,
+                match: matchesRegex(input.testString),
+            })),
+        );
+    }, [matchesRegex]);
+
+    useEffect(() => {
+        if (pendingFocusIndex.current !== null) {
+            if (pendingFocusIndex.current > -1) {
+                regexTestInputRefs.current[pendingFocusIndex.current]?.focus();
+            }
+            pendingFocusIndex.current = null;
+        }
+    }, [regexTestInputs]);
+
+    const handleEditTestString = useCallback(
+        (id: number, testString: string) => {
+            setRegexTestInputs((prev) =>
+                prev.map((input) => {
+                    if (input.id !== id) return input;
+                    return {
+                        ...input,
+                        testString,
+                        match: matchesRegex(testString),
+                    };
+                }),
+            );
+        },
+        [matchesRegex],
+    );
+
+    const handleAddTestString = useCallback(() => {
+        setRegexTestInputs((prev) => {
+            const maxId = prev.reduce(
+                (max, input) => Math.max(max, input.id),
+                0,
+            );
+            pendingFocusIndex.current = prev.length;
+            return [...prev, { id: maxId + 1, testString: '', match: false }];
+        });
+    }, []);
+
+    const handleRemoveTestString = useCallback((id: number) => {
+        setRegexTestInputs((prev) => {
+            if (prev.length <= 1) return prev;
+            const idx = prev.findIndex((input) => input.id === id);
+            pendingFocusIndex.current = Math.min(idx, prev.length - 2);
+            return prev.filter((input) => input.id !== id);
+        });
+    }, []);
+
+    return (
+        <StyledTestValuesBox>
+            <Typography variant='h3'>Test regex</Typography>
+            <Typography id='test-strings-description' variant='body2'>
+                Enter test values to check Regex matching.
+            </Typography>
+            <StyledList>
+                {regexTestInputs.map((regexTestInput, index) => (
+                    <RegexTestInputItem
+                        key={regexTestInput.id}
+                        input={regexTestInput}
+                        index={index}
+                        totalCount={regexTestInputs.length}
+                        onEdit={handleEditTestString}
+                        onRemove={handleRemoveTestString}
+                        inputRefs={regexTestInputRefs}
+                    />
+                ))}
+            </StyledList>
+            <Box>
+                <Button
+                    type='button'
+                    variant='text'
+                    size='small'
+                    startIcon={<Add />}
+                    onClick={handleAddTestString}
+                >
+                    Add test string
+                </Button>
+            </Box>
+        </StyledTestValuesBox>
+    );
+};
 
 type AddRegexValueEditorProps = {
     addValue: (newValue: string) => void;
@@ -276,28 +333,6 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
         },
         [inputValue, caseInsensitive],
     );
-    const [regexTestInputs, setRegexTestInputs] = useState<RegexTestInput[]>([
-        { id: 1, testString: '', match: false },
-    ]);
-    const regexTestInputRefs = useRef<
-        Array<HTMLTextAreaElement | HTMLInputElement | null>
-    >([]);
-    const pendingFocusIndex = useRef<number | null>(null);
-    const addTestStringButtonRef = useRef<HTMLButtonElement>(null);
-    const arrowDownSelectionStart = useRef<number | null>(null);
-
-    const focusTestInput = useCallback((idx: number) => {
-        regexTestInputRefs.current[idx]?.focus();
-    }, []);
-
-    const focusRegexInput = useCallback(() => {
-        const textarea = inputRef.current;
-        if (textarea) {
-            textarea.focus();
-            const len = textarea.value.length;
-            textarea.setSelectionRange(len, len);
-        }
-    }, []);
 
     const validateValue = useCallback(
         (newValue: string): string => {
@@ -310,50 +345,17 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
         [validator],
     );
 
-    const handleOnEnterInRegexInput = useCallback(() => {
-        if (!inputValue?.trim()) {
-            setError('Value cannot be empty or whitespace');
-            return;
-        }
-        focusTestInput(0);
-    }, [inputValue, focusTestInput]);
-
     const handleRegexKeyDown = useCallback(
         (e: React.KeyboardEvent) => {
-            if (e.key === 'ArrowUp') {
-                e.stopPropagation();
-                return;
-            }
-            if (e.key === 'ArrowDown') {
-                e.stopPropagation();
-                arrowDownSelectionStart.current =
-                    inputRef.current?.selectionStart ?? null;
-                return;
-            }
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                handleOnEnterInRegexInput();
-            }
-        },
-        [handleOnEnterInRegexInput],
-    );
-
-    const handleRegexKeyUp = useCallback(
-        (e: React.KeyboardEvent) => {
-            if (e.key === 'ArrowDown') {
-                const textarea = inputRef.current;
-                const before = arrowDownSelectionStart.current;
-                arrowDownSelectionStart.current = null;
-                if (
-                    textarea &&
-                    before !== null &&
-                    textarea.selectionStart === before
-                ) {
-                    focusTestInput(0);
+                if (!inputValue?.trim()) {
+                    setError('Value cannot be empty or whitespace');
+                    return;
                 }
             }
         },
-        [focusTestInput],
+        [inputValue],
     );
 
     const handleRegexInputChange = useCallback(
@@ -369,77 +371,6 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
         setInputValue(initialValue || '');
         setError(validateValue(initialValue || ''));
     }, [editingOpen, initialValue, validateValue]);
-
-    const handleEditTestString = useCallback(
-        (id: number, testString: string) => {
-            setRegexTestInputs((prev) =>
-                prev.map((input) => {
-                    if (input.id !== id) return input;
-                    return {
-                        ...input,
-                        testString,
-                        match: matchesRegex(testString),
-                    };
-                }),
-            );
-        },
-        [matchesRegex],
-    );
-
-    useEffect(() => {
-        setRegexTestInputs((prev) =>
-            prev.map((input) => ({
-                ...input,
-                match: matchesRegex(input.testString),
-            })),
-        );
-    }, [matchesRegex]);
-
-    useEffect(() => {
-        if (pendingFocusIndex.current !== null) {
-            if (pendingFocusIndex.current === -1) {
-                addTestStringButtonRef.current?.focus();
-            } else {
-                regexTestInputRefs.current[pendingFocusIndex.current]?.focus();
-            }
-            pendingFocusIndex.current = null;
-        }
-    }, [regexTestInputs]);
-
-    const handleAddTestString = useCallback(() => {
-        setRegexTestInputs((prev) => {
-            const maxId = prev.reduce(
-                (max, input) => Math.max(max, input.id),
-                0,
-            );
-            pendingFocusIndex.current = prev.length;
-            return [...prev, { id: maxId + 1, testString: '', match: false }];
-        });
-    }, []);
-
-    const handleAddTestStringAfter = useCallback((afterIndex: number) => {
-        const newIndex = afterIndex + 1;
-        pendingFocusIndex.current = newIndex;
-        setRegexTestInputs((prev) => {
-            const maxId = prev.reduce(
-                (max, input) => Math.max(max, input.id),
-                0,
-            );
-            const newItem = { id: maxId + 1, testString: '', match: false };
-            const next = [...prev];
-            next.splice(newIndex, 0, newItem);
-            return next;
-        });
-    }, []);
-
-    const handleRemoveTestString = useCallback((id: number) => {
-        setRegexTestInputs((prev) => {
-            if (prev.length <= 1) return prev;
-            const idx = prev.findIndex((input) => input.id === id);
-            pendingFocusIndex.current = Math.min(idx, prev.length - 2);
-            return prev.filter((input) => input.id !== id);
-        });
-    }, []);
 
     return (
         <StyledBox>
@@ -462,7 +393,6 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                         value={inputValue}
                         onChange={handleRegexInputChange}
                         onKeyDown={handleRegexKeyDown}
-                        onKeyUp={handleRegexKeyUp}
                         size='small'
                         variant='outlined'
                         fullWidth
@@ -477,41 +407,7 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                 </Box>
             </InputRow>
 
-            <StyledTestValuesBox>
-                <Typography variant='h3'>Test regex</Typography>
-
-                <Typography id='test-strings-description' variant='body2'>
-                    Enter test values to check Regex matching.
-                </Typography>
-                <StyledList>
-                    {regexTestInputs.map((regexTestInput, index) => (
-                        <RegexTestInputItem
-                            key={regexTestInput.id}
-                            input={regexTestInput}
-                            index={index}
-                            totalCount={regexTestInputs.length}
-                            onEdit={handleEditTestString}
-                            onRemove={handleRemoveTestString}
-                            onAddAfter={handleAddTestStringAfter}
-                            focusTestInput={focusTestInput}
-                            focusRegexInput={focusRegexInput}
-                            inputRefs={regexTestInputRefs}
-                        />
-                    ))}
-                </StyledList>
-                <Box>
-                    <Button
-                        ref={addTestStringButtonRef}
-                        type='button'
-                        variant='text'
-                        size='small'
-                        startIcon={<Add />}
-                        onClick={handleAddTestString}
-                    >
-                        Add test string
-                    </Button>
-                </Box>
-            </StyledTestValuesBox>
+            <RegexTestValues matchesRegex={matchesRegex} />
         </StyledBox>
     );
 };

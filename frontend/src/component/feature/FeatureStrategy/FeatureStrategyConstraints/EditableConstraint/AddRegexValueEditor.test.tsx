@@ -168,21 +168,6 @@ describe('AddRegexValueEditor', () => {
                 screen.queryByText('Value cannot be empty or whitespace'),
             ).not.toBeInTheDocument();
         });
-
-        test('moves focus to the first test input on Enter with a valid value', () => {
-            render(
-                <AddRegexValueEditor {...defaultProps} initialValue='[abc]' />,
-            );
-
-            const textarea = screen
-                .getByTestId('CONSTRAINT_VALUES_INPUT')
-                .querySelector('textarea')!;
-            fireEvent.keyDown(textarea, { key: 'Enter' });
-
-            expect(
-                screen.getByPlaceholderText('Enter test value'),
-            ).toHaveFocus();
-        });
     });
 
     describe('test string management', () => {
@@ -196,6 +181,8 @@ describe('AddRegexValueEditor', () => {
             expect(
                 screen.getAllByPlaceholderText('Enter test value'),
             ).toHaveLength(2);
+            const inputs = screen.getAllByPlaceholderText('Enter test value');
+            expect(inputs[inputs.length - 1]).toHaveFocus();
         });
 
         test('remove button is enabled when more than one test string exists', () => {
@@ -231,6 +218,8 @@ describe('AddRegexValueEditor', () => {
             expect(
                 screen.getAllByPlaceholderText('Enter test value'),
             ).toHaveLength(1);
+            const inputs = screen.getAllByPlaceholderText('Enter test value');
+            expect(inputs[inputs.length - 1]).toHaveFocus();
         });
     });
 

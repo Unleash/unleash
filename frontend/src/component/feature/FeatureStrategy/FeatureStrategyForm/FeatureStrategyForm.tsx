@@ -154,7 +154,7 @@ export const FeatureStrategyForm = ({
         navigate(formatFeaturePath(feature.project, feature.name));
     };
 
-    const onSubmitWithValidation = async (event: React.FormEvent) => {
+    const onSubmitWithValidation = async () => {
         if (Array.isArray(strategy.variants) && strategy.variants?.length > 0) {
             trackEvent('strategy-variants', {
                 props: {
@@ -162,7 +162,6 @@ export const FeatureStrategyForm = ({
                 },
             });
         }
-        event.preventDefault();
         if (!validateAllParameters()) {
             return;
         }

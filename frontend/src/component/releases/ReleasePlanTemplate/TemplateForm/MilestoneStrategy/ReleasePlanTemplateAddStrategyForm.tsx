@@ -58,8 +58,7 @@ const NewReleasePlanTemplateAddStrategyForm = ({
                 strategyDefinition={strategyDefinition}
                 errors={errors}
                 canRenamePreexistingVariants
-                onSubmit={(e) => {
-                    e.preventDefault();
+                onSubmit={(_) => {
                     onAddUpdateStrategy(currentStrategy);
                 }}
             >

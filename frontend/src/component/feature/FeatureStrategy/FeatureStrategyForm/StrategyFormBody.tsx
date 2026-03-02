@@ -45,7 +45,7 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
     beforeFooter?: React.ReactNode;
     children?: React.ReactNode;
 
-    onSubmit?: (event: React.FormEvent) => void;
+    onSubmit: (event: React.FormEvent) => void;
 }
 
 const StyledHeaderBox = styled(Box)(({ theme }) => ({
@@ -259,7 +259,13 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                 )}
             </StyledTabs>
 
-            <StyledForm onSubmit={onSubmit}>
+            <StyledForm
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onSubmit(e);
+                }}
+            >
                 {tab === 0 && (
                     <>
                         <FeatureStrategyTitle

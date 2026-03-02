@@ -19,7 +19,10 @@ import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import type { IFeatureToggle } from 'interfaces/featureToggle';
+import type {
+    IFeatureEnvironment,
+    IFeatureToggle,
+} from 'interfaces/featureToggle';
 import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -99,7 +102,10 @@ const NewFeatureStrategyEdit = () => {
     const strategyId = useRequiredQueryParam('strategyId');
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
-    const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
+    const [strategyKind, setStrategyKind] = useState<'basic' | 'milestone'>(
+        'milestone',
+    );
+    const { updateStrategyOnFeature, loading } = useFeatureStrategyApi(); // todo: should probably make an equivalent for milestone strategies?
     const { strategyDefinition } = useStrategy(strategy.name);
     const { defaultStickiness } = useDefaultProjectSettings(projectId);
     const { setToastData, setToastApiError } = useToast();
@@ -172,15 +178,37 @@ const NewFeatureStrategyEdit = () => {
         });
 
     useEffect(() => {
-        const savedStrategy = data?.environments
-            .flatMap((environment) => environment.strategies)
-            .find((strategy) => strategy.id === strategyId);
+        const environmentConfig: IFeatureEnvironment | undefined =
+            data?.environments.find((env) => env.name === environmentId);
+
+        if (!environmentConfig) {
+            return;
+        }
+
+        const foundStrategy = environmentConfig.strategies.find(
+            (strategy) => strategy.id === strategyId,
+        );
+
+        const savedStrategy =
+            foundStrategy ??
+            environmentConfig.releasePlans
+                ?.flatMap((plan) =>
+                    plan.milestones.flatMap(
+                        (milestone) => milestone.strategies,
+                    ),
+                )
+                .find((strategy) => strategy.id === strategyId);
+
+        if (savedStrategy && 'milestoneId' in savedStrategy) {
+            setStrategyKind('milestone');
+        }
 
         const constraintsWithId = addIdSymbolToConstraints(savedStrategy);
 
         const formattedStrategy = {
             ...savedStrategy,
             constraints: constraintsWithId,
+            name: savedStrategy?.name || savedStrategy?.strategyName,
         };
 
         setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
@@ -212,6 +240,7 @@ const NewFeatureStrategyEdit = () => {
     const payload = createStrategyPayload(strategy);
 
     const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
+        // todo: need to update this
         await updateStrategyOnFeature(
             projectId,
             featureId,
@@ -227,6 +256,7 @@ const NewFeatureStrategyEdit = () => {
     };
 
     const onStrategyRequestEdit = async (payload: IFeatureStrategyPayload) => {
+        // todo: need to update this
         await addChange(projectId, environmentId, {
             action: 'updateStrategy',
             feature: featureId,
@@ -268,15 +298,15 @@ const NewFeatureStrategyEdit = () => {
             documentationLink={featureStrategyDocsLink}
             documentationLinkLabel={featureStrategyDocsLinkLabel}
             formatApiCode={() =>
-                formatUpdateStrategyApiCode(
+                formatUpdateStrategyApiCode({
                     projectId,
                     featureId,
                     environmentId,
                     strategyId,
-                    payload,
+                    strategy: payload,
                     strategyDefinition,
                     unleashUrl,
-                )
+                })
             }
         >
             <FeatureStrategyForm
@@ -334,15 +364,52 @@ export const formatEditStrategyPath = (
     return `/projects/${projectId}/features/${featureId}/strategies/edit?${params}`;
 };
 
-export const formatUpdateStrategyApiCode = (
-    projectId: string,
-    featureId: string,
-    environmentId: string,
-    strategyId: string,
-    strategy: Partial<IFeatureStrategy>,
-    strategyDefinition: IStrategy,
-    unleashUrl?: string,
-): string => {
+type FeatureEnvironmentStrategyKind = 'basic' | 'milestone';
+
+type ApiUpdatePathProps = {
+    strategyKind: FeatureEnvironmentStrategyKind;
+    unleashUrl: string;
+    projectId: string;
+    featureId: string;
+    environmentId: string;
+    strategyId: string;
+};
+
+const apiUpdatePath = ({
+    strategyId,
+    strategyKind,
+    unleashUrl,
+    projectId,
+    featureId,
+    environmentId,
+}: ApiUpdatePathProps) => {
+    if (strategyKind === 'milestone') {
+        return `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/milestone-strategies/${strategyId}`;
+    }
+    return `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
+};
+
+type FormatUpdateStrategyApiCodeProps = {
+    strategyKind?: FeatureEnvironmentStrategyKind;
+    projectId: string;
+    featureId: string;
+    environmentId: string;
+    strategyId: string;
+    strategy: Partial<IFeatureStrategy>;
+    strategyDefinition: IStrategy;
+    unleashUrl?: string;
+};
+
+export const formatUpdateStrategyApiCode = ({
+    strategyKind = 'basic',
+    projectId,
+    featureId,
+    environmentId,
+    strategyId,
+    strategy,
+    strategyDefinition,
+    unleashUrl,
+}: FormatUpdateStrategyApiCodeProps): string => {
     if (!unleashUrl) {
         return '';
     }
@@ -357,7 +424,15 @@ export const formatUpdateStrategyApiCode = (
         ),
     };
 
-    const url = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
+    const url = apiUpdatePath({
+        strategyKind,
+        unleashUrl,
+        projectId,
+        featureId,
+        environmentId,
+        strategyId,
+    });
+
     const payload = JSON.stringify(
         sortedStrategy,
         apiPayloadConstraintReplacer,

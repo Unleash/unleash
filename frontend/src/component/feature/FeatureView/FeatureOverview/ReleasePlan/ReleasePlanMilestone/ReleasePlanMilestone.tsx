@@ -18,6 +18,9 @@ import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewE
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import { ProjectEnvironmentStrategyDraggableItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem.tsx';
+import { IFeatureMetricsStatsProps } from 'component/feature/FeatureView/FeatureMetrics/FeatureMetricsStats/FeatureMetricsStats.tsx';
+import type { IFeatureStrategy } from 'interfaces/strategy.ts';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
@@ -106,7 +109,7 @@ interface IReleasePlanMilestoneProps {
     automationSection?: React.ReactNode;
     previousMilestoneStatus?: MilestoneStatus;
     projectId?: string;
-    environmentId?: string;
+    environmentId: string;
 }
 
 export const ReleasePlanMilestone = ({
@@ -232,8 +235,7 @@ export const ReleasePlanMilestone = ({
                             <StrategyListItem key={strategy.id}>
                                 {index > 0 ? <StrategySeparator /> : null}
 
-                                <StrategyItem
-                                    strategyHeaderLevel={4}
+                                <ProjectEnvironmentStrategyDraggableItem
                                     strategy={{
                                         ...strategy,
                                         name:
@@ -241,6 +243,8 @@ export const ReleasePlanMilestone = ({
                                             strategy.strategyName ||
                                             '',
                                     }}
+                                    index={index}
+                                    environmentName={environmentId}
                                 />
                             </StrategyListItem>
                         ))}

@@ -55,6 +55,7 @@ const StyledHeaderBox = styled(Box)(({ theme }) => ({
     paddingLeft: theme.spacing(6),
     paddingRight: theme.spacing(6),
     paddingTop: theme.spacing(2),
+    background: 'limegreen',
 }));
 
 const StyledTitle = styled('h1')(({ theme }) => ({

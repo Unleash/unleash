@@ -39,7 +39,7 @@ import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { AddRegexConstraintValueWidget } from './AddRegexConstraintValueWidget.tsx';
-import { ToggleConstraintInverted } from '../ToggleConstraintInverted.tsx';
+import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
 import { AddRegexValueEditor } from './AddRegexValueEditor.tsx';
 
 const Container = styled('article')(({ theme }) => ({

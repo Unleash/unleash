@@ -61,7 +61,7 @@ export class ConstraintsReadModel implements IConstraintsReadModel {
         }
 
         if (operator === REGEX) {
-            validateRegex(constraint.value);
+            validateRegex(constraint.value, constraint.inverted);
         }
 
         if (await this.contextFieldStore.exists(constraint.contextName)) {

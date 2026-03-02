@@ -28,7 +28,7 @@ export const validateSemver = (value: unknown): void => {
     }
 };
 
-export const validateRegex = (value: unknown): void => {
+export const validateRegex = (value: unknown, inverted?: unknown): void => {
     if (typeof value !== 'string') {
         throw new BadDataError(
             `the provided value is not a valid regex string.`,
@@ -41,6 +41,10 @@ export const validateRegex = (value: unknown): void => {
         throw new BadDataError(
             `the provided value is not a valid regex string. Error: ${e.message}`,
         );
+    }
+
+    if (inverted === true) {
+        throw new BadDataError(`REGEX operator cannot be inverted.`);
     }
 };
 

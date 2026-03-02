@@ -152,7 +152,7 @@ const NewEditChange = ({
                     loading={false}
                     permission={UPDATE_FEATURE_STRATEGY}
                     errors={errors}
-                    areChangeRequestsEnabled={isChangeRequestConfigured(
+                    changeRequestsEnabled={isChangeRequestConfigured(
                         environment,
                     )}
                 />

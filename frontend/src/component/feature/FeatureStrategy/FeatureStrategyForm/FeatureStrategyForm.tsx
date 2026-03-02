@@ -38,7 +38,7 @@ export interface IFeatureStrategyFormProps {
     onSubmit: () => void;
     onCancel?: () => void;
     loading: boolean;
-    areChangeRequestsEnabled: boolean;
+    changeRequestsEnabled: boolean;
     strategy: Partial<IFeatureStrategy>;
     setStrategy: React.Dispatch<
         React.SetStateAction<Partial<IFeatureStrategy>>
@@ -68,7 +68,7 @@ export const FeatureStrategyForm = ({
     strategy,
     setStrategy,
     errors,
-    areChangeRequestsEnabled,
+    changeRequestsEnabled,
     canRenamePreexistingVariants,
     Limit,
     disabled,
@@ -172,7 +172,7 @@ export const FeatureStrategyForm = ({
             },
         });
 
-        if (enableProdGuard && !areChangeRequestsEnabled) {
+        if (enableProdGuard && !changeRequestsEnabled) {
             setShowProdGuard(true);
         } else {
             onSubmit();
@@ -181,7 +181,7 @@ export const FeatureStrategyForm = ({
 
     const changeRequestAlert = hasChangeRequestInReviewForEnvironment ? (
         changeRequestInReviewOrApprovedAlert
-    ) : areChangeRequestsEnabled ? (
+    ) : changeRequestsEnabled ? (
         <FeatureStrategyChangeRequestAlert environment={environmentId} />
     ) : null;
 
@@ -210,7 +210,7 @@ export const FeatureStrategyForm = ({
                         }
                     />
 
-                    {areChangeRequestsEnabled ? null : (
+                    {changeRequestsEnabled ? null : (
                         <FeatureStrategyEnabled
                             projectId={feature.project}
                             featureId={feature.name}
@@ -253,7 +253,7 @@ export const FeatureStrategyForm = ({
                 }
                 data-testid={STRATEGY_FORM_SUBMIT_ID}
             >
-                {areChangeRequestsEnabled
+                {changeRequestsEnabled
                     ? changeRequestButtonText
                     : 'Save strategy'}
             </PermissionButton>

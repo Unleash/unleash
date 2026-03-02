@@ -254,6 +254,23 @@ describe('ConstraintsReadModel - validateConstraints', () => {
                 readModel.validateConstraints(constraints),
             ).rejects.toThrow();
         });
+
+        test('rejects inverted REGEX constraint', async () => {
+            const { readModel } = createReadModel();
+            const constraints: IConstraint[] = [
+                {
+                    contextName: 'someField',
+                    operator: 'REGEX',
+                    value: '^test.*$',
+                    values: [],
+                    inverted: true,
+                },
+            ];
+
+            await expect(
+                readModel.validateConstraints(constraints),
+            ).rejects.toThrow('REGEX operator cannot be inverted.');
+        });
     });
 
     describe('legal values validation', () => {

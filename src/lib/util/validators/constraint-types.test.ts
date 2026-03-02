@@ -147,3 +147,26 @@ test('regex validation should accept a valid regex', () => {
 
     expect(() => validateRegex(goodRegex)).not.toThrow();
 });
+
+test('regex validation should throw when inverted is true', () => {
+    const goodRegex = '^[a-zA-Z0-9]+$';
+    expect.assertions(1);
+
+    try {
+        validateRegex(goodRegex, true);
+    } catch (e) {
+        expect(e.message).toContain('REGEX operator cannot be inverted.');
+    }
+});
+
+test('regex validation should not throw when inverted is false', () => {
+    const goodRegex = '^[a-zA-Z0-9]+$';
+
+    expect(() => validateRegex(goodRegex, false)).not.toThrow();
+});
+
+test('regex validation should not throw when inverted is undefined', () => {
+    const goodRegex = '^[a-zA-Z0-9]+$';
+
+    expect(() => validateRegex(goodRegex, undefined)).not.toThrow();
+});

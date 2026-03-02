@@ -6,8 +6,8 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { ReactComponent as UnleashLogo } from 'assets/img/unleash_logo_dark_no_label.svg';
-import { ReactComponent as UnleashLogoWhite } from 'assets/img/unleash_logo_white_no_label.svg';
+import UnleashLogo from 'assets/img/unleash_logo_dark_no_label.svg?react';
+import UnleashLogoWhite from 'assets/img/unleash_logo_white_no_label.svg?react';
 import { ThemeMode } from '../../common/ThemeMode/ThemeMode.tsx';
 import { type ComponentType, useEffect, useRef, useState } from 'react';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';

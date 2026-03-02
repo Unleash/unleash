@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import { Typography, useTheme, useMediaQuery, styled } from '@mui/material';
 import Gradient from 'component/common/Gradient/Gradient';
-import { ReactComponent as Logo } from 'assets/icons/logoWhiteBg.svg';
-import { ReactComponent as LogoWithText } from 'assets/img/logoWhiteTransparentHorizontal.svg';
+import Logo from 'assets/icons/logoWhiteBg.svg?react';
+import LogoWithText from 'assets/img/logoWhiteTransparentHorizontal.svg?react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { Theme } from '@mui/material';
 

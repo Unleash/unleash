@@ -7,39 +7,39 @@ exports[`renders an empty list correctly 1`] = `
     aria-live="polite"
   >
     <div
-      className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1  css-9re55q-MuiPaper-root"
+      className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1  mui-9re55q-MuiPaper-root"
     >
       <div
-        className="header mui-70tvrt-headerPadding css-1eoza9b"
+        className="header mui-1vdhda9-headerPadding"
       >
         <div
-          className="css-j7qwjs"
+          className="mui-j7qwjs"
         >
           <div
-            className="css-mt0dvk"
+            className="mui-mt0dvk"
           >
             <div
-              className=" css-1kxj5dx"
+              className=" mui-1kxj5dx"
               data-loading={true}
             >
               <h1
-                className="MuiTypography-root MuiTypography-h1  css-1bsc9a5-MuiTypography-root"
+                className="MuiTypography-root MuiTypography-h1  mui-1bsc9a5-MuiTypography-root"
               >
                 Tag types (5)
               </h1>
             </div>
             <div
-              className="css-j2179i"
+              className="mui-j2179i"
             >
               <div
-                className="css-non55o"
+                className="mui-non55o"
               >
                 <div
-                  className="css-1om4ep4"
+                  className="mui-1om4ep4"
                 >
                   <svg
                     aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-6jhd5d-MuiSvgIcon-root"
+                    className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-6jhd5d-MuiSvgIcon-root"
                     data-testid="SearchIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -49,12 +49,12 @@ exports[`renders an empty list correctly 1`] = `
                     />
                   </svg>
                   <div
-                    className="MuiInputBase-root MuiInputBase-colorPrimary css-1mvykop-MuiInputBase-root"
+                    className="MuiInputBase-root MuiInputBase-colorPrimary mui-1mvykop-MuiInputBase-root"
                     onClick={[Function]}
                   >
                     <input
                       aria-label="Search (Ctrl+Shift+K)"
-                      className="MuiInputBase-input css-mfsqjb-MuiInputBase-input"
+                      className="MuiInputBase-input mui-mfsqjb-MuiInputBase-input"
                       data-testid="SEARCH_INPUT"
                       onAnimationStart={[Function]}
                       onBlur={[Function]}
@@ -66,16 +66,16 @@ exports[`renders an empty list correctly 1`] = `
                     />
                   </div>
                   <div
-                    className="MuiBox-root css-1ty7gog"
+                    className="MuiBox-root mui-1ty7gog"
                   />
                 </div>
               </div>
               <hr
-                className="MuiDivider-root MuiDivider-middle MuiDivider-vertical css-1cqsk4j-MuiDivider-root"
+                className="MuiDivider-root MuiDivider-middle MuiDivider-vertical mui-1cqsk4j-MuiDivider-root"
               />
               <button
                 aria-labelledby="useId-0"
-                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-rkhgas-MuiButtonBase-root-MuiButton-root"
+                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium mui-rkhgas-MuiButtonBase-root-MuiButton-root"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -95,7 +95,7 @@ exports[`renders an empty list correctly 1`] = `
               >
                 New tag type
                 <span
-                  className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                  className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
                 />
               </button>
             </div>
@@ -106,20 +106,20 @@ exports[`renders an empty list correctly 1`] = `
         className="body mui-ccg7sp-bodyContainer"
       >
         <table
-          className="MuiTable-root css-1h5dyuu-MuiTable-root"
+          className="MuiTable-root mui-1h5dyuu-MuiTable-root"
           role="table"
         >
           <thead
-            className="MuiTableHead-root css-jwzar2-MuiTableHead-root"
+            className="MuiTableHead-root mui-jwzar2-MuiTableHead-root"
             role={null}
           >
             <tr
-              className="MuiTableRow-root MuiTableRow-head css-15lapfi-MuiTableRow-root"
+              className="MuiTableRow-root MuiTableRow-head mui-15lapfi-MuiTableRow-root"
               data-loading={true}
               role="row"
             >
               <th
-                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1jpcb9q-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium mui-1jpcb9q-MuiTableCell-root"
                 scope="col"
                 style={
                   {
@@ -135,7 +135,7 @@ exports[`renders an empty list correctly 1`] = `
               </th>
               <th
                 aria-sort="ascending"
-                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1tdt0jv-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium mui-1tdt0jv-MuiTableCell-root"
                 scope="col"
                 style={
                   {
@@ -148,7 +148,7 @@ exports[`renders an empty list correctly 1`] = `
                 <button
                   aria-label=""
                   aria-labelledby={null}
-                  className=" css-abwubk"
+                  className=" mui-abwubk"
                   data-mui-internal-clone-element={true}
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -161,10 +161,10 @@ exports[`renders an empty list correctly 1`] = `
                 >
                   <span
                     aria-hidden={true}
-                    className="css-15yxmxx"
+                    className="mui-15yxmxx"
                   >
                     <span
-                      className="css-1w3kvnb"
+                      className="mui-1w3kvnb"
                       data-text="Name"
                       tabIndex={-1}
                     >
@@ -172,7 +172,7 @@ exports[`renders an empty list correctly 1`] = `
                     </span>
                     <svg
                       aria-hidden={true}
-                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-18chwvk-MuiSvgIcon-root"
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit mui-18chwvk-MuiSvgIcon-root"
                       data-testid="KeyboardArrowUpIcon"
                       focusable="false"
                       viewBox="0 0 24 24"
@@ -183,7 +183,7 @@ exports[`renders an empty list correctly 1`] = `
                     </svg>
                   </span>
                   <span
-                    className="css-y8b3t8"
+                    className="mui-y8b3t8"
                   >
                     <span
                       tabIndex={-1}
@@ -194,7 +194,7 @@ exports[`renders an empty list correctly 1`] = `
                     </span>
                     <svg
                       aria-hidden={true}
-                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit sort-arrow css-18chwvk-MuiSvgIcon-root"
+                      className="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit sort-arrow mui-18chwvk-MuiSvgIcon-root"
                       data-testid="KeyboardArrowUpIcon"
                       focusable="false"
                       viewBox="0 0 24 24"
@@ -207,7 +207,7 @@ exports[`renders an empty list correctly 1`] = `
                 </button>
               </th>
               <th
-                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium css-1jpcb9q-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium mui-1jpcb9q-MuiTableCell-root"
                 scope="col"
                 style={
                   {
@@ -231,25 +231,25 @@ exports[`renders an empty list correctly 1`] = `
             </tr>
           </thead>
           <tbody
-            className="MuiTableBody-root css-apqrd9-MuiTableBody-root"
+            className="MuiTableBody-root mui-apqrd9-MuiTableBody-root"
             role="rowgroup"
           >
             <tr
-              className="MuiTableRow-root MuiTableRow-hover css-15lapfi-MuiTableRow-root"
+              className="MuiTableRow-root MuiTableRow-hover mui-15lapfi-MuiTableRow-root"
               role="row"
             >
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-7n01ps"
+                  className="MuiBox-root mui-7n01ps"
                   data-loading={true}
                 >
                   <svg
                     aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium css-1011y64-MuiSvgIcon-root"
+                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium mui-1011y64-MuiSvgIcon-root"
                     data-testid="LabelIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -262,22 +262,22 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-70qvj9"
+                  className="MuiBox-root mui-70qvj9"
                 >
                   <div
-                    className="css-1prhjm6"
+                    className="mui-1prhjm6"
                   >
                     <div
-                      className="css-u8cmsa"
+                      className="mui-u8cmsa"
                     >
                       <span
                         aria-label=""
                         aria-labelledby={null}
-                        className=" MuiBox-root css-gzore8"
+                        className=" MuiBox-root mui-gzore8"
                         data-loading={true}
                         data-mui-internal-clone-element={true}
                         onBlur={[Function]}
@@ -292,7 +292,7 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1ui83sq"
+                        className="mui-1ui83sq"
                         data-loading={true}
                       >
                         Tag type description when loading
@@ -303,11 +303,11 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-1bvc4cc"
+                  className="MuiBox-root mui-1bvc4cc"
                   data-loading={true}
                 >
                   <div
@@ -326,7 +326,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-1"
-                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1c5tps-MuiButtonBase-root-MuiIconButton-root"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1c5tps-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
                       onClick={[Function]}
@@ -346,7 +346,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <svg
                         aria-hidden={true}
-                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
                         data-testid="EditIcon"
                         focusable="false"
                         viewBox="0 0 24 24"
@@ -356,7 +356,7 @@ exports[`renders an empty list correctly 1`] = `
                         />
                       </svg>
                       <span
-                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
                       />
                     </button>
                   </div>
@@ -376,7 +376,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-2"
-                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1c5tps-MuiButtonBase-root-MuiIconButton-root"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1c5tps-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
                       onClick={[Function]}
@@ -396,7 +396,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <svg
                         aria-hidden={true}
-                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
                         data-testid="DeleteIcon"
                         focusable="false"
                         viewBox="0 0 24 24"
@@ -406,7 +406,7 @@ exports[`renders an empty list correctly 1`] = `
                         />
                       </svg>
                       <span
-                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
                       />
                     </button>
                   </div>
@@ -414,21 +414,21 @@ exports[`renders an empty list correctly 1`] = `
               </td>
             </tr>
             <tr
-              className="MuiTableRow-root MuiTableRow-hover css-15lapfi-MuiTableRow-root"
+              className="MuiTableRow-root MuiTableRow-hover mui-15lapfi-MuiTableRow-root"
               role="row"
             >
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-7n01ps"
+                  className="MuiBox-root mui-7n01ps"
                   data-loading={true}
                 >
                   <svg
                     aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium css-1011y64-MuiSvgIcon-root"
+                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium mui-1011y64-MuiSvgIcon-root"
                     data-testid="LabelIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -441,22 +441,22 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-70qvj9"
+                  className="MuiBox-root mui-70qvj9"
                 >
                   <div
-                    className="css-1prhjm6"
+                    className="mui-1prhjm6"
                   >
                     <div
-                      className="css-u8cmsa"
+                      className="mui-u8cmsa"
                     >
                       <span
                         aria-label=""
                         aria-labelledby={null}
-                        className=" MuiBox-root css-gzore8"
+                        className=" MuiBox-root mui-gzore8"
                         data-loading={true}
                         data-mui-internal-clone-element={true}
                         onBlur={[Function]}
@@ -471,7 +471,7 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1ui83sq"
+                        className="mui-1ui83sq"
                         data-loading={true}
                       >
                         Tag type description when loading
@@ -482,11 +482,11 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-1bvc4cc"
+                  className="MuiBox-root mui-1bvc4cc"
                   data-loading={true}
                 >
                   <div
@@ -505,7 +505,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-3"
-                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1c5tps-MuiButtonBase-root-MuiIconButton-root"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1c5tps-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
                       onClick={[Function]}
@@ -525,7 +525,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <svg
                         aria-hidden={true}
-                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
                         data-testid="EditIcon"
                         focusable="false"
                         viewBox="0 0 24 24"
@@ -535,7 +535,7 @@ exports[`renders an empty list correctly 1`] = `
                         />
                       </svg>
                       <span
-                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
                       />
                     </button>
                   </div>
@@ -555,7 +555,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-4"
-                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1c5tps-MuiButtonBase-root-MuiIconButton-root"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1c5tps-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
                       onClick={[Function]}
@@ -575,7 +575,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <svg
                         aria-hidden={true}
-                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
                         data-testid="DeleteIcon"
                         focusable="false"
                         viewBox="0 0 24 24"
@@ -585,7 +585,7 @@ exports[`renders an empty list correctly 1`] = `
                         />
                       </svg>
                       <span
-                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
                       />
                     </button>
                   </div>
@@ -593,21 +593,21 @@ exports[`renders an empty list correctly 1`] = `
               </td>
             </tr>
             <tr
-              className="MuiTableRow-root MuiTableRow-hover css-15lapfi-MuiTableRow-root"
+              className="MuiTableRow-root MuiTableRow-hover mui-15lapfi-MuiTableRow-root"
               role="row"
             >
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-7n01ps"
+                  className="MuiBox-root mui-7n01ps"
                   data-loading={true}
                 >
                   <svg
                     aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium css-1011y64-MuiSvgIcon-root"
+                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium mui-1011y64-MuiSvgIcon-root"
                     data-testid="LabelIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -620,22 +620,22 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-70qvj9"
+                  className="MuiBox-root mui-70qvj9"
                 >
                   <div
-                    className="css-1prhjm6"
+                    className="mui-1prhjm6"
                   >
                     <div
-                      className="css-u8cmsa"
+                      className="mui-u8cmsa"
                     >
                       <span
                         aria-label=""
                         aria-labelledby={null}
-                        className=" MuiBox-root css-gzore8"
+                        className=" MuiBox-root mui-gzore8"
                         data-loading={true}
                         data-mui-internal-clone-element={true}
                         onBlur={[Function]}
@@ -650,7 +650,7 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1ui83sq"
+                        className="mui-1ui83sq"
                         data-loading={true}
                       >
                         Tag type description when loading
@@ -661,11 +661,11 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-1bvc4cc"
+                  className="MuiBox-root mui-1bvc4cc"
                   data-loading={true}
                 >
                   <div
@@ -684,7 +684,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-5"
-                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1c5tps-MuiButtonBase-root-MuiIconButton-root"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1c5tps-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
                       onClick={[Function]}
@@ -704,7 +704,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <svg
                         aria-hidden={true}
-                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
                         data-testid="EditIcon"
                         focusable="false"
                         viewBox="0 0 24 24"
@@ -714,7 +714,7 @@ exports[`renders an empty list correctly 1`] = `
                         />
                       </svg>
                       <span
-                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
                       />
                     </button>
                   </div>
@@ -734,7 +734,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-6"
-                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1c5tps-MuiButtonBase-root-MuiIconButton-root"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1c5tps-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
                       onClick={[Function]}
@@ -754,7 +754,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <svg
                         aria-hidden={true}
-                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
                         data-testid="DeleteIcon"
                         focusable="false"
                         viewBox="0 0 24 24"
@@ -764,7 +764,7 @@ exports[`renders an empty list correctly 1`] = `
                         />
                       </svg>
                       <span
-                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
                       />
                     </button>
                   </div>
@@ -772,21 +772,21 @@ exports[`renders an empty list correctly 1`] = `
               </td>
             </tr>
             <tr
-              className="MuiTableRow-root MuiTableRow-hover css-15lapfi-MuiTableRow-root"
+              className="MuiTableRow-root MuiTableRow-hover mui-15lapfi-MuiTableRow-root"
               role="row"
             >
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-7n01ps"
+                  className="MuiBox-root mui-7n01ps"
                   data-loading={true}
                 >
                   <svg
                     aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium css-1011y64-MuiSvgIcon-root"
+                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium mui-1011y64-MuiSvgIcon-root"
                     data-testid="LabelIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -799,22 +799,22 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-70qvj9"
+                  className="MuiBox-root mui-70qvj9"
                 >
                   <div
-                    className="css-1prhjm6"
+                    className="mui-1prhjm6"
                   >
                     <div
-                      className="css-u8cmsa"
+                      className="mui-u8cmsa"
                     >
                       <span
                         aria-label=""
                         aria-labelledby={null}
-                        className=" MuiBox-root css-gzore8"
+                        className=" MuiBox-root mui-gzore8"
                         data-loading={true}
                         data-mui-internal-clone-element={true}
                         onBlur={[Function]}
@@ -829,7 +829,7 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1ui83sq"
+                        className="mui-1ui83sq"
                         data-loading={true}
                       >
                         Tag type description when loading
@@ -840,11 +840,11 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-1bvc4cc"
+                  className="MuiBox-root mui-1bvc4cc"
                   data-loading={true}
                 >
                   <div
@@ -863,7 +863,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-7"
-                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1c5tps-MuiButtonBase-root-MuiIconButton-root"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1c5tps-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
                       onClick={[Function]}
@@ -883,7 +883,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <svg
                         aria-hidden={true}
-                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
                         data-testid="EditIcon"
                         focusable="false"
                         viewBox="0 0 24 24"
@@ -893,7 +893,7 @@ exports[`renders an empty list correctly 1`] = `
                         />
                       </svg>
                       <span
-                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
                       />
                     </button>
                   </div>
@@ -913,7 +913,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-8"
-                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1c5tps-MuiButtonBase-root-MuiIconButton-root"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1c5tps-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
                       onClick={[Function]}
@@ -933,7 +933,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <svg
                         aria-hidden={true}
-                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
                         data-testid="DeleteIcon"
                         focusable="false"
                         viewBox="0 0 24 24"
@@ -943,7 +943,7 @@ exports[`renders an empty list correctly 1`] = `
                         />
                       </svg>
                       <span
-                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
                       />
                     </button>
                   </div>
@@ -951,21 +951,21 @@ exports[`renders an empty list correctly 1`] = `
               </td>
             </tr>
             <tr
-              className="MuiTableRow-root MuiTableRow-hover css-15lapfi-MuiTableRow-root"
+              className="MuiTableRow-root MuiTableRow-hover mui-15lapfi-MuiTableRow-root"
               role="row"
             >
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-7n01ps"
+                  className="MuiBox-root mui-7n01ps"
                   data-loading={true}
                 >
                   <svg
                     aria-hidden={true}
-                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium css-1011y64-MuiSvgIcon-root"
+                    className="MuiSvgIcon-root MuiSvgIcon-colorDisabled MuiSvgIcon-fontSizeMedium mui-1011y64-MuiSvgIcon-root"
                     data-testid="LabelIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -978,22 +978,22 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-70qvj9"
+                  className="MuiBox-root mui-70qvj9"
                 >
                   <div
-                    className="css-1prhjm6"
+                    className="mui-1prhjm6"
                   >
                     <div
-                      className="css-u8cmsa"
+                      className="mui-u8cmsa"
                     >
                       <span
                         aria-label=""
                         aria-labelledby={null}
-                        className=" MuiBox-root css-gzore8"
+                        className=" MuiBox-root mui-gzore8"
                         data-loading={true}
                         data-mui-internal-clone-element={true}
                         onBlur={[Function]}
@@ -1008,7 +1008,7 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1ui83sq"
+                        className="mui-1ui83sq"
                         data-loading={true}
                       >
                         Tag type description when loading
@@ -1019,11 +1019,11 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 aria-sort={null}
-                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium css-jvmadm-MuiTableCell-root"
+                className="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-jvmadm-MuiTableCell-root"
                 role="cell"
               >
                 <div
-                  className="MuiBox-root css-1bvc4cc"
+                  className="MuiBox-root mui-1bvc4cc"
                   data-loading={true}
                 >
                   <div
@@ -1042,7 +1042,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-9"
-                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1c5tps-MuiButtonBase-root-MuiIconButton-root"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1c5tps-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
                       onClick={[Function]}
@@ -1062,7 +1062,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <svg
                         aria-hidden={true}
-                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
                         data-testid="EditIcon"
                         focusable="false"
                         viewBox="0 0 24 24"
@@ -1072,7 +1072,7 @@ exports[`renders an empty list correctly 1`] = `
                         />
                       </svg>
                       <span
-                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
                       />
                     </button>
                   </div>
@@ -1092,7 +1092,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-10"
-                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-1c5tps-MuiButtonBase-root-MuiIconButton-root"
+                      className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1c5tps-MuiButtonBase-root-MuiIconButton-root"
                       disabled={false}
                       onBlur={[Function]}
                       onClick={[Function]}
@@ -1112,7 +1112,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <svg
                         aria-hidden={true}
-                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+                        className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-i4bv87-MuiSvgIcon-root"
                         data-testid="DeleteIcon"
                         focusable="false"
                         viewBox="0 0 24 24"
@@ -1122,7 +1122,7 @@ exports[`renders an empty list correctly 1`] = `
                         />
                       </svg>
                       <span
-                        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                        className="MuiTouchRipple-root mui-8je8zh-MuiTouchRipple-root"
                       />
                     </button>
                   </div>
@@ -1137,7 +1137,7 @@ exports[`renders an empty list correctly 1`] = `
   <div
     aria-atomic={true}
     aria-live="polite"
-    className="css-gqbqkz"
+    className="mui-gqbqkz"
     data-testid="ANNOUNCER_ELEMENT_TEST_ID"
     role="status"
   >

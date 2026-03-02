@@ -10,7 +10,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ArticleIcon from '@mui/icons-material/Article';
-import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
+import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
 
 const YOUTUBE_VIDEO_ID = 'PLACEHOLDER_VIDEO_ID';
 const DOCS_URL = 'https://docs.getunleash.io/reference/release-plans';

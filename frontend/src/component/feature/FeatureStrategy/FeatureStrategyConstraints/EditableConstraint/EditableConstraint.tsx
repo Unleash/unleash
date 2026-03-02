@@ -11,12 +11,12 @@ import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
 import { ValueList } from './ValueList.tsx';
-import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
-import { ReactComponent as CaseInsensitiveIcon } from 'assets/icons/case-insensitive.svg';
+import CaseSensitiveIcon from 'assets/icons/case-sensitive.svg?react';
+import CaseInsensitiveIcon from 'assets/icons/case-insensitive.svg?react';
 import { AddValuesWidget } from './AddValuesWidget.tsx';
 
-import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
-import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
+import EqualsIcon from 'assets/icons/constraint-equals.svg?react';
+import NotEqualsIcon from 'assets/icons/constraint-not-equals.svg?react';
 import { AddSingleValueWidget } from './AddSingleValueWidget.tsx';
 import { ConstraintDateInput } from './ConstraintDateInput.tsx';
 import {

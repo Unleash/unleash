@@ -80,13 +80,13 @@ const InputRow = styled('div')(({ theme }) => ({
 }));
 
 const StyledMatchIndicatorBox = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'passes',
-})<{ passes: boolean }>(({ theme, passes }) => ({
+    shouldForwardProp: (prop) => prop !== 'match',
+})<{ match: boolean }>(({ theme, match }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.5),
     fontSize: theme.fontSizes.smallBody,
-    color: passes ? theme.palette.success.main : theme.palette.warning.main,
+    color: match ? theme.palette.success.main : theme.palette.warning.main,
 }));
 
 const StyledMatchIcon = styled(CheckCircleOutline)(({ theme }) => ({
@@ -99,19 +99,19 @@ const StyledNoMatchIcon = styled(HighlightOff)(({ theme }) => ({
     fontSize: 'inherit',
 }));
 
-const MatchIndicator: FC<{ passes: boolean; testString: string }> = ({
-    passes,
+const MatchIndicator: FC<{ match: boolean; testString: string }> = ({
+    match,
     testString,
 }) => {
     const isEmptyTestString = testString === '';
-    return passes ? (
-        <StyledMatchIndicatorBox passes={passes}>
+    return match ? (
+        <StyledMatchIndicatorBox match={match}>
             <StyledMatchIcon aria-hidden />
             Your regular expression matches
             {isEmptyTestString ? ' an empty string.' : ''}
         </StyledMatchIndicatorBox>
     ) : (
-        <StyledMatchIndicatorBox passes={passes}>
+        <StyledMatchIndicatorBox match={match}>
             <StyledNoMatchIcon aria-hidden />
             Your regular expression does not match
             {isEmptyTestString ? ' empty strings.' : ''}
@@ -236,7 +236,7 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
                     )}
                 </StyledTestInputBox>
                 <MatchIndicator
-                    passes={input.match}
+                    match={input.match}
                     testString={input.testString}
                 />
             </StyledListItem>

@@ -130,7 +130,7 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          node dist/server.js > /tmp/unleash-server.log 2>&1 &
+          yarn start > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
@@ -145,7 +145,7 @@ jobs:
               kill $TAIL_PID
               exit 0
             fi
-            echo "Waiting for Unleash... attempt $i/256 ($(date -u '+%H:%M:%S') UTC)";
+            echo "Waiting for Unleash... attempt $i";
             sleep 2
           done
           echo "Unleash did not become ready in time."

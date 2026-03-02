@@ -62,7 +62,7 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn dev:backend &
+          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
@@ -74,13 +74,14 @@ jobs:
               echo "Unleash is up!";
               exit 0
             fi
-            echo "Waiting for Unleash...";
+            echo "Waiting for Unleash... attempt $i";
             sleep 2
           done
           echo "Unleash did not become ready in time."
+          cat /tmp/unleash-server.log
           exit 1
       - name: Download OpenAPI spec from baseline
-        run: curl -sSL -o openapi-stable.json "localhost:4242/docs/openapi.json"
+        run: curl -sSL -o openapi-stable.json "http://localhost:4242/docs/openapi.json"
       - name: Upload openapi-stable.json
         uses: actions/upload-artifact@v4
         with:
@@ -122,7 +123,7 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn dev:backend &
+          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
@@ -132,13 +133,16 @@ jobs:
           for i in {1..30}; do
             if curl -sf http://localhost:4242/health; then
               echo "Unleash is up!";
-              break;
+              exit 0
             fi
-            echo "Waiting for Unleash...";
+            echo "Waiting for Unleash... attempt $i";
             sleep 2
           done
+          echo "Unleash did not become ready in time."
+          cat /tmp/unleash-server.log
+          exit 1
       - name: Download OpenAPI spec (current branch)
-        run: curl -sSL -o openapi-current.json localhost:4242/docs/openapi.json
+        run: curl -sSL -o openapi-current.json http://localhost:4242/docs/openapi.json
       - name: Upload openapi-current.json
         uses: actions/upload-artifact@v4
         with:

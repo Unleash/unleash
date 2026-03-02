@@ -53,6 +53,8 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install --immutable
+      - name: Build backend
+        run: yarn build:backend
       - name: Start Unleash test instance
         run: |
           # fake frontend build
@@ -62,7 +64,7 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
+          node dist/server.js > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
@@ -71,8 +73,7 @@ jobs:
         run: |
           tail -f /tmp/unleash-server.log &
           TAIL_PID=$!
-          sleep 10
-          for i in {1..256}; do
+          for i in {1..30}; do
             if curl -sf http://localhost:4242/health; then
               echo "Unleash is up!";
               kill $TAIL_PID
@@ -118,6 +119,8 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install --immutable
+      - name: Build backend
+        run: yarn build:backend
       - name: Start Unleash test instance
         run: |
           # fake frontend build
@@ -127,7 +130,7 @@ jobs:
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
+          node dist/server.js > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'

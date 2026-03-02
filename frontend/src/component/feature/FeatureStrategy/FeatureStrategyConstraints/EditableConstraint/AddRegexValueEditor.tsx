@@ -14,7 +14,9 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import {
     type FC,
+    type MutableRefObject,
     type ReactNode,
+    memo,
     useCallback,
     useEffect,
     useId,
@@ -128,6 +130,120 @@ const HelpText = styled('p')(({ theme }) => ({
     margin: 0,
 }));
 
+type RegexTestInput = {
+    id: number;
+    testString: string;
+    match: boolean;
+};
+
+type RegexTestInputItemProps = {
+    input: RegexTestInput;
+    index: number;
+    totalCount: number;
+    onEdit: (id: number, testString: string) => void;
+    onRemove: (id: number) => void;
+    onAddAfter: (index: number) => void;
+    focusTestInput: (index: number) => void;
+    focusRegexInput: () => void;
+    inputRefs: MutableRefObject<
+        Array<HTMLTextAreaElement | HTMLInputElement | null>
+    >;
+};
+
+const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
+    ({
+        input,
+        index,
+        totalCount,
+        onEdit,
+        onRemove,
+        onAddAfter,
+        focusTestInput,
+        focusRegexInput,
+        inputRefs,
+    }) => {
+        const setInputRef = useCallback(
+            (el: HTMLTextAreaElement | HTMLInputElement | null) => {
+                inputRefs.current[index] = el;
+            },
+            [inputRefs, index],
+        );
+
+        const handleKeyDown = useCallback(
+            (e: React.KeyboardEvent) => {
+                if (e.key === 'ArrowDown' || e.key === 'Enter') {
+                    e.preventDefault();
+                    if (index + 1 < totalCount) {
+                        focusTestInput(index + 1);
+                    } else if (input.testString.trim()) {
+                        onAddAfter(index);
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (index === 0) {
+                        focusRegexInput();
+                    } else {
+                        focusTestInput(index - 1);
+                    }
+                }
+            },
+            [
+                index,
+                totalCount,
+                input.testString,
+                focusTestInput,
+                onAddAfter,
+                focusRegexInput,
+            ],
+        );
+
+        const handleChange = useCallback(
+            (e: React.ChangeEvent<HTMLInputElement>) => {
+                onEdit(input.id, e.target.value);
+            },
+            [input.id, onEdit],
+        );
+
+        return (
+            <StyledListItem>
+                <StyledTestInputBox>
+                    <StyledTextField
+                        type='text'
+                        placeholder='Enter test value'
+                        size='small'
+                        fullWidth
+                        value={input.testString}
+                        id={`test-input-${input.id}`}
+                        inputProps={{
+                            'aria-describedby': 'test-strings-description',
+                        }}
+                        inputRef={setInputRef}
+                        onKeyDown={handleKeyDown}
+                        onChange={handleChange}
+                    />
+                    {totalCount > 1 && (
+                        <HtmlTooltip title='Remove test string' arrow>
+                            <IconButton
+                                type='button'
+                                size='small'
+                                aria-label={`Remove test string ${index}: ${input.testString === '' ? 'empty string' : ''}`}
+                                sx={{ ml: 'auto' }}
+                                onClick={() => onRemove(input.id)}
+                            >
+                                <Delete fontSize='inherit' />
+                            </IconButton>
+                        </HtmlTooltip>
+                    )}
+                </StyledTestInputBox>
+                <MatchIndicator
+                    passes={input.match}
+                    testString={input.testString}
+                />
+            </StyledListItem>
+        );
+    },
+);
+
 type AddRegexValueEditorProps = {
     addValue: (newValue: string) => void;
     initialValue?: string;
@@ -165,13 +281,9 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
         },
         [inputValue, caseInsensitive],
     );
-    const [regexTestInputs, setRegexTestInputs] = useState<
-        {
-            id: number;
-            testString: string;
-            match: boolean;
-        }[]
-    >([{ id: 1, testString: '', match: false }]);
+    const [regexTestInputs, setRegexTestInputs] = useState<RegexTestInput[]>([
+        { id: 1, testString: '', match: false },
+    ]);
     const regexTestInputRefs = useRef<
         Array<HTMLTextAreaElement | HTMLInputElement | null>
     >([]);
@@ -179,63 +291,114 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
     const addTestStringButtonRef = useRef<HTMLButtonElement>(null);
     const arrowDownSelectionStart = useRef<number | null>(null);
 
-    const validateValue = (newValue: string): string => {
-        if (newValue.length > 100) {
-            return `Values cannot be longer than 100 characters (current: ${newValue.length})`;
+    const focusTestInput = useCallback((idx: number) => {
+        regexTestInputRefs.current[idx]?.focus();
+    }, []);
+
+    const focusRegexInput = useCallback(() => {
+        const textarea = inputRef.current;
+        if (textarea) {
+            textarea.focus();
+            const len = textarea.value.length;
+            textarea.setSelectionRange(len, len);
         }
+    }, []);
 
-        const [isValid, errorMessage] = validator(newValue);
-        if (isValid) {
-            return '';
-        } else {
-            return errorMessage;
-        }
-    };
+    const validateValue = useCallback(
+        (newValue: string): string => {
+            if (newValue.length > 100) {
+                return `Values cannot be longer than 100 characters (current: ${newValue.length})`;
+            }
+            const [isValid, errorMessage] = validator(newValue);
+            return isValid ? '' : errorMessage;
+        },
+        [validator],
+    );
 
-    useEffect(() => {
-        if (!editingOpen) return;
-        // Reset state when opening the popover.
-        // Reset button could be better, but we're not using it in other popoovers.
-        setInputValue(initialValue || '');
-        setError(validateValue(initialValue || ''));
-    }, [editingOpen, initialValue]);
-
-    const handleOnEnterInRegexInput = () => {
+    const handleOnEnterInRegexInput = useCallback(() => {
         if (!inputValue?.trim()) {
             setError('Value cannot be empty or whitespace');
             return;
         }
-        // otherwise move to the test input
-        regexTestInputRefs.current[0]?.focus();
-    };
+        focusTestInput(0);
+    }, [inputValue, focusTestInput]);
 
-    const handleRegexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.value;
-        addValue(newValue);
-    };
+    const handleRegexKeyDown = useCallback(
+        (e: React.KeyboardEvent) => {
+            if (e.key === 'ArrowUp') {
+                e.stopPropagation();
+                return;
+            }
+            if (e.key === 'ArrowDown') {
+                e.stopPropagation();
+                arrowDownSelectionStart.current =
+                    inputRef.current?.selectionStart ?? null;
+                return;
+            }
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleOnEnterInRegexInput();
+            }
+        },
+        [handleOnEnterInRegexInput],
+    );
+
+    const handleRegexKeyUp = useCallback(
+        (e: React.KeyboardEvent) => {
+            if (e.key === 'ArrowDown') {
+                const textarea = inputRef.current;
+                const before = arrowDownSelectionStart.current;
+                arrowDownSelectionStart.current = null;
+                if (
+                    textarea &&
+                    before !== null &&
+                    textarea.selectionStart === before
+                ) {
+                    focusTestInput(0);
+                }
+            }
+        },
+        [focusTestInput],
+    );
+
+    const handleRegexInputChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            addValue(e.target.value);
+        },
+        [addValue],
+    );
+
+    useEffect(() => {
+        if (!editingOpen) return;
+        setInputValue(initialValue || '');
+        setError(validateValue(initialValue || ''));
+    }, [editingOpen, initialValue, validateValue]);
+
+    const handleEditTestString = useCallback(
+        (id: number, testString: string) => {
+            setRegexTestInputs((prev) =>
+                prev.map((input) => {
+                    if (input.id !== id) return input;
+                    return {
+                        ...input,
+                        testString,
+                        match: matchesRegex(testString),
+                    };
+                }),
+            );
+        },
+        [matchesRegex],
+    );
 
     useEffect(() => {
         setRegexTestInputs((prev) =>
-            prev.map((input) => {
-                const match = matchesRegex(input.testString);
-                return { ...input, match };
-            }),
+            prev.map((input) => ({
+                ...input,
+                match: matchesRegex(input.testString),
+            })),
         );
     }, [matchesRegex]);
 
-    const handleEditTestString = (id: number, testString: string) => {
-        setRegexTestInputs((prev) =>
-            prev.map((input) => {
-                if (input.id !== id) return input;
-                const match = matchesRegex(testString);
-                return {
-                    ...input,
-                    testString,
-                    match,
-                };
-            }),
-        );
-    };
     useEffect(() => {
         if (pendingFocusIndex.current !== null) {
             if (pendingFocusIndex.current === -1) {
@@ -247,25 +410,18 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
         }
     }, [regexTestInputs]);
 
-    const handleAddTestString = () => {
+    const handleAddTestString = useCallback(() => {
         setRegexTestInputs((prev) => {
             const maxId = prev.reduce(
                 (max, input) => Math.max(max, input.id),
                 0,
             );
             pendingFocusIndex.current = prev.length;
-            return [
-                ...prev,
-                {
-                    id: maxId + 1,
-                    testString: '',
-                    match: false,
-                },
-            ];
+            return [...prev, { id: maxId + 1, testString: '', match: false }];
         });
-    };
+    }, []);
 
-    const handleAddTestStringAfter = (afterIndex: number) => {
+    const handleAddTestStringAfter = useCallback((afterIndex: number) => {
         const newIndex = afterIndex + 1;
         pendingFocusIndex.current = newIndex;
         setRegexTestInputs((prev) => {
@@ -273,19 +429,21 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                 (max, input) => Math.max(max, input.id),
                 0,
             );
-            const newItem = {
-                id: maxId + 1,
-                testString: '',
-                match: false,
-            };
+            const newItem = { id: maxId + 1, testString: '', match: false };
             const next = [...prev];
             next.splice(newIndex, 0, newItem);
             return next;
         });
-    };
-    const handleRemoveTestString = (id: number) => {
-        setRegexTestInputs((prev) => prev.filter((input) => input.id !== id));
-    };
+    }, []);
+
+    const handleRemoveTestString = useCallback((id: number) => {
+        setRegexTestInputs((prev) => {
+            if (prev.length <= 1) return prev;
+            const idx = prev.findIndex((input) => input.id === id);
+            pendingFocusIndex.current = Math.min(idx, prev.length - 2);
+            return prev.filter((input) => input.id !== id);
+        });
+    }, []);
 
     return (
         <StyledBox>
@@ -307,40 +465,8 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                         placeholder='Enter RE2 regex value e.g.: [xyz]'
                         value={inputValue}
                         onChange={handleRegexInputChange}
-                        onKeyDown={(e) => {
-                            if (e.key === 'ArrowUp') {
-                                e.stopPropagation();
-                                return;
-                            }
-                            if (e.key === 'ArrowDown') {
-                                e.stopPropagation();
-                                // Save position before the browser moves the
-                                // cursor. We compare in onKeyUp: if it hasn't
-                                // moved, we were on the last visual line.
-                                arrowDownSelectionStart.current =
-                                    inputRef.current?.selectionStart ?? null;
-                                return;
-                            }
-                            if (e.key === 'Enter' && !e.shiftKey) {
-                                e.preventDefault();
-                                handleOnEnterInRegexInput();
-                            }
-                        }}
-                        onKeyUp={(e) => {
-                            if (e.key === 'ArrowDown') {
-                                const textarea = inputRef.current;
-                                const before = arrowDownSelectionStart.current;
-                                arrowDownSelectionStart.current = null;
-                                if (
-                                    textarea &&
-                                    before !== null &&
-                                    textarea.selectionStart === before
-                                ) {
-                                    // Cursor didn't move → already on last visual line
-                                    regexTestInputRefs.current[0]?.focus();
-                                }
-                            }
-                        }}
+                        onKeyDown={handleRegexKeyDown}
+                        onKeyUp={handleRegexKeyUp}
                         size='small'
                         variant='outlined'
                         fullWidth
@@ -363,104 +489,18 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                 </Typography>
                 <StyledList>
                     {regexTestInputs.map((regexTestInput, index) => (
-                        <StyledListItem key={regexTestInput.id}>
-                            <StyledTestInputBox>
-                                <StyledTextField
-                                    type='text'
-                                    placeholder='Enter test value'
-                                    size='small'
-                                    fullWidth
-                                    value={regexTestInput.testString}
-                                    id={`test-input-${regexTestInput.id}`}
-                                    inputProps={{
-                                        'aria-describedby':
-                                            'test-strings-description',
-                                    }}
-                                    inputRef={(el) => {
-                                        regexTestInputRefs.current[index] = el;
-                                    }}
-                                    onKeyDown={(e) => {
-                                        if (
-                                            e.key === 'ArrowDown' ||
-                                            e.key === 'Enter'
-                                        ) {
-                                            e.preventDefault();
-                                            if (
-                                                index + 1 <
-                                                regexTestInputs.length
-                                            ) {
-                                                regexTestInputRefs.current[
-                                                    index + 1
-                                                ]?.focus();
-                                            } else if (
-                                                regexTestInput.testString.trim()
-                                            ) {
-                                                handleAddTestStringAfter(index);
-                                            }
-                                        } else if (e.key === 'ArrowUp') {
-                                            e.preventDefault();
-                                            if (index === 0) {
-                                                const textarea =
-                                                    inputRef.current;
-                                                if (textarea) {
-                                                    textarea.focus();
-                                                    const len =
-                                                        textarea.value.length;
-                                                    textarea.setSelectionRange(
-                                                        len,
-                                                        len,
-                                                    );
-                                                }
-                                            } else {
-                                                regexTestInputRefs.current[
-                                                    index - 1
-                                                ]?.focus();
-                                            }
-                                        }
-                                    }}
-                                    onChange={(e) => {
-                                        handleEditTestString(
-                                            regexTestInput.id,
-                                            e.target.value,
-                                        );
-                                    }}
-                                />
-                                {regexTestInputs.length > 1 && (
-                                    <HtmlTooltip
-                                        title='Remove test string'
-                                        arrow
-                                    >
-                                        <IconButton
-                                            type='button'
-                                            size='small'
-                                            aria-label={`Remove test string ${index}: ${regexTestInput.testString === '' ? 'empty string' : ''}`}
-                                            sx={{ ml: 'auto' }}
-                                            onClick={() => {
-                                                const newLength =
-                                                    regexTestInputs.length - 1;
-                                                if (newLength === 0) {
-                                                    return;
-                                                }
-                                                pendingFocusIndex.current =
-                                                    Math.min(
-                                                        index,
-                                                        newLength - 1,
-                                                    );
-                                                handleRemoveTestString(
-                                                    regexTestInput.id,
-                                                );
-                                            }}
-                                        >
-                                            <Delete fontSize='inherit' />
-                                        </IconButton>
-                                    </HtmlTooltip>
-                                )}
-                            </StyledTestInputBox>
-                            <MatchIndicator
-                                passes={regexTestInput.match}
-                                testString={regexTestInput.testString}
-                            />
-                        </StyledListItem>
+                        <RegexTestInputItem
+                            key={regexTestInput.id}
+                            input={regexTestInput}
+                            index={index}
+                            totalCount={regexTestInputs.length}
+                            onEdit={handleEditTestString}
+                            onRemove={handleRemoveTestString}
+                            onAddAfter={handleAddTestStringAfter}
+                            focusTestInput={focusTestInput}
+                            focusRegexInput={focusRegexInput}
+                            inputRefs={regexTestInputRefs}
+                        />
                     ))}
                 </StyledList>
                 <Box>

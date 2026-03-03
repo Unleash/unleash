@@ -171,6 +171,10 @@ describe('AddRegexValueEditor', () => {
             ).toHaveLength(2);
             const inputs = screen.getAllByPlaceholderText('Enter test value');
             expect(inputs[inputs.length - 1]).toHaveFocus();
+
+            expect(
+                screen.getAllByText(/matches an empty string/i),
+            ).toHaveLength(2);
         });
 
         test('removes a test string when remove button is clicked', () => {

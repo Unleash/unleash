@@ -162,9 +162,9 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 <Collapse in={expanded}>
                     <StyledExpandedContent>
                         <StyledEmptyDescription>
-                            Connect your metrics to see how this feature
-                            affects adoption, error counts, latency, and other
-                            key indicators during rollout.
+                            Connect your metrics to see how this feature affects
+                            adoption, error counts, latency, and other key
+                            indicators during rollout.
                         </StyledEmptyDescription>
                         <StyledChartRow>
                             <PlaceholderChart

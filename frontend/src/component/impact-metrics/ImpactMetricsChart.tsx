@@ -136,7 +136,11 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
 
     const cover = notEnoughData ? placeholder : isLoading;
 
-    const { scales: overrideScales = {}, plugins: overridePlugins = {}, ...restOverrides } = overrideOptions;
+    const {
+        scales: overrideScales = {},
+        plugins: overridePlugins = {},
+        ...restOverrides
+    } = overrideOptions;
 
     const chartOptions: ChartOptions<'line'> = shouldShowPlaceholder
         ? overrideOptions

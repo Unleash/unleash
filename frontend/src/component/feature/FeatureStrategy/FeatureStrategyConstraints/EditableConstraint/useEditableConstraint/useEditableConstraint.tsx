@@ -44,7 +44,7 @@ const resolveContextDefinition = (
     );
 };
 
-type LegalValueData = {
+export type LegalValueData = {
     legalValues: ILegalValue[];
     deletedLegalValues?: Set<string>;
     invalidLegalValues?: Set<string>;

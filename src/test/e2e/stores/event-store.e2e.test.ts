@@ -16,6 +16,7 @@ import {
     FeatureTaggedEvent,
     FeatureUpdatedEvent,
 } from '../../../lib/types/index.js';
+import { ALL_ENVS } from '../../../lib/util/index.js';
 
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
@@ -373,7 +374,7 @@ describe('getDeltaRevisionState', () => {
         )!;
 
         const state = await eventStore.getDeltaRevisionState(
-            undefined,
+            ALL_ENVS,
             segmentStored.id,
         );
 
@@ -454,7 +455,7 @@ describe('getDeltaRevisionState', () => {
         )!;
 
         const state = await eventStore.getDeltaRevisionState(
-            undefined,
+            ALL_ENVS,
             storedMove.id,
         );
 
@@ -478,7 +479,7 @@ describe('getDeltaRevisionState', () => {
 
         const stored = (await eventStore.getAll())[0];
         const state = await eventStore.getDeltaRevisionState(
-            undefined,
+            ALL_ENVS,
             stored.id,
         );
 
@@ -525,7 +526,7 @@ describe('getDeltaRevisionState', () => {
         )!;
 
         const state = await eventStore.getDeltaRevisionState(
-            undefined,
+            ALL_ENVS,
             segmentStored.id,
         );
 

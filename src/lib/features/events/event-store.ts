@@ -264,15 +264,16 @@ export class EventStore implements IEventStore {
     }
 
     async getDeltaRevisionState(
-        environment: string | undefined,
+        environment: string,
         upperBound: number,
     ): Promise<{
         projectRevisions: Map<string, number>;
         globalSegmentRevision: number;
     }> {
         const stopTimer = this.metricTimer('getDeltaRevisionState');
+        const shouldFilterEnvironment = environment !== ALL_ENVS;
         const applyEnvironmentFilter = (query: Knex.QueryBuilder) => {
-            if (environment && environment !== ALL_ENVS) {
+            if (shouldFilterEnvironment) {
                 query.andWhere((envInner) => {
                     envInner
                         .where('environment', environment)

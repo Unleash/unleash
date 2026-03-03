@@ -43,7 +43,7 @@ export interface IEventStore
         environment?: string,
     ): Promise<number>;
     getDeltaRevisionState(
-        environment: string | undefined,
+        environment: string,
         upperBound: number,
     ): Promise<{
         projectRevisions: Map<string, number>;

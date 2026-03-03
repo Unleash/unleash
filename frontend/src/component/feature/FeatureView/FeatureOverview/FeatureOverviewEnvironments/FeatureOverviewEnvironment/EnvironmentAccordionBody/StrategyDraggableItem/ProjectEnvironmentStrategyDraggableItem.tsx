@@ -113,23 +113,20 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                     >
                         <Edit />
                     </PermissionIconButton>
+                    {otherEnvironments && otherEnvironments?.length > 0 ? (
+                        <CopyStrategyIconMenu
+                            environmentId={environmentName}
+                            environments={otherEnvironments as string[]}
+                            strategy={strategy}
+                        />
+                    ) : null}
                     {context === 'milestone' ? null : (
-                        <>
-                            {otherEnvironments &&
-                            otherEnvironments?.length > 0 ? (
-                                <CopyStrategyIconMenu
-                                    environmentId={environmentName}
-                                    environments={otherEnvironments as string[]}
-                                    strategy={strategy}
-                                />
-                            ) : null}
-                            <MenuStrategyRemove
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentName}
-                                strategy={strategy}
-                            />
-                        </>
+                        <MenuStrategyRemove
+                            projectId={projectId}
+                            featureId={featureId}
+                            environmentId={environmentName}
+                            strategy={strategy}
+                        />
                     )}
                 </>
             }

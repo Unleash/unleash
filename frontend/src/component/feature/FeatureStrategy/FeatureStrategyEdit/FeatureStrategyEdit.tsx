@@ -241,6 +241,7 @@ const NewFeatureStrategyEdit = () => {
     }, [defaultStickiness, strategyDefinition?.name]);
 
     const payload = createStrategyPayload(strategy);
+    console.log(payload);
 
     const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
         const updateFn =

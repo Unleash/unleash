@@ -9,7 +9,7 @@ export const userTokenClientApiLogger = (
 ): any =>
 {
     return async (req: IAuthRequest | IApiRequest, res, next) => {
-        const logger = getLogger('/middleware/user-token-rejector-middleware.ts');
+        const logger = getLogger('/middleware/user-token-client-api-logger-middleware.ts');
         const apiToken = req.header('authorization');
         if (apiToken?.startsWith('user:') && flagResolver.isEnabled('userTokenWithClientApiLogging')) {
             logger.info(`In the next version update, calling API endpoints under /api/client/ using Personal Access Tokens and Service Accounts will no longer be supported.

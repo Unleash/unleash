@@ -282,6 +282,7 @@ export const EditableConstraint: FC<Props> = ({
         updateConstraint,
         validator,
         legalValueData,
+        invertedDisabled,
     } = useEditableConstraint(constraint, onUpdate);
     const addValues = useCallback(
         (value: string | string[]) =>
@@ -359,8 +360,13 @@ export const EditableConstraint: FC<Props> = ({
 
                         <OperatorOptions>
                             <ToggleConstraintInverted
-                                inverted={localConstraint.inverted}
+                                inverted={Boolean(localConstraint.inverted)}
                                 onToggleInverted={onToggleInverted}
+                                disabledText={
+                                    invertedDisabled
+                                        ? 'The REGEX operator does not support inversion'
+                                        : undefined
+                                }
                             />
 
                             <ConstraintOperatorSelect

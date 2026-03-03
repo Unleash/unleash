@@ -4,9 +4,9 @@
 
 Before you begin:
 
-- Have you read the [code of conduct](CODE_OF_CONDUCT.md)?
+- Have you read the [code of conduct](../CODE_OF_CONDUCT.md)?
 - Check out the [existing issues](https://github.com/unleash/Unleash/issues)
-- Browse the [developer-guide](./website/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
+- Browse the [developer-guide](https://docs.getunleash.io/contribute) for tips on environment setup, running the tests, and running Unleash from source.
 - You need
   - Node 20
   - corepack enabled `corepack enable`
@@ -36,7 +36,7 @@ Follow the steps in [the "how to run the project" section](#how-to-run-the-proje
 
 ### Make your update:
 
-Make your changes to the files you'd like to update. You'll need **Node.js v18.0+** and PostgreSQL v13.0+ to run Unleash locally. [See more details](https://github.com/Unleash/unleash/tree/master/website/docs/contributing/developer-guide.md)
+Make your changes to the files you'd like to update. You'll need **Node.js v18.0+** and PostgreSQL v13.0+ to run Unleash locally. [See more details](https://docs.getunleash.io/contribute)
 
 ### Open a pull request
 
@@ -165,7 +165,7 @@ Unleash will attempt to connect using the connection string in `src/test/e2e/hel
 
 ### Controllers
 
-In order to handle HTTP requests we have an abstraction called [Controller](https://github.com/Unleash/unleash/blob/master/src/lib/routes/controller.ts). If you want to introduce a new route handler for a specific path (and sub pats) you should implement a controller class which extends the base Controller. An example to follow is the [routes/admin-api/feature.ts](https://github.com/Unleash/unleash/blob/master/src/lib/routes/admin-api/feature.ts) implementation.
+In order to handle HTTP requests we have an abstraction called [Controller](https://github.com/Unleash/unleash/blob/main/src/lib/routes/controller.ts). If you want to introduce a new route handler for a specific path (and sub pats) you should implement a controller class which extends the base Controller. An example to follow is the [features/feature-toggle/legacy/feature-toggle-legacy-controller.ts](https://github.com/Unleash/unleash/blob/main/src/lib/features/feature-toggle/legacy/feature-toggle-legacy-controller.ts) implementation.
 
 The controller takes care of the following:
 

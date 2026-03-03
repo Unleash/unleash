@@ -66,9 +66,12 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                     }
                     options={[
                         'Developer',
-                        'DevOps',
-                        'Engineering manager',
-                        'Product manager',
+                        'Engineering Manager',
+                        'Product Manager',
+                        'Designer/UX',
+                        'DevOps Engineer',
+                        'QA/Test Engineer',
+                        'Executive',
                         'Other',
                     ]}
                     renderInput={(params) => (

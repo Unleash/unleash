@@ -237,7 +237,7 @@ const InlineEdit: FC<{
         return (
             <AddRegexValueEditor
                 initialValue={localConstraint.value}
-                caseInsensitive={!!localConstraint.caseInsensitive}
+                caseInsensitive={Boolean(localConstraint.caseInsensitive)}
                 addValue={addValues}
                 validator={validator}
                 editingOpen={editingOpen}
@@ -372,9 +372,9 @@ export const EditableConstraint: FC<Props> = ({
 
                             {showCaseSensitiveButton ? (
                                 <ToggleConstraintCaseSensitivity
-                                    caseInsensitive={
-                                        !!localConstraint.caseInsensitive
-                                    }
+                                    caseInsensitive={Boolean(
+                                        localConstraint.caseInsensitive,
+                                    )}
                                     onToggleCaseSensitivity={
                                         onToggleCaseSensitivity
                                     }

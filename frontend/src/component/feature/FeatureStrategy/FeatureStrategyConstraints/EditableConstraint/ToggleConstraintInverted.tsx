@@ -65,7 +65,7 @@ export const ToggleConstraintInverted = ({
                         : 'The constraint operator is inclusive.'
                 }
             >
-                <ConstrainInversionIcon inverted={!!inverted} />
+                <ConstrainInversionIcon inverted={Boolean(inverted)} />
             </StyledButton>
         </HtmlTooltip>
     );

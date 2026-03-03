@@ -397,7 +397,7 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                         variant='outlined'
                         fullWidth
                         autoFocus
-                        error={!!error}
+                        error={Boolean(error)}
                         helperText={error}
                         aria-describedby={helpTextId}
                         data-testid='CONSTRAINT_VALUES_INPUT'

@@ -56,7 +56,7 @@ export const AddRegexConstraintValueWidget: FC<Props> = ({
 
     return (
         <StyledChip
-            hasValue={!!currentValue}
+            hasValue={Boolean(currentValue)}
             label={currentValue || 'Add value'}
             onClick={handleClick}
             icon={currentValue ? undefined : <Add />}

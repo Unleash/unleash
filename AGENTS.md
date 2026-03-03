@@ -114,6 +114,8 @@ Detailed standards are documented as Architectural Decision Records (ADRs). They
 - /contributing/ADRs/front-end/
 - /contributing/ADRs/overarching/
 
+Instead of `!!someVariable` prefer `Boolean(someVariable)`. 
+
 ## Database Migrations
 
 - Migrations live in `/src/migrations/`

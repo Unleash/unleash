@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer } from 'react';
+import { useEffect, useMemo, useReducer, useRef } from 'react';
 import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint,
@@ -67,19 +67,29 @@ export const useEditableConstraint = (
         constraintReducer,
         fromIConstraint(constraint),
     );
-    const { deletedLegalValues, ...localConstraint } = constraintState;
-    useEffect(() => {
-        onUpdate(toIConstraint(localConstraint));
+    const localConstraint = useMemo(() => {
+        const { deletedLegalValues: _ignored, ...rest } = constraintState;
+        return rest;
     }, [constraintState]);
+    const { deletedLegalValues } = constraintState;
+
+    const onUpdateRef = useRef(onUpdate);
+    onUpdateRef.current = onUpdate;
+    useEffect(() => {
+        onUpdateRef.current(toIConstraint(localConstraint));
+    }, [localConstraint]);
 
     const { context } = useAssignableUnleashContext();
 
     const contextDefinition = useMemo(
         () => resolveContextDefinition(context, localConstraint.contextName),
-        [JSON.stringify(context), localConstraint.contextName],
+        [context, localConstraint.contextName],
     );
 
-    const baseValidator = constraintValidator(localConstraint.operator);
+    const baseValidator = useMemo(
+        () => constraintValidator(localConstraint.operator),
+        [localConstraint.operator],
+    );
 
     const validator = (...values: string[]) => {
         if (
@@ -109,10 +119,7 @@ export const useEditableConstraint = (
                 payload: deletedLegalValues,
             });
         }
-    }, [
-        JSON.stringify(contextDefinition.legalValues),
-        JSON.stringify(constraint.values),
-    ]);
+    }, [constraint.values, contextDefinition.legalValues]);
 
     const invalidLegalValues = useMemo(() => {
         if (
@@ -125,10 +132,7 @@ export const useEditableConstraint = (
             );
         }
         return undefined;
-    }, [
-        JSON.stringify(contextDefinition.legalValues),
-        JSON.stringify(localConstraint.operator),
-    ]);
+    }, [baseValidator, contextDefinition.legalValues, localConstraint]);
 
     const legalValueData = contextDefinition.legalValues?.length
         ? {

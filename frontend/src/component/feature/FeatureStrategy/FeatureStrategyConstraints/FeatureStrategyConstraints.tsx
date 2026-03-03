@@ -27,18 +27,17 @@ export const FeatureStrategyConstraints = <T extends StrategyFormState>({
 }: IFeatureStrategyConstraintsProps<T>) => {
     useEffect(() => {
         return () => {
-            if (!strategy.constraints) {
-                return;
-            }
-
             // If the component is unmounting we want to remove all constraints that do not have valid single value or
             // valid multivalues
-            setStrategy((prev: T) => ({
-                ...prev,
-                constraints: prev.constraints?.filter(filterConstraints),
-            }));
+            setStrategy((prev: T) => {
+                if (!prev.constraints) return prev;
+                return {
+                    ...prev,
+                    constraints: prev.constraints.filter(filterConstraints),
+                };
+            });
         };
-    }, []);
+    }, [setStrategy]);
 
     const constraints = strategy.constraints || [];
 

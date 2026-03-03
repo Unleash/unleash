@@ -133,6 +133,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                     role='button'
                     tabIndex={0}
                     aria-expanded={expanded}
+                    aria-label='Toggle impact metrics details'
                     onClick={toggleExpanded}
                     onKeyDown={onHeaderKeyDown}
                 >
@@ -194,6 +195,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 role='button'
                 tabIndex={0}
                 aria-expanded={expanded}
+                aria-label='Toggle impact metrics details'
                 onClick={toggleExpanded}
                 onKeyDown={onHeaderKeyDown}
             >

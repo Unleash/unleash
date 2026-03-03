@@ -1,6 +1,7 @@
 import type { FC, ReactNode } from 'react';
 import { useMemo } from 'react';
 import { Alert, Box, Typography } from '@mui/material';
+import type { ChartOptions } from 'chart.js';
 import {
     LineChart,
     NotEnoughData,
@@ -30,7 +31,7 @@ type ImpactMetricsChartProps = {
     yAxisMin: 'auto' | 'zero';
     aggregationMode?: AggregationMode;
     aspectRatio?: number;
-    overrideOptions?: Record<string, unknown>;
+    overrideOptions?: ChartOptions<'line'>;
     errorTitle?: string;
     emptyDataDescription?: string;
     noSeriesPlaceholder?: ReactNode;
@@ -46,7 +47,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     yAxisMin,
     aggregationMode,
     aspectRatio,
-    overrideOptions = {},
+    overrideOptions = {} as ChartOptions<'line'>,
     errorTitle = 'Failed to load impact metrics.',
     emptyDataDescription = 'Send impact metrics using Unleash SDK and select data series to view the chart.',
     noSeriesPlaceholder,
@@ -135,20 +136,16 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
 
     const cover = notEnoughData ? placeholder : isLoading;
 
-    const overrideScales =
-        (overrideOptions.scales as Record<string, unknown>) ?? {};
-    const overridePlugins =
-        (overrideOptions.plugins as Record<string, unknown>) ?? {};
-    const { scales: _s, plugins: _p, ...restOverrides } = overrideOptions;
+    const { scales: overrideScales = {}, plugins: overridePlugins = {}, ...restOverrides } = overrideOptions;
 
-    const chartOptions = shouldShowPlaceholder
+    const chartOptions: ChartOptions<'line'> = shouldShowPlaceholder
         ? overrideOptions
-        : {
+        : ({
               ...restOverrides,
               scales: {
                   x: shouldShowComponent('xAxis')
                       ? {
-                            type: 'time',
+                            type: 'time' as const,
                             min: minTime?.getTime(),
                             max: maxTime?.getTime(),
                             time: {
@@ -164,7 +161,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                                 minRotation: 45,
                                 maxTicksLimit: 8,
                             },
-                            ...(overrideScales.x as Record<string, unknown>),
+                            ...overrideScales.x,
                         }
                       : {
                             display: false,
@@ -186,7 +183,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                                         ? `${formatLargeNumbers(value)}${aggregationMode === 'rps' ? '/s' : ''}`
                                         : (value as number),
                             },
-                            ...(overrideScales.y as Record<string, unknown>),
+                            ...overrideScales.y,
                         }
                       : {
                             display: false,
@@ -211,7 +208,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                   x: { duration: 0 },
                   y: { duration: 0 },
               },
-          };
+          } as ChartOptions<'line'>);
 
     return (
         <>

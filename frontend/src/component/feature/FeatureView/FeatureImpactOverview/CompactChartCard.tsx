@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react';
+import type { FC } from 'react';
 import { styled, Tooltip, Typography } from '@mui/material';
 import ShieldOutlined from '@mui/icons-material/ShieldOutlined';
 import { ImpactMetricsChart } from 'component/impact-metrics/ImpactMetricsChart';
@@ -89,14 +89,14 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({ config }) => {
                 : undefined,
     });
 
-    const currentValue = useMemo(() => {
+    const currentValue = (() => {
         if (!data.series?.length) return null;
         const seriesData = data.series[0].data;
         if (!seriesData.length) return null;
         const lastValue = seriesData[seriesData.length - 1][1];
         const suffix = config.aggregationMode === 'rps' ? '/s' : '';
         return `${formatLargeNumbers(lastValue)}${suffix}`;
-    }, [data.series, config.aggregationMode]);
+    })();
 
     return (
         <StyledCard>

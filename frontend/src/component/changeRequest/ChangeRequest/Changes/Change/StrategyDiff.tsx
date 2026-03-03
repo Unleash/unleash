@@ -33,15 +33,7 @@ export const StrategyDiff: FC<{
     const changeRequestStrategy =
         change.action === 'deleteStrategy' ? undefined : change.payload;
 
-    const sortedCurrentStrategy =
-        change.action === 'updateMilestoneStrategy'
-            ? sortSegments(
-                  omitIfDefined(currentStrategy, [
-                      'strategyName',
-                      'milestoneId',
-                  ]),
-              )
-            : sortSegments(currentStrategy);
+    const sortedCurrentStrategy = sortSegments(currentStrategy);
     const sortedChangeRequestStrategy = sortSegments(changeRequestStrategy);
 
     return (

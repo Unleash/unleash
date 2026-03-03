@@ -5,6 +5,7 @@ import type {
     IChangeRequestUpdateMilestoneStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { omitIfDefined } from 'utils/omitFields';
 
 export const useCurrentStrategy = (
     change:
@@ -22,13 +23,19 @@ export const useCurrentStrategy = (
     );
 
     if (change.action === 'updateMilestoneStrategy') {
-        return environment?.releasePlans
+        const milestoneStrategy = environment?.releasePlans
             ?.flatMap((plan) => plan.milestones)
             .flatMap((milestone) => milestone.strategies)
             .find(
                 (strategy) =>
                     'id' in change.payload && strategy.id === change.payload.id,
             );
+
+        return omitIfDefined(milestoneStrategy, [
+            'strategyName',
+            'milestoneId',
+            'sortOrder',
+        ]);
     }
 
     const currentStrategy = environment?.strategies.find(

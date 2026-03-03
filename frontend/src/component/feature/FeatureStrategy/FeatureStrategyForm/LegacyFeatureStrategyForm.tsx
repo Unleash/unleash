@@ -49,7 +49,7 @@ import type { IFeatureToggle } from 'interfaces/featureToggle.ts';
 import type { ISegment } from 'interfaces/segment.ts';
 import type { IFormErrors } from 'hooks/useFormErrors.ts';
 
-export interface IFeatureStrategyFormProps {
+export interface ILegacyFeatureStrategyFormProps {
     feature: IFeatureToggle;
     environmentId: string;
     permission: string;
@@ -175,7 +175,7 @@ export const LegacyFeatureStrategyForm = ({
     StrategyVariants,
     Limit,
     disabled,
-}: IFeatureStrategyFormProps) => {
+}: ILegacyFeatureStrategyFormProps) => {
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);

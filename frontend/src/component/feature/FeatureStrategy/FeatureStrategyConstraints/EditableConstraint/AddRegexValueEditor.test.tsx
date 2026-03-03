@@ -18,7 +18,7 @@ const defaultProps = {
 
 describe('AddRegexValueEditor', () => {
     describe('initial render', () => {
-        test('renders heading and subheadings', () => {
+        test('renders correctly', () => {
             render(<AddRegexValueEditor {...defaultProps} />);
 
             expect(
@@ -27,13 +27,18 @@ describe('AddRegexValueEditor', () => {
             expect(
                 screen.getByRole('heading', { name: 'Test regex' }),
             ).toBeInTheDocument();
-        });
-
-        test('renders the regex input', () => {
-            render(<AddRegexValueEditor {...defaultProps} />);
 
             expect(
                 screen.getByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).toBeInTheDocument();
+
+            const testInputs =
+                screen.getAllByPlaceholderText('Enter test value');
+            expect(testInputs).toHaveLength(1);
+            expect(testInputs[0]).toHaveValue('');
+
+            expect(
+                screen.getByRole('button', { name: /add test string/i }),
             ).toBeInTheDocument();
         });
 
@@ -47,23 +52,6 @@ describe('AddRegexValueEditor', () => {
                     .getByTestId('CONSTRAINT_VALUES_INPUT')
                     .querySelector('textarea'),
             ).toHaveValue('[abc]');
-        });
-
-        test('renders one empty test string input by default', () => {
-            render(<AddRegexValueEditor {...defaultProps} />);
-
-            const testInputs =
-                screen.getAllByPlaceholderText('Enter test value');
-            expect(testInputs).toHaveLength(1);
-            expect(testInputs[0]).toHaveValue('');
-        });
-
-        test('renders "Add test string" button', () => {
-            render(<AddRegexValueEditor {...defaultProps} />);
-
-            expect(
-                screen.getByRole('button', { name: /add test string/i }),
-            ).toBeInTheDocument();
         });
 
         test('renders helpText when provided', () => {
@@ -183,21 +171,6 @@ describe('AddRegexValueEditor', () => {
             ).toHaveLength(2);
             const inputs = screen.getAllByPlaceholderText('Enter test value');
             expect(inputs[inputs.length - 1]).toHaveFocus();
-        });
-
-        test('remove button is enabled when more than one test string exists', () => {
-            render(<AddRegexValueEditor {...defaultProps} />);
-
-            fireEvent.click(
-                screen.getByRole('button', { name: /add test string/i }),
-            );
-
-            const removeButtons = screen.getAllByRole('button', {
-                name: /remove test string/i,
-            });
-            for (const btn of removeButtons) {
-                expect(btn).not.toBeDisabled();
-            }
         });
 
         test('removes a test string when remove button is clicked', () => {

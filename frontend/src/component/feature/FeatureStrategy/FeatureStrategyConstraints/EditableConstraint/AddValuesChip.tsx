@@ -33,7 +33,7 @@ interface AddValuesProps {
     validator: (...values: string[]) => ConstraintValidatorOutput;
 }
 
-export const AddValuesWidget = forwardRef<HTMLButtonElement, AddValuesProps>(
+export const AddValuesChip = forwardRef<HTMLButtonElement, AddValuesProps>(
     ({ onAddValues, helpText, validator }, ref) => {
         const [open, setOpen] = useState(false);
         const positioningRef = useRef<HTMLButtonElement>(null);

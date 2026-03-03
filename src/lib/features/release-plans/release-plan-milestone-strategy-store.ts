@@ -41,6 +41,19 @@ const fromRow = (row: any): ReleasePlanMilestoneStrategy => {
     };
 };
 
+const fromUpdateRow = (row: any): ReleasePlanMilestoneStrategy => {
+    return {
+        id: row.id,
+        milestoneId: row.milestone_id,
+        sortOrder: row.sort_order,
+        title: row.title,
+        strategyName: row.strategy_name,
+        parameters: row.parameters,
+        constraints: row.constraints,
+        variants: row.variants,
+    };
+};
+
 const toRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
     return {
         id: ulid(),
@@ -103,7 +116,7 @@ export class ReleasePlanMilestoneStrategyStore
             .where({ id: strategyId })
             .update(toUpdateRow(strategy))
             .returning('*');
-        return this.fromRow(rows[0]) as ReleasePlanMilestoneStrategy;
+        return fromUpdateRow(rows[0]);
     }
 
     async upsert(

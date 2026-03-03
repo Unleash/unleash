@@ -315,7 +315,6 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
 }) => {
     const [inputValue, setInputValue] = useState(initialValue || '');
     const [error, setError] = useState('');
-    const inputRef = useRef<HTMLInputElement>(null);
     const inputId = useId();
     const helpTextId = useId();
     const matchesRegex = useCallback(
@@ -361,6 +360,7 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
     const handleRegexInputChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             setInputValue(e.target.value);
+            setError(validateValue(e.target.value));
             addValue(e.target.value);
         },
         [addValue],
@@ -396,7 +396,6 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                         size='small'
                         variant='outlined'
                         fullWidth
-                        inputRef={inputRef}
                         autoFocus
                         error={!!error}
                         helperText={error}

@@ -113,7 +113,10 @@ export default async function getApp(
         corsOriginMiddleware(services, config),
     );
 
-    app.use(`${baseUriPath}/client/features/*`, userTokenClientApiLogger(config));
+    app.use(
+        `${baseUriPath}/client/features/*`,
+        userTokenClientApiLogger(config),
+    );
 
     app.use(baseUriPath, patMiddleware(config, services));
 

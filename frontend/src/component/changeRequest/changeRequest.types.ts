@@ -3,7 +3,11 @@ import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
 import type { SetStrategySortOrderSchema } from 'openapi';
-import type { IReleasePlan, ISafeguard } from 'interfaces/releasePlans';
+import type {
+    IReleasePlan,
+    ISafeguard,
+    IReleasePlanMilestoneStrategy,
+} from 'interfaces/releasePlans';
 
 type BaseChangeRequest = {
     id: number;
@@ -122,7 +126,7 @@ type ChangeRequestPayload =
     | ChangeRequestEnabled
     | ChangeRequestAddStrategy
     | ChangeRequestEditStrategy
-    | ChangeRequestEditMilestoneStrategy
+    | ChangeRequestUpdateMilestoneStrategy
     | ChangeRequestDeleteStrategy
     | ChangeRequestVariantPatch
     | IChangeRequestUpdateSegment
@@ -154,15 +158,18 @@ export interface IChangeRequestUpdateStrategy extends IChangeRequestChangeBase {
     payload: ChangeRequestEditStrategy;
 }
 
-export type ChangeRequestEditMilestoneStrategy = Omit<
-    ChangeRequestEditStrategy,
-    'name'
->;
+export type ChangeRequestUpdateMilestoneStrategy = Pick<
+    IReleasePlanMilestoneStrategy,
+    'constraints' | 'parameters' | 'segments' | 'title' | 'variants'
+> & {
+    id: string;
+    snapshot?: IReleasePlanMilestoneStrategy;
+};
 
 export interface IChangeRequestUpdateMilestoneStrategy
     extends IChangeRequestChangeBase {
     action: 'updateMilestoneStrategy';
-    payload: ChangeRequestEditMilestoneStrategy;
+    payload: ChangeRequestUpdateMilestoneStrategy;
 }
 
 export interface IChangeRequestEnabled extends IChangeRequestChangeBase {

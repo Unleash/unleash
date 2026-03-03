@@ -173,10 +173,14 @@ const UpdateStrategy: FC<{
             />
             <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <EditHeader
-                        wasDisabled={currentStrategy?.disabled}
-                        willBeDisabled={change.payload?.disabled}
-                    />
+                    {change.action === 'updateMilestoneStrategy' ? (
+                        <Action>Editing strategy</Action>
+                    ) : (
+                        <EditHeader
+                            wasDisabled={currentStrategy?.disabled}
+                            willBeDisabled={change.payload?.disabled}
+                        />
+                    )}
                     <NameWithChangeInfo
                         newName={change.payload.title}
                         previousName={previousTitle}
@@ -184,26 +188,28 @@ const UpdateStrategy: FC<{
                 </ChangeItemInfo>
                 {actions}
             </ChangeItemWrapper>
-            <ConditionallyRender
-                condition={
-                    change.payload?.disabled !== currentStrategy?.disabled
-                }
-                show={
-                    <Typography
-                        sx={{
-                            marginTop: (theme) => theme.spacing(2),
-                            marginBottom: (theme) => theme.spacing(2),
-                            ...flexRow,
-                            gap: (theme) => theme.spacing(1),
-                        }}
-                    >
-                        This strategy will be{' '}
-                        <DisabledEnabledState
-                            disabled={change.payload?.disabled || false}
-                        />
-                    </Typography>
-                }
-            />
+            {change.action === 'updateStrategy' && (
+                <ConditionallyRender
+                    condition={
+                        change.payload?.disabled !== currentStrategy?.disabled
+                    }
+                    show={
+                        <Typography
+                            sx={{
+                                marginTop: (theme) => theme.spacing(2),
+                                marginBottom: (theme) => theme.spacing(2),
+                                ...flexRow,
+                                gap: (theme) => theme.spacing(1),
+                            }}
+                        >
+                            This strategy will be{' '}
+                            <DisabledEnabledState
+                                disabled={change.payload?.disabled || false}
+                            />
+                        </Typography>
+                    }
+                />
+            )}
 
             <TabPanel>
                 <StrategyExecution strategy={change.payload} />

@@ -594,3 +594,68 @@ test('Segments order does not matter for diff calculation', async () => {
     const segmentsChangeElement = screen.queryByText('segments: [');
     expect(segmentsChangeElement).not.toBeInTheDocument();
 });
+
+test('Milestone strategy update diff excludes non updatable fields (milestoneId, strategyName)', async () => {
+    render(
+        <Routes>
+            <Route
+                path='/projects/:projectId'
+                element={
+                    <StrategyChange
+                        featureName={feature}
+                        environmentName={environmentName}
+                        projectId={projectId}
+                        changeRequestState='Approved'
+                        change={{
+                            action: 'updateMilestoneStrategy',
+                            id: 1,
+                            payload: {
+                                id: milestoneStrategy.id,
+                                constraints: [
+                                    {
+                                        contextName: 'userId',
+                                        operator: 'IN',
+                                        values: ['123', '456'],
+                                    },
+                                ],
+                                segments: milestoneStrategy.segments,
+                                variants: [
+                                    {
+                                        name: 'change_variant',
+                                        weight: 1000,
+                                        stickiness: 'default',
+                                        weightType: 'variable' as const,
+                                    },
+                                ],
+                                title: 'change_request_title',
+                                parameters: {
+                                    ...milestoneStrategy.parameters,
+                                    rollout: changeRequestRollout,
+                                },
+                                snapshot: {
+                                    ...milestoneStrategy,
+                                    title: 'current_title',
+                                    parameters: {
+                                        ...milestoneStrategy.parameters,
+                                        rollout: currentRollout,
+                                    },
+                                },
+                            },
+                        }}
+                    />
+                }
+            />
+        </Routes>,
+        { route: `/projects/${projectId}` },
+    );
+
+    await screen.findByText('Editing strategy');
+
+    const viewDiff = await screen.findByRole('tab', {
+        name: 'View diff',
+    });
+    await userEvent.click(viewDiff);
+
+    expect(screen.queryByText(/milestoneId/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/strategyName/)).not.toBeInTheDocument();
+});

@@ -102,9 +102,9 @@ const NewFeatureStrategyEdit = () => {
     const strategyId = useRequiredQueryParam('strategyId');
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
-    const [strategyKind, setStrategyKind] = useState<'basic' | 'milestone'>(
-        'basic',
-    );
+    const [strategyContext, setStrategyContext] = useState<
+        'default' | 'milestone'
+    >('default');
     const {
         updateStrategyOnFeature,
         updateMilestoneStrategyOnFeature,
@@ -204,7 +204,7 @@ const NewFeatureStrategyEdit = () => {
                 .find((strategy) => strategy.id === strategyId);
 
         if (savedStrategy && 'milestoneId' in savedStrategy) {
-            setStrategyKind('milestone');
+            setStrategyContext('milestone');
         }
 
         const constraintsWithId = addIdSymbolToConstraints(savedStrategy);
@@ -245,7 +245,7 @@ const NewFeatureStrategyEdit = () => {
 
     const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
         const updateFn =
-            strategyKind === 'milestone'
+            strategyContext === 'milestone'
                 ? updateMilestoneStrategyOnFeature
                 : updateStrategyOnFeature;
 
@@ -306,7 +306,7 @@ const NewFeatureStrategyEdit = () => {
             documentationLinkLabel={featureStrategyDocsLinkLabel}
             formatApiCode={() =>
                 formatUpdateStrategyApiCode({
-                    strategyKind,
+                    strategyContext,
                     projectId,
                     featureId,
                     environmentId,
@@ -372,10 +372,10 @@ export const formatEditStrategyPath = (
     return `/projects/${projectId}/features/${featureId}/strategies/edit?${params}`;
 };
 
-type FeatureEnvironmentStrategyKind = 'basic' | 'milestone';
+type FeatureEnvironmentStrategyContext = 'default' | 'milestone';
 
 type ApiUpdatePathProps = {
-    strategyKind: FeatureEnvironmentStrategyKind;
+    strategyContext: FeatureEnvironmentStrategyContext;
     unleashUrl: string;
     projectId: string;
     featureId: string;
@@ -385,20 +385,20 @@ type ApiUpdatePathProps = {
 
 const apiUpdatePath = ({
     strategyId,
-    strategyKind,
+    strategyContext,
     unleashUrl,
     projectId,
     featureId,
     environmentId,
 }: ApiUpdatePathProps) => {
-    if (strategyKind === 'milestone') {
+    if (strategyContext === 'milestone') {
         return `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/milestone-strategies/${strategyId}`;
     }
     return `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
 };
 
 type FormatUpdateStrategyApiCodeProps = {
-    strategyKind?: FeatureEnvironmentStrategyKind;
+    strategyContext?: FeatureEnvironmentStrategyContext;
     projectId: string;
     featureId: string;
     environmentId: string;
@@ -409,7 +409,7 @@ type FormatUpdateStrategyApiCodeProps = {
 };
 
 export const formatUpdateStrategyApiCode = ({
-    strategyKind = 'basic',
+    strategyContext = 'default',
     projectId,
     featureId,
     environmentId,
@@ -433,7 +433,7 @@ export const formatUpdateStrategyApiCode = ({
     };
 
     const url = apiUpdatePath({
-        strategyKind,
+        strategyContext,
         unleashUrl,
         projectId,
         featureId,

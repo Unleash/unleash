@@ -233,6 +233,7 @@ export const ReleasePlanMilestone = ({
                                 {index > 0 ? <StrategySeparator /> : null}
 
                                 <ProjectEnvironmentStrategyDraggableItem
+                                    context='milestone'
                                     strategy={{
                                         ...strategy,
                                         name:

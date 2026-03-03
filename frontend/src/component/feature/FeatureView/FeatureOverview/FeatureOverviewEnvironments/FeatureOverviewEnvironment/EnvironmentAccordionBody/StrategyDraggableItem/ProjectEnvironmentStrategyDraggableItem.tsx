@@ -16,10 +16,13 @@ import { Link } from 'react-router-dom';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
 
+type StrategyContext = 'default' | 'milestone';
+
 type ProjectEnvironmentStrategyDraggableItemProps = {
     strategy: IFeatureStrategy;
     environmentName: string;
     index: number;
+    context?: StrategyContext;
     otherEnvironments?: IFeatureEnvironment['name'][];
     isDragging?: boolean;
     onDragStartRef?: (
@@ -37,6 +40,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
     strategy,
     index,
     environmentName,
+    context = 'default',
     otherEnvironments,
     isDragging,
     onDragStartRef,
@@ -65,8 +69,6 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
     const draftChange = strategyChangesFromRequest?.find(
         ({ isScheduledChange }) => !isScheduledChange,
     );
-
-    const isMilestoneStrategy = 'milestoneId' in strategy;
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -110,23 +112,24 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                     >
                         <Edit />
                     </PermissionIconButton>
-                    {otherEnvironments &&
-                    otherEnvironments?.length > 0 &&
-                    !isMilestoneStrategy ? (
-                        <CopyStrategyIconMenu
-                            environmentId={environmentName}
-                            environments={otherEnvironments as string[]}
-                            strategy={strategy}
-                        />
-                    ) : null}
-                    {!isMilestoneStrategy ? (
-                        <MenuStrategyRemove
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={environmentName}
-                            strategy={strategy}
-                        />
-                    ) : null}
+                    {context === 'milestone' ? null : (
+                        <>
+                            {otherEnvironments &&
+                            otherEnvironments?.length > 0 ? (
+                                <CopyStrategyIconMenu
+                                    environmentId={environmentName}
+                                    environments={otherEnvironments as string[]}
+                                    strategy={strategy}
+                                />
+                            ) : null}
+                            <MenuStrategyRemove
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentName}
+                                strategy={strategy}
+                            />
+                        </>
+                    )}
                 </>
             }
         />

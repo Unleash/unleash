@@ -32,6 +32,7 @@ export const releasePlanMilestoneStrategySchema = {
         constraints: createFeatureStrategySchema.properties.constraints,
         variants: createFeatureStrategySchema.properties.variants,
         segments: createFeatureStrategySchema.properties.segments,
+        disabled: createFeatureStrategySchema.properties.disabled,
     },
     components: {
         schemas: {

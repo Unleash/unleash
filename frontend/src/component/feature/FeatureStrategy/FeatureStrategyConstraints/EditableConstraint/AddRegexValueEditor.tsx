@@ -402,7 +402,9 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                         aria-describedby={helpTextId}
                         data-testid='CONSTRAINT_VALUES_INPUT'
                     />
-                    <HelpText id={helpTextId}>{helpText}</HelpText>
+                    {helpText && (
+                        <HelpText id={helpTextId}>{helpText}</HelpText>
+                    )}
                 </Box>
             </InputRow>
 

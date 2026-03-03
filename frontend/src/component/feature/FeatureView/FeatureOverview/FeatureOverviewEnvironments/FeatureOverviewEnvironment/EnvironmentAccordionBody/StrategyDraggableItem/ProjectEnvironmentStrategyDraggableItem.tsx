@@ -6,7 +6,10 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useStrategyChangesFromRequest } from './StrategyItem/useStrategyChangesFromRequest.tsx';
 import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
-import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import {
+    formatEditStrategyPath,
+    type FeatureEnvironmentStrategyContext,
+} from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { ChangeRequestDraftStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestDraftStatusBadge';
 import { CopyStrategyIconMenu } from './StrategyItem/CopyStrategyIconMenu/CopyStrategyIconMenu.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
@@ -16,13 +19,11 @@ import { Link } from 'react-router-dom';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
 
-type StrategyContext = 'default' | 'milestone';
-
 type ProjectEnvironmentStrategyDraggableItemProps = {
     strategy: IFeatureStrategy;
     environmentName: string;
     index: number;
-    context?: StrategyContext;
+    context?: FeatureEnvironmentStrategyContext;
     otherEnvironments?: IFeatureEnvironment['name'][];
     isDragging?: boolean;
     onDragStartRef?: (

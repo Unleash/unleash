@@ -102,9 +102,8 @@ const NewFeatureStrategyEdit = () => {
     const strategyId = useRequiredQueryParam('strategyId');
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
-    const [strategyContext, setStrategyContext] = useState<
-        'default' | 'milestone'
-    >('default');
+    const [strategyContext, setStrategyContext] =
+        useState<FeatureEnvironmentStrategyContext>('default');
     const {
         updateStrategyOnFeature,
         updateMilestoneStrategyOnFeature,
@@ -372,30 +371,7 @@ export const formatEditStrategyPath = (
     return `/projects/${projectId}/features/${featureId}/strategies/edit?${params}`;
 };
 
-type FeatureEnvironmentStrategyContext = 'default' | 'milestone';
-
-type ApiUpdatePathProps = {
-    strategyContext: FeatureEnvironmentStrategyContext;
-    unleashUrl: string;
-    projectId: string;
-    featureId: string;
-    environmentId: string;
-    strategyId: string;
-};
-
-const apiUpdatePath = ({
-    strategyId,
-    strategyContext,
-    unleashUrl,
-    projectId,
-    featureId,
-    environmentId,
-}: ApiUpdatePathProps) => {
-    if (strategyContext === 'milestone') {
-        return `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/milestone-strategies/${strategyId}`;
-    }
-    return `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies/${strategyId}`;
-};
+export type FeatureEnvironmentStrategyContext = 'default' | 'milestone';
 
 type FormatUpdateStrategyApiCodeProps = {
     strategyContext?: FeatureEnvironmentStrategyContext;
@@ -432,14 +408,11 @@ export const formatUpdateStrategyApiCode = ({
         ),
     };
 
-    const url = apiUpdatePath({
-        strategyContext,
-        unleashUrl,
-        projectId,
-        featureId,
-        environmentId,
-        strategyId,
-    });
+    const baseUrl = `${unleashUrl}/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}`;
+    const url =
+        strategyContext === 'milestone'
+            ? `${baseUrl}/milestone-strategies/${strategyId}`
+            : `${baseUrl}/strategies/${strategyId}`;
 
     const payload = JSON.stringify(
         sortedStrategy,

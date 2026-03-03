@@ -65,7 +65,8 @@ export const MiniChartNoData: React.FC<MiniChartNoDataProps> = ({
                         threshold={threshold}
                         overrideOptions={{
                             interaction: {
-                                mode: 'none',
+                                mode: 'nearest',
+                                intersect: false,
                             },
                             plugins: {
                                 tooltip: {

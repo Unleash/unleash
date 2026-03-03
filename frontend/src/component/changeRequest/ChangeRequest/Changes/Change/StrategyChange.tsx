@@ -9,6 +9,7 @@ import type {
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,
+    IChangeRequestUpdateMilestoneStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useCurrentStrategy } from './hooks/useCurrentStrategy.ts';
 import { Badge } from 'component/common/Badge/Badge';
@@ -140,7 +141,9 @@ const DeleteStrategy: FC<{
 };
 
 const UpdateStrategy: FC<{
-    change: IChangeRequestUpdateStrategy;
+    change:
+        | IChangeRequestUpdateStrategy
+        | IChangeRequestUpdateMilestoneStrategy;
     changeRequestState: ChangeRequestState;
     currentStrategy: IFeatureStrategy | undefined;
     actions?: ReactNode;
@@ -170,10 +173,14 @@ const UpdateStrategy: FC<{
             />
             <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    <EditHeader
-                        wasDisabled={currentStrategy?.disabled}
-                        willBeDisabled={change.payload?.disabled}
-                    />
+                    {change.action === 'updateMilestoneStrategy' ? (
+                        <Action>Editing strategy</Action>
+                    ) : (
+                        <EditHeader
+                            wasDisabled={currentStrategy?.disabled}
+                            willBeDisabled={change.payload?.disabled}
+                        />
+                    )}
                     <NameWithChangeInfo
                         newName={change.payload.title}
                         previousName={previousTitle}
@@ -181,26 +188,28 @@ const UpdateStrategy: FC<{
                 </ChangeItemInfo>
                 {actions}
             </ChangeItemWrapper>
-            <ConditionallyRender
-                condition={
-                    change.payload?.disabled !== currentStrategy?.disabled
-                }
-                show={
-                    <Typography
-                        sx={{
-                            marginTop: (theme) => theme.spacing(2),
-                            marginBottom: (theme) => theme.spacing(2),
-                            ...flexRow,
-                            gap: (theme) => theme.spacing(1),
-                        }}
-                    >
-                        This strategy will be{' '}
-                        <DisabledEnabledState
-                            disabled={change.payload?.disabled || false}
-                        />
-                    </Typography>
-                }
-            />
+            {change.action === 'updateStrategy' && (
+                <ConditionallyRender
+                    condition={
+                        change.payload?.disabled !== currentStrategy?.disabled
+                    }
+                    show={
+                        <Typography
+                            sx={{
+                                marginTop: (theme) => theme.spacing(2),
+                                marginBottom: (theme) => theme.spacing(2),
+                                ...flexRow,
+                                gap: (theme) => theme.spacing(1),
+                            }}
+                        >
+                            This strategy will be{' '}
+                            <DisabledEnabledState
+                                disabled={change.payload?.disabled || false}
+                            />
+                        </Typography>
+                    }
+                />
+            )}
 
             <TabPanel>
                 <StrategyExecution strategy={change.payload} />
@@ -291,7 +300,8 @@ export const StrategyChange: FC<{
     change:
         | IChangeRequestAddStrategy
         | IChangeRequestDeleteStrategy
-        | IChangeRequestUpdateStrategy;
+        | IChangeRequestUpdateStrategy
+        | IChangeRequestUpdateMilestoneStrategy;
     environmentName: string;
     featureName: string;
     projectId: string;
@@ -340,7 +350,8 @@ export const StrategyChange: FC<{
                     actions={actionsWithTabs}
                 />
             )}
-            {change.action === 'updateStrategy' && (
+            {(change.action === 'updateStrategy' ||
+                change.action === 'updateMilestoneStrategy') && (
                 <UpdateStrategy
                     change={change}
                     changeRequestState={changeRequestState}

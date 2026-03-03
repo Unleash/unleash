@@ -10,6 +10,10 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureViewHeader } from './FeatureViewHeader.tsx';
 import { styled } from '@mui/material';
 import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
+import { ChartConfigModal } from '../../impact-metrics/ChartConfigModal/ChartConfigModal';
+import { useFeatureImpactChartActions } from './useFeatureImpactChartActions';
 
 export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
@@ -23,10 +27,21 @@ export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
 
+    const impactMetricsFlagPage = useUiFlag('impactMetricsFlagPage');
+
     const { feature, loading, error, status } = useFeature(
         projectId,
         featureId,
     );
+
+    const {
+        chartModalOpen,
+        openChartModal,
+        closeChartModal,
+        saveChart,
+        metricOptions,
+        metadataLoading,
+    } = useFeatureImpactChartActions(projectId, featureId);
 
     const ref = useLoading(loading);
 
@@ -49,8 +64,32 @@ export const FeatureView = () => {
                     element={<FeatureEnvironmentVariants />}
                 />
                 <Route path='settings' element={<FeatureSettings />} />
-                <Route path='*' element={<FeatureOverview />} />
+                <Route
+                    path='*'
+                    element={
+                        <FeatureOverview
+                            header={
+                                impactMetricsFlagPage ? (
+                                    <FeatureImpactHeader
+                                        projectId={projectId}
+                                        featureName={featureId}
+                                        onAddChart={openChartModal}
+                                    />
+                                ) : undefined
+                            }
+                        />
+                    }
+                />
             </Routes>
+            {impactMetricsFlagPage && (
+                <ChartConfigModal
+                    open={chartModalOpen}
+                    onClose={closeChartModal}
+                    onSave={saveChart}
+                    metricSeries={metricOptions}
+                    loading={metadataLoading}
+                />
+            )}
         </div>
     );
 };

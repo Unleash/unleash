@@ -32,7 +32,7 @@ type Props = {
     validator: (value: string) => ConstraintValidatorOutput;
 };
 
-export const AddRegexConstraintValueWidget: FC<Props> = ({
+export const AddRegexValueChip: FC<Props> = ({
     currentValue,
     removeValue,
     setEditingOpen,

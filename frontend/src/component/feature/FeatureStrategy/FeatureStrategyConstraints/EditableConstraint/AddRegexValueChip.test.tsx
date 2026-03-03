@@ -1,7 +1,7 @@
 import { screen, fireEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { describe, expect, test, vi } from 'vitest';
-import { AddRegexConstraintValueWidget } from './AddRegexConstraintValueWidget';
+import { AddRegexValueChip } from './AddRegexValueChip';
 import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput';
 
 const validValidator = (_: string): ConstraintValidatorOutput => [true, ''];
@@ -17,22 +17,22 @@ const defaultProps = {
     validator: validValidator,
 };
 
-describe('AddRegexConstraintValueWidget', () => {
+describe('AddRegexValueChip', () => {
     describe('without a currentValue', () => {
         test('renders "Add value" label', () => {
-            render(<AddRegexConstraintValueWidget {...defaultProps} />);
+            render(<AddRegexValueChip {...defaultProps} />);
 
             expect(screen.getByText('Add value')).toBeInTheDocument();
         });
 
         test('renders an add (+) icon', () => {
-            render(<AddRegexConstraintValueWidget {...defaultProps} />);
+            render(<AddRegexValueChip {...defaultProps} />);
 
             expect(screen.getByTestId('AddIcon')).toBeInTheDocument();
         });
 
         test('does not render a delete button', () => {
-            render(<AddRegexConstraintValueWidget {...defaultProps} />);
+            render(<AddRegexValueChip {...defaultProps} />);
 
             expect(screen.queryByTestId('ClearIcon')).not.toBeInTheDocument();
         });
@@ -40,7 +40,7 @@ describe('AddRegexConstraintValueWidget', () => {
         test('calls setEditingOpen(true) when clicked', () => {
             const setEditingOpen = vi.fn();
             render(
-                <AddRegexConstraintValueWidget
+                <AddRegexValueChip
                     {...defaultProps}
                     setEditingOpen={setEditingOpen}
                 />,
@@ -55,10 +55,7 @@ describe('AddRegexConstraintValueWidget', () => {
     describe('with a currentValue', () => {
         test('renders the current value as the chip label', () => {
             render(
-                <AddRegexConstraintValueWidget
-                    {...defaultProps}
-                    currentValue='[abc]+'
-                />,
+                <AddRegexValueChip {...defaultProps} currentValue='[abc]+' />,
             );
 
             expect(screen.getByText('[abc]+')).toBeInTheDocument();
@@ -66,10 +63,7 @@ describe('AddRegexConstraintValueWidget', () => {
 
         test('does not render the add (+) icon', () => {
             render(
-                <AddRegexConstraintValueWidget
-                    {...defaultProps}
-                    currentValue='[abc]+'
-                />,
+                <AddRegexValueChip {...defaultProps} currentValue='[abc]+' />,
             );
 
             expect(screen.queryByTestId('AddIcon')).not.toBeInTheDocument();
@@ -77,10 +71,7 @@ describe('AddRegexConstraintValueWidget', () => {
 
         test('renders a delete button', () => {
             render(
-                <AddRegexConstraintValueWidget
-                    {...defaultProps}
-                    currentValue='[abc]+'
-                />,
+                <AddRegexValueChip {...defaultProps} currentValue='[abc]+' />,
             );
 
             expect(screen.getByTestId('ClearIcon')).toBeInTheDocument();
@@ -89,7 +80,7 @@ describe('AddRegexConstraintValueWidget', () => {
         test('clicking delete calls removeValue', () => {
             const removeValue = vi.fn();
             render(
-                <AddRegexConstraintValueWidget
+                <AddRegexValueChip
                     {...defaultProps}
                     currentValue='[abc]+'
                     removeValue={removeValue}
@@ -104,7 +95,7 @@ describe('AddRegexConstraintValueWidget', () => {
         test('clicking the label opens the editor when editingOpen=false', () => {
             const setEditingOpen = vi.fn();
             render(
-                <AddRegexConstraintValueWidget
+                <AddRegexValueChip
                     {...defaultProps}
                     currentValue='[abc]+'
                     editingOpen={false}
@@ -120,7 +111,7 @@ describe('AddRegexConstraintValueWidget', () => {
         test('clicking the label closes the editor when editingOpen=true', () => {
             const setEditingOpen = vi.fn();
             render(
-                <AddRegexConstraintValueWidget
+                <AddRegexValueChip
                     {...defaultProps}
                     currentValue='[abc]+'
                     editingOpen={true}
@@ -136,7 +127,7 @@ describe('AddRegexConstraintValueWidget', () => {
         test('clicking the label opens the editor when validator returns invalid and editingOpen=false', () => {
             const setEditingOpen = vi.fn();
             render(
-                <AddRegexConstraintValueWidget
+                <AddRegexValueChip
                     {...defaultProps}
                     currentValue='['
                     editingOpen={false}
@@ -153,7 +144,7 @@ describe('AddRegexConstraintValueWidget', () => {
         test('clicking the label opens the editor when validator returns invalid and editingOpen=true', () => {
             const setEditingOpen = vi.fn();
             render(
-                <AddRegexConstraintValueWidget
+                <AddRegexValueChip
                     {...defaultProps}
                     currentValue='['
                     editingOpen={true}

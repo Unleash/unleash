@@ -15,6 +15,7 @@ import {
     constraintReducer,
     type ConstraintUpdateAction,
 } from './constraint-reducer.ts';
+import { isRegexOperator } from 'constants/operators';
 import {
     constraintValidator,
     type ConstraintValidationResult,
@@ -55,6 +56,7 @@ type EditableConstraintState = {
     validator: (...values: string[]) => ConstraintValidationResult;
     legalValueData?: LegalValueData;
     constraint: EditableConstraint;
+    invertedDisabled: boolean;
 };
 
 export const useEditableConstraint = (
@@ -141,5 +143,6 @@ export const useEditableConstraint = (
         constraint: localConstraint,
         validator,
         legalValueData,
+        invertedDisabled: isRegexOperator(localConstraint.operator),
     } as EditableConstraintState;
 };

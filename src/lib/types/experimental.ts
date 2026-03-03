@@ -78,7 +78,8 @@ export type IFlagKey =
     | 'updateMilestoneStrategy'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
-    | 'userTokenWithClientApiLogging';
+    | 'userTokenWithClientApiLogging'
+    | 'featureEnvSafeguards';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -353,6 +354,10 @@ const flags: IFlags = {
     ),
     userTokenWithClientApiLogging: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING,
+        false,
+    ),
+    featureEnvSafeguards: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEATURE_ENV_SAFEGUARDS,
         false,
     ),
 };

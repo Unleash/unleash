@@ -2,10 +2,12 @@ import type {
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,
+    IChangeRequestUpdateMilestoneStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import type { FC } from 'react';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import type { IFeatureStrategy } from 'interfaces/strategy';
+import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import { omitIfDefined } from 'utils/omitFields';
 
 const sortSegments = <T extends { segments?: number[] }>(
@@ -24,8 +26,9 @@ export const StrategyDiff: FC<{
     change:
         | IChangeRequestAddStrategy
         | IChangeRequestUpdateStrategy
+        | IChangeRequestUpdateMilestoneStrategy
         | IChangeRequestDeleteStrategy;
-    currentStrategy?: IFeatureStrategy;
+    currentStrategy?: IFeatureStrategy | IReleasePlanMilestoneStrategy;
 }> = ({ change, currentStrategy }) => {
     const changeRequestStrategy =
         change.action === 'deleteStrategy' ? undefined : change.payload;

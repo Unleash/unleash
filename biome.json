@@ -97,6 +97,7 @@
         "frontend/src/component/feature/EditFeature/**",
         "frontend/src/component/feature/FeatureForm/**",
         "frontend/src/component/feature/FeatureNamingPatternInfo/**",
+        "frontend/src/component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/*",
         "frontend/src/component/feature/hooks/**",
         "frontend/src/component/events/EventCard/**",
         "frontend/src/component/events/EventDiff/**",

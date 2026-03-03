@@ -206,7 +206,7 @@ const RegexTestValues: FC<{
     const regexTestInputRefs = useRef<
         Array<HTMLTextAreaElement | HTMLInputElement | null>
     >([]);
-    const pendingFocusIndex = useRef<number | null>(null);
+    const [pendingFocus, setPendingFocus] = useState<number | null>(null);
 
     useEffect(() => {
         setRegexTestInputs((prev) =>
@@ -218,13 +218,13 @@ const RegexTestValues: FC<{
     }, [matchesRegex]);
 
     useEffect(() => {
-        if (pendingFocusIndex.current !== null) {
-            if (pendingFocusIndex.current > -1) {
-                regexTestInputRefs.current[pendingFocusIndex.current]?.focus();
+        if (pendingFocus !== null) {
+            if (pendingFocus > -1) {
+                regexTestInputRefs.current[pendingFocus]?.focus();
             }
-            pendingFocusIndex.current = null;
+            setPendingFocus(null);
         }
-    }, [regexTestInputs]);
+    }, [pendingFocus]);
 
     const handleEditTestString = useCallback(
         (id: number, testString: string) => {
@@ -243,28 +243,31 @@ const RegexTestValues: FC<{
     );
 
     const handleAddTestString = useCallback(() => {
+        setPendingFocus(regexTestInputs.length);
         setRegexTestInputs((prev) => {
             const maxId = prev.reduce(
                 (max, input) => Math.max(max, input.id),
                 0,
             );
-            pendingFocusIndex.current = prev.length;
             const testString = '';
             return [
                 ...prev,
                 { id: maxId + 1, testString, match: matchesRegex(testString) },
             ];
         });
-    }, [matchesRegex]);
+    }, [regexTestInputs.length, matchesRegex]);
 
-    const handleRemoveTestString = useCallback((id: number) => {
-        setRegexTestInputs((prev) => {
-            if (prev.length <= 1) return prev;
-            const idx = prev.findIndex((input) => input.id === id);
-            pendingFocusIndex.current = Math.min(idx, prev.length - 2);
-            return prev.filter((input) => input.id !== id);
-        });
-    }, []);
+    const handleRemoveTestString = useCallback(
+        (id: number) => {
+            const idx = regexTestInputs.findIndex((input) => input.id === id);
+            if (regexTestInputs.length <= 1) return;
+            setPendingFocus(Math.min(idx, regexTestInputs.length - 2));
+            setRegexTestInputs((prev) =>
+                prev.filter((input) => input.id !== id),
+            );
+        },
+        [regexTestInputs],
+    );
 
     return (
         <StyledTestValuesBox>
@@ -367,7 +370,7 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
             setError(validateValue(e.target.value));
             addValue(e.target.value);
         },
-        [addValue],
+        [addValue, validateValue],
     );
 
     useEffect(() => {

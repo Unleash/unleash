@@ -58,12 +58,6 @@ shell.nix
 # We use yarn.lock
 package-lock.json
 
-# Website stuff
-/website/build
-/website/backers.json
-/website/node_modules
-/website/translated_docs
-/website/i18n/*
 .env
 
 # Ignore frontend build
@@ -74,9 +68,6 @@ frontend/src/openapi/apis
 frontend/src/openapi/index.ts
 
 # Generated docs
-website/docs/reference/api/**/sidebar.ts
-website/docs/reference/api/**/**.info.mdx
-website/docs/generated
 reports/jest-junit.xml
 
 # Yarn (https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored)
@@ -100,13 +91,6 @@ docker/.yarn/*
 !docker/.yarn/releases
 !docker/.yarn/sdks
 !docker/.yarn/versions
-
-website/.yarn/*
-!website/.yarn/patches
-!website/.yarn/plugins
-!website/.yarn/releases
-!website/.yarn/sdks
-!website/.yarn/versions
 
 coverage/.tmp
 coverage/*

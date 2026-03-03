@@ -22,7 +22,6 @@ export default defineConfig({
         testTimeout: 30000,
         exclude: [
             ...configDefaults.exclude,
-            'website/**',
             'frontend/**',
             'docker/index.js',
             'dist/**',
@@ -39,7 +38,6 @@ export default defineConfig({
             provider: 'v8',
             exclude: [
                 ...(configDefaults.coverage.exclude || []),
-                'website/**',
                 'frontend/**',
                 'src/test-setup.ts',
                 'src/server-dev.ts',

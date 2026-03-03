@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import FeatureLog from './FeatureLog/FeatureLog.tsx';
@@ -14,13 +13,7 @@ import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
 import { ChartConfigModal } from '../../impact-metrics/ChartConfigModal/ChartConfigModal';
-import { useImpactMetricsApi } from 'hooks/api/actions/useImpactMetricsApi/useImpactMetricsApi';
-import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
-import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics';
-import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import type { ChartConfig } from '../../impact-metrics/types';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useFeatureImpactChartActions } from './useFeatureImpactChartActions';
 
 export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
@@ -35,38 +28,20 @@ export const FeatureView = () => {
     const featureId = useRequiredPathParam('featureId');
 
     const impactMetricsFlagPage = useUiFlag('impactMetricsFlagPage');
-    const [chartModalOpen, setChartModalOpen] = useState(false);
 
     const { feature, loading, error, status } = useFeature(
         projectId,
         featureId,
     );
 
-    const { createImpactMetric } = useImpactMetricsApi({
-        projectId,
-        featureName: featureId,
-    });
-    const { metricOptions, loading: metadataLoading } =
-        useImpactMetricsOptions();
-    const { refetch } = useFeatureImpactMetrics({
-        projectId,
-        featureName: featureId,
-    });
-    const { setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
-
-    const handleSaveChart = async (data: Omit<ChartConfig, 'id'>) => {
-        try {
-            await createImpactMetric({ ...data, feature: featureId });
-            trackEvent('flagpage-impact-metrics', {
-                props: { eventType: 'impact-metric-saved' },
-            });
-            refetch();
-            setChartModalOpen(false);
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
+    const {
+        chartModalOpen,
+        openChartModal,
+        closeChartModal,
+        saveChart,
+        metricOptions,
+        metadataLoading,
+    } = useFeatureImpactChartActions(projectId, featureId);
 
     const ref = useLoading(loading);
 
@@ -98,9 +73,7 @@ export const FeatureView = () => {
                                     <FeatureImpactHeader
                                         projectId={projectId}
                                         featureName={featureId}
-                                        onAddChart={() =>
-                                            setChartModalOpen(true)
-                                        }
+                                        onAddChart={openChartModal}
                                     />
                                 ) : undefined
                             }
@@ -111,8 +84,8 @@ export const FeatureView = () => {
             {impactMetricsFlagPage && (
                 <ChartConfigModal
                     open={chartModalOpen}
-                    onClose={() => setChartModalOpen(false)}
-                    onSave={handleSaveChart}
+                    onClose={closeChartModal}
+                    onSave={saveChart}
                     metricSeries={metricOptions}
                     loading={metadataLoading}
                 />

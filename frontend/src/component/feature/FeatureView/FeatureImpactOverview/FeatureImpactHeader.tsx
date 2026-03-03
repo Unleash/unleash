@@ -162,24 +162,24 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 <Collapse in={expanded}>
                     <StyledExpandedContent>
                         <StyledEmptyDescription>
-                            Connect your analytics to see how this feature
-                            affects conversion rates, error rates, and other key
-                            metrics during rollout.
+                            Connect your metrics to see how this feature
+                            affects adoption, error counts, latency, and other
+                            key indicators during rollout.
                         </StyledEmptyDescription>
                         <StyledChartRow>
                             <PlaceholderChart
-                                title='Conversion Rate'
-                                change='+12.4%'
+                                title='Adoption'
+                                change='+1,204'
                                 variant='upward'
                             />
                             <PlaceholderChart
-                                title='Error Rate'
-                                change='-0.8%'
+                                title='Errors'
+                                change='3'
                                 variant='downward'
                             />
                             <PlaceholderChart
-                                title='Latency (ms)'
-                                change='+2ms'
+                                title='Latency (p95)'
+                                change='~230ms'
                                 variant='stable'
                             />
                         </StyledChartRow>

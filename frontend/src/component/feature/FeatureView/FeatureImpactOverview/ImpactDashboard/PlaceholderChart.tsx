@@ -34,11 +34,6 @@ const StyledChartTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
 }));
 
-const StyledChartSubtitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
-    color: theme.palette.text.disabled,
-}));
-
 const StyledChange = styled(Typography)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.disabled,
@@ -111,10 +106,7 @@ export const PlaceholderChart: FC<PlaceholderChartProps> = ({
     return (
         <StyledChartCard>
             <StyledChartHeader>
-                <div>
-                    <StyledChartTitle>{title}</StyledChartTitle>
-                    <StyledChartSubtitle>Last 7 days</StyledChartSubtitle>
-                </div>
+                <StyledChartTitle>{title}</StyledChartTitle>
                 <StyledChange>{change}</StyledChange>
             </StyledChartHeader>
             <Box sx={{ height: 80 }}>

@@ -5,7 +5,9 @@ import {
     multipleValueOperators,
     NOT_IN,
     numOperators,
+    REGEX,
     semVerOperators,
+    stringOperators,
 } from 'constants/operators';
 import type { IConstraint } from 'interfaces/strategy';
 import { useEditableConstraint } from './useEditableConstraint.js';
@@ -265,5 +267,37 @@ describe('legal values', () => {
                 result.current.legalValueData?.invalidLegalValues,
             ).toStrictEqual(new Set(['A']));
         });
+    });
+});
+
+describe('invertedDisabled', () => {
+    test('is true when the operator is REGEX', () => {
+        const initial: IConstraint = {
+            contextName: 'context-field',
+            operator: REGEX,
+            value: '',
+        };
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
+        expect(result.current.invertedDisabled).toBe(true);
+    });
+
+    test.each([
+        ...multipleValueOperators,
+        ...numOperators,
+        ...semVerOperators,
+        ...dateOperators,
+        ...stringOperators,
+    ])('is false for non-REGEX operator %s', (operator) => {
+        const initial: IConstraint = {
+            contextName: 'context-field',
+            operator,
+            values: [],
+        };
+        const { result } = renderHook(() =>
+            useEditableConstraint(initial, () => {}),
+        );
+        expect(result.current.invertedDisabled).toBe(false);
     });
 });

@@ -3,9 +3,11 @@ import {
     IN,
     isDateOperator,
     isMultiValueOperator,
+    isRegexOperator,
     isSingleValueOperator,
     NOT_IN,
     NUM_EQ,
+    REGEX,
 } from 'constants/operators';
 import type {
     EditableConstraint,
@@ -151,9 +153,12 @@ describe('changing operator', () => {
     });
 
     const nonDateOperators = allOperators.filter((op) => !isDateOperator(op));
-    const allCombinations = nonDateOperators
+    const nonDateNonRegexOperators = nonDateOperators.filter(
+        (op) => !isRegexOperator(op),
+    );
+    const allCombinations = nonDateNonRegexOperators
         .flatMap((a) => nonDateOperators.map((b) => [a, b]))
-        .filter(([a, b]) => a !== b);
+        .filter(([a, b]) => a !== b && !isRegexOperator(b));
 
     test.each(
         allCombinations,
@@ -178,6 +183,21 @@ describe('changing operator', () => {
         } else if (isSingleValueOperator(operatorB)) {
             expect(value).toBe('');
         }
+    });
+
+    test.each(
+        nonDateNonRegexOperators,
+    )('switching to REGEX from %s forces inverted to false and clears value', (operatorA) => {
+        const constraint = {
+            ...getConstraintForOperator(operatorA),
+            inverted: true,
+        };
+        const result = constraintReducer(constraint, {
+            type: 'set operator',
+            payload: REGEX,
+        }) as Extractable;
+        expect(result.inverted).toBe(false);
+        expect(result.value).toBe('');
     });
 
     const dateTransititons = [
@@ -516,5 +536,19 @@ describe('toggle options', () => {
             ...input,
             inverted: to,
         });
+    });
+
+    test.each([
+        true,
+        false,
+    ] as const)('toggle inverted operator is a no-op for REGEX (inverted: %s)', (inverted) => {
+        const input = {
+            ...singleValueConstraint,
+            operator: REGEX,
+            inverted,
+        };
+        expect(
+            constraintReducer(input, { type: 'toggle inverted operator' }),
+        ).toStrictEqual(input);
     });
 });

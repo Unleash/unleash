@@ -4,6 +4,7 @@ import {
     type Operator,
     isDateOperator,
     isMultiValueOperator,
+    isRegexOperator,
     isSingleValueOperator,
 } from 'constants/operators';
 import { CURRENT_TIME_CONTEXT_FIELD } from 'utils/operatorsForContext';
@@ -150,6 +151,7 @@ export const constraintReducer = (
                 return withValue(null, {
                     ...state,
                     operator: action.payload,
+                    ...(isRegexOperator(action.payload) && { inverted: false }),
                 } as EditableSingleValueConstraint);
             }
             return withValue(null, {
@@ -160,6 +162,9 @@ export const constraintReducer = (
             return addValue(action.payload);
         }
         case 'toggle inverted operator':
+            if (isRegexOperator(state.operator)) {
+                return state;
+            }
             return { ...state, inverted: !state.inverted };
         case 'toggle case sensitivity':
             return { ...state, caseInsensitive: !state.caseInsensitive };

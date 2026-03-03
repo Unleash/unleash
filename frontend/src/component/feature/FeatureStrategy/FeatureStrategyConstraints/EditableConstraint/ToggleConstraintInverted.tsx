@@ -14,16 +14,22 @@ const StyledButton = styled('button')(({ theme }) => ({
     color: theme.palette.secondary.dark,
     fontWeight: theme.typography.fontWeightBold,
     transition: 'all 0.03s ease',
-    '&:is(:hover, :focus-visible)': {
+    '&:not(:disabled):is(:hover, :focus-visible)': {
         outline: `1px solid ${theme.palette.primary.main}`,
+    },
+    '&:disabled': {
+        color: theme.palette.action.disabled,
+        background: 'transparent',
+        border: `1px solid ${theme.palette.action.disabledBackground}`,
+        cursor: 'not-allowed',
     },
 }));
 
-const StyledEqualsIcon = styled(EqualsIcon)(({ theme }) => ({
+const StyledEqualsIcon = styled(EqualsIcon)({
     path: {
         fill: 'currentcolor',
     },
-}));
+});
 
 const StyledNotEqualsIcon = styled(NotEqualsIcon)(({ theme }) => ({
     path: {
@@ -44,29 +50,39 @@ export const ConstrainInversionIcon = ({ inverted }: { inverted: boolean }) => {
 
 interface ToggleInvertedProps {
     onToggleInverted: () => void;
-    inverted?: boolean;
+    inverted: boolean;
+    disabledText?: string;
 }
 
 export const ToggleConstraintInverted = ({
     inverted,
     onToggleInverted,
+    disabledText,
 }: ToggleInvertedProps) => {
+    const disabled = Boolean(disabledText);
+
+    const tooltipTitle =
+        disabledText ??
+        `Make the selected operator${inverted ? ' inclusive' : ' exclusive'}`;
+
+    const ariaLabel =
+        disabledText ??
+        (inverted
+            ? 'The constraint operator is exclusive.'
+            : 'The constraint operator is inclusive.');
+
     return (
-        <HtmlTooltip
-            title={`Make the selected operator${inverted ? ' inclusive' : ' exclusive'}`}
-            arrow
-        >
-            <StyledButton
-                type='button'
-                onClick={onToggleInverted}
-                aria-label={
-                    inverted
-                        ? 'The constraint operator is exclusive.'
-                        : 'The constraint operator is inclusive.'
-                }
-            >
-                <ConstrainInversionIcon inverted={Boolean(inverted)} />
-            </StyledButton>
+        <HtmlTooltip title={tooltipTitle} arrow>
+            <span>
+                <StyledButton
+                    type='button'
+                    onClick={onToggleInverted}
+                    disabled={disabled}
+                    aria-label={ariaLabel}
+                >
+                    <ConstrainInversionIcon inverted={Boolean(inverted)} />
+                </StyledButton>
+            </span>
         </HtmlTooltip>
     );
 };

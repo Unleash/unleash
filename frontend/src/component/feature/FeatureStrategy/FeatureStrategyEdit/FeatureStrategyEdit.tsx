@@ -265,7 +265,10 @@ const NewFeatureStrategyEdit = () => {
 
     const onStrategyRequestEdit = async (payload: IFeatureStrategyPayload) => {
         await addChange(projectId, environmentId, {
-            action: 'updateStrategy',
+            action:
+                strategyContext === 'milestone'
+                    ? 'updateMilestoneStrategy'
+                    : 'updateStrategy',
             feature: featureId,
             payload: { ...payload, id: strategyId },
         });

@@ -11,6 +11,7 @@ export interface IChangeSchema {
         | 'updateEnabled'
         | 'addStrategy'
         | 'updateStrategy'
+        | 'updateMilestoneStrategy'
         | 'deleteStrategy'
         | 'patchVariant'
         | 'reorderStrategy'

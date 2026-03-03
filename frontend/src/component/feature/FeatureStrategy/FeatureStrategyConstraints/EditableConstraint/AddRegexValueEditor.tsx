@@ -249,14 +249,13 @@ const RegexTestValues: FC<{
                 (max, input) => Math.max(max, input.id),
                 0,
             );
-            pendingFocusIndex.current = prev.length;
             const testString = '';
             return [
                 ...prev,
                 { id: maxId + 1, testString, match: matchesRegex(testString) },
             ];
         });
-    }, [matchesRegex]);
+    }, [regexTestInputs.length, matchesRegex]);
 
     const handleRemoveTestString = useCallback(
         (id: number) => {

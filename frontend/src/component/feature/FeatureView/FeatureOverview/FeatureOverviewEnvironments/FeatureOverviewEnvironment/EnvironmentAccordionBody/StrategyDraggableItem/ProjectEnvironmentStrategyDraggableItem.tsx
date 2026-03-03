@@ -1,4 +1,4 @@
-import { type DragEventHandler, type RefObject, useRef } from 'react';
+import type { DragEventHandler, RefObject } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
@@ -66,6 +66,8 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
         ({ isScheduledChange }) => !isScheduledChange,
     );
 
+    const isMilestoneStrategy = 'milestoneId' in strategy;
+
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -108,19 +110,23 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                     >
                         <Edit />
                     </PermissionIconButton>
-                    {otherEnvironments && otherEnvironments?.length > 0 ? (
+                    {otherEnvironments &&
+                    otherEnvironments?.length > 0 &&
+                    !isMilestoneStrategy ? (
                         <CopyStrategyIconMenu
                             environmentId={environmentName}
                             environments={otherEnvironments as string[]}
                             strategy={strategy}
                         />
                     ) : null}
-                    <MenuStrategyRemove
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentName}
-                        strategy={strategy}
-                    />
+                    {!isMilestoneStrategy ? (
+                        <MenuStrategyRemove
+                            projectId={projectId}
+                            featureId={featureId}
+                            environmentId={environmentName}
+                            strategy={strategy}
+                        />
+                    ) : null}
                 </>
             }
         />

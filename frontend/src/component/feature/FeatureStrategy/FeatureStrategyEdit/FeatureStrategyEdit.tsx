@@ -103,9 +103,13 @@ const NewFeatureStrategyEdit = () => {
 
     const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
     const [strategyKind, setStrategyKind] = useState<'basic' | 'milestone'>(
-        'milestone',
+        'basic',
     );
-    const { updateStrategyOnFeature, loading } = useFeatureStrategyApi(); // todo: should probably make an equivalent for milestone strategies?
+    const {
+        updateStrategyOnFeature,
+        updateMilestoneStrategyOnFeature,
+        loading,
+    } = useFeatureStrategyApi();
     const { strategyDefinition } = useStrategy(strategy.name);
     const { defaultStickiness } = useDefaultProjectSettings(projectId);
     const { setToastData, setToastApiError } = useToast();
@@ -240,8 +244,12 @@ const NewFeatureStrategyEdit = () => {
     const payload = createStrategyPayload(strategy);
 
     const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
-        // todo: need to update this
-        await updateStrategyOnFeature(
+        const updateFn =
+            strategyKind === 'milestone'
+                ? updateMilestoneStrategyOnFeature
+                : updateStrategyOnFeature;
+
+        await updateFn(
             projectId,
             featureId,
             environmentId,
@@ -256,7 +264,6 @@ const NewFeatureStrategyEdit = () => {
     };
 
     const onStrategyRequestEdit = async (payload: IFeatureStrategyPayload) => {
-        // todo: need to update this
         await addChange(projectId, environmentId, {
             action: 'updateStrategy',
             feature: featureId,
@@ -299,6 +306,7 @@ const NewFeatureStrategyEdit = () => {
             documentationLinkLabel={featureStrategyDocsLinkLabel}
             formatApiCode={() =>
                 formatUpdateStrategyApiCode({
+                    strategyKind,
                     projectId,
                     featureId,
                     environmentId,

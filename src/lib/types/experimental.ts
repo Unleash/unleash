@@ -354,7 +354,7 @@ const flags: IFlags = {
     ),
     userTokenWithClientApiLogging: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING,
-        false,
+        true,
     ),
     featureEnvSafeguards: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_ENV_SAFEGUARDS,

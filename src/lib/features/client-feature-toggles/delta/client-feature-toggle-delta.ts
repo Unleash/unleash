@@ -34,7 +34,7 @@ type EnvironmentVisibleRevisionState = {
 };
 
 const createVisibleRevisionState = (): EnvironmentVisibleRevisionState => ({
-    projectRevisions: new Map(),
+    projectRevisions: new Map<string, number>(),
     globalSegmentRevision: 0,
 });
 

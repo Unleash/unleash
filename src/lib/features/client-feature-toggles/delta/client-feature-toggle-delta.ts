@@ -33,11 +33,6 @@ type EnvironmentVisibleRevisionState = {
     globalSegmentRevision: number;
 };
 
-const createVisibleRevisionState = (): EnvironmentVisibleRevisionState => ({
-    projectRevisions: new Map<string, number>(),
-    globalSegmentRevision: 0,
-});
-
 export const UPDATE_DELTA = 'UPDATE_DELTA';
 
 export const filterEventsByQuery = (
@@ -402,8 +397,11 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             return delta.getHydrationEvent().eventId;
         }
 
-        const revisionState =
-            this.visibleRevisions[environment] ?? createVisibleRevisionState();
+        const revisionState = this.visibleRevisions[environment];
+
+        if (!revisionState) {
+            return 0;
+        }
         let visibleRevision = revisionState.globalSegmentRevision;
 
         for (const project of projects) {
@@ -422,8 +420,10 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         featureEvents: DeltaEvent[],
         hasSegmentChanges: boolean,
     ) {
-        const revisionState =
-            this.visibleRevisions[environment] ?? createVisibleRevisionState();
+        const revisionState = this.visibleRevisions[environment] ?? {
+            projectRevisions: new Map<string, number>(),
+            globalSegmentRevision: 0,
+        };
 
         if (hasSegmentChanges) {
             revisionState.globalSegmentRevision = revisionId;

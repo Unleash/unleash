@@ -10,6 +10,8 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureViewHeader } from './FeatureViewHeader.tsx';
 import { styled } from '@mui/material';
 import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
 
 export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
@@ -22,6 +24,8 @@ export const StyledLink = styled(Link)(() => ({
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
+
+    const impactMetricsFlagPage = useUiFlag('impactMetricsFlagPage');
 
     const { feature, loading, error, status } = useFeature(
         projectId,
@@ -49,7 +53,21 @@ export const FeatureView = () => {
                     element={<FeatureEnvironmentVariants />}
                 />
                 <Route path='settings' element={<FeatureSettings />} />
-                <Route path='*' element={<FeatureOverview />} />
+                <Route
+                    path='*'
+                    element={
+                        <FeatureOverview
+                            header={
+                                impactMetricsFlagPage ? (
+                                    <FeatureImpactHeader
+                                        projectId={projectId}
+                                        featureName={featureId}
+                                    />
+                                ) : undefined
+                            }
+                        />
+                    }
+                />
             </Routes>
         </div>
     );

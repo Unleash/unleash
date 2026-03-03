@@ -135,10 +135,16 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
 
     const cover = notEnoughData ? placeholder : isLoading;
 
+    const overrideScales =
+        (overrideOptions.scales as Record<string, unknown>) ?? {};
+    const overridePlugins =
+        (overrideOptions.plugins as Record<string, unknown>) ?? {};
+    const { scales: _s, plugins: _p, ...restOverrides } = overrideOptions;
+
     const chartOptions = shouldShowPlaceholder
         ? overrideOptions
         : {
-              ...overrideOptions,
+              ...restOverrides,
               scales: {
                   x: shouldShowComponent('xAxis')
                       ? {
@@ -158,6 +164,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                                 minRotation: 45,
                                 maxTicksLimit: 8,
                             },
+                            ...(overrideScales.x as Record<string, unknown>),
                         }
                       : {
                             display: false,
@@ -179,6 +186,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                                         ? `${formatLargeNumbers(value)}${aggregationMode === 'rps' ? '/s' : ''}`
                                         : (value as number),
                             },
+                            ...(overrideScales.y as Record<string, unknown>),
                         }
                       : {
                             display: false,
@@ -197,6 +205,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                           padding: 12,
                       },
                   },
+                  ...overridePlugins,
               },
               animations: {
                   x: { duration: 0 },

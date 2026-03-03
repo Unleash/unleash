@@ -9,7 +9,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { styled } from '@mui/material';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import { useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
 import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments.tsx';
 import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentVisibilityMenu/hooks/useEnvironmentVisibility.ts';
@@ -35,7 +35,11 @@ const StyledMainContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-export const FeatureOverview = () => {
+interface FeatureOverviewProps {
+    header?: ReactNode;
+}
+
+export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
     const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -85,6 +89,7 @@ export const FeatureOverview = () => {
                     ) : null}
                 </div>
                 <StyledMainContent>
+                    {header}
                     <FeatureOverviewEnvironments
                         onToggleEnvOpen={toggleShowTooltip}
                         hiddenEnvironments={hiddenEnvironments}

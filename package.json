@@ -33,7 +33,7 @@
   "license": "Apache-2.0",
   "exports": "./dist/lib/server-impl.js",
   "scripts": {
-    "ci": "yarn lint:fix && yarn build:backend --logLevel=error && yarn test --reporter=dot",
+    "ci": "yarn lint:fix && yarn build:backend && yarn test --reporter=dot",
     "start": "TZ=UTC node ./dist/server.js",
     "copy-templates": "mkdir -p dist && cp -r src/mailtemplates dist/",
     "copy-migrations-package": "mkdir -p dist/migrations && cp src/migrations/package.json dist/migrations/",

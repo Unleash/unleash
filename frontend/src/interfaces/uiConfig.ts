@@ -95,6 +95,7 @@ export type UiFlags = {
     strategyFormConsolidation?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
+    featureEnvSafeguards?: boolean;
 };
 
 export interface IVersionInfo {

@@ -14,7 +14,7 @@ export const userTokenClientApiLogger = ({
         );
         const apiToken = req.header('authorization');
         if (
-            apiToken?.startsWith('user:') &&
+            (apiToken?.startsWith('user:') || apiToken?.startsWith('*:*.')) &&
             flagResolver.isEnabled('userTokenWithClientApiLogging')
         ) {
             logger.info(

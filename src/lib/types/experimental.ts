@@ -76,7 +76,8 @@ export type IFlagKey =
     | 'signupDialog'
     | 'strategyFormConsolidation'
     | 'updateMilestoneStrategy'
-    | 'enterpriseEdgeTokensList';
+    | 'enterpriseEdgeTokensList'
+    | 'impactMetricsFlagPage';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -343,6 +344,10 @@ const flags: IFlags = {
     ),
     enterpriseEdgeTokensList: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_EDGE_TOKENS_LIST,
+        false,
+    ),
+    impactMetricsFlagPage: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS_FLAG_PAGE,
         false,
     ),
 };

@@ -12,10 +12,10 @@ import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
 import { ValueList } from './ValueList.tsx';
-import { AddValuesWidget } from './AddValuesWidget.tsx';
+import { AddValuesChip } from './AddValuesChip.tsx';
 import { ToggleConstraintCaseSensitivity } from './ToggleConstraintCaseSensitivity.tsx';
 
-import { AddSingleValueWidget } from './AddSingleValueWidget.tsx';
+import { AddSingleValueChip } from './AddSingleValueChip.tsx';
 import { ConstraintDateInput } from './ConstraintDateInput.tsx';
 import {
     LegalValuesSelector,
@@ -38,7 +38,7 @@ import type { ConstraintValidationResult } from './useEditableConstraint/constra
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
-import { AddRegexConstraintValueWidget } from './AddRegexConstraintValueWidget.tsx';
+import { AddRegexValueChip } from './AddRegexValueChip.tsx';
 import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
 import { AddRegexValueEditor } from './AddRegexValueEditor.tsx';
 
@@ -150,7 +150,7 @@ const TopRowInput: FC<{
     }
     if (isSemVerConstraint(localConstraint)) {
         return (
-            <AddSingleValueWidget
+            <AddSingleValueChip
                 validator={validator}
                 onAddValue={addValues}
                 removeValue={clearValues}
@@ -162,7 +162,7 @@ const TopRowInput: FC<{
     }
     if (isRegexConstraint(localConstraint)) {
         return (
-            <AddRegexConstraintValueWidget
+            <AddRegexValueChip
                 removeValue={clearValues}
                 currentValue={localConstraint.value}
                 validator={validator}
@@ -173,7 +173,7 @@ const TopRowInput: FC<{
     }
     if (isNumberConstraint(localConstraint)) {
         return (
-            <AddSingleValueWidget
+            <AddSingleValueChip
                 validator={validator}
                 onAddValue={addValues}
                 removeValue={clearValues}
@@ -185,7 +185,7 @@ const TopRowInput: FC<{
     }
 
     return (
-        <AddValuesWidget
+        <AddValuesChip
             validator={validator}
             helpText='Maximum 100 char length per value'
             ref={addValuesButtonRef}

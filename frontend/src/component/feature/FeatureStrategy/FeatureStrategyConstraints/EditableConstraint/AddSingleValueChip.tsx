@@ -34,7 +34,7 @@ type Props = {
     validator: (value: string) => ConstraintValidatorOutput;
 };
 
-export const AddSingleValueWidget = forwardRef<HTMLDivElement, Props>(
+export const AddSingleValueChip = forwardRef<HTMLDivElement, Props>(
     (
         {
             currentValue,

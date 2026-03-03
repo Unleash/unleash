@@ -114,7 +114,7 @@ export default async function getApp(
     );
 
     app.use(
-        `${baseUriPath}/client/features/*`,
+        `${baseUriPath}/api/client/features*`,
         userTokenClientApiLogger(config),
     );
 

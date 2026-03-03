@@ -70,7 +70,6 @@ export type IFlagKey =
     | 'projectContextFields'
     | 'readOnlyUsers'
     | 'readOnlyUsersUI'
-    | 'privateProjectMiddlewareMove'
     | 'remoteMcpServer'
     | 'datePickerRangeConstraints'
     | 'regexConstraintOperator'
@@ -316,10 +315,6 @@ const flags: IFlags = {
     ),
     readOnlyUsersUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS_UI,
-        false,
-    ),
-    privateProjectMiddlewareMove: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PRIVATE_PROJECT_MIDDLEWARE_MOVE,
         false,
     ),
     remoteMcpServer: parseEnvVarBoolean(

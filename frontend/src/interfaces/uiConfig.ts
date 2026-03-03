@@ -94,6 +94,7 @@ export type UiFlags = {
     updateMilestoneStrategy?: boolean;
     strategyFormConsolidation?: boolean;
     enterpriseEdgeTokensList?: boolean;
+    impactMetricsFlagPage?: boolean;
 };
 
 export interface IVersionInfo {

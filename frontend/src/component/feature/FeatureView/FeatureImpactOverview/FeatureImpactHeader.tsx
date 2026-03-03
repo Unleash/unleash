@@ -155,19 +155,15 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                         >
                             Connect metrics
                         </StyledConnectButton>
-                        {expanded ? (
-                            <ExpandLessIcon />
-                        ) : (
-                            <ExpandMoreIcon />
-                        )}
+                        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </StyledRightSection>
                 </StyledHeaderBar>
                 <Collapse in={expanded}>
                     <StyledExpandedContent>
                         <StyledEmptyDescription>
                             Connect your analytics to see how this feature
-                            affects conversion rates, error rates, and other
-                            key metrics during rollout.
+                            affects conversion rates, error rates, and other key
+                            metrics during rollout.
                         </StyledEmptyDescription>
                         <StyledChartRow>
                             <PlaceholderChart
@@ -209,11 +205,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                         <StyledChartCount>
                             {chartCount} chart{chartCount !== 1 ? 's' : ''}
                         </StyledChartCount>
-                        {expanded ? (
-                            <ExpandLessIcon />
-                        ) : (
-                            <ExpandMoreIcon />
-                        )}
+                        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </StyledImpactSection>
                 </StyledRightSection>
             </StyledHeaderBar>
@@ -222,10 +214,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 <StyledExpandedContent>
                     <StyledChartRow>
                         {impactMetrics.configs.map((config) => (
-                            <CompactChartCard
-                                key={config.id}
-                                config={config}
-                            />
+                            <CompactChartCard key={config.id} config={config} />
                         ))}
                     </StyledChartRow>
                 </StyledExpandedContent>

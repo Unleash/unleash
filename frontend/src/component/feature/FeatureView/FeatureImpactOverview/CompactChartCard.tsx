@@ -109,9 +109,7 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({ config }) => {
                 </StyledHeaderLeft>
                 <StyledTitleRow>
                     {currentValue !== null && (
-                        <StyledCurrentValue>
-                            {currentValue}
-                        </StyledCurrentValue>
+                        <StyledCurrentValue>{currentValue}</StyledCurrentValue>
                     )}
                     {config.mode === 'read' && (
                         <Tooltip title='Used by a safeguard' arrow>

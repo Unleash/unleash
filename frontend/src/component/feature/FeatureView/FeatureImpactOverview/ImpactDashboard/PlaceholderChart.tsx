@@ -10,13 +10,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Filler,
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler);
 
 const StyledChartCard = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),

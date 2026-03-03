@@ -101,7 +101,7 @@ const StyledFooter = styled('div')(({ theme }) => ({
 interface FeatureImpactHeaderProps {
     projectId: string;
     featureName: string;
-    onAddChart?: () => void;
+    onAddChart: () => void;
 }
 
 export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
@@ -165,7 +165,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                                         eventType: 'add-impact-metric-clicked',
                                     },
                                 });
-                                onAddChart?.();
+                                onAddChart();
                             }}
                         >
                             Connect metrics
@@ -245,7 +245,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                                     eventType: 'add-impact-metric-clicked',
                                 },
                             });
-                            onAddChart?.();
+                            onAddChart();
                         }}
                         sx={{ textTransform: 'none', marginLeft: 'auto' }}
                     >

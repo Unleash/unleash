@@ -63,6 +63,7 @@ process.nextTick(async () => {
                         updateMilestoneStrategy: true,
                         strategyFormConsolidation: true,
                         enterpriseEdgeTokensList: true,
+                        userTokenWithClientApiLogging: true,
                     },
                 },
                 authentication: {

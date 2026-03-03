@@ -12,6 +12,8 @@ import { styled } from '@mui/material';
 import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
+import { ChartConfigModal } from '../../impact-metrics/ChartConfigModal/ChartConfigModal';
+import { useFeatureImpactChartActions } from './useFeatureImpactChartActions';
 
 export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
@@ -31,6 +33,15 @@ export const FeatureView = () => {
         projectId,
         featureId,
     );
+
+    const {
+        chartModalOpen,
+        openChartModal,
+        closeChartModal,
+        saveChart,
+        metricOptions,
+        metadataLoading,
+    } = useFeatureImpactChartActions(projectId, featureId);
 
     const ref = useLoading(loading);
 
@@ -62,6 +73,7 @@ export const FeatureView = () => {
                                     <FeatureImpactHeader
                                         projectId={projectId}
                                         featureName={featureId}
+                                        onAddChart={openChartModal}
                                     />
                                 ) : undefined
                             }
@@ -69,6 +81,15 @@ export const FeatureView = () => {
                     }
                 />
             </Routes>
+            {impactMetricsFlagPage && (
+                <ChartConfigModal
+                    open={chartModalOpen}
+                    onClose={closeChartModal}
+                    onSave={saveChart}
+                    metricSeries={metricOptions}
+                    loading={metadataLoading}
+                />
+            )}
         </div>
     );
 };

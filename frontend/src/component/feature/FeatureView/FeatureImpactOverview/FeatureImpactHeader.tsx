@@ -7,6 +7,7 @@ import Add from '@mui/icons-material/Add';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics';
 import { PlaceholderChart } from './ImpactDashboard/PlaceholderChart';
 import { CompactChartCard } from './CompactChartCard';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -100,7 +101,7 @@ const StyledFooter = styled('div')(({ theme }) => ({
 interface FeatureImpactHeaderProps {
     projectId: string;
     featureName: string;
-    onAddChart?: () => void;
+    onAddChart: () => void;
 }
 
 export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
@@ -109,6 +110,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     onAddChart,
 }) => {
     const [expanded, setExpanded] = useState(false);
+    const { trackEvent } = usePlausibleTracker();
 
     const { impactMetrics } = useFeatureImpactMetrics({
         projectId,
@@ -118,7 +120,14 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     const chartCount = impactMetrics.configs.length;
     const hasMetrics = chartCount > 0;
 
-    const toggleExpanded = () => setExpanded(!expanded);
+    const toggleExpanded = () => {
+        if (!expanded) {
+            trackEvent('flagpage-impact-metrics', {
+                props: { eventType: 'impact-accordion-opened' },
+            });
+        }
+        setExpanded(!expanded);
+    };
     const onHeaderKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
@@ -151,7 +160,12 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                             startIcon={<Add />}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                onAddChart?.();
+                                trackEvent('flagpage-impact-metrics', {
+                                    props: {
+                                        eventType: 'add-impact-metric-clicked',
+                                    },
+                                });
+                                onAddChart();
                             }}
                         >
                             Connect metrics
@@ -226,7 +240,12 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                         startIcon={<Add />}
                         onClick={(e) => {
                             e.stopPropagation();
-                            onAddChart?.();
+                            trackEvent('flagpage-impact-metrics', {
+                                props: {
+                                    eventType: 'add-impact-metric-clicked',
+                                },
+                            });
+                            onAddChart();
                         }}
                         sx={{ textTransform: 'none', marginLeft: 'auto' }}
                     >

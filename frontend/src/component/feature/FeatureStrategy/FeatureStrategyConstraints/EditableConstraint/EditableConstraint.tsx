@@ -42,6 +42,21 @@ import { AddRegexValueChip } from './AddRegexValueChip.tsx';
 import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
 import { AddRegexValueEditor } from './AddRegexValueEditor.tsx';
 
+const invertedDisabledMessages: Partial<Record<Operator, string>> = {
+    REGEX: 'The REGEX operator does not support inversion',
+};
+
+const getInvertedDisabledText = (
+    invertedDisabled: boolean,
+    operator: Operator,
+): string | undefined => {
+    if (!invertedDisabled) return undefined;
+    return (
+        invertedDisabledMessages[operator] ??
+        'This operator does not support inversion'
+    );
+};
+
 const Container = styled('article')(({ theme }) => ({
     '--padding': theme.spacing(2),
     backgroundColor: theme.palette.background.paper,
@@ -362,11 +377,10 @@ export const EditableConstraint: FC<Props> = ({
                             <ToggleConstraintInverted
                                 inverted={Boolean(localConstraint.inverted)}
                                 onToggleInverted={onToggleInverted}
-                                disabledText={
-                                    invertedDisabled
-                                        ? 'The REGEX operator does not support inversion'
-                                        : undefined
-                                }
+                                disabledText={getInvertedDisabledText(
+                                    invertedDisabled,
+                                    operator,
+                                )}
                             />
 
                             <ConstraintOperatorSelect

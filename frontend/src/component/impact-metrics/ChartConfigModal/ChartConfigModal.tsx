@@ -30,20 +30,6 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiPaper-root > section': {
         overflowX: 'hidden',
     },
-    // Make the sidebar wider than the form panel so the chart preview
-    // has enough room to render at a good aspect ratio.
-    '& .MuiPaper-root > section > aside': {
-        width: '55%',
-    },
-    '& .MuiPaper-root > section > div:first-of-type': {
-        width: '45%',
-    },
-    [theme.breakpoints.down(1100)]: {
-        '& .MuiPaper-root > section > aside, & .MuiPaper-root > section > div:first-of-type':
-            {
-                width: '100%',
-            },
-    },
 }));
 
 const StyledForm = styled('form')({
@@ -189,6 +175,7 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                 disablePadding
                 description={sidebarDescription}
                 showLink={false}
+                sidebarWidth='55%'
             >
                 <StyledForm
                     onSubmit={(e) => {

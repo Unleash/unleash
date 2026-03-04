@@ -87,7 +87,6 @@ export type UiFlags = {
     newInUnleash?: boolean | Variant;
     gtmReleaseManagement?: boolean;
     projectContextFields?: boolean;
-    readOnlyUsersUI?: boolean;
     datePickerRangeConstraints?: boolean;
     regexConstraintOperator?: boolean;
     signupDialog?: boolean;

@@ -41,13 +41,7 @@ export const do_login = (
     // Wait for the login redirect to complete.
     cy.get("[data-testid='HEADER_USER_AVATAR']");
 
-    cy.get('body').then(($body) => {
-        const $el = $body.find("[data-testid='CLOSE_SPLASH']");
-
-        if ($el.length) {
-            cy.wrap($el).click({ multiple: true });
-        }
-    });
+    cy.get("[data-testid='CLOSE_SPLASH']").click({ multiple: true });
 
     return cy;
 };

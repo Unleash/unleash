@@ -307,6 +307,7 @@ export class ReleasePlanStore extends CRUDStore<
                 'parameters',
                 'variants',
                 'constraints',
+                'disabled',
             )
             .from('feature_strategies')
             .whereRaw(

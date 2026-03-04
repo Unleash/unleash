@@ -98,7 +98,11 @@ export const WelcomeDialog = () => {
                         environment.
                     </p>
                 </ScreenReaderOnly>
-                <Button variant='contained' onClick={onClose}>
+                <Button
+                    variant='contained'
+                    data-testid='CLOSE_SPLASH'
+                    onClick={onClose}
+                >
                     Got it, let's get started!
                 </Button>
             </ContentWrapper>

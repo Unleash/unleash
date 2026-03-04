@@ -13,6 +13,11 @@ import Delete from '@mui/icons-material/Delete';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import {
+    RegexSdkRequirementsBanner,
+    RegexSdkRequirementsToggle,
+} from './RegexSdkRequirements';
+import { useRegexSdkRequirements } from './useRegexSdkRequirements';
+import {
     type FC,
     type MutableRefObject,
     type ReactNode,
@@ -24,7 +29,7 @@ import {
     useState,
 } from 'react';
 import { RE2JS } from 're2js';
-import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput';
+import type { ConstraintValidatorOutput } from '../ConstraintValidatorOutput';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
@@ -77,6 +82,12 @@ const InputRow = styled('div')(({ theme }) => ({
     alignItems: 'start',
     width: '100%',
     marginBlock: theme.spacing(0.5),
+}));
+
+const StyledTitleRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
 }));
 
 const StyledMatchIndicatorBox = styled(Box, {
@@ -320,6 +331,11 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
     validator,
     editingOpen,
 }) => {
+    const {
+        open: sdkAlertOpen,
+        onClose: onSdkAlertClose,
+        onOpen: onSdkAlertOpen,
+    } = useRegexSdkRequirements();
     const [inputValue, setInputValue] = useState(initialValue || '');
     const [error, setError] = useState('');
     const inputId = useId();
@@ -381,7 +397,18 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
 
     return (
         <StyledBox>
-            <Typography variant='h2'>Regular expression</Typography>
+            <RegexSdkRequirementsBanner
+                open={sdkAlertOpen}
+                onClose={onSdkAlertClose}
+            />
+
+            <StyledTitleRow>
+                <Typography variant='h2'>Regular expression</Typography>
+                <RegexSdkRequirementsToggle
+                    open={sdkAlertOpen}
+                    onOpen={onSdkAlertOpen}
+                />
+            </StyledTitleRow>
             <InputRow>
                 <ScreenReaderOnly>
                     <label htmlFor={inputId}>Constraint Value</label>

@@ -41,7 +41,7 @@ import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { AddRegexValueChip } from './AddRegexValueChip.tsx';
 import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
-import { AddRegexValueEditor } from './AddRegexValueEditor.tsx';
+import { AddRegexValueEditor } from './AddRegexValueEditor/AddRegexValueEditor.tsx';
 
 const invertedDisabledMessages: Partial<Record<Operator, string>> = {
     REGEX: 'The REGEX operator does not support inversion',

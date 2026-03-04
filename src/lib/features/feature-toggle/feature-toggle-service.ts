@@ -1542,6 +1542,10 @@ export class FeatureToggleService {
         environment: string,
         featureName: string,
     ): Promise<IFeatureEnvironmentInfo> {
+        await this.validateFeatureBelongsToProject({
+            featureName,
+            projectId: project,
+        });
         const envMetadata =
             await this.featureEnvironmentStore.getEnvironmentMetaData(
                 environment,

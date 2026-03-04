@@ -91,7 +91,7 @@ const useFeatureStrategyApi = () => {
             addToRecentlyUsedConstraints(payload.constraints);
         }
 
-        if (payload.segments && payload.segments.length > 0) {
+        if (payload.segments?.length) {
             addToRecentlyUsedSegments(payload.segments);
         }
 

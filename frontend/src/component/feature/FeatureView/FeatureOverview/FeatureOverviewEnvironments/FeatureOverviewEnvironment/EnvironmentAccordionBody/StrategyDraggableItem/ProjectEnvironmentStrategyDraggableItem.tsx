@@ -8,7 +8,7 @@ import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeR
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import {
     formatEditStrategyPath,
-    type FeatureEnvironmentStrategyContext,
+    type FeatureEnvironmentStrategyScope,
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { ChangeRequestDraftStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestDraftStatusBadge';
 import { CopyStrategyIconMenu } from './StrategyItem/CopyStrategyIconMenu/CopyStrategyIconMenu.tsx';
@@ -23,7 +23,7 @@ type ProjectEnvironmentStrategyDraggableItemProps = {
     strategy: IFeatureStrategy;
     environmentName: string;
     index: number;
-    context?: FeatureEnvironmentStrategyContext;
+    scope?: FeatureEnvironmentStrategyScope;
     otherEnvironments?: IFeatureEnvironment['name'][];
     isDragging?: boolean;
     onDragStartRef?: (
@@ -41,7 +41,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
     strategy,
     index,
     environmentName,
-    context = 'default',
+    scope = 'default',
     otherEnvironments,
     isDragging,
     onDragStartRef,
@@ -120,7 +120,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                             strategy={strategy}
                         />
                     ) : null}
-                    {context === 'milestone' ? null : (
+                    {scope === 'milestone' ? null : (
                         <MenuStrategyRemove
                             projectId={projectId}
                             featureId={featureId}

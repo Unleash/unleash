@@ -2,6 +2,80 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.5.0] - 2026-03-04
+
+### Bug Fixes
+
+- Show longer legal values ([#11384](https://github.com/Unleash/unleash/issues/11384))
+
+- Welcome dialog behavior ([#11432](https://github.com/Unleash/unleash/issues/11432))
+
+- New regex test fields should be validated ([#11449](https://github.com/Unleash/unleash/issues/11449))
+
+- Open regex editing when value resets ([#11453](https://github.com/Unleash/unleash/issues/11453))
+
+
+### Features
+
+- Block inverted regex on backend ([#11426](https://github.com/Unleash/unleash/issues/11426))
+
+- Register impactMetricsFlagPage internal feature flag ([#11437](https://github.com/Unleash/unleash/issues/11437))
+
+- RE2 Regex tester ([#11399](https://github.com/Unleash/unleash/issues/11399))
+
+- Add impact metrics UI on flag page
+
+- Add updateMilestoneStrategy support in CR flow ([#11425](https://github.com/Unleash/unleash/issues/11425))
+
+- Wire up impact metrics flag page actions ([#11445](https://github.com/Unleash/unleash/issues/11445))
+
+
+### Miscellaneous Tasks
+
+- Add link to new demo walkthrough ([#11422](https://github.com/Unleash/unleash/issues/11422))
+
+- Fix dialog order and other zindex problems ([#11424](https://github.com/Unleash/unleash/issues/11424))
+
+- Allow project access assignment to groups with root roles ([#11423](https://github.com/Unleash/unleash/issues/11423))
+
+- Add ui-flag for edge instance token-statuses ([#11420](https://github.com/Unleash/unleash/issues/11420))
+
+- Add milestone strategy not found guard ([#11415](https://github.com/Unleash/unleash/issues/11415))
+
+- Fix OpenAPI diff workflow ([#11430](https://github.com/Unleash/unleash/issues/11430))
+
+- Move legacy components into own files ([#11421](https://github.com/Unleash/unleash/issues/11421))
+
+- Remove privateProjectMiddlewareMove flag ([#11429](https://github.com/Unleash/unleash/issues/11429))
+
+- Check useExhaustiveDependencies in files that pass it ([#11436](https://github.com/Unleash/unleash/issues/11436))
+
+- Remove obsolete CI strictNullChecks ([#11435](https://github.com/Unleash/unleash/issues/11435))
+
+- Update list of company roles ([#11441](https://github.com/Unleash/unleash/issues/11441))
+
+- Feature env safeguards flag ([#11444](https://github.com/Unleash/unleash/issues/11444))
+
+- Disable inverted on REGEX operator on frontend ([#11443](https://github.com/Unleash/unleash/issues/11443))
+
+- Add migration for new `disabled` column in milestone_strategies ([#11446](https://github.com/Unleash/unleash/issues/11446))
+
+- Add `disabled` to `releasePlanMilestoneStrategySchema` ([#11447](https://github.com/Unleash/unleash/issues/11447))
+
+- Use `fromUpdateRow` in milestone strategy store `updateStrategy` ([#11451](https://github.com/Unleash/unleash/issues/11451))
+
+- Log when usertoken used with client api ([#11442](https://github.com/Unleash/unleash/issues/11442))
+
+
+### Refactor
+
+- Introduce shared strategy form for milestones and strategies ([#11410](https://github.com/Unleash/unleash/issues/11410))
+
+- Widget -> chip in FeatureStratetyContraints ([#11440](https://github.com/Unleash/unleash/issues/11440))
+
+- UseExhaustiveDependencies lint in EditableConstraint ([#11448](https://github.com/Unleash/unleash/issues/11448))
+
+
 ## [7.4.3] - 2026-02-27
 
 ### Bug Fixes

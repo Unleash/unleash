@@ -106,6 +106,8 @@ export class UserService {
 
     private flagResolver: IFlagResolver;
 
+    private readOnlyUsersUI: boolean;
+
     private passwordResetTimeouts: { [key: string]: NodeJS.Timeout } = {};
 
     private baseUriPath: string;
@@ -122,9 +124,15 @@ export class UserService {
             eventBus,
             flagResolver,
             session,
+            ui,
         }: Pick<
             IUnleashConfig,
-            'getLogger' | 'server' | 'eventBus' | 'flagResolver' | 'session'
+            | 'getLogger'
+            | 'server'
+            | 'eventBus'
+            | 'flagResolver'
+            | 'session'
+            | 'ui'
         >,
         services: {
             accessService: AccessService;
@@ -147,6 +155,7 @@ export class UserService {
         this.settingService = services.settingService;
         this.resourceLimitsService = services.resourceLimitsService;
         this.flagResolver = flagResolver;
+        this.readOnlyUsersUI = Boolean(ui.flags?.readOnlyUsersUI);
         this.maxParallelSessions = session.maxParallelSessions;
         this.baseUriPath = server.baseUriPath || '';
         this.unleashUrl = server.unleashUrl;
@@ -232,7 +241,7 @@ export class UserService {
 
         const { readOnlyUsers } =
             await this.resourceLimitsService.getResourceLimits();
-        if (!this.flagResolver.isEnabled('readOnlyUsersUI') || !readOnlyUsers) {
+        if (!this.readOnlyUsersUI || !readOnlyUsers) {
             users = users.map(({ seatType, ...user }) => user);
         }
 

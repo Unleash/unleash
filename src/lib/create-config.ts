@@ -176,6 +176,12 @@ function loadUI(options: IUnleashOptions): IUIConfig {
     const uiO = options.ui || {};
     const ui: IUIConfig = {
         environment: 'Open Source',
+        flags: {
+            readOnlyUsersUI: parseEnvVarBoolean(
+                process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS_UI,
+                false,
+            ),
+        },
     };
 
     return mergeAll([ui, uiO]);

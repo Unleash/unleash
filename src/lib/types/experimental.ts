@@ -316,10 +316,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS,
         false,
     ),
-    readOnlyUsersUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS_UI,
-        false,
-    ),
     remoteMcpServer: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REMOTE_MCP_SERVER,
         false,

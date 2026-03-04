@@ -57,7 +57,6 @@ process.nextTick(async () => {
                         gtmReleaseManagement: true,
                         projectContextFields: true,
                         readOnlyUsers: true,
-                        readOnlyUsersUI: true,
                         datePickerRangeConstraints: true,
                         regexConstraintOperator: true,
                         updateMilestoneStrategy: true,

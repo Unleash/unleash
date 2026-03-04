@@ -58,11 +58,6 @@ const StyledTitle = styled('h1')(({ theme }) => ({
     margin: 0,
 }));
 
-const StyledSubtitle = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(1),
-}));
-
 const StyledFormContent = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -202,15 +197,11 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                     }}
                 >
                     <StyledFormContent>
-                        <Box>
-                            <StyledTitle>
-                                {initialConfig ? 'Edit chart' : 'Create chart'}
-                            </StyledTitle>
-                            <StyledSubtitle>
-                                Keep track of your metrics by visualizing them
-                                in a chart.
-                            </StyledSubtitle>
-                        </Box>
+                        <StyledTitle>
+                            {initialConfig
+                                ? 'Edit impact metric'
+                                : 'Add impact metric'}
+                        </StyledTitle>
 
                         <TextField
                             label='Chart Title (optional)'

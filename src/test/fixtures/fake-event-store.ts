@@ -32,6 +32,19 @@ class FakeEventStore implements IEventStore {
         return Promise.resolve(1);
     }
 
+    getDeltaRevisionState(
+        _environment: string,
+        _upperBound: number,
+    ): Promise<{
+        projectRevisions: Map<string, number>;
+        globalSegmentRevision: number;
+    }> {
+        return Promise.resolve({
+            projectRevisions: new Map(),
+            globalSegmentRevision: 0,
+        });
+    }
+
     store(event: IBaseEvent): Promise<void> {
         this.events.push({
             ...event,

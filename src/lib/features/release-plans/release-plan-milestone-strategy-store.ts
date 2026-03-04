@@ -52,7 +52,6 @@ const fromUpdateRow = (row: any): ReleasePlanMilestoneStrategy => {
         parameters: row.parameters,
         constraints: row.constraints,
         variants: row.variants,
-        segments: [],
         disabled: row.disabled,
     };
 };
@@ -143,7 +142,7 @@ export class ReleasePlanMilestoneStrategyStore
             };
             await this.db('milestone_strategy_segments').insert(segmentRow);
         }
-        return releasePlanMilestoneStrategy;
+        return { ...releasePlanMilestoneStrategy, segments: segments ?? [] };
     }
 
     async deleteStrategiesForMilestone(milestoneId: string): Promise<void> {

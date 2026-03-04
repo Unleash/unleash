@@ -6683,9 +6683,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unleash-client@npm:^6.9.7-beta.0":
-  version: 6.9.7-beta.0
-  resolution: "unleash-client@npm:6.9.7-beta.0"
+"unleash-client@npm:^6.10.0":
+  version: 6.10.0
+  resolution: "unleash-client@npm:6.10.0"
   dependencies:
     http-proxy-agent: "npm:^7.0.2"
     https-proxy-agent: "npm:^7.0.5"
@@ -6697,7 +6697,7 @@ __metadata:
     proxy-from-env: "npm:^2.0.0"
     re2js: "npm:^1.2.2"
     semver: "npm:^7.7.3"
-  checksum: 10c0/ff2699633db53b494d6bee4911735d26896b70a1a48fcbc314d3de5921f8cc8f9484dac4ef1563b744f6dfa8c4df77a664b46e918dbdb361880b44c139b13897
+  checksum: 10c0/a3689543182bcf81ae49b48deb7ea61c41a4cff9cf8286dd1b5a563a00f7e234dd97692bb43b69414f0d1e2ed68c8a5286005a8a68829259fcc5a0beb8579991
   languageName: node
   linkType: hard
 
@@ -6807,7 +6807,7 @@ __metadata:
     type-is: "npm:^2.0.0"
     typescript: "npm:5.9.3"
     ulidx: "npm:^2.4.1"
-    unleash-client: "npm:^6.9.7-beta.0"
+    unleash-client: "npm:^6.10.0"
     vite-node: "npm:^5.2.0"
     vitest: "npm:^4.0.15"
     wait-on: "npm:^9.0.4"

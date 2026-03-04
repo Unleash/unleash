@@ -384,6 +384,7 @@ export type ChangeRequestAction =
     | 'updateEnabled'
     | 'addStrategy'
     | 'updateStrategy'
+    | 'updateMilestoneStrategy'
     | 'deleteStrategy'
     | 'patchVariant'
     | 'reorderStrategy'

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useReducer, useRef } from 'react';
 import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint,
@@ -73,7 +73,9 @@ export const useEditableConstraint = (
     }, [constraintState]);
 
     const onUpdateRef = useRef(onUpdate);
-    onUpdateRef.current = onUpdate;
+    useLayoutEffect(() => {
+        onUpdateRef.current = onUpdate;
+    });
     useEffect(() => {
         onUpdateRef.current(toIConstraint(localConstraint));
     }, [localConstraint]);

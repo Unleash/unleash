@@ -130,7 +130,7 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({ config }) => {
                         maintainAspectRatio: false,
                         elements: {
                             point: { radius: 0 },
-                            line: { tension: 0.4, borderWidth: 2 },
+                            line: { borderWidth: 2 },
                         },
                         scales: {
                             x: {

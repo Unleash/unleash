@@ -1,17 +1,15 @@
 import type { FC } from 'react';
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
     Button,
     TextField,
     Box,
     styled,
     useTheme,
     useMediaQuery,
-    Divider,
+    Dialog,
+    Typography,
 } from '@mui/material';
+import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { ImpactMetricsControls } from './ImpactMetricsControls/ImpactMetricsControls.tsx';
 import { useChartFormState } from '../hooks/useChartFormState.ts';
 import type { ChartConfig } from '../types.ts';
@@ -19,30 +17,79 @@ import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMeta
 import { LabelsFilter } from './LabelFilter/LabelsFilter.tsx';
 import { ImpactMetricsChart } from '../ImpactMetricsChart.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
-export const StyledConfigPanel = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(3),
-    [theme.breakpoints.down('lg')]: {
-        flex: 'none',
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+    '& .MuiDialog-paper': {
+        borderRadius: theme.shape.borderRadiusLarge,
+        maxWidth: theme.spacing(170),
+        width: '100%',
+        backgroundColor: 'transparent',
     },
-    [theme.breakpoints.up('lg')]: {
-        flex: '0 0 400px',
+    padding: 0,
+    '& .MuiPaper-root > section': {
+        overflowX: 'hidden',
     },
 }));
 
-export const StyledPreviewPanel = styled(Box)(({ theme }) => ({
-    flex: 1,
+const StyledForm = styled('form')({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(2),
-    [theme.breakpoints.down('lg')]: {
-        minHeight: '300px',
+    height: '100%',
+});
+
+const StyledTitle = styled('h1')(({ theme }) => ({
+    fontWeight: 'normal',
+    fontSize: theme.typography.h1.fontSize,
+    margin: 0,
+}));
+
+const StyledFormContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+    padding: theme.spacing(6),
+    flexGrow: 1,
+    minHeight: 600,
+}));
+
+const StyledButtonContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(3),
+    justifyContent: 'flex-end',
+    padding: theme.spacing(4, 6),
+    borderTop: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledSidebarHeading = styled(Typography)(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.common.white,
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledSidebarLink = styled('a')(({ theme }) => ({
+    color: theme.palette.common.white,
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    marginTop: theme.spacing(1.5),
+    textDecoration: 'underline',
+    '&:hover': {
+        textDecoration: 'none',
     },
-    [theme.breakpoints.up('lg')]: {
-        minHeight: '400px',
-    },
+}));
+
+const StyledPreviewLabel = styled(Typography)(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.common.white,
+    marginBottom: theme.spacing(1.5),
+}));
+
+const StyledPreviewContainer = styled(Box)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadiusLarge,
+    overflow: 'hidden',
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2),
 }));
 
 export interface ChartConfigModalProps {
@@ -83,33 +130,66 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
         onClose();
     };
 
+    const sidebarDescription = (
+        <>
+            <StyledSidebarHeading>Did you know?</StyledSidebarHeading>
+            Impact metrics let you track how your feature rollouts affect key
+            outcomes like error rates, latency, and adoption — directly inside
+            Unleash.
+            <StyledSidebarLink
+                href='https://docs.getunleash.io/reference/impact-metrics'
+                target='_blank'
+                rel='noopener noreferrer'
+                onClick={() =>
+                    trackEvent('impact-metrics', {
+                        props: {
+                            eventType: 'sidebar docs clicked',
+                        },
+                    })
+                }
+            >
+                <MenuBookIcon fontSize='small' />
+                Learn how to use impact metrics
+            </StyledSidebarLink>
+            <Box sx={{ mt: 3 }}>
+                <StyledPreviewLabel>Preview chart</StyledPreviewLabel>
+                <StyledPreviewContainer>
+                    <ImpactMetricsChart
+                        key={screenBreakpoint ? 'small' : 'large'}
+                        metricName={formData.metricName}
+                        timeRange={formData.timeRange}
+                        labelSelectors={formData.labelSelectors}
+                        yAxisMin={formData.yAxisMin}
+                        aggregationMode={formData.aggregationMode}
+                        isPreview
+                    />
+                </StyledPreviewContainer>
+            </Box>
+        </>
+    );
+
     return (
-        <Dialog
-            open={open}
-            onClose={onClose}
-            maxWidth='lg'
-            fullWidth
-            sx={{
-                '& .MuiDialog-paper': {
-                    minHeight: '600px',
-                    maxHeight: '90vh',
-                },
-            }}
-        >
-            <DialogTitle>
-                {initialConfig ? 'Edit Chart' : 'Add New Chart'}
-            </DialogTitle>
-            <DialogContent>
-                <Box
-                    sx={(theme) => ({
-                        display: 'flex',
-                        flexDirection: { xs: 'column', lg: 'row' },
-                        gap: theme.spacing(3),
-                        pt: theme.spacing(1),
-                        height: '100%',
-                    })}
+        <StyledDialog open={open} onClose={onClose}>
+            <FormTemplate
+                compact
+                disablePadding
+                description={sidebarDescription}
+                showLink={false}
+                sidebarWidth='55%'
+            >
+                <StyledForm
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSave();
+                    }}
                 >
-                    <StyledConfigPanel>
+                    <StyledFormContent>
+                        <StyledTitle>
+                            {initialConfig
+                                ? 'Edit impact metric'
+                                : 'Add impact metric'}
+                        </StyledTitle>
+
                         <TextField
                             label='Chart Title (optional)'
                             value={formData.title}
@@ -124,42 +204,29 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                             actions={actions}
                             metricSeries={metricSeries}
                             loading={loading}
+                            labelsFilter={
+                                currentAvailableLabels ? (
+                                    <LabelsFilter
+                                        labelSelectors={formData.labelSelectors}
+                                        onChange={actions.setLabelSelectors}
+                                        availableLabels={currentAvailableLabels}
+                                    />
+                                ) : null
+                            }
                         />
-                    </StyledConfigPanel>
-                    <StyledPreviewPanel>
-                        <Box sx={(theme) => ({ padding: theme.spacing(1) })}>
-                            <ImpactMetricsChart
-                                key={screenBreakpoint ? 'small' : 'large'}
-                                metricName={formData.metricName}
-                                timeRange={formData.timeRange}
-                                labelSelectors={formData.labelSelectors}
-                                yAxisMin={formData.yAxisMin}
-                                aggregationMode={formData.aggregationMode}
-                                isPreview
-                            />
-                        </Box>
-                    </StyledPreviewPanel>
-                </Box>
-
-                {currentAvailableLabels ? (
-                    <LabelsFilter
-                        labelSelectors={formData.labelSelectors}
-                        onChange={actions.setLabelSelectors}
-                        availableLabels={currentAvailableLabels}
-                    />
-                ) : null}
-            </DialogContent>
-            <Divider />
-            <DialogActions sx={(theme) => ({ margin: theme.spacing(2, 3, 3) })}>
-                <Button onClick={onClose}>Cancel</Button>
-                <Button
-                    onClick={handleSave}
-                    variant='contained'
-                    disabled={!isValid}
-                >
-                    {initialConfig ? 'Update' : 'Add Chart'}
-                </Button>
-            </DialogActions>
-        </Dialog>
+                    </StyledFormContent>
+                    <StyledButtonContainer>
+                        <Button onClick={onClose}>Cancel</Button>
+                        <Button
+                            variant='contained'
+                            type='submit'
+                            disabled={!isValid}
+                        >
+                            {initialConfig ? 'Update' : 'Add impact metric'}
+                        </Button>
+                    </StyledButtonContainer>
+                </StyledForm>
+            </FormTemplate>
+        </StyledDialog>
     );
 };

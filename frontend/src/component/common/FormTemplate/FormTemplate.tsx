@@ -41,6 +41,7 @@ interface ICreateProps {
     compact?: boolean;
     showGuidance?: boolean;
     useFixedSidebar?: boolean;
+    sidebarWidth?: string;
     children?: React.ReactNode;
 }
 
@@ -264,6 +265,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     compact,
     showGuidance = true,
     useFixedSidebar,
+    sidebarWidth,
 }) => {
     const { setToastData } = useToast();
     const smallScreen = useMediaQuery(`(max-width:${1099}px)`);
@@ -367,6 +369,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         documentationLinkLabel={documentationLinkLabel}
                         showDescription={showDescription}
                         showLink={showLink}
+                        sidebarWidth={sidebarWidth}
                     >
                         {renderApiInfo(
                             formatApiCode === undefined,
@@ -499,15 +502,21 @@ const GuidanceContent: React.FC<
     );
 };
 
-const Guidance: React.FC<IGuidanceProps> = (props) => {
+const Guidance: React.FC<IGuidanceProps & { sidebarWidth?: string }> = ({
+    sidebarWidth,
+    ...props
+}) => {
     return (
-        <StyledSidebar>
+        <StyledSidebar sidebarWidth={sidebarWidth}>
             <GuidanceContent {...props} />
         </StyledSidebar>
     );
 };
 
-const FixedGuidance: React.FC<IGuidanceProps> = (props) => {
+const FixedGuidance: React.FC<IGuidanceProps & { sidebarWidth?: string }> = ({
+    sidebarWidth: _,
+    ...props
+}) => {
     return (
         <StyledSidebar
             sidebarWidth={formTemplateFixedSidebarWidth}

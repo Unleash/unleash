@@ -1,6 +1,13 @@
 import type { FC } from 'react';
-import { Autocomplete, TextField, Typography, Box } from '@mui/material';
+import {
+    Autocomplete,
+    TextField,
+    Typography,
+    Box,
+    Button,
+} from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 type SeriesOption = { name: string; displayName: string; help: string };
 
@@ -10,6 +17,39 @@ export type SeriesSelectorProps = {
     options: SeriesOption[];
     loading?: boolean;
     label?: string;
+};
+
+const NoOptionsMessage = () => {
+    const { trackEvent } = usePlausibleTracker();
+
+    return (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Typography variant='body2' fontWeight='bold'>
+                No impact metrics found
+            </Typography>
+            <Typography variant='body2' color='text.secondary'>
+                Impact metrics need to be implemented in your code before they
+                can be used in safeguards.
+            </Typography>
+            <Button
+                variant='contained'
+                size='small'
+                href='https://docs.getunleash.io/reference/impact-metrics'
+                target='_blank'
+                rel='noopener noreferrer'
+                sx={{ alignSelf: 'flex-start', mt: 1 }}
+                onClick={() =>
+                    trackEvent('impact-metrics', {
+                        props: {
+                            eventType: 'No options docs clicked',
+                        },
+                    })
+                }
+            >
+                Set up your first metric
+            </Button>
+        </Box>
+    );
 };
 
 export const MetricSelector: FC<SeriesSelectorProps> = ({
@@ -53,7 +93,7 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
                 required
             />
         )}
-        noOptionsText='No metrics available'
+        noOptionsText={<NoOptionsMessage />}
         sx={{ minWidth: 300 }}
     />
 );

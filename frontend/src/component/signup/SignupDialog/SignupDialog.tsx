@@ -169,19 +169,17 @@ export const SignupDialog = () => {
 
     const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
 
-    useEffect(() => {
-        if (steps.length === 0) return;
-        setStep((s) => Math.min(s, steps.length - 1));
-    }, [steps.length]);
+    if (!signupRequired || steps.length === 0) return null;
 
-    const currentStep = steps[step];
+    const safeStep = Math.min(step, steps.length - 1);
+    const currentStep = steps[safeStep];
     const StepContent = currentStep.content;
 
     const onNext = async () => {
         if (isSubmitting) return;
 
-        if (step < steps.length - 1) {
-            setStep(step + 1);
+        if (safeStep < steps.length - 1) {
+            setStep(safeStep + 1);
             return;
         }
 
@@ -195,8 +193,6 @@ export const SignupDialog = () => {
             setIsSubmitting(false);
         }
     };
-
-    if (!signupRequired || steps.length === 0) return null;
 
     return (
         <StyledDialog open>

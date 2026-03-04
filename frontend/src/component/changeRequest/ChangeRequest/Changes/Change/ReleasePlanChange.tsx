@@ -154,7 +154,11 @@ const StartMilestone: FC<{
                 </div>
             </ChangeItemWrapper>
             <TabPanel>
-                <ReleasePlanMilestone readonly milestone={newMilestone} />
+                <ReleasePlanMilestone
+                    readonly
+                    milestone={newMilestone}
+                    environmentId={releasePlan.environment}
+                />
             </TabPanel>
             <TabPanel variant='diff'>
                 <EventDiff

@@ -68,7 +68,6 @@ export type IFlagKey =
     | 'oidcPkceSupport'
     | 'gtmReleaseManagement'
     | 'projectContextFields'
-    | 'readOnlyUsers'
     | 'readOnlyUsersUI'
     | 'remoteMcpServer'
     | 'datePickerRangeConstraints'
@@ -78,6 +77,7 @@ export type IFlagKey =
     | 'updateMilestoneStrategy'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
+    | 'userTokenWithClientApiLogging'
     | 'featureEnvSafeguards';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -311,10 +311,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_CONTEXT_FIELDS,
         false,
     ),
-    readOnlyUsers: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS,
-        false,
-    ),
     readOnlyUsersUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS_UI,
         false,
@@ -350,6 +346,10 @@ const flags: IFlags = {
     impactMetricsFlagPage: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS_FLAG_PAGE,
         false,
+    ),
+    userTokenWithClientApiLogging: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING,
+        true,
     ),
     featureEnvSafeguards: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_ENV_SAFEGUARDS,

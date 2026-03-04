@@ -80,6 +80,30 @@ const useFeatureStrategyApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const updateMilestoneStrategyOnFeature = async (
+        projectId: string,
+        featureId: string,
+        environmentId: string,
+        strategyId: string,
+        payload: IFeatureStrategyPayload,
+    ): Promise<void> => {
+        if (payload.constraints && payload.constraints.length > 0) {
+            addToRecentlyUsedConstraints(payload.constraints);
+        }
+
+        if (payload.segments?.length) {
+            addToRecentlyUsedSegments(payload.segments);
+        }
+
+        const path = `api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/milestone-strategies/${strategyId}`;
+        const req = createRequest(
+            path,
+            { method: 'PUT', body: JSON.stringify(payload) },
+            'updateMilestoneStrategyOnFeature',
+        );
+        await makeRequest(req.caller, req.id);
+    };
+
     const setStrategiesSortOrder = async (
         projectId: string,
         featureId: string,
@@ -123,6 +147,7 @@ const useFeatureStrategyApi = () => {
     return {
         addStrategyToFeature,
         updateStrategyOnFeature,
+        updateMilestoneStrategyOnFeature,
         deleteStrategyFromFeature,
         setStrategiesSortOrder,
         setStrategyDisabledState,

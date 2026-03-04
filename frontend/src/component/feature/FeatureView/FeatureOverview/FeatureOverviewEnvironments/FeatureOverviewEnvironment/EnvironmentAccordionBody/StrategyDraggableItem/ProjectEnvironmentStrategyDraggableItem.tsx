@@ -1,4 +1,4 @@
-import { type DragEventHandler, type RefObject, useRef } from 'react';
+import type { DragEventHandler, RefObject } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
@@ -6,7 +6,10 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useStrategyChangesFromRequest } from './StrategyItem/useStrategyChangesFromRequest.tsx';
 import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
-import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
+import {
+    formatEditStrategyPath,
+    type FeatureEnvironmentStrategyScope,
+} from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { ChangeRequestDraftStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestDraftStatusBadge';
 import { CopyStrategyIconMenu } from './StrategyItem/CopyStrategyIconMenu/CopyStrategyIconMenu.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
@@ -20,6 +23,7 @@ type ProjectEnvironmentStrategyDraggableItemProps = {
     strategy: IFeatureStrategy;
     environmentName: string;
     index: number;
+    scope?: FeatureEnvironmentStrategyScope;
     otherEnvironments?: IFeatureEnvironment['name'][];
     isDragging?: boolean;
     onDragStartRef?: (
@@ -37,6 +41,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
     strategy,
     index,
     environmentName,
+    scope = 'default',
     otherEnvironments,
     isDragging,
     onDragStartRef,
@@ -45,7 +50,6 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
 }: ProjectEnvironmentStrategyDraggableItemProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const _ref = useRef<HTMLDivElement>(null);
     const strategyChangesFromRequest = useStrategyChangesFromRequest(
         projectId,
         featureId,
@@ -116,12 +120,14 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                             strategy={strategy}
                         />
                     ) : null}
-                    <MenuStrategyRemove
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentName}
-                        strategy={strategy}
-                    />
+                    {scope === 'milestone' ? null : (
+                        <MenuStrategyRemove
+                            projectId={projectId}
+                            featureId={featureId}
+                            environmentId={environmentName}
+                            strategy={strategy}
+                        />
+                    )}
                 </>
             }
         />

@@ -99,15 +99,15 @@ describe('NewFeatureStrategyEdit', () => {
         };
 
         expect(
-            formatUpdateStrategyApiCode(
-                'projectId',
-                'featureId',
-                'environmentId',
-                'strategyId',
+            formatUpdateStrategyApiCode({
+                projectId: 'projectId',
+                featureId: 'featureId',
+                environmentId: 'environmentId',
+                strategyId: 'strategyId',
                 strategy,
                 strategyDefinition,
-                'unleashUrl',
-            ),
+                unleashUrl: 'unleashUrl',
+            }),
         ).toMatchInlineSnapshot(`
       "curl --location --request PUT 'unleashUrl/api/admin/projects/projectId/features/featureId/environments/environmentId/strategies/strategyId' \\
           --header 'Authorization: INSERT_API_KEY' \\

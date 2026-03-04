@@ -412,9 +412,7 @@ export class InstanceStatsService {
             this.getReleaseTemplates(),
             this.getReleasePlans(),
             this.getEdgeInstances(),
-            this.flagResolver.isEnabled('readOnlyUsers')
-                ? this.getReadOnlyUsers()
-                : Promise.resolve(null),
+            this.getReadOnlyUsers(),
         ]);
 
         return {
@@ -514,9 +512,7 @@ export class InstanceStatsService {
             this.getReleaseTemplates(),
             this.getReleasePlans(),
             this.getEdgeInstances(),
-            this.flagResolver.isEnabled('readOnlyUsers')
-                ? this.getReadOnlyUsers()
-                : Promise.resolve(null),
+            this.getReadOnlyUsers(),
         ]);
         const versionInfo = await this.versionService.getVersionInfo();
 

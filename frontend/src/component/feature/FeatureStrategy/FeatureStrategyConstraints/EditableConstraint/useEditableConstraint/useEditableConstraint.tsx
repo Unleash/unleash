@@ -67,11 +67,10 @@ export const useEditableConstraint = (
         constraintReducer,
         fromIConstraint(constraint),
     );
-    const localConstraint = useMemo(() => {
-        const { deletedLegalValues: _ignored, ...rest } = constraintState;
-        return rest;
+    const { deletedLegalValues, localConstraint } = useMemo(() => {
+        const { deletedLegalValues, ...localConstraint } = constraintState;
+        return { deletedLegalValues, localConstraint };
     }, [constraintState]);
-    const { deletedLegalValues } = constraintState;
 
     const onUpdateRef = useRef(onUpdate);
     onUpdateRef.current = onUpdate;

@@ -235,7 +235,7 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                             type='submit'
                             disabled={!isValid}
                         >
-                            {initialConfig ? 'Update chart' : 'Create chart'}
+                            {initialConfig ? 'Update' : 'Add impact metric'}
                         </Button>
                     </StyledButtonContainer>
                 </StyledForm>

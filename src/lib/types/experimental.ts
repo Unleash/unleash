@@ -69,7 +69,6 @@ export type IFlagKey =
     | 'gtmReleaseManagement'
     | 'projectContextFields'
     | 'readOnlyUsers'
-    | 'readOnlyUsersUI'
     | 'remoteMcpServer'
     | 'datePickerRangeConstraints'
     | 'regexConstraintOperator'
@@ -314,10 +313,6 @@ const flags: IFlags = {
     ),
     readOnlyUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS,
-        false,
-    ),
-    readOnlyUsersUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS_UI,
         false,
     ),
     remoteMcpServer: parseEnvVarBoolean(

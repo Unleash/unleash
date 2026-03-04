@@ -112,6 +112,7 @@ export class ReleasePlanTemplateStore extends CRUDStore<
                             milestoneId: row.milestoneId,
                             sortOrder: row.strategySortOrder,
                             title: row.strategyTitle,
+                            name: row.strategyName,
                             strategyName: row.strategyName,
                             parameters: row.strategyParameters ?? {},
                             constraints: row.strategyConstraints,

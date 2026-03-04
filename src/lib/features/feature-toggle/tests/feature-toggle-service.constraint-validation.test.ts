@@ -189,7 +189,7 @@ describe('Constraint validation via update strategy', () => {
 
         const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
             parameters: {},
-            strategyName: 'default',
+            name: 'default',
             featureName: 'feature',
             constraints: [],
             projectId: 'default',
@@ -230,7 +230,7 @@ describe('Constraint validation via update strategy', () => {
 
         const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
             parameters: {},
-            strategyName: 'default',
+            name: 'default',
             featureName: 'feature',
             constraints: [],
             projectId: 'default',

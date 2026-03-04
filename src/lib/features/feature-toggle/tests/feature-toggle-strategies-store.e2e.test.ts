@@ -47,7 +47,7 @@ test('Can successfully update project for all strategies belonging to feature', 
     const oldProjectId = 'default';
     const environment = DEFAULT_ENV;
     await featureStrategiesStore.createStrategyFeatureEnv({
-        strategyName: 'default',
+        name: 'default',
         projectId: oldProjectId,
         environment,
         featureName,
@@ -56,7 +56,7 @@ test('Can successfully update project for all strategies belonging to feature', 
         sortOrder: 15,
     });
     await featureStrategiesStore.createStrategyFeatureEnv({
-        strategyName: 'default',
+        name: 'default',
         projectId: oldProjectId,
         environment,
         featureName,
@@ -165,7 +165,7 @@ test('Creating an applicationHostname strategy does not get unnecessary paramete
         createdByUserId: 9999,
     });
     const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
-        strategyName: 'applicationHostname',
+        name: 'applicationHostname',
         projectId: 'default',
         environment: DEFAULT_ENV,
         featureName: toggle.name,
@@ -195,7 +195,7 @@ describe('max metrics collection', () => {
         expect(maxEnvStrategiesBefore).toBe(null);
 
         await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'gradualRollout',
+            name: 'gradualRollout',
             projectId: 'default',
             environment: DEFAULT_ENV,
             featureName: toggle.name,
@@ -204,7 +204,7 @@ describe('max metrics collection', () => {
             parameters: {},
         });
         await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'gradualRollout',
+            name: 'gradualRollout',
             projectId: 'default',
             environment: DEFAULT_ENV,
             featureName: toggle.name,
@@ -240,7 +240,7 @@ describe('max metrics collection', () => {
         constraint: IConstraint,
     ) => {
         return {
-            strategyName: 'gradualRollout',
+            name: 'gradualRollout',
             projectId: 'default',
             environment: DEFAULT_ENV,
             featureName: feature,
@@ -315,7 +315,7 @@ describe('max metrics collection', () => {
         expect(maxConstraintValuesBefore).toBe(null);
 
         await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'gradualRollout',
+            name: 'gradualRollout',
             projectId: 'default',
             environment: DEFAULT_ENV,
             featureName: flagA.name,
@@ -336,7 +336,7 @@ describe('max metrics collection', () => {
             parameters: {},
         });
         await featureStrategiesStore.createStrategyFeatureEnv({
-            strategyName: 'gradualRollout',
+            name: 'gradualRollout',
             projectId: 'default',
             environment: DEFAULT_ENV,
             featureName: flagB.name,

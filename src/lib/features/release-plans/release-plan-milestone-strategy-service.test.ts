@@ -34,7 +34,7 @@ beforeAll(() => {
 test('also updates feature strategy when present', async () => {
     const milestoneStrategy = await milestoneStrategyStore.insert({
         milestoneId: 'milestone-1',
-        strategyName: 'default',
+        name: 'default',
         sortOrder: 0,
         parameters: {},
         constraints: [],
@@ -46,6 +46,7 @@ test('also updates feature strategy when present', async () => {
         projectId: defaultContext.projectId,
         featureName: defaultContext.featureName,
         environment: defaultContext.environment,
+        name: milestoneStrategy.strategyName,
         strategyName: milestoneStrategy.strategyName,
         parameters: milestoneStrategy.parameters!,
         constraints: milestoneStrategy.constraints!,

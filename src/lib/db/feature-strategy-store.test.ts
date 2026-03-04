@@ -85,7 +85,7 @@ test('counts custom strategies in use', async () => {
     await featureStrategiesStore.createStrategyFeatureEnv({
         projectId: 'default',
         featureName: 'test-toggle',
-        strategyName: 'strategy-1',
+        name: 'strategy-1',
         environment: DEFAULT_ENV,
         parameters: {},
         constraints: [],
@@ -103,7 +103,7 @@ test('counts custom strategies in use', async () => {
 const baseStrategy: PartialSome<IFeatureStrategy, 'id' | 'createdAt'> = {
     projectId: 'default',
     featureName: 'test-toggle-increment',
-    strategyName: 'strategy-1',
+    name: 'strategy-1',
     environment: DEFAULT_ENV,
     parameters: {},
     constraints: [],
@@ -124,21 +124,21 @@ test('increment sort order on each new insert', async () => {
         await featureStrategiesStore.createStrategyFeatureEnv({
             ...baseStrategy,
             featureName: 'test-toggle-increment',
-            strategyName: 'strategy-1',
+            name: 'strategy-1',
             // sort order implicitly 0
         });
     const { id: secondId } =
         await featureStrategiesStore.createStrategyFeatureEnv({
             ...baseStrategy,
             featureName: 'test-toggle-increment',
-            strategyName: 'strategy-2',
+            name: 'strategy-2',
             sortOrder: 50, // explicit sort order
         });
     const { id: thirdId } =
         await featureStrategiesStore.createStrategyFeatureEnv({
             ...baseStrategy,
             featureName: 'test-toggle-increment',
-            strategyName: 'strategy-2',
+            name: 'strategy-2',
             // implicit sort order incremented by 1
         });
 

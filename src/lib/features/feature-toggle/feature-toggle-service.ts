@@ -497,7 +497,7 @@ export class FeatureToggleService {
     ): Saved<IStrategyConfig> {
         const result: Saved<IStrategyConfig> = {
             id: featureStrategy.id,
-            name: featureStrategy.strategyName,
+            name: featureStrategy.name,
             title: featureStrategy.title,
             disabled: featureStrategy.disabled,
             constraints: featureStrategy.constraints || [],
@@ -698,6 +698,7 @@ export class FeatureToggleService {
             const newFeatureStrategy =
                 await this.featureStrategiesStore.createStrategyFeatureEnv({
                     ...standardizedConfig,
+                    name: standardizedConfig.name,
                     strategyName: standardizedConfig.name,
                     constraints: standardizedConfig.constraints || [],
                     variants: standardizedConfig.variants || [],
@@ -1014,7 +1015,7 @@ export class FeatureToggleService {
                     ) ?? [];
                 result.push({
                     id: strat.id,
-                    name: strat.strategyName,
+                    name: strat.name,
                     constraints: strat.constraints,
                     parameters: strat.parameters,
                     variants: strat.variants,
@@ -1518,7 +1519,7 @@ export class FeatureToggleService {
         const segments = await this.segmentService.getByStrategy(strategyId);
         let result: Saved<IStrategyConfig> = {
             id: strategy.id,
-            name: strategy.strategyName,
+            name: strategy.name,
             constraints: strategy.constraints || [],
             parameters: strategy.parameters,
             variants: strategy.variants || [],

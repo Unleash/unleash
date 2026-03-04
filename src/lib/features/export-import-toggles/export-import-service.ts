@@ -1001,7 +1001,6 @@ export default class ExportImportService
                 return rest;
             }),
             featureStrategies: featureStrategies.map((item) => {
-                const name = item.strategyName;
                 const {
                     createdAt,
                     projectId,
@@ -1011,8 +1010,8 @@ export default class ExportImportService
                     ...rest
                 } = item;
                 return {
-                    name,
                     ...rest,
+                    name: item.name,
                 };
             }),
             featureEnvironments: featureEnvironments.map((item) => {

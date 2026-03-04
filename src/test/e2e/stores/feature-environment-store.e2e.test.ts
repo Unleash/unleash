@@ -152,7 +152,7 @@ test('Copying strategies also copies strategy variants', async () => {
         environment: envName,
         projectId: 'default',
         featureName,
-        strategyName: 'default',
+        name: 'default',
         variants: [strategyVariant],
         parameters: {},
         constraints: [],

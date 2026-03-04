@@ -10,5 +10,7 @@ export interface ReleasePlanMilestoneStrategy
     id: string;
     milestoneId: string;
     sortOrder: number;
-    strategyName: string;
+    name: string;
+    /** @deprecated use {@link name} instead */
+    strategyName?: string;
 }

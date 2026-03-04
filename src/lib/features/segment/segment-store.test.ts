@@ -176,7 +176,7 @@ describe('usage counting', () => {
                 featureName: flag.name,
                 projectId: 'default',
                 environment: DEFAULT_ENV,
-                strategyName: 'flexibleRollout',
+                name: 'flexibleRollout',
                 segments: [segment1.id],
                 parameters: {
                     groupId: flag.name,

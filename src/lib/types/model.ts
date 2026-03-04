@@ -41,7 +41,9 @@ export interface IStrategyConfig {
 }
 
 export type MilestoneStrategyConfig = Omit<IStrategyConfig, 'name'> & {
-    strategyName: string;
+    name: string;
+    /** @deprecated use {@link name} instead */
+    strategyName?: string;
 };
 
 export type MilestoneStrategyConfigUpdate = Omit<
@@ -54,7 +56,9 @@ export interface IFeatureStrategy {
     featureName: string;
     projectId: string;
     environment: string;
-    strategyName: string;
+    name: string;
+    /** @deprecated use {@link name} instead */
+    strategyName?: string;
     parameters: { [key: string]: string };
     sortOrder?: number;
     milestoneId?: string;

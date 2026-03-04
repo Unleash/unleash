@@ -131,7 +131,7 @@ describe('Strategy limits', () => {
 
         const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
             parameters: {},
-            strategyName: 'default',
+            name: 'default',
             featureName: flagName,
             constraints: constraints,
             projectId: 'default',
@@ -238,7 +238,7 @@ describe('Strategy limits', () => {
         const initialConstraintValueCount = LIMIT + 2;
         const strategy = await featureStrategiesStore.createStrategyFeatureEnv({
             parameters: {},
-            strategyName: 'default',
+            name: 'default',
             featureName: flagName,
             constraints: constraints(initialConstraintValueCount),
             projectId: 'default',

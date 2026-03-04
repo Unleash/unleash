@@ -40,7 +40,7 @@ const createFeature = async (config: FeatureConfig) => {
         createdByUserId: 9999,
     });
     await featureStrategiesStore.createStrategyFeatureEnv({
-        strategyName: 'flexibleRollout',
+        name: 'flexibleRollout',
         projectId: 'default',
         environment: DEFAULT_ENV,
         featureName: config.featureName,

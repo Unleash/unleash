@@ -11,9 +11,10 @@ export const RegexSdkRequirementsBanner: FC<
 > = ({ open, onClose }) => (
     <Collapse in={open}>
         <Alert severity='info' icon={false} onClose={onClose} sx={{ mb: 2 }}>
-            Regex requires these SDK versions or newer: Node v6.9.7, Java TODO,
-            Ruby TODO, Python TODO, Rust TODO, Go TODO — or a frontend SDK
-            connected to Unleash TODO or Edge TODO.
+            Regex requires these SDK versions or newer: Node.js 6.10.0, Java
+            12.2.0, Ruby 6.5.0, Python 6.6.0, .NET 6.1.0, Go 6.2.0 - or a
+            frontend SDK connected to Unleash or Unleash Enterpirse Edge
+            20.1.10.
         </Alert>
     </Collapse>
 );

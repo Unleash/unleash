@@ -76,7 +76,7 @@ export interface InstanceStats {
     releaseTemplates: number;
     releasePlans: number;
     edgeInstanceUsage: Awaited<ReturnType<GetEdgeInstances>>;
-    readOnlyUsers?: number;
+    readOnlyUsers: number;
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -412,9 +412,7 @@ export class InstanceStatsService {
             this.getReleaseTemplates(),
             this.getReleasePlans(),
             this.getEdgeInstances(),
-            this.flagResolver.isEnabled('readOnlyUsers')
-                ? this.getReadOnlyUsers()
-                : Promise.resolve(null),
+            this.getReadOnlyUsers(),
         ]);
 
         return {
@@ -456,7 +454,7 @@ export class InstanceStatsService {
             releaseTemplates,
             releasePlans,
             edgeInstanceUsage,
-            ...(readOnlyUsers !== null ? { readOnlyUsers } : {}),
+            readOnlyUsers,
         };
     }
 
@@ -514,9 +512,7 @@ export class InstanceStatsService {
             this.getReleaseTemplates(),
             this.getReleasePlans(),
             this.getEdgeInstances(),
-            this.flagResolver.isEnabled('readOnlyUsers')
-                ? this.getReadOnlyUsers()
-                : Promise.resolve(null),
+            this.getReadOnlyUsers(),
         ]);
         const versionInfo = await this.versionService.getVersionInfo();
 
@@ -555,7 +551,7 @@ export class InstanceStatsService {
             releaseTemplates,
             releasePlans,
             edgeInstanceUsage,
-            ...(readOnlyUsers !== null ? { readOnlyUsers } : {}),
+            readOnlyUsers,
         };
         return featureInfo;
     }

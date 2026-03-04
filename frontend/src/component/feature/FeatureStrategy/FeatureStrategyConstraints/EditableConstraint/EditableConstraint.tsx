@@ -6,7 +6,7 @@ import {
     isStringOperator,
     type Operator,
 } from 'constants/operators';
-import { useCallback, useRef, useState, type FC } from 'react';
+import { useCallback, useEffect, useRef, useState, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -33,6 +33,7 @@ import {
     isNumberConstraint,
     isRegexConstraint,
     isSemVerConstraint,
+    isSingleValueConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
@@ -287,11 +288,6 @@ export const EditableConstraint: FC<Props> = ({
     onUpdate,
 }) => {
     const groupContextFieldOptionsByType = useUiFlag('projectContextFields');
-
-    const editingShouldBeOpenByDefaultForNewConstraints = !constraint.value;
-    const [editingOpen, setEditingOpen] = useState(
-        editingShouldBeOpenByDefaultForNewConstraints,
-    );
     const {
         constraint: localConstraint,
         updateConstraint,
@@ -299,6 +295,17 @@ export const EditableConstraint: FC<Props> = ({
         legalValueData,
         invertedDisabled,
     } = useEditableConstraint(constraint, onUpdate);
+    const editingShouldBeOpen =
+        isSingleValueConstraint(localConstraint) &&
+        isRegexConstraint(localConstraint) &&
+        !localConstraint.value;
+    const [editingOpen, setEditingOpen] = useState(editingShouldBeOpen);
+    useEffect(() => {
+        // open the editor when regex value is empty,
+        // even if it was closed before by the user
+        if (editingShouldBeOpen) setEditingOpen(true);
+    }, [editingShouldBeOpen]);
+
     const addValues = useCallback(
         (value: string | string[]) =>
             updateConstraint({ type: 'add value(s)', payload: value }),

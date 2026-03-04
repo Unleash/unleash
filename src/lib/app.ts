@@ -34,6 +34,7 @@ import NotFoundError from './error/notfound-error.js';
 import { bearerTokenMiddleware } from './middleware/bearer-token-middleware.js';
 import { auditAccessMiddleware } from './middleware/index.js';
 import { originMiddleware } from './middleware/origin-middleware.js';
+import { userTokenClientApiLogger } from './middleware/user-token-client-api-logger-middleware.js';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -110,6 +111,11 @@ export default async function getApp(
     app.options(
         `${baseUriPath}/api/streaming*`,
         corsOriginMiddleware(services, config),
+    );
+
+    app.use(
+        `${baseUriPath}/api/client/features*`,
+        userTokenClientApiLogger(config),
     );
 
     app.use(baseUriPath, patMiddleware(config, services));

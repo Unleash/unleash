@@ -117,6 +117,7 @@ export class ReleasePlanTemplateStore extends CRUDStore<
                             constraints: row.strategyConstraints,
                             variants: row.strategyVariants ?? [],
                             segments: [],
+                            disabled: row.strategyDisabled ?? false,
                         };
                         milestone.strategies = [
                             ...(milestone.strategies || []),
@@ -174,6 +175,7 @@ export class ReleasePlanTemplateStore extends CRUDStore<
                 'ms.parameters AS strategyParameters',
                 'ms.constraints AS strategyConstraints',
                 'ms.variants AS strategyVariants',
+                'ms.disabled AS strategyDisabled',
                 'mss.segment_id AS segmentId',
             );
         endTimer();

@@ -34,6 +34,7 @@ const selectColumns = [
     'ms.parameters AS strategyParameters',
     'ms.constraints AS strategyConstraints',
     'ms.variants AS strategyVariants',
+    'ms.disabled AS strategyDisabled',
     'mss.segment_id AS segmentId',
 ];
 const processReleasePlanRows = (templateRows): ReleasePlan[] =>
@@ -61,6 +62,7 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
                 strategyParameters,
                 strategyConstraints,
                 strategyVariants,
+                strategyDisabled,
                 segmentId,
             },
         ) => {
@@ -120,6 +122,7 @@ const processReleasePlanRows = (templateRows): ReleasePlan[] =>
                     constraints: strategyConstraints,
                     variants: strategyVariants ?? [],
                     segments: [],
+                    disabled: strategyDisabled ?? false,
                 };
                 milestone.strategies = [
                     ...(milestone.strategies || []),
@@ -149,6 +152,7 @@ const processMilestoneStrategyRows = (
             constraints: row.constraints,
             variants: row.variants,
             segments: [],
+            disabled: row.disabled,
         };
     });
 };
@@ -260,8 +264,8 @@ export class ReleasePlanStore extends CRUDStore<
         const endTimer = this.timer('activateStrategiesForMilestone');
         const rows = await this.db.raw(
             `
-            INSERT INTO feature_strategies(id, feature_name, project_name, environment, strategy_name, parameters, constraints, sort_order, title, variants, created_by_user_id, milestone_id)
-            SELECT ms.id, rpd.feature_name, feature.project, rpd.environment, ms.strategy_name, ms.parameters, ms.constraints, ms.sort_order, ms.title, ms.variants, :userId, ms.milestone_id
+            INSERT INTO feature_strategies(id, feature_name, project_name, environment, strategy_name, parameters, constraints, sort_order, title, variants, created_by_user_id, milestone_id, disabled)
+            SELECT ms.id, rpd.feature_name, feature.project, rpd.environment, ms.strategy_name, ms.parameters, ms.constraints, ms.sort_order, ms.title, ms.variants, :userId, ms.milestone_id, ms.disabled
                    FROM milestone_strategies AS ms
                    LEFT JOIN milestones AS m ON m.id = ms.milestone_id
                    LEFT JOIN release_plan_definitions AS rpd ON rpd.active_milestone_id = m.id AND rpd.discriminator = 'plan'

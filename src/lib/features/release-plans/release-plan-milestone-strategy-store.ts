@@ -38,6 +38,7 @@ const fromRow = (row: any): ReleasePlanMilestoneStrategy => {
         constraints: JSON.parse(row.constraints),
         variants: JSON.parse(row.variants),
         segments: [],
+        disabled: row.disabled,
     };
 };
 
@@ -51,6 +52,7 @@ const fromUpdateRow = (row: any): ReleasePlanMilestoneStrategy => {
         parameters: row.parameters,
         constraints: row.constraints,
         variants: row.variants,
+        disabled: row.disabled,
     };
 };
 
@@ -64,6 +66,7 @@ const toRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
         parameters: item.parameters ?? {},
         constraints: JSON.stringify(item.constraints ?? []),
         variants: JSON.stringify(item.variants ?? []),
+        disabled: item.disabled ?? false,
     };
 };
 
@@ -75,6 +78,7 @@ const toUpdateRow = (item: Partial<MilestoneStrategyConfigUpdate>) => {
         parameters: item.parameters ?? {},
         constraints: JSON.stringify(item.constraints ?? []),
         variants: JSON.stringify(item.variants ?? []),
+        disabled: item.disabled ?? false,
     };
 };
 
@@ -138,7 +142,7 @@ export class ReleasePlanMilestoneStrategyStore
             };
             await this.db('milestone_strategy_segments').insert(segmentRow);
         }
-        return releasePlanMilestoneStrategy;
+        return { ...releasePlanMilestoneStrategy, segments: segments ?? [] };
     }
 
     async deleteStrategiesForMilestone(milestoneId: string): Promise<void> {

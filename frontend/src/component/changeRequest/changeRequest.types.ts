@@ -3,11 +3,7 @@ import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
 import type { SetStrategySortOrderSchema } from 'openapi';
-import type {
-    IReleasePlan,
-    ISafeguard,
-    IReleasePlanMilestoneStrategy,
-} from 'interfaces/releasePlans';
+import type { IReleasePlan, ISafeguard } from 'interfaces/releasePlans';
 
 type BaseChangeRequest = {
     id: number;
@@ -158,13 +154,10 @@ export interface IChangeRequestUpdateStrategy extends IChangeRequestChangeBase {
     payload: ChangeRequestEditStrategy;
 }
 
-export type ChangeRequestUpdateMilestoneStrategy = Pick<
-    IReleasePlanMilestoneStrategy,
-    'constraints' | 'parameters' | 'segments' | 'title' | 'variants'
-> & {
-    id: string;
-    snapshot?: IReleasePlanMilestoneStrategy;
-};
+export type ChangeRequestUpdateMilestoneStrategy = Omit<
+    ChangeRequestEditStrategy,
+    'name'
+>;
 
 export interface IChangeRequestUpdateMilestoneStrategy
     extends IChangeRequestChangeBase {

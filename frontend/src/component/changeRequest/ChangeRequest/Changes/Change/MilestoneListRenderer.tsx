@@ -113,6 +113,7 @@ const MilestoneListRendererCore = ({
                         <ReleasePlanMilestone
                             readonly={readonly}
                             milestone={milestone}
+                            environmentId={plan.environment}
                             automationSection={automationSection}
                         />
                         {isNotLastMilestone && <StyledConnection />}

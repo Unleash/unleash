@@ -18,6 +18,8 @@ import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { ProjectEnvironmentStrategyDraggableItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem.tsx';
+import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem.tsx';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status' && prop !== 'hasAutomation',
@@ -120,6 +122,7 @@ export const ReleasePlanMilestone = ({
     environmentId,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(false);
+    const canEditStrategies = useUiFlag('updateMilestoneStrategy');
     const hasAutomation = Boolean(automationSection);
     const isPreviousMilestonePaused =
         previousMilestoneStatus?.type === 'paused' ||
@@ -232,18 +235,31 @@ export const ReleasePlanMilestone = ({
                             <StrategyListItem key={strategy.id}>
                                 {index > 0 ? <StrategySeparator /> : null}
 
-                                <ProjectEnvironmentStrategyDraggableItem
-                                    context='milestone'
-                                    strategy={{
-                                        ...strategy,
-                                        name:
-                                            strategy.name ||
-                                            strategy.strategyName ||
-                                            '',
-                                    }}
-                                    index={index}
-                                    environmentName={environmentId}
-                                />
+                                {canEditStrategies ? (
+                                    <ProjectEnvironmentStrategyDraggableItem
+                                        scope='milestone'
+                                        strategy={{
+                                            ...strategy,
+                                            name:
+                                                strategy.name ||
+                                                strategy.strategyName ||
+                                                '',
+                                        }}
+                                        index={index}
+                                        environmentName={environmentId}
+                                    />
+                                ) : (
+                                    <StrategyItem
+                                        strategyHeaderLevel={4}
+                                        strategy={{
+                                            ...strategy,
+                                            name:
+                                                strategy.name ||
+                                                strategy.strategyName ||
+                                                '',
+                                        }}
+                                    />
+                                )}
                             </StrategyListItem>
                         ))}
                     </StrategyList>

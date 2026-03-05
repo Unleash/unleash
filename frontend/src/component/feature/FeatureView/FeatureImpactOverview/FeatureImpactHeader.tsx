@@ -1,5 +1,5 @@
-import type { FC } from 'react';
-import { useLocalStorageState } from 'hooks/useLocalStorageState';
+import { type FC, useState } from 'react';
+import { createLocalStorage } from 'utils/createLocalStorage';
 import { Button, Collapse, styled, Typography } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -110,10 +110,12 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     featureName,
     onAddChart,
 }) => {
-    const [expanded, setExpanded] = useLocalStorageState<'open' | 'closed'>(
-        'impact-metrics-accordion:expanded',
-        'closed',
-    );
+    const { value: initialExpanded, setValue: persistExpanded } =
+        createLocalStorage<'open' | 'closed'>(
+            'impact-metrics-accordion:expanded',
+            'closed',
+        );
+    const [expanded, setExpanded] = useState(initialExpanded === 'open');
     const { trackEvent } = usePlausibleTracker();
 
     const { impactMetrics } = useFeatureImpactMetrics({
@@ -124,15 +126,15 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     const chartCount = impactMetrics.configs.length;
     const hasMetrics = chartCount > 0;
 
-    const isOpen = expanded === 'open';
-
     const toggleExpanded = () => {
-        if (!isOpen) {
+        if (!expanded) {
             trackEvent('flagpage-impact-metrics', {
                 props: { eventType: 'impact-accordion-opened' },
             });
         }
-        setExpanded(isOpen ? 'closed' : 'open');
+        const next = !expanded;
+        setExpanded(next);
+        persistExpanded(next ? 'open' : 'closed');
     };
     const onHeaderKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -147,7 +149,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 <StyledHeaderBar
                     role='button'
                     tabIndex={0}
-                    aria-expanded={isOpen}
+                    aria-expanded={expanded}
                     aria-label='Toggle impact metrics details'
                     onClick={toggleExpanded}
                     onKeyDown={onHeaderKeyDown}
@@ -176,14 +178,14 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                         >
                             Add impact metric
                         </StyledConnectButton>
-                        {isOpen ? (
+                        {expanded ? (
                             <ExpandLessIcon />
                         ) : (
                             <ExpandMoreIcon />
                         )}
                     </StyledRightSection>
                 </StyledHeaderBar>
-                <Collapse in={isOpen}>
+                <Collapse in={expanded}>
                     <StyledExpandedContent>
                         <StyledEmptyDescription>
                             Connect your metrics to see how this feature affects
@@ -218,7 +220,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
             <StyledHeaderBar
                 role='button'
                 tabIndex={0}
-                aria-expanded={isOpen}
+                aria-expanded={expanded}
                 aria-label='Toggle impact metrics details'
                 onClick={toggleExpanded}
                 onKeyDown={onHeaderKeyDown}
@@ -231,7 +233,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                         <StyledChartCount>
                             {chartCount} chart{chartCount !== 1 ? 's' : ''}
                         </StyledChartCount>
-                        {isOpen ? (
+                        {expanded ? (
                             <ExpandLessIcon />
                         ) : (
                             <ExpandMoreIcon />
@@ -240,7 +242,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 </StyledRightSection>
             </StyledHeaderBar>
 
-            <Collapse in={isOpen}>
+            <Collapse in={expanded}>
                 <StyledExpandedContent>
                     <StyledChartRow>
                         {impactMetrics.configs.map((config) => (

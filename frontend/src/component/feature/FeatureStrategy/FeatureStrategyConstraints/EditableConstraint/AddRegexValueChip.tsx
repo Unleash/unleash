@@ -12,17 +12,20 @@ import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
 // In MUI v6 and onwards this will "just work"
 // (https://mui.com/material-ui/migration/upgrade-to-v6/#chip)
 const StyledChip = styled(ValueChip, {
-    shouldForwardProp: (prop) => prop !== 'hasValue',
-})<{ hasValue: boolean }>(({ theme, hasValue }) => ({
-    color: hasValue ? 'inherit' : theme.palette.primary.main,
-    width: 'max-content',
-    '.MuiChip-icon': {
-        transform: 'translateX(50%)',
-        fill: theme.palette.primary.main,
-        height: theme.fontSizes.smallerBody,
-        width: theme.fontSizes.smallerBody,
-    },
-}));
+    shouldForwardProp: (prop) => prop !== 'hasValue' && prop !== 'hasError',
+})<{ hasValue: boolean; hasError?: boolean }>(
+    ({ theme, hasValue, hasError }) => ({
+        color: hasValue ? 'inherit' : theme.palette.primary.main,
+        borderColor: hasError ? theme.palette.error.main : undefined,
+        width: 'max-content',
+        '.MuiChip-icon': {
+            transform: 'translateX(50%)',
+            fill: theme.palette.primary.main,
+            height: theme.fontSizes.smallerBody,
+            width: theme.fontSizes.smallerBody,
+        },
+    }),
+);
 
 type Props = {
     removeValue: () => void;
@@ -39,14 +42,11 @@ export const AddRegexValueChip: FC<Props> = ({
     editingOpen,
     validator,
 }) => {
-    const handleClick = () => {
-        if (!currentValue) {
-            setEditingOpen(true);
-            return;
-        }
-        const [isValid] = validator(currentValue);
+    const [isValid] = currentValue ? validator(currentValue) : [true];
+    const hasError = !editingOpen && !isValid;
 
-        if (!isValid) {
+    const handleClick = () => {
+        if (!currentValue || !isValid) {
             setEditingOpen(true);
             return;
         }
@@ -57,7 +57,9 @@ export const AddRegexValueChip: FC<Props> = ({
     return (
         <StyledChip
             hasValue={Boolean(currentValue)}
+            hasError={hasError}
             label={currentValue || 'Add value'}
+            variant={hasError ? 'outlined' : 'filled'}
             onClick={handleClick}
             icon={currentValue ? undefined : <Add />}
             onDelete={currentValue ? removeValue : undefined}

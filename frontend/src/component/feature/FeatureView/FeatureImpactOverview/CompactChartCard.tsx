@@ -109,7 +109,9 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
     })();
 
     return (
-        <StyledCard to={`/projects/${projectId}/features/${featureName}/metrics`}>
+        <StyledCard
+            to={`/projects/${projectId}/features/${featureName}/metrics`}
+        >
             <StyledHeader>
                 <StyledHeaderLeft>
                     <StyledTitle>{title}</StyledTitle>

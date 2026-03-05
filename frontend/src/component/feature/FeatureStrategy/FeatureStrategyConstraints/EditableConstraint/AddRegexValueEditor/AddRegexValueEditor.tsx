@@ -7,7 +7,7 @@ import {
     Typography,
 } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import HighlightOff from '@mui/icons-material/HighlightOff';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
 import Delete from '@mui/icons-material/Delete';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -86,7 +86,8 @@ const InputRow = styled('div')(({ theme }) => ({
 
 const StyledTitleRow = styled(Box)(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'beaseline',
+    justifyContent: 'space-between',
     gap: theme.spacing(1),
 }));
 
@@ -102,12 +103,12 @@ const StyledMatchIndicatorBox = styled(Box, {
 
 const StyledMatchIcon = styled(CheckCircleOutline)(({ theme }) => ({
     color: theme.palette.success.main,
-    fontSize: 'inherit',
+    fontSize: theme.fontSizes.mainHeader,
 }));
 
-const StyledNoMatchIcon = styled(HighlightOff)(({ theme }) => ({
+const StyledNoMatchIcon = styled(ErrorOutline)(({ theme }) => ({
     color: theme.palette.warning.main,
-    fontSize: 'inherit',
+    fontSize: theme.fontSizes.mainHeader,
 }));
 
 const MatchIndicator: FC<{ match: boolean; testString: string }> = ({
@@ -133,7 +134,7 @@ const MatchIndicator: FC<{ match: boolean; testString: string }> = ({
 const HelpText = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.typography.caption.fontSize,
-    margin: 0,
+    marginTop: theme.spacing(1),
 }));
 
 type RegexTestInput = {
@@ -169,6 +170,10 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
             [input.id, onEdit],
         );
 
+        const preventEnterSubmit = useCallback((e: React.KeyboardEvent) => {
+            if (e.key === 'Enter') e.preventDefault();
+        }, []);
+
         return (
             <StyledListItem>
                 <StyledTestInputBox>
@@ -184,6 +189,7 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
                         }}
                         inputRef={setInputRef}
                         onChange={handleChange}
+                        onKeyDown={preventEnterSubmit}
                     />
                     {totalCount > 1 && (
                         <HtmlTooltip title='Remove test string' arrow>

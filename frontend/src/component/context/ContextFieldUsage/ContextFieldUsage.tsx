@@ -91,9 +91,10 @@ export const ContextFieldUsage = ({ contextName }: IContextFieldUsageProps) => {
 };
 
 const formatStrategyNameParens = (strategy: IFeatureStrategy): string => {
-    if (!strategy.strategyName) {
+    const strategyTypeName = strategy.name || strategy.strategyName;
+    if (!strategyTypeName) {
         return '';
     }
 
-    return `(${formatStrategyName(strategy.strategyName)})`;
+    return `(${formatStrategyName(strategyTypeName)})`;
 };

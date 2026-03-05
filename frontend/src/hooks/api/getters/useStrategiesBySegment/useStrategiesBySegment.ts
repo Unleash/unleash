@@ -9,6 +9,8 @@ export type ChangeRequestInfo = { id: number; title: string | null };
 export type ChangeRequestNewStrategy = {
     projectId: string;
     featureName: string;
+    name: string;
+    /** @deprecated use {@link name} instead */
     strategyName: string;
     environment: string;
     changeRequest: ChangeRequestInfo;

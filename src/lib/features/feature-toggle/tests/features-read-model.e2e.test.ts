@@ -1,6 +1,4 @@
-import dbInit, {
-    type ITestDb,
-} from '../../../../test/e2e/helpers/database-init.js';
+import dbInit from '../../../../test/e2e/helpers/database-init.js';
 import getLogger from '../../../../test/fixtures/no-logger.js';
 import { FeaturesReadModel } from '../features-read-model.js';
 

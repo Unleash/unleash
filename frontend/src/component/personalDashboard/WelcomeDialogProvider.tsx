@@ -37,7 +37,7 @@ export const WelcomeDialogProvider = ({
         if (splash?.personalDashboardKeyConcepts && welcomeDialog === 'open') {
             setWelcomeDialog('closed');
         }
-    }, [splash?.personalDashboardKeyConcepts, setWelcomeDialog]);
+    }, [splash?.personalDashboardKeyConcepts]);
 
     const onClose = () => {
         setSplashSeen('personalDashboardKeyConcepts');

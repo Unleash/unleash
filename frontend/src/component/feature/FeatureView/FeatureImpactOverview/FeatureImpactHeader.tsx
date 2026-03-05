@@ -113,14 +113,14 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     const [expandedState, setExpandedState] = useLocalStorageState<
         'open' | 'closed'
     >('impact-metrics-accordion:expanded', 'closed');
-    const expanded = expandedState === 'open';
     const { trackEvent } = usePlausibleTracker();
 
-    const { impactMetrics } = useFeatureImpactMetrics({
+    const { impactMetrics, loading } = useFeatureImpactMetrics({
         projectId,
         featureName,
     });
 
+    const expanded = expandedState === 'open' && !loading;
     const chartCount = impactMetrics.configs.length;
     const hasMetrics = chartCount > 0;
 

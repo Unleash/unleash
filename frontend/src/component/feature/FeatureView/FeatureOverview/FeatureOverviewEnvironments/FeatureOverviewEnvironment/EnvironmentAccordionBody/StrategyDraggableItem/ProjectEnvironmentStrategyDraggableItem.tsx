@@ -35,6 +35,7 @@ type ProjectEnvironmentStrategyDraggableItemProps = {
         index: number,
     ) => DragEventHandler<HTMLDivElement>;
     onDragEnd?: () => void;
+    featureId: string;
 };
 
 export const ProjectEnvironmentStrategyDraggableItem = ({
@@ -47,9 +48,9 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
     onDragStartRef,
     onDragOver,
     onDragEnd,
+    featureId,
 }: ProjectEnvironmentStrategyDraggableItemProps) => {
     const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
     const strategyChangesFromRequest = useStrategyChangesFromRequest(
         projectId,
         featureId,

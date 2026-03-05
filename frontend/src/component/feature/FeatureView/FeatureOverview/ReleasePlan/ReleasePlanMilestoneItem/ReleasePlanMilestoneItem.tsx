@@ -188,6 +188,7 @@ export const ReleasePlanMilestoneItem = ({
     return (
         <div key={milestone.id}>
             <ReleasePlanMilestone
+                featureId={featureName}
                 readonly={readonly}
                 milestone={milestone}
                 status={status}

@@ -17,6 +17,28 @@ const setupApi = () => {
 };
 
 describe('EditableConstraint', () => {
+    describe('REGEX constraint with an existing invalid value', () => {
+        test('opens the regex editor automatically', async () => {
+            setupApi();
+
+            const constraint: IConstraint = {
+                contextName: 'appName',
+                operator: 'REGEX',
+                value: '[invalid',
+            };
+
+            render(
+                <EditableConstraint
+                    constraint={constraint}
+                    onDelete={vi.fn()}
+                    onUpdate={vi.fn()}
+                />,
+            );
+
+            await screen.findByTestId('CONSTRAINT_VALUES_INPUT');
+        });
+    });
+
     describe('REGEX constraint with an existing valid value', () => {
         test('opens the regex editor when operator changes away from and back to REGEX', async () => {
             setupApi();

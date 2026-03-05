@@ -990,3 +990,41 @@ test('Should add links from templates when creating a feature flag', async () =>
         ]),
     );
 });
+
+describe('getEnvironmentInfo project validation', () => {
+    test('should throw NotFoundError when feature does not belong to the given project', async () => {
+        const realProject = 'default';
+        const wrongProject = 'wrong-project';
+        const featureName = 'env-info-cross-project-feature';
+
+        await service.createFeatureToggle(
+            realProject,
+            { name: featureName },
+            TEST_AUDIT_USER,
+        );
+
+        await expect(
+            service.getEnvironmentInfo(wrongProject, DEFAULT_ENV, featureName),
+        ).rejects.toThrow(NotFoundError);
+    });
+
+    test('should return environment info when feature belongs to the given project', async () => {
+        const projectId = 'default';
+        const featureName = 'env-info-correct-project-feature';
+
+        await service.createFeatureToggle(
+            projectId,
+            { name: featureName },
+            TEST_AUDIT_USER,
+        );
+
+        const info = await service.getEnvironmentInfo(
+            projectId,
+            DEFAULT_ENV,
+            featureName,
+        );
+
+        expect(info.name).toBe(featureName);
+        expect(info.environment).toBe(DEFAULT_ENV);
+    });
+});

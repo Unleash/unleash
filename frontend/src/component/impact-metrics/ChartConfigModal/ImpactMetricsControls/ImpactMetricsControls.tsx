@@ -1,11 +1,5 @@
-import type { FC } from 'react';
-import {
-    Box,
-    Typography,
-    FormControlLabel,
-    Checkbox,
-    MenuItem,
-} from '@mui/material';
+import type { FC, ReactNode } from 'react';
+import { Box, FormControlLabel, Checkbox, MenuItem } from '@mui/material';
 import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { MetricSelector } from './SeriesSelector/MetricSelector.tsx';
 import { RangeSelector } from './RangeSelector/RangeSelector.tsx';
@@ -25,6 +19,7 @@ export type ImpactMetricsControlsProps = {
     >;
     metricSeries: (ImpactMetricsSeries & { name: string })[];
     loading?: boolean;
+    labelsFilter?: ReactNode;
 };
 
 export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
@@ -32,6 +27,7 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
     actions,
     metricSeries,
     loading,
+    labelsFilter,
 }) => (
     <Box>
         <Box
@@ -41,19 +37,14 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                 gap: theme.spacing(3),
             })}
         >
-            <Typography variant='body2' color='text.secondary'>
-                Select a custom metric to see its value over time. This can help
-                you understand the impact of your feature rollout on key
-                outcomes, such as system performance, usage patterns or error
-                rates.
-            </Typography>
-
             <MetricSelector
                 value={formData.metricName}
                 onChange={actions.handleSeriesChange}
                 options={metricSeries}
                 loading={loading}
             />
+
+            {labelsFilter}
 
             {formData.metricName ? (
                 <>

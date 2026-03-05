@@ -168,7 +168,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                                 onAddChart();
                             }}
                         >
-                            Connect metrics
+                            Add impact metric
                         </StyledConnectButton>
                         {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </StyledRightSection>

@@ -2,17 +2,21 @@ import {
     APPLICATION_CREATED,
     FEATURE_CREATED,
     FEATURE_DELETED,
+    FEATURE_FAVORITED,
+    FEATURE_PROJECT_CHANGE,
     FEATURE_TAGGED,
     FEATURE_UPDATED,
     SEGMENT_UPDATED,
     type IEvent,
 } from '../../../lib/events/index.js';
 import {
+    FeatureChangeProjectEvent,
     FeatureCreatedEvent,
     FeatureDeletedEvent,
     FeatureTaggedEvent,
     FeatureUpdatedEvent,
 } from '../../../lib/types/index.js';
+import { ALL_ENVS } from '../../../lib/util/index.js';
 
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
@@ -328,6 +332,208 @@ test('getMaxRevisionId returns the latest id for relevant feature and segment ev
 
     expect(segmentEvent!.id).toBeGreaterThan(updatedEvent!.id);
     expect(taggedEvent!.id).toBeGreaterThan(segmentEvent!.id);
+});
+
+describe('getDeltaRevisionState', () => {
+    test('returns per-project max revision ids and segment revision', async () => {
+        const defaultEvent = new FeatureUpdatedEvent({
+            project: 'default',
+            featureName: 'feature-a',
+            auditUser: testAudit,
+            data: { name: 'feature-a', enabled: true },
+        });
+
+        const otherEvent = new FeatureUpdatedEvent({
+            project: 'other',
+            featureName: 'feature-b',
+            auditUser: testAudit,
+            data: { name: 'feature-b', enabled: false },
+        });
+
+        const segmentEvent = {
+            type: SEGMENT_UPDATED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            data: { id: 123, name: 'segment-a' },
+        };
+
+        await eventStore.store(defaultEvent);
+        await eventStore.store(otherEvent);
+        await eventStore.store(segmentEvent);
+
+        const allEvents = await eventStore.getAll();
+        const defaultStored = allEvents.find(
+            (e) => e.type === FEATURE_UPDATED && e.project === 'default',
+        )!;
+        const otherStored = allEvents.find(
+            (e) => e.type === FEATURE_UPDATED && e.project === 'other',
+        )!;
+        const segmentStored = allEvents.find(
+            (e) => e.type === SEGMENT_UPDATED,
+        )!;
+
+        const state = await eventStore.getDeltaRevisionState(
+            ALL_ENVS,
+            segmentStored.id,
+        );
+
+        expect(state.projectRevisions.get('default')).toBe(defaultStored.id);
+        expect(state.projectRevisions.get('other')).toBe(otherStored.id);
+        expect(state.globalSegmentRevision).toBe(segmentStored.id);
+    });
+
+    test('respects environment filtering and includes null-environment feature events', async () => {
+        const devEvent = {
+            type: FEATURE_UPDATED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            featureName: 'feature-a',
+            project: 'default',
+            environment: 'development',
+            data: { name: 'feature-a', enabled: true },
+        };
+
+        const prodEvent = {
+            type: FEATURE_UPDATED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            featureName: 'feature-a',
+            project: 'default',
+            environment: 'production',
+            data: { name: 'feature-a', enabled: false },
+        };
+
+        const nullEnvEvent = {
+            type: FEATURE_UPDATED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            featureName: 'feature-a',
+            project: 'default',
+            data: { name: 'feature-a', enabled: true },
+        };
+
+        await eventStore.store(devEvent);
+        await eventStore.store(prodEvent);
+        await eventStore.store(nullEnvEvent);
+
+        const allEvents = await eventStore.getAll();
+        const devStored = allEvents.find(
+            (e) => e.environment === 'development',
+        )!;
+        const prodStored = allEvents.find(
+            (e) => e.environment === 'production',
+        )!;
+        const nullEnvStored = allEvents.find((e) => e.environment == null)!;
+
+        const state = await eventStore.getDeltaRevisionState(
+            'development',
+            nullEnvStored.id,
+        );
+
+        expect(state.projectRevisions.get('default')).toBe(
+            Math.max(devStored.id, nullEnvStored.id),
+        );
+        expect(state.projectRevisions.get('default')).not.toBe(prodStored.id);
+    });
+
+    test('includes oldProject revisions from feature-project-change', async () => {
+        const moveEvent = new FeatureChangeProjectEvent({
+            oldProject: 'old-project',
+            newProject: 'new-project',
+            featureName: 'moved-feature',
+            auditUser: testAudit,
+        });
+
+        await eventStore.store(moveEvent);
+
+        const storedMove = (await eventStore.getAll()).find(
+            (e) => e.type === FEATURE_PROJECT_CHANGE,
+        )!;
+
+        const state = await eventStore.getDeltaRevisionState(
+            ALL_ENVS,
+            storedMove.id,
+        );
+
+        expect(state.projectRevisions.get('old-project')).toBe(storedMove.id);
+        expect(state.projectRevisions.get('new-project')).toBe(storedMove.id);
+        expect(state.globalSegmentRevision).toBe(0);
+    });
+
+    test('ignores non-interesting feature events', async () => {
+        const favoritedEvent = {
+            type: FEATURE_FAVORITED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            featureName: 'feature-a',
+            project: 'default',
+            data: {},
+        };
+
+        await eventStore.store(favoritedEvent);
+
+        const stored = (await eventStore.getAll())[0];
+        const state = await eventStore.getDeltaRevisionState(
+            ALL_ENVS,
+            stored.id,
+        );
+
+        expect(state.projectRevisions.size).toBe(0);
+        expect(state.globalSegmentRevision).toBe(0);
+    });
+
+    test('respects upperBound for project and segment revisions', async () => {
+        const firstFeature = new FeatureUpdatedEvent({
+            project: 'default',
+            featureName: 'feature-a',
+            auditUser: testAudit,
+            data: { name: 'feature-a', enabled: true },
+        });
+
+        const segmentEvent = {
+            type: SEGMENT_UPDATED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            data: { id: 999, name: 'segment-a' },
+        };
+
+        const secondFeature = new FeatureUpdatedEvent({
+            project: 'default',
+            featureName: 'feature-a',
+            auditUser: testAudit,
+            data: { name: 'feature-a', enabled: false },
+        });
+
+        await eventStore.store(firstFeature);
+        await eventStore.store(segmentEvent);
+        await eventStore.store(secondFeature);
+
+        const allEvents = await eventStore.getAll();
+        const firstStored = allEvents.find(
+            (e) => e.type === FEATURE_UPDATED && e.data.enabled === true,
+        )!;
+        const segmentStored = allEvents.find(
+            (e) => e.type === SEGMENT_UPDATED,
+        )!;
+        const secondStored = allEvents.find(
+            (e) => e.type === FEATURE_UPDATED && e.data.enabled === false,
+        )!;
+
+        const state = await eventStore.getDeltaRevisionState(
+            ALL_ENVS,
+            segmentStored.id,
+        );
+
+        expect(state.projectRevisions.get('default')).toBe(firstStored.id);
+        expect(state.projectRevisions.get('default')).not.toBe(secondStored.id);
+        expect(state.globalSegmentRevision).toBe(segmentStored.id);
+    });
 });
 
 test('Should filter events by ID using IS operator', async () => {

@@ -2,7 +2,7 @@ import { screen, fireEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { describe, expect, test, vi } from 'vitest';
 import { AddRegexValueEditor } from './AddRegexValueEditor';
-import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput';
+import type { ConstraintValidatorOutput } from '../ConstraintValidatorOutput';
 
 const validValidator = (_: string): ConstraintValidatorOutput => [true, ''];
 const invalidValidator =

@@ -159,6 +159,9 @@ import type { IProjectStats } from './features/project/project-service.js';
 import type { IImportService } from './features/export-import-toggles/export-import-service.js';
 import type { IContextFieldDto } from './features/context/context-field-store-type.js';
 import { SegmentReadModel } from './features/segment/segment-read-model.js';
+import { FeaturesReadModel } from './features/feature-toggle/features-read-model.js';
+import { FakeFeaturesReadModel } from './features/feature-toggle/fakes/fake-features-read-model.js';
+import type { IFeaturesReadModel } from './features/feature-toggle/types/features-read-model-type.js';
 import type ExportImportService from './features/export-import-toggles/export-import-service.js';
 import { FeatureEnvironmentStore } from './db/feature-environment-store.js';
 import StrategyStore from './db/strategy-store.js';
@@ -500,6 +503,8 @@ export {
     createFakeInstanceStatsService,
     createInstanceStatsService,
     SegmentReadModel,
+    FeaturesReadModel,
+    FakeFeaturesReadModel,
     FeatureEnvironmentStore,
     ChangeRequestAccessReadModel,
     StrategyStore,
@@ -593,6 +598,7 @@ export type {
     IFeatureUsageInfo,
     IInstanceInfo,
     IClientInstance,
+    IFeaturesReadModel,
 };
 export * from './openapi/index.js';
 export * from './types/index.js';

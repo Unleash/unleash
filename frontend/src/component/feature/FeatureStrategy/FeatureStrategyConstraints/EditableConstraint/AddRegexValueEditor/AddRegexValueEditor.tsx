@@ -86,7 +86,7 @@ const InputRow = styled('div')(({ theme }) => ({
 
 const StyledTitleRow = styled(Box)(({ theme }) => ({
     display: 'flex',
-    alignItems: 'beaseline',
+    alignItems: 'baseline',
     justifyContent: 'space-between',
     gap: theme.spacing(1),
 }));

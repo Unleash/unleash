@@ -230,7 +230,12 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 <StyledExpandedContent>
                     <StyledChartRow>
                         {impactMetrics.configs.map((config) => (
-                            <CompactChartCard key={config.id} config={config} />
+                            <CompactChartCard
+                                key={config.id}
+                                config={config}
+                                projectId={projectId}
+                                featureName={featureName}
+                            />
                         ))}
                     </StyledChartRow>
                 </StyledExpandedContent>

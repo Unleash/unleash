@@ -11,6 +11,7 @@ import { FeatureViewHeader } from './FeatureViewHeader.tsx';
 import { styled } from '@mui/material';
 import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
 import { ChartConfigModal } from '../../impact-metrics/ChartConfigModal/ChartConfigModal';
 import { useFeatureImpactChartActions } from './useFeatureImpactChartActions';
@@ -28,6 +29,8 @@ export const FeatureView = () => {
     const featureId = useRequiredPathParam('featureId');
 
     const impactMetricsFlagPage = useUiFlag('impactMetricsFlagPage');
+    const { isEnterprise } = useUiConfig();
+    const showImpactMetrics = impactMetricsFlagPage && isEnterprise();
 
     const { feature, loading, error, status } = useFeature(
         projectId,
@@ -69,7 +72,7 @@ export const FeatureView = () => {
                     element={
                         <FeatureOverview
                             header={
-                                impactMetricsFlagPage ? (
+                                showImpactMetrics ? (
                                     <FeatureImpactHeader
                                         projectId={projectId}
                                         featureName={featureId}
@@ -81,7 +84,7 @@ export const FeatureView = () => {
                     }
                 />
             </Routes>
-            {impactMetricsFlagPage && (
+            {showImpactMetrics && (
                 <ChartConfigModal
                     open={chartModalOpen}
                     onClose={closeChartModal}

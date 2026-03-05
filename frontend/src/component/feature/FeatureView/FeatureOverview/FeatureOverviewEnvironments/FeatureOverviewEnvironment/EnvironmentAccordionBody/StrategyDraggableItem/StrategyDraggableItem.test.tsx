@@ -204,7 +204,7 @@ beforeEach(() => {
     setupOtherServerRoutes();
 });
 
-const Component = () => {
+const Component = ({ featureId = 'feature1' }) => {
     return (
         <>
             <Routes>
@@ -212,6 +212,7 @@ const Component = () => {
                     path={'/projects/:projectId/features/:featureId'}
                     element={
                         <ProjectEnvironmentStrategyDraggableItem
+                            featureId={featureId}
                             strategy={strategy}
                             environmentName={'production'}
                             index={1}

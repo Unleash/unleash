@@ -243,6 +243,7 @@ export const EnvironmentAccordionBody = ({
 
                                 <ProjectEnvironmentStrategyDraggableItem
                                     strategy={strategy}
+                                    featureId={featureId}
                                     index={index + pageIndex * pageSize}
                                     environmentName={featureEnvironment.name}
                                     otherEnvironments={otherEnvironments}
@@ -259,6 +260,7 @@ export const EnvironmentAccordionBody = ({
                                 ) : null}
 
                                 <ProjectEnvironmentStrategyDraggableItem
+                                    featureId={featureId}
                                     strategy={strategy}
                                     index={index}
                                     environmentName={featureEnvironment.name}

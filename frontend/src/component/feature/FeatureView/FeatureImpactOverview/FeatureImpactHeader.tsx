@@ -1,5 +1,5 @@
-import { type FC, useState } from 'react';
-import { createLocalStorage } from 'utils/createLocalStorage';
+import type { FC } from 'react';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { Button, Collapse, styled, Typography } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -110,12 +110,10 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     featureName,
     onAddChart,
 }) => {
-    const { value: initialExpanded, setValue: persistExpanded } =
-        createLocalStorage<'open' | 'closed'>(
-            'impact-metrics-accordion:expanded',
-            'closed',
-        );
-    const [expanded, setExpanded] = useState(initialExpanded === 'open');
+    const [expandedState, setExpandedState] = useLocalStorageState<
+        'open' | 'closed'
+    >('impact-metrics-accordion:expanded', 'closed');
+    const expanded = expandedState === 'open';
     const { trackEvent } = usePlausibleTracker();
 
     const { impactMetrics } = useFeatureImpactMetrics({
@@ -132,9 +130,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 props: { eventType: 'impact-accordion-opened' },
             });
         }
-        const next = !expanded;
-        setExpanded(next);
-        persistExpanded(next ? 'open' : 'closed');
+        setExpandedState(expanded ? 'closed' : 'open');
     };
     const onHeaderKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {

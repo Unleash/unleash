@@ -18,7 +18,7 @@ const setupApi = () => {
 
 describe('EditableConstraint', () => {
     describe('REGEX constraint with an existing invalid value', () => {
-        test('opens the regex editor automatically', async () => {
+        test('opens the regex editor and shows a validation error', async () => {
             setupApi();
 
             const constraint: IConstraint = {
@@ -36,6 +36,7 @@ describe('EditableConstraint', () => {
             );
 
             await screen.findByTestId('CONSTRAINT_VALUES_INPUT');
+            await screen.findByText(/value must be a valid RE2 regex/i);
         });
     });
 

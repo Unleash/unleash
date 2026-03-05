@@ -1,4 +1,4 @@
-import { Alert, Chip, Collapse } from '@mui/material';
+import { Alert, Collapse, Link } from '@mui/material';
 import type { FC } from 'react';
 
 type RegexSdkRequirementsBannerProps = {
@@ -29,12 +29,8 @@ export const RegexSdkRequirementsToggle: FC<
 > = ({ open, onOpen }) => {
     if (open) return null;
     return (
-        <Chip
-            size='small'
-            variant='outlined'
-            label='SDK requirements'
-            aria-label='Show SDK version requirements'
-            onClick={onOpen}
-        />
+        <Link component='button' variant='body2' onClick={onOpen}>
+            View SDK requirements
+        </Link>
     );
 };

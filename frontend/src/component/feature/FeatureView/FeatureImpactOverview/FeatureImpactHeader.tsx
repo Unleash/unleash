@@ -110,9 +110,11 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     featureName,
     onAddChart,
 }) => {
-    const [expandedState, setExpandedState] = useLocalStorageState<
-        'open' | 'closed'
-    >('impact-metrics-accordion:expanded', 'closed');
+    const [impactMetricsAccordionState, setImpactMetricsAccordionState] =
+        useLocalStorageState<'open' | 'closed'>(
+            'impact-metrics-accordion:expanded',
+            'closed',
+        );
     const { trackEvent } = usePlausibleTracker();
 
     const { impactMetrics } = useFeatureImpactMetrics({
@@ -120,7 +122,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
         featureName,
     });
 
-    const expanded = expandedState === 'open';
+    const expanded = impactMetricsAccordionState === 'open';
     const chartCount = impactMetrics.configs.length;
     const hasMetrics = chartCount > 0;
 
@@ -130,7 +132,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 props: { eventType: 'impact-accordion-opened' },
             });
         }
-        setExpandedState(expanded ? 'closed' : 'open');
+        setImpactMetricsAccordionState(expanded ? 'closed' : 'open');
     };
     const onHeaderKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {

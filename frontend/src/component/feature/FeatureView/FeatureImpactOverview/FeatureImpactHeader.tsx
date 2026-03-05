@@ -174,11 +174,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                         >
                             Add impact metric
                         </StyledConnectButton>
-                        {expanded ? (
-                            <ExpandLessIcon />
-                        ) : (
-                            <ExpandMoreIcon />
-                        )}
+                        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </StyledRightSection>
                 </StyledHeaderBar>
                 <Collapse in={expanded}>
@@ -229,11 +225,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                         <StyledChartCount>
                             {chartCount} chart{chartCount !== 1 ? 's' : ''}
                         </StyledChartCount>
-                        {expanded ? (
-                            <ExpandLessIcon />
-                        ) : (
-                            <ExpandMoreIcon />
-                        )}
+                        {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                     </StyledImpactSection>
                 </StyledRightSection>
             </StyledHeaderBar>

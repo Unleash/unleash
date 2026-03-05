@@ -72,6 +72,33 @@ export default class ConfigurationRevisionService extends EventEmitter {
         );
     }
 
+    async getVisibleRevisionId(
+        environment: string,
+        projects: string[],
+    ): Promise<number> {
+        const projectList = projects.length > 0 ? projects : ['*'];
+        const upperBound = await this.getMaxRevisionId();
+
+        if (projectList.includes('*')) {
+            return upperBound;
+        }
+
+        const revisionState = await this.eventStore.getDeltaRevisionState(
+            environment,
+            upperBound,
+        );
+
+        let visibleRevision = revisionState.globalSegmentRevision;
+        for (const project of projectList) {
+            visibleRevision = Math.max(
+                visibleRevision,
+                revisionState.projectRevisions.get(project) ?? 0,
+            );
+        }
+
+        return visibleRevision;
+    }
+
     async getMaxRevisionId(environment?: string): Promise<number> {
         if (environment) {
             let maxEnvRevisionId = this.maxRevisionId.get(environment) ?? 0;

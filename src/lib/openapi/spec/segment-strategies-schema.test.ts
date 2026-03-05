@@ -9,6 +9,7 @@ test('segmentStrategiesSchema', () => {
                     id: 'test',
                     projectId: '2',
                     featureName: 'featureName',
+                    name: 'strategyName',
                     strategyName: 'strategyName',
                     environment: 'environment',
                 },

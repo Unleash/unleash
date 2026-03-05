@@ -149,6 +149,7 @@ class ContextService {
                 id: strategy.id,
                 projectId: strategy.projectId,
                 featureName: strategy.featureName,
+                name: strategy.name || strategy.strategyName,
                 strategyName: strategy.strategyName,
                 environment: strategy.environment,
             })),

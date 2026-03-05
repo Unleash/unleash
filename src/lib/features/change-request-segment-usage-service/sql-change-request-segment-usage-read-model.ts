@@ -33,6 +33,7 @@ export class ChangeRequestSegmentUsageReadModel
                     projectId: project,
                     featureName: feature,
                     environment: environment,
+                    name: payload.name,
                     strategyName: payload.name,
                     ...(payload.id ? { id: payload.id } : {}),
                     changeRequest: {

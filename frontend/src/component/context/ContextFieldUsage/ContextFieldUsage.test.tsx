@@ -16,6 +16,7 @@ const setupRoutes = () => {
                     id: '4b3ad603-4727-4782-bd61-efc530e37209',
                     projectId: 'faaa',
                     featureName: 'tests',
+                    name: 'flexibleRollout',
                     strategyName: 'flexibleRollout',
                     environment: 'development',
                 },

@@ -401,6 +401,7 @@ export class SegmentsController extends Controller {
             id: strategy.id,
             projectId: strategy.projectId,
             featureName: strategy.featureName,
+            name: strategy.name || strategy.strategyName,
             strategyName: strategy.strategyName,
             environment: strategy.environment,
         }));
@@ -410,6 +411,7 @@ export class SegmentsController extends Controller {
                 ...('id' in strategy ? { id: strategy.id } : {}),
                 projectId: strategy.projectId,
                 featureName: strategy.featureName,
+                name: strategy.name || strategy.strategyName,
                 strategyName: strategy.strategyName,
                 environment: strategy.environment,
                 changeRequest: strategy.changeRequest,

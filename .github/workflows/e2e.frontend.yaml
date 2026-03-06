@@ -46,10 +46,14 @@ jobs:
           config: baseUrl=http://localhost:3000
           spec: cypress/${{ matrix.test }}
           install-command: yarn --immutable
+      - name: Set artifact name
+        if: always()
+        id: artifact-name
+        run: echo "name=cypress-screenshots-$(echo '${{ matrix.test }}' | tr '/' '-')" >> $GITHUB_OUTPUT
       - name: Upload Cypress screenshots
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots-${{ matrix.test }}
+          name: ${{ steps.artifact-name.outputs.name }}
           path: frontend/cypress/screenshots
           if-no-files-found: ignore

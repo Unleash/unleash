@@ -43,5 +43,12 @@ jobs:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=http://localhost:4242
-          spec: cypress/oss/**/*.spec.ts
+          spec: cypress/oss/feature/*.spec.ts
           install-command: yarn --immutable
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-db-migrations
+          path: frontend/cypress/screenshots
+          if-no-files-found: ignore

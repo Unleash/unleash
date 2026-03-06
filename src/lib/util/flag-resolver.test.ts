@@ -70,6 +70,27 @@ test('should not use external resolver for enabled experiments', () => {
     expect(result.should_be_enabled).toBe(true);
 });
 
+test('enabled experiments should only be used as fallbacks', () => {
+    const externalResolver = {
+        isEnabled: () => {
+            return false;
+        },
+        getVariant: () => defaultVariant,
+        getStaticContext: () => ({}),
+    };
+
+    const config = {
+        flags: { celebrateUnleash: true, otherFlag: false },
+        externalResolver,
+    };
+
+    const resolver = new FlagResolver(config as IExperimentalOptions);
+
+    const enabled = resolver.isEnabled('celebrateUnleash');
+
+    expect(enabled).toBe(false);
+});
+
 test('should load experimental flags', () => {
     const externalResolver = {
         isEnabled: () => {

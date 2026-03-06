@@ -39,9 +39,7 @@ test('shows URL friendly error when flag name contains unsafe characters', async
         <Routes>
             <Route
                 path='/projects/:projectId'
-                element={
-                    <CreateFeatureDialog open={true} onClose={() => {}} />
-                }
+                element={<CreateFeatureDialog open={true} onClose={() => {}} />}
             />
         </Routes>,
         {

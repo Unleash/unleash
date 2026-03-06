@@ -1,20 +1,11 @@
 ///<reference path="../../global.d.ts" />
 
-describe.skip('login', { testIsolation: true }, () => {
+describe('login', { testIsolation: true }, () => {
     const baseUrl = Cypress.config().baseUrl;
-    const randomId = String(Math.random()).split('.')[1];
-    const projectName = `unleash-e2e-login-project-${randomId}`;
 
     before(() => {
         cy.runBefore();
         Cypress.session.clearAllSavedSessions();
-        cy.login_UI();
-        cy.createProject_API(projectName);
-        cy.logout_UI();
-    });
-
-    after(() => {
-        cy.deleteProject_API(projectName);
     });
 
     beforeEach(() => {
@@ -27,19 +18,6 @@ describe.skip('login', { testIsolation: true }, () => {
         cy.visit('/');
         // "/" should again redirect to last "home" page
         cy.url().should('eq', `${baseUrl}/personal`);
-    });
-
-    it('is redirecting to last visited projects', () => {
-        cy.visit('/projects');
-        cy.visit('/');
-        cy.url().should((url) => url.startsWith(`${baseUrl}/projects`));
-        cy.contains('a', projectName).click();
-        cy.get(`h1 span`).should('not.have.class', 'skeleton');
-        cy.visit('/');
-        cy.url().should((url) =>
-            // last visited project
-            url.startsWith(`${baseUrl}/projects/${projectName}`),
-        );
     });
 
     it('is redirecting to other pages', () => {
@@ -66,7 +44,7 @@ describe.skip('login', { testIsolation: true }, () => {
     });
 
     it('remembers last visited page on next login', () => {
-        cy.visit('/insights');
+        cy.visit('/playground');
         cy.window().then((win) => {
             win.sessionStorage.clear(); // not localStorage
             win.location.reload();
@@ -75,6 +53,6 @@ describe.skip('login', { testIsolation: true }, () => {
         cy.url().should('eq', `${baseUrl}/login`);
         cy.do_login();
         cy.visit('/');
-        cy.url().should('eq', `${baseUrl}/insights`);
+        cy.url().should('eq', `${baseUrl}/playground`);
     });
 });

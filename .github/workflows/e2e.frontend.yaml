@@ -14,8 +14,8 @@ jobs:
     strategy:
       matrix:
         test:
-          - enterprise/feature/feature.spec.ts
-          - enterprise/groups/groups.spec.ts
+          - enterprise/feature.spec.ts
+          - enterprise/groups.spec.ts
           - enterprise/projects/access.spec.ts
           - oss/segments/segments.spec.ts
           - oss/feature/feature.spec.ts

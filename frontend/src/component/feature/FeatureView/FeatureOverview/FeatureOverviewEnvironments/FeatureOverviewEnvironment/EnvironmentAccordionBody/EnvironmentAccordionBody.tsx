@@ -28,6 +28,7 @@ import {
     strategyBackground,
 } from 'component/common/StrategyList/StrategyListItem';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
+import { EnvironmentSafeguardSection } from './EnvironmentSafeguardSection.tsx';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -72,6 +73,7 @@ export const EnvironmentAccordionBody = ({
         featureEnvironment?.name,
     );
     const { trackEvent } = usePlausibleTracker();
+    const safeguardsEnabled = useUiFlag('safeguards');
 
     const [dragItem, setDragItem] = useState<{
         id: string;
@@ -212,6 +214,8 @@ export const EnvironmentAccordionBody = ({
     const paginateStrategies =
         strategies.length >= 50 && manyStrategiesPagination;
 
+    const firstPlan = releasePlans[0];
+
     return (
         <StyledAccordionBodyInnerContainer>
             {paginateStrategies ? (
@@ -222,6 +226,14 @@ export const EnvironmentAccordionBody = ({
                         leveraging constraints or segments.
                     </Alert>
                 </AlertContainer>
+            ) : null}
+            {safeguardsEnabled && firstPlan ? (
+                <EnvironmentSafeguardSection
+                    plan={firstPlan}
+                    environmentName={featureEnvironment.name}
+                    featureId={featureId}
+                    onSafeguardChange={refetch}
+                />
             ) : null}
             <StrategyList>
                 {releasePlans.map((plan) => (

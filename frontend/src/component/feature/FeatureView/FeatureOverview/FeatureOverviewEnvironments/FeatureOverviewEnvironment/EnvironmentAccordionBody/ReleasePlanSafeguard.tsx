@@ -45,7 +45,7 @@ const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
     paddingRight: theme.spacing(2),
 }));
 
-interface EnvironmentSafeguardSectionProps {
+interface ReleasePlanSafeguardProps {
     plan: IReleasePlan;
     environmentName: string;
     featureId: string;
@@ -57,7 +57,7 @@ export const ReleasePlanSafeguard = ({
     environmentName,
     featureId,
     onSafeguardChange,
-}: EnvironmentSafeguardSectionProps) => {
+}: ReleasePlanSafeguardProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { setToastData, setToastApiError } = useToast();
     const { addChange } = useChangeRequestApi();
@@ -206,6 +206,7 @@ export const ReleasePlanSafeguard = ({
                 type: 'success',
                 text: 'Added to draft',
             });
+            onSafeguardChange();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         } finally {

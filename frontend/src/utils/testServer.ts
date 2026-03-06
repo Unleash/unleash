@@ -27,8 +27,12 @@ export const testServerRoute = (
     const requests: unknown[] = [];
     server.use(
         http[method](path, async ({ request }) => {
-            const body = await request.json().catch(() => undefined);
-            requests.push(body);
+            if (method === 'post' || method === 'put') {
+                const body = await request.json().catch(() => undefined);
+                if (body !== undefined) {
+                    requests.push(body);
+                }
+            }
             return HttpResponse.json(json, { status });
         }),
     );

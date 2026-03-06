@@ -355,16 +355,18 @@ describe('ReleasePlanSafeguard', () => {
         await user.click(confirmButton);
 
         await waitFor(() => {
-            expect(requests).toMatchObject([
-                {
-                    feature: 'feature1',
-                    action: 'deleteSafeguard',
-                    payload: {
-                        planId: 'plan-1',
-                        safeguardId: 'safeguard-1',
-                    },
-                },
-            ]);
+            expect(onSafeguardChange).toHaveBeenCalled();
         });
+
+        expect(requests).toMatchObject([
+            {
+                feature: 'feature1',
+                action: 'deleteSafeguard',
+                payload: {
+                    planId: 'plan-1',
+                    safeguardId: 'safeguard-1',
+                },
+            },
+        ]);
     });
 });

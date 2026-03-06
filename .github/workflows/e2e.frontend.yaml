@@ -14,11 +14,12 @@ jobs:
     strategy:
       matrix:
         test:
-          - feature/feature.spec.ts
-          - groups/groups.spec.ts
-          - projects/access.spec.ts
-          - segments/segments.spec.ts
-          # - login/login.spec.ts
+          - enterprise/feature/feature.spec.ts
+          - enterprise/groups/groups.spec.ts
+          - enterprise/projects/access.spec.ts
+          - oss/segments/segments.spec.ts
+          - oss/feature/feature.spec.ts
+          # - oss/login/login.spec.ts
     steps:
       - name: Dump GitHub context
         env:
@@ -43,5 +44,5 @@ jobs:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=http://localhost:3000
-          spec: cypress/integration/${{ matrix.test }}
+          spec: cypress/${{ matrix.test }}
           install-command: yarn --immutable

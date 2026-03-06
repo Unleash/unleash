@@ -22,35 +22,25 @@ yarn install
 yarn run start:sandbox
 ```
 
-## Running end-to-end tests
-
-We have a set of Cypress tests that run on the build before a PR can be merged
-so it's important that you check these yourself before submitting a PR.
-On the server the tests will run against the deployed Heroku app so this is what you probably want to test against:
-
-```
-yarn run start:sandbox
-```
-
-In a different shell, you can run the tests themselves:
-
-```
-yarn run e2e:heroku
-```
+## Running end-to-end tests againts localhost 
 
 If you need to test against patches against a local server instance,
-you'll need to run that, and then run the end to end tests using:
+you'll need to run:
+
+* backend (main directory `yarn start:dev` )
+* frontend on port 3000 `yarn start` 
+
+Then run the end to end tests using:
 
 ```
 yarn run e2e
 ```
 
 You may also need to test that a feature works against the enterprise version of unleash.
-Assuming the Heroku instance is still running, this can be done by:
 
 ```
 yarn run start:enterprise
-yarn run e2e
+yarn run e2e:enterprise
 ```
 
 ## Generating the OpenAPI client

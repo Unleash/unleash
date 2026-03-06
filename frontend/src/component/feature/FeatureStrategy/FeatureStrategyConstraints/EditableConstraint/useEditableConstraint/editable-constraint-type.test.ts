@@ -1,6 +1,7 @@
 import { createEmptyConstraint } from 'utils/createEmptyConstraint';
 import { fromIConstraint, toIConstraint } from './editable-constraint-type.ts';
 import { constraintId } from 'constants/constraintId';
+import { REGEX } from 'constants/operators';
 import type { IConstraint } from 'interfaces/strategy.ts';
 
 test('mapping to and from retains the constraint id', () => {
@@ -29,4 +30,16 @@ test('mapping from an empty constraint removes redundant value / values', () => 
 
     const transformed = toIConstraint(fromIConstraint(constraint));
     expect(transformed).not.toHaveProperty('value');
+});
+
+test('if we have in DB REGEX constraint with inverted flag our UI has to reset it', () => {
+    const constraint: IConstraint = {
+        contextName: 'appName',
+        operator: REGEX,
+        value: 'some-pattern',
+        inverted: true,
+    };
+
+    // REGEX does not support inversion; reset on load to avoid impossible state
+    expect(fromIConstraint(constraint).inverted).toBe(false);
 });

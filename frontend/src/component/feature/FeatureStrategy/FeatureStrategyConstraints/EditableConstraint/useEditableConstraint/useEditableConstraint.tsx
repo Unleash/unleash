@@ -3,6 +3,7 @@ import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint,
     fromIConstraint,
+    invertedToggleDisabled,
     isMultiValueConstraint,
     isSingleValueConstraint,
     toIConstraint,
@@ -15,7 +16,6 @@ import {
     constraintReducer,
     type ConstraintUpdateAction,
 } from './constraint-reducer.ts';
-import { isRegexOperator } from 'constants/operators';
 import {
     constraintValidator,
     type ConstraintValidationResult,
@@ -143,11 +143,13 @@ export const useEditableConstraint = (
           }
         : undefined;
 
+    const invertedDisabled = invertedToggleDisabled(localConstraint);
+
     return {
         updateConstraint,
         constraint: localConstraint,
         validator,
         legalValueData,
-        invertedDisabled: isRegexOperator(localConstraint.operator),
+        invertedDisabled,
     } as EditableConstraintState;
 };

@@ -10,7 +10,7 @@ import { useCallback, useState } from 'react';
 const StyledButtonRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     gap: theme.spacing(2),
     width: '100%',
 }));
@@ -34,7 +34,7 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
     data,
     setData,
     onNext,
-    isSubmitting,
+    onBack,
 }) => {
     const [inputValue, setInputValue] = useState('');
 
@@ -144,20 +144,23 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
                 />
             </StyledSignupDialogField>
             <StyledButtonRow>
-                <Button
-                    variant='text'
-                    onClick={onLater}
-                    disabled={isSubmitting}
-                >
-                    Later
-                </Button>
-                <Button
-                    variant='contained'
-                    onClick={onInvite}
-                    disabled={!canInvite || isSubmitting}
-                >
-                    Invite
-                </Button>
+                <div>
+                    <Button variant='outlined' onClick={onBack}>
+                        Back
+                    </Button>
+                </div>
+                <div>
+                    <Button variant='text' onClick={onLater} sx={{ mr: 2 }}>
+                        Later
+                    </Button>
+                    <Button
+                        variant='contained'
+                        onClick={onInvite}
+                        disabled={!canInvite}
+                    >
+                        Invite
+                    </Button>
+                </div>
             </StyledButtonRow>
         </>
     );

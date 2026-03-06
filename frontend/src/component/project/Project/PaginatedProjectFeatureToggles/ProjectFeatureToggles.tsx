@@ -54,6 +54,7 @@ import { formatEnvironmentColumnId } from './formatEnvironmentColumnId.ts';
 import { ProjectFeaturesColumnsMenu } from './ProjectFeaturesColumnsMenu/ProjectFeaturesColumnsMenu.tsx';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
 import { ProjectFlagsSearch } from './ProjectFlagsSearch/ProjectFlagsSearch.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type ProjectFeatureTogglesProps = {
     environments: string[];
@@ -105,6 +106,7 @@ export const ProjectFeatureToggles = ({
     environments: availableEnvironments,
 }: ProjectFeatureTogglesProps) => {
     const { trackEvent } = usePlausibleTracker();
+    const inlineFavoriteInNameColumn = useUiFlag('inlineFavoriteInNameColumn');
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
@@ -228,36 +230,59 @@ export const ProjectFeatureToggles = ({
                 },
                 enableHiding: false,
             }),
-            columnHelper.accessor('favorite', {
-                id: 'favorite',
-                header: () => (
-                    <FavoriteIconHeader
-                        isActive={tableState.favoritesFirst}
-                        onClick={() =>
-                            setTableState({
-                                favoritesFirst: !tableState.favoritesFirst,
-                            })
-                        }
-                    />
-                ),
-                cell: ({ row: { original: feature } }) => (
-                    <FavoriteIconCell
-                        value={feature?.favorite}
-                        onClick={() => onFavorite(feature)}
-                    />
-                ),
+            ...(inlineFavoriteInNameColumn
+                ? []
+                : [
+                      columnHelper.accessor('favorite', {
+                          id: 'favorite',
+                          header: () => (
+                              <FavoriteIconHeader
+                                  isActive={tableState.favoritesFirst}
+                                  onClick={() =>
+                                      setTableState({
+                                          favoritesFirst:
+                                              !tableState.favoritesFirst,
+                                      })
+                                  }
+                              />
+                          ),
+                          cell: ({ row: { original: feature } }) => (
+                              <FavoriteIconCell
+                                  value={feature?.favorite}
+                                  onClick={() => onFavorite(feature)}
+                              />
+                          ),
+                          enableSorting: false,
+                          enableHiding: false,
+                          meta: {
+                              width: '1%',
+                          },
+                      }),
+                  ]),
+            columnHelper.accessor('createdBy', {
+                id: 'createdBy',
+                header: () => {
+                    return <span title='Created by'>By</span>;
+                },
+                cell: AvatarCell(onAvatarClick),
                 enableSorting: false,
-                enableHiding: false,
                 meta: {
                     width: '1%',
+                    align: 'center',
                 },
             }),
+
             columnHelper.accessor('name', {
                 id: 'name',
                 header: 'Name',
-                cell: createFeatureOverviewCell(onTagClick, onFlagTypeClick),
+                cell: createFeatureOverviewCell(
+                    onTagClick,
+                    onFlagTypeClick,
+                    inlineFavoriteInNameColumn ? onFavorite : undefined,
+                ),
                 enableHiding: false,
             }),
+
             columnHelper.accessor('createdAt', {
                 id: 'createdAt',
                 header: 'Created',
@@ -266,16 +291,7 @@ export const ProjectFeatureToggles = ({
                     width: '1%',
                 },
             }),
-            columnHelper.accessor('createdBy', {
-                id: 'createdBy',
-                header: 'By',
-                cell: AvatarCell(onAvatarClick),
-                enableSorting: false,
-                meta: {
-                    width: '1%',
-                    align: 'center',
-                },
-            }),
+
             columnHelper.accessor('lastSeenAt', {
                 id: 'lastSeenAt',
                 header: 'Last seen',
@@ -417,6 +433,7 @@ export const ProjectFeatureToggles = ({
             tableState.favoritesFirst,
             refetch,
             isPlaceholder,
+            inlineFavoriteInNameColumn,
         ],
     );
 

@@ -1,6 +1,8 @@
 import type { FC } from 'react';
 import type { FeatureSearchResponseSchema, TagSchema } from 'openapi';
 import { Box, IconButton, styled, Chip } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext.tsx';
@@ -28,8 +30,10 @@ interface IFeatureNameCellProps {
             | 'type'
             | 'dependencyType'
             | 'archivedAt'
+            | 'favorite'
         >;
     };
+    onFavorite?: (feature: FeatureSearchResponseSchema) => void;
 }
 
 const StyledFeatureLink = styled(Link)(({ theme }) => ({
@@ -116,6 +120,19 @@ const FeatureNameAndType = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
     color: theme.palette.primary.dark,
 }));
+
+const InlineFavoriteButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    padding: 0,
+    fontSize: '0.875rem',
+}));
+
+const InlineFavoriteButtonInactive = styled(InlineFavoriteButton)({
+    opacity: 0,
+    '&:hover': { opacity: 1 },
+    '&:focus': { opacity: 1 },
+    '&:active': { opacity: 1 },
+});
 
 const TagsContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -305,6 +322,8 @@ export const PrimaryFeatureInfo: FC<{
     dependencyType: string;
     onTypeClick: (type: string) => void;
     delay?: number;
+    isFavorite?: boolean;
+    onFavorite?: () => void;
 }> = ({
     project,
     feature,
@@ -314,6 +333,8 @@ export const PrimaryFeatureInfo: FC<{
     dependencyType,
     onTypeClick,
     delay = 500,
+    isFavorite,
+    onFavorite,
 }) => {
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(type);
@@ -342,6 +363,37 @@ export const PrimaryFeatureInfo: FC<{
         </HtmlTooltip>
     );
 
+    const FavoriteButton = () => {
+        if (!onFavorite) return null;
+        if (isFavorite) {
+            return (
+                <InlineFavoriteButton
+                    size='small'
+                    aria-label='Remove from favourites'
+                    onClick={(e) => {
+                        e.preventDefault();
+                        onFavorite();
+                    }}
+                >
+                    <StarIcon sx={{ fontSize: 'inherit' }} />
+                </InlineFavoriteButton>
+            );
+        }
+        return (
+            <InlineFavoriteButtonInactive
+                className='show-row-hover'
+                size='small'
+                aria-label='Add to favourites'
+                onClick={(e) => {
+                    e.preventDefault();
+                    onFavorite();
+                }}
+            >
+                <StarBorderIcon sx={{ fontSize: 'inherit' }} />
+            </InlineFavoriteButtonInactive>
+        );
+    };
+
     return (
         <FeatureNameAndType data-loading>
             <TypeIcon />
@@ -357,6 +409,7 @@ export const PrimaryFeatureInfo: FC<{
                     searchQuery={searchQuery}
                 />
             )}
+            <FavoriteButton />
 
             <ConditionallyRender
                 condition={Boolean(dependencyType)}
@@ -419,6 +472,7 @@ export const createFeatureOverviewCell =
     (
         onTagClick: (tag: string) => void,
         onFlagTypeClick: (type: string) => void,
+        onFavorite?: (feature: FeatureSearchResponseSchema) => void,
     ): FC<IFeatureNameCellProps> =>
     ({ row }) => {
         const { searchQuery } = useSearchHighlightContext();
@@ -433,6 +487,15 @@ export const createFeatureOverviewCell =
                     type={row.original.type || ''}
                     dependencyType={row.original.dependencyType || ''}
                     onTypeClick={onFlagTypeClick}
+                    isFavorite={row.original.favorite}
+                    onFavorite={
+                        onFavorite
+                            ? () =>
+                                  onFavorite(
+                                      row.original as FeatureSearchResponseSchema,
+                                  )
+                            : undefined
+                    }
                 />
                 <SecondaryFeatureInfo
                     description={row.original.description || ''}

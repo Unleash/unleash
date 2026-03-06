@@ -17,6 +17,7 @@ import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/Fa
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { focusable } from 'themes/themeStyles';
 import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
@@ -115,40 +116,36 @@ export const FeatureToggleListTable: FC = () => {
         [favorite, refetchFeatures, unfavorite, setToastApiError],
     );
 
+    const inlineFavoriteInNameColumn = useUiFlag('inlineFavoriteInNameColumn');
     const showStatusColumn = !isOss();
 
     const columns = useMemo(
         () => [
-            columnHelper.accessor('favorite', {
-                header: () => (
-                    <FavoriteIconHeader
-                        isActive={tableState.favoritesFirst}
-                        onClick={() =>
-                            setTableState({
-                                favoritesFirst: !tableState.favoritesFirst,
-                            })
-                        }
-                    />
-                ),
-                cell: ({ getValue, row }) => (
-                    <FavoriteIconCell
-                        value={getValue()}
-                        onClick={() => onFavorite(row.original)}
-                    />
-                ),
-                enableSorting: false,
-                meta: { width: 48 },
-            }),
-            columnHelper.accessor('name', {
-                header: 'Name',
-                cell: createFeatureOverviewCell(onTagClick, onFlagTypeClick),
-                meta: { width: '40%' },
-            }),
-            columnHelper.accessor('createdAt', {
-                header: 'Created',
-                cell: ({ getValue }) => <DateCell value={getValue()} />,
-                meta: { width: '1%' },
-            }),
+            ...(inlineFavoriteInNameColumn
+                ? []
+                : [
+                      columnHelper.accessor('favorite', {
+                          header: () => (
+                              <FavoriteIconHeader
+                                  isActive={tableState.favoritesFirst}
+                                  onClick={() =>
+                                      setTableState({
+                                          favoritesFirst:
+                                              !tableState.favoritesFirst,
+                                      })
+                                  }
+                              />
+                          ),
+                          cell: ({ getValue, row }) => (
+                              <FavoriteIconCell
+                                  value={getValue()}
+                                  onClick={() => onFavorite(row.original)}
+                              />
+                          ),
+                          enableSorting: false,
+                          meta: { width: 48 },
+                      }),
+                  ]),
             columnHelper.accessor('createdBy', {
                 id: 'createdBy',
                 header: 'By',
@@ -156,6 +153,21 @@ export const FeatureToggleListTable: FC = () => {
                 meta: { width: '1%', align: 'center' },
                 enableSorting: false,
             }),
+            columnHelper.accessor('name', {
+                header: 'Name',
+                cell: createFeatureOverviewCell(
+                    onTagClick,
+                    onFlagTypeClick,
+                    inlineFavoriteInNameColumn ? onFavorite : undefined,
+                ),
+                meta: { width: '40%' },
+            }),
+            columnHelper.accessor('createdAt', {
+                header: 'Created',
+                cell: ({ getValue }) => <DateCell value={getValue()} />,
+                meta: { width: '1%' },
+            }),
+
             columnHelper.accessor('lifecycle', {
                 id: 'lifecycle',
                 header: 'Lifecycle',
@@ -202,7 +214,11 @@ export const FeatureToggleListTable: FC = () => {
                 },
             }),
         ],
-        [tableState.favoritesFirst, showStatusColumn],
+        [
+            tableState.favoritesFirst,
+            showStatusColumn,
+            inlineFavoriteInNameColumn,
+        ],
     );
     const data = useMemo<FeatureSearchResponseSchema[]>(
         () =>

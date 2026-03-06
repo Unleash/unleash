@@ -94,6 +94,7 @@ export type UiFlags = {
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
     featureEnvSafeguards?: boolean;
+    inlineFavoriteInNameColumn?: boolean;
 };
 
 export interface IVersionInfo {

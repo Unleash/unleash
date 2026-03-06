@@ -62,6 +62,7 @@ process.nextTick(async () => {
                         strategyFormConsolidation: true,
                         enterpriseEdgeTokensList: true,
                         userTokenWithClientApiLogging: true,
+                        inlineFavoriteInNameColumn: true,
                     },
                 },
                 authentication: {

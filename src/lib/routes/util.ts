@@ -1,25 +1,25 @@
-import joi from "joi";
-import type { Response } from "express";
-import type { Logger } from "../logger.js";
-import { UnleashError } from "../error/unleash-error.js";
-import { fromLegacyError } from "../error/from-legacy-error.js";
-import createError from "http-errors";
+import joi from 'joi';
+import type { Response } from 'express';
+import type { Logger } from '../logger.js';
+import { UnleashError } from '../error/unleash-error.js';
+import { fromLegacyError } from '../error/from-legacy-error.js';
+import createError from 'http-errors';
 
 export const customJoi = joi.extend((j) => ({
-    type: "isUrlFriendly",
+    type: 'isUrlFriendly',
     base: j.string(),
     messages: {
-        "isUrlFriendly.base": "{{#label}} must be URL friendly",
+        'isUrlFriendly.base': '{{#label}} must be URL friendly',
     },
     validate(value, helpers) {
         // Base validation regardless of the rules applied
         if (
             encodeURIComponent(value) !== value ||
-            value === ".." ||
-            value === "."
+            value === '..' ||
+            value === '.'
         ) {
             // Generate an error, state and options need to be passed
-            return { value, errors: helpers.error("isUrlFriendly.base") };
+            return { value, errors: helpers.error('isUrlFriendly.base') };
         }
         return undefined;
     },
@@ -66,7 +66,7 @@ export const handleErrors: (
     const details =
         // @ts-expect-error - details might not be present on all UnleashErrors
         // biome-ignore lint/complexity/useLiteralKeys: see above
-        finalError.details ?? JSON.parse(JSON.stringify(finalError))["details"];
+        finalError.details ?? JSON.parse(JSON.stringify(finalError))['details'];
     return res
         .status(finalError.statusCode)
         .json({

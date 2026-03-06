@@ -52,7 +52,7 @@ interface EnvironmentSafeguardSectionProps {
     onSafeguardChange: () => void;
 }
 
-export const EnvironmentSafeguardSection = ({
+export const ReleasePlanSafeguard = ({
     plan,
     environmentName,
     featureId,

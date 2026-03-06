@@ -24,5 +24,13 @@ export const testServerRoute = (
     method: 'get' | 'post' | 'put' | 'delete' = 'get',
     status: number = 200,
 ) => {
-    server.use(http[method](path, () => HttpResponse.json(json, { status })));
+    const requests: unknown[] = [];
+    server.use(
+        http[method](path, async ({ request }) => {
+            const body = await request.json().catch(() => undefined);
+            requests.push(body);
+            return HttpResponse.json(json, { status });
+        }),
+    );
+    return { requests };
 };

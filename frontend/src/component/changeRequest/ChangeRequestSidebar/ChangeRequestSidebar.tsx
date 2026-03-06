@@ -12,6 +12,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/EnvironmentChangeRequest.tsx';
 import { ReviewChangesHeader } from './ReviewChangesHeader/ReviewChangesHeader.tsx';
 import { ChangeRequestPlausibleProvider } from '../ChangeRequestContext.tsx';
+import { useRefreshAllPendingChangeRequests } from 'hooks/useRefreshAllPendingChangeRequests.ts';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -76,6 +77,12 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
         loading,
         refetch: refetchChangeRequest,
     } = usePendingChangeRequests(project);
+    const featureNames =
+        data?.flatMap((changeRequest) =>
+            changeRequest.features.map((feature) => feature.name),
+        ) ?? [];
+    const { refreshAll: refreshAllPendingChangeRequests } =
+        useRefreshAllPendingChangeRequests(project, featureNames);
     const { discardDraft } = useChangeRequestApi();
     const { setToastApiError } = useToast();
     const [
@@ -88,7 +95,11 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
     ) => {
         try {
             await changeState(project);
-            refetchChangeRequest();
+            await Promise.all([
+                refetchChangeRequest(),
+                refreshAllPendingChangeRequests(),
+            ]);
+            onClose();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -97,7 +108,11 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
     const onDiscard = async (draftId: number) => {
         try {
             await discardDraft(project, draftId);
-            refetchChangeRequest();
+            await Promise.all([
+                refetchChangeRequest(),
+                refreshAllPendingChangeRequests(),
+            ]);
+            onClose();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

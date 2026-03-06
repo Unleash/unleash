@@ -40,6 +40,7 @@ import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { LegacyFeatureStrategyEdit } from './LegacyFeatureStrategyEdit.tsx';
+import { useRefreshAllPendingChangeRequests } from 'hooks/useRefreshAllPendingChangeRequests.ts';
 
 const useTitleTracking = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('');
@@ -120,6 +121,8 @@ const NewFeatureStrategyEdit = () => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests, data: pendingChangeRequests } =
         usePendingChangeRequests(projectId);
+    const { refreshAll: refreshAllPendingChangeRequests } =
+        useRefreshAllPendingChangeRequests(projectId, [featureId]);
     const { setPreviousTitle } = useTitleTracking();
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
@@ -276,6 +279,7 @@ const NewFeatureStrategyEdit = () => {
             type: 'success',
         });
         refetchChangeRequests();
+        await refreshAllPendingChangeRequests();
     };
 
     const onSubmit = async () => {

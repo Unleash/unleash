@@ -25,7 +25,7 @@ const setupApi = () => {
     });
 };
 
-test('shows URL friendly error when flag name contains unsafe characters', async () => {
+test('CreateFeatureDialog calls backend validation and shows the error message', async () => {
     setupApi();
     testServerRoute(
         server,

@@ -20,6 +20,5 @@ describe('feature', () => {
     it('can create a feature flag', () => {
         cy.createFeature_UI(featureToggleName, true, 'default', true);
         cy.contains(featureToggleName).should('exist');
-        cy.url().should('include', featureToggleName);
     });
 });

@@ -239,6 +239,7 @@ export const ReleasePlanMilestone = ({
 
                                 {canEditStrategies ? (
                                     <ProjectEnvironmentStrategyDraggableItem
+                                        readonly={readonly}
                                         scope='milestone'
                                         featureId={featureId}
                                         strategy={{

@@ -393,5 +393,4 @@ export type ChangeRequestAction =
     | 'deleteMilestoneProgression'
     | 'changeSafeguard'
     | 'deleteSafeguard'
-    | 'resumeMilestoneProgression'
-    | 'updateMilestoneStrategy';
+    | 'resumeMilestoneProgression';

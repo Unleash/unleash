@@ -72,7 +72,7 @@ run-current: prepare start-db
 .PHONY: test
 test:
 	@echo "Running tests against $${EXPOSED_PORT:-4242}..."
-	@EXPOSED_PORT=$${EXPOSED_PORT:-4242} yarn --cwd ../frontend e2e:oss
+	@EXPOSED_PORT=$${EXPOSED_PORT:-4242} yarn --cwd ../frontend e2e:migrations
 	@echo "You can manually validate Unleash at http://localhost:$${EXPOSED_PORT:-4242}"
 	@echo "If you want to test the current version (HEAD of this git repo) side-by-side, execute make run-current"
 	@echo "After all, you clean up by running 'make clean'"

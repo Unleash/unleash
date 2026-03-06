@@ -19,8 +19,8 @@ jobs:
           - enterprise/projects/access.spec.ts
           - oss/segments/segments.spec.ts
           - oss/feature/feature.spec.ts
-          - oss/login/login.spec.ts
-          - enterprise/login/login.spec.ts
+          - oss/login.spec.ts
+          - enterprise/login.spec.ts
     steps:
       - name: Dump GitHub context
         env:

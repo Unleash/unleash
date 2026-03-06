@@ -95,13 +95,15 @@ export const SegmentProjectAlert = ({
 };
 
 const formatStrategyNameParens = (strategy: {
+    name?: string;
     strategyName?: string;
 }): string => {
-    if (!strategy.strategyName) {
+    const strategyTypeName = strategy.name || strategy.strategyName;
+    if (!strategyTypeName) {
         return '';
     }
 
-    return `(${formatStrategyName(strategy.strategyName)})`;
+    return `(${formatStrategyName(strategyTypeName)})`;
 };
 
 export const formatChangeRequestPath = (

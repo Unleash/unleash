@@ -17,7 +17,8 @@ export const contextFieldStrategiesSchema = {
                     'featureName',
                     'projectId',
                     'environment',
-                    'strategyName',
+                    'name',
+                    'strategyName', // todo(v8) remove strategyName requirement
                 ],
                 properties: {
                     id: {
@@ -41,8 +42,13 @@ export const contextFieldStrategiesSchema = {
                         description:
                             'The ID of the environment where this strategy is in.',
                     },
+                    name: {
+                        type: 'string',
+                        description: 'The name of the strategy.',
+                    },
                     strategyName: {
                         type: 'string',
+                        deprecated: true,
                         description: 'The name of the strategy.',
                     },
                 },

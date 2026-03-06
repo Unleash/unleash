@@ -164,6 +164,7 @@ test.each([
         expect(result).toStrictEqual([
             {
                 projectId: 'default',
+                name: 'flexibleRollout',
                 strategyName: 'flexibleRollout',
                 environment: DEFAULT_ENV,
                 featureName: FLAG_NAME,
@@ -199,6 +200,7 @@ test.each([
             {
                 id: strategyId,
                 projectId: 'default',
+                name: 'flexibleRollout',
                 strategyName: 'flexibleRollout',
                 environment: DEFAULT_ENV,
                 featureName: FLAG_NAME,
@@ -228,6 +230,7 @@ test(`If the same strategy appears in multiple CRs with the same segment, each s
     expect(result).toContainEqual({
         id: strategyId,
         projectId: 'default',
+        name: 'flexibleRollout',
         strategyName: 'flexibleRollout',
         environment: DEFAULT_ENV,
         featureName: FLAG_NAME,
@@ -236,6 +239,7 @@ test(`If the same strategy appears in multiple CRs with the same segment, each s
     expect(result).toContainEqual({
         id: strategyId,
         projectId: 'default',
+        name: 'flexibleRollout',
         strategyName: 'flexibleRollout',
         environment: DEFAULT_ENV,
         featureName: FLAG_NAME,

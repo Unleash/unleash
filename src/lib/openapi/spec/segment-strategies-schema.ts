@@ -17,7 +17,8 @@ export const segmentStrategiesSchema = {
                     'featureName',
                     'projectId',
                     'environment',
-                    'strategyName',
+                    'name',
+                    'strategyName', // todo(v8) remove strategyName requirement
                 ],
                 properties: {
                     id: {
@@ -43,8 +44,14 @@ export const segmentStrategiesSchema = {
                             'The ID of the environment that the strategy belongs to.',
                         example: 'development',
                     },
+                    name: {
+                        type: 'string',
+                        description: "The name of the strategy's type.",
+                        example: 'flexibleRollout',
+                    },
                     strategyName: {
                         type: 'string',
+                        deprecated: true,
                         description: "The name of the strategy's type.",
                         example: 'flexibleRollout',
                     },
@@ -61,7 +68,8 @@ export const segmentStrategiesSchema = {
                     'featureName',
                     'projectId',
                     'environment',
-                    'strategyName',
+                    'name',
+                    'strategyName', // todo(v8) remove strategyName requirement
                 ],
                 properties: {
                     id: {
@@ -88,8 +96,14 @@ export const segmentStrategiesSchema = {
                             'The ID of the environment that the strategy belongs to.',
                         example: 'development',
                     },
+                    name: {
+                        type: 'string',
+                        description: "The name of the strategy's type.",
+                        example: 'flexibleRollout',
+                    },
                     strategyName: {
                         type: 'string',
+                        deprecated: true,
                         description: "The name of the strategy's type.",
                         example: 'flexibleRollout',
                     },

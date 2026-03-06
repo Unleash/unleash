@@ -10,6 +10,7 @@ describe('SegmentDeleteUsedSegment', () => {
             {
                 projectId,
                 featureName: 'feature1',
+                name: 'flexible rollout',
                 strategyName: 'flexible rollout',
                 environment: 'default',
                 changeRequest: { id: 1, title: null },
@@ -17,6 +18,7 @@ describe('SegmentDeleteUsedSegment', () => {
             {
                 projectId,
                 featureName: 'feature1',
+                name: 'flexible rollout',
                 strategyName: 'flexible rollout',
                 environment: 'default',
                 changeRequest: { id: 2, title: 'My cool CR' },

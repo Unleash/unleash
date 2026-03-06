@@ -10,6 +10,8 @@ export interface ReleasePlanMilestoneStrategy
     id: string;
     milestoneId: string;
     sortOrder: number;
+    name: string;
+    /** @deprecated use {@link name} instead */
     strategyName: string;
     disabled?: boolean | null;
 }

@@ -35,6 +35,7 @@ test('also updates feature strategy when present', async () => {
     const milestoneStrategy = await milestoneStrategyStore.insert({
         milestoneId: 'milestone-1',
         strategyName: 'default',
+        name: 'default',
         sortOrder: 0,
         parameters: {},
         constraints: [],

@@ -40,7 +40,8 @@ export interface IStrategyConfig {
     disabled?: boolean | null;
 }
 
-export type MilestoneStrategyConfig = Omit<IStrategyConfig, 'name'> & {
+export type MilestoneStrategyConfig = IStrategyConfig & {
+    /** @deprecated use {@link name} instead */ // todo(v8) remove this whole type
     strategyName: string;
 };
 

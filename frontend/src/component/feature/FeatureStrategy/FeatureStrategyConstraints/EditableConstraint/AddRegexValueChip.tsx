@@ -39,14 +39,10 @@ export const AddRegexValueChip: FC<Props> = ({
     editingOpen,
     validator,
 }) => {
-    const handleClick = () => {
-        if (!currentValue) {
-            setEditingOpen(true);
-            return;
-        }
-        const [isValid] = validator(currentValue);
+    const [isValid] = currentValue ? validator(currentValue) : [true];
 
-        if (!isValid) {
+    const handleClick = () => {
+        if (!currentValue || !isValid) {
             setEditingOpen(true);
             return;
         }

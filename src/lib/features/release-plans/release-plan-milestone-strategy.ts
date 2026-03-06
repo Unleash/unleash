@@ -11,4 +11,5 @@ export interface ReleasePlanMilestoneStrategy
     milestoneId: string;
     sortOrder: number;
     strategyName: string;
+    disabled?: boolean | null;
 }

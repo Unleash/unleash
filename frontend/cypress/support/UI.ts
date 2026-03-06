@@ -9,6 +9,17 @@ const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
 let strategyId: string | undefined;
 
 const disableActiveSplashScreens = () => {
+    cy.intercept('GET', '/api/admin/user', (req) => {
+        req.headers['cache-control'] = 'no-cache, no-store, must-revalidate';
+        req.on('response', (res) => {
+            if (res.body) {
+                res.body.splash = {
+                    ...res.body.splash,
+                    personalDashboardKeyConcepts: true,
+                };
+            }
+        });
+    });
     return cy.visit(`/splash/operators`);
 };
 

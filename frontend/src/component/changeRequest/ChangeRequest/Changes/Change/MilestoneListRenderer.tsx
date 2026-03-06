@@ -111,6 +111,7 @@ const MilestoneListRendererCore = ({
                 return (
                     <div key={milestone.id}>
                         <ReleasePlanMilestone
+                            featureId={plan.featureName}
                             readonly={readonly}
                             milestone={milestone}
                             environmentId={plan.environment}

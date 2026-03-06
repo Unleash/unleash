@@ -89,7 +89,7 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                     ) : null}
                 </div>
                 <StyledMainContent>
-                    {header}
+                    {!loading && header}
                     <FeatureOverviewEnvironments
                         onToggleEnvOpen={toggleShowTooltip}
                         hiddenEnvironments={hiddenEnvironments}

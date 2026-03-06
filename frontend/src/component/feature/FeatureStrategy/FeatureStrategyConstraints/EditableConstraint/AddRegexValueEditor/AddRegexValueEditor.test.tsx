@@ -1,8 +1,9 @@
 import { screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { describe, expect, test, vi } from 'vitest';
 import { AddRegexValueEditor } from './AddRegexValueEditor';
-import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput';
+import type { ConstraintValidatorOutput } from '../ConstraintValidatorOutput';
 
 const validValidator = (_: string): ConstraintValidatorOutput => [true, ''];
 const invalidValidator =
@@ -197,6 +198,22 @@ describe('AddRegexValueEditor', () => {
             ).toHaveLength(1);
             const inputs = screen.getAllByPlaceholderText('Enter test value');
             expect(inputs[inputs.length - 1]).toHaveFocus();
+        });
+    });
+
+    describe('test string input', () => {
+        test('pressing Enter does not submit the form', async () => {
+            const onSubmit = vi.fn((e: React.FormEvent) => e.preventDefault());
+            render(
+                <form onSubmit={onSubmit}>
+                    <AddRegexValueEditor {...defaultProps} />
+                </form>,
+            );
+
+            const testInput = screen.getByPlaceholderText('Enter test value');
+            await userEvent.type(testInput, '{Enter}');
+
+            expect(onSubmit).not.toHaveBeenCalled();
         });
     });
 

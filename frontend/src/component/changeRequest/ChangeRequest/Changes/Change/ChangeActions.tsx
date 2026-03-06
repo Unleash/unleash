@@ -4,6 +4,7 @@ import type {
     ChangeRequestType,
     IChange,
     IChangeRequestAddStrategy,
+    IChangeRequestUpdateMilestoneStrategy,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -48,7 +49,9 @@ const useShowActions = (changeRequest: ChangeRequestType, change: IChange) => {
 
     const showEdit =
         showActions &&
-        ['addStrategy', 'updateStrategy'].includes(change.action);
+        ['addStrategy', 'updateStrategy', 'updateMilestoneStrategy'].includes(
+            change.action,
+        );
 
     const showDiscard = showActions && changesCount(changeRequest) > 1;
 
@@ -163,6 +166,7 @@ export const ChangeActions: FC<{
                                                 change as
                                                     | IChangeRequestAddStrategy
                                                     | IChangeRequestUpdateStrategy
+                                                    | IChangeRequestUpdateMilestoneStrategy
                                             }
                                             environment={
                                                 changeRequest.environment

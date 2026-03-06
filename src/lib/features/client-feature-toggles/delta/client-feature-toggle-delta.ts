@@ -28,6 +28,10 @@ import {
 import { FEATURE_PROJECT_CHANGE } from '../../../events/index.js';
 
 type EnvironmentRevisions = Record<string, DeltaCache>;
+type EnvironmentVisibleRevisionState = {
+    projectRevisions: Map<string, number>;
+    globalSegmentRevision: number;
+};
 
 export const UPDATE_DELTA = 'UPDATE_DELTA';
 
@@ -95,6 +99,9 @@ export class ClientFeatureToggleDelta extends EventEmitter {
     private clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel;
 
     private delta: EnvironmentRevisions = {};
+
+    private visibleRevisions: Record<string, EnvironmentVisibleRevisionState> =
+        {};
 
     private eventStore: IEventStore;
 
@@ -173,7 +180,9 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             await this.initEnvironmentDelta(environment);
         }
 
-        if (requiredRevisionId >= this.currentRevisionId) {
+        const visibleRevision = this.getVisibleRevision(environment, projects);
+
+        if (requiredRevisionId !== 0 && requiredRevisionId >= visibleRevision) {
             return undefined;
         }
         const delta = this.delta[environment];
@@ -187,6 +196,12 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 projects,
                 namePrefix,
             );
+            const effectiveEventId =
+                visibleRevision === 0
+                    ? hydrationEvent.eventId
+                    : visibleRevision;
+
+            filteredEvent.eventId = effectiveEventId;
 
             const response: ClientFeaturesDeltaSchema = {
                 events: [filteredEvent],
@@ -225,6 +240,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
      */
     public resetDelta() {
         this.delta = {};
+        this.visibleRevisions = {};
     }
 
     private async updateFeaturesDelta() {
@@ -296,6 +312,10 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             }),
         );
 
+        const hasSegmentChanges =
+            segmentsUpdatedEvents.length > 0 ||
+            segmentsRemovedEvents.length > 0;
+
         // TODO: we might want to only update the environments that had events changed for performance
         for (const environment of keys) {
             const newToggles = await this.getChangedToggles(
@@ -316,6 +336,16 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 ...segmentsUpdatedEvents,
                 ...segmentsRemovedEvents,
             ]);
+            this.updateVisibleRevisions(
+                environment,
+                latestRevision,
+                [
+                    ...featuresMovedEvents,
+                    ...featuresUpdatedEvents,
+                    ...featuresRemovedEvents,
+                ],
+                hasSegmentChanges,
+            );
         }
         this.currentRevisionId = latestRevision;
     }
@@ -341,6 +371,10 @@ export class ClientFeatureToggleDelta extends EventEmitter {
 
         this.currentRevisionId =
             await this.configurationRevisionService.getMaxRevisionId();
+        const revisionState = await this.eventStore.getDeltaRevisionState(
+            environment,
+            this.currentRevisionId,
+        );
 
         this.delta[environment] = new DeltaCache({
             eventId: this.currentRevisionId,
@@ -348,8 +382,67 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             features: baseFeatures,
             segments: baseSegments,
         });
+        this.visibleRevisions[environment] = revisionState;
 
         this.storeFootprint();
+    }
+
+    private getVisibleRevision(
+        environment: string,
+        projects: string[],
+    ): number {
+        const delta = this.delta[environment];
+
+        if (projects.includes('*')) {
+            return delta.getHydrationEvent().eventId;
+        }
+
+        const revisionState = this.visibleRevisions[environment];
+
+        if (!revisionState) {
+            return 0;
+        }
+        let visibleRevision = revisionState.globalSegmentRevision;
+
+        for (const project of projects) {
+            visibleRevision = Math.max(
+                visibleRevision,
+                revisionState.projectRevisions.get(project) ?? 0,
+            );
+        }
+
+        return visibleRevision;
+    }
+
+    private updateVisibleRevisions(
+        environment: string,
+        revisionId: number,
+        featureEvents: DeltaEvent[],
+        hasSegmentChanges: boolean,
+    ) {
+        const revisionState = this.visibleRevisions[environment] ?? {
+            projectRevisions: new Map<string, number>(),
+            globalSegmentRevision: 0,
+        };
+
+        if (hasSegmentChanges) {
+            revisionState.globalSegmentRevision = revisionId;
+        }
+
+        for (const event of featureEvents) {
+            if (event.type === DELTA_EVENT_TYPES.FEATURE_UPDATED) {
+                revisionState.projectRevisions.set(
+                    event.feature.project!,
+                    revisionId,
+                );
+            }
+
+            if (event.type === DELTA_EVENT_TYPES.FEATURE_REMOVED) {
+                revisionState.projectRevisions.set(event.project, revisionId);
+            }
+        }
+
+        this.visibleRevisions[environment] = revisionState;
     }
 
     async getClientFeatures(

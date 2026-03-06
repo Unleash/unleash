@@ -726,4 +726,5 @@ export interface ISdkHeartbeatMetadata {
 export interface EnvironmentRevisionId {
     environment: string;
     revisionId: number;
+    projects?: string[];
 }

@@ -8,6 +8,7 @@ import type {
 } from '../../types/index.js';
 import EventEmitter from 'events';
 import { createGauge } from '../../util/metrics/index.js';
+import { getVisibleRevisionForProjects } from '../client-feature-toggles/delta/visible-revision.js';
 
 export const UPDATE_REVISION = 'UPDATE_REVISION';
 
@@ -69,6 +70,25 @@ export default class ConfigurationRevisionService extends EventEmitter {
                     revisionId,
                 };
             },
+        );
+    }
+
+    async getVisibleRevisionId(
+        environment: string,
+        projects: string[],
+    ): Promise<number> {
+        const upperBound = await this.getMaxRevisionId();
+        if (projects.length === 0 || projects.includes('*')) {
+            return upperBound;
+        }
+        const revisionState = await this.eventStore.getDeltaRevisionState(
+            environment,
+            upperBound,
+        );
+        return getVisibleRevisionForProjects(
+            revisionState,
+            projects,
+            upperBound,
         );
     }
 

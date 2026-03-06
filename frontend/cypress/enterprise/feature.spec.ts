@@ -62,6 +62,13 @@ describe('feature', () => {
         );
     });
 
+    it('gives an error if a toggle name is url unsafe', () => {
+        cy.createFeature_UI('featureToggleUnsafe####$#//', false, projectName);
+        cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
+            `"name" must be URL friendly`,
+        );
+    });
+
     it('can add, update and delete a gradual rollout strategy to the development environment', () => {
         cy.addFlexibleRolloutStrategyToFeature_UI({
             featureToggleName,

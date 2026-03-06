@@ -46,3 +46,10 @@ jobs:
           config: baseUrl=http://localhost:3000
           spec: cypress/${{ matrix.test }}
           install-command: yarn --immutable
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-${{ matrix.test }}
+          path: frontend/cypress/screenshots
+          if-no-files-found: ignore

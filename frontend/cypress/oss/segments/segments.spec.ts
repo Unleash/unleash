@@ -3,7 +3,6 @@
 describe('segments', () => {
     const randomId = String(Math.random()).split('.')[1];
     const segmentName = `unleash-e2e-${randomId}`;
-    let segmentId: string;
 
     before(() => {
         cy.runBefore();
@@ -33,7 +32,10 @@ describe('segments', () => {
     });
 
     it('can delete a segment', () => {
-        cy.deleteSegment_UI(segmentName, segmentId);
+        cy.contains(segmentName).should('exist');
+
+        cy.deleteSegment_UI(segmentName);
+
         cy.contains(segmentName).should('not.exist');
     });
 });

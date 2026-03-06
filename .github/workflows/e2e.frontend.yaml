@@ -14,11 +14,12 @@ jobs:
     strategy:
       matrix:
         test:
-          - feature/feature.spec.ts
-          - groups/groups.spec.ts
-          - projects/access.spec.ts
-          - segments/segments.spec.ts
-          # - login/login.spec.ts
+          - enterprise/feature.spec.ts
+          - enterprise/groups.spec.ts
+          - enterprise/projects/access.spec.ts
+          - oss/segments/segments.spec.ts
+          - oss/feature/feature.spec.ts
+          # - oss/login/login.spec.ts
     steps:
       - name: Dump GitHub context
         env:
@@ -43,5 +44,16 @@ jobs:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=http://localhost:3000
-          spec: cypress/integration/${{ matrix.test }}
+          spec: cypress/${{ matrix.test }}
           install-command: yarn --immutable
+      - name: Set artifact name
+        if: always()
+        id: artifact-name
+        run: echo "name=cypress-screenshots-$(echo '${{ matrix.test }}' | tr '/' '-')" >> $GITHUB_OUTPUT
+      - name: Upload Cypress screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ${{ steps.artifact-name.outputs.name }}
+          path: frontend/cypress/screenshots
+          if-no-files-found: ignore

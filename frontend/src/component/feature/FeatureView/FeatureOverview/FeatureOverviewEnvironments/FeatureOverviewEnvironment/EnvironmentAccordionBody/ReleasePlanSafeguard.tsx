@@ -13,6 +13,7 @@ import {
 } from '../../../ReleasePlan/SafeguardForm/SafeguardForm.tsx';
 import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguardsApi';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
+import { DeleteSafeguardDialog } from '../../../ReleasePlan/DeleteSafeguardDialog.tsx';
 import { StyledActionButton } from '../../../ReleasePlan/ReleasePlanMilestoneItem/StyledActionButton.tsx';
 import { Badge } from 'component/common/Badge/Badge';
 import type {
@@ -66,6 +67,8 @@ const useReleasePlanSafeguardActions = ({
         useSafeguardsApi();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [deleteChangeRequestOpen, setDeleteChangeRequestOpen] =
+        useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
     const safeguards = plan.safeguards;
@@ -107,7 +110,11 @@ const useReleasePlanSafeguardActions = ({
     };
 
     const handleDeleteRequest = () => {
-        if (safeguards.length > 0) {
+        if (safeguards.length === 0) return;
+
+        if (isCR) {
+            setDeleteChangeRequestOpen(true);
+        } else {
             setDeleteDialogOpen(true);
         }
     };
@@ -117,39 +124,50 @@ const useReleasePlanSafeguardActions = ({
 
         setIsDeleting(true);
         try {
-            if (isCR) {
-                await addChange(projectId, environmentName, {
-                    feature: featureId,
-                    action: 'deleteSafeguard',
-                    payload: {
-                        planId: plan.id,
-                        safeguardId: safeguards[0].id,
-                    },
-                });
-                await refetchChangeRequests();
-                setToastData({
-                    type: 'success',
-                    text: 'Added to draft',
-                });
-            } else {
-                await deleteSafeguardApi({
-                    projectId,
-                    featureName: featureId,
-                    environment: environmentName,
-                    planId: plan.id,
-                    safeguardId: safeguards[0].id,
-                });
-                setToastData({
-                    type: 'success',
-                    text: 'Safeguard deleted successfully',
-                });
-            }
+            await deleteSafeguardApi({
+                projectId,
+                featureName: featureId,
+                environment: environmentName,
+                planId: plan.id,
+                safeguardId: safeguards[0].id,
+            });
+            setToastData({
+                type: 'success',
+                text: 'Safeguard deleted successfully',
+            });
             onSafeguardChange();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         } finally {
             setIsDeleting(false);
             setDeleteDialogOpen(false);
+        }
+    };
+
+    const handleDeleteChangeRequestConfirm = async () => {
+        if (safeguards.length === 0 || isDeleting) return;
+
+        setIsDeleting(true);
+        try {
+            await addChange(projectId, environmentName, {
+                feature: featureId,
+                action: 'deleteSafeguard',
+                payload: {
+                    planId: plan.id,
+                    safeguardId: safeguards[0].id,
+                },
+            });
+            await refetchChangeRequests();
+            setToastData({
+                type: 'success',
+                text: 'Added to draft',
+            });
+            onSafeguardChange();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        } finally {
+            setIsDeleting(false);
+            setDeleteChangeRequestOpen(false);
         }
     };
 
@@ -193,7 +211,6 @@ const useReleasePlanSafeguardActions = ({
         pendingSafeguardAction,
         deleteDialog: {
             open: deleteDialogOpen,
-            isChangeRequest: isCR,
             isDeleting,
             onConfirm: handleDeleteConfirm,
             onClose: () => {
@@ -201,6 +218,12 @@ const useReleasePlanSafeguardActions = ({
                     setDeleteDialogOpen(false);
                 }
             },
+        },
+        deleteChangeRequestDialog: {
+            open: deleteChangeRequestOpen,
+            isDeleting,
+            onConfirm: handleDeleteChangeRequestConfirm,
+            onClose: () => setDeleteChangeRequestOpen(false),
         },
     };
 };
@@ -227,6 +250,7 @@ export const ReleasePlanSafeguard = ({
         handleDeleteRequest,
         pendingSafeguardAction,
         deleteDialog,
+        deleteChangeRequestDialog,
     } = useReleasePlanSafeguardActions({
         projectId,
         featureId,
@@ -269,42 +293,27 @@ export const ReleasePlanSafeguard = ({
                     </StyledAddSafeguardContent>
                 )}
             </StyledSafeguardContainer>
-            <Dialogue
-                title={
-                    deleteDialog.isChangeRequest
-                        ? 'Request changes'
-                        : 'Remove safeguard?'
-                }
+            <DeleteSafeguardDialog
                 open={deleteDialog.open}
-                primaryButtonText={
-                    deleteDialog.isChangeRequest
-                        ? 'Add suggestion to draft'
-                        : deleteDialog.isDeleting
-                          ? 'Removing...'
-                          : 'Remove safeguard'
-                }
-                secondaryButtonText='Cancel'
-                onClick={deleteDialog.onConfirm}
                 onClose={deleteDialog.onClose}
-                disabledPrimaryButton={deleteDialog.isDeleting}
+                onConfirm={deleteDialog.onConfirm}
+                isDeleting={deleteDialog.isDeleting}
+            />
+            <Dialogue
+                title='Request changes'
+                open={deleteChangeRequestDialog.open}
+                secondaryButtonText='Cancel'
+                onClose={deleteChangeRequestDialog.onClose}
+                primaryButtonText='Add suggestion to draft'
+                onClick={deleteChangeRequestDialog.onConfirm}
+                disabledPrimaryButton={deleteChangeRequestDialog.isDeleting}
             >
-                {deleteDialog.isChangeRequest ? (
-                    <p>
-                        <strong>Remove</strong> safeguard from release plan{' '}
-                        <strong>{plan.name}</strong> for{' '}
-                        <strong>{featureId}</strong> in{' '}
-                        <strong>{environmentName}</strong>
-                    </p>
-                ) : (
-                    <>
-                        <p>
-                            You are about to remove the safeguard that pauses
-                            automation when conditions are met.
-                        </p>
-                        <br />
-                        <p>This action cannot be undone.</p>
-                    </>
-                )}
+                <p>
+                    <strong>Remove</strong> safeguard from release plan{' '}
+                    <strong>{plan.name}</strong> for{' '}
+                    <strong>{featureId}</strong> in{' '}
+                    <strong>{environmentName}</strong>
+                </p>
             </Dialogue>
         </>
     );

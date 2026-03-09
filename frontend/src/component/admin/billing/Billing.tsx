@@ -35,8 +35,7 @@ export const Billing = () => {
         uiConfig: { billing },
     } = useUiConfig();
 
-    const eligibleForDetailedBilling =
-        billing === 'pay-as-you-go' || billing === 'enterprise-consumption';
+    const eligibleForDetailedBilling = billing === 'enterprise-consumption';
 
     useEffect(() => {
         const hardRefresh = async () => {

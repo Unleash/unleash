@@ -161,18 +161,20 @@ const HeaderActionsComponent = ({
         >
             {feature.favorite ? <Star /> : <StarBorder />}
         </IconButtonWithTooltip>
-        <PermissionIconButton
-            permission={CREATE_FEATURE}
-            projectId={feature.project}
-            data-loading
-            component={Link}
-            to={`/projects/${feature.project}/features/${feature.name}/copy`}
-            tooltipProps={{
-                title: 'Clone',
-            }}
-        >
-            <LibraryAddOutlined />
-        </PermissionIconButton>
+        {feature.project && feature.name && (
+            <PermissionIconButton
+                permission={CREATE_FEATURE}
+                projectId={feature.project}
+                data-loading
+                component={Link}
+                to={`/projects/${feature.project}/features/${feature.name}/copy`}
+                tooltipProps={{
+                    title: 'Clone',
+                }}
+            >
+                <LibraryAddOutlined />
+            </PermissionIconButton>
+        )}
 
         <PermissionIconButton
             permission={DELETE_FEATURE}

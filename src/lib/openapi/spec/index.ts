@@ -176,6 +176,7 @@ export * from './record-ui-error-schema.js';
 export * from './release-plan-milestone-schema.js';
 export * from './release-plan-milestone-strategy-schema.js';
 export * from './release-plan-schema.js';
+export * from './release-plans-schema.js';
 export * from './release-plan-template-id-schema.js';
 export * from './release-plan-template-schema.js';
 export * from './requests-per-second-schema.js';

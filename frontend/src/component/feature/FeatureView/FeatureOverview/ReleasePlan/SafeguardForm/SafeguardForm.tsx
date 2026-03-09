@@ -68,6 +68,8 @@ export const useSafeguardForm = (safeguards: ISafeguard[] | undefined) => {
     return { safeguardFormOpen, setSafeguardFormOpen };
 };
 
+export type SafeguardType = 'releasePlan' | 'featureEnvironment';
+
 interface IBaseSafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
     onCancel?: () => void;
@@ -76,6 +78,7 @@ interface IBaseSafeguardFormProps {
     environment: string;
     featureId: string;
     badge?: ReactNode;
+    safeguardType?: SafeguardType;
 }
 
 type MetricOption = { name: string } & ImpactMetricsSeries;
@@ -336,7 +339,13 @@ interface SafeguardFormBaseProps {
     environment: string;
     badge?: ReactNode;
     children?: React.ReactNode;
+    safeguardType?: SafeguardType;
 }
+
+const safeguardTypeLabel: Record<SafeguardType, string> = {
+    releasePlan: 'Pause automation when',
+    featureEnvironment: 'Disable environment when',
+};
 
 const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     formState,
@@ -346,6 +355,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     environment,
     badge,
     children,
+    safeguardType = 'releasePlan',
 }) => {
     const {
         metricName,
@@ -421,7 +431,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
             <StyledTopRow>
                 <StyledIcon />
                 <StyledLabel sx={{ mr: 'auto' }}>
-                    Pause automation when
+                    {safeguardTypeLabel[safeguardType]}
                 </StyledLabel>
                 {mode === 'display' && badge}
                 {metricName && (
@@ -594,6 +604,7 @@ const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     environment,
     featureId,
     badge,
+    safeguardType,
 }) => {
     const formState = useSafeguardFormState(safeguard, featureId);
     const { mode, setMode, buildSafeguardData, threshold } = formState;
@@ -621,6 +632,7 @@ const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
             onDelete={onDelete}
             environment={environment}
             badge={badge}
+            safeguardType={safeguardType}
         />
     );
 };
@@ -633,6 +645,7 @@ const SafeguardFormWithChangeRequests: FC<IBaseSafeguardFormProps> = ({
     environment,
     featureId,
     badge,
+    safeguardType,
 }) => {
     const formState = useSafeguardFormState(safeguard, featureId);
     const {
@@ -675,6 +688,7 @@ const SafeguardFormWithChangeRequests: FC<IBaseSafeguardFormProps> = ({
             onDelete={onDelete}
             environment={environment}
             badge={badge}
+            safeguardType={safeguardType}
         >
             <SafeguardChangeRequestDialog
                 isOpen={dialogOpen}
@@ -696,6 +710,7 @@ export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
     environment,
     featureId,
     badge,
+    safeguardType,
 }) => {
     const formState = useSafeguardFormState(safeguard, featureId);
     const { mode, setMode, buildSafeguardData, threshold } = formState;
@@ -723,6 +738,7 @@ export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
             onDelete={onDelete}
             environment={environment}
             badge={badge}
+            safeguardType={safeguardType}
         />
     );
 };

@@ -28,7 +28,7 @@ import {
     strategyBackground,
 } from 'component/common/StrategyList/StrategyListItem';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
-import { ReleasePlanSafeguard } from './ReleasePlanSafeguard.tsx';
+import { Safeguard } from './Safeguard.tsx';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -74,6 +74,7 @@ export const EnvironmentAccordionBody = ({
     );
     const { trackEvent } = usePlausibleTracker();
     const safeguardsEnabled = useUiFlag('safeguards');
+    const featureEnvSafeguards = useUiFlag('featureEnvSafeguards');
 
     const [dragItem, setDragItem] = useState<{
         id: string;
@@ -227,8 +228,8 @@ export const EnvironmentAccordionBody = ({
                     </Alert>
                 </AlertContainer>
             ) : null}
-            {safeguardsEnabled && firstPlan ? (
-                <ReleasePlanSafeguard
+            {safeguardsEnabled && (firstPlan || featureEnvSafeguards) ? (
+                <Safeguard
                     plan={firstPlan}
                     environmentName={featureEnvironment.name}
                     featureId={featureId}

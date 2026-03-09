@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { styled } from '@mui/material';
+import { styled, Menu, MenuItem, ListItemText, Tooltip } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
@@ -10,7 +10,9 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import {
     SafeguardForm,
     useSafeguardForm,
+    type SafeguardType,
 } from '../../../ReleasePlan/SafeguardForm/SafeguardForm.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguardsApi';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import { DeleteSafeguardDialog } from '../../../ReleasePlan/DeleteSafeguardDialog.tsx';
@@ -63,7 +65,7 @@ const useReleasePlanSafeguardActions = ({
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data: pendingChangeRequests, refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
-    const { createOrUpdateSafeguard, deleteSafeguard: deleteSafeguardApi } =
+    const { createOrUpdateReleasePlanSafeguard, deleteReleasePlanSafeguard } =
         useSafeguardsApi();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -91,7 +93,7 @@ const useReleasePlanSafeguardActions = ({
                     text: 'Added to draft',
                 });
             } else {
-                await createOrUpdateSafeguard({
+                await createOrUpdateReleasePlanSafeguard({
                     projectId,
                     featureName: featureId,
                     environment: environmentName,
@@ -124,7 +126,7 @@ const useReleasePlanSafeguardActions = ({
 
         setIsDeleting(true);
         try {
-            await deleteSafeguardApi({
+            await deleteReleasePlanSafeguard({
                 projectId,
                 featureName: featureId,
                 environment: environmentName,
@@ -228,23 +230,28 @@ const useReleasePlanSafeguardActions = ({
     };
 };
 
-interface ReleasePlanSafeguardProps {
-    plan: IReleasePlan;
+interface SafeguardProps {
+    plan?: IReleasePlan;
     environmentName: string;
     featureId: string;
     onSafeguardChange: () => void;
 }
 
-export const ReleasePlanSafeguard = ({
+const ReleasePlanSafeguard = ({
     plan,
     environmentName,
     featureId,
+    projectId,
     onSafeguardChange,
-}: ReleasePlanSafeguardProps) => {
-    const projectId = useRequiredPathParam('projectId');
-    const { safeguardFormOpen, setSafeguardFormOpen } = useSafeguardForm(
-        plan.safeguards,
-    );
+    onCancel,
+}: {
+    plan: IReleasePlan;
+    environmentName: string;
+    featureId: string;
+    projectId: string;
+    onSafeguardChange: () => void;
+    onCancel: () => void;
+}) => {
     const {
         handleSubmit,
         handleDeleteRequest,
@@ -268,31 +275,16 @@ export const ReleasePlanSafeguard = ({
 
     return (
         <>
-            <StyledSafeguardContainer>
-                {safeguardFormOpen ? (
-                    <SafeguardForm
-                        safeguard={plan.safeguards[0]}
-                        onSubmit={handleSubmit}
-                        onCancel={() => setSafeguardFormOpen(false)}
-                        onDelete={handleDeleteRequest}
-                        environment={environmentName}
-                        featureId={featureId}
-                        badge={safeguardBadge}
-                    />
-                ) : (
-                    <StyledAddSafeguardContent>
-                        <StyledActionButton
-                            onClick={() => setSafeguardFormOpen(true)}
-                            color='primary'
-                            startIcon={<Add />}
-                            sx={{ m: 2 }}
-                        >
-                            Add safeguard
-                        </StyledActionButton>
-                        {safeguardBadge}
-                    </StyledAddSafeguardContent>
-                )}
-            </StyledSafeguardContainer>
+            <SafeguardForm
+                safeguard={plan.safeguards[0]}
+                onSubmit={handleSubmit}
+                onCancel={onCancel}
+                onDelete={handleDeleteRequest}
+                environment={environmentName}
+                featureId={featureId}
+                badge={safeguardBadge}
+                safeguardType='releasePlan'
+            />
             <DeleteSafeguardDialog
                 open={deleteDialog.open}
                 onClose={deleteDialog.onClose}
@@ -315,6 +307,158 @@ export const ReleasePlanSafeguard = ({
                     <strong>{environmentName}</strong>
                 </p>
             </Dialogue>
+        </>
+    );
+};
+
+const FeatureEnvironmentSafeguard = ({
+    environmentName,
+    featureId,
+    projectId,
+    onSafeguardChange,
+    onCancel,
+}: {
+    environmentName: string;
+    featureId: string;
+    projectId: string;
+    onSafeguardChange: () => void;
+    onCancel: () => void;
+}) => {
+    const { createOrUpdateFeatureEnvironmentSafeguard } = useSafeguardsApi();
+    const { setToastData, setToastApiError } = useToast();
+
+    const handleSubmit = async (data: CreateSafeguardSchema) => {
+        try {
+            await createOrUpdateFeatureEnvironmentSafeguard({
+                projectId,
+                featureName: featureId,
+                environment: environmentName,
+                body: data,
+            });
+            setToastData({
+                type: 'success',
+                text: 'Safeguard added successfully',
+            });
+            onSafeguardChange();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    return (
+        <SafeguardForm
+            onSubmit={handleSubmit}
+            onCancel={onCancel}
+            environment={environmentName}
+            featureId={featureId}
+            safeguardType='featureEnvironment'
+        />
+    );
+};
+
+export const Safeguard = ({
+    plan,
+    environmentName,
+    featureId,
+    onSafeguardChange,
+}: SafeguardProps) => {
+    const projectId = useRequiredPathParam('projectId');
+    const featureEnvSafeguards = useUiFlag('featureEnvSafeguards');
+    const { safeguardFormOpen, setSafeguardFormOpen } = useSafeguardForm(
+        plan?.safeguards,
+    );
+    const [safeguardType, setSafeguardType] =
+        useState<SafeguardType>('releasePlan');
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const handleAddClick = (event: React.MouseEvent<HTMLElement>) => {
+        if (featureEnvSafeguards) {
+            setAnchorEl(event.currentTarget);
+        } else {
+            setSafeguardFormOpen(true);
+        }
+    };
+
+    const handleMenuSelect = (type: SafeguardType) => {
+        setSafeguardType(type);
+        setSafeguardFormOpen(true);
+        setAnchorEl(null);
+    };
+
+    const hasReleasePlan = Boolean(plan);
+
+    return (
+        <>
+            <StyledSafeguardContainer>
+                {safeguardFormOpen ? (
+                    <>
+                        {safeguardType === 'releasePlan' && plan && (
+                            <ReleasePlanSafeguard
+                                plan={plan}
+                                environmentName={environmentName}
+                                featureId={featureId}
+                                projectId={projectId}
+                                onSafeguardChange={onSafeguardChange}
+                                onCancel={() => setSafeguardFormOpen(false)}
+                            />
+                        )}
+                        {safeguardType === 'featureEnvironment' && (
+                            <FeatureEnvironmentSafeguard
+                                environmentName={environmentName}
+                                featureId={featureId}
+                                projectId={projectId}
+                                onSafeguardChange={onSafeguardChange}
+                                onCancel={() => setSafeguardFormOpen(false)}
+                            />
+                        )}
+                    </>
+                ) : (
+                    <StyledAddSafeguardContent>
+                        <StyledActionButton
+                            onClick={handleAddClick}
+                            color='primary'
+                            startIcon={<Add />}
+                            sx={{ m: 2 }}
+                        >
+                            Add safeguard
+                        </StyledActionButton>
+                    </StyledAddSafeguardContent>
+                )}
+            </StyledSafeguardContainer>
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}
+                slotProps={{
+                    paper: {
+                        sx: { mt: 1, ml: 1 },
+                    },
+                }}
+            >
+                <MenuItem
+                    onClick={() => handleMenuSelect('featureEnvironment')}
+                >
+                    <ListItemText>Disable environment</ListItemText>
+                </MenuItem>
+                <Tooltip
+                    title={
+                        !hasReleasePlan
+                            ? 'Requires a release plan in this environment'
+                            : ''
+                    }
+                    placement='right'
+                    arrow
+                >
+                    <span>
+                        <MenuItem
+                            disabled={!hasReleasePlan}
+                            onClick={() => handleMenuSelect('releasePlan')}
+                        >
+                            <ListItemText>Pause automation</ListItemText>
+                        </MenuItem>
+                    </span>
+                </Tooltip>
+            </Menu>
         </>
     );
 };

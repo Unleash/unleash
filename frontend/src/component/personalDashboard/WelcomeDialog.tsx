@@ -8,6 +8,9 @@ import { formatAssetPath } from 'utils/formatPath';
 import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
+    '.MuiBackdrop-root': {
+        backdropFilter: 'blur(8px)',
+    },
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusLarge,
         width: '65vw',

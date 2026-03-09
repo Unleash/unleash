@@ -1,9 +1,9 @@
 import type {
     IAuditUser,
     IUnleashConfig,
-    MilestoneStrategyConfig,
     MilestoneStrategyConfigUpdate,
 } from '../../types/index.js';
+import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-strategy.js';
 import type { IUser } from '../../types/user.js';
 import type { Logger } from '../../logger.js';
 import type { IReleasePlanMilestoneStrategyStore } from './release-plan-milestone-strategy-store.js';
@@ -53,7 +53,7 @@ export class ReleasePlanMilestoneStrategyService {
         context: MilestoneStrategyContext,
         auditUser: IAuditUser,
         user?: IUser,
-    ): Promise<MilestoneStrategyConfig> {
+    ): Promise<ReleasePlanMilestoneStrategy> {
         await this.stopWhenChangeRequestsEnabled(
             context.projectId,
             context.environment,
@@ -91,7 +91,7 @@ export class ReleasePlanMilestoneStrategyService {
         context: MilestoneStrategyContext,
         auditUser: IAuditUser,
         user?: IUser,
-    ): Promise<MilestoneStrategyConfig> {
+    ): Promise<ReleasePlanMilestoneStrategy> {
         const { projectId, environment, featureName } = context;
 
         const existingStrategy = await this.milestoneStrategyStore.get(id);

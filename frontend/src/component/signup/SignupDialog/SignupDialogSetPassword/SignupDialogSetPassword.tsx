@@ -85,7 +85,7 @@ export const SignupDialogSetPassword: SignupStepContent = ({
                 onClick={onNext}
                 disabled={!isValidPassword}
             >
-                Customize Unleash
+                Next
             </StyledSignupDialogButton>
         </>
     );

@@ -115,7 +115,7 @@
     "react-hooks-global-state": "2.1.0",
     "react-joyride": "^2.5.3",
     "react-markdown": "^8.0.4",
-    "react-router-dom": "6.16.0",
+    "react-router-dom": "6.30.3",
     "react-table": "7.8.0",
     "react-test-renderer": "18.3.1",
     "sass": "1.85.1",
@@ -125,7 +125,7 @@
     "typescript": "5.8.3",
     "unleash-proxy-client": "^3.7.3",
     "use-query-params": "^2.2.1",
-    "vanilla-jsoneditor": "^0.23.0",
+    "vanilla-jsoneditor": "^3.11.0",
     "vite": "5.4.21",
     "vite-plugin-env-compatible": "2.0.1",
     "vite-plugin-svgr": "3.3.0",
@@ -167,6 +167,7 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "json-2-csv": "^5.5.5",
     "json-diff-react": "^1.0.1",
-    "re2js": "^1.2.2"
+    "re2js": "^1.2.2",
+    "regenerator-runtime": "^0.14.1"
   }
 }

@@ -1,6 +1,7 @@
 import {
     type JSONEditorPropsOptional,
-    JSONEditor,
+    type JsonEditor,
+    createJSONEditor,
     Mode,
 } from 'vanilla-jsoneditor';
 import { useContext, useEffect, useRef } from 'react';
@@ -67,12 +68,12 @@ interface IReactJSONEditorProps extends JSONEditorPropsOptional {
 
 const VanillaJSONEditor: React.FC<IReactJSONEditorProps> = (props) => {
     const refContainer = useRef<HTMLDivElement | null>(null);
-    const refEditor = useRef<JSONEditor | null>(null);
+    const refEditor = useRef<JsonEditor | null>(null);
 
     useEffect(() => {
         // create editor
         if (refContainer.current !== null) {
-            refEditor.current = new JSONEditor({
+            refEditor.current = createJSONEditor({
                 target: refContainer.current,
                 props: {},
             });

@@ -12,6 +12,8 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/EnvironmentChangeRequest.tsx';
 import { ReviewChangesHeader } from './ReviewChangesHeader/ReviewChangesHeader.tsx';
 import { ChangeRequestPlausibleProvider } from '../ChangeRequestContext.tsx';
+import { refreshFeatureChangeRequests } from 'utils/refreshAllPendingChangeRequests.ts';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -76,6 +78,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
         loading,
         refetch: refetchChangeRequest,
     } = usePendingChangeRequests(project);
+    const featureName = useOptionalPathParam('featureId');
     const { discardDraft } = useChangeRequestApi();
     const { setToastApiError } = useToast();
     const [
@@ -88,7 +91,13 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
     ) => {
         try {
             await changeState(project);
-            refetchChangeRequest();
+            await Promise.all([
+                refetchChangeRequest(),
+                featureName
+                    ? refreshFeatureChangeRequests(project, featureName)
+                    : Promise.resolve(),
+            ]);
+            onClose();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -97,7 +106,13 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
     const onDiscard = async (draftId: number) => {
         try {
             await discardDraft(project, draftId);
-            refetchChangeRequest();
+            await Promise.all([
+                refetchChangeRequest(),
+                featureName
+                    ? refreshFeatureChangeRequests(project, featureName)
+                    : Promise.resolve(),
+            ]);
+            onClose();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

@@ -429,6 +429,11 @@ export const Safeguard = ({
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
+                slotProps={{
+                    paper: {
+                        sx: { mt: 1, ml: 1 },
+                    },
+                }}
             >
                 <MenuItem
                     onClick={() => handleMenuSelect('featureEnvironment')}
@@ -442,6 +447,7 @@ export const Safeguard = ({
                             : ''
                     }
                     placement='right'
+                    arrow
                 >
                     <span>
                         <MenuItem

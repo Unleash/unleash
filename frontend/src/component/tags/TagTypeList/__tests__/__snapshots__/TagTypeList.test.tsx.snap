@@ -7,7 +7,7 @@ exports[`renders an empty list correctly 1`] = `
     aria-live="polite"
   >
     <div
-      className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1  css-9re55q-MuiPaper-root"
+      className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-9re55q-MuiPaper-root"
     >
       <div
         className="header mui-70tvrt-headerPadding css-1eoza9b"
@@ -19,11 +19,11 @@ exports[`renders an empty list correctly 1`] = `
             className="css-mt0dvk"
           >
             <div
-              className=" css-1kxj5dx"
+              className="css-1kxj5dx"
               data-loading={true}
             >
               <h1
-                className="MuiTypography-root MuiTypography-h1  css-1bsc9a5-MuiTypography-root"
+                className="MuiTypography-root MuiTypography-h1 css-1bsc9a5-MuiTypography-root"
               >
                 Tag types (5)
               </h1>
@@ -148,7 +148,7 @@ exports[`renders an empty list correctly 1`] = `
                 <button
                   aria-label=""
                   aria-labelledby={null}
-                  className=" css-abwubk"
+                  className="css-abwubk"
                   data-mui-internal-clone-element={true}
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -277,7 +277,7 @@ exports[`renders an empty list correctly 1`] = `
                       <span
                         aria-label=""
                         aria-labelledby={null}
-                        className=" MuiBox-root css-gzore8"
+                        className="MuiBox-root css-gzore8"
                         data-loading={true}
                         data-mui-internal-clone-element={true}
                         onBlur={[Function]}
@@ -456,7 +456,7 @@ exports[`renders an empty list correctly 1`] = `
                       <span
                         aria-label=""
                         aria-labelledby={null}
-                        className=" MuiBox-root css-gzore8"
+                        className="MuiBox-root css-gzore8"
                         data-loading={true}
                         data-mui-internal-clone-element={true}
                         onBlur={[Function]}
@@ -635,7 +635,7 @@ exports[`renders an empty list correctly 1`] = `
                       <span
                         aria-label=""
                         aria-labelledby={null}
-                        className=" MuiBox-root css-gzore8"
+                        className="MuiBox-root css-gzore8"
                         data-loading={true}
                         data-mui-internal-clone-element={true}
                         onBlur={[Function]}
@@ -814,7 +814,7 @@ exports[`renders an empty list correctly 1`] = `
                       <span
                         aria-label=""
                         aria-labelledby={null}
-                        className=" MuiBox-root css-gzore8"
+                        className="MuiBox-root css-gzore8"
                         data-loading={true}
                         data-mui-internal-clone-element={true}
                         onBlur={[Function]}
@@ -993,7 +993,7 @@ exports[`renders an empty list correctly 1`] = `
                       <span
                         aria-label=""
                         aria-labelledby={null}
-                        className=" MuiBox-root css-gzore8"
+                        className="MuiBox-root css-gzore8"
                         data-loading={true}
                         data-mui-internal-clone-element={true}
                         onBlur={[Function]}

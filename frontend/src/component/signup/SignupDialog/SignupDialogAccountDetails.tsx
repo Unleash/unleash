@@ -36,10 +36,12 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
     return (
         <>
             <StyledSignupDialogField>
-                <StyledSignupDialogLabel>Name</StyledSignupDialogLabel>
+                <StyledSignupDialogLabel>
+                    What's your name?
+                </StyledSignupDialogLabel>
                 <StyledSignupDialogTextField
                     variant='outlined'
-                    placeholder='Name'
+                    placeholder='Enter full name'
                     name='name'
                     autoComplete='name'
                     value={data.name}
@@ -78,7 +80,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                         <StyledSignupDialogTextField
                             {...params}
                             placeholder='Please select'
-                            helperText='We use this to customize your onboarding'
+                            helperText={`Different roles use feature flags differently. Let's focus your onboarding on what's relevant to you`}
                         />
                     )}
                 />
@@ -91,7 +93,6 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                     <StyledSignupDialogTextField
                         variant='outlined'
                         placeholder='Company name'
-                        helperText='This is displayed when people join your workspace'
                         name='organization'
                         autoComplete='organization'
                         value={data.companyName}

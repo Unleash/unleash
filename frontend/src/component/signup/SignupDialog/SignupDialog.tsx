@@ -19,6 +19,7 @@ import { ReactComponent as Heart } from 'assets/icons/heart.svg';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
 import { useWelcomeDialogContext } from 'component/personalDashboard/WelcomeDialogContext.tsx';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '.MuiBackdrop-root': {
@@ -177,11 +178,15 @@ export type SignupStepContent = ComponentType<{
 }>;
 
 type SignupStep = {
-    title?: 'Set password' | 'Set up your account' | 'Invite your team';
+    title:
+        | 'Set password'
+        | 'Set up your account'
+        | 'Invite your team'
+        | `You're all set`;
     description?: string;
     content: SignupStepContent;
-    nextText?: string;
     show?: (signupData?: SignupData) => boolean;
+    isCustom?: boolean;
 };
 
 const SIGNUP_STEPS: SignupStep[] = [
@@ -204,11 +209,14 @@ const SIGNUP_STEPS: SignupStep[] = [
         content: SignupDialogInviteOthers,
     },
     {
+        title: `You're all set`,
         content: SignupDialogComplete,
+        isCustom: true,
     },
 ];
 
 export const SignupDialog = () => {
+    const { trackEvent } = usePlausibleTracker();
     const { setToastApiError } = useToast();
     const { setWelcomeDialog } = useWelcomeDialogContext();
     const { signupData, signupRequired, refetch } = useSignup();
@@ -227,6 +235,21 @@ export const SignupDialog = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const hydratedRef = useRef(false);
 
+    const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
+    const safeStep = Math.min(step, steps.length - 1);
+    const currentStep = steps[safeStep];
+
+    useEffect(() => {
+        if (currentStep?.title) {
+            trackEvent('signup-dialog', {
+                props: {
+                    eventType: 'view',
+                    step: currentStep.title,
+                },
+            });
+        }
+    }, [currentStep?.title, trackEvent]);
+
     useEffect(() => {
         if (!signupData || hydratedRef.current) return;
 
@@ -244,12 +267,8 @@ export const SignupDialog = () => {
         });
     }, [signupData]);
 
-    const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
+    if (!signupRequired || steps.length === 0 || !currentStep) return null;
 
-    if (!signupRequired || steps.length === 0) return null;
-
-    const safeStep = Math.min(step, steps.length - 1);
-    const currentStep = steps[safeStep];
     const StepContent = currentStep.content;
 
     const onBack = () => {
@@ -262,11 +281,30 @@ export const SignupDialog = () => {
         if (isSubmitting) return;
 
         if (safeStep < steps.length - 1) {
+            let eventType = 'next';
+            if (currentStep.title === 'Invite your team') {
+                eventType = data.inviteEmails.length ? 'invite' : 'later';
+            }
+            trackEvent('signup-dialog', {
+                props: {
+                    eventType,
+                    step: currentStep.title,
+                },
+            });
+
             setStep(safeStep + 1);
             return;
         }
 
         try {
+            trackEvent('signup-dialog', {
+                props: {
+                    eventType: 'complete',
+                    step: currentStep.title,
+                    totalInvitedEmails: data.inviteEmails.length,
+                },
+            });
+
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
@@ -300,7 +338,7 @@ export const SignupDialog = () => {
                 </StyledHearts>
             </StyledAside>
             <StyledBody>
-                {currentStep.title && (
+                {!currentStep.isCustom && (
                     <StyledHeader>
                         <StyledTitle>{currentStep.title}</StyledTitle>
                         <Typography

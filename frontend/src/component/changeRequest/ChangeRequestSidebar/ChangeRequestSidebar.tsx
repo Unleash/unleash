@@ -12,7 +12,8 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/EnvironmentChangeRequest.tsx';
 import { ReviewChangesHeader } from './ReviewChangesHeader/ReviewChangesHeader.tsx';
 import { ChangeRequestPlausibleProvider } from '../ChangeRequestContext.tsx';
-import { useRefreshAllPendingChangeRequests } from 'hooks/useRefreshAllPendingChangeRequests.ts';
+import { refreshFeatureChangeRequests } from 'utils/refreshAllPendingChangeRequests.ts';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -77,12 +78,7 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
         loading,
         refetch: refetchChangeRequest,
     } = usePendingChangeRequests(project);
-    const featureNames =
-        data?.flatMap((changeRequest) =>
-            changeRequest.features.map((feature) => feature.name),
-        ) ?? [];
-    const { refreshAll: refreshAllPendingChangeRequests } =
-        useRefreshAllPendingChangeRequests(project, featureNames);
+    const featureName = useOptionalPathParam('featureId');
     const { discardDraft } = useChangeRequestApi();
     const { setToastApiError } = useToast();
     const [
@@ -97,7 +93,9 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
             await changeState(project);
             await Promise.all([
                 refetchChangeRequest(),
-                refreshAllPendingChangeRequests(),
+                featureName
+                    ? refreshFeatureChangeRequests(project, featureName)
+                    : Promise.resolve(),
             ]);
             onClose();
         } catch (error: unknown) {
@@ -110,7 +108,9 @@ export const ChangeRequestSidebar: VFC<IChangeRequestSidebarProps> = ({
             await discardDraft(project, draftId);
             await Promise.all([
                 refetchChangeRequest(),
-                refreshAllPendingChangeRequests(),
+                featureName
+                    ? refreshFeatureChangeRequests(project, featureName)
+                    : Promise.resolve(),
             ]);
             onClose();
         } catch (error: unknown) {

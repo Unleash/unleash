@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, styled, Box } from '@mui/material';
 import type {
-    IFeatureStrategy,
     IFeatureStrategyParameters,
     IStrategyParameter,
+    StrategyFormState,
 } from 'interfaces/strategy';
 import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled.tsx';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
@@ -39,10 +39,8 @@ export interface IFeatureStrategyFormProps {
     onCancel?: () => void;
     loading: boolean;
     changeRequestsEnabled: boolean;
-    strategy: Partial<IFeatureStrategy>;
-    setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
-    >;
+    strategy: StrategyFormState;
+    setStrategy: React.Dispatch<React.SetStateAction<StrategyFormState>>;
     errors: IFormErrors;
     canRenamePreexistingVariants?: boolean;
     Limit?: JSX.Element;

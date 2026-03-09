@@ -63,6 +63,7 @@ process.nextTick(async () => {
                         enterpriseEdgeTokensList: true,
                         userTokenWithClientApiLogging: true,
                         inlineFavoriteInNameColumn: true,
+                        filterFavorites: true,
                     },
                 },
                 authentication: {

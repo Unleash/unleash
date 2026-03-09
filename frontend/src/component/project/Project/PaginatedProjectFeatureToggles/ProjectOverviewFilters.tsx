@@ -8,6 +8,7 @@ import {
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
 import { formatTag } from 'utils/format-tag';
 import { styled } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type ProjectOverviewFiltersProps = {
     state: FilterItemParamHolder;
@@ -27,6 +28,7 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
     const { tags } = useAllTags();
     const { flagCreators } = useProjectFlagCreators(project);
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
+    const filterFavoritesEnabled = useUiFlag('filterFavorites');
 
     useEffect(() => {
         const tagsOptions = (tags || []).map((tag) => {
@@ -115,10 +117,26 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
+            ...(filterFavoritesEnabled
+                ? [
+                      {
+                          label: 'Favorite',
+                          icon: 'star',
+                          options: [{ label: 'True', value: 'true' }],
+                          filterKey: 'favorite',
+                          singularOperators: ['IS'] as [string, ...string[]],
+                          pluralOperators: [] as string[],
+                      },
+                  ]
+                : []),
         ];
 
         setAvailableFilters(availableFilters);
-    }, [JSON.stringify(tags), JSON.stringify(flagCreators)]);
+    }, [
+        JSON.stringify(tags),
+        JSON.stringify(flagCreators),
+        filterFavoritesEnabled,
+    ]);
 
     return (
         <StyledFilters

@@ -41,6 +41,7 @@ export const useProjectFeatureSearch = (
         createdBy: FilterItemParam,
         archived: FilterItemParam,
         lifecycle: FilterItemParam,
+        favorite: FilterItemParam,
     };
     const [tableState, setTableState] = usePersistentTableState(
         `${storageKey}-${projectId}`,

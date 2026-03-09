@@ -170,6 +170,17 @@ export const featureSearchQueryParameters = [
         in: 'query',
     },
     {
+        name: 'favorite',
+        schema: {
+            type: 'string',
+            example: 'IS:true',
+            pattern: '^IS:(true|false)$',
+        },
+        description:
+            'Filter by whether the feature is favorited by the current user. Use IS:true to show only favorites.',
+        in: 'query',
+    },
+    {
         name: 'createdAt',
         schema: {
             type: 'string',

@@ -78,6 +78,7 @@ export type IFlagKey =
     | 'impactMetricsFlagPage'
     | 'userTokenWithClientApiLogging'
     | 'featureEnvSafeguards'
+    | 'filterFavorites'
     | 'inlineFavoriteInNameColumn';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -353,6 +354,10 @@ const flags: IFlags = {
     ),
     inlineFavoriteInNameColumn: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_INLINE_FAVORITE_IN_NAME_COLUMN,
+        false,
+    ),
+    filterFavorites: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FILTER_FAVORITES,
         false,
     ),
 };

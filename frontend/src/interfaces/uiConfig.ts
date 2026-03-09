@@ -95,6 +95,7 @@ export type UiFlags = {
     impactMetricsFlagPage?: boolean;
     featureEnvSafeguards?: boolean;
     inlineFavoriteInNameColumn?: boolean;
+    filterFavorites?: boolean;
 };
 
 export interface IVersionInfo {

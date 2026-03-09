@@ -597,7 +597,9 @@ export default class ProjectService {
             auditUser,
         );
 
-        const allTokens = await this.apiTokenService.getAllTokens();
+        const allTokens = await this.apiTokenService.getAllTokens({
+            filterEnterpriseEdgeTokens: true,
+        });
         const projectTokens = allTokens.filter(
             (token) =>
                 (token.projects &&

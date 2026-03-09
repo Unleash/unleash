@@ -25,6 +25,7 @@ import {
     type IAuditUser,
     type IFlagResolver,
     SYSTEM_USER_AUDIT,
+    SYSTEM_USER_ID,
 } from '../types/index.js';
 import { omitKeys } from '../util/index.js';
 import type EventService from '../features/events/event-service.js';
@@ -190,7 +191,14 @@ export class ApiTokenService {
         }
     }
 
-    public async getAllTokens(): Promise<IApiToken[]> {
+    public async getAllTokens({
+        filterEnterpriseEdgeTokens,
+    }: {
+        filterEnterpriseEdgeTokens: boolean;
+    }): Promise<IApiToken[]> {
+        if (filterEnterpriseEdgeTokens) {
+            return this.store.getAllFilterEnterpriseEdgeTokens();
+        }
         return this.store.getAll();
     }
 
@@ -276,7 +284,7 @@ export class ApiTokenService {
     /**
      * @param newToken
      * @param createdBy should be IApiUser or IUser. Still supports optional or string for backward compatibility
-     * @param createdByUserId still supported for backward compatibility
+     * @param auditUser Used for event log and referencing who made the token
      */
     public async createApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,
@@ -341,11 +349,15 @@ export class ApiTokenService {
         return this.insertNewApiToken(createNewToken, SYSTEM_USER_AUDIT);
     }
 
-    private normalizeTokenType(token: IApiTokenCreate): IApiTokenCreate {
+    private normalizeTokenType(
+        token: IApiTokenCreate,
+        auditUserId: number = SYSTEM_USER_ID,
+    ): IApiTokenCreate {
         const { type, ...rest } = token;
         return {
             ...rest,
             type: type.toLowerCase() as ApiTokenType,
+            createdByUserId: auditUserId,
         };
     }
 
@@ -355,7 +367,7 @@ export class ApiTokenService {
     ): Promise<IApiToken> {
         try {
             const token = await this.store.insert(
-                this.normalizeTokenType(newApiToken),
+                this.normalizeTokenType(newApiToken, auditUser.id),
             );
             this.activeTokens.push(token);
             await this.eventService.storeEvent(

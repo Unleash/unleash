@@ -411,7 +411,9 @@ export class ApiTokenController extends Controller {
     }
 
     private async accessibleTokens(user: IUser): Promise<IApiToken[]> {
-        const allTokens = await this.apiTokenService.getAllTokens();
+        const allTokens = await this.apiTokenService.getAllTokens({
+            filterEnterpriseEdgeTokens: true,
+        });
 
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;

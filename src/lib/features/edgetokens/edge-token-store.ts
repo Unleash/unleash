@@ -139,4 +139,12 @@ export class EdgeTokenStore implements IEdgeTokenStore {
             .delete();
         stop();
     }
+
+    async delete(tokenValue: string): Promise<void> {
+        const stop = this.timer('delete_token');
+        await this.db(T.edgeApiTokens)
+            .where('token_value', tokenValue)
+            .delete();
+        stop();
+    }
 }

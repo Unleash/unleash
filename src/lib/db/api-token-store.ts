@@ -10,10 +10,12 @@ import {
     type IApiToken,
     type IApiTokenCreate,
     type IFlagResolver,
+    SYSTEM_USER_ID,
 } from '../types/index.js';
 import { ALL_PROJECTS } from '../internals.js';
 import { isAllProjects } from '../server-impl.js';
 import { inTransaction } from './transaction.js';
+import type { Knex } from 'knex';
 
 const TABLE = 'api_tokens';
 const API_LINK_TABLE = 'api_token_project';
@@ -76,6 +78,7 @@ const toRow = (newToken: IApiTokenCreate) => ({
         newToken.environment === ALL ? undefined : newToken.environment,
     expires_at: newToken.expiresAt,
     alias: newToken.alias || null,
+    created_by_user_id: newToken.createdByUserId || SYSTEM_USER_ID,
 });
 
 const toTokens = (rows: any[]): IApiToken[] => {
@@ -140,6 +143,42 @@ export class ApiTokenStore implements IApiTokenStore {
         const rows = await this.makeTokenProjectQuery();
         stopTimer();
         return toTokens(rows);
+    }
+
+    async getAllFilterEnterpriseEdgeTokens(): Promise<IApiToken[]> {
+        const stopTimer = this.timer('getAllFilterEnterpriseEdgeTokens');
+        const rows = await this.filterEdgeTokens(this.makeTokenProjectQuery());
+        stopTimer();
+        return toTokens(rows);
+    }
+
+    filterEdgeTokens(
+        query: Knex.QueryBuilder<
+            any,
+            {
+                _base: any;
+                _hasSelection: true;
+                _keys:
+                    | 'type'
+                    | 'tokens.secret'
+                    | 'username'
+                    | 'expires_at'
+                    | 'created_at'
+                    | 'seen_at'
+                    | 'environment'
+                    | 'token_name'
+                    | 'alias'
+                    | 'token_project_link.project';
+                _aliases: {};
+                _single: false;
+                _intersectProps: {};
+                _unionProps: never;
+            }[]
+        >,
+    ) {
+        return query.whereRaw(
+            'NOT EXISTS (SELECT 1 FROM edge_api_tokens e WHERE e.token_value = tokens.secret)',
+        );
     }
 
     async getAllActive(): Promise<IApiToken[]> {

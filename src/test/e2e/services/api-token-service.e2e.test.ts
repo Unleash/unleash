@@ -61,8 +61,12 @@ afterEach(async () => {
 });
 
 test('should have empty list of tokens', async () => {
-    const allTokens = await apiTokenService.getAllTokens();
-    const activeTokens = await apiTokenService.getAllTokens();
+    const allTokens = await apiTokenService.getAllTokens({
+        filterEnterpriseEdgeTokens: false,
+    });
+    const activeTokens = await apiTokenService.getAllTokens({
+        filterEnterpriseEdgeTokens: true,
+    });
     expect(allTokens.length).toBe(0);
     expect(activeTokens.length).toBe(0);
 });
@@ -74,7 +78,9 @@ test('should create client token', async () => {
         projects: ['*'],
         environment: DEFAULT_ENV,
     });
-    const allTokens = await apiTokenService.getAllTokens();
+    const allTokens = await apiTokenService.getAllTokens({
+        filterEnterpriseEdgeTokens: false,
+    });
 
     expect(allTokens.length).toBe(1);
     expect(token.secret.length > 32).toBe(true);
@@ -105,7 +111,9 @@ test('should set expiry of token', async () => {
         environment: DEFAULT_ENV,
     });
 
-    const [token] = await apiTokenService.getAllTokens();
+    const [token] = await apiTokenService.getAllTokens({
+        filterEnterpriseEdgeTokens: false,
+    });
 
     expect(token.expiresAt).toEqual(time);
 });
@@ -127,7 +135,9 @@ test('should update expiry of token', async () => {
 
     await apiTokenService.updateExpiry(token.secret, newTime, TEST_AUDIT_USER);
 
-    const [updatedToken] = await apiTokenService.getAllTokens();
+    const [updatedToken] = await apiTokenService.getAllTokens({
+        filterEnterpriseEdgeTokens: false,
+    });
 
     expect(updatedToken.expiresAt).toEqual(newTime);
 });
@@ -196,7 +206,9 @@ test('should not partially create token if projects are invalid', async () => {
             environment: DEFAULT_ENV,
         });
     } catch (_e) {}
-    const allTokens = await apiTokenService.getAllTokens();
+    const allTokens = await apiTokenService.getAllTokens({
+        filterEnterpriseEdgeTokens: false,
+    });
 
     expect(allTokens.length).toBe(0);
 });

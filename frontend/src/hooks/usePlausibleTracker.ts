@@ -84,7 +84,8 @@ export type CustomEvents =
     | 'release-management-splash'
     | 'upgrade_trial_dialog'
     | 'new-template-from-add-strategy'
-    | 'flagpage-impact-metrics';
+    | 'flagpage-impact-metrics'
+    | 'signup-dialog';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

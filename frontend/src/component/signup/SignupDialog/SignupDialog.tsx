@@ -106,7 +106,7 @@ const StyledHeart = styled(Heart)(({ theme }) => ({
 const StyledBody = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing(10),
+    padding: theme.spacing(4, 10),
     [theme.breakpoints.down('sm')]: {
         padding: theme.spacing(2),
     },

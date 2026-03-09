@@ -55,7 +55,7 @@ export const SignupDialogComplete: SignupStepContent = ({
                 onClick={onNext}
                 disabled={isSubmitting}
             >
-                Learn key concepts
+                Start using Unleash
             </Button>
         </StyledContent>
     );

@@ -145,7 +145,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                 onClick={onNext}
                 disabled={!isValidForm}
             >
-                Customize Unleash
+                Next
             </StyledSignupDialogButton>
         </>
     );

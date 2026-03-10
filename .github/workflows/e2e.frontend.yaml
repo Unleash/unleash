@@ -9,7 +9,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  e2ebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+      - name: Install frontend dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: yarn install --immutable
+        working-directory: frontend
+      - name: Build static frontend
+        run: yarn build
+        working-directory: frontend
+      - name: Upload frontend build
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/build
+          retention-days: 1
+
   e2e:
+    needs: e2ebuild
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -21,25 +47,18 @@ jobs:
           - oss/feature/feature.spec.ts
           # - oss/login/login.spec.ts
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          echo "$GITHUB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Cache frontend build
-        id: cache-frontend
-        uses: actions/cache@v4
+      - name: Download frontend build
+        uses: actions/download-artifact@v4
         with:
+          name: frontend-build
           path: frontend/build
-          key: frontend-build-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock', 'frontend/src/**', 'frontend/public/**', 'frontend/index.html', 'frontend/vite.config.mts') }}
-      - name: Build static frontend
-        if: steps.cache-frontend.outputs.cache-hit != 'true'
-        run: |
-          cd frontend
-          yarn install --immutable
-          yarn build
+      - name: Restore node modules
+        uses: actions/cache/restore@v4
+        with:
+          path: frontend/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
       - name: Start Unleash test instance
         run: |
           docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
@@ -52,7 +71,7 @@ jobs:
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=http://localhost:3000
           spec: cypress/${{ matrix.test }}
-          install-command: yarn --immutable
+          install: false
       - name: Set artifact name
         if: always()
         id: artifact-name

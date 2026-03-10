@@ -52,7 +52,7 @@ export const SignupDialogComplete: SignupStepContent = ({
             </StyledHeader>
             <Button
                 variant='contained'
-                onClick={onNext}
+                onClick={() => onNext('complete')}
                 disabled={isSubmitting}
             >
                 Start using Unleash

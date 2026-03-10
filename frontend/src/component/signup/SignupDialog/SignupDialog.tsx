@@ -6,7 +6,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { type ComponentType, useEffect, useState } from 'react';
+import { type ComponentType, useState } from 'react';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
@@ -172,7 +172,7 @@ export type SignupStepContent = ComponentType<{
     data: SubmitSignupData;
     setData: React.Dispatch<React.SetStateAction<SubmitSignupData>>;
     onBack?: () => void;
-    onNext: () => void;
+    onNext: (eventType?: string) => void;
     signupData?: SignupData;
     isSubmitting?: boolean;
 }>;
@@ -240,17 +240,6 @@ export const SignupDialog = () => {
 
     const isVisible = signupRequired && steps.length > 0 && currentStep;
 
-    useEffect(() => {
-        if (isVisible && currentStep?.title) {
-            trackEvent('signup-dialog', {
-                props: {
-                    eventType: 'view',
-                    step: currentStep.title,
-                },
-            });
-        }
-    }, [isVisible, currentStep?.title, trackEvent]);
-
     if (!isVisible) return null;
 
     const StepContent = currentStep.content;
@@ -261,34 +250,25 @@ export const SignupDialog = () => {
         setStep(safeStep - 1);
     };
 
-    const onNext = async () => {
+    const onNext = async (eventType = 'next') => {
         if (isSubmitting) return;
 
-        if (safeStep < steps.length - 1) {
-            let eventType = 'next';
-            if (currentStep.title === 'Invite your team') {
-                eventType = data.inviteEmails.length ? 'invite' : 'later';
-            }
-            trackEvent('signup-dialog', {
-                props: {
-                    eventType,
-                    step: currentStep.title,
-                },
-            });
+        trackEvent('signup-dialog', {
+            props: {
+                eventType,
+                step: currentStep.title,
+                ...(eventType === 'invite' && {
+                    totalInvitedEmails: data.inviteEmails.length,
+                }),
+            },
+        });
 
+        if (safeStep < steps.length - 1) {
             setStep(safeStep + 1);
             return;
         }
 
         try {
-            trackEvent('signup-dialog', {
-                props: {
-                    eventType: 'complete',
-                    step: currentStep.title,
-                    totalInvitedEmails: data.inviteEmails.length,
-                },
-            });
-
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();

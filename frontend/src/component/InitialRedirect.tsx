@@ -27,7 +27,7 @@ export const useLastViewedPage = (location?: Location) => {
             ].find(
                 (page) =>
                     page === location.pathname ||
-                    location.pathname.startsWith(`/{page}/`),
+                    location.pathname.startsWith(`${page}/`),
             );
             if (page) {
                 setState(page);

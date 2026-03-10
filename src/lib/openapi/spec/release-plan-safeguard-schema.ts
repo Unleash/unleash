@@ -2,8 +2,8 @@ import type { FromSchema } from 'json-schema-to-ts';
 import { metricQuerySchema } from './metric-query-schema.js';
 import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
-export const safeguardSchema = {
-    $id: '#/components/schemas/safeguardSchema',
+export const releasePlanSafeguardSchema = {
+    $id: '#/components/schemas/releasePlanSafeguardSchema',
     type: 'object',
     required: ['id', 'action', 'triggerCondition', 'impactMetric'],
     description: 'A safeguard configuration for a release plan.',
@@ -61,4 +61,4 @@ export const safeguardSchema = {
     },
 } as const;
 
-export type SafeguardSchema = FromSchema<typeof safeguardSchema>;
+export type ReleasePlanSafeguardSchema = FromSchema<typeof releasePlanSafeguardSchema>;

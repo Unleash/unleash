@@ -4,7 +4,7 @@ import { constraintId } from 'constants/constraintId.js';
 
 export interface IFeatureStrategy {
     id: string;
-    /** @deprecated use {@link name} instead */ // todo(v8) remove this
+    /** @deprecated use {@link name} instead */ // todo(v9) remove this
     strategyName?: string;
     name: string;
     title?: string;

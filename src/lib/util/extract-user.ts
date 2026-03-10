@@ -2,6 +2,10 @@ import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../../lib/types/index.js';
 import type { IApiUser, IAuditUser, IUser } from '../types/index.js';
 import type { IApiRequest, IAuthRequest } from '../routes/unleash-types.js';
 
+export function extractClientIp(req: { ip?: string }): string {
+    return req.ip || 'unknown';
+}
+
 export function extractUsernameFromUser(user: IUser | IApiUser): string {
     return (
         (user as IUser)?.email || user?.username || SYSTEM_USER_AUDIT.username
@@ -38,5 +42,5 @@ export const extractAuditInfo = (
 ): IAuditUser => ({
     id: extractUserId(req),
     username: extractUsername(req),
-    ip: req.ip,
+    ip: extractClientIp(req),
 });

@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import { extractClientIp } from '../../util/extract-user.js';
 import Controller from '../../routes/controller.js';
 import {
     type IFlagResolver,
@@ -230,7 +231,7 @@ export default class FrontendAPIController extends Controller {
         await this.services.frontendApiService.registerFrontendApiMetrics(
             req.user,
             req.body,
-            req.ip,
+            extractClientIp(req),
             req.headers['unleash-sdk'],
         );
 
@@ -252,6 +253,6 @@ export default class FrontendAPIController extends Controller {
         const bodyContext = body.context ?? {};
         const contextData = req.method === 'POST' ? bodyContext : query;
 
-        return enrichContextWithIp(contextData, req.ip);
+        return enrichContextWithIp(contextData, extractClientIp(req));
     }
 }

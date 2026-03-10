@@ -1,5 +1,5 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { releasePlanSchema } from './release-plan-schema.js';
+import { releasePlanTemplateSchema } from './release-plan-template-schema.js';
 import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
 import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
 import { constraintSchema } from './constraint-schema.js';
@@ -7,20 +7,17 @@ import { createFeatureStrategySchema } from './create-feature-strategy-schema.js
 import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 import { parametersSchema } from './parameters-schema.js';
 import { transitionConditionSchema } from './transition-condition-schema.js';
-import { releasePlanSafeguardSchema } from './release-plan-safeguard-schema.js';
-import { metricQuerySchema } from './metric-query-schema.js';
-import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
-export const releasePlansSchema = {
-    $id: '#/components/schemas/releasePlansSchema',
-    description: 'A collection of release plans',
+export const releasePlanTemplatesSchema = {
+    $id: '#/components/schemas/releasePlanTemplatesSchema',
+    description: 'A collection of release plan templates',
     type: 'array',
     items: {
-        $ref: '#/components/schemas/releasePlanSchema',
+        $ref: '#/components/schemas/releasePlanTemplateSchema',
     },
     components: {
         schemas: {
-            releasePlanSchema,
+            releasePlanTemplateSchema,
             releasePlanMilestoneSchema,
             releasePlanMilestoneStrategySchema,
             createFeatureStrategySchema,
@@ -28,14 +25,10 @@ export const releasePlansSchema = {
             constraintSchema,
             createStrategyVariantSchema,
             transitionConditionSchema,
-            releasePlanSafeguardSchema,
-            metricQuerySchema,
-            safeguardTriggerConditionSchema,
         },
     },
 } as const;
 
-export type ReleasePlansSchema = FromSchema<
-    typeof releasePlansSchema,
-    { keepDefaultedPropertiesOptional: true }
+export type ReleasePlanTemplatesSchema = FromSchema<
+    typeof releasePlanTemplatesSchema
 >;

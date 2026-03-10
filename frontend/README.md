@@ -24,7 +24,7 @@ yarn run start:sandbox
 
 ## Running end-to-end tests against localhost 
 
-If you need to test against patches against a local server instance,
+If you need to test against a local server instance,
 you'll need to run in the root directory:
 
 * `yarn build:frontend`

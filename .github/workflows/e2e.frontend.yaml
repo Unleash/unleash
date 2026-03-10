@@ -28,7 +28,14 @@ jobs:
           echo "$GITHUB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Cache frontend build
+        id: cache-frontend
+        uses: actions/cache@v4
+        with:
+          path: frontend/build
+          key: frontend-build-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock', 'frontend/src/**', 'frontend/public/**', 'frontend/index.html', 'frontend/vite.config.mts') }}
       - name: Build static frontend
+        if: steps.cache-frontend.outputs.cache-hit != 'true'
         run: |
           cd frontend
           yarn install --immutable

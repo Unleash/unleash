@@ -369,7 +369,7 @@ export const PrimaryFeatureInfo: FC<{
             return (
                 <InlineFavoriteButton
                     size='small'
-                    aria-label='Remove from favourites'
+                    aria-label='Remove from favorites'
                     onClick={(e) => {
                         e.preventDefault();
                         onFavorite();
@@ -383,7 +383,7 @@ export const PrimaryFeatureInfo: FC<{
             <InlineFavoriteButtonInactive
                 className='show-row-hover'
                 size='small'
-                aria-label='Add to favourites'
+                aria-label='Add to favorites'
                 onClick={(e) => {
                     e.preventDefault();
                     onFavorite();

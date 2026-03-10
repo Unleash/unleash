@@ -785,7 +785,7 @@ const applyLastSeenAtConditions = (
     });
 };
 
-const applyFavouriteCondition = (
+const applyFavoriteCondition = (
     query: Knex.QueryBuilder,
     param: IQueryParam | undefined,
 ): void => {
@@ -821,7 +821,7 @@ const applyQueryParams = (
             ),
     );
     applyGenericQueryParams(query, genericConditions);
-    applyFavouriteCondition(query, favoriteCondition);
+    applyFavoriteCondition(query, favoriteCondition);
 
     applyStaleConditions(query, staleConditions);
     applyLastSeenAtConditions(query, lastSeenAtConditions);

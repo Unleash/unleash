@@ -193,6 +193,10 @@ export default class EdgeService {
     async deleteExpiredNonces() {
         await this.edgeTokenStore.cleanExpiredNonces();
     }
+
+    async deleteAllTokens() {
+        await this.edgeTokenStore.deleteAll();
+    }
 }
 
 const truncate = (projects: string[], max_length: number) =>

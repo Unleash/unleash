@@ -37,4 +37,8 @@ export class FakeEdgeTokenStore implements IEdgeTokenStore {
     delete(tokenValue: string): Promise<void> {
         return Promise.resolve(undefined);
     }
+
+    deleteAll(): Promise<void> {
+        return Promise.resolve(undefined);
+    }
 }

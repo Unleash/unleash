@@ -64,14 +64,7 @@ afterAll(async () => {
     }
 });
 afterEach(async () => {
-    const tokens = await stores.apiTokenStore.getAll();
-    const deleteAll = tokens.flatMap((t: IApiToken) => {
-        const promises: Promise<void>[] = [];
-        promises.push(stores.edgeTokenStore.delete(t.secret));
-        promises.push(stores.apiTokenStore.delete(t.secret));
-        return promises;
-    });
-    await Promise.all(deleteAll);
+    await edgeService.deleteAllTokens();
 });
 
 test('should only return valid tokens', async () => {

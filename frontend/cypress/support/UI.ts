@@ -32,6 +32,18 @@ const disableFeatureStrategiesProdGuard = () => {
     );
 };
 
+export const closeStrategyDragTooltip = () => {
+    cy.get('body').then(($body) => {
+        if ($body.text().includes('Decide the order evaluation')) {
+            cy.contains('Decide the order evaluation')
+                .closest('article')
+                .find('button[data-action]')
+                .first()
+                .click();
+        }
+    });
+};
+
 export const runBefore = () => {
     disableFeatureStrategiesProdGuard();
     disableActiveSplashScreens();
@@ -265,10 +277,9 @@ export const deleteFeatureStrategy_UI = (
     cy.visit(`/projects/${project}/features/${featureToggleName}`);
     cy.get('[data-testid=FEATURE_ENVIRONMENT_ACCORDION_development]')
         .first()
-        .click({ waitForAnimations: true });
-    cy.get('[data-testid=STRATEGY_REMOVE_MENU_BTN]')
-        .first()
-        .click({ waitForAnimations: true });
+        .click();
+    closeStrategyDragTooltip();
+    cy.get('[data-testid=STRATEGY_REMOVE_MENU_BTN]').first().click();
     cy.get('[data-testid=STRATEGY_FORM_REMOVE_ID]').first().click();
     if (!shouldWait) return cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
     else cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();

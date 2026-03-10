@@ -29,35 +29,28 @@ const StyledContainer = styled('div')({
 type ConstraintItemProps = {
     constraint: IConstraint;
     setConstraints: React.Dispatch<React.SetStateAction<IConstraint[]>>;
+    index: number;
 };
 
 const ConstraintItem = memo(
-    ({ constraint, setConstraints }: ConstraintItemProps) => {
-        const id = constraint[constraintId] as string;
+    ({ constraint, setConstraints, index }: ConstraintItemProps) => {
         const handleDelete = useCallback(
             () =>
                 setConstraints(
                     produce((draft) => {
-                        const index = draft.findIndex(
-                            (constraint) => constraint[constraintId] === id,
-                        );
-                        if (index !== -1) draft.splice(index, 1);
+                        draft.splice(index, 1);
                     }),
                 ),
-            [id, setConstraints],
+            [setConstraints, index],
         );
         const handleUpdate = useCallback(
             (updated: IConstraint) =>
                 setConstraints(
-                    produce((draft) =>
-                        draft.map((oldConstraint) =>
-                            oldConstraint[constraintId] === id
-                                ? updated
-                                : oldConstraint,
-                        ),
-                    ),
+                    produce((draft) => {
+                        draft.splice(index, 1, updated);
+                    }),
                 ),
-            [id, setConstraints],
+            [setConstraints, index],
         );
         return (
             <EditableConstraint
@@ -102,11 +95,12 @@ export const EditableConstraintsList = forwardRef<
     return (
         <StyledContainer>
             <ConstraintsList>
-                {constraints.map((constraint) => (
+                {constraints.map((constraint, index) => (
                     <ConstraintItem
                         key={constraint[constraintId]}
                         constraint={constraint}
                         setConstraints={setConstraints}
+                        index={index}
                     />
                 ))}
             </ConstraintsList>

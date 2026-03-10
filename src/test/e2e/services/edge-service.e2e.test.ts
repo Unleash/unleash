@@ -1,7 +1,7 @@
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import { createTestConfig } from '../../config/test-config.js';
-import { ApiTokenType, type IApiToken } from '../../../lib/types/model.js';
+import { ApiTokenType } from '../../../lib/types/model.js';
 import { DEFAULT_ENV } from '../../../lib/util/constants.js';
 import { addDays, subDays } from 'date-fns';
 import type ProjectService from '../../../lib/features/project/project-service.js';

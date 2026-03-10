@@ -159,5 +159,6 @@ export class EdgeTokenStore implements IEdgeTokenStore {
                 USING deleted_edge d
             WHERE t.secret = d.token_value
         `);
+        stop();
     }
 }

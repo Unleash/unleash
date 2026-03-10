@@ -12,7 +12,7 @@ import {
     TEST_AUDIT_USER,
 } from '../../../lib/types/index.js';
 import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService.js';
-import { EdgeService } from '../../../lib/services/index.js';
+import type { EdgeService } from '../../../lib/services/index.js';
 import { createTransactionalEdgeService } from '../../../lib/services/edge-service.js';
 
 let db: ITestDb;

@@ -260,18 +260,6 @@ export const ProjectFeatureToggles = ({
                           },
                       }),
                   ]),
-            columnHelper.accessor('createdBy', {
-                id: 'createdBy',
-                header: () => {
-                    return <span title='Created by'>By</span>;
-                },
-                cell: AvatarCell(onAvatarClick),
-                enableSorting: false,
-                meta: {
-                    width: '1%',
-                    align: 'center',
-                },
-            }),
 
             columnHelper.accessor('name', {
                 id: 'name',
@@ -290,6 +278,19 @@ export const ProjectFeatureToggles = ({
                 cell: DateCell,
                 meta: {
                     width: '1%',
+                },
+            }),
+
+            columnHelper.accessor('createdBy', {
+                id: 'createdBy',
+                header: () => {
+                    return <span title='Created by'>By</span>;
+                },
+                cell: AvatarCell(onAvatarClick),
+                enableSorting: false,
+                meta: {
+                    width: '1%',
+                    align: 'center',
                 },
             }),
 

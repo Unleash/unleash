@@ -456,7 +456,11 @@ const SecondaryFeatureInfo: FC<{
             condition={Boolean(description)}
             show={
                 <Box
-                    sx={(theme) => ({ display: 'flex', gap: theme.spacing(1) })}
+                    sx={(theme) => ({
+                        display: 'flex',
+                        gap: theme.spacing(1),
+                        paddingLeft: theme.spacing(3),
+                    })}
                 >
                     <CappedDescription
                         text={description}
@@ -501,7 +505,9 @@ export const createFeatureOverviewCell =
                     description={row.original.description || ''}
                     searchQuery={searchQuery}
                 />
-                <Tags tags={row.original.tags} onClick={onTagClick} />
+                <Box sx={(theme) => ({ paddingLeft: theme.spacing(3) })}>
+                    <Tags tags={row.original.tags} onClick={onTagClick} />
+                </Box>
             </Container>
         );
     };

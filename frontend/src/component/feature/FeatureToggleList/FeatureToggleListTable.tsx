@@ -146,13 +146,6 @@ export const FeatureToggleListTable: FC = () => {
                           meta: { width: 48 },
                       }),
                   ]),
-            columnHelper.accessor('createdBy', {
-                id: 'createdBy',
-                header: 'By',
-                cell: AvatarCell(),
-                meta: { width: '1%', align: 'center' },
-                enableSorting: false,
-            }),
             columnHelper.accessor('name', {
                 header: 'Name',
                 cell: createFeatureOverviewCell(
@@ -160,7 +153,13 @@ export const FeatureToggleListTable: FC = () => {
                     onFlagTypeClick,
                     inlineFavoriteInNameColumn ? onFavorite : undefined,
                 ),
-                meta: { width: '40%' },
+            }),
+            columnHelper.accessor('createdBy', {
+                id: 'createdBy',
+                header: 'By',
+                cell: AvatarCell(),
+                meta: { width: '1%', align: 'center' },
+                enableSorting: false,
             }),
             columnHelper.accessor('createdAt', {
                 header: 'Created',

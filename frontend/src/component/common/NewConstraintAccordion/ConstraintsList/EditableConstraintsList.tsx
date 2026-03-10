@@ -50,10 +50,10 @@ const ConstraintItem = memo(
             (updated: IConstraint) =>
                 setConstraints(
                     produce((draft) =>
-                        draft.map((constraint) =>
-                            constraint[constraintId] === id
+                        draft.map((oldConstraint) =>
+                            oldConstraint[constraintId] === id
                                 ? updated
-                                : constraint,
+                                : oldConstraint,
                         ),
                     ),
                 ),

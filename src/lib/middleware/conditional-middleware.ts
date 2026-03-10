@@ -34,10 +34,10 @@ export const conditionalMiddleware = (
  */
 export const requireFeatureEnabled = (
     flagResolver: Pick<IFlagResolver, 'isEnabled'>,
-    flagName: string,
+    flagName: IFlagKey,
 ): RequestHandler => {
     return (_req, res, next) => {
-        if (flagResolver.isEnabled(flagName as IFlagKey)) {
+        if (flagResolver.isEnabled(flagName)) {
             return next();
         }
         return res.sendStatus(404);

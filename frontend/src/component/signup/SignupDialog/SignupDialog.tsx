@@ -6,7 +6,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { type ComponentType, useEffect, useRef, useState } from 'react';
+import { type ComponentType, useEffect, useState } from 'react';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
@@ -233,14 +233,15 @@ export const SignupDialog = () => {
     });
     const [step, setStep] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const hydratedRef = useRef(false);
 
     const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
     const safeStep = Math.min(step, steps.length - 1);
     const currentStep = steps[safeStep];
 
+    const isVisible = signupRequired && steps.length > 0 && currentStep;
+
     useEffect(() => {
-        if (currentStep?.title) {
+        if (isVisible && currentStep?.title) {
             trackEvent('signup-dialog', {
                 props: {
                     eventType: 'view',
@@ -248,26 +249,9 @@ export const SignupDialog = () => {
                 },
             });
         }
-    }, [currentStep?.title, trackEvent]);
+    }, [isVisible, currentStep?.title, trackEvent]);
 
-    useEffect(() => {
-        if (!signupData || hydratedRef.current) return;
-
-        hydratedRef.current = true;
-
-        setData({
-            password: '',
-            name: signupData.name ?? '',
-            companyRole: signupData.companyRole ?? '',
-            companyName: signupData.companyName ?? '',
-            companyIsNA: signupData.companyIsNA ?? false,
-            productUpdatesEmailConsent:
-                signupData.productUpdatesEmailConsent ?? false,
-            inviteEmails: [],
-        });
-    }, [signupData]);
-
-    if (!signupRequired || steps.length === 0 || !currentStep) return null;
+    if (!isVisible) return null;
 
     const StepContent = currentStep.content;
 

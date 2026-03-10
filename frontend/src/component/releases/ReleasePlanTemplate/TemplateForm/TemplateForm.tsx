@@ -7,7 +7,7 @@ import { MilestoneList } from './MilestoneList/MilestoneList.tsx';
 import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
 
 const StyledInput = styled(Input)(({ theme }) => ({
-    maxWidth: theme.spacing(50),
+    width: '100%',
     fieldset: { border: 'none' },
     'label::first-letter': {
         textTransform: 'uppercase',
@@ -16,13 +16,7 @@ const StyledInput = styled(Input)(({ theme }) => ({
     padding: theme.spacing(0),
 }));
 
-const StyledDescriptionInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-    fieldset: { border: 'none' },
-    'label::first-letter': {
-        textTransform: 'uppercase',
-    },
-    marginBottom: theme.spacing(2),
+const StyledDescriptionInput = styled(StyledInput)(({ theme }) => ({
     padding: theme.spacing(2, 5, 1, 1.75),
 }));
 

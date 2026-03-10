@@ -4,13 +4,15 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { Alert, Box, styled, Typography } from '@mui/material';
+import { Alert, Box, Paper, styled, Typography } from '@mui/material';
 import { BillingDashboard } from './BillingDashboard/BillingDashboard.tsx';
 import { BillingHistory } from './BillingHistory/BillingHistory.tsx';
 import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
 import { BillingInvoices } from './BillingInvoices/BillingInvoices.tsx';
 import { BillingInfo } from './BillingInfo/BillingInfo.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
+import { ConnectedTrialUpsell } from './TrialUpsell/TrialUpsell.tsx';
+import { isTrialInstance } from 'utils/instanceTrial';
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -28,8 +30,13 @@ const StyledPageGrid = styled(Box)(({ theme }) => ({
 }));
 
 export const Billing = () => {
-    const { isBilling, refetchInstanceStatus, refresh, loading } =
-        useInstanceStatus();
+    const {
+        isBilling,
+        instanceStatus,
+        refetchInstanceStatus,
+        refresh,
+        loading,
+    } = useInstanceStatus();
     const { invoices } = useInvoices();
     const {
         uiConfig: { billing },
@@ -45,6 +52,33 @@ export const Billing = () => {
         };
         hardRefresh();
     }, [refetchInstanceStatus, refresh]);
+
+    if (
+        isTrialInstance(instanceStatus) &&
+        instanceStatus?.billing === 'pay-as-you-go' &&
+        invoices.length === 0
+    ) {
+        return (
+            <Box
+                sx={(theme) => ({
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: theme.spacing(4),
+                })}
+            >
+                <StyledHeader>Billing</StyledHeader>
+                <Paper
+                    elevation={1}
+                    sx={(theme) => ({
+                        padding: theme.spacing(2, 3),
+                        borderRadius: theme.shape.borderRadius,
+                    })}
+                >
+                    <ConnectedTrialUpsell />
+                </Paper>
+            </Box>
+        );
+    }
 
     if (eligibleForDetailedBilling) {
         return (

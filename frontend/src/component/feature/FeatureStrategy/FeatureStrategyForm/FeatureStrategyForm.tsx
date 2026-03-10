@@ -31,7 +31,7 @@ import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/Feature
 
 import { StrategyFormBody } from './StrategyFormBody.tsx';
 
-export interface IFeatureStrategyFormProps {
+export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
     feature: IFeatureToggle;
     environmentId: string;
     permission: string;
@@ -39,8 +39,8 @@ export interface IFeatureStrategyFormProps {
     onCancel?: () => void;
     loading: boolean;
     changeRequestsEnabled: boolean;
-    strategy: StrategyFormState;
-    setStrategy: React.Dispatch<React.SetStateAction<StrategyFormState>>;
+    strategy: T;
+    setStrategy: React.Dispatch<React.SetStateAction<T>>;
     errors: IFormErrors;
     canRenamePreexistingVariants?: boolean;
     Limit?: JSX.Element;
@@ -56,7 +56,7 @@ const StyledAlertBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-export const FeatureStrategyForm = ({
+export const FeatureStrategyForm = <T extends StrategyFormState>({
     feature,
     environmentId,
     permission,
@@ -70,12 +70,12 @@ export const FeatureStrategyForm = ({
     canRenamePreexistingVariants,
     Limit,
     disabled,
-}: IFeatureStrategyFormProps) => {
+}: IFeatureStrategyFormProps<T>) => {
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
-    const { strategyDefinition } = useStrategy(strategy?.name);
+    const { strategyDefinition } = useStrategy(strategy.name);
 
     useEffect(() => {
         trackEvent('new-strategy-form', {

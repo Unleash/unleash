@@ -7,6 +7,17 @@ import { featureStrategySchema } from './feature-strategy-schema.js';
 import { tagSchema } from './tag-schema.js';
 import { strategyVariantSchema } from './strategy-variant-schema.js';
 import { featureSearchEnvironmentSchema } from './feature-search-environment-schema.js';
+import { featureEnvironmentSchema } from './feature-environment-schema.js';
+import { releasePlanSchema } from './release-plan-schema.js';
+import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
+import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
+import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
+import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
+import { transitionConditionSchema } from './transition-condition-schema.js';
+import { releasePlanSafeguardSchema } from './release-plan-safeguard-schema.js';
+import { featureEnvironmentSafeguardSchema } from './feature-environment-safeguard-schema.js';
+import { metricQuerySchema } from './metric-query-schema.js';
+import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
 export const featureSearchResponseSchema = {
     $id: '#/components/schemas/featureSearchResponseSchema',
@@ -203,12 +214,23 @@ export const featureSearchResponseSchema = {
         schemas: {
             constraintSchema,
             featureSearchEnvironmentSchema,
+            featureEnvironmentSchema,
             featureStrategySchema,
             strategyVariantSchema,
             overrideSchema,
             parametersSchema,
             variantSchema,
             tagSchema,
+            releasePlanSchema,
+            releasePlanMilestoneSchema,
+            releasePlanMilestoneStrategySchema,
+            createFeatureStrategySchema,
+            createStrategyVariantSchema,
+            transitionConditionSchema,
+            releasePlanSafeguardSchema,
+            featureEnvironmentSafeguardSchema,
+            metricQuerySchema,
+            safeguardTriggerConditionSchema,
         },
     },
 } as const;

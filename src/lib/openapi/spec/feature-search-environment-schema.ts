@@ -11,6 +11,10 @@ import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-str
 import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 import { transitionConditionSchema } from './transition-condition-schema.js';
+import { releasePlanSafeguardSchema } from './release-plan-safeguard-schema.js';
+import { featureEnvironmentSafeguardSchema } from './feature-environment-safeguard-schema.js';
+import { metricQuerySchema } from './metric-query-schema.js';
+import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
 export const featureSearchEnvironmentSchema = {
     $id: '#/components/schemas/featureSearchEnvironmentSchema',
@@ -47,6 +51,10 @@ export const featureSearchEnvironmentSchema = {
             releasePlanMilestoneSchema,
             releasePlanMilestoneStrategySchema,
             transitionConditionSchema,
+            releasePlanSafeguardSchema,
+            featureEnvironmentSafeguardSchema,
+            metricQuerySchema,
+            safeguardTriggerConditionSchema,
             createFeatureStrategySchema,
             createStrategyVariantSchema,
         },

@@ -19,6 +19,10 @@ import { releasePlanSchema } from './release-plan-schema.js';
 import { releasePlanMilestoneSchema } from './release-plan-milestone-schema.js';
 import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-strategy-schema.js';
 import { transitionConditionSchema } from './transition-condition-schema.js';
+import { releasePlanSafeguardSchema } from './release-plan-safeguard-schema.js';
+import { featureEnvironmentSafeguardSchema } from './feature-environment-safeguard-schema.js';
+import { metricQuerySchema } from './metric-query-schema.js';
+import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
 export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
@@ -210,6 +214,10 @@ export const projectOverviewSchema = {
             releasePlanMilestoneSchema,
             releasePlanMilestoneStrategySchema,
             transitionConditionSchema,
+            releasePlanSafeguardSchema,
+            featureEnvironmentSafeguardSchema,
+            metricQuerySchema,
+            safeguardTriggerConditionSchema,
             projectStatsSchema,
             createFeatureNamingPatternSchema,
             featureTypeCountSchema,

@@ -295,13 +295,19 @@ export const EditableConstraint: FC<Props> = ({
         legalValueData,
         invertedDisabled,
     } = useEditableConstraint(constraint, onUpdate);
-    const editingShouldBeOpen =
+    let editingShouldBeOpen = false;
+    if (
         isSingleValueConstraint(localConstraint) &&
-        isRegexConstraint(localConstraint) &&
-        !localConstraint.value;
+        isRegexConstraint(localConstraint)
+    ) {
+        const [isValid] = localConstraint.value
+            ? validator(localConstraint.value)
+            : [true];
+        editingShouldBeOpen = !localConstraint.value || !isValid;
+    }
     const [editingOpen, setEditingOpen] = useState(editingShouldBeOpen);
     useEffect(() => {
-        // open the editor when regex value is empty,
+        // open the editor when regex value is empty or invalid,
         // even if it was closed before by the user
         if (editingShouldBeOpen) setEditingOpen(true);
     }, [editingShouldBeOpen]);

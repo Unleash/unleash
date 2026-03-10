@@ -32,7 +32,8 @@ export const useStrategyChangesFromRequest = (
         const change = feature?.changes.find((change) => {
             if (
                 change.action === 'updateStrategy' ||
-                change.action === 'deleteStrategy'
+                change.action === 'deleteStrategy' ||
+                change.action === 'updateMilestoneStrategy'
             ) {
                 return change.payload.id === strategyId;
             }

@@ -16,6 +16,7 @@ import {
     type EditableMultiValueConstraint,
     type EditableSingleValueConstraint,
     isMultiValueConstraint,
+    invertedToggleDisabled,
 } from './editable-constraint-type.js';
 import { difference, union } from './set-functions.js';
 
@@ -162,7 +163,7 @@ export const constraintReducer = (
             return addValue(action.payload);
         }
         case 'toggle inverted operator':
-            if (isRegexOperator(state.operator)) {
+            if (invertedToggleDisabled(state)) {
                 return state;
             }
             return { ...state, inverted: !state.inverted };

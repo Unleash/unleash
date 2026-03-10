@@ -133,7 +133,9 @@ export const LegacyReleasePlanTemplateAddStrategyForm = ({
     const { segments: allSegments } = useSegments();
     const { segments: assignableSegments = [] } = useAssignableSegments();
     const [segments, setSegments] = useState<ISegment[]>([]);
-    const { strategyDefinition } = useStrategy(strategy?.strategyName);
+    const { strategyDefinition } = useStrategy(
+        strategy?.name || strategy?.strategyName,
+    );
     const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
     const errors = useFormErrors();
     const showVariants = Boolean(
@@ -225,6 +227,9 @@ export const LegacyReleasePlanTemplateAddStrategyForm = ({
         onAddUpdateStrategy(currentStrategy);
     };
 
+    const currentStrategyName =
+        currentStrategy.name || currentStrategy.strategyName || '';
+
     return (
         <FormTemplate
             modal
@@ -235,8 +240,8 @@ export const LegacyReleasePlanTemplateAddStrategyForm = ({
         >
             <StyledHeaderBox>
                 <StyledTitle>
-                    {formatStrategyName(currentStrategy.strategyName || '')}
-                    {currentStrategy.strategyName === 'flexibleRollout' && (
+                    {formatStrategyName(currentStrategyName)}
+                    {currentStrategyName === 'flexibleRollout' && (
                         <Badge color='success' sx={{ marginLeft: '1rem' }}>
                             {currentStrategy.parameters?.rollout}%
                         </Badge>

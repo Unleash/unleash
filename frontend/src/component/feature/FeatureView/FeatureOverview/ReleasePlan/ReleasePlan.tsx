@@ -21,8 +21,6 @@ import { ResumeAutomationChangeRequestDialog } from './ChangeRequest/ResumeAutom
 import type {
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
-    IChangeRequestChangeSafeguard,
-    IChangeRequestDeleteSafeguard,
 } from 'component/changeRequest/changeRequest.types';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
@@ -31,17 +29,6 @@ import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgr
 import { DeleteProgressionDialog } from './DeleteProgressionDialog.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestoneItem } from './ReleasePlanMilestoneItem/ReleasePlanMilestoneItem.tsx';
-import Add from '@mui/icons-material/Add';
-
-import { StyledActionButton } from './ReleasePlanMilestoneItem/StyledActionButton.tsx';
-import {
-    SafeguardForm,
-    useSafeguardForm,
-} from './SafeguardForm/SafeguardForm.tsx';
-import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguardsApi';
-import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
-import { DeleteSafeguardDialog } from './DeleteSafeguardDialog.tsx';
-import { Badge } from 'component/common/Badge/Badge';
 import { formatDateYMDHMS } from 'utils/formatDate';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -84,44 +71,13 @@ const StyledHeaderDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledBody = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'border',
-})<{ border: 'solid' | 'dashed' | null }>(({ theme, border }) => ({
+const StyledBody = styled('div')({
     display: 'flex',
     flexDirection: 'column',
-    ...(border && {
-        border: `1px ${border} ${theme.palette.neutral.border}`,
-        borderRadius: theme.shape.borderRadiusMedium,
-    }),
-}));
-
-const StyledAddSafeguard = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'border',
-})<{ border: 'solid' | 'dashed' | null }>(({ theme, border }) => ({
-    display: 'flex',
-    borderBottom: `1px ${border || 'dashed'} ${theme.palette.neutral.border}`,
-    padding: theme.spacing(0.25, 0.25),
-}));
-
-const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    justifyContent: 'space-between',
-    width: '100%',
-    paddingRight: theme.spacing(2),
-}));
+});
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     margin: theme.spacing(1, 0),
-}));
-
-const StyledMilestones = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'safeguards',
-})<{ safeguards: boolean }>(({ theme, safeguards }) => ({
-    ...(safeguards && {
-        padding: theme.spacing(1.5, 1.5),
-    }),
 }));
 
 const StyledResumeMilestoneProgressions = styled(Link)(({ theme }) => ({
@@ -154,7 +110,6 @@ export const ReleasePlan = ({
         featureName,
         environment,
         milestones,
-        safeguards,
     } = plan;
 
     const projectId = useRequiredPathParam('projectId');
@@ -165,11 +120,6 @@ export const ReleasePlan = ({
         resumeMilestoneProgressions,
         loading: milestoneProgressionLoading,
     } = useMilestoneProgressionsApi();
-    const {
-        createOrUpdateSafeguard,
-        deleteSafeguard,
-        loading: safeguardLoading,
-    } = useSafeguardsApi();
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
 
@@ -186,10 +136,6 @@ export const ReleasePlan = ({
               type: 'deleteMilestoneProgression';
               sourceMilestoneId: string;
           }
-        | {
-              type: 'deleteSafeguard';
-              safeguardId: string;
-          }
         | null
     >(null);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
@@ -202,40 +148,6 @@ export const ReleasePlan = ({
     const pausedAt = milestones.find(
         (milestone) => milestone.pausedAt,
     )?.pausedAt;
-
-    const getPendingSafeguardAction = ():
-        | IChangeRequestChangeSafeguard['action']
-        | IChangeRequestDeleteSafeguard['action']
-        | null => {
-        if (!pendingChangeRequests) return null;
-
-        for (const changeRequest of pendingChangeRequests) {
-            if (changeRequest.environment !== environment) continue;
-
-            const featureInChangeRequest = changeRequest.features.find(
-                (featureItem) => featureItem.name === featureName,
-            );
-            if (!featureInChangeRequest) continue;
-
-            const safeguardChange = featureInChangeRequest.changes.find(
-                (
-                    change,
-                ): change is
-                    | IChangeRequestChangeSafeguard
-                    | IChangeRequestDeleteSafeguard =>
-                    (change.action === 'changeSafeguard' &&
-                        change.payload.planId === id) ||
-                    (change.action === 'deleteSafeguard' &&
-                        change.payload.planId === id),
-            );
-
-            if (safeguardChange) {
-                return safeguardChange.action;
-            }
-        }
-
-        return null;
-    };
 
     const getPendingProgressionChange = (sourceMilestoneId: string) => {
         if (!pendingChangeRequests) return null;
@@ -273,17 +185,11 @@ export const ReleasePlan = ({
         return null;
     };
     const milestoneProgressionsEnabled = useUiFlag('milestoneProgression');
-    const safeguardsEnabled = useUiFlag('safeguards');
     const [progressionFormOpenIndex, setProgressionFormOpenIndex] = useState<
         number | null
     >(null);
     const [milestoneToDeleteProgression, setMilestoneToDeleteProgression] =
         useState<IReleasePlanMilestone | null>(null);
-
-    const [safeguardDeleteDialogOpen, setSafeguardDeleteDialogOpen] =
-        useState(false);
-    const { safeguardFormOpen, setSafeguardFormOpen } =
-        useSafeguardForm(safeguards);
 
     const onChangeRequestConfirm = async () => {
         if (!changeRequestAction) return;
@@ -324,17 +230,6 @@ export const ReleasePlan = ({
                     action: 'deleteMilestoneProgression',
                     payload: {
                         sourceMilestone: changeRequestAction.sourceMilestoneId,
-                    },
-                });
-                break;
-
-            case 'deleteSafeguard':
-                await addChange(projectId, environment, {
-                    feature: featureName,
-                    action: 'deleteSafeguard',
-                    payload: {
-                        planId: plan.id,
-                        safeguardId: changeRequestAction.safeguardId,
                     },
                 });
                 break;
@@ -517,101 +412,6 @@ export const ReleasePlan = ({
         (milestone) => milestone.id === activeMilestoneId,
     );
 
-    const handleSafeguardSubmit = async (data: CreateSafeguardSchema) => {
-        if (isChangeRequestConfigured(environment)) {
-            try {
-                await addChange(projectId, environment, {
-                    feature: featureName,
-                    action: 'changeSafeguard' as const,
-                    payload: {
-                        planId: id,
-                        safeguard: data,
-                    },
-                });
-                await refetchChangeRequests();
-                setToastData({
-                    type: 'success',
-                    text: 'Added to draft',
-                });
-                onAutomationChange?.();
-            } catch (error: unknown) {
-                setToastApiError(formatUnknownError(error));
-            }
-        } else {
-            try {
-                await createOrUpdateSafeguard({
-                    projectId,
-                    featureName,
-                    environment,
-                    planId: id,
-                    body: data,
-                });
-                setToastData({
-                    type: 'success',
-                    text: 'Safeguard added successfully',
-                });
-                onAutomationChange?.();
-            } catch (error: unknown) {
-                setToastApiError(formatUnknownError(error));
-            }
-        }
-    };
-
-    const handleSafeguardDelete = () => {
-        if (isChangeRequestConfigured(environment) && safeguards.length > 0) {
-            setChangeRequestAction({
-                type: 'deleteSafeguard',
-                safeguardId: safeguards[0].id,
-            });
-        } else {
-            setSafeguardDeleteDialogOpen(true);
-        }
-    };
-
-    const onSafeguardDeleteConfirm = async () => {
-        if (safeguards.length === 0 || safeguardLoading) return;
-
-        try {
-            await deleteSafeguard({
-                projectId,
-                featureName,
-                environment,
-                planId: id,
-                safeguardId: safeguards[0].id,
-            });
-            setToastData({
-                type: 'success',
-                text: 'Safeguard deleted successfully',
-            });
-            onAutomationChange?.();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        } finally {
-            setSafeguardDeleteDialogOpen(false);
-        }
-    };
-
-    const handleCloseSafeguardDeleteDialog = () => {
-        if (!safeguardLoading) {
-            setSafeguardDeleteDialogOpen(false);
-        }
-    };
-
-    const safeguardBorder =
-        safeguardsEnabled && safeguards
-            ? safeguards[0]
-                ? 'solid'
-                : 'dashed'
-            : null;
-
-    const pendingSafeguardAction = getPendingSafeguardAction();
-    const safeguardBadge =
-        pendingSafeguardAction === 'deleteSafeguard' ? (
-            <Badge color='error'>Deleted in draft</Badge>
-        ) : pendingSafeguardAction === 'changeSafeguard' ? (
-            <Badge color='warning'>Modified in draft</Badge>
-        ) : undefined;
-
     return (
         <StyledContainer>
             <StyledHeader>
@@ -662,65 +462,36 @@ export const ReleasePlan = ({
                 </StyledAlert>
             ) : null}
 
-            <StyledBody border={safeguardBorder}>
-                {onAutomationChange && safeguardsEnabled ? (
-                    <StyledAddSafeguard border={safeguardBorder}>
-                        {safeguardFormOpen ? (
-                            <SafeguardForm
-                                safeguard={safeguards?.[0]}
-                                onSubmit={handleSafeguardSubmit}
-                                onCancel={() => setSafeguardFormOpen(false)}
-                                onDelete={handleSafeguardDelete}
-                                environment={environment}
-                                featureId={featureName}
-                                badge={safeguardBadge}
-                            />
-                        ) : (
-                            <StyledAddSafeguardContent>
-                                <StyledActionButton
-                                    onClick={() => setSafeguardFormOpen(true)}
-                                    color='primary'
-                                    startIcon={<Add />}
-                                    sx={{ m: 2 }}
-                                >
-                                    Add safeguard
-                                </StyledActionButton>
-                                {safeguardBadge}
-                            </StyledAddSafeguardContent>
-                        )}
-                    </StyledAddSafeguard>
-                ) : null}
-                <StyledMilestones safeguards={safeguardsEnabled}>
-                    {milestones.map((milestone, index) => (
-                        <ReleasePlanMilestoneItem
-                            key={milestone.id}
-                            milestone={milestone}
-                            index={index}
-                            milestones={milestones}
-                            activeMilestoneId={activeMilestoneId}
-                            activeIndex={activeIndex}
-                            environmentIsDisabled={environmentIsDisabled}
-                            readonly={readonly}
-                            milestoneProgressionsEnabled={
-                                milestoneProgressionsEnabled
-                            }
-                            progressionFormOpenIndex={progressionFormOpenIndex}
-                            onSetProgressionFormOpenIndex={
-                                setProgressionFormOpenIndex
-                            }
-                            onStartMilestone={onStartMilestone}
-                            onDeleteProgression={handleDeleteProgression}
-                            onAddToChangeRequest={handleAddToChangeRequest}
-                            getPendingProgressionChange={
-                                getPendingProgressionChange
-                            }
-                            projectId={projectId}
-                            environment={environment}
-                            featureName={featureName}
-                            onUpdate={onAutomationChange}
-                        />
-                    ))}
-                </StyledMilestones>
+            <StyledBody>
+                {milestones.map((milestone, index) => (
+                    <ReleasePlanMilestoneItem
+                        key={milestone.id}
+                        milestone={milestone}
+                        index={index}
+                        milestones={milestones}
+                        activeMilestoneId={activeMilestoneId}
+                        activeIndex={activeIndex}
+                        environmentIsDisabled={environmentIsDisabled}
+                        readonly={readonly}
+                        milestoneProgressionsEnabled={
+                            milestoneProgressionsEnabled
+                        }
+                        progressionFormOpenIndex={progressionFormOpenIndex}
+                        onSetProgressionFormOpenIndex={
+                            setProgressionFormOpenIndex
+                        }
+                        onStartMilestone={onStartMilestone}
+                        onDeleteProgression={handleDeleteProgression}
+                        onAddToChangeRequest={handleAddToChangeRequest}
+                        getPendingProgressionChange={
+                            getPendingProgressionChange
+                        }
+                        projectId={projectId}
+                        environment={environment}
+                        featureName={featureName}
+                        onUpdate={onAutomationChange}
+                    />
+                ))}
             </StyledBody>
             <ReleasePlanRemoveDialog
                 plan={plan}
@@ -747,12 +518,6 @@ export const ReleasePlan = ({
                     isDeleting={milestoneProgressionLoading}
                 />
             )}
-            <DeleteSafeguardDialog
-                open={safeguardDeleteDialogOpen}
-                onClose={handleCloseSafeguardDeleteDialog}
-                onConfirm={onSafeguardDeleteConfirm}
-                isDeleting={safeguardLoading}
-            />
             <ResumeAutomationChangeRequestDialog
                 isOpen={resumeDialogOpen}
                 onConfirm={handleResumeDialogConfirm}

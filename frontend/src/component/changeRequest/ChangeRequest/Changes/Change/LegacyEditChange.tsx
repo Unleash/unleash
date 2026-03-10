@@ -18,7 +18,9 @@ import { comparisonModerator } from 'component/feature/FeatureStrategy/featureSt
 import type {
     ChangeRequestAddStrategy,
     ChangeRequestEditStrategy,
+    ChangeRequestUpdateMilestoneStrategy,
     IChangeRequestAddStrategy,
+    IChangeRequestUpdateMilestoneStrategy,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
@@ -29,7 +31,10 @@ import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 
 interface IEditChangeProps {
-    change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;
+    change:
+        | IChangeRequestAddStrategy
+        | IChangeRequestUpdateStrategy
+        | IChangeRequestUpdateMilestoneStrategy;
     changeRequestId: number;
     featureId: string;
     environment: string;
@@ -39,7 +44,10 @@ interface IEditChangeProps {
 }
 
 const addIdSymbolToConstraints = (
-    strategy?: ChangeRequestAddStrategy | ChangeRequestEditStrategy,
+    strategy?:
+        | ChangeRequestAddStrategy
+        | ChangeRequestEditStrategy
+        | ChangeRequestUpdateMilestoneStrategy,
 ) => {
     if (!strategy) return;
 
@@ -75,10 +83,6 @@ export const LegacyEditChange = ({
 
     const [segments, setSegments] = useState<ISegment[]>(strategySegments);
 
-    const strategyDefinition = {
-        parameters: change.payload.parameters,
-        name: change.payload.name,
-    };
     const { setToastData, setToastApiError } = useToast();
     const errors = useFormErrors();
     const { uiConfig } = useUiConfig();
@@ -133,10 +137,6 @@ export const LegacyEditChange = ({
             setToastApiError(formatUnknownError(error));
         }
     };
-
-    if (!strategyDefinition) {
-        return null;
-    }
 
     if (!data) return null;
 

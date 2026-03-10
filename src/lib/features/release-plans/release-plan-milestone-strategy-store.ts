@@ -72,7 +72,6 @@ const toRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
 
 const toUpdateRow = (item: Partial<MilestoneStrategyConfigUpdate>) => {
     return {
-        milestone_id: item.milestoneId,
         sort_order: item.sortOrder,
         title: item.title,
         parameters: item.parameters ?? {},

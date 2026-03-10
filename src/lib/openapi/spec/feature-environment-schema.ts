@@ -10,6 +10,9 @@ import { releasePlanMilestoneStrategySchema } from './release-plan-milestone-str
 import { createFeatureStrategySchema } from './create-feature-strategy-schema.js';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema.js';
 import { transitionConditionSchema } from './transition-condition-schema.js';
+import { featureEnvironmentSafeguardSchema } from './feature-environment-safeguard-schema.js';
+import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
+import { metricQuerySchema } from './metric-query-schema.js';
 
 export const featureEnvironmentSchema = {
     $id: '#/components/schemas/featureEnvironmentSchema',
@@ -120,6 +123,13 @@ export const featureEnvironmentSchema = {
                 $ref: '#/components/schemas/releasePlanSchema',
             },
         },
+        safeguards: {
+            type: 'array',
+            description: 'Safeguards for this feature environment',
+            items: {
+                $ref: '#/components/schemas/featureEnvironmentSafeguardSchema',
+            },
+        },
         yes: {
             type: 'integer',
             description:
@@ -148,6 +158,9 @@ export const featureEnvironmentSchema = {
             createFeatureStrategySchema,
             createStrategyVariantSchema,
             transitionConditionSchema,
+            featureEnvironmentSafeguardSchema,
+            safeguardTriggerConditionSchema,
+            metricQuerySchema,
         },
     },
 } as const;

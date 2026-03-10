@@ -97,7 +97,7 @@ export const createFeature_UI = (
     const clicked = cy
         .get("[data-testid='FORM_CREATE_BUTTON']")
         .first()
-        .click(uiOpts);
+        .click({ ...uiOpts, waitForAnimations: true });
     if (shouldWait) {
         return cy.wait('@createFeature');
     }

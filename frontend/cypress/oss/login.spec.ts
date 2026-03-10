@@ -55,4 +55,23 @@ describe('login', { testIsolation: true }, () => {
         cy.visit('/');
         cy.url().should('eq', `${baseUrl}/playground`);
     });
+
+    it('error page Go home button redirects to default page', () => {
+        cy.visit('/insights');
+        cy.window().then((win) => {
+            win.sessionStorage.clear(); // not localStorage
+            win.location.reload();
+        });
+        cy.visit('/insights');
+        cy.url().should('contain', `${baseUrl}/login`);
+        cy.do_login();
+        cy.contains("Ooops. That's a page we haven't toggled on yet.").should(
+            'be.visible',
+        );
+        cy.get('button').contains('Go home').click();
+        cy.url().should('not.contain', `insights`);
+        cy.contains("Ooops. That's a page we haven't toggled on yet.").should(
+            'not.be.visible',
+        );
+    });
 });

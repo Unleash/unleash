@@ -1,4 +1,5 @@
-import { type FC, useState } from 'react';
+import type { FC } from 'react';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { Button, Collapse, styled, Typography } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -109,7 +110,11 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     featureName,
     onAddChart,
 }) => {
-    const [expanded, setExpanded] = useState(false);
+    const [impactMetricsAccordionState, setImpactMetricsAccordionState] =
+        useLocalStorageState<'open' | 'closed'>(
+            'impact-metrics-accordion:expanded',
+            'closed',
+        );
     const { trackEvent } = usePlausibleTracker();
 
     const { impactMetrics } = useFeatureImpactMetrics({
@@ -117,6 +122,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
         featureName,
     });
 
+    const expanded = impactMetricsAccordionState === 'open';
     const chartCount = impactMetrics.configs.length;
     const hasMetrics = chartCount > 0;
 
@@ -126,7 +132,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 props: { eventType: 'impact-accordion-opened' },
             });
         }
-        setExpanded(!expanded);
+        setImpactMetricsAccordionState(expanded ? 'closed' : 'open');
     };
     const onHeaderKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -230,7 +236,12 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 <StyledExpandedContent>
                     <StyledChartRow>
                         {impactMetrics.configs.map((config) => (
-                            <CompactChartCard key={config.id} config={config} />
+                            <CompactChartCard
+                                key={config.id}
+                                config={config}
+                                projectId={projectId}
+                                featureName={featureName}
+                            />
                         ))}
                     </StyledChartRow>
                 </StyledExpandedContent>

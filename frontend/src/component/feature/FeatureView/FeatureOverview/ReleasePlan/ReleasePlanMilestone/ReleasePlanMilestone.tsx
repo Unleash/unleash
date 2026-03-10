@@ -109,6 +109,7 @@ interface IReleasePlanMilestoneProps {
     previousMilestoneStatus?: MilestoneStatus;
     projectId?: string;
     environmentId: string;
+    featureId: string;
 }
 
 export const ReleasePlanMilestone = ({
@@ -120,6 +121,7 @@ export const ReleasePlanMilestone = ({
     previousMilestoneStatus,
     projectId,
     environmentId,
+    featureId,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(false);
     const canEditStrategies = useUiFlag('updateMilestoneStrategy');
@@ -237,7 +239,9 @@ export const ReleasePlanMilestone = ({
 
                                 {canEditStrategies ? (
                                     <ProjectEnvironmentStrategyDraggableItem
+                                        readonly={readonly}
                                         scope='milestone'
+                                        featureId={featureId}
                                         strategy={{
                                             ...strategy,
                                             name:

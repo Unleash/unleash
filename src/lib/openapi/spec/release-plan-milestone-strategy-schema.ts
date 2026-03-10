@@ -10,7 +10,7 @@ export const releasePlanMilestoneStrategySchema = {
     description:
         'Schema representing the creation of a release plan milestone strategy.',
     type: 'object',
-    required: ['id', 'milestoneId', 'sortOrder', 'strategyName'],
+    required: ['id', 'milestoneId', 'sortOrder', 'strategyName'], // todo(v8) remove strategyName requirement; add `name` if not there
     properties: {
         id: {
             type: 'string',
@@ -27,7 +27,11 @@ export const releasePlanMilestoneStrategySchema = {
         },
         sortOrder: createFeatureStrategySchema.properties.sortOrder,
         title: createFeatureStrategySchema.properties.title,
-        strategyName: createFeatureStrategySchema.properties.name,
+        name: createFeatureStrategySchema.properties.name,
+        strategyName: {
+            ...createFeatureStrategySchema.properties.name,
+            deprecated: true,
+        },
         parameters: createFeatureStrategySchema.properties.parameters,
         constraints: createFeatureStrategySchema.properties.constraints,
         variants: createFeatureStrategySchema.properties.variants,

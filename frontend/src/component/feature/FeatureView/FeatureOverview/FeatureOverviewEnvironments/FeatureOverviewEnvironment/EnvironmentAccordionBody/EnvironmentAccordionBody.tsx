@@ -28,6 +28,7 @@ import {
     strategyBackground,
 } from 'component/common/StrategyList/StrategyListItem';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
+import { Safeguard } from './Safeguard.tsx';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -72,6 +73,8 @@ export const EnvironmentAccordionBody = ({
         featureEnvironment?.name,
     );
     const { trackEvent } = usePlausibleTracker();
+    const safeguardsEnabled = useUiFlag('safeguards');
+    const featureEnvSafeguards = useUiFlag('featureEnvSafeguards');
 
     const [dragItem, setDragItem] = useState<{
         id: string;
@@ -212,6 +215,8 @@ export const EnvironmentAccordionBody = ({
     const paginateStrategies =
         strategies.length >= 50 && manyStrategiesPagination;
 
+    const firstPlan = releasePlans[0];
+
     return (
         <StyledAccordionBodyInnerContainer>
             {paginateStrategies ? (
@@ -222,6 +227,14 @@ export const EnvironmentAccordionBody = ({
                         leveraging constraints or segments.
                     </Alert>
                 </AlertContainer>
+            ) : null}
+            {safeguardsEnabled && (firstPlan || featureEnvSafeguards) ? (
+                <Safeguard
+                    plan={firstPlan}
+                    environmentName={featureEnvironment.name}
+                    featureId={featureId}
+                    onSafeguardChange={refetch}
+                />
             ) : null}
             <StrategyList>
                 {releasePlans.map((plan) => (
@@ -243,6 +256,7 @@ export const EnvironmentAccordionBody = ({
 
                                 <ProjectEnvironmentStrategyDraggableItem
                                     strategy={strategy}
+                                    featureId={featureId}
                                     index={index + pageIndex * pageSize}
                                     environmentName={featureEnvironment.name}
                                     otherEnvironments={otherEnvironments}
@@ -259,6 +273,7 @@ export const EnvironmentAccordionBody = ({
                                 ) : null}
 
                                 <ProjectEnvironmentStrategyDraggableItem
+                                    featureId={featureId}
                                     strategy={strategy}
                                     index={index}
                                     environmentName={featureEnvironment.name}

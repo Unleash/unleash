@@ -51,7 +51,7 @@ declare namespace Cypress {
 
         // SEGMENTS
         createSegment_UI(segmentName: string): Chainable;
-        deleteSegment_UI(segmentName: string, id: string): Chainable;
+        deleteSegment_UI(segmentName: string): Chainable;
 
         // STRATEGY
         addFlexibleRolloutStrategyToFeature_UI(

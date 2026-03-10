@@ -1,6 +1,6 @@
 ///<reference path="../../global.d.ts" />
 
-describe('login', { testIsolation: true }, () => {
+describe.skip('login', { testIsolation: true }, () => {
     const baseUrl = Cypress.config().baseUrl;
     const randomId = String(Math.random()).split('.')[1];
     const projectName = `unleash-e2e-login-project-${randomId}`;

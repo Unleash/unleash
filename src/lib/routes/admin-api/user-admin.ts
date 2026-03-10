@@ -235,7 +235,7 @@ export default class UserAdminController extends Controller {
                         },
                     ],
                     responses: {
-                        200: createResponseSchema('usersSchema'),
+                        200: createResponseSchema('usersSearchSchema'),
                         ...getStandardResponses(401),
                     },
                 }),
@@ -531,11 +531,12 @@ export default class UserAdminController extends Controller {
         if (this.flagResolver.isEnabled('anonymiseEventLog')) {
             users = this.anonymiseUsers(users);
         }
+        const response = users.map(({ isAPI, ...u }) => u);
         this.openApiService.respondWithValidation(
             200,
             res,
             usersSearchSchema.$id,
-            serializeDates(users.map(({ isAPI, ...u }) => u)),
+            serializeDates(response),
         );
     }
 

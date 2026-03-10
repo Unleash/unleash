@@ -11,12 +11,17 @@ import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import {
+    type IChangeSchema,
+    useChangeRequestApi,
+} from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { comparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import type {
     ChangeRequestAddStrategy,
     ChangeRequestEditStrategy,
+    ChangeRequestUpdateMilestoneStrategy,
     IChangeRequestAddStrategy,
+    IChangeRequestUpdateMilestoneStrategy,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
@@ -27,7 +32,10 @@ import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { LegacyEditChange } from './LegacyEditChange.tsx';
 
 interface IEditChangeProps {
-    change: IChangeRequestAddStrategy | IChangeRequestUpdateStrategy;
+    change:
+        | IChangeRequestAddStrategy
+        | IChangeRequestUpdateStrategy
+        | IChangeRequestUpdateMilestoneStrategy;
     changeRequestId: number;
     featureId: string;
     environment: string;
@@ -37,7 +45,10 @@ interface IEditChangeProps {
 }
 
 const addIdSymbolToConstraints = (
-    strategy?: ChangeRequestAddStrategy | ChangeRequestEditStrategy,
+    strategy?:
+        | ChangeRequestAddStrategy
+        | ChangeRequestEditStrategy
+        | ChangeRequestUpdateMilestoneStrategy,
 ) => {
     if (!strategy) return;
 
@@ -98,13 +109,14 @@ const NewEditChange = ({
         }
     }, [feature]);
 
+    const payload: IChangeSchema = {
+        action: change.action,
+        feature: featureId,
+        payload: strategy,
+    };
     const onInternalSubmit = async () => {
         try {
-            await editChange(projectId, changeRequestId, change.id, {
-                action: strategy.id ? 'updateStrategy' : 'addStrategy',
-                feature: featureId,
-                payload: strategy,
-            });
+            await editChange(projectId, changeRequestId, change.id, payload);
             onSubmit();
             setToastData({
                 text: 'Change updated',
@@ -137,7 +149,7 @@ const NewEditChange = ({
                         projectId,
                         changeRequestId,
                         change.id,
-                        strategy,
+                        payload,
                         unleashUrl,
                     )
                 }
@@ -176,7 +188,7 @@ export const formatUpdateStrategyApiCode = (
     projectId: string,
     changeRequestId: number,
     changeId: number,
-    strategy: Partial<IFeatureStrategy>,
+    strategy: IChangeSchema,
     unleashUrl?: string,
 ): string => {
     if (!unleashUrl) {

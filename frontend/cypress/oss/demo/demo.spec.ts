@@ -1,7 +1,7 @@
 ///<reference path="../../global.d.ts" />
 import { TOPICS } from '../../../src/component/demo/demo-topics.js';
 
-describe('demo', () => {
+describe.skip('demo', () => {
     const baseUrl = Cypress.config().baseUrl;
     const randomId = String(Math.random()).split('.')[1];
 

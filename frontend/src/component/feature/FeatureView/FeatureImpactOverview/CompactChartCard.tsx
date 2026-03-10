@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { Link } from 'react-router-dom';
 import { styled, Tooltip, Typography } from '@mui/material';
 import ShieldOutlined from '@mui/icons-material/ShieldOutlined';
 import { ImpactMetricsChart } from 'component/impact-metrics/ImpactMetricsChart';
@@ -6,13 +7,16 @@ import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/use
 import { formatLargeNumbers } from 'component/impact-metrics/metricsFormatters';
 import type { ImpactMetricsConfigSchema } from 'openapi';
 
-const StyledCard = styled('div')(({ theme }) => ({
+const StyledCard = styled(Link)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
     minWidth: 0,
+    textDecoration: 'none',
+    color: 'inherit',
+    cursor: 'pointer',
 }));
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -73,9 +77,15 @@ const timeRangeLabels: Record<string, string> = {
 
 interface CompactChartCardProps {
     config: ImpactMetricsConfigSchema;
+    projectId: string;
+    featureName: string;
 }
 
-export const CompactChartCard: FC<CompactChartCardProps> = ({ config }) => {
+export const CompactChartCard: FC<CompactChartCardProps> = ({
+    config,
+    projectId,
+    featureName,
+}) => {
     const title = config.title || config.displayName;
     const timeLabel = timeRangeLabels[config.timeRange] ?? config.timeRange;
 
@@ -99,7 +109,9 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({ config }) => {
     })();
 
     return (
-        <StyledCard>
+        <StyledCard
+            to={`/projects/${projectId}/features/${featureName}/metrics`}
+        >
             <StyledHeader>
                 <StyledHeaderLeft>
                     <StyledTitle>{title}</StyledTitle>

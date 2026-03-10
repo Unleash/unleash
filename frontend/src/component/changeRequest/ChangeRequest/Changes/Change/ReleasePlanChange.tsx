@@ -158,6 +158,7 @@ const StartMilestone: FC<{
                     readonly
                     milestone={newMilestone}
                     environmentId={releasePlan.environment}
+                    featureId={releasePlan.featureName}
                 />
             </TabPanel>
             <TabPanel variant='diff'>

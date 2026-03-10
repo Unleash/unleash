@@ -35,6 +35,8 @@ type ProjectEnvironmentStrategyDraggableItemProps = {
         index: number,
     ) => DragEventHandler<HTMLDivElement>;
     onDragEnd?: () => void;
+    featureId: string;
+    readonly?: boolean;
 };
 
 export const ProjectEnvironmentStrategyDraggableItem = ({
@@ -47,9 +49,10 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
     onDragStartRef,
     onDragOver,
     onDragEnd,
+    featureId,
+    readonly,
 }: ProjectEnvironmentStrategyDraggableItemProps) => {
     const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
     const strategyChangesFromRequest = useStrategyChangesFromRequest(
         projectId,
         featureId,
@@ -73,6 +76,39 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    const EditControls: React.FC = () => (
+        <>
+            <PermissionIconButton
+                permission={UPDATE_FEATURE_STRATEGY}
+                environmentId={environmentName}
+                projectId={projectId}
+                component={Link}
+                to={editStrategyPath}
+                tooltipProps={{
+                    title: 'Edit strategy',
+                }}
+                data-testid={`STRATEGY_EDIT-${strategy.name}`}
+            >
+                <Edit />
+            </PermissionIconButton>
+            {otherEnvironments && otherEnvironments?.length > 0 ? (
+                <CopyStrategyIconMenu
+                    environmentId={environmentName}
+                    environments={otherEnvironments as string[]}
+                    strategy={strategy}
+                />
+            ) : null}
+            {scope === 'milestone' ? null : (
+                <MenuStrategyRemove
+                    projectId={projectId}
+                    featureId={featureId}
+                    environmentId={environmentName}
+                    strategy={strategy}
+                />
+            )}
+        </>
+    );
 
     return (
         <StrategyDraggableItem
@@ -100,34 +136,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                             ).map((scheduledChange) => scheduledChange.id)}
                         />
                     ) : null}
-                    <PermissionIconButton
-                        permission={UPDATE_FEATURE_STRATEGY}
-                        environmentId={environmentName}
-                        projectId={projectId}
-                        component={Link}
-                        to={editStrategyPath}
-                        tooltipProps={{
-                            title: 'Edit strategy',
-                        }}
-                        data-testid={`STRATEGY_EDIT-${strategy.name}`}
-                    >
-                        <Edit />
-                    </PermissionIconButton>
-                    {otherEnvironments && otherEnvironments?.length > 0 ? (
-                        <CopyStrategyIconMenu
-                            environmentId={environmentName}
-                            environments={otherEnvironments as string[]}
-                            strategy={strategy}
-                        />
-                    ) : null}
-                    {scope === 'milestone' ? null : (
-                        <MenuStrategyRemove
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={environmentName}
-                            strategy={strategy}
-                        />
-                    )}
+                    {readonly ? null : <EditControls />}
                 </>
             }
         />

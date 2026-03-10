@@ -40,13 +40,9 @@ export interface IStrategyConfig {
     disabled?: boolean | null;
 }
 
-export type MilestoneStrategyConfig = Omit<IStrategyConfig, 'name'> & {
-    strategyName: string;
-};
-
 export type MilestoneStrategyConfigUpdate = Omit<
-    MilestoneStrategyConfig,
-    'strategyName'
+    IStrategyConfig,
+    'name' | 'milestoneId'
 >;
 
 export interface IFeatureStrategy {

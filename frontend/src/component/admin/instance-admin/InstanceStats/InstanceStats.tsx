@@ -99,7 +99,14 @@ export const InstanceStats: FC = () => {
                     </TableHead>
                     <TableBody>
                         {rows.map((row) => (
-                            <TableRow key={row.title}>
+                            <TableRow
+                                key={row.title}
+                                sx={{
+                                    '&:hover': {
+                                        backgroundColor: 'unset !important',
+                                    },
+                                }}
+                            >
                                 <TableCell component='th' scope='row'>
                                     <Box
                                         component='span'

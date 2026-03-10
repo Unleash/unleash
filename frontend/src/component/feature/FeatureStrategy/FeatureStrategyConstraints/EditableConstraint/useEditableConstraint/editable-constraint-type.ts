@@ -80,6 +80,10 @@ export const isRegexConstraint = (
 ): constraint is EditableRegexConstraint =>
     isRegexOperator(constraint.operator);
 
+export const invertedToggleDisabled = (
+    constraint: Pick<EditableConstraint, 'operator'>,
+) => isRegexOperator(constraint.operator);
+
 export const fromIConstraint = (
     constraint: IConstraint,
 ): EditableConstraint => {
@@ -90,6 +94,7 @@ export const fromIConstraint = (
             ...rest,
             operator,
             value: value ?? '',
+            ...(invertedToggleDisabled({ operator }) && { inverted: false }),
         };
     } else {
         return {

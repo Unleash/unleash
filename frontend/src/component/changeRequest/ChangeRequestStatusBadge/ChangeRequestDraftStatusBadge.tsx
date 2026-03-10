@@ -11,6 +11,7 @@ export const ChangeRequestDraftStatusBadge = ({
 }) => {
     switch (changeAction) {
         case 'updateStrategy':
+        case 'updateMilestoneStrategy':
             return (
                 <Badge color='warning' sx={sx}>
                     Modified in draft

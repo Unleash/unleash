@@ -20,6 +20,9 @@ const disableActiveSplashScreens = () => {
             }
         });
     });
+    cy.intercept('POST', '/api/admin/user/splash/operators', {
+        statusCode: 200,
+    });
 };
 
 const disableFeatureStrategiesProdGuard = () => {
@@ -52,7 +55,9 @@ export const do_login = (
     // Wait for the login redirect to complete.
     cy.get("[data-testid='HEADER_USER_AVATAR']");
 
-    cy.get("[data-testid='CLOSE_SPLASH']").should('be.visible').click();
+    if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
+        cy.get("[data-testid='CLOSE_SPLASH']").should('be.visible').click();
+    }
 
     return cy;
 };

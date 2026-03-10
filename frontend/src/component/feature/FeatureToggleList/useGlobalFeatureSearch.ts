@@ -10,9 +10,11 @@ import mapValues from 'lodash.mapvalues';
 import type { SearchFeaturesParams } from 'openapi';
 import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
     const storageKey = 'features-list-table';
+    const inlineFavoriteInNameColumn = useUiFlag('inlineFavoriteInNameColumn');
     const stateConfig = {
         offset: withDefault(SafeNumberParam, 0),
         limit: withDefault(SafeNumberParam, pageLimit),
@@ -45,6 +47,10 @@ export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
         ...filterState
     } = tableState;
 
+    const apiTableState = inlineFavoriteInNameColumn
+        ? { ...tableState, favoritesFirst: false }
+        : tableState;
+
     const {
         features = [],
         total,
@@ -52,7 +58,7 @@ export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
         refetch,
         initialLoad,
     } = useFeatureSearch(
-        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
+        mapValues(encodeQueryParams(stateConfig, apiTableState), (value) =>
             value ? `${value}` : undefined,
         ) as SearchFeaturesParams,
     );

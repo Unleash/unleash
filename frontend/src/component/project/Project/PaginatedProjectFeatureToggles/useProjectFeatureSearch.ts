@@ -14,6 +14,7 @@ import mapValues from 'lodash.mapvalues';
 import type { SearchFeaturesParams } from 'openapi';
 import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type Attribute =
     | { key: 'tag'; operator: 'INCLUDE' }
@@ -48,7 +49,11 @@ export const useProjectFeatureSearch = (
         stateConfig,
     );
 
-    const { columns: _, ...apiTableState } = tableState;
+    const inlineFavoriteInNameColumn = useUiFlag('inlineFavoriteInNameColumn');
+    const { columns: _, ...restTableState } = tableState;
+    const apiTableState = inlineFavoriteInNameColumn
+        ? { ...restTableState, favoritesFirst: false }
+        : restTableState;
     const { features, total, refetch, loading, initialLoad } = useFeatureSearch(
         mapValues(
             {

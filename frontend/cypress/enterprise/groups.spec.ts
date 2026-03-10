@@ -28,9 +28,13 @@ describe('groups', () => {
     beforeEach(() => {
         cy.login_UI();
         cy.visit('/admin/groups');
-        if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-            cy.get("[data-testid='CLOSE_SPLASH']").click();
-        }
+        cy.get('body').then(($body) => {
+            if ($body.find("[data-testid='CLOSE_SPLASH']").length > 0) {
+                cy.get("[data-testid='CLOSE_SPLASH']")
+                    .should('be.visible')
+                    .click();
+            }
+        });
     });
 
     it('can create a group', () => {

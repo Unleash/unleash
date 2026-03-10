@@ -55,9 +55,11 @@ export const do_login = (
     // Wait for the login redirect to complete.
     cy.get("[data-testid='HEADER_USER_AVATAR']");
 
-    if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-        cy.get("[data-testid='CLOSE_SPLASH']").should('be.visible').click();
-    }
+    cy.get('body').then(($body) => {
+        if ($body.find("[data-testid='CLOSE_SPLASH']").length > 0) {
+            cy.get("[data-testid='CLOSE_SPLASH']").should('be.visible').click();
+        }
+    });
 
     return cy;
 };

@@ -285,18 +285,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@biomejs/biome@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/biome@npm:2.4.4"
+"@biomejs/biome@npm:2.4.5":
+  version: 2.4.5
+  resolution: "@biomejs/biome@npm:2.4.5"
   dependencies:
-    "@biomejs/cli-darwin-arm64": "npm:2.4.4"
-    "@biomejs/cli-darwin-x64": "npm:2.4.4"
-    "@biomejs/cli-linux-arm64": "npm:2.4.4"
-    "@biomejs/cli-linux-arm64-musl": "npm:2.4.4"
-    "@biomejs/cli-linux-x64": "npm:2.4.4"
-    "@biomejs/cli-linux-x64-musl": "npm:2.4.4"
-    "@biomejs/cli-win32-arm64": "npm:2.4.4"
-    "@biomejs/cli-win32-x64": "npm:2.4.4"
+    "@biomejs/cli-darwin-arm64": "npm:2.4.5"
+    "@biomejs/cli-darwin-x64": "npm:2.4.5"
+    "@biomejs/cli-linux-arm64": "npm:2.4.5"
+    "@biomejs/cli-linux-arm64-musl": "npm:2.4.5"
+    "@biomejs/cli-linux-x64": "npm:2.4.5"
+    "@biomejs/cli-linux-x64-musl": "npm:2.4.5"
+    "@biomejs/cli-win32-arm64": "npm:2.4.5"
+    "@biomejs/cli-win32-x64": "npm:2.4.5"
   dependenciesMeta:
     "@biomejs/cli-darwin-arm64":
       optional: true
@@ -316,62 +316,62 @@ __metadata:
       optional: true
   bin:
     biome: bin/biome
-  checksum: 10c0/f2b7620d39caeeb9e0ed070dd1065cc2378626c7fa6ecda3db84b64df4c94fb4909407726044e28c83e8a95121ad389498cc3f0e5be600a421d906ca705b821c
+  checksum: 10c0/5466d0f69c30bbe1912f3f5f307dd31293e054c8b307c21f1df22edad415de34cf46842b0bd57e150cfc6dc6d698e848f6cd26fc7155d685aa8323e4ead7538e
   languageName: node
   linkType: hard
 
-"@biomejs/cli-darwin-arm64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-darwin-arm64@npm:2.4.4"
+"@biomejs/cli-darwin-arm64@npm:2.4.5":
+  version: 2.4.5
+  resolution: "@biomejs/cli-darwin-arm64@npm:2.4.5"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-darwin-x64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-darwin-x64@npm:2.4.4"
+"@biomejs/cli-darwin-x64@npm:2.4.5":
+  version: 2.4.5
+  resolution: "@biomejs/cli-darwin-x64@npm:2.4.5"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-arm64-musl@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-linux-arm64-musl@npm:2.4.4"
+"@biomejs/cli-linux-arm64-musl@npm:2.4.5":
+  version: 2.4.5
+  resolution: "@biomejs/cli-linux-arm64-musl@npm:2.4.5"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-arm64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-linux-arm64@npm:2.4.4"
+"@biomejs/cli-linux-arm64@npm:2.4.5":
+  version: 2.4.5
+  resolution: "@biomejs/cli-linux-arm64@npm:2.4.5"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-x64-musl@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-linux-x64-musl@npm:2.4.4"
+"@biomejs/cli-linux-x64-musl@npm:2.4.5":
+  version: 2.4.5
+  resolution: "@biomejs/cli-linux-x64-musl@npm:2.4.5"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@biomejs/cli-linux-x64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-linux-x64@npm:2.4.4"
+"@biomejs/cli-linux-x64@npm:2.4.5":
+  version: 2.4.5
+  resolution: "@biomejs/cli-linux-x64@npm:2.4.5"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@biomejs/cli-win32-arm64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-win32-arm64@npm:2.4.4"
+"@biomejs/cli-win32-arm64@npm:2.4.5":
+  version: 2.4.5
+  resolution: "@biomejs/cli-win32-arm64@npm:2.4.5"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@biomejs/cli-win32-x64@npm:2.4.4":
-  version: 2.4.4
-  resolution: "@biomejs/cli-win32-x64@npm:2.4.4"
+"@biomejs/cli-win32-x64@npm:2.4.5":
+  version: 2.4.5
+  resolution: "@biomejs/cli-win32-x64@npm:2.4.5"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -10268,7 +10268,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "unleash-frontend-local@workspace:."
   dependencies:
-    "@biomejs/biome": "npm:2.4.4"
+    "@biomejs/biome": "npm:2.4.5"
     "@codemirror/lang-json": "npm:6.0.2"
     "@emotion/react": "npm:11.14.0"
     "@emotion/styled": "npm:11.14.1"

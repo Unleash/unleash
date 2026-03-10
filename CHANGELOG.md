@@ -2,6 +2,118 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.5.1] - 2026-03-10
+
+### Bug Fixes
+
+- Add project validation for getEnvironmentInfo method ([#11472](https://github.com/Unleash/unleash/issues/11472))
+
+- Regex operator UX feedback ([#11478](https://github.com/Unleash/unleash/issues/11478))
+
+- Decouple project environment strategy draggable item from required featureid in path ([#11481](https://github.com/Unleash/unleash/issues/11481))
+
+- Search user shema should point to the right schema ([#11494](https://github.com/Unleash/unleash/issues/11494))
+
+- Make key concepts dialog background blurry ([#11508](https://github.com/Unleash/unleash/issues/11508))
+
+- Refresh SWR cache for feature-specific pending CR ([#11501](https://github.com/Unleash/unleash/issues/11501))
+
+
+### Chore
+
+- Return `ReleasePlanMilestoneStrategy` instead of `MilestoneStrategyConfig` from update methods ([#11517](https://github.com/Unleash/unleash/issues/11517))
+
+
+### Features
+
+- Introduce revision id per project for delta/streaming ([#11434](https://github.com/Unleash/unleash/issues/11434))
+
+- Redesign impact metrics chart config modal ([#11462](https://github.com/Unleash/unleash/issues/11462))
+
+- Gate impact metrics to enterprise and link charts to feature metrics ([#11474](https://github.com/Unleash/unleash/issues/11474))
+
+- Feature exists in project method in read model ([#11479](https://github.com/Unleash/unleash/issues/11479))
+
+- Persist impact metrics accordion state in localStorage ([#11477](https://github.com/Unleash/unleash/issues/11477))
+
+- Enable "edit change" item in cr item for milestone strategies ([#11485](https://github.com/Unleash/unleash/issues/11485))
+
+- Create/delete feature env safeguards UI ([#11510](https://github.com/Unleash/unleash/issues/11510))
+
+
+### Miscellaneous Tasks
+
+- ReadOnlyUsers flag cleanup ([#11459](https://github.com/Unleash/unleash/issues/11459))
+
+- Fix 'cannot read content from undefined' in signup flow ([#11463](https://github.com/Unleash/unleash/issues/11463))
+
+- Make milestone strats editable ([#11431](https://github.com/Unleash/unleash/issues/11431))
+
+- Regex feature SDK warning ([#11461](https://github.com/Unleash/unleash/issues/11461))
+
+- Unleash-client 6.10.0 ([#11466](https://github.com/Unleash/unleash/issues/11466))
+
+- Add disabled field to milestone strategy stores and types ([#11454](https://github.com/Unleash/unleash/issues/11454))
+
+- Fix e2e tests after latest changes related to welcome dialog ([#11470](https://github.com/Unleash/unleash/issues/11470))
+
+- Include disabled when getting active feature strategies ([#11471](https://github.com/Unleash/unleash/issues/11471))
+
+- Default-disable userTokenWithClientApiLogging ([#11464](https://github.com/Unleash/unleash/issues/11464))
+
+- Welcome dialog not showing on 'view key concepts' ([#11480](https://github.com/Unleash/unleash/issues/11480))
+
+- Enable the exact same change components as normal update strategies ([#11486](https://github.com/Unleash/unleash/issues/11486))
+
+- Handle invalid regex from DB ([#11483](https://github.com/Unleash/unleash/issues/11483))
+
+- Regex should never not be inverted ([#11484](https://github.com/Unleash/unleash/issues/11484))
+
+- Allow project env strategy draggable item to be marked as read-only ([#11482](https://github.com/Unleash/unleash/issues/11482))
+
+- Show Modified in draft badge for updateMilestoneStrategy CR ([#11487](https://github.com/Unleash/unleash/issues/11487))
+
+- Remove duplicated updateMilestoneStrategy from CR types ([#11465](https://github.com/Unleash/unleash/issues/11465))
+
+- Remove NODE_OPTIONS ([#11489](https://github.com/Unleash/unleash/issues/11489))
+
+- Running e2e:oss ([#11493](https://github.com/Unleash/unleash/issues/11493))
+
+- Update dependencies. ([#11490](https://github.com/Unleash/unleash/issues/11490))
+
+- Exclude signup dialog from special scenarios ([#11496](https://github.com/Unleash/unleash/issues/11496))
+
+- Signup dialog redesign ([#11504](https://github.com/Unleash/unleash/issues/11504))
+
+- Add plausible tracking to signup dialog ([#11512](https://github.com/Unleash/unleash/issues/11512))
+
+- Deprecate strategy name on ifeaturestrategy ([#11475](https://github.com/Unleash/unleash/issues/11475))
+
+- Don't crop template form name ([#11516](https://github.com/Unleash/unleash/issues/11516))
+
+- Remove table row hover on Instance Stats ([#11518](https://github.com/Unleash/unleash/issues/11518))
+
+- Regenerate yarn lock and fix compilation issues ([#11519](https://github.com/Unleash/unleash/issues/11519))
+
+
+### Refactor
+
+- Fix lint useExhaustiveDependencies for FeatureStrategyConstraints ([#11450](https://github.com/Unleash/unleash/issues/11450))
+
+- Move safeguard to feature env level ([#11491](https://github.com/Unleash/unleash/issues/11491))
+
+- Extract hooks in release plan safeguard ([#11498](https://github.com/Unleash/unleash/issues/11498))
+
+- Stable callbacks in ConstraintsList ([#11469](https://github.com/Unleash/unleash/issues/11469))
+
+
+### Testing
+
+- Release plan safeguard ([#11497](https://github.com/Unleash/unleash/issues/11497))
+
+- Replace cypress feature name test with frontend test ([#11503](https://github.com/Unleash/unleash/issues/11503))
+
+
 ## [7.5.0] - 2026-03-04
 
 ### Bug Fixes

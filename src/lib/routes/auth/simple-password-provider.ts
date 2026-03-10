@@ -1,4 +1,5 @@
 import type { Response } from 'express';
+import { extractClientIp } from '../../util/extract-user.js';
 import type { OpenApiService } from '../../services/openapi-service.js';
 import type { IUnleashConfig } from '../../types/index.js';
 import type UserService from '../../services/user-service.js';
@@ -63,7 +64,7 @@ export class SimplePasswordProvider extends Controller {
             password,
             {
                 userAgent,
-                ip: req.ip,
+                ip: extractClientIp(req),
             },
         );
         req.session.user = user;

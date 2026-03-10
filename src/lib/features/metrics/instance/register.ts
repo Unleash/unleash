@@ -1,4 +1,5 @@
 import type { Response } from 'express';
+import { extractClientIp } from '../../../util/extract-user.js';
 import Controller from '../../../routes/controller.js';
 import type { IFlagResolver } from '../../../types/index.js';
 import type { IUnleashConfig } from '../../../types/option.js';
@@ -93,7 +94,8 @@ export default class RegisterController extends Controller {
         req: IAuthRequest<unknown, void, ClientApplicationSchema>,
         res: Response<void>,
     ): Promise<void> {
-        const { body: data, ip: clientIp, user } = req;
+        const { body: data, user } = req;
+        const clientIp = extractClientIp(req);
         data.environment = this.resolveEnvironment(user, data);
         data.projects = this.resolveProject(user);
 

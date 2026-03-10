@@ -238,8 +238,10 @@ export const SignupDialog = () => {
     const safeStep = Math.min(step, steps.length - 1);
     const currentStep = steps[safeStep];
 
+    const isVisible = signupRequired && steps.length > 0 && currentStep;
+
     useEffect(() => {
-        if (currentStep?.title) {
+        if (isVisible && currentStep?.title) {
             trackEvent('signup-dialog', {
                 props: {
                     eventType: 'view',
@@ -247,9 +249,9 @@ export const SignupDialog = () => {
                 },
             });
         }
-    }, [currentStep?.title, trackEvent]);
+    }, [isVisible, currentStep?.title, trackEvent]);
 
-    if (!signupRequired || steps.length === 0 || !currentStep) return null;
+    if (!isVisible) return null;
 
     const StepContent = currentStep.content;
 

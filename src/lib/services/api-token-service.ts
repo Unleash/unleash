@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import type { Logger } from '../logger.js';
 import { ADMIN, CLIENT, FRONTEND } from '../types/permissions.js';
-import type { IEdgeTokenStore, IUnleashStores } from '../types/stores.js';
+import type { IUnleashStores } from '../types/stores.js';
 import type { IUnleashConfig } from '../types/option.js';
 import ApiUser, { type IApiUser } from '../types/api-user.js';
 import {
@@ -25,7 +25,6 @@ import {
     type IAuditUser,
     type IFlagResolver,
     SYSTEM_USER_AUDIT,
-    SYSTEM_USER_ID,
 } from '../types/index.js';
 import { omitKeys } from '../util/index.js';
 import type EventService from '../features/events/event-service.js';

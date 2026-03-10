@@ -1,8 +1,8 @@
 import { createTestConfig } from '../../test/config/test-config.js';
 import {
-    IUnleashConfig,
-    IUnleashOptions,
-    IUser,
+    type IUnleashConfig,
+    type IUnleashOptions,
+    type IUser,
     SYSTEM_USER_ID,
 } from '../types/index.js';
 import { ApiTokenType, type IApiTokenCreate } from '../types/model.js';

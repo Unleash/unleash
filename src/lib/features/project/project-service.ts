@@ -53,7 +53,7 @@ import {
     SYSTEM_USER_ID,
     type IProjectReadModel,
     type IOnboardingReadModel,
-    IEdgeTokenStore,
+    type IEdgeTokenStore,
 } from '../../types/index.js';
 import type {
     IRoleDescriptor,

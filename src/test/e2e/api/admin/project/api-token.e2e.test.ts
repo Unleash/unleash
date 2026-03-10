@@ -5,7 +5,7 @@ import {
 } from '../../../helpers/test-helper.js';
 import getLogger from '../../../../fixtures/no-logger.js';
 import {
-    IApiTokenStore,
+    type IApiTokenStore,
     SYSTEM_USER_ID,
 } from '../../../../../lib/types/index.js';
 

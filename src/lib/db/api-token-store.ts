@@ -10,7 +10,6 @@ import {
     type IApiToken,
     type IApiTokenCreate,
     type IFlagResolver,
-    SYSTEM_USER_ID,
 } from '../types/index.js';
 import { ALL_PROJECTS } from '../internals.js';
 import { isAllProjects } from '../server-impl.js';

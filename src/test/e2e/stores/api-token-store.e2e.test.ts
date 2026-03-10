@@ -1,6 +1,9 @@
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
-import { IUnleashStores, SYSTEM_USER_ID } from '../../../lib/types/index.js';
+import {
+    type IUnleashStores,
+    SYSTEM_USER_ID,
+} from '../../../lib/types/index.js';
 import { ApiTokenType } from '../../../lib/types/model.js';
 import { DEFAULT_ENV, randomId } from '../../../lib/util/index.js';
 

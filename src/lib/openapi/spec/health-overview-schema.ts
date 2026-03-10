@@ -18,6 +18,10 @@ import { createStrategyVariantSchema } from './create-strategy-variant-schema.js
 import { strategyVariantSchema } from './strategy-variant-schema.js';
 import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema.js';
 import { tagSchema } from './tag-schema.js';
+import { releasePlanSafeguardSchema } from './release-plan-safeguard-schema.js';
+import { featureEnvironmentSafeguardSchema } from './feature-environment-safeguard-schema.js';
+import { metricQuerySchema } from './metric-query-schema.js';
+import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
 export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
@@ -152,6 +156,10 @@ export const healthOverviewSchema = {
             releasePlanMilestoneSchema,
             releasePlanMilestoneStrategySchema,
             transitionConditionSchema,
+            releasePlanSafeguardSchema,
+            featureEnvironmentSafeguardSchema,
+            metricQuerySchema,
+            safeguardTriggerConditionSchema,
             strategyVariantSchema,
             variantSchema,
             projectStatsSchema,

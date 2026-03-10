@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { ReleasePlanSafeguard } from './ReleasePlanSafeguard.tsx';
+import { Safeguard } from './Safeguard.tsx';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 
 vi.mock(
@@ -135,7 +135,7 @@ const Component = ({
         <Route
             path='/projects/:projectId/features/:featureId'
             element={
-                <ReleasePlanSafeguard
+                <Safeguard
                     plan={plan}
                     environmentName='production'
                     featureId='feature1'
@@ -165,7 +165,7 @@ const enableChangeRequests = () => {
     );
 };
 
-describe('ReleasePlanSafeguard', () => {
+describe('Safeguard', () => {
     test('should add safeguard and send form data to API', async () => {
         const user = userEvent.setup();
         const onSafeguardChange = vi.fn();

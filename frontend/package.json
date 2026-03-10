@@ -48,8 +48,8 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.4",
     "@codemirror/lang-json": "6.0.2",
-    "@emotion/react": "11.11.4",
-    "@emotion/styled": "11.11.5",
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
     "@mui/icons-material": "5.15.3",
     "@mui/lab": "5.0.0-alpha.159",
     "@mui/material": "5.15.3",
@@ -69,7 +69,7 @@
     "@types/lodash.mapvalues": "^4.6.9",
     "@types/lodash.omit": "4.5.9",
     "@types/node": "^22.0.0",
-    "@types/react": "18.3.23",
+    "@types/react": "18.3.28",
     "@types/react-dom": "18.3.7",
     "@types/react-grid-layout": "^1.3.5",
     "@types/react-router-dom": "5.3.3",
@@ -124,6 +124,7 @@
     "react-router-dom": "6.16.0",
     "react-table": "7.8.0",
     "react-test-renderer": "18.3.1",
+    "regenerator-runtime": "0.14.1",
     "sass": "1.85.1",
     "semver": "7.7.2",
     "swr": "2.3.3",
@@ -131,7 +132,7 @@
     "typescript": "5.8.3",
     "unleash-proxy-client": "^3.7.3",
     "use-query-params": "^2.2.1",
-    "vanilla-jsoneditor": "^0.23.0",
+    "vanilla-jsoneditor": "^3.11.0",
     "vite": "5.4.21",
     "vite-plugin-env-compatible": "2.0.1",
     "vite-plugin-svgr": "3.3.0",
@@ -140,14 +141,15 @@
     "whatwg-fetch": "3.6.20"
   },
   "resolutions": {
-    "@codemirror/state": "6.5.2",
+    "@codemirror/state": "6.5.4",
     "@xmldom/xmldom": "^0.9.0",
     "jsonpath-plus": "10.3.0",
     "json5": "^2.2.2",
     "vite": "5.4.21",
     "semver": "7.7.2",
     "ws": "^8.18.0",
-    "@types/react": "18.3.23"
+    "@types/react": "18.3.28",
+    "nwsapi": "2.2.13"
   },
   "jest": {
     "moduleNameMapper": {

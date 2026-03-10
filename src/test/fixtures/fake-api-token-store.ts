@@ -103,4 +103,8 @@ export default class FakeApiTokenStore
     async countProjectTokens(): Promise<number> {
         return 0;
     }
+
+    getAllFilterEnterpriseEdgeTokens(): Promise<IApiToken[]> {
+        return Promise.resolve([]);
+    }
 }

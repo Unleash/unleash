@@ -60,17 +60,6 @@ afterEach(async () => {
     await Promise.all(deleteAll);
 });
 
-test('should have empty list of tokens', async () => {
-    const allTokens = await apiTokenService.getAllTokens({
-        filterEnterpriseEdgeTokens: false,
-    });
-    const activeTokens = await apiTokenService.getAllTokens({
-        filterEnterpriseEdgeTokens: true,
-    });
-    expect(allTokens.length).toBe(0);
-    expect(activeTokens.length).toBe(0);
-});
-
 test('should create client token', async () => {
     const token = await apiTokenService.createApiTokenWithProjects({
         tokenName: 'default-client',

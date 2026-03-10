@@ -31,7 +31,7 @@ describe('login', { testIsolation: true }, () => {
         cy.url().should('eq', `${baseUrl}/admin`);
     });
 
-    it('clears last visited page on manual logout', () => {
+    it('clears last visited page redirects to /login on manual logout', () => {
         cy.visit('/search');
         cy.get('[data-testid=HEADER_USER_AVATAR]').click();
         cy.get('button').contains('Log out').click();

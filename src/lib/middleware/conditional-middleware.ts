@@ -1,13 +1,11 @@
 import type { RequestHandler } from 'express';
-import type { IFlagKey, IUnleashConfig } from '../server-impl.js';
+import type { IFlagResolver, IFlagKey } from '../types/index.js';
 
 /**
- * @deprecated Prefer `requireEnabledFlag(config, flagName)` in `app.use(...)`
- * for new code.
+ * @deprecated Use `requireFeatureEnabled` for feature-flag route gating.
  *
- * `conditionalMiddleware` exists for backwards compatibility, but it is easier
- * to reason about flag gating when the flag-check middleware is declared
- * explicitly before the protected router.
+ * Generic conditional middleware runner.
+ * Prefer this only for non-feature-flag conditions.
  */
 export const conditionalMiddleware = (
     condition: () => boolean,
@@ -23,24 +21,25 @@ export const conditionalMiddleware = (
 };
 
 /**
- * Short-circuit requests unless the given internal feature flag is enabled.
+ * Route-level feature gate middleware.
  *
- * Intended usage:
- * - Place this middleware before protected route handlers/routers.
- * - Return 404 when disabled, so downstream middlewares are not executed.
+ * Recommended usage:
+ * `middleware: [requireFeatureEnabled(config.flagResolver, 'myFlag')]`
  *
- * Example:
- * `app.use('/api/signal-endpoint', requireEnabledFlag(config, 'signals'), router)`
- *
- * Ordering guidance:
- * - Put this before expensive middleware (for example rate limiting) when
- *   you want disabled features to bypass that work.
+ * Guidance:
+ * - Prefer route-level usage (`this.route({ middleware: [...] })`) in controllers.
+ * - Avoid broad prefix mounts (for example `/api/admin/projects`) where sibling routes
+ *   can accidentally be gated.
+ * - The route remains registered/discoverable; disabled features return `404` at request time.
  */
-export const requireEnabledFlag =
-    (config: IUnleashConfig, flagName: IFlagKey): RequestHandler =>
-    (_req, res, next) => {
-        if (config.flagResolver.isEnabled(flagName)) {
+export const requireFeatureEnabled = (
+    flagResolver: Pick<IFlagResolver, 'isEnabled'>,
+    flagName: string,
+): RequestHandler => {
+    return (_req, res, next) => {
+        if (flagResolver.isEnabled(flagName as IFlagKey)) {
             return next();
         }
         return res.sendStatus(404);
     };
+};

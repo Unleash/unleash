@@ -125,8 +125,7 @@ export const featureEnvironmentSchema = {
         },
         safeguards: {
             type: 'array',
-            description:
-                'Safeguards for this feature environment',
+            description: 'Safeguards for this feature environment',
             items: {
                 $ref: '#/components/schemas/featureEnvironmentSafeguardSchema',
             },

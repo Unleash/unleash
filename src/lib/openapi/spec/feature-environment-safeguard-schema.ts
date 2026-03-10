@@ -18,8 +18,7 @@ export const featureEnvironmentSafeguardSchema = {
             type: 'object',
             required: ['type', 'featureName', 'environment', 'project'],
             additionalProperties: false,
-            description:
-                'Disable a feature in an environment when triggered.',
+            description: 'Disable a feature in an environment when triggered.',
             properties: {
                 type: {
                     type: 'string',
@@ -33,13 +32,11 @@ export const featureEnvironmentSafeguardSchema = {
                 },
                 environment: {
                     type: 'string',
-                    description:
-                        'The environment this safeguard applies to.',
+                    description: 'The environment this safeguard applies to.',
                 },
                 project: {
                     type: 'string',
-                    description:
-                        'The project this safeguard applies to.',
+                    description: 'The project this safeguard applies to.',
                 },
             },
         },
@@ -54,8 +51,7 @@ export const featureEnvironmentSafeguardSchema = {
             properties: {
                 id: {
                     type: 'string',
-                    description:
-                        'The unique identifier for this impact metric',
+                    description: 'The unique identifier for this impact metric',
                     example: '01JB9GGTGQYEQ9D40R17T3YVW1',
                 },
                 ...metricQuerySchema.properties,

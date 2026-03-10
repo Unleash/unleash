@@ -61,4 +61,6 @@ export const releasePlanSafeguardSchema = {
     },
 } as const;
 
-export type ReleasePlanSafeguardSchema = FromSchema<typeof releasePlanSafeguardSchema>;
+export type ReleasePlanSafeguardSchema = FromSchema<
+    typeof releasePlanSafeguardSchema
+>;

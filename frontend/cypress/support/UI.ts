@@ -20,9 +20,6 @@ const disableActiveSplashScreens = () => {
             }
         });
     });
-    cy.intercept('POST', '/api/admin/user/splash/operators', {
-        statusCode: 200,
-    });
 };
 
 const disableFeatureStrategiesProdGuard = () => {

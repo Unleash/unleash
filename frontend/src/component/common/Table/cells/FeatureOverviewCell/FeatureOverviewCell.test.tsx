@@ -23,6 +23,7 @@ test('Display full overview information', () => {
                     dependencyType: 'child',
                     project: 'my_project',
                     archivedAt: null,
+                    favorite: false,
                 },
             }}
         />,
@@ -56,6 +57,7 @@ test('Display minimal overview information', () => {
                     dependencyType: null,
                     project: 'my_project',
                     archivedAt: null,
+                    favorite: false,
                 },
             }}
         />,
@@ -82,6 +84,7 @@ test('show archived information', () => {
                     dependencyType: null,
                     project: 'my_project',
                     archivedAt: '2024-11-09',
+                    favorite: false,
                 },
             }}
         />,

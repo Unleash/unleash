@@ -179,6 +179,7 @@ export * from './release-plan-schema.js';
 export * from './release-plans-schema.js';
 export * from './release-plan-template-id-schema.js';
 export * from './release-plan-template-schema.js';
+export * from './release-plan-templates-schema.js';
 export * from './requests-per-second-schema.js';
 export * from './requests-per-second-segmented-schema.js';
 export * from './reset-password-schema.js';

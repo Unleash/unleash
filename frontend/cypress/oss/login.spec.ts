@@ -64,14 +64,14 @@ describe('login', { testIsolation: true }, () => {
         });
         cy.visit('/not-exists');
         cy.url().should('contain', `${baseUrl}/login`);
-        cy.do_login();
+        cy.do_login({ waitForLogin: false });
         cy.contains("Ooops. That's a page we haven't toggled on yet.").should(
             'be.visible',
         );
-        cy.get('button').contains('Go home').click();
+        cy.contains('button', 'Go home').click();
         cy.url().should('not.contain', `not-exists`);
         cy.contains("Ooops. That's a page we haven't toggled on yet.").should(
-            'not.be.visible',
+            'not.exist',
         );
     });
 });

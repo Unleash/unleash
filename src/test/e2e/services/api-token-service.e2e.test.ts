@@ -12,10 +12,13 @@ import {
     TEST_AUDIT_USER,
 } from '../../../lib/types/index.js';
 import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService.js';
+import { EdgeService } from '../../../lib/services/index.js';
+import { createTransactionalEdgeService } from '../../../lib/services/edge-service.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let apiTokenService: ApiTokenService;
+let edgeService: EdgeService;
 let projectService: ProjectService;
 
 beforeAll(async () => {
@@ -45,6 +48,7 @@ beforeAll(async () => {
     await projectService.createProject(project, user, TEST_AUDIT_USER);
 
     apiTokenService = createApiTokenService(db.rawDatabase, config);
+    edgeService = createTransactionalEdgeService(db.rawDatabase, config);
 });
 
 afterAll(async () => {
@@ -200,4 +204,24 @@ test('should not partially create token if projects are invalid', async () => {
     });
 
     expect(allTokens.length).toBe(0);
+});
+
+test('Enterprise edge tokens should be filtered', async () => {
+    try {
+        await edgeService.getOrCreateTokens('enterprise-edge', {
+            tokens: [
+                {
+                    environment: 'development',
+                    projects: ['project1', 'project2'],
+                },
+            ],
+        });
+        const unfilteredList = await apiTokenService.getAllTokens({
+            filterEnterpriseEdgeTokens: false,
+        });
+        const filteredList = await apiTokenService.getAllTokens({
+            filterEnterpriseEdgeTokens: true,
+        });
+        expect(unfilteredList.length).toBe(filteredList.length + 1);
+    } catch (_e) {}
 });

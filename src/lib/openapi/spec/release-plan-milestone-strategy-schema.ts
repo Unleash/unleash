@@ -10,7 +10,7 @@ export const releasePlanMilestoneStrategySchema = {
     description:
         'Schema representing the creation of a release plan milestone strategy.',
     type: 'object',
-    required: ['id', 'milestoneId', 'sortOrder', 'strategyName'], // todo(v8) remove strategyName requirement; add `name` if not there
+    required: ['id', 'milestoneId', 'sortOrder', 'strategyName'], // todo(v9) remove strategyName requirement; add `name` if not there
     properties: {
         id: {
             type: 'string',

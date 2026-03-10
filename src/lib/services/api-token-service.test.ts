@@ -178,7 +178,7 @@ describe('API token getTokenWithCache', () => {
         const apiTokenStoreGet = vi.spyOn(apiTokenStore, 'get');
 
         // valid token not present in cache (could be inserted by another instance)
-        apiTokenStore.insert(token);
+        apiTokenStore.insert(token, SYSTEM_USER_ID);
 
         for (let i = 0; i < 5; i++) {
             const found = await apiTokenService.getTokenWithCache(token.secret);
@@ -217,7 +217,10 @@ describe('API token getTokenWithCache', () => {
         const apiTokenStoreGet = vi.spyOn(apiTokenStore, 'get');
 
         // valid token not present in cache but expired
-        apiTokenStore.insert({ ...token, expiresAt: subDays(new Date(), 1) });
+        apiTokenStore.insert(
+            { ...token, expiresAt: subDays(new Date(), 1) },
+            SYSTEM_USER_ID,
+        );
 
         for (let i = 0; i < 5; i++) {
             const found = await apiTokenService.getTokenWithCache(token.secret);

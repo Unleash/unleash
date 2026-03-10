@@ -79,7 +79,7 @@
     "@uiw/codemirror-theme-duotone": "4.25.7",
     "@uiw/react-codemirror": "4.23.13",
     "@unleash/proxy-client-react": "^5.0.0",
-    "@vitejs/plugin-react": "4.3.4",
+    "@vitejs/plugin-react": "4.7.0",
     "cartesian": "^1.0.1",
     "chart.js": "3.9.1",
     "chartjs-adapter-date-fns": "3.0.0",

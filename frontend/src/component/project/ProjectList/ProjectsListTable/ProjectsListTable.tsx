@@ -1,5 +1,4 @@
 import { VirtualizedTable } from 'component/common/Table';
-import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
@@ -39,22 +38,17 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
     const columns = useMemo(
         () => [
             {
-                Header: '',
-                accessor: 'favorite',
-                Cell: ({ row }: { row: { original: ProjectSchema } }) => (
-                    <FavoriteIconCell
-                        value={row.original.favorite}
-                        onClick={() => onFavorite(row.original)}
-                    />
-                ),
-                width: 40,
-            },
-            {
                 Header: 'Project name',
                 accessor: 'name',
                 minWidth: 200,
                 searchable: true,
-                Cell: ProjectsListTableNameCell,
+                Cell: ({ row }: { row: { original: ProjectSchema } }) => (
+                    <ProjectsListTableNameCell
+                        row={row}
+                        isFavorite={row.original.favorite}
+                        onFavorite={() => onFavorite(row.original)}
+                    />
+                ),
             },
             {
                 Header: 'Last updated',

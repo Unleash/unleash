@@ -9,16 +9,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  e2ebuild:
+  e2e-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Cache node modules
+      - name: Cache node modules and Cypress binary
         id: cache-node-modules
         uses: actions/cache@v4
         with:
-          path: frontend/node_modules
+          path: |
+            frontend/node_modules
+            ~/.cache/Cypress
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
       - name: Install frontend dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
@@ -35,7 +37,7 @@ jobs:
           retention-days: 1
 
   e2e:
-    needs: e2ebuild
+    needs: e2e-build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -54,10 +56,12 @@ jobs:
         with:
           name: frontend-build
           path: frontend/build
-      - name: Restore node modules
+      - name: Restore node modules and Cypress binary
         uses: actions/cache/restore@v4
         with:
-          path: frontend/node_modules
+          path: |
+            frontend/node_modules
+            ~/.cache/Cypress
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
       - name: Start Unleash test instance
         run: |

@@ -125,7 +125,10 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
                           options: [{ label: 'True', value: 'true' }],
                           filterKey: 'favorite',
                           singularOperators: ['IS'] as [string, ...string[]],
-                          pluralOperators: [] as string[],
+                          pluralOperators: ['IS_ANY_OF'] as [
+                              string,
+                              ...string[],
+                          ],
                       },
                   ]
                 : []),

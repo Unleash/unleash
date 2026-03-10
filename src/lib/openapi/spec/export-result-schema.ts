@@ -23,7 +23,8 @@ import { dependentFeatureSchema } from './dependent-feature-schema.js';
 import { tagSchema } from './tag-schema.js';
 import { featureLinksSchema } from './feature-links-schema.js';
 import { featureLinkSchema } from './feature-link-schema.js';
-import { safeguardSchema } from './safeguard-schema.js';
+import { releasePlanSafeguardSchema } from './release-plan-safeguard-schema.js';
+import { featureEnvironmentSafeguardSchema } from './feature-environment-safeguard-schema.js';
 import { metricQuerySchema } from './metric-query-schema.js';
 import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
@@ -222,7 +223,8 @@ export const exportResultSchema = {
             createFeatureStrategySchema,
             createStrategyVariantSchema,
             transitionConditionSchema,
-            safeguardSchema,
+            releasePlanSafeguardSchema,
+            featureEnvironmentSafeguardSchema,
             metricQuerySchema,
             safeguardTriggerConditionSchema,
         },

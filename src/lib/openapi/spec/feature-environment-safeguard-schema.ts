@@ -2,11 +2,11 @@ import type { FromSchema } from 'json-schema-to-ts';
 import { metricQuerySchema } from './metric-query-schema.js';
 import { safeguardTriggerConditionSchema } from './safeguard-trigger-condition-schema.js';
 
-export const safeguardSchema = {
-    $id: '#/components/schemas/safeguardSchema',
+export const featureEnvironmentSafeguardSchema = {
+    $id: '#/components/schemas/featureEnvironmentSafeguardSchema',
     type: 'object',
     required: ['id', 'action', 'triggerCondition', 'impactMetric'],
-    description: 'A safeguard configuration for a release plan.',
+    description: 'A safeguard configuration for a feature environment.',
     additionalProperties: false,
     properties: {
         id: {
@@ -16,20 +16,27 @@ export const safeguardSchema = {
         },
         action: {
             type: 'object',
-            required: ['type', 'id'],
+            required: ['type', 'featureName', 'environment', 'project'],
             additionalProperties: false,
-            description: 'The action to take when the safeguard is triggered.',
+            description: 'Disable a feature in an environment when triggered.',
             properties: {
                 type: {
                     type: 'string',
                     description: 'The type of action to perform.',
-                    example: 'pauseReleasePlanProgressions',
+                    example: 'disableFeatureEnvironment',
                 },
-                id: {
+                featureName: {
                     type: 'string',
                     description:
-                        'The ID of the release plan this safeguard applies to.',
-                    example: '01JB9GGTGQYEQ9D40R17T3YVW2',
+                        'The feature flag name this safeguard applies to.',
+                },
+                environment: {
+                    type: 'string',
+                    description: 'The environment this safeguard applies to.',
+                },
+                project: {
+                    type: 'string',
+                    description: 'The project this safeguard applies to.',
                 },
             },
         },
@@ -61,4 +68,6 @@ export const safeguardSchema = {
     },
 } as const;
 
-export type SafeguardSchema = FromSchema<typeof safeguardSchema>;
+export type FeatureEnvironmentSafeguardSchema = FromSchema<
+    typeof featureEnvironmentSafeguardSchema
+>;

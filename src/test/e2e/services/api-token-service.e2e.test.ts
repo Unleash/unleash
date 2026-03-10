@@ -207,21 +207,19 @@ test('should not partially create token if projects are invalid', async () => {
 });
 
 test('Enterprise edge tokens should be filtered', async () => {
-    try {
-        await edgeService.getOrCreateTokens('enterprise-edge', {
-            tokens: [
-                {
-                    environment: 'development',
-                    projects: ['project1', 'project2'],
-                },
-            ],
-        });
-        const unfilteredList = await apiTokenService.getAllTokens({
-            filterEnterpriseEdgeTokens: false,
-        });
-        const filteredList = await apiTokenService.getAllTokens({
-            filterEnterpriseEdgeTokens: true,
-        });
-        expect(unfilteredList.length).toBe(filteredList.length + 1);
-    } catch (_e) {}
+    await edgeService.getOrCreateTokens('enterprise-edge', {
+        tokens: [
+            {
+                environment: 'development',
+                projects: ['project1', 'project2'],
+            },
+        ],
+    });
+    const unfilteredList = await apiTokenService.getAllTokens({
+        filterEnterpriseEdgeTokens: false,
+    });
+    const filteredList = await apiTokenService.getAllTokens({
+        filterEnterpriseEdgeTokens: true,
+    });
+    expect(unfilteredList.length).toBe(filteredList.length + 1);
 });

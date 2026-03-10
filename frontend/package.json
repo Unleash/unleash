@@ -39,7 +39,7 @@
     "e2e:dev:enterprise": "yarn run e2e:enterprise --config baseUrl='http://localhost:3000'",
     "e2e:migrations": "yarn run cypress run --spec \"cypress/oss/feature/**/*.spec.ts\" --config baseUrl=\"http://localhost:${EXPOSED_PORT:-4242}\" ",
     "cypress:open": "yarn run cypress open --e2e --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
-    "cypress:run": "yarn run cypress run  --e2e --browser chrome --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
+    "cypress:run": "yarn run cypress run  --e2e --browser electron --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "gen:api": "orval --config orval.config.ts",
     "gen:api:demo": "UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",
     "gen:api:sandbox": "UNLEASH_OPENAPI_URL=https://sandbox.getunleash.io/demo2/docs/openapi.json yarn run gen:api",

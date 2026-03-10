@@ -1,4 +1,5 @@
 import type { Response } from 'express';
+import { extractClientIp } from '../../../util/extract-user.js';
 import Controller from '../../../routes/controller.js';
 import type { IFlagResolver, IUnleashConfig } from '../../../types/index.js';
 import type ClientInstanceService from './instance-service.js';
@@ -175,7 +176,8 @@ export default class ClientMetricsController extends Controller {
             res.status(204).end();
         } else {
             try {
-                const { body: data, ip: clientIp, user } = req;
+                const { body: data, user } = req;
+                const clientIp = extractClientIp(req);
                 const { impactMetrics, ...metricsData } = data;
                 metricsData.environment =
                     this.metricsV2.resolveMetricsEnvironment(user, metricsData);
@@ -254,7 +256,8 @@ export default class ClientMetricsController extends Controller {
         if (this.config.flagResolver.isEnabled('disableMetrics')) {
             res.status(204).end();
         } else {
-            const { body, ip: clientIp } = req;
+            const { body } = req;
+            const clientIp = extractClientIp(req);
             const { metrics, applications, impactMetrics } = body;
             const promises: Promise<void>[] = [];
 

@@ -191,12 +191,12 @@
     "ssh2": "^1.4.0",
     "json-schema": "^0.4.0",
     "ip": "^2.0.1",
-    "tar": "7.5.10",
     "semver": "^7.7.3",
     "tough-cookie": "4.1.4",
     "brace-expansion": "2.0.2",
     "@wesleytodd/openapi/path-to-regexp": "6.3.0",
     "router/path-to-regexp": "1.9.0",
+    "@types/express-session/@types/express": "4.17.25",
     "prompt": "link:./node_modules/.cache/null"
   },
   "lint-staged": {

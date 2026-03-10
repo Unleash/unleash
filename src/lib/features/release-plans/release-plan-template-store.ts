@@ -193,9 +193,9 @@ export class ReleasePlanTemplateStore extends CRUDStore<
         const endTimer = this.timer('insert');
         const row = this.toRow(item);
         row.id = ulid();
-        await this.db(TABLE).insert(row);
+        const [inserted] = await this.db(TABLE).insert(row).returning('*');
         endTimer();
-        return fromRow(row);
+        return fromRow(inserted);
     }
 
     async archive(id: string): Promise<void> {

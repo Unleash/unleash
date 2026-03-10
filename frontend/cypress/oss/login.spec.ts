@@ -57,19 +57,19 @@ describe('login', { testIsolation: true }, () => {
     });
 
     it('error page Go home button redirects to default page', () => {
-        cy.visit('/insights');
+        cy.visit('/not-exists');
         cy.window().then((win) => {
             win.sessionStorage.clear(); // not localStorage
             win.location.reload();
         });
-        cy.visit('/insights');
+        cy.visit('/not-exists');
         cy.url().should('contain', `${baseUrl}/login`);
         cy.do_login();
         cy.contains("Ooops. That's a page we haven't toggled on yet.").should(
             'be.visible',
         );
         cy.get('button').contains('Go home').click();
-        cy.url().should('not.contain', `insights`);
+        cy.url().should('not.contain', `not-exists`);
         cy.contains("Ooops. That's a page we haven't toggled on yet.").should(
             'not.be.visible',
         );

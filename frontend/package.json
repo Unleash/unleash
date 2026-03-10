@@ -76,7 +76,7 @@
     "@types/react-table": "7.7.20",
     "@types/react-test-renderer": "18.3.1",
     "@types/semver": "7.7.1",
-    "@uiw/codemirror-theme-duotone": "4.23.13",
+    "@uiw/codemirror-theme-duotone": "4.25.7",
     "@uiw/react-codemirror": "4.23.13",
     "@unleash/proxy-client-react": "^5.0.0",
     "@vitejs/plugin-react": "4.3.4",

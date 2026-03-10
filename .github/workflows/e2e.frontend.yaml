@@ -35,6 +35,22 @@ jobs:
           name: frontend-build
           path: frontend/build
           retention-days: 1
+      - name: Cache Docker images
+        id: docker-cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/docker-images
+          key: docker-images-${{ runner.os }}-${{ github.event.pull_request.number }}-${{ hashFiles('.github/docker-compose.test.yml') }}
+      - name: Pull and save Docker images
+        if: steps.docker-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p /tmp/docker-images
+          docker pull node:alpine
+          docker pull postgres:16
+          docker pull unleashorg/unleash-enterprise:latest
+          docker save node:alpine -o /tmp/docker-images/node-alpine.tar
+          docker save postgres:16 -o /tmp/docker-images/postgres-16.tar
+          docker save unleashorg/unleash-enterprise:latest -o /tmp/docker-images/unleash-enterprise.tar
 
   e2e:
     needs: e2e-build
@@ -63,6 +79,16 @@ jobs:
             frontend/node_modules
             ~/.cache/Cypress
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+      - name: Restore Docker images
+        uses: actions/cache/restore@v4
+        with:
+          path: /tmp/docker-images
+          key: docker-images-${{ runner.os }}-${{ github.event.pull_request.number }}-${{ hashFiles('.github/docker-compose.test.yml') }}
+      - name: Load cached Docker images
+        run: |
+          docker load -i /tmp/docker-images/node-alpine.tar
+          docker load -i /tmp/docker-images/postgres-16.tar
+          docker load -i /tmp/docker-images/unleash-enterprise.tar
       - name: Start Unleash test instance
         run: |
           docker compose -f .github/docker-compose.test.yml up -d --wait -t 90

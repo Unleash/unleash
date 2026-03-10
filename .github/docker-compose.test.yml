@@ -27,7 +27,7 @@ services:
         condition: service_healthy
   unleash:
     image: unleashorg/${UNLEASH_VERSION:-unleash-enterprise:latest}
-    pull_policy: "always"
+    pull_policy: "missing"
     expose:
       - "4242"
     environment:

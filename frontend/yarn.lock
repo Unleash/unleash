@@ -9962,9 +9962,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tss-react@npm:4.9.18":
-  version: 4.9.18
-  resolution: "tss-react@npm:4.9.18"
+"tss-react@npm:4.9.20":
+  version: 4.9.20
+  resolution: "tss-react@npm:4.9.20"
   dependencies:
     "@emotion/cache": "npm:*"
     "@emotion/serialize": "npm:*"
@@ -9980,7 +9980,7 @@ __metadata:
       optional: true
     "@mui/material":
       optional: true
-  checksum: 10c0/81bfdfee892c1eb1bf253b2b456b9d573911d8b2668c757e2f5c56d01def00139bd780efe85fe9115dd7bb15477840e816586d6e999317456ca1e6cf7c1dccd3
+  checksum: 10c0/90095c969eaa6db893ea9ddb078b76e9668740a55aa8efc95086097cc818c5fc0b48c003d44892980db7665256487db19a39dad46e2952c3d554f7e1e361e8d9
   languageName: node
   linkType: hard
 
@@ -10354,7 +10354,7 @@ __metadata:
     sass: "npm:1.85.1"
     semver: "npm:7.7.4"
     swr: "npm:2.3.3"
-    tss-react: "npm:4.9.18"
+    tss-react: "npm:4.9.20"
     typescript: "npm:5.8.3"
     unleash-proxy-client: "npm:^3.7.3"
     use-query-params: "npm:^2.2.1"

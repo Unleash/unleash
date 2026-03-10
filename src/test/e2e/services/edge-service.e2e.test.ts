@@ -1,7 +1,7 @@
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import getLogger from '../../fixtures/no-logger.js';
 import { createTestConfig } from '../../config/test-config.js';
-import { ApiTokenType } from '../../../lib/types/model.js';
+import { ApiTokenType, IApiToken } from '../../../lib/types/model.js';
 import { DEFAULT_ENV } from '../../../lib/util/constants.js';
 import { addDays, subDays } from 'date-fns';
 import type ProjectService from '../../../lib/features/project/project-service.js';
@@ -65,6 +65,11 @@ afterAll(async () => {
 });
 afterEach(async () => {
     await edgeService.deleteAllTokens();
+    const tokens = await stores.apiTokenStore.getAll();
+    const deleteAll = tokens.map((t: IApiToken) =>
+        stores.apiTokenStore.delete(t.secret),
+    );
+    await Promise.all(deleteAll);
 });
 
 test('should only return valid tokens', async () => {

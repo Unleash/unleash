@@ -152,33 +152,12 @@ export class ApiTokenStore implements IApiTokenStore {
         return toTokens(rows);
     }
 
-    filterEdgeTokens(
-        query: Knex.QueryBuilder<
-            any,
-            {
-                _base: any;
-                _hasSelection: true;
-                _keys:
-                    | 'type'
-                    | 'tokens.secret'
-                    | 'username'
-                    | 'expires_at'
-                    | 'created_at'
-                    | 'seen_at'
-                    | 'environment'
-                    | 'token_name'
-                    | 'alias'
-                    | 'token_project_link.project';
-                _aliases: {};
-                _single: false;
-                _intersectProps: {};
-                _unionProps: never;
-            }[]
-        >,
-    ) {
-        return query.whereRaw(
-            'NOT EXISTS (SELECT 1 FROM edge_api_tokens e WHERE e.token_value = tokens.secret)',
-        );
+    filterEdgeTokens(query: Knex.QueryBuilder<any, any>) {
+        return query.whereNotExists((qb) => {
+            qb.select(1)
+                .from('edge_api_tokens as e')
+                .whereRaw('?? = ??', ['e.token_value', 'tokens.secret']);
+        });
     }
 
     async getAllActive(): Promise<IApiToken[]> {

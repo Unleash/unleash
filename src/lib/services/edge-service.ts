@@ -177,6 +177,7 @@ export default class EdgeService {
                         },
                         SYSTEM_USER_AUDIT,
                     );
+                console.log(newToken);
                 await this.edgeTokenStore.saveToken(clientId, newToken);
                 tokens.push({
                     projects: newToken.projects,

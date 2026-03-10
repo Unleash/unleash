@@ -4,7 +4,10 @@ import {
     setupAppWithCustomConfig,
 } from '../../../helpers/test-helper.js';
 import getLogger from '../../../../fixtures/no-logger.js';
-import type { IApiTokenStore } from '../../../../../lib/types/index.js';
+import {
+    IApiTokenStore,
+    SYSTEM_USER_ID,
+} from '../../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -33,14 +36,17 @@ afterAll(async () => {
 });
 
 test('Should always return token type in lowercase', async () => {
-    await apiTokenStore.insert({
-        environment: '*',
-        alias: 'some-alias',
-        secret: 'some-secret',
-        type: 'FRONTEND' as any,
-        projects: ['default'],
-        tokenName: 'some-name',
-    });
+    await apiTokenStore.insert(
+        {
+            environment: '*',
+            alias: 'some-alias',
+            secret: 'some-secret',
+            type: 'FRONTEND' as any,
+            projects: ['default'],
+            tokenName: 'some-name',
+        },
+        SYSTEM_USER_ID,
+    );
 
     const storedToken = await apiTokenStore.get('some-secret');
     expect(storedToken!.type).toBe('frontend');

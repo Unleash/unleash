@@ -53,7 +53,10 @@ export default class FakeApiTokenStore
         );
     }
 
-    async insert(newToken: IApiTokenCreate): Promise<IApiToken> {
+    async insert(
+        newToken: IApiTokenCreate,
+        createdByUserId: number,
+    ): Promise<IApiToken> {
         const apiToken = {
             createdAt: new Date(),
             project: newToken.projects?.join(',') || '*',
@@ -104,7 +107,7 @@ export default class FakeApiTokenStore
         return 0;
     }
 
-    getAllFilterEnterpriseEdgeTokens(): Promise<IApiToken[]> {
+    getUserDefinedTokens(): Promise<IApiToken[]> {
         return Promise.resolve([]);
     }
 }

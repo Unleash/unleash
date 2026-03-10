@@ -14,6 +14,7 @@ import {
 import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService.js';
 import type { EdgeService } from '../../../lib/services/index.js';
 import { createTransactionalEdgeService } from '../../../lib/services/edge-service.js';
+import { withTransactional } from '../../../lib/db/transaction.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -29,6 +30,8 @@ beforeAll(async () => {
                 useMemoizedActiveTokens: true,
             },
         },
+        edgeMasterKey: 'JxvIFjEQIcgp1+y0TzyHcJ4iiIREDtm85GhZFaEsOU8=',
+        edgeClientSecret: 'N/ujM32DRtA6IytNvaazOX/5zac9nhsj1jnPqcxl1iA=',
     });
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;
@@ -48,7 +51,11 @@ beforeAll(async () => {
     await projectService.createProject(project, user, TEST_AUDIT_USER);
 
     apiTokenService = createApiTokenService(db.rawDatabase, config);
-    edgeService = createTransactionalEdgeService(db.rawDatabase, config);
+    edgeService = withTransactional(
+        (tx) => createTransactionalEdgeService(tx, config),
+        db.rawDatabase,
+    );
+    await edgeService.saveClient('enterprise-edge', config.edgeClientSecret!);
 });
 
 afterAll(async () => {
@@ -71,9 +78,7 @@ test('should create client token', async () => {
         projects: ['*'],
         environment: DEFAULT_ENV,
     });
-    const allTokens = await apiTokenService.getAllTokens({
-        filterEnterpriseEdgeTokens: false,
-    });
+    const allTokens = await apiTokenService.getAllTokens();
 
     expect(allTokens.length).toBe(1);
     expect(token.secret.length > 32).toBe(true);
@@ -104,9 +109,7 @@ test('should set expiry of token', async () => {
         environment: DEFAULT_ENV,
     });
 
-    const [token] = await apiTokenService.getAllTokens({
-        filterEnterpriseEdgeTokens: false,
-    });
+    const [token] = await apiTokenService.getAllTokens();
 
     expect(token.expiresAt).toEqual(time);
 });
@@ -128,9 +131,7 @@ test('should update expiry of token', async () => {
 
     await apiTokenService.updateExpiry(token.secret, newTime, TEST_AUDIT_USER);
 
-    const [updatedToken] = await apiTokenService.getAllTokens({
-        filterEnterpriseEdgeTokens: false,
-    });
+    const [updatedToken] = await apiTokenService.getAllTokens();
 
     expect(updatedToken.expiresAt).toEqual(newTime);
 });
@@ -199,9 +200,7 @@ test('should not partially create token if projects are invalid', async () => {
             environment: DEFAULT_ENV,
         });
     } catch (_e) {}
-    const allTokens = await apiTokenService.getAllTokens({
-        filterEnterpriseEdgeTokens: false,
-    });
+    const allTokens = await apiTokenService.getAllTokens();
 
     expect(allTokens.length).toBe(0);
 });
@@ -211,15 +210,12 @@ test('Enterprise edge tokens should be filtered', async () => {
         tokens: [
             {
                 environment: 'development',
-                projects: ['project1', 'project2'],
+                projects: ['*'],
             },
         ],
     });
-    const unfilteredList = await apiTokenService.getAllTokens({
-        filterEnterpriseEdgeTokens: false,
-    });
-    const filteredList = await apiTokenService.getAllTokens({
-        filterEnterpriseEdgeTokens: true,
-    });
+    const unfilteredList = await apiTokenService.getAllTokens();
+    const filteredList = await apiTokenService.getUserDefinedTokens();
     expect(unfilteredList.length).toBe(filteredList.length + 1);
+    await edgeService.deleteAllTokens();
 });

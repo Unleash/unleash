@@ -38,6 +38,4 @@ export interface ApiTokenSchema {
     tokenName: string;
     /** The type of API token */
     type: ApiTokenSchemaType;
-    /** User id of the user that created this token */
-    createdByUserId?: number | null;
 }

@@ -11,6 +11,7 @@ import {
     type IUnleashStores,
     type IUser,
     SYSTEM_USER_AUDIT,
+    SYSTEM_USER_ID,
     TEST_AUDIT_USER,
 } from '../../../lib/types/index.js';
 import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService.js';
@@ -77,23 +78,29 @@ test('should only return valid tokens', async () => {
     const yesterday = subDays(now, 1);
     const tomorrow = addDays(now, 1);
 
-    const expiredToken = await stores.apiTokenStore.insert({
-        tokenName: 'expired',
-        secret: '*:environment.expired-secret',
-        type: ApiTokenType.BACKEND,
-        expiresAt: yesterday,
-        projects: ['*'],
-        environment: DEFAULT_ENV,
-    });
+    const expiredToken = await stores.apiTokenStore.insert(
+        {
+            tokenName: 'expired',
+            secret: '*:environment.expired-secret',
+            type: ApiTokenType.BACKEND,
+            expiresAt: yesterday,
+            projects: ['*'],
+            environment: DEFAULT_ENV,
+        },
+        SYSTEM_USER_ID,
+    );
 
-    const activeToken = await stores.apiTokenStore.insert({
-        tokenName: 'default-valid',
-        secret: '*:environment.valid-secret',
-        type: ApiTokenType.BACKEND,
-        expiresAt: tomorrow,
-        projects: ['*'],
-        environment: DEFAULT_ENV,
-    });
+    const activeToken = await stores.apiTokenStore.insert(
+        {
+            tokenName: 'default-valid',
+            secret: '*:environment.valid-secret',
+            type: ApiTokenType.BACKEND,
+            expiresAt: tomorrow,
+            projects: ['*'],
+            environment: DEFAULT_ENV,
+        },
+        SYSTEM_USER_ID,
+    );
 
     const response = await edgeService.getValidTokens([
         activeToken.secret,

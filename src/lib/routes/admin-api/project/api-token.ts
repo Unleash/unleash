@@ -228,9 +228,7 @@ export class ProjectApiTokenController extends Controller {
         user: IUser,
         project: string,
     ): Promise<IApiToken[]> {
-        const allTokens = await this.apiTokenService.getAllTokens({
-            filterEnterpriseEdgeTokens: true,
-        });
+        const allTokens = await this.apiTokenService.getUserDefinedTokens();
 
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;

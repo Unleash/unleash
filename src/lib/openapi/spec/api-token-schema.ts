@@ -72,12 +72,6 @@ export const apiTokenSchema = {
             description: `Alias is no longer in active use and will often be NULL. It's kept around as a way of allowing old proxy tokens created with the old metadata format to keep working.`,
             example: 'randomid-or-some-alias',
         },
-        createdByUserId: {
-            type: 'number',
-            nullable: true,
-            description: 'User Id of the user that created this token',
-            example: -1337,
-        },
     },
     components: {},
 } as const;

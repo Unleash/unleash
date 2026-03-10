@@ -218,10 +218,10 @@ export interface IApiTokenCreate {
     environment: string;
     projects: string[];
     expiresAt?: Date;
-    createdByUserId?: number;
 }
 
-export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
+export interface IApiToken
+    extends Omit<IApiTokenCreate, 'alias' | 'createdByUserId'> {
     createdAt: Date;
     seenAt?: Date;
     environment: string;

@@ -1,5 +1,10 @@
 import { createTestConfig } from '../../test/config/test-config.js';
-import type { IUnleashConfig, IUnleashOptions, IUser } from '../types/index.js';
+import {
+    IUnleashConfig,
+    IUnleashOptions,
+    IUser,
+    SYSTEM_USER_ID,
+} from '../types/index.js';
 import { ApiTokenType, type IApiTokenCreate } from '../types/model.js';
 import {
     ADMIN_TOKEN_USER,
@@ -262,12 +267,14 @@ test('normalizes api token type casing to lowercase', async () => {
         expect.objectContaining({
             type: 'client',
         }),
+        SYSTEM_USER_ID,
     );
 
     expect(apiTokenStoreInsert).not.toHaveBeenCalledWith(
         expect.objectContaining({
             type: 'CLIENT',
         }),
+        SYSTEM_USER_ID,
     );
 
     const tokens = await apiTokenStore.getAll();

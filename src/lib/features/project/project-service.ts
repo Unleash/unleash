@@ -53,6 +53,7 @@ import {
     SYSTEM_USER_ID,
     type IProjectReadModel,
     type IOnboardingReadModel,
+    IEdgeTokenStore,
 } from '../../types/index.js';
 import type {
     IRoleDescriptor,
@@ -154,6 +155,8 @@ export default class ProjectService {
 
     private onboardingReadModel: IOnboardingReadModel;
 
+    private edgeTokenStore: IEdgeTokenStore;
+
     private timer: Function;
 
     constructor(
@@ -169,6 +172,7 @@ export default class ProjectService {
             projectStatsStore,
             projectReadModel,
             onboardingReadModel,
+            edgeTokenStore,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -182,6 +186,7 @@ export default class ProjectService {
             | 'projectStatsStore'
             | 'projectReadModel'
             | 'onboardingReadModel'
+            | 'edgeTokenStore'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -216,6 +221,7 @@ export default class ProjectService {
         this.eventBus = config.eventBus;
         this.projectReadModel = projectReadModel;
         this.onboardingReadModel = onboardingReadModel;
+        this.edgeTokenStore = edgeTokenStore;
         this.timer = (functionName: string) =>
             metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
                 className: 'ProjectService',
@@ -597,9 +603,7 @@ export default class ProjectService {
             auditUser,
         );
 
-        const allTokens = await this.apiTokenService.getAllTokens({
-            filterEnterpriseEdgeTokens: true,
-        });
+        const allTokens = await this.apiTokenService.getAllTokens();
         const projectTokens = allTokens.filter(
             (token) =>
                 (token.projects &&
@@ -609,6 +613,12 @@ export default class ProjectService {
         );
 
         await this.projectStore.delete(id);
+
+        await Promise.all(
+            projectTokens.map((token) =>
+                this.edgeTokenStore.delete(token.secret),
+            ),
+        );
 
         await Promise.all(
             projectTokens.map((token) =>

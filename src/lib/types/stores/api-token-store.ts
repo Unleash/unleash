@@ -3,8 +3,11 @@ import type { Store } from './store.js';
 
 export interface IApiTokenStore extends Store<IApiToken, string> {
     getAllActive(): Promise<IApiToken[]>;
-    getAllFilterEnterpriseEdgeTokens(): Promise<IApiToken[]>;
-    insert(newToken: IApiTokenCreate): Promise<IApiToken>;
+    getUserDefinedTokens(): Promise<IApiToken[]>;
+    insert(
+        newToken: IApiTokenCreate,
+        createdByUserId: number,
+    ): Promise<IApiToken>;
     setExpiry(secret: string, expiresAt: Date): Promise<IApiToken | undefined>;
     markSeenAt(secrets: string[]): Promise<void>;
     count(): Promise<number>;

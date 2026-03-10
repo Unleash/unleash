@@ -69,7 +69,7 @@ const tokenRowReducer = (acc, tokenRow) => {
     return acc;
 };
 
-const toRow = (newToken: IApiTokenCreate) => ({
+const toRow = (newToken: IApiTokenCreate, createdByUserId: number) => ({
     username: newToken.tokenName,
     token_name: newToken.tokenName,
     secret: newToken.secret,
@@ -78,7 +78,7 @@ const toRow = (newToken: IApiTokenCreate) => ({
         newToken.environment === ALL ? undefined : newToken.environment,
     expires_at: newToken.expiresAt,
     alias: newToken.alias || null,
-    created_by_user_id: newToken.createdByUserId || SYSTEM_USER_ID,
+    created_by_user_id: createdByUserId,
 });
 
 const toTokens = (rows: any[]): IApiToken[] => {
@@ -145,7 +145,7 @@ export class ApiTokenStore implements IApiTokenStore {
         return toTokens(rows);
     }
 
-    async getAllFilterEnterpriseEdgeTokens(): Promise<IApiToken[]> {
+    async getUserDefinedTokens(): Promise<IApiToken[]> {
         const stopTimer = this.timer('getAllFilterEnterpriseEdgeTokens');
         const rows = await this.filterEdgeTokens(this.makeTokenProjectQuery());
         stopTimer();
@@ -190,10 +190,13 @@ export class ApiTokenStore implements IApiTokenStore {
             );
     }
 
-    async insert(newToken: IApiTokenCreate): Promise<IApiToken> {
+    async insert(
+        newToken: IApiTokenCreate,
+        createdByUserId: number,
+    ): Promise<IApiToken> {
         const response = await inTransaction(this.db, async (tx) => {
             const [row] = await tx<ITokenInsert>(TABLE).insert(
-                toRow(newToken),
+                toRow(newToken, createdByUserId),
                 ['created_at'],
             );
 

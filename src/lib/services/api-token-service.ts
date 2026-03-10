@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import type { Logger } from '../logger.js';
 import { ADMIN, CLIENT, FRONTEND } from '../types/permissions.js';
-import type { IUnleashStores } from '../types/stores.js';
+import type { IEdgeTokenStore, IUnleashStores } from '../types/stores.js';
 import type { IUnleashConfig } from '../types/option.js';
 import ApiUser, { type IApiUser } from '../types/api-user.js';
 import {
@@ -191,15 +191,12 @@ export class ApiTokenService {
         }
     }
 
-    public async getAllTokens({
-        filterEnterpriseEdgeTokens,
-    }: {
-        filterEnterpriseEdgeTokens: boolean;
-    }): Promise<IApiToken[]> {
-        if (filterEnterpriseEdgeTokens) {
-            return this.store.getAllFilterEnterpriseEdgeTokens();
-        }
+    public async getAllTokens(): Promise<IApiToken[]> {
         return this.store.getAll();
+    }
+
+    public async getUserDefinedTokens(): Promise<IApiToken[]> {
+        return this.store.getUserDefinedTokens();
     }
 
     async initApiTokens(tokens: IApiTokenCreate[]) {
@@ -349,15 +346,11 @@ export class ApiTokenService {
         return this.insertNewApiToken(createNewToken, SYSTEM_USER_AUDIT);
     }
 
-    private normalizeTokenType(
-        token: IApiTokenCreate,
-        auditUserId: number = SYSTEM_USER_ID,
-    ): IApiTokenCreate {
+    private normalizeTokenType(token: IApiTokenCreate): IApiTokenCreate {
         const { type, ...rest } = token;
         return {
             ...rest,
             type: type.toLowerCase() as ApiTokenType,
-            createdByUserId: auditUserId,
         };
     }
 
@@ -367,7 +360,8 @@ export class ApiTokenService {
     ): Promise<IApiToken> {
         try {
             const token = await this.store.insert(
-                this.normalizeTokenType(newApiToken, auditUser.id),
+                this.normalizeTokenType(newApiToken),
+                auditUser.id,
             );
             this.activeTokens.push(token);
             await this.eventService.storeEvent(

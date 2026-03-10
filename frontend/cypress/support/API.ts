@@ -32,12 +32,10 @@ export const deleteFeature_API = (
     cy.request({
         method: 'DELETE',
         url: `${baseUrl}/api/admin/projects/${project}/features/${name}`,
-        failOnStatusCode: false,
     });
     return cy.request({
         method: 'DELETE',
         url: `${baseUrl}/api/admin/archive/${name}`,
-        failOnStatusCode: false,
     });
 };
 
@@ -62,7 +60,6 @@ export const deleteProject_API = (name: string): Chainable<any> => {
     return cy.request({
         method: 'DELETE',
         url: `${baseUrl}/api/admin/projects/${name}`,
-        failOnStatusCode: false,
     });
 };
 

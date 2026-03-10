@@ -13,6 +13,7 @@ describe('feature', () => {
     });
 
     after(() => {
+        cy.login_UI();
         cy.on('uncaught:exception', (err) => {
             if (
                 err.message.includes(

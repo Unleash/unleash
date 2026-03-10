@@ -20,7 +20,9 @@ const disableActiveSplashScreens = () => {
             }
         });
     });
-    return cy.visit(`/splash/operators`);
+    cy.intercept('POST', '/api/admin/user/splash/operators', {
+        statusCode: 200,
+    });
 };
 
 const disableFeatureStrategiesProdGuard = () => {
@@ -40,20 +42,21 @@ export const do_login = (
     password = AUTH_PASSWORD,
 ): Chainable<any> => {
     cy.visit('/');
-    cy.wait(200);
-    cy.get("[data-testid='LOGIN_EMAIL_ID']").type(user);
+    cy.get("[data-testid='LOGIN_EMAIL_ID']").should('be.visible').type(user);
 
     if (AUTH_PASSWORD) {
-        cy.get("[data-testid='LOGIN_PASSWORD_ID']").type(password);
+        cy.get("[data-testid='LOGIN_PASSWORD_ID']")
+            .should('be.visible')
+            .type(password);
     }
 
-    cy.get("[data-testid='LOGIN_BUTTON']").click();
+    cy.get("[data-testid='LOGIN_BUTTON']").should('be.visible').click();
 
     // Wait for the login redirect to complete.
     cy.get("[data-testid='HEADER_USER_AVATAR']");
 
     if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
-        cy.get("[data-testid='CLOSE_SPLASH']").click();
+        cy.get("[data-testid='CLOSE_SPLASH']").should('be.visible').click();
     }
 
     return cy;
@@ -76,17 +79,18 @@ export const createFeature_UI = (
     const uiOpts = forceInteractions ? { force: true } : undefined;
     cy.visit(`/projects/${projectName}`);
 
-    cy.wait(5_000);
-
-    cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').first().click(uiOpts);
+    cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE')
+        .should('be.visible')
+        .first()
+        .click(uiOpts);
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(
         'createFeature',
     );
 
-    cy.wait(300);
-
-    cy.get("[data-testid='FORM_NAME_INPUT'] input").type(name, uiOpts);
+    cy.get("[data-testid='FORM_NAME_INPUT'] input")
+        .should('be.visible')
+        .type(name, uiOpts);
     cy.get("[data-testid='FORM_DESCRIPTION_INPUT'] textarea")
         .first()
         .type('hello-world', uiOpts);
@@ -126,9 +130,9 @@ export const createSegment_UI = (segmentName: string): Chainable<any> => {
 
     cy.intercept('POST', '/api/admin/segments').as('createSegment');
 
-    cy.wait(500);
-
-    cy.get("[data-testid='SEGMENT_NAME_ID']").type(segmentName);
+    cy.get("[data-testid='SEGMENT_NAME_ID']")
+        .should('be.visible')
+        .type(segmentName);
     cy.get("[data-testid='SEGMENT_DESC_ID']").type('hello-world');
     cy.get("[data-testid='SEGMENT_NEXT_BTN_ID']").click();
     cy.get("[data-testid='SEGMENT_CREATE_BTN_ID']").click();
@@ -176,9 +180,9 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     cy.visit(
         `/projects/${projectName}/features/${featureToggleName}/strategies/create?environmentId=${env}&strategyName=flexibleRollout`,
     );
-    cy.wait(500);
-    //  Takes a bit to load the screen - this will wait until it finds it or fail
-    cy.get('[data-testid=FLEXIBLE_STRATEGY_STICKINESS_ID]');
+    cy.get('[data-testid=FLEXIBLE_STRATEGY_STICKINESS_ID]').should(
+        'be.visible',
+    );
     if (ENTERPRISE) {
         cy.get('[data-testid=ADD_CONSTRAINT_ID]').click();
         cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
@@ -199,16 +203,15 @@ export const updateFlexibleRolloutStrategy_UI = (
         `/projects/${project}/features/${featureToggleName}/strategies/edit?environmentId=development&strategyId=${strategyId}`,
     );
 
-    cy.wait(500);
-
     cy.get('[data-testid=FLEXIBLE_STRATEGY_STICKINESS_ID]')
+        .should('be.visible')
         .first()
         .click()
         .get('[data-testid=SELECT_ITEM_ID-sessionId')
         .first()
         .click();
 
-    cy.wait(500);
+    cy.get('[data-testid=FLEXIBLE_STRATEGY_GROUP_ID]').should('be.visible');
     cy.get('[data-testid=FLEXIBLE_STRATEGY_GROUP_ID]')
         .first()
         .clear()

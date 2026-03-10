@@ -104,9 +104,15 @@ export const useTemplateForm = (
         return {
             name,
             description,
-            milestones: milestones.map(
-                ({ startExpanded, ...milestone }) => milestone,
-            ),
+            milestones: milestones.map(({ startExpanded, ...milestone }) => ({
+                ...milestone,
+                strategies: milestone.strategies?.map(
+                    ({ strategyName, name, ...strategy }) => ({
+                        name: name || strategyName,
+                        ...strategy,
+                    }),
+                ),
+            })),
         };
     };
 

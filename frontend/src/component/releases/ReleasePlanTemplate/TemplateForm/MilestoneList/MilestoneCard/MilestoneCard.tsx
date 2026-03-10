@@ -195,7 +195,6 @@ export const MilestoneCard = ({
                 ...(milestone.strategies || []),
                 {
                     ...strategy,
-                    strategyName: strategy.name || strategy.strategyName,
                     sortOrder: milestone.strategies?.length || 0,
                 },
             ],

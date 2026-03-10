@@ -50,5 +50,8 @@ jobs:
         if: failure()
         with:
           name: cypress-screenshots-db-migrations
-          path: frontend/cypress/screenshots
+          path: |
+            frontend/cypress/screenshots
+            frontend/cypress/videos
           if-no-files-found: ignore
+          retention-days: 3

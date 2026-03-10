@@ -8,6 +8,7 @@ import {
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 import { formatTag } from 'utils/format-tag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type FeaturesOverviewToggleFiltersProps = {
     state: FilterItemParamHolder;
@@ -20,6 +21,7 @@ export const FeaturesOverviewToggleFilters: FC<
     const { projects } = useProjects();
     const { segments } = useSegments();
     const { tags } = useAllTags();
+    const filterFavoritesEnabled = useUiFlag('filterFavorites');
 
     const stateOptions = [
         {
@@ -118,6 +120,21 @@ export const FeaturesOverviewToggleFilters: FC<
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
+            ...(filterFavoritesEnabled
+                ? ([
+                      {
+                          label: 'Favorite',
+                          icon: 'star',
+                          options: [{ label: 'True', value: 'true' }],
+                          filterKey: 'favorite',
+                          singularOperators: ['IS'] as [string, ...string[]],
+                          pluralOperators: ['IS_ANY_OF'] as [
+                              string,
+                              ...string[],
+                          ],
+                      },
+                  ] as IFilterItem[])
+                : []),
         ];
 
         setAvailableFilters(availableFilters);
@@ -125,6 +142,7 @@ export const FeaturesOverviewToggleFilters: FC<
         JSON.stringify(projects),
         JSON.stringify(segments),
         JSON.stringify(tags),
+        filterFavoritesEnabled,
     ]);
 
     return (

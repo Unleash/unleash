@@ -28,6 +28,7 @@ export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
         type: FilterItemParam,
         lifecycle: FilterItemParam,
         createdBy: FilterItemParam,
+        favorite: FilterItemParam,
     };
     const [tableState, setTableState] = usePersistentTableState(
         `${storageKey}`,

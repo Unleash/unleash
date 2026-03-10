@@ -280,7 +280,6 @@ export class ApiTokenService {
 
     /**
      * @param newToken
-     * @param createdBy should be IApiUser or IUser. Still supports optional or string for backward compatibility
      * @param auditUser Used for event log and referencing who made the token
      */
     public async createApiTokenWithProjects(

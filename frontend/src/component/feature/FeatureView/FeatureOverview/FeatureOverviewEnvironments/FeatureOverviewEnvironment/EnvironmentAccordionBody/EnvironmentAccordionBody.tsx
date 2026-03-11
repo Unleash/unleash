@@ -70,11 +70,8 @@ export const EnvironmentAccordionBody = ({
     const [strategies, setStrategies] = useState(
         featureEnvironment?.strategies || [],
     );
-    const { releasePlans, refetch } = useFeatureReleasePlans(
-        projectId,
-        featureId,
-        featureEnvironment?.name,
-    );
+    const { releasePlans, refetch: refetchReleasePlans } =
+        useFeatureReleasePlans(projectId, featureId, featureEnvironment?.name);
     const { trackEvent } = usePlausibleTracker();
     const safeguardsEnabled = useUiFlag('safeguards');
     const featureEnvSafeguards = useUiFlag('featureEnvSafeguards');
@@ -221,7 +218,7 @@ export const EnvironmentAccordionBody = ({
     const firstPlan = releasePlans[0];
 
     const handleSafeguardChange = () => {
-        refetch();
+        refetchReleasePlans();
         refetchFeature();
     };
 
@@ -259,7 +256,7 @@ export const EnvironmentAccordionBody = ({
                         <ReleasePlan
                             plan={plan}
                             environmentIsDisabled={isDisabled}
-                            onAutomationChange={refetch}
+                            onAutomationChange={refetchReleasePlans}
                         />
                     </StrategyListItem>
                 ))}

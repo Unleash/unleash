@@ -23,8 +23,6 @@ describe('expectedUpstreamRevisionId', () => {
         const upstreamRevision = expectedUpstreamRevisionId(revisionIds, {
             environment: 'development',
             projects: ['three', 'two'],
-            revisionId: 33,
-            lastUpdated: new Date(),
         });
 
         expect(upstreamRevision).toBe(34);
@@ -34,8 +32,6 @@ describe('expectedUpstreamRevisionId', () => {
         const upstreamRevision = expectedUpstreamRevisionId(revisionIds, {
             environment: 'development',
             projects: ['two'],
-            revisionId: 27,
-            lastUpdated: new Date(),
         });
 
         expect(upstreamRevision).toBe(27);

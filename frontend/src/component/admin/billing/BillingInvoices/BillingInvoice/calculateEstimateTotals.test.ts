@@ -89,8 +89,8 @@ describe('calculateEstimateTotals', () => {
 
         it('calculates totals correctly with usage lines only', () => {
             const usageLines = [
-                createUsageLine(100, 50, 2, 100),
-                createUsageLine(200, 150, 1.5, 75),
+                createUsageLine(60_000_000, 53_000_000, 5),
+                createUsageLine(56_500_000, 53_000_000, 5),
             ];
             const result = calculateEstimateTotals(
                 'estimate',
@@ -102,16 +102,17 @@ describe('calculateEstimateTotals', () => {
                 usageLines,
             );
 
+            // ceil(7M/1M)*5 + ceil(3.5M/1M)*5 = 7*5 + 4*5 = 55
             expect(result).toEqual({
-                subtotal: 175,
-                taxAmount: 35,
-                totalAmount: 210,
+                subtotal: 55,
+                taxAmount: 11,
+                totalAmount: 66,
             });
         });
 
         it('calculates totals correctly with both main and usage lines', () => {
-            const mainLines = [createMainLine(1000)];
-            const usageLines = [createUsageLine(100, 50, 2, 100)];
+            const mainLines = [createMainLine(375)];
+            const usageLines = [createUsageLine(60_000_000, 53_000_000, 5)];
             const result = calculateEstimateTotals(
                 'estimate',
                 0,
@@ -122,10 +123,11 @@ describe('calculateEstimateTotals', () => {
                 usageLines,
             );
 
+            // 375 + ceil(7M/1M)*5 = 375 + 35 = 410
             expect(result).toEqual({
-                subtotal: 1100,
-                taxAmount: 110,
-                totalAmount: 1210,
+                subtotal: 410,
+                taxAmount: 41,
+                totalAmount: 451,
             });
         });
 
@@ -153,7 +155,7 @@ describe('calculateEstimateTotals', () => {
 
         it('handles usage lines with missing consumption or limit', () => {
             const usageLines = [
-                createUsageLine(100, 50, 2, 100),
+                createUsageLine(60_000_000, 53_000_000, 5),
                 { ...createUsageLine(0, 0, 0), consumption: undefined },
                 { ...createUsageLine(0, 0, 0), limit: undefined },
             ];
@@ -167,10 +169,11 @@ describe('calculateEstimateTotals', () => {
                 usageLines,
             );
 
+            // ceil(7M/1M)*5 = 35; missing consumption/limit lines contribute 0
             expect(result).toEqual({
-                subtotal: 100,
-                taxAmount: 10,
-                totalAmount: 110,
+                subtotal: 35,
+                taxAmount: 3.5,
+                totalAmount: 38.5,
             });
         });
 
@@ -255,8 +258,8 @@ describe('calculateEstimateTotals', () => {
 
         it('handles usage lines with zero unitPrice', () => {
             const usageLines = [
-                createUsageLine(100, 50, 2, 100),
-                createUsageLine(200, 100, 0, 0),
+                createUsageLine(60_000_000, 53_000_000, 5),
+                createUsageLine(60_000_000, 53_000_000, 0),
             ];
             const result = calculateEstimateTotals(
                 'estimate',
@@ -268,17 +271,17 @@ describe('calculateEstimateTotals', () => {
                 usageLines,
             );
 
+            // ceil(7M/1M)*5 + ceil(7M/1M)*0 = 35 + 0 = 35
             expect(result).toEqual({
-                subtotal: 100,
-                taxAmount: 10,
-                totalAmount: 110,
+                subtotal: 35,
+                taxAmount: 3.5,
+                totalAmount: 38.5,
             });
         });
 
-        it('sums usage line totalAmounts directly', () => {
+        it('rounds up overage bundles', () => {
             const usageLines = [
-                createUsageLine(150.7, 100, 2, 100),
-                createUsageLine(200.3, 150, 1.5, 75),
+                createUsageLine(53_500_000, 53_000_000, 5),
             ];
             const result = calculateEstimateTotals(
                 'estimate',
@@ -290,10 +293,11 @@ describe('calculateEstimateTotals', () => {
                 usageLines,
             );
 
+            // ceil(500_000/1M) = 1 bundle, 1*5 = 5
             expect(result).toEqual({
-                subtotal: 175,
-                taxAmount: 17.5,
-                totalAmount: 192.5,
+                subtotal: 5,
+                taxAmount: 0.5,
+                totalAmount: 5.5,
             });
         });
     });

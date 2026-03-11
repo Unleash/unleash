@@ -16,6 +16,7 @@ describe('requireFeatureEnabled', () => {
 
         app.use(
             `${path}/change-requests`,
+            // @ts-expect-error the feature name does not exist, it's only for testing
             requireFeatureEnabled(flagResolver, 'changeRequestEnabled'),
             (_req, res) => {
                 res.json({ changeRequest: 'hello' });
@@ -36,6 +37,7 @@ describe('requireFeatureEnabled', () => {
 
         app.use(
             `${path}/change-requests`,
+            // @ts-expect-error the feature name does not exist, it's only for testing
             requireFeatureEnabled(flagResolver, 'changeRequestEnabled'),
             (_req, res) => {
                 res.send({ changeRequest: 'hello' });
@@ -56,6 +58,7 @@ describe('requireFeatureEnabled', () => {
 
         app.use(
             `${path}/change-requests`,
+            // @ts-expect-error the feature name does not exist, it's only for testing
             requireFeatureEnabled(flagResolver, 'changeRequestEnabled'),
             (_req, res) => {
                 res.json({ name: 'Request changes' });
@@ -80,6 +83,7 @@ describe('requireFeatureEnabled', () => {
 
         app.use(
             path,
+            // @ts-expect-error the feature name does not exist, it's only for testing
             requireFeatureEnabled(flagResolver, 'changeRequestEnabled'),
             (_req, res) => {
                 res.json({ name: 'Request changes' });
@@ -152,6 +156,7 @@ test('routes stay discoverable in OpenAPI when guarded route returns 404', async
 
     app.use(
         '/api/admin/do-the-thing',
+        // @ts-expect-error the feature name does not exist, it's only for testing
         requireFeatureEnabled(flagResolver, 'the-thing'),
         router,
     );

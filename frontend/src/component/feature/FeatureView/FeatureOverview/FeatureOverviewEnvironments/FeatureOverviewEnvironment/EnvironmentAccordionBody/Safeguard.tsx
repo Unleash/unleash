@@ -20,6 +20,7 @@ import type {
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { ISafeguard } from 'interfaces/releasePlans';
 import { strategyBackground } from 'component/common/StrategyList/StrategyListItem';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledSafeguardContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -46,25 +47,22 @@ type SafeguardAddingType = 'releasePlan' | 'featureEnvironment';
 
 export const AddSafeguard = ({
     onSelect,
-    showFeatureEnv,
-    hasReleasePlan,
+    releasePlan,
 }: {
     onSelect: (type: SafeguardAddingType) => void;
-    showFeatureEnv: boolean;
-    hasReleasePlan: boolean;
+    releasePlan?: { id: string; name: string };
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const featureEnvSafeguardsEnabled = useUiFlag('featureEnvSafeguards');
 
-    if (!showFeatureEnv && !hasReleasePlan) return null;
-
-    const showMenu = showFeatureEnv;
+    if (!featureEnvSafeguardsEnabled && !releasePlan) return null;
 
     return (
         <StyledSafeguardContainer>
             <StyledAddSafeguardContent>
                 <StyledActionButton
                     onClick={(e) => {
-                        if (showMenu) {
+                        if (featureEnvSafeguardsEnabled) {
                             setAnchorEl(e.currentTarget);
                         } else {
                             onSelect('releasePlan');
@@ -92,7 +90,7 @@ export const AddSafeguard = ({
                 </MenuItem>
                 <Tooltip
                     title={
-                        hasReleasePlan
+                        releasePlan
                             ? ''
                             : 'Add a release plan to use this safeguard'
                     }
@@ -100,7 +98,7 @@ export const AddSafeguard = ({
                 >
                     <span>
                         <MenuItem
-                            disabled={!hasReleasePlan}
+                            disabled={!releasePlan}
                             onClick={() => {
                                 onSelect('releasePlan');
                                 setAnchorEl(null);
@@ -527,7 +525,6 @@ export const SafeguardSection = ({
     environmentName,
     featureId,
     onSafeguardChange,
-    showFeatureEnvOption,
 }: {
     featureEnvSafeguard?: ISafeguard;
     releasePlan?: { id: string; name: string };
@@ -535,7 +532,6 @@ export const SafeguardSection = ({
     environmentName: string;
     featureId: string;
     onSafeguardChange: () => void;
-    showFeatureEnvOption: boolean;
 }) => {
     const [addingType, setAddingType] = useState<SafeguardAddingType | null>(
         null,
@@ -593,11 +589,5 @@ export const SafeguardSection = ({
         );
     }
 
-    return (
-        <AddSafeguard
-            onSelect={setAddingType}
-            showFeatureEnv={showFeatureEnvOption}
-            hasReleasePlan={Boolean(releasePlan)}
-        />
-    );
+    return <AddSafeguard onSelect={setAddingType} releasePlan={releasePlan} />;
 };

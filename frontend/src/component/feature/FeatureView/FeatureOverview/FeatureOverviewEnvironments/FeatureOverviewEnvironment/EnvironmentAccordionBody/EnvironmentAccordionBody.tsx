@@ -71,8 +71,6 @@ export const EnvironmentAccordionBody = ({
         useFeatureReleasePlans(projectId, featureId, featureEnvironment?.name);
     const { trackEvent } = usePlausibleTracker();
     const safeguardsEnabled = useUiFlag('safeguards');
-    const featureEnvSafeguards = useUiFlag('featureEnvSafeguards');
-
     const [dragItem, setDragItem] = useState<{
         id: string;
         index: number;
@@ -232,17 +230,12 @@ export const EnvironmentAccordionBody = ({
             ) : null}
             {safeguardsEnabled ? (
                 <SafeguardSection
-                    featureEnvSafeguard={
-                        featureEnvSafeguards
-                            ? featureEnvironment.safeguards?.[0]
-                            : undefined
-                    }
+                    featureEnvSafeguard={featureEnvironment.safeguards?.[0]}
                     releasePlan={firstPlan}
                     releasePlanSafeguard={firstPlan?.safeguards?.[0]}
                     environmentName={featureEnvironment.name}
                     featureId={featureId}
                     onSafeguardChange={handleSafeguardChange}
-                    showFeatureEnvOption={featureEnvSafeguards}
                 />
             ) : null}
             <StrategyList>

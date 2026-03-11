@@ -72,7 +72,7 @@ const setupServerRoutes = () => {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
-        flags: { safeguards: true },
+        flags: { safeguards: true, featureEnvSafeguards: true },
     });
     testServerRoute(server, '/api/admin/user', {
         user: {
@@ -465,14 +465,10 @@ describe('AddSafeguard', () => {
         const user = userEvent.setup();
         const onSelect = vi.fn();
 
-        render(
-            <AddSafeguard
-                onSelect={onSelect}
-                showFeatureEnv={true}
-                hasReleasePlan={true}
-            />,
-            { route: '/', permissions },
-        );
+        render(<AddSafeguard onSelect={onSelect} releasePlan={releasePlan} />, {
+            route: '/',
+            permissions,
+        });
 
         const addButton = await screen.findByText('Add safeguard');
         await user.click(addButton);
@@ -485,14 +481,10 @@ describe('AddSafeguard', () => {
         const user = userEvent.setup();
         const onSelect = vi.fn();
 
-        render(
-            <AddSafeguard
-                onSelect={onSelect}
-                showFeatureEnv={true}
-                hasReleasePlan={true}
-            />,
-            { route: '/', permissions },
-        );
+        render(<AddSafeguard onSelect={onSelect} releasePlan={releasePlan} />, {
+            route: '/',
+            permissions,
+        });
 
         const addButton = await screen.findByText('Add safeguard');
         await user.click(addButton);
@@ -507,14 +499,10 @@ describe('AddSafeguard', () => {
         const user = userEvent.setup();
         const onSelect = vi.fn();
 
-        render(
-            <AddSafeguard
-                onSelect={onSelect}
-                showFeatureEnv={true}
-                hasReleasePlan={false}
-            />,
-            { route: '/', permissions },
-        );
+        render(<AddSafeguard onSelect={onSelect} />, {
+            route: '/',
+            permissions,
+        });
 
         const addButton = await screen.findByText('Add safeguard');
         await user.click(addButton);
@@ -530,14 +518,17 @@ describe('AddSafeguard', () => {
         const onSelect = vi.fn();
         const user = userEvent.setup();
 
-        render(
-            <AddSafeguard
-                onSelect={onSelect}
-                showFeatureEnv={false}
-                hasReleasePlan={true}
-            />,
-            { route: '/', permissions },
-        );
+        testServerRoute(server, '/api/admin/ui-config', {
+            versionInfo: {
+                current: { oss: 'version', enterprise: 'version' },
+            },
+            flags: { safeguards: true, featureEnvSafeguards: false },
+        });
+
+        render(<AddSafeguard onSelect={onSelect} releasePlan={releasePlan} />, {
+            route: '/',
+            permissions,
+        });
 
         const addButton = await screen.findByText('Add safeguard');
         await user.click(addButton);
@@ -548,14 +539,17 @@ describe('AddSafeguard', () => {
     test('should render nothing when no types available', () => {
         const onSelect = vi.fn();
 
-        render(
-            <AddSafeguard
-                onSelect={onSelect}
-                showFeatureEnv={false}
-                hasReleasePlan={false}
-            />,
-            { route: '/', permissions },
-        );
+        testServerRoute(server, '/api/admin/ui-config', {
+            versionInfo: {
+                current: { oss: 'version', enterprise: 'version' },
+            },
+            flags: { safeguards: true, featureEnvSafeguards: false },
+        });
+
+        render(<AddSafeguard onSelect={onSelect} />, {
+            route: '/',
+            permissions,
+        });
 
         expect(screen.queryByText('Add safeguard')).not.toBeInTheDocument();
     });
@@ -565,12 +559,10 @@ describe('SafeguardSection', () => {
     const SafeguardSectionComponent = ({
         featureEnvSafeguard,
         releasePlanSafeguard,
-        showFeatureEnvOption = true,
         onSafeguardChange,
     }: {
         featureEnvSafeguard?: ISafeguard;
         releasePlanSafeguard?: ISafeguard;
-        showFeatureEnvOption?: boolean;
         onSafeguardChange: () => void;
     }) => (
         <Routes>
@@ -584,7 +576,6 @@ describe('SafeguardSection', () => {
                         environmentName='production'
                         featureId='feature1'
                         onSafeguardChange={onSafeguardChange}
-                        showFeatureEnvOption={showFeatureEnvOption}
                     />
                 }
             />

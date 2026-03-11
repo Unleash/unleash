@@ -127,7 +127,7 @@
     "regenerator-runtime": "0.14.1",
     "sass": "1.97.3",
     "semver": "7.7.4",
-    "swr": "2.3.3",
+    "swr": "2.4.1",
     "tss-react": "4.9.20",
     "typescript": "5.8.3",
     "unleash-proxy-client": "^3.7.3",

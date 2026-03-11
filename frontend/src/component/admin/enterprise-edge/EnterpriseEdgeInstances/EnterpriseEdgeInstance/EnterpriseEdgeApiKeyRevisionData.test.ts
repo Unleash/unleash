@@ -5,6 +5,10 @@ describe('expectedUpstreamRevisionId', () => {
     const revisionIds = [
         {
             environment: 'development',
+            revisionId: 12,
+        },
+        {
+            environment: 'development',
             projects: ['two'],
             revisionId: 27,
         },
@@ -35,5 +39,23 @@ describe('expectedUpstreamRevisionId', () => {
         });
 
         expect(upstreamRevision).toBe(27);
+    });
+
+    it('uses the highest scoped revision for wildcard tokens', () => {
+        const upstreamRevision = expectedUpstreamRevisionId(revisionIds, {
+            environment: 'development',
+            projects: ['*'],
+        });
+
+        expect(upstreamRevision).toBe(34);
+    });
+
+    it('falls back to the environment-wide revision when no project scope matches', () => {
+        const upstreamRevision = expectedUpstreamRevisionId(revisionIds, {
+            environment: 'development',
+            projects: ['unknown-project'],
+        });
+
+        expect(upstreamRevision).toBe(12);
     });
 });

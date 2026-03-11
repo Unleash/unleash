@@ -56,6 +56,11 @@ const listKey = (revInfo: EdgeApiKeyRevisionId): string => {
     return `[${revInfo.projects.join(',')}]:${revInfo.environment}`;
 };
 
+type RevisionLookupApiKey = Pick<
+    EdgeApiKeyRevisionId,
+    'environment' | 'projects'
+>;
+
 const hasExactSameProjects = (
     sourceProjects: string[] | undefined,
     targetProjects: string[],
@@ -67,7 +72,13 @@ const hasExactSameProjects = (
         return false;
     }
 
-    return Array.from(source).every((project) => target.has(project));
+    for (const project of source) {
+        if (!target.has(project)) {
+            return false;
+        }
+    }
+
+    return true;
 };
 
 const isSubsetOfTokenProjects = (
@@ -78,55 +89,67 @@ const isSubsetOfTokenProjects = (
     return projects.every((project) => tokenProjects.has(project));
 };
 
-export const expectedUpstreamRevisionId = (
+const getEnvironmentWideRevisionId = (
     revisionIds: EnvironmentRevisionId[],
-    apiKey: EdgeApiKeyRevisionId,
 ): number => {
-    const environmentRevisionIds = revisionIds.filter(
-        (rev) => rev.environment === apiKey.environment,
+    return (
+        revisionIds.find((rev) => !rev.projects || rev.projects.length === 0)
+            ?.revisionId ?? 0
     );
-    const environmentWideRevisionId = environmentRevisionIds.find(
-        (rev) => !rev.projects || rev.projects.length === 0,
-    )?.revisionId;
-    const projectScopedRevisionIds = environmentRevisionIds.filter((rev) =>
-        Boolean(rev.projects && rev.projects.length > 0),
-    );
+};
 
-    if (projectScopedRevisionIds.length === 0) {
-        return environmentWideRevisionId || 0;
+const getExpectedProjectScopedRevisionId = (
+    revisionIds: EnvironmentRevisionId[],
+    apiKey: RevisionLookupApiKey,
+): number | undefined => {
+    if (revisionIds.length === 0) {
+        return undefined;
     }
 
     if (apiKey.projects.includes('*')) {
-        return Math.max(
-            ...projectScopedRevisionIds.map((rev) => rev.revisionId),
-            environmentWideRevisionId || 0,
-        );
+        return Math.max(...revisionIds.map((rev) => rev.revisionId));
     }
 
-    const tokenProjects = new Set(apiKey.projects);
-    const exactMatchRevision = projectScopedRevisionIds.find((rev) =>
+    const exactMatchRevision = revisionIds.find((rev) =>
         hasExactSameProjects(rev.projects, apiKey.projects),
     );
 
     if (exactMatchRevision) {
-        return Math.max(
-            exactMatchRevision.revisionId,
-            environmentWideRevisionId || 0,
-        );
+        return exactMatchRevision.revisionId;
     }
 
-    const relevantScopedRevisionIds = projectScopedRevisionIds.filter((rev) =>
+    const tokenProjects = new Set(apiKey.projects);
+    const relevantScopedRevisionIds = revisionIds.filter((rev) =>
         isSubsetOfTokenProjects(rev.projects, tokenProjects),
     );
 
     if (relevantScopedRevisionIds.length === 0) {
-        return environmentWideRevisionId || 0;
+        return undefined;
     }
 
-    return Math.max(
-        ...relevantScopedRevisionIds.map((rev) => rev.revisionId),
-        environmentWideRevisionId || 0,
+    return Math.max(...relevantScopedRevisionIds.map((rev) => rev.revisionId));
+};
+
+export const expectedUpstreamRevisionId = (
+    revisionIds: EnvironmentRevisionId[],
+    apiKey: RevisionLookupApiKey,
+): number => {
+    const environmentRevisionIds = revisionIds.filter(
+        (rev) => rev.environment === apiKey.environment,
     );
+    const environmentWideRevisionId = getEnvironmentWideRevisionId(
+        environmentRevisionIds,
+    );
+    const projectScopedRevisionIds = environmentRevisionIds.filter((rev) =>
+        Boolean(rev.projects && rev.projects.length > 0),
+    );
+
+    const projectScopedRevisionId = getExpectedProjectScopedRevisionId(
+        projectScopedRevisionIds,
+        apiKey,
+    );
+
+    return Math.max(projectScopedRevisionId ?? 0, environmentWideRevisionId);
 };
 
 const colorFromDiff = (diff: number) => {

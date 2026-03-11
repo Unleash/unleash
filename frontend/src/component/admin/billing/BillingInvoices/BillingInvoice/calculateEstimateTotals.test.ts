@@ -89,8 +89,8 @@ describe('calculateEstimateTotals', () => {
 
         it('calculates totals correctly with usage lines only', () => {
             const usageLines = [
-                createUsageLine(100, 50, 2),
-                createUsageLine(200, 150, 1.5),
+                createUsageLine(100, 50, 2, 100),
+                createUsageLine(200, 150, 1.5, 75),
             ];
             const result = calculateEstimateTotals(
                 'estimate',
@@ -111,7 +111,7 @@ describe('calculateEstimateTotals', () => {
 
         it('calculates totals correctly with both main and usage lines', () => {
             const mainLines = [createMainLine(1000)];
-            const usageLines = [createUsageLine(100, 50, 2)];
+            const usageLines = [createUsageLine(100, 50, 2, 100)];
             const result = calculateEstimateTotals(
                 'estimate',
                 0,
@@ -153,7 +153,7 @@ describe('calculateEstimateTotals', () => {
 
         it('handles usage lines with missing consumption or limit', () => {
             const usageLines = [
-                createUsageLine(100, 50, 2),
+                createUsageLine(100, 50, 2, 100),
                 { ...createUsageLine(0, 0, 0), consumption: undefined },
                 { ...createUsageLine(0, 0, 0), limit: undefined },
             ];
@@ -255,8 +255,8 @@ describe('calculateEstimateTotals', () => {
 
         it('handles usage lines with zero unitPrice', () => {
             const usageLines = [
-                createUsageLine(100, 50, 2),
-                createUsageLine(200, 100, 0),
+                createUsageLine(100, 50, 2, 100),
+                createUsageLine(200, 100, 0, 0),
             ];
             const result = calculateEstimateTotals(
                 'estimate',
@@ -275,10 +275,10 @@ describe('calculateEstimateTotals', () => {
             });
         });
 
-        it('rounds down overages to integers', () => {
+        it('sums usage line totalAmounts directly', () => {
             const usageLines = [
-                createUsageLine(150.7, 100, 2),
-                createUsageLine(200.3, 150, 1.5),
+                createUsageLine(150.7, 100, 2, 100),
+                createUsageLine(200.3, 150, 1.5, 75),
             ];
             const result = calculateEstimateTotals(
                 'estimate',

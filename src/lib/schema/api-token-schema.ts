@@ -18,5 +18,6 @@ export const createApiToken = joi
         expiresAt: joi.date().optional(),
         projects: joi.array().min(1).optional().default([ALL]),
         environment: joi.string().optional().default('development'),
+        createdByUserId: joi.number().optional(),
     })
     .options({ stripUnknown: true, allowUnknown: false, abortEarly: false });

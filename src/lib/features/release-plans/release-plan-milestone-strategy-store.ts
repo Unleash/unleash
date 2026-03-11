@@ -5,12 +5,27 @@ import type { Row } from '../../db/crud/row-type.js';
 import type { Db } from '../../db/db.js';
 import type { MilestoneStrategyConfigUpdate } from '../../types/index.js';
 import type { Store } from '../../types/stores/store.js';
+import NotFoundError from '../../error/notfound-error.js';
+
 const TABLE = 'milestone_strategies';
 
 export type ReleasePlanMilestoneStrategyWriteModel = Omit<
     ReleasePlanMilestoneStrategy,
-    'id'
->;
+    'id' | 'strategyName' | 'name'
+> &
+    (
+        | {
+              name: string;
+              /** @deprecated use {@link name} instead */
+              strategyName?: string;
+          }
+        | {
+              name?: string;
+              /** @deprecated use {@link name} instead */
+              strategyName: string;
+          }
+    );
+
 export interface IReleasePlanMilestoneStrategyStore
     extends Store<ReleasePlanMilestoneStrategy, string> {
     insert(
@@ -33,6 +48,7 @@ const fromRow = (row: any): ReleasePlanMilestoneStrategy => {
         milestoneId: row.milestone_id,
         sortOrder: row.sort_order,
         title: row.title,
+        name: row.strategy_name,
         strategyName: row.strategy_name,
         parameters: row.parameters,
         constraints: JSON.parse(row.constraints),
@@ -42,12 +58,13 @@ const fromRow = (row: any): ReleasePlanMilestoneStrategy => {
     };
 };
 
-const fromUpdateRow = (row: any): ReleasePlanMilestoneStrategy => {
+const fromDatabaseRow = (row: any): ReleasePlanMilestoneStrategy => {
     return {
         id: row.id,
         milestoneId: row.milestone_id,
         sortOrder: row.sort_order,
         title: row.title,
+        name: row.strategy_name,
         strategyName: row.strategy_name,
         parameters: row.parameters,
         constraints: row.constraints,
@@ -62,7 +79,7 @@ const toRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
         milestone_id: item.milestoneId,
         sort_order: item.sortOrder,
         title: item.title,
-        strategy_name: item.strategyName,
+        strategy_name: item.name || item.strategyName,
         parameters: item.parameters ?? {},
         constraints: JSON.stringify(item.constraints ?? []),
         variants: JSON.stringify(item.variants ?? []),
@@ -95,6 +112,25 @@ export class ReleasePlanMilestoneStrategyStore
         super(TABLE, db, config);
     }
 
+    override async get(id: string): Promise<ReleasePlanMilestoneStrategy> {
+        const row = await this.db(TABLE).where({ id }).first();
+        if (!row) {
+            throw new NotFoundError(
+                `Milestone strategy with id ${id} not found`,
+            );
+        }
+        const strategy = fromDatabaseRow(row);
+
+        const segmentRows = await this.db('milestone_strategy_segments')
+            .where('milestone_strategy_id', id)
+            .select('segment_id');
+
+        return {
+            ...strategy,
+            segments: segmentRows.map((row: any) => row.segment_id),
+        };
+    }
+
     override async insert({
         segments,
         ...strategy
@@ -119,7 +155,7 @@ export class ReleasePlanMilestoneStrategyStore
             .where({ id: strategyId })
             .update(toUpdateRow(strategy))
             .returning('*');
-        return fromUpdateRow(rows[0]);
+        return fromDatabaseRow(rows[0]);
     }
 
     async upsert(

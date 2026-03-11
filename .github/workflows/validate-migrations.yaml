@@ -45,10 +45,13 @@ jobs:
           config: baseUrl=http://localhost:4242
           spec: cypress/oss/feature/*.spec.ts
           install-command: yarn --immutable
-      - name: Upload Cypress screenshots
+      - name: Upload Cypress artifacts
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots-db-migrations
-          path: frontend/cypress/screenshots
+          name: cypress-artifacts-db-migrations
+          path: |
+            frontend/cypress/screenshots
+            frontend/cypress/videos
           if-no-files-found: ignore
+          retention-days: 3

@@ -19,7 +19,8 @@ export interface IFeatureStrategy {
     sortOrder?: number;
 }
 
-export type StrategyFormState = Partial<IFeatureStrategy>; // todo (`strategyFormConsolidation`) `name` shouldn't be optional
+export type StrategyFormState = Partial<IFeatureStrategy> &
+    Required<Pick<IFeatureStrategy, 'name'>>;
 
 export interface IFeatureStrategyParameters {
     [key: string]: string | number | undefined;

@@ -8,7 +8,7 @@ export default defineConfig({
     screenshotOnRunFailure: true,
     viewportWidth: 1920,
     viewportHeight: 1080,
-    video: false,
+    video: true,
     e2e: {
         specPattern: '**/*.spec.ts',
         setupNodeEvents(on, _config) {

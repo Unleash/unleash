@@ -142,7 +142,7 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
             </StyledCheckboxContainer>
             <StyledSignupDialogButton
                 variant='contained'
-                onClick={onNext}
+                onClick={() => onNext()}
                 disabled={!isValidForm}
             >
                 Next

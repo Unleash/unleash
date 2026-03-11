@@ -13,9 +13,9 @@ import {
     Typography,
 } from '@mui/material';
 import type {
-    IFeatureStrategy,
     IFeatureStrategyParameters,
     IStrategyParameter,
+    StrategyFormState,
 } from 'interfaces/strategy';
 import { LegacyFeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';
 import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled.tsx';
@@ -49,7 +49,7 @@ import type { IFeatureToggle } from 'interfaces/featureToggle.ts';
 import type { ISegment } from 'interfaces/segment.ts';
 import type { IFormErrors } from 'hooks/useFormErrors.ts';
 
-export interface ILegacyFeatureStrategyFormProps {
+export interface ILegacyFeatureStrategyFormProps<T extends StrategyFormState> {
     feature: IFeatureToggle;
     environmentId: string;
     permission: string;
@@ -57,10 +57,8 @@ export interface ILegacyFeatureStrategyFormProps {
     onCancel?: () => void;
     loading: boolean;
     isChangeRequest: boolean;
-    strategy: Partial<IFeatureStrategy>;
-    setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
-    >;
+    strategy: T;
+    setStrategy: React.Dispatch<React.SetStateAction<T>>;
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
     errors: IFormErrors;
@@ -157,7 +155,7 @@ const StyledConstraintSeparator = styled(ConstraintSeparator)({
     transform: 'translateY(0)',
 });
 
-export const LegacyFeatureStrategyForm = ({
+export const LegacyFeatureStrategyForm = <T extends StrategyFormState>({
     feature,
     environmentId,
     permission,
@@ -175,7 +173,7 @@ export const LegacyFeatureStrategyForm = ({
     StrategyVariants,
     Limit,
     disabled,
-}: ILegacyFeatureStrategyFormProps) => {
+}: ILegacyFeatureStrategyFormProps<T>) => {
     const { trackEvent } = usePlausibleTracker();
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);

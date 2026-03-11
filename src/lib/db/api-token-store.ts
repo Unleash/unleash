@@ -14,6 +14,7 @@ import {
 import { ALL_PROJECTS } from '../internals.js';
 import { isAllProjects } from '../server-impl.js';
 import { inTransaction } from './transaction.js';
+import type { Knex } from 'knex';
 
 const TABLE = 'api_tokens';
 const API_LINK_TABLE = 'api_token_project';
@@ -67,7 +68,7 @@ const tokenRowReducer = (acc, tokenRow) => {
     return acc;
 };
 
-const toRow = (newToken: IApiTokenCreate) => ({
+const toRow = (newToken: IApiTokenCreate, createdByUserId: number) => ({
     username: newToken.tokenName,
     token_name: newToken.tokenName,
     secret: newToken.secret,
@@ -76,6 +77,7 @@ const toRow = (newToken: IApiTokenCreate) => ({
         newToken.environment === ALL ? undefined : newToken.environment,
     expires_at: newToken.expiresAt,
     alias: newToken.alias || null,
+    created_by_user_id: createdByUserId,
 });
 
 const toTokens = (rows: any[]): IApiToken[] => {
@@ -142,6 +144,21 @@ export class ApiTokenStore implements IApiTokenStore {
         return toTokens(rows);
     }
 
+    async getUserDefinedTokens(): Promise<IApiToken[]> {
+        const stopTimer = this.timer('getAllFilterEnterpriseEdgeTokens');
+        const rows = await this.filterEdgeTokens(this.makeTokenProjectQuery());
+        stopTimer();
+        return toTokens(rows);
+    }
+
+    filterEdgeTokens(query: Knex.QueryBuilder<any, any>) {
+        return query.whereNotExists((qb) => {
+            qb.select(1)
+                .from('edge_api_tokens as e')
+                .whereRaw('?? = ??', ['e.token_value', 'tokens.secret']);
+        });
+    }
+
     async getAllActive(): Promise<IApiToken[]> {
         const stopTimer = this.timer('getAllActive');
         const rows = await this.makeTokenProjectQuery()
@@ -172,10 +189,13 @@ export class ApiTokenStore implements IApiTokenStore {
             );
     }
 
-    async insert(newToken: IApiTokenCreate): Promise<IApiToken> {
+    async insert(
+        newToken: IApiTokenCreate,
+        createdByUserId: number,
+    ): Promise<IApiToken> {
         const response = await inTransaction(this.db, async (tx) => {
             const [row] = await tx<ITokenInsert>(TABLE).insert(
-                toRow(newToken),
+                toRow(newToken, createdByUserId),
                 ['created_at'],
             );
 

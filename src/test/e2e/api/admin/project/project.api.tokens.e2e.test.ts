@@ -5,7 +5,7 @@ import {
 } from '../../../helpers/test-helper.js';
 import getLogger from '../../../../fixtures/no-logger.js';
 import { ApiTokenType } from '../../../../../lib/types/model.js';
-import { DEFAULT_ENV } from '../../../../../lib/server-impl.js';
+import { DEFAULT_ENV, SYSTEM_USER_ID } from '../../../../../lib/server-impl.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -47,13 +47,16 @@ test('Returns empty list of tokens', async () => {
 test('Returns list of tokens', async () => {
     const tokenSecret = 'random-secret';
 
-    await db.stores.apiTokenStore.insert({
-        tokenName: 'test',
-        secret: tokenSecret,
-        type: ApiTokenType.BACKEND,
-        environment: DEFAULT_ENV,
-        projects: ['default'],
-    });
+    await db.stores.apiTokenStore.insert(
+        {
+            tokenName: 'test',
+            secret: tokenSecret,
+            type: ApiTokenType.BACKEND,
+            environment: DEFAULT_ENV,
+            projects: ['default'],
+        },
+        SYSTEM_USER_ID,
+    );
     return app.request
         .get('/api/admin/projects/default/api-tokens')
         .expect('Content-Type', /json/)
@@ -64,7 +67,7 @@ test('Returns list of tokens', async () => {
         });
 });
 
-test('Returns 404 when given non-existant projectId', async () => {
+test('Returns 404 when given non-existent projectId', async () => {
     return app.request
         .get('/api/admin/projects/wrong/api-tokens')
         .expect('Content-Type', /json/)
@@ -109,13 +112,16 @@ test.each([
 test('Deletes existing tokens', async () => {
     const tokenSecret = 'random-secret';
 
-    await db.stores.apiTokenStore.insert({
-        tokenName: 'test',
-        secret: tokenSecret,
-        type: ApiTokenType.BACKEND,
-        environment: DEFAULT_ENV,
-        projects: ['default'],
-    });
+    await db.stores.apiTokenStore.insert(
+        {
+            tokenName: 'test',
+            secret: tokenSecret,
+            type: ApiTokenType.BACKEND,
+            environment: DEFAULT_ENV,
+            projects: ['default'],
+        },
+        SYSTEM_USER_ID,
+    );
 
     return app.request
         .delete(`/api/admin/projects/default/api-tokens/${tokenSecret}`)
@@ -142,13 +148,16 @@ test('Returns Bad Request when deleting tokens with more than one project', asyn
         mode: 'open',
     });
 
-    await db.stores.apiTokenStore.insert({
-        tokenName: 'test',
-        secret: tokenSecret,
-        type: ApiTokenType.BACKEND,
-        environment: DEFAULT_ENV,
-        projects: ['default', 'other'],
-    });
+    await db.stores.apiTokenStore.insert(
+        {
+            tokenName: 'test',
+            secret: tokenSecret,
+            type: ApiTokenType.BACKEND,
+            environment: DEFAULT_ENV,
+            projects: ['default', 'other'],
+        },
+        SYSTEM_USER_ID,
+    );
 
     return app.request
         .delete(`/api/admin/projects/default/api-tokens/${tokenSecret}`)

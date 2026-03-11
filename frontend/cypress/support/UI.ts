@@ -263,6 +263,8 @@ export const deleteFeatureStrategy_UI = (
             });
         },
     ).as('deleteUserStrategy');
+    // disable strategy-drag-tooltip to avoid it blocking the click on the delete button
+    disableActiveSplashScreens();
     cy.visit(`/projects/${project}/features/${featureToggleName}`);
     cy.get('[data-testid=FEATURE_ENVIRONMENT_ACCORDION_development]')
         .first()

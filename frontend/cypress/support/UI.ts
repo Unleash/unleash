@@ -16,6 +16,7 @@ const disableActiveSplashScreens = () => {
                 res.body.splash = {
                     ...res.body.splash,
                     personalDashboardKeyConcepts: true,
+                    'strategy-drag-tooltip': true,
                 };
             }
         });

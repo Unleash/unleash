@@ -10,9 +10,7 @@ const StyledButton = styled(IconButton, {
     padding: 0,
     fontSize: '0.875rem',
     opacity: active ? 1 : 0,
-    '&:hover': { opacity: 1 },
-    '&:focus': { opacity: 1 },
-    '&:active': { opacity: 1 },
+    '&:is(:hover, :focus, :active)': { opacity: 1 },
 }));
 
 interface FavoriteButtonProps {

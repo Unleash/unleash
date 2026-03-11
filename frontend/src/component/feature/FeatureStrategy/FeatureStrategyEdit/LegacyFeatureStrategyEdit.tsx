@@ -12,6 +12,7 @@ import type {
     IFeatureStrategy,
     IFeatureStrategyPayload,
     IStrategy,
+    StrategyFormState,
 } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import type { ISegment } from 'interfaces/segment';
@@ -98,7 +99,9 @@ export const LegacyFeatureStrategyEdit = () => {
     const strategyId = useRequiredQueryParam('strategyId');
     const [tab, setTab] = useState(0);
 
-    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
+    const [strategy, setStrategy] = useState<StrategyFormState>({
+        name: '', // populated in the effect
+    });
     const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateStrategyOnFeature, loading } = useFeatureStrategyApi();
     const { strategyDefinition } = useStrategy(strategy.name);

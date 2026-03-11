@@ -69,7 +69,9 @@ export const DialogFormTemplate: React.FC<FormProps> = ({
                         onChange={(e) => setName(e.target.value)}
                         error={Boolean(errors.name)}
                         errorText={errors.name}
-                        onBlur={validateName}
+                        onBlur={() => {
+                            if (name) validateName();
+                        }}
                         onFocus={() => {
                             delete errors.name;
                         }}

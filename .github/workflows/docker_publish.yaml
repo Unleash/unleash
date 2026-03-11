@@ -12,7 +12,7 @@ on:
         required: true
       is-latest-version:
         description: Is this the latest version? If latest we'll update the version docker
-        required: true
+        required: false
         type: boolean
         default: true
   workflow_dispatch:
@@ -23,11 +23,11 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version: [ 22.22-alpine3.23 ]
+  prepare:
+    runs-on: ubuntu-24.04
+    outputs:
+      tags: ${{ steps.meta.outputs.tags }}
+      primary_tag: ${{ steps.tags.outputs.primary_tag }}
     steps:
     - name: Checkout tag v${{ inputs.version }}
       if: ${{ inputs.version != '' }}
@@ -37,29 +37,14 @@ jobs:
     - name: Checkout
       if: ${{ inputs.version == '' }}
       uses: actions/checkout@v6
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: arn:aws:iam::726824350591:role/unleash-github-ecr-public-publish-role
-        role-session-name: unleash-actions-push-to-ecr-public
-        aws-region: us-east-1
-    - name: Login to AWS ECR
-      id: login-ecr-public
-      uses: aws-actions/amazon-ecr-login@v2
-      with:
-        registry-type: public
-    - name: Setup QEmu so we can build multiplatform
-      uses: docker/setup-qemu-action@v3
-    - name: Setup Docker buildx
-      uses: docker/setup-buildx-action@v3
     - name: Docker meta configuration
-      uses: docker/metadata-action@v5
       id: meta
+      uses: docker/metadata-action@v5
       with:
         images: |
           unleashorg/unleash-server
           public.ecr.aws/unleashorg/unleash-server
-        flavor: latest=${{ github.event.inputs.is-latest-version || 'auto' }}
+        flavor: latest=${{ inputs.is-latest-version || 'auto' }}
         tags: |
           # only enabled for workflow dispatch except main (assume its a release):
           type=semver,pattern={{ version }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
@@ -67,19 +52,145 @@ jobs:
           type=semver,pattern={{ major }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
           # only enabled in main:
           type=edge,prefix=main-,enable=${{ github.ref == 'refs/heads/main' }}
+    - name: Persist bake metadata fragments
+      run: |
+        cp "${{ steps.meta.outputs.bake-file-labels }}" "${{ runner.temp }}/docker-meta-labels.json"
+    - name: Upload bake metadata fragments
+      uses: actions/upload-artifact@v4
+      with:
+        name: docker-meta-bake-files
+        path: ${{ runner.temp }}/docker-meta-labels.json
+        if-no-files-found: error
+    - name: Record primary tag
+      id: tags
+      run: |
+        primary_tag="$(printf '%s\n' "${{ steps.meta.outputs.tags }}" | head -n 1)"
+        echo "primary_tag=${primary_tag}" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: prepare
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-24.04
+            artifact_suffix: amd64
+            cache_scope: docker-amd64
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            artifact_suffix: arm64
+            cache_scope: docker-arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+    - name: Checkout tag v${{ inputs.version }}
+      if: ${{ inputs.version != '' }}
+      uses: actions/checkout@v6
+      with:
+        ref: v${{ inputs.version }} # tag that should be created by the caller workflow
+    - name: Checkout
+      if: ${{ inputs.version == '' }}
+      uses: actions/checkout@v6
+    - name: Download bake metadata fragments
+      uses: actions/download-artifact@v4
+      with:
+        name: docker-meta-bake-files
+        path: ${{ runner.temp }}/docker-meta
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::726824350591:role/unleash-github-ecr-public-publish-role
+        role-session-name: unleash-actions-push-to-ecr-public
+        aws-region: us-east-1
+    - name: Login to AWS ECR
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registry-type: public
     - name: Login to docker hub
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Build tag and push image to Docker hub
-      uses: docker/build-push-action@v6
+    - name: Setup Docker buildx
+      uses: docker/setup-buildx-action@v4
+    - name: Build and push ${{ matrix.platform }} by digest
+      env:
+        PLATFORM: ${{ matrix.platform }}
+        CACHE_SCOPE: ${{ matrix.cache_scope }}
+        META_LABELS_FILE: ${{ runner.temp }}/docker-meta/docker-meta-labels.json
+      run: |
+        docker buildx bake image \
+          -f docker-bake.hcl \
+          -f "$META_LABELS_FILE" \
+          --set image.platform="$PLATFORM" \
+          --set image.tags=unleashorg/unleash-server \
+          --set image.tags+=public.ecr.aws/unleashorg/unleash-server \
+          --set image.cache-from=type=gha,scope="$CACHE_SCOPE" \
+          --set image.cache-to=type=gha,mode=max,scope="$CACHE_SCOPE" \
+          --set image.output=type=image,push-by-digest=true,name-canonical=true,push=true \
+          --metadata-file "${{ runner.temp }}/build-metadata.json"
+    - name: Capture digest
+      run: |
+        digest="$(jq -r '.. | .["containerimage.digest"]? // empty' "${{ runner.temp }}/build-metadata.json" | head -n 1)"
+        test -n "$digest"
+        printf '%s\n' "$digest" > "${{ runner.temp }}/digest.txt"
+    - name: Upload digest artifact
+      uses: actions/upload-artifact@v4
       with:
-        context: .
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-        build-args: NODE_VERSION=${{ matrix.version }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        name: digest-${{ matrix.artifact_suffix }}
+        path: ${{ runner.temp }}/digest.txt
+        if-no-files-found: error
+
+  merge:
+    needs:
+      - prepare
+      - build
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::726824350591:role/unleash-github-ecr-public-publish-role
+        role-session-name: unleash-actions-push-to-ecr-public
+        aws-region: us-east-1
+    - name: Login to AWS ECR
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registry-type: public
+    - name: Login to docker hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Setup Docker buildx
+      uses: docker/setup-buildx-action@v4
+    - name: Download amd64 digest artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: digest-amd64
+        path: ${{ runner.temp }}/digests/amd64
+    - name: Download arm64 digest artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: digest-arm64
+        path: ${{ runner.temp }}/digests/arm64
+    - name: Create multi-platform manifests
+      run: |
+        amd64_digest="$(cat "${{ runner.temp }}/digests/amd64/digest.txt")"
+        arm64_digest="$(cat "${{ runner.temp }}/digests/arm64/digest.txt")"
+
+        while IFS= read -r tag; do
+          if [ -z "$tag" ]; then
+            continue
+          fi
+
+          base_image="${tag%%:*}"
+          docker buildx imagetools create \
+            --tag "$tag" \
+            "${base_image}@${amd64_digest}" \
+            "${base_image}@${arm64_digest}"
+        done <<'EOF'
+        ${{ needs.prepare.outputs.tags }}
+        EOF
+    - name: Inspect merged image
+      run: docker buildx imagetools inspect "${{ needs.prepare.outputs.primary_tag }}"

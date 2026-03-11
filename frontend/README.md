@@ -22,15 +22,15 @@ yarn install
 yarn run start:sandbox
 ```
 
-## Running end-to-end tests againts localhost 
+## Running end-to-end tests against localhost 
 
-If you need to test against patches against a local server instance,
-you'll need to run:
+If you need to test against a local server instance,
+you'll need to run in the root directory:
 
-* backend (main directory `yarn start:dev` )
-* frontend on port 3000 `yarn start` 
+* `yarn build:frontend`
+* `yarn dev:start` 
 
-Then run the end to end tests using:
+Then run the e2e tests using:
 
 ```
 yarn run e2e
@@ -42,6 +42,20 @@ You may also need to test that a feature works against the enterprise version of
 yarn run start:enterprise
 yarn run e2e:enterprise
 ```
+
+### Debugging end-to-end tests
+
+Run backend and frontend in develoment build. In the root of the project run e.g.: `yarn dev`. 
+
+Please keep in mind that running tests against dev frontend will be **really** slow (even x5 slower).
+It's best to open cypress UI and pick only the test that you need to work on. 
+
+In frontend project run:
+
+```
+yarn e2e:dev:open
+```
+
 
 ## Generating the OpenAPI client
 

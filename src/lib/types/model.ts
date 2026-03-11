@@ -220,7 +220,8 @@ export interface IApiTokenCreate {
     expiresAt?: Date;
 }
 
-export interface IApiToken extends Omit<IApiTokenCreate, 'alias'> {
+export interface IApiToken
+    extends Omit<IApiTokenCreate, 'alias' | 'createdByUserId'> {
     createdAt: Date;
     seenAt?: Date;
     environment: string;

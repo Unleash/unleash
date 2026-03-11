@@ -68,36 +68,48 @@ beforeAll(async () => {
     app = await setupAppWithAuth(stores, {}, db.rawDatabase);
 
     // insert initial tokens
-    clientToken = await stores.apiTokenStore.insert({
-        environment: '',
-        projects: [],
+    clientToken = await stores.apiTokenStore.insert(
+        {
+            environment: '',
+            projects: [],
 
-        tokenName: 'client',
-        secret: '*:environment.client_secret',
-        type: ApiTokenType.CLIENT,
-    });
-    _backendToken = await stores.apiTokenStore.insert({
-        environment: '',
-        projects: [],
+            tokenName: 'client',
+            secret: '*:environment.client_secret',
+            type: ApiTokenType.CLIENT,
+        },
+        SYSTEM_USER_ID,
+    );
+    _backendToken = await stores.apiTokenStore.insert(
+        {
+            environment: '',
+            projects: [],
 
-        tokenName: 'backend',
-        secret: '*:environment.backend_secret',
-        type: ApiTokenType.BACKEND,
-    });
-    adminToken = await stores.apiTokenStore.insert({
-        environment: '',
-        projects: [],
-        tokenName: 'admin',
-        secret: '*:*.sdfsdf2admin_secret',
-        type: ApiTokenType.ADMIN,
-    });
-    frontendToken = await stores.apiTokenStore.insert({
-        environment: '',
-        projects: [],
-        tokenName: 'frontender',
-        secret: '*:environment:sdfsdf2dfrontend_Secret',
-        type: ApiTokenType.FRONTEND,
-    });
+            tokenName: 'backend',
+            secret: '*:environment.backend_secret',
+            type: ApiTokenType.BACKEND,
+        },
+        SYSTEM_USER_ID,
+    );
+    adminToken = await stores.apiTokenStore.insert(
+        {
+            environment: '',
+            projects: [],
+            tokenName: 'admin',
+            secret: '*:*.sdfsdf2admin_secret',
+            type: ApiTokenType.ADMIN,
+        },
+        SYSTEM_USER_ID,
+    );
+    frontendToken = await stores.apiTokenStore.insert(
+        {
+            environment: '',
+            projects: [],
+            tokenName: 'frontender',
+            secret: '*:environment:sdfsdf2dfrontend_Secret',
+            type: ApiTokenType.FRONTEND,
+        },
+        SYSTEM_USER_ID,
+    );
 });
 
 afterAll(async () => {
@@ -322,13 +334,16 @@ describe('Fine grained API token permissions', () => {
                     [{ name: DELETE_CLIENT_API_TOKEN }],
                 );
                 await app.login({ email: 'delete_client_token@example.com' });
-                const tokenToDelete = await stores.apiTokenStore.insert({
-                    environment: '',
-                    projects: [],
-                    tokenName: 'cilent',
-                    secret: '*:environment.delete_client_token',
-                    type: ApiTokenType.CLIENT,
-                });
+                const tokenToDelete = await stores.apiTokenStore.insert(
+                    {
+                        environment: '',
+                        projects: [],
+                        tokenName: 'cilent',
+                        secret: '*:environment.delete_client_token',
+                        type: ApiTokenType.CLIENT,
+                    },
+                    SYSTEM_USER_ID,
+                );
                 await app.request
                     .delete(`/api/admin/api-tokens/${tokenToDelete.secret}`)
                     .send({ expiresAt: addDays(new Date(), 14) })

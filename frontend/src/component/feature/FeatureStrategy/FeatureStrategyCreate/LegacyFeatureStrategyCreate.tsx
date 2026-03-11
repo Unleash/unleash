@@ -11,6 +11,7 @@ import useToast from 'hooks/useToast';
 import type {
     IFeatureStrategy,
     IFeatureStrategyPayload,
+    StrategyFormState,
 } from 'interfaces/strategy';
 import {
     createStrategyPayload,
@@ -69,7 +70,9 @@ export const LegacyFeatureStrategyCreate = () => {
         return defaultStrategy?.segments?.includes(segment.id);
     });
 
-    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
+    const [strategy, setStrategy] = useState<StrategyFormState>({
+        name: strategyName,
+    });
 
     const [segments, setSegments] = useState<ISegment[]>(
         shouldUseDefaultStrategy ? strategySegments : [],

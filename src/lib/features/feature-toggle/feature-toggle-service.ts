@@ -32,6 +32,7 @@ import {
     type IFeatureToggleQuery,
     type IFeatureToggleStore,
     type IFeatureTypeCount,
+    type IFeatureTypeStore,
     type IFlagResolver,
     type IProjectStore,
     type ISegment,
@@ -137,6 +138,7 @@ export type Stores = Pick<
     | 'featureTagStore'
     | 'featureEnvironmentStore'
     | 'strategyStore'
+    | 'featureTypeStore'
 >;
 
 export type Config = Pick<
@@ -176,6 +178,8 @@ export class FeatureToggleService {
 
     private projectStore: IProjectStore;
 
+    private featureTypeStore: IFeatureTypeStore;
+
     private constraintsReadModel: IConstraintsReadModel;
 
     private segmentService: ISegmentService;
@@ -213,6 +217,7 @@ export class FeatureToggleService {
             featureTagStore,
             featureEnvironmentStore,
             strategyStore,
+            featureTypeStore,
         }: Stores,
         { getLogger, flagResolver, eventBus }: Config,
         {
@@ -237,6 +242,7 @@ export class FeatureToggleService {
         this.clientFeatureToggleStore = clientFeatureToggleStore;
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
+        this.featureTypeStore = featureTypeStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
         this.constraintsReadModel = constraintsReadModel;
         this.segmentService = segmentService;
@@ -1248,6 +1254,24 @@ export class FeatureToggleService {
                     ...validated,
                 };
             }
+
+            if (featureData.targetDate === undefined) {
+                try {
+                    const flagType = await this.featureTypeStore.get(
+                        featureData.type || 'release',
+                    );
+                    if (flagType?.lifetimeDays != null) {
+                        const createdAt = featureData.createdAt ?? new Date();
+                        featureData.targetDate = new Date(
+                            createdAt.getTime() +
+                                flagType.lifetimeDays * 24 * 60 * 60 * 1000,
+                        );
+                    }
+                } catch {
+                    // Feature type not found; skip auto-calculation
+                }
+            }
+
             const featureName = featureData.name;
             const createdToggle = await this.featureToggleStore.create(
                 projectId,

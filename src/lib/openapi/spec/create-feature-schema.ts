@@ -37,6 +37,14 @@ export const createFeatureSchema = {
             description:
                 '`true` if the impression data collection is enabled for the feature, otherwise `false`.',
         },
+        targetDate: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2026-06-01T00:00:00.000Z',
+            description:
+                'The target date for completing or removing this feature flag. Automatically calculated from the flag type lifetime if not provided.',
+        },
         tags: {
             type: 'array',
             description: 'Tags to add to the feature.',

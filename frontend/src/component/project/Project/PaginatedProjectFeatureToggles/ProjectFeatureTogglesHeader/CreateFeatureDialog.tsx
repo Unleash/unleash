@@ -15,6 +15,7 @@ import useFeatureForm, {
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import FlagIcon from '@mui/icons-material/Flag';
 import ImpressionDataIcon from '@mui/icons-material/AltRoute';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { useGlobalFeatureSearch } from 'component/feature/FeatureToggleList/useGlobalFeatureSearch';
 import useProjectOverview, {
     featuresCount,
@@ -29,10 +30,13 @@ import Label from '@mui/icons-material/Label';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
 import { ToggleConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/ToggleConfigButton';
+import { DateConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/DateConfigButton';
 import { useFlagLimits } from './useFlagLimits.tsx';
 import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback.ts';
 import { formatTag } from 'utils/format-tag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { format, parseISO, isValid } from 'date-fns';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
@@ -67,10 +71,13 @@ const configButtonData = {
         icon: <FlagIcon />,
         text: "A flag's type conveys its purpose. All types have the same capabilities, but choosing the right type signals what kind of flag it is. You can change this at any time.",
     },
-
     impressionData: {
         icon: <ImpressionDataIcon />,
         text: `Impression data is used to track how your flag is performing. When enabled, you can subscribe to 'impression events' in the SDK and process them according to your needs.`,
+    },
+    targetDate: {
+        icon: <CalendarTodayIcon />,
+        text: "The target date is the expected date by which this flag should be removed or completed. It's automatically calculated from the flag type's lifetime.",
     },
 };
 
@@ -104,6 +111,7 @@ const CreateFeatureDialogContent = ({
     const { uiConfig, isOss } = useUiConfig();
     const navigate = useNavigate();
     const openFeatureCreatedFeedback = useFeatureCreatedFeedback();
+    const flagTargetDateEnabled = useUiFlag('flagTargetDate');
 
     const [storedFlagConfig, setStoredFlagConfig] =
         useLocalStorageState<FeatureFormInitialData>(
@@ -113,6 +121,8 @@ const CreateFeatureDialogContent = ({
         );
 
     const initialData = storedFlagConfig;
+
+    const { featureTypes } = useFeatureTypes();
 
     const {
         type,
@@ -128,10 +138,12 @@ const CreateFeatureDialogContent = ({
         validateToggleName,
         impressionData,
         setImpressionData,
+        targetDate,
+        setTargetDate,
         getTogglePayload,
         clearErrors,
         errors,
-    } = useFeatureForm(initialData);
+    } = useFeatureForm(initialData, featureTypes);
     const { createFeatureToggle, loading } = useFeatureApi();
 
     const generalDocumentation: {
@@ -208,7 +220,6 @@ const CreateFeatureDialogContent = ({
         });
 
     const { projects } = useProjects();
-    const { featureTypes } = useFeatureTypes();
     const FeatureTypeIcon = getFeatureTypeIcons(type);
 
     const longestFeatureTypeName = featureTypes.reduce(
@@ -221,6 +232,16 @@ const CreateFeatureDialogContent = ({
         const projectObject = projects.find((p) => p.id === project);
         return projectObject?.name;
     }, [project, projects]);
+
+    const selectedType = featureTypes.find((t) => t.id === type);
+    const typeHasLifetime = Boolean(selectedType?.lifetimeDays);
+
+    const targetDateLabel = useMemo(() => {
+        if (!typeHasLifetime) return 'No target date';
+        if (!targetDate) return 'Target date';
+        const parsed = parseISO(targetDate);
+        return isValid(parsed) ? format(parsed, 'MMM d, yyyy') : 'Target date';
+    }, [targetDate, typeHasLifetime]);
 
     const onDialogClose = () => {
         setStoredFlagConfig({
@@ -388,7 +409,6 @@ const CreateFeatureDialogContent = ({
                                 }
                                 onClose={clearDocumentationOverride}
                             />
-
                             <ToggleConfigButton
                                 tooltip={{
                                     header: 'Enable or disable impression data',
@@ -402,6 +422,25 @@ const CreateFeatureDialogContent = ({
                                 label={`Impression data ${impressionData ? 'on' : 'off'}`}
                                 icon={<ImpressionDataIcon />}
                                 labelWidth={`${'impression data off'.length}ch`}
+                            />
+                            <ConditionallyRender
+                                condition={Boolean(flagTargetDateEnabled)}
+                                show={
+                                    <DateConfigButton
+                                        tooltip={{
+                                            header: 'Set a target date',
+                                            description:
+                                                configButtonData.targetDate
+                                                    .text,
+                                        }}
+                                        value={targetDate}
+                                        onChange={setTargetDate}
+                                        label={targetDateLabel}
+                                        icon={<CalendarTodayIcon />}
+                                        labelWidth={`${'MMM DD, YYYY'.length}ch`}
+                                        disabled={!typeHasLifetime}
+                                    />
+                                }
                             />
                         </>
                     }

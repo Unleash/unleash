@@ -7,7 +7,6 @@ import { createServices } from '../../../lib/services/index.js';
 import sessionDb from '../../../lib/middleware/session-db.js';
 import {
     DEFAULT_PROJECT,
-    type FeatureToggleDTO,
     type IUnleashStores,
 } from '../../../lib/types/index.js';
 import type { IUnleashServices } from '../../../lib/services/index.js';
@@ -166,7 +165,7 @@ function httpApis(
             return request.post(url).send(postData).expect(expectStatusCode);
         },
         createFeature: (
-            feature: string | FeatureToggleDTO,
+            feature: string | CreateFeatureSchema,
             project: string = DEFAULT_PROJECT,
             expectedResponseCode: number = 201,
         ) => {

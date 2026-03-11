@@ -1,17 +1,19 @@
-import { type FC, useState } from 'react';
+import { type FC, useRef, useState } from 'react';
 import {
     List,
     ListItem,
     ListItemButton,
     ListItemIcon,
     ListItemText,
+    Popover,
     styled,
+    Tooltip,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { formatDateYMD } from 'utils/formatDate';
-import { parseISO } from 'date-fns';
+import { parseISO, isValid } from 'date-fns';
 import { DependencyRow } from './DependencyRow.tsx';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useShowDependentFeatures } from './useShowDependentFeatures.ts';
@@ -36,6 +38,10 @@ import useToast from 'hooks/useToast';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ExtraActions } from './ExtraActions.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -222,6 +228,96 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
     );
 };
 
+type TargetDateRowProps = {
+    project: string;
+    featureName: string;
+    targetDate: string | null | undefined;
+    onUpdated: () => void;
+};
+
+const TargetDateRow: FC<TargetDateRowProps> = ({
+    project,
+    featureName,
+    targetDate,
+    onUpdated,
+}) => {
+    const buttonRef = useRef<HTMLSpanElement>(null);
+    const [open, setOpen] = useState(false);
+    const { setToastData, setToastApiError } = useToast();
+    const { patchFeatureToggle } = useFeatureApi();
+    const { locationSettings } = useLocationSettings();
+
+    const parsedDate =
+        targetDate && isValid(parseISO(targetDate))
+            ? parseISO(targetDate)
+            : null;
+
+    const handleDateChange = async (date: Date | null) => {
+        setOpen(false);
+        try {
+            const patch = [
+                {
+                    op: 'replace' as const,
+                    path: '/targetDate',
+                    value: date ? date.toISOString() : null,
+                },
+            ];
+            await patchFeatureToggle(project, featureName, patch);
+            setToastData({ text: 'Target date updated', type: 'success' });
+            onUpdated();
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    return (
+        <StyledMetaDataItem>
+            <StyledMetaDataItemLabel>Target date:</StyledMetaDataItemLabel>
+            <Tooltip title='Edit target date' arrow>
+                <span ref={buttonRef}>
+                    <PermissionButton
+                        size='small'
+                        permission={UPDATE_FEATURE}
+                        projectId={project}
+                        onClick={() => setOpen(true)}
+                        variant='text'
+                        sx={{
+                            p: 0,
+                            minWidth: 0,
+                            fontWeight: 'normal',
+                            fontSize: 'inherit',
+                            textTransform: 'none',
+                        }}
+                    >
+                        <StyledMetaDataItemText data-loading>
+                            {parsedDate
+                                ? formatDateYMD(
+                                      parsedDate,
+                                      locationSettings.locale,
+                                  )
+                                : 'Not set'}
+                        </StyledMetaDataItemText>
+                    </PermissionButton>
+                </span>
+            </Tooltip>
+            <Popover
+                open={open}
+                anchorEl={buttonRef.current}
+                onClose={() => setOpen(false)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DateCalendar
+                        value={parsedDate}
+                        onChange={handleDateChange}
+                    />
+                </LocalizationProvider>
+            </Popover>
+        </StyledMetaDataItem>
+    );
+};
+
 const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
     hiddenEnvironments,
     onEnvironmentVisibilityChange,
@@ -230,6 +326,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
 }) => {
     const { locationSettings } = useLocationSettings();
     const navigate = useNavigate();
+    const flagTargetDateEnabled = useUiFlag('flagTargetDate');
 
     const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
     const [markCompletedDialogueOpen, setMarkCompletedDialogueOpen] =
@@ -305,6 +402,14 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                                 </StyledMetaDataItemText>
                             </StyledMetaDataItemValue>
                         </StyledMetaDataItem>
+                    ) : null}
+                    {flagTargetDateEnabled ? (
+                        <TargetDateRow
+                            project={feature.project}
+                            featureName={feature.name}
+                            targetDate={feature.targetDate}
+                            onUpdated={onChange}
+                        />
                     ) : null}
                     {feature.collaborators?.users &&
                     feature.collaborators?.users.length > 0 ? (

@@ -63,6 +63,8 @@ import {
 } from '../feature-links/createFeatureLinkService.js';
 import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 import { createConstraintsReadModel } from '../constraints/createConstraintsReadModel.js';
+import FeatureTypeStore from '../../db/feature-type-store.js';
+import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store.js';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -99,6 +101,7 @@ export const createFeatureToggleService = (
     );
     const groupStore = new GroupStore(db);
     const strategyStore = new StrategyStore(db, getLogger);
+    const featureTypeStore = new FeatureTypeStore(db, getLogger);
     const accountStore = new AccountStore(db, getLogger);
     const accessStore = new AccessStore(db, eventBus, getLogger);
     const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
@@ -147,6 +150,7 @@ export const createFeatureToggleService = (
             featureTagStore,
             featureEnvironmentStore,
             strategyStore,
+            featureTypeStore,
         },
         { getLogger, flagResolver, eventBus },
         {
@@ -181,6 +185,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     const accountStore = new FakeAccountStore();
     const accessStore = new FakeAccessStore();
     const featureTagStore = new FakeFeatureTagStore();
+    const featureTypeStore = new FakeFeatureTypeStore();
     const roleStore = new FakeRoleStore();
     const environmentStore = new FakeEnvironmentStore();
     const eventService = createFakeEventsService(config);
@@ -219,6 +224,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             featureTagStore,
             featureEnvironmentStore,
             strategyStore,
+            featureTypeStore,
         },
         {
             getLogger,
@@ -243,6 +249,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     return {
         featureToggleService,
         featureToggleStore,
+        featureTypeStore,
         projectStore,
         featureStrategiesStore,
         contextFieldStore,

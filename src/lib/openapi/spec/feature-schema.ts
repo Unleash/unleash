@@ -113,6 +113,14 @@ export const featureSchema = {
             example: '2023-01-29T15:21:39.975Z',
             description: 'The date the feature was archived',
         },
+        targetDate: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2026-06-01T00:00:00.000Z',
+            description:
+                'The target date for completing or removing this feature flag. Automatically calculated from the flag type lifetime if not set explicitly.',
+        },
         lastSeenAt: {
             type: 'string',
             format: 'date-time',

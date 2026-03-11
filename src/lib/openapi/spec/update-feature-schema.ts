@@ -41,6 +41,14 @@ export const updateFeatureSchema = {
             description:
                 '`true` if the impression data collection is enabled for the feature',
         },
+        targetDate: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2026-06-01T00:00:00.000Z',
+            description:
+                'The target date for completing or removing this feature flag.',
+        },
     },
     components: {
         schemas: {

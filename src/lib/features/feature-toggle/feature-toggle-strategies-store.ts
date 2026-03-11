@@ -423,6 +423,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 acc.stale = r.stale;
 
                 acc.createdAt = r.created_at;
+                acc.targetDate = r.target_date ?? undefined;
                 if (r.user_id) {
                     const name =
                         r.user_name ||

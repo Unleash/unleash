@@ -70,6 +70,7 @@ export interface FeatureToggleDTO {
     archived?: boolean;
     archivedAt?: Date;
     createdAt?: Date;
+    targetDate?: Date | null;
     impressionData?: boolean;
     variants?: IVariant[];
     tags?: ITag[];

@@ -61,6 +61,7 @@ export interface IFeatureToggle {
     enabled?: boolean;
     createdAt: string;
     lastSeenAt?: string;
+    targetDate?: string | null;
     description?: string;
     environments: IFeatureEnvironment[];
     name: string;

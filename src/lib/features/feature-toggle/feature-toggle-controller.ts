@@ -685,6 +685,10 @@ export default class ProjectFeaturesController extends Controller {
                         {
                             ...req.body,
                             description: req.body.description || undefined,
+                            targetDate:
+                                req.body.targetDate != null
+                                    ? new Date(req.body.targetDate)
+                                    : req.body.targetDate,
                         },
                         req.audit,
                     ),
@@ -775,6 +779,10 @@ export default class ProjectFeaturesController extends Controller {
                         {
                             ...data,
                             name: featureName,
+                            targetDate:
+                                data.targetDate != null
+                                    ? new Date(data.targetDate)
+                                    : data.targetDate,
                         },
                         featureName,
                         req.audit,

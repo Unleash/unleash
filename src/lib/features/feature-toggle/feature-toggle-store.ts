@@ -40,6 +40,7 @@ const FEATURE_COLUMNS = [
     'impression_data',
     'last_seen_at',
     'archived_at',
+    'target_date',
 ];
 
 export interface FeaturesTable {
@@ -50,6 +51,7 @@ export interface FeaturesTable {
     project: string;
     last_seen_at?: Date;
     created_at?: Date;
+    target_date?: Date | null;
     impression_data?: boolean | null;
     archived?: boolean;
     archived_at?: Date | null;
@@ -414,6 +416,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             stale: row.stale || false,
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
+            targetDate: row.target_date ?? undefined,
             impressionData: row.impression_data || false,
             archivedAt: row.archived_at || undefined,
             archived: row.archived_at != null,
@@ -440,6 +443,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             archived_at: data.archived ? new Date() : null,
             stale: data.stale || false,
             created_at: data.createdAt,
+            target_date: data.targetDate ?? null,
             impression_data: data.impressionData || false,
             created_by_user_id: data.createdByUserId,
         };
@@ -461,6 +465,8 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             project,
             archived_at: data.archived ? new Date() : null,
             stale: data.stale,
+            target_date:
+                data.targetDate !== undefined ? data.targetDate : undefined,
             impression_data: data.impressionData,
         };
 

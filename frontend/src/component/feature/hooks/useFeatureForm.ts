@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useQueryParams from 'hooks/useQueryParams';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { ITag } from 'interfaces/tags';
-import type { CreateFeatureSchema, CreateFeatureSchemaType } from 'openapi';
+import type {
+    CreateFeatureSchema,
+    CreateFeatureSchemaType,
+    FeatureTypeSchema,
+} from 'openapi';
 
 export type FeatureFormInitialData = Partial<{
     name: string;
@@ -13,16 +17,32 @@ export type FeatureFormInitialData = Partial<{
     description: string;
     impressionData: boolean;
     tags: Set<ITag>;
+    targetDate: string | null;
 }>;
 
-const useFeatureForm = ({
-    name: initialName = '',
-    type: initialType = 'release',
-    project: initialProject = 'default',
-    description: initialDescription = '',
-    impressionData: initialImpressionData = false,
-    tags: initialTags = new Set(),
-}: FeatureFormInitialData) => {
+const computeTargetDate = (
+    featureType: CreateFeatureSchemaType | undefined,
+    featureTypes: FeatureTypeSchema[],
+): string | null => {
+    const match = featureTypes.find((t) => t.id === featureType);
+    if (!match?.lifetimeDays) return null;
+    const date = new Date();
+    date.setDate(date.getDate() + match.lifetimeDays);
+    return date.toISOString();
+};
+
+const useFeatureForm = (
+    {
+        name: initialName = '',
+        type: initialType = 'release',
+        project: initialProject = 'default',
+        description: initialDescription = '',
+        impressionData: initialImpressionData = false,
+        tags: initialTags = new Set(),
+        targetDate: initialTargetDate = undefined,
+    }: FeatureFormInitialData,
+    featureTypes: FeatureTypeSchema[] = [],
+) => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
     const { validateFeatureToggleName } = useFeatureApi();
@@ -35,6 +55,13 @@ const useFeatureForm = ({
     const [impressionData, setImpressionData] = useState<boolean>(
         initialImpressionData,
     );
+    const [targetDate, setTargetDateState] = useState<string | null>(
+        initialTargetDate !== undefined
+            ? initialTargetDate
+            : computeTargetDate(initialType, featureTypes),
+    );
+    // Track whether the user has manually overridden the auto-calculated date
+    const targetDateManuallySet = useRef(false);
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
@@ -54,6 +81,23 @@ const useFeatureForm = ({
         setImpressionData(initialImpressionData);
     }, [initialImpressionData]);
 
+    // When the flag type changes, recalculate targetDate unless the user manually set it
+    useEffect(() => {
+        if (!targetDateManuallySet.current) {
+            setTargetDateState(computeTargetDate(type, featureTypes));
+        }
+    }, [type, featureTypes]);
+
+    const setTargetDate = (date: string | null) => {
+        targetDateManuallySet.current = true;
+        setTargetDateState(date);
+    };
+
+    const resetTargetDate = () => {
+        targetDateManuallySet.current = false;
+        setTargetDateState(computeTargetDate(type, featureTypes));
+    };
+
     const getTogglePayload = (): CreateFeatureSchema => {
         const tagsPayload = tags.size > 0 ? { tags: Array.from(tags) } : {};
         return {
@@ -61,6 +105,7 @@ const useFeatureForm = ({
             name,
             description,
             impressionData,
+            targetDate: targetDate ?? undefined,
             ...tagsPayload,
         };
     };
@@ -96,6 +141,9 @@ const useFeatureForm = ({
         setDescription,
         impressionData,
         setImpressionData,
+        targetDate,
+        setTargetDate,
+        resetTargetDate,
         getTogglePayload,
         validateToggleName,
         clearErrors,

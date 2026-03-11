@@ -98,6 +98,7 @@ export const featureMetadataSchema = joi
             .default(false)
             .optional(),
         createdAt: joi.date().optional().allow(null),
+        targetDate: joi.date().optional().allow(null),
         variants: joi
             .array()
             .allow(null)

@@ -78,7 +78,8 @@ export type IFlagKey =
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
     | 'userTokenWithClientApiLogging'
-    | 'featureEnvSafeguards';
+    | 'featureEnvSafeguards'
+    | 'flagTargetDate';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -353,6 +354,10 @@ const flags: IFlags = {
     ),
     featureEnvSafeguards: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_ENV_SAFEGUARDS,
+        false,
+    ),
+    flagTargetDate: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAG_TARGET_DATE,
         false,
     ),
 };

@@ -1,6 +1,7 @@
 export type EnvironmentRevisionId = {
     environment: string;
     revisionId: number;
+    projects?: string[];
 };
 
 export type EdgeObservability = {

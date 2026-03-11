@@ -56,13 +56,76 @@ const listKey = (revInfo: EdgeApiKeyRevisionId): string => {
     return `[${revInfo.projects.join(',')}]:${revInfo.environment}`;
 };
 
-const unleashRevisionId = (
+const hasExactSameProjects = (
+    sourceProjects: string[] | undefined,
+    targetProjects: string[],
+): boolean => {
+    const source = new Set(sourceProjects || []);
+    const target = new Set(targetProjects);
+
+    if (source.size !== target.size) {
+        return false;
+    }
+
+    return Array.from(source).every((project) => target.has(project));
+};
+
+const isSubsetOfTokenProjects = (
+    candidateProjects: string[] | undefined,
+    tokenProjects: Set<string>,
+): boolean => {
+    const projects = candidateProjects || [];
+    return projects.every((project) => tokenProjects.has(project));
+};
+
+export const expectedUpstreamRevisionId = (
     revisionIds: EnvironmentRevisionId[],
-    environment: string,
+    apiKey: EdgeApiKeyRevisionId,
 ): number => {
-    return (
-        revisionIds.find((rev) => rev.environment === environment)
-            ?.revisionId || 0
+    const environmentRevisionIds = revisionIds.filter(
+        (rev) => rev.environment === apiKey.environment,
+    );
+    const environmentWideRevisionId = environmentRevisionIds.find(
+        (rev) => !rev.projects || rev.projects.length === 0,
+    )?.revisionId;
+    const projectScopedRevisionIds = environmentRevisionIds.filter((rev) =>
+        Boolean(rev.projects && rev.projects.length > 0),
+    );
+
+    if (projectScopedRevisionIds.length === 0) {
+        return environmentWideRevisionId || 0;
+    }
+
+    if (apiKey.projects.includes('*')) {
+        return Math.max(
+            ...projectScopedRevisionIds.map((rev) => rev.revisionId),
+            environmentWideRevisionId || 0,
+        );
+    }
+
+    const tokenProjects = new Set(apiKey.projects);
+    const exactMatchRevision = projectScopedRevisionIds.find((rev) =>
+        hasExactSameProjects(rev.projects, apiKey.projects),
+    );
+
+    if (exactMatchRevision) {
+        return Math.max(
+            exactMatchRevision.revisionId,
+            environmentWideRevisionId || 0,
+        );
+    }
+
+    const relevantScopedRevisionIds = projectScopedRevisionIds.filter((rev) =>
+        isSubsetOfTokenProjects(rev.projects, tokenProjects),
+    );
+
+    if (relevantScopedRevisionIds.length === 0) {
+        return environmentWideRevisionId || 0;
+    }
+
+    return Math.max(
+        ...relevantScopedRevisionIds.map((rev) => rev.revisionId),
+        environmentWideRevisionId || 0,
     );
 };
 
@@ -88,7 +151,7 @@ const ApiRevisionId = ({
     const inSync = diff <= 0;
     const title = inSync
         ? 'Edge feature configuration is up to date'
-        : `Edge is ${diff} revisions behind Unleash`;
+        : `Edge is ${diff} revisions behind expected upstream revision for this token`;
 
     return (
         <Tooltip title={title}>
@@ -128,9 +191,9 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
                                 <div>
                                     <ApiRevisionId
                                         edgeRevisionId={apiKey.revisionId}
-                                        upstreamRevisionId={unleashRevisionId(
+                                        upstreamRevisionId={expectedUpstreamRevisionId(
                                             revisionIds,
-                                            apiKey.environment,
+                                            apiKey,
                                         )}
                                     />
                                     <HelpIcon

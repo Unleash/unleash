@@ -4,13 +4,15 @@ import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { Alert, Box, styled, Typography } from '@mui/material';
+import { Alert, Box, Paper, styled, Typography } from '@mui/material';
 import { BillingDashboard } from './BillingDashboard/BillingDashboard.tsx';
 import { BillingHistory } from './BillingHistory/BillingHistory.tsx';
 import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
 import { BillingInvoices } from './BillingInvoices/BillingInvoices.tsx';
 import { BillingInfo } from './BillingInfo/BillingInfo.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
+import { TrialUpsell } from './TrialUpsell/TrialUpsell.tsx';
+import { isTrialInstance } from 'utils/instanceTrial';
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.mainHeader,
@@ -27,9 +29,25 @@ const StyledPageGrid = styled(Box)(({ theme }) => ({
     },
 }));
 
+const StyledDetailedBillingContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(4),
+}));
+
+const StyledTrialUpsellPaper = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(3, 4, 4),
+    borderRadius: theme.shape.borderRadius,
+}));
+
 export const Billing = () => {
-    const { isBilling, refetchInstanceStatus, refresh, loading } =
-        useInstanceStatus();
+    const {
+        isBilling,
+        instanceStatus,
+        refetchInstanceStatus,
+        refresh,
+        loading,
+    } = useInstanceStatus();
     const { invoices } = useInvoices();
     const {
         uiConfig: { billing },
@@ -46,15 +64,24 @@ export const Billing = () => {
         hardRefresh();
     }, [refetchInstanceStatus, refresh]);
 
+    if (
+        isTrialInstance(instanceStatus) &&
+        eligibleForDetailedBilling &&
+        invoices.length === 0
+    ) {
+        return (
+            <StyledDetailedBillingContainer>
+                <StyledHeader>Billing</StyledHeader>
+                <StyledTrialUpsellPaper elevation={1}>
+                    <TrialUpsell />
+                </StyledTrialUpsellPaper>
+            </StyledDetailedBillingContainer>
+        );
+    }
+
     if (eligibleForDetailedBilling) {
         return (
-            <Box
-                sx={(theme) => ({
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: theme.spacing(4),
-                })}
-            >
+            <StyledDetailedBillingContainer>
                 <StyledHeader>Usage and invoices</StyledHeader>
                 <StyledPageGrid>
                     <BillingInvoices />
@@ -62,7 +89,7 @@ export const Billing = () => {
                         <BillingInfo />
                     </div>
                 </StyledPageGrid>
-            </Box>
+            </StyledDetailedBillingContainer>
         );
     }
 

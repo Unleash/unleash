@@ -28,7 +28,7 @@ import {
     strategyBackground,
 } from 'component/common/StrategyList/StrategyListItem';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
-import { SafeguardSection } from './Safeguard.tsx';
+import { Safeguard } from './Safeguard.tsx';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -229,7 +229,7 @@ export const EnvironmentAccordionBody = ({
                 </AlertContainer>
             ) : null}
             {safeguardsEnabled ? (
-                <SafeguardSection
+                <Safeguard
                     featureEnvSafeguard={featureEnvironment.safeguards?.[0]}
                     releasePlan={firstPlan}
                     releasePlanSafeguard={firstPlan?.safeguards?.[0]}

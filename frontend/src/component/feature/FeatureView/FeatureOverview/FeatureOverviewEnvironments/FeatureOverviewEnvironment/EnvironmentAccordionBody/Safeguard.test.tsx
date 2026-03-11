@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { AddSafeguard, SafeguardSection } from './Safeguard.tsx';
+import { AddSafeguard, Safeguard } from './Safeguard.tsx';
 import type { ISafeguard } from 'interfaces/releasePlans';
 
 vi.mock(
@@ -281,7 +281,7 @@ describe('AddSafeguard', () => {
     });
 });
 
-describe('SafeguardSection', () => {
+describe('Safeguard', () => {
     const renderSection = (props?: {
         featureEnvSafeguard?: ISafeguard;
         releasePlanSafeguard?: ISafeguard;
@@ -292,7 +292,7 @@ describe('SafeguardSection', () => {
                 <Route
                     path='/projects/:projectId/features/:featureId'
                     element={
-                        <SafeguardSection
+                        <Safeguard
                             featureEnvSafeguard={props?.featureEnvSafeguard}
                             releasePlan={releasePlan}
                             releasePlanSafeguard={props?.releasePlanSafeguard}

@@ -418,7 +418,7 @@ const ReleasePlanSafeguardForm = ({
     );
 };
 
-export const ReleasePlanSafeguardSection = ({
+export const ReleasePlanSafeguard = ({
     releasePlan,
     safeguard,
     environmentName,
@@ -539,7 +539,7 @@ const FeatureEnvironmentSafeguardForm = ({
     );
 };
 
-export const FeatureEnvironmentSafeguardSection = ({
+export const FeatureEnvironmentSafeguard = ({
     safeguard,
     environmentName,
     featureId,
@@ -563,7 +563,7 @@ export const FeatureEnvironmentSafeguardSection = ({
     </StyledSafeguardContainer>
 );
 
-export const SafeguardSection = ({
+export const Safeguard = ({
     featureEnvSafeguard,
     releasePlan,
     releasePlanSafeguard,
@@ -578,9 +578,7 @@ export const SafeguardSection = ({
     featureId: string;
     onSafeguardChange: () => void;
 }) => {
-    const [addingType, setAddingType] = useState<SafeguardType | null>(
-        null,
-    );
+    const [addingType, setAddingType] = useState<SafeguardType | null>(null);
 
     const handleSafeguardChange = () => {
         setAddingType(null);
@@ -589,7 +587,7 @@ export const SafeguardSection = ({
 
     if (featureEnvSafeguard) {
         return (
-            <FeatureEnvironmentSafeguardSection
+            <FeatureEnvironmentSafeguard
                 safeguard={featureEnvSafeguard}
                 environmentName={environmentName}
                 featureId={featureId}
@@ -600,7 +598,7 @@ export const SafeguardSection = ({
 
     if (releasePlanSafeguard && releasePlan) {
         return (
-            <ReleasePlanSafeguardSection
+            <ReleasePlanSafeguard
                 releasePlan={releasePlan}
                 safeguard={releasePlanSafeguard}
                 environmentName={environmentName}
@@ -612,7 +610,7 @@ export const SafeguardSection = ({
 
     if (addingType === 'featureEnvironment') {
         return (
-            <FeatureEnvironmentSafeguardSection
+            <FeatureEnvironmentSafeguard
                 environmentName={environmentName}
                 featureId={featureId}
                 onSafeguardChange={handleSafeguardChange}
@@ -623,7 +621,7 @@ export const SafeguardSection = ({
 
     if (addingType === 'releasePlan' && releasePlan) {
         return (
-            <ReleasePlanSafeguardSection
+            <ReleasePlanSafeguard
                 releasePlan={releasePlan}
                 environmentName={environmentName}
                 featureId={featureId}

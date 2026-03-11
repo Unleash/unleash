@@ -34,7 +34,6 @@ export interface IUiConfig {
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
     unleashContext?: IMutableContext;
-    datePickerRangeConstraints?: boolean;
 }
 
 export type UiFlags = {
@@ -88,7 +87,6 @@ export type UiFlags = {
     gtmReleaseManagement?: boolean;
     projectContextFields?: boolean;
     readOnlyUsersUI?: boolean;
-    datePickerRangeConstraints?: boolean;
     regexConstraintOperator?: boolean;
     signupDialog?: boolean;
     updateMilestoneStrategy?: boolean;

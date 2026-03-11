@@ -70,7 +70,6 @@ export type IFlagKey =
     | 'projectContextFields'
     | 'readOnlyUsersUI'
     | 'remoteMcpServer'
-    | 'datePickerRangeConstraints'
     | 'regexConstraintOperator'
     | 'signupDialog'
     | 'strategyFormConsolidation'
@@ -317,10 +316,6 @@ const flags: IFlags = {
     ),
     remoteMcpServer: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REMOTE_MCP_SERVER,
-        false,
-    ),
-    datePickerRangeConstraints: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DATEPICKER_RANGE_CONSTRAINTS,
         false,
     ),
     regexConstraintOperator: parseEnvVarBoolean(

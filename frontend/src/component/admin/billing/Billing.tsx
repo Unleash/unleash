@@ -11,7 +11,7 @@ import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
 import { BillingInvoices } from './BillingInvoices/BillingInvoices.tsx';
 import { BillingInfo } from './BillingInfo/BillingInfo.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
-import { ConnectedTrialUpsell } from './TrialUpsell/TrialUpsell.tsx';
+import { TrialUpsell } from './TrialUpsell/TrialUpsell.tsx';
 import { isTrialInstance } from 'utils/instanceTrial';
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
@@ -73,7 +73,7 @@ export const Billing = () => {
             <StyledDetailedBillingContainer>
                 <StyledHeader>Billing</StyledHeader>
                 <StyledTrialUpsellPaper elevation={1}>
-                    <ConnectedTrialUpsell />
+                    <TrialUpsell />
                 </StyledTrialUpsellPaper>
             </StyledDetailedBillingContainer>
         );

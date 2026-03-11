@@ -2,12 +2,12 @@ import { vi } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TrialUpsell } from './TrialUpsell';
+import { TrialUpsellPure } from './TrialUpsell';
 
 describe('TrialUpsell', () => {
     it('shows pricing info for admins', () => {
         render(
-            <TrialUpsell
+            <TrialUpsellPure
                 isAdmin
                 seatPrice={20}
                 trialExpiry='2026-03-19T23:59:59.999Z'
@@ -22,7 +22,9 @@ describe('TrialUpsell', () => {
     });
 
     it('shows contact-admin alert for non-admins', () => {
-        render(<TrialUpsell isAdmin={false} seatPrice={20} locale='en-US' />);
+        render(
+            <TrialUpsellPure isAdmin={false} seatPrice={20} locale='en-US' />,
+        );
 
         expect(
             screen.getByText(/Contact your account admin/),
@@ -32,7 +34,7 @@ describe('TrialUpsell', () => {
 
     it('shows the formatted trial expiry date when provided', () => {
         render(
-            <TrialUpsell
+            <TrialUpsellPure
                 isAdmin
                 seatPrice={20}
                 trialExpiry='2026-03-19T23:59:59.999Z'
@@ -47,7 +49,7 @@ describe('TrialUpsell', () => {
 
     it('shows the formatted trial expiry date in user time zone', () => {
         render(
-            <TrialUpsell
+            <TrialUpsellPure
                 isAdmin
                 seatPrice={20}
                 trialExpiry='2026-03-19T23:59:59.999Z'
@@ -61,14 +63,19 @@ describe('TrialUpsell', () => {
     });
 
     it('falls back to "soon" when no trialExpiry is provided', () => {
-        render(<TrialUpsell isAdmin seatPrice={20} locale='en-US' />);
+        render(<TrialUpsellPure isAdmin seatPrice={20} locale='en-US' />);
 
         expect(screen.getByText(/expires soon/)).toBeInTheDocument();
     });
 
     it('shows expiration title and message when trial has expired', () => {
         render(
-            <TrialUpsell isAdmin seatPrice={20} trialExpired locale='en-US' />,
+            <TrialUpsellPure
+                isAdmin
+                seatPrice={20}
+                trialExpired
+                locale='en-US'
+            />,
         );
 
         expect(
@@ -85,7 +92,7 @@ describe('TrialUpsell', () => {
     });
 
     it('shows trusted logos for all users', () => {
-        render(<TrialUpsell isAdmin seatPrice={20} locale='en-US' />);
+        render(<TrialUpsellPure isAdmin seatPrice={20} locale='en-US' />);
 
         expect(
             screen.getByText('Trusted by enterprises like'),
@@ -94,7 +101,7 @@ describe('TrialUpsell', () => {
 
     it('shows upgrade button for admins when onUpgrade is provided', () => {
         render(
-            <TrialUpsell
+            <TrialUpsellPure
                 isAdmin
                 seatPrice={20}
                 onUpgrade={vi.fn()}
@@ -109,7 +116,7 @@ describe('TrialUpsell', () => {
 
     it('does not show upgrade button for non-admins', () => {
         render(
-            <TrialUpsell
+            <TrialUpsellPure
                 isAdmin={false}
                 seatPrice={20}
                 onUpgrade={vi.fn()}
@@ -125,7 +132,7 @@ describe('TrialUpsell', () => {
     it('calls onUpgrade when upgrade button is clicked', async () => {
         const onUpgrade = vi.fn();
         render(
-            <TrialUpsell
+            <TrialUpsellPure
                 isAdmin
                 seatPrice={20}
                 onUpgrade={onUpgrade}

@@ -60,6 +60,12 @@ const StyledLogoList = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const formatTrialExpiry = (locale: string, trialExpiry?: string): string => {
+    if (!trialExpiry) return '';
+
+    return formatDateDM(parseISO(trialExpiry), locale);
+};
+
 export interface ITrialUpsellProps {
     isAdmin: boolean;
     seatPrice: number;
@@ -69,7 +75,7 @@ export interface ITrialUpsellProps {
     locale: string;
 }
 
-export const ConnectedTrialUpsell = () => {
+export const TrialUpsell = () => {
     const { hasAccess } = useContext(AccessContext);
     const { instancePrices } = useInstancePrices();
     const { instanceStatus } = useInstanceStatus();
@@ -80,7 +86,7 @@ export const ConnectedTrialUpsell = () => {
     };
 
     return (
-        <TrialUpsell
+        <TrialUpsellPure
             isAdmin={hasAccess(ADMIN)}
             seatPrice={instancePrices.payg.seat}
             trialExpiry={instanceStatus?.trialExpiry}
@@ -91,13 +97,7 @@ export const ConnectedTrialUpsell = () => {
     );
 };
 
-const formatTrialExpiry = (locale: string, trialExpiry?: string): string => {
-    if (!trialExpiry) return '';
-
-    return formatDateDM(parseISO(trialExpiry), locale);
-};
-
-export const TrialUpsell = ({
+export const TrialUpsellPure = ({
     isAdmin,
     seatPrice,
     trialExpiry,

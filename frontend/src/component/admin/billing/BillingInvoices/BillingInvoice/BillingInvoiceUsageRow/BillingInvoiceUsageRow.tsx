@@ -36,6 +36,7 @@ const StyledCellWithIndicator = styled('div')(({ theme }) => ({
 
 type BillingInvoiceUsageRowProps = DetailedInvoicesLineSchema & {
     invoiceCurrency?: string;
+    invoiceStatus?: string;
 };
 
 export const BillingInvoiceUsageRow = ({
@@ -44,21 +45,31 @@ export const BillingInvoiceUsageRow = ({
     limit,
     description,
     totalAmount,
+    unitPrice,
     invoiceCurrency,
+    invoiceStatus,
 }: BillingInvoiceUsageRowProps) => {
     const percentage =
         limit && limit > 0
             ? Math.min(100, Math.round(((consumption || 0) / limit) * 100))
             : undefined;
 
+    const isEstimate = invoiceStatus === 'estimate';
     const hasValidData = hasValidUsageData(consumption, limit);
-    const overage = hasValidData
-        ? calculateOverage(consumption, limit)
-        : quantity;
-    const includedAmount = hasValidData
-        ? calculateIncludedAmount(consumption, limit)
-        : consumption;
-    const calculatedAmount = totalAmount;
+    const overage =
+        isEstimate && hasValidData
+            ? calculateOverage(consumption, limit)
+            : quantity;
+    const includedAmount =
+        isEstimate && hasValidData
+            ? calculateIncludedAmount(consumption, limit)
+            : consumption;
+    const BUNDLE_SIZE = 1_000_000;
+    const calculatedAmount =
+        isEstimate && unitPrice && hasValidData
+            ? Math.ceil(calculateOverage(consumption, limit) / BUNDLE_SIZE) *
+              unitPrice
+            : totalAmount;
 
     const hasAmount = calculatedAmount && calculatedAmount > 0;
     const showConsumption = hasValidData;

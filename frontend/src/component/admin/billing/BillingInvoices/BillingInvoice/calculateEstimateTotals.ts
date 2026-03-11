@@ -22,10 +22,16 @@ export const calculateEstimateTotals = (
         0,
     );
 
-    const usageLinesTotal = usageLines.reduce(
-        (sum, line) => sum + (line.totalAmount || 0),
-        0,
-    );
+    const BUNDLE_SIZE = 1_000_000;
+    const usageLinesTotal = usageLines.reduce((sum, line) => {
+        const overage =
+            line.consumption && line.limit
+                ? Math.ceil(
+                      Math.max(0, line.consumption - line.limit) / BUNDLE_SIZE,
+                  )
+                : 0;
+        return sum + overage * (line.unitPrice || 0);
+    }, 0);
 
     const calculatedSubtotal = mainLinesTotal + usageLinesTotal;
     const calculatedTaxAmount = taxPercentage

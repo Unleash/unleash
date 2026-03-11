@@ -5,8 +5,11 @@ import { Route, Routes } from 'react-router-dom';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { Safeguard } from './Safeguard.tsx';
-import type { IReleasePlan } from 'interfaces/releasePlans';
+import {
+    ReleasePlanSafeguardSection,
+    FeatureEnvironmentSafeguardSection,
+} from './Safeguard.tsx';
+import type { ISafeguard } from 'interfaces/releasePlans';
 
 vi.mock(
     '../../../ReleasePlan/SafeguardForm/MiniMetricsChartWithTooltip.tsx',
@@ -25,37 +28,41 @@ const permissions = [
     },
 ];
 
-const planWithoutSafeguards: IReleasePlan = {
-    id: 'plan-1',
-    name: 'Release Plan 1',
-    description: 'A release plan',
-    createdAt: '2024-01-01T00:00:00.000Z',
-    createdByUserId: 1,
-    featureName: 'feature1',
-    environment: 'production',
-    milestones: [],
-    safeguards: [],
+const releasePlan = { id: 'plan-1', name: 'Release Plan 1' };
+
+const releasePlanSafeguard: ISafeguard = {
+    id: 'safeguard-1',
+    action: { id: 'action-1', type: 'pause' },
+    impactMetric: {
+        id: 'metric-1',
+        metricName: 'http_requests_total',
+        timeRange: 'day',
+        aggregationMode: 'rps',
+        labelSelectors: { appName: ['*'] },
+    },
+    triggerCondition: {
+        operator: '>',
+        threshold: 100,
+    },
 };
 
-const planWithSafeguard: IReleasePlan = {
-    ...planWithoutSafeguards,
-    safeguards: [
-        {
-            id: 'safeguard-1',
-            action: { id: 'action-1', type: 'pause' },
-            impactMetric: {
-                id: 'metric-1',
-                metricName: 'http_requests_total',
-                timeRange: 'day',
-                aggregationMode: 'rps',
-                labelSelectors: { appName: ['*'] },
-            },
-            triggerCondition: {
-                operator: '>',
-                threshold: 100,
-            },
-        },
-    ],
+const featureEnvSafeguard: ISafeguard = {
+    id: 'env-safeguard-1',
+    action: {
+        id: 'action-2',
+        type: 'disableFeatureEnvironment',
+    },
+    impactMetric: {
+        id: 'metric-2',
+        metricName: 'http_requests_total',
+        timeRange: 'hour',
+        aggregationMode: 'count',
+        labelSelectors: { appName: ['*'] },
+    },
+    triggerCondition: {
+        operator: '>',
+        threshold: 200,
+    },
 };
 
 const setupServerRoutes = () => {
@@ -124,19 +131,42 @@ const setupServerRoutes = () => {
     });
 };
 
-const Component = ({
-    plan,
+const ReleasePlanComponent = ({
+    safeguard,
     onSafeguardChange,
 }: {
-    plan: IReleasePlan;
+    safeguard?: ISafeguard;
     onSafeguardChange: () => void;
 }) => (
     <Routes>
         <Route
             path='/projects/:projectId/features/:featureId'
             element={
-                <Safeguard
-                    plan={plan}
+                <ReleasePlanSafeguardSection
+                    releasePlan={releasePlan}
+                    safeguard={safeguard}
+                    environmentName='production'
+                    featureId='feature1'
+                    onSafeguardChange={onSafeguardChange}
+                />
+            }
+        />
+    </Routes>
+);
+
+const FeatureEnvComponent = ({
+    safeguard,
+    onSafeguardChange,
+}: {
+    safeguard?: ISafeguard;
+    onSafeguardChange: () => void;
+}) => (
+    <Routes>
+        <Route
+            path='/projects/:projectId/features/:featureId'
+            element={
+                <FeatureEnvironmentSafeguardSection
+                    safeguard={safeguard}
                     environmentName='production'
                     featureId='feature1'
                     onSafeguardChange={onSafeguardChange}
@@ -165,7 +195,7 @@ const enableChangeRequests = () => {
     );
 };
 
-describe('Safeguard', () => {
+describe('ReleasePlanSafeguardSection', () => {
     test('should add safeguard and send form data to API', async () => {
         const user = userEvent.setup();
         const onSafeguardChange = vi.fn();
@@ -177,16 +207,10 @@ describe('Safeguard', () => {
             'put',
         );
 
-        render(
-            <Component
-                plan={planWithoutSafeguards}
-                onSafeguardChange={onSafeguardChange}
-            />,
-            {
-                route: '/projects/default/features/feature1',
-                permissions,
-            },
-        );
+        render(<ReleasePlanComponent onSafeguardChange={onSafeguardChange} />, {
+            route: '/projects/default/features/feature1',
+            permissions,
+        });
 
         const addButton = await screen.findByText('Add safeguard');
         await user.click(addButton);
@@ -228,8 +252,8 @@ describe('Safeguard', () => {
         );
 
         render(
-            <Component
-                plan={planWithSafeguard}
+            <ReleasePlanComponent
+                safeguard={releasePlanSafeguard}
                 onSafeguardChange={onSafeguardChange}
             />,
             {
@@ -267,16 +291,10 @@ describe('Safeguard', () => {
             'post',
         );
 
-        render(
-            <Component
-                plan={planWithoutSafeguards}
-                onSafeguardChange={onSafeguardChange}
-            />,
-            {
-                route: '/projects/default/features/feature1',
-                permissions,
-            },
-        );
+        render(<ReleasePlanComponent onSafeguardChange={onSafeguardChange} />, {
+            route: '/projects/default/features/feature1',
+            permissions,
+        });
 
         const addButton = await screen.findByText('Add safeguard');
         await user.click(addButton);
@@ -332,8 +350,8 @@ describe('Safeguard', () => {
         );
 
         render(
-            <Component
-                plan={planWithSafeguard}
+            <ReleasePlanComponent
+                safeguard={releasePlanSafeguard}
                 onSafeguardChange={onSafeguardChange}
             />,
             {
@@ -368,5 +386,78 @@ describe('Safeguard', () => {
                 },
             },
         ]);
+    });
+});
+
+describe('FeatureEnvironmentSafeguardSection', () => {
+    test('should display existing safeguard', async () => {
+        const onSafeguardChange = vi.fn();
+
+        render(
+            <FeatureEnvComponent
+                safeguard={featureEnvSafeguard}
+                onSafeguardChange={onSafeguardChange}
+            />,
+            {
+                route: '/projects/default/features/feature1',
+                permissions,
+            },
+        );
+
+        await screen.findByText('Disable environment when');
+    });
+
+    test('should add safeguard', async () => {
+        const user = userEvent.setup();
+        const onSafeguardChange = vi.fn();
+
+        render(<FeatureEnvComponent onSafeguardChange={onSafeguardChange} />, {
+            route: '/projects/default/features/feature1',
+            permissions,
+        });
+
+        const addButton = await screen.findByText('Add safeguard');
+        await user.click(addButton);
+
+        await screen.findByText('Disable environment when');
+    });
+
+    test('should delete safeguard', async () => {
+        const user = userEvent.setup();
+        const onSafeguardChange = vi.fn();
+
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/features/feature1/environments/production/safeguards/env-safeguard-1',
+            {},
+            'delete',
+        );
+
+        render(
+            <FeatureEnvComponent
+                safeguard={featureEnvSafeguard}
+                onSafeguardChange={onSafeguardChange}
+            />,
+            {
+                route: '/projects/default/features/feature1',
+                permissions,
+            },
+        );
+
+        await screen.findByText('Disable environment when');
+
+        const removeButton = await screen.findByRole('button', {
+            name: 'Remove safeguard',
+        });
+        await user.click(removeButton);
+
+        const confirmButton = await screen.findByRole('button', {
+            name: 'Remove safeguard',
+        });
+        await user.click(confirmButton);
+
+        await waitFor(() => {
+            expect(onSafeguardChange).toHaveBeenCalled();
+        });
     });
 });

@@ -28,7 +28,10 @@ import {
     strategyBackground,
 } from 'component/common/StrategyList/StrategyListItem';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
-import { Safeguard } from './Safeguard.tsx';
+import {
+    ReleasePlanSafeguardSection,
+    FeatureEnvironmentSafeguardSection,
+} from './Safeguard.tsx';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -217,6 +220,11 @@ export const EnvironmentAccordionBody = ({
 
     const firstPlan = releasePlans[0];
 
+    const handleSafeguardChange = () => {
+        refetch();
+        refetchFeature();
+    };
+
     return (
         <StyledAccordionBodyInnerContainer>
             {paginateStrategies ? (
@@ -228,12 +236,21 @@ export const EnvironmentAccordionBody = ({
                     </Alert>
                 </AlertContainer>
             ) : null}
-            {safeguardsEnabled && (firstPlan || featureEnvSafeguards) ? (
-                <Safeguard
-                    plan={firstPlan}
+            {safeguardsEnabled && featureEnvSafeguards ? (
+                <FeatureEnvironmentSafeguardSection
+                    safeguard={featureEnvironment.safeguard}
                     environmentName={featureEnvironment.name}
                     featureId={featureId}
-                    onSafeguardChange={refetch}
+                    onSafeguardChange={handleSafeguardChange}
+                />
+            ) : null}
+            {safeguardsEnabled && firstPlan ? (
+                <ReleasePlanSafeguardSection
+                    releasePlan={firstPlan}
+                    safeguard={firstPlan.safeguards?.[0]}
+                    environmentName={featureEnvironment.name}
+                    featureId={featureId}
+                    onSafeguardChange={handleSafeguardChange}
                 />
             ) : null}
             <StrategyList>

@@ -747,7 +747,10 @@ export const SafeguardForm: FC<IBaseSafeguardFormProps> = (props) => {
     const projectId = useRequiredPathParam('projectId');
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
-    if (isChangeRequestConfigured(props.environment)) {
+    if (
+        props.safeguardType !== 'featureEnvironment' &&
+        isChangeRequestConfigured(props.environment)
+    ) {
         return <SafeguardFormWithChangeRequests {...props} />;
     }
 

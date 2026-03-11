@@ -355,6 +355,30 @@ describe('SafeguardSection', () => {
         expect(requests).toMatchObject([defaultSafeguardPayload]);
     });
 
+    test('should add feature env safeguard directly even with change requests enabled', async () => {
+        const user = userEvent.setup();
+        enableChangeRequests();
+        const { requests } = testServerRoute(
+            server,
+            '/api/admin/projects/default/features/feature1/environments/production/safeguards',
+            {},
+            'put',
+        );
+
+        const { onSafeguardChange } = renderSection();
+
+        await selectSafeguardType(user, 'Disable environment');
+        await screen.findByText('Disable environment when');
+
+        const saveButton = await screen.findByText('Save');
+        await user.click(saveButton);
+
+        await waitFor(() => {
+            expect(onSafeguardChange).toHaveBeenCalled();
+        });
+        expect(requests).toMatchObject([defaultSafeguardPayload]);
+    });
+
     test('should add release plan safeguard via API', async () => {
         const user = userEvent.setup();
         const { requests } = testServerRoute(

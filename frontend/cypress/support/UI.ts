@@ -8,7 +8,7 @@ const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
 
 let strategyId: string | undefined;
 
-const disableActiveSplashScreens = () => {
+export const disableActiveSplashScreens = () => {
     cy.intercept('GET', '/api/admin/user', (req) => {
         req.headers['cache-control'] = 'no-cache, no-store, must-revalidate';
         req.on('response', (res) => {

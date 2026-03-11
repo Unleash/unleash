@@ -8,7 +8,11 @@ export default defineConfig({
     screenshotOnRunFailure: true,
     viewportWidth: 1920,
     viewportHeight: 1080,
-    video: false,
+    video: true,
+    retries: {
+        runMode: 1,
+        openMode: 0,
+    },
     e2e: {
         specPattern: '**/*.spec.ts',
         setupNodeEvents(on, _config) {

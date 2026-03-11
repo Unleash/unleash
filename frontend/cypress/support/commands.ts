@@ -12,6 +12,7 @@ import {
     addFlexibleRolloutStrategyToFeature_UI,
     updateFlexibleRolloutStrategy_UI,
     do_login,
+    disableActiveSplashScreens,
 } from './UI.ts';
 import {
     addUserToProject_API,
@@ -29,6 +30,7 @@ Cypress.on('window:before:load', (window) => {
     Object.defineProperty(window.navigator, 'languages', { value: ['en'] });
 });
 Cypress.Commands.add('runBefore', runBefore);
+Cypress.Commands.add('disableActiveSplashScreens', disableActiveSplashScreens);
 Cypress.Commands.add('login_UI', login_UI);
 Cypress.Commands.add('do_login', do_login);
 Cypress.Commands.add('createSegment_UI', createSegment_UI);

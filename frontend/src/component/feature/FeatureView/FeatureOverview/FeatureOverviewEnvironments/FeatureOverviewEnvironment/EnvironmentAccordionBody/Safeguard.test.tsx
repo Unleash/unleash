@@ -62,6 +62,19 @@ const featureEnvSafeguard: ISafeguard = {
     },
 };
 
+const defaultSafeguardPayload = {
+    impactMetric: {
+        metricName: 'http_requests_total',
+        timeRange: 'day',
+        aggregationMode: 'rps',
+        labelSelectors: { appName: ['*'] },
+    },
+    triggerCondition: {
+        operator: '>',
+        threshold: 0,
+    },
+};
+
 const setupServerRoutes = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: {
@@ -145,6 +158,32 @@ const enableChangeRequests = () => {
         ],
         'get',
     );
+};
+
+const selectSafeguardType = async (
+    user: ReturnType<typeof userEvent.setup>,
+    menuLabel: string,
+) => {
+    const addButton = await screen.findByText('Add safeguard');
+    await user.click(addButton);
+
+    const menuItem = await screen.findByText(menuLabel);
+    await user.click(menuItem);
+};
+
+const deleteSafeguard = async (
+    user: ReturnType<typeof userEvent.setup>,
+    confirmLabel = 'Remove safeguard',
+) => {
+    const removeButton = await screen.findByRole('button', {
+        name: 'Remove safeguard',
+    });
+    await user.click(removeButton);
+
+    const confirmButton = await screen.findByRole('button', {
+        name: confirmLabel,
+    });
+    await user.click(confirmButton);
 };
 
 describe('AddSafeguard', () => {
@@ -243,78 +282,51 @@ describe('AddSafeguard', () => {
 });
 
 describe('SafeguardSection', () => {
-    const SafeguardSectionComponent = ({
-        featureEnvSafeguard,
-        releasePlanSafeguard,
-        onSafeguardChange,
-    }: {
+    const renderSection = (props?: {
         featureEnvSafeguard?: ISafeguard;
         releasePlanSafeguard?: ISafeguard;
-        onSafeguardChange: () => void;
-    }) => (
-        <Routes>
-            <Route
-                path='/projects/:projectId/features/:featureId'
-                element={
-                    <SafeguardSection
-                        featureEnvSafeguard={featureEnvSafeguard}
-                        releasePlan={releasePlan}
-                        releasePlanSafeguard={releasePlanSafeguard}
-                        environmentName='production'
-                        featureId='feature1'
-                        onSafeguardChange={onSafeguardChange}
-                    />
-                }
-            />
-        </Routes>
-    );
-
-    test('should show one Add safeguard button when no safeguards exist', async () => {
+    }) => {
         const onSafeguardChange = vi.fn();
-
         render(
-            <SafeguardSectionComponent onSafeguardChange={onSafeguardChange} />,
+            <Routes>
+                <Route
+                    path='/projects/:projectId/features/:featureId'
+                    element={
+                        <SafeguardSection
+                            featureEnvSafeguard={props?.featureEnvSafeguard}
+                            releasePlan={releasePlan}
+                            releasePlanSafeguard={props?.releasePlanSafeguard}
+                            environmentName='production'
+                            featureId='feature1'
+                            onSafeguardChange={onSafeguardChange}
+                        />
+                    }
+                />
+            </Routes>,
             {
                 route: '/projects/default/features/feature1',
                 permissions,
             },
         );
+        return { onSafeguardChange };
+    };
+
+    test('should show one Add safeguard button when no safeguards exist', async () => {
+        renderSection();
 
         const buttons = await screen.findAllByText('Add safeguard');
         expect(buttons).toHaveLength(1);
     });
 
     test('should show existing feature env safeguard', async () => {
-        const onSafeguardChange = vi.fn();
-
-        render(
-            <SafeguardSectionComponent
-                featureEnvSafeguard={featureEnvSafeguard}
-                onSafeguardChange={onSafeguardChange}
-            />,
-            {
-                route: '/projects/default/features/feature1',
-                permissions,
-            },
-        );
+        renderSection({ featureEnvSafeguard });
 
         await screen.findByText('Disable environment when');
         expect(screen.queryByText('Add safeguard')).not.toBeInTheDocument();
     });
 
     test('should show existing release plan safeguard', async () => {
-        const onSafeguardChange = vi.fn();
-
-        render(
-            <SafeguardSectionComponent
-                releasePlanSafeguard={releasePlanSafeguard}
-                onSafeguardChange={onSafeguardChange}
-            />,
-            {
-                route: '/projects/default/features/feature1',
-                permissions,
-            },
-        );
+        renderSection({ releasePlanSafeguard });
 
         await screen.findByText('Pause automation when');
         expect(screen.queryByText('Add safeguard')).not.toBeInTheDocument();
@@ -322,8 +334,6 @@ describe('SafeguardSection', () => {
 
     test('should add feature env safeguard via API', async () => {
         const user = userEvent.setup();
-        const onSafeguardChange = vi.fn();
-
         const { requests } = testServerRoute(
             server,
             '/api/admin/projects/default/features/feature1/environments/production/safeguards',
@@ -331,20 +341,9 @@ describe('SafeguardSection', () => {
             'put',
         );
 
-        render(
-            <SafeguardSectionComponent onSafeguardChange={onSafeguardChange} />,
-            {
-                route: '/projects/default/features/feature1',
-                permissions,
-            },
-        );
+        const { onSafeguardChange } = renderSection();
 
-        const addButton = await screen.findByText('Add safeguard');
-        await user.click(addButton);
-
-        const menuItem = await screen.findByText('Disable environment');
-        await user.click(menuItem);
-
+        await selectSafeguardType(user, 'Disable environment');
         await screen.findByText('Disable environment when');
 
         const saveButton = await screen.findByText('Save');
@@ -353,27 +352,11 @@ describe('SafeguardSection', () => {
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
         });
-
-        expect(requests).toMatchObject([
-            {
-                impactMetric: {
-                    metricName: 'http_requests_total',
-                    timeRange: 'day',
-                    aggregationMode: 'rps',
-                    labelSelectors: { appName: ['*'] },
-                },
-                triggerCondition: {
-                    operator: '>',
-                    threshold: 0,
-                },
-            },
-        ]);
+        expect(requests).toMatchObject([defaultSafeguardPayload]);
     });
 
     test('should add release plan safeguard via API', async () => {
         const user = userEvent.setup();
-        const onSafeguardChange = vi.fn();
-
         const { requests } = testServerRoute(
             server,
             '/api/admin/projects/default/features/feature1/environments/production/release-plans/plan-1/safeguards',
@@ -381,20 +364,9 @@ describe('SafeguardSection', () => {
             'put',
         );
 
-        render(
-            <SafeguardSectionComponent onSafeguardChange={onSafeguardChange} />,
-            {
-                route: '/projects/default/features/feature1',
-                permissions,
-            },
-        );
+        const { onSafeguardChange } = renderSection();
 
-        const addButton = await screen.findByText('Add safeguard');
-        await user.click(addButton);
-
-        const menuItem = await screen.findByText('Pause automation');
-        await user.click(menuItem);
-
+        await selectSafeguardType(user, 'Pause automation');
         await screen.findByText('Pause automation when');
 
         const saveButton = await screen.findByText('Save');
@@ -403,27 +375,11 @@ describe('SafeguardSection', () => {
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
         });
-
-        expect(requests).toMatchObject([
-            {
-                impactMetric: {
-                    metricName: 'http_requests_total',
-                    timeRange: 'day',
-                    aggregationMode: 'rps',
-                    labelSelectors: { appName: ['*'] },
-                },
-                triggerCondition: {
-                    operator: '>',
-                    threshold: 0,
-                },
-            },
-        ]);
+        expect(requests).toMatchObject([defaultSafeguardPayload]);
     });
 
     test('should delete existing release plan safeguard', async () => {
         const user = userEvent.setup();
-        const onSafeguardChange = vi.fn();
-
         testServerRoute(
             server,
             '/api/admin/projects/default/features/feature1/environments/production/release-plans/plan-1/safeguards/safeguard-1',
@@ -431,28 +387,29 @@ describe('SafeguardSection', () => {
             'delete',
         );
 
-        render(
-            <SafeguardSectionComponent
-                releasePlanSafeguard={releasePlanSafeguard}
-                onSafeguardChange={onSafeguardChange}
-            />,
-            {
-                route: '/projects/default/features/feature1',
-                permissions,
-            },
-        );
+        const { onSafeguardChange } = renderSection({ releasePlanSafeguard });
 
         await screen.findByText('Pause automation when');
+        await deleteSafeguard(user);
 
-        const removeButton = await screen.findByRole('button', {
-            name: 'Remove safeguard',
+        await waitFor(() => {
+            expect(onSafeguardChange).toHaveBeenCalled();
         });
-        await user.click(removeButton);
+    });
 
-        const confirmButton = await screen.findByRole('button', {
-            name: 'Remove safeguard',
-        });
-        await user.click(confirmButton);
+    test('should delete existing feature env safeguard', async () => {
+        const user = userEvent.setup();
+        testServerRoute(
+            server,
+            '/api/admin/projects/default/features/feature1/environments/production/safeguards/env-safeguard-1',
+            {},
+            'delete',
+        );
+
+        const { onSafeguardChange } = renderSection({ featureEnvSafeguard });
+
+        await screen.findByText('Disable environment when');
+        await deleteSafeguard(user);
 
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
@@ -461,9 +418,7 @@ describe('SafeguardSection', () => {
 
     test('should add release plan safeguard via change request', async () => {
         const user = userEvent.setup();
-        const onSafeguardChange = vi.fn();
         enableChangeRequests();
-
         const { requests } = testServerRoute(
             server,
             '/api/admin/projects/default/environments/production/change-requests',
@@ -471,20 +426,9 @@ describe('SafeguardSection', () => {
             'post',
         );
 
-        render(
-            <SafeguardSectionComponent onSafeguardChange={onSafeguardChange} />,
-            {
-                route: '/projects/default/features/feature1',
-                permissions,
-            },
-        );
+        const { onSafeguardChange } = renderSection();
 
-        const addButton = await screen.findByText('Add safeguard');
-        await user.click(addButton);
-
-        const menuItem = await screen.findByText('Pause automation');
-        await user.click(menuItem);
-
+        await selectSafeguardType(user, 'Pause automation');
         await screen.findByText('Pause automation when');
 
         const saveButton = await screen.findByText('Save');
@@ -499,25 +443,13 @@ describe('SafeguardSection', () => {
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
         });
-
         expect(requests).toMatchObject([
             {
                 feature: 'feature1',
                 action: 'changeSafeguard',
                 payload: {
                     planId: 'plan-1',
-                    safeguard: {
-                        impactMetric: {
-                            metricName: 'http_requests_total',
-                            timeRange: 'day',
-                            aggregationMode: 'rps',
-                            labelSelectors: { appName: ['*'] },
-                        },
-                        triggerCondition: {
-                            operator: '>',
-                            threshold: 0,
-                        },
-                    },
+                    safeguard: defaultSafeguardPayload,
                 },
             },
         ]);
@@ -525,9 +457,7 @@ describe('SafeguardSection', () => {
 
     test('should delete release plan safeguard via change request', async () => {
         const user = userEvent.setup();
-        const onSafeguardChange = vi.fn();
         enableChangeRequests();
-
         const { requests } = testServerRoute(
             server,
             '/api/admin/projects/default/environments/production/change-requests',
@@ -535,33 +465,14 @@ describe('SafeguardSection', () => {
             'post',
         );
 
-        render(
-            <SafeguardSectionComponent
-                releasePlanSafeguard={releasePlanSafeguard}
-                onSafeguardChange={onSafeguardChange}
-            />,
-            {
-                route: '/projects/default/features/feature1',
-                permissions,
-            },
-        );
+        const { onSafeguardChange } = renderSection({ releasePlanSafeguard });
 
         await screen.findByText('Pause automation when');
-
-        const removeButton = await screen.findByRole('button', {
-            name: 'Remove safeguard',
-        });
-        await user.click(removeButton);
-
-        const confirmButton = await screen.findByRole('button', {
-            name: 'Add suggestion to draft',
-        });
-        await user.click(confirmButton);
+        await deleteSafeguard(user, 'Add suggestion to draft');
 
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
         });
-
         expect(requests).toMatchObject([
             {
                 feature: 'feature1',
@@ -572,44 +483,5 @@ describe('SafeguardSection', () => {
                 },
             },
         ]);
-    });
-
-    test('should delete existing feature env safeguard', async () => {
-        const user = userEvent.setup();
-        const onSafeguardChange = vi.fn();
-
-        testServerRoute(
-            server,
-            '/api/admin/projects/default/features/feature1/environments/production/safeguards/env-safeguard-1',
-            {},
-            'delete',
-        );
-
-        render(
-            <SafeguardSectionComponent
-                featureEnvSafeguard={featureEnvSafeguard}
-                onSafeguardChange={onSafeguardChange}
-            />,
-            {
-                route: '/projects/default/features/feature1',
-                permissions,
-            },
-        );
-
-        await screen.findByText('Disable environment when');
-
-        const removeButton = await screen.findByRole('button', {
-            name: 'Remove safeguard',
-        });
-        await user.click(removeButton);
-
-        const confirmButton = await screen.findByRole('button', {
-            name: 'Remove safeguard',
-        });
-        await user.click(confirmButton);
-
-        await waitFor(() => {
-            expect(onSafeguardChange).toHaveBeenCalled();
-        });
     });
 });

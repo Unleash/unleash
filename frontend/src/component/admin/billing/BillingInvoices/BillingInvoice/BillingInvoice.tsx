@@ -224,7 +224,6 @@ export const BillingInvoice = ({
                                     <BillingInvoiceUsageRow
                                         {...line}
                                         invoiceCurrency={currency}
-                                        invoiceStatus={status}
                                     />
                                 </StyledTableRow>
                             ))}

@@ -280,9 +280,7 @@ describe('calculateEstimateTotals', () => {
         });
 
         it('rounds up overage bundles', () => {
-            const usageLines = [
-                createUsageLine(53_500_000, 53_000_000, 5),
-            ];
+            const usageLines = [createUsageLine(53_500_000, 53_000_000, 5)];
             const result = calculateEstimateTotals(
                 'estimate',
                 0,

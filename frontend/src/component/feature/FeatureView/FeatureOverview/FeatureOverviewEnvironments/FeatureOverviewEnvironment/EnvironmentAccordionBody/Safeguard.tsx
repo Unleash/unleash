@@ -116,10 +116,11 @@ export const AddSafeguard = ({
     );
 };
 
-const useReleasePlanSafeguardActions = ({
+const useSafeguardActions = ({
     projectId,
     featureId,
     environmentName,
+    safeguardType,
     releasePlan,
     safeguard,
     onSafeguardChange,
@@ -127,7 +128,8 @@ const useReleasePlanSafeguardActions = ({
     projectId: string;
     featureId: string;
     environmentName: string;
-    releasePlan: { id: string; name: string };
+    safeguardType: SafeguardType;
+    releasePlan?: { id: string; name: string };
     safeguard?: ISafeguard;
     onSafeguardChange: () => void;
 }) => {
@@ -136,8 +138,12 @@ const useReleasePlanSafeguardActions = ({
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data: pendingChangeRequests, refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
-    const { createOrUpdateReleasePlanSafeguard, deleteReleasePlanSafeguard } =
-        useSafeguardsApi();
+    const {
+        createOrUpdateReleasePlanSafeguard,
+        deleteReleasePlanSafeguard,
+        createOrUpdateFeatureEnvironmentSafeguard,
+        deleteFeatureEnvironmentSafeguard,
+    } = useSafeguardsApi();
 
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deleteChangeRequestOpen, setDeleteChangeRequestOpen] =
@@ -148,7 +154,46 @@ const useReleasePlanSafeguardActions = ({
         useState<CreateSafeguardSchema | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const isCR = isChangeRequestConfigured(environmentName);
+    // Feature env safeguards don't support change requests yet
+    const isCR =
+        safeguardType === 'releasePlan' &&
+        isChangeRequestConfigured(environmentName);
+
+    const createOrUpdate =
+        safeguardType === 'releasePlan' && releasePlan
+            ? (data: CreateSafeguardSchema) =>
+                  createOrUpdateReleasePlanSafeguard({
+                      projectId,
+                      featureName: featureId,
+                      environment: environmentName,
+                      planId: releasePlan.id,
+                      body: data,
+                  })
+            : (data: CreateSafeguardSchema) =>
+                  createOrUpdateFeatureEnvironmentSafeguard({
+                      projectId,
+                      featureName: featureId,
+                      environment: environmentName,
+                      body: data,
+                  });
+
+    const deleteSafeguard =
+        safeguardType === 'releasePlan' && releasePlan
+            ? (safeguardId: string) =>
+                  deleteReleasePlanSafeguard({
+                      projectId,
+                      featureName: featureId,
+                      environment: environmentName,
+                      planId: releasePlan.id,
+                      safeguardId,
+                  })
+            : (safeguardId: string) =>
+                  deleteFeatureEnvironmentSafeguard({
+                      projectId,
+                      featureName: featureId,
+                      environment: environmentName,
+                      safeguardId,
+                  });
 
     const handleSubmit = async (data: CreateSafeguardSchema) => {
         if (isCR) {
@@ -158,13 +203,7 @@ const useReleasePlanSafeguardActions = ({
         }
 
         try {
-            await createOrUpdateReleasePlanSafeguard({
-                projectId,
-                featureName: featureId,
-                environment: environmentName,
-                planId: releasePlan.id,
-                body: data,
-            });
+            await createOrUpdate(data);
             setToastData({
                 type: 'success',
                 text: 'Safeguard added successfully',
@@ -176,7 +215,7 @@ const useReleasePlanSafeguardActions = ({
     };
 
     const handleSubmitChangeRequestConfirm = async () => {
-        if (!pendingSubmitData) return;
+        if (!pendingSubmitData || !releasePlan) return;
 
         try {
             await addChange(projectId, environmentName, {
@@ -216,13 +255,7 @@ const useReleasePlanSafeguardActions = ({
 
         setIsDeleting(true);
         try {
-            await deleteReleasePlanSafeguard({
-                projectId,
-                featureName: featureId,
-                environment: environmentName,
-                planId: releasePlan.id,
-                safeguardId: safeguard.id,
-            });
+            await deleteSafeguard(safeguard.id);
             setToastData({
                 type: 'success',
                 text: 'Safeguard deleted successfully',
@@ -237,7 +270,7 @@ const useReleasePlanSafeguardActions = ({
     };
 
     const handleDeleteChangeRequestConfirm = async () => {
-        if (!safeguard || isDeleting) return;
+        if (!safeguard || isDeleting || !releasePlan) return;
 
         setIsDeleting(true);
         try {
@@ -267,7 +300,7 @@ const useReleasePlanSafeguardActions = ({
         | IChangeRequestChangeSafeguard['action']
         | IChangeRequestDeleteSafeguard['action']
         | null => {
-        if (!pendingChangeRequests) return null;
+        if (!releasePlan || !pendingChangeRequests) return null;
 
         for (const changeRequest of pendingChangeRequests) {
             if (changeRequest.environment !== environmentName) continue;
@@ -295,7 +328,7 @@ const useReleasePlanSafeguardActions = ({
         }
 
         return null;
-    }, [pendingChangeRequests, environmentName, featureId, releasePlan.id]);
+    }, [pendingChangeRequests, environmentName, featureId, releasePlan?.id]);
 
     return {
         handleSubmit,
@@ -329,7 +362,8 @@ const useReleasePlanSafeguardActions = ({
     };
 };
 
-const ReleasePlanSafeguardForm = ({
+const SafeguardForm = ({
+    safeguardType,
     releasePlan,
     safeguard,
     environmentName,
@@ -337,7 +371,8 @@ const ReleasePlanSafeguardForm = ({
     onSafeguardChange,
     onCancel,
 }: {
-    releasePlan: { id: string; name: string };
+    safeguardType: SafeguardType;
+    releasePlan?: { id: string; name: string };
     safeguard?: ISafeguard;
     environmentName: string;
     featureId: string;
@@ -352,10 +387,11 @@ const ReleasePlanSafeguardForm = ({
         deleteDialog,
         deleteChangeRequestDialog,
         submitChangeRequestDialog,
-    } = useReleasePlanSafeguardActions({
+    } = useSafeguardActions({
         projectId,
         featureId,
         environmentName,
+        safeguardType,
         releasePlan,
         safeguard,
         onSafeguardChange,
@@ -374,11 +410,11 @@ const ReleasePlanSafeguardForm = ({
                 safeguard={safeguard}
                 onSubmit={handleSubmit}
                 onCancel={onCancel}
-                onDelete={handleDeleteRequest}
+                onDelete={safeguard ? handleDeleteRequest : undefined}
                 environment={environmentName}
                 featureId={featureId}
                 badge={safeguardBadge}
-                safeguardType='releasePlan'
+                safeguardType={safeguardType}
             />
             {submitChangeRequestDialog.data && (
                 <SafeguardChangeRequestDialog
@@ -398,170 +434,35 @@ const ReleasePlanSafeguardForm = ({
                     isDeleting={deleteDialog.isDeleting}
                 />
             )}
-            <Dialogue
-                title='Request changes'
-                open={deleteChangeRequestDialog.open}
-                secondaryButtonText='Cancel'
-                onClose={deleteChangeRequestDialog.onClose}
-                primaryButtonText='Add suggestion to draft'
-                onClick={deleteChangeRequestDialog.onConfirm}
-                disabledPrimaryButton={deleteChangeRequestDialog.isDeleting}
-            >
-                <p>
-                    <strong>Remove</strong> safeguard from release plan{' '}
-                    <strong>{releasePlan.name}</strong> for{' '}
-                    <strong>{featureId}</strong> in{' '}
-                    <strong>{environmentName}</strong>
-                </p>
-            </Dialogue>
-        </>
-    );
-};
-
-export const ReleasePlanSafeguard = ({
-    releasePlan,
-    safeguard,
-    environmentName,
-    featureId,
-    onSafeguardChange,
-    onCancel = () => {},
-}: {
-    releasePlan: { id: string; name: string };
-    safeguard?: ISafeguard;
-    environmentName: string;
-    featureId: string;
-    onSafeguardChange: () => void;
-    onCancel?: () => void;
-}) => (
-    <StyledSafeguardContainer>
-        <ReleasePlanSafeguardForm
-            releasePlan={releasePlan}
-            safeguard={safeguard}
-            environmentName={environmentName}
-            featureId={featureId}
-            onSafeguardChange={onSafeguardChange}
-            onCancel={onCancel}
-        />
-    </StyledSafeguardContainer>
-);
-
-const FeatureEnvironmentSafeguardForm = ({
-    environmentName,
-    featureId,
-    onSafeguardChange,
-    onCancel,
-    safeguard,
-}: {
-    environmentName: string;
-    featureId: string;
-    onSafeguardChange: () => void;
-    onCancel: () => void;
-    safeguard?: ISafeguard;
-}) => {
-    const projectId = useRequiredPathParam('projectId');
-    const {
-        createOrUpdateFeatureEnvironmentSafeguard,
-        deleteFeatureEnvironmentSafeguard,
-    } = useSafeguardsApi();
-    const { setToastData, setToastApiError } = useToast();
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
-
-    const handleSubmit = async (data: CreateSafeguardSchema) => {
-        try {
-            await createOrUpdateFeatureEnvironmentSafeguard({
-                projectId,
-                featureName: featureId,
-                environment: environmentName,
-                body: data,
-            });
-            setToastData({
-                type: 'success',
-                text: 'Safeguard added successfully',
-            });
-            onSafeguardChange();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
-
-    const handleDeleteRequest = () => {
-        setDeleteDialogOpen(true);
-    };
-
-    const handleDeleteConfirm = async () => {
-        if (!safeguard || isDeleting) return;
-        setIsDeleting(true);
-        try {
-            await deleteFeatureEnvironmentSafeguard({
-                projectId,
-                featureName: featureId,
-                environment: environmentName,
-                safeguardId: safeguard.id,
-            });
-            setToastData({
-                type: 'success',
-                text: 'Safeguard deleted successfully',
-            });
-            onSafeguardChange();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        } finally {
-            setIsDeleting(false);
-            setDeleteDialogOpen(false);
-        }
-    };
-
-    return (
-        <>
-            <SafeguardFormDirect
-                safeguard={safeguard}
-                onSubmit={handleSubmit}
-                onCancel={onCancel}
-                onDelete={safeguard ? handleDeleteRequest : undefined}
-                environment={environmentName}
-                featureId={featureId}
-                safeguardType='featureEnvironment'
-            />
             {safeguard && (
-                <DeleteSafeguardDialog
-                    open={deleteDialogOpen}
-                    onClose={() => {
-                        if (!isDeleting) {
-                            setDeleteDialogOpen(false);
-                        }
-                    }}
-                    onConfirm={handleDeleteConfirm}
-                    isDeleting={isDeleting}
-                />
+                <Dialogue
+                    title='Request changes'
+                    open={deleteChangeRequestDialog.open}
+                    secondaryButtonText='Cancel'
+                    onClose={deleteChangeRequestDialog.onClose}
+                    primaryButtonText='Add suggestion to draft'
+                    onClick={deleteChangeRequestDialog.onConfirm}
+                    disabledPrimaryButton={
+                        deleteChangeRequestDialog.isDeleting
+                    }
+                >
+                    <p>
+                        <strong>Remove</strong> safeguard
+                        {releasePlan && (
+                            <>
+                                {' '}
+                                from release plan{' '}
+                                <strong>{releasePlan.name}</strong>
+                            </>
+                        )}{' '}
+                        for <strong>{featureId}</strong> in{' '}
+                        <strong>{environmentName}</strong>
+                    </p>
+                </Dialogue>
             )}
         </>
     );
 };
-
-export const FeatureEnvironmentSafeguard = ({
-    safeguard,
-    environmentName,
-    featureId,
-    onSafeguardChange,
-    onCancel = () => {},
-}: {
-    safeguard?: ISafeguard;
-    environmentName: string;
-    featureId: string;
-    onSafeguardChange: () => void;
-    onCancel?: () => void;
-}) => (
-    <StyledSafeguardContainer>
-        <FeatureEnvironmentSafeguardForm
-            safeguard={safeguard}
-            environmentName={environmentName}
-            featureId={featureId}
-            onSafeguardChange={onSafeguardChange}
-            onCancel={onCancel}
-        />
-    </StyledSafeguardContainer>
-);
 
 export const Safeguard = ({
     featureEnvSafeguard,
@@ -587,47 +488,61 @@ export const Safeguard = ({
 
     if (featureEnvSafeguard) {
         return (
-            <FeatureEnvironmentSafeguard
-                safeguard={featureEnvSafeguard}
-                environmentName={environmentName}
-                featureId={featureId}
-                onSafeguardChange={handleExistingChange}
-            />
+            <StyledSafeguardContainer>
+                <SafeguardForm
+                    safeguardType='featureEnvironment'
+                    safeguard={featureEnvSafeguard}
+                    environmentName={environmentName}
+                    featureId={featureId}
+                    onSafeguardChange={handleExistingChange}
+                    onCancel={() => {}}
+                />
+            </StyledSafeguardContainer>
         );
     }
 
     if (releasePlanSafeguard && releasePlan) {
         return (
-            <ReleasePlanSafeguard
-                releasePlan={releasePlan}
-                safeguard={releasePlanSafeguard}
-                environmentName={environmentName}
-                featureId={featureId}
-                onSafeguardChange={handleExistingChange}
-            />
+            <StyledSafeguardContainer>
+                <SafeguardForm
+                    safeguardType='releasePlan'
+                    releasePlan={releasePlan}
+                    safeguard={releasePlanSafeguard}
+                    environmentName={environmentName}
+                    featureId={featureId}
+                    onSafeguardChange={handleExistingChange}
+                    onCancel={() => {}}
+                />
+            </StyledSafeguardContainer>
         );
     }
 
     if (addingType === 'featureEnvironment') {
         return (
-            <FeatureEnvironmentSafeguard
-                environmentName={environmentName}
-                featureId={featureId}
-                onSafeguardChange={onSafeguardChange}
-                onCancel={() => setAddingType(null)}
-            />
+            <StyledSafeguardContainer>
+                <SafeguardForm
+                    safeguardType='featureEnvironment'
+                    environmentName={environmentName}
+                    featureId={featureId}
+                    onSafeguardChange={onSafeguardChange}
+                    onCancel={() => setAddingType(null)}
+                />
+            </StyledSafeguardContainer>
         );
     }
 
     if (addingType === 'releasePlan' && releasePlan) {
         return (
-            <ReleasePlanSafeguard
-                releasePlan={releasePlan}
-                environmentName={environmentName}
-                featureId={featureId}
-                onSafeguardChange={onSafeguardChange}
-                onCancel={() => setAddingType(null)}
-            />
+            <StyledSafeguardContainer>
+                <SafeguardForm
+                    safeguardType='releasePlan'
+                    releasePlan={releasePlan}
+                    environmentName={environmentName}
+                    featureId={featureId}
+                    onSafeguardChange={onSafeguardChange}
+                    onCancel={() => setAddingType(null)}
+                />
+            </StyledSafeguardContainer>
         );
     }
 

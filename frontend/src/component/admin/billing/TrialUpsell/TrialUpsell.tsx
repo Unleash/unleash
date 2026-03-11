@@ -66,15 +66,6 @@ const formatTrialExpiry = (locale: string, trialExpiry?: string): string => {
     return formatDateDM(parseISO(trialExpiry), locale);
 };
 
-export interface ITrialUpsellProps {
-    isAdmin: boolean;
-    seatPrice: number;
-    trialExpiry?: string;
-    trialExpired?: boolean;
-    onUpgrade?: () => void;
-    locale: string;
-}
-
 export const TrialUpsell = () => {
     const { hasAccess } = useContext(AccessContext);
     const { instancePrices } = useInstancePrices();
@@ -85,26 +76,12 @@ export const TrialUpsell = () => {
         window.location.assign(formatApiPath('api/admin/invoices/checkout'));
     };
 
-    return (
-        <TrialUpsellPure
-            isAdmin={hasAccess(ADMIN)}
-            seatPrice={instancePrices.payg.seat}
-            trialExpiry={instanceStatus?.trialExpiry}
-            trialExpired={trialHasExpired(instanceStatus)}
-            onUpgrade={onUpgrade}
-            locale={locationSettings?.locale}
-        />
-    );
-};
+    const isAdmin = hasAccess(ADMIN);
+    const seatPrice = instancePrices.payg.seat;
+    const trialExpiry = instanceStatus?.trialExpiry;
+    const trialExpired = trialHasExpired(instanceStatus);
+    const locale = locationSettings?.locale;
 
-export const TrialUpsellPure = ({
-    isAdmin,
-    seatPrice,
-    trialExpiry,
-    trialExpired = false,
-    onUpgrade,
-    locale,
-}: ITrialUpsellProps) => {
     const expiryText = trialExpiry
         ? `on ${formatTrialExpiry(locale, trialExpiry)}`
         : 'soon';
@@ -115,54 +92,53 @@ export const TrialUpsellPure = ({
 
     return (
         <>
+            <Typography variant='h2' sx={{ mb: 1 }}>
+                {trialExpired
+                    ? 'Upgrade to continue using Unleash'
+                    : '14 day free trial'}
+            </Typography>
+            <Typography variant='body2'>
+                {descriptionText}{' '}
+                <Link
+                    href='https://www.getunleash.io/pricing'
+                    target='_blank'
+                    rel='noreferrer'
+                    sx={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                    }}
+                >
+                    View full pricing
+                    <OpenInNewIcon fontSize='inherit' />
+                </Link>
+            </Typography>
             {isAdmin ? (
-                <>
-                    <Typography variant='h2' sx={{ mb: 1 }}>
-                        {trialExpired
-                            ? 'Upgrade to continue using Unleash'
-                            : '14 day free trial'}
-                    </Typography>
-                    <Typography variant='body2'>
-                        {descriptionText}{' '}
-                        <Link
-                            href='https://www.getunleash.io/pricing'
-                            target='_blank'
-                            rel='noreferrer'
-                            sx={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: 0.5,
-                            }}
-                        >
-                            View full pricing
-                            <OpenInNewIcon fontSize='inherit' />
-                        </Link>
-                    </Typography>
-                    <StyledBillingInformation>
-                        <StyledBillingInformationTextContainer>
-                            <Typography>
-                                <StyledPrice>${seatPrice}</StyledPrice> per user
-                                billed monthly
-                            </Typography>
-                            <StyledDetailListContainer>
-                                <StyledDetailList>
-                                    <li>Pay by credit card</li>
-                                    <li>Cancel anytime</li>
-                                </StyledDetailList>
-                            </StyledDetailListContainer>
-                        </StyledBillingInformationTextContainer>
-                        {onUpgrade && (
-                            <Button variant='contained' onClick={onUpgrade}>
-                                Upgrade now
-                            </Button>
-                        )}
-                    </StyledBillingInformation>
-                </>
+                <StyledBillingInformation>
+                    <StyledBillingInformationTextContainer>
+                        <Typography>
+                            <StyledPrice>${seatPrice}</StyledPrice> per user
+                            billed monthly
+                        </Typography>
+                        <StyledDetailListContainer>
+                            <StyledDetailList>
+                                <li>Pay by credit card</li>
+                                <li>Cancel anytime</li>
+                            </StyledDetailList>
+                        </StyledDetailListContainer>
+                    </StyledBillingInformationTextContainer>
+                    {onUpgrade && (
+                        <Button variant='contained' onClick={onUpgrade}>
+                            Upgrade now
+                        </Button>
+                    )}
+                </StyledBillingInformation>
             ) : (
                 <Alert severity='info' sx={{ mt: 3, mb: 2 }}>
                     Contact your account admin to request an upgrade.
                 </Alert>
             )}
+
             <Typography color='text.secondary'>
                 Trusted by enterprises like
             </Typography>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { styled, Menu, MenuItem, Tooltip } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -580,11 +580,10 @@ export const Safeguard = ({
 }) => {
     const [addingType, setAddingType] = useState<SafeguardType | null>(null);
 
-    useEffect(() => {
-        if (featureEnvSafeguard || releasePlanSafeguard) {
-            setAddingType(null);
-        }
-    }, [featureEnvSafeguard, releasePlanSafeguard]);
+    const handleExistingChange = () => {
+        setAddingType(null);
+        onSafeguardChange();
+    };
 
     if (featureEnvSafeguard) {
         return (
@@ -592,7 +591,7 @@ export const Safeguard = ({
                 safeguard={featureEnvSafeguard}
                 environmentName={environmentName}
                 featureId={featureId}
-                onSafeguardChange={onSafeguardChange}
+                onSafeguardChange={handleExistingChange}
             />
         );
     }
@@ -604,7 +603,7 @@ export const Safeguard = ({
                 safeguard={releasePlanSafeguard}
                 environmentName={environmentName}
                 featureId={featureId}
-                onSafeguardChange={onSafeguardChange}
+                onSafeguardChange={handleExistingChange}
             />
         );
     }

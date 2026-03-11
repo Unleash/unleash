@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { styled, Menu, MenuItem, Tooltip } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -580,10 +580,11 @@ export const Safeguard = ({
 }) => {
     const [addingType, setAddingType] = useState<SafeguardType | null>(null);
 
-    const handleSafeguardChange = () => {
-        setAddingType(null);
-        onSafeguardChange();
-    };
+    useEffect(() => {
+        if (featureEnvSafeguard || releasePlanSafeguard) {
+            setAddingType(null);
+        }
+    }, [featureEnvSafeguard, releasePlanSafeguard]);
 
     if (featureEnvSafeguard) {
         return (
@@ -591,7 +592,7 @@ export const Safeguard = ({
                 safeguard={featureEnvSafeguard}
                 environmentName={environmentName}
                 featureId={featureId}
-                onSafeguardChange={handleSafeguardChange}
+                onSafeguardChange={onSafeguardChange}
             />
         );
     }
@@ -603,7 +604,7 @@ export const Safeguard = ({
                 safeguard={releasePlanSafeguard}
                 environmentName={environmentName}
                 featureId={featureId}
-                onSafeguardChange={handleSafeguardChange}
+                onSafeguardChange={onSafeguardChange}
             />
         );
     }
@@ -613,7 +614,7 @@ export const Safeguard = ({
             <FeatureEnvironmentSafeguard
                 environmentName={environmentName}
                 featureId={featureId}
-                onSafeguardChange={handleSafeguardChange}
+                onSafeguardChange={onSafeguardChange}
                 onCancel={() => setAddingType(null)}
             />
         );
@@ -625,7 +626,7 @@ export const Safeguard = ({
                 releasePlan={releasePlan}
                 environmentName={environmentName}
                 featureId={featureId}
-                onSafeguardChange={handleSafeguardChange}
+                onSafeguardChange={onSafeguardChange}
                 onCancel={() => setAddingType(null)}
             />
         );

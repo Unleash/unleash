@@ -82,7 +82,7 @@ export const SignupDialogSetPassword: SignupStepContent = ({
             />
             <StyledSignupDialogButton
                 variant='contained'
-                onClick={onNext}
+                onClick={() => onNext()}
                 disabled={!isValidPassword}
             >
                 Next

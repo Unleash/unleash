@@ -139,4 +139,26 @@ export class EdgeTokenStore implements IEdgeTokenStore {
             .delete();
         stop();
     }
+
+    async delete(tokenValue: string): Promise<void> {
+        const stop = this.timer('delete_token');
+        await this.db(T.edgeApiTokens)
+            .where('token_value', tokenValue)
+            .delete();
+        stop();
+    }
+
+    async deleteAll(): Promise<void> {
+        const stop = this.timer('delete_all_tokens');
+        await this.db.raw(`
+            WITH deleted_edge AS (
+                DELETE FROM ${T.edgeApiTokens}
+                    RETURNING token_value)
+            DELETE
+            FROM ${T.apiTokens} t
+                USING deleted_edge d
+            WHERE t.secret = d.token_value
+        `);
+        stop();
+    }
 }

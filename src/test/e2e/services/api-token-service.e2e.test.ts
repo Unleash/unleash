@@ -12,10 +12,14 @@ import {
     TEST_AUDIT_USER,
 } from '../../../lib/types/index.js';
 import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService.js';
+import type { EdgeService } from '../../../lib/services/index.js';
+import { createTransactionalEdgeService } from '../../../lib/services/edge-service.js';
+import { withTransactional } from '../../../lib/db/transaction.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let apiTokenService: ApiTokenService;
+let edgeService: EdgeService;
 let projectService: ProjectService;
 
 beforeAll(async () => {
@@ -26,6 +30,8 @@ beforeAll(async () => {
                 useMemoizedActiveTokens: true,
             },
         },
+        edgeMasterKey: 'JxvIFjEQIcgp1+y0TzyHcJ4iiIREDtm85GhZFaEsOU8=',
+        edgeClientSecret: 'N/ujM32DRtA6IytNvaazOX/5zac9nhsj1jnPqcxl1iA=',
     });
     db = await dbInit('api_token_service_serial', getLogger);
     stores = db.stores;
@@ -45,6 +51,11 @@ beforeAll(async () => {
     await projectService.createProject(project, user, TEST_AUDIT_USER);
 
     apiTokenService = createApiTokenService(db.rawDatabase, config);
+    edgeService = withTransactional(
+        (tx) => createTransactionalEdgeService(tx, config),
+        db.rawDatabase,
+    );
+    await edgeService.saveClient('enterprise-edge', config.edgeClientSecret!);
 });
 
 afterAll(async () => {
@@ -58,13 +69,6 @@ afterEach(async () => {
         stores.apiTokenStore.delete(t.secret),
     );
     await Promise.all(deleteAll);
-});
-
-test('should have empty list of tokens', async () => {
-    const allTokens = await apiTokenService.getAllTokens();
-    const activeTokens = await apiTokenService.getAllTokens();
-    expect(allTokens.length).toBe(0);
-    expect(activeTokens.length).toBe(0);
 });
 
 test('should create client token', async () => {
@@ -199,4 +203,19 @@ test('should not partially create token if projects are invalid', async () => {
     const allTokens = await apiTokenService.getAllTokens();
 
     expect(allTokens.length).toBe(0);
+});
+
+test('Enterprise edge tokens should be filtered', async () => {
+    await edgeService.getOrCreateTokens('enterprise-edge', {
+        tokens: [
+            {
+                environment: 'development',
+                projects: ['*'],
+            },
+        ],
+    });
+    const unfilteredList = await apiTokenService.getAllTokens();
+    const filteredList = await apiTokenService.getUserDefinedTokens();
+    expect(unfilteredList.length).toBe(filteredList.length + 1);
+    await edgeService.deleteAllTokens();
 });

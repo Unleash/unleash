@@ -33,4 +33,12 @@ export class FakeEdgeTokenStore implements IEdgeTokenStore {
     cleanExpiredNonces(): Promise<void> {
         return Promise.resolve(undefined);
     }
+
+    delete(tokenValue: string): Promise<void> {
+        return Promise.resolve(undefined);
+    }
+
+    deleteAll(): Promise<void> {
+        return Promise.resolve(undefined);
+    }
 }

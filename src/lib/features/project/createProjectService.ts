@@ -57,6 +57,8 @@ import {
     createFakeOnboardingReadModel,
     createOnboardingReadModel,
 } from '../onboarding/createOnboardingReadModel.js';
+import { FakeEdgeTokenStore } from '../edgetokens/fake-edge-token-store.js';
+import { EdgeTokenStore } from '../edgetokens/edge-token-store.js';
 
 export const createProjectService = (
     db: Db,
@@ -68,6 +70,7 @@ export const createProjectService = (
     const projectOwnersReadModel = new ProjectOwnersReadModel(db);
     const projectFlagCreatorsReadModel = new ProjectFlagCreatorsReadModel(db);
     const groupStore = new GroupStore(db);
+    const edgeTokenStore = new EdgeTokenStore(db, eventBus, config);
     const featureToggleStore = new FeatureToggleStore(
         db,
         eventBus,
@@ -148,6 +151,7 @@ export const createProjectService = (
             projectFlagCreatorsReadModel,
             projectReadModel,
             onboardingReadModel,
+            edgeTokenStore,
         },
         config,
         accessService,
@@ -172,6 +176,7 @@ export const createFakeProjectService = (config: IUnleashConfig) => {
     const accountStore = new FakeAccountStore();
     const environmentStore = new FakeEnvironmentStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
+    const edgeTokenStore = new FakeEdgeTokenStore();
     const projectStatsStore = new FakeProjectStatsStore();
     const { accessService } = createFakeAccessService(config);
     const { featureToggleService } = createFakeFeatureToggleService(config);
@@ -220,6 +225,7 @@ export const createFakeProjectService = (config: IUnleashConfig) => {
             projectStatsStore,
             projectReadModel,
             onboardingReadModel,
+            edgeTokenStore,
         },
         config,
         accessService,

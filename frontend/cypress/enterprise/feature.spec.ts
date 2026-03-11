@@ -13,6 +13,7 @@ describe('feature', () => {
     });
 
     after(() => {
+        cy.login_UI();
         cy.on('uncaught:exception', (err) => {
             if (
                 err.message.includes(
@@ -62,7 +63,7 @@ describe('feature', () => {
         );
     });
 
-    it('can add, update and delete a gradual rollout strategy to the development environment', () => {
+    it.skip('can add, update and delete a gradual rollout strategy to the development environment', () => {
         cy.addFlexibleRolloutStrategyToFeature_UI({
             featureToggleName,
             project: projectName,

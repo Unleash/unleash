@@ -10,6 +10,7 @@ import useToast from 'hooks/useToast';
 import type {
     IFeatureStrategy,
     IFeatureStrategyPayload,
+    StrategyFormState,
 } from 'interfaces/strategy';
 import {
     createStrategyPayload,
@@ -61,7 +62,9 @@ const NewFeatureStrategyCreate = () => {
         useQueryParams().get('defaultStrategy') || 'false',
     );
 
-    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
+    const [strategy, setStrategy] = useState<StrategyFormState>({
+        name: strategyName,
+    });
 
     const { strategyDefinition } = useStrategy(strategyName);
     const errors = useFormErrors();

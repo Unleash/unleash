@@ -5,7 +5,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import type { IFeatureStrategy } from 'interfaces/strategy';
+import type { StrategyFormState } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import type { ISegment } from 'interfaces/segment';
 import { useFormErrors } from 'hooks/useFormErrors';
@@ -71,9 +71,20 @@ export const LegacyEditChange = ({
 
     const constraintsWithId = addIdSymbolToConstraints(change.payload);
 
-    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({
+    const strategySnapshot =
+        (change.action === 'updateMilestoneStrategy' ||
+            change.action === 'updateStrategy') &&
+        'snapshot' in change.payload
+            ? change.payload.snapshot
+            : undefined;
+
+    const [strategy, setStrategy] = useState<StrategyFormState>({
         ...change.payload,
         constraints: constraintsWithId,
+        name:
+            'name' in change.payload
+                ? change.payload.name
+                : strategySnapshot?.name || '',
     });
 
     const { segments: allSegments } = useSegments();
@@ -198,7 +209,7 @@ const formatUpdateStrategyApiCode = (
     projectId: string,
     changeRequestId: number,
     changeId: number,
-    strategy: Partial<IFeatureStrategy>,
+    strategy: StrategyFormState,
     unleashUrl?: string,
 ): string => {
     if (!unleashUrl) {

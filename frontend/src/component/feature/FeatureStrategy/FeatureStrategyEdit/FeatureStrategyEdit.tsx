@@ -11,6 +11,7 @@ import type {
     IFeatureStrategy,
     IFeatureStrategyPayload,
     IStrategy,
+    StrategyFormState,
 } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 
@@ -103,7 +104,9 @@ const NewFeatureStrategyEdit = () => {
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyId = useRequiredQueryParam('strategyId');
 
-    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({});
+    const [strategy, setStrategy] = useState<StrategyFormState>({
+        name: '', // populated in the effect
+    });
     const [strategyContext, setStrategyContext] =
         useState<FeatureEnvironmentStrategyScope>('default');
     const {

@@ -194,6 +194,10 @@ export class ApiTokenService {
         return this.store.getAll();
     }
 
+    public async getUserDefinedTokens(): Promise<IApiToken[]> {
+        return this.store.getUserDefinedTokens();
+    }
+
     async initApiTokens(tokens: IApiTokenCreate[]) {
         const tokenCount = await this.store.count();
         if (tokenCount > 0) {
@@ -275,8 +279,7 @@ export class ApiTokenService {
 
     /**
      * @param newToken
-     * @param createdBy should be IApiUser or IUser. Still supports optional or string for backward compatibility
-     * @param createdByUserId still supported for backward compatibility
+     * @param auditUser Used for event log and referencing who made the token
      */
     public async createApiTokenWithProjects(
         newToken: Omit<IApiTokenCreate, 'secret'>,
@@ -356,6 +359,7 @@ export class ApiTokenService {
         try {
             const token = await this.store.insert(
                 this.normalizeTokenType(newApiToken),
+                auditUser.id,
             );
             this.activeTokens.push(token);
             await this.eventService.storeEvent(

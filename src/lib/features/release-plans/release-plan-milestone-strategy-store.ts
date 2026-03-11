@@ -5,6 +5,8 @@ import type { Row } from '../../db/crud/row-type.js';
 import type { Db } from '../../db/db.js';
 import type { MilestoneStrategyConfigUpdate } from '../../types/index.js';
 import type { Store } from '../../types/stores/store.js';
+import NotFoundError from '../../error/notfound-error.js';
+
 const TABLE = 'milestone_strategies';
 
 export type ReleasePlanMilestoneStrategyWriteModel = Omit<
@@ -42,7 +44,7 @@ const fromRow = (row: any): ReleasePlanMilestoneStrategy => {
     };
 };
 
-const fromUpdateRow = (row: any): ReleasePlanMilestoneStrategy => {
+const fromDatabaseRow = (row: any): ReleasePlanMilestoneStrategy => {
     return {
         id: row.id,
         milestoneId: row.milestone_id,
@@ -95,6 +97,25 @@ export class ReleasePlanMilestoneStrategyStore
         super(TABLE, db, config);
     }
 
+    override async get(id: string): Promise<ReleasePlanMilestoneStrategy> {
+        const row = await this.db(TABLE).where({ id }).first();
+        if (!row) {
+            throw new NotFoundError(
+                `Milestone strategy with id ${id} not found`,
+            );
+        }
+        const strategy = fromDatabaseRow(row);
+
+        const segmentRows = await this.db('milestone_strategy_segments')
+            .where('milestone_strategy_id', id)
+            .select('segment_id');
+
+        return {
+            ...strategy,
+            segments: segmentRows.map((row: any) => row.segment_id),
+        };
+    }
+
     override async insert({
         segments,
         ...strategy
@@ -119,7 +140,7 @@ export class ReleasePlanMilestoneStrategyStore
             .where({ id: strategyId })
             .update(toUpdateRow(strategy))
             .returning('*');
-        return fromUpdateRow(rows[0]);
+        return fromDatabaseRow(rows[0]);
     }
 
     async upsert(

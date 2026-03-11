@@ -7,7 +7,10 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { SafeguardForm } from '../../../ReleasePlan/SafeguardForm/SafeguardForm.tsx';
+import {
+    SafeguardForm,
+    type SafeguardType,
+} from '../../../ReleasePlan/SafeguardForm/SafeguardForm.tsx';
 import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguardsApi';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import { DeleteSafeguardDialog } from '../../../ReleasePlan/DeleteSafeguardDialog.tsx';
@@ -43,13 +46,11 @@ const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
     paddingRight: theme.spacing(2),
 }));
 
-type SafeguardAddingType = 'releasePlan' | 'featureEnvironment';
-
 export const AddSafeguard = ({
     onSelect,
     releasePlan,
 }: {
-    onSelect: (type: SafeguardAddingType) => void;
+    onSelect: (type: SafeguardType) => void;
     releasePlan?: { id: string; name: string };
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -95,6 +96,7 @@ export const AddSafeguard = ({
                             : 'Add a release plan to use this safeguard'
                     }
                     placement='right'
+                    arrow
                 >
                     <span>
                         <MenuItem
@@ -533,7 +535,7 @@ export const SafeguardSection = ({
     featureId: string;
     onSafeguardChange: () => void;
 }) => {
-    const [addingType, setAddingType] = useState<SafeguardAddingType | null>(
+    const [addingType, setAddingType] = useState<SafeguardType | null>(
         null,
     );
 

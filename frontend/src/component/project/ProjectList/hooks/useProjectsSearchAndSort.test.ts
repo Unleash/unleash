@@ -17,6 +17,7 @@ const projects: ProjectSchema[] = [
         createdAt: '2024-02-01',
         lastUpdatedAt: '2024-02-10',
         lastReportedFlagUsage: '2024-02-15',
+        favorite: false,
     },
     {
         name: 'C - Koala',
@@ -40,6 +41,7 @@ const projects: ProjectSchema[] = [
         createdAt: '2024-01-20',
         lastUpdatedAt: '2024-01-30',
         lastReportedFlagUsage: '2024-02-05',
+        favorite: false,
     },
     {
         name: 'F - Zebra',
@@ -185,6 +187,7 @@ describe('useProjectsSearchAndSort', () => {
                             createdAt: '2024-01-01',
                             lastUpdatedAt: '2024-03-10',
                             lastReportedFlagUsage: '2024-01-15',
+                            favorite: false,
                         },
                         {
                             name: 'Project B',
@@ -192,6 +195,7 @@ describe('useProjectsSearchAndSort', () => {
                             createdAt: '2024-02-01',
                             lastUpdatedAt: '2024-02-10',
                             lastReportedFlagUsage: '2024-02-15',
+                            favorite: false,
                         },
                     ],
                     undefined,
@@ -230,11 +234,13 @@ describe('useProjectsSearchAndSort', () => {
                             id: '1',
                             createdAt: '2024-01-01',
                             lastUpdatedAt: '2024-01-02',
+                            favorite: false,
                         },
                         {
                             name: 'Project B',
                             id: '2',
                             createdAt: '2024-02-01',
+                            favorite: false,
                         },
                     ],
                     undefined,

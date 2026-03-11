@@ -5,7 +5,7 @@ import { createFeatureOverviewCell } from './FeatureOverviewCell.tsx';
 const noOp = () => {};
 
 test('Display full overview information', () => {
-    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp);
+    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp, noOp);
 
     render(
         <FeatureOverviewCell
@@ -44,7 +44,7 @@ test('Display full overview information', () => {
 });
 
 test('Display minimal overview information', () => {
-    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp);
+    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp, noOp);
 
     render(
         <FeatureOverviewCell
@@ -71,7 +71,7 @@ test('Display minimal overview information', () => {
 });
 
 test('show archived information', () => {
-    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp);
+    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp, noOp);
 
     render(
         <FeatureOverviewCell

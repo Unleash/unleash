@@ -52,7 +52,9 @@ export const BillingInvoiceUsageRow = ({
             : undefined;
 
     const hasValidData = hasValidUsageData(consumption, limit);
-    const overage = hasValidData ? calculateOverage(consumption, limit) : quantity;
+    const overage = hasValidData
+        ? calculateOverage(consumption, limit)
+        : quantity;
     const includedAmount = hasValidData
         ? calculateIncludedAmount(consumption, limit)
         : consumption;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { styled, Menu, MenuItem, Tooltip } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -390,12 +390,14 @@ const ReleasePlanSafeguardForm = ({
                     mode={safeguard ? 'edit' : 'create'}
                 />
             )}
-            <DeleteSafeguardDialog
-                open={deleteDialog.open}
-                onClose={deleteDialog.onClose}
-                onConfirm={deleteDialog.onConfirm}
-                isDeleting={deleteDialog.isDeleting}
-            />
+            {safeguard && (
+                <DeleteSafeguardDialog
+                    open={deleteDialog.open}
+                    onClose={deleteDialog.onClose}
+                    onConfirm={deleteDialog.onConfirm}
+                    isDeleting={deleteDialog.isDeleting}
+                />
+            )}
             <Dialogue
                 title='Request changes'
                 open={deleteChangeRequestDialog.open}
@@ -475,7 +477,7 @@ const FeatureEnvironmentSafeguardForm = ({
             });
             setToastData({
                 type: 'success',
-                text: 'Safeguard saved successfully',
+                text: 'Safeguard added successfully',
             });
             onSafeguardChange();
         } catch (error: unknown) {
@@ -580,11 +582,10 @@ export const SafeguardSection = ({
         null,
     );
 
-    useEffect(() => {
-        if (featureEnvSafeguard || releasePlanSafeguard) {
-            setAddingType(null);
-        }
-    }, [featureEnvSafeguard, releasePlanSafeguard]);
+    const handleSafeguardChange = () => {
+        setAddingType(null);
+        onSafeguardChange();
+    };
 
     if (featureEnvSafeguard) {
         return (
@@ -592,7 +593,7 @@ export const SafeguardSection = ({
                 safeguard={featureEnvSafeguard}
                 environmentName={environmentName}
                 featureId={featureId}
-                onSafeguardChange={onSafeguardChange}
+                onSafeguardChange={handleSafeguardChange}
             />
         );
     }
@@ -604,7 +605,7 @@ export const SafeguardSection = ({
                 safeguard={releasePlanSafeguard}
                 environmentName={environmentName}
                 featureId={featureId}
-                onSafeguardChange={onSafeguardChange}
+                onSafeguardChange={handleSafeguardChange}
             />
         );
     }
@@ -614,7 +615,7 @@ export const SafeguardSection = ({
             <FeatureEnvironmentSafeguardSection
                 environmentName={environmentName}
                 featureId={featureId}
-                onSafeguardChange={onSafeguardChange}
+                onSafeguardChange={handleSafeguardChange}
                 onCancel={() => setAddingType(null)}
             />
         );
@@ -626,7 +627,7 @@ export const SafeguardSection = ({
                 releasePlan={releasePlan}
                 environmentName={environmentName}
                 featureId={featureId}
-                onSafeguardChange={onSafeguardChange}
+                onSafeguardChange={handleSafeguardChange}
                 onCancel={() => setAddingType(null)}
             />
         );

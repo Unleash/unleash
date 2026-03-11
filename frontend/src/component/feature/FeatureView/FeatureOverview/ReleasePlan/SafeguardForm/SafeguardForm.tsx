@@ -51,21 +51,6 @@ const SafeguardConfigurationSection = styled(Box)({
     flex: 1,
     minWidth: 0,
 });
-
-export const useSafeguardForm = (safeguards: ISafeguard[] | undefined) => {
-    const [safeguardFormOpen, setSafeguardFormOpen] = useState(false);
-
-    useEffect(() => {
-        if (safeguards && safeguards.length > 0) {
-            setSafeguardFormOpen(true);
-        } else {
-            setSafeguardFormOpen(false);
-        }
-    }, [JSON.stringify(safeguards)]);
-
-    return { safeguardFormOpen, setSafeguardFormOpen };
-};
-
 export type SafeguardType = 'releasePlan' | 'featureEnvironment';
 
 interface IBaseSafeguardFormProps {

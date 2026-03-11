@@ -267,7 +267,7 @@ export const ProjectFeatureToggles = ({
                 cell: createFeatureOverviewCell(
                     onTagClick,
                     onFlagTypeClick,
-                    inlineFavoriteInNameColumn ? onFavorite : undefined,
+                    onFavorite,
                 ),
                 enableHiding: false,
             }),
@@ -612,13 +612,31 @@ export const ProjectFeatureToggles = ({
                             />
                         </FilterRow>
                         {showArchived ? null : (
-                            <FilterRow>
-                                <ProjectOverviewFilters
-                                    project={projectId}
-                                    onChange={setTableState}
-                                    state={filterState}
-                                />
-                            </FilterRow>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <FilterRow>
+                                    <ProjectOverviewFilters
+                                        project={projectId}
+                                        onChange={setTableState}
+                                        state={filterState}
+                                    />
+                                </FilterRow>
+                                {inlineFavoriteInNameColumn ? (
+                                    <FavoriteIconHeader
+                                        isActive={tableState.favoritesFirst}
+                                        onClick={() =>
+                                            setTableState({
+                                                favoritesFirst:
+                                                    !tableState.favoritesFirst,
+                                            })
+                                        }
+                                    />
+                                ) : null}
+                            </Box>
                         )}
                         {isMediumScreen ? (
                             <ProjectFlagsSearch

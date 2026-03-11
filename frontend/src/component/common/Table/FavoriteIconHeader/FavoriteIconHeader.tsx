@@ -29,14 +29,15 @@ export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
             }
         >
             <IconButton
-                sx={{
+                sx={(theme) => ({
                     mx: -0.75,
                     my: -1,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     padding: 1.25,
-                }}
+                    color: theme.palette.primary.main,
+                })}
                 onClick={onToggle}
                 size='small'
             >

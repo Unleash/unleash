@@ -49,11 +49,7 @@ export const useProjectFeatureSearch = (
         stateConfig,
     );
 
-    const inlineFavoriteInNameColumn = useUiFlag('inlineFavoriteInNameColumn');
-    const { columns: _, ...restTableState } = tableState;
-    const apiTableState = inlineFavoriteInNameColumn
-        ? { ...restTableState, favoritesFirst: false }
-        : restTableState;
+    const apiTableState = tableState;
     const { features, total, refetch, loading, initialLoad } = useFeatureSearch(
         mapValues(
             {

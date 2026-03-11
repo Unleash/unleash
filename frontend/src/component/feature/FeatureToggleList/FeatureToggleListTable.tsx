@@ -151,7 +151,7 @@ export const FeatureToggleListTable: FC = () => {
                 cell: createFeatureOverviewCell(
                     onTagClick,
                     onFlagTypeClick,
-                    inlineFavoriteInNameColumn ? onFavorite : undefined,
+                    onFavorite,
                 ),
             }),
             columnHelper.accessor('createdBy', {
@@ -327,10 +327,27 @@ export const FeatureToggleListTable: FC = () => {
                     />
                 ) : null}
             </FeaturesOverviewLifecycleFilters>
-            <FeaturesOverviewToggleFilters
-                onChange={setTableState}
-                state={filterState}
-            />
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                }}
+            >
+                <FeaturesOverviewToggleFilters
+                    onChange={setTableState}
+                    state={filterState}
+                />
+                {inlineFavoriteInNameColumn ? (
+                    <FavoriteIconHeader
+                        isActive={tableState.favoritesFirst}
+                        onClick={() =>
+                            setTableState({
+                                favoritesFirst: !tableState.favoritesFirst,
+                            })
+                        }
+                    />
+                ) : null}
+            </Box>
             {isLargeScreen ? (
                 <Box sx={(theme) => ({ padding: theme.spacing(0, 3, 3) })}>
                     <Search
@@ -340,6 +357,7 @@ export const FeatureToggleListTable: FC = () => {
                     />
                 </Box>
             ) : null}
+
             <SearchHighlightProvider value={tableState.query || ''}>
                 <div ref={bodyLoadingRef}>
                     <PaginatedTable tableInstance={table} totalItems={total} />

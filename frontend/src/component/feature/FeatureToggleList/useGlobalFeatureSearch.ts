@@ -14,7 +14,6 @@ import { useUiFlag } from 'hooks/useUiFlag';
 
 export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
     const storageKey = 'features-list-table';
-    const inlineFavoriteInNameColumn = useUiFlag('inlineFavoriteInNameColumn');
     const stateConfig = {
         offset: withDefault(SafeNumberParam, 0),
         limit: withDefault(SafeNumberParam, pageLimit),
@@ -47,9 +46,7 @@ export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
         ...filterState
     } = tableState;
 
-    const apiTableState = inlineFavoriteInNameColumn
-        ? { ...tableState, favoritesFirst: false }
-        : tableState;
+    const apiTableState = tableState;
 
     const {
         features = [],

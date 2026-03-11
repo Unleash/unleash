@@ -11,8 +11,9 @@ const TABLE = 'milestone_strategies';
 
 export type ReleasePlanMilestoneStrategyWriteModel = Omit<
     ReleasePlanMilestoneStrategy,
-    'id'
->;
+    'id' | 'name'
+> & { strategyName: string };
+
 export interface IReleasePlanMilestoneStrategyStore
     extends Store<ReleasePlanMilestoneStrategy, string> {
     insert(
@@ -35,6 +36,7 @@ const fromRow = (row: any): ReleasePlanMilestoneStrategy => {
         milestoneId: row.milestone_id,
         sortOrder: row.sort_order,
         title: row.title,
+        name: row.strategy_name,
         strategyName: row.strategy_name,
         parameters: row.parameters,
         constraints: JSON.parse(row.constraints),
@@ -50,6 +52,7 @@ const fromDatabaseRow = (row: any): ReleasePlanMilestoneStrategy => {
         milestoneId: row.milestone_id,
         sortOrder: row.sort_order,
         title: row.title,
+        name: row.strategy_name,
         strategyName: row.strategy_name,
         parameters: row.parameters,
         constraints: row.constraints,

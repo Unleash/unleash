@@ -1,5 +1,8 @@
 import type { ReleasePlanMilestoneStrategy } from '../../lib/features/release-plans/release-plan-milestone-strategy.js';
-import type { IReleasePlanMilestoneStrategyStore } from '../../lib/features/release-plans/release-plan-milestone-strategy-store.js';
+import type {
+    IReleasePlanMilestoneStrategyStore,
+    ReleasePlanMilestoneStrategyWriteModel,
+} from '../../lib/features/release-plans/release-plan-milestone-strategy-store.js';
 import type { MilestoneStrategyConfigUpdate } from '../../lib/types/model.js';
 
 export class FakeReleasePlanMilestoneStrategyStore
@@ -8,11 +11,12 @@ export class FakeReleasePlanMilestoneStrategyStore
     private items: ReleasePlanMilestoneStrategy[] = [];
 
     async insert(
-        _item: Omit<ReleasePlanMilestoneStrategy, 'id'>,
+        item: ReleasePlanMilestoneStrategyWriteModel,
     ): Promise<ReleasePlanMilestoneStrategy> {
         const strategy = {
-            ..._item,
+            ...item,
             id: String(this.items.length + 1),
+            name: item.strategyName,
         } as ReleasePlanMilestoneStrategy;
         this.items.push(strategy);
         return strategy;

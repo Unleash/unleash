@@ -20,6 +20,7 @@ test('requireFeatureEnabled should call next when feature is enabled', () => {
         isEnabled: vi.fn().mockReturnValue(true),
     };
 
+    // @ts-expect-error the feature name does not exist, it's only for testing
     requireFeatureEnabled(flagResolver as any, 'changeRequestEnabled')(
         {} as any,
         {} as any,
@@ -37,6 +38,7 @@ test('requireFeatureEnabled should return 404 when feature is disabled', () => {
         isEnabled: vi.fn().mockReturnValue(false),
     };
 
+    // @ts-expect-error the feature name does not exist, it's only for testing
     requireFeatureEnabled(flagResolver as any, 'changeRequestEnabled')(
         {} as any,
         { sendStatus } as any,

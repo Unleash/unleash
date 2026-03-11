@@ -72,12 +72,12 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
 
     const onLater = () => {
         setInviteEmails([]);
-        onNext();
+        onNext('later');
     };
 
     const onInvite = () => {
         addEmailsFromRaw(trimmedInput);
-        onNext();
+        onNext('invite');
     };
 
     return (

@@ -10,10 +10,8 @@ import ShieldIcon from '@mui/icons-material/ShieldOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import type { FormEvent, ReactNode } from 'react';
 import { useEffect, useMemo, useState, type FC } from 'react';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useNumericStringInput } from 'hooks/useNumericStringInput';
-import { SafeguardChangeRequestDialog } from './SafeguardChangeRequestDialog.tsx';
 import { MiniMetricsChartWithTooltip } from './MiniMetricsChartWithTooltip.tsx';
 import {
     useImpactMetricsOptions,
@@ -637,71 +635,6 @@ export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     );
 };
 
-const SafeguardFormWithChangeRequests: FC<IBaseSafeguardFormProps> = ({
-    onSubmit,
-    onCancel,
-    onDelete,
-    safeguard,
-    environment,
-    featureId,
-    badge,
-    safeguardType,
-}) => {
-    const formState = useSafeguardFormState(safeguard, featureId);
-    const {
-        mode,
-        setMode,
-        buildSafeguardData,
-        threshold,
-        resetToOriginalValues,
-    } = formState;
-    const [dialogOpen, setDialogOpen] = useState(false);
-
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-
-        if (Number.isNaN(Number(threshold))) {
-            return;
-        }
-
-        setDialogOpen(true);
-    };
-
-    const handleDialogConfirm = () => {
-        const safeguardData = buildSafeguardData();
-        setDialogOpen(false);
-        onSubmit(safeguardData);
-
-        resetToOriginalValues();
-        if (mode === 'create') {
-            onCancel?.();
-        } else {
-            setMode('display');
-        }
-    };
-
-    return (
-        <SafeguardFormBase
-            formState={formState}
-            onSubmit={handleSubmit}
-            onCancel={onCancel}
-            onDelete={onDelete}
-            environment={environment}
-            badge={badge}
-            safeguardType={safeguardType}
-        >
-            <SafeguardChangeRequestDialog
-                isOpen={dialogOpen}
-                onConfirm={handleDialogConfirm}
-                onClose={() => setDialogOpen(false)}
-                safeguardData={buildSafeguardData()}
-                environment={environment}
-                mode={mode === 'edit' ? 'edit' : 'create'}
-            />
-        </SafeguardFormBase>
-    );
-};
-
 export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
     onSubmit,
     onCancel,
@@ -743,13 +676,3 @@ export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
     );
 };
 
-export const SafeguardForm: FC<IBaseSafeguardFormProps> = (props) => {
-    const projectId = useRequiredPathParam('projectId');
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-
-    if (isChangeRequestConfigured(props.environment)) {
-        return <SafeguardFormWithChangeRequests {...props} />;
-    }
-
-    return <SafeguardFormDirect {...props} />;
-};

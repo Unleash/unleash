@@ -8,10 +8,10 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import {
-    SafeguardForm,
     SafeguardFormDirect,
     type SafeguardType,
 } from '../../../ReleasePlan/SafeguardForm/SafeguardForm.tsx';
+import { SafeguardChangeRequestDialog } from '../../../ReleasePlan/SafeguardForm/SafeguardChangeRequestDialog.tsx';
 import { useSafeguardsApi } from 'hooks/api/actions/useSafeguardsApi/useSafeguardsApi';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import { DeleteSafeguardDialog } from '../../../ReleasePlan/DeleteSafeguardDialog.tsx';
@@ -142,42 +142,62 @@ const useReleasePlanSafeguardActions = ({
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deleteChangeRequestOpen, setDeleteChangeRequestOpen] =
         useState(false);
+    const [submitChangeRequestOpen, setSubmitChangeRequestOpen] =
+        useState(false);
+    const [pendingSubmitData, setPendingSubmitData] =
+        useState<CreateSafeguardSchema | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
     const isCR = isChangeRequestConfigured(environmentName);
 
     const handleSubmit = async (data: CreateSafeguardSchema) => {
+        if (isCR) {
+            setPendingSubmitData(data);
+            setSubmitChangeRequestOpen(true);
+            return;
+        }
+
         try {
-            if (isCR) {
-                await addChange(projectId, environmentName, {
-                    feature: featureId,
-                    action: 'changeSafeguard' as const,
-                    payload: {
-                        planId: releasePlan.id,
-                        safeguard: data,
-                    },
-                });
-                await refetchChangeRequests();
-                setToastData({
-                    type: 'success',
-                    text: 'Added to draft',
-                });
-            } else {
-                await createOrUpdateReleasePlanSafeguard({
-                    projectId,
-                    featureName: featureId,
-                    environment: environmentName,
-                    planId: releasePlan.id,
-                    body: data,
-                });
-                setToastData({
-                    type: 'success',
-                    text: 'Safeguard added successfully',
-                });
-            }
+            await createOrUpdateReleasePlanSafeguard({
+                projectId,
+                featureName: featureId,
+                environment: environmentName,
+                planId: releasePlan.id,
+                body: data,
+            });
+            setToastData({
+                type: 'success',
+                text: 'Safeguard added successfully',
+            });
             onSafeguardChange();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const handleSubmitChangeRequestConfirm = async () => {
+        if (!pendingSubmitData) return;
+
+        try {
+            await addChange(projectId, environmentName, {
+                feature: featureId,
+                action: 'changeSafeguard' as const,
+                payload: {
+                    planId: releasePlan.id,
+                    safeguard: pendingSubmitData,
+                },
+            });
+            await refetchChangeRequests();
+            setToastData({
+                type: 'success',
+                text: 'Added to draft',
+            });
+            onSafeguardChange();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        } finally {
+            setSubmitChangeRequestOpen(false);
+            setPendingSubmitData(null);
         }
     };
 
@@ -297,6 +317,15 @@ const useReleasePlanSafeguardActions = ({
             onConfirm: handleDeleteChangeRequestConfirm,
             onClose: () => setDeleteChangeRequestOpen(false),
         },
+        submitChangeRequestDialog: {
+            open: submitChangeRequestOpen,
+            data: pendingSubmitData,
+            onConfirm: handleSubmitChangeRequestConfirm,
+            onClose: () => {
+                setSubmitChangeRequestOpen(false);
+                setPendingSubmitData(null);
+            },
+        },
     };
 };
 
@@ -322,6 +351,7 @@ const ReleasePlanSafeguardForm = ({
         pendingSafeguardAction,
         deleteDialog,
         deleteChangeRequestDialog,
+        submitChangeRequestDialog,
     } = useReleasePlanSafeguardActions({
         projectId,
         featureId,
@@ -340,7 +370,7 @@ const ReleasePlanSafeguardForm = ({
 
     return (
         <>
-            <SafeguardForm
+            <SafeguardFormDirect
                 safeguard={safeguard}
                 onSubmit={handleSubmit}
                 onCancel={onCancel}
@@ -350,6 +380,16 @@ const ReleasePlanSafeguardForm = ({
                 badge={safeguardBadge}
                 safeguardType='releasePlan'
             />
+            {submitChangeRequestDialog.data && (
+                <SafeguardChangeRequestDialog
+                    isOpen={submitChangeRequestDialog.open}
+                    onConfirm={submitChangeRequestDialog.onConfirm}
+                    onClose={submitChangeRequestDialog.onClose}
+                    safeguardData={submitChangeRequestDialog.data}
+                    environment={environmentName}
+                    mode={safeguard ? 'edit' : 'create'}
+                />
+            )}
             <DeleteSafeguardDialog
                 open={deleteDialog.open}
                 onClose={deleteDialog.onClose}

@@ -79,7 +79,7 @@ const toRow = (item: ReleasePlanMilestoneStrategyWriteModel) => {
         milestone_id: item.milestoneId,
         sort_order: item.sortOrder,
         title: item.title,
-        strategy_name: item.name ?? item.strategyName,
+        strategy_name: item.name || item.strategyName,
         parameters: item.parameters ?? {},
         constraints: JSON.stringify(item.constraints ?? []),
         variants: JSON.stringify(item.variants ?? []),

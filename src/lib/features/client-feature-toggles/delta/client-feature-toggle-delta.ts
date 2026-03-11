@@ -26,6 +26,7 @@ import {
     isDeltaSegmentEvent,
 } from './client-feature-toggle-delta-types.js';
 import { FEATURE_PROJECT_CHANGE } from '../../../events/index.js';
+import { getVisibleRevisionForProjects } from './visible-revision.js';
 
 type EnvironmentRevisions = Record<string, DeltaCache>;
 type EnvironmentVisibleRevisionState = {
@@ -392,26 +393,12 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         projects: string[],
     ): number {
         const delta = this.delta[environment];
-
-        if (projects.includes('*')) {
-            return delta.getHydrationEvent().eventId;
-        }
-
         const revisionState = this.visibleRevisions[environment];
-
-        if (!revisionState) {
-            return 0;
-        }
-        let visibleRevision = revisionState.globalSegmentRevision;
-
-        for (const project of projects) {
-            visibleRevision = Math.max(
-                visibleRevision,
-                revisionState.projectRevisions.get(project) ?? 0,
-            );
-        }
-
-        return visibleRevision;
+        return getVisibleRevisionForProjects(
+            revisionState,
+            projects,
+            delta.getHydrationEvent().eventId,
+        );
     }
 
     private updateVisibleRevisions(

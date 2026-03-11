@@ -2,9 +2,9 @@ import type React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, styled } from '@mui/material';
 import type {
-    IFeatureStrategy,
     IFeatureStrategyParameters,
     IStrategyParameter,
+    StrategyFormState,
 } from 'interfaces/strategy';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
@@ -30,7 +30,7 @@ import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignab
 import { useUiFlag } from 'hooks/useUiFlag';
 import produce from 'immer';
 
-interface IProjectDefaultStrategyFormProps {
+interface IProjectDefaultStrategyFormProps<T extends StrategyFormState> {
     projectId: string;
     environmentId: string;
     permission: string | string[];
@@ -38,10 +38,8 @@ interface IProjectDefaultStrategyFormProps {
     onCancel?: () => void;
     loading: boolean;
     isChangeRequest?: boolean;
-    strategy: Partial<IFeatureStrategy>;
-    setStrategy: React.Dispatch<
-        React.SetStateAction<Partial<IFeatureStrategy>>
-    >;
+    strategy: T;
+    setStrategy: React.Dispatch<React.SetStateAction<T>>;
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
     errors: IFormErrors;
@@ -67,7 +65,7 @@ const StyledButtons = styled('div')(({ theme }) => ({
     paddingBottom: theme.spacing(10),
 }));
 
-export const ProjectDefaultStrategyForm = ({
+export const ProjectDefaultStrategyForm = <T extends StrategyFormState>({
     projectId,
     environmentId,
     permission,
@@ -79,7 +77,7 @@ export const ProjectDefaultStrategyForm = ({
     segments,
     setSegments,
     errors,
-}: IProjectDefaultStrategyFormProps) => {
+}: IProjectDefaultStrategyFormProps<T>) => {
     const useNewStrategyTypeComponent = useUiFlag('strategyFormConsolidation');
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const { strategyDefinition } = useStrategy(strategy?.name);

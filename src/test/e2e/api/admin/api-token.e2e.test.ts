@@ -8,6 +8,7 @@ import { ALL } from '../../../../lib/types/models/api-token.js';
 import { ApiTokenType } from '../../../../lib/types/model.js';
 import { DEFAULT_ENV } from '../../../../lib/util/index.js';
 import { addDays } from 'date-fns';
+import { SYSTEM_USER_ID } from '../../../../lib/types/index.js';
 
 let db: ITestDb;
 let app: IUnleashTest;
@@ -68,13 +69,16 @@ test.each(['client', 'backend'])('creates new %s token', async (type) => {
 test('update client token with expiry', async () => {
     const tokenSecret = '*:environment.random-secret-update';
 
-    await db.stores.apiTokenStore.insert({
-        projects: ['*'],
-        tokenName: 'test_token',
-        secret: tokenSecret,
-        type: ApiTokenType.BACKEND,
-        environment: 'development',
-    });
+    await db.stores.apiTokenStore.insert(
+        {
+            projects: ['*'],
+            tokenName: 'test_token',
+            secret: tokenSecret,
+            type: ApiTokenType.BACKEND,
+            environment: 'development',
+        },
+        SYSTEM_USER_ID,
+    );
 
     await app.request
         .put(`/api/admin/api-tokens/${tokenSecret}`)
@@ -135,13 +139,16 @@ test.each([
 test('removes api token', async () => {
     const tokenSecret = '*:environment.random-secret';
 
-    await db.stores.apiTokenStore.insert({
-        environment: 'development',
-        projects: ['*'],
-        tokenName: 'testtoken',
-        secret: tokenSecret,
-        type: ApiTokenType.BACKEND,
-    });
+    await db.stores.apiTokenStore.insert(
+        {
+            environment: 'development',
+            projects: ['*'],
+            tokenName: 'testtoken',
+            secret: tokenSecret,
+            type: ApiTokenType.BACKEND,
+        },
+        SYSTEM_USER_ID,
+    );
 
     await app.request
         .delete(`/api/admin/api-tokens/${tokenSecret}`)

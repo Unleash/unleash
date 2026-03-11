@@ -3,6 +3,7 @@ import {
     type Db,
     type IUnleashConfig,
     type IUnleashStores,
+    SYSTEM_USER_AUDIT,
 } from '../types/index.js';
 import type { Logger } from '../logger.js';
 import type {
@@ -166,13 +167,16 @@ export default class EdgeService {
                 });
             } else if (tokenReq.environment && tokenReq.projects) {
                 const newToken =
-                    await this.apiTokenService.createApiTokenWithProjects({
-                        tokenName: `enterprise_edge_${tokenReq.environment}_${truncate(tokenReq.projects, 3)}`,
-                        alias: `ee_${tokenReq.environment}`,
-                        type: ApiTokenType.BACKEND,
-                        environment: tokenReq.environment,
-                        projects: tokenReq.projects,
-                    });
+                    await this.apiTokenService.createApiTokenWithProjects(
+                        {
+                            tokenName: `enterprise_edge_${tokenReq.environment}_${truncate(tokenReq.projects, 3)}`,
+                            alias: `ee_${tokenReq.environment}`,
+                            type: ApiTokenType.BACKEND,
+                            environment: tokenReq.environment,
+                            projects: tokenReq.projects,
+                        },
+                        SYSTEM_USER_AUDIT,
+                    );
                 await this.edgeTokenStore.saveToken(clientId, newToken);
                 tokens.push({
                     projects: newToken.projects,
@@ -188,6 +192,10 @@ export default class EdgeService {
 
     async deleteExpiredNonces() {
         await this.edgeTokenStore.cleanExpiredNonces();
+    }
+
+    async deleteAllTokens() {
+        await this.edgeTokenStore.deleteAll();
     }
 }
 

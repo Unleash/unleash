@@ -1,5 +1,10 @@
 import { createTestConfig } from '../../test/config/test-config.js';
-import type { IUnleashConfig, IUnleashOptions, IUser } from '../types/index.js';
+import {
+    type IUnleashConfig,
+    type IUnleashOptions,
+    type IUser,
+    SYSTEM_USER_ID,
+} from '../types/index.js';
 import { ApiTokenType, type IApiTokenCreate } from '../types/model.js';
 import {
     ADMIN_TOKEN_USER,
@@ -173,7 +178,7 @@ describe('API token getTokenWithCache', () => {
         const apiTokenStoreGet = vi.spyOn(apiTokenStore, 'get');
 
         // valid token not present in cache (could be inserted by another instance)
-        apiTokenStore.insert(token);
+        apiTokenStore.insert(token, SYSTEM_USER_ID);
 
         for (let i = 0; i < 5; i++) {
             const found = await apiTokenService.getTokenWithCache(token.secret);
@@ -212,7 +217,10 @@ describe('API token getTokenWithCache', () => {
         const apiTokenStoreGet = vi.spyOn(apiTokenStore, 'get');
 
         // valid token not present in cache but expired
-        apiTokenStore.insert({ ...token, expiresAt: subDays(new Date(), 1) });
+        apiTokenStore.insert(
+            { ...token, expiresAt: subDays(new Date(), 1) },
+            SYSTEM_USER_ID,
+        );
 
         for (let i = 0; i < 5; i++) {
             const found = await apiTokenService.getTokenWithCache(token.secret);
@@ -262,12 +270,14 @@ test('normalizes api token type casing to lowercase', async () => {
         expect.objectContaining({
             type: 'client',
         }),
+        SYSTEM_USER_ID,
     );
 
     expect(apiTokenStoreInsert).not.toHaveBeenCalledWith(
         expect.objectContaining({
             type: 'CLIENT',
         }),
+        SYSTEM_USER_ID,
     );
 
     const tokens = await apiTokenStore.getAll();

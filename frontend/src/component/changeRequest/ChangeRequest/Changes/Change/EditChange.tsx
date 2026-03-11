@@ -4,7 +4,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import type { IFeatureStrategy } from 'interfaces/strategy';
+import type { StrategyFormState } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useCollaborateData } from 'hooks/useCollaborateData';
@@ -30,6 +30,7 @@ import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { LegacyEditChange } from './LegacyEditChange.tsx';
+import { getChangeStrategyName } from 'utils/getChangeStrategyName.ts';
 
 interface IEditChangeProps {
     change:
@@ -71,9 +72,10 @@ const NewEditChange = ({
 
     const constraintsWithId = addIdSymbolToConstraints(change.payload);
 
-    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({
+    const [strategy, setStrategy] = useState<StrategyFormState>({
         ...change.payload,
         constraints: constraintsWithId,
+        name: getChangeStrategyName(change),
     });
 
     const { setToastData, setToastApiError } = useToast();

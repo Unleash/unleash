@@ -5,7 +5,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import type { IFeatureStrategy } from 'interfaces/strategy';
+import type { StrategyFormState } from 'interfaces/strategy';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import type { ISegment } from 'interfaces/segment';
 import { useFormErrors } from 'hooks/useFormErrors';
@@ -29,6 +29,7 @@ import { LegacyFeatureStrategyForm } from '../../../../feature/FeatureStrategy/F
 import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { getChangeStrategyName } from 'utils/getChangeStrategyName.ts';
 
 interface IEditChangeProps {
     change:
@@ -71,9 +72,10 @@ export const LegacyEditChange = ({
 
     const constraintsWithId = addIdSymbolToConstraints(change.payload);
 
-    const [strategy, setStrategy] = useState<Partial<IFeatureStrategy>>({
+    const [strategy, setStrategy] = useState<StrategyFormState>({
         ...change.payload,
         constraints: constraintsWithId,
+        name: getChangeStrategyName(change),
     });
 
     const { segments: allSegments } = useSegments();
@@ -198,7 +200,7 @@ const formatUpdateStrategyApiCode = (
     projectId: string,
     changeRequestId: number,
     changeId: number,
-    strategy: Partial<IFeatureStrategy>,
+    strategy: StrategyFormState,
     unleashUrl?: string,
 ): string => {
     if (!unleashUrl) {

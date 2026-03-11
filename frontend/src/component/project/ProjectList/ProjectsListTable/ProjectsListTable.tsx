@@ -45,7 +45,7 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
                 Cell: ({ row }: { row: { original: ProjectSchema } }) => (
                     <ProjectsListTableNameCell
                         row={row}
-                        isFavorite={row.original.favorite}
+                        isFavorite={Boolean(row.original.favorite)}
                         onFavorite={() => onFavorite(row.original)}
                     />
                 ),

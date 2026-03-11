@@ -1,6 +1,5 @@
-import { IconButton, styled } from '@mui/material';
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { styled } from '@mui/material';
+import { FavoriteButton } from 'component/common/FavoriteButton/FavoriteButton';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Truncator } from 'component/common/Truncator/Truncator';
@@ -23,24 +22,12 @@ const StyledFeatureLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-const InlineFavoriteButton = styled(IconButton)(({ theme }) => ({
-    color: theme.palette.primary.main,
-    padding: 0,
-    fontSize: '0.875rem',
-}));
-
-const InlineFavoriteButtonInactive = styled(InlineFavoriteButton)({
-    opacity: 0,
-    '&:focus': { opacity: 1 },
-    '&:active': { opacity: 1 },
-});
-
 type ProjectsListTableNameCellProps = {
     row: {
         original: ProjectSchema;
     };
-    isFavorite?: boolean;
-    onFavorite?: () => void;
+    isFavorite: boolean;
+    onFavorite: () => void;
 };
 
 export const ProjectsListTableNameCell = ({
@@ -49,37 +36,6 @@ export const ProjectsListTableNameCell = ({
     onFavorite,
 }: ProjectsListTableNameCellProps) => {
     const { searchQuery } = useSearchHighlightContext();
-
-    const FavoriteButton = () => {
-        if (!onFavorite) return null;
-        if (isFavorite) {
-            return (
-                <InlineFavoriteButton
-                    size='small'
-                    aria-label='Remove from favorites'
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onFavorite();
-                    }}
-                >
-                    <StarIcon sx={{ fontSize: 'inherit' }} />
-                </InlineFavoriteButton>
-            );
-        }
-        return (
-            <InlineFavoriteButtonInactive
-                className='show-row-hover'
-                size='small'
-                aria-label='Add to favorites'
-                onClick={(e) => {
-                    e.preventDefault();
-                    onFavorite();
-                }}
-            >
-                <StarBorderIcon sx={{ fontSize: 'inherit' }} />
-            </InlineFavoriteButtonInactive>
-        );
-    };
 
     return (
         <StyledCellContainer>
@@ -91,7 +47,10 @@ export const ProjectsListTableNameCell = ({
                     </Highlighter>
                 </Truncator>
             </StyledFeatureLink>
-            <FavoriteButton />
+            <FavoriteButton
+                isFavorite={Boolean(isFavorite)}
+                onClick={onFavorite}
+            />
         </StyledCellContainer>
     );
 };

@@ -1,8 +1,7 @@
 import type { FC } from 'react';
 import type { FeatureSearchResponseSchema, TagSchema } from 'openapi';
 import { Box, IconButton, styled, Chip } from '@mui/material';
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { FavoriteButton } from 'component/common/FavoriteButton/FavoriteButton';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext.tsx';
@@ -119,18 +118,6 @@ const FeatureNameAndType = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(1),
     color: theme.palette.primary.dark,
-}));
-
-const InlineFavoriteButton = styled(IconButton, {
-    shouldForwardProp: (prop) => prop !== 'active',
-})<{ active?: boolean }>(({ theme, active }) => ({
-    color: theme.palette.primary.main,
-    padding: 0,
-    fontSize: '0.875rem',
-    opacity: active ? 1 : 0,
-    '&:hover': { opacity: 1 },
-    '&:focus': { opacity: 1 },
-    '&:active': { opacity: 1 },
 }));
 
 const TagsContainer = styled(Box)(({ theme }) => ({
@@ -362,30 +349,6 @@ export const PrimaryFeatureInfo: FC<{
         </HtmlTooltip>
     );
 
-    const FavoriteButton = () => {
-        const favoriteProps = isFavorite
-            ? { 'aria-label': 'Remove from favorites' }
-            : { 'aria-label': 'Add to favorites', className: 'show-row-hover' };
-
-        return (
-            <InlineFavoriteButton
-                active={isFavorite}
-                size='small'
-                {...favoriteProps}
-                onClick={(e) => {
-                    e.preventDefault();
-                    onFavorite();
-                }}
-            >
-                {isFavorite ? (
-                    <StarIcon sx={{ fontSize: 'inherit' }} />
-                ) : (
-                    <StarBorderIcon sx={{ fontSize: 'inherit' }} />
-                )}
-            </InlineFavoriteButton>
-        );
-    };
-
     return (
         <FeatureNameAndType data-loading>
             <TypeIcon />
@@ -401,7 +364,7 @@ export const PrimaryFeatureInfo: FC<{
                     searchQuery={searchQuery}
                 />
             )}
-            <FavoriteButton />
+            <FavoriteButton isFavorite={isFavorite} onClick={onFavorite} />
 
             <ConditionallyRender
                 condition={Boolean(dependencyType)}

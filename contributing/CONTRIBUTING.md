@@ -161,6 +161,33 @@ docker run --name unleash-postgres -p 5432:5432 -e POSTGRES_USER=unleash_user -e
 
 Unleash will attempt to connect using the connection string in `src/test/e2e/helpers/database-config.ts` or the environment variable `TEST_DATABASE_URL`.
 
+### Timezone-related test failures
+
+Check the timezone in your DB:
+
+```sh
+psql -U unleash_user -d unleash -c "SHOW timezone;"
+# or
+psql postgres -c "SHOW timezone;"
+```
+
+If it's not `UTC`, find your configuration file:
+
+```sh
+psql postgres -c "SHOW config_file;"
+```
+
+For example: `/opt/homebrew/var/postgresql@18/postgresql.conf`
+
+Make sure to set:
+
+```
+timezone = 'UTC'
+```
+
+Then restart your DB.
+
+
 ## Nice to know
 
 ### Controllers
@@ -204,6 +231,6 @@ git push origin main --follow-tags
 This will push the new tag and a GitHub action will trigger on the new version tag, build the release and publish it to npm.
 
 
-## Contributing to Unleash Documention
+## Contributing to Unleash Documentation
 
 You can contribute to Unleash documentation in the [Unleash/unleash-documentation](https://github.com/Unleash/unleash-documentation) repository.

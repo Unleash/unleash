@@ -30,6 +30,7 @@ import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { LegacyEditChange } from './LegacyEditChange.tsx';
+import { getChangeStrategyName } from 'utils/getChangeStrategyName.ts';
 
 interface IEditChangeProps {
     change:
@@ -71,20 +72,10 @@ const NewEditChange = ({
 
     const constraintsWithId = addIdSymbolToConstraints(change.payload);
 
-    const strategySnapshot =
-        (change.action === 'updateMilestoneStrategy' ||
-            change.action === 'updateStrategy') &&
-        'snapshot' in change.payload
-            ? change.payload.snapshot
-            : undefined;
-
     const [strategy, setStrategy] = useState<StrategyFormState>({
         ...change.payload,
         constraints: constraintsWithId,
-        name:
-            'name' in change.payload
-                ? change.payload.name
-                : strategySnapshot?.name || '',
+        name: getChangeStrategyName(change),
     });
 
     const { setToastData, setToastApiError } = useToast();

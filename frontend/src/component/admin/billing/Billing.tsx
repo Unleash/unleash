@@ -29,6 +29,17 @@ const StyledPageGrid = styled(Box)(({ theme }) => ({
     },
 }));
 
+const StyledDetailedBillingContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(4),
+}));
+
+const StyledTrialUpsellPaper = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(3, 4, 4),
+    borderRadius: theme.shape.borderRadius,
+}));
+
 export const Billing = () => {
     const {
         isBilling,
@@ -55,40 +66,22 @@ export const Billing = () => {
 
     if (
         isTrialInstance(instanceStatus) &&
-        instanceStatus?.billing === 'pay-as-you-go' &&
+        eligibleForDetailedBilling &&
         invoices.length === 0
     ) {
         return (
-            <Box
-                sx={(theme) => ({
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: theme.spacing(4),
-                })}
-            >
+            <StyledDetailedBillingContainer>
                 <StyledHeader>Billing</StyledHeader>
-                <Paper
-                    elevation={1}
-                    sx={(theme) => ({
-                        padding: theme.spacing(2, 3),
-                        borderRadius: theme.shape.borderRadius,
-                    })}
-                >
+                <StyledTrialUpsellPaper elevation={1}>
                     <ConnectedTrialUpsell />
-                </Paper>
-            </Box>
+                </StyledTrialUpsellPaper>
+            </StyledDetailedBillingContainer>
         );
     }
 
     if (eligibleForDetailedBilling) {
         return (
-            <Box
-                sx={(theme) => ({
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: theme.spacing(4),
-                })}
-            >
+            <StyledDetailedBillingContainer>
                 <StyledHeader>Usage and invoices</StyledHeader>
                 <StyledPageGrid>
                     <BillingInvoices />
@@ -96,7 +89,7 @@ export const Billing = () => {
                         <BillingInfo />
                     </div>
                 </StyledPageGrid>
-            </Box>
+            </StyledDetailedBillingContainer>
         );
     }
 

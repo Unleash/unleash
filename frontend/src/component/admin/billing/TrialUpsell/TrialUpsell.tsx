@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Alert, Button, Link, styled, Typography } from '@mui/material';
+import { Alert, Box, Button, Link, styled, Typography } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { formatApiPath } from 'utils/formatPath';
 import { ReactComponent as LenovoLogo } from 'assets/logos/lenovo.svg';
@@ -17,10 +17,10 @@ import { formatDateDM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const StyledBillingInformation = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusMedium,
-    padding: theme.spacing(1.5, 3, 2.5, 3),
+    padding: theme.spacing(1.5, 4, 1.5, 3),
     border: `1px solid ${theme.palette.secondary.border}`,
     backgroundColor: theme.palette.secondary.light,
     display: 'flex',
@@ -28,17 +28,26 @@ const StyledBillingInformation = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
+const StyledBillingInformationTextContainer = styled(Box)(({ theme }) => ({
+    marginBottom: theme.spacing(1),
+}));
+
 const StyledPrice = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.fontSizes.largeHeader,
+}));
+
+const StyledDetailListContainer = styled(Box)(({ theme }) => ({
+    margin: 0,
+    padding: 0,
+    marginLeft: theme.spacing(2.5),
+    marginTop: theme.spacing(1),
 }));
 
 const StyledDetailList = styled('ul')(({ theme }) => ({
     display: 'flex',
     margin: 0,
     padding: 0,
-    marginLeft: theme.spacing(2.5),
-    marginTop: theme.spacing(1),
     gap: theme.spacing(3.5),
 }));
 
@@ -130,16 +139,18 @@ export const TrialUpsell = ({
                         </Link>
                     </Typography>
                     <StyledBillingInformation>
-                        <div>
+                        <StyledBillingInformationTextContainer>
                             <Typography>
                                 <StyledPrice>${seatPrice}</StyledPrice> per user
                                 billed monthly
                             </Typography>
-                            <StyledDetailList>
-                                <li>Pay by credit card</li>
-                                <li>Cancel anytime</li>
-                            </StyledDetailList>
-                        </div>
+                            <StyledDetailListContainer>
+                                <StyledDetailList>
+                                    <li>Pay by credit card</li>
+                                    <li>Cancel anytime</li>
+                                </StyledDetailList>
+                            </StyledDetailListContainer>
+                        </StyledBillingInformationTextContainer>
                         {onUpgrade && (
                             <Button variant='contained' onClick={onUpgrade}>
                                 Upgrade now

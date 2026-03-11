@@ -1,8 +1,26 @@
+import { vi } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import { Billing } from './Billing';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { InstancePlan, InstanceState } from 'interfaces/instance';
+
+vi.mock(
+    'hooks/api/getters/useInstanceStatus/useInstanceStatus',
+    async (importOriginal) => {
+        const mod =
+            await importOriginal<
+                typeof import('hooks/api/getters/useInstanceStatus/useInstanceStatus')
+            >();
+        return {
+            ...mod,
+            useInstanceStatus: () => ({
+                ...mod.useInstanceStatus(),
+                refresh: vi.fn().mockResolvedValue(undefined),
+            }),
+        };
+    },
+);
 
 const server = testServerSetup();
 
@@ -18,7 +36,6 @@ beforeEach(() => {
         trialExpiry: '2026-04-01T00:00:00Z',
     });
     testServerRoute(server, '/api/admin/invoices', { invoices: [] });
-    testServerRoute(server, '/api/instance/refresh', {});
     testServerRoute(server, '/api/instance/prices', {});
 });
 

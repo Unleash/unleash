@@ -12,6 +12,9 @@ import { ReactComponent as VisaLogo } from 'assets/logos/visa.svg';
 import { ReactComponent as SamsungLogo } from 'assets/logos/samsung.svg';
 import { ReactComponent as LloydsLogo } from 'assets/logos/lloyds.svg';
 import { trialHasExpired } from 'utils/instanceTrial';
+import { parseISO } from 'date-fns';
+import { formatDateDM } from 'utils/formatDate';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const StyledBillingInformation = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(3),
@@ -54,12 +57,14 @@ export interface ITrialUpsellProps {
     trialExpiry?: string;
     trialExpired?: boolean;
     onUpgrade?: () => void;
+    locale: string;
 }
 
 export const ConnectedTrialUpsell = () => {
     const { hasAccess } = useContext(AccessContext);
     const { instancePrices } = useInstancePrices();
     const { instanceStatus } = useInstanceStatus();
+    const { locationSettings } = useLocationSettings();
 
     const onUpgrade = () => {
         window.location.assign(formatApiPath('api/admin/invoices/checkout'));
@@ -72,17 +77,15 @@ export const ConnectedTrialUpsell = () => {
             trialExpiry={instanceStatus?.trialExpiry}
             trialExpired={trialHasExpired(instanceStatus)}
             onUpgrade={onUpgrade}
+            locale={locationSettings?.locale}
         />
     );
 };
 
-const formatTrialExpiry = (trialExpiry?: string): string => {
+const formatTrialExpiry = (locale: string, trialExpiry?: string): string => {
     if (!trialExpiry) return '';
-    const date = new Date(trialExpiry);
-    return date.toLocaleDateString(undefined, {
-        day: 'numeric',
-        month: 'long',
-    });
+
+    return formatDateDM(parseISO(trialExpiry), locale);
 };
 
 export const TrialUpsell = ({
@@ -91,9 +94,10 @@ export const TrialUpsell = ({
     trialExpiry,
     trialExpired = false,
     onUpgrade,
+    locale,
 }: ITrialUpsellProps) => {
     const expiryText = trialExpiry
-        ? `on ${formatTrialExpiry(trialExpiry)}`
+        ? `on ${formatTrialExpiry(locale, trialExpiry)}`
         : 'soon';
 
     const descriptionText = trialExpired

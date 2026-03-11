@@ -10,7 +10,8 @@ describe('TrialUpsell', () => {
             <TrialUpsell
                 isAdmin
                 seatPrice={20}
-                trialExpiry='2026-03-15T00:00:00Z'
+                trialExpiry='2026-03-19T23:59:59.999Z'
+                locale='en-US'
             />,
         );
 
@@ -21,7 +22,7 @@ describe('TrialUpsell', () => {
     });
 
     it('shows contact-admin alert for non-admins', () => {
-        render(<TrialUpsell isAdmin={false} seatPrice={20} />);
+        render(<TrialUpsell isAdmin={false} seatPrice={20} locale='en-US' />);
 
         expect(
             screen.getByText(/Contact your account admin/),
@@ -34,21 +35,41 @@ describe('TrialUpsell', () => {
             <TrialUpsell
                 isAdmin
                 seatPrice={20}
-                trialExpiry='2026-03-15T00:00:00Z'
+                trialExpiry='2026-03-19T23:59:59.999Z'
+                locale='en-US'
             />,
         );
 
-        expect(screen.getByText(/on .+/)).toBeInTheDocument();
+        expect(
+            screen.getByText(/Your trial expires on March 19/),
+        ).toBeInTheDocument();
+    });
+
+    it('shows the formatted trial expiry date in user time zone', () => {
+        render(
+            <TrialUpsell
+                isAdmin
+                seatPrice={20}
+                trialExpiry='2026-03-19T23:59:59.999Z'
+                locale='en-US'
+            />,
+        );
+
+        expect(
+            screen.getByText(/Your trial expires on March 19/),
+        ).toBeInTheDocument();
     });
 
     it('falls back to "soon" when no trialExpiry is provided', () => {
-        render(<TrialUpsell isAdmin seatPrice={20} />);
+        render(<TrialUpsell isAdmin seatPrice={20} locale='en-US' />);
 
         expect(screen.getByText(/expires soon/)).toBeInTheDocument();
     });
 
     it('shows expiration title and message when trial has expired', () => {
-        render(<TrialUpsell isAdmin seatPrice={20} trialExpired />);
+        render(
+            <TrialUpsell isAdmin seatPrice={20} trialExpired locale='en-US' />,
+        );
 
         expect(
             screen.getByRole('heading', {
@@ -64,7 +85,7 @@ describe('TrialUpsell', () => {
     });
 
     it('shows trusted logos for all users', () => {
-        render(<TrialUpsell isAdmin seatPrice={20} />);
+        render(<TrialUpsell isAdmin seatPrice={20} locale='en-US' />);
 
         expect(
             screen.getByText('Trusted by enterprises like'),
@@ -72,7 +93,14 @@ describe('TrialUpsell', () => {
     });
 
     it('shows upgrade button for admins when onUpgrade is provided', () => {
-        render(<TrialUpsell isAdmin seatPrice={20} onUpgrade={vi.fn()} />);
+        render(
+            <TrialUpsell
+                isAdmin
+                seatPrice={20}
+                onUpgrade={vi.fn()}
+                locale='en-US'
+            />,
+        );
 
         expect(
             screen.getByRole('button', { name: /upgrade now/i }),
@@ -81,7 +109,12 @@ describe('TrialUpsell', () => {
 
     it('does not show upgrade button for non-admins', () => {
         render(
-            <TrialUpsell isAdmin={false} seatPrice={20} onUpgrade={vi.fn()} />,
+            <TrialUpsell
+                isAdmin={false}
+                seatPrice={20}
+                onUpgrade={vi.fn()}
+                locale='en-US'
+            />,
         );
 
         expect(
@@ -91,7 +124,14 @@ describe('TrialUpsell', () => {
 
     it('calls onUpgrade when upgrade button is clicked', async () => {
         const onUpgrade = vi.fn();
-        render(<TrialUpsell isAdmin seatPrice={20} onUpgrade={onUpgrade} />);
+        render(
+            <TrialUpsell
+                isAdmin
+                seatPrice={20}
+                onUpgrade={onUpgrade}
+                locale='en-US'
+            />,
+        );
 
         await userEvent.click(
             screen.getByRole('button', { name: /upgrade now/i }),

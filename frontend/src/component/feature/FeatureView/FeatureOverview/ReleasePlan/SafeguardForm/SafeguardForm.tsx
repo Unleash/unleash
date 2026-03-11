@@ -596,7 +596,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     );
 };
 
-const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
+export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     onSubmit,
     onCancel,
     onDelete,
@@ -747,10 +747,7 @@ export const SafeguardForm: FC<IBaseSafeguardFormProps> = (props) => {
     const projectId = useRequiredPathParam('projectId');
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
 
-    if (
-        props.safeguardType !== 'featureEnvironment' &&
-        isChangeRequestConfigured(props.environment)
-    ) {
+    if (isChangeRequestConfigured(props.environment)) {
         return <SafeguardFormWithChangeRequests {...props} />;
     }
 

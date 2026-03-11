@@ -1449,6 +1449,45 @@ test('should filter by favorite=IS:false', async () => {
     expect(body.features).toHaveLength(1);
 });
 
+test('should filter by favorite=IS_ANY_OF:false and only return non-favorited flags', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+    await app.favoriteFeature('my_feature_b');
+
+    const { body } = await app.request
+        .get(
+            '/api/admin/search/features?project=IS:default&archived=IS:false&favorite=IS_ANY_OF:false',
+        )
+        .expect(200);
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a', favorite: false }],
+        total: 1,
+    });
+    expect(body.features).toHaveLength(1);
+});
+
+test('should return all flags when favorite=IS_ANY_OF:true,false', async () => {
+    await app.createFeature('my_feature_a');
+    await app.createFeature('my_feature_b');
+    await app.favoriteFeature('my_feature_b');
+
+    const { body } = await app.request
+        .get(
+            '/api/admin/search/features?project=IS:default&archived=IS:false&favorite=IS_ANY_OF:true,false',
+        )
+        .expect(200);
+
+    expect(body).toMatchObject({
+        features: [
+            { name: 'my_feature_a', favorite: false },
+            { name: 'my_feature_b', favorite: true },
+        ],
+        total: 2,
+    });
+    expect(body.features).toHaveLength(2);
+});
+
 test('should return tags with color information from tag type', async () => {
     await app.createFeature('my_feature_a');
 

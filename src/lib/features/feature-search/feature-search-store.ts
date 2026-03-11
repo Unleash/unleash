@@ -790,7 +790,10 @@ const applyFavoriteCondition = (
     param: IQueryParam | undefined,
 ): void => {
     if (!param) return;
-    if (param.values[0] === 'true') {
+    const wantsTrue = param.values.includes('true');
+    const wantsFalse = param.values.includes('false');
+    if (wantsTrue && wantsFalse) return;
+    if (wantsTrue) {
         query.whereNotNull('favorite_features.feature');
     } else {
         query.whereNull('favorite_features.feature');

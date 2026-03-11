@@ -8,6 +8,8 @@ import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/perm
 import {
     ReleasePlanSafeguardSection,
     FeatureEnvironmentSafeguardSection,
+    AddSafeguard,
+    SafeguardSection,
 } from './Safeguard.tsx';
 import type { ISafeguard } from 'interfaces/releasePlans';
 
@@ -134,9 +136,11 @@ const setupServerRoutes = () => {
 const ReleasePlanComponent = ({
     safeguard,
     onSafeguardChange,
+    onCancel,
 }: {
     safeguard?: ISafeguard;
     onSafeguardChange: () => void;
+    onCancel?: () => void;
 }) => (
     <Routes>
         <Route
@@ -148,6 +152,7 @@ const ReleasePlanComponent = ({
                     environmentName='production'
                     featureId='feature1'
                     onSafeguardChange={onSafeguardChange}
+                    onCancel={onCancel}
                 />
             }
         />
@@ -157,9 +162,11 @@ const ReleasePlanComponent = ({
 const FeatureEnvComponent = ({
     safeguard,
     onSafeguardChange,
+    onCancel,
 }: {
     safeguard?: ISafeguard;
     onSafeguardChange: () => void;
+    onCancel?: () => void;
 }) => (
     <Routes>
         <Route
@@ -170,6 +177,7 @@ const FeatureEnvComponent = ({
                     environmentName='production'
                     featureId='feature1'
                     onSafeguardChange={onSafeguardChange}
+                    onCancel={onCancel}
                 />
             }
         />
@@ -196,7 +204,7 @@ const enableChangeRequests = () => {
 };
 
 describe('ReleasePlanSafeguardSection', () => {
-    test('should add safeguard and send form data to API', async () => {
+    test('should show create form and send data to API', async () => {
         const user = userEvent.setup();
         const onSafeguardChange = vi.fn();
 
@@ -211,9 +219,6 @@ describe('ReleasePlanSafeguardSection', () => {
             route: '/projects/default/features/feature1',
             permissions,
         });
-
-        const addButton = await screen.findByText('Add safeguard');
-        await user.click(addButton);
 
         await screen.findByText('Pause automation when');
 
@@ -295,9 +300,6 @@ describe('ReleasePlanSafeguardSection', () => {
             route: '/projects/default/features/feature1',
             permissions,
         });
-
-        const addButton = await screen.findByText('Add safeguard');
-        await user.click(addButton);
 
         await screen.findByText('Pause automation when');
 
@@ -407,17 +409,13 @@ describe('FeatureEnvironmentSafeguardSection', () => {
         await screen.findByText('Disable environment when');
     });
 
-    test('should add safeguard', async () => {
-        const user = userEvent.setup();
+    test('should show create form when rendered without safeguard', async () => {
         const onSafeguardChange = vi.fn();
 
         render(<FeatureEnvComponent onSafeguardChange={onSafeguardChange} />, {
             route: '/projects/default/features/feature1',
             permissions,
         });
-
-        const addButton = await screen.findByText('Add safeguard');
-        await user.click(addButton);
 
         await screen.findByText('Disable environment when');
     });
@@ -459,5 +457,209 @@ describe('FeatureEnvironmentSafeguardSection', () => {
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
         });
+    });
+});
+
+describe('AddSafeguard', () => {
+    test('should show type menu when featureEnv is enabled', async () => {
+        const user = userEvent.setup();
+        const onSelect = vi.fn();
+
+        render(
+            <AddSafeguard
+                onSelect={onSelect}
+                showFeatureEnv={true}
+                hasReleasePlan={true}
+            />,
+            { route: '/', permissions },
+        );
+
+        const addButton = await screen.findByText('Add safeguard');
+        await user.click(addButton);
+
+        await screen.findByText('Disable environment');
+        await screen.findByText('Pause automation');
+    });
+
+    test('should call onSelect with chosen type', async () => {
+        const user = userEvent.setup();
+        const onSelect = vi.fn();
+
+        render(
+            <AddSafeguard
+                onSelect={onSelect}
+                showFeatureEnv={true}
+                hasReleasePlan={true}
+            />,
+            { route: '/', permissions },
+        );
+
+        const addButton = await screen.findByText('Add safeguard');
+        await user.click(addButton);
+
+        const menuItem = await screen.findByText('Disable environment');
+        await user.click(menuItem);
+
+        expect(onSelect).toHaveBeenCalledWith('featureEnvironment');
+    });
+
+    test('should disable pause automation when no release plan', async () => {
+        const user = userEvent.setup();
+        const onSelect = vi.fn();
+
+        render(
+            <AddSafeguard
+                onSelect={onSelect}
+                showFeatureEnv={true}
+                hasReleasePlan={false}
+            />,
+            { route: '/', permissions },
+        );
+
+        const addButton = await screen.findByText('Add safeguard');
+        await user.click(addButton);
+
+        const pauseItem = await screen.findByText('Pause automation');
+        expect(pauseItem.closest('li')).toHaveAttribute(
+            'aria-disabled',
+            'true',
+        );
+    });
+
+    test('should directly select when featureEnv is not enabled', async () => {
+        const onSelect = vi.fn();
+        const user = userEvent.setup();
+
+        render(
+            <AddSafeguard
+                onSelect={onSelect}
+                showFeatureEnv={false}
+                hasReleasePlan={true}
+            />,
+            { route: '/', permissions },
+        );
+
+        const addButton = await screen.findByText('Add safeguard');
+        await user.click(addButton);
+
+        expect(onSelect).toHaveBeenCalledWith('releasePlan');
+    });
+
+    test('should render nothing when no types available', () => {
+        const onSelect = vi.fn();
+
+        render(
+            <AddSafeguard
+                onSelect={onSelect}
+                showFeatureEnv={false}
+                hasReleasePlan={false}
+            />,
+            { route: '/', permissions },
+        );
+
+        expect(screen.queryByText('Add safeguard')).not.toBeInTheDocument();
+    });
+});
+
+describe('SafeguardSection', () => {
+    const SafeguardSectionComponent = ({
+        featureEnvSafeguard,
+        releasePlanSafeguard,
+        showFeatureEnvOption = true,
+        onSafeguardChange,
+    }: {
+        featureEnvSafeguard?: ISafeguard;
+        releasePlanSafeguard?: ISafeguard;
+        showFeatureEnvOption?: boolean;
+        onSafeguardChange: () => void;
+    }) => (
+        <Routes>
+            <Route
+                path='/projects/:projectId/features/:featureId'
+                element={
+                    <SafeguardSection
+                        featureEnvSafeguard={featureEnvSafeguard}
+                        releasePlan={releasePlan}
+                        releasePlanSafeguard={releasePlanSafeguard}
+                        environmentName='production'
+                        featureId='feature1'
+                        onSafeguardChange={onSafeguardChange}
+                        showFeatureEnvOption={showFeatureEnvOption}
+                    />
+                }
+            />
+        </Routes>
+    );
+
+    test('should show one Add safeguard button when both types available', async () => {
+        const onSafeguardChange = vi.fn();
+
+        render(
+            <SafeguardSectionComponent onSafeguardChange={onSafeguardChange} />,
+            {
+                route: '/projects/default/features/feature1',
+                permissions,
+            },
+        );
+
+        const buttons = await screen.findAllByText('Add safeguard');
+        expect(buttons).toHaveLength(1);
+    });
+
+    test('should show existing feature env safeguard instead of button', async () => {
+        const onSafeguardChange = vi.fn();
+
+        render(
+            <SafeguardSectionComponent
+                featureEnvSafeguard={featureEnvSafeguard}
+                onSafeguardChange={onSafeguardChange}
+            />,
+            {
+                route: '/projects/default/features/feature1',
+                permissions,
+            },
+        );
+
+        await screen.findByText('Disable environment when');
+        expect(screen.queryByText('Add safeguard')).not.toBeInTheDocument();
+    });
+
+    test('should show existing release plan safeguard instead of button', async () => {
+        const onSafeguardChange = vi.fn();
+
+        render(
+            <SafeguardSectionComponent
+                releasePlanSafeguard={releasePlanSafeguard}
+                onSafeguardChange={onSafeguardChange}
+            />,
+            {
+                route: '/projects/default/features/feature1',
+                permissions,
+            },
+        );
+
+        await screen.findByText('Pause automation when');
+        expect(screen.queryByText('Add safeguard')).not.toBeInTheDocument();
+    });
+
+    test('should open form after selecting type from menu', async () => {
+        const user = userEvent.setup();
+        const onSafeguardChange = vi.fn();
+
+        render(
+            <SafeguardSectionComponent onSafeguardChange={onSafeguardChange} />,
+            {
+                route: '/projects/default/features/feature1',
+                permissions,
+            },
+        );
+
+        const addButton = await screen.findByText('Add safeguard');
+        await user.click(addButton);
+
+        const menuItem = await screen.findByText('Disable environment');
+        await user.click(menuItem);
+
+        await screen.findByText('Disable environment when');
     });
 });

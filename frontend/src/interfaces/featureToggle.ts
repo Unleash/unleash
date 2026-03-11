@@ -98,7 +98,7 @@ export interface IFeatureEnvironment {
     yes?: number;
     no?: number;
     releasePlans?: IReleasePlan[];
-    safeguard?: ISafeguard;
+    safeguards?: ISafeguard[];
 }
 
 export interface IFeatureEnvironmentWithCrEnabled extends IFeatureEnvironment {

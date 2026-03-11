@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { styled } from '@mui/material';
+import { useEffect, useMemo, useState } from 'react';
+import { styled, Menu, MenuItem, Tooltip } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
@@ -42,22 +42,78 @@ const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
     paddingRight: theme.spacing(2),
 }));
 
-const AddSafeguardButton = ({ onClick }: { onClick: () => void }) => (
-    <StyledSafeguardContainer>
-        <StyledAddSafeguardContent>
-            <StyledActionButton
-                onClick={onClick}
-                color='primary'
-                startIcon={<Add />}
-                sx={{ m: 2 }}
-            >
-                Add safeguard
-            </StyledActionButton>
-        </StyledAddSafeguardContent>
-    </StyledSafeguardContainer>
-);
+type SafeguardAddingType = 'releasePlan' | 'featureEnvironment';
 
-// --- Release Plan Safeguard ---
+export const AddSafeguard = ({
+    onSelect,
+    showFeatureEnv,
+    hasReleasePlan,
+}: {
+    onSelect: (type: SafeguardAddingType) => void;
+    showFeatureEnv: boolean;
+    hasReleasePlan: boolean;
+}) => {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    if (!showFeatureEnv && !hasReleasePlan) return null;
+
+    const showMenu = showFeatureEnv;
+
+    return (
+        <StyledSafeguardContainer>
+            <StyledAddSafeguardContent>
+                <StyledActionButton
+                    onClick={(e) => {
+                        if (showMenu) {
+                            setAnchorEl(e.currentTarget);
+                        } else {
+                            onSelect('releasePlan');
+                        }
+                    }}
+                    color='primary'
+                    startIcon={<Add />}
+                    sx={{ m: 2 }}
+                >
+                    Add safeguard
+                </StyledActionButton>
+            </StyledAddSafeguardContent>
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}
+            >
+                <MenuItem
+                    onClick={() => {
+                        onSelect('featureEnvironment');
+                        setAnchorEl(null);
+                    }}
+                >
+                    Disable environment
+                </MenuItem>
+                <Tooltip
+                    title={
+                        hasReleasePlan
+                            ? ''
+                            : 'Add a release plan to use this safeguard'
+                    }
+                    placement='right'
+                >
+                    <span>
+                        <MenuItem
+                            disabled={!hasReleasePlan}
+                            onClick={() => {
+                                onSelect('releasePlan');
+                                setAnchorEl(null);
+                            }}
+                        >
+                            Pause automation
+                        </MenuItem>
+                    </span>
+                </Tooltip>
+            </Menu>
+        </StyledSafeguardContainer>
+    );
+};
 
 const useReleasePlanSafeguardActions = ({
     projectId,
@@ -325,51 +381,26 @@ export const ReleasePlanSafeguardSection = ({
     environmentName,
     featureId,
     onSafeguardChange,
+    onCancel = () => {},
 }: {
     releasePlan: { id: string; name: string };
     safeguard?: ISafeguard;
     environmentName: string;
     featureId: string;
     onSafeguardChange: () => void;
-}) => {
-    const [isAdding, setIsAdding] = useState(false);
-
-    if (safeguard) {
-        return (
-            <StyledSafeguardContainer>
-                <ReleasePlanSafeguardForm
-                    releasePlan={releasePlan}
-                    safeguard={safeguard}
-                    environmentName={environmentName}
-                    featureId={featureId}
-                    onSafeguardChange={onSafeguardChange}
-                    onCancel={() => {}}
-                />
-            </StyledSafeguardContainer>
-        );
-    }
-
-    if (isAdding) {
-        return (
-            <StyledSafeguardContainer>
-                <ReleasePlanSafeguardForm
-                    releasePlan={releasePlan}
-                    environmentName={environmentName}
-                    featureId={featureId}
-                    onSafeguardChange={() => {
-                        onSafeguardChange();
-                        setIsAdding(false);
-                    }}
-                    onCancel={() => setIsAdding(false)}
-                />
-            </StyledSafeguardContainer>
-        );
-    }
-
-    return <AddSafeguardButton onClick={() => setIsAdding(true)} />;
-};
-
-// --- Feature Environment Safeguard ---
+    onCancel?: () => void;
+}) => (
+    <StyledSafeguardContainer>
+        <ReleasePlanSafeguardForm
+            releasePlan={releasePlan}
+            safeguard={safeguard}
+            environmentName={environmentName}
+            featureId={featureId}
+            onSafeguardChange={onSafeguardChange}
+            onCancel={onCancel}
+        />
+    </StyledSafeguardContainer>
+);
 
 const FeatureEnvironmentSafeguardForm = ({
     environmentName,
@@ -470,43 +501,103 @@ export const FeatureEnvironmentSafeguardSection = ({
     environmentName,
     featureId,
     onSafeguardChange,
+    onCancel = () => {},
 }: {
     safeguard?: ISafeguard;
     environmentName: string;
     featureId: string;
     onSafeguardChange: () => void;
+    onCancel?: () => void;
+}) => (
+    <StyledSafeguardContainer>
+        <FeatureEnvironmentSafeguardForm
+            safeguard={safeguard}
+            environmentName={environmentName}
+            featureId={featureId}
+            onSafeguardChange={onSafeguardChange}
+            onCancel={onCancel}
+        />
+    </StyledSafeguardContainer>
+);
+
+export const SafeguardSection = ({
+    featureEnvSafeguard,
+    releasePlan,
+    releasePlanSafeguard,
+    environmentName,
+    featureId,
+    onSafeguardChange,
+    showFeatureEnvOption,
+}: {
+    featureEnvSafeguard?: ISafeguard;
+    releasePlan?: { id: string; name: string };
+    releasePlanSafeguard?: ISafeguard;
+    environmentName: string;
+    featureId: string;
+    onSafeguardChange: () => void;
+    showFeatureEnvOption: boolean;
 }) => {
-    const [isAdding, setIsAdding] = useState(false);
+    const [addingType, setAddingType] = useState<SafeguardAddingType | null>(
+        null,
+    );
 
-    if (safeguard) {
+    useEffect(() => {
+        if (featureEnvSafeguard || releasePlanSafeguard) {
+            setAddingType(null);
+        }
+    }, [featureEnvSafeguard, releasePlanSafeguard]);
+
+    if (featureEnvSafeguard) {
         return (
-            <StyledSafeguardContainer>
-                <FeatureEnvironmentSafeguardForm
-                    safeguard={safeguard}
-                    environmentName={environmentName}
-                    featureId={featureId}
-                    onSafeguardChange={onSafeguardChange}
-                    onCancel={() => {}}
-                />
-            </StyledSafeguardContainer>
+            <FeatureEnvironmentSafeguardSection
+                safeguard={featureEnvSafeguard}
+                environmentName={environmentName}
+                featureId={featureId}
+                onSafeguardChange={onSafeguardChange}
+            />
         );
     }
 
-    if (isAdding) {
+    if (releasePlanSafeguard && releasePlan) {
         return (
-            <StyledSafeguardContainer>
-                <FeatureEnvironmentSafeguardForm
-                    environmentName={environmentName}
-                    featureId={featureId}
-                    onSafeguardChange={() => {
-                        onSafeguardChange();
-                        setIsAdding(false);
-                    }}
-                    onCancel={() => setIsAdding(false)}
-                />
-            </StyledSafeguardContainer>
+            <ReleasePlanSafeguardSection
+                releasePlan={releasePlan}
+                safeguard={releasePlanSafeguard}
+                environmentName={environmentName}
+                featureId={featureId}
+                onSafeguardChange={onSafeguardChange}
+            />
         );
     }
 
-    return <AddSafeguardButton onClick={() => setIsAdding(true)} />;
+    if (addingType === 'featureEnvironment') {
+        return (
+            <FeatureEnvironmentSafeguardSection
+                environmentName={environmentName}
+                featureId={featureId}
+                onSafeguardChange={onSafeguardChange}
+                onCancel={() => setAddingType(null)}
+            />
+        );
+    }
+
+    if (addingType === 'releasePlan' && releasePlan) {
+        return (
+            <ReleasePlanSafeguardSection
+                releasePlan={releasePlan}
+                environmentName={environmentName}
+                featureId={featureId}
+                onSafeguardChange={onSafeguardChange}
+                onCancel={() => setAddingType(null)}
+            />
+        );
+    }
+
+    return (
+        <AddSafeguard
+            onSelect={setAddingType}
+            showFeatureEnv={showFeatureEnvOption}
+            hasReleasePlan={Boolean(releasePlan)}
+        />
+    );
 };

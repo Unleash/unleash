@@ -20,6 +20,7 @@ declare namespace Cypress {
 
     interface Chainable {
         runBefore(): Chainable;
+        disableActiveSplashScreens(): Chainable;
 
         do_login(user = AUTH_USER, password = AUTH_PASSWORD): Chainable;
         login_UI(user = AUTH_USER, password = AUTH_PASSWORD): Chainable;

@@ -267,7 +267,10 @@ export const deleteFeatureStrategy_UI = (
     cy.get('[data-testid=FEATURE_ENVIRONMENT_ACCORDION_development]')
         .first()
         .click({ waitForAnimations: true });
-    cy.get('[data-testid=STRATEGY_REMOVE_MENU_BTN]').first().click();
+    cy.get('[data-testid=STRATEGY_REMOVE_MENU_BTN]')
+        .first()
+        .should('be.visible')
+        .click({ waitForAnimations: true });
     cy.get('[data-testid=STRATEGY_FORM_REMOVE_ID]').first().click();
     if (!shouldWait) return cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
     else cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();

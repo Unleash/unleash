@@ -121,18 +121,17 @@ const FeatureNameAndType = styled(Box)(({ theme }) => ({
     color: theme.palette.primary.dark,
 }));
 
-const InlineFavoriteButton = styled(IconButton)(({ theme }) => ({
+const InlineFavoriteButton = styled(IconButton, {
+    shouldForwardProp: (prop) => prop !== 'active',
+})<{ active?: boolean }>(({ theme, active }) => ({
     color: theme.palette.primary.main,
     padding: 0,
     fontSize: '0.875rem',
-}));
-
-const InlineFavoriteButtonInactive = styled(InlineFavoriteButton)({
-    opacity: 0,
+    opacity: active ? 1 : 0,
     '&:hover': { opacity: 1 },
     '&:focus': { opacity: 1 },
     '&:active': { opacity: 1 },
-});
+}));
 
 const TagsContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -322,8 +321,8 @@ export const PrimaryFeatureInfo: FC<{
     dependencyType: string;
     onTypeClick: (type: string) => void;
     delay?: number;
-    isFavorite?: boolean;
-    onFavorite?: () => void;
+    isFavorite: boolean;
+    onFavorite: () => void;
 }> = ({
     project,
     feature,
@@ -364,33 +363,26 @@ export const PrimaryFeatureInfo: FC<{
     );
 
     const FavoriteButton = () => {
-        if (!onFavorite) return null;
-        if (isFavorite) {
-            return (
-                <InlineFavoriteButton
-                    size='small'
-                    aria-label='Remove from favorites'
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onFavorite();
-                    }}
-                >
-                    <StarIcon sx={{ fontSize: 'inherit' }} />
-                </InlineFavoriteButton>
-            );
-        }
+        const favoriteProps = isFavorite
+            ? { 'aria-label': 'Remove from favorites' }
+            : { 'aria-label': 'Add to favorites', className: 'show-row-hover' };
+
         return (
-            <InlineFavoriteButtonInactive
-                className='show-row-hover'
+            <InlineFavoriteButton
+                active={isFavorite}
                 size='small'
-                aria-label='Add to favorites'
+                {...favoriteProps}
                 onClick={(e) => {
                     e.preventDefault();
                     onFavorite();
                 }}
             >
-                <StarBorderIcon sx={{ fontSize: 'inherit' }} />
-            </InlineFavoriteButtonInactive>
+                {isFavorite ? (
+                    <StarIcon sx={{ fontSize: 'inherit' }} />
+                ) : (
+                    <StarBorderIcon sx={{ fontSize: 'inherit' }} />
+                )}
+            </InlineFavoriteButton>
         );
     };
 
@@ -476,7 +468,7 @@ export const createFeatureOverviewCell =
     (
         onTagClick: (tag: string) => void,
         onFlagTypeClick: (type: string) => void,
-        onFavorite?: (feature: FeatureSearchResponseSchema) => void,
+        onFavorite: (feature: FeatureSearchResponseSchema) => void,
     ): FC<IFeatureNameCellProps> =>
     ({ row }) => {
         const { searchQuery } = useSearchHighlightContext();
@@ -492,13 +484,8 @@ export const createFeatureOverviewCell =
                     dependencyType={row.original.dependencyType || ''}
                     onTypeClick={onFlagTypeClick}
                     isFavorite={row.original.favorite}
-                    onFavorite={
-                        onFavorite
-                            ? () =>
-                                  onFavorite(
-                                      row.original as FeatureSearchResponseSchema,
-                                  )
-                            : undefined
+                    onFavorite={() =>
+                        onFavorite(row.original as FeatureSearchResponseSchema)
                     }
                 />
                 <SecondaryFeatureInfo

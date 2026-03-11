@@ -9,7 +9,14 @@ exports.up = function (db, cb) {
             rpd.feature_name
         FROM safeguards s
             JOIN release_plan_definitions rpd ON rpd.id = (s.action->>'id')
-        WHERE s.action->>'type' = 'pauseReleasePlanProgressions';
+        WHERE s.action->>'type' = 'pauseReleasePlanProgressions'
+            AND s.id IS NOT NULL
+            AND s.impact_metric_id IS NOT NULL
+            AND s.trigger_condition IS NOT NULL
+            AND s.action->>'id' IS NOT NULL
+            AND rpd.environment IS NOT NULL
+            AND rpd.feature_name IS NOT NULL
+        ON CONFLICT (id) DO NOTHING;
 
         INSERT INTO feature_environment_safeguards (id, impact_metric_id, trigger_condition, environment, feature_name, project)
         SELECT
@@ -18,7 +25,14 @@ exports.up = function (db, cb) {
             s.action->>'featureName',
             s.action->>'project'
         FROM safeguards s
-        WHERE s.action->>'type' = 'disableFeatureEnvironment';
+        WHERE s.action->>'type' = 'disableFeatureEnvironment'
+            AND s.id IS NOT NULL
+            AND s.impact_metric_id IS NOT NULL
+            AND s.trigger_condition IS NOT NULL
+            AND s.action->>'environment' IS NOT NULL
+            AND s.action->>'featureName' IS NOT NULL
+            AND s.action->>'project' IS NOT NULL
+        ON CONFLICT (id) DO NOTHING;
         `,
         cb,
     );

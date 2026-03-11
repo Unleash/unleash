@@ -12,6 +12,12 @@ const hasValidUsageData = (consumption?: number, limit?: number): boolean => {
     return Boolean(consumption && limit);
 };
 
+const calculateOverage = (consumption?: number, limit?: number): number => {
+    return hasValidUsageData(consumption, limit)
+        ? Math.floor(Math.max(0, consumption! - limit!))
+        : 0;
+};
+
 const calculateIncludedAmount = (
     consumption?: number,
     limit?: number,
@@ -46,7 +52,7 @@ export const BillingInvoiceUsageRow = ({
             : undefined;
 
     const hasValidData = hasValidUsageData(consumption, limit);
-    const overage = quantity;
+    const overage = hasValidData ? calculateOverage(consumption, limit) : quantity;
     const includedAmount = hasValidData
         ? calculateIncludedAmount(consumption, limit)
         : consumption;

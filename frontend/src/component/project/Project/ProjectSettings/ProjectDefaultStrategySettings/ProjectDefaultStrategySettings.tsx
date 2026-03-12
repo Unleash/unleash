@@ -75,7 +75,7 @@ export const ProjectDefaultStrategySettings = () => {
                     path='edit'
                     element={
                         <SidebarModal
-                            label='Edit feature strategy'
+                            label='Edit default strategy'
                             onClose={onSidebarClose}
                             open
                         >

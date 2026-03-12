@@ -77,7 +77,7 @@ const NewProjectDefaultStrategyForm = <T extends StrategyFormState>({
     errors,
 }: IProjectDefaultStrategyFormProps<T>) => {
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
-    const { strategyDefinition } = useStrategy(strategy?.name);
+    const { strategyDefinition } = useStrategy(strategy.name);
     const navigate = useNavigate();
 
     if (!strategyDefinition) {

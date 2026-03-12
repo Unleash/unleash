@@ -216,7 +216,7 @@ export const formatUpdateStrategyApiCode = (
         ),
     };
 
-    const url = `${unleashUrl}/api/admin/projects/${projectId}/environments/${environmentId}/default-strategy}`;
+    const url = `${unleashUrl}/api/admin/projects/${projectId}/environments/${environmentId}/default-strategy`;
     const payload = JSON.stringify(sortedStrategy, undefined, 2);
 
     return `curl --location --request PUT '${url}' \\

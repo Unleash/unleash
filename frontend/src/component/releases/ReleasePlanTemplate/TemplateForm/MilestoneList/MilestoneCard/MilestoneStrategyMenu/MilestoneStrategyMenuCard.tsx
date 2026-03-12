@@ -75,7 +75,6 @@ export const MilestoneStrategyMenuCard = ({
                 onClick({
                     id: crypto.randomUUID(),
                     name: strat.name,
-                    strategyName: strat.name,
                     title: '',
                     constraints: strat.constraints,
                     parameters: strat.parameters,

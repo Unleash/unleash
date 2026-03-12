@@ -74,7 +74,6 @@ export const SafeguardChangeView: FC<{
                                 ? () => onDelete(currentSafeguard.id)
                                 : undefined
                         }
-                        onCancel={() => {}}
                         safeguard={safeguard}
                         environment={environmentName}
                         featureId={featureName}
@@ -149,7 +148,6 @@ export const SafeguardDeleteView: FC<{
                                 ? () => onDelete(safeguard.id)
                                 : undefined
                         }
-                        onCancel={() => {}}
                         safeguard={safeguard}
                         environment={environmentName}
                         featureId={featureName}

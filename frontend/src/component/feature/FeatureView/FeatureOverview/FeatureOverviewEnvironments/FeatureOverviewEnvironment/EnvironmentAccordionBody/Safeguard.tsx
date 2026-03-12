@@ -431,14 +431,18 @@ const SafeguardForm = ({
         onSafeguardChange,
     });
 
-    const safeguardBadge =
+    const isDeleteAction =
         pendingSafeguardAction === 'deleteSafeguard' ||
-        pendingSafeguardAction === 'deleteFeatureEnvSafeguard' ? (
-            <Badge color='error'>Deleted in draft</Badge>
-        ) : pendingSafeguardAction === 'changeSafeguard' ||
-          pendingSafeguardAction === 'changeFeatureEnvSafeguard' ? (
-            <Badge color='warning'>Modified in draft</Badge>
-        ) : undefined;
+        pendingSafeguardAction === 'deleteFeatureEnvSafeguard';
+    const isChangeAction =
+        pendingSafeguardAction === 'changeSafeguard' ||
+        pendingSafeguardAction === 'changeFeatureEnvSafeguard';
+
+    const safeguardBadge = isDeleteAction ? (
+        <Badge color='error'>Deleted in draft</Badge>
+    ) : isChangeAction ? (
+        <Badge color='warning'>Modified in draft</Badge>
+    ) : undefined;
 
     return (
         <>
@@ -458,9 +462,7 @@ const SafeguardForm = ({
                     onConfirm={submitChangeRequestDialog.onConfirm}
                     onClose={() => {
                         submitChangeRequestDialog.onClose();
-                        if (!safeguard) {
-                            onCancel();
-                        }
+                        onCancel();
                     }}
                     safeguardData={submitChangeRequestDialog.data}
                     environment={environmentName}

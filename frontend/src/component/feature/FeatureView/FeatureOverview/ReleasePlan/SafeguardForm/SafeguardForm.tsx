@@ -628,9 +628,10 @@ export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     );
 };
 
-export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
+export const SafeguardFormChangeRequestView: FC<
+    Omit<IBaseSafeguardFormProps, 'onCancel'>
+> = ({
     onSubmit,
-    onCancel,
     onDelete,
     safeguard,
     environment,
@@ -660,7 +661,6 @@ export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
         <SafeguardFormBase
             formState={formState}
             onSubmit={handleSubmit}
-            onCancel={onCancel}
             onDelete={onDelete}
             environment={environment}
             badge={badge}

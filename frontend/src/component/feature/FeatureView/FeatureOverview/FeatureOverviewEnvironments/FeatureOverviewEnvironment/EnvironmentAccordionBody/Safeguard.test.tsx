@@ -4,7 +4,10 @@ import { vi } from 'vitest';
 import { Route, Routes } from 'react-router-dom';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
-import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import {
+    UPDATE_FEATURE_ENVIRONMENT,
+    UPDATE_FEATURE_STRATEGY,
+} from 'component/providers/AccessProvider/permissions';
 import { AddSafeguard, Safeguard } from './Safeguard.tsx';
 import type { ISafeguard } from 'interfaces/releasePlans';
 
@@ -20,6 +23,11 @@ const server = testServerSetup();
 const permissions = [
     {
         permission: UPDATE_FEATURE_STRATEGY,
+        project: 'default',
+        environment: 'production',
+    },
+    {
+        permission: UPDATE_FEATURE_ENVIRONMENT,
         project: 'default',
         environment: 'production',
     },
@@ -355,14 +363,14 @@ describe('Safeguard', () => {
         expect(requests).toMatchObject([defaultSafeguardPayload]);
     });
 
-    test('should add feature env safeguard directly even with change requests enabled', async () => {
+    test('should add feature env safeguard via change request when enabled', async () => {
         const user = userEvent.setup();
         enableChangeRequests();
         const { requests } = testServerRoute(
             server,
-            '/api/admin/projects/default/features/feature1/environments/production/safeguards',
+            '/api/admin/projects/default/environments/production/change-requests',
             {},
-            'put',
+            'post',
         );
 
         const { onSafeguardChange } = renderSection();
@@ -373,10 +381,50 @@ describe('Safeguard', () => {
         const saveButton = await screen.findByText('Save');
         await user.click(saveButton);
 
+        await screen.findByText('Add suggestion to draft');
+        const confirmButton = await screen.findByRole('button', {
+            name: 'Add suggestion to draft',
+        });
+        await user.click(confirmButton);
+
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
         });
-        expect(requests).toMatchObject([defaultSafeguardPayload]);
+        expect(requests).toMatchObject([
+            {
+                feature: 'feature1',
+                action: 'changeFeatureEnvSafeguard',
+                payload: {
+                    safeguard: defaultSafeguardPayload,
+                },
+            },
+        ]);
+    });
+
+    test('should dismiss form when cancelling CR dialog during create', async () => {
+        const user = userEvent.setup();
+        enableChangeRequests();
+
+        renderSection();
+
+        await selectSafeguardType(user, 'Disable environment');
+        await screen.findByText('Disable environment when');
+
+        const saveButton = await screen.findByText('Save');
+        await user.click(saveButton);
+
+        await screen.findByText('Add suggestion to draft');
+        const cancelButton = await screen.findByRole('button', {
+            name: 'Cancel',
+        });
+        await user.click(cancelButton);
+
+        await waitFor(() => {
+            expect(
+                screen.queryByText('Disable environment when'),
+            ).not.toBeInTheDocument();
+        });
+        await screen.findByText('Add safeguard');
     });
 
     test('should add release plan safeguard via API', async () => {
@@ -419,6 +467,35 @@ describe('Safeguard', () => {
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
         });
+    });
+
+    test('should delete feature env safeguard via change request', async () => {
+        const user = userEvent.setup();
+        enableChangeRequests();
+        const { requests } = testServerRoute(
+            server,
+            '/api/admin/projects/default/environments/production/change-requests',
+            {},
+            'post',
+        );
+
+        const { onSafeguardChange } = renderSection({ featureEnvSafeguard });
+
+        await screen.findByText('Disable environment when');
+        await deleteSafeguard(user, 'Add suggestion to draft');
+
+        await waitFor(() => {
+            expect(onSafeguardChange).toHaveBeenCalled();
+        });
+        expect(requests).toMatchObject([
+            {
+                feature: 'feature1',
+                action: 'deleteFeatureEnvSafeguard',
+                payload: {
+                    safeguardId: 'env-safeguard-1',
+                },
+            },
+        ]);
     });
 
     test('should delete existing feature env safeguard', async () => {

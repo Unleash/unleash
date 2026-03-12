@@ -35,10 +35,11 @@ import type {
     CreateSafeguardSchema,
 } from 'openapi';
 import { ConsolidatedProgressionChanges } from './ConsolidatedProgressionChanges.tsx';
-import { SafeguardFormChangeRequestView } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
-import { ReadonlySafeguardDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/ReadonlySafeguardDisplay';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
-import { omitIfDefined } from 'utils/omitFields';
+import {
+    SafeguardChangeView,
+    SafeguardDeleteView,
+} from './SafeguardChangeViews.tsx';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -182,79 +183,22 @@ const ChangeSafeguard: FC<{
     actions?: ReactNode;
     onSubmit: (data: CreateSafeguardSchema) => void;
     onDelete: (safeguardId: string) => void;
-}> = ({
-    change,
-    currentReleasePlan,
-    changeRequestState,
-    environmentName,
-    featureName,
-    actions,
-    onSubmit,
-    onDelete,
-}) => {
+}> = ({ change, currentReleasePlan, changeRequestState, ...rest }) => {
     const releasePlan =
         (changeRequestState === 'Applied' || !currentReleasePlan) &&
         change.payload.snapshot
             ? change.payload.snapshot
             : currentReleasePlan;
 
-    if (!releasePlan) return;
-
-    const safeguard = change.payload.safeguard;
-
-    if (!safeguard) return;
-
-    const readonly =
-        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
-
-    const safeguardId = releasePlan?.safeguards?.[0]?.id;
+    if (!releasePlan || !change.payload.safeguard) return;
 
     return (
-        <StyledTabs>
-            <ChangeItemWrapper>
-                <ChangeItemInfo>
-                    <Added>Change safeguard</Added>
-                </ChangeItemInfo>
-                <div>
-                    <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
-                    </TabList>
-                    {actions}
-                </div>
-            </ChangeItemWrapper>
-            <TabPanel>
-                {readonly ? (
-                    <ReadonlySafeguardDisplay safeguard={safeguard} />
-                ) : (
-                    <SafeguardFormChangeRequestView
-                        onSubmit={onSubmit}
-                        onDelete={
-                            safeguardId
-                                ? () => onDelete(safeguardId)
-                                : undefined
-                        }
-                        onCancel={() => {}}
-                        safeguard={safeguard}
-                        environment={environmentName}
-                        featureId={featureName}
-                    />
-                )}
-            </TabPanel>
-            <TabPanel variant='diff'>
-                <EventDiff
-                    entry={{
-                        preData: omitIfDefined(releasePlan?.safeguards?.[0], [
-                            'id',
-                            'action',
-                            'impactMetric.id',
-                            'impactMetric.labelSelectors.environment',
-                        ]),
-                        data: safeguard,
-                    }}
-                />
-            </TabPanel>
-        </StyledTabs>
+        <SafeguardChangeView
+            safeguard={change.payload.safeguard}
+            currentSafeguard={releasePlan.safeguards?.[0]}
+            changeRequestState={changeRequestState}
+            {...rest}
+        />
     );
 };
 
@@ -267,72 +211,23 @@ const DeleteSafeguard: FC<{
     actions?: ReactNode;
     onSubmit: (data: CreateSafeguardSchema) => void;
     onDelete: (safeguardId: string) => void;
-}> = ({
-    change,
-    currentReleasePlan,
-    changeRequestState,
-    environmentName,
-    featureName,
-    actions,
-    onSubmit,
-    onDelete,
-}) => {
+}> = ({ change, currentReleasePlan, changeRequestState, ...rest }) => {
     const releasePlan =
         (changeRequestState === 'Applied' || !currentReleasePlan) &&
         change.payload.snapshot
             ? change.payload.snapshot
             : currentReleasePlan;
 
-    if (!releasePlan) return;
-
-    const safeguard = releasePlan.safeguards?.[0];
+    const safeguard = releasePlan?.safeguards?.[0];
 
     if (!safeguard) return;
 
-    const readonly =
-        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
-
     return (
-        <StyledTabs>
-            <ChangeItemWrapper>
-                <ChangeItemInfo>
-                    <Deleted>Delete safeguard</Deleted>
-                </ChangeItemInfo>
-                <div>
-                    <TabList>
-                        <Tab>View change</Tab>
-                        <Tab>View diff</Tab>
-                    </TabList>
-                    {actions}
-                </div>
-            </ChangeItemWrapper>
-            <TabPanel>
-                {readonly ? (
-                    <ReadonlySafeguardDisplay safeguard={safeguard} />
-                ) : (
-                    <SafeguardFormChangeRequestView
-                        onSubmit={onSubmit}
-                        onDelete={
-                            safeguard?.id
-                                ? () => onDelete(safeguard?.id)
-                                : undefined
-                        }
-                        onCancel={() => {}}
-                        safeguard={safeguard}
-                        environment={environmentName}
-                        featureId={featureName}
-                    />
-                )}
-            </TabPanel>
-            <TabPanel variant='diff'>
-                <EventDiff
-                    entry={{
-                        preData: safeguard,
-                        data: {},
-                    }}
-                />
-            </TabPanel>
-        </StyledTabs>
+        <SafeguardDeleteView
+            safeguard={safeguard}
+            changeRequestState={changeRequestState}
+            {...rest}
+        />
     );
 };
 

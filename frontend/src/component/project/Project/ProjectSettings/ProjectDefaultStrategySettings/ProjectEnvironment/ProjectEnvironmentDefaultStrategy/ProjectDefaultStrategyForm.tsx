@@ -16,10 +16,7 @@ import type { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/FeatureStrategyConstraints';
-import {
-    FeatureStrategyType,
-    LegacyFeatureStrategyType,
-} from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
+import { LegacyFeatureStrategyType } from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle';
 import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 import {
@@ -28,7 +25,7 @@ import {
 } from '@server/types/permissions';
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments';
 import { useUiFlag } from 'hooks/useUiFlag';
-import produce from 'immer';
+import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
 
 interface IProjectDefaultStrategyFormProps<T extends StrategyFormState> {
     projectId: string;
@@ -37,12 +34,15 @@ interface IProjectDefaultStrategyFormProps<T extends StrategyFormState> {
     onSubmit: () => void;
     onCancel?: () => void;
     loading: boolean;
-    isChangeRequest?: boolean;
     strategy: T;
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
+    errors: IFormErrors;
+}
+
+interface ILegacyProjectDefaultStrategyFormProps<T extends StrategyFormState>
+    extends IProjectDefaultStrategyFormProps<T> {
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
-    errors: IFormErrors;
 }
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -65,7 +65,66 @@ const StyledButtons = styled('div')(({ theme }) => ({
     paddingBottom: theme.spacing(10),
 }));
 
-export const ProjectDefaultStrategyForm = <T extends StrategyFormState>({
+const NewProjectDefaultStrategyForm = <T extends StrategyFormState>({
+    projectId,
+    environmentId,
+    permission,
+    onSubmit,
+    onCancel,
+    loading,
+    strategy,
+    setStrategy,
+    errors,
+}: IProjectDefaultStrategyFormProps<T>) => {
+    const hasValidConstraints = useConstraintsValidation(strategy.constraints);
+    const { strategyDefinition } = useStrategy(strategy?.name);
+    const navigate = useNavigate();
+
+    if (!strategyDefinition) {
+        return null;
+    }
+
+    const onDefaultCancel = () => {
+        navigate(`/projects/${projectId}/settings/default-strategy`);
+    };
+
+    return (
+        <StrategyFormBody
+            strategy={strategy}
+            setStrategy={setStrategy}
+            strategyDefinition={strategyDefinition}
+            errors={errors}
+            onSubmit={() => {
+                onSubmit();
+            }}
+        >
+            <PermissionButton
+                permission={permission}
+                projectId={projectId}
+                environmentId={environmentId}
+                variant='contained'
+                color='primary'
+                type='submit'
+                disabled={
+                    loading || !hasValidConstraints || errors.hasFormErrors()
+                }
+                data-testid={STRATEGY_FORM_SUBMIT_ID}
+            >
+                Save strategy
+            </PermissionButton>
+            <Button
+                type='button'
+                color='primary'
+                onClick={onCancel ? onCancel : onDefaultCancel}
+                disabled={loading}
+            >
+                Cancel
+            </Button>
+        </StrategyFormBody>
+    );
+};
+
+const LegacyProjectDefaultStrategyForm = <T extends StrategyFormState>({
     projectId,
     environmentId,
     permission,
@@ -77,8 +136,7 @@ export const ProjectDefaultStrategyForm = <T extends StrategyFormState>({
     segments,
     setSegments,
     errors,
-}: IProjectDefaultStrategyFormProps<T>) => {
-    const useNewStrategyTypeComponent = useUiFlag('strategyFormConsolidation');
+}: ILegacyProjectDefaultStrategyFormProps<T>) => {
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const { strategyDefinition } = useStrategy(strategy?.name);
     const { segments: assignableSegments = [] } = useAssignableSegments();
@@ -140,15 +198,6 @@ export const ProjectDefaultStrategyForm = <T extends StrategyFormState>({
         }
     };
 
-    const updateParameter = (name: string, value: string) => {
-        setStrategy(
-            produce((draft) => {
-                draft.parameters = draft.parameters ?? {};
-                draft.parameters[name] = value;
-            }),
-        );
-        validateParameter(name, value);
-    };
     return (
         <StyledForm onSubmit={onSubmitWithValidation}>
             <FeatureStrategyTitle
@@ -174,22 +223,13 @@ export const ProjectDefaultStrategyForm = <T extends StrategyFormState>({
             />
             <StyledHr />
 
-            {useNewStrategyTypeComponent ? (
-                <FeatureStrategyType
-                    strategy={strategy}
-                    strategyDefinition={strategyDefinition}
-                    updateParameter={updateParameter}
-                    errors={errors}
-                />
-            ) : (
-                <LegacyFeatureStrategyType
-                    strategy={strategy as any}
-                    strategyDefinition={strategyDefinition}
-                    setStrategy={setStrategy}
-                    validateParameter={validateParameter}
-                    errors={errors}
-                />
-            )}
+            <LegacyFeatureStrategyType
+                strategy={strategy as any}
+                strategyDefinition={strategyDefinition}
+                setStrategy={setStrategy}
+                validateParameter={validateParameter}
+                errors={errors}
+            />
             <ConditionallyRender
                 condition={
                     strategy.parameters != null &&
@@ -236,5 +276,16 @@ export const ProjectDefaultStrategyForm = <T extends StrategyFormState>({
                 </Button>
             </StyledButtons>
         </StyledForm>
+    );
+};
+
+export const ProjectDefaultStrategyForm = <T extends StrategyFormState>(
+    props: ILegacyProjectDefaultStrategyFormProps<T>,
+) => {
+    const useConsolidated = useUiFlag('strategyFormConsolidation');
+    return useConsolidated ? (
+        <NewProjectDefaultStrategyForm {...props} />
+    ) : (
+        <LegacyProjectDefaultStrategyForm {...props} />
     );
 };

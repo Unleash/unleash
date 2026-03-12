@@ -20,6 +20,7 @@ import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm.tsx';
 import type { CreateFeatureStrategySchema } from 'openapi';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { UPDATE_PROJECT } from '@server/types/permissions';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const useDefaultStrategy = (
     projectId: string,
@@ -48,6 +49,7 @@ const EditDefaultStrategy = () => {
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
     const { refetch: refetchProjectOverview } = useProjectOverview(projectId);
+    const useConsolidated = useUiFlag('strategyFormConsolidation');
 
     const {
         defaultStrategyFallback,
@@ -77,7 +79,8 @@ const EditDefaultStrategy = () => {
 
     useEffect(() => {
         // Fill in the selected segments once they've been fetched.
-        if (allSegments && strategy?.segments) {
+        // Only needed for the legacy form path which manages segments externally.
+        if (!useConsolidated && allSegments && strategy?.segments) {
             const temp: ISegment[] = [];
             for (const segmentId of strategy?.segments) {
                 temp.push(
@@ -88,9 +91,15 @@ const EditDefaultStrategy = () => {
             }
             setSegments(temp);
         }
-    }, [JSON.stringify(allSegments), JSON.stringify(strategy?.segments)]);
+    }, [
+        useConsolidated,
+        JSON.stringify(allSegments),
+        JSON.stringify(strategy?.segments),
+    ]);
 
-    const payload = createStrategyPayload(defaultStrategy as any, segments);
+    const payload = useConsolidated
+        ? createStrategyPayloadFromIds(defaultStrategy as any)
+        : createStrategyPayload(defaultStrategy as any, segments);
 
     const onDefaultStrategyEdit = async (
         payload: CreateFeatureStrategySchema,
@@ -156,11 +165,22 @@ const EditDefaultStrategy = () => {
                 loading={loading}
                 permission={[PROJECT_DEFAULT_STRATEGY_WRITE, UPDATE_PROJECT]}
                 errors={errors}
-                isChangeRequest={false}
             />
         </FormTemplate>
     );
 };
+
+const createStrategyPayloadFromIds = (
+    strategy: CreateFeatureStrategySchema,
+): CreateFeatureStrategySchema => ({
+    name: strategy.name,
+    title: strategy.title,
+    constraints: strategy.constraints ?? [],
+    parameters: strategy.parameters ?? {},
+    variants: strategy.variants ?? [],
+    segments: strategy.segments ?? [],
+    disabled: strategy.disabled ?? false,
+});
 
 export const createStrategyPayload = (
     strategy: CreateFeatureStrategySchema,

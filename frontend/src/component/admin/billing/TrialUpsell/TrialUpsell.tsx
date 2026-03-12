@@ -13,7 +13,7 @@ import { ReactComponent as SamsungLogo } from 'assets/logos/samsung.svg';
 import { ReactComponent as LloydsLogo } from 'assets/logos/lloyds.svg';
 import { trialHasExpired } from 'utils/instanceTrial';
 import { parseISO } from 'date-fns';
-import { formatDateDM } from 'utils/formatDate';
+import { formatDateYMD } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const StyledBillingInformation = styled('div')(({ theme }) => ({
@@ -63,7 +63,7 @@ const StyledLogoList = styled('div')(({ theme }) => ({
 const formatTrialExpiry = (locale: string, trialExpiry?: string): string => {
     if (!trialExpiry) return '';
 
-    return formatDateDM(parseISO(trialExpiry), locale);
+    return formatDateYMD(parseISO(trialExpiry), locale);
 };
 
 export const TrialUpsell = () => {

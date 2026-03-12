@@ -467,6 +467,7 @@ const SafeguardForm = ({
                     safeguardData={submitChangeRequestDialog.data}
                     environment={environmentName}
                     mode={safeguard ? 'edit' : 'create'}
+                    safeguardType={safeguardType}
                 />
             )}
             {safeguard && (

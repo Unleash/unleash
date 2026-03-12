@@ -9,6 +9,7 @@ import {
 } from 'component/filter/Filters/Filters';
 import { formatTag } from 'utils/format-tag';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 type FeaturesOverviewToggleFiltersProps = {
     state: FilterItemParamHolder;
@@ -22,6 +23,20 @@ export const FeaturesOverviewToggleFilters: FC<
     const { segments } = useSegments();
     const { tags } = useAllTags();
     const filterFavoritesEnabled = useUiFlag('filterFavorites');
+    const { trackEvent } = usePlausibleTracker();
+
+    const onFilterChange = (value: FilterItemParamHolder) => {
+        if (value.favorite !== state.favorite) {
+            trackEvent('favorite', {
+                props: {
+                    action: value.favorite
+                        ? 'filter-enabled'
+                        : 'filter-disabled',
+                },
+            });
+        }
+        onChange(value);
+    };
 
     const stateOptions = [
         {
@@ -152,7 +167,7 @@ export const FeaturesOverviewToggleFilters: FC<
         <Filters
             availableFilters={availableFilters}
             state={state}
-            onChange={onChange}
+            onChange={onFilterChange}
         />
     );
 };

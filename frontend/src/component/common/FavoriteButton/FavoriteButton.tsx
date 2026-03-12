@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { IconButton, styled } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledButton = styled(IconButton, {
     shouldForwardProp: (prop) => prop !== 'active',
@@ -22,6 +23,7 @@ export const FavoriteButton: FC<FavoriteButtonProps> = ({
     isFavorite,
     onClick,
 }) => {
+    const { trackEvent } = usePlausibleTracker();
     const favoriteProps = isFavorite
         ? { 'aria-label': 'Remove from favorites' }
         : { 'aria-label': 'Add to favorites', className: 'show-row-hover' };
@@ -33,6 +35,9 @@ export const FavoriteButton: FC<FavoriteButtonProps> = ({
             {...favoriteProps}
             onClick={(e) => {
                 e.preventDefault();
+                trackEvent('favorite', {
+                    props: { action: isFavorite ? 'unfavorite' : 'favorite' },
+                });
                 onClick();
             }}
         >

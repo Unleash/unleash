@@ -52,6 +52,14 @@ const apiToken = (revInfo: EdgeApiKeyRevisionId): string => {
     return `${projectKey(revInfo.projects)}:${revInfo.environment}.***`;
 };
 
+export const tokenProjectsTitle = (projects: string[]): string | undefined => {
+    if (projects.length <= 1 || projects.includes('*')) {
+        return undefined;
+    }
+
+    return `Projects: ${projects.join(', ')}`;
+};
+
 const listKey = (revInfo: EdgeApiKeyRevisionId): string => {
     return `[${revInfo.projects.join(',')}]:${revInfo.environment}`;
 };
@@ -204,11 +212,18 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
             <tbody>
                 {apiKeys?.map((apiKey) => {
                     const token = apiToken(apiKey);
+                    const tokenTitle = tokenProjectsTitle(apiKey.projects);
 
                     return (
                         <tr key={listKey(apiKey)}>
                             <StyledTableCell>
-                                <Truncator title={token}>{token}</Truncator>
+                                <Tooltip title={tokenTitle || ''}>
+                                    <span>
+                                        <Truncator title={token}>
+                                            {token}
+                                        </Truncator>
+                                    </span>
+                                </Tooltip>
                             </StyledTableCell>
                             <StyledTableCell>
                                 <div>

@@ -5,6 +5,13 @@
   "schedule": ["after 7pm every weekday", "before 5am every weekday"],
   "packageRules": [
     {
+      "description": "Do not bump python-version in AI flag cleanup workflow",
+      "matchManagers": ["github-actions"],
+      "matchDepNames": ["python"],
+      "matchFileNames": [".github/workflows/ai-flag-cleanup-pr.yml"],
+      "enabled": false
+    },
+    {
       "matchUpdateTypes": ["minor", "patch"],
       "matchPackageNames": ["*"],
       "automerge": true,

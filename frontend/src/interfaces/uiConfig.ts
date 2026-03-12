@@ -79,7 +79,6 @@ export type UiFlags = {
     impactMetrics?: boolean;
     plausibleMetrics?: boolean;
     milestoneProgression?: boolean;
-    featureReleasePlans?: boolean;
     safeguards?: boolean;
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;

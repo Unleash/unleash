@@ -52,12 +52,14 @@ const apiToken = (revInfo: EdgeApiKeyRevisionId): string => {
     return `${projectKey(revInfo.projects)}:${revInfo.environment}.***`;
 };
 
-export const tokenProjectsTitle = (projects: string[]): string | undefined => {
+const tokenProjectsTooltip = (projects: string[]): string => {
     if (projects.length <= 1 || projects.includes('*')) {
-        return undefined;
+        return '';
     }
 
-    return `Projects: ${projects.join(', ')}`;
+    return `
+        Projects: ${projects.join(', ')}
+    `;
 };
 
 const listKey = (revInfo: EdgeApiKeyRevisionId): string => {
@@ -212,18 +214,11 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
             <tbody>
                 {apiKeys?.map((apiKey) => {
                     const token = apiToken(apiKey);
-                    const tokenTitle = tokenProjectsTitle(apiKey.projects);
 
                     return (
                         <tr key={listKey(apiKey)}>
                             <StyledTableCell>
-                                <Tooltip title={tokenTitle || ''}>
-                                    <span>
-                                        <Truncator title={token}>
-                                            {token}
-                                        </Truncator>
-                                    </span>
-                                </Tooltip>
+                                <Truncator title={token}>{token}</Truncator>
                             </StyledTableCell>
                             <StyledTableCell>
                                 <div>
@@ -237,6 +232,7 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
                                     <HelpIcon
                                         tooltip={`
                                             Edge last updated this token: ${formatDateYMDHMS(apiKey.lastUpdated, locationSettings.locale)}
+                                            ${tokenProjectsTooltip(apiKey.projects)}
                                         `}
                                         size='14px'
                                     />

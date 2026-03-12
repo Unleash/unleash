@@ -1,3 +1,4 @@
+// todo(strategyFormConsolidation): delete this file when removing the flag
 import type React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, styled } from '@mui/material';

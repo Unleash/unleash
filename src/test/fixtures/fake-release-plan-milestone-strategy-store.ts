@@ -16,7 +16,7 @@ export class FakeReleasePlanMilestoneStrategyStore
         const strategy = {
             ...item,
             id: String(this.items.length + 1),
-            strategyName: item.name || item.strategyName,
+            strategyName: item.name,
         } as ReleasePlanMilestoneStrategy;
         this.items.push(strategy);
         return strategy;

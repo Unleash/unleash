@@ -7,19 +7,20 @@ import type { ChangeRequestCreateFeatureSchemaOneOf } from './changeRequestCreat
 import type { ChangeRequestCreateFeatureSchemaOneOfFour } from './changeRequestCreateFeatureSchemaOneOfFour';
 import type { ChangeRequestCreateFeatureSchemaOneOfSix } from './changeRequestCreateFeatureSchemaOneOfSix';
 import type { ChangeRequestCreateFeatureSchemaOneOfEight } from './changeRequestCreateFeatureSchemaOneOfEight';
-import type { ChangeRequestCreateFeatureSchemaOneOfOneone } from './changeRequestCreateFeatureSchemaOneOfOneone';
+import type { ChangeRequestCreateFeatureSchemaOneOfOnezero } from './changeRequestCreateFeatureSchemaOneOfOnezero';
 import type { ChangeRequestCreateFeatureSchemaOneOfOnethree } from './changeRequestCreateFeatureSchemaOneOfOnethree';
-import type { ChangeRequestCreateFeatureSchemaOneOfOnesix } from './changeRequestCreateFeatureSchemaOneOfOnesix';
+import type { ChangeRequestCreateFeatureSchemaOneOfOnefive } from './changeRequestCreateFeatureSchemaOneOfOnefive';
 import type { ChangeRequestCreateFeatureSchemaOneOfOneeight } from './changeRequestCreateFeatureSchemaOneOfOneeight';
 import type { ChangeRequestCreateFeatureSchemaOneOfTwozero } from './changeRequestCreateFeatureSchemaOneOfTwozero';
 import type { ChangeRequestCreateFeatureSchemaOneOfTwotwo } from './changeRequestCreateFeatureSchemaOneOfTwotwo';
 import type { ChangeRequestCreateFeatureSchemaOneOfTwofour } from './changeRequestCreateFeatureSchemaOneOfTwofour';
-import type { ChangeRequestCreateFeatureSchemaOneOfTwoseven } from './changeRequestCreateFeatureSchemaOneOfTwoseven';
-import type { ChangeRequestCreateFeatureSchemaOneOfThreezero } from './changeRequestCreateFeatureSchemaOneOfThreezero';
-import type { ChangeRequestCreateFeatureSchemaOneOfThreethree } from './changeRequestCreateFeatureSchemaOneOfThreethree';
-import type { ChangeRequestCreateFeatureSchemaOneOfThreesix } from './changeRequestCreateFeatureSchemaOneOfThreesix';
-import type { ChangeRequestCreateFeatureSchemaOneOfThreenine } from './changeRequestCreateFeatureSchemaOneOfThreenine';
-import type { ChangeRequestCreateFeatureSchemaOneOfFourtwo } from './changeRequestCreateFeatureSchemaOneOfFourtwo';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwosix } from './changeRequestCreateFeatureSchemaOneOfTwosix';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwonine } from './changeRequestCreateFeatureSchemaOneOfTwonine';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreetwo } from './changeRequestCreateFeatureSchemaOneOfThreetwo';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreefive } from './changeRequestCreateFeatureSchemaOneOfThreefive';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreeeight } from './changeRequestCreateFeatureSchemaOneOfThreeeight';
+import type { ChangeRequestCreateFeatureSchemaOneOfFourone } from './changeRequestCreateFeatureSchemaOneOfFourone';
+import type { ChangeRequestCreateFeatureSchemaOneOfFourfour } from './changeRequestCreateFeatureSchemaOneOfFourfour';
 
 /**
  * Data used to create a [change request](https://docs.getunleash.io/concepts/change-requests) for a single feature change.
@@ -29,16 +30,17 @@ export type ChangeRequestCreateFeatureSchema =
     | ChangeRequestCreateFeatureSchemaOneOfFour
     | ChangeRequestCreateFeatureSchemaOneOfSix
     | ChangeRequestCreateFeatureSchemaOneOfEight
-    | ChangeRequestCreateFeatureSchemaOneOfOneone
+    | ChangeRequestCreateFeatureSchemaOneOfOnezero
     | ChangeRequestCreateFeatureSchemaOneOfOnethree
-    | ChangeRequestCreateFeatureSchemaOneOfOnesix
+    | ChangeRequestCreateFeatureSchemaOneOfOnefive
     | ChangeRequestCreateFeatureSchemaOneOfOneeight
     | ChangeRequestCreateFeatureSchemaOneOfTwozero
     | ChangeRequestCreateFeatureSchemaOneOfTwotwo
     | ChangeRequestCreateFeatureSchemaOneOfTwofour
-    | ChangeRequestCreateFeatureSchemaOneOfTwoseven
-    | ChangeRequestCreateFeatureSchemaOneOfThreezero
-    | ChangeRequestCreateFeatureSchemaOneOfThreethree
-    | ChangeRequestCreateFeatureSchemaOneOfThreesix
-    | ChangeRequestCreateFeatureSchemaOneOfThreenine
-    | ChangeRequestCreateFeatureSchemaOneOfFourtwo;
+    | ChangeRequestCreateFeatureSchemaOneOfTwosix
+    | ChangeRequestCreateFeatureSchemaOneOfTwonine
+    | ChangeRequestCreateFeatureSchemaOneOfThreetwo
+    | ChangeRequestCreateFeatureSchemaOneOfThreefive
+    | ChangeRequestCreateFeatureSchemaOneOfThreeeight
+    | ChangeRequestCreateFeatureSchemaOneOfFourone
+    | ChangeRequestCreateFeatureSchemaOneOfFourfour;

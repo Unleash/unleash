@@ -25,8 +25,11 @@ export interface UpdateReleasePlanMilestoneStrategySchema {
     segments?: number[];
     /** The order of the strategy in the list */
     sortOrder: number;
-    /** The name of the strategy type */
-    strategyName: string;
+    /**
+     * The name of the strategy type
+     * @deprecated
+     */
+    strategyName?: string;
     /**
      * A descriptive title for the strategy
      * @nullable

@@ -4,15 +4,15 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestCreateSchemaOneOfOneoneAction } from './changeRequestCreateSchemaOneOfOneoneAction';
-import type { UpdateFeatureStrategySchema } from './updateFeatureStrategySchema';
+import type { UpdateMilestoneStrategySchema } from './updateMilestoneStrategySchema';
 
 /**
- * Update a strategy belonging to this feature.
+ * Update a milestone strategy belonging to this feature.
  */
 export type ChangeRequestCreateSchemaOneOfOneone = {
     /** The name of this action. */
     action: ChangeRequestCreateSchemaOneOfOneoneAction;
     /** The name of the feature that this change applies to. */
     feature: string;
-    payload: UpdateFeatureStrategySchema;
+    payload: UpdateMilestoneStrategySchema;
 };

@@ -9,19 +9,20 @@ import type { ChangeRequestCreateSchemaOneOfSix } from './changeRequestCreateSch
 import type { ChangeRequestCreateSchemaOneOfNine } from './changeRequestCreateSchemaOneOfNine';
 import type { ChangeRequestCreateSchemaOneOfOneone } from './changeRequestCreateSchemaOneOfOneone';
 import type { ChangeRequestCreateSchemaOneOfOnethree } from './changeRequestCreateSchemaOneOfOnethree';
-import type { ChangeRequestCreateSchemaOneOfOnesix } from './changeRequestCreateSchemaOneOfOnesix';
+import type { ChangeRequestCreateSchemaOneOfOnefive } from './changeRequestCreateSchemaOneOfOnefive';
 import type { ChangeRequestCreateSchemaOneOfOneeight } from './changeRequestCreateSchemaOneOfOneeight';
-import type { ChangeRequestCreateSchemaOneOfTwoone } from './changeRequestCreateSchemaOneOfTwoone';
+import type { ChangeRequestCreateSchemaOneOfTwozero } from './changeRequestCreateSchemaOneOfTwozero';
 import type { ChangeRequestCreateSchemaOneOfTwothree } from './changeRequestCreateSchemaOneOfTwothree';
 import type { ChangeRequestCreateSchemaOneOfTwofive } from './changeRequestCreateSchemaOneOfTwofive';
 import type { ChangeRequestCreateSchemaOneOfTwoseven } from './changeRequestCreateSchemaOneOfTwoseven';
 import type { ChangeRequestCreateSchemaOneOfTwonine } from './changeRequestCreateSchemaOneOfTwonine';
-import type { ChangeRequestCreateSchemaOneOfThreetwo } from './changeRequestCreateSchemaOneOfThreetwo';
-import type { ChangeRequestCreateSchemaOneOfThreefive } from './changeRequestCreateSchemaOneOfThreefive';
-import type { ChangeRequestCreateSchemaOneOfThreeeight } from './changeRequestCreateSchemaOneOfThreeeight';
-import type { ChangeRequestCreateSchemaOneOfFourone } from './changeRequestCreateSchemaOneOfFourone';
-import type { ChangeRequestCreateSchemaOneOfFourfour } from './changeRequestCreateSchemaOneOfFourfour';
-import type { ChangeRequestCreateSchemaOneOfFourseven } from './changeRequestCreateSchemaOneOfFourseven';
+import type { ChangeRequestCreateSchemaOneOfThreeone } from './changeRequestCreateSchemaOneOfThreeone';
+import type { ChangeRequestCreateSchemaOneOfThreefour } from './changeRequestCreateSchemaOneOfThreefour';
+import type { ChangeRequestCreateSchemaOneOfThreeseven } from './changeRequestCreateSchemaOneOfThreeseven';
+import type { ChangeRequestCreateSchemaOneOfFourzero } from './changeRequestCreateSchemaOneOfFourzero';
+import type { ChangeRequestCreateSchemaOneOfFourthree } from './changeRequestCreateSchemaOneOfFourthree';
+import type { ChangeRequestCreateSchemaOneOfFoursix } from './changeRequestCreateSchemaOneOfFoursix';
+import type { ChangeRequestCreateSchemaOneOfFournine } from './changeRequestCreateSchemaOneOfFournine';
 
 /**
  * Data used to create a [change request](https://docs.getunleash.io/concepts/change-requests) for a single feature or segment change.
@@ -33,16 +34,17 @@ export type ChangeRequestCreateSchema =
     | ChangeRequestCreateSchemaOneOfNine
     | ChangeRequestCreateSchemaOneOfOneone
     | ChangeRequestCreateSchemaOneOfOnethree
-    | ChangeRequestCreateSchemaOneOfOnesix
+    | ChangeRequestCreateSchemaOneOfOnefive
     | ChangeRequestCreateSchemaOneOfOneeight
-    | ChangeRequestCreateSchemaOneOfTwoone
+    | ChangeRequestCreateSchemaOneOfTwozero
     | ChangeRequestCreateSchemaOneOfTwothree
     | ChangeRequestCreateSchemaOneOfTwofive
     | ChangeRequestCreateSchemaOneOfTwoseven
     | ChangeRequestCreateSchemaOneOfTwonine
-    | ChangeRequestCreateSchemaOneOfThreetwo
-    | ChangeRequestCreateSchemaOneOfThreefive
-    | ChangeRequestCreateSchemaOneOfThreeeight
-    | ChangeRequestCreateSchemaOneOfFourone
-    | ChangeRequestCreateSchemaOneOfFourfour
-    | ChangeRequestCreateSchemaOneOfFourseven;
+    | ChangeRequestCreateSchemaOneOfThreeone
+    | ChangeRequestCreateSchemaOneOfThreefour
+    | ChangeRequestCreateSchemaOneOfThreeseven
+    | ChangeRequestCreateSchemaOneOfFourzero
+    | ChangeRequestCreateSchemaOneOfFourthree
+    | ChangeRequestCreateSchemaOneOfFoursix
+    | ChangeRequestCreateSchemaOneOfFournine;

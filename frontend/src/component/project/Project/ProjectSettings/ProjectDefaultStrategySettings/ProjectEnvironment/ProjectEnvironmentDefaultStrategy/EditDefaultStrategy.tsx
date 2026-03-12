@@ -3,23 +3,29 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { PROJECT_DEFAULT_STRATEGY_WRITE } from 'component/providers/AccessProvider/permissions';
-import type { IStrategy } from 'interfaces/strategy';
+import { Button } from '@mui/material';
+import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
-import type { ISegment } from 'interfaces/segment';
 import { useFormErrors } from 'hooks/useFormErrors';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { formatStrategyName } from 'utils/strategyNames';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm.tsx';
 import type { CreateFeatureStrategySchema } from 'openapi';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { UPDATE_PROJECT } from '@server/types/permissions';
+import {
+    PROJECT_DEFAULT_STRATEGY_WRITE,
+    UPDATE_PROJECT,
+} from '@server/types/permissions';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { LegacyEditDefaultStrategy } from './LegacyEditDefaultStrategy.tsx';
+import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
+import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 
 export const useDefaultStrategy = (
     projectId: string,
@@ -44,78 +50,52 @@ export const useDefaultStrategy = (
     return { defaultStrategyFallback, strategy, refetch };
 };
 
-const EditDefaultStrategy = () => {
+const NewEditDefaultStrategy = () => {
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
     const { refetch: refetchProjectOverview } = useProjectOverview(projectId);
 
     const {
         defaultStrategyFallback,
-        strategy,
+        strategy: savedStrategy,
         refetch: refetchProject,
     } = useDefaultStrategy(projectId, environmentId);
 
-    const [defaultStrategy, setDefaultStrategy] = useState<
-        CreateFeatureStrategySchema | undefined
-    >(strategy || defaultStrategyFallback);
+    const [strategy, setStrategy] = useState<StrategyFormState>(
+        (savedStrategy as StrategyFormState) || defaultStrategyFallback,
+    );
 
-    const [segments, setSegments] = useState<ISegment[]>([]);
     const { updateDefaultStrategy, loading } = useProjectApi();
-    const { strategyDefinition } = useStrategy(defaultStrategy?.name);
+    const { strategyDefinition } = useStrategy(strategy.name);
     const { setToastData, setToastApiError } = useToast();
     const errors = useFormErrors();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
-
     const { trackEvent } = usePlausibleTracker();
+    const hasValidConstraints = useConstraintsValidation(strategy.constraints);
 
-    const {
-        segments: allSegments,
-        refetchSegments: refetchSavedStrategySegments,
-    } = useSegments();
+    if (!strategyDefinition) return null;
 
-    useEffect(() => {
-        // Fill in the selected segments once they've been fetched.
-        if (allSegments && strategy?.segments) {
-            const temp: ISegment[] = [];
-            for (const segmentId of strategy?.segments) {
-                temp.push(
-                    ...allSegments.filter(
-                        (segment) => segment.id === segmentId,
-                    ),
-                );
-            }
-            setSegments(temp);
-        }
-    }, [JSON.stringify(allSegments), JSON.stringify(strategy?.segments)]);
-
-    const payload = createStrategyPayload(defaultStrategy as any, segments);
-
-    const onDefaultStrategyEdit = async (
-        payload: CreateFeatureStrategySchema,
-    ) => {
-        await updateDefaultStrategy(projectId, environmentId, payload);
-
-        trackEvent('default_strategy', {
-            props: {
-                action: 'edit',
-                hasTitle: Boolean(payload.title),
-            },
-        });
-
-        refetchSavedStrategySegments();
-        refetchProjectOverview();
-        setToastData({
-            text: 'Default Strategy updated',
-            type: 'success',
-        });
-    };
+    const payload = createStrategyPayload(strategy);
 
     const onSubmit = async () => {
         const path = `/projects/${projectId}/settings/default-strategy`;
         try {
-            await onDefaultStrategyEdit(payload);
+            await updateDefaultStrategy(projectId, environmentId, payload);
+
+            trackEvent('default_strategy', {
+                props: {
+                    action: 'edit',
+                    hasTitle: Boolean(payload.title),
+                },
+            });
+
+            refetchProjectOverview();
+            setToastData({
+                text: 'Default Strategy updated',
+                type: 'success',
+            });
             await refetchProject();
             navigate(path);
         } catch (error: unknown) {
@@ -123,15 +103,10 @@ const EditDefaultStrategy = () => {
         }
     };
 
-    if (!strategyDefinition) {
-        return null;
-    }
-
-    if (!defaultStrategy) return null;
     return (
         <FormTemplate
             modal
-            title={formatStrategyName(defaultStrategy?.name ?? '')}
+            title={formatStrategyName(strategy.name)}
             description={projectDefaultStrategyHelp}
             documentationLink={projectDefaultStrategyDocsLink}
             documentationLinkLabel={projectDefaultStrategyDocsLinkLabel}
@@ -145,37 +120,68 @@ const EditDefaultStrategy = () => {
                 )
             }
         >
-            <ProjectDefaultStrategyForm
-                projectId={projectId}
-                strategy={defaultStrategy as any}
-                setStrategy={setDefaultStrategy as any}
-                segments={segments}
-                setSegments={setSegments}
-                environmentId={environmentId}
-                onSubmit={onSubmit}
-                loading={loading}
-                permission={[PROJECT_DEFAULT_STRATEGY_WRITE, UPDATE_PROJECT]}
+            <StrategyFormBody
+                strategy={strategy}
+                setStrategy={setStrategy}
+                strategyDefinition={strategyDefinition}
                 errors={errors}
-                isChangeRequest={false}
-            />
+                onSubmit={onSubmit}
+            >
+                <PermissionButton
+                    permission={[
+                        PROJECT_DEFAULT_STRATEGY_WRITE,
+                        UPDATE_PROJECT,
+                    ]}
+                    projectId={projectId}
+                    environmentId={environmentId}
+                    variant='contained'
+                    color='primary'
+                    type='submit'
+                    disabled={
+                        loading ||
+                        !hasValidConstraints ||
+                        errors.hasFormErrors()
+                    }
+                    data-testid={STRATEGY_FORM_SUBMIT_ID}
+                >
+                    Save strategy
+                </PermissionButton>
+                <Button
+                    onClick={() =>
+                        navigate(
+                            `/projects/${projectId}/settings/default-strategy`,
+                        )
+                    }
+                >
+                    Cancel
+                </Button>
+            </StrategyFormBody>
         </FormTemplate>
     );
 };
 
+const EditDefaultStrategy = () => {
+    const useConsolidated = useUiFlag('strategyFormConsolidation');
+    return useConsolidated ? (
+        <NewEditDefaultStrategy />
+    ) : (
+        <LegacyEditDefaultStrategy />
+    );
+};
+
 export const createStrategyPayload = (
-    strategy: CreateFeatureStrategySchema,
-    segments: ISegment[],
+    strategy: StrategyFormState,
 ): CreateFeatureStrategySchema => ({
     name: strategy.name,
     title: strategy.title,
     constraints: strategy.constraints ?? [],
-    parameters: strategy.parameters ?? {},
+    parameters: (strategy.parameters ?? {}) as Record<string, string>,
     variants: strategy.variants ?? [],
-    segments: segments.map((segment) => segment.id),
+    segments: strategy.segments ?? [],
     disabled: strategy.disabled ?? false,
 });
 
-export const formatUpdateStrategyApiCode = (
+const formatUpdateStrategyApiCode = (
     projectId: string,
     environmentId: string,
     strategy: CreateFeatureStrategySchema,
@@ -196,7 +202,7 @@ export const formatUpdateStrategyApiCode = (
         ),
     };
 
-    const url = `${unleashUrl}/api/admin/projects/${projectId}/environments/${environmentId}/default-strategy}`;
+    const url = `${unleashUrl}/api/admin/projects/${projectId}/environments/${environmentId}/default-strategy`;
     const payload = JSON.stringify(sortedStrategy, undefined, 2);
 
     return `curl --location --request PUT '${url}' \\
@@ -205,15 +211,14 @@ export const formatUpdateStrategyApiCode = (
     --data-raw '${payload}'`;
 };
 
-export const projectDefaultStrategyHelp = `
+const projectDefaultStrategyHelp = `
     An activation strategy will only run when a feature flag is enabled and provides a way to control who will get access to the feature.
     If any of a feature flag's activation strategies returns true, the user will get access.
 `;
 
-export const projectDefaultStrategyDocsLink =
+const projectDefaultStrategyDocsLink =
     'https://docs.getunleash.io/concepts/projects#project-default-strategy';
 
-export const projectDefaultStrategyDocsLinkLabel =
-    'Default strategy documentation';
+const projectDefaultStrategyDocsLinkLabel = 'Default strategy documentation';
 
 export default EditDefaultStrategy;

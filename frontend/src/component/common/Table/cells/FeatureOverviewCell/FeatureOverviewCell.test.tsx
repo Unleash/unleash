@@ -5,7 +5,7 @@ import { createFeatureOverviewCell } from './FeatureOverviewCell.tsx';
 const noOp = () => {};
 
 test('Display full overview information', () => {
-    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp);
+    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp, noOp);
 
     render(
         <FeatureOverviewCell
@@ -23,6 +23,7 @@ test('Display full overview information', () => {
                     dependencyType: 'child',
                     project: 'my_project',
                     archivedAt: null,
+                    favorite: false,
                 },
             }}
         />,
@@ -43,7 +44,7 @@ test('Display full overview information', () => {
 });
 
 test('Display minimal overview information', () => {
-    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp);
+    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp, noOp);
 
     render(
         <FeatureOverviewCell
@@ -56,6 +57,7 @@ test('Display minimal overview information', () => {
                     dependencyType: null,
                     project: 'my_project',
                     archivedAt: null,
+                    favorite: false,
                 },
             }}
         />,
@@ -69,7 +71,7 @@ test('Display minimal overview information', () => {
 });
 
 test('show archived information', () => {
-    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp);
+    const FeatureOverviewCell = createFeatureOverviewCell(noOp, noOp, noOp);
 
     render(
         <FeatureOverviewCell
@@ -82,6 +84,7 @@ test('show archived information', () => {
                     dependencyType: null,
                     project: 'my_project',
                     archivedAt: '2024-11-09',
+                    favorite: false,
                 },
             }}
         />,

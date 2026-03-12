@@ -107,6 +107,7 @@ export default class FeatureSearchController extends Controller {
             lifecycle,
             favoritesFirst,
             archived,
+            favorite,
             sortBy,
             lastSeenAt,
         } = req.query;
@@ -151,6 +152,7 @@ export default class FeatureSearchController extends Controller {
             sortBy,
             lifecycle,
             lastSeenAt,
+            favorite,
             status: normalizedStatus,
             offset: normalizedOffset,
             limit: normalizedLimit,

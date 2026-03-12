@@ -29,3 +29,28 @@ test('insert returns createdAt from the database', async () => {
     expect(template.createdAt).toBeInstanceOf(Date);
     expect(template.name).toBe('test-template');
 });
+
+test("store updates don't leak column names that don't belong in the model", async () => {
+    const store = new ReleasePlanTemplateStore(db.rawDatabase, config);
+    const template = await store.insert({
+        name: 'template1',
+        description: 'old desc',
+        discriminator: 'template',
+        createdByUserId: 1,
+    });
+
+    const updatedTemplate = await store.update(template.id, {
+        description: 'new description',
+    });
+
+    // camelCased version of db column names that don't belong in the return type
+    const unmappedColumns = [
+        'featureName',
+        'environment',
+        'activeMilestoneId',
+        'releasePlanTemplateId',
+    ];
+    for (const column of unmappedColumns) {
+        expect(updatedTemplate).not.toHaveProperty(column);
+    }
+});

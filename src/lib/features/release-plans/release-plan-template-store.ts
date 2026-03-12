@@ -32,7 +32,7 @@ export class ReleasePlanTemplateStore extends CRUDStore<
     string
 > {
     constructor(db: Db, config: CrudStoreConfig) {
-        super(TABLE, db, config);
+        super(TABLE, db, config, { fromRow });
     }
 
     override async getAll(): Promise<ReleasePlanTemplate[]> {

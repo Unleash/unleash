@@ -107,10 +107,13 @@ export const useTemplateForm = (
             milestones: milestones.map(({ startExpanded, ...milestone }) => ({
                 ...milestone,
                 strategies: milestone.strategies?.map(
-                    ({ strategyName, name, ...strategy }) => ({
-                        name: name || strategyName,
-                        ...strategy,
-                    }),
+                    ({ strategyName, name, ...strategy }) => {
+                        const normalizedName = name || strategyName || ''; // todo(v9) remove the normalization; use `name` directly
+                        return {
+                            name: normalizedName, // place name first in the object for legibility
+                            ...strategy,
+                        };
+                    },
                 ),
             })),
         };

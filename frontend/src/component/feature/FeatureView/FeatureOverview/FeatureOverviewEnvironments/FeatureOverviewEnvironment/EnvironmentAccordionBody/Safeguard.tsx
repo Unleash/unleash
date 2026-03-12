@@ -442,9 +442,7 @@ const SafeguardForm = ({
                     onClose={deleteChangeRequestDialog.onClose}
                     primaryButtonText='Add suggestion to draft'
                     onClick={deleteChangeRequestDialog.onConfirm}
-                    disabledPrimaryButton={
-                        deleteChangeRequestDialog.isDeleting
-                    }
+                    disabledPrimaryButton={deleteChangeRequestDialog.isDeleting}
                 >
                     <p>
                         <strong>Remove</strong> safeguard

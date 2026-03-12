@@ -1,3 +1,4 @@
+// todo(strategyFormConsolidation): delete this file when removing the flag
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
@@ -21,10 +22,7 @@ import type { CreateFeatureStrategySchema } from 'openapi';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { UPDATE_PROJECT } from '@server/types/permissions';
 
-export const useDefaultStrategy = (
-    projectId: string,
-    environmentId: string,
-) => {
+const useDefaultStrategy = (projectId: string, environmentId: string) => {
     const { project, refetch } = useProjectOverview(projectId);
 
     const defaultStrategyFallback = {
@@ -44,7 +42,7 @@ export const useDefaultStrategy = (
     return { defaultStrategyFallback, strategy, refetch };
 };
 
-const EditDefaultStrategy = () => {
+export const LegacyEditDefaultStrategy = () => {
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
     const { refetch: refetchProjectOverview } = useProjectOverview(projectId);
@@ -162,7 +160,7 @@ const EditDefaultStrategy = () => {
     );
 };
 
-export const createStrategyPayload = (
+const createStrategyPayload = (
     strategy: CreateFeatureStrategySchema,
     segments: ISegment[],
 ): CreateFeatureStrategySchema => ({
@@ -175,7 +173,7 @@ export const createStrategyPayload = (
     disabled: strategy.disabled ?? false,
 });
 
-export const formatUpdateStrategyApiCode = (
+const formatUpdateStrategyApiCode = (
     projectId: string,
     environmentId: string,
     strategy: CreateFeatureStrategySchema,
@@ -196,7 +194,7 @@ export const formatUpdateStrategyApiCode = (
         ),
     };
 
-    const url = `${unleashUrl}/api/admin/projects/${projectId}/environments/${environmentId}/default-strategy}`;
+    const url = `${unleashUrl}/api/admin/projects/${projectId}/environments/${environmentId}/default-strategy`;
     const payload = JSON.stringify(sortedStrategy, undefined, 2);
 
     return `curl --location --request POST '${url}' \\
@@ -205,15 +203,12 @@ export const formatUpdateStrategyApiCode = (
     --data-raw '${payload}'`;
 };
 
-export const projectDefaultStrategyHelp = `
+const projectDefaultStrategyHelp = `
     An activation strategy will only run when a feature flag is enabled and provides a way to control who will get access to the feature.
     If any of a feature flag's activation strategies returns true, the user will get access.
 `;
 
-export const projectDefaultStrategyDocsLink =
+const projectDefaultStrategyDocsLink =
     'https://docs.getunleash.io/concepts/projects#project-default-strategy';
 
-export const projectDefaultStrategyDocsLinkLabel =
-    'Default strategy documentation';
-
-export default EditDefaultStrategy;
+const projectDefaultStrategyDocsLinkLabel = 'Default strategy documentation';

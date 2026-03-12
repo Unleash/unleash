@@ -36,7 +36,10 @@ import {
     StyledTopRow,
 } from '../shared/SharedFormComponents.tsx';
 import type { ISafeguard } from 'interfaces/releasePlans.ts';
-import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
+import {
+    UPDATE_FEATURE_ENVIRONMENT,
+    UPDATE_FEATURE_STRATEGY,
+} from 'component/providers/AccessProvider/permissions.ts';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
 
@@ -365,6 +368,11 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
         enterEditMode,
     } = formState;
 
+    const permission =
+        safeguardType === 'featureEnvironment'
+            ? UPDATE_FEATURE_ENVIRONMENT
+            : UPDATE_FEATURE_STRATEGY;
+
     const handleCancel = () => {
         if (mode === 'create') {
             onCancel?.();
@@ -431,7 +439,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                 )}
                 {mode !== 'create' && onDelete && (
                     <PermissionIconButton
-                        permission={UPDATE_FEATURE_STRATEGY}
+                        permission={permission}
                         projectId={projectId}
                         environmentId={environment}
                         onClick={handleDelete}
@@ -561,7 +569,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         Cancel
                     </Button>
                     <PermissionButton
-                        permission={UPDATE_FEATURE_STRATEGY}
+                        permission={permission}
                         projectId={projectId}
                         environmentId={environment}
                         variant='contained'
@@ -620,9 +628,10 @@ export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     );
 };
 
-export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
+export const SafeguardFormChangeRequestView: FC<
+    Omit<IBaseSafeguardFormProps, 'onCancel'>
+> = ({
     onSubmit,
-    onCancel,
     onDelete,
     safeguard,
     environment,
@@ -652,7 +661,6 @@ export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
         <SafeguardFormBase
             formState={formState}
             onSubmit={handleSubmit}
-            onCancel={onCancel}
             onDelete={onDelete}
             environment={environment}
             badge={badge}

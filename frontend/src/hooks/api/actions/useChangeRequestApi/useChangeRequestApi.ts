@@ -27,6 +27,8 @@ export interface IChangeSchema {
         | 'deleteMilestoneProgression'
         | 'changeSafeguard'
         | 'deleteSafeguard'
+        | 'changeFeatureEnvSafeguard'
+        | 'deleteFeatureEnvSafeguard'
         | 'resumeMilestoneProgression';
     payload: string | boolean | object | number | undefined;
 }

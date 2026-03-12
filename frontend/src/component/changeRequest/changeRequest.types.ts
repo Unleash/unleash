@@ -137,6 +137,8 @@ type ChangeRequestPayload =
     | ChangeRequestDeleteMilestoneProgression
     | ChangeRequestChangeSafeguard
     | ChangeRequestDeleteSafeguard
+    | ChangeRequestChangeFeatureEnvSafeguard
+    | ChangeRequestDeleteFeatureEnvSafeguard
     | ChangeRequestResumeMilestoneProgression;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
@@ -229,6 +231,18 @@ export interface IChangeRequestDeleteSafeguard
     payload: ChangeRequestDeleteSafeguard;
 }
 
+export interface IChangeRequestChangeFeatureEnvSafeguard
+    extends IChangeRequestChangeBase {
+    action: 'changeFeatureEnvSafeguard';
+    payload: ChangeRequestChangeFeatureEnvSafeguard;
+}
+
+export interface IChangeRequestDeleteFeatureEnvSafeguard
+    extends IChangeRequestChangeBase {
+    action: 'deleteFeatureEnvSafeguard';
+    payload: ChangeRequestDeleteFeatureEnvSafeguard;
+}
+
 export interface IChangeRequestResumeMilestoneProgression
     extends IChangeRequestChangeBase {
     action: 'resumeMilestoneProgression';
@@ -287,6 +301,8 @@ export type IFeatureChange =
     | IChangeRequestDeleteMilestoneProgression
     | IChangeRequestChangeSafeguard
     | IChangeRequestDeleteSafeguard
+    | IChangeRequestChangeFeatureEnvSafeguard
+    | IChangeRequestDeleteFeatureEnvSafeguard
     | IChangeRequestResumeMilestoneProgression
     | IChangeRequestUpdateMilestoneStrategy;
 
@@ -345,6 +361,14 @@ type ChangeRequestDeleteSafeguard = {
     snapshot?: IReleasePlan;
 };
 
+type ChangeRequestChangeFeatureEnvSafeguard = {
+    safeguard: ISafeguard;
+};
+
+type ChangeRequestDeleteFeatureEnvSafeguard = {
+    safeguardId: string;
+};
+
 type ChangeRequestResumeMilestoneProgression = {
     planId: string;
     snapshot?: IReleasePlan;
@@ -393,4 +417,6 @@ export type ChangeRequestAction =
     | 'deleteMilestoneProgression'
     | 'changeSafeguard'
     | 'deleteSafeguard'
+    | 'changeFeatureEnvSafeguard'
+    | 'deleteFeatureEnvSafeguard'
     | 'resumeMilestoneProgression';

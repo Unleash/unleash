@@ -20,6 +20,8 @@ import { Badge } from 'component/common/Badge/Badge';
 import type {
     IChangeRequestChangeSafeguard,
     IChangeRequestDeleteSafeguard,
+    IChangeRequestChangeFeatureEnvSafeguard,
+    IChangeRequestDeleteFeatureEnvSafeguard,
 } from 'component/changeRequest/changeRequest.types';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { ISafeguard } from 'interfaces/releasePlans';
@@ -154,10 +156,7 @@ const useSafeguardActions = ({
         useState<CreateSafeguardSchema | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    // Feature env safeguards don't support change requests yet
-    const isCR =
-        safeguardType === 'releasePlan' &&
-        isChangeRequestConfigured(environmentName);
+    const isCR = isChangeRequestConfigured(environmentName);
 
     const createOrUpdate =
         safeguardType === 'releasePlan' && releasePlan
@@ -215,17 +214,28 @@ const useSafeguardActions = ({
     };
 
     const handleSubmitChangeRequestConfirm = async () => {
-        if (!pendingSubmitData || !releasePlan) return;
+        if (!pendingSubmitData) return;
 
         try {
-            await addChange(projectId, environmentName, {
-                feature: featureId,
-                action: 'changeSafeguard' as const,
-                payload: {
-                    planId: releasePlan.id,
-                    safeguard: pendingSubmitData,
-                },
-            });
+            if (safeguardType === 'featureEnvironment') {
+                await addChange(projectId, environmentName, {
+                    feature: featureId,
+                    action: 'changeFeatureEnvSafeguard' as const,
+                    payload: {
+                        safeguard: pendingSubmitData,
+                    },
+                });
+            } else {
+                if (!releasePlan) return;
+                await addChange(projectId, environmentName, {
+                    feature: featureId,
+                    action: 'changeSafeguard' as const,
+                    payload: {
+                        planId: releasePlan.id,
+                        safeguard: pendingSubmitData,
+                    },
+                });
+            }
             await refetchChangeRequests();
             setToastData({
                 type: 'success',
@@ -270,18 +280,29 @@ const useSafeguardActions = ({
     };
 
     const handleDeleteChangeRequestConfirm = async () => {
-        if (!safeguard || isDeleting || !releasePlan) return;
+        if (!safeguard || isDeleting) return;
 
         setIsDeleting(true);
         try {
-            await addChange(projectId, environmentName, {
-                feature: featureId,
-                action: 'deleteSafeguard',
-                payload: {
-                    planId: releasePlan.id,
-                    safeguardId: safeguard.id,
-                },
-            });
+            if (safeguardType === 'featureEnvironment') {
+                await addChange(projectId, environmentName, {
+                    feature: featureId,
+                    action: 'deleteFeatureEnvSafeguard',
+                    payload: {
+                        safeguardId: safeguard.id,
+                    },
+                });
+            } else {
+                if (!releasePlan) return;
+                await addChange(projectId, environmentName, {
+                    feature: featureId,
+                    action: 'deleteSafeguard',
+                    payload: {
+                        planId: releasePlan.id,
+                        safeguardId: safeguard.id,
+                    },
+                });
+            }
             await refetchChangeRequests();
             setToastData({
                 type: 'success',
@@ -296,11 +317,33 @@ const useSafeguardActions = ({
         }
     };
 
+    type SafeguardChange =
+        | IChangeRequestChangeSafeguard
+        | IChangeRequestDeleteSafeguard
+        | IChangeRequestChangeFeatureEnvSafeguard
+        | IChangeRequestDeleteFeatureEnvSafeguard;
+
+    const isSafeguardChange = (change: {
+        action: string;
+        payload?: unknown;
+    }): change is SafeguardChange => {
+        const isReleasePlan =
+            (change.action === 'changeSafeguard' ||
+                change.action === 'deleteSafeguard') &&
+            !!releasePlan &&
+            (change.payload as { planId?: string })?.planId === releasePlan.id;
+
+        const isFeatureEnv =
+            change.action === 'changeFeatureEnvSafeguard' ||
+            change.action === 'deleteFeatureEnvSafeguard';
+
+        return isReleasePlan || isFeatureEnv;
+    };
+
     const pendingSafeguardAction = useMemo(():
-        | IChangeRequestChangeSafeguard['action']
-        | IChangeRequestDeleteSafeguard['action']
+        | SafeguardChange['action']
         | null => {
-        if (!releasePlan || !pendingChangeRequests) return null;
+        if (!pendingChangeRequests) return null;
 
         for (const changeRequest of pendingChangeRequests) {
             if (changeRequest.environment !== environmentName) continue;
@@ -310,17 +353,8 @@ const useSafeguardActions = ({
             );
             if (!featureInChangeRequest) continue;
 
-            const safeguardChange = featureInChangeRequest.changes.find(
-                (
-                    change,
-                ): change is
-                    | IChangeRequestChangeSafeguard
-                    | IChangeRequestDeleteSafeguard =>
-                    (change.action === 'changeSafeguard' &&
-                        change.payload.planId === releasePlan.id) ||
-                    (change.action === 'deleteSafeguard' &&
-                        change.payload.planId === releasePlan.id),
-            );
+            const safeguardChange =
+                featureInChangeRequest.changes.find(isSafeguardChange);
 
             if (safeguardChange) {
                 return safeguardChange.action;
@@ -397,12 +431,18 @@ const SafeguardForm = ({
         onSafeguardChange,
     });
 
-    const safeguardBadge =
-        pendingSafeguardAction === 'deleteSafeguard' ? (
-            <Badge color='error'>Deleted in draft</Badge>
-        ) : pendingSafeguardAction === 'changeSafeguard' ? (
-            <Badge color='warning'>Modified in draft</Badge>
-        ) : undefined;
+    const isDeleteAction =
+        pendingSafeguardAction === 'deleteSafeguard' ||
+        pendingSafeguardAction === 'deleteFeatureEnvSafeguard';
+    const isChangeAction =
+        pendingSafeguardAction === 'changeSafeguard' ||
+        pendingSafeguardAction === 'changeFeatureEnvSafeguard';
+
+    const safeguardBadge = isDeleteAction ? (
+        <Badge color='error'>Deleted in draft</Badge>
+    ) : isChangeAction ? (
+        <Badge color='warning'>Modified in draft</Badge>
+    ) : undefined;
 
     return (
         <>
@@ -420,10 +460,14 @@ const SafeguardForm = ({
                 <SafeguardChangeRequestDialog
                     isOpen={submitChangeRequestDialog.open}
                     onConfirm={submitChangeRequestDialog.onConfirm}
-                    onClose={submitChangeRequestDialog.onClose}
+                    onClose={() => {
+                        submitChangeRequestDialog.onClose();
+                        onCancel();
+                    }}
                     safeguardData={submitChangeRequestDialog.data}
                     environment={environmentName}
                     mode={safeguard ? 'edit' : 'create'}
+                    safeguardType={safeguardType}
                 />
             )}
             {safeguard && (

@@ -1,7 +1,7 @@
 import type { CreateFeatureSchemaType, FeatureSchema } from 'openapi';
 import type { IFeatureStrategy } from './strategy.js';
 import type { ITag } from './tags.js';
-import type { IReleasePlan } from './releasePlans.js';
+import type { IReleasePlan, ISafeguard } from './releasePlans.js';
 
 /**
  * @deprecated use FeatureSchema from openapi
@@ -98,6 +98,7 @@ export interface IFeatureEnvironment {
     yes?: number;
     no?: number;
     releasePlans?: IReleasePlan[];
+    safeguards?: ISafeguard[];
 }
 
 export interface IFeatureEnvironmentWithCrEnabled extends IFeatureEnvironment {

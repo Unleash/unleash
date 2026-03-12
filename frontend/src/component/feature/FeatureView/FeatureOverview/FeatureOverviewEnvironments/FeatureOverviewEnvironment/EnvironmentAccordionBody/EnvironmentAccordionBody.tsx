@@ -67,15 +67,10 @@ export const EnvironmentAccordionBody = ({
     const [strategies, setStrategies] = useState(
         featureEnvironment?.strategies || [],
     );
-    const { releasePlans, refetch } = useFeatureReleasePlans(
-        projectId,
-        featureId,
-        featureEnvironment?.name,
-    );
+    const { releasePlans, refetch: refetchReleasePlans } =
+        useFeatureReleasePlans(projectId, featureId, featureEnvironment?.name);
     const { trackEvent } = usePlausibleTracker();
     const safeguardsEnabled = useUiFlag('safeguards');
-    const featureEnvSafeguards = useUiFlag('featureEnvSafeguards');
-
     const [dragItem, setDragItem] = useState<{
         id: string;
         index: number;
@@ -217,6 +212,11 @@ export const EnvironmentAccordionBody = ({
 
     const firstPlan = releasePlans[0];
 
+    const handleSafeguardChange = () => {
+        refetchReleasePlans();
+        refetchFeature();
+    };
+
     return (
         <StyledAccordionBodyInnerContainer>
             {paginateStrategies ? (
@@ -228,12 +228,14 @@ export const EnvironmentAccordionBody = ({
                     </Alert>
                 </AlertContainer>
             ) : null}
-            {safeguardsEnabled && (firstPlan || featureEnvSafeguards) ? (
+            {safeguardsEnabled ? (
                 <Safeguard
-                    plan={firstPlan}
+                    featureEnvSafeguard={featureEnvironment.safeguards?.[0]}
+                    releasePlan={firstPlan}
+                    releasePlanSafeguard={firstPlan?.safeguards?.[0]}
                     environmentName={featureEnvironment.name}
                     featureId={featureId}
-                    onSafeguardChange={refetch}
+                    onSafeguardChange={handleSafeguardChange}
                 />
             ) : null}
             <StrategyList>
@@ -242,7 +244,7 @@ export const EnvironmentAccordionBody = ({
                         <ReleasePlan
                             plan={plan}
                             environmentIsDisabled={isDisabled}
-                            onAutomationChange={refetch}
+                            onAutomationChange={refetchReleasePlans}
                         />
                     </StrategyListItem>
                 ))}

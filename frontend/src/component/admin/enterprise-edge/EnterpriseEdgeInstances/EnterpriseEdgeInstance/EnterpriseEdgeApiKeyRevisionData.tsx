@@ -52,6 +52,16 @@ const apiToken = (revInfo: EdgeApiKeyRevisionId): string => {
     return `${projectKey(revInfo.projects)}:${revInfo.environment}.***`;
 };
 
+const tokenProjectsTooltip = (projects: string[]): string => {
+    if (projects.length <= 1 || projects.includes('*')) {
+        return '';
+    }
+
+    return `
+        Projects: ${projects.join(', ')}
+    `;
+};
+
 const listKey = (revInfo: EdgeApiKeyRevisionId): string => {
     return `[${revInfo.projects.join(',')}]:${revInfo.environment}`;
 };
@@ -222,6 +232,7 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
                                     <HelpIcon
                                         tooltip={`
                                             Edge last updated this token: ${formatDateYMDHMS(apiKey.lastUpdated, locationSettings.locale)}
+                                            ${tokenProjectsTooltip(apiKey.projects)}
                                         `}
                                         size='14px'
                                     />

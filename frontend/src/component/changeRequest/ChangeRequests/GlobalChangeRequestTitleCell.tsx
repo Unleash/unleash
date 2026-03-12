@@ -52,7 +52,7 @@ export const GlobalChangeRequestTitleCell = ({
 }: GlobalChangeRequestTitleCellProps) => {
     const projectName = useProjectOverviewNameOrId(project);
     const totalChanges =
-        featureChanges?.length ?? 0 + segmentChanges?.length ?? 0;
+        (featureChanges?.length ?? 0) + (segmentChanges?.length ?? 0);
     const projectPath = `/projects/${project}`;
     const crPath = `${projectPath}/change-requests/${id}`;
 

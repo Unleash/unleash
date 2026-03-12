@@ -9,7 +9,7 @@ const StyledButton = styled(IconButton, {
 })<{ active?: boolean }>(({ theme, active }) => ({
     color: theme.palette.primary.main,
     padding: 0,
-    fontSize: '0.875rem',
+    fontSize: theme.typography.body2.fontSize,
     opacity: active ? 1 : 0,
     '&:is(:hover, :focus, :active)': { opacity: 1 },
 }));

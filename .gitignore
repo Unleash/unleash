@@ -59,6 +59,7 @@ shell.nix
 package-lock.json
 
 .env
+.profiles/
 
 # Ignore frontend build
 frontend/build

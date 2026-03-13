@@ -46,6 +46,7 @@
     "dev:frontend": "wait-on tcp:4242 && yarn --cwd ./frontend run dev",
     "dev:frontend:cloud": "UNLEASH_BASE_PATH=/demo/ yarn run dev:frontend",
     "dev": "concurrently \"yarn:dev:backend\" \"yarn:dev:frontend\"",
+    "profile:startup": "./scripts/profile-startup.sh",
     "prepare:backend": "concurrently \"yarn:copy-templates\" \"yarn:build:backend\"",
     "start:dev": "yarn run clean && yarn dev:backend",
     "db-migrate": "db-migrate --migrations-dir ./src/migrations",

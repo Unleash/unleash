@@ -199,7 +199,8 @@ test('Should not delete release plans when removing environment from project', a
         .expect(200);
 
     const planAfter = await db.stores.releasePlanStore.get(plan.id);
-    expect(planAfter).toBeDefined();
-    expect(planAfter.featureName).toBe(featureName);
-    expect(planAfter.environment).toBe(envName);
+    expect(planAfter).toMatchObject({
+        featureName,
+        environment: envName,
+    });
 });

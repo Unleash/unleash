@@ -68,7 +68,6 @@ export const TrialUpsell = () => {
         trackEvent('upgrade_trial_billing_page', {
             props: {
                 eventType: 'upgrade_click',
-                userType: isAdmin ? 'admin' : 'non-admin',
             },
         });
         window.location.assign(formatApiPath('api/admin/invoices/checkout'));

@@ -36,19 +36,19 @@ export const UnleashFlagProvider: FC<{ children?: React.ReactNode }> = ({
             clientKey: token || 'offline',
             appName: 'Unleash Cloud UI',
         });
+
+        if (token) {
+            started = true;
+            client.start();
+        }
     }
 
     const { uiConfig } = useUiConfig();
 
+    // Update context once uiConfig becomes available (after login).
     useEffect(() => {
         if (uiConfig.unleashContext && token) {
             client.updateContext(uiConfig.unleashContext);
-            if (!started) {
-                started = true;
-                client.start();
-            }
-        } else {
-            // nothing
         }
     }, [JSON.stringify(uiConfig.unleashContext)]);
 

@@ -9,8 +9,6 @@ import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { parseRedirectParam } from 'component/user/Login/parseRedirectParam';
 import { getSessionStorageItem, setSessionStorageItem } from 'utils/storage';
-import { useFlag } from '@unleash/proxy-client-react';
-import DeprecatedLogin from './DeprecatedLogin';
 
 const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -23,7 +21,7 @@ const StyledHeader = styled('h2')(({ theme }) => ({
     textAlign: 'center',
 }));
 
-const NewLogin = () => {
+const DeprecatedLogin = () => {
     const { authDetails } = useAuthDetails();
     const { user } = useAuthUser();
     const query = useQueryParams();
@@ -62,7 +60,7 @@ const NewLogin = () => {
                     condition={authDetails?.type !== DEMO_TYPE}
                     show={
                         <StyledHeader>
-                            Log in to continue the great works - new login
+                            Log in to continue the great work
                         </StyledHeader>
                     }
                 />
@@ -72,13 +70,4 @@ const NewLogin = () => {
     );
 };
 
-const Login = () => {
-    const newLogin = useFlag('newLogin');
-    if (newLogin) {
-        return <NewLogin />;
-    }
-
-    return <DeprecatedLogin />;
-};
-
-export default Login;
+export default DeprecatedLogin;

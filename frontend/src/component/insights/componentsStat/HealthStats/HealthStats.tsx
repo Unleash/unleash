@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { Box, Divider, Link, styled } from '@mui/material';
-import { ReactComponent as InstanceHealthIcon } from 'assets/icons/instance-health.svg';
+import InstanceHealthIcon from 'assets/icons/instance-health.svg?react';
 
 interface IHealthStatsProps {
     value?: string | number;

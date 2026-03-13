@@ -1,15 +1,15 @@
 import { useContext } from 'react';
 import { Alert, Box, Button, styled, Typography } from '@mui/material';
 import { formatApiPath } from 'utils/formatPath';
-import { ReactComponent as LenovoLogo } from 'assets/logos/lenovo.svg';
+import LenovoLogo from 'assets/logos/lenovo.svg?react';
 import AccessContext from 'contexts/AccessContext';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { useInstancePrices } from 'hooks/api/getters/useInstancePrices/useInstancePrices';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { ReactComponent as DockerLogo } from 'assets/logos/docker.svg';
-import { ReactComponent as VisaLogo } from 'assets/logos/visa.svg';
-import { ReactComponent as SamsungLogo } from 'assets/logos/samsung.svg';
-import { ReactComponent as LloydsLogo } from 'assets/logos/lloyds.svg';
+import DockerLogo from 'assets/logos/docker.svg?react';
+import VisaLogo from 'assets/logos/visa.svg?react';
+import SamsungLogo from 'assets/logos/samsung.svg?react';
+import LloydsLogo from 'assets/logos/lloyds.svg?react';
 import { trialHasExpired } from 'utils/instanceTrial';
 import { TrialUpsellDescription } from './TrialUpsellDescription';
 

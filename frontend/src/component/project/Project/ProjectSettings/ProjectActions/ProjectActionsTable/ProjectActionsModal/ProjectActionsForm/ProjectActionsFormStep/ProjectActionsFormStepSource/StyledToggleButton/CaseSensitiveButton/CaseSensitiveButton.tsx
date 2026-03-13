@@ -1,6 +1,6 @@
 import { Tooltip, Box } from '@mui/material';
-import { ReactComponent as CaseSensitive } from 'assets/icons/24_Text format.svg';
-import { ReactComponent as CaseSensitiveOff } from 'assets/icons/24_Text format off.svg';
+import CaseSensitive from 'assets/icons/24_Text format.svg?react';
+import CaseSensitiveOff from 'assets/icons/24_Text format off.svg?react';
 import {
     StyledToggleButtonOff,
     StyledToggleButtonOn,

@@ -44,10 +44,7 @@ import { UpgradeSSO } from './UpgradeSSO.tsx';
 
 const UsersList = () => {
     const navigate = useNavigate();
-    const {
-        isEnterprise,
-        isOss,
-    } = useUiConfig();
+    const { isEnterprise, isOss } = useUiConfig();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();

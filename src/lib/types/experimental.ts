@@ -61,7 +61,6 @@ export type IFlagKey =
     | 'fetchMode'
     | 'optimizeLifecycle'
     | 'milestoneProgression'
-
     | 'plausibleMetrics'
     | 'safeguards'
     | 'newInUnleash'

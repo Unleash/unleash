@@ -12,7 +12,6 @@ const DEV_TOKEN = '';
 
 let client: UnleashClient;
 let token: string;
-let started: boolean = false;
 
 export const UnleashFlagProvider: FC<{ children?: React.ReactNode }> = ({
     children,
@@ -38,14 +37,12 @@ export const UnleashFlagProvider: FC<{ children?: React.ReactNode }> = ({
         });
 
         if (token) {
-            started = true;
             client.start();
         }
     }
 
     const { uiConfig } = useUiConfig();
 
-    // Update context once uiConfig becomes available (after login).
     useEffect(() => {
         if (uiConfig.unleashContext && token) {
             client.updateContext(uiConfig.unleashContext);

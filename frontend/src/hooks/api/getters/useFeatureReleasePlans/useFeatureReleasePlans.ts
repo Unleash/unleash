@@ -1,4 +1,3 @@
-import { useReleasePlans } from '../useReleasePlans/useReleasePlans.js';
 import { useFeature } from '../useFeature/useFeature.js';
 
 export const useFeatureReleasePlans = (
@@ -6,11 +5,6 @@ export const useFeatureReleasePlans = (
     featureId: string,
     environmentName?: string,
 ) => {
-    const { loading: releasePlansLoading, ...rest } = useReleasePlans(
-        projectId,
-        featureId,
-        environmentName,
-    );
     const {
         feature,
         refetchFeature,
@@ -23,9 +17,8 @@ export const useFeatureReleasePlans = (
     const releasePlans = matchingEnvironment?.releasePlans || [];
 
     return {
-        ...rest,
         releasePlans,
         refetch: refetchFeature,
-        loading: featureLoading || releasePlansLoading,
+        loading: featureLoading,
     };
 };

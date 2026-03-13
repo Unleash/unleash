@@ -16,6 +16,7 @@ export const disableActiveSplashScreens = () => {
                 res.body.splash = {
                     ...res.body.splash,
                     personalDashboardKeyConcepts: true,
+                    'strategy-drag-tooltip': true,
                 };
             }
         });
@@ -269,11 +270,19 @@ export const deleteFeatureStrategyUI = (
             });
         },
     ).as('deleteUserStrategy');
+    // disable strategy-drag-tooltip to avoid it blocking the click on the delete button
+    disableActiveSplashScreens();
     cy.visit(`/projects/${project}/features/${featureToggleName}`);
     cy.get('[data-testid=FEATURE_ENVIRONMENT_ACCORDION_development]')
         .first()
         .click();
+    cy.get('[data-testid=STRATEGY_REMOVE_MENU_BTN]')
+        .first()
+        .should('be.visible');
     cy.get('[data-testid=STRATEGY_REMOVE_MENU_BTN]').first().click();
+    cy.get('[data-testid=STRATEGY_FORM_REMOVE_ID]')
+        .first()
+        .should('be.visible');
     cy.get('[data-testid=STRATEGY_FORM_REMOVE_ID]').first().click();
     if (!shouldWait) return cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
     else cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();

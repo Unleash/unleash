@@ -292,8 +292,17 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1ui83sq"
+                        aria-label=""
+                        aria-labelledby={null}
+                        className="MuiBox-root css-gzore8"
                         data-loading={true}
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
                       >
                         Tag type description when loading
                       </span>
@@ -471,8 +480,17 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1ui83sq"
+                        aria-label=""
+                        aria-labelledby={null}
+                        className="MuiBox-root css-gzore8"
                         data-loading={true}
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
                       >
                         Tag type description when loading
                       </span>
@@ -650,8 +668,17 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1ui83sq"
+                        aria-label=""
+                        aria-labelledby={null}
+                        className="MuiBox-root css-gzore8"
                         data-loading={true}
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
                       >
                         Tag type description when loading
                       </span>
@@ -829,8 +856,17 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1ui83sq"
+                        aria-label=""
+                        aria-labelledby={null}
+                        className="MuiBox-root css-gzore8"
                         data-loading={true}
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
                       >
                         Tag type description when loading
                       </span>
@@ -1008,8 +1044,17 @@ exports[`renders an empty list correctly 1`] = `
                         </span>
                       </span>
                       <span
-                        className="css-1ui83sq"
+                        aria-label=""
+                        aria-labelledby={null}
+                        className="MuiBox-root css-gzore8"
                         data-loading={true}
+                        data-mui-internal-clone-element={true}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        onMouseLeave={[Function]}
+                        onMouseOver={[Function]}
+                        onTouchEnd={[Function]}
+                        onTouchStart={[Function]}
                       >
                         Tag type description when loading
                       </span>

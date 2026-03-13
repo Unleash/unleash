@@ -3,14 +3,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import {
-    StyledWrapper,
-    StyledLink,
-    StyledContainer,
-    StyledDescription,
-} from './LinkCell.styles';
+import { StyledWrapper, StyledLink, StyledContainer } from './LinkCell.styles';
 
 interface ILinkCellProps {
     title?: string;
@@ -30,33 +24,14 @@ export const LinkCell: React.FC<ILinkCellProps> = ({
     const { searchQuery } = useSearchHighlightContext();
 
     const renderSubtitle = (
-        <ConditionallyRender
-            condition={Boolean(subtitle && subtitle.length > 40)}
-            show={
-                <HtmlTooltip title={subtitle} placement='bottom-start' arrow>
-                    <StyledDescription data-loading>
-                        <Highlighter search={searchQuery}>
-                            {subtitle}
-                        </Highlighter>
-                    </StyledDescription>
-                </HtmlTooltip>
-            }
-            elseShow={
-                <StyledDescription data-loading>
-                    <Highlighter search={searchQuery}>{subtitle}</Highlighter>
-                </StyledDescription>
-            }
-        />
+        <Truncator lines={1} title={subtitle} arrow data-loading>
+            <Highlighter search={searchQuery}>{subtitle}</Highlighter>
+        </Truncator>
     );
 
     const content = (
         <StyledContainer>
-            <Truncator
-                lines={subtitle ? 1 : 2}
-                title={title}
-                arrow
-                data-loading
-            >
+            <Truncator lines={1} title={title} arrow data-loading>
                 <span>
                     <Highlighter search={searchQuery}>{title}</Highlighter>
                     {children}

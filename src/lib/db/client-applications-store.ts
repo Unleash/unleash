@@ -124,14 +124,18 @@ export default class ClientApplicationsStore
 
     private flagResolver: IFlagResolver;
 
+    private seenAtUpdateIntervalSeconds: number;
+
     constructor(
         db: Db,
         eventBus: EventEmitter,
         getLogger: LogProvider,
         flagResolver: IFlagResolver,
+        seenAtUpdateIntervalSeconds = 0,
     ) {
         this.db = db;
         this.flagResolver = flagResolver;
+        this.seenAtUpdateIntervalSeconds = seenAtUpdateIntervalSeconds;
         this.logger = getLogger('client-applications-store.ts');
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
@@ -174,13 +178,23 @@ export default class ClientApplicationsStore
             }, {}),
         );
 
-        await this.db(TABLE)
+        const upsertQuery = this.db(TABLE)
             .insert(uniqueRows)
             .onConflict('app_name')
             .merge({
                 updated_at: this.db.raw('EXCLUDED.updated_at'),
                 seen_at: this.db.raw('EXCLUDED.seen_at'),
             });
+
+        if (this.seenAtUpdateIntervalSeconds > 0) {
+            await upsertQuery.where(
+                this.db.raw(
+                    `${TABLE}.seen_at < EXCLUDED.seen_at - interval '${this.seenAtUpdateIntervalSeconds} seconds'`,
+                ),
+            );
+        } else {
+            await upsertQuery;
+        }
 
         await this.db(TABLE_USAGE)
             .insert(uniqueUsageRows)

@@ -2,6 +2,7 @@ import type React from 'react';
 import type { FC } from 'react';
 import { Button, styled, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
+import { useLastViewedPage } from 'component/InitialRedirect';
 
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 import { GO_BACK } from 'constants/navigate';
@@ -41,8 +42,10 @@ const StyledHomeButton = styled(Button)(({ theme }) => ({
 
 const NotFound: FC<{ children?: React.ReactNode }> = ({ children }) => {
     const navigate = useNavigate();
+    const { resetLastViewedPage } = useLastViewedPage();
 
     const onClickHome = () => {
+        resetLastViewedPage();
         navigate('/');
     };
 

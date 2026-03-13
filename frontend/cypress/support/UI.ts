@@ -37,14 +37,19 @@ export const runBefore = () => {
     disableActiveSplashScreens();
 };
 
-export const do_login = (
+export const do_login = ({
     user = AUTH_USER,
     password = AUTH_PASSWORD,
-): Chainable<any> => {
+    waitForLogin = true,
+}: {
+    user?: string;
+    password?: string;
+    waitForLogin?: boolean;
+} = {}): Chainable<any> => {
     cy.visit('/');
     cy.get("[data-testid='LOGIN_EMAIL_ID']").should('be.visible').type(user);
 
-    if (AUTH_PASSWORD) {
+    if (password) {
         cy.get("[data-testid='LOGIN_PASSWORD_ID']")
             .should('be.visible')
             .type(password);
@@ -53,7 +58,9 @@ export const do_login = (
     cy.get("[data-testid='LOGIN_BUTTON']").should('be.visible').click();
 
     // Wait for the login redirect to complete.
-    cy.get("[data-testid='HEADER_USER_AVATAR']");
+    if (waitForLogin) {
+        cy.get("[data-testid='HEADER_USER_AVATAR']");
+    }
 
     cy.get('body').then(($body) => {
         if ($body.find("[data-testid='CLOSE_SPLASH']").length > 0) {
@@ -68,7 +75,7 @@ export const login_UI = (
     user = AUTH_USER,
     password = AUTH_PASSWORD,
 ): Chainable<any> => {
-    return cy.session(user, () => do_login(user, password));
+    return cy.session(user, () => do_login({ user, password }));
 };
 
 export const createFeature_UI = (

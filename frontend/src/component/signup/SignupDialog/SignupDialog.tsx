@@ -60,6 +60,7 @@ const StyledHearts = styled(Box)(({ theme }) => ({
     justifyContent: 'center',
     flexWrap: 'wrap',
     gap: theme.spacing(2),
+    paddingInline: theme.spacing(4),
 }));
 
 const StyledBackgroundTexture = styled('img')({
@@ -70,6 +71,7 @@ const StyledBackgroundTexture = styled('img')({
     pointerEvents: 'none',
     filter: 'brightness(1.3)',
     opacity: 0.6,
+    imageRendering: 'pixelated',
 });
 
 const StyledHeartWrapper = styled(Box)({

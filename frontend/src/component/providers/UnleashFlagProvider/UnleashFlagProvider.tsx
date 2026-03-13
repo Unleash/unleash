@@ -12,7 +12,6 @@ const DEV_TOKEN = '';
 
 let client: UnleashClient;
 let token: string;
-let started: boolean = false;
 
 export const UnleashFlagProvider: FC<{ children?: React.ReactNode }> = ({
     children,
@@ -36,6 +35,10 @@ export const UnleashFlagProvider: FC<{ children?: React.ReactNode }> = ({
             clientKey: token || 'offline',
             appName: 'Unleash Cloud UI',
         });
+
+        if (token) {
+            client.start();
+        }
     }
 
     const { uiConfig } = useUiConfig();
@@ -43,12 +46,6 @@ export const UnleashFlagProvider: FC<{ children?: React.ReactNode }> = ({
     useEffect(() => {
         if (uiConfig.unleashContext && token) {
             client.updateContext(uiConfig.unleashContext);
-            if (!started) {
-                started = true;
-                client.start();
-            }
-        } else {
-            // nothing
         }
     }, [JSON.stringify(uiConfig.unleashContext)]);
 

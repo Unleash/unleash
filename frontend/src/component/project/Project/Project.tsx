@@ -276,10 +276,6 @@ export const Project = () => {
                 <StyledInnerContainer>
                     <StyledTopRow>
                         <StyledDiv>
-                            <StyledFavoriteIconButton
-                                onClick={onFavorite}
-                                isFavorite={project?.favorite || false}
-                            />
                             <StyledProjectTitle>
                                 <ConditionallyRender
                                     condition={project?.mode === 'private'}
@@ -288,6 +284,10 @@ export const Project = () => {
                                 <StyledName data-loading-project>
                                     {projectName}
                                 </StyledName>
+                                <StyledFavoriteIconButton
+                                    onClick={onFavorite}
+                                    isFavorite={project?.favorite || false}
+                                />
                             </StyledProjectTitle>
                         </StyledDiv>
                         <StyledDiv>

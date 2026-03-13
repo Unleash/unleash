@@ -2,26 +2,27 @@
 
 import {
     runBefore,
-    login_UI,
-    logout_UI,
-    createProject_UI,
-    createFeature_UI,
-    createSegment_UI,
-    deleteSegment_UI,
-    deleteFeatureStrategy_UI,
-    addFlexibleRolloutStrategyToFeature_UI,
-    updateFlexibleRolloutStrategy_UI,
-    do_login,
+    loginUI,
+    logoutUI,
+    createProjectUI,
+    createFeatureUI,
+    createSegmentUI,
+    deleteSegmentUI,
+    deleteFeatureStrategyUI,
+    addFlexibleRolloutStrategyToFeatureUI,
+    updateFlexibleRolloutStrategyUI,
+    doLogin,
+    disableActiveSplashScreens,
 } from './UI.ts';
 import {
-    addUserToProject_API,
-    createFeature_API,
-    createProject_API,
-    createUser_API,
-    deleteFeature_API,
-    deleteProject_API,
-    updateUserPassword_API,
-    createEnvironment_API,
+    addUserToProjectAPI,
+    createFeatureAPI,
+    createProjectAPI,
+    createUserAPI,
+    deleteFeatureAPI,
+    deleteProjectAPI,
+    updateUserPasswordAPI,
+    createEnvironmentAPI,
 } from './API.ts';
 
 Cypress.on('window:before:load', (window) => {
@@ -29,30 +30,31 @@ Cypress.on('window:before:load', (window) => {
     Object.defineProperty(window.navigator, 'languages', { value: ['en'] });
 });
 Cypress.Commands.add('runBefore', runBefore);
-Cypress.Commands.add('login_UI', login_UI);
-Cypress.Commands.add('do_login', do_login);
-Cypress.Commands.add('createSegment_UI', createSegment_UI);
-Cypress.Commands.add('deleteSegment_UI', deleteSegment_UI);
-Cypress.Commands.add('deleteFeature_API', deleteFeature_API);
-Cypress.Commands.add('deleteProject_API', deleteProject_API);
-Cypress.Commands.add('logout_UI', logout_UI);
-Cypress.Commands.add('createProject_UI', createProject_UI);
-Cypress.Commands.add('createProject_API', createProject_API);
-Cypress.Commands.add('createUser_API', createUser_API);
-Cypress.Commands.add('addUserToProject_API', addUserToProject_API);
-Cypress.Commands.add('updateUserPassword_API', updateUserPassword_API);
-Cypress.Commands.add('createFeature_UI', createFeature_UI);
-Cypress.Commands.add('deleteFeatureStrategy_UI', deleteFeatureStrategy_UI);
-Cypress.Commands.add('createFeature_API', createFeature_API);
+Cypress.Commands.add('disableActiveSplashScreens', disableActiveSplashScreens);
+Cypress.Commands.add('loginUI', loginUI);
+Cypress.Commands.add('doLogin', doLogin);
+Cypress.Commands.add('createSegmentUI', createSegmentUI);
+Cypress.Commands.add('deleteSegmentUI', deleteSegmentUI);
+Cypress.Commands.add('deleteFeatureAPI', deleteFeatureAPI);
+Cypress.Commands.add('deleteProjectAPI', deleteProjectAPI);
+Cypress.Commands.add('logoutUI', logoutUI);
+Cypress.Commands.add('createProjectUI', createProjectUI);
+Cypress.Commands.add('createProjectAPI', createProjectAPI);
+Cypress.Commands.add('createUserAPI', createUserAPI);
+Cypress.Commands.add('addUserToProjectAPI', addUserToProjectAPI);
+Cypress.Commands.add('updateUserPasswordAPI', updateUserPasswordAPI);
+Cypress.Commands.add('createFeatureUI', createFeatureUI);
+Cypress.Commands.add('deleteFeatureStrategyUI', deleteFeatureStrategyUI);
+Cypress.Commands.add('createFeatureAPI', createFeatureAPI);
 Cypress.Commands.add(
-    'addFlexibleRolloutStrategyToFeature_UI',
-    addFlexibleRolloutStrategyToFeature_UI,
+    'addFlexibleRolloutStrategyToFeatureUI',
+    addFlexibleRolloutStrategyToFeatureUI,
 );
 Cypress.Commands.add(
-    'updateFlexibleRolloutStrategy_UI',
-    updateFlexibleRolloutStrategy_UI,
+    'updateFlexibleRolloutStrategyUI',
+    updateFlexibleRolloutStrategyUI,
 );
-Cypress.Commands.add('createEnvironment_API', createEnvironment_API);
+Cypress.Commands.add('createEnvironmentAPI', createEnvironmentAPI);
 Cypress.Commands.overwrite('visit', (originalFn, url, options = {}) => {
     if (!options.headers) {
         options.headers = {};

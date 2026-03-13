@@ -40,18 +40,6 @@ export const formatDateYMD = (
     });
 };
 
-export const formatDateDM = (
-    date: number | string | Date,
-    locale: string,
-    timeZone?: string,
-): string => {
-    return new Date(date).toLocaleString(locale, {
-        day: 'numeric',
-        month: 'long',
-        timeZone,
-    });
-};
-
 export const formatDateHM = (
     date: number | string | Date,
     locale: string,

@@ -52,7 +52,7 @@ process.nextTick(async () => {
                         customMetrics: true,
                         impactMetrics: true,
                         milestoneProgression: true,
-                        featureReleasePlans: true,
+
                         safeguards: true,
                         gtmReleaseManagement: true,
                         projectContextFields: true,
@@ -62,6 +62,9 @@ process.nextTick(async () => {
                         strategyFormConsolidation: true,
                         enterpriseEdgeTokensList: true,
                         userTokenWithClientApiLogging: true,
+                        inlineFavoriteInNameColumn: true,
+                        filterFavorites: true,
+                        userTokenWithClientApiLoggingKillSwitch: false,
                     },
                 },
                 authentication: {

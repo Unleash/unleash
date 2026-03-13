@@ -19,9 +19,11 @@ test('Preview parent feature', async () => {
             type='release'
             archivedAt={null}
             searchQuery=''
+            onFavorite={() => {}}
             dependencyType='child'
             onTypeClick={() => {}}
             delay={0}
+            isFavorite={false}
         />,
     );
 
@@ -50,6 +52,8 @@ test('Preview child features', async () => {
             dependencyType='parent'
             onTypeClick={() => {}}
             delay={0}
+            onFavorite={() => {}}
+            isFavorite={false}
         />,
     );
 

@@ -1,4 +1,5 @@
 import { styled } from '@mui/material';
+import { FavoriteButton } from 'component/common/FavoriteButton/FavoriteButton';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Truncator } from 'component/common/Truncator/Truncator';
@@ -25,10 +26,14 @@ type ProjectsListTableNameCellProps = {
     row: {
         original: ProjectSchema;
     };
+    isFavorite: boolean;
+    onFavorite: () => void;
 };
 
 export const ProjectsListTableNameCell = ({
     row,
+    isFavorite,
+    onFavorite,
 }: ProjectsListTableNameCellProps) => {
     const { searchQuery } = useSearchHighlightContext();
 
@@ -42,6 +47,10 @@ export const ProjectsListTableNameCell = ({
                     </Highlighter>
                 </Truncator>
             </StyledFeatureLink>
+            <FavoriteButton
+                isFavorite={Boolean(isFavorite)}
+                onClick={onFavorite}
+            />
         </StyledCellContainer>
     );
 };

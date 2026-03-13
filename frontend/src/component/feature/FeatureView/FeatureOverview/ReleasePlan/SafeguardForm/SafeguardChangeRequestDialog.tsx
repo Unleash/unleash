@@ -1,6 +1,7 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
 import { Button } from '@mui/material';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema.ts';
+import type { SafeguardType } from './SafeguardForm.tsx';
 
 interface ISafeguardChangeRequestDialogProps {
     isOpen: boolean;
@@ -9,6 +10,7 @@ interface ISafeguardChangeRequestDialogProps {
     safeguardData: CreateSafeguardSchema;
     environment: string;
     mode: 'create' | 'edit';
+    safeguardType?: SafeguardType;
 }
 
 export const SafeguardChangeRequestDialog = ({
@@ -17,9 +19,14 @@ export const SafeguardChangeRequestDialog = ({
     onClose,
     safeguardData,
     mode,
+    safeguardType,
 }: ISafeguardChangeRequestDialogProps) => {
     const { impactMetric } = safeguardData;
     const { metricName } = impactMetric;
+    const actionLabel =
+        safeguardType === 'featureEnvironment'
+            ? 'disables the environment'
+            : 'pauses automation';
 
     return (
         <Dialogue
@@ -39,8 +46,8 @@ export const SafeguardChangeRequestDialog = ({
             }
         >
             <p>
-                {mode === 'create' ? 'Add' : 'Update'} safeguard that pauses
-                automation based on <strong>{metricName}</strong>
+                {mode === 'create' ? 'Add' : 'Update'} safeguard that{' '}
+                {actionLabel} based on <strong>{metricName}</strong>
             </p>
         </Dialogue>
     );

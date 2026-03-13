@@ -83,6 +83,7 @@ export type CustomEvents =
     | 'impact-metrics'
     | 'release-management-splash'
     | 'upgrade_trial_dialog'
+    | 'upgrade_trial_billing_page'
     | 'new-template-from-add-strategy'
     | 'flagpage-impact-metrics'
     | 'signup-dialog';

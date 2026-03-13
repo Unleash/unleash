@@ -10,10 +10,8 @@ import ShieldIcon from '@mui/icons-material/ShieldOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import type { FormEvent, ReactNode } from 'react';
 import { useEffect, useMemo, useState, type FC } from 'react';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useNumericStringInput } from 'hooks/useNumericStringInput';
-import { SafeguardChangeRequestDialog } from './SafeguardChangeRequestDialog.tsx';
 import { MiniMetricsChartWithTooltip } from './MiniMetricsChartWithTooltip.tsx';
 import {
     useImpactMetricsOptions,
@@ -38,7 +36,10 @@ import {
     StyledTopRow,
 } from '../shared/SharedFormComponents.tsx';
 import type { ISafeguard } from 'interfaces/releasePlans.ts';
-import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions.ts';
+import {
+    UPDATE_FEATURE_ENVIRONMENT,
+    UPDATE_FEATURE_STRATEGY,
+} from 'component/providers/AccessProvider/permissions.ts';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton.tsx';
 
@@ -53,21 +54,6 @@ const SafeguardConfigurationSection = styled(Box)({
     flex: 1,
     minWidth: 0,
 });
-
-export const useSafeguardForm = (safeguards: ISafeguard[] | undefined) => {
-    const [safeguardFormOpen, setSafeguardFormOpen] = useState(false);
-
-    useEffect(() => {
-        if (safeguards && safeguards.length > 0) {
-            setSafeguardFormOpen(true);
-        } else {
-            setSafeguardFormOpen(false);
-        }
-    }, [JSON.stringify(safeguards)]);
-
-    return { safeguardFormOpen, setSafeguardFormOpen };
-};
-
 export type SafeguardType = 'releasePlan' | 'featureEnvironment';
 
 interface IBaseSafeguardFormProps {
@@ -382,6 +368,11 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
         enterEditMode,
     } = formState;
 
+    const permission =
+        safeguardType === 'featureEnvironment'
+            ? UPDATE_FEATURE_ENVIRONMENT
+            : UPDATE_FEATURE_STRATEGY;
+
     const handleCancel = () => {
         if (mode === 'create') {
             onCancel?.();
@@ -448,7 +439,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                 )}
                 {mode !== 'create' && onDelete && (
                     <PermissionIconButton
-                        permission={UPDATE_FEATURE_STRATEGY}
+                        permission={permission}
                         projectId={projectId}
                         environmentId={environment}
                         onClick={handleDelete}
@@ -578,7 +569,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         Cancel
                     </Button>
                     <PermissionButton
-                        permission={UPDATE_FEATURE_STRATEGY}
+                        permission={permission}
                         projectId={projectId}
                         environmentId={environment}
                         variant='contained'
@@ -596,7 +587,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     );
 };
 
-const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
+export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     onSubmit,
     onCancel,
     onDelete,
@@ -637,74 +628,10 @@ const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     );
 };
 
-const SafeguardFormWithChangeRequests: FC<IBaseSafeguardFormProps> = ({
+export const SafeguardFormChangeRequestView: FC<
+    Omit<IBaseSafeguardFormProps, 'onCancel'>
+> = ({
     onSubmit,
-    onCancel,
-    onDelete,
-    safeguard,
-    environment,
-    featureId,
-    badge,
-    safeguardType,
-}) => {
-    const formState = useSafeguardFormState(safeguard, featureId);
-    const {
-        mode,
-        setMode,
-        buildSafeguardData,
-        threshold,
-        resetToOriginalValues,
-    } = formState;
-    const [dialogOpen, setDialogOpen] = useState(false);
-
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-
-        if (Number.isNaN(Number(threshold))) {
-            return;
-        }
-
-        setDialogOpen(true);
-    };
-
-    const handleDialogConfirm = () => {
-        const safeguardData = buildSafeguardData();
-        setDialogOpen(false);
-        onSubmit(safeguardData);
-
-        resetToOriginalValues();
-        if (mode === 'create') {
-            onCancel?.();
-        } else {
-            setMode('display');
-        }
-    };
-
-    return (
-        <SafeguardFormBase
-            formState={formState}
-            onSubmit={handleSubmit}
-            onCancel={onCancel}
-            onDelete={onDelete}
-            environment={environment}
-            badge={badge}
-            safeguardType={safeguardType}
-        >
-            <SafeguardChangeRequestDialog
-                isOpen={dialogOpen}
-                onConfirm={handleDialogConfirm}
-                onClose={() => setDialogOpen(false)}
-                safeguardData={buildSafeguardData()}
-                environment={environment}
-                mode={mode === 'edit' ? 'edit' : 'create'}
-            />
-        </SafeguardFormBase>
-    );
-};
-
-export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
-    onSubmit,
-    onCancel,
     onDelete,
     safeguard,
     environment,
@@ -734,22 +661,10 @@ export const SafeguardFormChangeRequestView: FC<IBaseSafeguardFormProps> = ({
         <SafeguardFormBase
             formState={formState}
             onSubmit={handleSubmit}
-            onCancel={onCancel}
             onDelete={onDelete}
             environment={environment}
             badge={badge}
             safeguardType={safeguardType}
         />
     );
-};
-
-export const SafeguardForm: FC<IBaseSafeguardFormProps> = (props) => {
-    const projectId = useRequiredPathParam('projectId');
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-
-    if (isChangeRequestConfigured(props.environment)) {
-        return <SafeguardFormWithChangeRequests {...props} />;
-    }
-
-    return <SafeguardFormDirect {...props} />;
 };

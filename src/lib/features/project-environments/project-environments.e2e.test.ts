@@ -7,6 +7,8 @@ import {
 } from '../../../test/e2e/helpers/test-helper.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
 import { DEFAULT_ENV } from '../../util/index.js';
+import { randomId } from '../../util/random-id.js';
+import { TEST_AUDIT_USER } from '../../types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -154,4 +156,51 @@ test('Add environment to project should return 404 when given a projectid that d
             environment: DEFAULT_ENV,
         })
         .expect(404);
+});
+
+test('Should not delete release plans when removing environment from project', async () => {
+    const envName = 'release-plan-env';
+    const featureName = `release-plan-test-${randomId()}`;
+
+    await db.stores.environmentStore.create({
+        name: envName,
+        type: 'test',
+    });
+
+    await app.request
+        .post('/api/admin/projects/default/environments')
+        .send({ environment: envName })
+        .expect(200);
+
+    await app.services.featureToggleService.createFeatureToggle(
+        'default',
+        { name: featureName },
+        TEST_AUDIT_USER,
+    );
+
+    const template = await db.stores.releasePlanTemplateStore.insert({
+        name: 'Test Template',
+        description: 'a test template',
+        discriminator: 'template',
+        createdByUserId: -1337,
+    });
+
+    const plan = await db.stores.releasePlanStore.insert({
+        id: randomId(),
+        name: 'Test Plan',
+        featureName,
+        environment: envName,
+        createdByUserId: -1337,
+        releasePlanTemplateId: template.id,
+    });
+
+    await app.request
+        .delete(`/api/admin/projects/default/environments/${envName}`)
+        .expect(200);
+
+    const planAfter = await db.stores.releasePlanStore.get(plan.id);
+    expect(planAfter).toMatchObject({
+        featureName,
+        environment: envName,
+    });
 });

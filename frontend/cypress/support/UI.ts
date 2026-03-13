@@ -8,7 +8,7 @@ const ENTERPRISE = Boolean(Cypress.env('ENTERPRISE'));
 
 let strategyId: string | undefined;
 
-const disableActiveSplashScreens = () => {
+export const disableActiveSplashScreens = () => {
     cy.intercept('GET', '/api/admin/user', (req) => {
         req.headers['cache-control'] = 'no-cache, no-store, must-revalidate';
         req.on('response', (res) => {
@@ -38,14 +38,19 @@ export const runBefore = () => {
     disableActiveSplashScreens();
 };
 
-export const do_login = (
+export const doLogin = ({
     user = AUTH_USER,
     password = AUTH_PASSWORD,
-): Chainable<any> => {
+    waitForLogin = true,
+}: {
+    user?: string;
+    password?: string;
+    waitForLogin?: boolean;
+} = {}): Chainable<any> => {
     cy.visit('/');
     cy.get("[data-testid='LOGIN_EMAIL_ID']").should('be.visible').type(user);
 
-    if (AUTH_PASSWORD) {
+    if (password) {
         cy.get("[data-testid='LOGIN_PASSWORD_ID']")
             .should('be.visible')
             .type(password);
@@ -54,7 +59,9 @@ export const do_login = (
     cy.get("[data-testid='LOGIN_BUTTON']").should('be.visible').click();
 
     // Wait for the login redirect to complete.
-    cy.get("[data-testid='HEADER_USER_AVATAR']");
+    if (waitForLogin) {
+        cy.get("[data-testid='HEADER_USER_AVATAR']");
+    }
 
     cy.get('body').then(($body) => {
         if ($body.find("[data-testid='CLOSE_SPLASH']").length > 0) {
@@ -65,14 +72,14 @@ export const do_login = (
     return cy;
 };
 
-export const login_UI = (
+export const loginUI = (
     user = AUTH_USER,
     password = AUTH_PASSWORD,
 ): Chainable<any> => {
-    return cy.session(user, () => do_login(user, password));
+    return cy.session(user, () => doLogin({ user, password }));
 };
 
-export const createFeature_UI = (
+export const createFeatureUI = (
     name: string,
     shouldWait?: boolean,
     project?: string,
@@ -107,7 +114,7 @@ export const createFeature_UI = (
     return clicked;
 };
 
-export const createProject_UI = (
+export const createProjectUI = (
     projectName: string,
     defaultStickiness: string,
 ): Chainable<any> => {
@@ -128,7 +135,7 @@ export const createProject_UI = (
     return cy.visit(`/projects/${projectName}`);
 };
 
-export const createSegment_UI = (segmentName: string): Chainable<any> => {
+export const createSegmentUI = (segmentName: string): Chainable<any> => {
     cy.get("[data-testid='NAVIGATE_TO_CREATE_SEGMENT']").click();
 
     cy.intercept('POST', '/api/admin/segments').as('createSegment');
@@ -142,14 +149,14 @@ export const createSegment_UI = (segmentName: string): Chainable<any> => {
     return cy.wait('@createSegment');
 };
 
-export const deleteSegment_UI = (segmentName: string): Chainable<any> => {
+export const deleteSegmentUI = (segmentName: string): Chainable<any> => {
     cy.get(`[data-testid='SEGMENT_DELETE_BTN_ID_${segmentName}']`).click();
 
     cy.get("[data-testid='SEGMENT_DIALOG_NAME_ID']").type(segmentName);
     return cy.get("[data-testid='DIALOGUE_CONFIRM_ID'").click();
 };
 
-export const addFlexibleRolloutStrategyToFeature_UI = (
+export const addFlexibleRolloutStrategyToFeatureUI = (
     options: AddStrategyOptions,
 ): Chainable<any> => {
     const { featureToggleName, project, environment, stickiness } = options;
@@ -197,7 +204,7 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     return cy.wait('@addStrategyToFeature');
 };
 
-export const updateFlexibleRolloutStrategy_UI = (
+export const updateFlexibleRolloutStrategyUI = (
     featureToggleName: string,
     projectName?: string,
 ) => {
@@ -247,7 +254,7 @@ export const updateFlexibleRolloutStrategy_UI = (
     return cy.wait('@updateStrategy');
 };
 
-export const deleteFeatureStrategy_UI = (
+export const deleteFeatureStrategyUI = (
     featureToggleName: string,
     shouldWait?: boolean,
     projectName?: string,
@@ -282,6 +289,6 @@ export const deleteFeatureStrategy_UI = (
     return cy.wait('@deleteUserStrategy');
 };
 
-export const logout_UI = (): Chainable<any> => {
+export const logoutUI = (): Chainable<any> => {
     return cy.visit('/logout');
 };

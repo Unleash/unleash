@@ -1,0 +1,51 @@
+import type { FC } from 'react';
+import { IconButton, styled } from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+
+const StyledButton = styled(IconButton, {
+    shouldForwardProp: (prop) => prop !== 'active',
+})<{ active?: boolean }>(({ theme, active }) => ({
+    color: theme.palette.primary.main,
+    padding: 0,
+    fontSize: theme.typography.body2.fontSize,
+    opacity: active ? 1 : 0,
+    '&:is(:hover, :focus, :active)': { opacity: 1 },
+}));
+
+interface FavoriteButtonProps {
+    isFavorite: boolean;
+    onClick: () => void;
+}
+
+export const FavoriteButton: FC<FavoriteButtonProps> = ({
+    isFavorite,
+    onClick,
+}) => {
+    const { trackEvent } = usePlausibleTracker();
+    const favoriteProps = isFavorite
+        ? { 'aria-label': 'Remove from favorites' }
+        : { 'aria-label': 'Add to favorites', className: 'show-row-hover' };
+
+    return (
+        <StyledButton
+            active={isFavorite}
+            size='small'
+            {...favoriteProps}
+            onClick={(e) => {
+                e.preventDefault();
+                trackEvent('favorite', {
+                    props: { action: isFavorite ? 'unfavorite' : 'favorite' },
+                });
+                onClick();
+            }}
+        >
+            {isFavorite ? (
+                <StarIcon sx={{ fontSize: 'inherit' }} />
+            ) : (
+                <StarBorderIcon sx={{ fontSize: 'inherit' }} />
+            )}
+        </StyledButton>
+    );
+};

@@ -21,7 +21,7 @@ describe('project-access', () => {
 
     before(() => {
         cy.runBefore();
-        cy.login_UI();
+        cy.loginUI();
         for (let i = 1; i <= 2; i++) {
             const name = `${i}-${userName}`;
             cy.request('POST', `${baseUrl}/api/admin/user-admin`, {
@@ -64,7 +64,7 @@ describe('project-access', () => {
     });
 
     beforeEach(() => {
-        cy.login_UI();
+        cy.loginUI();
 
         cy.visit(`/projects/${groupAndProjectName}/settings/access`);
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {

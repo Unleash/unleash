@@ -61,7 +61,6 @@ export type IFlagKey =
     | 'fetchMode'
     | 'optimizeLifecycle'
     | 'milestoneProgression'
-    | 'featureReleasePlans'
     | 'plausibleMetrics'
     | 'safeguards'
     | 'newInUnleash'
@@ -77,7 +76,10 @@ export type IFlagKey =
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
     | 'userTokenWithClientApiLogging'
-    | 'featureEnvSafeguards';
+    | 'featureEnvSafeguards'
+    | 'filterFavorites'
+    | 'inlineFavoriteInNameColumn'
+    | 'userTokenWithClientApiLoggingKillSwitch';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -282,10 +284,7 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_MILESTONE_PROGRESSION,
         false,
     ),
-    featureReleasePlans: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_RELEASE_PLANS,
-        false,
-    ),
+
     plausibleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
         false,
@@ -348,6 +347,19 @@ const flags: IFlags = {
     ),
     featureEnvSafeguards: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_ENV_SAFEGUARDS,
+        false,
+    ),
+    inlineFavoriteInNameColumn: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INLINE_FAVORITE_IN_NAME_COLUMN,
+        false,
+    ),
+    filterFavorites: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FILTER_FAVORITES,
+        false,
+    ),
+    userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(
+        process.env
+            .UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING_KILL_SWITCH,
         false,
     ),
 };

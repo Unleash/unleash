@@ -8,7 +8,7 @@ describe('groups', () => {
 
     before(() => {
         cy.runBefore();
-        cy.login_UI();
+        cy.loginUI();
         for (let i = 1; i <= 2; i++) {
             cy.request('POST', `${baseUrl}/api/admin/user-admin`, {
                 name: `unleash-e2e-user${i}-${randomId}`,
@@ -26,7 +26,8 @@ describe('groups', () => {
     });
 
     beforeEach(() => {
-        cy.login_UI();
+        cy.disableActiveSplashScreens();
+        cy.loginUI();
         cy.visit('/admin/groups');
         cy.get('body').then(($body) => {
             if ($body.find("[data-testid='CLOSE_SPLASH']").length > 0) {

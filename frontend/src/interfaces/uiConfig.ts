@@ -79,7 +79,7 @@ export type UiFlags = {
     impactMetrics?: boolean;
     plausibleMetrics?: boolean;
     milestoneProgression?: boolean;
-    featureReleasePlans?: boolean;
+
     safeguards?: boolean;
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
@@ -94,6 +94,8 @@ export type UiFlags = {
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
     featureEnvSafeguards?: boolean;
+    inlineFavoriteInNameColumn?: boolean;
+    filterFavorites?: boolean;
 };
 
 export interface IVersionInfo {

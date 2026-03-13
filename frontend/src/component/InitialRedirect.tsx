@@ -27,7 +27,7 @@ export const useLastViewedPage = (location?: Location) => {
             ].find(
                 (page) =>
                     page === location.pathname ||
-                    location.pathname.startsWith(`/{page}/`),
+                    location.pathname.startsWith(`${page}/`),
             );
             if (page) {
                 setState(page);
@@ -35,14 +35,16 @@ export const useLastViewedPage = (location?: Location) => {
         }
     }, [location]);
 
-    return state;
+    const resetLastViewedPage = () => setState(defaultPage);
+
+    return { lastViewedPage: state, resetLastViewedPage };
 };
 
 export const InitialRedirect = () => {
     const { user, loading: isLoadingAuth } = useAuthUser();
     const { loading: isLoadingProjects } = useProjects();
     const isLoggedIn = Boolean(user?.id);
-    const lastViewedPage = useLastViewedPage();
+    const { lastViewedPage } = useLastViewedPage();
     const { lastViewed: lastViewedProject } = useLastViewedProject();
 
     if (isLoadingAuth || isLoadingProjects) {

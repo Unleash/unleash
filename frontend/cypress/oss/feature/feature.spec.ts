@@ -9,16 +9,16 @@ describe('feature', () => {
     });
 
     after(() => {
-        cy.deleteFeature_API(featureToggleName);
+        cy.deleteFeatureAPI(featureToggleName);
     });
 
     beforeEach(() => {
-        cy.login_UI();
+        cy.loginUI();
         cy.visit('/features');
     });
 
     it('can create a feature flag', () => {
-        cy.createFeature_UI(featureToggleName, true, 'default', true);
+        cy.createFeatureUI(featureToggleName, true, 'default', true);
         cy.contains(featureToggleName).should('exist');
     });
 });

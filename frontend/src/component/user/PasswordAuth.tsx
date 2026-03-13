@@ -35,6 +35,14 @@ const StyledDiv = styled('div')(({ theme }) => ({
     flexDirection: 'column',
 }));
 
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    '&&& input': {
+        boxShadow: `transparent 0px 0px 0px 1px inset, ${theme.palette.background.paper} 0px 0px 0px 100px inset`,
+        WebkitTextFillColor: theme.palette.text.primary,
+        caretColor: theme.palette.text.primary,
+    },
+}));
+
 const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
     const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
@@ -125,7 +133,7 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
                         />
 
                         <StyledDiv>
-                            <TextField
+                            <StyledTextField
                                 label='Username or email'
                                 name='username'
                                 id='username'

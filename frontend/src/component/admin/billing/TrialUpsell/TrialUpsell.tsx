@@ -12,6 +12,7 @@ import { ReactComponent as SamsungLogo } from 'assets/logos/samsung.svg';
 import { ReactComponent as LloydsLogo } from 'assets/logos/lloyds.svg';
 import { trialHasExpired } from 'utils/instanceTrial';
 import { TrialUpsellDescription } from './TrialUpsellDescription';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledBillingInformation = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -61,8 +62,14 @@ export const TrialUpsell = () => {
     const { hasAccess } = useContext(AccessContext);
     const { instancePrices } = useInstancePrices();
     const { instanceStatus } = useInstanceStatus();
+    const { trackEvent } = usePlausibleTracker();
 
     const onUpgrade = () => {
+        trackEvent('upgrade_trial_billing_page', {
+            props: {
+                eventType: 'upgrade_click',
+            },
+        });
         window.location.assign(formatApiPath('api/admin/invoices/checkout'));
     };
 

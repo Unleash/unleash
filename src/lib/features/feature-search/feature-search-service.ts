@@ -85,6 +85,14 @@ export class FeatureSearchService {
             if (parsed) queryParams.push(parsed);
         }
 
+        if (params.favorite) {
+            const parsed = parseSearchOperatorValue(
+                'favorite',
+                params.favorite,
+            );
+            if (parsed) queryParams.push(parsed);
+        }
+
         ['tag', 'segment', 'project'].forEach((field) => {
             if (params[field]) {
                 const parsed = parseSearchOperatorValue(field, params[field]);

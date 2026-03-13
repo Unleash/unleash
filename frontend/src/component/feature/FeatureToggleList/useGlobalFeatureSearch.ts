@@ -28,6 +28,7 @@ export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
         type: FilterItemParam,
         lifecycle: FilterItemParam,
         createdBy: FilterItemParam,
+        favorite: FilterItemParam,
     };
     const [tableState, setTableState] = usePersistentTableState(
         `${storageKey}`,
@@ -44,6 +45,8 @@ export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
         ...filterState
     } = tableState;
 
+    const apiTableState = tableState;
+
     const {
         features = [],
         total,
@@ -51,7 +54,7 @@ export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
         refetch,
         initialLoad,
     } = useFeatureSearch(
-        mapValues(encodeQueryParams(stateConfig, tableState), (value) =>
+        mapValues(encodeQueryParams(stateConfig, apiTableState), (value) =>
             value ? `${value}` : undefined,
         ) as SearchFeaturesParams,
     );

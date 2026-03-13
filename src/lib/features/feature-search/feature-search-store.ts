@@ -785,6 +785,21 @@ const applyLastSeenAtConditions = (
     });
 };
 
+const applyFavoriteCondition = (
+    query: Knex.QueryBuilder,
+    param: IQueryParam | undefined,
+): void => {
+    if (!param) return;
+    const wantsTrue = param.values.includes('true');
+    const wantsFalse = param.values.includes('false');
+    if (wantsTrue && wantsFalse) return;
+    if (wantsTrue) {
+        query.whereNotNull('favorite_features.feature');
+    } else {
+        query.whereNull('favorite_features.feature');
+    }
+};
+
 const applyQueryParams = (
     query: Knex.QueryBuilder,
     queryParams: IQueryParam[],
@@ -799,11 +814,17 @@ const applyQueryParams = (
     const lastSeenAtConditions = queryParams.filter(
         (param) => param.field === 'lastSeenAt',
     );
+    const favoriteCondition = queryParams.find(
+        (param) => param.field === 'favorite',
+    );
     const genericConditions = queryParams.filter(
         (param) =>
-            !['tag', 'stale', 'segment', 'lastSeenAt'].includes(param.field),
+            !['tag', 'stale', 'segment', 'lastSeenAt', 'favorite'].includes(
+                param.field,
+            ),
     );
     applyGenericQueryParams(query, genericConditions);
+    applyFavoriteCondition(query, favoriteCondition);
 
     applyStaleConditions(query, staleConditions);
     applyLastSeenAtConditions(query, lastSeenAtConditions);

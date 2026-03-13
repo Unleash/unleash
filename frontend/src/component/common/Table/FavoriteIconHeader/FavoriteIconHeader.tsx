@@ -4,6 +4,7 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipResolver } from '../../TooltipResolver/TooltipResolver.tsx';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IFavoriteIconHeaderProps {
     isActive: boolean;
@@ -14,10 +15,15 @@ export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
     isActive = false,
     onClick,
 }) => {
+    const { trackEvent } = usePlausibleTracker();
     const [internalState, setInternalState] = useState(isActive);
     const onToggle = () => {
-        setInternalState(!internalState);
-        onClick(!internalState);
+        const newState = !internalState;
+        setInternalState(newState);
+        trackEvent('favorite', {
+            props: { action: newState ? 'pin' : 'unpin' },
+        });
+        onClick(newState);
     };
 
     return (
@@ -29,14 +35,15 @@ export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
             }
         >
             <IconButton
-                sx={{
+                sx={(theme) => ({
                     mx: -0.75,
                     my: -1,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     padding: 1.25,
-                }}
+                    color: theme.palette.primary.main,
+                })}
                 onClick={onToggle}
                 size='small'
             >

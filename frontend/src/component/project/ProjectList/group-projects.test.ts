@@ -7,10 +7,10 @@ test('should check that the project is a user project OR that it is a favorite',
     const projects: ProjectSchema[] = [
         { id: 'my1', favorite: true },
         { id: 'my2', favorite: false },
-        { id: 'my3' },
+        { id: 'my3', favorite: false },
         { id: 'fave-but-not-mine', favorite: true },
         { id: 'not-mine-not-fave', favorite: false },
-        { id: 'not-mine-undefined-fave' },
+        { id: 'not-mine-undefined-fave', favorite: false },
     ].map(({ id, favorite }) => ({
         name: 'name',
         id,

@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { FeatureSearchResponseSchema, TagSchema } from 'openapi';
 import { Box, IconButton, styled, Chip } from '@mui/material';
+import { FavoriteButton } from 'component/common/FavoriteButton/FavoriteButton';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext.tsx';
@@ -28,8 +29,10 @@ interface IFeatureNameCellProps {
             | 'type'
             | 'dependencyType'
             | 'archivedAt'
+            | 'favorite'
         >;
     };
+    onFavorite?: (feature: FeatureSearchResponseSchema) => void;
 }
 
 const StyledFeatureLink = styled(Link)(({ theme }) => ({
@@ -305,6 +308,8 @@ export const PrimaryFeatureInfo: FC<{
     dependencyType: string;
     onTypeClick: (type: string) => void;
     delay?: number;
+    isFavorite: boolean;
+    onFavorite: () => void;
 }> = ({
     project,
     feature,
@@ -314,6 +319,8 @@ export const PrimaryFeatureInfo: FC<{
     dependencyType,
     onTypeClick,
     delay = 500,
+    isFavorite,
+    onFavorite,
 }) => {
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(type);
@@ -357,6 +364,7 @@ export const PrimaryFeatureInfo: FC<{
                     searchQuery={searchQuery}
                 />
             )}
+            <FavoriteButton isFavorite={isFavorite} onClick={onFavorite} />
 
             <ConditionallyRender
                 condition={Boolean(dependencyType)}
@@ -403,7 +411,11 @@ const SecondaryFeatureInfo: FC<{
             condition={Boolean(description)}
             show={
                 <Box
-                    sx={(theme) => ({ display: 'flex', gap: theme.spacing(1) })}
+                    sx={(theme) => ({
+                        display: 'flex',
+                        gap: theme.spacing(1),
+                        paddingLeft: theme.spacing(3),
+                    })}
                 >
                     <CappedDescription
                         text={description}
@@ -419,6 +431,7 @@ export const createFeatureOverviewCell =
     (
         onTagClick: (tag: string) => void,
         onFlagTypeClick: (type: string) => void,
+        onFavorite: (feature: FeatureSearchResponseSchema) => void,
     ): FC<IFeatureNameCellProps> =>
     ({ row }) => {
         const { searchQuery } = useSearchHighlightContext();
@@ -433,12 +446,18 @@ export const createFeatureOverviewCell =
                     type={row.original.type || ''}
                     dependencyType={row.original.dependencyType || ''}
                     onTypeClick={onFlagTypeClick}
+                    isFavorite={row.original.favorite}
+                    onFavorite={() =>
+                        onFavorite(row.original as FeatureSearchResponseSchema)
+                    }
                 />
                 <SecondaryFeatureInfo
                     description={row.original.description || ''}
                     searchQuery={searchQuery}
                 />
-                <Tags tags={row.original.tags} onClick={onTagClick} />
+                <Box sx={(theme) => ({ paddingLeft: theme.spacing(3) })}>
+                    <Tags tags={row.original.tags} onClick={onTagClick} />
+                </Box>
             </Container>
         );
     };

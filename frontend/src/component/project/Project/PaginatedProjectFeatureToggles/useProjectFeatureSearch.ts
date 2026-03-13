@@ -41,13 +41,14 @@ export const useProjectFeatureSearch = (
         createdBy: FilterItemParam,
         archived: FilterItemParam,
         lifecycle: FilterItemParam,
+        favorite: FilterItemParam,
     };
     const [tableState, setTableState] = usePersistentTableState(
         `${storageKey}-${projectId}`,
         stateConfig,
     );
 
-    const { columns: _, ...apiTableState } = tableState;
+    const apiTableState = tableState;
     const { features, total, refetch, loading, initialLoad } = useFeatureSearch(
         mapValues(
             {

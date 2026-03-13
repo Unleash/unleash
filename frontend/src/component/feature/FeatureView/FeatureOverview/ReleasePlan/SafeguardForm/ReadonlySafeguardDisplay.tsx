@@ -3,6 +3,7 @@ import { styled } from '@mui/material';
 import type { ReactNode } from 'react';
 import type { ISafeguard } from 'interfaces/releasePlans';
 import { createStyledIcon } from '../shared/SharedFormComponents.tsx';
+import type { SafeguardType } from './SafeguardForm.tsx';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -37,14 +38,21 @@ const StyledValue = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
+const safeguardTypeLabel: Record<SafeguardType, string> = {
+    releasePlan: 'Pause automation when',
+    featureEnvironment: 'Disable environment when',
+};
+
 interface ReadonlySafeguardDisplayProps {
     safeguard: ISafeguard;
     badge?: ReactNode;
+    safeguardType?: SafeguardType;
 }
 
 export const ReadonlySafeguardDisplay = ({
     safeguard,
     badge,
+    safeguardType = 'releasePlan',
 }: ReadonlySafeguardDisplayProps) => {
     const appName = safeguard.impactMetric.labelSelectors.appName?.[0] || '*';
     const operator =
@@ -56,7 +64,7 @@ export const ReadonlySafeguardDisplay = ({
         <StyledDisplayContainer>
             <StyledContentGroup>
                 <StyledIcon />
-                <StyledLabel>Pause automation when</StyledLabel>
+                <StyledLabel>{safeguardTypeLabel[safeguardType]}</StyledLabel>
                 <StyledValue>{safeguard.impactMetric.metricName}</StyledValue>
                 {appName !== '*' && (
                     <>

@@ -64,9 +64,11 @@ export const BillingInvoiceUsageRow = ({
         isEstimate && hasValidData
             ? calculateIncludedAmount(consumption, limit)
             : consumption;
+    const BUNDLE_SIZE = 1_000_000;
     const calculatedAmount =
         isEstimate && unitPrice && hasValidData
-            ? calculateOverage(consumption, limit) * unitPrice
+            ? Math.ceil(calculateOverage(consumption, limit) / BUNDLE_SIZE) *
+              unitPrice
             : totalAmount;
 
     const hasAmount = calculatedAmount && calculatedAmount > 0;

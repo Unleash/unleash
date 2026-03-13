@@ -11,6 +11,7 @@ export const loadingData: ProjectSchema[] = [
         description: '',
         mode: 'open' as const,
         owners: [{ ownerType: 'user', name: 'Loading data' }],
+        favorite: false,
     },
     {
         id: 'loading2',
@@ -22,6 +23,7 @@ export const loadingData: ProjectSchema[] = [
         description: '',
         mode: 'open' as const,
         owners: [{ ownerType: 'user', name: 'Loading data' }],
+        favorite: false,
     },
     {
         id: 'loading3',
@@ -33,6 +35,7 @@ export const loadingData: ProjectSchema[] = [
         description: '',
         mode: 'open' as const,
         owners: [{ ownerType: 'user', name: 'Loading data' }],
+        favorite: false,
     },
     {
         id: 'loading4',
@@ -44,5 +47,6 @@ export const loadingData: ProjectSchema[] = [
         description: '',
         mode: 'open' as const,
         owners: [{ ownerType: 'user', name: 'Loading data' }],
+        favorite: false,
     },
 ];

@@ -14,6 +14,7 @@ import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
 import { Link } from 'react-router-dom';
 import { ReleasePlanChange } from './ReleasePlanChange.tsx';
+import { FeatureEnvSafeguardChange } from './FeatureEnvSafeguardChange.tsx';
 import { StrategyChange } from './StrategyChange.tsx';
 
 const StyledSingleChangeBox = styled(Box, {
@@ -224,6 +225,18 @@ export const FeatureChange: FC<{
                         projectId={changeRequest.project}
                         changeRequestState={changeRequest.state}
                         feature={feature}
+                        onRefetch={onRefetch}
+                    />
+                )}
+                {(change.action === 'changeFeatureEnvSafeguard' ||
+                    change.action === 'deleteFeatureEnvSafeguard') && (
+                    <FeatureEnvSafeguardChange
+                        actions={actions}
+                        change={change}
+                        featureName={feature.name}
+                        environmentName={changeRequest.environment}
+                        projectId={changeRequest.project}
+                        changeRequestState={changeRequest.state}
                         onRefetch={onRefetch}
                     />
                 )}

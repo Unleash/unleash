@@ -52,18 +52,114 @@ const apiToken = (revInfo: EdgeApiKeyRevisionId): string => {
     return `${projectKey(revInfo.projects)}:${revInfo.environment}.***`;
 };
 
+const tokenProjectsTooltip = (projects: string[]): string => {
+    if (projects.length <= 1 || projects.includes('*')) {
+        return '';
+    }
+
+    return `
+        Projects: ${projects.join(', ')}
+    `;
+};
+
 const listKey = (revInfo: EdgeApiKeyRevisionId): string => {
     return `[${revInfo.projects.join(',')}]:${revInfo.environment}`;
 };
 
-const unleashRevisionId = (
+type RevisionLookupApiKey = Pick<
+    EdgeApiKeyRevisionId,
+    'environment' | 'projects'
+>;
+
+const hasExactSameProjects = (
+    sourceProjects: string[] | undefined,
+    targetProjects: string[],
+): boolean => {
+    const source = new Set(sourceProjects || []);
+    const target = new Set(targetProjects);
+
+    if (source.size !== target.size) {
+        return false;
+    }
+
+    for (const project of source) {
+        if (!target.has(project)) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+const isSubsetOfTokenProjects = (
+    candidateProjects: string[] | undefined,
+    tokenProjects: Set<string>,
+): boolean => {
+    const projects = candidateProjects || [];
+    return projects.every((project) => tokenProjects.has(project));
+};
+
+const getEnvironmentWideRevisionId = (
     revisionIds: EnvironmentRevisionId[],
-    environment: string,
 ): number => {
     return (
-        revisionIds.find((rev) => rev.environment === environment)
-            ?.revisionId || 0
+        revisionIds.find((rev) => !rev.projects || rev.projects.length === 0)
+            ?.revisionId ?? 0
     );
+};
+
+const getExpectedProjectScopedRevisionId = (
+    revisionIds: EnvironmentRevisionId[],
+    apiKey: RevisionLookupApiKey,
+): number | undefined => {
+    if (revisionIds.length === 0) {
+        return undefined;
+    }
+
+    if (apiKey.projects.includes('*')) {
+        return Math.max(...revisionIds.map((rev) => rev.revisionId));
+    }
+
+    const exactMatchRevision = revisionIds.find((rev) =>
+        hasExactSameProjects(rev.projects, apiKey.projects),
+    );
+
+    if (exactMatchRevision) {
+        return exactMatchRevision.revisionId;
+    }
+
+    const tokenProjects = new Set(apiKey.projects);
+    const relevantScopedRevisionIds = revisionIds.filter((rev) =>
+        isSubsetOfTokenProjects(rev.projects, tokenProjects),
+    );
+
+    if (relevantScopedRevisionIds.length === 0) {
+        return undefined;
+    }
+
+    return Math.max(...relevantScopedRevisionIds.map((rev) => rev.revisionId));
+};
+
+export const expectedUpstreamRevisionId = (
+    revisionIds: EnvironmentRevisionId[],
+    apiKey: RevisionLookupApiKey,
+): number => {
+    const environmentRevisionIds = revisionIds.filter(
+        (rev) => rev.environment === apiKey.environment,
+    );
+    const environmentWideRevisionId = getEnvironmentWideRevisionId(
+        environmentRevisionIds,
+    );
+    const projectScopedRevisionIds = environmentRevisionIds.filter((rev) =>
+        Boolean(rev.projects && rev.projects.length > 0),
+    );
+
+    const projectScopedRevisionId = getExpectedProjectScopedRevisionId(
+        projectScopedRevisionIds,
+        apiKey,
+    );
+
+    return Math.max(projectScopedRevisionId ?? 0, environmentWideRevisionId);
 };
 
 const colorFromDiff = (diff: number) => {
@@ -88,7 +184,7 @@ const ApiRevisionId = ({
     const inSync = diff <= 0;
     const title = inSync
         ? 'Edge feature configuration is up to date'
-        : `Edge is ${diff} revisions behind Unleash`;
+        : `Edge is ${diff} revisions behind expected upstream revision for this token`;
 
     return (
         <Tooltip title={title}>
@@ -128,14 +224,15 @@ export const EnterpriseEdgeApiKeyRevisionData = ({
                                 <div>
                                     <ApiRevisionId
                                         edgeRevisionId={apiKey.revisionId}
-                                        upstreamRevisionId={unleashRevisionId(
+                                        upstreamRevisionId={expectedUpstreamRevisionId(
                                             revisionIds,
-                                            apiKey.environment,
+                                            apiKey,
                                         )}
                                     />
                                     <HelpIcon
                                         tooltip={`
                                             Edge last updated this token: ${formatDateYMDHMS(apiKey.lastUpdated, locationSettings.locale)}
+                                            ${tokenProjectsTooltip(apiKey.projects)}
                                         `}
                                         size='14px'
                                     />

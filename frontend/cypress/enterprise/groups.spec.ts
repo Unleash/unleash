@@ -26,6 +26,7 @@ describe('groups', () => {
     });
 
     beforeEach(() => {
+        cy.disableActiveSplashScreens();
         cy.login_UI();
         cy.visit('/admin/groups');
         cy.get('body').then(($body) => {

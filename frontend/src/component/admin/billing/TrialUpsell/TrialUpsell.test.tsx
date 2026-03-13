@@ -60,7 +60,7 @@ describe('TrialUpsell', () => {
             screen.getByRole('button', { name: /upgrade now/i }),
         ).toBeInTheDocument();
         expect(
-            screen.getByText(/Your trial expires on March 19/),
+            screen.getByText(/Your trial expires on 03\/19\/2026/),
         ).toBeInTheDocument();
         expect(
             screen.getByText('Trusted by enterprises like'),

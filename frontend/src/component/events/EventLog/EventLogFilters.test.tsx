@@ -41,7 +41,7 @@ test('When you have no projects, you should not get a project filter', () => {
 
 test('When you have only one project, you should not get a project filter', () => {
     const { result } = renderWithRouter(() =>
-        useEventLogFilters([{ id: 'a', name: 'A' }], []),
+        useEventLogFilters([{ id: 'a', name: 'A', favorite: false }], []),
     );
     const filterKeys = result.current.map((filter) => filter.filterKey);
     filterKeys.sort();
@@ -53,8 +53,8 @@ test('When you have two one project, you should not get a project filter', () =>
     const { result } = renderWithRouter(() =>
         useEventLogFilters(
             [
-                { id: 'a', name: 'A' },
-                { id: 'b', name: 'B' },
+                { id: 'a', name: 'A', favorite: false },
+                { id: 'b', name: 'B', favorite: false },
             ],
             [],
         ),

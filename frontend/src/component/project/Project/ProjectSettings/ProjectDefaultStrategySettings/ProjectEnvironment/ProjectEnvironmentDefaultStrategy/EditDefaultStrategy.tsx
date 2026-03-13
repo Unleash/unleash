@@ -153,7 +153,6 @@ const NewEditDefaultStrategy = () => {
                             `/projects/${projectId}/settings/default-strategy`,
                         )
                     }
-                    disabled={loading}
                 >
                     Cancel
                 </Button>

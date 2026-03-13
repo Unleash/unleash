@@ -8,7 +8,7 @@ import FlagProvider, {
 import { basePath } from '../../../utils/formatPath.ts';
 
 const UNLEASH_API = 'https://hosted.edge.getunleash.io/api/frontend';
-const DEV_TOKEN = 'unleash-frontend:development.770ccc394d6b586c70744db292d7872ecbda731d35adeb6d15e63291';
+const DEV_TOKEN = '';
 
 let client: UnleashClient;
 let token: string;

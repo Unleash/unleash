@@ -143,10 +143,7 @@ const NewLogin = () => {
                                 </StyledTitle>
                             }
                         />
-                        <Authentication
-                            redirect={redirect}
-                            invited={invited}
-                        />
+                        <Authentication redirect={redirect} invited={invited} />
                     </StyledCard>
                 </StyledCardWrapper>
             </StyledMain>

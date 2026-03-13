@@ -9,7 +9,7 @@ describe('segments', () => {
     });
 
     beforeEach(() => {
-        cy.login_UI();
+        cy.loginUI();
         cy.visit('/segments');
         if (document.querySelector("[data-testid='CLOSE_SPLASH']")) {
             cy.get("[data-testid='CLOSE_SPLASH']").click();
@@ -17,7 +17,7 @@ describe('segments', () => {
     });
 
     it('can create a segment', () => {
-        cy.createSegment_UI(segmentName);
+        cy.createSegmentUI(segmentName);
         cy.contains(segmentName);
     });
 
@@ -35,7 +35,7 @@ describe('segments', () => {
     it('can delete a segment', () => {
         cy.contains(segmentName).should('exist');
 
-        cy.deleteSegment_UI(segmentName);
+        cy.deleteSegmentUI(segmentName);
 
         cy.contains(segmentName).should('not.exist');
     });

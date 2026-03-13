@@ -22,20 +22,20 @@ declare namespace Cypress {
         runBefore(): Chainable;
         disableActiveSplashScreens(): Chainable;
 
-        do_login(options?: {
+        doLogin(options?: {
             user?: string;
             password?: string;
             waitForLogin?: boolean;
         }): Chainable;
-        login_UI(options?: { user?: string; password?: string }): Chainable;
-        logout_UI(): Chainable;
+        loginUI(options?: { user?: string; password?: string }): Chainable;
+        logoutUI(): Chainable;
 
-        createProject_UI(
+        createProjectUI(
             projectName: string,
             defaultStickiness: string,
         ): Chainable;
 
-        createFeature_UI(
+        createFeatureUI(
             name: string,
             shouldWait?: boolean,
             project?: string,
@@ -43,55 +43,55 @@ declare namespace Cypress {
         ): Chainable;
 
         // VARIANTS
-        addVariantsToFeature_UI(
+        addVariantsToFeatureUI(
             featureToggleName: string,
             variants: Array<string>,
             projectName?: string,
         );
-        deleteVariant_UI(
+        deleteVariantUI(
             featureToggleName: string,
             variant: string,
             projectName?: string,
         ): Chainable<any>;
 
         // SEGMENTS
-        createSegment_UI(segmentName: string): Chainable;
-        deleteSegment_UI(segmentName: string): Chainable;
+        createSegmentUI(segmentName: string): Chainable;
+        deleteSegmentUI(segmentName: string): Chainable;
 
         // STRATEGY
-        addFlexibleRolloutStrategyToFeature_UI(
+        addFlexibleRolloutStrategyToFeatureUI(
             options: AddFlexibleRolloutStrategyOptions,
         ): Chainable;
-        updateFlexibleRolloutStrategy_UI(
+        updateFlexibleRolloutStrategyUI(
             featureToggleName: string,
             projectName?: string,
         );
-        deleteFeatureStrategy_UI(
+        deleteFeatureStrategyUI(
             featureName: string,
             shouldWait?: boolean,
             projectName?: string,
         ): Chainable;
 
         // API
-        createUser_API(userName: string, role: number): Chainable;
-        updateUserPassword_API(id: number, pass?: string): Chainable;
-        addUserToProject_API(
+        createUserAPI(userName: string, role: number): Chainable;
+        updateUserPasswordAPI(id: number, pass?: string): Chainable;
+        addUserToProjectAPI(
             id: number,
             role: number,
             projectName?: string,
         ): Chainable;
-        createProject_API(
+        createProjectAPI(
             name: string,
             options?: Partial<Cypress.RequestOptions>,
         ): Chainable;
-        deleteProject_API(name: string): Chainable;
-        createFeature_API(
+        deleteProjectAPI(name: string): Chainable;
+        createFeatureAPI(
             name: string,
             projectName?: string,
             options?: Partial<Cypress.RequestOptions>,
         ): Chainable;
-        deleteFeature_API(name: string, projectName?: string): Chainable;
-        createEnvironment_API(
+        deleteFeatureAPI(name: string, projectName?: string): Chainable;
+        createEnvironmentAPI(
             environment: IEnvironment,
             options?: Partial<Cypress.RequestOptions>,
         ): Chainable;

@@ -15,7 +15,7 @@ export const userTokenClientApiLogger = ({
         const apiToken = req.header('authorization');
         if (
             (apiToken?.startsWith('user:') || apiToken?.startsWith('*:*.')) &&
-            flagResolver.isEnabled('userTokenWithClientApiLogging')
+            !flagResolver.isEnabled('userTokenWithClientApiLoggingKillSwitch')
         ) {
             logger.info(
                 'In the next version update, calling API endpoints under /api/client/ using Personal Access Tokens and Service Accounts will no longer be supported. Please update your integrations to use the new supported authentication method before upgrading to avoid service disruption.',

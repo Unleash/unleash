@@ -59,9 +59,7 @@ shell.nix
 package-lock.json
 
 .env
-startup-profiler.cpuprofile
-startup-profiler-report.txt
-startup-profiler-trace.json
+.profiles/
 
 # Ignore frontend build
 frontend/build

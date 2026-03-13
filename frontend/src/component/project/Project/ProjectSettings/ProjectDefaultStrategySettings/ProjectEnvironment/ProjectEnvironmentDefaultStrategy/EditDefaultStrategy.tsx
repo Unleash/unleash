@@ -176,7 +176,11 @@ export const createStrategyPayload = (
     name: strategy.name,
     title: strategy.title,
     constraints: strategy.constraints ?? [],
-    parameters: (strategy.parameters ?? {}) as Record<string, string>,
+    parameters: Object.fromEntries(
+        Object.entries(strategy.parameters ?? {})
+            .filter(([, value]) => value !== undefined)
+            .map(([key, value]) => [key, String(value)]),
+    ),
     variants: strategy.variants ?? [],
     segments: strategy.segments ?? [],
     disabled: strategy.disabled ?? false,

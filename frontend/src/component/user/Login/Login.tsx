@@ -55,10 +55,10 @@ const StyledSquare = styled('div')<{
     width: size,
     height: size,
     backgroundColor: color,
-    // pointerEvents: 'none',
 }));
 
 const StyledCard = styled('div')(({ theme }) => ({
+    position: 'relative',
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(5, 4),
     width: '100%',
@@ -106,6 +106,16 @@ const NewLogin = () => {
                         color='#98E3AF'
                         sx={{ top: -12, left: -12 }}
                     />
+                    <StyledSquare
+                        size={24}
+                        color='#6c65e5'
+                        sx={{ bottom: -12, right: -12 }}
+                    />
+                    <StyledSquare
+                        size={8}
+                        color='#ffffff'
+                        sx={{ bottom: -20, right: -20 }}
+                    />
                     <StyledCard>
                         <ConditionallyRender
                             condition={resetPassword}
@@ -138,16 +148,6 @@ const NewLogin = () => {
                             invited={invited}
                         />
                     </StyledCard>
-                    <StyledSquare
-                        size={24}
-                        color='#6c65e5'
-                        sx={{ bottom: -12, right: -12 }}
-                    />
-                    <StyledSquare
-                        size={8}
-                        color='#ffffff'
-                        sx={{ bottom: -20, right: -20 }}
-                    />
                 </StyledCardWrapper>
             </StyledMain>
         </StyledPage>

@@ -5941,21 +5941,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tldts-core@npm:^7.0.24":
+"tldts-core@npm:^7.0.25":
   version: 7.0.25
   resolution: "tldts-core@npm:7.0.25"
   checksum: 10c0/fd07a555a27a6f11ed87365845d80bf7755d490cd52adf6cd474cbb9148fdaa97c79f58a8ebbc19ccfec0578e76ced5f5ae3b88e85338529291918f5fe815914
   languageName: node
   linkType: hard
 
-"tldts@npm:7.0.24":
-  version: 7.0.24
-  resolution: "tldts@npm:7.0.24"
+"tldts@npm:7.0.25":
+  version: 7.0.25
+  resolution: "tldts@npm:7.0.25"
   dependencies:
-    tldts-core: "npm:^7.0.24"
+    tldts-core: "npm:^7.0.25"
   bin:
     tldts: bin/cli.js
-  checksum: 10c0/320e871695d82969024d108ee1254495e7f15c4398d0a6eede10899c581e5189f0590195bdaadbdb131af86c2a7630f664fdc3e381e671ba6acaf77a04d86dfe
+  checksum: 10c0/8affd92849a4b0e290c5b211dce58ddee79d5e6d7079fc592afb97d95decd90028194b844c0b3cfb9254de02fb73e01f89500f3e47073dd96a3266223ca221b9
   languageName: node
   linkType: hard
 
@@ -6329,7 +6329,7 @@ __metadata:
     stoppable: "npm:^1.1.0"
     superagent: "npm:10.3.0"
     supertest: "npm:7.2.2"
-    tldts: "npm:7.0.24"
+    tldts: "npm:7.0.25"
     ts-node: "npm:10.9.2"
     ts-toolbelt: "npm:^9.6.0"
     tsc-watch: "npm:7.2.0"

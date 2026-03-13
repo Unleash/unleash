@@ -130,7 +130,7 @@
     "serve-favicon": "^2.5.1",
     "slug": "^11.0.1",
     "stoppable": "^1.1.0",
-    "tldts": "7.0.24",
+    "tldts": "7.0.25",
     "ts-toolbelt": "^9.6.0",
     "type-is": "^2.0.1",
     "ulidx": "^2.4.1",

@@ -358,7 +358,8 @@ const flags: IFlags = {
         false,
     ),
     userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING_KILL_SWITCH,
+        process.env
+            .UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING_KILL_SWITCH,
         false,
     ),
 };

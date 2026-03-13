@@ -8,12 +8,12 @@ describe('feature', () => {
 
     before(() => {
         cy.runBefore();
-        cy.login_UI();
-        cy.createProject_API(projectName);
+        cy.loginUI();
+        cy.createProjectAPI(projectName);
     });
 
     after(() => {
-        cy.login_UI();
+        cy.loginUI();
         cy.on('uncaught:exception', (err) => {
             if (
                 err.message.includes(
@@ -30,12 +30,12 @@ describe('feature', () => {
                 return false;
             }
         });
-        cy.deleteFeature_API(featureToggleName, projectName);
-        cy.deleteProject_API(projectName);
+        cy.deleteFeatureAPI(featureToggleName, projectName);
+        cy.deleteProjectAPI(projectName);
     });
 
     beforeEach(() => {
-        cy.login_UI();
+        cy.loginUI();
         cy.visit('/features');
 
         cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, (req) => {
@@ -52,25 +52,25 @@ describe('feature', () => {
     });
 
     it('can create a feature flag', () => {
-        cy.createFeature_UI(featureToggleName, true, projectName);
+        cy.createFeatureUI(featureToggleName, true, projectName);
         cy.contains('td', featureToggleName).should('exist');
     });
 
     it('gives an error if a toggle exists with the same name', () => {
-        cy.createFeature_UI(featureToggleName, false, projectName);
+        cy.createFeatureUI(featureToggleName, false, projectName);
         cy.get("[data-testid='INPUT_ERROR_TEXT']").contains(
             'A flag with that name already exists',
         );
     });
 
     it.skip('can add, update and delete a gradual rollout strategy to the development environment', () => {
-        cy.addFlexibleRolloutStrategyToFeature_UI({
+        cy.addFlexibleRolloutStrategyToFeatureUI({
             featureToggleName,
             project: projectName,
         });
 
-        cy.updateFlexibleRolloutStrategy_UI(featureToggleName, projectName);
+        cy.updateFlexibleRolloutStrategyUI(featureToggleName, projectName);
 
-        cy.deleteFeatureStrategy_UI(featureToggleName, false, projectName);
+        cy.deleteFeatureStrategyUI(featureToggleName, false, projectName);
     });
 });

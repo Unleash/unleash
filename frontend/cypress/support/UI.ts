@@ -37,7 +37,7 @@ export const runBefore = () => {
     disableActiveSplashScreens();
 };
 
-export const do_login = ({
+export const doLogin = ({
     user = AUTH_USER,
     password = AUTH_PASSWORD,
     waitForLogin = true,
@@ -71,14 +71,14 @@ export const do_login = ({
     return cy;
 };
 
-export const login_UI = (
+export const loginUI = (
     user = AUTH_USER,
     password = AUTH_PASSWORD,
 ): Chainable<any> => {
-    return cy.session(user, () => do_login({ user, password }));
+    return cy.session(user, () => doLogin({ user, password }));
 };
 
-export const createFeature_UI = (
+export const createFeatureUI = (
     name: string,
     shouldWait?: boolean,
     project?: string,
@@ -113,7 +113,7 @@ export const createFeature_UI = (
     return clicked;
 };
 
-export const createProject_UI = (
+export const createProjectUI = (
     projectName: string,
     defaultStickiness: string,
 ): Chainable<any> => {
@@ -134,7 +134,7 @@ export const createProject_UI = (
     return cy.visit(`/projects/${projectName}`);
 };
 
-export const createSegment_UI = (segmentName: string): Chainable<any> => {
+export const createSegmentUI = (segmentName: string): Chainable<any> => {
     cy.get("[data-testid='NAVIGATE_TO_CREATE_SEGMENT']").click();
 
     cy.intercept('POST', '/api/admin/segments').as('createSegment');
@@ -148,14 +148,14 @@ export const createSegment_UI = (segmentName: string): Chainable<any> => {
     return cy.wait('@createSegment');
 };
 
-export const deleteSegment_UI = (segmentName: string): Chainable<any> => {
+export const deleteSegmentUI = (segmentName: string): Chainable<any> => {
     cy.get(`[data-testid='SEGMENT_DELETE_BTN_ID_${segmentName}']`).click();
 
     cy.get("[data-testid='SEGMENT_DIALOG_NAME_ID']").type(segmentName);
     return cy.get("[data-testid='DIALOGUE_CONFIRM_ID'").click();
 };
 
-export const addFlexibleRolloutStrategyToFeature_UI = (
+export const addFlexibleRolloutStrategyToFeatureUI = (
     options: AddStrategyOptions,
 ): Chainable<any> => {
     const { featureToggleName, project, environment, stickiness } = options;
@@ -203,7 +203,7 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     return cy.wait('@addStrategyToFeature');
 };
 
-export const updateFlexibleRolloutStrategy_UI = (
+export const updateFlexibleRolloutStrategyUI = (
     featureToggleName: string,
     projectName?: string,
 ) => {
@@ -253,7 +253,7 @@ export const updateFlexibleRolloutStrategy_UI = (
     return cy.wait('@updateStrategy');
 };
 
-export const deleteFeatureStrategy_UI = (
+export const deleteFeatureStrategyUI = (
     featureToggleName: string,
     shouldWait?: boolean,
     projectName?: string,
@@ -280,6 +280,6 @@ export const deleteFeatureStrategy_UI = (
     return cy.wait('@deleteUserStrategy');
 };
 
-export const logout_UI = (): Chainable<any> => {
+export const logoutUI = (): Chainable<any> => {
     return cy.visit('/logout');
 };

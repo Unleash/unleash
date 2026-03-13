@@ -147,6 +147,7 @@ const NewEditDefaultStrategy = () => {
                     Save strategy
                 </PermissionButton>
                 <Button
+                    type='button'
                     onClick={() =>
                         navigate(
                             `/projects/${projectId}/settings/default-strategy`,

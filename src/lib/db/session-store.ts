@@ -1,13 +1,18 @@
 import type EventEmitter from 'events';
 import type { Logger, LogProvider } from '../logger.js';
 import NotFoundError from '../error/notfound-error.js';
-import type { ISession, ISessionStore } from '../types/stores/session-store.js';
+import type {
+    ISession,
+    ISessionStore,
+    ISessionWithUserInfo,
+} from '../types/stores/session-store.js';
 import { addDays } from 'date-fns';
 import type { Db } from './db.js';
 
 const TABLE = 'unleash_session';
 
 interface ISessionRow {
+    id: string;
     sid: string;
     sess: string;
     created_at: Date;
@@ -33,6 +38,31 @@ export default class SessionStore implements ISessionStore {
             .orWhere('expired', '>', new Date())
             .orderBy('created_at', 'desc');
         return rows.map(this.rowToSession);
+    }
+
+    async getActiveSessionsWithUserInfo(): Promise<ISessionWithUserInfo[]> {
+        const rows = await this.db(TABLE)
+            .leftJoin(
+                'users',
+                this.db.raw(`(${TABLE}.sess->'user'->>'id')::int = users.id`),
+            )
+            .select(
+                `${TABLE}.id`,
+                `${TABLE}.sid`,
+                `${TABLE}.sess`,
+                `${TABLE}.created_at`,
+                `${TABLE}.expired`,
+                'users.image_url',
+                'users.seen_at',
+            )
+            .whereNull(`${TABLE}.expired`)
+            .orWhere(`${TABLE}.expired`, '>', new Date())
+            .orderBy(`${TABLE}.created_at`, 'desc');
+        return rows.map((row) => ({
+            ...this.rowToSession(row),
+            imageUrl: row.image_url ?? null,
+            seenAt: row.seen_at ?? null,
+        }));
     }
 
     async getSessionsForUser(userId: number): Promise<ISession[]> {
@@ -73,7 +103,13 @@ export default class SessionStore implements ISessionStore {
                 sess: JSON.stringify(data.sess),
                 expired: data.expired || addDays(Date.now(), 1),
             })
-            .returning<ISessionRow>(['sid', 'sess', 'created_at', 'expired']);
+            .returning<ISessionRow>([
+                'id',
+                'sid',
+                'sess',
+                'created_at',
+                'expired',
+            ]);
         if (row) {
             return this.rowToSession(row);
         }
@@ -100,8 +136,13 @@ export default class SessionStore implements ISessionStore {
         return rows.map(this.rowToSession);
     }
 
+    async deleteSessionById(id: string): Promise<void> {
+        await this.db<ISessionRow>(TABLE).where('id', '=', id).del();
+    }
+
     private rowToSession(row: ISessionRow): ISession {
         return {
+            id: row.id,
             sid: row.sid,
             sess: row.sess,
             createdAt: row.created_at,

@@ -7,6 +7,7 @@ import { ApiTokenType } from '../types/model.js';
 import type { IAuthRequest, IUser } from '../types/index.js';
 import type { IApiRequest } from '../routes/unleash-types.js';
 import { encrypt } from '../util/index.js';
+import { extractClientIp } from '../util/extract-user.js';
 
 function demoAuthentication(
     app: Application,
@@ -33,6 +34,8 @@ function demoAuthentication(
             }
 
             req.session.user = user;
+            req.session.ip = extractClientIp(req);
+            req.session.userAgent = req.get('user-agent') ?? null;
             return res.status(200).json(user);
         } catch (_e) {
             res.status(400)

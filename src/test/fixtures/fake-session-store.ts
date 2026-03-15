@@ -1,6 +1,7 @@
 import type {
     ISession,
     ISessionStore,
+    ISessionWithUserInfo,
 } from '../../lib/types/stores/session-store.js';
 
 export default class FakeSessionStore implements ISessionStore {
@@ -8,6 +9,12 @@ export default class FakeSessionStore implements ISessionStore {
 
     async getActiveSessions(): Promise<ISession[]> {
         return this.sessions.filter((session) => session.expired != null);
+    }
+
+    async getActiveSessionsWithUserInfo(): Promise<ISessionWithUserInfo[]> {
+        return this.sessions
+            .filter((session) => session.expired != null)
+            .map((session) => ({ ...session, imageUrl: null, seenAt: null }));
     }
 
     destroy(): void {}
@@ -47,8 +54,18 @@ export default class FakeSessionStore implements ISessionStore {
         return Promise.resolve(this.sessions.find((s) => s.sid === sid));
     }
 
-    async insertSession(data: Omit<ISession, 'createdAt'>): Promise<ISession> {
-        const session = { ...data, createdAt: new Date() };
+    async deleteSessionById(id: string): Promise<void> {
+        this.sessions = this.sessions.filter((s) => s.id !== id);
+    }
+
+    async insertSession(
+        data: Omit<ISession, 'createdAt' | 'id'>,
+    ): Promise<ISession> {
+        const session = {
+            ...data,
+            id: crypto.randomUUID(),
+            createdAt: new Date(),
+        };
         this.sessions.push(session);
         return session;
     }

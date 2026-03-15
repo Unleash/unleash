@@ -19,6 +19,7 @@ import NotFound from 'component/common/NotFound/NotFound';
 import { Banners } from './banners/Banners.tsx';
 import { License } from './license/License.tsx';
 import { AdminHome } from './AdminHome.tsx';
+import { ActiveSessions } from './sessions/ActiveSessions.tsx';
 import { lazy } from 'react';
 
 const EnterpriseEdge = lazy(
@@ -52,6 +53,7 @@ export const Admin = () => {
                 />
                 <Route path='billing' element={<Billing />} />
                 <Route path='instance-privacy' element={<InstancePrivacy />} />
+                <Route path='sessions' element={<ActiveSessions />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </>

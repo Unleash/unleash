@@ -31,6 +31,10 @@ export default class SessionService {
         return this.sessionStore.getActiveSessions();
     }
 
+    async getActiveSessionsWithUserInfo() {
+        return this.sessionStore.getActiveSessionsWithUserInfo();
+    }
+
     async getSessionsForUser(userId: number): Promise<ISession[]> {
         return this.sessionStore.getSessionsForUser(userId);
     }
@@ -63,6 +67,10 @@ export default class SessionService {
 
     async deleteSession(sid: string): Promise<void> {
         return this.sessionStore.delete(sid);
+    }
+
+    async deleteSessionById(id: string): Promise<void> {
+        return this.sessionStore.deleteSessionById(id);
     }
 
     async insertSession({

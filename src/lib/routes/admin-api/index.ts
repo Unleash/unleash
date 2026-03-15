@@ -38,6 +38,7 @@ import PersonalDashboardController from '../../features/personal-dashboard/perso
 import FeatureLifecycleCountController from '../../features/feature-lifecycle/feature-lifecycle-count-controller.js';
 import type { IUnleashServices } from '../../services/index.js';
 import CustomMetricsController from '../../features/metrics/custom/custom-metrics-controller.js';
+import { SessionAdminController } from './session-admin.js';
 
 export class AdminApi extends Controller {
     constructor(
@@ -180,6 +181,11 @@ export class AdminApi extends Controller {
         this.app.use(
             '/record-ui-error',
             new UiObservabilityController(config, services).router,
+        );
+
+        this.app.use(
+            '/sessions',
+            new SessionAdminController(config, services).router,
         );
     }
 }

@@ -78,7 +78,8 @@ export type IFlagKey =
     | 'userTokenWithClientApiLogging'
     | 'featureEnvSafeguards'
     | 'filterFavorites'
-    | 'inlineFavoriteInNameColumn';
+    | 'inlineFavoriteInNameColumn'
+    | 'sessionInspector';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -354,6 +355,10 @@ const flags: IFlags = {
     ),
     filterFavorites: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FILTER_FAVORITES,
+        false,
+    ),
+    sessionInspector: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SESSION_INSPECTOR,
         false,
     ),
 };

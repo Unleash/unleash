@@ -133,6 +133,11 @@ const PremiumFeatures = {
         url: '',
         label: 'Release templates',
     },
+    'active-sessions': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: '',
+        label: 'Active sessions',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;

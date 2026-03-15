@@ -64,6 +64,7 @@ process.nextTick(async () => {
                         userTokenWithClientApiLogging: true,
                         inlineFavoriteInNameColumn: true,
                         filterFavorites: true,
+                        sessionInspector: true,
                     },
                 },
                 authentication: {

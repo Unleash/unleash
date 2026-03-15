@@ -68,6 +68,8 @@ export class SimplePasswordProvider extends Controller {
             },
         );
         req.session.user = user;
+        req.session.ip = extractClientIp(req);
+        req.session.userAgent = userAgent;
         this.openApiService.respondWithValidation(
             200,
             res,

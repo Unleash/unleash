@@ -59,6 +59,13 @@ export const adminRoutes: INavigationMenuItem[] = [
         },
         group: 'users',
     },
+    {
+        path: '/admin/sessions',
+        title: 'Sessions',
+        menu: { adminSettings: true },
+        group: 'users',
+        flag: 'sessionInspector',
+    },
 
     // Service accounts
     {

@@ -96,6 +96,7 @@ export type UiFlags = {
     featureEnvSafeguards?: boolean;
     inlineFavoriteInNameColumn?: boolean;
     filterFavorites?: boolean;
+    sessionInspector?: boolean;
 };
 
 export interface IVersionInfo {

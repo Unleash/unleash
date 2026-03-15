@@ -10,6 +10,8 @@ export * from './addons-schema.js';
 export * from './admin-count-schema.js';
 export * from './admin-features-query-schema.js';
 export * from './admin-segment-schema.js';
+export * from './admin-session-schema.js';
+export * from './admin-sessions-schema.js';
 export * from './advanced-playground-environment-feature-schema.js';
 export * from './advanced-playground-feature-schema.js';
 export * from './advanced-playground-request-schema.js';

@@ -9,7 +9,6 @@ import type {
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
     IChangeRequestUpdateStrategy,
-    IChangeRequestUpdateMilestoneStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useCurrentStrategy } from './hooks/useCurrentStrategy.ts';
 import { Badge } from 'component/common/Badge/Badge';
@@ -140,9 +139,7 @@ const DeleteStrategy: FC<{
 };
 
 const UpdateStrategy: FC<{
-    change:
-        | IChangeRequestUpdateStrategy
-        | IChangeRequestUpdateMilestoneStrategy;
+    change: IChangeRequestUpdateStrategy;
     changeRequestState: ChangeRequestState;
     currentStrategy: IFeatureStrategy | undefined;
     actions?: ReactNode;
@@ -288,8 +285,7 @@ export const StrategyChange: FC<{
     change:
         | IChangeRequestAddStrategy
         | IChangeRequestDeleteStrategy
-        | IChangeRequestUpdateStrategy
-        | IChangeRequestUpdateMilestoneStrategy;
+        | IChangeRequestUpdateStrategy;
     environmentName: string;
     featureName: string;
     projectId: string;
@@ -338,8 +334,7 @@ export const StrategyChange: FC<{
                     actions={actionsWithTabs}
                 />
             )}
-            {(change.action === 'updateStrategy' ||
-                change.action === 'updateMilestoneStrategy') && (
+            {change.action === 'updateStrategy' && (
                 <UpdateStrategy
                     change={change}
                     changeRequestState={changeRequestState}

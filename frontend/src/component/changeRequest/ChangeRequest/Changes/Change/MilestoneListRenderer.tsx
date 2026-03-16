@@ -22,6 +22,7 @@ interface MilestoneListRendererCoreProps {
     readonly: boolean;
     milestonesWithAutomation: Set<string>;
     milestonesWithDeletedAutomation: Set<string>;
+    milestonesWithStrategyChanges: Set<string>;
     onUpdateAutomation: (
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
@@ -34,6 +35,7 @@ const MilestoneListRendererCore = ({
     readonly,
     milestonesWithAutomation,
     milestonesWithDeletedAutomation,
+    milestonesWithStrategyChanges,
     onUpdateAutomation,
     onDeleteAutomation,
 }: MilestoneListRendererCoreProps) => {
@@ -62,10 +64,17 @@ const MilestoneListRendererCore = ({
                     milestone.id,
                 );
 
-                const badge = hasPendingDelete ? (
+                const hasPendingStrategyChange =
+                    milestonesWithStrategyChanges.has(milestone.id);
+
+                const automationBadge = hasPendingDelete ? (
                     <Badge color='error'>Deleted in draft</Badge>
                 ) : hasPendingModification ? (
                     <Badge color='warning'>Modified in draft</Badge>
+                ) : undefined;
+
+                const milestoneBadge = hasPendingStrategyChange ? (
+                    <Badge color='warning'>Strategy edited in draft</Badge>
                 ) : undefined;
 
                 const automationSection =
@@ -101,7 +110,7 @@ const MilestoneListRendererCore = ({
                                     }
                                     milestoneName={milestone.name}
                                     status={status}
-                                    badge={badge}
+                                    badge={automationBadge}
                                     environment={plan.environment}
                                 />
                             )}
@@ -116,6 +125,7 @@ const MilestoneListRendererCore = ({
                             milestone={milestone}
                             environmentId={plan.environment}
                             automationSection={automationSection}
+                            badge={milestoneBadge}
                         />
                         {isNotLastMilestone && <StyledConnection />}
                     </div>
@@ -129,12 +139,14 @@ interface ReadonlyMilestoneListRendererProps {
     plan: IReleasePlan;
     milestonesWithAutomation?: Set<string>;
     milestonesWithDeletedAutomation?: Set<string>;
+    milestonesWithStrategyChanges?: Set<string>;
 }
 
 export const ReadonlyMilestoneListRenderer = ({
     plan,
     milestonesWithAutomation = new Set(),
     milestonesWithDeletedAutomation = new Set(),
+    milestonesWithStrategyChanges = new Set(),
 }: ReadonlyMilestoneListRendererProps) => {
     return (
         <MilestoneListRendererCore
@@ -142,6 +154,7 @@ export const ReadonlyMilestoneListRenderer = ({
             readonly={true}
             milestonesWithAutomation={milestonesWithAutomation}
             milestonesWithDeletedAutomation={milestonesWithDeletedAutomation}
+            milestonesWithStrategyChanges={milestonesWithStrategyChanges}
             onUpdateAutomation={async () => {}}
             onDeleteAutomation={() => {}}
         />
@@ -152,6 +165,7 @@ interface EditableMilestoneListRendererProps {
     plan: IReleasePlan;
     milestonesWithAutomation?: Set<string>;
     milestonesWithDeletedAutomation?: Set<string>;
+    milestonesWithStrategyChanges?: Set<string>;
     onUpdateAutomation: (
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
@@ -163,6 +177,7 @@ export const EditableMilestoneListRenderer = ({
     plan,
     milestonesWithAutomation = new Set(),
     milestonesWithDeletedAutomation = new Set(),
+    milestonesWithStrategyChanges = new Set(),
     onUpdateAutomation,
     onDeleteAutomation,
 }: EditableMilestoneListRendererProps) => {
@@ -172,6 +187,7 @@ export const EditableMilestoneListRenderer = ({
             readonly={false}
             milestonesWithAutomation={milestonesWithAutomation}
             milestonesWithDeletedAutomation={milestonesWithDeletedAutomation}
+            milestonesWithStrategyChanges={milestonesWithStrategyChanges}
             onUpdateAutomation={onUpdateAutomation}
             onDeleteAutomation={onDeleteAutomation}
         />

@@ -4,11 +4,13 @@ import type {
     ChangeRequestState,
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
+    IChangeRequestUpdateMilestoneStrategy,
     IChangeRequestFeature,
 } from 'component/changeRequest/changeRequest.types';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 import {
+    Action,
     Added,
     ChangeItemInfo,
     ChangeItemWrapper,
@@ -20,6 +22,7 @@ import {
     EditableMilestoneListRenderer,
 } from './MilestoneListRenderer.tsx';
 import { applyProgressionChanges } from './applyProgressionChanges.js';
+import { applyStrategyChanges } from './applyStrategyChanges.ts';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -54,7 +57,7 @@ const getMilestonesWithDeletedAutomation = (
     );
 };
 
-const getChangeDescriptions = (
+const getProgressionChangeDescriptions = (
     progressionChanges: ProgressionChange[],
     basePlan: IReleasePlan,
 ): string[] => {
@@ -68,6 +71,44 @@ const getChangeDescriptions = (
                 ? 'Changing'
                 : 'Deleting';
         return `${action} automation for ${sourceName}`;
+    });
+};
+
+const getMilestonesWithStrategyChanges = (
+    strategyChanges: IChangeRequestUpdateMilestoneStrategy[],
+    basePlan: IReleasePlan,
+): Set<string> => {
+    const milestoneIds = new Set<string>();
+    for (const change of strategyChanges) {
+        for (const milestone of basePlan.milestones) {
+            if (milestone.strategies.some((s) => s.id === change.payload.id)) {
+                milestoneIds.add(milestone.id);
+                break;
+            }
+        }
+    }
+    return milestoneIds;
+};
+
+const getStrategyChangeDescriptions = (
+    strategyChanges: IChangeRequestUpdateMilestoneStrategy[],
+    basePlan: IReleasePlan,
+): string[] => {
+    return strategyChanges.map((change) => {
+        for (const milestone of basePlan.milestones) {
+            const strategy = milestone.strategies.find(
+                (s) => s.id === change.payload.id,
+            );
+            if (strategy) {
+                const strategyLabel =
+                    change.payload.title ||
+                    strategy.title ||
+                    strategy.strategyName ||
+                    'strategy';
+                return `Editing ${strategyLabel} in ${milestone.name}`;
+            }
+        }
+        return 'Editing strategy';
     });
 };
 
@@ -98,13 +139,23 @@ export const ConsolidatedProgressionChanges: FC<{
             change.action === 'deleteMilestoneProgression',
     );
 
-    if (progressionChanges.length === 0) return null;
+    // Get all milestone strategy changes for this feature
+    const strategyChanges = feature.changes.filter(
+        (change): change is IChangeRequestUpdateMilestoneStrategy =>
+            change.action === 'updateMilestoneStrategy',
+    );
 
-    const firstChange = progressionChanges[0];
+    if (progressionChanges.length === 0 && strategyChanges.length === 0)
+        return null;
+
+    // Only progression changes carry a release plan snapshot;
+    // updateMilestoneStrategy snapshots are strategy objects, not plans.
+    const firstProgressionChange = progressionChanges[0];
+    const planSnapshot = firstProgressionChange?.payload.snapshot;
     const releasePlan =
         (changeRequestState === 'Applied' || !currentReleasePlan) &&
-        firstChange.payload.snapshot
-            ? firstChange.payload.snapshot
+        planSnapshot
+            ? planSnapshot
             : currentReleasePlan;
 
     const basePlan = releasePlan;
@@ -113,13 +164,28 @@ export const ConsolidatedProgressionChanges: FC<{
         return null;
     }
 
-    const modifiedPlan = applyProgressionChanges(basePlan, progressionChanges);
+    const withProgressionChanges = applyProgressionChanges(
+        basePlan,
+        progressionChanges,
+    );
+    const modifiedPlan = applyStrategyChanges(
+        withProgressionChanges,
+        strategyChanges,
+    );
     const milestonesWithAutomation =
         getMilestonesWithAutomation(progressionChanges);
     const milestonesWithDeletedAutomation =
         getMilestonesWithDeletedAutomation(progressionChanges);
-    const changeDescriptions = getChangeDescriptions(
+    const milestonesWithStrategyEdits = getMilestonesWithStrategyChanges(
+        strategyChanges,
+        basePlan,
+    );
+    const progressionDescriptions = getProgressionChangeDescriptions(
         progressionChanges,
+        basePlan,
+    );
+    const strategyDescriptions = getStrategyChangeDescriptions(
+        strategyChanges,
         basePlan,
     );
 
@@ -136,11 +202,16 @@ export const ConsolidatedProgressionChanges: FC<{
                                 ? Deleted
                                 : Added;
                         return (
-                            <Component key={index}>
-                                {changeDescriptions[index]}
+                            <Component key={`progression-${index}`}>
+                                {progressionDescriptions[index]}
                             </Component>
                         );
                     })}
+                    {strategyChanges.map((_, index) => (
+                        <Action key={`strategy-${index}`}>
+                            {strategyDescriptions[index]}
+                        </Action>
+                    ))}
                 </ChangeItemInfo>
                 <div>
                     <TabList>
@@ -151,13 +222,21 @@ export const ConsolidatedProgressionChanges: FC<{
             </ChangeItemWrapper>
             <TabPanel>
                 {readonly ? (
-                    <ReadonlyMilestoneListRenderer plan={modifiedPlan} />
+                    <ReadonlyMilestoneListRenderer
+                        plan={modifiedPlan}
+                        milestonesWithStrategyChanges={
+                            milestonesWithStrategyEdits
+                        }
+                    />
                 ) : (
                     <EditableMilestoneListRenderer
                         plan={modifiedPlan}
                         milestonesWithAutomation={milestonesWithAutomation}
                         milestonesWithDeletedAutomation={
                             milestonesWithDeletedAutomation
+                        }
+                        milestonesWithStrategyChanges={
+                            milestonesWithStrategyEdits
                         }
                         onUpdateAutomation={onUpdateChangeRequestSubmit}
                         onDeleteAutomation={onDeleteChangeRequestSubmit}

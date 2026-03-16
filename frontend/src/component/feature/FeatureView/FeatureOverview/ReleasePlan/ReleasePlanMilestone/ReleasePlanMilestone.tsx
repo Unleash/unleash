@@ -110,6 +110,7 @@ interface IReleasePlanMilestoneProps {
     projectId?: string;
     environmentId: string;
     featureId: string;
+    badge?: React.ReactNode;
 }
 
 export const ReleasePlanMilestone = ({
@@ -122,6 +123,7 @@ export const ReleasePlanMilestone = ({
     projectId,
     environmentId,
     featureId,
+    badge,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(false);
     const canEditStrategies = useUiFlag('updateMilestoneStrategy');
@@ -142,6 +144,7 @@ export const ReleasePlanMilestone = ({
                             <StyledTitle status={status}>
                                 {milestone.name}
                             </StyledTitle>
+                            {badge}
                             {(!readonly && onStartMilestone) ||
                             (status.type === 'active' &&
                                 milestone.startedAt) ? (
@@ -197,6 +200,7 @@ export const ReleasePlanMilestone = ({
                         <StyledTitle status={status}>
                             {milestone.name}
                         </StyledTitle>
+                        {badge}
                         {(!readonly && onStartMilestone) ||
                         (status.type === 'active' && milestone.startedAt) ? (
                             <StyledStatusRow>

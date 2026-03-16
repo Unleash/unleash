@@ -11,6 +11,7 @@ import type {
     IChangeRequestFeature,
     IChangeRequestResumeMilestoneProgression,
     IChangeRequestStartMilestone,
+    IChangeRequestUpdateMilestoneStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -354,7 +355,8 @@ export const ReleasePlanChange: FC<{
         | IChangeRequestDeleteMilestoneProgression
         | IChangeRequestChangeSafeguard
         | IChangeRequestDeleteSafeguard
-        | IChangeRequestResumeMilestoneProgression;
+        | IChangeRequestResumeMilestoneProgression
+        | IChangeRequestUpdateMilestoneStrategy;
     environmentName: string;
     featureName: string;
     projectId: string;
@@ -470,28 +472,31 @@ export const ReleasePlanChange: FC<{
         }
     };
 
-    // If this is a progression change and we have the full feature object,
-    // check if we should consolidate with other progression changes
+    // If this is a release plan modification change (progression or milestone strategy)
+    // and we have the full feature object, consolidate with other such changes
     if (
         feature &&
         (change.action === 'changeMilestoneProgression' ||
-            change.action === 'deleteMilestoneProgression')
+            change.action === 'deleteMilestoneProgression' ||
+            change.action === 'updateMilestoneStrategy')
     ) {
-        const progressionChanges = feature.changes.filter(
+        const consolidatedChanges = feature.changes.filter(
             (
                 change,
             ): change is
                 | IChangeRequestChangeMilestoneProgression
-                | IChangeRequestDeleteMilestoneProgression =>
+                | IChangeRequestDeleteMilestoneProgression
+                | IChangeRequestUpdateMilestoneStrategy =>
                 change.action === 'changeMilestoneProgression' ||
-                change.action === 'deleteMilestoneProgression',
+                change.action === 'deleteMilestoneProgression' ||
+                change.action === 'updateMilestoneStrategy',
         );
 
-        // Only render if this is the first progression change
-        const isFirstProgression =
-            progressionChanges.length > 0 && progressionChanges[0] === change;
+        // Only render if this is the first consolidated change
+        const isFirst =
+            consolidatedChanges.length > 0 && consolidatedChanges[0] === change;
 
-        if (!isFirstProgression) {
+        if (!isFirst) {
             return null; // Skip rendering, will be handled by the first one
         }
 

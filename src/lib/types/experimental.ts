@@ -78,7 +78,8 @@ export type IFlagKey =
     | 'featureEnvSafeguards'
     | 'filterFavorites'
     | 'inlineFavoriteInNameColumn'
-    | 'userTokenWithClientApiLoggingKillSwitch';
+    | 'userTokenWithClientApiLoggingKillSwitch'
+    | 'onlyBackendTokensWithClientAPI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -355,6 +356,10 @@ const flags: IFlags = {
     userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING_KILL_SWITCH,
+        false,
+    ),
+    onlyBackendTokensWithClientAPI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ONLY_BACKEND_TOKENS_WITH_CLIENT_API,
         false,
     ),
 };

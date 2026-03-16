@@ -84,6 +84,45 @@ test('should not make database query when provided PAT format', async () => {
     expect(req.user).toBeFalsy();
 });
 
+
+test('PAT format tokens cause middleware to return 403 when flag is set', async () => {
+    const localConfig = createTestConfig({
+        getLogger,
+        authentication: {
+            enableApiToken: true,
+        },
+        experimental: {
+            flags: {
+                onlyBackendTokensWithClientAPI: true,
+            },
+        },
+    });
+
+    const apiTokenService = {
+        getUserForToken: vi.fn(),
+    } as unknown as ApiTokenService;
+
+    const func = apiTokenMiddleware(localConfig, { apiTokenService });
+
+    const cb = vi.fn();
+    const res = {
+        status: vi.fn().mockReturnValue({ send: vi.fn() }),
+    };
+
+    const req = {
+        header: vi.fn().mockReturnValue('user:asdkjsdhg3'),
+        user: undefined,
+    };
+
+    await func(req, res, cb);
+
+    expect(apiTokenService.getUserForToken).not.toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(cb).not.toHaveBeenCalled();
+    expect(req.user).toBeFalsy();
+});
+
 test('should add user if known token', async () => {
     const apiUser = new ApiUser({
         tokenName: 'default',

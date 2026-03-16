@@ -229,7 +229,7 @@ const useSafeguardActions = ({
                 if (!releasePlan) return;
                 await addChange(projectId, environmentName, {
                     feature: featureId,
-                    action: 'changeSafeguard' as const,
+                    action: 'changeReleasePlanSafeguard' as const,
                     payload: {
                         planId: releasePlan.id,
                         safeguard: pendingSubmitData,
@@ -296,7 +296,7 @@ const useSafeguardActions = ({
                 if (!releasePlan) return;
                 await addChange(projectId, environmentName, {
                     feature: featureId,
-                    action: 'deleteSafeguard',
+                    action: 'deleteReleasePlanSafeguard',
                     payload: {
                         planId: releasePlan.id,
                         safeguardId: safeguard.id,
@@ -328,8 +328,8 @@ const useSafeguardActions = ({
         payload?: unknown;
     }): change is SafeguardChange => {
         const isReleasePlan =
-            (change.action === 'changeSafeguard' ||
-                change.action === 'deleteSafeguard') &&
+            (change.action === 'changeReleasePlanSafeguard' ||
+                change.action === 'deleteReleasePlanSafeguard') &&
             !!releasePlan &&
             (change.payload as { planId?: string })?.planId === releasePlan.id;
 
@@ -432,10 +432,10 @@ const SafeguardForm = ({
     });
 
     const isDeleteAction =
-        pendingSafeguardAction === 'deleteSafeguard' ||
+        pendingSafeguardAction === 'deleteReleasePlanSafeguard' ||
         pendingSafeguardAction === 'deleteFeatureEnvSafeguard';
     const isChangeAction =
-        pendingSafeguardAction === 'changeSafeguard' ||
+        pendingSafeguardAction === 'changeReleasePlanSafeguard' ||
         pendingSafeguardAction === 'changeFeatureEnvSafeguard';
 
     const safeguardBadge = isDeleteAction ? (

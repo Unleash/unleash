@@ -547,7 +547,7 @@ describe('Safeguard', () => {
         expect(requests).toMatchObject([
             {
                 feature: 'feature1',
-                action: 'changeSafeguard',
+                action: 'changeReleasePlanSafeguard',
                 payload: {
                     planId: 'plan-1',
                     safeguard: defaultSafeguardPayload,
@@ -577,7 +577,7 @@ describe('Safeguard', () => {
         expect(requests).toMatchObject([
             {
                 feature: 'feature1',
-                action: 'deleteSafeguard',
+                action: 'deleteReleasePlanSafeguard',
                 payload: {
                     planId: 'plan-1',
                     safeguardId: 'safeguard-1',

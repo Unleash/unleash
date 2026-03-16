@@ -429,14 +429,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fast-check/vitest@npm:^0.2.4":
-  version: 0.2.4
-  resolution: "@fast-check/vitest@npm:0.2.4"
+"@fast-check/vitest@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@fast-check/vitest@npm:0.3.0"
   dependencies:
     fast-check: "npm:^3.0.0 || ^4.0.0"
   peerDependencies:
     vitest: ^1 || ^2 || ^3 || ^4
-  checksum: 10c0/51dd152cd316a6817ef3829fbfdbe94e5d0f837f257ef8e6cb04963165614db06c4f681d271944e258af0ce38e022aa0853919fef62575242feb55a848852171
+  checksum: 10c0/b10574c2164b13302f9af315d0a8c979439a4204fcd4982189aa46244e9dfe93252b96432a18521b2c14d7f92a5678658f6b6255c5f5739be11ad080ed94564e
   languageName: node
   linkType: hard
 
@@ -6238,7 +6238,7 @@ __metadata:
     "@biomejs/biome": "npm:^2.4.6"
     "@cyclonedx/yarn-plugin-cyclonedx": "npm:^3.3.0"
     "@faker-js/faker": "npm:^10.3.0"
-    "@fast-check/vitest": "npm:^0.2.4"
+    "@fast-check/vitest": "npm:^0.3.0"
     "@json2csv/plainjs": "npm:^7.0.6"
     "@slack/web-api": "npm:^7.14.1"
     "@types/cors": "npm:2.8.19"

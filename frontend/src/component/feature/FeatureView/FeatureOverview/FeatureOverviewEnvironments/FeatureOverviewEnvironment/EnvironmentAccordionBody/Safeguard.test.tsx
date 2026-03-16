@@ -40,7 +40,7 @@ const releasePlanSafeguard: ISafeguard = {
     action: { id: 'action-1', type: 'pause' },
     impactMetric: {
         id: 'metric-1',
-        metricName: 'http_requests_total',
+        metricName: 'unleash_counter_http_requests_total',
         timeRange: 'day',
         aggregationMode: 'rps',
         labelSelectors: { appName: ['*'] },
@@ -59,7 +59,7 @@ const featureEnvSafeguard: ISafeguard = {
     },
     impactMetric: {
         id: 'metric-2',
-        metricName: 'http_requests_total',
+        metricName: 'unleash_counter_http_requests_total',
         timeRange: 'hour',
         aggregationMode: 'count',
         labelSelectors: { appName: ['*'] },
@@ -72,7 +72,7 @@ const featureEnvSafeguard: ISafeguard = {
 
 const defaultSafeguardPayload = {
     impactMetric: {
-        metricName: 'http_requests_total',
+        metricName: 'unleash_counter_http_requests_total',
         timeRange: 'day',
         aggregationMode: 'rps',
         labelSelectors: { appName: ['*'] },
@@ -124,10 +124,10 @@ const setupServerRoutes = () => {
     );
     testServerRoute(server, '/api/admin/impact-metrics/metadata', {
         series: {
-            http_requests_total: {
+            unleash_counter_http_requests_total: {
                 type: 'counter',
                 help: 'Total HTTP requests',
-                displayName: 'HTTP Requests',
+                displayName: 'http_requests_total',
             },
         },
     });
@@ -382,6 +382,11 @@ describe('Safeguard', () => {
         await user.click(saveButton);
 
         await screen.findByText('Add suggestion to draft');
+        expect(screen.getByText('http_requests_total')).toBeInTheDocument();
+        expect(
+            screen.queryByText('unleash_counter_http_requests_total'),
+        ).not.toBeInTheDocument();
+
         const confirmButton = await screen.findByRole('button', {
             name: 'Add suggestion to draft',
         });

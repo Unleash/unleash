@@ -2,6 +2,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
 import { Button } from '@mui/material';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema.ts';
 import type { SafeguardType } from './SafeguardForm.tsx';
+import { getMetricDisplayName } from 'component/impact-metrics/metricsFormatters.ts';
 
 interface ISafeguardChangeRequestDialogProps {
     isOpen: boolean;
@@ -21,8 +22,7 @@ export const SafeguardChangeRequestDialog = ({
     mode,
     safeguardType,
 }: ISafeguardChangeRequestDialogProps) => {
-    const { impactMetric } = safeguardData;
-    const { metricName } = impactMetric;
+    const { metricName } = safeguardData.impactMetric;
     const actionLabel =
         safeguardType === 'featureEnvironment'
             ? 'disables the environment'
@@ -46,8 +46,9 @@ export const SafeguardChangeRequestDialog = ({
             }
         >
             <p>
-                {mode === 'create' ? 'Add' : 'Update'} safeguard that{' '}
-                {actionLabel} based on <strong>{metricName}</strong>
+                {mode === 'create' ? 'Add' : 'Update'} safeguard that an{' '}
+                {actionLabel} based on{' '}
+                <strong>{getMetricDisplayName(metricName)}</strong>
             </p>
         </Dialogue>
     );

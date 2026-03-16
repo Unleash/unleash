@@ -3278,9 +3278,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-extensions-basic-setup@npm:4.25.7":
-  version: 4.25.7
-  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.25.7"
+"@uiw/codemirror-extensions-basic-setup@npm:4.25.8":
+  version: 4.25.8
+  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.25.8"
   dependencies:
     "@codemirror/autocomplete": "npm:^6.0.0"
     "@codemirror/commands": "npm:^6.0.0"
@@ -3297,7 +3297,7 @@ __metadata:
     "@codemirror/search": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: 10c0/62d5be49a22e7b26c3a4bf41320b8d0f5eeb7409850766aef837cb929590d5ba6b1616193e5e11b21b9d19da0c8fbad8268f333fca64965c58cfecf35d59e84c
+  checksum: 10c0/9f2d7ed191746ba01acf0f14fead30a61acdd156a1c77499813ab588278c70589bbcd0503ace4b55a32ae862a11063ff6c8a8b5854c0147c8880a5f04e7fa838
   languageName: node
   linkType: hard
 
@@ -3325,15 +3325,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/react-codemirror@npm:4.25.7":
-  version: 4.25.7
-  resolution: "@uiw/react-codemirror@npm:4.25.7"
+"@uiw/react-codemirror@npm:4.25.8":
+  version: 4.25.8
+  resolution: "@uiw/react-codemirror@npm:4.25.8"
   dependencies:
     "@babel/runtime": "npm:^7.18.6"
     "@codemirror/commands": "npm:^6.1.0"
     "@codemirror/state": "npm:^6.1.1"
     "@codemirror/theme-one-dark": "npm:^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup": "npm:4.25.7"
+    "@uiw/codemirror-extensions-basic-setup": "npm:4.25.8"
     codemirror: "npm:^6.0.0"
   peerDependencies:
     "@babel/runtime": ">=7.11.0"
@@ -3343,7 +3343,7 @@ __metadata:
     codemirror: ">=6.0.0"
     react: ">=17.0.0"
     react-dom: ">=17.0.0"
-  checksum: 10c0/3dc40909b3e98ee7dc41b782601202875a8689852aca45a5d7cff27575a240a9c4ed802b14280dc748ce79a67da92c67588eabc74a4a60dfd6bb4fad2597578f
+  checksum: 10c0/a86f6fc31a925b0147ababb68bd54983dda94825e287db3da1a2cc278c849b53f7f98b049ebbdc51ef85c3de7a05ebcdb0164f82dd732d20d6fc37420283f50d
   languageName: node
   linkType: hard
 
@@ -10309,7 +10309,7 @@ __metadata:
     "@types/react-test-renderer": "npm:18.3.1"
     "@types/semver": "npm:7.7.1"
     "@uiw/codemirror-theme-duotone": "npm:4.25.8"
-    "@uiw/react-codemirror": "npm:4.25.7"
+    "@uiw/react-codemirror": "npm:4.25.8"
     "@unleash/proxy-client-react": "npm:^5.0.0"
     "@vitejs/plugin-react": "npm:4.7.0"
     cartesian: "npm:^1.0.1"

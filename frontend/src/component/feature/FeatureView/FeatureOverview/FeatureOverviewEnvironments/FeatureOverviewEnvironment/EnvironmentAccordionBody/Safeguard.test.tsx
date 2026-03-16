@@ -33,8 +33,6 @@ const permissions = [
     },
 ];
 
-const releasePlan = { id: 'plan-1', name: 'Release Plan 1' };
-
 const releasePlanSafeguard: ISafeguard = {
     id: 'safeguard-1',
     action: { id: 'action-1', type: 'pause' },
@@ -49,6 +47,23 @@ const releasePlanSafeguard: ISafeguard = {
         operator: '>',
         threshold: 100,
     },
+};
+
+const releasePlanBase = {
+    id: 'plan-1',
+    name: 'Release Plan 1',
+    description: '',
+    createdAt: '',
+    createdByUserId: 0,
+    featureName: 'feature1',
+    environment: 'production',
+    milestones: [],
+};
+
+const releasePlan = { ...releasePlanBase, safeguards: [] as ISafeguard[] };
+const releasePlanWithSafeguard = {
+    ...releasePlanBase,
+    safeguards: [releasePlanSafeguard],
 };
 
 const featureEnvSafeguard: ISafeguard = {
@@ -302,8 +317,11 @@ describe('Safeguard', () => {
                     element={
                         <Safeguard
                             featureEnvSafeguard={props?.featureEnvSafeguard}
-                            releasePlan={releasePlan}
-                            releasePlanSafeguard={props?.releasePlanSafeguard}
+                            releasePlan={
+                                props?.releasePlanSafeguard
+                                    ? releasePlanWithSafeguard
+                                    : releasePlan
+                            }
                             environmentName='production'
                             featureId='feature1'
                             onSafeguardChange={onSafeguardChange}

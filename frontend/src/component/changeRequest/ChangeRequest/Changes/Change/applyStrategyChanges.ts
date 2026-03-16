@@ -16,7 +16,8 @@ export const applyStrategyChanges = (
             strategies: milestone.strategies.map((strategy) => {
                 const change = changeMap.get(strategy.id);
                 if (change) {
-                    return { ...strategy, ...change };
+                    const { snapshot, ...rest } = change;
+                    return { ...strategy, ...rest };
                 }
                 return strategy;
             }),

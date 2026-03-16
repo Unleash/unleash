@@ -232,7 +232,6 @@ export const EnvironmentAccordionBody = ({
                 <Safeguard
                     featureEnvSafeguard={featureEnvironment.safeguards?.[0]}
                     releasePlan={firstPlan}
-                    releasePlanSafeguard={firstPlan?.safeguards?.[0]}
                     environmentName={featureEnvironment.name}
                     featureId={featureId}
                     onSafeguardChange={handleSafeguardChange}

@@ -2858,16 +2858,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-check@npm:4.5.3":
-  version: 4.5.3
-  resolution: "fast-check@npm:4.5.3"
-  dependencies:
-    pure-rand: "npm:^7.0.0"
-  checksum: 10c0/e50846538de208756ecc3fab9d8bdc5d9677d2e27c611ccbbb3269c44635e819eb0a2323fcf4bf9aae648f7066cc5d7bda339549b25b8e35139831adf4975329
-  languageName: node
-  linkType: hard
-
-"fast-check@npm:^3.0.0 || ^4.0.0":
+"fast-check@npm:4.6.0, fast-check@npm:^3.0.0 || ^4.0.0":
   version: 4.6.0
   resolution: "fast-check@npm:4.6.0"
   dependencies:
@@ -4992,13 +4983,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pure-rand@npm:^7.0.0":
-  version: 7.0.1
-  resolution: "pure-rand@npm:7.0.1"
-  checksum: 10c0/9cade41030f5ec95f5d55a11a71404cd6f46b69becaad892097cd7f58e2c6248cd0a933349ca7d21336ab629f1da42ffe899699b671bc4651600eaf6e57f837e
-  languageName: node
-  linkType: hard
-
 "pure-rand@npm:^8.0.0":
   version: 8.0.0
   resolution: "pure-rand@npm:8.0.0"
@@ -6284,7 +6268,7 @@ __metadata:
     express: "npm:^4.22.1"
     express-rate-limit: "npm:^8.3.0"
     express-session: "npm:^1.19.0"
-    fast-check: "npm:4.5.3"
+    fast-check: "npm:4.6.0"
     fast-json-patch: "npm:^3.1.1"
     fetch-mock: "npm:^12.6.0"
     hash-sum: "npm:^2.0.0"

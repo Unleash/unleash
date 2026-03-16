@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useCallback, useState } from 'react';
 import { styled } from '@mui/material';
 import type {
     ChangeRequestState,
@@ -24,6 +24,7 @@ import {
 import { applyProgressionChanges } from './applyProgressionChanges.js';
 import { applyStrategyChanges } from './applyStrategyChanges.ts';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
+import { EditChange } from './EditChange.tsx';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -116,17 +117,23 @@ export const ConsolidatedProgressionChanges: FC<{
     feature: IChangeRequestFeature;
     currentReleasePlan?: IReleasePlan;
     changeRequestState: ChangeRequestState;
+    changeRequestId: number;
+    environmentName: string;
     onUpdateChangeRequestSubmit: (
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
     onDeleteChangeRequestSubmit: (sourceMilestoneId: string) => Promise<void>;
+    onRefetch?: () => void;
 }> = ({
     feature,
     currentReleasePlan,
     changeRequestState,
+    changeRequestId,
+    environmentName,
     onUpdateChangeRequestSubmit,
     onDeleteChangeRequestSubmit,
+    onRefetch,
 }) => {
     // Get all progression changes for this feature
     const progressionChanges = feature.changes.filter(
@@ -192,6 +199,24 @@ export const ConsolidatedProgressionChanges: FC<{
     const readonly =
         changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
 
+    const strategyChangeMap = new Map(
+        strategyChanges.map((c) => [c.payload.id, c]),
+    );
+    const [editingChange, setEditingChange] =
+        useState<IChangeRequestUpdateMilestoneStrategy | null>(null);
+    const [editOpen, setEditOpen] = useState(false);
+
+    const onEditStrategy = useCallback(
+        (strategyId: string) => {
+            const change = strategyChangeMap.get(strategyId);
+            if (change) {
+                setEditingChange(change);
+                setEditOpen(true);
+            }
+        },
+        [strategyChangeMap],
+    );
+
     return (
         <StyledTabs>
             <ChangeItemWrapper>
@@ -240,6 +265,25 @@ export const ConsolidatedProgressionChanges: FC<{
                         }
                         onUpdateAutomation={onUpdateChangeRequestSubmit}
                         onDeleteAutomation={onDeleteChangeRequestSubmit}
+                        onEditStrategy={onEditStrategy}
+                    />
+                )}
+                {editingChange && (
+                    <EditChange
+                        changeRequestId={changeRequestId}
+                        featureId={feature.name}
+                        change={editingChange}
+                        environment={environmentName}
+                        open={editOpen}
+                        onSubmit={() => {
+                            setEditOpen(false);
+                            setEditingChange(null);
+                            onRefetch?.();
+                        }}
+                        onClose={() => {
+                            setEditOpen(false);
+                            setEditingChange(null);
+                        }}
                     />
                 )}
             </TabPanel>

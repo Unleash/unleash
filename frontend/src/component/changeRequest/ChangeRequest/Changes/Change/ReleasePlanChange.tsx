@@ -361,6 +361,7 @@ export const ReleasePlanChange: FC<{
     featureName: string;
     projectId: string;
     changeRequestState: ChangeRequestState;
+    changeRequestId: number;
     feature?: IChangeRequestFeature; // Optional feature object for consolidated progression changes
     onRefetch?: () => void;
 }> = ({
@@ -370,6 +371,7 @@ export const ReleasePlanChange: FC<{
     environmentName,
     projectId,
     changeRequestState,
+    changeRequestId,
     feature,
     onRefetch,
 }) => {
@@ -505,8 +507,11 @@ export const ReleasePlanChange: FC<{
                 feature={feature}
                 currentReleasePlan={currentReleasePlan}
                 changeRequestState={changeRequestState}
+                changeRequestId={changeRequestId}
+                environmentName={environmentName}
                 onUpdateChangeRequestSubmit={changeMilestoneProgressionSubmit}
                 onDeleteChangeRequestSubmit={deleteMilestonProgressionSubmit}
+                onRefetch={onRefetch}
             />
         );
     }

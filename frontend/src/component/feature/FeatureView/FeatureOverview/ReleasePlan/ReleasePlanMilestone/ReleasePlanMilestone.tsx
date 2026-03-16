@@ -111,6 +111,7 @@ interface IReleasePlanMilestoneProps {
     environmentId: string;
     featureId: string;
     defaultExpanded?: boolean;
+    onEditStrategy?: (strategyId: string) => void;
 }
 
 export const ReleasePlanMilestone = ({
@@ -124,6 +125,7 @@ export const ReleasePlanMilestone = ({
     environmentId,
     featureId,
     defaultExpanded = false,
+    onEditStrategy,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(true);
     const canEditStrategies = useUiFlag('updateMilestoneStrategy');
@@ -245,6 +247,7 @@ export const ReleasePlanMilestone = ({
                                         readonly={readonly}
                                         scope='milestone'
                                         featureId={featureId}
+                                        onEditStrategy={onEditStrategy}
                                         strategy={{
                                             ...strategy,
                                             name:

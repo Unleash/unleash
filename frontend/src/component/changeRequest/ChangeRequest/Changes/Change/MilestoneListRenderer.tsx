@@ -28,6 +28,7 @@ interface MilestoneListRendererCoreProps {
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
     onDeleteAutomation: (sourceMilestoneId: string) => void;
+    onEditStrategy?: (strategyId: string) => void;
 }
 
 const MilestoneListRendererCore = ({
@@ -38,6 +39,7 @@ const MilestoneListRendererCore = ({
     milestonesWithStrategyChanges,
     onUpdateAutomation,
     onDeleteAutomation,
+    onEditStrategy,
 }: MilestoneListRendererCoreProps) => {
     const status: MilestoneStatus = {
         type: 'not-started',
@@ -121,6 +123,7 @@ const MilestoneListRendererCore = ({
                             defaultExpanded={milestonesWithStrategyChanges.has(
                                 milestone.id,
                             )}
+                            onEditStrategy={onEditStrategy}
                         />
                         {isNotLastMilestone && <StyledConnection />}
                     </div>
@@ -166,6 +169,7 @@ interface EditableMilestoneListRendererProps {
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
     onDeleteAutomation: (sourceMilestoneId: string) => void;
+    onEditStrategy?: (strategyId: string) => void;
 }
 
 export const EditableMilestoneListRenderer = ({
@@ -175,6 +179,7 @@ export const EditableMilestoneListRenderer = ({
     milestonesWithStrategyChanges = new Set(),
     onUpdateAutomation,
     onDeleteAutomation,
+    onEditStrategy,
 }: EditableMilestoneListRendererProps) => {
     return (
         <MilestoneListRendererCore
@@ -185,6 +190,7 @@ export const EditableMilestoneListRenderer = ({
             milestonesWithStrategyChanges={milestonesWithStrategyChanges}
             onUpdateAutomation={onUpdateAutomation}
             onDeleteAutomation={onDeleteAutomation}
+            onEditStrategy={onEditStrategy}
         />
     );
 };

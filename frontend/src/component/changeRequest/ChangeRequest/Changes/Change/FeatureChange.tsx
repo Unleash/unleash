@@ -224,6 +224,7 @@ export const FeatureChange: FC<{
                         environmentName={changeRequest.environment}
                         projectId={changeRequest.project}
                         changeRequestState={changeRequest.state}
+                        changeRequestId={changeRequest.id}
                         feature={feature}
                         onRefetch={onRefetch}
                     />

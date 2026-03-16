@@ -84,7 +84,6 @@ test('should not make database query when provided PAT format', async () => {
     expect(req.user).toBeFalsy();
 });
 
-
 test('PAT format tokens cause middleware to return 403 when flag is set', async () => {
     const localConfig = createTestConfig({
         getLogger,

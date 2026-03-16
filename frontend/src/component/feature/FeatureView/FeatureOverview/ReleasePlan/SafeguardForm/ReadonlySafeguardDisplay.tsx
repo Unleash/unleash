@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import type { ISafeguard } from 'interfaces/releasePlans';
 import { createStyledIcon } from '../shared/SharedFormComponents.tsx';
 import type { SafeguardType } from './SafeguardForm.tsx';
+import { getMetricDisplayName } from 'component/impact-metrics/metricsFormatters.ts';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -65,7 +66,9 @@ export const ReadonlySafeguardDisplay = ({
             <StyledContentGroup>
                 <StyledIcon />
                 <StyledLabel>{safeguardTypeLabel[safeguardType]}</StyledLabel>
-                <StyledValue>{safeguard.impactMetric.metricName}</StyledValue>
+                <StyledValue>
+                    {getMetricDisplayName(safeguard.impactMetric.metricName)}
+                </StyledValue>
                 {appName !== '*' && (
                     <>
                         <StyledLabel>filtered by</StyledLabel>

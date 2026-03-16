@@ -10,7 +10,6 @@ import { Button } from '@mui/material';
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useFormErrors } from 'hooks/useFormErrors';
-import { formatStrategyName } from 'utils/strategyNames';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -106,7 +105,7 @@ const NewEditDefaultStrategy = () => {
     return (
         <FormTemplate
             modal
-            title={formatStrategyName(strategy.name)}
+            disablePadding
             description={projectDefaultStrategyHelp}
             documentationLink={projectDefaultStrategyDocsLink}
             documentationLinkLabel={projectDefaultStrategyDocsLinkLabel}

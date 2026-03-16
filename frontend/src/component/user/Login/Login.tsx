@@ -45,6 +45,7 @@ const StyledMain = styled('main')(({ theme }) => ({
 const StyledCardWrapper = styled('div')({
     position: 'relative',
     width: 500,
+    maxWidth: '100%',
 });
 
 const StyledSquare = styled('div')<{

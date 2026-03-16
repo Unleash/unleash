@@ -110,7 +110,7 @@ interface IReleasePlanMilestoneProps {
     projectId?: string;
     environmentId: string;
     featureId: string;
-    badge?: React.ReactNode;
+    defaultExpanded?: boolean;
 }
 
 export const ReleasePlanMilestone = ({
@@ -123,9 +123,9 @@ export const ReleasePlanMilestone = ({
     projectId,
     environmentId,
     featureId,
-    badge,
+    defaultExpanded = false,
 }: IReleasePlanMilestoneProps) => {
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(true);
     const canEditStrategies = useUiFlag('updateMilestoneStrategy');
     const hasAutomation = Boolean(automationSection);
     const isPreviousMilestonePaused =
@@ -144,7 +144,6 @@ export const ReleasePlanMilestone = ({
                             <StyledTitle status={status}>
                                 {milestone.name}
                             </StyledTitle>
-                            {badge}
                             {(!readonly && onStartMilestone) ||
                             (status.type === 'active' &&
                                 milestone.startedAt) ? (
@@ -192,6 +191,7 @@ export const ReleasePlanMilestone = ({
             <StyledAccordion
                 status={status}
                 hasAutomation={hasAutomation}
+                defaultExpanded={defaultExpanded}
                 onChange={(_evt, expanded) => setExpanded(expanded)}
             >
                 <StyledAccordionSummary expandIcon={<ExpandMore />}>
@@ -200,7 +200,6 @@ export const ReleasePlanMilestone = ({
                         <StyledTitle status={status}>
                             {milestone.name}
                         </StyledTitle>
-                        {badge}
                         {(!readonly && onStartMilestone) ||
                         (status.type === 'active' && milestone.startedAt) ? (
                             <StyledStatusRow>

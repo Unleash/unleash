@@ -64,17 +64,10 @@ const MilestoneListRendererCore = ({
                     milestone.id,
                 );
 
-                const hasPendingStrategyChange =
-                    milestonesWithStrategyChanges.has(milestone.id);
-
                 const automationBadge = hasPendingDelete ? (
                     <Badge color='error'>Deleted in draft</Badge>
                 ) : hasPendingModification ? (
                     <Badge color='warning'>Modified in draft</Badge>
-                ) : undefined;
-
-                const milestoneBadge = hasPendingStrategyChange ? (
-                    <Badge color='warning'>Strategy edited in draft</Badge>
                 ) : undefined;
 
                 const automationSection =
@@ -125,7 +118,9 @@ const MilestoneListRendererCore = ({
                             milestone={milestone}
                             environmentId={plan.environment}
                             automationSection={automationSection}
-                            badge={milestoneBadge}
+                            defaultExpanded={milestonesWithStrategyChanges.has(
+                                milestone.id,
+                            )}
                         />
                         {isNotLastMilestone && <StyledConnection />}
                     </div>

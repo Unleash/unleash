@@ -1,8 +1,6 @@
-import type { IDBOption, ISSLOption } from '../types/index.js';
+import type { IDBOption } from '../types/index.js';
 
-const cloneSslOptions = (
-    ssl: IDBOption['ssl'],
-): ISSLOption | boolean | undefined => {
+const cloneSslOptions = (ssl: IDBOption['ssl']): IDBOption['ssl'] => {
     if (ssl == null || typeof ssl === 'boolean') {
         return ssl;
     }

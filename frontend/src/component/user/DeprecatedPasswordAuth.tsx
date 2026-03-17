@@ -35,7 +35,10 @@ const StyledDiv = styled('div')(({ theme }) => ({
     flexDirection: 'column',
 }));
 
-const DeprecatedPasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
+const DeprecatedPasswordAuth: VFC<IPasswordAuthProps> = ({
+    authDetails,
+    redirect,
+}) => {
     const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
     const params = useQueryParams();

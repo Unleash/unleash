@@ -42,7 +42,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
     marginTop: theme.spacing(2),
 }));
 
-const NewPasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
+const NewPasswordAuth: VFC<IPasswordAuthProps> = ({
+    authDetails,
+    redirect,
+}) => {
     const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
     const params = useQueryParams();

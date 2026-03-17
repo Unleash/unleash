@@ -106,6 +106,7 @@ test('show dependency dialogue for OSS with dependencies', async () => {
         project: 'default',
         dependencies: [] as Array<{ feature: string }>,
         children: [] as string[],
+        createdAt: '2023-01-01T10:00:00Z',
     } as IFeatureToggle;
     setupOssWithExistingDependencies();
     render(
@@ -141,6 +142,7 @@ test('show child', async () => {
         project: 'default',
         dependencies: [] as Array<{ feature: string }>,
         children: ['some_child'],
+        createdAt: '2023-01-01T10:00:00Z',
     } as IFeatureToggle;
     render(
         <Routes>
@@ -167,6 +169,7 @@ test('show children', async () => {
         project: 'default',
         dependencies: [] as Array<{ feature: string }>,
         children: ['some_child', 'some_other_child'],
+        createdAt: '2023-01-01T10:00:00Z',
     } as IFeatureToggle;
     render(
         <Routes>
@@ -192,6 +195,7 @@ const feature = {
     project: 'default',
     dependencies: [] as IDependency[],
     children: [] as string[],
+    createdAt: '2023-01-01T10:00:00Z',
 } as IFeatureToggle;
 
 test('delete dependency', async () => {

@@ -36,6 +36,14 @@ const StyledButton = styled(Button)(({ theme }) => ({
     textAlign: 'center',
 }));
 
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    '& input': {
+        boxShadow: `transparent 0px 0px 0px 1px inset, ${theme.palette.background.paper} 0px 0px 0px 100px inset`,
+        WebkitTextFillColor: theme.palette.text.primary,
+        caretColor: theme.palette.text.primary,
+    },
+}));
+
 const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
     const { refetchUser } = useAuthUser();
     const navigate = useNavigate();
@@ -126,7 +134,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                             {apiError}
                         </StyledTypography>
                         <StyledDiv>
-                            <TextField
+                            <StyledTextField
                                 label='Username or email'
                                 name='username'
                                 id='username'

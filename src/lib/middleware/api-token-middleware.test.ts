@@ -84,7 +84,7 @@ test('should not make database query when provided PAT format', async () => {
     expect(req.user).toBeFalsy();
 });
 
-test('PAT format tokens with client api cause middleware to return 403 when flag is set', async () => {
+test.each(['user:asdkjsdhg3', '*:*.asdf'])('%s PAT format tokens with client api cause middleware to return 403 when flag is set', async (rejectedToken) => {
     const localConfig = createTestConfig({
         getLogger,
         authentication: {

@@ -2,6 +2,7 @@ import type React from 'react';
 import { type FC, useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import FlagProvider, {
+    InMemoryStorageProvider,
     LocalStorageProvider,
     UnleashClient,
 } from '@unleash/proxy-client-react';
@@ -30,7 +31,9 @@ export const UnleashFlagProvider: FC<{ children?: React.ReactNode }> = ({
         token = getUnleashFrontendToken();
 
         client = new UnleashClient({
-            storageProvider: new LocalStorageProvider(`${basePath}:unleash`),
+            storageProvider: token
+                ? new LocalStorageProvider(`${basePath}:unleash`)
+                : new InMemoryStorageProvider(),
             url: UNLEASH_API,
             clientKey: token || 'offline',
             appName: 'Unleash Cloud UI',

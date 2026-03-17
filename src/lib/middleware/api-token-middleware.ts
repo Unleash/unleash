@@ -56,7 +56,8 @@ export const apiAccessMiddleware = (
             const apiToken = req.header('authorization');
             if (
                 flagResolver.isEnabled('onlyBackendTokensWithClientAPI') &&
-                (apiToken?.startsWith('user:') || apiToken?.startsWith('*:*.'))
+                (apiToken?.startsWith('user:') || apiToken?.startsWith('*:*.')) &&
+                isClientApi(req)
             ) {
                 res.status(403).send({
                     message: TOKEN_TYPE_ERROR_MESSAGE,

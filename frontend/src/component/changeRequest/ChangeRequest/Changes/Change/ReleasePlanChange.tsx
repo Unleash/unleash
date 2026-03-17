@@ -2,6 +2,7 @@ import { type FC, type ReactNode, useRef, useState } from 'react';
 import { styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
+    ChangeRequestType,
     IChangeRequestAddReleasePlan,
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestChangeSafeguard,
@@ -361,7 +362,7 @@ export const ReleasePlanChange: FC<{
     featureName: string;
     projectId: string;
     changeRequestState: ChangeRequestState;
-    changeRequestId: number;
+    changeRequest: ChangeRequestType;
     feature?: IChangeRequestFeature; // Optional feature object for consolidated progression changes
     onRefetch?: () => void;
 }> = ({
@@ -371,7 +372,7 @@ export const ReleasePlanChange: FC<{
     environmentName,
     projectId,
     changeRequestState,
-    changeRequestId,
+    changeRequest,
     feature,
     onRefetch,
 }) => {
@@ -506,9 +507,7 @@ export const ReleasePlanChange: FC<{
             <ConsolidatedProgressionChanges
                 feature={feature}
                 currentReleasePlan={currentReleasePlan}
-                changeRequestState={changeRequestState}
-                changeRequestId={changeRequestId}
-                environmentName={environmentName}
+                changeRequest={changeRequest}
                 onUpdateChangeRequestSubmit={changeMilestoneProgressionSubmit}
                 onDeleteChangeRequestSubmit={deleteMilestonProgressionSubmit}
                 onRefetch={onRefetch}

@@ -1,7 +1,7 @@
-import { type FC, useCallback, useState } from 'react';
+import type { FC } from 'react';
 import { styled } from '@mui/material';
 import type {
-    ChangeRequestState,
+    ChangeRequestType,
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
     IChangeRequestUpdateMilestoneStrategy,
@@ -24,7 +24,6 @@ import {
 import { applyProgressionChanges } from './applyProgressionChanges.js';
 import { applyStrategyChanges } from './applyStrategyChanges.ts';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
-import { EditChange } from './EditChange.tsx';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -116,9 +115,7 @@ const getStrategyChangeDescriptions = (
 export const ConsolidatedProgressionChanges: FC<{
     feature: IChangeRequestFeature;
     currentReleasePlan?: IReleasePlan;
-    changeRequestState: ChangeRequestState;
-    changeRequestId: number;
-    environmentName: string;
+    changeRequest: ChangeRequestType;
     onUpdateChangeRequestSubmit: (
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
@@ -128,13 +125,13 @@ export const ConsolidatedProgressionChanges: FC<{
 }> = ({
     feature,
     currentReleasePlan,
-    changeRequestState,
-    changeRequestId,
-    environmentName,
+    changeRequest,
     onUpdateChangeRequestSubmit,
     onDeleteChangeRequestSubmit,
     onRefetch,
 }) => {
+    const changeRequestState = changeRequest.state;
+
     // Get all progression changes for this feature
     const progressionChanges = feature.changes.filter(
         (
@@ -202,20 +199,6 @@ export const ConsolidatedProgressionChanges: FC<{
     const strategyChangeMap = new Map(
         strategyChanges.map((c) => [c.payload.id, c]),
     );
-    const [editingChange, setEditingChange] =
-        useState<IChangeRequestUpdateMilestoneStrategy | null>(null);
-    const [editOpen, setEditOpen] = useState(false);
-
-    const onEditStrategy = useCallback(
-        (strategyId: string) => {
-            const change = strategyChangeMap.get(strategyId);
-            if (change) {
-                setEditingChange(change);
-                setEditOpen(true);
-            }
-        },
-        [strategyChangeMap],
-    );
 
     return (
         <StyledTabs>
@@ -265,25 +248,9 @@ export const ConsolidatedProgressionChanges: FC<{
                         }
                         onUpdateAutomation={onUpdateChangeRequestSubmit}
                         onDeleteAutomation={onDeleteChangeRequestSubmit}
-                        onEditStrategy={onEditStrategy}
-                    />
-                )}
-                {editingChange && (
-                    <EditChange
-                        changeRequestId={changeRequestId}
-                        featureId={feature.name}
-                        change={editingChange}
-                        environment={environmentName}
-                        open={editOpen}
-                        onSubmit={() => {
-                            setEditOpen(false);
-                            setEditingChange(null);
-                            onRefetch?.();
-                        }}
-                        onClose={() => {
-                            setEditOpen(false);
-                            setEditingChange(null);
-                        }}
+                        strategyChanges={strategyChangeMap}
+                        changeRequest={changeRequest}
+                        onRefetch={onRefetch}
                     />
                 )}
             </TabPanel>

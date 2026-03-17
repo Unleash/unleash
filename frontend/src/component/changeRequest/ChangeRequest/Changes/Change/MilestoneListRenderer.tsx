@@ -1,3 +1,4 @@
+import type React from 'react';
 import { styled } from '@mui/material';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
@@ -9,6 +10,13 @@ import {
 } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneTransitionDisplay.tsx';
 import type { MilestoneStatus } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestoneStatus.tsx';
 import { Badge } from 'component/common/Badge/Badge';
+import type {
+    ChangeRequestType,
+    IChangeRequestUpdateMilestoneStrategy,
+} from 'component/changeRequest/changeRequest.types';
+import { StrategyChange } from './StrategyChange.tsx';
+import { ChangeActions } from './ChangeActions.tsx';
+import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 
 const StyledConnection = styled('div')(({ theme }) => ({
     width: 2,
@@ -28,7 +36,10 @@ interface MilestoneListRendererCoreProps {
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
     onDeleteAutomation: (sourceMilestoneId: string) => void;
-    onEditStrategy?: (strategyId: string) => void;
+    renderStrategy?: (
+        strategy: IReleasePlanMilestone['strategies'][number],
+        index: number,
+    ) => React.ReactNode;
 }
 
 const MilestoneListRendererCore = ({
@@ -39,7 +50,7 @@ const MilestoneListRendererCore = ({
     milestonesWithStrategyChanges,
     onUpdateAutomation,
     onDeleteAutomation,
-    onEditStrategy,
+    renderStrategy,
 }: MilestoneListRendererCoreProps) => {
     const status: MilestoneStatus = {
         type: 'not-started',
@@ -66,7 +77,7 @@ const MilestoneListRendererCore = ({
                     milestone.id,
                 );
 
-                const automationBadge = hasPendingDelete ? (
+                const badge = hasPendingDelete ? (
                     <Badge color='error'>Deleted in draft</Badge>
                 ) : hasPendingModification ? (
                     <Badge color='warning'>Modified in draft</Badge>
@@ -105,7 +116,7 @@ const MilestoneListRendererCore = ({
                                     }
                                     milestoneName={milestone.name}
                                     status={status}
-                                    badge={automationBadge}
+                                    badge={badge}
                                     environment={plan.environment}
                                 />
                             )}
@@ -123,7 +134,7 @@ const MilestoneListRendererCore = ({
                             defaultExpanded={milestonesWithStrategyChanges.has(
                                 milestone.id,
                             )}
-                            onEditStrategy={onEditStrategy}
+                            renderStrategy={renderStrategy}
                         />
                         {isNotLastMilestone && <StyledConnection />}
                     </div>
@@ -169,7 +180,9 @@ interface EditableMilestoneListRendererProps {
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
     onDeleteAutomation: (sourceMilestoneId: string) => void;
-    onEditStrategy?: (strategyId: string) => void;
+    strategyChanges?: Map<string, IChangeRequestUpdateMilestoneStrategy>;
+    changeRequest?: ChangeRequestType;
+    onRefetch?: () => void;
 }
 
 export const EditableMilestoneListRenderer = ({
@@ -179,8 +192,40 @@ export const EditableMilestoneListRenderer = ({
     milestonesWithStrategyChanges = new Set(),
     onUpdateAutomation,
     onDeleteAutomation,
-    onEditStrategy,
+    strategyChanges,
+    changeRequest,
+    onRefetch,
 }: EditableMilestoneListRendererProps) => {
+    const renderStrategy =
+        strategyChanges && changeRequest
+            ? (
+                  strategy: IReleasePlanMilestone['strategies'][number],
+                  _index: number,
+              ) => {
+                  const change = strategyChanges.get(strategy.id);
+                  if (change) {
+                      return (
+                          <StrategyChange
+                              change={change}
+                              featureName={plan.featureName}
+                              environmentName={plan.environment}
+                              projectId={changeRequest.project}
+                              changeRequestState={changeRequest.state}
+                              actions={
+                                  <ChangeActions
+                                      changeRequest={changeRequest}
+                                      feature={plan.featureName}
+                                      change={change}
+                                      onRefetch={onRefetch}
+                                  />
+                              }
+                          />
+                      );
+                  }
+                  return undefined;
+              }
+            : undefined;
+
     return (
         <MilestoneListRendererCore
             plan={plan}
@@ -190,7 +235,7 @@ export const EditableMilestoneListRenderer = ({
             milestonesWithStrategyChanges={milestonesWithStrategyChanges}
             onUpdateAutomation={onUpdateAutomation}
             onDeleteAutomation={onDeleteAutomation}
-            onEditStrategy={onEditStrategy}
+            renderStrategy={renderStrategy}
         />
     );
 };

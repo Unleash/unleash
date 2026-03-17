@@ -111,7 +111,10 @@ interface IReleasePlanMilestoneProps {
     environmentId: string;
     featureId: string;
     defaultExpanded?: boolean;
-    onEditStrategy?: (strategyId: string) => void;
+    renderStrategy?: (
+        strategy: IReleasePlanMilestone['strategies'][number],
+        index: number,
+    ) => React.ReactNode;
 }
 
 export const ReleasePlanMilestone = ({
@@ -125,9 +128,9 @@ export const ReleasePlanMilestone = ({
     environmentId,
     featureId,
     defaultExpanded = false,
-    onEditStrategy,
+    renderStrategy,
 }: IReleasePlanMilestoneProps) => {
-    const [expanded, setExpanded] = useState(true);
+    const [expanded, setExpanded] = useState(defaultExpanded);
     const canEditStrategies = useUiFlag('updateMilestoneStrategy');
     const hasAutomation = Boolean(automationSection);
     const isPreviousMilestonePaused =
@@ -242,34 +245,34 @@ export const ReleasePlanMilestone = ({
                             <StrategyListItem key={strategy.id}>
                                 {index > 0 ? <StrategySeparator /> : null}
 
-                                {canEditStrategies ? (
-                                    <ProjectEnvironmentStrategyDraggableItem
-                                        readonly={readonly}
-                                        scope='milestone'
-                                        featureId={featureId}
-                                        onEditStrategy={onEditStrategy}
-                                        strategy={{
-                                            ...strategy,
-                                            name:
-                                                strategy.name ||
-                                                strategy.strategyName ||
-                                                '',
-                                        }}
-                                        index={index}
-                                        environmentName={environmentId}
-                                    />
-                                ) : (
-                                    <StrategyItem
-                                        strategyHeaderLevel={4}
-                                        strategy={{
-                                            ...strategy,
-                                            name:
-                                                strategy.name ||
-                                                strategy.strategyName ||
-                                                '',
-                                        }}
-                                    />
-                                )}
+                                {renderStrategy?.(strategy, index) ??
+                                    (canEditStrategies ? (
+                                        <ProjectEnvironmentStrategyDraggableItem
+                                            readonly={readonly}
+                                            scope='milestone'
+                                            featureId={featureId}
+                                            strategy={{
+                                                ...strategy,
+                                                name:
+                                                    strategy.name ||
+                                                    strategy.strategyName ||
+                                                    '',
+                                            }}
+                                            index={index}
+                                            environmentName={environmentId}
+                                        />
+                                    ) : (
+                                        <StrategyItem
+                                            strategyHeaderLevel={4}
+                                            strategy={{
+                                                ...strategy,
+                                                name:
+                                                    strategy.name ||
+                                                    strategy.strategyName ||
+                                                    '',
+                                            }}
+                                        />
+                                    ))}
                             </StrategyListItem>
                         ))}
                     </StrategyList>

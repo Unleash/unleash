@@ -8,8 +8,8 @@ import type {
     ChangeRequestState,
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
-    IChangeRequestUpdateStrategy,
     IChangeRequestUpdateMilestoneStrategy,
+    IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useCurrentStrategy } from './hooks/useCurrentStrategy.ts';
 import { Badge } from 'component/common/Badge/Badge';

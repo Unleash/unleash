@@ -14,7 +14,7 @@ import {
     ReadonlyMilestoneListRenderer,
     EditableMilestoneListRenderer,
 } from './MilestoneListRenderer.tsx';
-import { applyProgressionChanges } from './applyProgressionChanges.ts';
+import { applyProgressionChanges } from './applyReleasePlanChanges.ts';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -91,9 +91,7 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
                 ) : (
                     <EditableMilestoneListRenderer
                         plan={modifiedPlan}
-                        milestonesWithAutomation={
-                            new Set([sourceId].filter(Boolean))
-                        }
+                        changesByMilestone={{ [sourceId]: [{ change }] }}
                         onUpdateAutomation={onUpdateChangeRequestSubmit}
                         onDeleteAutomation={onDeleteChangeRequestSubmit}
                     />

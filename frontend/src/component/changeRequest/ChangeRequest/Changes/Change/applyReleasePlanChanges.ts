@@ -1,16 +1,39 @@
-import type { IReleasePlan } from 'interfaces/releasePlans';
+import type {
+    IReleasePlan,
+    IReleasePlanMilestone,
+    IReleasePlanMilestoneStrategy,
+} from 'interfaces/releasePlans';
 import type {
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestDeleteMilestoneProgression,
+    IChangeRequestUpdateMilestoneStrategy,
 } from 'component/changeRequest/changeRequest.types';
 
 type ProgressionChange =
     | IChangeRequestChangeMilestoneProgression
     | IChangeRequestDeleteMilestoneProgression;
 
+const applyStrategyChanges = (
+    milestoneStrategies: IReleasePlanMilestoneStrategy[],
+    strategyChanges: IChangeRequestUpdateMilestoneStrategy[],
+): IReleasePlanMilestoneStrategy[] => {
+    const changeMap = new Map(
+        strategyChanges.map((c) => [c.payload.id, c.payload]),
+    );
+    return milestoneStrategies.map((strategy) => {
+        const change = changeMap.get(strategy.id);
+        if (change) {
+            const { snapshot, ...rest } = change;
+            return { ...strategy, ...rest };
+        }
+        return strategy;
+    });
+};
+
 export const applyProgressionChanges = (
     basePlan: IReleasePlan,
     progressionChanges: ProgressionChange[],
+    strategyChanges: IChangeRequestUpdateMilestoneStrategy[],
 ): IReleasePlan => {
     return {
         ...basePlan,
@@ -26,21 +49,26 @@ export const applyProgressionChanges = (
                     change.payload.sourceMilestone === milestone.id,
             );
 
+            let updates: Partial<IReleasePlanMilestone> = {
+                strategies: applyStrategyChanges(
+                    milestone.strategies,
+                    strategyChanges,
+                ),
+            };
+
             if (deleteChange) {
-                return {
-                    ...milestone,
-                    transitionCondition: null,
-                };
+                updates = { ...updates, transitionCondition: null };
             }
 
             if (changeProgression) {
-                return {
-                    ...milestone,
+                updates = {
+                    ...updates,
                     transitionCondition:
                         changeProgression.payload.transitionCondition,
                 };
             }
-            return milestone;
+
+            return { ...milestone, ...updates };
         }),
     };
 };

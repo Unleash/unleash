@@ -21,8 +21,7 @@ import {
     ReadonlyMilestoneListRenderer,
     EditableMilestoneListRenderer,
 } from './MilestoneListRenderer.tsx';
-import { applyProgressionChanges } from './applyProgressionChanges.js';
-import { applyStrategyChanges } from './applyStrategyChanges.ts';
+import { applyProgressionChanges as applyReleasePlanChanges } from './applyReleasePlanChanges.js';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -68,7 +67,7 @@ const getProgressionChangeDescriptions = (
                 ?.name || sourceId;
         const action =
             change.action === 'changeMilestoneProgression'
-                ? 'Changing'
+                ? 'Editing'
                 : 'Deleting';
         return `${action} automation for ${sourceName}`;
     });
@@ -95,18 +94,26 @@ const getStrategyChangeDescriptions = (
     basePlan: IReleasePlan,
 ): string[] => {
     return strategyChanges.map((change) => {
-        for (const milestone of basePlan.milestones) {
-            const strategy = milestone.strategies.find(
-                (s) => s.id === change.payload.id,
-            );
-            if (strategy) {
-                const strategyLabel =
-                    change.payload.title ||
-                    strategy.title ||
-                    strategy.strategyName ||
-                    'strategy';
-                return `Editing ${strategyLabel} in ${milestone.name}`;
+        const getMilestoneAndStrategy = () => {
+            for (const milestone of basePlan.milestones) {
+                const strategy = milestone.strategies.find(
+                    (s) => s.id === change.payload.id,
+                );
+                if (strategy) {
+                    return {
+                        sourceStrategy: strategy.name,
+                        sourceMilestone: milestone.name || milestone.id,
+                    };
+                }
             }
+            return { sourceStrategy: null, sourceMilestone: null };
+        };
+        const { sourceStrategy, sourceMilestone } = getMilestoneAndStrategy();
+
+        if (sourceMilestone) {
+            const strategyLabel =
+                change.payload.title || sourceStrategy || 'strategy';
+            return `Editing ${strategyLabel} in ${sourceMilestone}`;
         }
         return 'Editing strategy';
     });
@@ -132,6 +139,9 @@ export const ConsolidatedProgressionChanges: FC<{
 }) => {
     const changeRequestState = changeRequest.state;
 
+    // todo: add a map of "milestone.id" -> { milestoneName (optional), changes: []}
+    const milestoneChangeMap = new Map<string, string>();
+
     // Get all progression changes for this feature
     const progressionChanges = feature.changes.filter(
         (
@@ -156,24 +166,19 @@ export const ConsolidatedProgressionChanges: FC<{
     // updateMilestoneStrategy snapshots are strategy objects, not plans.
     const firstProgressionChange = progressionChanges[0];
     const planSnapshot = firstProgressionChange?.payload.snapshot;
-    const releasePlan =
+    const basePlan =
         (changeRequestState === 'Applied' || !currentReleasePlan) &&
         planSnapshot
             ? planSnapshot
             : currentReleasePlan;
 
-    const basePlan = releasePlan;
-
     if (!basePlan) {
         return null;
     }
 
-    const withProgressionChanges = applyProgressionChanges(
+    const modifiedPlan = applyReleasePlanChanges(
         basePlan,
         progressionChanges,
-    );
-    const modifiedPlan = applyStrategyChanges(
-        withProgressionChanges,
         strategyChanges,
     );
     const milestonesWithAutomation =

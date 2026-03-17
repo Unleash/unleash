@@ -14,7 +14,7 @@ import {
     ReadonlyMilestoneListRenderer,
     EditableMilestoneListRenderer,
 } from './MilestoneListRenderer.tsx';
-import { applyProgressionChanges } from './applyProgressionChanges.ts';
+import { applyProgressionChanges } from './applyReleasePlanChanges.ts';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',

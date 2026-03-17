@@ -1,8 +1,8 @@
 import type {
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
-    IChangeRequestUpdateMilestoneStrategy,
     IChangeRequestUpdateStrategy,
+    IChangeRequestUpdateMilestoneStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { omitIfDefined } from 'utils/omitFields';

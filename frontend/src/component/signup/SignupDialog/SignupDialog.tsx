@@ -22,9 +22,6 @@ import { useWelcomeDialogContext } from 'component/personalDashboard/WelcomeDial
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
-    '.MuiBackdrop-root': {
-        backdropFilter: 'blur(8px)',
-    },
     '& .MuiDialog-paper': {
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',

@@ -235,6 +235,47 @@ test('with flag set should set user if known token', async () => {
     expect(req.user).toBe(apiUser);
 });
 
+test('with flag set client api should return 403 if user object is set and token is PAT', async () => {
+    const localConfig = createTestConfig({
+        getLogger,
+        authentication: {
+            enableApiToken: true,
+        },
+        experimental: {
+            flags: {
+                onlyBackendTokensWithClientAPI: true,
+            },
+        },
+    });
+
+    const apiTokenService = {
+        getUserForToken: vi.fn(),
+    } as unknown as ApiTokenService;
+
+    const func = apiTokenMiddleware(localConfig, { apiTokenService });
+
+    const cb = vi.fn();
+    const user = { accountType: 'User', id: 1, username: 'PAT-Owner' };
+
+    const req = {
+        header: vi.fn().mockReturnValue('user:some-pat-token'),
+        user,
+        path: '/api/client',
+    };
+
+    const res = {
+        status: vi.fn().mockReturnValue({
+            send: vi.fn(),
+        }),
+    };
+
+    await func(req, res, cb);
+
+    expect(cb).not.toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(403);
+});
+
 test.each([
     ApiTokenType.CLIENT,
     ApiTokenType.BACKEND,

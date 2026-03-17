@@ -20,6 +20,7 @@ import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import {
     ReadonlyMilestoneListRenderer,
     EditableMilestoneListRenderer,
+    type ReleasePlanChange,
 } from './MilestoneListRenderer.tsx';
 import { applyProgressionChanges as applyReleasePlanChanges } from './applyReleasePlanChanges.js';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
@@ -30,93 +31,82 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-type ProgressionChange =
-    | IChangeRequestChangeMilestoneProgression
-    | IChangeRequestDeleteMilestoneProgression;
-
-const getMilestonesWithAutomation = (
-    progressionChanges: ProgressionChange[],
-): Set<string> => {
-    return new Set(
-        progressionChanges
-            .filter((change) => change.action === 'changeMilestoneProgression')
-            .map((change) => change.payload.sourceMilestone)
-            .filter((id): id is string => Boolean(id)),
-    );
+type ChangeDescription = {
+    text: string;
+    action: ReleasePlanChange['action'];
 };
 
-const getMilestonesWithDeletedAutomation = (
-    progressionChanges: ProgressionChange[],
-): Set<string> => {
-    return new Set(
-        progressionChanges
-            .filter((change) => change.action === 'deleteMilestoneProgression')
-            .map((change) => change.payload.sourceMilestone)
-            .filter((id): id is string => Boolean(id)),
-    );
+type MilestoneChanges = {
+    [milestoneId: string]: Array<{
+        description: ChangeDescription;
+        change: ReleasePlanChange;
+    }>;
 };
 
-const getProgressionChangeDescriptions = (
-    progressionChanges: ProgressionChange[],
+const processReleasePlanChanges = (
+    changes: ReleasePlanChange[],
     basePlan: IReleasePlan,
-): string[] => {
-    return progressionChanges.map((change) => {
-        const sourceId = change.payload.sourceMilestone;
-        const sourceName =
-            basePlan.milestones.find((milestone) => milestone.id === sourceId)
-                ?.name || sourceId;
-        const action =
-            change.action === 'changeMilestoneProgression'
-                ? 'Editing'
-                : 'Deleting';
-        return `${action} automation for ${sourceName}`;
-    });
-};
+): MilestoneChanges => {
+    const changesByMilestone: MilestoneChanges = {};
 
-const getMilestonesWithStrategyChanges = (
-    strategyChanges: IChangeRequestUpdateMilestoneStrategy[],
-    basePlan: IReleasePlan,
-): Set<string> => {
-    const milestoneIds = new Set<string>();
-    for (const change of strategyChanges) {
-        for (const milestone of basePlan.milestones) {
-            if (milestone.strategies.some((s) => s.id === change.payload.id)) {
-                milestoneIds.add(milestone.id);
+    const releasePlanStrategies = new Map(
+        basePlan.milestones.flatMap((milestone) =>
+            milestone.strategies.map((strategy) => [
+                strategy.id,
+                { milestone, strategy },
+            ]),
+        ),
+    );
+
+    const milestoneName = (id: string) =>
+        basePlan.milestones.find((milestone) => milestone.id === id)?.name ||
+        id;
+
+    const addToMilestone = (
+        milestoneId: string,
+        change: ReleasePlanChange,
+        description: ChangeDescription,
+    ) => {
+        const existing = changesByMilestone[milestoneId] ?? [];
+        existing.push({ change, description });
+        changesByMilestone[milestoneId] = existing;
+    };
+
+    for (const change of changes) {
+        switch (change.action) {
+            case 'changeMilestoneProgression':
+            case 'deleteMilestoneProgression': {
+                const milestoneId = change.payload.sourceMilestone;
+                const label =
+                    change.action === 'changeMilestoneProgression'
+                        ? 'Editing'
+                        : 'Deleting';
+                addToMilestone(milestoneId, change, {
+                    text: `${label} automation for ${milestoneName(milestoneId)}`,
+                    action: change.action,
+                });
+                break;
+            }
+            case 'updateMilestoneStrategy': {
+                const strategyInfo = releasePlanStrategies.get(
+                    change.payload.id,
+                );
+                if (strategyInfo) {
+                    const strategyLabel =
+                        change.payload.title ||
+                        strategyInfo.strategy.name ||
+                        'strategy';
+                    addToMilestone(strategyInfo.milestone.id, change, {
+                        text: `Editing ${strategyLabel} in ${strategyInfo.milestone.name || strategyInfo.milestone.id}`,
+                        action: change.action,
+                    });
+                }
                 break;
             }
         }
     }
-    return milestoneIds;
-};
 
-const getStrategyChangeDescriptions = (
-    strategyChanges: IChangeRequestUpdateMilestoneStrategy[],
-    basePlan: IReleasePlan,
-): string[] => {
-    return strategyChanges.map((change) => {
-        const getMilestoneAndStrategy = () => {
-            for (const milestone of basePlan.milestones) {
-                const strategy = milestone.strategies.find(
-                    (s) => s.id === change.payload.id,
-                );
-                if (strategy) {
-                    return {
-                        sourceStrategy: strategy.name,
-                        sourceMilestone: milestone.name || milestone.id,
-                    };
-                }
-            }
-            return { sourceStrategy: null, sourceMilestone: null };
-        };
-        const { sourceStrategy, sourceMilestone } = getMilestoneAndStrategy();
-
-        if (sourceMilestone) {
-            const strategyLabel =
-                change.payload.title || sourceStrategy || 'strategy';
-            return `Editing ${strategyLabel} in ${sourceMilestone}`;
-        }
-        return 'Editing strategy';
-    });
+    return changesByMilestone;
 };
 
 export const ConsolidatedProgressionChanges: FC<{
@@ -139,32 +129,24 @@ export const ConsolidatedProgressionChanges: FC<{
 }) => {
     const changeRequestState = changeRequest.state;
 
-    // todo: add a map of "milestone.id" -> { milestoneName (optional), changes: []}
-    const milestoneChangeMap = new Map<string, string>();
-
-    // Get all progression changes for this feature
-    const progressionChanges = feature.changes.filter(
+    const releasePlanChanges = feature.changes.filter(
         (
             change,
         ): change is
             | IChangeRequestChangeMilestoneProgression
-            | IChangeRequestDeleteMilestoneProgression =>
+            | IChangeRequestDeleteMilestoneProgression
+            | IChangeRequestUpdateMilestoneStrategy =>
             change.action === 'changeMilestoneProgression' ||
-            change.action === 'deleteMilestoneProgression',
-    );
-
-    // Get all milestone strategy changes for this feature
-    const strategyChanges = feature.changes.filter(
-        (change): change is IChangeRequestUpdateMilestoneStrategy =>
+            change.action === 'deleteMilestoneProgression' ||
             change.action === 'updateMilestoneStrategy',
     );
 
-    if (progressionChanges.length === 0 && strategyChanges.length === 0)
-        return null;
-
     // Only progression changes carry a release plan snapshot;
     // updateMilestoneStrategy snapshots are strategy objects, not plans.
-    const firstProgressionChange = progressionChanges[0];
+    const firstProgressionChange = releasePlanChanges.find(
+        (change): change is IChangeRequestChangeMilestoneProgression =>
+            change.action === 'changeMilestoneProgression',
+    );
     const planSnapshot = firstProgressionChange?.payload.snapshot;
     const basePlan =
         (changeRequestState === 'Applied' || !currentReleasePlan) &&
@@ -176,55 +158,39 @@ export const ConsolidatedProgressionChanges: FC<{
         return null;
     }
 
-    const modifiedPlan = applyReleasePlanChanges(
-        basePlan,
-        progressionChanges,
-        strategyChanges,
-    );
-    const milestonesWithAutomation =
-        getMilestonesWithAutomation(progressionChanges);
-    const milestonesWithDeletedAutomation =
-        getMilestonesWithDeletedAutomation(progressionChanges);
-    const milestonesWithStrategyEdits = getMilestonesWithStrategyChanges(
-        strategyChanges,
-        basePlan,
-    );
-    const progressionDescriptions = getProgressionChangeDescriptions(
-        progressionChanges,
-        basePlan,
-    );
-    const strategyDescriptions = getStrategyChangeDescriptions(
-        strategyChanges,
+    const modifiedPlan = applyReleasePlanChanges(basePlan, releasePlanChanges);
+    const changesByMilestone = processReleasePlanChanges(
+        releasePlanChanges,
         basePlan,
     );
 
     const readonly =
         changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
 
-    const strategyChangeMap = new Map(
-        strategyChanges.map((c) => [c.payload.id, c]),
-    );
+    const descriptionWrappers = {
+        changeMilestoneProgression: Added,
+        deleteMilestoneProgression: Deleted,
+        updateMilestoneStrategy: Action,
+    };
 
     return (
         <StyledTabs>
             <ChangeItemWrapper>
                 <ChangeItemInfo>
-                    {progressionChanges.map((change, index) => {
-                        const Component =
-                            change.action === 'deleteMilestoneProgression'
-                                ? Deleted
-                                : Added;
-                        return (
-                            <Component key={`progression-${index}`}>
-                                {progressionDescriptions[index]}
-                            </Component>
-                        );
+                    {basePlan.milestones.flatMap(({ id }, index) => {
+                        const changes = changesByMilestone[id];
+                        if (!changes) return null;
+
+                        return changes.map(({ description }) => {
+                            const Component =
+                                descriptionWrappers[description.action];
+                            return (
+                                <Component key={index}>
+                                    {description.text}
+                                </Component>
+                            );
+                        });
                     })}
-                    {strategyChanges.map((_, index) => (
-                        <Action key={`strategy-${index}`}>
-                            {strategyDescriptions[index]}
-                        </Action>
-                    ))}
                 </ChangeItemInfo>
                 <div>
                     <TabList>
@@ -237,23 +203,14 @@ export const ConsolidatedProgressionChanges: FC<{
                 {readonly ? (
                     <ReadonlyMilestoneListRenderer
                         plan={modifiedPlan}
-                        milestonesWithStrategyChanges={
-                            milestonesWithStrategyEdits
-                        }
+                        changesByMilestone={changesByMilestone}
                     />
                 ) : (
                     <EditableMilestoneListRenderer
                         plan={modifiedPlan}
-                        milestonesWithAutomation={milestonesWithAutomation}
-                        milestonesWithDeletedAutomation={
-                            milestonesWithDeletedAutomation
-                        }
-                        milestonesWithStrategyChanges={
-                            milestonesWithStrategyEdits
-                        }
+                        changesByMilestone={changesByMilestone}
                         onUpdateAutomation={onUpdateChangeRequestSubmit}
                         onDeleteAutomation={onDeleteChangeRequestSubmit}
-                        strategyChanges={strategyChangeMap}
                         changeRequest={changeRequest}
                         onRefetch={onRefetch}
                     />

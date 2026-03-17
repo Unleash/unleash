@@ -102,7 +102,8 @@ describe('applying strategy changes', () => {
         progressionChanges,
         expectedTransitionCondition,
     }) => {
-        const result = applyProgressionChanges(basePlan, progressionChanges, [
+        const result = applyProgressionChanges(basePlan, [
+            ...progressionChanges,
             strategyChange,
         ]);
 

@@ -30,20 +30,24 @@ const applyStrategyChanges = (
     });
 };
 
+const isStrategyChange = (
+    change: ProgressionChange | IChangeRequestUpdateMilestoneStrategy,
+): change is IChangeRequestUpdateMilestoneStrategy =>
+    change.action === 'updateMilestoneStrategy';
+
 export const applyProgressionChanges = (
     basePlan: IReleasePlan,
-    progressionChanges: ProgressionChange[],
-    strategyChanges: IChangeRequestUpdateMilestoneStrategy[],
+    changes: (ProgressionChange | IChangeRequestUpdateMilestoneStrategy)[],
 ): IReleasePlan => {
     return {
         ...basePlan,
         milestones: basePlan.milestones.map((milestone) => {
-            const changeProgression = progressionChanges.find(
+            const changeProgression = changes.find(
                 (change): change is IChangeRequestChangeMilestoneProgression =>
                     change.action === 'changeMilestoneProgression' &&
                     change.payload.sourceMilestone === milestone.id,
             );
-            const deleteChange = progressionChanges.find(
+            const deleteChange = changes.find(
                 (change): change is IChangeRequestDeleteMilestoneProgression =>
                     change.action === 'deleteMilestoneProgression' &&
                     change.payload.sourceMilestone === milestone.id,
@@ -52,7 +56,7 @@ export const applyProgressionChanges = (
             let updates: Partial<IReleasePlanMilestone> = {
                 strategies: applyStrategyChanges(
                     milestone.strategies,
-                    strategyChanges,
+                    changes.filter(isStrategyChange),
                 ),
             };
 

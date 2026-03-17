@@ -1,6 +1,9 @@
 import type React from 'react';
 import { styled } from '@mui/material';
-import type { IReleasePlan } from 'interfaces/releasePlans';
+import type {
+    IReleasePlan,
+    IReleasePlanMilestone,
+} from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
 import { MilestoneAutomationSection } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/MilestoneAutomationSection.tsx';
@@ -12,11 +15,12 @@ import type { MilestoneStatus } from 'component/feature/FeatureView/FeatureOverv
 import { Badge } from 'component/common/Badge/Badge';
 import type {
     ChangeRequestType,
+    IChangeRequestChangeMilestoneProgression,
+    IChangeRequestDeleteMilestoneProgression,
     IChangeRequestUpdateMilestoneStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { StrategyChange } from './StrategyChange.tsx';
 import { ChangeActions } from './ChangeActions.tsx';
-import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 
 const StyledConnection = styled('div')(({ theme }) => ({
     width: 2,
@@ -25,12 +29,24 @@ const StyledConnection = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(3.5),
 }));
 
+export type ReleasePlanChange =
+    | IChangeRequestChangeMilestoneProgression
+    | IChangeRequestDeleteMilestoneProgression
+    | IChangeRequestUpdateMilestoneStrategy;
+
+export type MilestoneChangeEntry = {
+    change: ReleasePlanChange;
+    [key: string]: unknown;
+};
+
+export type MilestoneChanges = {
+    [milestoneId: string]: MilestoneChangeEntry[];
+};
+
 interface MilestoneListRendererCoreProps {
     plan: IReleasePlan;
     readonly: boolean;
-    milestonesWithAutomation: Set<string>;
-    milestonesWithDeletedAutomation: Set<string>;
-    milestonesWithStrategyChanges: Set<string>;
+    changesByMilestone: MilestoneChanges;
     onUpdateAutomation: (
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
@@ -45,9 +61,7 @@ interface MilestoneListRendererCoreProps {
 const MilestoneListRendererCore = ({
     plan,
     readonly,
-    milestonesWithAutomation,
-    milestonesWithDeletedAutomation,
-    milestonesWithStrategyChanges,
+    changesByMilestone,
     onUpdateAutomation,
     onDeleteAutomation,
     renderStrategy,
@@ -60,26 +74,32 @@ const MilestoneListRendererCore = ({
     return (
         <>
             {plan.milestones.map((milestone, index) => {
+                const milestoneChanges = changesByMilestone[milestone.id] ?? [];
+                const hasAutomationChange = milestoneChanges.some(
+                    (entry) =>
+                        entry.change.action === 'changeMilestoneProgression',
+                );
+                const hasDeletedAutomation = milestoneChanges.some(
+                    (entry) =>
+                        entry.change.action === 'deleteMilestoneProgression',
+                );
+                const hasStrategyChanges = milestoneChanges.some(
+                    (entry) =>
+                        entry.change.action === 'updateMilestoneStrategy',
+                );
+
                 const isNotLastMilestone = index < plan.milestones.length - 1;
                 const nextMilestoneId = plan.milestones[index + 1]?.id || '';
                 const shouldShowAutomation = readonly
                     ? milestone.transitionCondition !== undefined
-                    : milestonesWithAutomation.has(milestone.id) ||
-                      milestonesWithDeletedAutomation.has(milestone.id);
+                    : hasAutomationChange || hasDeletedAutomation;
 
                 const showAutomation =
                     isNotLastMilestone && shouldShowAutomation;
 
-                const hasPendingDelete = milestonesWithDeletedAutomation.has(
-                    milestone.id,
-                );
-                const hasPendingModification = milestonesWithAutomation.has(
-                    milestone.id,
-                );
-
-                const badge = hasPendingDelete ? (
+                const badge = hasDeletedAutomation ? (
                     <Badge color='error'>Deleted in draft</Badge>
-                ) : hasPendingModification ? (
+                ) : hasAutomationChange ? (
                     <Badge color='warning'>Modified in draft</Badge>
                 ) : undefined;
 
@@ -131,9 +151,7 @@ const MilestoneListRendererCore = ({
                             milestone={milestone}
                             environmentId={plan.environment}
                             automationSection={automationSection}
-                            defaultExpanded={milestonesWithStrategyChanges.has(
-                                milestone.id,
-                            )}
+                            defaultExpanded={hasStrategyChanges}
                             renderStrategy={renderStrategy}
                         />
                         {isNotLastMilestone && <StyledConnection />}
@@ -146,24 +164,18 @@ const MilestoneListRendererCore = ({
 
 interface ReadonlyMilestoneListRendererProps {
     plan: IReleasePlan;
-    milestonesWithAutomation?: Set<string>;
-    milestonesWithDeletedAutomation?: Set<string>;
-    milestonesWithStrategyChanges?: Set<string>;
+    changesByMilestone?: MilestoneChanges;
 }
 
 export const ReadonlyMilestoneListRenderer = ({
     plan,
-    milestonesWithAutomation = new Set(),
-    milestonesWithDeletedAutomation = new Set(),
-    milestonesWithStrategyChanges = new Set(),
+    changesByMilestone = {},
 }: ReadonlyMilestoneListRendererProps) => {
     return (
         <MilestoneListRendererCore
             plan={plan}
             readonly={true}
-            milestonesWithAutomation={milestonesWithAutomation}
-            milestonesWithDeletedAutomation={milestonesWithDeletedAutomation}
-            milestonesWithStrategyChanges={milestonesWithStrategyChanges}
+            changesByMilestone={changesByMilestone}
             onUpdateAutomation={async () => {}}
             onDeleteAutomation={() => {}}
         />
@@ -172,16 +184,13 @@ export const ReadonlyMilestoneListRenderer = ({
 
 interface EditableMilestoneListRendererProps {
     plan: IReleasePlan;
-    milestonesWithAutomation?: Set<string>;
-    milestonesWithDeletedAutomation?: Set<string>;
-    milestonesWithStrategyChanges?: Set<string>;
+    changesByMilestone?: MilestoneChanges;
     onUpdateAutomation: (
         sourceMilestoneId: string,
         payload: ChangeMilestoneProgressionSchema,
     ) => Promise<void>;
     onDeleteAutomation: (sourceMilestoneId: string) => void;
-    strategyChanges?: Map<string, IChangeRequestUpdateMilestoneStrategy>;
-    changeRequest: ChangeRequestType;
+    changeRequest?: ChangeRequestType;
     onRefetch?: () => void;
 }
 
@@ -191,22 +200,37 @@ const ChangeWrapper = styled('div')(({ theme }) => ({
 
 export const EditableMilestoneListRenderer = ({
     plan,
-    milestonesWithAutomation = new Set(),
-    milestonesWithDeletedAutomation = new Set(),
-    milestonesWithStrategyChanges = new Set(),
+    changesByMilestone = {},
     onUpdateAutomation,
     onDeleteAutomation,
-    strategyChanges,
     changeRequest,
     onRefetch,
 }: EditableMilestoneListRendererProps) => {
+    // Build a strategy lookup from the milestone change map for O(1) access
+    const strategyChangeMap = new Map<
+        string,
+        IChangeRequestUpdateMilestoneStrategy
+    >();
+    if (changeRequest) {
+        for (const entries of Object.values(changesByMilestone)) {
+            for (const entry of entries) {
+                if (entry.change.action === 'updateMilestoneStrategy') {
+                    strategyChangeMap.set(
+                        entry.change.payload.id,
+                        entry.change,
+                    );
+                }
+            }
+        }
+    }
+
     const renderStrategy =
-        strategyChanges && changeRequest
+        changeRequest && strategyChangeMap.size > 0
             ? (
                   strategy: IReleasePlanMilestone['strategies'][number],
                   _index: number,
               ) => {
-                  const change = strategyChanges.get(strategy.id);
+                  const change = strategyChangeMap.get(strategy.id);
                   if (change) {
                       return (
                           <ChangeWrapper>
@@ -236,9 +260,7 @@ export const EditableMilestoneListRenderer = ({
         <MilestoneListRendererCore
             plan={plan}
             readonly={false}
-            milestonesWithAutomation={milestonesWithAutomation}
-            milestonesWithDeletedAutomation={milestonesWithDeletedAutomation}
-            milestonesWithStrategyChanges={milestonesWithStrategyChanges}
+            changesByMilestone={changesByMilestone}
             onUpdateAutomation={onUpdateAutomation}
             onDeleteAutomation={onDeleteAutomation}
             renderStrategy={renderStrategy}

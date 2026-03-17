@@ -6,6 +6,7 @@ import type { IUnleashConfig } from './lib/types/option.js';
 import { secondsToMilliseconds } from 'date-fns';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
+import { cloneDbConfig } from './lib/util/clone-db-config.js';
 
 log.setLogLevel('error');
 const __filename = fileURLToPath(import.meta.url);
@@ -24,7 +25,7 @@ export async function migrateDb(
 ): Promise<void> {
     return noDatabaseUrl(async () => {
         const custom = {
-            ...db,
+            ...cloneDbConfig(db),
             connectionTimeoutMillis: secondsToMilliseconds(10),
         };
 
@@ -45,7 +46,7 @@ export async function requiresMigration({
 }: Pick<IUnleashConfig, 'db'>): Promise<boolean> {
     return noDatabaseUrl(async () => {
         const custom = {
-            ...db,
+            ...cloneDbConfig(db),
             connectionTimeoutMillis: secondsToMilliseconds(10),
         };
 
@@ -66,7 +67,7 @@ export async function requiresMigration({
 export async function resetDb({ db }: IUnleashConfig): Promise<void> {
     return noDatabaseUrl(async () => {
         const custom = {
-            ...db,
+            ...cloneDbConfig(db),
             connectionTimeoutMillis: secondsToMilliseconds(10),
         };
 

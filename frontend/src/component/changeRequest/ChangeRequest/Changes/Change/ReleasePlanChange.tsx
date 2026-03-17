@@ -386,7 +386,7 @@ export const ReleasePlanChange: FC<{
         try {
             await addChange(projectId, environmentName, {
                 feature: featureName,
-                action: 'changeSafeguard' as const,
+                action: 'changeReleasePlanSafeguard' as const,
                 payload: {
                     planId: currentReleasePlan.id,
                     safeguard: data,
@@ -407,7 +407,7 @@ export const ReleasePlanChange: FC<{
         try {
             await addChange(projectId, environmentName, {
                 feature: featureName,
-                action: 'deleteSafeguard',
+                action: 'deleteReleasePlanSafeguard',
                 payload: {
                     planId: currentReleasePlan.id,
                     safeguardId: safeguardId,
@@ -543,7 +543,7 @@ export const ReleasePlanChange: FC<{
                     actions={actions}
                 />
             )}
-            {change.action === 'changeSafeguard' && (
+            {change.action === 'changeReleasePlanSafeguard' && (
                 <ChangeSafeguard
                     change={change}
                     currentReleasePlan={currentReleasePlan}
@@ -555,7 +555,7 @@ export const ReleasePlanChange: FC<{
                     actions={actions}
                 />
             )}
-            {change.action === 'deleteSafeguard' && (
+            {change.action === 'deleteReleasePlanSafeguard' && (
                 <DeleteSafeguard
                     change={change}
                     currentReleasePlan={currentReleasePlan}

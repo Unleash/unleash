@@ -429,14 +429,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fast-check/vitest@npm:^0.2.4":
-  version: 0.2.4
-  resolution: "@fast-check/vitest@npm:0.2.4"
+"@fast-check/vitest@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@fast-check/vitest@npm:0.3.0"
   dependencies:
     fast-check: "npm:^3.0.0 || ^4.0.0"
   peerDependencies:
     vitest: ^1 || ^2 || ^3 || ^4
-  checksum: 10c0/51dd152cd316a6817ef3829fbfdbe94e5d0f837f257ef8e6cb04963165614db06c4f681d271944e258af0ce38e022aa0853919fef62575242feb55a848852171
+  checksum: 10c0/b10574c2164b13302f9af315d0a8c979439a4204fcd4982189aa46244e9dfe93252b96432a18521b2c14d7f92a5678658f6b6255c5f5739be11ad080ed94564e
   languageName: node
   linkType: hard
 
@@ -2784,13 +2784,13 @@ __metadata:
   linkType: hard
 
 "express-rate-limit@npm:^8.3.0":
-  version: 8.3.0
-  resolution: "express-rate-limit@npm:8.3.0"
+  version: 8.3.1
+  resolution: "express-rate-limit@npm:8.3.1"
   dependencies:
     ip-address: "npm:10.1.0"
   peerDependencies:
     express: ">= 4.11"
-  checksum: 10c0/604672788f0d45cf5bc3bb7d841997f48437ae5b8001605e2eb161798180087fdb3d0a0882827655add868cc64dd9192211173c29260af752e671fe697027617
+  checksum: 10c0/e3229938457cec617460c54ef4e90c8c254facc884729325d20ea35e3838bd273e4c611fc1f4a76f6d14c411e30d31b15e88eb4be87408615ff0aacc142511a2
   languageName: node
   linkType: hard
 
@@ -2858,16 +2858,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-check@npm:4.5.3":
-  version: 4.5.3
-  resolution: "fast-check@npm:4.5.3"
-  dependencies:
-    pure-rand: "npm:^7.0.0"
-  checksum: 10c0/e50846538de208756ecc3fab9d8bdc5d9677d2e27c611ccbbb3269c44635e819eb0a2323fcf4bf9aae648f7066cc5d7bda339549b25b8e35139831adf4975329
-  languageName: node
-  linkType: hard
-
-"fast-check@npm:^3.0.0 || ^4.0.0":
+"fast-check@npm:4.6.0, fast-check@npm:^3.0.0 || ^4.0.0":
   version: 4.6.0
   resolution: "fast-check@npm:4.6.0"
   dependencies:
@@ -4992,13 +4983,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pure-rand@npm:^7.0.0":
-  version: 7.0.1
-  resolution: "pure-rand@npm:7.0.1"
-  checksum: 10c0/9cade41030f5ec95f5d55a11a71404cd6f46b69becaad892097cd7f58e2c6248cd0a933349ca7d21336ab629f1da42ffe899699b671bc4651600eaf6e57f837e
-  languageName: node
-  linkType: hard
-
 "pure-rand@npm:^8.0.0":
   version: 8.0.0
   resolution: "pure-rand@npm:8.0.0"
@@ -6238,7 +6222,7 @@ __metadata:
     "@biomejs/biome": "npm:^2.4.6"
     "@cyclonedx/yarn-plugin-cyclonedx": "npm:^3.3.0"
     "@faker-js/faker": "npm:^10.3.0"
-    "@fast-check/vitest": "npm:^0.2.4"
+    "@fast-check/vitest": "npm:^0.3.0"
     "@json2csv/plainjs": "npm:^7.0.6"
     "@slack/web-api": "npm:^7.14.1"
     "@types/cors": "npm:2.8.19"
@@ -6284,7 +6268,7 @@ __metadata:
     express: "npm:^4.22.1"
     express-rate-limit: "npm:^8.3.0"
     express-session: "npm:^1.19.0"
-    fast-check: "npm:4.5.3"
+    fast-check: "npm:4.6.0"
     fast-json-patch: "npm:^3.1.1"
     fetch-mock: "npm:^12.6.0"
     hash-sum: "npm:^2.0.0"

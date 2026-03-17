@@ -62,6 +62,16 @@ export const getMetricType = (seriesName: string) => {
     return 'unknown';
 };
 
+export const getMetricDisplayName = (metricName: string): string => {
+    if (metricName.startsWith('unleash_counter_'))
+        return metricName.slice('unleash_counter_'.length);
+    if (metricName.startsWith('unleash_gauge_'))
+        return metricName.slice('unleash_gauge_'.length);
+    if (metricName.startsWith('unleash_histogram_'))
+        return metricName.slice('unleash_histogram_'.length);
+    return metricName;
+};
+
 export const getDefaultAggregation = (seriesName: string) => {
     const metricType = getMetricType(seriesName);
 

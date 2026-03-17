@@ -221,13 +221,13 @@ export interface IChangeRequestDeleteMilestoneProgression
 
 export interface IChangeRequestChangeSafeguard
     extends IChangeRequestChangeBase {
-    action: 'changeSafeguard';
+    action: 'changeReleasePlanSafeguard';
     payload: ChangeRequestChangeSafeguard;
 }
 
 export interface IChangeRequestDeleteSafeguard
     extends IChangeRequestChangeBase {
-    action: 'deleteSafeguard';
+    action: 'deleteReleasePlanSafeguard';
     payload: ChangeRequestDeleteSafeguard;
 }
 
@@ -415,8 +415,8 @@ export type ChangeRequestAction =
     | 'startMilestone'
     | 'changeMilestoneProgression'
     | 'deleteMilestoneProgression'
-    | 'changeSafeguard'
-    | 'deleteSafeguard'
+    | 'changeReleasePlanSafeguard'
+    | 'deleteReleasePlanSafeguard'
     | 'changeFeatureEnvSafeguard'
     | 'deleteFeatureEnvSafeguard'
     | 'resumeMilestoneProgression';

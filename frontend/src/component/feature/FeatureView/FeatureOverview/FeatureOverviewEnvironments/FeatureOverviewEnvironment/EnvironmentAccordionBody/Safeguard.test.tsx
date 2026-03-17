@@ -33,14 +33,12 @@ const permissions = [
     },
 ];
 
-const releasePlan = { id: 'plan-1', name: 'Release Plan 1' };
-
 const releasePlanSafeguard: ISafeguard = {
     id: 'safeguard-1',
     action: { id: 'action-1', type: 'pause' },
     impactMetric: {
         id: 'metric-1',
-        metricName: 'http_requests_total',
+        metricName: 'unleash_counter_http_requests_total',
         timeRange: 'day',
         aggregationMode: 'rps',
         labelSelectors: { appName: ['*'] },
@@ -51,6 +49,23 @@ const releasePlanSafeguard: ISafeguard = {
     },
 };
 
+const releasePlanBase = {
+    id: 'plan-1',
+    name: 'Release Plan 1',
+    description: '',
+    createdAt: '',
+    createdByUserId: 0,
+    featureName: 'feature1',
+    environment: 'production',
+    milestones: [],
+};
+
+const releasePlan = { ...releasePlanBase, safeguards: [] as ISafeguard[] };
+const releasePlanWithSafeguard = {
+    ...releasePlanBase,
+    safeguards: [releasePlanSafeguard],
+};
+
 const featureEnvSafeguard: ISafeguard = {
     id: 'env-safeguard-1',
     action: {
@@ -59,7 +74,7 @@ const featureEnvSafeguard: ISafeguard = {
     },
     impactMetric: {
         id: 'metric-2',
-        metricName: 'http_requests_total',
+        metricName: 'unleash_counter_http_requests_total',
         timeRange: 'hour',
         aggregationMode: 'count',
         labelSelectors: { appName: ['*'] },
@@ -72,7 +87,7 @@ const featureEnvSafeguard: ISafeguard = {
 
 const defaultSafeguardPayload = {
     impactMetric: {
-        metricName: 'http_requests_total',
+        metricName: 'unleash_counter_http_requests_total',
         timeRange: 'day',
         aggregationMode: 'rps',
         labelSelectors: { appName: ['*'] },
@@ -124,10 +139,10 @@ const setupServerRoutes = () => {
     );
     testServerRoute(server, '/api/admin/impact-metrics/metadata', {
         series: {
-            http_requests_total: {
+            unleash_counter_http_requests_total: {
                 type: 'counter',
                 help: 'Total HTTP requests',
-                displayName: 'HTTP Requests',
+                displayName: 'http_requests_total',
             },
         },
     });
@@ -302,8 +317,11 @@ describe('Safeguard', () => {
                     element={
                         <Safeguard
                             featureEnvSafeguard={props?.featureEnvSafeguard}
-                            releasePlan={releasePlan}
-                            releasePlanSafeguard={props?.releasePlanSafeguard}
+                            releasePlan={
+                                props?.releasePlanSafeguard
+                                    ? releasePlanWithSafeguard
+                                    : releasePlan
+                            }
                             environmentName='production'
                             featureId='feature1'
                             onSafeguardChange={onSafeguardChange}
@@ -382,6 +400,11 @@ describe('Safeguard', () => {
         await user.click(saveButton);
 
         await screen.findByText('Add suggestion to draft');
+        expect(screen.getByText('http_requests_total')).toBeInTheDocument();
+        expect(
+            screen.queryByText('unleash_counter_http_requests_total'),
+        ).not.toBeInTheDocument();
+
         const confirmButton = await screen.findByRole('button', {
             name: 'Add suggestion to draft',
         });
@@ -547,7 +570,7 @@ describe('Safeguard', () => {
         expect(requests).toMatchObject([
             {
                 feature: 'feature1',
-                action: 'changeSafeguard',
+                action: 'changeReleasePlanSafeguard',
                 payload: {
                     planId: 'plan-1',
                     safeguard: defaultSafeguardPayload,
@@ -577,7 +600,7 @@ describe('Safeguard', () => {
         expect(requests).toMatchObject([
             {
                 feature: 'feature1',
-                action: 'deleteSafeguard',
+                action: 'deleteReleasePlanSafeguard',
                 payload: {
                     planId: 'plan-1',
                     safeguardId: 'safeguard-1',

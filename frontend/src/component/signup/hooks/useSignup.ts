@@ -49,11 +49,7 @@ export const useSignup = (options?: SWRConfiguration) => {
         authData &&
         'user' in authData &&
         authData.user?.email?.toLowerCase().endsWith('@getunleash.io');
-    const dataIncomplete =
-        signupData &&
-        (signupData.shouldSetPassword ||
-            !signupData.companyRole ||
-            !signupData.companyName);
+    const dataIncomplete = signupData && !signupData.companyRole;
     const signupRequired = isUCASignup && !isUnleashUser && dataIncomplete;
 
     return {

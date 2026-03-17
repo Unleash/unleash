@@ -10,6 +10,7 @@ import type {
     ClientMetricsSchema,
     FrontendApiFeatureSchema,
 } from '../../openapi/index.js';
+import type { Metric } from '../metrics/impact/metrics-translator.js';
 import ApiUser from '../../types/api-user.js';
 import type { IApiUser } from '../../types/api-user.js';
 import {
@@ -118,6 +119,7 @@ export class FrontendApiService {
         metrics: ClientMetricsSchema,
         ip: string,
         sdkVersion?: string | string[],
+        impactMetrics?: Metric[],
     ): Promise<void> {
         FrontendApiService.assertExpectedTokenType(token);
 
@@ -134,6 +136,15 @@ export class FrontendApiService {
             },
             ip,
         );
+
+        if (
+            this.config.flagResolver.isEnabled('impactMetrics') &&
+            impactMetrics
+        ) {
+            await this.services.clientMetricsServiceV2.registerImpactMetrics(
+                impactMetrics,
+            );
+        }
 
         if (metrics.instanceId && typeof sdkVersion === 'string') {
             const client = {

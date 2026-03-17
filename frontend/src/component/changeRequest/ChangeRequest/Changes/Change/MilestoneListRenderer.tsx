@@ -181,9 +181,13 @@ interface EditableMilestoneListRendererProps {
     ) => Promise<void>;
     onDeleteAutomation: (sourceMilestoneId: string) => void;
     strategyChanges?: Map<string, IChangeRequestUpdateMilestoneStrategy>;
-    changeRequest?: ChangeRequestType;
+    changeRequest: ChangeRequestType;
     onRefetch?: () => void;
 }
+
+const ChangeWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(3),
+}));
 
 export const EditableMilestoneListRenderer = ({
     plan,
@@ -205,21 +209,23 @@ export const EditableMilestoneListRenderer = ({
                   const change = strategyChanges.get(strategy.id);
                   if (change) {
                       return (
-                          <StrategyChange
-                              change={change}
-                              featureName={plan.featureName}
-                              environmentName={plan.environment}
-                              projectId={changeRequest.project}
-                              changeRequestState={changeRequest.state}
-                              actions={
-                                  <ChangeActions
-                                      changeRequest={changeRequest}
-                                      feature={plan.featureName}
-                                      change={change}
-                                      onRefetch={onRefetch}
-                                  />
-                              }
-                          />
+                          <ChangeWrapper>
+                              <StrategyChange
+                                  change={change}
+                                  featureName={plan.featureName}
+                                  environmentName={plan.environment}
+                                  projectId={changeRequest.project}
+                                  changeRequestState={changeRequest.state}
+                                  actions={
+                                      <ChangeActions
+                                          changeRequest={changeRequest}
+                                          feature={plan.featureName}
+                                          change={change}
+                                          onRefetch={onRefetch}
+                                      />
+                                  }
+                              />
+                          </ChangeWrapper>
                       );
                   }
                   return undefined;

@@ -15,7 +15,6 @@ export const clientMetricsEnvSchema = {
         appName: {
             description: 'The name of the application the SDK is being used in',
             type: 'string',
-            minLength: 1,
             example: 'accounting',
         },
         environment: {

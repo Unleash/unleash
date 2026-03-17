@@ -31,7 +31,6 @@ export const bulkRegistrationSchema = {
             description:
                 'The name of the application that is evaluating toggles',
             type: 'string',
-            minLength: 1,
             example: 'Ingress load balancer',
         },
         environment: {

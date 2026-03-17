@@ -178,8 +178,7 @@ export const FeatureChange: FC<{
 
                 {change.action === 'addStrategy' ||
                 change.action === 'deleteStrategy' ||
-                change.action === 'updateStrategy' ||
-                change.action === 'updateMilestoneStrategy' ? (
+                change.action === 'updateStrategy' ? (
                     <StrategyChange
                         actions={actions}
                         isDefaultChange={isDefaultChange}
@@ -216,7 +215,8 @@ export const FeatureChange: FC<{
                     change.action === 'deleteMilestoneProgression' ||
                     change.action === 'changeReleasePlanSafeguard' ||
                     change.action === 'deleteReleasePlanSafeguard' ||
-                    change.action === 'resumeMilestoneProgression') && (
+                    change.action === 'resumeMilestoneProgression' ||
+                    change.action === 'updateMilestoneStrategy') && (
                     <ReleasePlanChange
                         actions={actions}
                         change={change}
@@ -224,6 +224,7 @@ export const FeatureChange: FC<{
                         environmentName={changeRequest.environment}
                         projectId={changeRequest.project}
                         changeRequestState={changeRequest.state}
+                        changeRequest={changeRequest}
                         feature={feature}
                         onRefetch={onRefetch}
                     />

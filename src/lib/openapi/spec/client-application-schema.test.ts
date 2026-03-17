@@ -9,7 +9,7 @@ test('clientApplicationSchema no fields', () => {
 
 test('clientApplicationSchema required fields', () => {
     const data: ClientApplicationSchema = {
-        appName: 'test-app',
+        appName: '',
         interval: 0,
         started: 0,
         strategies: [''],
@@ -22,7 +22,7 @@ test('clientApplicationSchema required fields', () => {
 
 test('clientApplicationSchema all fields', () => {
     const data: ClientApplicationSchema = {
-        appName: 'test-app',
+        appName: '',
         instanceId: '',
         sdkVersion: '',
         environment: '',

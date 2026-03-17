@@ -194,7 +194,7 @@ test('should add user if known token', async () => {
     expect(req.user).toBe(apiUser);
 });
 
-test('with flag set should add user if known token', async () => {
+test('with flag set should set user if known token', async () => {
     const localConfig = createTestConfig({
         getLogger,
         authentication: {

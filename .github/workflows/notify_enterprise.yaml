@@ -21,7 +21,7 @@ jobs:
       - name: Enable corepack
         run: corepack enable
       - name: Trigger sync
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           COMMIT_ACTOR: ${{ github.event.commits[0].author.name }} <${{ github.event.commits[0].author.email }}>
         with:

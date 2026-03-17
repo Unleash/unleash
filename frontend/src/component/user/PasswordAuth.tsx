@@ -16,7 +16,6 @@ import {
     BadRequestError,
     NotFoundError,
 } from 'utils/apiUtils';
-import { contentSpacingY } from 'themes/themeStyles';
 import useToast from 'hooks/useToast';
 import { useFlag } from '@unleash/proxy-client-react';
 import DeprecatedPasswordAuth from './DeprecatedPasswordAuth';
@@ -32,15 +31,14 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 }));
 
 const StyledDiv = styled('div')(({ theme }) => ({
-    ...contentSpacingY(theme),
     display: 'flex',
     flexDirection: 'column',
+    gap: theme.spacing(3),
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
+const StyledButton = styled(Button)({
     width: '100%',
-    marginTop: theme.spacing(2),
-}));
+});
 
 const NewPasswordAuth: VFC<IPasswordAuthProps> = ({
     authDetails,

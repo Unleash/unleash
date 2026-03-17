@@ -48,14 +48,21 @@ export const apiAccessMiddleware = (
     }
 
     return async (req: IAuthRequest | IApiRequest, res, next) => {
-        if (req.user) {
+        const onlyBackendTokensWithClientAPI = flagResolver.isEnabled(
+            'onlyBackendTokensWithClientAPI',
+        );
+
+        if (
+            req.user &&
+            (!onlyBackendTokensWithClientAPI || !isClientApi(req))
+        ) {
             return next();
         }
 
         try {
             const apiToken = req.header('authorization');
             if (
-                flagResolver.isEnabled('onlyBackendTokensWithClientAPI') &&
+                onlyBackendTokensWithClientAPI &&
                 (apiToken?.startsWith('user:') ||
                     apiToken?.startsWith('*:*.')) &&
                 isClientApi(req)

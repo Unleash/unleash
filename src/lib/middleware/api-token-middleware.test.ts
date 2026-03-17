@@ -84,7 +84,10 @@ test('should not make database query when provided PAT format', async () => {
     expect(req.user).toBeFalsy();
 });
 
-test.each(['user:asdkjsdhg3', '*:*.asdf'])('%s PAT format tokens with client api cause middleware to return 403 when flag is set', async (rejectedToken) => {
+test.each([
+    'user:asdkjsdhg3',
+    '*:*.asdf',
+])('%s PAT format tokens with client api cause middleware to return 403 when flag is set', async (rejectedToken) => {
     const localConfig = createTestConfig({
         getLogger,
         authentication: {
@@ -109,9 +112,9 @@ test.each(['user:asdkjsdhg3', '*:*.asdf'])('%s PAT format tokens with client api
     };
 
     const req = {
-        header: vi.fn().mockReturnValue('user:asdkjsdhg3'),
+        header: vi.fn().mockReturnValue(rejectedToken),
         user: undefined,
-        path: '/api/client/metrics'
+        path: '/api/client/metrics',
     };
 
     await func(req, res, cb);
@@ -150,7 +153,7 @@ test('callback called when calling admin api with PAT format tokens even when fl
     const req = {
         header: vi.fn().mockReturnValue('user:asdkjsdhg3'),
         user: undefined,
-        path: '/api/admin/projects'
+        path: '/api/admin/projects',
     };
 
     await func(req, res, cb);

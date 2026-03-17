@@ -54,6 +54,7 @@ import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/
 import { ExploreCounters } from 'component/counters/ExploreCounters/ExploreCounters.js';
 import { UnknownFlagsTable } from 'component/unknownFlags/UnknownFlagsTable';
 import { ChangeRequests } from 'component/changeRequest/ChangeRequests/ChangeRequests';
+import { UxLab } from 'component/uxLab/UxLab';
 
 export const routes: IRoute[] = [
     // Splash
@@ -487,6 +488,15 @@ export const routes: IRoute[] = [
         component: UnknownFlagsTable,
         type: 'protected',
         menu: {},
+    },
+
+    // UX Lab
+    {
+        path: '/ux-lab',
+        title: 'UX Lab',
+        component: UxLab,
+        type: 'protected',
+        menu: { primary: true },
     },
 
     // Admin

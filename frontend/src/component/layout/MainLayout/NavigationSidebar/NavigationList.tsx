@@ -95,6 +95,7 @@ export const PrimaryNavigationList: FC<{
             {!isOss() && impactMetricsEnabled ? (
                 <PrimaryListItem href='/impact-metrics' text='Impact Metrics' />
             ) : null}
+            <PrimaryListItem href='/ux-lab' text='UX Lab' />
             <ConfigurationAccordion
                 mode={mode}
                 setMode={setMode}

@@ -38,6 +38,7 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunchOutlined';
 import BuildIcon from '@mui/icons-material/BuildOutlined';
 import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon';
+import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
 
 // TODO: move to routes
 const icons: Record<
@@ -89,6 +90,7 @@ const icons: Record<
     '/playground': PlaygroundIcon,
     '/custom-metrics': RocketLaunchIcon,
     '/change-requests': ChangeRequestIcon,
+    '/ux-lab': ScienceOutlinedIcon,
     GitHub: GitHubIcon,
     Documentation: LibraryBooksIcon,
     Configure: BuildIcon,

@@ -1,5 +1,4 @@
 import 'chartjs-adapter-date-fns';
-import type { Locale } from 'date-fns/locale';
 import {
     cs,
     de,

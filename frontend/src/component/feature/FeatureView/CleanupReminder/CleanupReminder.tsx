@@ -2,7 +2,8 @@ import { type FC, useState } from 'react';
 import { Alert, Box, Button, styled } from '@mui/material';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
-import { parseISO, differenceInDays } from 'date-fns';
+import { parseISO } from 'date-fns';
+import differenceInDays from 'date-fns/differenceInDays';
 
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {

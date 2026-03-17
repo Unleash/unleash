@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import type { Duration } from 'date-fns';
 import { EventTimelineContext } from './EventTimelineContext.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import type { IEnvironment } from 'interfaces/environments';

@@ -119,7 +119,6 @@ export class FrontendApiService {
         metrics: ClientMetricsSchema,
         ip: string,
         sdkVersion?: string | string[],
-        impactMetrics?: Metric[],
     ): Promise<void> {
         FrontendApiService.assertExpectedTokenType(token);
 
@@ -137,12 +136,19 @@ export class FrontendApiService {
             ip,
         );
 
+        // Because we're keeping impact metrics out of the client schema for now,
+        // we need to check for it separately here. We can remove this once impact
+        // metrics are fully integrated into the client schema.
+        const { impactMetrics } = metrics as ClientMetricsSchema & {
+            impactMetrics?: Metric[];
+        };
+
         if (
             this.config.flagResolver.isEnabled('impactMetrics') &&
             impactMetrics
         ) {
             await this.services.clientMetricsServiceV2.registerImpactMetrics(
-                impactMetrics,
+                impactMetrics as Metric[],
             );
         }
 

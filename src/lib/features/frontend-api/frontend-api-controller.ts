@@ -26,7 +26,6 @@ import { minutesToMilliseconds } from 'date-fns';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
 import type { IUnleashServices } from '../../services/index.js';
-import type { Metric } from '../metrics/impact/metrics-translator.js';
 
 interface ApiUserRequest<
     PARAM = any,
@@ -229,14 +228,11 @@ export default class FrontendAPIController extends Controller {
             return;
         }
 
-        const { impactMetrics, ...metricsData } = req.body;
-
         await this.services.frontendApiService.registerFrontendApiMetrics(
             req.user,
-            metricsData,
+            req.body,
             extractClientIp(req),
             req.headers['unleash-sdk'],
-            impactMetrics as Metric[],
         );
 
         res.sendStatus(200);

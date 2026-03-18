@@ -33,9 +33,13 @@ const ChangeFeatureEnvSafeguard: FC<{
     ...rest
 }) => {
     const { feature } = useFeature(projectId, featureName);
-    const currentSafeguard = feature.environments.find(
+    const liveSafeguard = feature.environments.find(
         (env) => env.name === environmentName,
     )?.safeguards?.[0];
+    const currentSafeguard =
+        changeRequestState === 'Applied'
+            ? (change.payload.snapshot ?? undefined)
+            : liveSafeguard;
 
     if (!change.payload.safeguard) return;
 
@@ -70,9 +74,13 @@ const DeleteFeatureEnvSafeguard: FC<{
     ...rest
 }) => {
     const { feature } = useFeature(projectId, featureName);
-    const safeguard = feature.environments.find(
+    const liveSafeguard = feature.environments.find(
         (env) => env.name === environmentName,
     )?.safeguards?.[0];
+    const safeguard =
+        changeRequestState === 'Applied'
+            ? (change.payload.snapshot ?? undefined)
+            : liveSafeguard;
 
     if (!safeguard) return;
 

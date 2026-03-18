@@ -119,55 +119,33 @@ export default async function getApp(
     );
 
     app.use(baseUriPath, patMiddleware(config, services));
+    if (config.authentication.type === IAuthType.NONE) {
+        logger.warn(
+            'The AuthType=none option for Unleash is no longer recommended and will be removed in version 6.',
+        );
+        noApiToken(baseUriPath, app);
+    }
+
+    app.use(baseUriPath, apiAccessMiddleware(config, services));
 
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {
-            app.use(baseUriPath, apiAccessMiddleware(config, services));
             ossAuthentication(app, config.getLogger, config.server.baseUriPath);
             break;
         }
-        case IAuthType.ENTERPRISE: {
-            app.use(baseUriPath, apiAccessMiddleware(config, services));
-            if (config.authentication.customAuthHandler) {
-                config.authentication.customAuthHandler(app, config, services);
-            }
-            break;
-        }
+        case IAuthType.ENTERPRISE:
+        case IAuthType.CUSTOM:
         case IAuthType.HOSTED: {
-            app.use(baseUriPath, apiAccessMiddleware(config, services));
-            if (config.authentication.customAuthHandler) {
-                config.authentication.customAuthHandler(app, config, services);
-            }
-            break;
-        }
-        case IAuthType.DEMO: {
-            app.use(baseUriPath, apiAccessMiddleware(config, services));
-            demoAuthentication(
-                app,
-                config.server.baseUriPath,
-                services,
-                config,
-            );
-            break;
-        }
-        case IAuthType.CUSTOM: {
-            app.use(baseUriPath, apiAccessMiddleware(config, services));
             if (config.authentication.customAuthHandler) {
                 config.authentication.customAuthHandler(app, config, services);
             }
             break;
         }
         case IAuthType.NONE: {
-            logger.warn(
-                'The AuthType=none option for Unleash is no longer recommended and will be removed in version 6.',
-            );
-            noApiToken(baseUriPath, app);
-            app.use(baseUriPath, apiAccessMiddleware(config, services));
             noAuthentication(baseUriPath, app);
             break;
         }
         default: {
-            app.use(baseUriPath, apiAccessMiddleware(config, services));
             demoAuthentication(
                 app,
                 config.server.baseUriPath,

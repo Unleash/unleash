@@ -21,6 +21,9 @@ export class DeltaCache {
     ): void {
         const lastFeature =
             hydrationEvent.features[hydrationEvent.features.length - 1];
+        if (!lastFeature) {
+            return;
+        }
         this.addEvents([
             {
                 eventId: hydrationEvent.eventId,

@@ -172,8 +172,8 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         const projects = query.project ? query.project : ['*'];
         const environment = query.environment ? query.environment : 'default';
         const namePrefix = query.namePrefix ? query.namePrefix : '';
-
-        const requiredRevisionId = sdkRevisionId || 0;
+        const hasRequestedRevision = sdkRevisionId !== undefined;
+        const requiredRevisionId = sdkRevisionId ?? 0;
 
         const hasDelta = this.delta[environment] !== undefined;
 
@@ -183,12 +183,12 @@ export class ClientFeatureToggleDelta extends EventEmitter {
 
         const visibleRevision = this.getVisibleRevision(environment, projects);
 
-        if (requiredRevisionId !== 0 && requiredRevisionId >= visibleRevision) {
+        if (hasRequestedRevision && requiredRevisionId >= visibleRevision) {
             return undefined;
         }
         const delta = this.delta[environment];
         if (
-            requiredRevisionId === 0 ||
+            !hasRequestedRevision ||
             delta.isMissingRevision(requiredRevisionId)
         ) {
             const hydrationEvent = delta.getHydrationEvent();

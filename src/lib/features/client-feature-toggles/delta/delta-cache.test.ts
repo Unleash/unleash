@@ -6,6 +6,26 @@ import {
 } from './client-feature-toggle-delta-types.js';
 
 describe('RevisionCache', () => {
+    it('should not create a synthetic base event when hydration has no features', () => {
+        const deltaCache = new DeltaCache(
+            {
+                eventId: 0,
+                features: [],
+                type: 'hydration',
+                segments: [],
+            },
+            2,
+        );
+
+        expect(deltaCache.getEvents()).toEqual([]);
+        expect(deltaCache.getHydrationEvent()).toEqual({
+            eventId: 0,
+            features: [],
+            type: 'hydration',
+            segments: [],
+        });
+    });
+
     it('should always update the hydration event and remove event when over limit', () => {
         const baseEvent: DeltaHydrationEvent = {
             eventId: 1,

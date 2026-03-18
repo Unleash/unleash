@@ -1,5 +1,9 @@
 import type { DeltaEvent } from './client-feature-toggle-delta-types.js';
-import { filterEventsByQuery } from './client-feature-toggle-delta.js';
+import { EventEmitter } from 'events';
+import {
+    ClientFeatureToggleDelta,
+    filterEventsByQuery,
+} from './client-feature-toggle-delta.js';
 import { DeltaCache } from './delta-cache.js';
 
 describe('filterEventsByQuery', () => {
@@ -165,5 +169,86 @@ describe('DeltaCache hydration ordering', () => {
         expect(hydration.segments.map((segment) => segment.id)).toEqual([
             1, 2, 3, 4,
         ]);
+    });
+});
+
+describe('ClientFeatureToggleDelta bootstrap behavior', () => {
+    test('returns an empty hydration event on initial request for an empty environment', async () => {
+        const delta = new ClientFeatureToggleDelta(
+            {
+                getAll: async () => [],
+            } as any,
+            {
+                getAllForClientIds: async () => [],
+            } as any,
+            {
+                getDeltaRevisionState: async () => ({
+                    projectRevisions: new Map(),
+                    globalSegmentRevision: 0,
+                }),
+            } as any,
+            {
+                getMaxRevisionId: async () => 0,
+                on: () => undefined,
+            } as any,
+            {} as any,
+            {
+                eventBus: new EventEmitter(),
+                getLogger: () =>
+                    ({
+                        error: () => undefined,
+                    }) as any,
+            } as any,
+        );
+
+        const result = await delta.getDelta(undefined, {
+            environment: 'production',
+        } as any);
+
+        expect(result).toEqual({
+            events: [
+                {
+                    eventId: 0,
+                    type: 'hydration',
+                    features: [],
+                    segments: [],
+                },
+            ],
+        });
+    });
+
+    test('returns no delta when client explicitly requests revision 0 for an empty environment', async () => {
+        const delta = new ClientFeatureToggleDelta(
+            {
+                getAll: async () => [],
+            } as any,
+            {
+                getAllForClientIds: async () => [],
+            } as any,
+            {
+                getDeltaRevisionState: async () => ({
+                    projectRevisions: new Map(),
+                    globalSegmentRevision: 0,
+                }),
+            } as any,
+            {
+                getMaxRevisionId: async () => 0,
+                on: () => undefined,
+            } as any,
+            {} as any,
+            {
+                eventBus: new EventEmitter(),
+                getLogger: () =>
+                    ({
+                        error: () => undefined,
+                    }) as any,
+            } as any,
+        );
+
+        const result = await delta.getDelta(0, {
+            environment: 'production',
+        } as any);
+
+        expect(result).toBeUndefined();
     });
 });

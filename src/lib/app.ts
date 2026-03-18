@@ -145,15 +145,6 @@ export default async function getApp(
             noAuthentication(baseUriPath, app);
             break;
         }
-        case IAuthType.DEMO: {
-            demoAuthentication(
-                app,
-                config.server.baseUriPath,
-                services,
-                config,
-            );
-            break;
-        }
         default: {
             demoAuthentication(
                 app,

@@ -1292,6 +1292,61 @@ test('should return enabled feature flags using POST', async () => {
         });
 });
 
+test('should accept impact metrics in frontend API metrics endpoint', async () => {
+    const localApp = await setupAppWithAuth(
+        db.stores,
+        {
+            frontendApiOrigins: ['https://example.com'],
+            experimental: {
+                flags: {
+                    impactMetrics: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
+
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    const now = new Date();
+
+    await localApp.request
+        .post('/api/frontend/client/metrics')
+        .set('Authorization', frontendToken.secret)
+        .send({
+            appName: 'impact-metrics-frontend',
+            instanceId: 'instance-1',
+            bucket: {
+                start: now,
+                stop: now,
+                toggles: {},
+            },
+            impactMetrics: [
+                {
+                    name: 'frontend_counter',
+                    help: 'A counter from frontend SDK',
+                    type: 'counter',
+                    samples: [
+                        {
+                            labels: { source: 'frontend' },
+                            value: 5,
+                        },
+                    ],
+                },
+            ],
+        })
+        .expect(200);
+
+    const response = await localApp.request
+        .get('/internal-backstage/impact/metrics')
+        .expect(200);
+
+    expect(response.text).toMatch(
+        /unleash_counter_frontend_counter{unleash_source="frontend",unleash_origin="sdk"} 5/,
+    );
+
+    await localApp.destroy();
+});
+
 test('should return enabled feature flags based on context using POST', async () => {
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     const featureName = 'featureWithEnvironmentConstraint';

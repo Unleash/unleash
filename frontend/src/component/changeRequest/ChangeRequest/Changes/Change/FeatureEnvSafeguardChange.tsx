@@ -38,7 +38,7 @@ const ChangeFeatureEnvSafeguard: FC<{
     )?.safeguards?.[0];
     const currentSafeguard =
         changeRequestState === 'Applied'
-            ? change.payload.snapshot ?? undefined
+            ? (change.payload.snapshot ?? undefined)
             : liveSafeguard;
 
     if (!change.payload.safeguard) return;
@@ -79,7 +79,7 @@ const DeleteFeatureEnvSafeguard: FC<{
     )?.safeguards?.[0];
     const safeguard =
         changeRequestState === 'Applied'
-            ? change.payload.snapshot ?? undefined
+            ? (change.payload.snapshot ?? undefined)
             : liveSafeguard;
 
     if (!safeguard) return;

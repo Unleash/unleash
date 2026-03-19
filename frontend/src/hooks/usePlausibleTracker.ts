@@ -86,7 +86,8 @@ export type CustomEvents =
     | 'upgrade_trial_billing_page'
     | 'new-template-from-add-strategy'
     | 'flagpage-impact-metrics'
-    | 'signup-dialog';
+    | 'signup-dialog'
+    | 'safeguards';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

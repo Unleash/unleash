@@ -54,7 +54,7 @@ export const useSignup = (options?: SWRConfiguration) => {
 
     return {
         signupData,
-        signupRequired,
+        signupRequired: true,
         loading,
         refetch: mutate,
         error,

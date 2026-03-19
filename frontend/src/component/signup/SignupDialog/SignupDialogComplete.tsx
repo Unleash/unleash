@@ -30,7 +30,9 @@ const StyledTitle = styled('h1')(({ theme }) => ({
 export const SignupDialogComplete: SignupStepContent = ({
     data,
     onNext,
+    onBack,
     isSubmitting,
+    error,
 }) => {
     const description =
         data.inviteEmails.length === 0
@@ -57,6 +59,16 @@ export const SignupDialogComplete: SignupStepContent = ({
             >
                 Start using Unleash
             </Button>
+            {error && (
+                <Button
+                    variant='text'
+                    onClick={onBack}
+                    disabled={isSubmitting}
+                    sx={{ mt: 2 }}
+                >
+                    Back
+                </Button>
+            )}
         </StyledContent>
     );
 };

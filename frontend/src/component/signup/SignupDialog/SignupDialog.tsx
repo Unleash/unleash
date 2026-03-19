@@ -174,6 +174,7 @@ export type SignupStepContent = ComponentType<{
     onNext: (eventType?: string) => void;
     signupData?: SignupData;
     isSubmitting?: boolean;
+    error?: string;
 }>;
 
 type SignupStep = {
@@ -232,6 +233,7 @@ export const SignupDialog = () => {
     });
     const [step, setStep] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState('');
 
     const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
     const safeStep = Math.min(step, steps.length - 1);
@@ -246,6 +248,14 @@ export const SignupDialog = () => {
     const onBack = () => {
         if (isSubmitting) return;
         if (safeStep === 0) return;
+
+        trackEvent('signup-dialog', {
+            props: {
+                eventType: 'back',
+                step: currentStep.title,
+            },
+        });
+
         setStep(safeStep - 1);
     };
 
@@ -272,8 +282,16 @@ export const SignupDialog = () => {
             await submitSignupData(data);
             refetch();
             setWelcomeDialog('open');
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
+        } catch (e: unknown) {
+            const error = formatUnknownError(e);
+            setToastApiError(error);
+            setError(error);
+
+            trackEvent('signup-dialog-error', {
+                props: {
+                    error,
+                },
+            });
         } finally {
             setIsSubmitting(false);
         }
@@ -321,6 +339,7 @@ export const SignupDialog = () => {
                         onNext={onNext}
                         signupData={signupData}
                         isSubmitting={isSubmitting}
+                        error={error}
                     />
                 </StyledContent>
             </StyledBody>

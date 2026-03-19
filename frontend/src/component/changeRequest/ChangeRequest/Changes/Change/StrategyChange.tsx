@@ -8,8 +8,8 @@ import type {
     ChangeRequestState,
     IChangeRequestAddStrategy,
     IChangeRequestDeleteStrategy,
-    IChangeRequestUpdateStrategy,
     IChangeRequestUpdateMilestoneStrategy,
+    IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useCurrentStrategy } from './hooks/useCurrentStrategy.ts';
 import { Badge } from 'component/common/Badge/Badge';
@@ -295,6 +295,7 @@ export const StrategyChange: FC<{
     projectId: string;
     changeRequestState: ChangeRequestState;
     isDefaultChange?: boolean;
+    className?: string;
 }> = ({
     actions,
     change,
@@ -303,6 +304,7 @@ export const StrategyChange: FC<{
     projectId,
     changeRequestState,
     isDefaultChange,
+    className,
 }) => {
     const currentStrategy = useCurrentStrategy(
         change,
@@ -322,7 +324,7 @@ export const StrategyChange: FC<{
     );
 
     return (
-        <StyledTabs>
+        <StyledTabs className={className}>
             {change.action === 'addStrategy' && (
                 <AddStrategy
                     change={change}

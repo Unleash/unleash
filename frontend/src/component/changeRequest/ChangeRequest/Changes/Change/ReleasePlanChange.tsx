@@ -2,6 +2,7 @@ import { type FC, type ReactNode, useRef, useState } from 'react';
 import { styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
+    ChangeRequestType,
     IChangeRequestAddReleasePlan,
     IChangeRequestChangeMilestoneProgression,
     IChangeRequestChangeSafeguard,
@@ -11,6 +12,7 @@ import type {
     IChangeRequestFeature,
     IChangeRequestResumeMilestoneProgression,
     IChangeRequestStartMilestone,
+    IChangeRequestUpdateMilestoneStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -34,7 +36,7 @@ import type {
     ChangeMilestoneProgressionSchema,
     CreateSafeguardSchema,
 } from 'openapi';
-import { ConsolidatedProgressionChanges } from './ConsolidatedReleasePlanChanges.tsx';
+import { ConsolidatedReleasePlanChanges } from './ConsolidatedReleasePlanChanges.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
 import {
     SafeguardChangeView,
@@ -354,11 +356,13 @@ export const ReleasePlanChange: FC<{
         | IChangeRequestDeleteMilestoneProgression
         | IChangeRequestChangeSafeguard
         | IChangeRequestDeleteSafeguard
-        | IChangeRequestResumeMilestoneProgression;
+        | IChangeRequestResumeMilestoneProgression
+        | IChangeRequestUpdateMilestoneStrategy;
     environmentName: string;
     featureName: string;
     projectId: string;
     changeRequestState: ChangeRequestState;
+    changeRequest: ChangeRequestType;
     feature?: IChangeRequestFeature; // Optional feature object for consolidated progression changes
     onRefetch?: () => void;
 }> = ({
@@ -368,6 +372,7 @@ export const ReleasePlanChange: FC<{
     environmentName,
     projectId,
     changeRequestState,
+    changeRequest,
     feature,
     onRefetch,
 }) => {
@@ -470,38 +475,42 @@ export const ReleasePlanChange: FC<{
         }
     };
 
-    // If this is a progression change and we have the full feature object,
-    // check if we should consolidate with other progression changes
+    // If this is a release plan modification change (progression or milestone strategy)
+    // and we have the full feature object, consolidate with other such changes
     if (
         feature &&
         (change.action === 'changeMilestoneProgression' ||
-            change.action === 'deleteMilestoneProgression')
+            change.action === 'deleteMilestoneProgression' ||
+            change.action === 'updateMilestoneStrategy')
     ) {
-        const progressionChanges = feature.changes.filter(
+        const consolidatedChanges = feature.changes.filter(
             (
                 change,
             ): change is
                 | IChangeRequestChangeMilestoneProgression
-                | IChangeRequestDeleteMilestoneProgression =>
+                | IChangeRequestDeleteMilestoneProgression
+                | IChangeRequestUpdateMilestoneStrategy =>
                 change.action === 'changeMilestoneProgression' ||
-                change.action === 'deleteMilestoneProgression',
+                change.action === 'deleteMilestoneProgression' ||
+                change.action === 'updateMilestoneStrategy',
         );
 
-        // Only render if this is the first progression change
-        const isFirstProgression =
-            progressionChanges.length > 0 && progressionChanges[0] === change;
+        // Only render if this is the first consolidated change
+        const isFirst =
+            consolidatedChanges.length > 0 && consolidatedChanges[0] === change;
 
-        if (!isFirstProgression) {
+        if (!isFirst) {
             return null; // Skip rendering, will be handled by the first one
         }
 
         return (
-            <ConsolidatedProgressionChanges
+            <ConsolidatedReleasePlanChanges
                 feature={feature}
                 currentReleasePlan={currentReleasePlan}
-                changeRequestState={changeRequestState}
+                changeRequest={changeRequest}
                 onUpdateChangeRequestSubmit={changeMilestoneProgressionSubmit}
                 onDeleteChangeRequestSubmit={deleteMilestonProgressionSubmit}
+                onRefetch={onRefetch}
             />
         );
     }

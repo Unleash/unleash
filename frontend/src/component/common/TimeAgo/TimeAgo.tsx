@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from 'react';
+import { useCallback, useEffect, useState, type FC } from 'react';
 import { formatDistanceToNow, secondsToMilliseconds } from 'date-fns';
 
 type TimeAgoProps = {
@@ -21,7 +21,10 @@ export const TimeAgo: FC<TimeAgoProps> = ({
     refresh = true,
     timeElement = true,
 }) => {
-    const getValue = (): { description: string; dateTime?: Date } => {
+    const getValue = useCallback((): {
+        description: string;
+        dateTime?: Date;
+    } => {
         try {
             if (!date) return { description: fallback };
             return {
@@ -31,12 +34,12 @@ export const TimeAgo: FC<TimeAgoProps> = ({
         } catch {
             return { description: fallback };
         }
-    };
+    }, [date, fallback, timeElement]);
     const [state, setState] = useState(getValue);
 
     useEffect(() => {
         setState(getValue);
-    }, [date, fallback]);
+    }, [getValue]);
 
     useEffect(() => {
         if (!date || !refresh) return;
@@ -46,7 +49,7 @@ export const TimeAgo: FC<TimeAgoProps> = ({
         }, secondsToMilliseconds(12));
 
         return () => clearInterval(intervalId);
-    }, [refresh]);
+    }, [date, refresh, getValue]);
 
     if (!state.dateTime) {
         return state.description;

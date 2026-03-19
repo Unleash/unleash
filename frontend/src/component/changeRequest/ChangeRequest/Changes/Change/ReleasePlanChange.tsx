@@ -34,7 +34,7 @@ import type {
     ChangeMilestoneProgressionSchema,
     CreateSafeguardSchema,
 } from 'openapi';
-import { ConsolidatedProgressionChanges } from './ConsolidatedProgressionChanges.tsx';
+import { ConsolidatedProgressionChanges } from './ConsolidatedReleasePlanChanges.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
 import {
     SafeguardChangeView,

@@ -42,7 +42,7 @@ const isStrategyChange = (
 ): change is IChangeRequestUpdateMilestoneStrategy =>
     change.action === 'updateMilestoneStrategy';
 
-export const applyProgressionChanges = (
+export const applyReleasePlanChanges = (
     basePlan: IReleasePlan,
     changes: (ProgressionChange | IChangeRequestUpdateMilestoneStrategy)[],
 ): IReleasePlan => {

@@ -14,7 +14,7 @@ import {
     ReadonlyMilestoneListRenderer,
     EditableMilestoneListRenderer,
 } from './MilestoneListRenderer.tsx';
-import { applyProgressionChanges } from './applyProgressionChanges.ts';
+import { applyReleasePlanChanges } from './applyReleasePlanChanges.ts';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -58,7 +58,7 @@ export const ProgressionChange: FC<ProgressionChangeProps> = ({
             (milestone) => milestone.id === change.payload.targetMilestone,
         )?.name || change.payload.targetMilestone;
 
-    const modifiedPlan = applyProgressionChanges(basePlan, [change]);
+    const modifiedPlan = applyReleasePlanChanges(basePlan, [change]);
 
     const previousMilestone = sourceMilestone;
     const newMilestone = modifiedPlan.milestones.find(

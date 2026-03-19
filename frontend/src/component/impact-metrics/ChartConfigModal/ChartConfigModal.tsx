@@ -113,6 +113,7 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
         useChartFormState({
             open,
             initialConfig,
+            metricSeries,
         });
     const theme = useTheme();
     const screenBreakpoint = useMediaQuery(theme.breakpoints.down('lg'));
@@ -161,6 +162,7 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                         labelSelectors={formData.labelSelectors}
                         yAxisMin={formData.yAxisMin}
                         aggregationMode={formData.aggregationMode}
+                        metricType={formData.metricType}
                         isPreview
                     />
                 </StyledPreviewContainer>

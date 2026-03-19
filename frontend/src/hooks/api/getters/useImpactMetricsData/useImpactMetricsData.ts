@@ -28,6 +28,7 @@ export type ImpactMetricsQuery = {
     range: 'hour' | 'day' | 'week' | 'month';
     labels?: Record<string, string[]>;
     aggregationMode?: 'rps' | 'count' | 'avg' | 'sum' | 'p50' | 'p95' | 'p99';
+    metricType?: 'counter' | 'gauge' | 'histogram';
 };
 
 export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
@@ -42,6 +43,10 @@ export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
 
         if (query.aggregationMode !== undefined) {
             params.append('aggregationMode', query.aggregationMode);
+        }
+
+        if (query.metricType !== undefined) {
+            params.append('metricType', query.metricType);
         }
 
         if (query.labels && Object.keys(query.labels).length > 0) {

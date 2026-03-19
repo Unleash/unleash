@@ -27,6 +27,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { IReleasePlan, ISafeguard } from 'interfaces/releasePlans';
 import { strategyBackground } from 'component/common/StrategyList/StrategyListItem';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledSafeguardContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -58,6 +59,7 @@ export const AddSafeguard = ({
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const featureEnvSafeguardsEnabled = useUiFlag('featureEnvSafeguards');
+    const { trackEvent } = usePlausibleTracker();
 
     if (!featureEnvSafeguardsEnabled && !releasePlan) return null;
 
@@ -67,8 +69,19 @@ export const AddSafeguard = ({
                 <StyledActionButton
                     onClick={(e) => {
                         if (featureEnvSafeguardsEnabled) {
+                            trackEvent('safeguards', {
+                                props: {
+                                    eventType: 'add safeguard opened',
+                                },
+                            });
                             setAnchorEl(e.currentTarget);
                         } else {
+                            trackEvent('safeguards', {
+                                props: {
+                                    eventType: 'form opened',
+                                    safeguardType: 'releasePlan',
+                                },
+                            });
                             onSelect('releasePlan');
                         }
                     }}
@@ -86,6 +99,12 @@ export const AddSafeguard = ({
             >
                 <MenuItem
                     onClick={() => {
+                        trackEvent('safeguards', {
+                            props: {
+                                eventType: 'form opened',
+                                safeguardType: 'featureEnvironment',
+                            },
+                        });
                         onSelect('featureEnvironment');
                         setAnchorEl(null);
                     }}
@@ -105,6 +124,12 @@ export const AddSafeguard = ({
                         <MenuItem
                             disabled={!releasePlan}
                             onClick={() => {
+                                trackEvent('safeguards', {
+                                    props: {
+                                        eventType: 'form opened',
+                                        safeguardType: 'releasePlan',
+                                    },
+                                });
                                 onSelect('releasePlan');
                                 setAnchorEl(null);
                             }}
@@ -136,6 +161,7 @@ const useSafeguardActions = ({
     onSafeguardChange: () => void;
 }) => {
     const { setToastData, setToastApiError } = useToast();
+    const { trackEvent } = usePlausibleTracker();
     const { addChange } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data: pendingChangeRequests, refetch: refetchChangeRequests } =
@@ -195,6 +221,13 @@ const useSafeguardActions = ({
                   });
 
     const handleSubmit = async (data: CreateSafeguardSchema) => {
+        trackEvent('safeguards', {
+            props: {
+                eventType: 'safeguard submitted',
+                safeguardType,
+            },
+        });
+
         if (isCR) {
             setPendingSubmitData(data);
             setSubmitChangeRequestOpen(true);

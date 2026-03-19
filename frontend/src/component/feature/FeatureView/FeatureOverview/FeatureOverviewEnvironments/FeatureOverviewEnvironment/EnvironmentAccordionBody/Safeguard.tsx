@@ -71,7 +71,7 @@ export const AddSafeguard = ({
                         if (featureEnvSafeguardsEnabled) {
                             trackEvent('safeguards', {
                                 props: {
-                                    eventType: 'add safeguard opened',
+                                    eventType: 'choose safeguard opened',
                                 },
                             });
                             setAnchorEl(e.currentTarget);

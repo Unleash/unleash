@@ -18,7 +18,7 @@ const mergeStrategyWithoutSnapshot = (
     strategy: IReleasePlanMilestoneStrategy,
     change: Partial<ChangeRequestUpdateMilestoneStrategy> = {},
 ): IReleasePlanMilestoneStrategy => {
-    const { snapshot: _, ...updates } = change;
+    const { snapshot: _, releasePlanSnapshot: __, ...updates } = change;
     return { ...strategy, ...updates };
 };
 

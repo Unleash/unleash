@@ -159,7 +159,9 @@ export interface IChangeRequestUpdateStrategy extends IChangeRequestChangeBase {
 export type ChangeRequestUpdateMilestoneStrategy = Omit<
     ChangeRequestEditStrategy,
     'name'
->;
+> & {
+    releasePlanSnapshot?: IReleasePlan;
+};
 
 export interface IChangeRequestUpdateMilestoneStrategy
     extends IChangeRequestChangeBase {
@@ -342,11 +344,13 @@ type ChangeRequestChangeMilestoneProgression = {
     targetMilestone: string;
     transitionCondition: { intervalMinutes: number };
     snapshot?: IReleasePlan;
+    releasePlanSnapshot?: IReleasePlan;
 };
 
 type ChangeRequestDeleteMilestoneProgression = {
     sourceMilestone: string;
     snapshot?: IReleasePlan;
+    releasePlanSnapshot?: IReleasePlan;
 };
 
 type ChangeRequestChangeSafeguard = {

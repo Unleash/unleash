@@ -115,7 +115,7 @@ export const Search = ({
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
-    const [usedHotkey, setUsedHotkey] = useState(false);
+    const usedHotkeyRef = useRef(false);
     const hideSuggestions = () => {
         setShowSuggestions(false);
         onBlur?.();
@@ -139,7 +139,7 @@ export const Search = ({
             preventDefault: true,
         },
         () => {
-            setUsedHotkey(true);
+            usedHotkeyRef.current = true;
             if (document.activeElement === searchInputRef.current) {
                 searchInputRef.current?.blur();
             } else {
@@ -152,7 +152,7 @@ export const Search = ({
         if (!showSuggestions) {
             return;
         }
-        if (usedHotkey) {
+        if (usedHotkeyRef.current) {
             trackEvent('search-opened', {
                 props: {
                     eventType: 'hotkey',
@@ -165,8 +165,8 @@ export const Search = ({
                 },
             });
         }
-        setUsedHotkey(false);
-    }, [showSuggestions]);
+        usedHotkeyRef.current = false;
+    }, [showSuggestions, trackEvent]);
 
     useKeyboardShortcut({ key: 'Escape' }, () => {
         if (searchContainerRef.current?.contains(document.activeElement)) {

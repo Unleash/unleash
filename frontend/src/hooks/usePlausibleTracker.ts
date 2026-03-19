@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useRef } from 'react';
 import { PlausibleContext } from 'contexts/PlausibleContext';
 import type { EventOptions, PlausibleOptions } from 'plausible-tracker';
 
@@ -92,6 +92,8 @@ export type CustomEvents =
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);
+    const plausibleRef = useRef(plausible);
+    plausibleRef.current = plausible;
 
     const trackEvent = useCallback(
         (
@@ -99,15 +101,15 @@ export const usePlausibleTracker = () => {
             options?: EventOptions | undefined,
             eventData?: PlausibleOptions | undefined,
         ) => {
-            if (plausible?.trackEvent) {
-                plausible.trackEvent(eventName, options, eventData);
+            if (plausibleRef.current?.trackEvent) {
+                plausibleRef.current.trackEvent(eventName, options, eventData);
             } else {
                 if (options?.callback) {
                     options.callback();
                 }
             }
         },
-        [plausible],
+        [],
     );
 
     return { trackEvent };

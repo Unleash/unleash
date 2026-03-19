@@ -40,7 +40,10 @@ export const StrategyDiff: FC<{
         <EventDiff
             entry={{
                 preData: omitIfDefined(sortedCurrentStrategy, ['sortOrder']),
-                data: omitIfDefined(sortedChangeRequestStrategy, ['snapshot']),
+                data: omitIfDefined(sortedChangeRequestStrategy, [
+                    'snapshot',
+                    'releasePlanSnapshot',
+                ]),
             }}
         />
     );

@@ -131,7 +131,6 @@
         "!frontend/src/component/common/Table/**",
         "!frontend/src/component/common/TimeAgo/**",
         "!frontend/src/component/common/ToastRenderer/**",
-        "!frontend/src/component/common/Truncator/**",
         "frontend/src/component/project/ProjectCard/**",
         "frontend/src/component/project/ProjectId/**",
         "frontend/src/component/project/Project/ArchiveProject/**",

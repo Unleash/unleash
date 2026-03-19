@@ -109,6 +109,25 @@ const processReleasePlanChanges = (
     return changesByMilestone;
 };
 
+const findReleasePlanSnapshot = (
+    changes: ReleasePlanChange[],
+): IReleasePlan | undefined => {
+    const releasePlanSnapshot = changes.find(
+        (change) => change.payload.releasePlanSnapshot,
+    )?.payload.releasePlanSnapshot;
+
+    if (releasePlanSnapshot) {
+        return releasePlanSnapshot;
+    }
+
+    // fall back to old version of finding the snapshot
+    const firstProgressionChange = changes.find(
+        (change): change is IChangeRequestChangeMilestoneProgression =>
+            change.action === 'changeMilestoneProgression',
+    );
+    return firstProgressionChange?.payload.snapshot;
+};
+
 export const ConsolidatedReleasePlanChanges: FC<{
     feature: IChangeRequestFeature;
     currentReleasePlan?: IReleasePlan;
@@ -141,18 +160,14 @@ export const ConsolidatedReleasePlanChanges: FC<{
             change.action === 'updateMilestoneStrategy',
     );
 
-    // Only progression changes carry a release plan snapshot;
-    // updateMilestoneStrategy snapshots are strategy objects, not plans.
-    const firstProgressionChange = releasePlanChanges.find(
-        (change): change is IChangeRequestChangeMilestoneProgression =>
-            change.action === 'changeMilestoneProgression',
-    );
-    const planSnapshot = firstProgressionChange?.payload.snapshot;
+    const isClosed =
+        changeRequestState === 'Applied' ||
+        changeRequestState === 'Cancelled' ||
+        changeRequestState === 'Rejected';
+
+    const planSnapshot = findReleasePlanSnapshot(releasePlanChanges);
     const basePlan =
-        (changeRequestState === 'Applied' || !currentReleasePlan) &&
-        planSnapshot
-            ? planSnapshot
-            : currentReleasePlan;
+        isClosed && planSnapshot ? planSnapshot : currentReleasePlan;
 
     if (!basePlan) {
         return null;
@@ -164,8 +179,7 @@ export const ConsolidatedReleasePlanChanges: FC<{
         basePlan,
     );
 
-    const readonly =
-        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+    const readonly = isClosed;
 
     const descriptionWrappers = {
         changeMilestoneProgression: Added,

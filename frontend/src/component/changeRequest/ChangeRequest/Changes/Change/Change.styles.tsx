@@ -1,5 +1,15 @@
-import { styled, Typography, type TypographyProps } from '@mui/material';
-import type { FC, PropsWithChildren } from 'react';
+import {
+    styled,
+    type Theme,
+    Typography,
+    type TypographyProps,
+} from '@mui/material';
+import type { FC } from 'react';
+
+export const colors = (theme: Theme) => ({
+    added: theme.palette.success.dark,
+    deleted: theme.palette.error.main,
+});
 
 export const Action: FC<TypographyProps> = ({ children, ...props }) => (
     <Typography component='span' {...props}>
@@ -8,13 +18,13 @@ export const Action: FC<TypographyProps> = ({ children, ...props }) => (
 );
 
 export const Deleted = styled(Action)(({ theme }) => ({
-    color: theme.palette.error.main,
+    color: colors(theme).deleted,
     '::before': { content: '"- "' },
 }));
 
 export const Added = styled(Action)(({ theme }) => ({
     '::before': { content: '"+ "' },
-    color: theme.palette.success.dark,
+    color: colors(theme).added,
 }));
 
 export const AddedStrategy = styled(Added, {
@@ -28,7 +38,7 @@ const Change = styled('span')({
 });
 
 export const ChangeItemInfo = styled(
-    ({ children, ...props }: PropsWithChildren) => (
+    ({ children, ...props }: TypographyProps) => (
         <Typography {...props}>
             <Change>Change: </Change>
             {children}

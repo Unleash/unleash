@@ -85,7 +85,6 @@ describe('Schedule conflicts', () => {
         render(
             <FeatureChange
                 actions={null}
-                index={0}
                 changeRequest={changeRequest(flag)(
                     changeRequestState as ChangeRequestState,
                 )}
@@ -136,7 +135,6 @@ describe('Schedule conflicts', () => {
         render(
             <FeatureChange
                 actions={null}
-                index={0}
                 changeRequest={changeRequest(flag)(
                     changeRequestState as ChangeRequestState,
                 )}

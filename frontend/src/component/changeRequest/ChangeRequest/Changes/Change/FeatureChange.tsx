@@ -17,40 +17,26 @@ import { ReleasePlanChange } from './ReleasePlanChange.tsx';
 import { FeatureEnvSafeguardChange } from './FeatureEnvSafeguardChange.tsx';
 import { StrategyChange } from './StrategyChange.tsx';
 
-const StyledSingleChangeBox = styled(Box, {
-    shouldForwardProp: (prop: string) => !prop.startsWith('$'),
-})<{
-    $hasConflict: boolean;
-    $isAfterWarning: boolean;
-    $isLast: boolean;
-    $isInConflictFeature: boolean;
-}>(
-    ({
-        theme,
-        $hasConflict,
-        $isInConflictFeature,
-        $isAfterWarning,
-        $isLast,
-    }) => ({
-        overflow: 'hidden',
-        borderLeft: '1px solid',
-        borderRight: '1px solid',
-        borderTop: '1px solid',
-        borderBottom: $isLast ? '1px solid' : 'none',
-        borderRadius: $isLast
-            ? `0 0
-                ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`
-            : 0,
-        borderColor:
-            $hasConflict || $isInConflictFeature
-                ? theme.palette.warning.border
-                : theme.palette.divider,
-        borderTopColor:
-            ($hasConflict || $isAfterWarning) && !$isInConflictFeature
-                ? theme.palette.warning.border
-                : theme.palette.divider,
-    }),
-);
+const StyledSingleChangeBox = styled(Box)(({ theme }) => ({
+    overflow: 'hidden',
+    border: '1px solid',
+    borderBottom: 'none',
+    borderRadius: 0,
+    borderColor: theme.palette.divider,
+    '&[data-conflict="change"]': {
+        borderColor: theme.palette.warning.border,
+    },
+    '[data-conflict="change"] + &': {
+        borderTopColor: theme.palette.warning.border,
+    },
+    '[data-conflict="feature"] &': {
+        borderTopColor: theme.palette.divider,
+    },
+    '&:last-child': {
+        borderBottomStyle: 'solid',
+        borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
+    },
+}));
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     borderRadius: 0,
@@ -78,7 +64,6 @@ const ChangeInnerBox = styled(Box)(({ theme }) => ({
 
 export const FeatureChange: FC<{
     actions?: ReactNode;
-    index: number;
     changeRequest: ChangeRequestType;
     change: IFeatureChange;
     feature: IChangeRequestFeature;
@@ -86,7 +71,6 @@ export const FeatureChange: FC<{
     isDefaultChange?: boolean;
     onRefetch?: () => void;
 }> = ({
-    index,
     change,
     feature,
     changeRequest,
@@ -95,20 +79,11 @@ export const FeatureChange: FC<{
     isDefaultChange,
     onRefetch,
 }) => {
-    const lastIndex = feature.defaultChange
-        ? feature.changes.length + 1
-        : feature.changes.length;
-
+    const conflict = change.conflict || change.scheduleConflicts;
     return (
         <StyledSingleChangeBox
+            data-conflict={conflict ? 'change' : undefined}
             key={objectId(change)}
-            $hasConflict={Boolean(change.conflict || change.scheduleConflicts)}
-            $isInConflictFeature={Boolean(feature.conflict)}
-            $isAfterWarning={Boolean(
-                feature.changes[index - 1]?.conflict ||
-                    feature.changes[index - 1]?.scheduleConflicts,
-            )}
-            $isLast={index + 1 === lastIndex}
         >
             <ConditionallyRender
                 condition={Boolean(change.conflict) && !feature.conflict}

@@ -36,13 +36,6 @@ type EnvironmentVisibleRevisionState = {
 
 export const UPDATE_DELTA = 'UPDATE_DELTA';
 
-const isEventRelevantForEnvironment = (
-    environment: string,
-    event: { environment?: string },
-) => {
-    return event.environment === undefined || event.environment === environment;
-};
-
 export const filterEventsByQuery = (
     events: DeltaEvent[],
     requiredRevisionId: number,
@@ -314,18 +307,34 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             segmentsUpdatedEvents.length > 0 ||
             segmentsRemovedEvents.length > 0;
 
+        const globallyUpdatedFeatures = new Set<string>();
+        const environmentUpdatedFeatures = new Map<string, Set<string>>();
+
+        for (const event of changeEvents) {
+            if (
+                !event.featureName ||
+                event.type === 'feature-archived' ||
+                event.type === 'feature-deleted'
+            ) {
+                continue;
+            }
+
+            if (event.environment == null) {
+                globallyUpdatedFeatures.add(event.featureName);
+                continue;
+            }
+
+            const featureNames =
+                environmentUpdatedFeatures.get(event.environment) ??
+                new Set<string>();
+            featureNames.add(event.featureName);
+            environmentUpdatedFeatures.set(event.environment, featureNames);
+        }
+
         for (const environment of keys) {
             const environmentFeaturesUpdated = [
-                ...new Set(
-                    changeEvents
-                        .filter((event) => event.featureName)
-                        .filter((event) => event.type !== 'feature-archived')
-                        .filter((event) => event.type !== 'feature-deleted')
-                        .filter((event) =>
-                            isEventRelevantForEnvironment(environment, event),
-                        )
-                        .map((event) => event.featureName!),
-                ),
+                ...globallyUpdatedFeatures,
+                ...(environmentUpdatedFeatures.get(environment) ?? []),
             ];
             const newToggles = await this.getChangedToggles(
                 environment,

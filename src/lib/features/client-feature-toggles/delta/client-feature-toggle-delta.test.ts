@@ -326,4 +326,122 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
 
         expect(result).toBeUndefined();
     });
+
+    test('applies global events without environment to all initialized environments', async () => {
+        let currentRevisionId = 1;
+        const delta = new ClientFeatureToggleDelta(
+            {
+                getAll: async ({ environment, toggleNames = [] }) => {
+                    const featuresByEnvironment = {
+                        development: {
+                            name: 'first',
+                            project: 'default',
+                            enabled: false,
+                        },
+                        production: {
+                            name: 'first',
+                            project: 'default',
+                            enabled: true,
+                        },
+                    };
+
+                    const feature =
+                        featuresByEnvironment[
+                            environment as keyof typeof featuresByEnvironment
+                        ];
+
+                    if (!feature) {
+                        return [];
+                    }
+
+                    if (toggleNames.length === 0) {
+                        return [feature];
+                    }
+
+                    // @ts-expect-error - toggle name not defined
+                    return toggleNames.includes('first') ? [feature] : [];
+                },
+            } as any,
+            {
+                getAllForClientIds: async () => [],
+            } as any,
+            {
+                getDeltaRevisionState: async () => ({
+                    projectRevisions: new Map([['default', 1]]),
+                    globalSegmentRevision: 0,
+                }),
+                getRevisionRange: async () => [
+                    {
+                        id: 2,
+                        type: 'feature-updated',
+                        featureName: 'first',
+                        project: 'default',
+                        environment: null,
+                    },
+                ],
+            } as any,
+            {
+                getMaxRevisionId: async () => currentRevisionId,
+                on: () => undefined,
+            } as any,
+            {
+                isEnabled: (name: string) => name === 'deltaApi',
+            } as any,
+            {
+                eventBus: new EventEmitter(),
+                getLogger: () =>
+                    ({
+                        error: () => undefined,
+                    }) as any,
+            } as any,
+        );
+
+        await delta.getDelta(undefined, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+        await delta.getDelta(undefined, {
+            environment: 'production',
+            project: ['default'],
+        } as any);
+
+        currentRevisionId = 2;
+        await delta.onUpdateRevisionEvent();
+
+        const developmentResult = await delta.getDelta(1, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+        const productionResult = await delta.getDelta(1, {
+            environment: 'production',
+            project: ['default'],
+        } as any);
+
+        expect(developmentResult).toEqual({
+            events: [
+                {
+                    eventId: 2,
+                    type: 'feature-updated',
+                    feature: {
+                        name: 'first',
+                        project: 'default',
+                        enabled: false,
+                    },
+                },
+            ],
+        });
+        expect(productionResult).toEqual({
+            events: [
+                {
+                    eventId: 2,
+                    type: 'feature-updated',
+                    feature: {
+                        name: 'first',
+                        project: 'default',
+                        enabled: true,
+                    },
+                },
+            ],
+        });
+    });
 });

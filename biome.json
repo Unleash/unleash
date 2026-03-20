@@ -126,7 +126,6 @@
         "!frontend/src/component/common/FilterDateItem/**",
         "!frontend/src/component/common/InstanceStatus/**",
         "!frontend/src/component/common/ReleaseTemplatesBanner/**",
-        "!frontend/src/component/common/Search/**",
         "!frontend/src/component/common/Sticky/**",
         "!frontend/src/component/common/Table/**",
         "!frontend/src/component/common/TimeAgo/**",

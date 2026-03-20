@@ -84,6 +84,86 @@ test('should not make database query when provided PAT format', async () => {
     expect(req.user).toBeFalsy();
 });
 
+test.each([
+    'user:asdkjsdhg3',
+    '*:*.asdf',
+])('%s PAT format tokens with client api cause middleware to return 403 when flag is set', async (rejectedToken) => {
+    const localConfig = createTestConfig({
+        getLogger,
+        authentication: {
+            enableApiToken: true,
+        },
+        experimental: {
+            flags: {
+                onlyBackendTokensWithClientAPI: true,
+            },
+        },
+    });
+
+    const apiTokenService = {
+        getUserForToken: vi.fn(),
+    } as unknown as ApiTokenService;
+
+    const func = apiTokenMiddleware(localConfig, { apiTokenService });
+
+    const cb = vi.fn();
+    const res = {
+        status: vi.fn().mockReturnValue({ send: vi.fn() }),
+    };
+
+    const req = {
+        header: vi.fn().mockReturnValue(rejectedToken),
+        user: undefined,
+        path: '/api/client/metrics',
+    };
+
+    await func(req, res, cb);
+
+    expect(apiTokenService.getUserForToken).not.toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(cb).not.toHaveBeenCalled();
+    expect(req.user).toBeFalsy();
+});
+
+test('callback called when calling admin api with PAT format tokens even when flag is set', async () => {
+    const localConfig = createTestConfig({
+        getLogger,
+        authentication: {
+            enableApiToken: true,
+        },
+        experimental: {
+            flags: {
+                onlyBackendTokensWithClientAPI: true,
+            },
+        },
+    });
+
+    const apiTokenService = {
+        getUserForToken: vi.fn(),
+    } as unknown as ApiTokenService;
+
+    const func = apiTokenMiddleware(localConfig, { apiTokenService });
+
+    const cb = vi.fn();
+    const res = {
+        status: vi.fn().mockReturnValue({ send: vi.fn() }),
+    };
+
+    const req = {
+        header: vi.fn().mockReturnValue('user:asdkjsdhg3'),
+        user: undefined,
+        path: '/api/admin/projects',
+    };
+
+    await func(req, res, cb);
+
+    expect(apiTokenService.getUserForToken).not.toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
+    expect(res.status).not.toHaveBeenCalled();
+    expect(cb).toHaveBeenCalled();
+});
+
 test('should add user if known token', async () => {
     const apiUser = new ApiUser({
         tokenName: 'default',
@@ -112,6 +192,88 @@ test('should add user if known token', async () => {
     expect(cb).toHaveBeenCalled();
     expect(req.header).toHaveBeenCalled();
     expect(req.user).toBe(apiUser);
+});
+
+test('with flag set should set user if known token', async () => {
+    const localConfig = createTestConfig({
+        getLogger,
+        authentication: {
+            enableApiToken: true,
+        },
+        experimental: {
+            flags: {
+                onlyBackendTokensWithClientAPI: true,
+            },
+        },
+    });
+    const apiUser = new ApiUser({
+        tokenName: 'default',
+        permissions: [CLIENT],
+        project: ALL,
+        environment: 'development',
+        type: ApiTokenType.BACKEND,
+        secret: 'some-known-token',
+    });
+    const apiTokenService = {
+        getUserForToken: vi.fn().mockReturnValue(apiUser),
+    } as unknown as ApiTokenService;
+
+    const func = apiTokenMiddleware(localConfig, { apiTokenService });
+
+    const cb = vi.fn();
+
+    const req = {
+        header: vi.fn().mockReturnValue('*:development.some-known-token'),
+        user: undefined,
+        path: '/api/client',
+    };
+
+    await func(req, undefined, cb);
+
+    expect(cb).toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
+    expect(req.user).toBe(apiUser);
+});
+
+test('with flag set client api should return 403 if user object is set and token is PAT', async () => {
+    const localConfig = createTestConfig({
+        getLogger,
+        authentication: {
+            enableApiToken: true,
+        },
+        experimental: {
+            flags: {
+                onlyBackendTokensWithClientAPI: true,
+            },
+        },
+    });
+
+    const apiTokenService = {
+        getUserForToken: vi.fn(),
+    } as unknown as ApiTokenService;
+
+    const func = apiTokenMiddleware(localConfig, { apiTokenService });
+
+    const cb = vi.fn();
+    const user = { accountType: 'User', id: 1, username: 'PAT-Owner' };
+
+    const req = {
+        header: vi.fn().mockReturnValue('user:some-pat-token'),
+        user,
+        path: '/api/client',
+    };
+
+    const res = {
+        status: vi.fn().mockReturnValue({
+            send: vi.fn(),
+        }),
+    };
+
+    await func(req, res, cb);
+
+    expect(cb).not.toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(403);
 });
 
 test.each([

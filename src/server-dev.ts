@@ -64,6 +64,7 @@ process.nextTick(async () => {
                         inlineFavoriteInNameColumn: true,
                         filterFavorites: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
+                        onlyBackendTokensWithClientAPI: false,
                     },
                 },
                 authentication: {

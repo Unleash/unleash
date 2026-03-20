@@ -36,6 +36,13 @@ type EnvironmentVisibleRevisionState = {
 
 export const UPDATE_DELTA = 'UPDATE_DELTA';
 
+const isEventRelevantForEnvironment = (
+    environment: string,
+    event: { environment?: string },
+) => {
+    return event.environment === undefined || event.environment === environment;
+};
+
 export const filterEventsByQuery = (
     events: DeltaEvent[],
     requiredRevisionId: number,
@@ -266,16 +273,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 project: event.data.oldProject,
             }));
 
-        const featuresUpdated = [
-            ...new Set(
-                changeEvents
-                    .filter((event) => event.featureName)
-                    .filter((event) => event.type !== 'feature-archived')
-                    .filter((event) => event.type !== 'feature-deleted')
-                    .map((event) => event.featureName!),
-            ),
-        ];
-
         const featuresRemovedEvents: DeltaEvent[] = changeEvents
             .filter((event) => event.featureName && event.project)
             .filter((event) => event.type === 'feature-archived')
@@ -319,9 +316,21 @@ export class ClientFeatureToggleDelta extends EventEmitter {
 
         // TODO: we might want to only update the environments that had events changed for performance
         for (const environment of keys) {
+            const environmentFeaturesUpdated = [
+                ...new Set(
+                    changeEvents
+                        .filter((event) => event.featureName)
+                        .filter((event) => event.type !== 'feature-archived')
+                        .filter((event) => event.type !== 'feature-deleted')
+                        .filter((event) =>
+                            isEventRelevantForEnvironment(environment, event),
+                        )
+                        .map((event) => event.featureName!),
+                ),
+            ];
             const newToggles = await this.getChangedToggles(
                 environment,
-                featuresUpdated,
+                environmentFeaturesUpdated,
             );
             const featuresUpdatedEvents: DeltaEvent[] = newToggles.map(
                 (toggle) => ({

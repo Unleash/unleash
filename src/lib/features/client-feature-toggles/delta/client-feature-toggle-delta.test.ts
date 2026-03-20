@@ -251,4 +251,78 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
 
         expect(result).toBeUndefined();
     });
+
+    test('does not emit a no-op delta for an unrelated environment change', async () => {
+        let currentRevisionId = 1;
+        const delta = new ClientFeatureToggleDelta(
+            {
+                getAll: async ({ environment, toggleNames = [] }) => {
+                    const developmentFeature = {
+                        name: 'first',
+                        project: 'default',
+                        enabled: false,
+                    };
+
+                    if (environment !== 'development') {
+                        return [];
+                    }
+
+                    if (toggleNames.length === 0) {
+                        return [developmentFeature];
+                    }
+
+                    return toggleNames.includes('first')
+                        ? [developmentFeature]
+                        : [];
+                },
+            } as any,
+            {
+                getAllForClientIds: async () => [],
+            } as any,
+            {
+                getDeltaRevisionState: async () => ({
+                    projectRevisions: new Map([['default', 1]]),
+                    globalSegmentRevision: 0,
+                }),
+                getRevisionRange: async () => [
+                    {
+                        id: 2,
+                        type: 'feature-updated',
+                        featureName: 'first',
+                        project: 'default',
+                        environment: 'production',
+                    },
+                ],
+            } as any,
+            {
+                getMaxRevisionId: async () => currentRevisionId,
+                on: () => undefined,
+            } as any,
+            {
+                isEnabled: (name: string) => name === 'deltaApi',
+            } as any,
+            {
+                eventBus: new EventEmitter(),
+                getLogger: () =>
+                    ({
+                        error: () => undefined,
+                    }) as any,
+            } as any,
+        );
+
+        await delta.getDelta(undefined, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+
+        currentRevisionId = 2;
+        await delta.onUpdateRevisionEvent();
+
+        const result = await delta.getDelta(1, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+
+        expect(result).toBeUndefined();
+    });
 });

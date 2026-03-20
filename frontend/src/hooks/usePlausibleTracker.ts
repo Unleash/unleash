@@ -42,6 +42,7 @@ export type CustomEvents =
     | 'context-usage'
     | 'segment-usage'
     | 'strategy-add'
+    | 'edit-milestone-strategy'
     | 'suggestion-strategy-add'
     | 'playground'
     | 'feature-type-edit'

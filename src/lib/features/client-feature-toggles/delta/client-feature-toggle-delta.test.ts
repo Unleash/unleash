@@ -271,6 +271,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                         return [developmentFeature];
                     }
 
+                    // @ts-expect-error - toggle name not defined
                     return toggleNames.includes('first')
                         ? [developmentFeature]
                         : [];

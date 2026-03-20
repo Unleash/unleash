@@ -118,6 +118,7 @@ export default defineConfig(({ mode }) => {
             plugins: [
                 {
                     name: 'html-rewrite',
+                    apply: 'serve',
                     transformIndexHtml(html) {
                         return html.replace(
                             /::unleashToken::/gi,

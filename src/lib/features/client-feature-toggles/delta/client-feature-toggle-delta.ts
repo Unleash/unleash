@@ -314,7 +314,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             segmentsUpdatedEvents.length > 0 ||
             segmentsRemovedEvents.length > 0;
 
-        // TODO: we might want to only update the environments that had events changed for performance
         for (const environment of keys) {
             const environmentFeaturesUpdated = [
                 ...new Set(

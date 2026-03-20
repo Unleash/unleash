@@ -25,6 +25,7 @@ export const FeatureToggleChanges: FC<IFeatureToggleChanges> = ({
             marginTop: theme.spacing(2),
             overflow: 'hidden',
         })}
+        data-conflict={conflict ? 'feature' : undefined}
     >
         <Box
             sx={(theme) => ({

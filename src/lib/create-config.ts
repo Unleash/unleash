@@ -806,6 +806,14 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const edgeClientSecret =
         options.edgeClientSecret ?? process.env.EDGE_CLIENT_SECRET;
+
+    const clientApplicationSeenAtUpdateIntervalSeconds =
+        options.clientApplicationSeenAtUpdateIntervalSeconds ??
+        parseEnvVarNumber(
+            process.env.CLIENT_APP_SEEN_TTL_SECONDS,
+            0,
+        );
+
     return {
         db,
         session,
@@ -854,5 +862,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         checkDbOnReady,
         edgeMasterKey,
         edgeClientSecret,
+        clientApplicationSeenAtUpdateIntervalSeconds,
     };
 }

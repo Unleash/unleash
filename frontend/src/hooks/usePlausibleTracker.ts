@@ -87,7 +87,6 @@ export type CustomEvents =
     | 'new-template-from-add-strategy'
     | 'flagpage-impact-metrics'
     | 'signup-dialog'
-    | 'signup-dialog-error'
     | 'safeguards';
 
 export const usePlausibleTracker = () => {

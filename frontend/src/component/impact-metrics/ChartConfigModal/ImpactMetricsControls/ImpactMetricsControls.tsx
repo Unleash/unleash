@@ -4,6 +4,7 @@ import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMeta
 import { MetricSelector } from './SeriesSelector/MetricSelector.tsx';
 import { RangeSelector } from './RangeSelector/RangeSelector.tsx';
 import { ModeSelector } from './ModeSelector/ModeSelector.tsx';
+import { MetricTypeSelector } from './MetricTypeSelector/MetricTypeSelector.tsx';
 import type { ChartFormState } from '../../hooks/useChartFormState.ts';
 import { getMetricType } from '../../metricsFormatters.ts';
 
@@ -12,6 +13,7 @@ export type ImpactMetricsControlsProps = {
     actions: Pick<
         ChartFormState['actions'],
         | 'handleSeriesChange'
+        | 'setMetricType'
         | 'setTimeRange'
         | 'setYAxisMin'
         | 'setLabelSelectors'
@@ -48,6 +50,12 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
 
             {formData.metricName ? (
                 <>
+                    {getMetricType(formData.metricName) === 'unknown' ? (
+                        <MetricTypeSelector
+                            value={formData.metricType}
+                            onChange={actions.setMetricType}
+                        />
+                    ) : null}
                     <RangeSelector
                         value={formData.timeRange}
                         onChange={actions.setTimeRange}
@@ -60,7 +68,7 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                     <ModeSelector
                         value={formData.aggregationMode}
                         onChange={actions.setAggregationMode}
-                        metricType={getMetricType(formData.metricName)!}
+                        metricType={formData.metricType}
                     />
                 </>
             ) : null}

@@ -20,7 +20,9 @@ import {
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
+import { MetricTypeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/MetricTypeSelector/MetricTypeSelector.tsx';
 import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+import type { MetricType } from 'component/impact-metrics/types.ts';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
@@ -203,13 +205,24 @@ const useSafeguardMetricsData = (
     }, [metricsData?.labels?.appName]);
 
     const selectedMetricData = metricOptions.find((m) => m.name === metricName);
-    const metricType = selectedMetricData?.type || 'unknown';
+    const backendMetricType: MetricType =
+        selectedMetricData?.type || 'unknown';
+
+    const [metricTypeOverride, setMetricTypeOverride] =
+        useState<MetricType>('unknown');
+
+    const metricType =
+        backendMetricType !== 'unknown' ? backendMetricType : metricTypeOverride;
+
+    const needsManualType = backendMetricType === 'unknown';
 
     return {
         metricOptions,
         loading,
         applicationNames,
         metricType,
+        needsManualType,
+        setMetricTypeOverride,
     };
 };
 
@@ -217,6 +230,7 @@ const useSafeguardFormHandlers = (
     formValues: ReturnType<typeof useSafeguardFormValues>,
     formMode: ReturnType<typeof useSafeguardFormMode>,
     metricOptions: MetricOption[],
+    setMetricTypeOverride: (type: MetricType) => void,
 ) => {
     const {
         setMetricName,
@@ -240,6 +254,7 @@ const useSafeguardFormHandlers = (
         enterEditMode();
         setMetricName(value);
         setAppName('*');
+        setMetricTypeOverride('unknown');
 
         const metric = metricOptions.find((m) => m.name === value);
         if (metric?.type) {
@@ -247,6 +262,12 @@ const useSafeguardFormHandlers = (
                 getDefaultAggregationMode(metric.type, aggregationMode),
             );
         }
+    };
+
+    const handleMetricTypeChange = (type: MetricType) => {
+        enterEditMode();
+        setMetricTypeOverride(type);
+        setAggregationMode(getDefaultAggregationMode(type, aggregationMode));
     };
 
     const handleApplicationChange = (value: string) => {
@@ -280,6 +301,7 @@ const useSafeguardFormHandlers = (
 
     return {
         handleMetricChange,
+        handleMetricTypeChange,
         handleApplicationChange,
         handleAggregationModeChange,
         handleOperatorChange,
@@ -304,6 +326,7 @@ const useSafeguardFormState = (
         formValues,
         formMode,
         metricsData.metricOptions,
+        metricsData.setMetricTypeOverride,
     );
 
     return {
@@ -359,6 +382,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
         projectId,
         featureId,
         handleMetricChange,
+        handleMetricTypeChange,
         handleApplicationChange,
         handleAggregationModeChange,
         handleOperatorChange,
@@ -366,6 +390,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
         handleTimeRangeChange,
         resetToOriginalValues,
         enterEditMode,
+        needsManualType,
     } = formState;
 
     const permission =
@@ -465,6 +490,13 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                             loading={loading}
                             label=''
                         />
+
+                        {needsManualType ? (
+                            <MetricTypeSelector
+                                value={metricType}
+                                onChange={handleMetricTypeChange}
+                            />
+                        ) : null}
 
                         <StyledTopRow>
                             <StyledLabel>filtered by</StyledLabel>

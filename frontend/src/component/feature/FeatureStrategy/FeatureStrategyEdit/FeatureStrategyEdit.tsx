@@ -107,7 +107,7 @@ const NewFeatureStrategyEdit = () => {
     const [strategy, setStrategy] = useState<StrategyFormState>({
         name: '', // populated in the effect
     });
-    const [strategyContext, setStrategyContext] =
+    const [strategyScope, setStrategyScope] =
         useState<FeatureEnvironmentStrategyScope>('default');
     const {
         updateStrategyOnFeature,
@@ -209,7 +209,7 @@ const NewFeatureStrategyEdit = () => {
                 .find((strategy) => strategy.id === strategyId);
 
         if (savedStrategy && 'milestoneId' in savedStrategy) {
-            setStrategyContext('milestone');
+            setStrategyScope('milestone');
         }
 
         const constraintsWithId = addIdSymbolToConstraints(savedStrategy);
@@ -250,7 +250,7 @@ const NewFeatureStrategyEdit = () => {
 
     const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
         const updateFn =
-            strategyContext === 'milestone'
+            strategyScope === 'milestone'
                 ? updateMilestoneStrategyOnFeature
                 : updateStrategyOnFeature;
 
@@ -271,7 +271,7 @@ const NewFeatureStrategyEdit = () => {
     const onStrategyRequestEdit = async (payload: IFeatureStrategyPayload) => {
         await addChange(projectId, environmentId, {
             action:
-                strategyContext === 'milestone'
+                strategyScope === 'milestone'
                     ? 'updateMilestoneStrategy'
                     : 'updateStrategy',
             feature: featureId,
@@ -291,6 +291,14 @@ const NewFeatureStrategyEdit = () => {
     };
 
     const onSubmit = async () => {
+        if (strategyScope === 'milestone') {
+            trackEvent('edit-milestone-strategy', {
+                props: {
+                    eventType: 'form submitted',
+                },
+            });
+        }
+
         try {
             if (isChangeRequestConfigured(environmentId)) {
                 await onStrategyRequestEdit(payload);
@@ -320,7 +328,7 @@ const NewFeatureStrategyEdit = () => {
             documentationLinkLabel={featureStrategyDocsLinkLabel}
             formatApiCode={() =>
                 formatUpdateStrategyApiCode({
-                    strategyScope: strategyContext,
+                    strategyScope,
                     projectId,
                     featureId,
                     environmentId,

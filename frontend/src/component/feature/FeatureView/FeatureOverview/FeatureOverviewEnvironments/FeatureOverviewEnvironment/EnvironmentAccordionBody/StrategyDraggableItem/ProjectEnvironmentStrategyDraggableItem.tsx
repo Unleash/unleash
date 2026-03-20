@@ -18,6 +18,7 @@ import MenuStrategyRemove from './StrategyItem/MenuStrategyRemove/MenuStrategyRe
 import { Link } from 'react-router-dom';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 
 type EditControlsProps = {
     projectId: string;
@@ -37,38 +38,48 @@ const EditControls = ({
     editStrategyPath,
     otherEnvironments,
     scope,
-}: EditControlsProps) => (
-    <>
-        <PermissionIconButton
-            permission={UPDATE_FEATURE_STRATEGY}
-            environmentId={environmentName}
-            projectId={projectId}
-            component={Link}
-            to={editStrategyPath}
-            tooltipProps={{
-                title: 'Edit strategy',
-            }}
-            data-testid={`STRATEGY_EDIT-${strategy.name}`}
-        >
-            <Edit />
-        </PermissionIconButton>
-        {otherEnvironments && otherEnvironments?.length > 0 ? (
-            <CopyStrategyIconMenu
+}: EditControlsProps) => {
+    const { trackEvent } = usePlausibleTracker();
+    return (
+        <>
+            <PermissionIconButton
+                permission={UPDATE_FEATURE_STRATEGY}
                 environmentId={environmentName}
-                environments={otherEnvironments as string[]}
-                strategy={strategy}
-            />
-        ) : null}
-        {scope === 'milestone' ? null : (
-            <MenuStrategyRemove
                 projectId={projectId}
-                featureId={featureId}
-                environmentId={environmentName}
-                strategy={strategy}
-            />
-        )}
-    </>
-);
+                component={Link}
+                onClick={() => {
+                    if (scope === 'milestone') {
+                        trackEvent('edit-milestone-strategy', {
+                            props: { eventType: 'clicked edit button' },
+                        });
+                    }
+                }}
+                to={editStrategyPath}
+                tooltipProps={{
+                    title: 'Edit strategy',
+                }}
+                data-testid={`STRATEGY_EDIT-${strategy.name}`}
+            >
+                <Edit />
+            </PermissionIconButton>
+            {otherEnvironments && otherEnvironments?.length > 0 ? (
+                <CopyStrategyIconMenu
+                    environmentId={environmentName}
+                    environments={otherEnvironments as string[]}
+                    strategy={strategy}
+                />
+            ) : null}
+            {scope === 'milestone' ? null : (
+                <MenuStrategyRemove
+                    projectId={projectId}
+                    featureId={featureId}
+                    environmentId={environmentName}
+                    strategy={strategy}
+                />
+            )}
+        </>
+    );
+};
 
 type ProjectEnvironmentStrategyDraggableItemProps = {
     strategy: IFeatureStrategy;

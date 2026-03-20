@@ -134,15 +134,15 @@ const getUnmappedServerErrors = (validationErrors: string[]) => {
     return validationErrors.filter((msg) => !known.has(msg));
 };
 
-interface ISignupDialogSetPasswordCheckerProps {
+interface IPasswordRequirementsCheckerProps {
     password: string;
     setIsValidPassword: Dispatch<SetStateAction<boolean>>;
 }
 
-export const SignupDialogSetPasswordChecker = ({
+export const PasswordRequirementsChecker = ({
     password,
     setIsValidPassword,
-}: ISignupDialogSetPasswordCheckerProps) => {
+}: IPasswordRequirementsCheckerProps) => {
     const [errors, setErrors] = useState<PasswordErrors>(ALL_TRUE);
     const [serverExtraErrors, setServerExtraErrors] = useState<string[]>([]);
 

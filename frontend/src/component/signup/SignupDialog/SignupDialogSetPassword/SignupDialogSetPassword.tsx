@@ -9,7 +9,7 @@ import {
 import { Badge } from 'component/common/Badge/Badge.tsx';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import { useState } from 'react';
-import { SignupDialogSetPasswordChecker } from './SignupDialogSetPasswordChecker.tsx';
+import { PasswordRequirementsChecker } from 'component/user/common/PasswordRequirementsChecker/PasswordRequirementsChecker';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser.ts';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -76,7 +76,7 @@ export const SignupDialogSetPassword: SignupStepContent = ({
                     }}
                 />
             </StyledSignupDialogField>
-            <SignupDialogSetPasswordChecker
+            <PasswordRequirementsChecker
                 password={data.password}
                 setIsValidPassword={setIsValidPassword}
             />

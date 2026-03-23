@@ -52,7 +52,7 @@ const NewResetPassword = () => {
         try {
             const res = await resetPassword({ token, password });
             if (res.status === OK) {
-                navigate('/login?reset=true');
+                navigate('/reset-password-success');
                 setApiError('');
             } else {
                 setApiError(

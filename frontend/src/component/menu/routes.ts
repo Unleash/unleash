@@ -7,6 +7,7 @@ import Login from 'component/user/Login/Login';
 import { P } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
+import ResetPasswordSuccess from 'component/user/ResetPassword/ResetPasswordSuccess';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
 import { ProjectList } from 'component/project/ProjectList/ProjectList';
 import { ArchiveProjectList } from 'component/project/ProjectList/ArchiveProjectList';
@@ -532,6 +533,15 @@ export const routes: IRoute[] = [
         title: 'Reset password',
         hidden: true,
         component: ResetPassword,
+        type: 'unprotected',
+        menu: {},
+        isStandalone: true,
+    },
+    {
+        path: '/reset-password-success',
+        title: 'Password reset successful',
+        hidden: true,
+        component: ResetPasswordSuccess,
         type: 'unprotected',
         menu: {},
         isStandalone: true,

@@ -17,7 +17,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useFlag } from '@unleash/proxy-client-react';
 import DeprecatedForgottenPassword from './DeprecatedForgottenPassword';
 import { AuthPageLayout } from '../common/AuthPageLayout';
-import passwordSuccess from 'assets/img/passwordSuccess.png';
+import { AuthSuccessIcon } from '../common/AuthSuccessIcon';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.h2.fontSize,
@@ -53,6 +53,11 @@ const StyledInfoBox = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.info.light,
     border: `1px solid ${theme.palette.info.border}`,
+}));
+
+const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
+    fontSize: 24,
+    color: theme.palette.info.main,
 }));
 
 const StyledInfoContent = styled('div')(({ theme }) => ({
@@ -98,12 +103,7 @@ const NewForgottenPassword = () => {
                     condition={attempted}
                     show={
                         <StyledHeader>
-                            <img
-                                src={passwordSuccess}
-                                alt=''
-                                width={56}
-                                height={56}
-                            />
+                            <AuthSuccessIcon />
                             <div>
                                 <StyledTitle variant='h2'>
                                     Email sent to
@@ -136,12 +136,7 @@ const NewForgottenPassword = () => {
                         condition={attempted}
                         show={
                             <StyledInfoBox>
-                                <InfoOutlinedIcon
-                                    sx={{
-                                        fontSize: 24,
-                                        color: 'info.main',
-                                    }}
-                                />
+                                <StyledInfoIcon />
                                 <StyledInfoContent>
                                     <strong>Didn't receive an email?</strong>
                                     <br />

@@ -9,7 +9,6 @@ import {
     corsOriginMiddleware,
 } from './middleware/index.js';
 import rbacMiddleware from './middleware/rbac-middleware.js';
-import { apiAccessMiddleware } from './middleware/api-token-middleware.js';
 import type { IUnleashServices } from './services/index.js';
 import { IAuthType, type IUnleashConfig } from './types/option.js';
 import type { IUnleashStores } from './types/index.js';
@@ -35,6 +34,8 @@ import { bearerTokenMiddleware } from './middleware/bearer-token-middleware.js';
 import { auditAccessMiddleware } from './middleware/index.js';
 import { originMiddleware } from './middleware/origin-middleware.js';
 import { userTokenClientApiLogger } from './middleware/user-token-client-api-logger-middleware.js';
+import frontendApiAccessMiddleware from './middleware/frontend-token-middleware.js';
+import backendApiAccessMiddleware from './middleware/backend-token-middleware.js';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -126,7 +127,31 @@ export default async function getApp(
         noApiToken(baseUriPath, app);
     }
 
-    app.use(baseUriPath, apiAccessMiddleware(config, services));
+    app.use(
+        `${baseUriPath}/api/proxy*`,
+        frontendApiAccessMiddleware(config, services),
+    );
+    app.use(
+        `${baseUriPath}/api/development/proxy*`,
+        frontendApiAccessMiddleware(config, services),
+    );
+    app.use(
+        `${baseUriPath}/api/production/proxy*`,
+        frontendApiAccessMiddleware(config, services),
+    );
+    app.use(
+        `${baseUriPath}/api/frontend*`,
+        frontendApiAccessMiddleware(config, services),
+    );
+
+    app.use(
+        `${baseUriPath}/api/client*`,
+        backendApiAccessMiddleware(config, services),
+    );
+    app.use(
+        `${baseUriPath}/edge/metrics*`,
+        backendApiAccessMiddleware(config, services),
+    );
 
     switch (config.authentication.type) {
         case IAuthType.OPEN_SOURCE: {

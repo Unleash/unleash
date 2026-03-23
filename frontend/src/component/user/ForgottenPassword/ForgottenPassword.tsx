@@ -143,9 +143,7 @@ const NewForgottenPassword = () => {
                                     }}
                                 />
                                 <StyledInfoContent>
-                                    <strong>
-                                        Didn't receive an email?
-                                    </strong>
+                                    <strong>Didn't receive an email?</strong>
                                     <br />
                                     Please verify that you typed in the correct
                                     email, or contact your administrator

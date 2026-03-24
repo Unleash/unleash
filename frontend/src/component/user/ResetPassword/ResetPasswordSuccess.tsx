@@ -2,7 +2,7 @@ import { Button, styled, Typography } from '@mui/material';
 import { Link, Navigate } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
 import { AuthPageLayout } from '../common/AuthPageLayout';
-import passwordSuccess from 'assets/img/passwordSuccess.png';
+import { AuthSuccessIcon } from '../common/AuthSuccessIcon';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -35,7 +35,7 @@ const ResetPasswordSuccess = () => {
         <AuthPageLayout>
             <StyledContainer>
                 <div>
-                    <img src={passwordSuccess} alt='' width={56} height={56} />
+                    <AuthSuccessIcon />
                     <StyledTitle variant='h2'>
                         Your password has been reset
                     </StyledTitle>

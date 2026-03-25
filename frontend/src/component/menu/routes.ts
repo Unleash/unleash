@@ -9,6 +9,7 @@ import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ResetPasswordSuccess from 'component/user/ResetPassword/ResetPasswordSuccess';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
+import SignedOut from 'component/user/SignedOut/SignedOut';
 import { ProjectList } from 'component/project/ProjectList/ProjectList';
 import { ArchiveProjectList } from 'component/project/ProjectList/ArchiveProjectList';
 import CreateEnvironment from 'component/environments/CreateEnvironment/CreateEnvironment';
@@ -552,6 +553,15 @@ export const routes: IRoute[] = [
         title: 'Forgotten password',
         hidden: true,
         component: ForgottenPassword,
+        type: 'unprotected',
+        menu: {},
+        isStandalone: true,
+    },
+    {
+        path: '/signed-out',
+        title: 'Signed out',
+        hidden: true,
+        component: SignedOut,
         type: 'unprotected',
         menu: {},
         isStandalone: true,

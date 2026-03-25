@@ -74,12 +74,8 @@ export const AuthPageLayout = ({ children }: AuthPageLayoutProps) => {
             <StyledBackground src={loginBackground} alt='' />
             <StyledHeader>
                 <ThemeMode
-                    darkmode={
-                        <StyledLogoWhite aria-label='Unleash logo' />
-                    }
-                    lightmode={
-                        <StyledLogoDark aria-label='Unleash logo' />
-                    }
+                    darkmode={<StyledLogoWhite aria-label='Unleash logo' />}
+                    lightmode={<StyledLogoDark aria-label='Unleash logo' />}
                 />
             </StyledHeader>
             <StyledMain>

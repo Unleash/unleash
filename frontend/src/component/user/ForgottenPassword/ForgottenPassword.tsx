@@ -1,62 +1,80 @@
-import { Button, styled, TextField, Typography } from '@mui/material';
-import { AlertTitle, Alert } from '@mui/material';
+import {
+    Alert,
+    AlertTitle,
+    Button,
+    Divider,
+    styled,
+    TextField,
+    Typography,
+} from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { type SyntheticEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useLoading from 'hooks/useLoading';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import { formatApiPath } from 'utils/formatPath';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import DividerText from 'component/common/DividerText/DividerText';
-import StandaloneLayout from '../common/StandaloneLayout.tsx';
-import {
-    contentSpacingY,
-    flexColumn,
-    textCenter,
-    title,
-} from 'themes/themeStyles';
+import { useFlag } from '@unleash/proxy-client-react';
+import DeprecatedForgottenPassword from './DeprecatedForgottenPassword';
+import { AuthPageLayout } from '../common/AuthPageLayout';
+import { AuthSuccessIcon } from '../common/AuthSuccessIcon';
 
-const StyledDiv = styled('div')(({ theme }) => ({
-    ...contentSpacingY,
-    ...flexColumn,
-    width: '350px',
-    [theme.breakpoints.down('sm')]: {
-        width: '100%',
-    },
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.h2.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    lineHeight: '28px',
 }));
 
-const StyledStrong = styled('strong')(({ theme }) => ({
-    display: 'block',
-    margin: theme.spacing(1, 0),
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-    width: '150px',
-    margin: theme.spacing(2, 'auto'),
-}));
-
-const StyledTitle = styled('h2')(({ theme }) => ({
-    ...title(theme),
-    ...textCenter,
+const StyledSubtitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    lineHeight: '20px',
+    marginTop: theme.spacing(0.5),
 }));
 
 const StyledForm = styled('form')(({ theme }) => ({
-    ...contentSpacingY(theme),
-    ...flexColumn,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
 }));
 
-const StyledTypography = styled(Typography)(({ theme }) => ({
-    ...textCenter,
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    textAlign: 'center',
+    marginBottom: theme.spacing(3),
+}));
+
+const StyledInfoBox = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    padding: theme.spacing(1.5),
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.info.light,
+    border: `1px solid ${theme.palette.info.border}`,
+}));
+
+const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
+    fontSize: 24,
+    color: theme.palette.info.main,
+}));
+
+const StyledInfoContent = styled('div')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    lineHeight: '20px',
+    color: theme.palette.info.dark,
 }));
 
 type State = 'initial' | 'loading' | 'attempted' | 'too_many_attempts';
 
-const ForgottenPassword = () => {
+const NewForgottenPassword = () => {
     const [email, setEmail] = useState('');
     const [state, setState] = useState<State>('initial');
     const [attemptedEmail, setAttemptedEmail] = useState('');
     const ref = useLoading(state === 'loading');
 
-    const onClick = async (e: SyntheticEvent) => {
+    const onSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
         setState('loading');
         setAttemptedEmail(email);
@@ -76,28 +94,36 @@ const ForgottenPassword = () => {
         }
     };
 
+    const attempted = state === 'attempted';
+
     return (
-        <StandaloneLayout>
-            <StyledDiv ref={ref}>
-                <StyledTitle data-loading>Forgotten password</StyledTitle>
+        <AuthPageLayout>
+            <div ref={ref}>
                 <ConditionallyRender
-                    condition={state === 'attempted'}
+                    condition={attempted}
                     show={
-                        <Alert severity='success' data-loading>
-                            <AlertTitle>Attempted to send email</AlertTitle>
-                            We've attempted to send a reset password email to:
-                            <StyledStrong>{attemptedEmail}</StyledStrong>
-                            If you did not receive an email, please verify that
-                            you typed in the correct email, and contact your
-                            administrator to make sure that you are in the
-                            system.
-                        </Alert>
+                        <StyledHeader>
+                            <AuthSuccessIcon />
+                            <div>
+                                <StyledTitle variant='h2'>
+                                    Email sent to
+                                </StyledTitle>
+                                <StyledSubtitle variant='body2'>
+                                    {attemptedEmail}
+                                </StyledSubtitle>
+                            </div>
+                        </StyledHeader>
+                    }
+                    elseShow={
+                        <StyledTitle sx={{ mb: 3 }}>
+                            Forgot your password?
+                        </StyledTitle>
                     }
                 />
                 <ConditionallyRender
                     condition={state === 'too_many_attempts'}
                     show={
-                        <Alert severity='warning' data-loading>
+                        <Alert severity='warning' sx={{ mb: 3 }}>
                             <AlertTitle>
                                 Too many password reset attempts
                             </AlertTitle>
@@ -105,55 +131,69 @@ const ForgottenPassword = () => {
                         </Alert>
                     }
                 />
-                <StyledForm onSubmit={onClick}>
-                    <StyledTypography variant='body1' data-loading>
-                        Please provide your email address. If it exists in the
-                        system we'll send a new reset link.
-                    </StyledTypography>
+                <StyledForm onSubmit={onSubmit}>
+                    <ConditionallyRender
+                        condition={attempted}
+                        show={
+                            <StyledInfoBox>
+                                <StyledInfoIcon />
+                                <StyledInfoContent>
+                                    <strong>Didn't receive an email?</strong>
+                                    <br />
+                                    Please verify that you typed in the correct
+                                    email, or contact your administrator
+                                </StyledInfoContent>
+                            </StyledInfoBox>
+                        }
+                        elseShow={
+                            <Typography variant='body2'>
+                                Enter your email address. If it exists in the
+                                system, we'll send you a reset password link.
+                            </Typography>
+                        }
+                    />
                     <TextField
+                        label='Email'
                         variant='outlined'
                         size='small'
-                        placeholder='email'
                         type='email'
-                        data-loading
                         data-testid={FORGOTTEN_PASSWORD_FIELD}
                         value={email}
                         onChange={(e) => {
                             setEmail(e.target.value);
                         }}
+                        autoFocus
                     />
-                    <StyledButton
+                    <Button
                         variant='contained'
                         type='submit'
-                        data-loading
                         color='primary'
                         disabled={state === 'loading'}
+                        fullWidth
                     >
-                        <ConditionallyRender
-                            condition={state === 'initial'}
-                            show={<span>Submit</span>}
-                            elseShow={<span>Try again</span>}
-                        />
-                    </StyledButton>
-                    <DividerText text='Or log in' />
+                        {attempted ? 'Try again' : 'Reset password'}
+                    </Button>
+                    <Divider>OR</Divider>
                     <Button
-                        type='submit'
-                        data-loading
                         variant='outlined'
-                        disabled={state === 'loading'}
                         component={Link}
                         to='/login'
-                        sx={(theme) => ({
-                            width: '150px',
-                            margin: theme.spacing(2, 'auto'),
-                        })}
+                        fullWidth
                     >
-                        Log in
+                        Go back to sign in
                     </Button>
                 </StyledForm>
-            </StyledDiv>
-        </StandaloneLayout>
+            </div>
+        </AuthPageLayout>
     );
+};
+
+const ForgottenPassword = () => {
+    const newLogin = useFlag('newLogin');
+    if (newLogin) {
+        return <NewForgottenPassword />;
+    }
+    return <DeprecatedForgottenPassword />;
 };
 
 export default ForgottenPassword;

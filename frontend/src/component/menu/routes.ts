@@ -7,7 +7,9 @@ import Login from 'component/user/Login/Login';
 import { P } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
+import ResetPasswordSuccess from 'component/user/ResetPassword/ResetPasswordSuccess';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
+import SignedOut from 'component/user/SignedOut/SignedOut';
 import { ProjectList } from 'component/project/ProjectList/ProjectList';
 import { ArchiveProjectList } from 'component/project/ProjectList/ArchiveProjectList';
 import CreateEnvironment from 'component/environments/CreateEnvironment/CreateEnvironment';
@@ -536,12 +538,30 @@ export const routes: IRoute[] = [
         menu: {},
         isStandalone: true,
     },
+    {
+        path: '/reset-password-success',
+        title: 'Password reset successful',
+        hidden: true,
+        component: ResetPasswordSuccess,
+        type: 'unprotected',
+        menu: {},
+        isStandalone: true,
+    },
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */
     {
         path: '/forgotten-password',
         title: 'Forgotten password',
         hidden: true,
         component: ForgottenPassword,
+        type: 'unprotected',
+        menu: {},
+        isStandalone: true,
+    },
+    {
+        path: '/signed-out',
+        title: 'Signed out',
+        hidden: true,
+        component: SignedOut,
         type: 'unprotected',
         menu: {},
         isStandalone: true,

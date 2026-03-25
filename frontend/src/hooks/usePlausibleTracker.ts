@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useRef } from 'react';
 import { PlausibleContext } from 'contexts/PlausibleContext';
 import type { EventOptions, PlausibleOptions } from 'plausible-tracker';
 
@@ -42,6 +42,7 @@ export type CustomEvents =
     | 'context-usage'
     | 'segment-usage'
     | 'strategy-add'
+    | 'edit-milestone-strategy'
     | 'suggestion-strategy-add'
     | 'playground'
     | 'feature-type-edit'
@@ -86,10 +87,14 @@ export type CustomEvents =
     | 'upgrade_trial_billing_page'
     | 'new-template-from-add-strategy'
     | 'flagpage-impact-metrics'
-    | 'signup-dialog';
+    | 'signup-dialog'
+    | 'signup-dialog-error'
+    | 'safeguards';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);
+    const plausibleRef = useRef(plausible);
+    plausibleRef.current = plausible;
 
     const trackEvent = useCallback(
         (
@@ -97,15 +102,15 @@ export const usePlausibleTracker = () => {
             options?: EventOptions | undefined,
             eventData?: PlausibleOptions | undefined,
         ) => {
-            if (plausible?.trackEvent) {
-                plausible.trackEvent(eventName, options, eventData);
+            if (plausibleRef.current?.trackEvent) {
+                plausibleRef.current.trackEvent(eventName, options, eventData);
             } else {
                 if (options?.callback) {
                     options.callback();
                 }
             }
         },
-        [plausible],
+        [],
     );
 
     return { trackEvent };

@@ -16,8 +16,9 @@ import {
     BadRequestError,
     NotFoundError,
 } from 'utils/apiUtils';
-import { contentSpacingY } from 'themes/themeStyles';
 import useToast from 'hooks/useToast';
+import { useFlag } from '@unleash/proxy-client-react';
+import DeprecatedPasswordAuth from './DeprecatedPasswordAuth';
 
 interface IPasswordAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
@@ -30,12 +31,19 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 }));
 
 const StyledDiv = styled('div')(({ theme }) => ({
-    ...contentSpacingY(theme),
     display: 'flex',
     flexDirection: 'column',
+    gap: theme.spacing(3),
 }));
 
-const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
+const StyledButton = styled(Button)({
+    width: '100%',
+});
+
+const NewPasswordAuth: VFC<IPasswordAuthProps> = ({
+    authDetails,
+    redirect,
+}) => {
     const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
     const params = useQueryParams();
@@ -126,7 +134,7 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
 
                         <StyledDiv>
                             <TextField
-                                label='Username or email'
+                                label='Email'
                                 name='username'
                                 id='username'
                                 type='text'
@@ -155,15 +163,14 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
                                 autoComplete='off'
                                 data-testid={LOGIN_PASSWORD_ID}
                             />
-                            <Button
+                            <StyledButton
                                 variant='contained'
                                 color='primary'
                                 type='submit'
-                                style={{ width: '150px', margin: '1rem auto' }}
                                 data-testid={LOGIN_BUTTON}
                             >
                                 Sign in
-                            </Button>
+                            </StyledButton>
                         </StyledDiv>
                     </form>
                 }
@@ -193,6 +200,14 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
             />
         </>
     );
+};
+
+const PasswordAuth: VFC<IPasswordAuthProps> = (props) => {
+    const newLogin = useFlag('newLogin');
+    if (newLogin) {
+        return <NewPasswordAuth {...props} />;
+    }
+    return <DeprecatedPasswordAuth {...props} />;
 };
 
 export default PasswordAuth;

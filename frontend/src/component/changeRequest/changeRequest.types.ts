@@ -363,10 +363,12 @@ type ChangeRequestDeleteSafeguard = {
 
 type ChangeRequestChangeFeatureEnvSafeguard = {
     safeguard: ISafeguard;
+    snapshot?: ISafeguard;
 };
 
 type ChangeRequestDeleteFeatureEnvSafeguard = {
     safeguardId: string;
+    snapshot?: ISafeguard;
 };
 
 type ChangeRequestResumeMilestoneProgression = {

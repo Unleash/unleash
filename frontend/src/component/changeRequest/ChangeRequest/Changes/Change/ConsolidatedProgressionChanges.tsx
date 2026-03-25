@@ -19,7 +19,7 @@ import {
     ReadonlyMilestoneListRenderer,
     EditableMilestoneListRenderer,
 } from './MilestoneListRenderer.tsx';
-import { applyProgressionChanges } from './applyProgressionChanges.js';
+import { applyReleasePlanChanges } from './applyReleasePlanChanges.js';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -113,7 +113,7 @@ export const ConsolidatedProgressionChanges: FC<{
         return null;
     }
 
-    const modifiedPlan = applyProgressionChanges(basePlan, progressionChanges);
+    const modifiedPlan = applyReleasePlanChanges(basePlan, progressionChanges);
     const milestonesWithAutomation =
         getMilestonesWithAutomation(progressionChanges);
     const milestonesWithDeletedAutomation =

@@ -32,7 +32,7 @@ const defaultStatus = {
     instanceStatus: {
         plan: InstancePlan.PRO,
         state: InstanceState.TRIAL,
-        trialExpiry: '2026-03-19T23:59:59.999Z',
+        trialExpiry: '2028-03-19T23:59:59.999Z',
     },
     refetchInstanceStatus: vi.fn(),
     refresh: vi.fn().mockResolvedValue(undefined),
@@ -60,7 +60,7 @@ describe('TrialUpsell', () => {
             screen.getByRole('button', { name: /upgrade now/i }),
         ).toBeInTheDocument();
         expect(
-            screen.getByText(/Your trial expires on 03\/19\/2026/),
+            screen.getByText(/Your trial expires on 03\/19\/2028/),
         ).toBeInTheDocument();
         expect(
             screen.getByText('Trusted by enterprises like'),

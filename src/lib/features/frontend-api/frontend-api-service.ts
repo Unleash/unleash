@@ -10,6 +10,7 @@ import type {
     ClientMetricsSchema,
     FrontendApiFeatureSchema,
 } from '../../openapi/index.js';
+import type { Metric } from '../metrics/impact/metrics-translator.js';
 import ApiUser from '../../types/api-user.js';
 import type { IApiUser } from '../../types/api-user.js';
 import {
@@ -134,6 +135,22 @@ export class FrontendApiService {
             },
             ip,
         );
+
+        // Because we're keeping impact metrics out of the client schema for now,
+        // we need to check for it separately here. We can remove this once impact
+        // metrics are fully integrated into the client schema.
+        const { impactMetrics } = metrics as ClientMetricsSchema & {
+            impactMetrics?: Metric[];
+        };
+
+        if (
+            this.config.flagResolver.isEnabled('impactMetrics') &&
+            impactMetrics
+        ) {
+            await this.services.clientMetricsServiceV2.registerImpactMetrics(
+                impactMetrics as Metric[],
+            );
+        }
 
         if (metrics.instanceId && typeof sdkVersion === 'string') {
             const client = {

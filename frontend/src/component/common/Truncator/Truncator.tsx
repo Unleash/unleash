@@ -1,4 +1,10 @@
-import { useState, useEffect, useRef, type CSSProperties } from 'react';
+import {
+    useState,
+    useEffect,
+    useRef,
+    useCallback,
+    type CSSProperties,
+} from 'react';
 import {
     Box,
     type BoxProps,
@@ -49,25 +55,30 @@ export const Truncator = ({
     const [isTruncated, setIsTruncated] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
-    const checkTruncation = () => {
+    const checkTruncation = useCallback(() => {
         if (ref.current) {
             setIsTruncated(
                 ref.current.scrollHeight > ref.current.offsetHeight ||
                     ref.current.scrollWidth > ref.current.offsetWidth,
             );
         }
-    };
+    }, []);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: re-check truncation when content changes
+    useEffect(() => {
+        checkTruncation();
+    }, [checkTruncation, title, children]);
+
     useEffect(() => {
         const resizeObserver = new ResizeObserver(checkTruncation);
         if (ref.current) {
             resizeObserver.observe(ref.current);
         }
         return () => resizeObserver.disconnect();
-    }, [title, children]);
+    }, [checkTruncation]);
 
     useEffect(() => {
         onSetTruncated?.(isTruncated);
-    }, [isTruncated]);
+    }, [isTruncated, onSetTruncated]);
 
     const overridableTooltipProps: OverridableTooltipProps = {
         title,

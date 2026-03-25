@@ -10,6 +10,7 @@ import envCompatible from 'vite-plugin-env-compatible';
 
 const UNLEASH_API = process.env.UNLEASH_API || 'http://localhost:4242';
 const UNLEASH_BASE_PATH = process.env.UNLEASH_BASE_PATH || '/';
+const UNLEASH_FRONTEND_TOKEN = process.env.UNLEASH_FRONTEND_TOKEN || '';
 
 if (!UNLEASH_BASE_PATH.startsWith('/') || !UNLEASH_BASE_PATH.endsWith('/')) {
     console.error('UNLEASH_BASE_PATH must both start and end with /');
@@ -115,6 +116,16 @@ export default defineConfig(({ mode }) => {
                 },
             },
             plugins: [
+                {
+                    name: 'html-rewrite',
+                    apply: 'serve',
+                    transformIndexHtml(html) {
+                        return html.replace(
+                            /::unleashToken::/gi,
+                            UNLEASH_FRONTEND_TOKEN,
+                        );
+                    },
+                },
                 react(reactPluginArgs),
                 tsconfigPaths(),
                 svgr(),

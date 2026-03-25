@@ -243,6 +243,13 @@ export default class FeatureToggleClientStore
                 ?.sort(sortStrategies)
                 .map(({ id, title, sortOrder, milestoneId, ...strategy }) => ({
                     ...strategy,
+                    ...(strategy.segments
+                        ? {
+                              segments: [...strategy.segments].sort(
+                                  (a, b) => a - b,
+                              ),
+                          }
+                        : {}),
 
                     ...(isPlayground && title ? { title } : {}),
 

@@ -184,6 +184,13 @@ export default class ClientFeatureToggleDeltaReadModel
                 ?.sort(sortStrategies)
                 .map(({ id, title, sortOrder, milestoneId, ...strategy }) => ({
                     ...strategy,
+                    ...(strategy.segments
+                        ? {
+                              segments: [...strategy.segments].sort(
+                                  (a, b) => a - b,
+                              ),
+                          }
+                        : {}),
                 })),
         }));
 

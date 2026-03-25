@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { styled } from '@mui/material';
-import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
+import { ReactComponent as UnleashLogoDark } from 'assets/img/logoDarkWithText.svg';
+import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import loginBackground from 'assets/img/loginBackground.png';
 
 const StyledPage = styled('div')(({ theme }) => ({
@@ -21,7 +23,11 @@ const StyledHeader = styled('header')(({ theme }) => ({
     padding: theme.spacing(3),
 }));
 
-const StyledLogo = styled(UnleashLogo)({
+const StyledLogoDark = styled(UnleashLogoDark)({
+    width: 150,
+});
+
+const StyledLogoWhite = styled(UnleashLogoWhite)({
     width: 150,
 });
 
@@ -67,7 +73,14 @@ export const AuthPageLayout = ({ children }: AuthPageLayoutProps) => {
         <StyledPage>
             <StyledBackground src={loginBackground} alt='' />
             <StyledHeader>
-                <StyledLogo aria-label='Unleash logo' />
+                <ThemeMode
+                    darkmode={
+                        <StyledLogoWhite aria-label='Unleash logo' />
+                    }
+                    lightmode={
+                        <StyledLogoDark aria-label='Unleash logo' />
+                    }
+                />
             </StyledHeader>
             <StyledMain>
                 <StyledCardWrapper>

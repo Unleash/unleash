@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { styled } from '@mui/material';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import loginBackground from 'assets/img/loginBackground.png';
+import { formatAssetPath } from 'utils/formatPath';
 
 const StyledPage = styled('div')(({ theme }) => ({
     minHeight: '100vh',
@@ -65,7 +66,7 @@ interface AuthPageLayoutProps {
 export const AuthPageLayout = ({ children }: AuthPageLayoutProps) => {
     return (
         <StyledPage>
-            <StyledBackground src={loginBackground} alt='' />
+            <StyledBackground src={formatAssetPath(loginBackground)} alt='' />
             <StyledHeader>
                 <StyledLogo aria-label='Unleash logo' />
             </StyledHeader>

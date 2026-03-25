@@ -190,7 +190,7 @@ export const ReleasePlanMilestoneItem = ({
     ) : undefined;
 
     const renderStrategy = canEditStrategies
-        ? (strategy) => (
+        ? (strategy, strategyIndex) => (
               <ProjectEnvironmentStrategyDraggableItem
                   readonly={readonly}
                   scope='milestone'
@@ -199,7 +199,7 @@ export const ReleasePlanMilestoneItem = ({
                       ...strategy,
                       name: strategy.name || strategy.strategyName || '',
                   }}
-                  index={index}
+                  index={strategyIndex}
                   environmentName={environment}
               />
           )

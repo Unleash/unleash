@@ -52,13 +52,15 @@ export const apiAccessMiddleware = (
             'onlyBackendTokensWithClientAPI',
         );
 
-        if (
-            req.user &&
-            (!onlyBackendTokensWithClientAPI || !isClientApi(req))
-        ) {
-            return next();
+        if (req.user) {
+            if (isClientApi(req) && onlyBackendTokensWithClientAPI) {
+                res.status(403).send({
+                    message: TOKEN_TYPE_ERROR_MESSAGE,
+                });
+            } else {
+                return next();
+            }
         }
-
         try {
             const apiToken = req.header('authorization');
             if (

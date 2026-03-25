@@ -42,6 +42,7 @@ import {
     SafeguardChangeView,
     SafeguardDeleteView,
 } from './SafeguardChangeViews.tsx';
+import { StrategyItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem.tsx';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -162,6 +163,18 @@ const StartMilestone: FC<{
                     milestone={newMilestone}
                     environmentId={releasePlan.environment}
                     featureId={releasePlan.featureName}
+                    renderStrategy={(strategy) => (
+                        <StrategyItem
+                            strategyHeaderLevel={4}
+                            strategy={{
+                                ...strategy,
+                                name:
+                                    strategy.name ||
+                                    strategy.strategyName ||
+                                    '',
+                            }}
+                        />
+                    )}
                 />
             </TabPanel>
             <TabPanel variant='diff'>

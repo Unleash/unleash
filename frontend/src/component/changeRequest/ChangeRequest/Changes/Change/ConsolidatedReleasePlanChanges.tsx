@@ -9,13 +9,7 @@ import type {
 } from 'component/changeRequest/changeRequest.types';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
-import {
-    Action,
-    Added,
-    ChangeItemInfo,
-    ChangeItemWrapper,
-    Deleted,
-} from './Change.styles.tsx';
+import { ChangeItemInfo, ChangeItemWrapper, colors } from './Change.styles.tsx';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import {
     ReadonlyMilestoneListRenderer,
@@ -109,6 +103,15 @@ const processReleasePlanChanges = (
     return changesByMilestone;
 };
 
+const ChangeList = styled('ul')(({ theme }) => ({
+    padding: theme.spacing(1.5),
+    alignItems: 'flex-start',
+    'li[data-action="deleteMilestoneProgression"]': {
+        color: colors(theme).deleted,
+        '::marker': { content: '"- "' },
+    },
+}));
+
 export const ConsolidatedReleasePlanChanges: FC<{
     feature: IChangeRequestFeature;
     currentReleasePlan?: IReleasePlan;
@@ -167,30 +170,24 @@ export const ConsolidatedReleasePlanChanges: FC<{
     const readonly =
         changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
 
-    const descriptionWrappers = {
-        changeMilestoneProgression: Added,
-        deleteMilestoneProgression: Deleted,
-        updateMilestoneStrategy: Action,
-    };
-
     return (
         <StyledTabs>
             <ChangeItemWrapper>
-                <ChangeItemInfo>
-                    {basePlan.milestones.flatMap(({ id }, index) => {
-                        const changes = changesByMilestone[id];
-                        if (!changes) return null;
+                <ChangeItemInfo component={'div'}>
+                    <ChangeList>
+                        {basePlan.milestones.flatMap(({ id }) => {
+                            const changes = changesByMilestone[id];
+                            if (!changes) return null;
 
-                        return changes.map(({ description }) => {
-                            const Component =
-                                descriptionWrappers[description.action];
-                            return (
-                                <Component key={index}>
-                                    {description.text}
-                                </Component>
-                            );
-                        });
-                    })}
+                            return changes.map(({ description }) => {
+                                return (
+                                    <li data-action={description.action}>
+                                        {description.text}
+                                    </li>
+                                );
+                            });
+                        })}
+                    </ChangeList>
                 </ChangeItemInfo>
                 <div>
                     <TabList>

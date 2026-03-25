@@ -106,10 +106,6 @@ const processReleasePlanChanges = (
 const ChangeList = styled('ul')(({ theme }) => ({
     padding: theme.spacing(1.5),
     alignItems: 'flex-start',
-    'li[data-action="changeMilestoneProgression"]': {
-        color: colors(theme).added,
-        '::marker': { content: '"+ "' },
-    },
     'li[data-action="deleteMilestoneProgression"]': {
         color: colors(theme).deleted,
         '::marker': { content: '"- "' },

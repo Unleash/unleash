@@ -54,6 +54,7 @@ interface MilestoneListRendererCoreProps {
     onDeleteAutomation: (sourceMilestoneId: string) => void;
     renderStrategy: (
         strategy: IReleasePlanMilestoneStrategy,
+        index: number,
     ) => React.ReactNode;
 }
 

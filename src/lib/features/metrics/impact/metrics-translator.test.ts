@@ -76,6 +76,13 @@ describe('MetricsTranslator', () => {
         expect(result).toContain(
             'unleash_gauge_test_gauge{unleash_env="prod",unleash_origin="sdk"} 10',
         );
+        // Plain metrics (no unleash_ prefix, type stored as label)
+        expect(result).toContain(
+            'labeled_counter{origin="sdk",type="counter",foo="bar"} 5',
+        );
+        expect(result).toContain(
+            'test_gauge{origin="sdk",type="gauge",env="prod"} 10',
+        );
     });
 
     it('should ignore unsupported metric types', async () => {

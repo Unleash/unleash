@@ -92,25 +92,55 @@ export class MetricsTranslator {
         };
     }
 
+    private plainLabels(
+        sample: NumericMetricSample | BucketMetricSample,
+        type: string,
+    ): Record<string, string | number> {
+        const result: Record<string, string | number> = {
+            origin: sample.labels?.origin || 'sdk',
+            type,
+        };
+        if (sample.labels) {
+            for (const [key, value] of Object.entries(sample.labels)) {
+                const sanitized = this.sanitizeName(key);
+                if (/^[a-zA-Z_]/.test(sanitized)) {
+                    result[sanitized] = value;
+                }
+            }
+        }
+        return result;
+    }
+
     translateMetric(
         metric: Metric,
     ): Counter<string> | Gauge<string> | BatchHistogram | null {
         const sanitizedName = this.sanitizeName(metric.name);
         const prefixedName = `unleash_${metric.type}_${sanitizedName}`;
         const existingMetric = this.registry.getSingleMetric(prefixedName);
+        const plainValid = /^[a-zA-Z_]/.test(sanitizedName);
+        const existingPlainMetric = plainValid
+            ? this.registry.getSingleMetric(sanitizedName)
+            : undefined;
 
         const allLabelNames = new Set<string>();
         allLabelNames.add('unleash_origin');
+        const allPlainLabelNames = new Set<string>();
+        allPlainLabelNames.add('origin');
+        allPlainLabelNames.add('type');
         for (const sample of metric.samples) {
             if (sample.labels) {
                 Object.keys(sample.labels).forEach((label) => {
                     allLabelNames.add(`unleash_${label}`);
+                    allPlainLabelNames.add(label);
                 });
             }
         }
         const labelNames = Array.from(allLabelNames).map((labelName) =>
             this.sanitizeName(labelName),
         );
+        const plainLabelNames = Array.from(allPlainLabelNames)
+            .map((l) => this.sanitizeName(l))
+            .filter((l) => /^[a-zA-Z_]/.test(l));
 
         if (metric.type === 'counter') {
             let counter: Counter<string>;
@@ -144,6 +174,41 @@ export class MetricsTranslator {
                 );
             }
 
+            if (plainValid) {
+                let plainCounter: Counter<string>;
+                if (
+                    existingPlainMetric &&
+                    existingPlainMetric instanceof Counter
+                ) {
+                    if (
+                        this.hasNewLabels(existingPlainMetric, plainLabelNames)
+                    ) {
+                        this.registry.removeSingleMetric(sanitizedName);
+                        plainCounter = new Counter({
+                            name: sanitizedName,
+                            help: metric.help,
+                            registers: [this.registry],
+                            labelNames: plainLabelNames,
+                        });
+                    } else {
+                        plainCounter = existingPlainMetric as Counter<string>;
+                    }
+                } else {
+                    plainCounter = new Counter({
+                        name: sanitizedName,
+                        help: metric.help,
+                        registers: [this.registry],
+                        labelNames: plainLabelNames,
+                    });
+                }
+                for (const sample of metric.samples) {
+                    plainCounter.inc(
+                        this.plainLabels(sample, metric.type),
+                        sample.value,
+                    );
+                }
+            }
+
             return counter;
         } else if (metric.type === 'gauge') {
             let gauge: Gauge<string>;
@@ -175,6 +240,36 @@ export class MetricsTranslator {
                     this.transformLabels(this.addOriginLabel(sample)),
                     sample.value,
                 );
+            }
+
+            if (plainValid) {
+                let plainGauge: Gauge<string>;
+                if (existingPlainMetric && existingPlainMetric instanceof Gauge) {
+                    if (this.hasNewLabels(existingPlainMetric, plainLabelNames)) {
+                        this.registry.removeSingleMetric(sanitizedName);
+                        plainGauge = new Gauge({
+                            name: sanitizedName,
+                            help: metric.help,
+                            registers: [this.registry],
+                            labelNames: plainLabelNames,
+                        });
+                    } else {
+                        plainGauge = existingPlainMetric as Gauge<string>;
+                    }
+                } else {
+                    plainGauge = new Gauge({
+                        name: sanitizedName,
+                        help: metric.help,
+                        registers: [this.registry],
+                        labelNames: plainLabelNames,
+                    });
+                }
+                for (const sample of metric.samples) {
+                    plainGauge.set(
+                        this.plainLabels(sample, metric.type),
+                        sample.value,
+                    );
+                }
             }
 
             return gauge;
@@ -224,6 +319,55 @@ export class MetricsTranslator {
                     sum: sample.sum,
                     buckets: sample.buckets,
                 });
+            }
+
+            if (plainValid) {
+                let plainHistogram: BatchHistogram;
+                if (
+                    existingPlainMetric &&
+                    existingPlainMetric instanceof BatchHistogram
+                ) {
+                    const firstSample = metric.samples[0];
+                    const needsRecreation =
+                        !firstSample?.buckets ||
+                        this.hasNewLabels(
+                            existingPlainMetric,
+                            plainLabelNames,
+                        ) ||
+                        this.hasNewBuckets(
+                            existingPlainMetric,
+                            firstSample.buckets,
+                        );
+                    if (needsRecreation) {
+                        this.registry.removeSingleMetric(sanitizedName);
+                        plainHistogram = new BatchHistogram({
+                            name: sanitizedName,
+                            help: metric.help,
+                            registry: this.registry,
+                            labelNames: plainLabelNames,
+                        });
+                    } else {
+                        plainHistogram =
+                            existingPlainMetric as BatchHistogram;
+                    }
+                } else {
+                    plainHistogram = new BatchHistogram({
+                        name: sanitizedName,
+                        help: metric.help,
+                        registry: this.registry,
+                        labelNames: plainLabelNames,
+                    });
+                }
+                for (const sample of metric.samples) {
+                    plainHistogram.recordBatch(
+                        this.plainLabels(sample, metric.type),
+                        {
+                            count: sample.count,
+                            sum: sample.sum,
+                            buckets: sample.buckets,
+                        },
+                    );
+                }
             }
 
             return histogram;

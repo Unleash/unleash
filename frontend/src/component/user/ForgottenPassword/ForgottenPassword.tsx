@@ -2,7 +2,6 @@ import {
     Alert,
     AlertTitle,
     Button,
-    Divider,
     styled,
     TextField,
     Typography,
@@ -16,6 +15,7 @@ import { formatApiPath } from 'utils/formatPath';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFlag } from '@unleash/proxy-client-react';
 import DeprecatedForgottenPassword from './DeprecatedForgottenPassword';
+import OrDivider from '../common/OrDivider';
 import { AuthPageLayout } from '../common/AuthPageLayout';
 import { AuthSuccessIcon } from '../common/AuthSuccessIcon';
 
@@ -173,7 +173,7 @@ const NewForgottenPassword = () => {
                     >
                         {attempted ? 'Try again' : 'Reset password'}
                     </Button>
-                    <Divider>OR</Divider>
+                    <OrDivider />
                     <Button
                         variant='outlined'
                         component={Link}

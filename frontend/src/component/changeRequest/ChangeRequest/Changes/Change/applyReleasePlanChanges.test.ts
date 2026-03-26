@@ -48,7 +48,7 @@ const strategyChange: IChangeRequestUpdateMilestoneStrategy = {
         segments: [],
         variants: [],
         disabled: false,
-        snapshot: { ...basePlan },
+        snapshot: basePlan,
     },
 };
 

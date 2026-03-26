@@ -4,7 +4,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from './common/AuthOptions/AuthOptions.tsx';
-import DividerText from 'component/common/DividerText/DividerText';
 import { Alert } from '@mui/material';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from 'utils/testIds';
 import PasswordField from 'component/common/PasswordField/PasswordField';

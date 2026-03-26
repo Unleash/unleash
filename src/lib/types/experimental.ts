@@ -80,7 +80,7 @@ export type IFlagKey =
     | 'inlineFavoriteInNameColumn'
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'newSignOut'
-    | 'onlyBackendTokensWithClientAPI';
+    | 'onlyFeatureTokensWithFeatureAPIs';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -363,8 +363,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_NEW_SIGN_OUT,
         false,
     ),
-    onlyBackendTokensWithClientAPI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ONLY_BACKEND_TOKENS_WITH_CLIENT_API,
+    onlyFeatureTokensWithFeatureAPIs: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ONLY_FEATURE_TOKENS_WITH_FEATURE_APIS,
         false,
     ),
 };

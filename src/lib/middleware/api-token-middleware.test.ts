@@ -95,7 +95,7 @@ test.each([
         },
         experimental: {
             flags: {
-                onlyBackendTokensWithClientAPI: true,
+                onlyFeatureTokensWithFeatureAPIs: true,
             },
         },
     });
@@ -134,7 +134,7 @@ test('callback called when calling admin api with PAT format tokens even when fl
         },
         experimental: {
             flags: {
-                onlyBackendTokensWithClientAPI: true,
+                onlyFeatureTokensWithFeatureAPIs: true,
             },
         },
     });
@@ -202,7 +202,7 @@ test('with flag set should set user if known token', async () => {
         },
         experimental: {
             flags: {
-                onlyBackendTokensWithClientAPI: true,
+                onlyFeatureTokensWithFeatureAPIs: true,
             },
         },
     });
@@ -243,7 +243,7 @@ test('with flag set client api should return 403 if user object is set and token
         },
         experimental: {
             flags: {
-                onlyBackendTokensWithClientAPI: true,
+                onlyFeatureTokensWithFeatureAPIs: true,
             },
         },
     });

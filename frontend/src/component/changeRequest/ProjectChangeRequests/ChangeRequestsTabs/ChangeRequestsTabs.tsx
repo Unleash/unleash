@@ -56,7 +56,7 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     },
 }));
 
-const ConftigurationLinkBox = styled(Box)(({ theme }) => ({
+const ConfigurationLinkBox = styled(Box)(({ theme }) => ({
     textAlign: 'right',
     paddingBottom: theme.spacing(2),
     fontSize: theme.fontSizes.smallBody,
@@ -339,11 +339,11 @@ export const ChangeRequestsTabs = ({
                 />
             }
         >
-            <ConftigurationLinkBox>
+            <ConfigurationLinkBox>
                 <Link to={`/projects/${projectId}/settings/change-requests`}>
                     Change request configuration
                 </Link>
-            </ConftigurationLinkBox>
+            </ConfigurationLinkBox>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <StyledTable {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />

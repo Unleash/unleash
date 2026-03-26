@@ -1,12 +1,12 @@
-import { Button, styled } from '@mui/material';
+import { Button } from '@mui/material';
+import classnames from 'classnames';
+import { useThemeStyles } from 'themes/themeStyles';
 import LockRounded from '@mui/icons-material/LockRounded';
 import type { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import useQueryParams from 'hooks/useQueryParams';
 import GoogleIcon from '@mui/icons-material/Google';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import { useFlag } from '@unleash/proxy-client-react';
-import DeprecatedAuthOptions from './DeprecatedAuthOptions';
 
 interface IAuthOptionProps {
     options?: IAuthOptions[];
@@ -18,16 +18,6 @@ function addOrOverwriteRedirect(path: string, redirectValue: string): string {
     params.set('redirect', redirectValue);
     return `${basePath}?${params.toString()}`;
 }
-
-const StyledSsoButton = styled(Button)(({ theme }) => ({
-    height: '40px',
-    color: theme.palette.text.primary,
-    borderColor: theme.palette.divider,
-    '&:hover': {
-        borderColor: theme.palette.text.primary,
-        backgroundColor: theme.palette.action.hover,
-    },
-}));
 
 const renderStartIcon = ({ type }: IAuthOptions) => {
     if (type === 'google') {
@@ -60,45 +50,43 @@ const renderStartIcon = ({ type }: IAuthOptions) => {
     );
 };
 
-const StyledContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1.5),
-}));
-
-const NewAuthOptions = ({ options }: IAuthOptionProps) => {
+const DeprecatedAuthOptions = ({ options }: IAuthOptionProps) => {
+    const { classes: themeStyles } = useThemeStyles();
     const query = useQueryParams();
     const redirectPath = query.get('redirect') || '';
 
     return (
-        <StyledContainer>
+        <>
             {options?.map((o) => (
-                <StyledSsoButton
+                <div
                     key={o.type}
-                    data-loading
-                    variant='outlined'
-                    href={
-                        redirectPath
-                            ? addOrOverwriteRedirect(o.path, redirectPath)
-                            : o.path
-                    }
-                    size='small'
-                    data-testid={`${SSO_LOGIN_BUTTON}-${o.type}`}
-                    startIcon={renderStartIcon(o)}
+                    className={classnames(
+                        themeStyles.flexColumn,
+                        themeStyles.contentSpacingY,
+                    )}
                 >
-                    {o.message}
-                </StyledSsoButton>
+                    <Button
+                        color='primary'
+                        data-loading
+                        variant='outlined'
+                        href={
+                            redirectPath
+                                ? addOrOverwriteRedirect(o.path, redirectPath)
+                                : o.path
+                        }
+                        size='small'
+                        data-testid={`${SSO_LOGIN_BUTTON}-${o.type}`}
+                        style={{
+                            height: '40px',
+                        }}
+                        startIcon={renderStartIcon(o)}
+                    >
+                        {o.message}
+                    </Button>
+                </div>
             ))}
-        </StyledContainer>
+        </>
     );
 };
 
-const AuthOptions = (props: IAuthOptionProps) => {
-    const newLogin = useFlag('newLogin');
-    if (newLogin) {
-        return <NewAuthOptions {...props} />;
-    }
-    return <DeprecatedAuthOptions {...props} />;
-};
-
-export default AuthOptions;
+export default DeprecatedAuthOptions;

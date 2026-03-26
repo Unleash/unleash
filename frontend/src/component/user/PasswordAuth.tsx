@@ -1,5 +1,5 @@
 import { type FormEventHandler, useState, type VFC } from 'react';
-import { Button, styled, TextField } from '@mui/material';
+import { Button, Divider, styled, TextField } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
@@ -185,16 +185,14 @@ const NewPasswordAuth: VFC<IPasswordAuthProps> = ({
             <ConditionallyRender
                 condition={options.length > 0}
                 show={
-                    <>
+                    <StyledDiv>
                         <AuthOptions options={options} />
                         <ConditionallyRender
                             condition={!authDetails.defaultHidden}
-                            show={
-                                <DividerText text='Or sign in with username' />
-                            }
+                            show={<Divider>OR</Divider>}
                         />
                         {renderLoginForm()}
-                    </>
+                    </StyledDiv>
                 }
                 elseShow={renderLoginForm()}
             />

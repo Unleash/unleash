@@ -61,7 +61,6 @@ process.nextTick(async () => {
                         updateMilestoneStrategy: true,
                         strategyFormConsolidation: true,
                         enterpriseEdgeTokensList: true,
-                        inlineFavoriteInNameColumn: true,
                         filterFavorites: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
                     },

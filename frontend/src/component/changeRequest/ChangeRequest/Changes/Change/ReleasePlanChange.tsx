@@ -1,18 +1,19 @@
 import { type FC, type ReactNode, useRef, useState } from 'react';
 import { styled, Typography } from '@mui/material';
-import type {
-    ChangeRequestState,
-    ChangeRequestType,
-    IChangeRequestAddReleasePlan,
-    IChangeRequestChangeMilestoneProgression,
-    IChangeRequestChangeSafeguard,
-    IChangeRequestDeleteMilestoneProgression,
-    IChangeRequestDeleteReleasePlan,
-    IChangeRequestDeleteSafeguard,
-    IChangeRequestFeature,
-    IChangeRequestResumeMilestoneProgression,
-    IChangeRequestStartMilestone,
-    IChangeRequestUpdateMilestoneStrategy,
+import {
+    isClosed,
+    type ChangeRequestState,
+    type ChangeRequestType,
+    type IChangeRequestAddReleasePlan,
+    type IChangeRequestChangeMilestoneProgression,
+    type IChangeRequestChangeSafeguard,
+    type IChangeRequestDeleteMilestoneProgression,
+    type IChangeRequestDeleteReleasePlan,
+    type IChangeRequestDeleteSafeguard,
+    type IChangeRequestFeature,
+    type IChangeRequestResumeMilestoneProgression,
+    type IChangeRequestStartMilestone,
+    type IChangeRequestUpdateMilestoneStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -57,7 +58,7 @@ const DeleteReleasePlan: FC<{
     actions?: ReactNode;
 }> = ({ change, currentReleasePlan, changeRequestState, actions }) => {
     const releasePlan =
-        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        (isClosed(changeRequestState) || !currentReleasePlan) &&
         change.payload.snapshot
             ? change.payload.snapshot
             : currentReleasePlan;
@@ -95,7 +96,7 @@ const ResumeMilestoneProgression: FC<{
         actions,
     } = props;
     const releasePlan =
-        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        (isClosed(changeRequestState) || !currentReleasePlan) &&
         change.payload.snapshot
             ? change.payload.snapshot
             : currentReleasePlan;
@@ -123,7 +124,7 @@ const StartMilestone: FC<{
     actions?: ReactNode;
 }> = ({ change, currentReleasePlan, changeRequestState, actions }) => {
     const releasePlan =
-        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        (isClosed(changeRequestState) || !currentReleasePlan) &&
         change.payload.snapshot
             ? change.payload.snapshot
             : currentReleasePlan;
@@ -200,7 +201,7 @@ const ChangeSafeguard: FC<{
     onDelete: (safeguardId: string) => void;
 }> = ({ change, currentReleasePlan, changeRequestState, ...rest }) => {
     const releasePlan =
-        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        (isClosed(changeRequestState) || !currentReleasePlan) &&
         change.payload.snapshot
             ? change.payload.snapshot
             : currentReleasePlan;
@@ -228,7 +229,7 @@ const DeleteSafeguard: FC<{
     onDelete: (safeguardId: string) => void;
 }> = ({ change, currentReleasePlan, changeRequestState, ...rest }) => {
     const releasePlan =
-        (changeRequestState === 'Applied' || !currentReleasePlan) &&
+        (isClosed(changeRequestState) || !currentReleasePlan) &&
         change.payload.snapshot
             ? change.payload.snapshot
             : currentReleasePlan;

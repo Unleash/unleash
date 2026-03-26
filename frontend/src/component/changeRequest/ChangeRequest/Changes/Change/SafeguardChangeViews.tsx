@@ -1,6 +1,9 @@
 import type { FC, ReactNode } from 'react';
 import { styled } from '@mui/material';
-import type { ChangeRequestState } from 'component/changeRequest/changeRequest.types';
+import {
+    isClosed,
+    type ChangeRequestState,
+} from 'component/changeRequest/changeRequest.types';
 import type { CreateSafeguardSchema } from 'openapi';
 import type { ISafeguard } from 'interfaces/releasePlans';
 import type { SafeguardType } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
@@ -43,8 +46,7 @@ export const SafeguardChangeView: FC<{
     onSubmit,
     onDelete,
 }) => {
-    const readonly =
-        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+    const readonly = isClosed(changeRequestState);
 
     return (
         <StyledTabs>
@@ -117,8 +119,7 @@ export const SafeguardDeleteView: FC<{
     onSubmit,
     onDelete,
 }) => {
-    const readonly =
-        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+    const readonly = isClosed(changeRequestState);
 
     return (
         <StyledTabs>

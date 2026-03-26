@@ -104,14 +104,12 @@ const DeleteStrategy: FC<{
     currentStrategy: IFeatureStrategy | undefined;
     actions?: ReactNode;
 }> = ({ change, changeRequestState, currentStrategy, actions }) => {
-    const title =
-        changeRequestState === 'Applied'
-            ? change.payload?.snapshot?.title
-            : currentStrategy?.title;
-    const referenceStrategy =
-        changeRequestState === 'Applied'
-            ? change.payload.snapshot
-            : currentStrategy;
+    const title = isClosed(changeRequestState)
+        ? change.payload?.snapshot?.title
+        : currentStrategy?.title;
+    const referenceStrategy = isClosed(changeRequestState)
+        ? change.payload.snapshot
+        : currentStrategy;
 
     return (
         <>

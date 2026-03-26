@@ -24,6 +24,8 @@ export interface IInstanceStatus {
     isCustomBilling?: boolean;
     billing?: InstanceBilling;
     ucaSignup?: boolean;
+    emailDomain?: string;
+    autoCreateDomainUsers?: boolean;
 }
 
 export enum InstanceState {

@@ -10,6 +10,9 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { calculateMilestoneStatus } from './milestoneStatusUtils.js';
 import { MilestoneAutomation } from './MilestoneAutomation.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { ProjectEnvironmentStrategyDraggableItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem.tsx';
+import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem.tsx';
 
 const StyledConnection = styled('div', {
     shouldForwardProp: (prop) => prop !== 'isCompleted',
@@ -88,6 +91,7 @@ export const ReleasePlanMilestoneItem = ({
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
+    const canEditStrategies = useUiFlag('updateMilestoneStrategy');
 
     const isNotLastMilestone = index < milestones.length - 1;
     const isProgressionFormOpen = progressionFormOpenIndex === index;
@@ -185,6 +189,30 @@ export const ReleasePlanMilestoneItem = ({
         />
     ) : undefined;
 
+    const renderStrategy = canEditStrategies
+        ? (strategy, strategyIndex) => (
+              <ProjectEnvironmentStrategyDraggableItem
+                  readonly={readonly}
+                  scope='milestone'
+                  featureId={featureName}
+                  strategy={{
+                      ...strategy,
+                      name: strategy.name || strategy.strategyName || '',
+                  }}
+                  index={strategyIndex}
+                  environmentName={environment}
+              />
+          )
+        : (strategy) => (
+              <StrategyItem
+                  strategyHeaderLevel={4}
+                  strategy={{
+                      ...strategy,
+                      name: strategy.name || strategy.strategyName || '',
+                  }}
+              />
+          );
+
     return (
         <div key={milestone.id}>
             <ReleasePlanMilestone
@@ -197,6 +225,7 @@ export const ReleasePlanMilestoneItem = ({
                 previousMilestoneStatus={previousMilestoneStatus}
                 projectId={projectId}
                 environmentId={environment}
+                renderStrategy={renderStrategy}
             />
             <ConditionallyRender
                 condition={isNotLastMilestone}

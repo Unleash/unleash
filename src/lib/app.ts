@@ -128,8 +128,14 @@ export default async function getApp(
         noApiToken(baseUriPath, app);
     }
 
-    app.use(`${baseUriPath}/api/frontend`, frontendApiAccessMiddleware(config, services));
-    app.use(`${baseUriPath}/api/client`, backendApiAccessMiddleware(config, services));
+    app.use(
+        `${baseUriPath}/api/frontend`,
+        frontendApiAccessMiddleware(config, services),
+    );
+    app.use(
+        `${baseUriPath}/api/client`,
+        backendApiAccessMiddleware(config, services),
+    );
     app.use(baseUriPath, apiAccessMiddleware(config, services));
 
     switch (config.authentication.type) {

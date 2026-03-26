@@ -44,33 +44,12 @@ export const apiAccessMiddleware = (
     }
 
     return async (req: IAuthRequest | IApiRequest, res, next) => {
-        const onlyBackendTokensWithClientAPI = flagResolver.isEnabled(
-            'onlyBackendTokensWithClientAPI',
-        );
-
         if (req.user) {
-            if (isClientApi(req) && onlyBackendTokensWithClientAPI) {
-                res.status(403).send({
-                    message: TOKEN_TYPE_ERROR_MESSAGE,
-                });
-            } else {
-                return next();
-            }
+            return next();
         }
+
         try {
             const apiToken = req.header('authorization');
-            if (
-                onlyBackendTokensWithClientAPI &&
-                (apiToken?.startsWith('user:') ||
-                    apiToken?.startsWith('*:*.')) &&
-                isClientApi(req)
-            ) {
-                res.status(403).send({
-                    message: TOKEN_TYPE_ERROR_MESSAGE,
-                });
-                return;
-            }
-
             if (!apiToken?.startsWith('user:')) {
                 const apiUser = apiToken
                     ? await apiTokenService.getUserForToken(apiToken)

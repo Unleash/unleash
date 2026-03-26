@@ -131,6 +131,9 @@ export default defineConfig(({ mode }) => {
                 svgr(),
                 envCompatible(),
             ],
+            optimizeDeps: {
+                exclude: ['chartjs-adapter-date-fns'],
+            },
             esbuild: {
                 logOverride: { 'this-is-undefined-in-esm': 'silent' },
             },

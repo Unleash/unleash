@@ -4,6 +4,7 @@ import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
 import type { SetStrategySortOrderSchema } from 'openapi';
 import type { IReleasePlan, ISafeguard } from 'interfaces/releasePlans';
+import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlan.js';
 
 type BaseChangeRequest = {
     id: number;
@@ -118,6 +119,9 @@ export type ChangeRequestState =
     | 'Cancelled'
     | 'Rejected';
 
+export const isClosed = (state: ChangeRequestState): boolean =>
+    ['Applied', 'Cancelled', 'Rejected'].includes(state);
+
 type ChangeRequestPayload =
     | ChangeRequestEnabled
     | ChangeRequestAddStrategy
@@ -158,8 +162,10 @@ export interface IChangeRequestUpdateStrategy extends IChangeRequestChangeBase {
 
 export type ChangeRequestUpdateMilestoneStrategy = Omit<
     ChangeRequestEditStrategy,
-    'name'
->;
+    'name' | 'snapshot'
+> & {
+    snapshot?: IReleasePlan;
+};
 
 export interface IChangeRequestUpdateMilestoneStrategy
     extends IChangeRequestChangeBase {

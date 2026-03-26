@@ -4,12 +4,13 @@ import { Box, styled, Tooltip, Typography } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
-import type {
-    ChangeRequestState,
-    IChangeRequestAddStrategy,
-    IChangeRequestDeleteStrategy,
-    IChangeRequestUpdateMilestoneStrategy,
-    IChangeRequestUpdateStrategy,
+import {
+    isClosed,
+    type ChangeRequestState,
+    type IChangeRequestAddStrategy,
+    type IChangeRequestDeleteStrategy,
+    type IChangeRequestUpdateMilestoneStrategy,
+    type IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
 import { useCurrentStrategy } from './hooks/useCurrentStrategy.ts';
 import { Badge } from 'component/common/Badge/Badge';
@@ -139,10 +140,86 @@ const DeleteStrategy: FC<{
     );
 };
 
+const UpdateStrategyInfo: FC<{
+    change: IChangeRequestUpdateMilestoneStrategy;
+    changeRequestState: ChangeRequestState;
+    currentStrategy: IFeatureStrategy | undefined;
+    actions?: ReactNode;
+    className?: string;
+}> = ({ change, changeRequestState, currentStrategy, actions, className }) => {
+    const snapshotStrategy = change.payload.snapshot?.milestones
+        ?.flatMap((milestone) => milestone.strategies)
+        .find((strategy) => strategy.id === change.payload.id);
+
+    const referenceStrategy = isClosed(changeRequestState)
+        ? snapshotStrategy
+        : currentStrategy;
+
+    const previousTitle = referenceStrategy?.title;
+
+    const hasVariantDiff = hasDiff(
+        referenceStrategy?.variants || [],
+        change.payload.variants || [],
+    );
+
+    return (
+        <Box className={className}>
+            <ChangeItemWrapper>
+                <ChangeItemInfo>
+                    <EditHeader
+                        wasDisabled={currentStrategy?.disabled}
+                        willBeDisabled={change.payload?.disabled}
+                    />
+                    <NameWithChangeInfo
+                        newName={change.payload.title}
+                        previousName={previousTitle}
+                    />
+                </ChangeItemInfo>
+                {actions}
+            </ChangeItemWrapper>
+            {change.payload?.disabled !== currentStrategy?.disabled && (
+                <Typography
+                    sx={{
+                        marginTop: (theme) => theme.spacing(2),
+                        marginBottom: (theme) => theme.spacing(2),
+                        ...flexRow,
+                        gap: (theme) => theme.spacing(1),
+                    }}
+                >
+                    This strategy will be{' '}
+                    <DisabledEnabledState
+                        disabled={change.payload?.disabled || false}
+                    />
+                </Typography>
+            )}
+
+            <StrategyExecution strategy={change.payload} />
+            {hasVariantDiff ? (
+                <StyledBox>
+                    {change.payload.variants?.length ? (
+                        <>
+                            <StyledTypography>
+                                {currentStrategy?.variants?.length
+                                    ? 'Updating strategy variants to:'
+                                    : 'Adding strategy variants:'}
+                            </StyledTypography>
+                            <EnvironmentVariantsTable
+                                variants={change.payload.variants || []}
+                            />
+                        </>
+                    ) : (
+                        <StyledTypography>
+                            Removed all strategy variants.
+                        </StyledTypography>
+                    )}
+                </StyledBox>
+            ) : null}
+        </Box>
+    );
+};
+
 const UpdateStrategy: FC<{
-    change:
-        | IChangeRequestUpdateStrategy
-        | IChangeRequestUpdateMilestoneStrategy;
+    change: IChangeRequestUpdateStrategy;
     changeRequestState: ChangeRequestState;
     currentStrategy: IFeatureStrategy | undefined;
     actions?: ReactNode;
@@ -313,6 +390,18 @@ export const StrategyChange: FC<{
         environmentName,
     );
 
+    if (change.action === 'updateMilestoneStrategy') {
+        return (
+            <UpdateStrategyInfo
+                change={change}
+                changeRequestState={changeRequestState}
+                currentStrategy={currentStrategy}
+                actions={actions}
+                className={className}
+            />
+        );
+    }
+
     const actionsWithTabs = (
         <ActionsContainer>
             <TabList>
@@ -340,8 +429,7 @@ export const StrategyChange: FC<{
                     actions={actionsWithTabs}
                 />
             )}
-            {(change.action === 'updateStrategy' ||
-                change.action === 'updateMilestoneStrategy') && (
+            {change.action === 'updateStrategy' && (
                 <UpdateStrategy
                     change={change}
                     changeRequestState={changeRequestState}

@@ -48,16 +48,7 @@ const strategyChange: IChangeRequestUpdateMilestoneStrategy = {
         segments: [],
         variants: [],
         disabled: false,
-        snapshot: {
-            id: 'strategy-1',
-            name: 'flexibleRollout',
-            parameters: { rollout: '50' },
-            constraints: [],
-            segments: [],
-            variants: [],
-            disabled: false,
-            sortOrder: 0,
-        },
+        snapshot: { ...basePlan },
     },
 };
 

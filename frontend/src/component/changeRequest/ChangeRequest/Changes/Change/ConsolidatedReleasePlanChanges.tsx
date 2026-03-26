@@ -1,11 +1,12 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material';
-import type {
-    ChangeRequestType,
-    IChangeRequestChangeMilestoneProgression,
-    IChangeRequestDeleteMilestoneProgression,
-    IChangeRequestUpdateMilestoneStrategy,
-    IChangeRequestFeature,
+import {
+    type ChangeRequestType,
+    type IChangeRequestChangeMilestoneProgression,
+    type IChangeRequestDeleteMilestoneProgression,
+    type IChangeRequestUpdateMilestoneStrategy,
+    type IChangeRequestFeature,
+    isClosed,
 } from 'component/changeRequest/changeRequest.types';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
@@ -144,16 +145,14 @@ export const ConsolidatedReleasePlanChanges: FC<{
             change.action === 'updateMilestoneStrategy',
     );
 
-    // Only progression changes carry a release plan snapshot;
-    // updateMilestoneStrategy snapshots are strategy objects, not plans.
-    const firstProgressionChange = releasePlanChanges.find(
-        (change): change is IChangeRequestChangeMilestoneProgression =>
-            change.action === 'changeMilestoneProgression',
-    );
-    const planSnapshot = firstProgressionChange?.payload.snapshot;
+    const isReleasePlan = (snapshot: unknown): snapshot is IReleasePlan =>
+        snapshot instanceof Object && 'milestones' in snapshot;
+    const planSnapshot = releasePlanChanges.find((change) =>
+        isReleasePlan(change.payload.snapshot),
+    )?.payload.snapshot;
+
     const basePlan =
-        (changeRequestState === 'Applied' || !currentReleasePlan) &&
-        planSnapshot
+        (isClosed(changeRequestState) || !currentReleasePlan) && planSnapshot
             ? planSnapshot
             : currentReleasePlan;
 
@@ -167,8 +166,7 @@ export const ConsolidatedReleasePlanChanges: FC<{
         basePlan,
     );
 
-    const readonly =
-        changeRequestState === 'Applied' || changeRequestState === 'Cancelled';
+    const readonly = isClosed(changeRequestState);
 
     return (
         <StyledTabs>

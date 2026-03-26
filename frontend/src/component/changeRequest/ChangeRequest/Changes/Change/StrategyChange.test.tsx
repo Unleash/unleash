@@ -173,76 +173,6 @@ test('Editing strategy before change request is applied diffs against current st
     expect(newName).toHaveClass('addition');
 });
 
-test('Editing milestone strategy before change request is applied diffs against current milestone strategy', async () => {
-    render(
-        <Routes>
-            <Route
-                path='/projects/:projectId'
-                element={
-                    <StrategyChange
-                        featureName={feature}
-                        environmentName={environmentName}
-                        projectId={projectId}
-                        changeRequestState='Approved'
-                        change={{
-                            action: 'updateMilestoneStrategy',
-                            id: 1,
-                            payload: {
-                                id: milestoneStrategy.id,
-                                constraints: milestoneStrategy.constraints,
-                                segments: milestoneStrategy.segments,
-                                variants: [
-                                    {
-                                        name: 'change_variant',
-                                        weight: 1000,
-                                        stickiness: 'default',
-                                        weightType: 'variable' as const,
-                                    },
-                                ],
-                                title: 'change_request_title',
-                                parameters: {
-                                    ...milestoneStrategy.parameters,
-                                    rollout: changeRequestRollout,
-                                },
-                                snapshot: {
-                                    ...milestoneStrategy,
-                                    title: 'snapshot_title',
-                                    parameters: {
-                                        ...milestoneStrategy.parameters,
-                                        rollout: snapshotRollout,
-                                    },
-                                },
-                            },
-                        }}
-                    />
-                }
-            />
-        </Routes>,
-        { route: `/projects/${projectId}` },
-    );
-
-    await screen.findByText('Editing strategy');
-    await screen.findByText('change_request_title');
-    await screen.findByText('current_title');
-    expect(screen.queryByText('snapshot_title')).not.toBeInTheDocument();
-
-    await screen.findByText('Updating strategy variants to:');
-    const variants = await screen.findAllByText('change_variant');
-    expect(variants).toHaveLength(2);
-
-    const viewDiff = await screen.findByRole('tab', {
-        name: 'View diff',
-    });
-    await userEvent.click(viewDiff);
-
-    const rollout = await screen.findByText(`rollout: "${currentRollout}"`);
-    expect(rollout).toHaveClass('deletion');
-    const oldName = await screen.findByText('name: "current_variant"');
-    expect(oldName).toHaveClass('deletion');
-    const newName = await screen.findByText('name: "change_variant"');
-    expect(newName).toHaveClass('addition');
-});
-
 test('Editing strategy after change request is applied diffs against the snapshot', async () => {
     render(
         <Routes>
@@ -285,89 +215,6 @@ test('Editing strategy after change request is applied diffs against the snapsho
                                     title: 'snapshot_title',
                                     parameters: {
                                         ...strategy.parameters,
-                                        rollout: snapshotRollout,
-                                    },
-                                },
-                            },
-                        }}
-                    />
-                }
-            />
-        </Routes>,
-        { route: `/projects/${projectId}` },
-    );
-
-    await screen.findByText('Editing strategy');
-    await screen.findByText('change_request_title');
-    await screen.findByText('snapshot_title');
-    expect(screen.queryByText('current_title')).not.toBeInTheDocument();
-
-    await screen.findByText('Updating strategy variants to:');
-    const variants = await screen.findAllByText('change_variant');
-    expect(variants).toHaveLength(2);
-
-    const viewDiff = await screen.findByRole('tab', {
-        name: 'View diff',
-    });
-    await userEvent.click(viewDiff);
-
-    const oldRollout = await screen.findByText(`rollout: "${snapshotRollout}"`);
-    expect(oldRollout).toHaveClass('deletion');
-    const newRollout = await screen.findByText(
-        `rollout: "${changeRequestRollout}"`,
-    );
-
-    expect(newRollout).toHaveClass('addition');
-    const oldName = await screen.findByText('name: "snapshot_variant"');
-    expect(oldName).toHaveClass('deletion');
-    const newName = await screen.findByText('name: "change_variant"');
-    expect(newName).toHaveClass('addition');
-});
-
-test('Editing milestone strategy after change request is applied diffs against the snapshot', async () => {
-    render(
-        <Routes>
-            <Route
-                path='/projects/:projectId'
-                element={
-                    <StrategyChange
-                        featureName='my_feature'
-                        environmentName='production'
-                        projectId='default'
-                        changeRequestState='Applied'
-                        change={{
-                            action: 'updateMilestoneStrategy',
-                            id: 1,
-                            payload: {
-                                id: milestoneStrategy.id,
-                                constraints: milestoneStrategy.constraints,
-                                segments: milestoneStrategy.segments,
-                                title: 'change_request_title',
-                                parameters: {
-                                    ...milestoneStrategy.parameters,
-                                    rollout: changeRequestRollout,
-                                },
-                                variants: [
-                                    {
-                                        name: 'change_variant',
-                                        weight: 1000,
-                                        stickiness: 'default',
-                                        weightType: 'variable' as const,
-                                    },
-                                ],
-                                snapshot: {
-                                    ...milestoneStrategy,
-                                    variants: [
-                                        {
-                                            name: 'snapshot_variant',
-                                            weight: 1000,
-                                            stickiness: 'default',
-                                            weightType: 'variable' as const,
-                                        },
-                                    ],
-                                    title: 'snapshot_title',
-                                    parameters: {
-                                        ...milestoneStrategy.parameters,
                                         rollout: snapshotRollout,
                                     },
                                 },
@@ -595,7 +442,7 @@ test('Segments order does not matter for diff calculation', async () => {
     expect(segmentsChangeElement).not.toBeInTheDocument();
 });
 
-test('Milestone strategy update diff excludes non updatable fields (milestoneId, strategyName)', async () => {
+test('Milestone strategy update does not show diff tabs', async () => {
     render(
         <Routes>
             <Route
@@ -632,14 +479,6 @@ test('Milestone strategy update diff excludes non updatable fields (milestoneId,
                                     ...milestoneStrategy.parameters,
                                     rollout: changeRequestRollout,
                                 },
-                                snapshot: {
-                                    ...milestoneStrategy,
-                                    title: 'current_title',
-                                    parameters: {
-                                        ...milestoneStrategy.parameters,
-                                        rollout: currentRollout,
-                                    },
-                                },
                             },
                         }}
                     />
@@ -651,11 +490,10 @@ test('Milestone strategy update diff excludes non updatable fields (milestoneId,
 
     await screen.findByText('Editing strategy');
 
-    const viewDiff = await screen.findByRole('tab', {
-        name: 'View diff',
-    });
-    await userEvent.click(viewDiff);
-
-    expect(screen.queryByText(/milestoneId/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/strategyName/)).not.toBeInTheDocument();
+    expect(
+        screen.queryByRole('tab', { name: 'View diff' }),
+    ).not.toBeInTheDocument();
+    expect(
+        screen.queryByRole('tab', { name: 'View change' }),
+    ).not.toBeInTheDocument();
 });

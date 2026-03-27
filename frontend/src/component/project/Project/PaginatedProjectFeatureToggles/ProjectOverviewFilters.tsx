@@ -29,7 +29,6 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
     const { tags } = useAllTags();
     const { flagCreators } = useProjectFlagCreators(project);
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
-    const filterFavoritesEnabled = useUiFlag('filterFavorites');
     const { trackEvent } = usePlausibleTracker();
 
     const onFilterChange = (value: FilterItemParamHolder) => {
@@ -132,31 +131,26 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
-            ...(filterFavoritesEnabled
-                ? [
-                      {
-                          label: 'Favorite',
-                          icon: 'star',
-                          options: [
-                              { label: 'True', value: 'true' },
-                              { label: 'False', value: 'false' },
-                          ],
-                          filterKey: 'favorite',
-                          singularOperators: ['IS'] as [string, ...string[]],
-                          pluralOperators: ['IS_ANY_OF'] as [
-                              string,
-                              ...string[],
-                          ],
-                      },
-                  ]
-                : []),
+            {
+                label: 'Favorite',
+                icon: 'star',
+                options: [
+                    { label: 'True', value: 'true' },
+                    { label: 'False', value: 'false' },
+                ],
+                filterKey: 'favorite',
+                singularOperators: ['IS'] as [string, ...string[]],
+                pluralOperators: ['IS_ANY_OF'] as [
+                    string,
+                    ...string[],
+                ],
+            },
         ];
 
         setAvailableFilters(availableFilters);
     }, [
         JSON.stringify(tags),
         JSON.stringify(flagCreators),
-        filterFavoritesEnabled,
     ]);
 
     return (

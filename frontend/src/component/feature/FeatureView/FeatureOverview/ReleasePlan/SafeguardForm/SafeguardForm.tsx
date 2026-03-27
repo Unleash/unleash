@@ -21,7 +21,11 @@ import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/use
 import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
-import { getMetricType } from 'component/impact-metrics/metricsFormatters.ts';
+import {
+    getMetricType,
+    isValidAggregation,
+    type MetricType,
+} from 'component/impact-metrics/metricsFormatters.ts';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
@@ -203,10 +207,7 @@ const useSafeguardMetricsData = (
         return ['*', ...appNames];
     }, [metricsData?.labels?.appName]);
 
-    const metricType = getMetricType(
-        metricName,
-        metricsData?.labels?.type,
-    );
+    const metricType = getMetricType(metricName, metricsData?.labels?.type);
 
     return {
         metricOptions,
@@ -220,7 +221,7 @@ const useSafeguardFormHandlers = (
     formValues: ReturnType<typeof useSafeguardFormValues>,
     formMode: ReturnType<typeof useSafeguardFormMode>,
     metricOptions: MetricOption[],
-    metricType: string,
+    metricType: MetricType,
 ) => {
     const {
         setMetricName,
@@ -241,7 +242,10 @@ const useSafeguardFormHandlers = (
     }, [metricOptions, formValues.metricName, setMetricName]);
 
     useEffect(() => {
-        if (metricType !== 'unknown') {
+        if (
+            metricType !== 'unknown' &&
+            !isValidAggregation(metricType, aggregationMode)
+        ) {
             setAggregationMode(
                 getDefaultAggregationMode(metricType, aggregationMode),
             );

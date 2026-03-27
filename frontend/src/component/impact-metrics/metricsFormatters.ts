@@ -85,6 +85,17 @@ export const getMetricDisplayName = (metricName: string): string => {
     return metricName;
 };
 
+const VALID_MODES: Record<string, string[]> = {
+    counter: ['rps', 'count'],
+    gauge: ['avg', 'sum'],
+    histogram: ['p50', 'p95', 'p99'],
+};
+
+export const isValidAggregation = (
+    metricType: MetricType,
+    mode: string,
+): boolean => VALID_MODES[metricType]?.includes(mode) ?? false;
+
 export const getDefaultAggregation = (
     seriesName: string,
     typeLabel?: string[],

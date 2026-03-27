@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import type { AggregationMode, ChartConfig } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import { getDefaultAggregation, getMetricType, type MetricType } from '../metricsFormatters.ts';
+import {
+    getDefaultAggregation,
+    getMetricType,
+    isValidAggregation,
+    type MetricType,
+} from '../metricsFormatters.ts';
 
 type UseChartConfigParams = {
     open: boolean;
@@ -103,7 +108,10 @@ export const useChartFormState = ({
     const metricType = getMetricType(metricName, currentAvailableLabels?.type);
 
     useEffect(() => {
-        if (metricType !== 'unknown') {
+        if (
+            metricType !== 'unknown' &&
+            !isValidAggregation(metricType, aggregationMode)
+        ) {
             setAggregationMode(
                 getDefaultAggregation(metricName, currentAvailableLabels?.type),
             );

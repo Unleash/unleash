@@ -144,10 +144,7 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
         ];
 
         setAvailableFilters(availableFilters);
-    }, [
-        JSON.stringify(tags),
-        JSON.stringify(flagCreators),
-    ]);
+    }, [JSON.stringify(tags), JSON.stringify(flagCreators)]);
 
     return (
         <StyledFilters

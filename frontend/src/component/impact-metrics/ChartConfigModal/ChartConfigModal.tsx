@@ -109,11 +109,16 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
     metricSeries,
     loading = false,
 }) => {
-    const { formData, actions, isValid, currentAvailableLabels } =
-        useChartFormState({
-            open,
-            initialConfig,
-        });
+    const {
+        formData,
+        actions,
+        isValid,
+        resolvedMetricType,
+        currentAvailableLabels,
+    } = useChartFormState({
+        open,
+        initialConfig,
+    });
     const theme = useTheme();
     const screenBreakpoint = useMediaQuery(theme.breakpoints.down('lg'));
     const { trackEvent } = usePlausibleTracker();
@@ -203,6 +208,7 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                             formData={formData}
                             actions={actions}
                             metricSeries={metricSeries}
+                            metricType={resolvedMetricType}
                             loading={loading}
                             labelsFilter={
                                 currentAvailableLabels ? (

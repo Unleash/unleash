@@ -55,10 +55,26 @@ export const getSeriesLabel = (metric: Record<string, string>): string => {
 
 export const formatLargeNumbers = prettifyLargeNumber(1000, 1);
 
-export const getMetricType = (seriesName: string) => {
+export type MetricType = 'counter' | 'gauge' | 'histogram' | 'unknown';
+
+export const getMetricType = (seriesName: string): MetricType => {
     if (seriesName.startsWith('unleash_counter_')) return 'counter';
     if (seriesName.startsWith('unleash_gauge_')) return 'gauge';
     if (seriesName.startsWith('unleash_histogram_')) return 'histogram';
+    return 'unknown';
+};
+
+const KNOWN_METRIC_TYPES: MetricType[] = ['counter', 'gauge', 'histogram'];
+
+export const getMetricTypeFromLabel = (
+    typeLabel: string[] | undefined,
+): MetricType => {
+    if (
+        typeLabel?.length === 1 &&
+        KNOWN_METRIC_TYPES.includes(typeLabel[0] as MetricType)
+    ) {
+        return typeLabel[0] as MetricType;
+    }
     return 'unknown';
 };
 
@@ -72,14 +88,8 @@ export const getMetricDisplayName = (metricName: string): string => {
     return metricName;
 };
 
-export const getDefaultAggregation = (seriesName: string) => {
-    const metricType = getMetricType(seriesName);
-
-    if (metricType === 'counter') {
-        return 'count';
-    }
-    if (metricType === 'histogram') {
-        return 'p50';
-    }
+export const getDefaultAggregation = (metricType: MetricType) => {
+    if (metricType === 'counter') return 'count';
+    if (metricType === 'histogram') return 'p50';
     return 'avg';
 };

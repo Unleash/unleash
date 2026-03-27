@@ -185,10 +185,7 @@ export const FeatureToggleListTable: FC = () => {
                 },
             }),
         ],
-        [
-            tableState.favoritesFirst,
-            showStatusColumn,
-        ],
+        [tableState.favoritesFirst, showStatusColumn],
     );
     const data = useMemo<FeatureSearchResponseSchema[]>(
         () =>

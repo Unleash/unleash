@@ -76,7 +76,6 @@ export type IFlagKey =
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
     | 'featureEnvSafeguards'
-    | 'filterFavorites'
     | 'inlineFavoriteInNameColumn'
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'newSignOut'
@@ -348,10 +347,6 @@ const flags: IFlags = {
     ),
     inlineFavoriteInNameColumn: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_INLINE_FAVORITE_IN_NAME_COLUMN,
-        false,
-    ),
-    filterFavorites: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FILTER_FAVORITES,
         false,
     ),
     userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(

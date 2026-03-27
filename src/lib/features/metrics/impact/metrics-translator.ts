@@ -1,5 +1,6 @@
 import { Counter, Gauge, type Registry } from 'prom-client';
 import { BatchHistogram } from './batch-histogram.js';
+import type { IFlagResolver } from '../../../types/experimental.js';
 
 export interface NumericMetricSample {
     labels?: Record<string, string | number>;
@@ -31,9 +32,18 @@ export type Metric = NumericMetric | BucketMetric;
 
 export class MetricsTranslator {
     private registry: Registry;
+    private flagResolver: Pick<IFlagResolver, 'isEnabled'>;
 
-    constructor(registry: Registry) {
+    constructor(
+        registry: Registry,
+        flagResolver: Pick<IFlagResolver, 'isEnabled'>,
+    ) {
         this.registry = registry;
+        this.flagResolver = flagResolver;
+    }
+
+    private isPlainMetricsEnabled(): boolean {
+        return this.flagResolver.isEnabled('externalPrometheusImpactMetrics');
     }
 
     sanitizeName(name: string): string {
@@ -230,7 +240,7 @@ export class MetricsTranslator {
                 counter.inc(this.prefixedLabels(sample), sample.value);
             }
 
-            if (plainValid) {
+            if (this.isPlainMetricsEnabled() && plainValid) {
                 const plainCounter = this.resolveCounter(
                     sanitizedName,
                     metric.help,
@@ -256,7 +266,7 @@ export class MetricsTranslator {
                 gauge.set(this.prefixedLabels(sample), sample.value);
             }
 
-            if (plainValid) {
+            if (this.isPlainMetricsEnabled() && plainValid) {
                 const plainGauge = this.resolveGauge(
                     sanitizedName,
                     metric.help,
@@ -291,7 +301,7 @@ export class MetricsTranslator {
                 });
             }
 
-            if (plainValid) {
+            if (this.isPlainMetricsEnabled() && plainValid) {
                 const plainHistogram = this.resolveHistogram(
                     sanitizedName,
                     metric.help,

@@ -58,6 +58,22 @@ describe('MetricsTranslator', () => {
                     },
                 ],
             },
+            {
+                name: 'response_time',
+                help: 'response time',
+                type: 'histogram' as const,
+                samples: [
+                    {
+                        labels: { service: 'api' },
+                        count: 5,
+                        sum: 2.5,
+                        buckets: [
+                            { le: 1, count: 3 },
+                            { le: '+Inf' as const, count: 5 },
+                        ],
+                    },
+                ],
+            },
         ];
 
         const registry = new Registry();
@@ -82,6 +98,12 @@ describe('MetricsTranslator', () => {
         );
         expect(result).toContain(
             'test_gauge{origin="sdk",type="gauge",env="prod"} 10',
+        );
+        expect(result).toContain(
+            'unleash_histogram_response_time_bucket{unleash_origin="sdk",unleash_service="api",le="1"} 3',
+        );
+        expect(result).toContain(
+            'response_time_bucket{origin="sdk",service="api",type="histogram",le="1"} 3',
         );
     });
 

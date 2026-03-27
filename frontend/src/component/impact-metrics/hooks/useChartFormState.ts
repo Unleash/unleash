@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import type { AggregationMode, ChartConfig } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import { getDefaultAggregation, getMetricType } from '../metricsFormatters.ts';
+import {
+    getDefaultAggregation,
+    getMetricType,
+    isValidAggregation,
+    type MetricType,
+} from '../metricsFormatters.ts';
 
 type UseChartConfigParams = {
     open: boolean;
@@ -13,6 +18,7 @@ export type ChartFormState = {
     formData: {
         title: string;
         metricName: string;
+        metricType: MetricType;
         timeRange: 'hour' | 'day' | 'week' | 'month';
         yAxisMin: 'auto' | 'zero';
         aggregationMode: AggregationMode;
@@ -48,7 +54,8 @@ export const useChartFormState = ({
         Record<string, string[]>
     >(initialConfig?.labelSelectors || {});
     const [aggregationMode, setAggregationMode] = useState<AggregationMode>(
-        initialConfig?.aggregationMode || getDefaultAggregation(metricName),
+        initialConfig?.aggregationMode ||
+            getDefaultAggregation(getMetricType(metricName)),
     );
 
     const {
@@ -72,7 +79,9 @@ export const useChartFormState = ({
             setLabelSelectors(initialConfig.labelSelectors);
             setAggregationMode(
                 initialConfig.aggregationMode ||
-                    getDefaultAggregation(initialConfig.metricName),
+                    getDefaultAggregation(
+                        getMetricType(initialConfig.metricName),
+                    ),
             );
         } else if (open && !initialConfig) {
             setTitle('');
@@ -87,14 +96,6 @@ export const useChartFormState = ({
     const handleSeriesChange = (series: string) => {
         setMetricName(series);
         setLabelSelectors({});
-        const metric = getMetricType(series);
-        if (metric === 'counter') {
-            setAggregationMode('count');
-        } else if (metric === 'gauge') {
-            setAggregationMode('avg');
-        } else if (metric === 'histogram') {
-            setAggregationMode('p50');
-        }
     };
 
     const getConfigToSave = (): Omit<ChartConfig, 'id'> => ({
@@ -107,11 +108,22 @@ export const useChartFormState = ({
     });
 
     const isValid = metricName.length > 0;
+    const metricType = getMetricType(metricName, currentAvailableLabels?.type);
+
+    useEffect(() => {
+        if (
+            metricType !== 'unknown' &&
+            !isValidAggregation(metricType, aggregationMode)
+        ) {
+            setAggregationMode(getDefaultAggregation(metricType));
+        }
+    }, [metricName, metricType, aggregationMode]);
 
     return {
         formData: {
             title,
             metricName,
+            metricType,
             timeRange,
             yAxisMin,
             aggregationMode,

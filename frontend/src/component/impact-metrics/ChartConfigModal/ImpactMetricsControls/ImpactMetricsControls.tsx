@@ -5,7 +5,6 @@ import { MetricSelector } from './SeriesSelector/MetricSelector.tsx';
 import { RangeSelector } from './RangeSelector/RangeSelector.tsx';
 import { ModeSelector } from './ModeSelector/ModeSelector.tsx';
 import type { ChartFormState } from '../../hooks/useChartFormState.ts';
-import { getMetricType } from '../../metricsFormatters.ts';
 
 export type ImpactMetricsControlsProps = {
     formData: ChartFormState['formData'];
@@ -60,7 +59,7 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                     <ModeSelector
                         value={formData.aggregationMode}
                         onChange={actions.setAggregationMode}
-                        metricType={getMetricType(formData.metricName)!}
+                        metricType={formData.metricType}
                     />
                 </>
             ) : null}

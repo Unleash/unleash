@@ -21,6 +21,11 @@ import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/use
 import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+import {
+    getMetricType,
+    isValidAggregation,
+    type MetricType,
+} from 'component/impact-metrics/metricsFormatters.ts';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
@@ -202,8 +207,7 @@ const useSafeguardMetricsData = (
         return ['*', ...appNames];
     }, [metricsData?.labels?.appName]);
 
-    const selectedMetricData = metricOptions.find((m) => m.name === metricName);
-    const metricType = selectedMetricData?.type || 'unknown';
+    const metricType = getMetricType(metricName, metricsData?.labels?.type);
 
     return {
         metricOptions,
@@ -217,6 +221,7 @@ const useSafeguardFormHandlers = (
     formValues: ReturnType<typeof useSafeguardFormValues>,
     formMode: ReturnType<typeof useSafeguardFormMode>,
     metricOptions: MetricOption[],
+    metricType: MetricType,
 ) => {
     const {
         setMetricName,
@@ -236,17 +241,21 @@ const useSafeguardFormHandlers = (
         }
     }, [metricOptions, formValues.metricName, setMetricName]);
 
+    useEffect(() => {
+        if (
+            metricType !== 'unknown' &&
+            !isValidAggregation(metricType, aggregationMode)
+        ) {
+            setAggregationMode(
+                getDefaultAggregationMode(metricType, aggregationMode),
+            );
+        }
+    }, [formValues.metricName, metricType, aggregationMode]);
+
     const handleMetricChange = (value: string) => {
         enterEditMode();
         setMetricName(value);
         setAppName('*');
-
-        const metric = metricOptions.find((m) => m.name === value);
-        if (metric?.type) {
-            setAggregationMode(
-                getDefaultAggregationMode(metric.type, aggregationMode),
-            );
-        }
     };
 
     const handleApplicationChange = (value: string) => {
@@ -304,6 +313,7 @@ const useSafeguardFormState = (
         formValues,
         formMode,
         metricsData.metricOptions,
+        metricsData.metricType,
     );
 
     return {

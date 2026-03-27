@@ -40,7 +40,7 @@ const releasePlanSafeguard: ISafeguard = {
         id: 'metric-1',
         metricName: 'unleash_counter_http_requests_total',
         timeRange: 'day',
-        aggregationMode: 'rps',
+        aggregationMode: 'count',
         labelSelectors: { appName: ['*'] },
     },
     triggerCondition: {
@@ -89,7 +89,7 @@ const defaultSafeguardPayload = {
     impactMetric: {
         metricName: 'unleash_counter_http_requests_total',
         timeRange: 'day',
-        aggregationMode: 'rps',
+        aggregationMode: 'count',
         labelSelectors: { appName: ['*'] },
     },
     triggerCondition: {

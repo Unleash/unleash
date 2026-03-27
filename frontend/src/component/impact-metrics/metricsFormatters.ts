@@ -1,4 +1,5 @@
 import { prettifyLargeNumber } from '../common/PrettifyLargeNumber/formatLargeNumber.js';
+import type { AggregationMode } from './types.ts';
 
 export const getTimeUnit = (timeRange: string) => {
     switch (timeRange) {
@@ -85,7 +86,9 @@ export const getMetricDisplayName = (metricName: string): string => {
     return metricName;
 };
 
-export const getDefaultAggregation = (metricType: MetricType) => {
+export const getDefaultAggregation = (
+    metricType: MetricType,
+): AggregationMode => {
     if (metricType === 'counter') return 'count';
     if (metricType === 'histogram') return 'p50';
     return 'avg';

@@ -22,6 +22,7 @@ import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactM
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
 import {
+    getDefaultAggregation,
     getMetricType,
     type MetricType,
 } from 'component/impact-metrics/metricsFormatters.ts';
@@ -84,22 +85,6 @@ const getInitialValues = (safeguard?: ISafeguard) => ({
     timeRange: (safeguard?.impactMetric.timeRange ||
         'day') as MetricQuerySchemaTimeRange,
 });
-
-const getDefaultAggregationMode = (
-    metricType: string,
-    fallback: MetricQuerySchemaAggregationMode = 'rps',
-): MetricQuerySchemaAggregationMode => {
-    switch (metricType) {
-        case 'counter':
-            return 'count';
-        case 'gauge':
-            return 'avg';
-        case 'histogram':
-            return 'p50';
-        default:
-            return fallback;
-    }
-};
 
 const useSafeguardFormValues = (safeguard?: ISafeguard) => {
     const initialValues = useMemo(
@@ -229,9 +214,8 @@ const useSafeguardFormHandlers = (
         setOperator,
         setThreshold,
         setTimeRange,
-        aggregationMode,
     } = formValues;
-    const { enterEditMode } = formMode;
+    const { enterEditMode, mode } = formMode;
 
     // Auto-select first metric when options become available
     useEffect(() => {
@@ -240,11 +224,12 @@ const useSafeguardFormHandlers = (
         }
     }, [metricOptions, formValues.metricName, setMetricName]);
 
+    // Set default aggregation when metric type becomes known (only for new safeguards)
     useEffect(() => {
-        setAggregationMode(
-            getDefaultAggregationMode(metricType, aggregationMode),
-        );
-    }, [formValues.metricName, metricType]);
+        if (mode === 'create' && metricType !== 'unknown') {
+            setAggregationMode(getDefaultAggregation(metricType));
+        }
+    }, [mode, formValues.metricName, metricType]);
 
     const handleMetricChange = (value: string) => {
         enterEditMode();

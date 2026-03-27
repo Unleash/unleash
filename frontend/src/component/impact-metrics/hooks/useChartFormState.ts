@@ -95,6 +95,10 @@ export const useChartFormState = ({
     const handleSeriesChange = (series: string) => {
         setMetricName(series);
         setLabelSelectors({});
+        const metricType = getMetricType(series);
+        if (metricType !== 'unknown') {
+            setAggregationMode(getDefaultAggregation(metricType));
+        }
     };
 
     const getConfigToSave = (): Omit<ChartConfig, 'id'> => ({
@@ -108,10 +112,6 @@ export const useChartFormState = ({
 
     const isValid = metricName.length > 0;
     const metricType = getMetricType(metricName, currentAvailableLabels?.type);
-
-    useEffect(() => {
-        setAggregationMode(getDefaultAggregation(metricType));
-    }, [metricName, metricType]);
 
     return {
         formData: {

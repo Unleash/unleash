@@ -45,19 +45,17 @@ export const ModeSelector: FC<ModeSelectorProps> = ({
                                 Sum
                             </MenuItem>,
                         ]
-                      : metricType === 'histogram'
-                        ? [
-                              <MenuItem key='p50' value='p50'>
-                                  50th percentile
-                              </MenuItem>,
-                              <MenuItem key='p95' value='p95'>
-                                  95th percentile
-                              </MenuItem>,
-                              <MenuItem key='p99' value='p99'>
-                                  99th percentile
-                              </MenuItem>,
-                          ]
-                        : []}
+                      : [
+                            <MenuItem key='p50' value='p50'>
+                                50th percentile
+                            </MenuItem>,
+                            <MenuItem key='p95' value='p95'>
+                                95th percentile
+                            </MenuItem>,
+                            <MenuItem key='p99' value='p99'>
+                                99th percentile
+                            </MenuItem>,
+                        ]}
             </Select>
         </FormControl>
     );

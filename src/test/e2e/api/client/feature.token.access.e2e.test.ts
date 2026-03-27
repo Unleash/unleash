@@ -25,13 +25,17 @@ const feature3 = 'f3.p2.token.access';
 
 beforeAll(async () => {
     db = await dbInit('feature_api_api_access_client', getLogger);
-    app = await setupAppWithAuth(db.stores, {
-        experimental: {
-            flags: {
-                onlyFeatureTokensWithFeatureAPIs: true,
+    app = await setupAppWithAuth(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    onlyFeatureTokensWithFeatureAPIs: true,
+                },
             },
         },
-    }, db.rawDatabase);
+        db.rawDatabase,
+    );
     apiTokenService = app.services.apiTokenService;
 
     const { featureToggleService, environmentService } = app.services;

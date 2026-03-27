@@ -23,7 +23,6 @@ import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMe
 import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
 import {
     getMetricType,
-    isValidAggregation,
     type MetricType,
 } from 'component/impact-metrics/metricsFormatters.ts';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
@@ -242,15 +241,10 @@ const useSafeguardFormHandlers = (
     }, [metricOptions, formValues.metricName, setMetricName]);
 
     useEffect(() => {
-        if (
-            metricType !== 'unknown' &&
-            !isValidAggregation(metricType, aggregationMode)
-        ) {
-            setAggregationMode(
-                getDefaultAggregationMode(metricType, aggregationMode),
-            );
-        }
-    }, [formValues.metricName, metricType, aggregationMode]);
+        setAggregationMode(
+            getDefaultAggregationMode(metricType, aggregationMode),
+        );
+    }, [formValues.metricName, metricType]);
 
     const handleMetricChange = (value: string) => {
         enterEditMode();

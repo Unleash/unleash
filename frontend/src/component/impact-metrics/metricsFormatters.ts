@@ -57,16 +57,7 @@ export const formatLargeNumbers = prettifyLargeNumber(1000, 1);
 
 export type MetricType = 'counter' | 'gauge' | 'histogram' | 'unknown';
 
-const VALID_MODES: Record<string, string[]> = {
-    counter: ['rps', 'count'],
-    gauge: ['avg', 'sum'],
-    histogram: ['p50', 'p95', 'p99'],
-};
-
-export const isValidAggregation = (
-    metricType: MetricType,
-    mode: string,
-): boolean => VALID_MODES[metricType]?.includes(mode) ?? false;
+const KNOWN_METRIC_TYPES: MetricType[] = ['counter', 'gauge', 'histogram'];
 
 export const getMetricType = (
     seriesName: string,
@@ -75,7 +66,10 @@ export const getMetricType = (
     if (seriesName.startsWith('unleash_counter_')) return 'counter';
     if (seriesName.startsWith('unleash_gauge_')) return 'gauge';
     if (seriesName.startsWith('unleash_histogram_')) return 'histogram';
-    if (typeLabel?.length === 1 && typeLabel[0] in VALID_MODES) {
+    if (
+        typeLabel?.length === 1 &&
+        KNOWN_METRIC_TYPES.includes(typeLabel[0] as MetricType)
+    ) {
         return typeLabel[0] as MetricType;
     }
     return 'unknown';

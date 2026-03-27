@@ -1,13 +1,15 @@
 import { MetricsTranslator } from './metrics-translator.js';
 import { Registry } from 'prom-client';
 
+const flagResolver = { isEnabled: () => true };
+
 describe('MetricsTranslator', () => {
     describe('Sanitize name', () => {
         let translator: MetricsTranslator;
 
         beforeEach(() => {
             const registry = new Registry();
-            translator = new MetricsTranslator(registry);
+            translator = new MetricsTranslator(registry, flagResolver);
         });
 
         it('should not modify valid names', () => {
@@ -58,23 +60,46 @@ describe('MetricsTranslator', () => {
                     },
                 ],
             },
+            {
+                name: 'response_time',
+                help: 'response time',
+                type: 'histogram' as const,
+                samples: [
+                    {
+                        labels: { service: 'api' },
+                        count: 5,
+                        sum: 2.5,
+                        buckets: [
+                            { le: 1, count: 3 },
+                            { le: '+Inf' as const, count: 5 },
+                        ],
+                    },
+                ],
+            },
         ];
 
         const registry = new Registry();
-        const translator = new MetricsTranslator(registry);
+        const translator = new MetricsTranslator(registry, flagResolver);
         const result = await translator.translateAndSerializeMetrics(metrics);
         expect(typeof result).toBe('string');
-        expect(result).toContain(
-            '# HELP unleash_counter_labeled_counter with labels',
-        );
-        expect(result).toContain(
-            '# TYPE unleash_counter_labeled_counter counter',
-        );
         expect(result).toContain(
             'unleash_counter_labeled_counter{unleash_foo="bar",unleash_origin="sdk"} 5',
         );
         expect(result).toContain(
             'unleash_gauge_test_gauge{unleash_env="prod",unleash_origin="sdk"} 10',
+        );
+        expect(result).toContain(
+            'unleash_histogram_response_time_bucket{unleash_origin="sdk",unleash_service="api",le="1"} 3',
+        );
+        // Plain metrics (no unleash_ prefix, type stored as label)
+        expect(result).toContain(
+            'labeled_counter{origin="sdk",type="counter",foo="bar"} 5',
+        );
+        expect(result).toContain(
+            'test_gauge{origin="sdk",type="gauge",env="prod"} 10',
+        );
+        expect(result).toContain(
+            'response_time_bucket{origin="sdk",service="api",type="histogram",le="1"} 3',
         );
     });
 
@@ -101,7 +126,7 @@ describe('MetricsTranslator', () => {
         ];
 
         const registry = new Registry();
-        const translator = new MetricsTranslator(registry);
+        const translator = new MetricsTranslator(registry, flagResolver);
         const result = await translator.translateAndSerializeMetrics(metrics);
         expect(typeof result).toBe('string');
         expect(result).toContain(
@@ -115,7 +140,7 @@ describe('MetricsTranslator', () => {
 
     it('should sanitize metric names and label names', async () => {
         const registry = new Registry();
-        const translator = new MetricsTranslator(registry);
+        const translator = new MetricsTranslator(registry, flagResolver);
 
         const metrics = [
             {
@@ -168,7 +193,7 @@ describe('MetricsTranslator', () => {
 
     it('should handle re-labeling of metrics', async () => {
         const registry = new Registry();
-        const translator = new MetricsTranslator(registry);
+        const translator = new MetricsTranslator(registry, flagResolver);
 
         const metrics1 = [
             {
@@ -282,7 +307,7 @@ describe('MetricsTranslator', () => {
 
     it('should handle histogram bucket changes', async () => {
         const registry = new Registry();
-        const translator = new MetricsTranslator(registry);
+        const translator = new MetricsTranslator(registry, flagResolver);
 
         // Initial histogram with 2 buckets
         const metrics1 = [

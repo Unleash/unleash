@@ -113,6 +113,12 @@ export const useChartFormState = ({
     const isValid = metricName.length > 0;
     const metricType = getMetricType(metricName, currentAvailableLabels?.type);
 
+    useEffect(() => {
+        if (!initialConfig && metricType !== 'unknown') {
+            setAggregationMode(getDefaultAggregation(metricType));
+        }
+    }, [metricName, metricType]);
+
     return {
         formData: {
             title,

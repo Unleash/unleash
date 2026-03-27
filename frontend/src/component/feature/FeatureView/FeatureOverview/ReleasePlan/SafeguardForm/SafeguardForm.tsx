@@ -215,7 +215,8 @@ const useSafeguardFormHandlers = (
         setThreshold,
         setTimeRange,
     } = formValues;
-    const { enterEditMode, mode } = formMode;
+    const { enterEditMode } = formMode;
+    const initialMetricName = formValues.initialValues.metricName;
 
     // Auto-select first metric when options become available
     useEffect(() => {
@@ -224,12 +225,16 @@ const useSafeguardFormHandlers = (
         }
     }, [metricOptions, formValues.metricName, setMetricName]);
 
-    // Set default aggregation when metric type becomes known (only for new safeguards)
+    // Set default aggregation when metric type becomes known
+    // Skip when metric hasn't changed from initial (existing safeguard opened)
     useEffect(() => {
-        if (mode === 'create' && metricType !== 'unknown') {
+        if (
+            formValues.metricName !== initialMetricName &&
+            metricType !== 'unknown'
+        ) {
             setAggregationMode(getDefaultAggregation(metricType));
         }
-    }, [mode, formValues.metricName, metricType]);
+    }, [formValues.metricName, initialMetricName, metricType]);
 
     const handleMetricChange = (value: string) => {
         enterEditMode();

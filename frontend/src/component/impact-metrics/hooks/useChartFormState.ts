@@ -54,7 +54,8 @@ export const useChartFormState = ({
         Record<string, string[]>
     >(initialConfig?.labelSelectors || {});
     const [aggregationMode, setAggregationMode] = useState<AggregationMode>(
-        initialConfig?.aggregationMode || getDefaultAggregation(metricName),
+        initialConfig?.aggregationMode ||
+            getDefaultAggregation(getMetricType(metricName)),
     );
 
     const {
@@ -78,7 +79,9 @@ export const useChartFormState = ({
             setLabelSelectors(initialConfig.labelSelectors);
             setAggregationMode(
                 initialConfig.aggregationMode ||
-                    getDefaultAggregation(initialConfig.metricName),
+                    getDefaultAggregation(
+                        getMetricType(initialConfig.metricName),
+                    ),
             );
         } else if (open && !initialConfig) {
             setTitle('');
@@ -112,11 +115,9 @@ export const useChartFormState = ({
             metricType !== 'unknown' &&
             !isValidAggregation(metricType, aggregationMode)
         ) {
-            setAggregationMode(
-                getDefaultAggregation(metricName, currentAvailableLabels?.type),
-            );
+            setAggregationMode(getDefaultAggregation(metricType));
         }
-    }, [metricName, metricType]);
+    }, [metricName, metricType, aggregationMode]);
 
     return {
         formData: {

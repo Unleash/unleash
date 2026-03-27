@@ -250,7 +250,7 @@ const useSafeguardFormHandlers = (
                 getDefaultAggregationMode(metricType, aggregationMode),
             );
         }
-    }, [formValues.metricName, metricType]);
+    }, [formValues.metricName, metricType, aggregationMode]);
 
     const handleMetricChange = (value: string) => {
         enterEditMode();

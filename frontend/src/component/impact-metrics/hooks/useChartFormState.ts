@@ -108,7 +108,7 @@ export const useChartFormState = ({
         if (nameType === 'unknown' && labelType !== 'unknown') {
             setAggregationMode(getDefaultAggregation(labelType));
         }
-    }, [labelType]);
+    }, [nameType, labelType]);
 
     const getConfigToSave = (): Omit<ChartConfig, 'id'> => ({
         title: title || undefined,

@@ -8,6 +8,8 @@ export type ChartConfig = {
     title?: string;
 };
 
+export type MetricType = 'counter' | 'gauge' | 'histogram' | 'unknown';
+
 export type AggregationMode =
     | 'rps'
     | 'count'
@@ -18,7 +20,7 @@ export type AggregationMode =
     | 'p99';
 
 export type DisplayChartConfig = ChartConfig & {
-    type: 'counter' | 'gauge' | 'histogram' | 'unknown';
+    type: MetricType;
     displayName: string; // e.g. my_metric with unleash_counter stripped
     mode?: 'read' | 'write';
 };

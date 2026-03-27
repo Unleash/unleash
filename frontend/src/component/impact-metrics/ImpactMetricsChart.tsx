@@ -15,7 +15,7 @@ import {
 } from './metricsFormatters.js';
 import { fromUnixTime } from 'date-fns';
 import { useChartData } from './hooks/useChartData.ts';
-import type { AggregationMode } from './types.ts';
+import type { AggregationMode, MetricType } from './types.ts';
 
 type ChartComponent =
     | 'xAxis'
@@ -30,6 +30,7 @@ type ImpactMetricsChartProps = {
     labelSelectors: Record<string, string[]>;
     yAxisMin: 'auto' | 'zero';
     aggregationMode?: AggregationMode;
+    metricType?: MetricType;
     aspectRatio?: number;
     overrideOptions?: ChartOptions<'line'>;
     errorTitle?: string;
@@ -46,6 +47,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     labelSelectors,
     yAxisMin,
     aggregationMode,
+    metricType,
     aspectRatio,
     overrideOptions = {} as ChartOptions<'line'>,
     errorTitle = 'Failed to load impact metrics.',
@@ -73,6 +75,10 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                   series: metricName,
                   range: timeRange,
                   aggregationMode,
+                  metricType:
+                      metricType && metricType !== 'unknown'
+                          ? metricType
+                          : undefined,
                   labels:
                       Object.keys(labelSelectors).length > 0
                           ? labelSelectors

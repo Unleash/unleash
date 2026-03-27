@@ -63,6 +63,7 @@ const StyledHeader = styled('div', {
     display: 'flex',
     alignItems: 'center',
     color: disabled ? theme.palette.text.secondary : theme.palette.text.primary,
+    minHeight: theme.spacing(5), // <- mui button height; avoids collapsing when there are no actions
 }));
 
 const StyledHeaderInner = styled('div')(({ theme }) => ({

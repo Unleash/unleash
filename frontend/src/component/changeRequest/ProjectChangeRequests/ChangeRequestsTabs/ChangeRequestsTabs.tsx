@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { isClosed } from 'component/changeRequest/changeRequest.types';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import {
@@ -96,22 +97,13 @@ export const ChangeRequestsTabs = ({
         'open' | 'closed'
     >(initialChangeRequestType === 'closed' ? 'closed' : 'open');
 
-    const [openChangeRequests, closedChangeRequests] = useMemo(() => {
-        const open = changeRequests.filter(
-            (changeRequest) =>
-                changeRequest.state !== 'Cancelled' &&
-                changeRequest.state !== 'Rejected' &&
-                changeRequest.state !== 'Applied',
-        );
-        const closed = changeRequests.filter(
-            (changeRequest) =>
-                changeRequest.state === 'Cancelled' ||
-                changeRequest.state === 'Rejected' ||
-                changeRequest.state === 'Applied',
-        );
-
-        return [open, closed];
-    }, [changeRequests]);
+    const { openChangeRequests = [], closedChangeRequests = [] } = useMemo(
+        () =>
+            Object.groupBy(changeRequests, ({ state }) =>
+                isClosed(state) ? 'closedChangeRequests' : 'openChangeRequests',
+            ),
+        [changeRequests],
+    );
 
     const tabs = [
         {

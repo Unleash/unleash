@@ -1,6 +1,5 @@
 import type {
     IChangeRequestPatchVariant,
-    IChangeRequestUpdateMilestoneStrategy,
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
@@ -140,9 +139,7 @@ export function getSegmentChangesThatWouldBeOverwritten(
 
 export function getStrategyChangesThatWouldBeOverwritten(
     currentStrategyConfig: IFeatureStrategy | undefined,
-    change:
-        | IChangeRequestUpdateStrategy
-        | IChangeRequestUpdateMilestoneStrategy,
+    change: IChangeRequestUpdateStrategy,
 ): ChangesThatWouldBeOverwritten | null {
     const fallbacks = { segments: [], variants: [], title: '' };
 

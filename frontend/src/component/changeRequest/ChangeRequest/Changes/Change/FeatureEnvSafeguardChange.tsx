@@ -1,8 +1,9 @@
 import type { FC, ReactNode } from 'react';
-import type {
-    ChangeRequestState,
-    IChangeRequestChangeFeatureEnvSafeguard,
-    IChangeRequestDeleteFeatureEnvSafeguard,
+import {
+    isClosed,
+    type ChangeRequestState,
+    type IChangeRequestChangeFeatureEnvSafeguard,
+    type IChangeRequestDeleteFeatureEnvSafeguard,
 } from 'component/changeRequest/changeRequest.types';
 import type { CreateSafeguardSchema } from 'openapi';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -36,10 +37,9 @@ const ChangeFeatureEnvSafeguard: FC<{
     const liveSafeguard = feature.environments.find(
         (env) => env.name === environmentName,
     )?.safeguards?.[0];
-    const currentSafeguard =
-        changeRequestState === 'Applied'
-            ? (change.payload.snapshot ?? undefined)
-            : liveSafeguard;
+    const currentSafeguard = isClosed(changeRequestState)
+        ? (change.payload.snapshot ?? undefined)
+        : liveSafeguard;
 
     if (!change.payload.safeguard) return;
 
@@ -77,10 +77,9 @@ const DeleteFeatureEnvSafeguard: FC<{
     const liveSafeguard = feature.environments.find(
         (env) => env.name === environmentName,
     )?.safeguards?.[0];
-    const safeguard =
-        changeRequestState === 'Applied'
-            ? (change.payload.snapshot ?? undefined)
-            : liveSafeguard;
+    const safeguard = isClosed(changeRequestState)
+        ? (change.payload.snapshot ?? undefined)
+        : liveSafeguard;
 
     if (!safeguard) return;
 

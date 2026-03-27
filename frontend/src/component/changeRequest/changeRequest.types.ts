@@ -118,6 +118,9 @@ export type ChangeRequestState =
     | 'Cancelled'
     | 'Rejected';
 
+export const isClosed = (state: ChangeRequestState): boolean =>
+    ['Applied', 'Cancelled', 'Rejected'].includes(state);
+
 type ChangeRequestPayload =
     | ChangeRequestEnabled
     | ChangeRequestAddStrategy
@@ -158,8 +161,10 @@ export interface IChangeRequestUpdateStrategy extends IChangeRequestChangeBase {
 
 export type ChangeRequestUpdateMilestoneStrategy = Omit<
     ChangeRequestEditStrategy,
-    'name'
->;
+    'name' | 'snapshot'
+> & {
+    snapshot?: IReleasePlan;
+};
 
 export interface IChangeRequestUpdateMilestoneStrategy
     extends IChangeRequestChangeBase {

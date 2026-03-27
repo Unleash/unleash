@@ -25,7 +25,13 @@ const feature3 = 'f3.p2.token.access';
 
 beforeAll(async () => {
     db = await dbInit('feature_api_api_access_client', getLogger);
-    app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
+    app = await setupAppWithAuth(db.stores, {
+        experimental: {
+            flags: {
+                onlyFeatureTokensWithFeatureAPIs: true,
+            },
+        },
+    }, db.rawDatabase);
     apiTokenService = app.services.apiTokenService;
 
     const { featureToggleService, environmentService } = app.services;
@@ -208,4 +214,35 @@ test('returns feature flag for all projects', async () => {
             const { features } = res.body;
             expect(features).toHaveLength(3);
         });
+});
+
+test('returns 401 when not provided token', async () => {
+    await app.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(401);
+});
+
+test('returns 401 when provided token that doesnt exist', async () => {
+    await app.request
+        .get('/api/client/features')
+        .set('Authorization', '*:production.secret')
+        .expect('Content-Type', /json/)
+        .expect(401);
+});
+
+test('returns 403 when provided admin token', async () => {
+    await app.request
+        .get('/api/client/features')
+        .set('Authorization', '*:*.secret')
+        .expect('Content-Type', /json/)
+        .expect(403);
+});
+
+test('returns 403 when provided user token', async () => {
+    await app.request
+        .get('/api/client/features')
+        .set('Authorization', 'user:secret')
+        .expect('Content-Type', /json/)
+        .expect(403);
 });

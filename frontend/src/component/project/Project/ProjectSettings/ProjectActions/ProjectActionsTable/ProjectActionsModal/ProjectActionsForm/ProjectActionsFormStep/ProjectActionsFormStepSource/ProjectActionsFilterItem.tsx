@@ -137,7 +137,9 @@ export const ProjectActionsFilterItem = ({
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
 
-    const isSemverGteOperatorsEnabled = useUiFlag('semverGteConstraintOperators');
+    const isSemverGteOperatorsEnabled = useUiFlag(
+        'semverGteConstraintOperators',
+    );
 
     const validOperators = [
         ...inOperators,

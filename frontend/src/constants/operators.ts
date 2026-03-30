@@ -79,7 +79,13 @@ export const dateOperators = [DATE_BEFORE, DATE_AFTER];
 export type DateOperator = (typeof dateOperators)[number];
 export const isDateOperator = isOperator(dateOperators);
 
-export const semVerOperators = [SEMVER_EQ, SEMVER_GT, SEMVER_LT, SEMVER_GTE, SEMVER_GLT];
+export const semVerOperators = [
+    SEMVER_EQ,
+    SEMVER_GT,
+    SEMVER_LT,
+    SEMVER_GTE,
+    SEMVER_GLT,
+];
 export type SemVerOperator = (typeof semVerOperators)[number];
 export const isSemVerOperator = isOperator(semVerOperators);
 

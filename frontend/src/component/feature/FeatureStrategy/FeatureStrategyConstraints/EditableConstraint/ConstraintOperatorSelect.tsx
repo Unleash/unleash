@@ -104,12 +104,13 @@ export const ConstraintOperatorSelect = ({
     };
 
     const isRegexOperatorEnabled = useUiFlag('regexConstraintOperator');
-    const isSemverGteOperatorsEnabled = useUiFlag('semverGteConstraintOperators');
+    const isSemverGteOperatorsEnabled = useUiFlag(
+        'semverGteConstraintOperators',
+    );
 
     const operators = options
         .filter(
-            (operator) =>
-                isRegexOperatorEnabled || !isRegexOperator(operator),
+            (operator) => isRegexOperatorEnabled || !isRegexOperator(operator),
         )
         .filter(
             (operator) =>

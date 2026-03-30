@@ -4,10 +4,8 @@ import {
     FeatureEvaluator,
 } from './feature-evaluator/index.js';
 import type { FeatureConfigurationClient } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type.js';
-import type { Segment } from './feature-evaluator/strategy/strategy.js';
 import type { ISegment } from '../../types/model.js';
 import { serializeDates } from '../../types/serialize-dates.js';
-import type { Operator } from './feature-evaluator/constraint.js';
 import type { PayloadType } from 'unleash-client';
 import type { FeatureInterface } from 'unleash-client/lib/feature.js';
 import type { FeatureInterface as PlaygroundFeatureInterface } from './feature-evaluator/feature.js';
@@ -51,15 +49,15 @@ export const mapFeatureForClient = (
                     inverted: false,
                     values: [],
                     ...constraint,
-                    operator: constraint.operator as unknown as Operator,
+                    operator: constraint.operator as any,
                 })) || [],
         })),
         dependencies: feature.dependencies,
     };
 };
 
-export const mapSegmentsForClient = (segments: ISegment[]): Segment[] =>
-    serializeDates(segments) as Segment[];
+export const mapSegmentsForClient = (segments: ISegment[]): any[] =>
+    serializeDates(segments);
 
 export type ClientInitOptions = {
     features: NonEmptyList<FeatureConfigurationClient>;

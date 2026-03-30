@@ -1,4 +1,10 @@
-import { gt as semverGt, lt as semverLt, eq as semverEq, gte as semverGte, lte as semverLte } from 'semver';
+import {
+    gt as semverGt,
+    lt as semverLt,
+    eq as semverEq,
+    gte as semverGte,
+    lte as semverLte,
+} from 'semver';
 import type { Context } from './context.js';
 import { resolveContextValue } from './helpers.js';
 import { RE2JS } from 're2js';

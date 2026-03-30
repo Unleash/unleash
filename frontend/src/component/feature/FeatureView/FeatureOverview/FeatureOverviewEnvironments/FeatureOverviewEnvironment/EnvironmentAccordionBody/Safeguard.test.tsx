@@ -89,7 +89,7 @@ const defaultSafeguardPayload = {
     impactMetric: {
         metricName: 'unleash_counter_http_requests_total',
         timeRange: 'day',
-        aggregationMode: 'rps',
+        aggregationMode: 'count',
         labelSelectors: { appName: ['*'] },
     },
     triggerCondition: {
@@ -356,6 +356,121 @@ describe('Safeguard', () => {
 
         await screen.findByText('Pause automation when');
         expect(screen.queryByText('Add safeguard')).not.toBeInTheDocument();
+    });
+
+    test('should preserve aggregation mode when editing existing safeguard with unprefixed metric', async () => {
+        const user = userEvent.setup();
+        const { requests } = testServerRoute(
+            server,
+            '/api/admin/projects/default/features/feature1/environments/production/safeguards',
+            {},
+            'put',
+        );
+
+        testServerRoute(server, '/api/admin/impact-metrics/metadata', {
+            series: {
+                my_custom_metric: {
+                    type: 'unknown',
+                    help: 'A custom metric',
+                    displayName: 'my_custom_metric',
+                },
+            },
+        });
+        testServerRoute(server, '/api/admin/impact-metrics/', {
+            series: [],
+            labels: { appName: [], type: ['counter'] },
+        });
+
+        const existingSafeguard: ISafeguard = {
+            id: 'env-safeguard-custom',
+            action: {
+                id: 'action-custom',
+                type: 'disableFeatureEnvironment',
+            },
+            impactMetric: {
+                id: 'metric-custom',
+                metricName: 'my_custom_metric',
+                timeRange: 'hour',
+                aggregationMode: 'rps',
+                labelSelectors: { appName: ['*'] },
+            },
+            triggerCondition: {
+                operator: '>',
+                threshold: 50,
+            },
+        };
+
+        const { onSafeguardChange } = renderSection({
+            featureEnvSafeguard: existingSafeguard,
+        });
+
+        await screen.findByText('Disable environment when');
+
+        const thresholdInput = screen.getByDisplayValue('50');
+        await user.clear(thresholdInput);
+        await user.type(thresholdInput, '99');
+
+        const saveButton = await screen.findByText('Save');
+        await user.click(saveButton);
+
+        await waitFor(() => {
+            expect(onSafeguardChange).toHaveBeenCalled();
+        });
+        expect(requests).toMatchObject([
+            {
+                impactMetric: {
+                    metricName: 'my_custom_metric',
+                    aggregationMode: 'rps',
+                    timeRange: 'hour',
+                },
+                triggerCondition: {
+                    threshold: 99,
+                },
+            },
+        ]);
+    });
+
+    test('should default to count aggregation when creating new safeguard with unprefixed counter metric', async () => {
+        const user = userEvent.setup();
+        const { requests } = testServerRoute(
+            server,
+            '/api/admin/projects/default/features/feature1/environments/production/safeguards',
+            {},
+            'put',
+        );
+
+        testServerRoute(server, '/api/admin/impact-metrics/metadata', {
+            series: {
+                my_custom_metric: {
+                    type: 'unknown',
+                    help: 'A custom metric',
+                    displayName: 'my_custom_metric',
+                },
+            },
+        });
+        testServerRoute(server, '/api/admin/impact-metrics/', {
+            series: [],
+            labels: { appName: [], type: ['counter'] },
+        });
+
+        const { onSafeguardChange } = renderSection();
+
+        await selectSafeguardType(user, 'Disable environment');
+        await screen.findByText('Disable environment when');
+        const saveButton = await screen.findByText('Save');
+        await user.click(saveButton);
+
+        await waitFor(() => {
+            expect(onSafeguardChange).toHaveBeenCalled();
+        });
+        expect(requests).toMatchObject([
+            {
+                impactMetric: {
+                    metricName: 'my_custom_metric',
+                    aggregationMode: 'count',
+                },
+            },
+        ]);
     });
 
     test('should add feature env safeguard via API', async () => {

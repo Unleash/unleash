@@ -37,7 +37,10 @@ import {
     ChangeRequestRejectScheduledDialogue,
 } from './ChangeRequestScheduledDialogs/changeRequestScheduledDialogs.tsx';
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog.tsx';
-import type { PlausibleChangeRequestState } from '../changeRequest.types';
+import {
+    isClosed,
+    type PlausibleChangeRequestState,
+} from '../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { ChangeRequestRequestedApprovers } from './ChangeRequestRequestedApprovers/ChangeRequestRequestedApprovers.tsx';
@@ -477,9 +480,7 @@ export const ChangeRequestOverview: FC = () => {
 
                                 <ConditionallyRender
                                     condition={
-                                        changeRequest.state !== 'Applied' &&
-                                        changeRequest.state !== 'Rejected' &&
-                                        changeRequest.state !== 'Cancelled' &&
+                                        !isClosed(changeRequest.state) &&
                                         (changeRequest.createdBy.id ===
                                             user?.id ||
                                             isAdmin)

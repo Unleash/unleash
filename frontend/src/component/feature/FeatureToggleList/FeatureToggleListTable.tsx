@@ -12,12 +12,10 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import type { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
 import { Search } from 'component/common/Search/Search';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
-import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { focusable } from 'themes/themeStyles';
 import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
@@ -116,36 +114,10 @@ export const FeatureToggleListTable: FC = () => {
         [favorite, refetchFeatures, unfavorite, setToastApiError],
     );
 
-    const inlineFavoriteInNameColumn = useUiFlag('inlineFavoriteInNameColumn');
     const showStatusColumn = !isOss();
 
     const columns = useMemo(
         () => [
-            ...(inlineFavoriteInNameColumn
-                ? []
-                : [
-                      columnHelper.accessor('favorite', {
-                          header: () => (
-                              <FavoriteIconHeader
-                                  isActive={tableState.favoritesFirst}
-                                  onClick={() =>
-                                      setTableState({
-                                          favoritesFirst:
-                                              !tableState.favoritesFirst,
-                                      })
-                                  }
-                              />
-                          ),
-                          cell: ({ getValue, row }) => (
-                              <FavoriteIconCell
-                                  value={getValue()}
-                                  onClick={() => onFavorite(row.original)}
-                              />
-                          ),
-                          enableSorting: false,
-                          meta: { width: 48 },
-                      }),
-                  ]),
             columnHelper.accessor('name', {
                 header: 'Name',
                 cell: createFeatureOverviewCell(
@@ -213,11 +185,7 @@ export const FeatureToggleListTable: FC = () => {
                 },
             }),
         ],
-        [
-            tableState.favoritesFirst,
-            showStatusColumn,
-            inlineFavoriteInNameColumn,
-        ],
+        [tableState.favoritesFirst, showStatusColumn],
     );
     const data = useMemo<FeatureSearchResponseSchema[]>(
         () =>
@@ -337,16 +305,14 @@ export const FeatureToggleListTable: FC = () => {
                     onChange={setTableState}
                     state={filterState}
                 />
-                {inlineFavoriteInNameColumn ? (
-                    <FavoriteIconHeader
-                        isActive={tableState.favoritesFirst}
-                        onClick={() =>
-                            setTableState({
-                                favoritesFirst: !tableState.favoritesFirst,
-                            })
-                        }
-                    />
-                ) : null}
+                <FavoriteIconHeader
+                    isActive={tableState.favoritesFirst}
+                    onClick={() =>
+                        setTableState({
+                            favoritesFirst: !tableState.favoritesFirst,
+                        })
+                    }
+                />
             </Box>
             {isLargeScreen ? (
                 <Box sx={(theme) => ({ padding: theme.spacing(0, 3, 3) })}>

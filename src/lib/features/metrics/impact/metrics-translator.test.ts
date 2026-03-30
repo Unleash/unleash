@@ -1,13 +1,15 @@
 import { MetricsTranslator } from './metrics-translator.js';
 import { Registry } from 'prom-client';
 
+const flagResolver = { isEnabled: () => false };
+
 describe('MetricsTranslator', () => {
     describe('Sanitize name', () => {
         let translator: MetricsTranslator;
 
         beforeEach(() => {
             const registry = new Registry();
-            translator = new MetricsTranslator(registry);
+            translator = new MetricsTranslator(registry, flagResolver);
         });
 
         it('should not modify valid names', () => {
@@ -34,7 +36,7 @@ describe('MetricsTranslator', () => {
             );
         });
     });
-    it('should handle metrics with labels', async () => {
+    it('should write only plain metrics when flag is enabled', async () => {
         const metrics = [
             {
                 name: 'labeled_counter',
@@ -58,24 +60,43 @@ describe('MetricsTranslator', () => {
                     },
                 ],
             },
+            {
+                name: 'response_time',
+                help: 'response time',
+                type: 'histogram' as const,
+                samples: [
+                    {
+                        labels: { service: 'api' },
+                        count: 5,
+                        sum: 2.5,
+                        buckets: [
+                            { le: 1, count: 3 },
+                            { le: '+Inf' as const, count: 5 },
+                        ],
+                    },
+                ],
+            },
         ];
 
         const registry = new Registry();
-        const translator = new MetricsTranslator(registry);
+        const plainFlagResolver = { isEnabled: () => true };
+        const translator = new MetricsTranslator(registry, plainFlagResolver);
         const result = await translator.translateAndSerializeMetrics(metrics);
         expect(typeof result).toBe('string');
+        // Plain metrics (no unleash_ prefix, type stored as label)
         expect(result).toContain(
-            '# HELP unleash_counter_labeled_counter with labels',
+            'labeled_counter{origin="sdk",metric_type="counter",foo="bar"} 5',
         );
         expect(result).toContain(
-            '# TYPE unleash_counter_labeled_counter counter',
+            'test_gauge{origin="sdk",metric_type="gauge",env="prod"} 10',
         );
         expect(result).toContain(
-            'unleash_counter_labeled_counter{unleash_foo="bar",unleash_origin="sdk"} 5',
+            'response_time_bucket{metric_type="histogram",origin="sdk",service="api",le="1"} 3',
         );
-        expect(result).toContain(
-            'unleash_gauge_test_gauge{unleash_env="prod",unleash_origin="sdk"} 10',
-        );
+        // Should NOT contain prefixed metrics
+        expect(result).not.toContain('unleash_counter_');
+        expect(result).not.toContain('unleash_gauge_');
+        expect(result).not.toContain('unleash_histogram_');
     });
 
     it('should ignore unsupported metric types', async () => {
@@ -101,7 +122,7 @@ describe('MetricsTranslator', () => {
         ];
 
         const registry = new Registry();
-        const translator = new MetricsTranslator(registry);
+        const translator = new MetricsTranslator(registry, flagResolver);
         const result = await translator.translateAndSerializeMetrics(metrics);
         expect(typeof result).toBe('string');
         expect(result).toContain(
@@ -115,7 +136,7 @@ describe('MetricsTranslator', () => {
 
     it('should sanitize metric names and label names', async () => {
         const registry = new Registry();
-        const translator = new MetricsTranslator(registry);
+        const translator = new MetricsTranslator(registry, flagResolver);
 
         const metrics = [
             {
@@ -168,7 +189,7 @@ describe('MetricsTranslator', () => {
 
     it('should handle re-labeling of metrics', async () => {
         const registry = new Registry();
-        const translator = new MetricsTranslator(registry);
+        const translator = new MetricsTranslator(registry, flagResolver);
 
         const metrics1 = [
             {
@@ -282,7 +303,7 @@ describe('MetricsTranslator', () => {
 
     it('should handle histogram bucket changes', async () => {
         const registry = new Registry();
-        const translator = new MetricsTranslator(registry);
+        const translator = new MetricsTranslator(registry, flagResolver);
 
         // Initial histogram with 2 buckets
         const metrics1 = [

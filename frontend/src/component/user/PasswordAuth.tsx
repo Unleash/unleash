@@ -4,7 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from './common/AuthOptions/AuthOptions.tsx';
-import DividerText from 'component/common/DividerText/DividerText';
+import OrDivider from './common/OrDivider';
 import { Alert } from '@mui/material';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from 'utils/testIds';
 import PasswordField from 'component/common/PasswordField/PasswordField';
@@ -185,16 +185,14 @@ const NewPasswordAuth: VFC<IPasswordAuthProps> = ({
             <ConditionallyRender
                 condition={options.length > 0}
                 show={
-                    <>
+                    <StyledDiv>
                         <AuthOptions options={options} />
                         <ConditionallyRender
                             condition={!authDetails.defaultHidden}
-                            show={
-                                <DividerText text='Or sign in with username' />
-                            }
+                            show={<OrDivider />}
                         />
                         {renderLoginForm()}
-                    </>
+                    </StyledDiv>
                 }
                 elseShow={renderLoginForm()}
             />

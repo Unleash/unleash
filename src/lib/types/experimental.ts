@@ -77,11 +77,12 @@ export type IFlagKey =
     | 'impactMetricsFlagPage'
     | 'featureEnvSafeguards'
     | 'filterFavorites'
-    | 'inlineFavoriteInNameColumn'
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'newSignOut'
     | 'externalPrometheusImpactMetrics'
+    | 'unprefixedImpactMetrics'
     | 'onlyFeatureTokensWithFeatureAPIs';
+
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -347,10 +348,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_ENV_SAFEGUARDS,
         false,
     ),
-    inlineFavoriteInNameColumn: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INLINE_FAVORITE_IN_NAME_COLUMN,
-        false,
-    ),
     filterFavorites: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FILTER_FAVORITES,
         false,
@@ -366,6 +363,10 @@ const flags: IFlags = {
     ),
     externalPrometheusImpactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTERNAL_PROMETHEUS_IMPACT_METRICS,
+        false,
+    ),
+    unprefixedImpactMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_UNPREFIXED_IMPACT_METRICS,
         false,
     ),
     onlyFeatureTokensWithFeatureAPIs: parseEnvVarBoolean(

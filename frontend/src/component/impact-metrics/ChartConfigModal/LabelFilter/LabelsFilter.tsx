@@ -44,7 +44,12 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
         .filter(([key]) => STATIC_LABELS.includes(key))
         .sort();
     const dynamicLabels = Object.entries(availableLabels)
-        .filter(([key]) => !STATIC_LABELS.includes(key))
+        .filter(
+            ([key]) =>
+                !STATIC_LABELS.includes(key) &&
+                key !== 'type' &&
+                key !== 'metric_type',
+        )
         .sort();
 
     return (
@@ -62,7 +67,7 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
 
             {dynamicLabels.length > 0 && (
                 <LabelFilterSection
-                    title='Flag specific filters'
+                    title='Other filters'
                     labels={dynamicLabels}
                     labelSelectors={labelSelectors}
                     onLabelChange={handleLabelChange}

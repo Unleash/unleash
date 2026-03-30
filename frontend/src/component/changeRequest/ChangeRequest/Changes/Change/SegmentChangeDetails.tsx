@@ -1,9 +1,10 @@
 import type { FC, ReactNode } from 'react';
 import { Box, styled } from '@mui/material';
-import type {
-    ChangeRequestState,
-    IChangeRequestDeleteSegment,
-    IChangeRequestUpdateSegment,
+import {
+    isClosed,
+    type ChangeRequestState,
+    type IChangeRequestDeleteSegment,
+    type IChangeRequestUpdateSegment,
 } from 'component/changeRequest/changeRequest.types';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';
 import { ViewableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/ViewableConstraintsList';
@@ -47,12 +48,12 @@ export const SegmentChangeDetails: FC<{
 }> = ({ actions, change, changeRequestState }) => {
     const { segment: currentSegment } = useSegment(change.payload.id);
     const snapshotSegment = change.payload.snapshot;
-    const previousName =
-        changeRequestState === 'Applied'
-            ? change.payload?.snapshot?.name
-            : currentSegment?.name;
-    const referenceSegment =
-        changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
+    const previousName = isClosed(changeRequestState)
+        ? change.payload?.snapshot?.name
+        : currentSegment?.name;
+    const referenceSegment = isClosed(changeRequestState)
+        ? snapshotSegment
+        : currentSegment;
 
     const actionsWithTabs = (
         <ActionsContainer>

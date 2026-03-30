@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
+import { isClosed } from 'component/changeRequest/changeRequest.types';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import {
@@ -56,7 +57,7 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     },
 }));
 
-const ConftigurationLinkBox = styled(Box)(({ theme }) => ({
+const ConfigurationLinkBox = styled(Box)(({ theme }) => ({
     textAlign: 'right',
     paddingBottom: theme.spacing(2),
     fontSize: theme.fontSizes.smallBody,
@@ -96,22 +97,13 @@ export const ChangeRequestsTabs = ({
         'open' | 'closed'
     >(initialChangeRequestType === 'closed' ? 'closed' : 'open');
 
-    const [openChangeRequests, closedChangeRequests] = useMemo(() => {
-        const open = changeRequests.filter(
-            (changeRequest) =>
-                changeRequest.state !== 'Cancelled' &&
-                changeRequest.state !== 'Rejected' &&
-                changeRequest.state !== 'Applied',
-        );
-        const closed = changeRequests.filter(
-            (changeRequest) =>
-                changeRequest.state === 'Cancelled' ||
-                changeRequest.state === 'Rejected' ||
-                changeRequest.state === 'Applied',
-        );
-
-        return [open, closed];
-    }, [changeRequests]);
+    const { openChangeRequests = [], closedChangeRequests = [] } = useMemo(
+        () =>
+            Object.groupBy(changeRequests, ({ state }) =>
+                isClosed(state) ? 'closedChangeRequests' : 'openChangeRequests',
+            ),
+        [changeRequests],
+    );
 
     const tabs = [
         {
@@ -339,11 +331,11 @@ export const ChangeRequestsTabs = ({
                 />
             }
         >
-            <ConftigurationLinkBox>
+            <ConfigurationLinkBox>
                 <Link to={`/projects/${projectId}/settings/change-requests`}>
                     Change request configuration
                 </Link>
-            </ConftigurationLinkBox>
+            </ConfigurationLinkBox>
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <StyledTable {...getTableProps()}>
                     <SortableTableHeader headerGroups={headerGroups} />

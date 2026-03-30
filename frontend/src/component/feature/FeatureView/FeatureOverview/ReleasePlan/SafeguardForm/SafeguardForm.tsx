@@ -21,6 +21,11 @@ import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/use
 import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+import {
+    getDefaultAggregation,
+    getMetricType,
+    type MetricType,
+} from 'component/impact-metrics/metricsFormatters.ts';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
@@ -80,22 +85,6 @@ const getInitialValues = (safeguard?: ISafeguard) => ({
     timeRange: (safeguard?.impactMetric.timeRange ||
         'day') as MetricQuerySchemaTimeRange,
 });
-
-const getDefaultAggregationMode = (
-    metricType: string,
-    fallback: MetricQuerySchemaAggregationMode = 'rps',
-): MetricQuerySchemaAggregationMode => {
-    switch (metricType) {
-        case 'counter':
-            return 'count';
-        case 'gauge':
-            return 'avg';
-        case 'histogram':
-            return 'p50';
-        default:
-            return fallback;
-    }
-};
 
 const useSafeguardFormValues = (safeguard?: ISafeguard) => {
     const initialValues = useMemo(
@@ -202,8 +191,10 @@ const useSafeguardMetricsData = (
         return ['*', ...appNames];
     }, [metricsData?.labels?.appName]);
 
-    const selectedMetricData = metricOptions.find((m) => m.name === metricName);
-    const metricType = selectedMetricData?.type || 'unknown';
+    const metricType = getMetricType(
+        metricName,
+        metricsData?.labels?.metric_type ?? metricsData?.labels?.type,
+    );
 
     return {
         metricOptions,
@@ -217,6 +208,7 @@ const useSafeguardFormHandlers = (
     formValues: ReturnType<typeof useSafeguardFormValues>,
     formMode: ReturnType<typeof useSafeguardFormMode>,
     metricOptions: MetricOption[],
+    metricType: MetricType,
 ) => {
     const {
         setMetricName,
@@ -225,9 +217,9 @@ const useSafeguardFormHandlers = (
         setOperator,
         setThreshold,
         setTimeRange,
-        aggregationMode,
     } = formValues;
     const { enterEditMode } = formMode;
+    const initialMetricName = formValues.initialValues.metricName;
 
     // Auto-select first metric when options become available
     useEffect(() => {
@@ -236,17 +228,21 @@ const useSafeguardFormHandlers = (
         }
     }, [metricOptions, formValues.metricName, setMetricName]);
 
+    // Set default aggregation when metric type becomes known
+    // Skip when metric hasn't changed from initial (existing safeguard opened)
+    useEffect(() => {
+        if (
+            formValues.metricName !== initialMetricName &&
+            metricType !== 'unknown'
+        ) {
+            setAggregationMode(getDefaultAggregation(metricType));
+        }
+    }, [formValues.metricName, initialMetricName, metricType]);
+
     const handleMetricChange = (value: string) => {
         enterEditMode();
         setMetricName(value);
         setAppName('*');
-
-        const metric = metricOptions.find((m) => m.name === value);
-        if (metric?.type) {
-            setAggregationMode(
-                getDefaultAggregationMode(metric.type, aggregationMode),
-            );
-        }
     };
 
     const handleApplicationChange = (value: string) => {
@@ -304,6 +300,7 @@ const useSafeguardFormState = (
         formValues,
         formMode,
         metricsData.metricOptions,
+        metricsData.metricType,
     );
 
     return {

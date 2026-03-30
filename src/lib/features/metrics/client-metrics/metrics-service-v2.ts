@@ -74,7 +74,10 @@ export default class ClientMetricsServiceV2 {
                 maxAge: secondsToMilliseconds(10),
             },
         );
-        this.impactMetricsTranslator = new MetricsTranslator(impactRegister);
+        this.impactMetricsTranslator = new MetricsTranslator(
+            impactRegister,
+            config.flagResolver,
+        );
     }
 
     async clearMetrics(hoursAgo: number) {

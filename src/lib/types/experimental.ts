@@ -83,7 +83,6 @@ export type IFlagKey =
     | 'unprefixedImpactMetrics'
     | 'onlyFeatureTokensWithFeatureAPIs';
 
-
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
 const flags: IFlags = {

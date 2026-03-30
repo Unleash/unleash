@@ -108,7 +108,7 @@ export class MetricsTranslator {
     ): Record<string, string | number> {
         const result: Record<string, string | number> = {
             origin: sample.labels?.origin || 'sdk',
-            type,
+            metric_type: type,
         };
         if (sample.labels) {
             for (const [key, value] of Object.entries(sample.labels)) {
@@ -199,7 +199,7 @@ export class MetricsTranslator {
         plainLabelNames: string[];
     } {
         const allPrefixed = new Set<string>(['unleash_origin']);
-        const allPlain = new Set<string>(['origin', 'type']);
+        const allPlain = new Set<string>(['origin', 'metric_type']);
 
         for (const sample of metric.samples) {
             if (sample.labels) {

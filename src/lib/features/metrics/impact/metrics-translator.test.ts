@@ -85,13 +85,13 @@ describe('MetricsTranslator', () => {
         expect(typeof result).toBe('string');
         // Plain metrics (no unleash_ prefix, type stored as label)
         expect(result).toContain(
-            'labeled_counter{origin="sdk",type="counter",foo="bar"} 5',
+            'labeled_counter{origin="sdk",metric_type="counter",foo="bar"} 5',
         );
         expect(result).toContain(
-            'test_gauge{origin="sdk",type="gauge",env="prod"} 10',
+            'test_gauge{origin="sdk",metric_type="gauge",env="prod"} 10',
         );
         expect(result).toContain(
-            'response_time_bucket{origin="sdk",service="api",type="histogram",le="1"} 3',
+            'response_time_bucket{metric_type="histogram",origin="sdk",service="api",le="1"} 3',
         );
         // Should NOT contain prefixed metrics
         expect(result).not.toContain('unleash_counter_');

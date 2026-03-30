@@ -77,7 +77,7 @@ describe('sortStrategies', () => {
             { sortOrder: 0, id: 'b' },
         ]);
     });
-    it('should sort by id if both milestoneId and sortOrder is equal', () => {
+    it('should sort by id if both milestoneId and sortOrder are equal', () => {
         const strategy1 = { milestoneId: 'm1', sortOrder: 1, id: '10' };
         const strategy2 = { milestoneId: 'm1', sortOrder: 1, id: '20' };
         const sorted = sortStrategies(strategy2, strategy1);

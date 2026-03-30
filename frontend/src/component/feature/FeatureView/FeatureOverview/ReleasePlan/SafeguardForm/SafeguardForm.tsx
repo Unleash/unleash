@@ -191,7 +191,7 @@ const useSafeguardMetricsData = (
         return ['*', ...appNames];
     }, [metricsData?.labels?.appName]);
 
-    const metricType = getMetricType(metricName, metricsData?.labels?.type);
+    const metricType = getMetricType(metricName, metricsData?.labels?.metric_type ?? metricsData?.labels?.type);
 
     return {
         metricOptions,

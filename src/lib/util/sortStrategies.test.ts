@@ -81,6 +81,10 @@ describe('sortStrategies', () => {
         const strategy1 = { milestoneId: 'm1', sortOrder: 1, id: '10' };
         const strategy2 = { milestoneId: 'm1', sortOrder: 1, id: '20' };
         const sorted = sortStrategies(strategy2, strategy1);
-        expect(sorted).toEqual([strategy1, strategy2]);
+        expect(sorted).toBe(1);
+        expect([strategy2, strategy1].sort(sortStrategies)).toEqual([
+            strategy1,
+            strategy2,
+        ]);
     });
 });

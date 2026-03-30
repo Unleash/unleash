@@ -9,19 +9,25 @@ export type ModeSelectorProps = {
     label?: string;
 };
 
-const allOptions = [
+const counterOptions = [
     <MenuItem key='rps' value='rps'>
         Rate per second
     </MenuItem>,
     <MenuItem key='count' value='count'>
         Count
     </MenuItem>,
+];
+
+const gaugeOptions = [
     <MenuItem key='avg' value='avg'>
         Average
     </MenuItem>,
     <MenuItem key='sum' value='sum'>
         Sum
     </MenuItem>,
+];
+
+const histogramOptions = [
     <MenuItem key='p50' value='p50'>
         50th percentile
     </MenuItem>,
@@ -34,33 +40,10 @@ const allOptions = [
 ];
 
 const optionsByType: Record<string, JSX.Element[]> = {
-    counter: [
-        <MenuItem key='rps' value='rps'>
-            Rate per second
-        </MenuItem>,
-        <MenuItem key='count' value='count'>
-            Count
-        </MenuItem>,
-    ],
-    gauge: [
-        <MenuItem key='avg' value='avg'>
-            Average
-        </MenuItem>,
-        <MenuItem key='sum' value='sum'>
-            Sum
-        </MenuItem>,
-    ],
-    histogram: [
-        <MenuItem key='p50' value='p50'>
-            50th percentile
-        </MenuItem>,
-        <MenuItem key='p95' value='p95'>
-            95th percentile
-        </MenuItem>,
-        <MenuItem key='p99' value='p99'>
-            99th percentile
-        </MenuItem>,
-    ],
+    counter: counterOptions,
+    gauge: gaugeOptions,
+    histogram: histogramOptions,
+    unknown: [...counterOptions, ...gaugeOptions, ...histogramOptions],
 };
 
 export const ModeSelector: FC<ModeSelectorProps> = ({
@@ -69,7 +52,7 @@ export const ModeSelector: FC<ModeSelectorProps> = ({
     metricType,
     label = 'Aggregation Mode',
 }) => {
-    const options = optionsByType[metricType] ?? allOptions;
+    const options = optionsByType[metricType] ?? optionsByType.unknown;
 
     return (
         <FormControl variant='outlined' size='small'>

@@ -62,7 +62,7 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
 
             {dynamicLabels.length > 0 && (
                 <LabelFilterSection
-                    title='Flag specific filters'
+                    title='Other filters'
                     labels={dynamicLabels}
                     labelSelectors={labelSelectors}
                     onLabelChange={handleLabelChange}

@@ -5,7 +5,6 @@ import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData
 import {
     getDefaultAggregation,
     getMetricType,
-    isValidAggregation,
     type MetricType,
 } from '../metricsFormatters.ts';
 
@@ -96,6 +95,10 @@ export const useChartFormState = ({
     const handleSeriesChange = (series: string) => {
         setMetricName(series);
         setLabelSelectors({});
+        const metricType = getMetricType(series);
+        if (metricType !== 'unknown') {
+            setAggregationMode(getDefaultAggregation(metricType));
+        }
     };
 
     const getConfigToSave = (): Omit<ChartConfig, 'id'> => ({
@@ -111,13 +114,10 @@ export const useChartFormState = ({
     const metricType = getMetricType(metricName, currentAvailableLabels?.type);
 
     useEffect(() => {
-        if (
-            metricType !== 'unknown' &&
-            !isValidAggregation(metricType, aggregationMode)
-        ) {
+        if (!initialConfig && metricType !== 'unknown') {
             setAggregationMode(getDefaultAggregation(metricType));
         }
-    }, [metricName, metricType, aggregationMode]);
+    }, [metricName, metricType]);
 
     return {
         formData: {

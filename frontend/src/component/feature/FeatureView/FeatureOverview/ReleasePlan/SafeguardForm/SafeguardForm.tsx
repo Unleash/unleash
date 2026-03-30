@@ -22,8 +22,8 @@ import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactM
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
 import {
+    getDefaultAggregation,
     getMetricType,
-    isValidAggregation,
     type MetricType,
 } from 'component/impact-metrics/metricsFormatters.ts';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema';
@@ -85,22 +85,6 @@ const getInitialValues = (safeguard?: ISafeguard) => ({
     timeRange: (safeguard?.impactMetric.timeRange ||
         'day') as MetricQuerySchemaTimeRange,
 });
-
-const getDefaultAggregationMode = (
-    metricType: string,
-    fallback: MetricQuerySchemaAggregationMode = 'rps',
-): MetricQuerySchemaAggregationMode => {
-    switch (metricType) {
-        case 'counter':
-            return 'count';
-        case 'gauge':
-            return 'avg';
-        case 'histogram':
-            return 'p50';
-        default:
-            return fallback;
-    }
-};
 
 const useSafeguardFormValues = (safeguard?: ISafeguard) => {
     const initialValues = useMemo(
@@ -230,9 +214,9 @@ const useSafeguardFormHandlers = (
         setOperator,
         setThreshold,
         setTimeRange,
-        aggregationMode,
     } = formValues;
     const { enterEditMode } = formMode;
+    const initialMetricName = formValues.initialValues.metricName;
 
     // Auto-select first metric when options become available
     useEffect(() => {
@@ -241,16 +225,16 @@ const useSafeguardFormHandlers = (
         }
     }, [metricOptions, formValues.metricName, setMetricName]);
 
+    // Set default aggregation when metric type becomes known
+    // Skip when metric hasn't changed from initial (existing safeguard opened)
     useEffect(() => {
         if (
-            metricType !== 'unknown' &&
-            !isValidAggregation(metricType, aggregationMode)
+            formValues.metricName !== initialMetricName &&
+            metricType !== 'unknown'
         ) {
-            setAggregationMode(
-                getDefaultAggregationMode(metricType, aggregationMode),
-            );
+            setAggregationMode(getDefaultAggregation(metricType));
         }
-    }, [formValues.metricName, metricType, aggregationMode]);
+    }, [formValues.metricName, initialMetricName, metricType]);
 
     const handleMetricChange = (value: string) => {
         enterEditMode();

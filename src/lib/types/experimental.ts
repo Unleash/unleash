@@ -77,7 +77,6 @@ export type IFlagKey =
     | 'impactMetricsFlagPage'
     | 'featureEnvSafeguards'
     | 'filterFavorites'
-    | 'inlineFavoriteInNameColumn'
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'newSignOut'
     | 'externalPrometheusImpactMetrics';
@@ -344,10 +343,6 @@ const flags: IFlags = {
     ),
     featureEnvSafeguards: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEATURE_ENV_SAFEGUARDS,
-        false,
-    ),
-    inlineFavoriteInNameColumn: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INLINE_FAVORITE_IN_NAME_COLUMN,
         false,
     ),
     filterFavorites: parseEnvVarBoolean(

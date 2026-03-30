@@ -6,7 +6,6 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { PaginatedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
-import { FavoriteIconCell } from 'component/common/Table/cells/FavoriteIconCell/FavoriteIconCell';
 import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell.tsx';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell.tsx';
@@ -54,7 +53,6 @@ import { formatEnvironmentColumnId } from './formatEnvironmentColumnId.ts';
 import { ProjectFeaturesColumnsMenu } from './ProjectFeaturesColumnsMenu/ProjectFeaturesColumnsMenu.tsx';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
 import { ProjectFlagsSearch } from './ProjectFlagsSearch/ProjectFlagsSearch.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 type ProjectFeatureTogglesProps = {
     environments: string[];
@@ -106,7 +104,6 @@ export const ProjectFeatureToggles = ({
     environments: availableEnvironments,
 }: ProjectFeatureTogglesProps) => {
     const { trackEvent } = usePlausibleTracker();
-    const inlineFavoriteInNameColumn = useUiFlag('inlineFavoriteInNameColumn');
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
@@ -231,36 +228,6 @@ export const ProjectFeatureToggles = ({
                 },
                 enableHiding: false,
             }),
-            ...(inlineFavoriteInNameColumn
-                ? []
-                : [
-                      columnHelper.accessor('favorite', {
-                          id: 'favorite',
-                          header: () => (
-                              <FavoriteIconHeader
-                                  isActive={tableState.favoritesFirst}
-                                  onClick={() =>
-                                      setTableState({
-                                          favoritesFirst:
-                                              !tableState.favoritesFirst,
-                                      })
-                                  }
-                              />
-                          ),
-                          cell: ({ row: { original: feature } }) => (
-                              <FavoriteIconCell
-                                  value={feature?.favorite}
-                                  onClick={() => onFavorite(feature)}
-                              />
-                          ),
-                          enableSorting: false,
-                          enableHiding: false,
-                          meta: {
-                              width: '1%',
-                          },
-                      }),
-                  ]),
-
             columnHelper.accessor('name', {
                 id: 'name',
                 header: 'Name',
@@ -435,7 +402,6 @@ export const ProjectFeatureToggles = ({
             tableState.favoritesFirst,
             refetch,
             isPlaceholder,
-            inlineFavoriteInNameColumn,
         ],
     );
 
@@ -625,17 +591,15 @@ export const ProjectFeatureToggles = ({
                                         state={filterState}
                                     />
                                 </FilterRow>
-                                {inlineFavoriteInNameColumn ? (
-                                    <FavoriteIconHeader
-                                        isActive={tableState.favoritesFirst}
-                                        onClick={() =>
-                                            setTableState({
-                                                favoritesFirst:
-                                                    !tableState.favoritesFirst,
-                                            })
-                                        }
-                                    />
-                                ) : null}
+                                <FavoriteIconHeader
+                                    isActive={tableState.favoritesFirst}
+                                    onClick={() =>
+                                        setTableState({
+                                            favoritesFirst:
+                                                !tableState.favoritesFirst,
+                                        })
+                                    }
+                                />
                             </Box>
                         )}
                         {isMediumScreen ? (

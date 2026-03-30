@@ -95,7 +95,6 @@ export type UiFlags = {
     impactMetricsFlagPage?: boolean;
     featureEnvSafeguards?: boolean;
     inlineFavoriteInNameColumn?: boolean;
-    filterFavorites?: boolean;
     externalPrometheusImpactMetrics?: boolean;
 };
 

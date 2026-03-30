@@ -986,7 +986,6 @@ export * from './impactMetricsConfigSchemaLabelSelectors';
 export * from './impactMetricsConfigSchemaMode';
 export * from './impactMetricsConfigSchemaStep';
 export * from './impactMetricsConfigSchemaTimeRange';
-export * from './impactMetricsConfigSchemaType';
 export * from './impactMetricsConfigSchemaYAxisMin';
 export * from './impactMetricsSchema';
 export * from './impactMetricsSchemaOneOf';

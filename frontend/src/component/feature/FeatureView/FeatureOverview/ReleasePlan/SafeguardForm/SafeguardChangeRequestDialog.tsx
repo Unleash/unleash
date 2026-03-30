@@ -2,7 +2,6 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue.tsx';
 import { Button } from '@mui/material';
 import type { CreateSafeguardSchema } from 'openapi/models/createSafeguardSchema.ts';
 import type { SafeguardType } from './SafeguardForm.tsx';
-import { getMetricDisplayName } from 'component/impact-metrics/metricsFormatters.ts';
 
 interface ISafeguardChangeRequestDialogProps {
     isOpen: boolean;
@@ -47,8 +46,7 @@ export const SafeguardChangeRequestDialog = ({
         >
             <p>
                 {mode === 'create' ? 'Add' : 'Update'} safeguard that an{' '}
-                {actionLabel} based on{' '}
-                <strong>{getMetricDisplayName(metricName)}</strong>
+                {actionLabel} based on <strong>{metricName}</strong>
             </p>
         </Dialogue>
     );

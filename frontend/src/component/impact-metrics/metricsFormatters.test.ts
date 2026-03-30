@@ -1,7 +1,4 @@
-import {
-    formatLargeNumbers,
-    getMetricDisplayName,
-} from './metricsFormatters.js';
+import { formatLargeNumbers } from './metricsFormatters.js';
 
 describe('formatLargeNumbers', () => {
     it('formats small numbers with locale formatting', () => {
@@ -40,19 +37,5 @@ describe('formatLargeNumbers', () => {
         expect(formatLargeNumbers(1000000000000)).toBe('1T');
         expect(formatLargeNumbers(2500000000000)).toBe('2.5T');
         expect(formatLargeNumbers(10000000000000)).toBe('10T');
-    });
-});
-
-describe('getMetricDisplayName', () => {
-    it('strips unleash metric prefix', () => {
-        expect(getMetricDisplayName('unleash_counter_purchases')).toBe(
-            'purchases',
-        );
-        expect(getMetricDisplayName('unleash_gauge_active_users')).toBe(
-            'active_users',
-        );
-        expect(getMetricDisplayName('unleash_histogram_duration')).toBe(
-            'duration',
-        );
     });
 });

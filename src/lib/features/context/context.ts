@@ -305,29 +305,17 @@ export class ContextController extends Controller {
         >,
         res: Response<ContextFieldsSchema>,
     ): Promise<void> {
-        if (this.flagResolver.isEnabled('projectContextFields')) {
-            res.status(200)
-                .json(
-                    serializeDates(
-                        await this.transactionalContextService.getContextFields(
-                            {
-                                projectId: req.params.projectId,
-                                userId: req.user.id,
-                                include: req.query.include,
-                            },
-                        ),
-                    ),
-                )
-                .end();
-        } else {
-            res.status(200)
-                .json(
-                    serializeDates(
-                        await this.transactionalContextService.getAll(),
-                    ),
-                )
-                .end();
-        }
+        res.status(200)
+            .json(
+                serializeDates(
+                    await this.transactionalContextService.getContextFields({
+                        projectId: req.params.projectId,
+                        userId: req.user.id,
+                        include: req.query.include,
+                    }),
+                ),
+            )
+            .end();
     }
 
     async getContextField(

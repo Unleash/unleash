@@ -66,7 +66,6 @@ export type IFlagKey =
     | 'newInUnleash'
     | 'oidcPkceSupport'
     | 'gtmReleaseManagement'
-    | 'projectContextFields'
     | 'readOnlyUsersUI'
     | 'remoteMcpServer'
     | 'regexConstraintOperator'
@@ -303,10 +302,6 @@ const flags: IFlags = {
     ),
     gtmReleaseManagement: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GTM_RELEASE_MANAGEMENT,
-        false,
-    ),
-    projectContextFields: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_CONTEXT_FIELDS,
         false,
     ),
     readOnlyUsersUI: parseEnvVarBoolean(

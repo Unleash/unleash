@@ -111,7 +111,10 @@ export const useChartFormState = ({
     });
 
     const isValid = metricName.length > 0;
-    const metricType = getMetricType(metricName, currentAvailableLabels?.metric_type ?? currentAvailableLabels?.type);
+    const metricType = getMetricType(
+        metricName,
+        currentAvailableLabels?.metric_type ?? currentAvailableLabels?.type,
+    );
 
     useEffect(() => {
         if (!initialConfig && metricType !== 'unknown') {

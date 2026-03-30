@@ -1,4 +1,4 @@
-import { gt as semverGt, lt as semverLt, eq as semverEq } from 'semver';
+import { gt as semverGt, lt as semverLt, eq as semverEq, gte as semverGte, lte as semverLte } from 'semver';
 import type { Context } from './context.js';
 import { resolveContextValue } from './helpers.js';
 import { RE2JS } from 're2js';
@@ -28,6 +28,8 @@ export enum Operator {
     SEMVER_EQ = 'SEMVER_EQ',
     SEMVER_GT = 'SEMVER_GT',
     SEMVER_LT = 'SEMVER_LT',
+    SEMVER_GTE = 'SEMVER_GTE',
+    SEMVER_GLT = 'SEMVER_GLT',
     REGEX = 'REGEX',
 }
 
@@ -92,6 +94,12 @@ const SemverOperator = (constraint: Constraint, context: Context) => {
         }
         if (operator === Operator.SEMVER_GT) {
             return semverGt(contextValue, value);
+        }
+        if (operator === Operator.SEMVER_GTE) {
+            return semverGte(contextValue, value);
+        }
+        if (operator === Operator.SEMVER_GLT) {
+            return semverLte(contextValue, value);
         }
     } catch (_e) {
         return false;
@@ -180,4 +188,6 @@ operators.set(Operator.DATE_BEFORE, DateOperator);
 operators.set(Operator.SEMVER_EQ, SemverOperator);
 operators.set(Operator.SEMVER_GT, SemverOperator);
 operators.set(Operator.SEMVER_LT, SemverOperator);
+operators.set(Operator.SEMVER_GTE, SemverOperator);
+operators.set(Operator.SEMVER_GLT, SemverOperator);
 operators.set(Operator.REGEX, RegexOperator);

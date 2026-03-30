@@ -15,6 +15,8 @@ import {
     regexOperators,
     inOperators,
     isRegexOperator,
+    SEMVER_GTE,
+    SEMVER_GLT,
 } from 'constants/operators';
 import { useId } from 'react';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
@@ -102,10 +104,18 @@ export const ConstraintOperatorSelect = ({
     };
 
     const isRegexOperatorEnabled = useUiFlag('regexConstraintOperator');
+    const isSemverGteOperatorsEnabled = useUiFlag('semverGteConstraintOperators');
 
-    const operators = isRegexOperatorEnabled
-        ? options
-        : options.filter((operator) => !isRegexOperator(operator));
+    const operators = options
+        .filter(
+            (operator) =>
+                isRegexOperatorEnabled || !isRegexOperator(operator),
+        )
+        .filter(
+            (operator) =>
+                isSemverGteOperatorsEnabled ||
+                (operator !== SEMVER_GTE && operator !== SEMVER_GLT),
+        );
 
     return (
         <FormControl variant='standard' size='small' hiddenLabel>

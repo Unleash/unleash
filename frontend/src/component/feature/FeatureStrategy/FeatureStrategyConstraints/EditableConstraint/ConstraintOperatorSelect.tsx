@@ -16,7 +16,7 @@ import {
     inOperators,
     isRegexOperator,
     SEMVER_GTE,
-    SEMVER_GLT,
+    SEMVER_LTE,
 } from 'constants/operators';
 import { useId } from 'react';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
@@ -115,7 +115,7 @@ export const ConstraintOperatorSelect = ({
         .filter(
             (operator) =>
                 isSemverGteOperatorsEnabled ||
-                (operator !== SEMVER_GTE && operator !== SEMVER_GLT),
+                (operator !== SEMVER_GTE && operator !== SEMVER_LTE),
         );
 
     return (

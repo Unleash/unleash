@@ -35,7 +35,7 @@ export enum Operator {
     SEMVER_GT = 'SEMVER_GT',
     SEMVER_LT = 'SEMVER_LT',
     SEMVER_GTE = 'SEMVER_GTE',
-    SEMVER_GLT = 'SEMVER_GLT',
+    SEMVER_LTE = 'SEMVER_LTE',
     REGEX = 'REGEX',
 }
 
@@ -104,7 +104,7 @@ const SemverOperator = (constraint: Constraint, context: Context) => {
         if (operator === Operator.SEMVER_GTE) {
             return semverGte(contextValue, value);
         }
-        if (operator === Operator.SEMVER_GLT) {
+        if (operator === Operator.SEMVER_LTE) {
             return semverLte(contextValue, value);
         }
     } catch (_e) {
@@ -195,5 +195,5 @@ operators.set(Operator.SEMVER_EQ, SemverOperator);
 operators.set(Operator.SEMVER_GT, SemverOperator);
 operators.set(Operator.SEMVER_LT, SemverOperator);
 operators.set(Operator.SEMVER_GTE, SemverOperator);
-operators.set(Operator.SEMVER_GLT, SemverOperator);
+operators.set(Operator.SEMVER_LTE, SemverOperator);
 operators.set(Operator.REGEX, RegexOperator);

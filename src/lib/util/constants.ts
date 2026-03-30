@@ -35,7 +35,7 @@ export const SEMVER_EQ = 'SEMVER_EQ';
 export const SEMVER_GT = 'SEMVER_GT';
 export const SEMVER_LT = 'SEMVER_LT';
 export const SEMVER_GTE = 'SEMVER_GTE';
-export const SEMVER_GLT = 'SEMVER_GLT';
+export const SEMVER_LTE = 'SEMVER_LTE';
 export const REGEX = 'REGEX';
 
 export const ALL_OPERATORS = [
@@ -55,7 +55,7 @@ export const ALL_OPERATORS = [
     SEMVER_GT,
     SEMVER_LT,
     SEMVER_GTE,
-    SEMVER_GLT,
+    SEMVER_LTE,
     REGEX,
 ] as const;
 
@@ -73,7 +73,7 @@ export const SEMVER_OPERATORS = [
     SEMVER_GT,
     SEMVER_LT,
     SEMVER_GTE,
-    SEMVER_GLT,
+    SEMVER_LTE,
 ];
 
 export const PAT_LIMIT = 10;

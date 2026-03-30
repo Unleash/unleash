@@ -17,7 +17,7 @@ import {
     semVerOperators,
     stringOperators,
     SEMVER_GTE,
-    SEMVER_GLT,
+    SEMVER_LTE,
 } from 'constants/operators';
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -148,7 +148,7 @@ export const ProjectActionsFilterItem = ({
         ...semVerOperators.filter(
             (op) =>
                 isSemverGteOperatorsEnabled ||
-                (op !== SEMVER_GTE && op !== SEMVER_GLT),
+                (op !== SEMVER_GTE && op !== SEMVER_LTE),
         ),
     ];
 

@@ -27,7 +27,7 @@ import {
     SEMVER_GT,
     SEMVER_LT,
     SEMVER_GTE,
-    SEMVER_GLT,
+    SEMVER_LTE,
     STR_CONTAINS,
     STR_ENDS_WITH,
     STR_STARTS_WITH,
@@ -362,7 +362,7 @@ const testCases: [string, IEvent][] = [
         SEMVER_GT,
         SEMVER_LT,
         SEMVER_GTE,
-        SEMVER_GLT,
+        SEMVER_LTE,
     ].map(
         (operator) =>
             <[string, IEvent]>[

@@ -120,7 +120,7 @@ exports[`Should format specialised text for events when default strategy updated
 }
 `;
 
-exports[`Should format specialised text for events when default strategy updated with numeric constraint SEMVER_GLT 1`] = `
+exports[`Should format specialised text for events when default strategy updated with numeric constraint SEMVER_LTE 1`] = `
 {
   "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a SemVer less than or equal to 4] to empty set of constraints",

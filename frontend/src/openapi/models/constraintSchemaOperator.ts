@@ -30,6 +30,6 @@ export const ConstraintSchemaOperator: Record<Operator, Operator> = {
     SEMVER_GT: 'SEMVER_GT',
     SEMVER_LT: 'SEMVER_LT',
     SEMVER_GTE: 'SEMVER_GTE',
-    SEMVER_GLT: 'SEMVER_GLT',
+    SEMVER_LTE: 'SEMVER_LTE',
     REGEX: 'REGEX',
 } as const;

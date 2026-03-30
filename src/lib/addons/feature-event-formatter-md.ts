@@ -286,7 +286,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 SEMVER_GT: 'is a SemVer greater than',
                 SEMVER_LT: 'is a SemVer less than',
                 SEMVER_GTE: 'is a SemVer greater than or equal to',
-                SEMVER_GLT: 'is a SemVer less than or equal to',
+                SEMVER_LTE: 'is a SemVer less than or equal to',
                 REGEX: 'matches regex',
             };
             const formatConstraint = (constraint: IConstraint) => {

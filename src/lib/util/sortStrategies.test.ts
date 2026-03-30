@@ -1,4 +1,3 @@
-import { ulid } from 'ulidx';
 import { sortStrategies } from './sortStrategies.js';
 
 describe('sortStrategies', () => {

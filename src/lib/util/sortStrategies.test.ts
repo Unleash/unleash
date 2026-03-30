@@ -1,3 +1,4 @@
+import { ulid } from 'ulidx';
 import { sortStrategies } from './sortStrategies.js';
 
 describe('sortStrategies', () => {
@@ -64,5 +65,23 @@ describe('sortStrategies', () => {
         const sorted = strategies.sort(sortStrategies);
 
         expect(sorted).toEqual([{ sortOrder: undefined }, { sortOrder: 1 }]);
+    });
+
+    it('should sort by id if sortOrder is equal', () => {
+        const strategies = [
+            { sortOrder: 0, id: 'b' },
+            { sortOrder: 0, id: 'a' },
+        ];
+        const sorted = strategies.sort(sortStrategies);
+        expect(sorted).toEqual([
+            { sortOrder: 0, id: 'a' },
+            { sortOrder: 0, id: 'b' },
+        ]);
+    });
+    it('should sort by id if both milestoneId and sortOrder is equal', () => {
+        const strategy1 = { milestoneId: 'm1', sortOrder: 1, id: '10' };
+        const strategy2 = { milestoneId: 'm1', sortOrder: 1, id: '20' };
+        const sorted = sortStrategies(strategy2, strategy1);
+        expect(sorted).toEqual([strategy1, strategy2]);
     });
 });

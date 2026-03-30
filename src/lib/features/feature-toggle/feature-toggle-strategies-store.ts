@@ -23,13 +23,13 @@ import {
     ensureStringValue,
     generateImageUrl,
     mapValues,
-    randomId,
 } from '../../util/index.js';
 import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
 import type { Db } from '../../db/db.js';
 import { isAfter } from 'date-fns';
 import Raw = Knex.Raw;
 import type { ITag } from '../../tags/index.js';
+import { ulid } from 'ulidx';
 
 const COLUMNS = [
     'id',
@@ -232,7 +232,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 strategyConfig.environment,
             ));
         const strategyRow = mapInput({
-            id: randomId(),
+            id: ulid(),
             ...strategyConfig,
             sortOrder,
         });

@@ -43,7 +43,7 @@ export class MetricsTranslator {
     }
 
     private isPlainMetricsEnabled(): boolean {
-        return this.flagResolver.isEnabled('externalPrometheusImpactMetrics');
+        return this.flagResolver.isEnabled('unprefixedImpactMetrics');
     }
 
     sanitizeName(name: string): string {
@@ -230,14 +230,16 @@ export class MetricsTranslator {
             this.collectLabelNames(metric);
 
         if (metric.type === 'counter') {
-            const counter = this.resolveCounter(
-                prefixedName,
-                metric.help,
-                prefixedLabelNames,
-            );
+            if (!this.isPlainMetricsEnabled()) {
+                const counter = this.resolveCounter(
+                    prefixedName,
+                    metric.help,
+                    prefixedLabelNames,
+                );
 
-            for (const sample of metric.samples) {
-                counter.inc(this.prefixedLabels(sample), sample.value);
+                for (const sample of metric.samples) {
+                    counter.inc(this.prefixedLabels(sample), sample.value);
+                }
             }
 
             if (this.isPlainMetricsEnabled() && plainValid) {
@@ -254,16 +256,18 @@ export class MetricsTranslator {
                 }
             }
 
-            return counter;
+            return null;
         } else if (metric.type === 'gauge') {
-            const gauge = this.resolveGauge(
-                prefixedName,
-                metric.help,
-                prefixedLabelNames,
-            );
+            if (!this.isPlainMetricsEnabled()) {
+                const gauge = this.resolveGauge(
+                    prefixedName,
+                    metric.help,
+                    prefixedLabelNames,
+                );
 
-            for (const sample of metric.samples) {
-                gauge.set(this.prefixedLabels(sample), sample.value);
+                for (const sample of metric.samples) {
+                    gauge.set(this.prefixedLabels(sample), sample.value);
+                }
             }
 
             if (this.isPlainMetricsEnabled() && plainValid) {
@@ -280,25 +284,27 @@ export class MetricsTranslator {
                 }
             }
 
-            return gauge;
+            return null;
         } else if (metric.type === 'histogram') {
             if (!metric.samples || metric.samples.length === 0) {
                 return null;
             }
 
-            const histogram = this.resolveHistogram(
-                prefixedName,
-                metric.help,
-                prefixedLabelNames,
-                metric.samples,
-            );
+            if (!this.isPlainMetricsEnabled()) {
+                const histogram = this.resolveHistogram(
+                    prefixedName,
+                    metric.help,
+                    prefixedLabelNames,
+                    metric.samples,
+                );
 
-            for (const sample of metric.samples) {
-                histogram.recordBatch(this.prefixedLabels(sample), {
-                    count: sample.count,
-                    sum: sample.sum,
-                    buckets: sample.buckets,
-                });
+                for (const sample of metric.samples) {
+                    histogram.recordBatch(this.prefixedLabels(sample), {
+                        count: sample.count,
+                        sum: sample.sum,
+                        buckets: sample.buckets,
+                    });
+                }
             }
 
             if (this.isPlainMetricsEnabled() && plainValid) {
@@ -320,7 +326,7 @@ export class MetricsTranslator {
                 }
             }
 
-            return histogram;
+            return null;
         }
 
         return null;

@@ -1,7 +1,7 @@
 import { MetricsTranslator } from './metrics-translator.js';
 import { Registry } from 'prom-client';
 
-const flagResolver = { isEnabled: () => true };
+const flagResolver = { isEnabled: () => false };
 
 describe('MetricsTranslator', () => {
     describe('Sanitize name', () => {
@@ -36,7 +36,7 @@ describe('MetricsTranslator', () => {
             );
         });
     });
-    it('should handle metrics with labels', async () => {
+    it('should write only plain metrics when flag is enabled', async () => {
         const metrics = [
             {
                 name: 'labeled_counter',
@@ -79,18 +79,10 @@ describe('MetricsTranslator', () => {
         ];
 
         const registry = new Registry();
-        const translator = new MetricsTranslator(registry, flagResolver);
+        const plainFlagResolver = { isEnabled: () => true };
+        const translator = new MetricsTranslator(registry, plainFlagResolver);
         const result = await translator.translateAndSerializeMetrics(metrics);
         expect(typeof result).toBe('string');
-        expect(result).toContain(
-            'unleash_counter_labeled_counter{unleash_foo="bar",unleash_origin="sdk"} 5',
-        );
-        expect(result).toContain(
-            'unleash_gauge_test_gauge{unleash_env="prod",unleash_origin="sdk"} 10',
-        );
-        expect(result).toContain(
-            'unleash_histogram_response_time_bucket{unleash_origin="sdk",unleash_service="api",le="1"} 3',
-        );
         // Plain metrics (no unleash_ prefix, type stored as label)
         expect(result).toContain(
             'labeled_counter{origin="sdk",type="counter",foo="bar"} 5',
@@ -101,6 +93,10 @@ describe('MetricsTranslator', () => {
         expect(result).toContain(
             'response_time_bucket{origin="sdk",service="api",type="histogram",le="1"} 3',
         );
+        // Should NOT contain prefixed metrics
+        expect(result).not.toContain('unleash_counter_');
+        expect(result).not.toContain('unleash_gauge_');
+        expect(result).not.toContain('unleash_histogram_');
     });
 
     it('should ignore unsupported metric types', async () => {

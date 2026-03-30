@@ -117,7 +117,10 @@ export const useChartFormState = ({
     );
 
     useEffect(() => {
-        if (!initialConfig && metricType !== 'unknown') {
+        if (
+            metricName !== initialConfig?.metricName &&
+            metricType !== 'unknown'
+        ) {
             setAggregationMode(getDefaultAggregation(metricType));
         }
     }, [metricName, metricType]);

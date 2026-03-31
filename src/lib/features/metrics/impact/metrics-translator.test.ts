@@ -105,7 +105,7 @@ describe('MetricsTranslator', () => {
                 type: 'counter' as const,
                 samples: [
                     {
-                        labels: { 'invalid-label': 'value' },
+                        labels: { 'invalid-label': 'value', '1numeric': 123 },
                         value: 5,
                     },
                 ],
@@ -135,13 +135,13 @@ describe('MetricsTranslator', () => {
     it('should handle re-labeling of metrics', async () => {
         await translator.translateAndSerializeMetrics([
             {
-                name: 'my_counter',
+                name: 'counter_with_labels',
                 help: 'counter',
                 type: 'counter' as const,
                 samples: [{ labels: { foo: 'bar' }, value: 5 }],
             },
             {
-                name: 'my_histogram',
+                name: 'histogram_with_labels',
                 help: 'histogram',
                 type: 'histogram' as const,
                 samples: [
@@ -160,13 +160,13 @@ describe('MetricsTranslator', () => {
 
         const result = await translator.translateAndSerializeMetrics([
             {
-                name: 'my_counter',
+                name: 'counter_with_labels',
                 help: 'counter',
                 type: 'counter' as const,
                 samples: [{ labels: { foo: 'bar', baz: 'qux' }, value: 15 }],
             },
             {
-                name: 'my_histogram',
+                name: 'histogram_with_labels',
                 help: 'histogram',
                 type: 'histogram' as const,
                 samples: [
@@ -184,13 +184,13 @@ describe('MetricsTranslator', () => {
         ]);
 
         expect(result).toContain(
-            'my_counter{origin="sdk",metric_type="counter",foo="bar",baz="qux"} 15',
+            'counter_with_labels{origin="sdk",metric_type="counter",foo="bar",baz="qux"} 15',
         );
         expect(result).toContain(
-            'my_histogram_count{metric_type="histogram",origin="sdk",region="us-east",service="api"} 3',
+            'histogram_with_labels_count{metric_type="histogram",origin="sdk",region="us-east",service="api"} 3',
         );
         expect(result).not.toContain(
-            'my_histogram_count{metric_type="histogram",origin="sdk",service="api"} 5',
+            'histogram_with_labels_count{metric_type="histogram",origin="sdk",service="api"} 5',
         );
     });
 

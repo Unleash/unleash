@@ -9,13 +9,51 @@ export type ModeSelectorProps = {
     label?: string;
 };
 
+const counterOptions = [
+    <MenuItem key='rps' value='rps'>
+        Rate per second
+    </MenuItem>,
+    <MenuItem key='count' value='count'>
+        Count
+    </MenuItem>,
+];
+
+const gaugeOptions = [
+    <MenuItem key='avg' value='avg'>
+        Average
+    </MenuItem>,
+    <MenuItem key='sum' value='sum'>
+        Sum
+    </MenuItem>,
+];
+
+const histogramOptions = [
+    <MenuItem key='p50' value='p50'>
+        50th percentile
+    </MenuItem>,
+    <MenuItem key='p95' value='p95'>
+        95th percentile
+    </MenuItem>,
+    <MenuItem key='p99' value='p99'>
+        99th percentile
+    </MenuItem>,
+];
+
+const optionsByType: Record<string, JSX.Element[]> = {
+    counter: counterOptions,
+    gauge: gaugeOptions,
+    histogram: histogramOptions,
+    unknown: [...counterOptions, ...gaugeOptions, ...histogramOptions],
+};
+
 export const ModeSelector: FC<ModeSelectorProps> = ({
     value,
     onChange,
     metricType,
     label = 'Aggregation Mode',
 }) => {
-    if (metricType === 'unknown') return null;
+    const options = optionsByType[metricType] ?? optionsByType.unknown;
+
     return (
         <FormControl variant='outlined' size='small'>
             {label ? (
@@ -27,37 +65,7 @@ export const ModeSelector: FC<ModeSelectorProps> = ({
                 onChange={(e) => onChange(e.target.value as AggregationMode)}
                 label={label}
             >
-                {metricType === 'counter'
-                    ? [
-                          <MenuItem key='rps' value='rps'>
-                              Rate per second
-                          </MenuItem>,
-                          <MenuItem key='count' value='count'>
-                              Count
-                          </MenuItem>,
-                      ]
-                    : metricType === 'gauge'
-                      ? [
-                            <MenuItem key='avg' value='avg'>
-                                Average
-                            </MenuItem>,
-                            <MenuItem key='sum' value='sum'>
-                                Sum
-                            </MenuItem>,
-                        ]
-                      : metricType === 'histogram'
-                        ? [
-                              <MenuItem key='p50' value='p50'>
-                                  50th percentile
-                              </MenuItem>,
-                              <MenuItem key='p95' value='p95'>
-                                  95th percentile
-                              </MenuItem>,
-                              <MenuItem key='p99' value='p99'>
-                                  99th percentile
-                              </MenuItem>,
-                          ]
-                        : []}
+                {options}
             </Select>
         </FormControl>
     );

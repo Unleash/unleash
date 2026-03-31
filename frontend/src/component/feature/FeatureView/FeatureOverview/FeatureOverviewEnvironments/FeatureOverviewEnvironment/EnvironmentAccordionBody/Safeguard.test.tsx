@@ -378,7 +378,7 @@ describe('Safeguard', () => {
         });
         testServerRoute(server, '/api/admin/impact-metrics/', {
             series: [],
-            labels: { appName: [], type: ['counter'] },
+            labels: { appName: [], metric_type: ['counter'] },
         });
 
         const existingSafeguard: ISafeguard = {
@@ -450,7 +450,7 @@ describe('Safeguard', () => {
         });
         testServerRoute(server, '/api/admin/impact-metrics/', {
             series: [],
-            labels: { appName: [], type: ['counter'] },
+            labels: { appName: [], metric_type: ['counter'] },
         });
 
         const { onSafeguardChange } = renderSection();
@@ -515,10 +515,9 @@ describe('Safeguard', () => {
         await user.click(saveButton);
 
         await screen.findByText('Add suggestion to draft');
-        expect(screen.getByText('http_requests_total')).toBeInTheDocument();
         expect(
-            screen.queryByText('unleash_counter_http_requests_total'),
-        ).not.toBeInTheDocument();
+            screen.getByText('unleash_counter_http_requests_total'),
+        ).toBeInTheDocument();
 
         const confirmButton = await screen.findByRole('button', {
             name: 'Add suggestion to draft',

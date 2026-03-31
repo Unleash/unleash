@@ -256,6 +256,11 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                         startIcon={<Add />}
                         onClick={(e) => {
                             e.stopPropagation();
+                            trackEvent('flagpage-impact-metrics', {
+                                props: {
+                                    eventType: 'add-impact-metric-clicked',
+                                },
+                            });
                             trackAddMetricClicked();
                             onAddChart();
                         }}

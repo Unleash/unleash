@@ -1153,7 +1153,7 @@ test('should accept impact metrics in frontend API metrics endpoint', async () =
         .expect(200);
 
     expect(response.text).toMatch(
-        /unleash_counter_frontend_counter{unleash_source="frontend",unleash_origin="sdk"} 5/,
+        /frontend_counter{origin="sdk",metric_type="counter",source="frontend"} 5/,
     );
 
     await localApp.destroy();

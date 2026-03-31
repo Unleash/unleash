@@ -253,10 +253,12 @@ export class ClientFeatureToggleDelta extends EventEmitter {
 
         for (const event of changeEvents) {
             if (event.type === FEATURE_PROJECT_CHANGE && event.featureName) {
+                // A project change involves two steps: removing the feature from old project and adding it to new project
                 featuresRemoved.push({
                     featureName: event.featureName,
                     project: event.data.oldProject,
                 });
+                globallyUpdatedFeatures.add(event.featureName);
             } else if (
                 event.type === 'feature-archived' &&
                 event.featureName &&

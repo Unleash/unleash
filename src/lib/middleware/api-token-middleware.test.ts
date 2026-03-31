@@ -84,44 +84,6 @@ test('should not make database query when provided PAT format', async () => {
     expect(req.user).toBeFalsy();
 });
 
-test('callback called when calling admin api with PAT format tokens even when flag is set', async () => {
-    const localConfig = createTestConfig({
-        getLogger,
-        authentication: {
-            enableApiToken: true,
-        },
-        experimental: {
-            flags: {
-                onlyFeatureTokensWithFeatureAPIs: true,
-            },
-        },
-    });
-
-    const apiTokenService = {
-        getUserForToken: vi.fn(),
-    } as unknown as ApiTokenService;
-
-    const func = apiTokenMiddleware(localConfig, { apiTokenService });
-
-    const cb = vi.fn();
-    const res = {
-        status: vi.fn().mockReturnValue({ send: vi.fn() }),
-    };
-
-    const req = {
-        header: vi.fn().mockReturnValue('user:asdkjsdhg3'),
-        user: undefined,
-        path: '/api/admin/projects',
-    };
-
-    await func(req, res, cb);
-
-    expect(apiTokenService.getUserForToken).not.toHaveBeenCalled();
-    expect(req.header).toHaveBeenCalled();
-    expect(res.status).not.toHaveBeenCalled();
-    expect(cb).toHaveBeenCalled();
-});
-
 test('should add user if known token', async () => {
     const apiUser = new ApiUser({
         tokenName: 'default',

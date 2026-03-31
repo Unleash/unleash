@@ -2,7 +2,7 @@ import { Box, styled } from '@mui/material';
 import { InviteLinkBar } from '../InviteLinkBar/InviteLinkBar.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { LicensedUsersBox } from './LicensedUsersBox.tsx';
-import { UsersHeaderAutoCreateDomainUsers } from './UsersHeaderAutoCreateDomainUsers.tsx';
+import { AutoCreateDomainUsersToggle } from '../AutoCreateDomainUsersToggle.tsx';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -50,7 +50,7 @@ export const UsersHeader = () => {
                     </StyledElement>
                 )}
             </StyledUsersHeaderRow>
-            <UsersHeaderAutoCreateDomainUsers />
+            <AutoCreateDomainUsersToggle showFallback />
         </StyledContainer>
     );
 };

@@ -6,6 +6,7 @@ import {
     type SignupStepContent,
 } from './SignupDialog';
 import { useCallback, useState } from 'react';
+import { AutoCreateDomainUsersToggle } from 'component/admin/users/AutoCreateDomainUsersToggle';
 
 const StyledButtonRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -35,7 +36,10 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
     setData,
     onNext,
     onBack,
+    signupData,
 }) => {
+    const isFirstSignup = !signupData?.companyName;
+
     const [inputValue, setInputValue] = useState('');
 
     const setInviteEmails = useCallback(
@@ -82,6 +86,7 @@ export const SignupDialogInviteOthers: SignupStepContent = ({
 
     return (
         <>
+            {isFirstSignup && <AutoCreateDomainUsersToggle />}
             <StyledSignupDialogField>
                 <StyledSignupDialogLabel>
                     Invite team members

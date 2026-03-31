@@ -116,7 +116,10 @@ describe('MetricsTranslator', () => {
                 type: 'gauge' as const,
                 samples: [
                     {
-                        labels: { 'invalid:colon': 'value' },
+                        labels: {
+                            'invalid:colon': 'value',
+                            'space label': 'test',
+                        },
                         value: 10,
                     },
                 ],
@@ -128,7 +131,7 @@ describe('MetricsTranslator', () => {
             'invalid_metric_name{origin="sdk",metric_type="counter",invalid_label="value"} 5',
         );
         expect(result).toContain(
-            '_valid_metric{origin="sdk",metric_type="gauge",invalid_colon="value"} 10',
+            '_valid_metric{origin="sdk",metric_type="gauge",invalid_colon="value",space_label="test"} 10',
         );
     });
 
@@ -136,13 +139,13 @@ describe('MetricsTranslator', () => {
         await translator.translateAndSerializeMetrics([
             {
                 name: 'counter_with_labels',
-                help: 'counter',
+                help: 'counter with labels',
                 type: 'counter' as const,
                 samples: [{ labels: { foo: 'bar' }, value: 5 }],
             },
             {
                 name: 'histogram_with_labels',
-                help: 'histogram',
+                help: 'histogram with labels',
                 type: 'histogram' as const,
                 samples: [
                     {
@@ -161,13 +164,13 @@ describe('MetricsTranslator', () => {
         const result = await translator.translateAndSerializeMetrics([
             {
                 name: 'counter_with_labels',
-                help: 'counter',
+                help: 'counter with labels',
                 type: 'counter' as const,
                 samples: [{ labels: { foo: 'bar', baz: 'qux' }, value: 15 }],
             },
             {
                 name: 'histogram_with_labels',
-                help: 'histogram',
+                help: 'histogram with labels',
                 type: 'histogram' as const,
                 samples: [
                     {

@@ -274,6 +274,9 @@ export const PersonalDashboard = () => {
     const { setWelcomeDialog } = useWelcomeDialogContext();
     const { isOss, isEnterprise } = useUiConfig();
     const gtmReleaseManagementEnabled = useUiFlag('gtmReleaseManagement');
+    const { personalDashboard } = usePersonalDashboard();
+    const isNewUser = personalDashboard?.flags.length === 0;
+
     const name = user?.name || '';
 
     usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
@@ -288,10 +291,10 @@ export const PersonalDashboard = () => {
 
     return (
         <MainContent>
-            {isEnterprise() && gtmReleaseManagementEnabled ? (
+            {isEnterprise() && gtmReleaseManagementEnabled && !isNewUser && (
                 <ReleaseTemplatesBanner />
-            ) : null}
-            {isOss() ? <InfoSection /> : null}
+            )}
+            {isOss() && <InfoSection />}
 
             <WelcomeSection>
                 <Typography component='h2' variant='h2'>

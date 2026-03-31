@@ -2,12 +2,19 @@ import { Box, styled } from '@mui/material';
 import { InviteLinkBar } from '../InviteLinkBar/InviteLinkBar.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { LicensedUsersBox } from './LicensedUsersBox.tsx';
+import { UsersHeaderAutoCreateDomainUsers } from './UsersHeaderAutoCreateDomainUsers.tsx';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
-    flexFlow: 'row',
+    flexDirection: 'column',
     gap: theme.spacing(2),
     paddingBottom: theme.spacing(3),
+}));
+
+const StyledUsersHeaderRow = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row',
+    gap: theme.spacing(2),
 }));
 
 const StyledElement = styled(Box)(({ theme }) => ({
@@ -32,15 +39,18 @@ export const UsersHeader = () => {
 
     return (
         <StyledContainer>
-            <StyledElement>
-                <InviteLinkBar />
-            </StyledElement>
-
-            {licensedUsersEnabled && (
+            <StyledUsersHeaderRow>
                 <StyledElement>
-                    <LicensedUsersBox />
+                    <InviteLinkBar />
                 </StyledElement>
-            )}
+
+                {licensedUsersEnabled && (
+                    <StyledElement>
+                        <LicensedUsersBox />
+                    </StyledElement>
+                )}
+            </StyledUsersHeaderRow>
+            <UsersHeaderAutoCreateDomainUsers />
         </StyledContainer>
     );
 };

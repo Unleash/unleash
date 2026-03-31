@@ -5,6 +5,7 @@ import {
     filterEventsByQuery,
 } from './client-feature-toggle-delta.js';
 import { DeltaCache } from './delta-cache.js';
+import { FEATURE_PROJECT_CHANGE } from '../../../events/index.js';
 
 describe('filterEventsByQuery', () => {
     const mockEvents: DeltaEvent[] = [
@@ -438,6 +439,132 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                     feature: {
                         name: 'first',
                         project: 'default',
+                        enabled: true,
+                    },
+                },
+            ],
+        });
+    });
+
+    test('feature project move emits feature-removed for old project and feature-updated for new project', async () => {
+        let currentRevisionId = 1;
+        const delta = new ClientFeatureToggleDelta(
+            {
+                getAll: async ({ environment, toggleNames = [] }) => {
+                    const feature = {
+                        name: 'moved-feature',
+                        project: 'new-project',
+                        enabled: true,
+                    };
+
+                    if (environment !== 'development') return [];
+                    if (toggleNames.length === 0) return [feature];
+                    // @ts-expect-error - toggle name not defined
+                    return toggleNames.includes('moved-feature')
+                        ? [feature]
+                        : [];
+                },
+            } as any,
+            {
+                getAllForClientIds: async () => [],
+            } as any,
+            {
+                getDeltaRevisionState: async () => ({
+                    projectRevisions: new Map([['old-project', 1]]),
+                    globalSegmentRevision: 0,
+                }),
+                getRevisionRange: async () => [
+                    {
+                        id: 2,
+                        type: FEATURE_PROJECT_CHANGE,
+                        featureName: 'moved-feature',
+                        project: 'new-project',
+                        environment: null,
+                        data: {
+                            oldProject: 'old-project',
+                            newProject: 'new-project',
+                        },
+                    },
+                ],
+            } as any,
+            {
+                getMaxRevisionId: async () => currentRevisionId,
+                on: () => undefined,
+            } as any,
+            {
+                isEnabled: (name: string) => name === 'deltaApi',
+            } as any,
+            {
+                eventBus: new EventEmitter(),
+                getLogger: () =>
+                    ({
+                        error: () => undefined,
+                    }) as any,
+            } as any,
+        );
+
+        await delta.getDelta(undefined, {
+            environment: 'development',
+            project: ['*'],
+        } as any);
+
+        currentRevisionId = 2;
+        await delta.onUpdateRevisionEvent();
+
+        const oldProjectResult = await delta.getDelta(1, {
+            environment: 'development',
+            project: ['old-project'],
+        } as any);
+
+        const newProjectResult = await delta.getDelta(1, {
+            environment: 'development',
+            project: ['new-project'],
+        } as any);
+
+        const bothProjectsResult = await delta.getDelta(1, {
+            environment: 'development',
+            project: ['old-project', 'new-project'],
+        } as any);
+
+        expect(oldProjectResult).toEqual({
+            events: [
+                {
+                    eventId: 2,
+                    type: 'feature-removed',
+                    featureName: 'moved-feature',
+                    project: 'old-project',
+                },
+            ],
+        });
+
+        expect(newProjectResult).toEqual({
+            events: [
+                {
+                    eventId: 2,
+                    type: 'feature-updated',
+                    feature: {
+                        name: 'moved-feature',
+                        project: 'new-project',
+                        enabled: true,
+                    },
+                },
+            ],
+        });
+
+        expect(bothProjectsResult).toEqual({
+            events: [
+                {
+                    eventId: 2,
+                    type: 'feature-removed',
+                    featureName: 'moved-feature',
+                    project: 'old-project',
+                },
+                {
+                    eventId: 2,
+                    type: 'feature-updated',
+                    feature: {
+                        name: 'moved-feature',
+                        project: 'new-project',
                         enabled: true,
                     },
                 },

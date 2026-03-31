@@ -63,6 +63,7 @@ process.nextTick(async () => {
                         enterpriseEdgeTokensList: true,
                         filterFavorites: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
+                        onlyFeatureTokensWithFeatureAPIs: false,
                     },
                 },
                 authentication: {

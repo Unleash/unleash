@@ -625,3 +625,5 @@ export const Safeguard = ({
 
     return <AddSafeguard onSelect={setAddingType} releasePlan={releasePlan} />;
 };
+
+export default Safeguard;

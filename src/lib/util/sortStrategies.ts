@@ -1,6 +1,9 @@
 import type { IStrategyConfig } from '../types/index.js';
 
-type SortableStrategy = Pick<IStrategyConfig, 'milestoneId' | 'sortOrder'>;
+type SortableStrategy = Pick<
+    IStrategyConfig,
+    'id' | 'milestoneId' | 'sortOrder'
+>;
 
 export const sortStrategies = (
     strategy1: SortableStrategy,
@@ -13,11 +16,15 @@ export const sortStrategies = (
         return 1;
     }
 
+    let sortOrder = 0;
     if (
         typeof strategy1.sortOrder === 'number' &&
         typeof strategy2.sortOrder === 'number'
     ) {
-        return strategy1.sortOrder - strategy2.sortOrder;
+        sortOrder = strategy1.sortOrder - strategy2.sortOrder;
     }
-    return 0;
+    if (sortOrder === 0 && strategy1.id && strategy2.id) {
+        return strategy1.id.localeCompare(strategy2.id);
+    }
+    return sortOrder;
 };

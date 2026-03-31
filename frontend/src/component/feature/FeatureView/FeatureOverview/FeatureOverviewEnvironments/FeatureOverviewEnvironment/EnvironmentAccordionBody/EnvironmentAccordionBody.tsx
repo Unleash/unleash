@@ -1,6 +1,8 @@
 import {
     type DragEventHandler,
     type RefObject,
+    Suspense,
+    lazy,
     useEffect,
     useState,
 } from 'react';
@@ -28,7 +30,8 @@ import {
     strategyBackground,
 } from 'component/common/StrategyList/StrategyListItem';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
-import { Safeguard } from './Safeguard.tsx';
+
+const LazySafeguard = lazy(() => import('./Safeguard.tsx'));
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -229,13 +232,15 @@ export const EnvironmentAccordionBody = ({
                 </AlertContainer>
             ) : null}
             {safeguardsEnabled ? (
-                <Safeguard
-                    featureEnvSafeguard={featureEnvironment.safeguards?.[0]}
-                    releasePlan={firstPlan}
-                    environmentName={featureEnvironment.name}
-                    featureId={featureId}
-                    onSafeguardChange={handleSafeguardChange}
-                />
+                <Suspense fallback={null}>
+                    <LazySafeguard
+                        featureEnvSafeguard={featureEnvironment.safeguards?.[0]}
+                        releasePlan={firstPlan}
+                        environmentName={featureEnvironment.name}
+                        featureId={featureId}
+                        onSafeguardChange={handleSafeguardChange}
+                    />
+                </Suspense>
             ) : null}
             <StrategyList>
                 {releasePlans.map((plan) => (

@@ -114,6 +114,47 @@ test('should add user if known token', async () => {
     expect(req.user).toBe(apiUser);
 });
 
+test('with flag set should set user if known token', async () => {
+    const localConfig = createTestConfig({
+        getLogger,
+        authentication: {
+            enableApiToken: true,
+        },
+        experimental: {
+            flags: {
+                onlyFeatureTokensWithFeatureAPIs: true,
+            },
+        },
+    });
+    const apiUser = new ApiUser({
+        tokenName: 'default',
+        permissions: [CLIENT],
+        project: ALL,
+        environment: 'development',
+        type: ApiTokenType.BACKEND,
+        secret: 'some-known-token',
+    });
+    const apiTokenService = {
+        getUserForToken: vi.fn().mockReturnValue(apiUser),
+    } as unknown as ApiTokenService;
+
+    const func = apiTokenMiddleware(localConfig, { apiTokenService });
+
+    const cb = vi.fn();
+
+    const req = {
+        header: vi.fn().mockReturnValue('*:development.some-known-token'),
+        user: undefined,
+        path: '/api/client',
+    };
+
+    await func(req, undefined, cb);
+
+    expect(cb).toHaveBeenCalled();
+    expect(req.header).toHaveBeenCalled();
+    expect(req.user).toBe(apiUser);
+});
+
 test.each([
     ApiTokenType.CLIENT,
     ApiTokenType.BACKEND,

@@ -81,8 +81,9 @@ export const UsersHeaderAutoCreateDomainUsers = () => {
                                 tooltip={
                                     <>
                                         People with this email domain will be
-                                        able to join automatically when signing
-                                        in via Unleash's website.
+                                        able to discover and join this instance
+                                        when signing in through Unleash's
+                                        website.
                                         <br />
                                         <br />
                                         Need help? Contact us at{' '}

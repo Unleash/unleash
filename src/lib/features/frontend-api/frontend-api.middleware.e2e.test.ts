@@ -432,7 +432,6 @@ test('should store frontend api client metrics', async () => {
         });
 });
 
-
 test('should filter features by strategies', async () => {
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await createFeatureToggle({

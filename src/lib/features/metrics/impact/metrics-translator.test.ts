@@ -144,6 +144,12 @@ describe('MetricsTranslator', () => {
                 samples: [{ labels: { foo: 'bar' }, value: 5 }],
             },
             {
+                name: 'gauge_with_labels',
+                help: 'gauge with labels',
+                type: 'gauge' as const,
+                samples: [{ labels: { env: 'prod' }, value: 10 }],
+            },
+            {
                 name: 'histogram_with_labels',
                 help: 'histogram with labels',
                 type: 'histogram' as const,
@@ -169,6 +175,14 @@ describe('MetricsTranslator', () => {
                 samples: [{ labels: { foo: 'bar', baz: 'qux' }, value: 15 }],
             },
             {
+                name: 'gauge_with_labels',
+                help: 'gauge with labels',
+                type: 'gauge' as const,
+                samples: [
+                    { labels: { env: 'prod', region: 'us-east' }, value: 20 },
+                ],
+            },
+            {
                 name: 'histogram_with_labels',
                 help: 'histogram with labels',
                 type: 'histogram' as const,
@@ -188,6 +202,9 @@ describe('MetricsTranslator', () => {
 
         expect(result).toContain(
             'counter_with_labels{origin="sdk",metric_type="counter",foo="bar",baz="qux"} 15',
+        );
+        expect(result).toContain(
+            'gauge_with_labels{origin="sdk",metric_type="gauge",env="prod",region="us-east"} 20',
         );
         expect(result).toContain(
             'histogram_with_labels_count{metric_type="histogram",origin="sdk",region="us-east",service="api"} 3',

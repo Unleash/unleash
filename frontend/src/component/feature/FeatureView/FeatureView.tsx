@@ -42,6 +42,7 @@ export const FeatureView = () => {
         openChartModal,
         closeChartModal,
         saveChart,
+        trackDocsClicked,
         metricOptions,
         metadataLoading,
     } = useFeatureImpactChartActions(projectId, featureId);
@@ -89,6 +90,7 @@ export const FeatureView = () => {
                     open={chartModalOpen}
                     onClose={closeChartModal}
                     onSave={saveChart}
+                    onDocsClicked={trackDocsClicked}
                     metricSeries={metricOptions}
                     loading={metadataLoading}
                 />

@@ -96,6 +96,7 @@ export interface ChartConfigModalProps {
     open: boolean;
     onClose: () => void;
     onSave: (config: Omit<ChartConfig, 'id'>) => void;
+    onDocsClicked?: () => void;
     initialConfig?: ChartConfig;
     metricSeries: (ImpactMetricsSeries & { name: string })[];
     loading?: boolean;
@@ -105,6 +106,7 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
     open,
     onClose,
     onSave,
+    onDocsClicked,
     initialConfig,
     metricSeries,
     loading = false,
@@ -140,13 +142,14 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                 href='https://docs.getunleash.io/reference/impact-metrics'
                 target='_blank'
                 rel='noopener noreferrer'
-                onClick={() =>
+                onClick={() => {
                     trackEvent('impact-metrics', {
                         props: {
                             eventType: 'sidebar docs clicked',
                         },
-                    })
-                }
+                    });
+                    onDocsClicked?.();
+                }}
             >
                 <MenuBookIcon fontSize='small' />
                 Learn how to use impact metrics

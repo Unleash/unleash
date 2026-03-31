@@ -3347,12 +3347,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@unleash/proxy-client-react@npm:^5.0.0":
-  version: 5.0.1
-  resolution: "@unleash/proxy-client-react@npm:5.0.1"
+"@unleash/proxy-client-react@npm:^5.1.0-beta.2":
+  version: 5.1.0-beta.2
+  resolution: "@unleash/proxy-client-react@npm:5.1.0-beta.2"
   peerDependencies:
-    unleash-proxy-client: ^3.7.3
-  checksum: 10c0/bed7000a759f920ab346aa4943de09a0a4edc91e1d1ea04df8c8d3f022061086d24f4662299119cd37790e3cba0319dd6d8711d370eca4efc35e296fe9f6e2e6
+    unleash-proxy-client: 3.8.0-beta.3
+  checksum: 10c0/61eac6a5ebe0ed01f03b14de90676a839ff914fab06d0a2fd2e72dc04c4057c4a54bfe314d3537ca984e9ba96ef7346687f988a3b1c77f063c5b125a87782eb1
   languageName: node
   linkType: hard
 
@@ -10301,7 +10301,7 @@ __metadata:
     "@types/semver": "npm:7.7.1"
     "@uiw/codemirror-theme-duotone": "npm:4.25.8"
     "@uiw/react-codemirror": "npm:4.25.8"
-    "@unleash/proxy-client-react": "npm:^5.0.0"
+    "@unleash/proxy-client-react": "npm:^5.1.0-beta.2"
     "@vitejs/plugin-react": "npm:4.7.0"
     cartesian: "npm:^1.0.1"
     chart.js: "npm:3.9.1"
@@ -10357,7 +10357,7 @@ __metadata:
     swr: "npm:2.4.1"
     tss-react: "npm:4.9.20"
     typescript: "npm:5.9.3"
-    unleash-proxy-client: "npm:^3.7.3"
+    unleash-proxy-client: "npm:3.8.0-beta.3"
     use-query-params: "npm:^2.2.1"
     vanilla-jsoneditor: "npm:^3.11.0"
     vite: "npm:5.4.21"
@@ -10369,13 +10369,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"unleash-proxy-client@npm:^3.7.3":
-  version: 3.7.8
-  resolution: "unleash-proxy-client@npm:3.7.8"
+"unleash-proxy-client@npm:3.8.0-beta.3":
+  version: 3.8.0-beta.3
+  resolution: "unleash-proxy-client@npm:3.8.0-beta.3"
   dependencies:
     tiny-emitter: "npm:^2.1.0"
     uuid: "npm:^9.0.1"
-  checksum: 10c0/c34a958e59ef6d9bba1e3df1dee6282c6b8d2c3a6b21c9a3a78f3ca2e3d247204648d864855067f3779c77a42e72ad5a1bc43d07dabea10d6b4002bb9a5f67cb
+  checksum: 10c0/1ad4f2b91094e7a80c07642bef97e609a62bfb4567d58b907db7cf64fc1319de4dee4175a28b02e4b0f0b6a56dc0d900d2c247c50dbe8f1a05f4698f949d3321
   languageName: node
   linkType: hard
 

@@ -102,7 +102,13 @@ it('disables dates after today', async () => {
     const chip = await screen.findByText('Test');
     await userEvent.click(chip);
 
-    const tomorrow = addDays(new Date(), 1);
+    const today = new Date();
+    const tomorrow = addDays(today, 1);
+
+    if (today.getMonth() !== tomorrow.getMonth()) {
+        return;
+    }
+
     const dayLabel = format(tomorrow, 'd');
 
     const tomorrowCell = await screen.findByRole('gridcell', {

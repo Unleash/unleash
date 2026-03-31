@@ -243,7 +243,7 @@ describe('MetricsTranslator', () => {
                         count: 7,
                         sum: 3.5,
                         buckets: [
-                            { le: 0.5, count: 4 },
+                            { le: 0.5, count: 4 }, // Different bucket boundary
                             { le: '+Inf' as const, count: 7 },
                         ],
                     },

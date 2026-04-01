@@ -18,8 +18,7 @@ export type AggregationMode =
     | 'p99';
 
 export type DisplayChartConfig = ChartConfig & {
-    type: 'counter' | 'gauge' | 'histogram' | 'unknown';
-    displayName: string; // e.g. my_metric with unleash_counter stripped
+    displayName: string;
     mode?: 'read' | 'write';
 };
 

@@ -25,7 +25,7 @@ import {
     isDeltaFeatureUpdatedEvent,
     isDeltaSegmentEvent,
 } from './client-feature-toggle-delta-types.js';
-import { FEATURE_PROJECT_CHANGE } from '../../../events/index.js';
+import { FEATURE_PROJECT_CHANGE, type IEvent } from '../../../events/index.js';
 import { getVisibleRevisionForProjects } from './visible-revision.js';
 
 type EnvironmentRevisions = Record<string, DeltaCache>;
@@ -244,10 +244,66 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         this.visibleRevisions = {};
     }
 
-    private async updateFeaturesDelta() {
-        const keys = Object.keys(this.delta);
+    private processChangeEvents(changeEvents: IEvent[]) {
+        const featuresRemoved: { featureName: string; project: string }[] = [];
+        const segmentsUpdatedIds: number[] = [];
+        const segmentsRemovedIds: number[] = [];
+        const globallyUpdatedFeatures = new Set<string>();
+        const environmentUpdatedFeatures = new Map<string, Set<string>>();
 
-        if (keys.length === 0) return;
+        for (const event of changeEvents) {
+            if (event.type === FEATURE_PROJECT_CHANGE && event.featureName) {
+                // A project change involves two steps: removing the feature from old project and adding it to new project
+                featuresRemoved.push({
+                    featureName: event.featureName,
+                    project: event.data.oldProject,
+                });
+                globallyUpdatedFeatures.add(event.featureName);
+            } else if (
+                event.type === 'feature-archived' &&
+                event.featureName &&
+                event.project
+            ) {
+                featuresRemoved.push({
+                    featureName: event.featureName,
+                    project: event.project,
+                });
+            } else if (
+                event.type === 'segment-created' ||
+                event.type === 'segment-updated'
+            ) {
+                segmentsUpdatedIds.push(event.data.id);
+            } else if (event.type === 'segment-deleted') {
+                segmentsRemovedIds.push(event.preData.id);
+            } else if (event.featureName && event.type !== 'feature-deleted') {
+                if (event.environment == null) {
+                    globallyUpdatedFeatures.add(event.featureName);
+                } else {
+                    const featureNames =
+                        environmentUpdatedFeatures.get(event.environment) ??
+                        new Set<string>();
+                    featureNames.add(event.featureName);
+                    environmentUpdatedFeatures.set(
+                        event.environment,
+                        featureNames,
+                    );
+                }
+            }
+        }
+
+        return {
+            featuresRemoved,
+            segmentsUpdatedIds,
+            segmentsRemovedIds,
+            globallyUpdatedFeatures,
+            environmentUpdatedFeatures,
+        };
+    }
+
+    private async updateFeaturesDelta() {
+        const environments = Object.keys(this.delta);
+
+        if (environments.length === 0) return;
         const latestRevision =
             await this.configurationRevisionService.getMaxRevisionId();
 
@@ -256,56 +312,35 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             latestRevision,
         );
 
-        const featuresMovedEvents = changeEvents
-            .filter((event) => event.featureName)
-            .filter((event) => event.type === FEATURE_PROJECT_CHANGE)
-            .map((event) => ({
+        const {
+            featuresRemoved,
+            segmentsUpdatedIds,
+            segmentsRemovedIds,
+            globallyUpdatedFeatures,
+            environmentUpdatedFeatures,
+        } = this.processChangeEvents(changeEvents);
+
+        const updatedSegments =
+            await this.segmentReadModel.getAllForClientIds(segmentsUpdatedIds);
+
+        const featuresRemovedEvents: DeltaEvent[] = featuresRemoved.map(
+            ({ featureName, project }) => ({
                 eventId: latestRevision,
                 type: DELTA_EVENT_TYPES.FEATURE_REMOVED,
-                featureName: event.featureName!,
-                project: event.data.oldProject,
-            }));
+                featureName,
+                project,
+            }),
+        );
 
-        const featuresUpdated = [
-            ...new Set(
-                changeEvents
-                    .filter((event) => event.featureName)
-                    .filter((event) => event.type !== 'feature-archived')
-                    .filter((event) => event.type !== 'feature-deleted')
-                    .map((event) => event.featureName!),
-            ),
-        ];
-
-        const featuresRemovedEvents: DeltaEvent[] = changeEvents
-            .filter((event) => event.featureName && event.project)
-            .filter((event) => event.type === 'feature-archived')
-            .map((event) => ({
+        const segmentsUpdatedEvents: DeltaEvent[] = updatedSegments.map(
+            (segment) => ({
                 eventId: latestRevision,
-                type: DELTA_EVENT_TYPES.FEATURE_REMOVED,
-                featureName: event.featureName!,
-                project: event.project!,
-            }));
+                type: DELTA_EVENT_TYPES.SEGMENT_UPDATED,
+                segment,
+            }),
+        );
 
-        const segmentsUpdated = changeEvents
-            .filter((event) =>
-                ['segment-created', 'segment-updated'].includes(event.type),
-            )
-            .map((event) => event.data.id);
-
-        const segmentsRemoved = changeEvents
-            .filter((event) => event.type === 'segment-deleted')
-            .map((event) => event.preData.id);
-
-        const segments =
-            await this.segmentReadModel.getAllForClientIds(segmentsUpdated);
-
-        const segmentsUpdatedEvents: DeltaEvent[] = segments.map((segment) => ({
-            eventId: latestRevision,
-            type: DELTA_EVENT_TYPES.SEGMENT_UPDATED,
-            segment,
-        }));
-
-        const segmentsRemovedEvents: DeltaEvent[] = segmentsRemoved.map(
+        const segmentsRemovedEvents: DeltaEvent[] = segmentsRemovedIds.map(
             (segmentId) => ({
                 eventId: latestRevision,
                 type: DELTA_EVENT_TYPES.SEGMENT_REMOVED,
@@ -317,11 +352,14 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             segmentsUpdatedEvents.length > 0 ||
             segmentsRemovedEvents.length > 0;
 
-        // TODO: we might want to only update the environments that had events changed for performance
-        for (const environment of keys) {
+        for (const environment of environments) {
+            const featureUpdatesInEnvironment = [
+                ...globallyUpdatedFeatures,
+                ...(environmentUpdatedFeatures.get(environment) ?? []),
+            ];
             const newToggles = await this.getChangedToggles(
                 environment,
-                featuresUpdated,
+                featureUpdatesInEnvironment,
             );
             const featuresUpdatedEvents: DeltaEvent[] = newToggles.map(
                 (toggle) => ({
@@ -331,20 +369,15 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 }),
             );
             this.delta[environment].addEvents([
-                ...featuresMovedEvents,
-                ...featuresUpdatedEvents,
                 ...featuresRemovedEvents,
+                ...featuresUpdatedEvents,
                 ...segmentsUpdatedEvents,
                 ...segmentsRemovedEvents,
             ]);
             this.updateVisibleRevisions(
                 environment,
                 latestRevision,
-                [
-                    ...featuresMovedEvents,
-                    ...featuresUpdatedEvents,
-                    ...featuresRemovedEvents,
-                ],
+                [...featuresRemovedEvents, ...featuresUpdatedEvents],
                 hasSegmentChanges,
             );
         }

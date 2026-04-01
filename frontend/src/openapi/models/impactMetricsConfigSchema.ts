@@ -8,7 +8,6 @@ import type { ImpactMetricsConfigSchemaLabelSelectors } from './impactMetricsCon
 import type { ImpactMetricsConfigSchemaMode } from './impactMetricsConfigSchemaMode';
 import type { ImpactMetricsConfigSchemaStep } from './impactMetricsConfigSchemaStep';
 import type { ImpactMetricsConfigSchemaTimeRange } from './impactMetricsConfigSchemaTimeRange';
-import type { ImpactMetricsConfigSchemaType } from './impactMetricsConfigSchemaType';
 import type { ImpactMetricsConfigSchemaYAxisMin } from './impactMetricsConfigSchemaYAxisMin';
 
 /**
@@ -38,8 +37,6 @@ export interface ImpactMetricsConfigSchema {
      * Optional title for the impact metric chart.
      */
     title?: string;
-    /** The type of metric */
-    type: ImpactMetricsConfigSchemaType;
     /** Whether the chart should begin at zero on the y-axis. */
     yAxisMin: ImpactMetricsConfigSchemaYAxisMin;
 }

@@ -8,7 +8,7 @@ Before you begin:
 - Check out the [existing issues](https://github.com/unleash/Unleash/issues)
 - Browse the [developer-guide](https://docs.getunleash.io/contribute) for tips on environment setup, running the tests, and running Unleash from source.
 - You need
-  - Node 20
+  - Node 22
   - corepack enabled `corepack enable`
 
 ### Don't see your issue? Open one
@@ -36,7 +36,7 @@ Follow the steps in [the "how to run the project" section](#how-to-run-the-proje
 
 ### Make your update:
 
-Make your changes to the files you'd like to update. You'll need **Node.js v18.0+** and PostgreSQL v13.0+ to run Unleash locally. [See more details](https://docs.getunleash.io/contribute)
+Make your changes to the files you'd like to update. You'll need **Node.js v22.0+** and PostgreSQL v14.0+ to run Unleash locally. [See more details](https://docs.getunleash.io/contribute)
 
 ### Open a pull request
 

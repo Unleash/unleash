@@ -14,7 +14,6 @@ import {
 } from '../../types/model.js';
 import { startOfHour } from 'date-fns';
 import {
-    type IConstraint,
     type IStrategyConfig,
     SYSTEM_USER_AUDIT,
     TEST_AUDIT_USER,
@@ -27,11 +26,16 @@ let app: IUnleashTest;
 let db: ITestDb;
 let frontendApiService: FrontendApiService;
 beforeAll(async () => {
-    db = await dbInit('frontend_api', getLogger);
+    db = await dbInit('frontend_api_with_new_middleware', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {
             frontendApiOrigins: ['https://example.com'],
+            experimental: {
+                flags: {
+                    onlyFeatureTokensWithFeatureAPIs: true,
+                },
+            },
         },
         db.rawDatabase,
     );
@@ -219,7 +223,7 @@ test('should allow requests with a token secret alias', async () => {
         .expect((res) => expect(res.body.toggles[0].name).toEqual(featureB));
 });
 
-test('should allow requests with an admin token', async () => {
+test('should not allow requests with an admin token', async () => {
     const featureA = randomId();
     await createFeatureToggle({
         name: featureA,
@@ -231,13 +235,11 @@ test('should allow requests with an admin token', async () => {
         environment: '*',
     });
     await frontendApiService.refreshData();
-    const { body } = await app.request
+    await app.request
         .get('/api/frontend')
         .set('Authorization', adminToken.secret)
         .expect('Content-Type', /json/)
-        .expect(200);
-    expect(body.toggles).toHaveLength(1);
-    expect(body.toggles[0].name).toEqual(featureA);
+        .expect(403);
 });
 
 test('should not allow admin requests with a frontend token', async () => {
@@ -426,59 +428,6 @@ test('should store frontend api client metrics', async () => {
                 maturity: 'stable',
                 seenApplications: [appName],
                 version: 1,
-            });
-        });
-});
-
-test('should filter features by enabled/disabled', async () => {
-    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
-    await createFeatureToggle({
-        name: 'enabledFeature1',
-        enabled: true,
-        strategies: [{ name: 'default', constraints: [], parameters: {} }],
-    });
-    await createFeatureToggle({
-        name: 'enabledFeature2',
-        enabled: true,
-        strategies: [{ name: 'default', constraints: [], parameters: {} }],
-    });
-    await createFeatureToggle({
-        name: 'disabledFeature',
-        enabled: false,
-        strategies: [{ name: 'default', constraints: [], parameters: {} }],
-    });
-    await frontendApiService.refreshData();
-    await app.request
-        .get('/api/frontend')
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body).toEqual({
-                toggles: [
-                    {
-                        name: 'enabledFeature1',
-                        enabled: true,
-                        impressionData: false,
-                        variant: {
-                            enabled: false,
-                            name: 'disabled',
-                            feature_enabled: true,
-                            featureEnabled: true,
-                        },
-                    },
-                    {
-                        name: 'enabledFeature2',
-                        enabled: true,
-                        impressionData: false,
-                        variant: {
-                            enabled: false,
-                            name: 'disabled',
-                            feature_enabled: true,
-                            featureEnabled: true,
-                        },
-                    },
-                ],
             });
         });
 });
@@ -847,71 +796,6 @@ test('should filter features by environment', async () => {
         });
 });
 
-test('should filter features by segment', async () => {
-    const [featureA, [strategyA]] = await createFeatureToggle({
-        name: randomId(),
-        enabled: true,
-        strategies: [{ name: 'default', parameters: {} }],
-    });
-    const [featureB, [strategyB]] = await createFeatureToggle({
-        name: randomId(),
-        enabled: true,
-        strategies: [{ name: 'default', parameters: {} }],
-    });
-    const constraintA: IConstraint = {
-        operator: 'IN',
-        contextName: 'appName',
-        values: ['a'],
-    };
-    const constraintB: IConstraint = {
-        operator: 'IN',
-        contextName: 'appName',
-        values: ['b'],
-    };
-    const segmentA = await app.services.segmentService.create(
-        { name: randomId(), constraints: [constraintA] },
-        TEST_AUDIT_USER,
-    );
-    const segmentB = await app.services.segmentService.create(
-        { name: randomId(), constraints: [constraintB] },
-        TEST_AUDIT_USER,
-    );
-    await app.services.segmentService.addToStrategy(segmentA.id, strategyA.id);
-    await app.services.segmentService.addToStrategy(segmentB.id, strategyB.id);
-    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
-    await frontendApiService.refreshData();
-    await app.request
-        .get('/api/frontend')
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => expect(res.body).toEqual({ toggles: [] }));
-    await app.request
-        .get('/api/frontend?appName=a')
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => expect(res.body.toggles).toHaveLength(1))
-        .expect((res) =>
-            expect(res.body.toggles[0].name).toEqual(featureA.name),
-        );
-    await app.request
-        .get('/api/frontend?appName=b')
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => expect(res.body.toggles).toHaveLength(1))
-        .expect((res) =>
-            expect(res.body.toggles[0].name).toEqual(featureB.name),
-        );
-    await app.request
-        .get('/api/frontend?appName=c')
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => expect(res.body).toEqual({ toggles: [] }));
-});
-
 test('should return maxAge header on options call', async () => {
     await app.request
         .options('/api/frontend')
@@ -966,78 +850,6 @@ test('should evaluate strategies when returning toggles', async () => {
                 toggles: [
                     {
                         name: 'enabledFeature',
-                        enabled: true,
-                        impressionData: false,
-                        variant: {
-                            enabled: false,
-                            name: 'disabled',
-                            feature_enabled: true,
-                            featureEnabled: true,
-                        },
-                    },
-                ],
-            });
-        });
-});
-test('should not return all features', async () => {
-    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
-    await createFeatureToggle({
-        name: 'enabledFeature1',
-        enabled: true,
-        strategies: [{ name: 'default', constraints: [], parameters: {} }],
-    });
-    await createFeatureToggle({
-        name: 'enabledFeature2',
-        enabled: true,
-        strategies: [
-            {
-                name: 'flexibleRollout',
-                constraints: [],
-                parameters: {
-                    rollout: '100',
-                    stickiness: 'default',
-                    groupId: 'some-new',
-                },
-            },
-        ],
-    });
-    await createFeatureToggle({
-        name: 'disabledFeature',
-        enabled: true,
-        strategies: [
-            {
-                name: 'flexibleRollout',
-                constraints: [],
-                parameters: {
-                    rollout: '0',
-                    stickiness: 'default',
-                    groupId: 'some-new',
-                },
-            },
-        ],
-    });
-    await frontendApiService.refreshData();
-    await app.request
-        .get('/api/frontend')
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body).toEqual({
-                toggles: [
-                    {
-                        name: 'enabledFeature1',
-                        enabled: true,
-                        impressionData: false,
-                        variant: {
-                            enabled: false,
-                            name: 'disabled',
-                            feature_enabled: true,
-                            featureEnabled: true,
-                        },
-                    },
-                    {
-                        name: 'enabledFeature2',
                         enabled: true,
                         impressionData: false,
                         variant: {

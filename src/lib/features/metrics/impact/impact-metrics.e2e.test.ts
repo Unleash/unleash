@@ -114,14 +114,10 @@ test('should store impact metrics in memory and be able to retrieve them', async
 
     const metricsText = response.text;
 
-    expect(metricsText).toContain(
-        '# HELP unleash_counter_labeled_counter with labels',
-    );
-    expect(metricsText).toContain(
-        '# TYPE unleash_counter_labeled_counter counter',
-    );
+    expect(metricsText).toContain('# HELP labeled_counter with labels');
+    expect(metricsText).toContain('# TYPE labeled_counter counter');
     expect(metricsText).toMatch(
-        /unleash_counter_labeled_counter{unleash_foo="bar",unleash_origin="sdk"} 15/,
+        /labeled_counter{origin="sdk",metric_type="counter",foo="bar"} 15/,
     );
 });
 
@@ -164,13 +160,11 @@ test('should store impact metrics sent via bulk metrics endpoint', async () => {
     const metricsText = response.text;
 
     expect(metricsText).toContain(
-        '# HELP unleash_counter_bulk_counter bulk counter with labels',
+        '# HELP bulk_counter bulk counter with labels',
     );
-    expect(metricsText).toContain(
-        '# TYPE unleash_counter_bulk_counter counter',
-    );
+    expect(metricsText).toContain('# TYPE bulk_counter counter');
     expect(metricsText).toMatch(
-        /unleash_counter_bulk_counter{unleash_source="bulk",unleash_origin="sdk"} 15/,
+        /bulk_counter{origin="sdk",metric_type="counter",source="bulk"} 15/,
     );
 });
 
@@ -221,21 +215,19 @@ test('should store histogram metrics with batch data', async () => {
     const metricsText = response.text;
 
     expect(metricsText).toContain(
-        '# HELP unleash_histogram_response_time Response time histogram',
+        '# HELP response_time Response time histogram',
+    );
+    expect(metricsText).toContain('# TYPE response_time histogram');
+    expect(metricsText).toContain(
+        'response_time_bucket{foo="bar",metric_type="histogram",origin="sdk",le="1"} 10',
     );
     expect(metricsText).toContain(
-        '# TYPE unleash_histogram_response_time histogram',
+        'response_time_bucket{foo="bar",metric_type="histogram",origin="sdk",le="+Inf"} 15',
     );
     expect(metricsText).toContain(
-        'unleash_histogram_response_time_bucket{unleash_foo="bar",unleash_origin="sdk",le="1"} 10',
+        'response_time_sum{foo="bar",metric_type="histogram",origin="sdk"} 11.7',
     );
     expect(metricsText).toContain(
-        'unleash_histogram_response_time_bucket{unleash_foo="bar",unleash_origin="sdk",le="+Inf"} 15',
-    );
-    expect(metricsText).toContain(
-        'unleash_histogram_response_time_sum{unleash_foo="bar",unleash_origin="sdk"} 11.7',
-    );
-    expect(metricsText).toContain(
-        'unleash_histogram_response_time_count{unleash_foo="bar",unleash_origin="sdk"} 15',
+        'response_time_count{foo="bar",metric_type="histogram",origin="sdk"} 15',
     );
 });

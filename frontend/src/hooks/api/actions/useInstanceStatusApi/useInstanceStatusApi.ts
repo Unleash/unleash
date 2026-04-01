@@ -11,8 +11,24 @@ const useInstanceStatusApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const setAutoCreateDomainUsers = async (
+        enabled: boolean,
+    ): Promise<void> => {
+        const path = 'api/instance/auto-create-domain-users';
+        const req = createRequest(
+            path,
+            {
+                method: 'POST',
+                body: JSON.stringify({ enabled }),
+            },
+            'setAutoCreateDomainUsers',
+        );
+        await makeRequest(req.caller, req.id);
+    };
+
     return {
         extendTrial,
+        setAutoCreateDomainUsers,
         loading,
         errors,
     };

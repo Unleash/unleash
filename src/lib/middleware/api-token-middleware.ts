@@ -25,6 +25,9 @@ const isProxyApi = ({ path }) => {
 export const TOKEN_TYPE_ERROR_MESSAGE =
     'invalid token: expected a different token type for this endpoint';
 
+export const NO_ACCESS =
+    'no access: unknown or invalid API token';
+
 export const NO_TOKEN_WHERE_TOKEN_WAS_REQUIRED =
     'This endpoint requires an API token. Please add an authorization header to your request with a valid token';
 

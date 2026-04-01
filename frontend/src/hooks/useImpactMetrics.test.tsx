@@ -1,10 +1,20 @@
-import { renderHook } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { UnleashClient, InMemoryStorageProvider } from 'unleash-proxy-client';
 import FlagProvider from '@unleash/proxy-client-react';
 import { useImpactMetricsCounter } from './useImpactMetrics';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();
+
+const TestCounterComponent = () => {
+    const { increment } = useImpactMetricsCounter('my_counter', 'A counter');
+    return (
+        <button type='button' onClick={() => increment()}>
+            Increment
+        </button>
+    );
+};
 
 test('defines counter and increments via real SDK', async () => {
     const { requests }: { requests: any[] } = testServerRoute(
@@ -24,22 +34,25 @@ test('defines counter and increments via real SDK', async () => {
         metricsIntervalInitial: 0,
     });
 
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
+    render(
         <FlagProvider unleashClient={client} startClient={false}>
-            {children}
-        </FlagProvider>
+            <TestCounterComponent />
+        </FlagProvider>,
     );
 
-    const { result } = renderHook(
-        () => useImpactMetricsCounter('my_counter', 'A counter'),
-        { wrapper },
-    );
-
-    result.current.increment();
-    result.current.increment();
+    const button = await screen.findByText('Increment');
+    await userEvent.click(button);
+    await userEvent.click(button);
 
     await client.sendMetrics();
 
-    expect(requests[0].impactMetrics).toHaveLength(1);
-    expect(requests[0].impactMetrics[0].name).toBe('my_counter');
+    expect(requests[0]).toMatchObject({
+        impactMetrics: [
+            {
+                name: 'my_counter',
+                type: 'counter',
+                samples: [{ value: 2 }],
+            },
+        ],
+    });
 });

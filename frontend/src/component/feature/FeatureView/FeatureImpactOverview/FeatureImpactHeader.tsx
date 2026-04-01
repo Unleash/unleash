@@ -9,6 +9,7 @@ import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetri
 import { PlaceholderChart } from './ImpactDashboard/PlaceholderChart';
 import { CompactChartCard } from './CompactChartCard';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -116,6 +117,8 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
             'closed',
         );
     const { trackEvent } = usePlausibleTracker();
+    const { trackAccordionOpened, trackAddMetricClicked } =
+        useTrackFlagpageImpactMetrics();
 
     const { impactMetrics } = useFeatureImpactMetrics({
         projectId,
@@ -131,6 +134,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
             trackEvent('flagpage-impact-metrics', {
                 props: { eventType: 'impact-accordion-opened' },
             });
+            trackAccordionOpened();
         }
         setImpactMetricsAccordionState(expanded ? 'closed' : 'open');
     };
@@ -171,6 +175,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                                         eventType: 'add-impact-metric-clicked',
                                     },
                                 });
+                                trackAddMetricClicked();
                                 onAddChart();
                             }}
                         >
@@ -256,6 +261,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                                     eventType: 'add-impact-metric-clicked',
                                 },
                             });
+                            trackAddMetricClicked();
                             onAddChart();
                         }}
                         sx={{ textTransform: 'none', marginLeft: 'auto' }}

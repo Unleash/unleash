@@ -6,12 +6,15 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { ChartConfig } from '../../impact-metrics/types';
+import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
 
 export const useFeatureImpactChartActions = (
     projectId: string,
     featureName: string,
 ) => {
     const [chartModalOpen, setChartModalOpen] = useState(false);
+    const { trackMetricSaved, trackDocsClicked } =
+        useTrackFlagpageImpactMetrics();
 
     const { createImpactMetric } = useImpactMetricsApi({
         projectId,
@@ -35,6 +38,7 @@ export const useFeatureImpactChartActions = (
             trackEvent('flagpage-impact-metrics', {
                 props: { eventType: 'impact-metric-saved' },
             });
+            trackMetricSaved();
             refetch();
             setChartModalOpen(false);
         } catch (error: unknown) {
@@ -47,6 +51,7 @@ export const useFeatureImpactChartActions = (
         openChartModal,
         closeChartModal,
         saveChart,
+        trackDocsClicked,
         metricOptions,
         metadataLoading,
     };

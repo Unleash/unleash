@@ -138,7 +138,12 @@ import {
     type ISchemaValidationErrors,
     validateSchema,
 } from './openapi/validate.js';
-import type { Counter, Gauge, Histogram, Summary } from './util/metrics/index.js';
+import type {
+    Counter,
+    Gauge,
+    Histogram,
+    Summary,
+} from './util/metrics/index.js';
 import {
     createCounter,
     createGauge,

@@ -111,6 +111,7 @@ import {
     createTagTypeService,
     createExportImportTogglesService,
     DB_TIME,
+    IMPACT_METRICS_QUERY_TIME,
     findParam,
     conditionalMiddleware,
     createPlaygroundService,
@@ -137,8 +138,13 @@ import {
     type ISchemaValidationErrors,
     validateSchema,
 } from './openapi/validate.js';
-import type { Counter, Gauge } from './util/metrics/index.js';
-import { createCounter, createGauge } from './util/metrics/index.js';
+import type { Counter, Gauge, Histogram, Summary } from './util/metrics/index.js';
+import {
+    createCounter,
+    createGauge,
+    createSummary,
+    createHistogram,
+} from './util/metrics/index.js';
 import FakeEventStore from '../test/fixtures/fake-event-store.js';
 import type { Subscriber } from './features/user-subscriptions/user-subscriptions-read-model-type.js';
 import { UserSubscriptionsReadModel } from './features/user-subscriptions/user-subscriptions-read-model.js';
@@ -476,6 +482,7 @@ export {
     createAccessService,
     metricsHelper,
     DB_TIME,
+    IMPACT_METRICS_QUERY_TIME,
     EventStore,
     FakeEventStore,
     fakeImpactMetricsResolver,
@@ -492,6 +499,8 @@ export {
     addAjvSchema,
     createCounter,
     createGauge,
+    createSummary,
+    createHistogram,
     UserSubscriptionsReadModel,
     FakeUserSubscriptionsReadModel,
     FakePrivateProjectChecker,
@@ -588,6 +597,8 @@ export type {
     IContextFieldDto,
     Gauge,
     Counter,
+    Histogram,
+    Summary,
     Subscriber,
     ProjectAccess,
     IPrivateProjectChecker,

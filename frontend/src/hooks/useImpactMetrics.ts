@@ -1,23 +1,19 @@
 import { useEffect, useCallback } from 'react';
 import { useUnleashClient } from '@unleash/proxy-client-react';
 
-export const useImpactMetricsHistogram = (
-    name: string,
-    help: string,
-    buckets: number[],
-) => {
+export const useImpactMetricsCounter = (name: string, help: string) => {
     const client = useUnleashClient();
 
     useEffect(() => {
-        client?.impactMetrics?.defineHistogram(name, help, buckets);
-    }, [client, name, help, buckets]);
+        client?.impactMetrics?.defineCounter(name, help);
+    }, [client, name, help]);
 
-    const observe = useCallback(
-        (value: number) => {
-            client?.impactMetrics?.observeHistogram(name, value);
+    const increment = useCallback(
+        (value?: number) => {
+            client?.impactMetrics?.incrementCounter(name, value);
         },
         [client, name],
     );
 
-    return { observe };
+    return { increment };
 };

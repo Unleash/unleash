@@ -4,6 +4,7 @@ import { screen } from '@testing-library/react';
 import { Billing } from './Billing';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { InstancePlan, InstanceState } from 'interfaces/instance';
+import { addDays } from 'date-fns';
 
 vi.mock(
     'hooks/api/getters/useInstanceStatus/useInstanceStatus',
@@ -33,7 +34,7 @@ beforeEach(() => {
         plan: InstancePlan.PRO,
         state: InstanceState.TRIAL,
         billing: 'pay-as-you-go',
-        trialExpiry: '2026-04-01T00:00:00Z',
+        trialExpiry: addDays(new Date(), 14).toISOString(),
     });
     testServerRoute(server, '/api/admin/invoices', { invoices: [] });
     testServerRoute(server, '/api/instance/prices', {});

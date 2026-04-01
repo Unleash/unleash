@@ -15,6 +15,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
 import { ChartConfigModal } from '../../impact-metrics/ChartConfigModal/ChartConfigModal';
 import { useFeatureImpactChartActions } from './useFeatureImpactChartActions';
+import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics.ts';
 
 export const StyledLink = styled(Link)(() => ({
     maxWidth: '100%',
@@ -30,7 +31,14 @@ export const FeatureView = () => {
 
     const impactMetricsFlagPage = useUiFlag('impactMetricsFlagPage');
     const { isEnterprise } = useUiConfig();
-    const showImpactMetrics = impactMetricsFlagPage && isEnterprise();
+    const { impactMetrics } = useFeatureImpactMetrics({
+        projectId,
+        featureName: featureId,
+    });
+    const chartCount = impactMetrics.configs.length;
+    const hasMetrics = chartCount > 0;
+    const showImpactMetrics =
+        impactMetricsFlagPage && isEnterprise() && hasMetrics;
 
     const { feature, loading, error, status } = useFeature(
         projectId,

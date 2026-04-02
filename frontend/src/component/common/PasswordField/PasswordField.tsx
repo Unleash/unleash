@@ -1,9 +1,5 @@
-import {
-    IconButton,
-    InputAdornment,
-    TextField,
-    type TextFieldProps,
-} from '@mui/material';
+import { IconButton, InputAdornment, type TextFieldProps } from '@mui/material';
+import { StyledAutofillTextField } from 'component/user/StyledAutofillTextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import type React from 'react';
@@ -26,7 +22,7 @@ const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {
     const iconTitle = 'Toggle password visibility';
 
     return (
-        <TextField
+        <StyledAutofillTextField
             variant='outlined'
             size='small'
             type={showPassword ? 'text' : 'password'}

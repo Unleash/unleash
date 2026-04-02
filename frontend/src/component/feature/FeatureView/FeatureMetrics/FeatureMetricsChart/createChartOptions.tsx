@@ -22,7 +22,7 @@ export const createChartOptions = (
     _metrics: IFeatureMetricsRaw[],
     hoursBack: number,
     locationSettings: ILocationSettings,
-): ChartOptions<'line'> => {
+): ChartOptions<'bar'> => {
     return {
         locale: locationSettings.locale,
         responsive: true,
@@ -43,7 +43,7 @@ export const createChartOptions = (
                 boxPadding: 5,
                 usePointStyle: true,
                 itemSort: (a, b) => {
-                    const order = ['Total requests', 'Exposed', 'Not exposed'];
+                    const order = ['Exposed', 'Not exposed'];
                     const aIndex = order.indexOf(a.dataset.label!);
                     const bIndex = order.indexOf(b.dataset.label!);
                     return aIndex - bIndex;
@@ -107,12 +107,12 @@ export const createChartOptions = (
         scales: {
             y: {
                 type: 'linear',
+                stacked: true,
                 title: {
                     display: true,
                     text: 'Number of requests',
                     color: theme.palette.text.secondary,
                 },
-                // min: 0,
                 suggestedMin: 0,
                 ticks: { precision: 0, color: theme.palette.text.secondary },
                 grid: {
@@ -122,6 +122,7 @@ export const createChartOptions = (
             },
             x: {
                 type: 'time',
+                stacked: true,
                 time: { unit: hoursBack > 48 ? 'day' : 'hour' },
                 grid: { display: false },
                 ticks: {

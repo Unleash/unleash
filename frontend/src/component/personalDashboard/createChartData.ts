@@ -1,6 +1,7 @@
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import type { ChartData } from 'chart.js';
 import 'chartjs-adapter-date-fns';
+import type { Theme } from '@mui/material/styles/createTheme';
 
 export interface IPoint {
     x: string;
@@ -9,19 +10,20 @@ export interface IPoint {
 }
 
 export const createChartData = (
+    theme: Theme,
     metrics: IFeatureMetricsRaw[],
 ): ChartData<'bar', IPoint[], string> => {
     const yesSeries = {
         label: 'Exposed',
-        hoverBackgroundColor: '#A39EFF',
-        backgroundColor: '#A39EFF',
+        hoverBackgroundColor: theme.palette.charts.flagMetrics.exposed,
+        backgroundColor: theme.palette.charts.flagMetrics.exposed,
         data: createChartPoints(metrics, (m) => m.yes),
     };
 
     const noSeries = {
         label: 'Not exposed',
-        hoverBackgroundColor: '#D8D6FF',
-        backgroundColor: '#D8D6FF',
+        hoverBackgroundColor: theme.palette.charts.flagMetrics.notExposed,
+        backgroundColor: theme.palette.charts.flagMetrics.notExposed,
         data: createChartPoints(metrics, (m) => m.no),
     };
 

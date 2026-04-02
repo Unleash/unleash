@@ -1,5 +1,6 @@
 import { type FormEventHandler, useState, type VFC } from 'react';
-import { Button, styled, TextField } from '@mui/material';
+import { Button, styled } from '@mui/material';
+import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
@@ -128,7 +129,7 @@ const DeprecatedPasswordAuth: VFC<IPasswordAuthProps> = ({
                         />
 
                         <StyledDiv>
-                            <TextField
+                            <StyledAutofillTextField
                                 label='Username or email'
                                 name='username'
                                 id='username'

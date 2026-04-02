@@ -1,5 +1,6 @@
 import { type FormEventHandler, useState, type VFC } from 'react';
-import { Button, Grid, styled, TextField, Typography } from '@mui/material';
+import { Button, Grid, styled, Typography } from '@mui/material';
+import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from './common/AuthOptions/AuthOptions.tsx';
@@ -34,14 +35,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
     margin: theme.spacing(2, 'auto', 0, 'auto'),
     display: 'block',
     textAlign: 'center',
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    '& input': {
-        boxShadow: `transparent 0px 0px 0px 1px inset, ${theme.palette.background.paper} 0px 0px 0px 100px inset`,
-        WebkitTextFillColor: theme.palette.text.primary,
-        caretColor: theme.palette.text.primary,
-    },
 }));
 
 const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
@@ -134,7 +127,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                             {apiError}
                         </StyledTypography>
                         <StyledDiv>
-                            <StyledTextField
+                            <StyledAutofillTextField
                                 label='Username or email'
                                 name='username'
                                 id='username'

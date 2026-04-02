@@ -1,22 +1,9 @@
-import {
-    IconButton,
-    InputAdornment,
-    styled,
-    TextField,
-    type TextFieldProps,
-} from '@mui/material';
+import { IconButton, InputAdornment, type TextFieldProps } from '@mui/material';
+import { StyledAutofillTextField } from 'component/user/StyledAutofillTextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import type React from 'react';
 import { useState, type VFC } from 'react';
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    '& input': {
-        boxShadow: `transparent 0px 0px 0px 1px inset, ${theme.palette.background.paper} 0px 0px 0px 100px inset`,
-        WebkitTextFillColor: theme.palette.text.primary,
-        caretColor: theme.palette.text.primary,
-    },
-}));
 
 const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {
     const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +22,7 @@ const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {
     const iconTitle = 'Toggle password visibility';
 
     return (
-        <StyledTextField
+        <StyledAutofillTextField
             variant='outlined'
             size='small'
             type={showPassword ? 'text' : 'password'}

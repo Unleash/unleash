@@ -23,8 +23,8 @@ export const useSignup = (options?: SWRConfiguration) => {
         isEnterprise,
         uiConfig: { billing },
     } = useUiConfig();
-    const { data: authData } = useAuthEndpoint();
-    const { instanceStatus } = useInstanceStatus();
+    const { data: authData, refetchAuth } = useAuthEndpoint();
+    const { instanceStatus, refetchInstanceStatus } = useInstanceStatus();
     const signupDialogEnabled = useUiFlag('signupDialog');
 
     const isPAYG = isEnterprise() && billing === 'pay-as-you-go';
@@ -56,7 +56,11 @@ export const useSignup = (options?: SWRConfiguration) => {
         signupData,
         signupRequired,
         loading,
-        refetch: mutate,
+        refetch: () => {
+            mutate();
+            refetchAuth();
+            refetchInstanceStatus();
+        },
         error,
     };
 };

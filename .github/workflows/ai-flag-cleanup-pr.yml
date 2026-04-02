@@ -65,7 +65,7 @@ jobs:
           persist-credentials: true
 
       - name: Get issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         id: get_issue
         with:
           github-token: ${{ steps.app_token.outputs.token }}
@@ -99,7 +99,7 @@ jobs:
 
       - name: Create a new branch
         id: create_branch
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           FLAG_NAME: ${{ steps.extract_flag.outputs.flag-name }}
         with:
@@ -273,7 +273,7 @@ jobs:
         run: git push -u origin HEAD
 
       - name: Create Pull Request
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ steps.app_token.outputs.token }}
           result-encoding: string
@@ -326,7 +326,7 @@ jobs:
 
       - name: Report failure to Issue
         if: failure()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ steps.app_token.outputs.token }}
           script: |

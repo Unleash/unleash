@@ -36,7 +36,6 @@ import {
     isSingleValueConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { AddRegexValueChip } from './AddRegexValueChip.tsx';
@@ -287,7 +286,6 @@ export const EditableConstraint: FC<Props> = ({
     constraint,
     onUpdate,
 }) => {
-    const groupContextFieldOptionsByType = useUiFlag('projectContextFields');
     const {
         constraint: localConstraint,
         updateConstraint,
@@ -362,7 +360,7 @@ export const EditableConstraint: FC<Props> = ({
     const contextFieldOptions = createContextFieldOptions(
         localConstraint,
         context,
-        { groupOptions: groupContextFieldOptionsByType },
+        { groupOptions: true },
     );
 
     return (

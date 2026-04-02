@@ -29,7 +29,6 @@ import {
 import CheckBoxOutlineBlank from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useFullUnleashContext } from 'hooks/api/getters/useUnleashContext/useFullUnleashContext.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import type { IUnleashContextDefinition } from 'interfaces/context.ts';
 import type {
     ISelectOption,
@@ -99,9 +98,8 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
     const { setToastData } = useToast();
     const { context: contextData } = useFullUnleashContext();
 
-    const groupOptions = useUiFlag('projectContextFields');
     const contextOptions = createContextFieldOptions(contextData, {
-        groupOptions,
+        groupOptions: true,
     });
 
     const [error, setError] = useState<string>();

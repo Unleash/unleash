@@ -17,13 +17,7 @@ beforeAll(async () => {
     db = await dbInit('project_context_api_serial', getLogger);
     app = await setupAppWithAuth(
         db.stores,
-        {
-            experimental: {
-                flags: {
-                    projectContextFields: true,
-                },
-            },
-        },
+        {},
         db.rawDatabase,
     );
 });

@@ -16,6 +16,7 @@ import RoleInUseError from './role-in-use-error.js';
 import PasswordUndefinedError from './password-undefined.js';
 import PasswordMismatchError from './password-mismatch.js';
 import PatternError from './pattern-error.js';
+import BadGatewayError from './bad-gateway-error.js';
 import ForbiddenError from './forbidden-error.js';
 import GatewayTimeoutError from './gateway-timeout-error.js';
 import NotFoundError from './notfound-error.js';
@@ -27,6 +28,7 @@ import { GenericUnleashError } from './unleash-error.js';
 import NotImplementedError from './not-implemented-error.js';
 export {
     BadDataError,
+    BadGatewayError,
     UNIQUE_CONSTRAINT_VIOLATION,
     FOREIGN_KEY_VIOLATION,
     NotFoundError,

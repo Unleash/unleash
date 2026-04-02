@@ -8,6 +8,7 @@ export const frontendApiClientSchema = {
     properties: {
         appName: {
             type: 'string',
+            minLength: 1,
             description: 'Name of the application using Unleash',
         },
         instanceId: {

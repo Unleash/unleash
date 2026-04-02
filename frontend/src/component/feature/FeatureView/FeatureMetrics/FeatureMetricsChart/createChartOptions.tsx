@@ -54,7 +54,7 @@ export const createChartOptions = (
                             (sum, item) => sum + item.parsed.y,
                             0,
                         );
-                        return `Total requests: ${total.toLocaleString()}`;
+                        return `${total.toLocaleString()} - Total requests`;
                     },
                     label: (item) => {
                         return `${item.formattedValue} - ${item.dataset.label}`;

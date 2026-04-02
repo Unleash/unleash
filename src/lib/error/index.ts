@@ -17,6 +17,7 @@ import PasswordUndefinedError from './password-undefined.js';
 import PasswordMismatchError from './password-mismatch.js';
 import PatternError from './pattern-error.js';
 import ForbiddenError from './forbidden-error.js';
+import GatewayTimeoutError from './gateway-timeout-error.js';
 import NotFoundError from './notfound-error.js';
 import {
     ExceedsLimitError,
@@ -45,6 +46,7 @@ export {
     PatternError,
     PasswordMismatchError,
     throwExceedsLimitError,
+    GatewayTimeoutError,
     GenericUnleashError,
     ExceedsLimitError,
 };

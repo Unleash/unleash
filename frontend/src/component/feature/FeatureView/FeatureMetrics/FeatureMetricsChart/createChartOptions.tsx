@@ -49,6 +49,13 @@ export const createChartOptions = (
                     return aIndex - bIndex;
                 },
                 callbacks: {
+                    beforeBody: (items) => {
+                        const total = items.reduce(
+                            (sum, item) => sum + item.parsed.y,
+                            0,
+                        );
+                        return `Total requests: ${total.toLocaleString()}`;
+                    },
                     label: (item) => {
                         return `${item.formattedValue} - ${item.dataset.label}`;
                     },

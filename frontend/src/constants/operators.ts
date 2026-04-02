@@ -14,6 +14,8 @@ export type Operator =
     | 'SEMVER_EQ'
     | 'SEMVER_GT'
     | 'SEMVER_LT'
+    | 'SEMVER_GTE'
+    | 'SEMVER_LTE'
     | 'REGEX';
 
 export const NOT_IN = 'NOT_IN' as const;
@@ -31,6 +33,8 @@ export const DATE_BEFORE = 'DATE_BEFORE' as const;
 export const SEMVER_EQ = 'SEMVER_EQ' as const;
 export const SEMVER_GT = 'SEMVER_GT' as const;
 export const SEMVER_LT = 'SEMVER_LT' as const;
+export const SEMVER_GTE = 'SEMVER_GTE' as const;
+export const SEMVER_LTE = 'SEMVER_LTE' as const;
 export const REGEX = 'REGEX' as const;
 
 export const allOperators: Operator[] = [
@@ -49,6 +53,8 @@ export const allOperators: Operator[] = [
     SEMVER_EQ,
     SEMVER_GT,
     SEMVER_LT,
+    SEMVER_GTE,
+    SEMVER_LTE,
     REGEX,
 ];
 
@@ -73,7 +79,13 @@ export const dateOperators = [DATE_BEFORE, DATE_AFTER];
 export type DateOperator = (typeof dateOperators)[number];
 export const isDateOperator = isOperator(dateOperators);
 
-export const semVerOperators = [SEMVER_EQ, SEMVER_GT, SEMVER_LT];
+export const semVerOperators = [
+    SEMVER_EQ,
+    SEMVER_GT,
+    SEMVER_LT,
+    SEMVER_GTE,
+    SEMVER_LTE,
+];
 export type SemVerOperator = (typeof semVerOperators)[number];
 export const isSemVerOperator = isOperator(semVerOperators);
 

@@ -16,6 +16,8 @@ import {
     type Operator,
     semVerOperators,
     stringOperators,
+    SEMVER_GTE,
+    SEMVER_LTE,
 } from 'constants/operators';
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -24,6 +26,7 @@ import { InvertedOperatorButton } from './StyledToggleButton/InvertedOperatorBut
 import { constraintValidator } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/useEditableConstraint/constraint-validator.ts';
 import { ResolveInput } from './ProjectActionsFilterItemInputs/ResolveInput.tsx';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledDeleteButton = styled(IconButton)({
     marginRight: '-6px',
@@ -134,11 +137,19 @@ export const ProjectActionsFilterItem = ({
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
 
+    const isSemverGteOperatorsEnabled = useUiFlag(
+        'semverGteConstraintOperators',
+    );
+
     const validOperators = [
         ...inOperators,
         ...stringOperators,
         ...numOperators,
-        ...semVerOperators,
+        ...semVerOperators.filter(
+            (op) =>
+                isSemverGteOperatorsEnabled ||
+                (op !== SEMVER_GTE && op !== SEMVER_LTE),
+        ),
     ];
 
     const [error, setError] = useState('');

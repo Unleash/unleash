@@ -88,6 +88,7 @@ export type UiFlags = {
     projectContextFields?: boolean;
     readOnlyUsersUI?: boolean;
     regexConstraintOperator?: boolean;
+    semverGteConstraintOperators?: boolean;
     signupDialog?: boolean;
     updateMilestoneStrategy?: boolean;
     strategyFormConsolidation?: boolean;

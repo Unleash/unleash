@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Box, Button, Divider, Typography, styled } from '@mui/material';
 import PermMedia from '@mui/icons-material/PermMedia';
 import Send from '@mui/icons-material/Send';
@@ -79,12 +79,15 @@ export const ExperimentalFeedback: React.FC<IExperimentalFeedbackProps> = ({
     sketchURL,
 }) => {
     const { trackEvent } = usePlausibleTracker();
-    const { value, setValue } = createLocalStorage(trackerKey, { sent: false });
+    const { value, setValue } = useMemo(
+        () => createLocalStorage(trackerKey, { sent: false }),
+        [trackerKey],
+    );
     const [metrics, setMetrics] = useState(value);
 
     useEffect(() => {
         setValue(metrics);
-    }, [metrics]);
+    }, [metrics, setValue]);
 
     const onBtnClick = (type: string) => {
         try {

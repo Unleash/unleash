@@ -19,6 +19,24 @@ export const StickyProvider = ({ children }: IStickyProviderProps) => {
         new Set<RefObject<HTMLDivElement>>(),
     );
 
+    const registerResizeListener = useCallback(
+        (ref: RefObject<HTMLDivElement>) => {
+            setResizeListeners((prev) => new Set(prev).add(ref));
+        },
+        [],
+    );
+
+    const unregisterResizeListener = useCallback(
+        (ref: RefObject<HTMLDivElement>) => {
+            setResizeListeners((prev) => {
+                const newListeners = new Set(prev);
+                newListeners.delete(ref);
+                return newListeners;
+            });
+        },
+        [],
+    );
+
     const registerStickyItem = useCallback(
         (item: RefObject<HTMLDivElement>) => {
             setStickyItems((prevItems) => {
@@ -45,7 +63,7 @@ export const StickyProvider = ({ children }: IStickyProviderProps) => {
                 return prevItems;
             });
         },
-        [],
+        [registerResizeListener],
     );
 
     const unregisterStickyItem = useCallback(
@@ -53,25 +71,7 @@ export const StickyProvider = ({ children }: IStickyProviderProps) => {
             unregisterResizeListener(ref);
             setStickyItems((prev) => prev.filter((item) => item !== ref));
         },
-        [],
-    );
-
-    const registerResizeListener = useCallback(
-        (ref: RefObject<HTMLDivElement>) => {
-            setResizeListeners((prev) => new Set(prev).add(ref));
-        },
-        [],
-    );
-
-    const unregisterResizeListener = useCallback(
-        (ref: RefObject<HTMLDivElement>) => {
-            setResizeListeners((prev) => {
-                const newListeners = new Set(prev);
-                newListeners.delete(ref);
-                return newListeners;
-            });
-        },
-        [],
+        [unregisterResizeListener],
     );
 
     const getTopOffset = useCallback(

@@ -292,6 +292,7 @@ const useVerifyArchive = (
     const [hasDeletedDependencies, setHasDeletedDependencies] = useState(false);
     const { verifyArchiveFeatures } = useProjectApi();
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: JSON.stringify(featureIds) covers structural equality for the array
     useEffect(() => {
         if (isOpen) {
             verifyArchiveFeatures(projectId, featureIds)
@@ -316,6 +317,7 @@ const useVerifyArchive = (
         setOffendingParents,
         setDisableArchive,
         setHasDeletedDependencies,
+        verifyArchiveFeatures,
     ]);
 
     return { disableArchive, offendingParents, hasDeletedDependencies };

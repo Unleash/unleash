@@ -135,21 +135,6 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
         setTimeRange(initialValues.timeRange);
     };
 
-    const buildSafeguardData = (
-        labelSelectors: Record<string, string[]>,
-    ): CreateSafeguardSchema => ({
-        impactMetric: {
-            metricName,
-            timeRange,
-            aggregationMode,
-            labelSelectors,
-        },
-        triggerCondition: {
-            operator,
-            threshold: Number(threshold),
-        },
-    });
-
     return {
         metricName,
         setMetricName,
@@ -164,7 +149,6 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
         timeRange,
         setTimeRange,
         resetToOriginalValues,
-        buildSafeguardData,
         initialValues,
     };
 };
@@ -334,6 +318,38 @@ const useSafeguardFormState = (
         metricsData.metricType,
     );
 
+    const labelSelectors = useMemo(
+        () =>
+            buildLabelSelectors(
+                formValues.appName,
+                metricsData.metricEnvironment,
+            ),
+        [formValues.appName, metricsData.metricEnvironment],
+    );
+
+    const safeguardData: CreateSafeguardSchema = useMemo(
+        () => ({
+            impactMetric: {
+                metricName: formValues.metricName,
+                timeRange: formValues.timeRange,
+                aggregationMode: formValues.aggregationMode,
+                labelSelectors,
+            },
+            triggerCondition: {
+                operator: formValues.operator,
+                threshold: Number(formValues.threshold),
+            },
+        }),
+        [
+            formValues.metricName,
+            formValues.timeRange,
+            formValues.aggregationMode,
+            labelSelectors,
+            formValues.operator,
+            formValues.threshold,
+        ],
+    );
+
     return {
         ...formValues,
         ...formMode,
@@ -341,7 +357,8 @@ const useSafeguardFormState = (
         ...handlers,
         projectId,
         featureId,
-        safeguard,
+        labelSelectors,
+        safeguardData,
     };
 };
 
@@ -394,7 +411,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
         handleTimeRangeChange,
         resetToOriginalValues,
         enterEditMode,
-        metricEnvironment,
+        labelSelectors,
     } = formState;
 
     const permission =
@@ -419,11 +436,6 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     };
 
     const showButtons = mode === 'create' || mode === 'edit';
-
-    const labelSelectors = useMemo(
-        () => buildLabelSelectors(appName, metricEnvironment),
-        [appName, metricEnvironment],
-    );
 
     const miniChartMetricDisplayName = metricOptions.find(
         (m) => m.name === metricName,
@@ -620,14 +632,7 @@ export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     safeguardType,
 }) => {
     const formState = useSafeguardFormState(safeguard, featureId, environment);
-    const {
-        mode,
-        setMode,
-        buildSafeguardData,
-        threshold,
-        appName,
-        metricEnvironment,
-    } = formState;
+    const { mode, setMode, safeguardData, threshold } = formState;
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -636,9 +641,7 @@ export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
             return;
         }
 
-        onSubmit(
-            buildSafeguardData(buildLabelSelectors(appName, metricEnvironment)),
-        );
+        onSubmit(safeguardData);
 
         // Show changes immediately
         if (mode === 'edit' || mode === 'create') {
@@ -671,14 +674,7 @@ export const SafeguardFormChangeRequestView: FC<
     safeguardType,
 }) => {
     const formState = useSafeguardFormState(safeguard, featureId, environment);
-    const {
-        mode,
-        setMode,
-        buildSafeguardData,
-        threshold,
-        appName,
-        metricEnvironment,
-    } = formState;
+    const { mode, setMode, safeguardData, threshold } = formState;
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -687,9 +683,7 @@ export const SafeguardFormChangeRequestView: FC<
             return;
         }
 
-        onSubmit(
-            buildSafeguardData(buildLabelSelectors(appName, metricEnvironment)),
-        );
+        onSubmit(safeguardData);
 
         // Keep changes visible in CR view
         if (mode === 'edit' || mode === 'create') {

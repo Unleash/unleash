@@ -301,6 +301,7 @@ const useSafeguardFormState = (
     safeguard: ISafeguard | undefined,
     featureId: string,
     environment: string,
+    onSubmit: (data: CreateSafeguardSchema) => void,
 ) => {
     const projectId = useRequiredPathParam('projectId');
     const formValues = useSafeguardFormValues(safeguard);
@@ -350,6 +351,20 @@ const useSafeguardFormState = (
         ],
     );
 
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+
+        if (Number.isNaN(Number(formValues.threshold))) {
+            return;
+        }
+
+        onSubmit(safeguardData);
+
+        if (formMode.mode === 'edit' || formMode.mode === 'create') {
+            formMode.setMode('display');
+        }
+    };
+
     return {
         ...formValues,
         ...formMode,
@@ -358,7 +373,7 @@ const useSafeguardFormState = (
         projectId,
         featureId,
         labelSelectors,
-        safeguardData,
+        handleSubmit,
     };
 };
 
@@ -621,7 +636,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     );
 };
 
-export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
+export const SafeguardForm: FC<IBaseSafeguardFormProps> = ({
     onSubmit,
     onCancel,
     onDelete,
@@ -631,70 +646,13 @@ export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     badge,
     safeguardType,
 }) => {
-    const formState = useSafeguardFormState(safeguard, featureId, environment);
-    const { mode, setMode, safeguardData, threshold } = formState;
-
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-
-        if (Number.isNaN(Number(threshold))) {
-            return;
-        }
-
-        onSubmit(safeguardData);
-
-        // Show changes immediately
-        if (mode === 'edit' || mode === 'create') {
-            setMode('display');
-        }
-    };
+    const formState = useSafeguardFormState(safeguard, featureId, environment, onSubmit);
 
     return (
         <SafeguardFormBase
             formState={formState}
-            onSubmit={handleSubmit}
+            onSubmit={formState.handleSubmit}
             onCancel={onCancel}
-            onDelete={onDelete}
-            environment={environment}
-            badge={badge}
-            safeguardType={safeguardType}
-        />
-    );
-};
-
-export const SafeguardFormChangeRequestView: FC<
-    Omit<IBaseSafeguardFormProps, 'onCancel'>
-> = ({
-    onSubmit,
-    onDelete,
-    safeguard,
-    environment,
-    featureId,
-    badge,
-    safeguardType,
-}) => {
-    const formState = useSafeguardFormState(safeguard, featureId, environment);
-    const { mode, setMode, safeguardData, threshold } = formState;
-
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-
-        if (Number.isNaN(Number(threshold))) {
-            return;
-        }
-
-        onSubmit(safeguardData);
-
-        // Keep changes visible in CR view
-        if (mode === 'edit' || mode === 'create') {
-            setMode('display');
-        }
-    };
-
-    return (
-        <SafeguardFormBase
-            formState={formState}
-            onSubmit={handleSubmit}
             onDelete={onDelete}
             environment={environment}
             badge={badge}

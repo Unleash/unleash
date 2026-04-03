@@ -8,7 +8,7 @@ import type { CreateSafeguardSchema } from 'openapi';
 import type { ISafeguard } from 'interfaces/releasePlans';
 import type { SafeguardType } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
-import { SafeguardFormChangeRequestView } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
+import { SafeguardForm } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
 import { ReadonlySafeguardDisplay } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/ReadonlySafeguardDisplay';
 import { Tab, TabList, TabPanel, Tabs } from './ChangeTabComponents.tsx';
 import {
@@ -69,7 +69,7 @@ export const SafeguardChangeView: FC<{
                         safeguardType={safeguardType}
                     />
                 ) : (
-                    <SafeguardFormChangeRequestView
+                    <SafeguardForm
                         onSubmit={onSubmit}
                         onDelete={
                             currentSafeguard?.id
@@ -141,7 +141,7 @@ export const SafeguardDeleteView: FC<{
                         safeguardType={safeguardType}
                     />
                 ) : (
-                    <SafeguardFormChangeRequestView
+                    <SafeguardForm
                         onSubmit={onSubmit}
                         onDelete={
                             safeguard?.id

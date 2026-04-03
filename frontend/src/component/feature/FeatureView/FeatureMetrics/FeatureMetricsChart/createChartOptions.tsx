@@ -42,6 +42,7 @@ export const createChartOptions = (
                 padding: 10,
                 boxPadding: 5,
                 usePointStyle: true,
+                position: 'nearest',
                 itemSort: (a, b) => {
                     const order = ['Exposed', 'Not exposed'];
                     const aIndex = order.indexOf(a.dataset.label!);
@@ -54,7 +55,7 @@ export const createChartOptions = (
                             (sum, item) => sum + item.parsed.y,
                             0,
                         );
-                        return `${total.toLocaleString()} - Total requests`;
+                        return `${total.toLocaleString(locationSettings.locale)} - Total requests`;
                     },
                     label: (item) => {
                         return `${item.formattedValue} - ${item.dataset.label}`;

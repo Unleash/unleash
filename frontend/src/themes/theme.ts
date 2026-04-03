@@ -287,6 +287,10 @@ const theme = {
             D1: '#D76500',
             E1: '#68A611',
             series: colors.chartSeries,
+            flagMetrics: {
+                exposed: '#A39EFF',
+                notExposed: '#D8D6FF',
+            },
         },
 
         inverse: {

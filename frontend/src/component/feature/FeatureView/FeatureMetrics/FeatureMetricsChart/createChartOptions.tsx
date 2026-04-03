@@ -22,7 +22,7 @@ export const createChartOptions = (
     _metrics: IFeatureMetricsRaw[],
     hoursBack: number,
     locationSettings: ILocationSettings,
-): ChartOptions<'line'> => {
+): ChartOptions<'bar'> => {
     return {
         locale: locationSettings.locale,
         responsive: true,
@@ -42,13 +42,21 @@ export const createChartOptions = (
                 padding: 10,
                 boxPadding: 5,
                 usePointStyle: true,
+                position: 'nearest',
                 itemSort: (a, b) => {
-                    const order = ['Total requests', 'Exposed', 'Not exposed'];
+                    const order = ['Exposed', 'Not exposed'];
                     const aIndex = order.indexOf(a.dataset.label!);
                     const bIndex = order.indexOf(b.dataset.label!);
                     return aIndex - bIndex;
                 },
                 callbacks: {
+                    beforeBody: (items) => {
+                        const total = items.reduce(
+                            (sum, item) => sum + item.parsed.y,
+                            0,
+                        );
+                        return `${total.toLocaleString(locationSettings.locale)} - Total requests`;
+                    },
                     label: (item) => {
                         return `${item.formattedValue} - ${item.dataset.label}`;
                     },
@@ -107,12 +115,12 @@ export const createChartOptions = (
         scales: {
             y: {
                 type: 'linear',
+                stacked: true,
                 title: {
                     display: true,
                     text: 'Number of requests',
                     color: theme.palette.text.secondary,
                 },
-                // min: 0,
                 suggestedMin: 0,
                 ticks: { precision: 0, color: theme.palette.text.secondary },
                 grid: {
@@ -122,6 +130,7 @@ export const createChartOptions = (
             },
             x: {
                 type: 'time',
+                stacked: true,
                 time: { unit: hoursBack > 48 ? 'day' : 'hour' },
                 grid: { display: false },
                 ticks: {

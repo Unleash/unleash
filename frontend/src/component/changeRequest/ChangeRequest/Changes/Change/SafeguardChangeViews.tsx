@@ -90,7 +90,6 @@ export const SafeguardChangeView: FC<{
                             'id',
                             'action',
                             'impactMetric.id',
-                            'impactMetric.labelSelectors.environment',
                         ]),
                         data: safeguard,
                     }}

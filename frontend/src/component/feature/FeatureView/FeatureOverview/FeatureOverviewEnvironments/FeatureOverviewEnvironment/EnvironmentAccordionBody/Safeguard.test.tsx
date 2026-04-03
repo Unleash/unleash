@@ -90,7 +90,7 @@ const defaultSafeguardPayload = {
         metricName: 'unleash_counter_http_requests_total',
         timeRange: 'day',
         aggregationMode: 'count',
-        labelSelectors: { appName: ['*'] },
+        labelSelectors: {},
     },
     triggerCondition: {
         operator: '>',
@@ -473,8 +473,14 @@ describe('Safeguard', () => {
         ]);
     });
 
-    test('should add feature env safeguard via API', async () => {
+    const submitFeatureEnvSafeguard = async (
+        metricLabels: Record<string, string[]>,
+    ) => {
         const user = userEvent.setup();
+        testServerRoute(server, '/api/admin/impact-metrics/', {
+            series: [],
+            labels: metricLabels,
+        });
         const { requests } = testServerRoute(
             server,
             '/api/admin/projects/default/features/feature1/environments/production/safeguards',
@@ -493,7 +499,40 @@ describe('Safeguard', () => {
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
         });
+        return requests;
+    };
+
+    test('should exclude environment from labelSelectors when metric lacks environment label', async () => {
+        const requests = await submitFeatureEnvSafeguard({
+            appName: [],
+        });
         expect(requests).toMatchObject([defaultSafeguardPayload]);
+        expect(requests[0].impactMetric.labelSelectors).toEqual({});
+    });
+
+    test('should include environment in labelSelectors when metric has matching environment label', async () => {
+        const requests = await submitFeatureEnvSafeguard({
+            appName: [],
+            environment: ['production', 'development'],
+        });
+        expect(requests).toMatchObject([
+            {
+                ...defaultSafeguardPayload,
+                impactMetric: {
+                    ...defaultSafeguardPayload.impactMetric,
+                    labelSelectors: { environment: ['production'] },
+                },
+            },
+        ]);
+    });
+
+    test('should exclude environment from labelSelectors when metric environment values do not match current environment', async () => {
+        const requests = await submitFeatureEnvSafeguard({
+            appName: [],
+            environment: ['staging', 'dev'],
+        });
+        expect(requests).toMatchObject([defaultSafeguardPayload]);
+        expect(requests[0].impactMetric.labelSelectors).toEqual({});
     });
 
     test('should add feature env safeguard via change request when enabled', async () => {

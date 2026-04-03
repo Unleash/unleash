@@ -61,6 +61,23 @@ const SafeguardConfigurationSection = styled(Box)({
 });
 export type SafeguardType = 'releasePlan' | 'featureEnvironment';
 
+const buildLabelSelectors = (
+    appName: string,
+    environment?: string,
+): Record<string, string[]> => {
+    const selectors: Record<string, string[]> = {};
+
+    if (environment) {
+        selectors.environment = [environment];
+    }
+
+    if (appName !== '*') {
+        selectors.appName = [appName];
+    }
+
+    return selectors;
+};
+
 interface IBaseSafeguardFormProps {
     onSubmit: (data: CreateSafeguardSchema) => void;
     onCancel?: () => void;
@@ -118,14 +135,14 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
         setTimeRange(initialValues.timeRange);
     };
 
-    const buildSafeguardData = (): CreateSafeguardSchema => ({
+    const buildSafeguardData = (
+        labelSelectors: Record<string, string[]>,
+    ): CreateSafeguardSchema => ({
         impactMetric: {
             metricName,
             timeRange,
             aggregationMode,
-            labelSelectors: {
-                appName: [appName],
-            },
+            labelSelectors,
         },
         triggerCondition: {
             operator,
@@ -174,6 +191,7 @@ const useSafeguardMetricsData = (
     metricName: string,
     timeRange: MetricQuerySchemaTimeRange,
     aggregationMode: MetricQuerySchemaAggregationMode,
+    environment: string,
 ) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
     const { data: metricsData } = useImpactMetricsData(
@@ -196,11 +214,22 @@ const useSafeguardMetricsData = (
         metricsData?.labels?.metric_type,
     );
 
+    // External Prometheus metrics may not have an environment label —
+    // only include it when the metric actually exposes one and its values
+    // match the current Unleash environment (e.g., external metrics might
+    // use "prod" instead of "production").
+    const metricEnvironment = metricsData?.labels?.environment?.includes(
+        environment,
+    )
+        ? environment
+        : undefined;
+
     return {
         metricOptions,
         loading,
         applicationNames,
         metricType,
+        metricEnvironment,
     };
 };
 
@@ -287,6 +316,7 @@ const useSafeguardFormHandlers = (
 const useSafeguardFormState = (
     safeguard: ISafeguard | undefined,
     featureId: string,
+    environment: string,
 ) => {
     const projectId = useRequiredPathParam('projectId');
     const formValues = useSafeguardFormValues(safeguard);
@@ -295,6 +325,7 @@ const useSafeguardFormState = (
         formValues.metricName,
         formValues.timeRange,
         formValues.aggregationMode,
+        environment,
     );
     const handlers = useSafeguardFormHandlers(
         formValues,
@@ -363,6 +394,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
         handleTimeRangeChange,
         resetToOriginalValues,
         enterEditMode,
+        metricEnvironment,
     } = formState;
 
     const permission =
@@ -388,17 +420,10 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
 
     const showButtons = mode === 'create' || mode === 'edit';
 
-    const labelSelectors = useMemo((): Record<string, string[]> => {
-        const selectors: Record<string, string[]> = {
-            environment: [environment],
-        };
-
-        if (appName !== '*') {
-            selectors.appName = [appName];
-        }
-
-        return selectors;
-    }, [appName, environment]);
+    const labelSelectors = useMemo(
+        () => buildLabelSelectors(appName, metricEnvironment),
+        [appName, metricEnvironment],
+    );
 
     const miniChartMetricDisplayName = metricOptions.find(
         (m) => m.name === metricName,
@@ -594,8 +619,15 @@ export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
     badge,
     safeguardType,
 }) => {
-    const formState = useSafeguardFormState(safeguard, featureId);
-    const { mode, setMode, buildSafeguardData, threshold } = formState;
+    const formState = useSafeguardFormState(safeguard, featureId, environment);
+    const {
+        mode,
+        setMode,
+        buildSafeguardData,
+        threshold,
+        appName,
+        metricEnvironment,
+    } = formState;
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -604,7 +636,9 @@ export const SafeguardFormDirect: FC<IBaseSafeguardFormProps> = ({
             return;
         }
 
-        onSubmit(buildSafeguardData());
+        onSubmit(
+            buildSafeguardData(buildLabelSelectors(appName, metricEnvironment)),
+        );
 
         // Show changes immediately
         if (mode === 'edit' || mode === 'create') {
@@ -636,8 +670,15 @@ export const SafeguardFormChangeRequestView: FC<
     badge,
     safeguardType,
 }) => {
-    const formState = useSafeguardFormState(safeguard, featureId);
-    const { mode, setMode, buildSafeguardData, threshold } = formState;
+    const formState = useSafeguardFormState(safeguard, featureId, environment);
+    const {
+        mode,
+        setMode,
+        buildSafeguardData,
+        threshold,
+        appName,
+        metricEnvironment,
+    } = formState;
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -646,7 +687,9 @@ export const SafeguardFormChangeRequestView: FC<
             return;
         }
 
-        onSubmit(buildSafeguardData());
+        onSubmit(
+            buildSafeguardData(buildLabelSelectors(appName, metricEnvironment)),
+        );
 
         // Keep changes visible in CR view
         if (mode === 'edit' || mode === 'create') {

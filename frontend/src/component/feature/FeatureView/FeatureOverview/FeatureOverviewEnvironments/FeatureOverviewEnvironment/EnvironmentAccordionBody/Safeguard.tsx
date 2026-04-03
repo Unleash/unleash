@@ -8,7 +8,7 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import {
-    SafeguardFormDirect,
+    SafeguardForm as SafeguardFormBase,
     type SafeguardType,
 } from '../../../ReleasePlan/SafeguardForm/SafeguardForm.tsx';
 import { SafeguardChangeRequestDialog } from '../../../ReleasePlan/SafeguardForm/SafeguardChangeRequestDialog.tsx';
@@ -479,7 +479,7 @@ const SafeguardForm = ({
 
     return (
         <>
-            <SafeguardFormDirect
+            <SafeguardFormBase
                 safeguard={safeguard}
                 onSubmit={handleSubmit}
                 onCancel={onCancel}

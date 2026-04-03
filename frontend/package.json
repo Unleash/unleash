@@ -149,7 +149,7 @@
     "semver": "7.7.4",
     "ws": "^8.18.0",
     "@types/react": "18.3.28",
-    "nwsapi": "2.2.13"
+    "nwsapi": "2.2.23"
   },
   "jest": {
     "moduleNameMapper": {

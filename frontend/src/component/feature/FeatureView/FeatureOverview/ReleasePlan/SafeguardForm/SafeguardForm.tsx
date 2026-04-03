@@ -646,7 +646,12 @@ export const SafeguardForm: FC<IBaseSafeguardFormProps> = ({
     badge,
     safeguardType,
 }) => {
-    const formState = useSafeguardFormState(safeguard, featureId, environment, onSubmit);
+    const formState = useSafeguardFormState(
+        safeguard,
+        featureId,
+        environment,
+        onSubmit,
+    );
 
     return (
         <SafeguardFormBase

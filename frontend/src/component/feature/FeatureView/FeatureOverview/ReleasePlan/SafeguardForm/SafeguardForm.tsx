@@ -199,12 +199,11 @@ const useSafeguardMetricsData = (
     );
 
     // External Prometheus metrics may not have an environment label —
-    // only include it when the metric actually exposes one and its values
-    // match the current Unleash environment (e.g., external metrics might
-    // use "prod" instead of "production").
-    const metricEnvironment = metricsData?.labels?.environment?.includes(
-        environment,
-    )
+    // only filter by environment when the metric actually exposes one.
+    // When the label exists, always filter by the current environment even
+    // if it's not in the values list — showing unfiltered data from other
+    // environments (e.g. development data in production) would be misleading.
+    const metricEnvironment = metricsData?.labels?.environment
         ? environment
         : undefined;
 

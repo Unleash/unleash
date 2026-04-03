@@ -43,6 +43,7 @@ export const Sticky = ({ children, ...props }: IStickyProps) => {
 
     const { registerStickyItem, unregisterStickyItem, getTopOffset } = context;
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: intentional mount-only effect — top offset is read once at mount from computed style
     useEffect(() => {
         // We should only set the initial top offset once - when the component is mounted
         // This value will be set based on the initial top that was set for this component
@@ -73,7 +74,7 @@ export const Sticky = ({ children, ...props }: IStickyProps) => {
         return () => {
             unregisterStickyItem(ref);
         };
-    }, [ref, registerStickyItem, unregisterStickyItem]);
+    }, [registerStickyItem, unregisterStickyItem]);
 
     return (
         <StyledSticky ref={ref} top={top} {...props}>

@@ -71,7 +71,7 @@ export const UpgradeTrialDialog = ({
                 },
             });
         }
-    }, [dialogOpen]);
+    }, [dialogOpen, isAdmin, trackEvent]);
 
     const onClickUpgrade = () => {
         trackEvent('upgrade_trial_dialog', {

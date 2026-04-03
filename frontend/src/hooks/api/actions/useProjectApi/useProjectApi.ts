@@ -7,6 +7,7 @@ import type {
     ProjectCreatedSchema,
 } from 'openapi';
 import useAPI from '../useApi/useApi.js';
+import { useCallback } from 'react';
 
 interface IAccessPayload {
     roles: number[];
@@ -190,18 +191,18 @@ const useProjectApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
-    const verifyArchiveFeatures = async (
-        projectId: string,
-        featureIds: string[],
-    ) => {
-        const path = `api/admin/projects/${projectId}/archive/validate`;
-        const req = createRequest(path, {
-            method: 'POST',
-            body: JSON.stringify({ features: featureIds }),
-        });
+    const verifyArchiveFeatures = useCallback(
+        async (projectId: string, featureIds: string[]) => {
+            const path = `api/admin/projects/${projectId}/archive/validate`;
+            const req = createRequest(path, {
+                method: 'POST',
+                body: JSON.stringify({ features: featureIds }),
+            });
 
-        return makeRequest(req.caller, req.id);
-    };
+            return makeRequest(req.caller, req.id);
+        },
+        [makeRequest, createRequest],
+    );
 
     const reviveFeatures = async (projectId: string, featureIds: string[]) => {
         const path = `api/admin/projects/${projectId}/revive`;

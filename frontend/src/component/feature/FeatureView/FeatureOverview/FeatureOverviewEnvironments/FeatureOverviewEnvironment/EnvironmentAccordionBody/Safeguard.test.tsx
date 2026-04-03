@@ -499,7 +499,7 @@ describe('Safeguard', () => {
         await waitFor(() => {
             expect(onSafeguardChange).toHaveBeenCalled();
         });
-        return requests;
+        return requests as Array<typeof defaultSafeguardPayload>;
     };
 
     test('should exclude environment from labelSelectors when metric lacks environment label', async () => {

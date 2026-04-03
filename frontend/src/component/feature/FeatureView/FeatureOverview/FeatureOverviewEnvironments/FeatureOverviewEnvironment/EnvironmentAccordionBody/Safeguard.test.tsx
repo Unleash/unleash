@@ -526,13 +526,14 @@ describe('Safeguard', () => {
         ]);
     });
 
-    test('should exclude environment from labelSelectors when metric environment values do not match current environment', async () => {
+    test('should include environment in labelSelectors even when metric environment values do not match current environment', async () => {
         const requests = await submitFeatureEnvSafeguard({
             appName: [],
             environment: ['staging', 'dev'],
         });
-        expect(requests).toMatchObject([defaultSafeguardPayload]);
-        expect(requests[0].impactMetric.labelSelectors).toEqual({});
+        expect(requests[0].impactMetric.labelSelectors).toEqual({
+            environment: ['production'],
+        });
     });
 
     test('should add feature env safeguard via change request when enabled', async () => {

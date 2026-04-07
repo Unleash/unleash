@@ -80,7 +80,8 @@ export type IFlagKey =
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'newSignOut'
     | 'externalPrometheusImpactMetrics'
-    | 'onlyFeatureTokensWithFeatureAPIs';
+    | 'onlyFeatureTokensWithFeatureAPIs'
+    | 'pendingUserAccessRequests';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -365,6 +366,10 @@ const flags: IFlags = {
     ),
     onlyFeatureTokensWithFeatureAPIs: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ONLY_FEATURE_TOKENS_WITH_FEATURE_APIS,
+        false,
+    ),
+    pendingUserAccessRequests: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PENDING_USER_ACCESS_REQUESTS,
         false,
     ),
 };

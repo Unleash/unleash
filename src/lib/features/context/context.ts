@@ -41,7 +41,6 @@ import type { CreateContextFieldSchema } from '../../openapi/spec/create-context
 import { extractUserIdFromUser } from '../../util/index.js';
 import type { LegalValueSchema } from '../../openapi/index.js';
 import type { WithTransactional } from '../../db/transaction.js';
-import type { IFlagResolver } from '../../types/index.js';
 import {
     type ContextQueryParameters,
     contextQueryParameters,
@@ -62,8 +61,6 @@ export class ContextController extends Controller {
     private transactionalContextService: WithTransactional<ContextService>;
 
     private openApiService: OpenApiService;
-
-    private flagResolver: IFlagResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -88,8 +85,6 @@ export class ContextController extends Controller {
             mode === 'project'
                 ? projectLevelContextFieldsRelease
                 : rootLevelContextFieldsRelease;
-        this.flagResolver = config.flagResolver;
-
         this.route({
             method: 'get',
             path: prefix,

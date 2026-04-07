@@ -1,4 +1,3 @@
-import { useEffect, useMemo } from 'react';
 import { Box, styled } from '@mui/material';
 import type { IFeatureStrategyParameters } from 'interfaces/strategy';
 import ConditionalRolloutSlider from '../RolloutSlider/ConditionalRolloutSlider.tsx';
@@ -12,11 +11,6 @@ import {
     parseParameterString,
 } from 'utils/parseParameter';
 import { StickinessSelect } from './StickinessSelect/StickinessSelect.tsx';
-import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
-import Loader from '../../../common/Loader/Loader.tsx';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { useLocation } from 'react-router';
 import type { IFormErrors } from 'hooks/useFormErrors';
 
 interface IFlexibleStrategyProps {
@@ -106,4 +100,3 @@ export const FlexibleStrategy = ({
         </StyledBox>
     );
 };
-

@@ -15,7 +15,7 @@ export const AnnouncerProvider = ({
         () => ({
             setAnnouncement,
         }),
-        [setAnnouncement],
+        [],
     );
 
     return (

@@ -22,6 +22,6 @@ export const useConstraintTooltips = (
                     ])
                     .filter(([_, tooltip]) => !!tooltip) || [],
             ),
-        [context, values],
+        [contextDefinition, values],
     );
 };

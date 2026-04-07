@@ -41,6 +41,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     const open = () => setAnchorEl(ref.current);
     const onClose = () => setAnchorEl(null);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: intentional mount-only effect — popover should open once on mount, not re-open on state changes
     useEffect(() => {
         if (!state && initMode === 'auto-open') {
             open();
@@ -65,6 +66,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
           }
         : undefined;
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: onChange and operators are unstable inline references from the caller — adding them would cause the effect to run on every render
     useEffect(() => {
         if (state && !operators.includes(state.operator)) {
             onChange({

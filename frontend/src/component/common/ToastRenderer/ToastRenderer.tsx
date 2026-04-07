@@ -17,6 +17,7 @@ const ToastRenderer = () => {
         setToast((prev: IToast) => ({ ...prev, show: false }));
     };
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: intentional — timeout should only reset when show changes; hide and autoHideDuration are intentionally omitted to avoid restarting the timer on every render
     useEffect(() => {
         if (!toastData.autoHideDuration) return;
         const timeout = setTimeout(() => {
@@ -25,7 +26,6 @@ const ToastRenderer = () => {
         return () => {
             clearTimeout(timeout);
         };
-        /* eslint-disable-next-line */
     }, [toastData?.show]);
 
     const animations = useMemo(

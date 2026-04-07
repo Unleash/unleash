@@ -15,11 +15,7 @@ let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('project_context_api_serial', getLogger);
-    app = await setupAppWithAuth(
-        db.stores,
-        {},
-        db.rawDatabase,
-    );
+    app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
 });
 
 test('should reject creating a project context field without permission', async () => {

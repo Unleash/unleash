@@ -360,7 +360,6 @@ export const EditableConstraint: FC<Props> = ({
     const contextFieldOptions = createContextFieldOptions(
         localConstraint,
         context,
-        { groupOptions: true },
     );
 
     return (

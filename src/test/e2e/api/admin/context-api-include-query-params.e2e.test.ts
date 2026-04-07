@@ -16,11 +16,7 @@ const projects = [projectA, projectB];
 
 beforeAll(async () => {
     db = await dbInit('context_api_include_query_params_serial', getLogger);
-    app = await setupAppWithCustomConfig(
-        db.stores,
-        {},
-        db.rawDatabase,
-    );
+    app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 
     await setup();
 });

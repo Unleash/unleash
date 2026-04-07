@@ -103,14 +103,12 @@ export const AccessRequestsTable = () => {
     const { roles } = useUsers();
     const accessRequests = MOCK_ACCESS_REQUESTS;
 
-    const viewerRole = roles.find(
-        (r) => r.name.toLowerCase() === 'viewer',
-    );
+    const viewerRole = roles.find((r) => r.name.toLowerCase() === 'viewer');
     const defaultRoleId = viewerRole?.id ?? roles[0]?.id ?? 0;
 
-    const [selectedRoles, setSelectedRoles] = useState<
-        Record<string, number>
-    >({});
+    const [selectedRoles, setSelectedRoles] = useState<Record<string, number>>(
+        {},
+    );
 
     const getRoleId = (requestId: string) =>
         selectedRoles[requestId] ?? defaultRoleId;
@@ -243,9 +241,7 @@ export const AccessRequestsTable = () => {
 
     return (
         <StyledContainer>
-            <StyledTitle>
-                Access requests ({accessRequests.length})
-            </StyledTitle>
+            <StyledTitle>Access requests ({accessRequests.length})</StyledTitle>
             <VirtualizedTable
                 rows={rows}
                 headerGroups={headerGroups}

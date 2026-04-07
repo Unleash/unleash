@@ -72,42 +72,42 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
     const allOptions = withSelectedValue(options, value);
 
     return (
-    <Autocomplete
-        options={allOptions}
-        getOptionLabel={(option) => option.displayName}
-        value={allOptions.find((option) => option.name === value) || null}
-        onChange={(_, newValue) =>
-            onChange(newValue?.name || options[0]?.name || '')
-        }
-        disabled={loading}
-        renderOption={(props, option, { inputValue }) => (
-            <Box component='li' {...props} key={option.name}>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography variant='body2'>
-                        <Highlighter search={inputValue}>
-                            {option.displayName}
-                        </Highlighter>
-                    </Typography>
-                    <Typography variant='caption' color='text.secondary'>
-                        <Highlighter search={inputValue}>
-                            {option.help}
-                        </Highlighter>
-                    </Typography>
+        <Autocomplete
+            options={allOptions}
+            getOptionLabel={(option) => option.displayName}
+            value={allOptions.find((option) => option.name === value) || null}
+            onChange={(_, newValue) =>
+                onChange(newValue?.name || options[0]?.name || '')
+            }
+            disabled={loading}
+            renderOption={(props, option, { inputValue }) => (
+                <Box component='li' {...props} key={option.name}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Typography variant='body2'>
+                            <Highlighter search={inputValue}>
+                                {option.displayName}
+                            </Highlighter>
+                        </Typography>
+                        <Typography variant='caption' color='text.secondary'>
+                            <Highlighter search={inputValue}>
+                                {option.help}
+                            </Highlighter>
+                        </Typography>
+                    </Box>
                 </Box>
-            </Box>
-        )}
-        renderInput={(params) => (
-            <TextField
-                {...params}
-                label={label}
-                placeholder='Search for a metric…'
-                variant='outlined'
-                size='small'
-                required
-            />
-        )}
-        noOptionsText={<NoOptionsMessage />}
-        sx={{ minWidth: 300 }}
-    />
+            )}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    label={label}
+                    placeholder='Search for a metric…'
+                    variant='outlined'
+                    size='small'
+                    required
+                />
+            )}
+            noOptionsText={<NoOptionsMessage />}
+            sx={{ minWidth: 300 }}
+        />
     );
 };

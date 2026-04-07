@@ -58,7 +58,6 @@ process.nextTick(async () => {
                         projectContextFields: true,
                         readOnlyUsersUI: true,
                         regexConstraintOperator: true,
-                        updateMilestoneStrategy: true,
                         strategyFormConsolidation: true,
                         enterpriseEdgeTokensList: true,
                         filterFavorites: true,

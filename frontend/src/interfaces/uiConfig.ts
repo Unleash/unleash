@@ -89,7 +89,6 @@ export type UiFlags = {
     readOnlyUsersUI?: boolean;
     regexConstraintOperator?: boolean;
     signupDialog?: boolean;
-    updateMilestoneStrategy?: boolean;
     strategyFormConsolidation?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;

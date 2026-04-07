@@ -327,10 +327,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SIGNUP_DIALOG,
         false,
     ),
-    updateMilestoneStrategy: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_UPDATE_MILESTONE_STRATEGY,
-        false,
-    ),
     strategyFormConsolidation: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_STRATEGY_FORM_CONSOLIDATION,
         false,

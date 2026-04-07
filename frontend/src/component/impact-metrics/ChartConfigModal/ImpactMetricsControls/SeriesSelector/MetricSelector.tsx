@@ -52,17 +52,30 @@ const NoOptionsMessage = () => {
     );
 };
 
+const withSelectedValue = (
+    options: SeriesOption[],
+    value: string,
+): SeriesOption[] => {
+    if (value && !options.some((option) => option.name === value)) {
+        return [...options, { name: value, displayName: value, help: '' }];
+    }
+    return options;
+};
+
 export const MetricSelector: FC<SeriesSelectorProps> = ({
     value,
     onChange,
     options,
     loading = false,
     label = 'Metric name',
-}) => (
+}) => {
+    const allOptions = withSelectedValue(options, value);
+
+    return (
     <Autocomplete
-        options={options}
+        options={allOptions}
         getOptionLabel={(option) => option.displayName}
-        value={options.find((option) => option.name === value) || null}
+        value={allOptions.find((option) => option.name === value) || null}
         onChange={(_, newValue) =>
             onChange(newValue?.name || options[0]?.name || '')
         }
@@ -96,4 +109,5 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
         noOptionsText={<NoOptionsMessage />}
         sx={{ minWidth: 300 }}
     />
-);
+    );
+};

@@ -90,7 +90,6 @@ export type UiFlags = {
     regexConstraintOperator?: boolean;
     signupDialog?: boolean;
     updateMilestoneStrategy?: boolean;
-    strategyFormConsolidation?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
     featureEnvSafeguards?: boolean;

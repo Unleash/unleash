@@ -9,10 +9,8 @@ import {
     featureStrategyDocsLinkLabel,
     featureStrategyHelp,
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
-import { LegacyReleasePlanTemplateAddStrategyForm } from './LegacyReleasePlanTemplateAddStrategyForm.tsx';
 
 export interface IReleasePlanTemplateAddStrategyFormProps {
     onCancel: () => void;
@@ -23,7 +21,7 @@ export interface IReleasePlanTemplateAddStrategyFormProps {
     editMode: boolean;
 }
 
-const NewReleasePlanTemplateAddStrategyForm = ({
+export const ReleasePlanTemplateAddStrategyForm = ({
     onCancel,
     strategy,
     onAddUpdateStrategy,
@@ -73,16 +71,5 @@ const NewReleasePlanTemplateAddStrategyForm = ({
                 <Button onClick={onCancel}>Cancel</Button>
             </StrategyFormBody>
         </FormTemplate>
-    );
-};
-
-export const ReleasePlanTemplateAddStrategyForm = (
-    props: IReleasePlanTemplateAddStrategyFormProps,
-) => {
-    const useConsolidated = useUiFlag('strategyFormConsolidation');
-    return useConsolidated ? (
-        <NewReleasePlanTemplateAddStrategyForm {...props} />
-    ) : (
-        <LegacyReleasePlanTemplateAddStrategyForm {...props} />
     );
 };

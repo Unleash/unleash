@@ -96,6 +96,7 @@ export type UiFlags = {
     featureEnvSafeguards?: boolean;
     filterFavorites?: boolean;
     externalPrometheusImpactMetrics?: boolean;
+    pendingUserAccessRequests?: boolean;
 };
 
 export interface IVersionInfo {

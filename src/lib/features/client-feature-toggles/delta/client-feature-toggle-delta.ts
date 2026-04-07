@@ -181,6 +181,10 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             await this.initEnvironmentDelta(environment);
         }
 
+        const environmentRevision =
+            await this.configurationRevisionService.getMaxRevisionId(
+                environment,
+            );
         const visibleRevision = this.getVisibleRevision(environment, projects);
 
         if (hasRequestedRevision && requiredRevisionId >= visibleRevision) {
@@ -203,6 +207,9 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                     : visibleRevision;
 
             filteredEvent.eventId = effectiveEventId;
+            this.logger.info(
+                `[revision] Fresh delta hydration for environment=${environment} projects=${projects.join(',')} currentRevisionId=${this.currentRevisionId} environmentRevision=${environmentRevision} visibleRevision=${visibleRevision} hydrationEventId=${hydrationEvent.eventId} returnedHydrationEventId=${filteredEvent.eventId}`,
+            );
 
             const response: ClientFeaturesDeltaSchema = {
                 events: [filteredEvent],
@@ -307,6 +314,12 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         const latestRevision =
             await this.configurationRevisionService.getMaxRevisionId();
 
+        if (latestRevision > this.currentRevisionId) {
+            this.logger.info(
+                `[revision] Delta max revision advanced: ${this.currentRevisionId} -> ${latestRevision}`,
+            );
+        }
+
         const changeEvents = await this.eventStore.getRevisionRange(
             this.currentRevisionId,
             latestRevision,
@@ -403,8 +416,12 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         });
         const baseSegments = await this.segmentReadModel.getAllForClientIds();
 
+        const previousRevision = this.currentRevisionId;
         this.currentRevisionId =
             await this.configurationRevisionService.getMaxRevisionId();
+        this.logger.info(
+            `[revision] Initialized delta cache for ${environment} at revision ${this.currentRevisionId} (previous global delta revision ${previousRevision})`,
+        );
         const revisionState = await this.eventStore.getDeltaRevisionState(
             environment,
             this.currentRevisionId,

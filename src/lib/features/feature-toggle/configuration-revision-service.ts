@@ -117,6 +117,9 @@ export default class ConfigurationRevisionService extends EventEmitter {
             environment,
         );
         if (maxRevId < actualMax) {
+            this.logger.info(
+                `[revision] Environment revision advanced for ${environment}: ${maxRevId} -> ${actualMax}`,
+            );
             this.maxRevisionId.set(environment, actualMax);
             maxRevId = actualMax;
         }
@@ -134,6 +137,9 @@ export default class ConfigurationRevisionService extends EventEmitter {
         );
         if (this.revisionId !== revisionId) {
             const knownEnvironments = [...this.maxRevisionId.keys()];
+            this.logger.info(
+                `[revision] Global configuration revision advanced: ${this.revisionId} -> ${revisionId}`,
+            );
             this.logger.debug(
                 `Updating feature configuration with new revision Id ${revisionId} and all envs: ${knownEnvironments.join(', ')}`,
             );

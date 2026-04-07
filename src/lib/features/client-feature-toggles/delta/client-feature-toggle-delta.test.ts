@@ -174,6 +174,68 @@ describe('DeltaCache hydration ordering', () => {
 });
 
 describe('ClientFeatureToggleDelta bootstrap behavior', () => {
+    test('returns the same wildcard hydration revision for identical environment state across pods', async () => {
+        const createDelta = (globalRevisionId: number) =>
+            new ClientFeatureToggleDelta(
+                {
+                    getAll: async ({
+                        environment,
+                    }: {
+                        environment?: string;
+                    }) =>
+                        environment === 'production'
+                            ? [
+                                  {
+                                      name: 'first',
+                                      project: 'default',
+                                      enabled: true,
+                                  },
+                              ]
+                            : [],
+                } as any,
+                {
+                    getAllForClientIds: async () => [],
+                } as any,
+                {
+                    getDeltaRevisionState: async () => ({
+                        projectRevisions: new Map([['default', 85815]]),
+                        globalSegmentRevision: 0,
+                    }),
+                } as any,
+                {
+                    getMaxRevisionId: async () => globalRevisionId,
+                    on: () => undefined,
+                } as any,
+                {} as any,
+                {
+                    eventBus: new EventEmitter(),
+                    getLogger: () =>
+                        ({
+                            error: () => undefined,
+                            info: () => undefined,
+                        }) as any,
+                } as any,
+            );
+
+        const stalePodDelta = createDelta(85815);
+        const freshPodDelta = createDelta(85923);
+
+        const stalePodResult = await stalePodDelta.getDelta(undefined, {
+            environment: 'production',
+            project: ['*'],
+        } as any);
+        const freshPodResult = await freshPodDelta.getDelta(undefined, {
+            environment: 'production',
+            project: ['*'],
+        } as any);
+
+        expect(stalePodResult).toBeDefined();
+        expect(freshPodResult).toBeDefined();
+        expect(stalePodResult?.events[0]?.eventId).toBe(
+            freshPodResult?.events[0]?.eventId,
+        );
+    });
+
     test('returns an empty hydration event on initial request for an empty environment', async () => {
         const delta = new ClientFeatureToggleDelta(
             {

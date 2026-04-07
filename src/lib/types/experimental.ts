@@ -72,7 +72,6 @@ export type IFlagKey =
     | 'regexConstraintOperator'
     | 'signupDialog'
     | 'strategyFormConsolidation'
-    | 'updateMilestoneStrategy'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
     | 'featureEnvSafeguards'

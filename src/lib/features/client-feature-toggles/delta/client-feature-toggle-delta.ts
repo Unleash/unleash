@@ -28,7 +28,6 @@ import {
 import { FEATURE_PROJECT_CHANGE, type IEvent } from '../../../events/index.js';
 import { getVisibleRevision } from './visible-revision.js';
 import { createGauge } from '../../../util/metrics/index.js';
-import { set } from 'date-fns';
 
 export type EnvironmentRevisions = Record<string, DeltaCache>;
 export type EnvironmentVisibleRevisionState = {

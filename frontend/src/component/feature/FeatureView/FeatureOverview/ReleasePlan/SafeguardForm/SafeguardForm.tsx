@@ -96,8 +96,10 @@ interface IBaseSafeguardFormProps {
 type MetricOption = { name: string } & ImpactMetricsSeries;
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
-    metricName: safeguard?.impactMetric.metricName || '',
-    source: safeguard?.impactMetric.source,
+    metric: {
+        metricName: safeguard?.impactMetric.metricName || '',
+        source: safeguard?.impactMetric.source,
+    } as MetricSelection,
     appName: safeguard?.impactMetric.labelSelectors.appName?.[0] || '*',
     aggregationMode: (safeguard?.impactMetric.aggregationMode ||
         'rps') as MetricQuerySchemaAggregationMode,
@@ -114,9 +116,8 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
         [safeguard],
     );
 
-    const [metricName, setMetricName] = useState(initialValues.metricName);
-    const [source, setSource] = useState<MetricSource | undefined>(
-        initialValues.source,
+    const [metric, setMetric] = useState<MetricSelection>(
+        initialValues.metric,
     );
     const [appName, setAppName] = useState(initialValues.appName);
     const [aggregationMode, setAggregationMode] =
@@ -135,8 +136,7 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
     const resetToOriginalValues = () => {
         if (!safeguard) return;
 
-        setMetricName(initialValues.metricName);
-        setSource(initialValues.source);
+        setMetric(initialValues.metric);
         setAppName(initialValues.appName);
         setAggregationMode(initialValues.aggregationMode);
         setOperator(initialValues.operator);
@@ -145,10 +145,8 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
     };
 
     return {
-        metricName,
-        setMetricName,
-        source,
-        setSource,
+        metric,
+        setMetric,
         appName,
         setAppName,
         aggregationMode,
@@ -236,8 +234,7 @@ const useSafeguardFormHandlers = (
     metricType: MetricType,
 ) => {
     const {
-        setMetricName,
-        setSource,
+        setMetric,
         setAppName,
         setAggregationMode,
         setOperator,
@@ -245,31 +242,32 @@ const useSafeguardFormHandlers = (
         setTimeRange,
     } = formValues;
     const { enterEditMode } = formMode;
-    const initialMetricName = formValues.initialValues.metricName;
+    const initialMetricName = formValues.initialValues.metric.metricName;
 
     // Auto-select first metric when options become available
     useEffect(() => {
-        if (metricOptions.length > 0 && !formValues.metricName) {
-            setMetricName(metricOptions[0].name);
-            setSource(metricOptions[0].source);
+        if (metricOptions.length > 0 && !formValues.metric.metricName) {
+            setMetric({
+                metricName: metricOptions[0].name,
+                source: metricOptions[0].source,
+            });
         }
-    }, [metricOptions, formValues.metricName, setMetricName, setSource]);
+    }, [metricOptions, formValues.metric.metricName, setMetric]);
 
     // Set default aggregation when metric type becomes known
     // Skip when metric hasn't changed from initial (existing safeguard opened)
     useEffect(() => {
         if (
-            formValues.metricName !== initialMetricName &&
+            formValues.metric.metricName !== initialMetricName &&
             metricType !== 'unknown'
         ) {
             setAggregationMode(getDefaultAggregation(metricType));
         }
-    }, [formValues.metricName, initialMetricName, metricType]);
+    }, [formValues.metric.metricName, initialMetricName, metricType]);
 
     const handleMetricChange = (selection: MetricSelection) => {
         enterEditMode();
-        setMetricName(selection.metricName);
-        setSource(selection.source);
+        setMetric(selection);
         setAppName('*');
     };
 
@@ -322,11 +320,11 @@ const useSafeguardFormState = (
     const formValues = useSafeguardFormValues(safeguard);
     const formMode = useSafeguardFormMode(safeguard);
     const metricsData = useSafeguardMetricsData(
-        formValues.metricName,
+        formValues.metric.metricName,
         formValues.timeRange,
         formValues.aggregationMode,
         environment,
-        formValues.source,
+        formValues.metric.source,
     );
     const handlers = useSafeguardFormHandlers(
         formValues,
@@ -347,11 +345,13 @@ const useSafeguardFormState = (
     const safeguardData: CreateSafeguardSchema = useMemo(
         () => ({
             impactMetric: {
-                metricName: formValues.metricName,
+                metricName: formValues.metric.metricName,
                 timeRange: formValues.timeRange,
                 aggregationMode: formValues.aggregationMode,
                 labelSelectors,
-                ...(formValues.source ? { source: formValues.source } : {}),
+                ...(formValues.metric.source
+                    ? { source: formValues.metric.source }
+                    : {}),
             },
             triggerCondition: {
                 operator: formValues.operator,
@@ -359,8 +359,7 @@ const useSafeguardFormState = (
             },
         }),
         [
-            formValues.metricName,
-            formValues.source,
+            formValues.metric,
             formValues.timeRange,
             formValues.aggregationMode,
             labelSelectors,
@@ -422,8 +421,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     safeguardType = 'releasePlan',
 }) => {
     const {
-        metricName,
-        source,
+        metric,
         appName,
         aggregationMode,
         operator,
@@ -472,7 +470,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     const showButtons = mode === 'create' || mode === 'edit';
 
     const miniChartMetricDisplayName = metricOptions.find(
-        (m) => m.name === metricName,
+        (m) => m.name === metric.metricName,
     )?.displayName;
 
     const {
@@ -493,9 +491,9 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                     {safeguardTypeLabel[safeguardType]}
                 </StyledLabel>
                 {mode === 'display' && badge}
-                {metricName && (
+                {metric.metricName && (
                     <MiniMetricsChartWithTooltip
-                        metricName={metricName}
+                        metricName={metric.metricName}
                         metricDisplayName={miniChartMetricDisplayName}
                         timeRange={timeRange}
                         labelSelectors={labelSelectors}
@@ -503,7 +501,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         threshold={threshold}
                         projectId={projectId}
                         featureId={featureId}
-                        source={source}
+                        source={metric.source}
                     />
                 )}
                 {mode !== 'create' && onDelete && (
@@ -528,7 +526,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                 <SafeguardConfigurationSection>
                     <StyledTopRow sx={{ ml: 3, mb: 1.5 }}>
                         <MetricSelector
-                            value={metricName}
+                            value={metric.metricName}
                             onChange={handleMetricChange}
                             options={metricOptions}
                             loading={loading}

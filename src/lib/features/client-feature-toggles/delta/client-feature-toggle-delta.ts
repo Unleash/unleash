@@ -174,7 +174,8 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         sdkRevisionId: number | undefined,
         query: IFeatureToggleQuery,
     ): Promise<ClientFeaturesDeltaSchema | undefined> {
-        const projects = query.project ? query.project : ['*'];
+        const projects =
+            query.project && query.project.length > 0 ? query.project : ['*'];
         const environment = query.environment ? query.environment : 'default';
         const namePrefix = query.namePrefix ? query.namePrefix : '';
         const hasRequestedRevision = sdkRevisionId !== undefined;

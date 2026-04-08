@@ -16,6 +16,7 @@ interface MiniMetricsChartWithTooltipProps {
     threshold: number;
     projectId: string;
     featureId: string;
+    source?: 'internal' | 'external';
 }
 
 export const MiniMetricsChartWithTooltip: FC<
@@ -29,6 +30,7 @@ export const MiniMetricsChartWithTooltip: FC<
     threshold,
     projectId,
     featureId,
+    source,
 }) => {
     const {
         data: { series: timeSeriesData },
@@ -43,6 +45,7 @@ export const MiniMetricsChartWithTooltip: FC<
                       Object.keys(labelSelectors).length > 0
                           ? labelSelectors
                           : undefined,
+                  source,
               }
             : undefined,
     );
@@ -70,6 +73,7 @@ export const MiniMetricsChartWithTooltip: FC<
                 labelSelectors={labelSelectors}
                 aggregationMode={aggregationMode}
                 threshold={threshold}
+                source={source}
             />
         );
     }
@@ -84,6 +88,7 @@ export const MiniMetricsChartWithTooltip: FC<
             threshold={threshold}
             projectId={projectId}
             featureId={featureId}
+            source={source}
         />
     );
 };

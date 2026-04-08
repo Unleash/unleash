@@ -53,6 +53,7 @@ interface MiniChartWithDataProps {
     threshold: number;
     projectId: string;
     featureId: string;
+    source?: 'internal' | 'external';
 }
 
 export const MiniChartWithData: React.FC<MiniChartWithDataProps> = ({
@@ -64,6 +65,7 @@ export const MiniChartWithData: React.FC<MiniChartWithDataProps> = ({
     threshold,
     projectId,
     featureId,
+    source,
 }) => {
     const tooltipContent = (
         <Box sx={{ width: 400 }}>
@@ -87,6 +89,7 @@ export const MiniChartWithData: React.FC<MiniChartWithDataProps> = ({
                     labelSelectors={labelSelectors}
                     yAxisMin='auto'
                     aggregationMode={aggregationMode}
+                    source={source}
                     isPreview={false}
                     showComponents={['xAxis', 'yAxis', 'notEnoughDataMessage']}
                     threshold={threshold}
@@ -109,6 +112,7 @@ export const MiniChartWithData: React.FC<MiniChartWithDataProps> = ({
                     labelSelectors={labelSelectors}
                     yAxisMin='auto'
                     aggregationMode={aggregationMode}
+                    source={source}
                     isPreview={true}
                     showComponents={[]}
                     threshold={threshold}

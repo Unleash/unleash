@@ -41,6 +41,7 @@ interface MiniChartNoDataProps {
     labelSelectors: Record<string, string[]>;
     aggregationMode?: MetricQuerySchemaAggregationMode;
     threshold: number;
+    source?: 'internal' | 'external';
 }
 
 export const MiniChartNoData: React.FC<MiniChartNoDataProps> = ({
@@ -49,6 +50,7 @@ export const MiniChartNoData: React.FC<MiniChartNoDataProps> = ({
     labelSelectors,
     aggregationMode,
     threshold,
+    source,
 }) => {
     return (
         <TooltipResolver title='Not enough data' placement='top' arrow>
@@ -60,6 +62,7 @@ export const MiniChartNoData: React.FC<MiniChartNoDataProps> = ({
                         labelSelectors={labelSelectors}
                         yAxisMin='auto'
                         aggregationMode={aggregationMode}
+                        source={source}
                         isPreview={true}
                         showComponents={[]}
                         threshold={threshold}

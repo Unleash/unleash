@@ -184,6 +184,7 @@ const useSafeguardMetricsData = (
     timeRange: MetricQuerySchemaTimeRange,
     aggregationMode: MetricQuerySchemaAggregationMode,
     environment: string,
+    source?: 'internal' | 'external',
 ) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
     const { data: metricsData } = useImpactMetricsData(
@@ -192,6 +193,7 @@ const useSafeguardMetricsData = (
                   series: metricName,
                   range: timeRange,
                   aggregationMode: aggregationMode,
+                  source,
               }
             : undefined,
     );
@@ -324,6 +326,7 @@ const useSafeguardFormState = (
         formValues.timeRange,
         formValues.aggregationMode,
         environment,
+        formValues.source,
     );
     const handlers = useSafeguardFormHandlers(
         formValues,
@@ -420,6 +423,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
 }) => {
     const {
         metricName,
+        source,
         appName,
         aggregationMode,
         operator,
@@ -499,6 +503,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                         threshold={threshold}
                         projectId={projectId}
                         featureId={featureId}
+                        source={source}
                     />
                 )}
                 {mode !== 'create' && onDelete && (

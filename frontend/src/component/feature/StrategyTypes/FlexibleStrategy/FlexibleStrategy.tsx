@@ -12,11 +12,13 @@ import {
 } from 'utils/parseParameter';
 import { StickinessSelect } from './StickinessSelect/StickinessSelect.tsx';
 import type { IFormErrors } from 'hooks/useFormErrors';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 interface IFlexibleStrategyProps {
     parameters: IFeatureStrategyParameters;
     updateParameter: (field: string, value: string) => void;
     errors?: IFormErrors;
+    groupIdTooltip?: React.ReactNode;
 }
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -40,14 +42,22 @@ const StyledInnerBox1 = styled(Box)(({ theme }) => ({
 }));
 
 const StyledInnerBox2 = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
     width: '50%',
     marginLeft: theme.spacing(0.5),
+    marginBlockEnd: theme.spacing(2),
+    '& > div': {
+        flex: 1,
+    },
 }));
 
 export const FlexibleStrategy = ({
     updateParameter,
     parameters,
     errors,
+    groupIdTooltip,
 }: IFlexibleStrategyProps) => {
     const updateRollout = (_e: Event, value: number | number[]) => {
         updateParameter('rollout', value.toString());
@@ -95,6 +105,9 @@ export const FlexibleStrategy = ({
                         error={Boolean(errors?.getFormError('groupId'))}
                         helperText={errors?.getFormError('groupId')}
                     />
+                    {groupIdTooltip ? (
+                        <HelpIcon htmlTooltip tooltip={groupIdTooltip} />
+                    ) : null}
                 </StyledInnerBox2>
             </StyledOuterBox>
         </StyledBox>

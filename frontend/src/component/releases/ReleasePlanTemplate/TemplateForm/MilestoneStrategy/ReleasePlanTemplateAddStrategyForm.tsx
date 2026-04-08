@@ -56,6 +56,13 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 strategyDefinition={strategyDefinition}
                 errors={errors}
                 canRenamePreexistingVariants
+                groupIdTooltip={
+                    <>
+                        Supports <strong>{'{{featureName}}'}</strong> as a
+                        template variable. If not set, defaults to the feature
+                        flag name.
+                    </>
+                }
                 onSubmit={(_) => {
                     onAddUpdateStrategy(currentStrategy);
                 }}

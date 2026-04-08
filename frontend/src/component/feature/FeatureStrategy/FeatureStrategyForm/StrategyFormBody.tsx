@@ -43,6 +43,7 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
     alertContent?: React.ReactNode;
     generalTabExtras?: React.ReactNode;
     beforeFooter?: React.ReactNode;
+    groupIdTooltip?: React.ReactNode;
     children?: React.ReactNode;
 
     onSubmit: (event: React.FormEvent) => void;
@@ -135,6 +136,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
     alertContent,
     generalTabExtras,
     beforeFooter,
+    groupIdTooltip,
     children,
     onSubmit,
 }: StrategyFormBodyProps<T>) => {
@@ -278,6 +280,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                             strategyDefinition={strategyDefinition}
                             updateParameter={updateParameter}
                             errors={errors}
+                            groupIdTooltip={groupIdTooltip}
                         />
 
                         {generalTabExtras}

@@ -122,6 +122,7 @@ const EditDefaultStrategy = () => {
                 setStrategy={setStrategy}
                 strategyDefinition={strategyDefinition}
                 errors={errors}
+                groupIdTooltip='Defaults to the feature flag name if not set.'
                 onSubmit={onSubmit}
             >
                 <PermissionButton

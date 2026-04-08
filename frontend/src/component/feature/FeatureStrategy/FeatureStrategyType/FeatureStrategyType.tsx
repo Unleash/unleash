@@ -9,6 +9,7 @@ interface IFeatureStrategyTypeProps<T extends StrategyFormState> {
     strategyDefinition: IStrategy;
     updateParameter: (field: string, value: string) => void;
     errors: IFormErrors;
+    groupIdTooltip?: React.ReactNode;
 }
 
 export const FeatureStrategyType = <T extends StrategyFormState>({
@@ -16,6 +17,7 @@ export const FeatureStrategyType = <T extends StrategyFormState>({
     strategyDefinition,
     updateParameter,
     errors,
+    groupIdTooltip,
 }: IFeatureStrategyTypeProps<T>) => {
     switch (strategy.name) {
         case 'default':
@@ -26,6 +28,7 @@ export const FeatureStrategyType = <T extends StrategyFormState>({
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
                     errors={errors}
+                    groupIdTooltip={groupIdTooltip}
                 />
             );
         default:

@@ -4742,10 +4742,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^7.0.13":
-  version: 7.0.13
-  resolution: "nodemailer@npm:7.0.13"
-  checksum: 10c0/b26aa5b9fa4a033bbc1e1c16ef75ee2a9c8641fd290c00a8361d6a251b3c1b8bad545a23efa627f59cb266340a448891ea8aa49d8a9307c767b8505219d95079
+"nodemailer@npm:^8.0.0":
+  version: 8.0.5
+  resolution: "nodemailer@npm:8.0.5"
+  checksum: 10c0/5e8450499bd059c56d74ba96fa5f9928de2ecdae0d53c083dba5661d797114c1f9524d30f992d0263cc5a7dcf5a54b9c1d92dc1f766da150c9d0bde7d3798431
   languageName: node
   linkType: hard
 
@@ -6629,7 +6629,7 @@ __metadata:
     murmurhash3js: "npm:^3.0.1"
     mustache: "npm:^4.2.0"
     nock: "npm:^14.0.11"
-    nodemailer: "npm:^7.0.13"
+    nodemailer: "npm:^8.0.0"
     normalize-url: "npm:^8.1.1"
     openapi-enforcer: "npm:1.23.0"
     openapi-types: "npm:^12.1.3"

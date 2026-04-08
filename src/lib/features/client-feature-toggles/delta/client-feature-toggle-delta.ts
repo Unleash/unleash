@@ -275,16 +275,17 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             Map<string, number>
         >();
 
+        // helper function
+        const warnUnexpectedEventPayload = (
+            event: IEvent,
+            field: 'data' | 'preData',
+            expectedValue: string,
+        ) => {
+            this.logger.warn(
+                `[delta] Skipping event ${event.id} ${event.createdAt.toISOString()} (${event.type}) because ${field} ${expectedValue}.`,
+            );
+        };
         for (const event of changeEvents) {
-            const warnUnexpectedEventPayload = (
-                field: 'data' | 'preData',
-                expectedValue: string,
-            ) => {
-                this.logger.warn(
-                    `[delta] Skipping event ${event.id} ${event.createdAt.toISOString()} (${event.type}) because ${field} ${expectedValue}.`,
-                );
-            };
-
             if (event.type === FEATURE_PROJECT_CHANGE && event.featureName) {
                 // A project change involves two steps: removing the feature from old project and adding it to new project
                 featuresRemoved.push({
@@ -313,7 +314,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             ) {
                 const segmentId = event.data?.id;
                 if (!segmentId) {
-                    warnUnexpectedEventPayload('data', 'is missing id');
+                    warnUnexpectedEventPayload(event, 'data', 'is missing id');
                     continue;
                 }
                 setMaxRevision(segmentsUpdated, segmentId, event.id);
@@ -321,7 +322,11 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 // we were previously using data.id for segment-deleted event, this was changed on Sep 29, 2023: https://github.com/Unleash/unleash/pull/4815
                 const segmentId = event.preData?.id;
                 if (!segmentId) {
-                    warnUnexpectedEventPayload('preData', 'is missing id');
+                    warnUnexpectedEventPayload(
+                        event,
+                        'preData',
+                        'is missing id',
+                    );
                     continue;
                 }
                 setMaxRevision(segmentsRemoved, segmentId, event.id);

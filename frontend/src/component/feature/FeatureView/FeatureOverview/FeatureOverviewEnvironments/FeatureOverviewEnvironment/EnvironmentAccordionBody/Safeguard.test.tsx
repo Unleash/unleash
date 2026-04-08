@@ -373,6 +373,7 @@ describe('Safeguard', () => {
                     type: 'unknown',
                     help: 'A custom metric',
                     displayName: 'my_custom_metric',
+                    source: 'external',
                 },
             },
         });
@@ -393,6 +394,7 @@ describe('Safeguard', () => {
                 timeRange: 'hour',
                 aggregationMode: 'rps',
                 labelSelectors: { appName: ['*'] },
+                source: 'external',
             },
             triggerCondition: {
                 operator: '>',
@@ -422,6 +424,7 @@ describe('Safeguard', () => {
                     metricName: 'my_custom_metric',
                     aggregationMode: 'rps',
                     timeRange: 'hour',
+                    source: 'external',
                 },
                 triggerCondition: {
                     threshold: 99,

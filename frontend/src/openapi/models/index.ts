@@ -1652,6 +1652,8 @@ export * from './userAccessOverviewSchemaOverviewProjectItem';
 export * from './userAccessOverviewSchemaOverviewRootItem';
 export * from './userAccessOverviewSchemaProjectRolesItem';
 export * from './userAccessOverviewSchemaProjectRolesItemPermissionsItem';
+export * from './userAccessRequestSchema';
+export * from './userAccessRequestsSchema';
 export * from './userAccessSchema';
 export * from './userSchema';
 export * from './userSchemaAccountType';

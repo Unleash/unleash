@@ -2,8 +2,10 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
-import type { UserAccessRequestSchema } from 'openapi/models/userAccessRequestSchema';
-import type { UserAccessRequestsSchema } from 'openapi/models/userAccessRequestsSchema';
+import type {
+    UserAccessRequestSchema,
+    UserAccessRequestsSchema,
+} from 'openapi';
 
 interface IUseUserAccessRequestsOutput {
     accessRequests: UserAccessRequestSchema[];

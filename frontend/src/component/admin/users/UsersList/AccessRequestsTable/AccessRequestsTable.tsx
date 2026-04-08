@@ -9,7 +9,7 @@ import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { sortTypes } from 'utils/sortTypes';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { useUserAccessRequests } from 'hooks/api/getters/useUserAccessRequests/useUserAccessRequests';
-import type { UserAccessRequestSchema } from 'openapi/models/userAccessRequestSchema';
+import type { UserAccessRequestSchema } from 'openapi';
 import { RoleSelectCell } from './RoleSelectCell.tsx';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({

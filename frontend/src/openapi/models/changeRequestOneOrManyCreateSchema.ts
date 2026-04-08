@@ -9,19 +9,22 @@ import type { ChangeRequestOneOrManyCreateSchemaOneOfSix } from './changeRequest
 import type { ChangeRequestOneOrManyCreateSchemaOneOfNine } from './changeRequestOneOrManyCreateSchemaOneOfNine';
 import type { ChangeRequestOneOrManyCreateSchemaOneOfOneone } from './changeRequestOneOrManyCreateSchemaOneOfOneone';
 import type { ChangeRequestOneOrManyCreateSchemaOneOfOnethree } from './changeRequestOneOrManyCreateSchemaOneOfOnethree';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfOnesix } from './changeRequestOneOrManyCreateSchemaOneOfOnesix';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfOnefive } from './changeRequestOneOrManyCreateSchemaOneOfOnefive';
 import type { ChangeRequestOneOrManyCreateSchemaOneOfOneeight } from './changeRequestOneOrManyCreateSchemaOneOfOneeight';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfTwoone } from './changeRequestOneOrManyCreateSchemaOneOfTwoone';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfTwozero } from './changeRequestOneOrManyCreateSchemaOneOfTwozero';
 import type { ChangeRequestOneOrManyCreateSchemaOneOfTwothree } from './changeRequestOneOrManyCreateSchemaOneOfTwothree';
 import type { ChangeRequestOneOrManyCreateSchemaOneOfTwofive } from './changeRequestOneOrManyCreateSchemaOneOfTwofive';
 import type { ChangeRequestOneOrManyCreateSchemaOneOfTwoseven } from './changeRequestOneOrManyCreateSchemaOneOfTwoseven';
 import type { ChangeRequestOneOrManyCreateSchemaOneOfTwonine } from './changeRequestOneOrManyCreateSchemaOneOfTwonine';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfThreetwo } from './changeRequestOneOrManyCreateSchemaOneOfThreetwo';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfThreefive } from './changeRequestOneOrManyCreateSchemaOneOfThreefive';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfThreeeight } from './changeRequestOneOrManyCreateSchemaOneOfThreeeight';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfFourone } from './changeRequestOneOrManyCreateSchemaOneOfFourone';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfFourfour } from './changeRequestOneOrManyCreateSchemaOneOfFourfour';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfFourseven } from './changeRequestOneOrManyCreateSchemaOneOfFourseven';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfThreeone } from './changeRequestOneOrManyCreateSchemaOneOfThreeone';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfThreefour } from './changeRequestOneOrManyCreateSchemaOneOfThreefour';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfThreeseven } from './changeRequestOneOrManyCreateSchemaOneOfThreeseven';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFourzero } from './changeRequestOneOrManyCreateSchemaOneOfFourzero';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFourthree } from './changeRequestOneOrManyCreateSchemaOneOfFourthree';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFoursix } from './changeRequestOneOrManyCreateSchemaOneOfFoursix';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFournine } from './changeRequestOneOrManyCreateSchemaOneOfFournine';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFivetwo } from './changeRequestOneOrManyCreateSchemaOneOfFivetwo';
+import type { ChangeRequestOneOrManyCreateSchemaOneOfFivefive } from './changeRequestOneOrManyCreateSchemaOneOfFivefive';
 import type { ChangeRequestCreateSchema } from './changeRequestCreateSchema';
 
 /**
@@ -34,17 +37,20 @@ export type ChangeRequestOneOrManyCreateSchema =
     | ChangeRequestOneOrManyCreateSchemaOneOfNine
     | ChangeRequestOneOrManyCreateSchemaOneOfOneone
     | ChangeRequestOneOrManyCreateSchemaOneOfOnethree
-    | ChangeRequestOneOrManyCreateSchemaOneOfOnesix
+    | ChangeRequestOneOrManyCreateSchemaOneOfOnefive
     | ChangeRequestOneOrManyCreateSchemaOneOfOneeight
-    | ChangeRequestOneOrManyCreateSchemaOneOfTwoone
+    | ChangeRequestOneOrManyCreateSchemaOneOfTwozero
     | ChangeRequestOneOrManyCreateSchemaOneOfTwothree
     | ChangeRequestOneOrManyCreateSchemaOneOfTwofive
     | ChangeRequestOneOrManyCreateSchemaOneOfTwoseven
     | ChangeRequestOneOrManyCreateSchemaOneOfTwonine
-    | ChangeRequestOneOrManyCreateSchemaOneOfThreetwo
-    | ChangeRequestOneOrManyCreateSchemaOneOfThreefive
-    | ChangeRequestOneOrManyCreateSchemaOneOfThreeeight
-    | ChangeRequestOneOrManyCreateSchemaOneOfFourone
-    | ChangeRequestOneOrManyCreateSchemaOneOfFourfour
-    | ChangeRequestOneOrManyCreateSchemaOneOfFourseven
+    | ChangeRequestOneOrManyCreateSchemaOneOfThreeone
+    | ChangeRequestOneOrManyCreateSchemaOneOfThreefour
+    | ChangeRequestOneOrManyCreateSchemaOneOfThreeseven
+    | ChangeRequestOneOrManyCreateSchemaOneOfFourzero
+    | ChangeRequestOneOrManyCreateSchemaOneOfFourthree
+    | ChangeRequestOneOrManyCreateSchemaOneOfFoursix
+    | ChangeRequestOneOrManyCreateSchemaOneOfFournine
+    | ChangeRequestOneOrManyCreateSchemaOneOfFivetwo
+    | ChangeRequestOneOrManyCreateSchemaOneOfFivefive
     | ChangeRequestCreateSchema[];

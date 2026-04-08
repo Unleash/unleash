@@ -41,6 +41,7 @@ import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettin
 import { UserSessionsCell } from './UserSessionsCell/UserSessionsCell.tsx';
 import { UsersHeader } from '../UsersHeader/UsersHeader.tsx';
 import { UpgradeSSO } from './UpgradeSSO.tsx';
+import { AccessRequestsTable } from './AccessRequestsTable/AccessRequestsTable.tsx';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -63,6 +64,7 @@ const UsersList = () => {
         open: false,
     });
     const showUserDeviceCount = useUiFlag('showUserDeviceCount');
+    const showAccessRequests = useUiFlag('pendingUserAccessRequests');
     const showSSOUpgrade = isOss() && users.length > 3;
 
     const showSeatTypes =
@@ -362,6 +364,7 @@ const UsersList = () => {
                 }
             />
             <UsersHeader />
+            {showAccessRequests ? <AccessRequestsTable /> : null}
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}

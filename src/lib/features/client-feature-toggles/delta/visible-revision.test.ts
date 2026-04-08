@@ -10,7 +10,7 @@ const revisionState: EnvironmentVisibleRevisionState = {
     globalSegmentRevision: 12,
 };
 
-describe('getVisibleRevisionForProjects', () => {
+describe('getVisibleRevision', () => {
     test('returns all-project revision for wildcard query', () => {
         expect(getVisibleRevision(revisionState, ['*'])).toBe(14);
     });

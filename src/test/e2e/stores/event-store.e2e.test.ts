@@ -476,7 +476,7 @@ describe('getDeltaRevisionState', () => {
         expect(state.globalSegmentRevision).toBe(0);
     });
 
-    test('respects max revision id for project and segment revisions', async () => {
+    test('returns latest project and segment revisions', async () => {
         const firstFeature = new FeatureUpdatedEvent({
             project: 'default',
             featureName: 'feature-a',

@@ -4,15 +4,15 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestOneOrManyCreateSchemaOneOfOnethreeAction } from './changeRequestOneOrManyCreateSchemaOneOfOnethreeAction';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfOnethreePayload } from './changeRequestOneOrManyCreateSchemaOneOfOnethreePayload';
+import type { UpdateFeatureStrategySchema } from './updateFeatureStrategySchema';
 
 /**
- * Delete a strategy from this feature.
+ * Update a strategy belonging to this feature.
  */
 export type ChangeRequestOneOrManyCreateSchemaOneOfOnethree = {
     /** The name of this action. */
     action: ChangeRequestOneOrManyCreateSchemaOneOfOnethreeAction;
     /** The name of the feature that this change applies to. */
     feature: string;
-    payload: ChangeRequestOneOrManyCreateSchemaOneOfOnethreePayload;
+    payload: UpdateFeatureStrategySchema;
 };

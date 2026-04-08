@@ -12,5 +12,5 @@ export type ChangeRequestCreateFeatureSchemaOneOfTwotwoAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfTwotwoAction = {
-    addReleasePlan: 'addReleasePlan',
+    deleteDependency: 'deleteDependency',
 } as const;

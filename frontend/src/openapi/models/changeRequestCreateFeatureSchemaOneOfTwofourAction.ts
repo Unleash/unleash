@@ -12,5 +12,5 @@ export type ChangeRequestCreateFeatureSchemaOneOfTwofourAction =
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfTwofourAction = {
-    startMilestone: 'startMilestone',
+    addReleasePlan: 'addReleasePlan',
 } as const;

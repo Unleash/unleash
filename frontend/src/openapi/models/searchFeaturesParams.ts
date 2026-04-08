@@ -75,6 +75,11 @@ export type SearchFeaturesParams = {
      */
     archived?: string;
     /**
+     * Filter by whether the feature is favorited by the current user. Use IS:true to show only favorites.
+     * @pattern ^(IS|IS_ANY_OF):(true|false)(,(true|false))*$
+     */
+    favorite?: string;
+    /**
      * The date the feature was created. The date can be specified with an operator. The supported operators are IS_BEFORE, IS_ON_OR_AFTER.
      * @pattern ^(IS_BEFORE|IS_ON_OR_AFTER):\d{4}-\d{2}-\d{2}$
      */

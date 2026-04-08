@@ -4,15 +4,15 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestCreateFeatureSchemaOneOfOneeightAction } from './changeRequestCreateFeatureSchemaOneOfOneeightAction';
-import type { CreateDependentFeatureSchema } from './createDependentFeatureSchema';
+import type { SetStrategySortOrderSchema } from './setStrategySortOrderSchema';
 
 /**
- * Add a parent feature dependency.
+ * Reorder strategies for this feature
  */
 export type ChangeRequestCreateFeatureSchemaOneOfOneeight = {
     /** The name of this action. */
     action: ChangeRequestCreateFeatureSchemaOneOfOneeightAction;
     /** The name of the feature that this change applies to. */
     feature: string;
-    payload: CreateDependentFeatureSchema;
+    payload: SetStrategySortOrderSchema;
 };

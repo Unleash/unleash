@@ -2,7 +2,6 @@ import useSWR, { type SWRConfiguration } from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { IUnleashContextDefinition } from 'interfaces/context';
-import { useUiFlag } from 'hooks/useUiFlag.js';
 
 export interface IUnleashContextOutput {
     context: IUnleashContextDefinition[];
@@ -38,9 +37,7 @@ const useUnleashContext = (
         revalidateIfStale: true,
     },
 ): IUnleashContextOutput => {
-    const useProjectContext = useUiFlag('projectContextFields');
-
-    const uri = useProjectContext ? uriFromQuery(query) : `api/admin/context`;
+    const uri = uriFromQuery(query);
 
     const fetcher = () => {
         const path = formatApiPath(uri);

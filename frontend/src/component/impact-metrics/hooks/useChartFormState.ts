@@ -100,9 +100,9 @@ export const useChartFormState = ({
         }
     }, [open, initialConfig]);
 
-    const handleSeriesChange = ({ metricName: name, source: newSource }: MetricSelection) => {
-        setMetricName(name);
-        setSource(newSource);
+    const handleSeriesChange = (selection: MetricSelection) => {
+        setMetricName(selection.metricName);
+        setSource(selection.source);
         setLabelSelectors({});
         const metricType = getMetricType(series);
         if (metricType !== 'unknown') {

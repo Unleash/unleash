@@ -116,9 +116,7 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
         [safeguard],
     );
 
-    const [metric, setMetric] = useState<MetricSelection>(
-        initialValues.metric,
-    );
+    const [metric, setMetric] = useState<MetricSelection>(initialValues.metric);
     const [appName, setAppName] = useState(initialValues.appName);
     const [aggregationMode, setAggregationMode] =
         useState<MetricQuerySchemaAggregationMode>(

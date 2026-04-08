@@ -10,7 +10,7 @@ import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { MetricSource } from 'component/impact-metrics/types';
 
-type SeriesOption = {
+type MetricOption = {
     name: string;
     displayName: string;
     help: string;
@@ -22,10 +22,10 @@ export type MetricSelection = {
     source?: MetricSource;
 };
 
-export type SeriesSelectorProps = {
+export type MetricSelectorProps = {
     value: string;
     onChange: (selection: MetricSelection) => void;
-    options: SeriesOption[];
+    options: MetricOption[];
     loading?: boolean;
     label?: string;
 };
@@ -64,16 +64,16 @@ const NoOptionsMessage = () => {
 };
 
 const withSelectedValue = (
-    options: SeriesOption[],
+    options: MetricOption[],
     value: string,
-): SeriesOption[] => {
+): MetricOption[] => {
     if (value && !options.some((option) => option.name === value)) {
         return [...options, { name: value, displayName: value, help: '' }];
     }
     return options;
 };
 
-export const MetricSelector: FC<SeriesSelectorProps> = ({
+export const MetricSelector: FC<MetricSelectorProps> = ({
     value,
     onChange,
     options,

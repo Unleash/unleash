@@ -799,6 +799,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.prometheusImpactMetricsApi ||
         process.env.PROMETHEUS_IMPACT_METRICS_API;
 
+    const externalPrometheusImpactMetricsApi =
+        options.externalPrometheusImpactMetricsApi ||
+        process.env.EXTERNAL_PROMETHEUS_IMPACT_METRICS_API;
+
     const checkDbOnReady =
         Boolean(options.checkDbOnReady) ??
         parseEnvVarBoolean(process.env.CHECK_DB_ON_READY, false);
@@ -838,6 +842,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         accessControlMaxAge,
         prometheusApi,
         prometheusImpactMetricsApi,
+        externalPrometheusImpactMetricsApi,
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
         isEnterprise: isEnterprise,

@@ -172,6 +172,7 @@ export interface IUnleashOptions {
     accessControlMaxAge?: number;
     prometheusApi?: string;
     prometheusImpactMetricsApi?: string;
+    externalPrometheusImpactMetricsApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
     metricsRateLimiting?: Partial<IMetricsRateLimiting>;
@@ -301,6 +302,7 @@ export interface IUnleashConfig {
     accessControlMaxAge: number;
     prometheusApi?: string;
     prometheusImpactMetricsApi?: string;
+    externalPrometheusImpactMetricsApi?: string;
     publicFolder?: string;
     disableScheduler?: boolean;
     isEnterprise: boolean;

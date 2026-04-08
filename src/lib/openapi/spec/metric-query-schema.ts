@@ -41,6 +41,13 @@ export const metricQuerySchema = {
                 project: ['default'],
             },
         },
+        source: {
+            type: 'string',
+            enum: ['internal', 'external'],
+            description:
+                'The Prometheus data source for this metric. Internal is the Unleash-managed Prometheus, external is a customer-provided Prometheus instance. Defaults to internal if not specified.',
+            example: 'internal',
+        },
     },
     components: {},
 } as const;

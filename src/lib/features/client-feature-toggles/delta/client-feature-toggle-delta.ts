@@ -497,10 +497,12 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         };
 
         if (segmentEvents.length > 0) {
-            revisionState.globalSegmentRevision = Math.max(
-                revisionState.globalSegmentRevision,
-                ...segmentEvents.map((event) => event.eventId),
-            );
+            for (const event of segmentEvents) {
+                revisionState.globalSegmentRevision = Math.max(
+                    revisionState.globalSegmentRevision,
+                    event.eventId,
+                );
+            }
         }
 
         // assume segment revision id as max feature event

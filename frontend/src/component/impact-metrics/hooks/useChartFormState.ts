@@ -104,7 +104,7 @@ export const useChartFormState = ({
         setMetricName(selection.metricName);
         setSource(selection.source);
         setLabelSelectors({});
-        const metricType = getMetricType(series);
+        const metricType = getMetricType(selection.metricName);
         if (metricType !== 'unknown') {
             setAggregationMode(getDefaultAggregation(metricType));
         }

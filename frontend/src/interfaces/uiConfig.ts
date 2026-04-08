@@ -79,7 +79,6 @@ export type UiFlags = {
     impactMetrics?: boolean;
     plausibleMetrics?: boolean;
     milestoneProgression?: boolean;
-
     safeguards?: boolean;
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
@@ -88,8 +87,6 @@ export type UiFlags = {
     readOnlyUsersUI?: boolean;
     regexConstraintOperator?: boolean;
     signupDialog?: boolean;
-    strategyFormConsolidation?: boolean;
-    updateMilestoneStrategy?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
     featureEnvSafeguards?: boolean;

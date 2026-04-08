@@ -52,13 +52,10 @@ process.nextTick(async () => {
                         customMetrics: true,
                         impactMetrics: true,
                         milestoneProgression: true,
-
                         safeguards: true,
                         gtmReleaseManagement: true,
                         readOnlyUsersUI: true,
                         regexConstraintOperator: true,
-                        strategyFormConsolidation: true,
-                        updateMilestoneStrategy: true,
                         enterpriseEdgeTokensList: true,
                         filterFavorites: true,
                         userTokenWithClientApiLoggingKillSwitch: false,

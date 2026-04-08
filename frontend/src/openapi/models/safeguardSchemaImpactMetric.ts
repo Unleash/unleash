@@ -19,6 +19,8 @@ export type SafeguardSchemaImpactMetric = {
     labelSelectors: SafeguardSchemaImpactMetricLabelSelectors;
     /** The Prometheus metric series to query. It includes both unleash prefix and metric type and display name */
     metricName: string;
+    /** The Prometheus data source for this metric. Defaults to internal. */
+    source?: 'internal' | 'external';
     /** The time range for the metric data. */
     timeRange: SafeguardSchemaImpactMetricTimeRange;
 };

@@ -30,7 +30,13 @@ const StyledBody = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
-export const UsersHeaderAutoCreateDomainUsers = () => {
+export interface IAutoCreateDomainUsersToggleProps {
+    showFallback?: boolean;
+}
+
+export const AutoCreateDomainUsersToggle = ({
+    showFallback = false,
+}: IAutoCreateDomainUsersToggleProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { instanceStatus, refetchInstanceStatus, loading } =
         useInstanceStatus();
@@ -65,6 +71,7 @@ export const UsersHeaderAutoCreateDomainUsers = () => {
     };
 
     if (!instanceStatus?.ucaSignup) return null;
+    if (!instanceStatus.emailDomain && !showFallback) return null;
 
     return (
         <StyledElement>

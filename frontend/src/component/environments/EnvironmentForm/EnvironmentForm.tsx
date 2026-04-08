@@ -29,11 +29,6 @@ const StyledForm = styled('form')({
     height: '100%',
 });
 
-const StyledFormHeader = styled('h3')({
-    fontWeight: 'normal',
-    marginTop: '0',
-});
-
 const StyledContainer = styled('div')({
     maxWidth: '440px',
 });
@@ -83,8 +78,6 @@ const EnvironmentForm: React.FC<IEnvironmentForm> = ({
 }) => {
     return (
         <StyledForm onSubmit={handleSubmit}>
-            <StyledFormHeader>Environment information</StyledFormHeader>
-
             <StyledContainer>
                 <StyledInputDescription>
                     What is your environment name? (Can't be changed later)

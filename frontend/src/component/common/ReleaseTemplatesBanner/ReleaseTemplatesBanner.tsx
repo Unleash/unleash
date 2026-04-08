@@ -74,6 +74,7 @@ export const ReleaseTemplatesBanner: FC = () => {
         'open' | 'closed'
     >('release-templates-banner:v1', 'open');
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: intentional mount-only effect — "seen" event should fire once on mount, not on every bannerState change
     useEffect(() => {
         if (bannerState === 'open') {
             trackEvent('release-templates-banner', {

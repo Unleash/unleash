@@ -14,52 +14,23 @@ export const createChartData = (
     theme: Theme,
     metrics: IFeatureMetricsRaw[],
     locationSettings: ILocationSettings,
-): ChartData<'line', IPoint[], string> => {
-    const requestsSeries = {
-        label: 'Total requests',
-        borderColor: theme.palette.primary.main,
-        backgroundColor: theme.palette.primary.main,
-        data: createChartPoints(metrics, locationSettings, (m) => m.yes + m.no),
-        elements: {
-            point: {
-                radius: 6,
-                pointStyle: 'circle',
-            },
-            line: {
-                borderDash: [8, 4],
-            },
-        },
-    };
-
+): ChartData<'bar', IPoint[], string> => {
     const yesSeries = {
         label: 'Exposed',
-        borderColor: theme.palette.success.main,
-        backgroundColor: theme.palette.success.main,
+        borderColor: theme.palette.charts.flagMetrics.exposed,
+        backgroundColor: theme.palette.charts.flagMetrics.exposed,
         data: createChartPoints(metrics, locationSettings, (m) => m.yes),
-        elements: {
-            point: {
-                radius: 6,
-                pointStyle: 'triangle',
-            },
-        },
     };
 
     const noSeries = {
         label: 'Not exposed',
-        borderColor: theme.palette.error.main,
-        backgroundColor: theme.palette.error.main,
+        borderColor: theme.palette.charts.flagMetrics.notExposed,
+        backgroundColor: theme.palette.charts.flagMetrics.notExposed,
         data: createChartPoints(metrics, locationSettings, (m) => m.no),
-        elements: {
-            point: {
-                radius: 6,
-                pointStyle: 'triangle',
-                pointRotation: 180,
-            },
-        },
     };
 
     return {
-        datasets: [yesSeries, noSeries, requestsSeries],
+        datasets: [yesSeries, noSeries],
     };
 };
 

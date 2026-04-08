@@ -33,6 +33,8 @@ export const UnleashApiErrorTypes = [
     'RateLimitError',
     // server errors; not the end user's fault
     'InternalError',
+    'BadGatewayError',
+    'GatewayTimeoutError',
 ] as const;
 
 export type UnleashApiErrorName = (typeof UnleashApiErrorTypes)[number];

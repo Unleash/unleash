@@ -22,6 +22,7 @@ export const useApiTokenTable = (
         [],
     );
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: getActionCell is intentionally omitted — callers pass inline functions; including it would defeat memoization
     const COLUMNS = useMemo(() => {
         return [
             {

@@ -147,6 +147,10 @@ declare module '@mui/material/styles' {
             D1: string;
             E1: string;
             series: string[];
+            flagMetrics: {
+                exposed: string;
+                notExposed: string;
+            };
         };
 
         inverse: {

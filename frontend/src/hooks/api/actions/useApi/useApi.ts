@@ -286,8 +286,13 @@ const useAPI = ({
         [],
     );
 
-    const makeRequestWithTimer = requestWithTimer(makeRequest);
-    const makeLightRequestWithTimer = requestWithTimer(makeLightRequest);
+    const makeRequestWithTimer = useCallback(requestWithTimer(makeRequest), [
+        makeRequest,
+    ]);
+    const makeLightRequestWithTimer = useCallback(
+        requestWithTimer(makeLightRequest),
+        [makeLightRequest],
+    );
 
     const isDevelopment = process.env.NODE_ENV === 'development';
 

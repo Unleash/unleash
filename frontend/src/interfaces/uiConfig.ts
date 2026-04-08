@@ -85,17 +85,16 @@ export type UiFlags = {
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;
     gtmReleaseManagement?: boolean;
-    projectContextFields?: boolean;
     readOnlyUsersUI?: boolean;
     regexConstraintOperator?: boolean;
     signupDialog?: boolean;
     updateMilestoneStrategy?: boolean;
-    strategyFormConsolidation?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
     featureEnvSafeguards?: boolean;
     filterFavorites?: boolean;
     externalPrometheusImpactMetrics?: boolean;
+    pendingUserAccessRequests?: boolean;
 };
 
 export interface IVersionInfo {

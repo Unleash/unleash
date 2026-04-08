@@ -1,5 +1,6 @@
 import { type FormEventHandler, useState, type VFC } from 'react';
-import { Button, Grid, styled, TextField, Typography } from '@mui/material';
+import { Button, Grid, styled, Typography } from '@mui/material';
+import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
 import { useNavigate } from 'react-router';
 import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from './common/AuthOptions/AuthOptions.tsx';
@@ -126,7 +127,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                             {apiError}
                         </StyledTypography>
                         <StyledDiv>
-                            <TextField
+                            <StyledAutofillTextField
                                 label='Username or email'
                                 name='username'
                                 id='username'

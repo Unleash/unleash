@@ -5,26 +5,11 @@ import type { SelectOptionGroup } from 'component/common/GeneralSelect/GeneralSe
 export const createContextFieldOptions = (
     localConstraint: EditableConstraint,
     context: IUnleashContextDefinition[],
-    { groupOptions }: { groupOptions: boolean },
 ) => {
     const existingContextFieldNames = context.map((context) => context.name);
     const contextFieldHasBeenDeleted = !existingContextFieldNames.includes(
         localConstraint.contextName,
     );
-
-    if (!groupOptions) {
-        const availableContextFieldNames = contextFieldHasBeenDeleted
-            ? [
-                  ...existingContextFieldNames,
-                  localConstraint.contextName,
-              ].toSorted()
-            : existingContextFieldNames;
-
-        return availableContextFieldNames.map((option) => ({
-            key: option,
-            label: option,
-        }));
-    }
 
     const fields = context.reduce(
         ({ project, global }, next) => {

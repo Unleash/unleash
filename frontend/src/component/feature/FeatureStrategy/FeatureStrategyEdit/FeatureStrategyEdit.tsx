@@ -39,8 +39,6 @@ import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { LegacyFeatureStrategyEdit } from './LegacyFeatureStrategyEdit.tsx';
 import { refreshFeatureChangeRequests } from 'utils/refreshAllPendingChangeRequests.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 
@@ -98,7 +96,7 @@ const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
     });
 };
 
-const NewFeatureStrategyEdit = () => {
+export const FeatureStrategyEdit = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
@@ -352,15 +350,6 @@ const NewFeatureStrategyEdit = () => {
             />
             {staleDataNotification}
         </FormTemplate>
-    );
-};
-
-export const FeatureStrategyEdit = () => {
-    const consolidate = useUiFlag('strategyFormConsolidation');
-    return consolidate ? (
-        <NewFeatureStrategyEdit />
-    ) : (
-        <LegacyFeatureStrategyEdit />
     );
 };
 

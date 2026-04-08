@@ -36,8 +36,6 @@ import { useDefaultStrategy } from '../../../project/Project/ProjectSettings/Pro
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { Limit } from 'component/common/Limit/Limit';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { LegacyFeatureStrategyCreate } from './LegacyFeatureStrategyCreate.tsx';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -51,7 +49,7 @@ const useStrategyLimit = (strategyCount: number) => {
     };
 };
 
-const NewFeatureStrategyCreate = () => {
+export const FeatureStrategyCreate = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
@@ -235,15 +233,6 @@ const NewFeatureStrategyCreate = () => {
             />
             {staleDataNotification}
         </FormTemplate>
-    );
-};
-
-export const FeatureStrategyCreate = () => {
-    const consolidate = useUiFlag('strategyFormConsolidation');
-    return consolidate ? (
-        <NewFeatureStrategyCreate />
-    ) : (
-        <LegacyFeatureStrategyCreate />
     );
 };
 

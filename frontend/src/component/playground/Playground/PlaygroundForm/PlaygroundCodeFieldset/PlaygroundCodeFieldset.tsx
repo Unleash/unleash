@@ -29,12 +29,8 @@ import {
 import CheckBoxOutlineBlank from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useFullUnleashContext } from 'hooks/api/getters/useUnleashContext/useFullUnleashContext.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 import type { IUnleashContextDefinition } from 'interfaces/context.ts';
-import type {
-    ISelectOption,
-    SelectOptionGroup,
-} from 'component/common/GeneralSelect/GeneralSelect.tsx';
+import type { SelectOptionGroup } from 'component/common/GeneralSelect/GeneralSelect.tsx';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect.tsx';
 
 interface IPlaygroundCodeFieldsetProps {
@@ -44,8 +40,7 @@ interface IPlaygroundCodeFieldsetProps {
 
 const createContextFieldOptions = (
     context: IUnleashContextDefinition[],
-    { groupOptions }: { groupOptions: boolean },
-): ISelectOption[] | SelectOptionGroup[] => {
+): SelectOptionGroup[] => {
     const optList = (opts: { name: string; sortOrder: number }[]) =>
         opts
             .toSorted((a, b) => a.sortOrder - b.sortOrder)
@@ -53,10 +48,6 @@ const createContextFieldOptions = (
                 key: option.name,
                 label: option.name,
             }));
-
-    if (!groupOptions) {
-        return optList(context);
-    }
 
     const fields = context.reduce(
         ({ project, global }, next) => {
@@ -99,10 +90,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
     const { setToastData } = useToast();
     const { context: contextData } = useFullUnleashContext();
 
-    const groupOptions = useUiFlag('projectContextFields');
-    const contextOptions = createContextFieldOptions(contextData, {
-        groupOptions,
-    });
+    const contextOptions = createContextFieldOptions(contextData);
 
     const [error, setError] = useState<string>();
     const [fieldExist, setFieldExist] = useState<boolean>(false);

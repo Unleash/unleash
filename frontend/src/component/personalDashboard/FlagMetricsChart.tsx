@@ -121,6 +121,8 @@ const useFlagMetrics = (
     environment: string | null,
     hoursBack: number,
 ) => {
+    const theme = useTheme();
+
     const {
         featureMetrics: metrics = [],
         loading,
@@ -144,10 +146,8 @@ const useFlagMetrics = (
     }, [sortedMetrics, environment]);
 
     const data = useMemo(() => {
-        return createChartData(filteredMetrics);
-    }, [filteredMetrics]);
-
-    const theme = useTheme();
+        return createChartData(theme, filteredMetrics);
+    }, [theme, filteredMetrics]);
     const { locationSettings } = useLocationSettings();
     const options = useMemo(() => {
         return createBarChartOptions(theme, hoursBack, locationSettings);

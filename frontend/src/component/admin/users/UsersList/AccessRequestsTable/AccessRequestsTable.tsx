@@ -1,13 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
-import {
-    Button,
-    IconButton,
-    Select,
-    MenuItem,
-    Typography,
-    styled,
-} from '@mui/material';
+import { Button, IconButton, Typography, styled } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import { VirtualizedTable } from 'component/common/Table';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -15,11 +8,12 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { sortTypes } from 'utils/sortTypes';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import type { IRole } from 'interfaces/role';
+import { RoleSelectCell } from './RoleSelectCell.tsx';
 
 export interface IAccessRequest {
     id: string;
     email: string;
+    imageUrl: string;
     requestedAt: string;
 }
 
@@ -27,26 +21,36 @@ const MOCK_ACCESS_REQUESTS: IAccessRequest[] = [
     {
         id: '1',
         email: 'henning@sillerud.com',
+        imageUrl:
+            'https://gravatar.com/avatar/1d310efca484c9fe1eca3ff7ebe6a648ae18da60c0ed715b3dac2301e02f820c?s=42&d=retro&r=g',
         requestedAt: '2026-03-24T00:00:00Z',
     },
     {
         id: '2',
         email: 'ivar+local@getunleash.io',
+        imageUrl:
+            'https://gravatar.com/avatar/caa545d93eb98c2fb322d39996929113e8d50c21f2fec15d9a8bd0b240c5ff86?s=42&d=retro&r=g',
         requestedAt: '2026-03-10T00:00:00Z',
     },
     {
         id: '3',
         email: 'alexandru.gheorghies@intelligentbee.com',
+        imageUrl:
+            'https://gravatar.com/avatar/273fd5d36d6cf98c9549f001d983b8f34db42ea36fc8c8961748311b5d4fad60?s=42&d=retro&r=g',
         requestedAt: '2026-02-23T00:00:00Z',
     },
     {
         id: '4',
         email: 'cristian.busuioc@intelligentbee.com',
+        imageUrl:
+            'https://gravatar.com/avatar/a52777f9de77536490503cedc4980327fef9a9c970c559f48857dbf562e28a66?s=42&d=retro&r=g',
         requestedAt: '2026-02-23T00:00:00Z',
     },
     {
         id: '5',
         email: 'robert.cristea@intelligentbee.com',
+        imageUrl:
+            'https://gravatar.com/avatar/139ae3fc4cbee319a04f743bdfa40ab1b14f06b16b1fe38fd8bd1fd03cc8e71b?s=42&d=retro&r=g',
         requestedAt: '2026-02-23T00:00:00Z',
     },
 ];
@@ -54,12 +58,6 @@ const MOCK_ACCESS_REQUESTS: IAccessRequest[] = [
 const StyledTitle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(2),
     fontWeight: theme.typography.fontWeightBold,
-}));
-
-const StyledSelect = styled(Select<number>)(({ theme }) => ({
-    minWidth: 100,
-    height: 32,
-    fontSize: theme.fontSizes.smallBody,
 }));
 
 const StyledActions = styled('div')(({ theme }) => ({
@@ -73,31 +71,6 @@ const StyledActions = styled('div')(({ theme }) => ({
 const StyledContainer = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
-
-const RoleSelectCell = ({
-    roles,
-    selectedRoleId,
-    onChange,
-}: {
-    roles: IRole[];
-    selectedRoleId: number;
-    onChange: (roleId: number) => void;
-}) => (
-    <TextCell>
-        <StyledSelect
-            size='small'
-            value={selectedRoleId}
-            onChange={(e) => onChange(e.target.value as number)}
-            variant='outlined'
-        >
-            {roles.map((role) => (
-                <MenuItem key={role.id} value={role.id}>
-                    {role.name}
-                </MenuItem>
-            ))}
-        </StyledSelect>
-    </TextCell>
-);
 
 export const AccessRequestsTable = () => {
     const { roles } = useUsers();

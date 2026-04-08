@@ -364,10 +364,7 @@ const UsersList = () => {
                 }
             />
             <UsersHeader />
-            <ConditionallyRender
-                condition={Boolean(showAccessRequests)}
-                show={<AccessRequestsTable />}
-            />
+            {showAccessRequests ? <AccessRequestsTable /> : null}
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}

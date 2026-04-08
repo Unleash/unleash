@@ -5,6 +5,7 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { ImpactMetricsChart } from 'component/impact-metrics/ImpactMetricsChart';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
+import type { MetricSource } from 'component/impact-metrics/types';
 
 const StyledMiniChartWrapper = styled(Box)(({ theme }) => ({
     width: 60,
@@ -53,7 +54,7 @@ interface MiniChartWithDataProps {
     threshold: number;
     projectId: string;
     featureId: string;
-    source?: 'internal' | 'external';
+    source?: MetricSource;
 }
 
 export const MiniChartWithData: React.FC<MiniChartWithDataProps> = ({

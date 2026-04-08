@@ -4,6 +4,7 @@ import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolve
 import { ImpactMetricsChart } from 'component/impact-metrics/ImpactMetricsChart';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
+import type { MetricSource } from 'component/impact-metrics/types';
 
 const StyledMiniChartWrapper = styled(Box)(({ theme }) => ({
     width: 60,
@@ -41,7 +42,7 @@ interface MiniChartNoDataProps {
     labelSelectors: Record<string, string[]>;
     aggregationMode?: MetricQuerySchemaAggregationMode;
     threshold: number;
-    source?: 'internal' | 'external';
+    source?: MetricSource;
 }
 
 export const MiniChartNoData: React.FC<MiniChartNoDataProps> = ({

@@ -8,17 +8,18 @@ import {
 } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import type { MetricSource } from 'component/impact-metrics/types';
 
 type SeriesOption = {
     name: string;
     displayName: string;
     help: string;
-    source?: 'internal' | 'external';
+    source?: MetricSource;
 };
 
 export type MetricSelection = {
     series: string;
-    source?: 'internal' | 'external';
+    source?: MetricSource;
 };
 
 export type SeriesSelectorProps = {

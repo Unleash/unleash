@@ -1,4 +1,5 @@
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
+import type { MetricSource } from 'component/impact-metrics/types';
 import { useChartData } from 'component/impact-metrics/hooks/useChartData';
 import { useMemo } from 'react';
 import type { FC } from 'react';
@@ -16,7 +17,7 @@ interface MiniMetricsChartWithTooltipProps {
     threshold: number;
     projectId: string;
     featureId: string;
-    source?: 'internal' | 'external';
+    source?: MetricSource;
 }
 
 export const MiniMetricsChartWithTooltip: FC<

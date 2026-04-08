@@ -24,6 +24,7 @@ import {
     MetricSelector,
     type MetricSelection,
 } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+import type { MetricSource } from 'component/impact-metrics/types';
 import {
     getDefaultAggregation,
     getMetricType,
@@ -96,7 +97,7 @@ type MetricOption = { name: string } & ImpactMetricsSeries;
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
     metricName: safeguard?.impactMetric.metricName || '',
-    source: (safeguard?.impactMetric as { source?: 'internal' | 'external' })
+    source: (safeguard?.impactMetric as { source?: MetricSource })
         ?.source,
     appName: safeguard?.impactMetric.labelSelectors.appName?.[0] || '*',
     aggregationMode: (safeguard?.impactMetric.aggregationMode ||
@@ -115,7 +116,7 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
     );
 
     const [metricName, setMetricName] = useState(initialValues.metricName);
-    const [source, setSource] = useState<'internal' | 'external' | undefined>(
+    const [source, setSource] = useState<MetricSource | undefined>(
         initialValues.source,
     );
     const [appName, setAppName] = useState(initialValues.appName);
@@ -187,7 +188,7 @@ const useSafeguardMetricsData = (
     timeRange: MetricQuerySchemaTimeRange,
     aggregationMode: MetricQuerySchemaAggregationMode,
     environment: string,
-    source?: 'internal' | 'external',
+    source?: MetricSource,
 ) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
     const { data: metricsData } = useImpactMetricsData(

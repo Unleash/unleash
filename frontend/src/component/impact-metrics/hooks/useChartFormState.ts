@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import type { AggregationMode, ChartConfig } from '../types.ts';
+import type { AggregationMode, ChartConfig, MetricSource } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import type { MetricSelection } from '../ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
 import {
@@ -23,7 +23,7 @@ export type ChartFormState = {
         yAxisMin: 'auto' | 'zero';
         aggregationMode: AggregationMode;
         labelSelectors: Record<string, string[]>;
-        source?: 'internal' | 'external';
+        source?: MetricSource;
     };
     actions: {
         setTitle: (title: string) => void;
@@ -58,7 +58,7 @@ export const useChartFormState = ({
         initialConfig?.aggregationMode ||
             getDefaultAggregation(getMetricType(metricName)),
     );
-    const [source, setSource] = useState<'internal' | 'external' | undefined>(
+    const [source, setSource] = useState<MetricSource | undefined>(
         initialConfig?.source,
     );
 

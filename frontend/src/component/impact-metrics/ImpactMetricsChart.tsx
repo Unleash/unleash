@@ -15,7 +15,7 @@ import {
 } from './metricsFormatters.js';
 import { fromUnixTime } from 'date-fns';
 import { useChartData } from './hooks/useChartData.ts';
-import type { AggregationMode } from './types.ts';
+import type { AggregationMode, MetricSource } from './types.ts';
 
 type ChartComponent =
     | 'xAxis'
@@ -38,7 +38,7 @@ type ImpactMetricsChartProps = {
     isPreview?: boolean;
     showComponents?: ChartComponent[];
     threshold?: number;
-    source?: 'internal' | 'external';
+    source?: MetricSource;
 };
 
 export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({

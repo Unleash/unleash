@@ -1,5 +1,6 @@
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
+import type { MetricSource } from 'component/impact-metrics/types';
 
 export type TimeSeriesData = [number, number][];
 
@@ -28,7 +29,7 @@ export type ImpactMetricsQuery = {
     range: 'hour' | 'day' | 'week' | 'month';
     labels?: Record<string, string[]>;
     aggregationMode?: 'rps' | 'count' | 'avg' | 'sum' | 'p50' | 'p95' | 'p99';
-    source?: 'internal' | 'external';
+    source?: MetricSource;
 };
 
 export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {

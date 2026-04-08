@@ -1,3 +1,5 @@
+export type MetricSource = 'internal' | 'external';
+
 export type ChartConfig = {
     id: string;
     metricName: string; // e.g. unleash_counter_my_metric
@@ -6,7 +8,7 @@ export type ChartConfig = {
     aggregationMode: AggregationMode;
     labelSelectors: Record<string, string[]>;
     title?: string;
-    source?: 'internal' | 'external';
+    source?: MetricSource;
 };
 
 export type AggregationMode =

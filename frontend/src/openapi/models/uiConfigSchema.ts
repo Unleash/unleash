@@ -23,6 +23,8 @@ export interface UiConfigSchema {
     billing?: UiConfigSchemaBilling;
     /** Whether password authentication should be disabled or not. */
     disablePasswordAuth?: boolean;
+    /** The URL of the Unleash Edge instance. */
+    edgeUrl?: string;
     /** Whether this instance can send out emails or not. */
     emailEnabled?: boolean;
     /** What kind of Unleash instance it is: Enterprise, Pro, or Open source */

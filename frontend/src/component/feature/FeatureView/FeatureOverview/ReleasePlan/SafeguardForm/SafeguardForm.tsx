@@ -99,7 +99,7 @@ const getInitialValues = (safeguard?: ISafeguard) => ({
     metric: {
         metricName: safeguard?.impactMetric.metricName || '',
         source: safeguard?.impactMetric.source,
-    } as MetricSelection,
+    },
     appName: safeguard?.impactMetric.labelSelectors.appName?.[0] || '*',
     aggregationMode: (safeguard?.impactMetric.aggregationMode ||
         'rps') as MetricQuerySchemaAggregationMode,

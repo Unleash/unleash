@@ -63,6 +63,9 @@ import {
     RELEASE_PLAN_MILESTONE_STARTED,
     RELEASE_PLAN_PROGRESSIONS_PAUSED,
     RELEASE_PLAN_PROGRESSIONS_RESUMED,
+    USER_ACCESS_REQUEST_REGISTERED,
+    USER_ACCESS_REQUEST_APPROVED,
+    USER_ACCESS_REQUEST_REJECTED,
 } from '../events/index.js';
 
 interface IEventData {
@@ -391,5 +394,20 @@ export const EVENT_MAP: Record<string, IEventData> = {
         label: 'Release plan progressions resumed',
         action: '{{b}}{{user}}{{b}} resumed release plan progressions for {{b}}{{feature}}{{b}} in the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
         path: '/projects/{{event.project}}/features/{{event.featureName}}',
+    },
+    [USER_ACCESS_REQUEST_REGISTERED]: {
+        label: 'User access request registered',
+        action: '{{b}}{{event.data.email}}{{b}} requested access to Unleash',
+        path: '/admin/users',
+    },
+    [USER_ACCESS_REQUEST_APPROVED]: {
+        label: 'User access request approved',
+        action: '{{b}}{{user}}{{b}} approved access request for {{b}}{{event.data.email}}{{b}}',
+        path: '/admin/users',
+    },
+    [USER_ACCESS_REQUEST_REJECTED]: {
+        label: 'User access request rejected',
+        action: '{{b}}{{user}}{{b}} rejected access request for {{b}}{{event.data.email}}{{b}}',
+        path: '/admin/users',
     },
 };

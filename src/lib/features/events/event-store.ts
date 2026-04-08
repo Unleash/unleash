@@ -34,6 +34,7 @@ import { applyGenericQueryParams } from '../feature-search/search-utils.js';
 import type { ITag } from '../../tags/index.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
+import type { EnvironmentVisibleRevisionState } from '../client-feature-toggles/delta/client-feature-toggle-delta.js';
 
 const EVENT_COLUMNS = [
     'id',
@@ -265,11 +266,7 @@ export class EventStore implements IEventStore {
 
     async getDeltaRevisionState(
         environment: string,
-        upperBound: number,
-    ): Promise<{
-        projectRevisions: Map<string, number>;
-        globalSegmentRevision: number;
-    }> {
+    ): Promise<EnvironmentVisibleRevisionState> {
         const stopTimer = this.metricTimer('getDeltaRevisionState');
         const shouldFilterEnvironment = environment !== ALL_ENVS;
         const applyEnvironmentFilter = (query: Knex.QueryBuilder) => {
@@ -304,7 +301,6 @@ export class EventStore implements IEventStore {
 
                 return applyEnvironmentFilter(builder);
             })
-            .andWhere('id', '<=', upperBound)
             .whereNotNull('project')
             .groupBy('project');
 
@@ -315,7 +311,6 @@ export class EventStore implements IEventStore {
             .select(this.db.raw(`data->>'oldProject' as project`))
             .max({ revisionId: 'id' })
             .where({ type: FEATURE_PROJECT_CHANGE })
-            .andWhere('id', '<=', upperBound)
             .modify(applyEnvironmentFilter)
             .groupByRaw(`data->>'oldProject'`);
 
@@ -323,7 +318,6 @@ export class EventStore implements IEventStore {
             await this.db(TABLE)
                 .max({ revisionId: 'id' })
                 .where({ type: SEGMENT_UPDATED })
-                .andWhere('id', '<=', upperBound)
                 .first();
 
         stopTimer();

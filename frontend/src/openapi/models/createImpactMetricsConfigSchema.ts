@@ -22,6 +22,8 @@ export interface CreateImpactMetricsConfigSchema {
     metricName: string;
     /** The time range for the metric data. */
     timeRange: CreateImpactMetricsConfigSchemaTimeRange;
+    /** The Prometheus data source for this metric. Defaults to internal. */
+    source?: 'internal' | 'external';
     /**
      * Optional title for the impact metric chart.
      */

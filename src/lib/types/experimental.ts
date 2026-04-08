@@ -71,7 +71,6 @@ export type IFlagKey =
     | 'remoteMcpServer'
     | 'regexConstraintOperator'
     | 'signupDialog'
-    | 'strategyFormConsolidation'
     | 'updateMilestoneStrategy'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
@@ -329,10 +328,6 @@ const flags: IFlags = {
     ),
     updateMilestoneStrategy: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_UPDATE_MILESTONE_STRATEGY,
-        false,
-    ),
-    strategyFormConsolidation: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_STRATEGY_FORM_CONSOLIDATION,
         false,
     ),
     enterpriseEdgeTokensList: parseEnvVarBoolean(

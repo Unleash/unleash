@@ -170,7 +170,6 @@ export const setupUiConfigEndpoint = () => {
         environment: 'enterprise',
         flags: {
             newStrategyConfiguration: true,
-            strategyFormConsolidation: true,
         },
         resourceLimits: {
             featureEnvironmentStrategies: 2,

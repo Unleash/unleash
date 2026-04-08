@@ -28,8 +28,6 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { LegacyEditChange } from './LegacyEditChange.tsx';
 import { getChangeStrategyName } from 'utils/getChangeStrategyName.ts';
 
 interface IEditChangeProps {
@@ -58,7 +56,7 @@ const addIdSymbolToConstraints = (
     });
 };
 
-const NewEditChange = ({
+export const EditChange = ({
     change,
     changeRequestId,
     environment,
@@ -174,15 +172,6 @@ const NewEditChange = ({
                 {staleDataNotification}
             </FormTemplate>
         </SidebarModal>
-    );
-};
-
-export const EditChange = (props: IEditChangeProps) => {
-    const consolidate = useUiFlag('strategyFormConsolidation');
-    return consolidate ? (
-        <NewEditChange {...props} />
-    ) : (
-        <LegacyEditChange {...props} />
     );
 };
 

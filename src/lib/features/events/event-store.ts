@@ -317,11 +317,7 @@ export class EventStore implements IEventStore {
         const segmentRow: { revisionId?: number | string } | undefined =
             await this.db(TABLE)
                 .max({ revisionId: 'id' })
-                .whereIn('type', [
-                    SEGMENT_CREATED,
-                    SEGMENT_UPDATED,
-                    SEGMENT_DELETED,
-                ])
+                .where({ type: SEGMENT_UPDATED })
                 .first();
 
         stopTimer();

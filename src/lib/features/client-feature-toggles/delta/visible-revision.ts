@@ -1,3 +1,4 @@
+import { ALL_PROJECTS } from '../../../server-impl.js';
 import type { EnvironmentVisibleRevisionState } from './client-feature-toggle-delta.js';
 
 export const getVisibleRevision = (
@@ -9,7 +10,7 @@ export const getVisibleRevision = (
     }
 
     const projectList =
-        projects.length > 0 && !projects.includes('*')
+        projects.length > 0 && !projects.includes(ALL_PROJECTS)
             ? projects
             : Array.from(revisionState.projectRevisions.keys());
     // assume segment revision as max because segment changes are always visible

@@ -180,9 +180,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         const hasRequestedRevision = sdkRevisionId !== undefined;
         const requestedRevisionId = sdkRevisionId ?? 0;
 
-        const hasDelta = this.delta[environment] !== undefined;
-
-        if (!hasDelta) {
+        if (this.delta[environment] === undefined) {
             await this.initEnvironmentDelta(environment);
         }
 
@@ -461,13 +459,12 @@ export class ClientFeatureToggleDelta extends EventEmitter {
     }
 
     private async initEnvironmentDelta(environment: string) {
+        const revisionState =
+            await this.eventStore.getDeltaRevisionState(environment);
         const baseFeatures = await this.getClientFeatures({
             environment,
         });
         const baseSegments = await this.segmentReadModel.getAllForClientIds();
-
-        const revisionState =
-            await this.eventStore.getDeltaRevisionState(environment);
 
         this.delta[environment] = new DeltaCache({
             eventId: getVisibleRevision(revisionState),

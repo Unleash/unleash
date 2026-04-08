@@ -8,52 +8,9 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { sortTypes } from 'utils/sortTypes';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
+import { useUserAccessRequests } from 'hooks/api/getters/useUserAccessRequests/useUserAccessRequests';
+import type { UserAccessRequestSchema } from 'openapi';
 import { RoleSelectCell } from './RoleSelectCell.tsx';
-
-export interface IAccessRequest {
-    id: string;
-    email: string;
-    imageUrl: string;
-    requestedAt: string;
-}
-
-const MOCK_ACCESS_REQUESTS: IAccessRequest[] = [
-    {
-        id: '1',
-        email: 'henning@sillerud.com',
-        imageUrl:
-            'https://gravatar.com/avatar/1d310efca484c9fe1eca3ff7ebe6a648ae18da60c0ed715b3dac2301e02f820c?s=42&d=retro&r=g',
-        requestedAt: '2026-03-24T00:00:00Z',
-    },
-    {
-        id: '2',
-        email: 'ivar+local@getunleash.io',
-        imageUrl:
-            'https://gravatar.com/avatar/caa545d93eb98c2fb322d39996929113e8d50c21f2fec15d9a8bd0b240c5ff86?s=42&d=retro&r=g',
-        requestedAt: '2026-03-10T00:00:00Z',
-    },
-    {
-        id: '3',
-        email: 'alexandru.gheorghies@intelligentbee.com',
-        imageUrl:
-            'https://gravatar.com/avatar/273fd5d36d6cf98c9549f001d983b8f34db42ea36fc8c8961748311b5d4fad60?s=42&d=retro&r=g',
-        requestedAt: '2026-02-23T00:00:00Z',
-    },
-    {
-        id: '4',
-        email: 'cristian.busuioc@intelligentbee.com',
-        imageUrl:
-            'https://gravatar.com/avatar/a52777f9de77536490503cedc4980327fef9a9c970c559f48857dbf562e28a66?s=42&d=retro&r=g',
-        requestedAt: '2026-02-23T00:00:00Z',
-    },
-    {
-        id: '5',
-        email: 'robert.cristea@intelligentbee.com',
-        imageUrl:
-            'https://gravatar.com/avatar/139ae3fc4cbee319a04f743bdfa40ab1b14f06b16b1fe38fd8bd1fd03cc8e71b?s=42&d=retro&r=g',
-        requestedAt: '2026-02-23T00:00:00Z',
-    },
-];
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -74,7 +31,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
 
 export const AccessRequestsTable = () => {
     const { roles } = useUsers();
-    const accessRequests = MOCK_ACCESS_REQUESTS;
+    const { accessRequests } = useUserAccessRequests();
 
     const viewerRole = roles.find((r) => r.name.toLowerCase() === 'viewer');
     const defaultRoleId = viewerRole?.id ?? roles[0]?.id ?? 0;
@@ -90,11 +47,11 @@ export const AccessRequestsTable = () => {
         setSelectedRoles((prev) => ({ ...prev, [requestId]: roleId }));
     };
 
-    const handleApprove = (_request: IAccessRequest) => {
+    const handleApprove = (_request: UserAccessRequestSchema) => {
         // noop for now
     };
 
-    const handleDelete = (_request: IAccessRequest) => {
+    const handleDelete = (_request: UserAccessRequestSchema) => {
         // noop for now
     };
 
@@ -120,7 +77,7 @@ export const AccessRequestsTable = () => {
                 Cell: ({
                     row: { original },
                 }: {
-                    row: { original: IAccessRequest };
+                    row: { original: UserAccessRequestSchema };
                 }) => <TextCell>{original.email}</TextCell>,
             },
             {
@@ -130,7 +87,7 @@ export const AccessRequestsTable = () => {
                 Cell: ({
                     row: { original },
                 }: {
-                    row: { original: IAccessRequest };
+                    row: { original: UserAccessRequestSchema };
                 }) => (
                     <RoleSelectCell
                         roles={roles}
@@ -157,7 +114,7 @@ export const AccessRequestsTable = () => {
                 Cell: ({
                     row: { original },
                 }: {
-                    row: { original: IAccessRequest };
+                    row: { original: UserAccessRequestSchema };
                 }) => (
                     <StyledActions>
                         <Button

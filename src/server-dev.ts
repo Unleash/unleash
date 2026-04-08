@@ -55,10 +55,10 @@ process.nextTick(async () => {
 
                         safeguards: true,
                         gtmReleaseManagement: true,
-                        projectContextFields: true,
                         readOnlyUsersUI: true,
                         regexConstraintOperator: true,
                         strategyFormConsolidation: true,
+                        updateMilestoneStrategy: true,
                         enterpriseEdgeTokensList: true,
                         filterFavorites: true,
                         userTokenWithClientApiLoggingKillSwitch: false,

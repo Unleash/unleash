@@ -66,12 +66,12 @@ export type IFlagKey =
     | 'newInUnleash'
     | 'oidcPkceSupport'
     | 'gtmReleaseManagement'
-    | 'projectContextFields'
     | 'readOnlyUsersUI'
     | 'remoteMcpServer'
     | 'regexConstraintOperator'
     | 'signupDialog'
     | 'strategyFormConsolidation'
+    | 'updateMilestoneStrategy'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
     | 'featureEnvSafeguards'
@@ -306,10 +306,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_GTM_RELEASE_MANAGEMENT,
         false,
     ),
-    projectContextFields: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_CONTEXT_FIELDS,
-        false,
-    ),
     readOnlyUsersUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS_UI,
         false,
@@ -328,6 +324,8 @@ const flags: IFlags = {
     ),
     strategyFormConsolidation: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_STRATEGY_FORM_CONSOLIDATION,
+    updateMilestoneStrategy: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_UPDATE_MILESTONE_STRATEGY,
         false,
     ),
     enterpriseEdgeTokensList: parseEnvVarBoolean(

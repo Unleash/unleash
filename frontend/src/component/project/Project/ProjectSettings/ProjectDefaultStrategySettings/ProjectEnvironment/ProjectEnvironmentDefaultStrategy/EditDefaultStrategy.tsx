@@ -19,8 +19,6 @@ import {
     PROJECT_DEFAULT_STRATEGY_WRITE,
     UPDATE_PROJECT,
 } from '@server/types/permissions';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { LegacyEditDefaultStrategy } from './LegacyEditDefaultStrategy.tsx';
 import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -49,7 +47,7 @@ export const useDefaultStrategy = (
     return { defaultStrategyFallback, strategy, refetch };
 };
 
-const NewEditDefaultStrategy = () => {
+const EditDefaultStrategy = () => {
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
     const { refetch: refetchProjectOverview } = useProjectOverview(projectId);
@@ -157,15 +155,6 @@ const NewEditDefaultStrategy = () => {
                 </Button>
             </StrategyFormBody>
         </FormTemplate>
-    );
-};
-
-const EditDefaultStrategy = () => {
-    const useConsolidated = useUiFlag('strategyFormConsolidation');
-    return useConsolidated ? (
-        <NewEditDefaultStrategy />
-    ) : (
-        <LegacyEditDefaultStrategy />
     );
 };
 

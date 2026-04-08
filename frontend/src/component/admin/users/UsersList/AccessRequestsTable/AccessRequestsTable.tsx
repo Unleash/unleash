@@ -8,10 +8,8 @@ import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { sortTypes } from 'utils/sortTypes';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import {
-    useUserAccessRequests,
-    type IUserAccessRequest,
-} from 'hooks/api/getters/useUserAccessRequests/useUserAccessRequests';
+import { useUserAccessRequests } from 'hooks/api/getters/useUserAccessRequests/useUserAccessRequests';
+import type { UserAccessRequestSchema } from 'openapi/models/userAccessRequestSchema';
 import { RoleSelectCell } from './RoleSelectCell.tsx';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
@@ -49,11 +47,11 @@ export const AccessRequestsTable = () => {
         setSelectedRoles((prev) => ({ ...prev, [requestId]: roleId }));
     };
 
-    const handleApprove = (_request: IUserAccessRequest) => {
+    const handleApprove = (_request: UserAccessRequestSchema) => {
         // noop for now
     };
 
-    const handleDelete = (_request: IUserAccessRequest) => {
+    const handleDelete = (_request: UserAccessRequestSchema) => {
         // noop for now
     };
 
@@ -79,7 +77,7 @@ export const AccessRequestsTable = () => {
                 Cell: ({
                     row: { original },
                 }: {
-                    row: { original: IUserAccessRequest };
+                    row: { original: UserAccessRequestSchema };
                 }) => <TextCell>{original.email}</TextCell>,
             },
             {
@@ -89,7 +87,7 @@ export const AccessRequestsTable = () => {
                 Cell: ({
                     row: { original },
                 }: {
-                    row: { original: IUserAccessRequest };
+                    row: { original: UserAccessRequestSchema };
                 }) => (
                     <RoleSelectCell
                         roles={roles}
@@ -116,7 +114,7 @@ export const AccessRequestsTable = () => {
                 Cell: ({
                     row: { original },
                 }: {
-                    row: { original: IUserAccessRequest };
+                    row: { original: UserAccessRequestSchema };
                 }) => (
                     <StyledActions>
                         <Button

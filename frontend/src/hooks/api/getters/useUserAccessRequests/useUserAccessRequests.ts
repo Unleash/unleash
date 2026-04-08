@@ -2,23 +2,18 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
-
-export interface IUserAccessRequest {
-    id: string;
-    email: string;
-    imageUrl: string;
-    requestedAt: string;
-}
+import type { UserAccessRequestSchema } from 'openapi/models/userAccessRequestSchema';
+import type { UserAccessRequestsSchema } from 'openapi/models/userAccessRequestsSchema';
 
 interface IUseUserAccessRequestsOutput {
-    accessRequests: IUserAccessRequest[];
+    accessRequests: UserAccessRequestSchema[];
     refetchAccessRequests: () => void;
     loading: boolean;
     error?: Error;
 }
 
 export const useUserAccessRequests = (): IUseUserAccessRequestsOutput => {
-    const { data, error, mutate } = useSWR(
+    const { data, error, mutate } = useSWR<UserAccessRequestsSchema>(
         formatApiPath('api/admin/user-access-requests'),
         fetcher,
     );

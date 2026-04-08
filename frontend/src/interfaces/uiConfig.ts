@@ -86,6 +86,7 @@ export type UiFlags = {
     gtmReleaseManagement?: boolean;
     readOnlyUsersUI?: boolean;
     regexConstraintOperator?: boolean;
+    semverGteConstraintOperators?: boolean;
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;

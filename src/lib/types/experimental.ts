@@ -69,6 +69,7 @@ export type IFlagKey =
     | 'readOnlyUsersUI'
     | 'remoteMcpServer'
     | 'regexConstraintOperator'
+    | 'semverGteConstraintOperators'
     | 'signupDialog'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
@@ -314,6 +315,10 @@ const flags: IFlags = {
     ),
     regexConstraintOperator: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REGEX_CONSTRAINT_OPERATOR,
+        false,
+    ),
+    semverGteConstraintOperators: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SEMVER_GTE_CONSTRAINT_OPERATORS,
         false,
     ),
     signupDialog: parseEnvVarBoolean(

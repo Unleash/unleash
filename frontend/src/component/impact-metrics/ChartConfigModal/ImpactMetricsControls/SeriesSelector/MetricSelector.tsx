@@ -9,11 +9,16 @@ import {
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
-type SeriesOption = { name: string; displayName: string; help: string };
+type SeriesOption = {
+    name: string;
+    displayName: string;
+    help: string;
+    source?: 'internal' | 'external';
+};
 
 export type SeriesSelectorProps = {
     value: string;
-    onChange: (series: string) => void;
+    onChange: (series: string, option?: SeriesOption) => void;
     options: SeriesOption[];
     loading?: boolean;
     label?: string;
@@ -76,9 +81,10 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
             options={allOptions}
             getOptionLabel={(option) => option.displayName}
             value={allOptions.find((option) => option.name === value) || null}
-            onChange={(_, newValue) =>
-                onChange(newValue?.name || options[0]?.name || '')
-            }
+            onChange={(_, newValue) => {
+                const selected = newValue || options[0];
+                onChange(selected?.name || '', selected);
+            }}
             disabled={loading}
             renderOption={(props, option, { inputValue }) => (
                 <Box component='li' {...props} key={option.name}>

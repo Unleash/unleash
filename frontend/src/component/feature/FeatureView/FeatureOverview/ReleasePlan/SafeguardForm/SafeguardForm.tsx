@@ -93,6 +93,8 @@ type MetricOption = { name: string } & ImpactMetricsSeries;
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
     metricName: safeguard?.impactMetric.metricName || '',
+    source: (safeguard?.impactMetric as { source?: 'internal' | 'external' })
+        ?.source,
     appName: safeguard?.impactMetric.labelSelectors.appName?.[0] || '*',
     aggregationMode: (safeguard?.impactMetric.aggregationMode ||
         'rps') as MetricQuerySchemaAggregationMode,
@@ -110,6 +112,9 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
     );
 
     const [metricName, setMetricName] = useState(initialValues.metricName);
+    const [source, setSource] = useState<'internal' | 'external' | undefined>(
+        initialValues.source,
+    );
     const [appName, setAppName] = useState(initialValues.appName);
     const [aggregationMode, setAggregationMode] =
         useState<MetricQuerySchemaAggregationMode>(
@@ -128,6 +133,7 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
         if (!safeguard) return;
 
         setMetricName(initialValues.metricName);
+        setSource(initialValues.source);
         setAppName(initialValues.appName);
         setAggregationMode(initialValues.aggregationMode);
         setOperator(initialValues.operator);
@@ -138,6 +144,8 @@ const useSafeguardFormValues = (safeguard?: ISafeguard) => {
     return {
         metricName,
         setMetricName,
+        source,
+        setSource,
         appName,
         setAppName,
         aggregationMode,
@@ -224,6 +232,7 @@ const useSafeguardFormHandlers = (
 ) => {
     const {
         setMetricName,
+        setSource,
         setAppName,
         setAggregationMode,
         setOperator,
@@ -237,8 +246,9 @@ const useSafeguardFormHandlers = (
     useEffect(() => {
         if (metricOptions.length > 0 && !formValues.metricName) {
             setMetricName(metricOptions[0].name);
+            setSource(metricOptions[0].source);
         }
-    }, [metricOptions, formValues.metricName, setMetricName]);
+    }, [metricOptions, formValues.metricName, setMetricName, setSource]);
 
     // Set default aggregation when metric type becomes known
     // Skip when metric hasn't changed from initial (existing safeguard opened)
@@ -251,9 +261,13 @@ const useSafeguardFormHandlers = (
         }
     }, [formValues.metricName, initialMetricName, metricType]);
 
-    const handleMetricChange = (value: string) => {
+    const handleMetricChange = (
+        value: string,
+        option?: MetricOption,
+    ) => {
         enterEditMode();
         setMetricName(value);
+        setSource(option?.source);
         setAppName('*');
     };
 
@@ -334,6 +348,7 @@ const useSafeguardFormState = (
                 timeRange: formValues.timeRange,
                 aggregationMode: formValues.aggregationMode,
                 labelSelectors,
+                ...(formValues.source ? { source: formValues.source } : {}),
             },
             triggerCondition: {
                 operator: formValues.operator,
@@ -342,6 +357,7 @@ const useSafeguardFormState = (
         }),
         [
             formValues.metricName,
+            formValues.source,
             formValues.timeRange,
             formValues.aggregationMode,
             labelSelectors,

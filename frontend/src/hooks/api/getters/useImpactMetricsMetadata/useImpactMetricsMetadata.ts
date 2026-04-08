@@ -5,6 +5,7 @@ import { formatApiPath } from 'utils/formatPath';
 export type ImpactMetricsSeries = {
     help: string;
     displayName: string;
+    source?: 'internal' | 'external';
 };
 
 export type ImpactMetricsMetadata = {

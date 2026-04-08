@@ -201,9 +201,9 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                         projectRevisions: new Map([['default', 85815]]),
                         globalSegmentRevision: 0,
                     }),
+                    getMaxRevisionId: async () => globalRevisionId,
                 } as any,
                 {
-                    getMaxRevisionId: async () => globalRevisionId,
                     on: () => undefined,
                 } as any,
                 {} as any,
@@ -249,9 +249,9 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                     projectRevisions: new Map(),
                     globalSegmentRevision: 0,
                 }),
+                getMaxRevisionId: async () => 0,
             } as any,
             {
-                getMaxRevisionId: async () => 0,
                 on: () => undefined,
             } as any,
             {} as any,
@@ -260,6 +260,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                 getLogger: () =>
                     ({
                         error: () => undefined,
+                        info: () => undefined,
                     }) as any,
             } as any,
         );
@@ -293,9 +294,9 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                     projectRevisions: new Map(),
                     globalSegmentRevision: 0,
                 }),
+                getMaxRevisionId: async () => 0,
             } as any,
             {
-                getMaxRevisionId: async () => 0,
                 on: () => undefined,
             } as any,
             {} as any,
@@ -304,6 +305,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                 getLogger: () =>
                     ({
                         error: () => undefined,
+                        info: () => undefined,
                     }) as any,
             } as any,
         );
@@ -357,9 +359,9 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                         environment: 'production',
                     },
                 ],
+                getMaxRevisionId: async () => currentRevisionId,
             } as any,
             {
-                getMaxRevisionId: async () => currentRevisionId,
                 on: () => undefined,
             } as any,
             {
@@ -370,6 +372,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                 getLogger: () =>
                     ({
                         error: () => undefined,
+                        info: () => undefined,
                     }) as any,
             } as any,
         );
@@ -442,9 +445,9 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                         environment: null,
                     },
                 ],
+                getMaxRevisionId: async () => currentRevisionId,
             } as any,
             {
-                getMaxRevisionId: async () => currentRevisionId,
                 on: () => undefined,
             } as any,
             {
@@ -455,6 +458,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                 getLogger: () =>
                     ({
                         error: () => undefined,
+                        info: () => undefined,
                     }) as any,
             } as any,
         );
@@ -548,9 +552,9 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                         },
                     },
                 ],
+                getMaxRevisionId: async () => currentRevisionId,
             } as any,
             {
-                getMaxRevisionId: async () => currentRevisionId,
                 on: () => undefined,
             } as any,
             {
@@ -561,6 +565,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                 getLogger: () =>
                     ({
                         error: () => undefined,
+                        info: () => undefined,
                     }) as any,
             } as any,
         );

@@ -1,10 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import {
-    getVisibleRevisionForProjects,
-    type VisibleRevisionState,
-} from './visible-revision.js';
+import { getVisibleRevision } from './visible-revision.js';
+import type { EnvironmentVisibleRevisionState } from './client-feature-toggle-delta.js';
 
-const revisionState: VisibleRevisionState = {
+const revisionState: EnvironmentVisibleRevisionState = {
     projectRevisions: new Map([
         ['alpha', 11],
         ['beta', 14],
@@ -14,25 +12,19 @@ const revisionState: VisibleRevisionState = {
 
 describe('getVisibleRevisionForProjects', () => {
     test('returns all-project revision for wildcard query', () => {
-        expect(getVisibleRevisionForProjects(revisionState, ['*'], 99)).toBe(
-            99,
-        );
+        expect(getVisibleRevision(revisionState, ['*'])).toBe(14);
     });
 
     test('uses wildcard semantics for empty project list', () => {
-        expect(getVisibleRevisionForProjects(revisionState, [], 77)).toBe(77);
+        expect(getVisibleRevision(revisionState, [])).toBe(14);
     });
 
     test('returns max project or segment revision for project-scoped query', () => {
-        expect(
-            getVisibleRevisionForProjects(revisionState, ['alpha'], 99),
-        ).toBe(12);
-        expect(
-            getVisibleRevisionForProjects(revisionState, ['alpha', 'beta'], 99),
-        ).toBe(14);
+        expect(getVisibleRevision(revisionState, ['alpha'])).toBe(12);
+        expect(getVisibleRevision(revisionState, ['alpha', 'beta'])).toBe(14);
     });
 
     test('returns 0 when scoped query has no revision state', () => {
-        expect(getVisibleRevisionForProjects(undefined, ['alpha'], 99)).toBe(0);
+        expect(getVisibleRevision(undefined, ['alpha'])).toBe(0);
     });
 });

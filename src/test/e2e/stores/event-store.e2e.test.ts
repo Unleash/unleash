@@ -6,6 +6,8 @@ import {
     FEATURE_PROJECT_CHANGE,
     FEATURE_TAGGED,
     FEATURE_UPDATED,
+    SEGMENT_CREATED,
+    SEGMENT_DELETED,
     SEGMENT_UPDATED,
     type IEvent,
 } from '../../../lib/events/index.js';
@@ -373,10 +375,7 @@ describe('getDeltaRevisionState', () => {
             (e) => e.type === SEGMENT_UPDATED,
         )!;
 
-        const state = await eventStore.getDeltaRevisionState(
-            ALL_ENVS,
-            segmentStored.id,
-        );
+        const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
 
         expect(state.projectRevisions.get('default')).toBe(defaultStored.id);
         expect(state.projectRevisions.get('other')).toBe(otherStored.id);
@@ -429,10 +428,7 @@ describe('getDeltaRevisionState', () => {
         )!;
         const nullEnvStored = allEvents.find((e) => e.environment == null)!;
 
-        const state = await eventStore.getDeltaRevisionState(
-            'development',
-            nullEnvStored.id,
-        );
+        const state = await eventStore.getDeltaRevisionState('development');
 
         expect(state.projectRevisions.get('default')).toBe(
             Math.max(devStored.id, nullEnvStored.id),
@@ -454,10 +450,7 @@ describe('getDeltaRevisionState', () => {
             (e) => e.type === FEATURE_PROJECT_CHANGE,
         )!;
 
-        const state = await eventStore.getDeltaRevisionState(
-            ALL_ENVS,
-            storedMove.id,
-        );
+        const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
 
         expect(state.projectRevisions.get('old-project')).toBe(storedMove.id);
         expect(state.projectRevisions.get('new-project')).toBe(storedMove.id);
@@ -477,17 +470,13 @@ describe('getDeltaRevisionState', () => {
 
         await eventStore.store(favoritedEvent);
 
-        const stored = (await eventStore.getAll())[0];
-        const state = await eventStore.getDeltaRevisionState(
-            ALL_ENVS,
-            stored.id,
-        );
+        const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
 
         expect(state.projectRevisions.size).toBe(0);
         expect(state.globalSegmentRevision).toBe(0);
     });
 
-    test('respects upperBound for project and segment revisions', async () => {
+    test('respects max revision id for project and segment revisions', async () => {
         const firstFeature = new FeatureUpdatedEvent({
             project: 'default',
             featureName: 'feature-a',
@@ -525,14 +514,41 @@ describe('getDeltaRevisionState', () => {
             (e) => e.type === FEATURE_UPDATED && e.data.enabled === false,
         )!;
 
-        const state = await eventStore.getDeltaRevisionState(
-            ALL_ENVS,
-            segmentStored.id,
-        );
+        const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
 
-        expect(state.projectRevisions.get('default')).toBe(firstStored.id);
-        expect(state.projectRevisions.get('default')).not.toBe(secondStored.id);
+        expect(state.projectRevisions.get('default')).not.toBe(firstStored.id);
+        expect(state.projectRevisions.get('default')).toBe(secondStored.id);
         expect(state.globalSegmentRevision).toBe(segmentStored.id);
+    });
+
+    test('includes segment created and deleted revisions in global segment revision', async () => {
+        const segmentCreatedEvent = {
+            type: SEGMENT_CREATED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            data: { id: 999, name: 'segment-a' },
+        };
+        const segmentDeletedEvent = {
+            type: SEGMENT_DELETED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            preData: { id: 999, name: 'segment-a' },
+            data: {},
+        };
+
+        await eventStore.store(segmentCreatedEvent);
+        await eventStore.store(segmentDeletedEvent);
+
+        const allEvents = await eventStore.getAll();
+        const segmentDeletedStored = allEvents.find(
+            (e) => e.type === SEGMENT_DELETED,
+        )!;
+
+        const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
+
+        expect(state.globalSegmentRevision).toBe(segmentDeletedStored.id);
     });
 });
 

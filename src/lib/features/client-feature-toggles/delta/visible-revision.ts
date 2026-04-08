@@ -1,24 +1,19 @@
-export type VisibleRevisionState = {
-    projectRevisions: Map<string, number>;
-    globalSegmentRevision: number;
-};
+import type { EnvironmentVisibleRevisionState } from './client-feature-toggle-delta.js';
 
-export const getVisibleRevisionForProjects = (
-    revisionState: VisibleRevisionState | undefined,
-    projects: string[],
-    allProjectsRevisionId: number,
+export const getVisibleRevision = (
+    revisionState: EnvironmentVisibleRevisionState | undefined,
+    projects: string[] = ['*'],
 ): number => {
-    const projectList = projects.length > 0 ? projects : ['*'];
-
-    if (projectList.includes('*')) {
-        return allProjectsRevisionId;
-    }
-
     if (!revisionState) {
         return 0;
     }
 
-    let visibleRevision = revisionState.globalSegmentRevision;
+    const projectList =
+        projects.length > 0 && !projects.includes('*')
+            ? projects
+            : Array.from(revisionState.projectRevisions.keys());
+    // assume segment revision as max because segment changes are always visible
+    let visibleRevision = revisionState.globalSegmentRevision ?? 0;
     for (const project of projectList) {
         visibleRevision = Math.max(
             visibleRevision,

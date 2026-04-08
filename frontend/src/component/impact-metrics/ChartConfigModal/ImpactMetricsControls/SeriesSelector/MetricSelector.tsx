@@ -8,13 +8,24 @@ import {
 } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import type { MetricSource } from 'component/impact-metrics/types';
 
-type SeriesOption = { name: string; displayName: string; help: string };
+type MetricOption = {
+    name: string;
+    displayName: string;
+    help: string;
+    source?: MetricSource;
+};
 
-export type SeriesSelectorProps = {
+export type MetricSelection = {
+    metricName: string;
+    source?: MetricSource;
+};
+
+export type MetricSelectorProps = {
     value: string;
-    onChange: (series: string) => void;
-    options: SeriesOption[];
+    onChange: (selection: MetricSelection) => void;
+    options: MetricOption[];
     loading?: boolean;
     label?: string;
 };
@@ -53,16 +64,16 @@ const NoOptionsMessage = () => {
 };
 
 const withSelectedValue = (
-    options: SeriesOption[],
+    options: MetricOption[],
     value: string,
-): SeriesOption[] => {
+): MetricOption[] => {
     if (value && !options.some((option) => option.name === value)) {
         return [...options, { name: value, displayName: value, help: '' }];
     }
     return options;
 };
 
-export const MetricSelector: FC<SeriesSelectorProps> = ({
+export const MetricSelector: FC<MetricSelectorProps> = ({
     value,
     onChange,
     options,
@@ -76,9 +87,13 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
             options={allOptions}
             getOptionLabel={(option) => option.displayName}
             value={allOptions.find((option) => option.name === value) || null}
-            onChange={(_, newValue) =>
-                onChange(newValue?.name || options[0]?.name || '')
-            }
+            onChange={(_, newValue) => {
+                const selected = newValue || options[0];
+                onChange({
+                    metricName: selected?.name || '',
+                    source: selected?.source,
+                });
+            }}
             disabled={loading}
             renderOption={(props, option, { inputValue }) => (
                 <Box component='li' {...props} key={option.name}>

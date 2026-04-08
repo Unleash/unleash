@@ -149,6 +149,7 @@ export const ChartItem: FC<ChartItemProps> = ({
                     labelSelectors={config.labelSelectors}
                     yAxisMin={config.yAxisMin}
                     aggregationMode={config.aggregationMode}
+                    source={config.source}
                     aspectRatio={1.5}
                     overrideOptions={{ maintainAspectRatio: false }}
                     emptyDataDescription='Send impact metrics using Unleash SDK for this series to view the chart.'

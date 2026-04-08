@@ -5,6 +5,7 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { ImpactMetricsChart } from 'component/impact-metrics/ImpactMetricsChart';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';
 import type { MetricQuerySchemaAggregationMode } from 'openapi/models/metricQuerySchemaAggregationMode';
+import type { MetricSource } from 'component/impact-metrics/types';
 
 const StyledMiniChartWrapper = styled(Box)(({ theme }) => ({
     width: 60,
@@ -53,6 +54,7 @@ interface MiniChartWithDataProps {
     threshold: number;
     projectId: string;
     featureId: string;
+    source?: MetricSource;
 }
 
 export const MiniChartWithData: React.FC<MiniChartWithDataProps> = ({
@@ -64,6 +66,7 @@ export const MiniChartWithData: React.FC<MiniChartWithDataProps> = ({
     threshold,
     projectId,
     featureId,
+    source,
 }) => {
     const tooltipContent = (
         <Box sx={{ width: 400 }}>
@@ -87,6 +90,7 @@ export const MiniChartWithData: React.FC<MiniChartWithDataProps> = ({
                     labelSelectors={labelSelectors}
                     yAxisMin='auto'
                     aggregationMode={aggregationMode}
+                    source={source}
                     isPreview={false}
                     showComponents={['xAxis', 'yAxis', 'notEnoughDataMessage']}
                     threshold={threshold}
@@ -109,6 +113,7 @@ export const MiniChartWithData: React.FC<MiniChartWithDataProps> = ({
                     labelSelectors={labelSelectors}
                     yAxisMin='auto'
                     aggregationMode={aggregationMode}
+                    source={source}
                     isPreview={true}
                     showComponents={[]}
                     threshold={threshold}

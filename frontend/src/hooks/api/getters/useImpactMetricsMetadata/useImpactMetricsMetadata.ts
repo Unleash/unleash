@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
+import type { MetricSource } from 'component/impact-metrics/types';
 
 export type ImpactMetricsSeries = {
     help: string;
     displayName: string;
+    source?: MetricSource;
 };
 
 export type ImpactMetricsMetadata = {

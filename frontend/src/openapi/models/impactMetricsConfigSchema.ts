@@ -26,6 +26,8 @@ export interface ImpactMetricsConfigSchema {
     metricName: string;
     /** The access mode for this impact metric configuration: "read" when referenced by a safeguard, "write" otherwise. */
     mode?: ImpactMetricsConfigSchemaMode;
+    /** The Prometheus data source for this metric. Defaults to internal. */
+    source?: 'internal' | 'external';
     /**
      * The step interval for querying metrics data. This is automatically calculated from the timeRange and stored when the metric is created or updated.
      * @nullable

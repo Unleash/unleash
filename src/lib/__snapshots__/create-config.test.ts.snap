@@ -78,6 +78,7 @@ exports[`should create default config 1`] = `
     Symbol(shapeMode): false,
     Symbol(kCapture): false,
   },
+  "externalPrometheusImpactMetricsApi": undefined,
   "feedbackUriPath": undefined,
   "frontendApi": {
     "refreshIntervalInMs": 2700000,

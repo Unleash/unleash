@@ -16,9 +16,14 @@ type SeriesOption = {
     source?: 'internal' | 'external';
 };
 
+export type MetricSelection = {
+    series: string;
+    source?: 'internal' | 'external';
+};
+
 export type SeriesSelectorProps = {
     value: string;
-    onChange: (series: string, option?: SeriesOption) => void;
+    onChange: (selection: MetricSelection) => void;
     options: SeriesOption[];
     loading?: boolean;
     label?: string;
@@ -83,7 +88,10 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
             value={allOptions.find((option) => option.name === value) || null}
             onChange={(_, newValue) => {
                 const selected = newValue || options[0];
-                onChange(selected?.name || '', selected);
+                onChange({
+                    series: selected?.name || '',
+                    source: selected?.source,
+                });
             }}
             disabled={loading}
             renderOption={(props, option, { inputValue }) => (

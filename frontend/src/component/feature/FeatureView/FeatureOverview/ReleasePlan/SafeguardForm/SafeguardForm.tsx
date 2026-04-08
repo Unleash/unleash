@@ -20,7 +20,10 @@ import {
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
-import { MetricSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+import {
+    MetricSelector,
+    type MetricSelection,
+} from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
 import {
     getDefaultAggregation,
     getMetricType,
@@ -263,13 +266,13 @@ const useSafeguardFormHandlers = (
         }
     }, [formValues.metricName, initialMetricName, metricType]);
 
-    const handleMetricChange = (
-        value: string,
-        option?: MetricOption,
-    ) => {
+    const handleMetricChange = ({
+        series,
+        source: newSource,
+    }: MetricSelection) => {
         enterEditMode();
-        setMetricName(value);
-        setSource(option?.source);
+        setMetricName(series);
+        setSource(newSource);
         setAppName('*');
     };
 

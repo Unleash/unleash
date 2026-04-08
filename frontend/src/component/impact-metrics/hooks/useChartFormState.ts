@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import type { AggregationMode, ChartConfig } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
+import type { MetricSelection } from '../ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
 import {
     getDefaultAggregation,
     getMetricType,
@@ -31,7 +32,7 @@ export type ChartFormState = {
         setYAxisMin: (yAxisMin: 'auto' | 'zero') => void;
         setAggregationMode: (mode: AggregationMode) => void;
         setLabelSelectors: (labels: Record<string, string[]>) => void;
-        handleSeriesChange: (series: string, option?: { source?: 'internal' | 'external' }) => void;
+        handleSeriesChange: (selection: MetricSelection) => void;
         getConfigToSave: () => Omit<ChartConfig, 'id'>;
     };
     isValid: boolean;
@@ -99,9 +100,9 @@ export const useChartFormState = ({
         }
     }, [open, initialConfig]);
 
-    const handleSeriesChange = (series: string, option?: { source?: 'internal' | 'external' }) => {
+    const handleSeriesChange = ({ series, source: newSource }: MetricSelection) => {
         setMetricName(series);
-        setSource(option?.source);
+        setSource(newSource);
         setLabelSelectors({});
         const metricType = getMetricType(series);
         if (metricType !== 'unknown') {

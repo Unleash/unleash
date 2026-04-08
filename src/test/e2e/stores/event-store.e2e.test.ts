@@ -6,8 +6,6 @@ import {
     FEATURE_PROJECT_CHANGE,
     FEATURE_TAGGED,
     FEATURE_UPDATED,
-    SEGMENT_CREATED,
-    SEGMENT_DELETED,
     SEGMENT_UPDATED,
     type IEvent,
 } from '../../../lib/events/index.js';

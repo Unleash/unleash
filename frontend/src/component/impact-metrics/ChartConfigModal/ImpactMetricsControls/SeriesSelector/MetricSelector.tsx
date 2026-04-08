@@ -18,7 +18,7 @@ type SeriesOption = {
 };
 
 export type MetricSelection = {
-    series: string;
+    metricName: string;
     source?: MetricSource;
 };
 
@@ -90,7 +90,7 @@ export const MetricSelector: FC<SeriesSelectorProps> = ({
             onChange={(_, newValue) => {
                 const selected = newValue || options[0];
                 onChange({
-                    series: selected?.name || '',
+                    metricName: selected?.name || '',
                     source: selected?.source,
                 });
             }}

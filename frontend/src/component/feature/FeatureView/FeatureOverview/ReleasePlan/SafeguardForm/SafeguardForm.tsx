@@ -267,11 +267,11 @@ const useSafeguardFormHandlers = (
     }, [formValues.metricName, initialMetricName, metricType]);
 
     const handleMetricChange = ({
-        series,
+        metricName: name,
         source: newSource,
     }: MetricSelection) => {
         enterEditMode();
-        setMetricName(series);
+        setMetricName(name);
         setSource(newSource);
         setAppName('*');
     };

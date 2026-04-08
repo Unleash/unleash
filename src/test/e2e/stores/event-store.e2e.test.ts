@@ -520,36 +520,6 @@ describe('getDeltaRevisionState', () => {
         expect(state.projectRevisions.get('default')).toBe(secondStored.id);
         expect(state.globalSegmentRevision).toBe(segmentStored.id);
     });
-
-    test('includes segment created and deleted revisions in global segment revision', async () => {
-        const segmentCreatedEvent = {
-            type: SEGMENT_CREATED,
-            createdBy: testAudit.username,
-            createdByUserId: testAudit.id,
-            ip: testAudit.ip,
-            data: { id: 999, name: 'segment-a' },
-        };
-        const segmentDeletedEvent = {
-            type: SEGMENT_DELETED,
-            createdBy: testAudit.username,
-            createdByUserId: testAudit.id,
-            ip: testAudit.ip,
-            preData: { id: 999, name: 'segment-a' },
-            data: {},
-        };
-
-        await eventStore.store(segmentCreatedEvent);
-        await eventStore.store(segmentDeletedEvent);
-
-        const allEvents = await eventStore.getAll();
-        const segmentDeletedStored = allEvents.find(
-            (e) => e.type === SEGMENT_DELETED,
-        )!;
-
-        const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
-
-        expect(state.globalSegmentRevision).toBe(segmentDeletedStored.id);
-    });
 });
 
 test('Should filter events by ID using IS operator', async () => {

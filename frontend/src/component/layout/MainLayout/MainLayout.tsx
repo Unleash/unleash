@@ -4,7 +4,6 @@ import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
 import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';
 import textureImage from 'assets/img/texture.png';
-import { SkipNavLink } from 'component/common/SkipNavLink/SkipNavLink';
 import { SkipNavTarget } from 'component/common/SkipNavLink/SkipNavTarget';
 import { formatAssetPath } from 'utils/formatPath';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
@@ -130,7 +129,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
 
         return (
             <EventTimelineProvider>
-                <SkipNavLink />
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>
                         <LayoutFlexContainer>

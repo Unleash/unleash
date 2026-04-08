@@ -4,8 +4,6 @@
  * See `gen:api` script in package.json
  */
 
-import type { Operator } from 'constants/operators';
-
 /**
  * The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/concepts/activation-strategies#constraint-operators).
  */
@@ -13,7 +11,7 @@ export type ConstraintSchemaOperator =
     (typeof ConstraintSchemaOperator)[keyof typeof ConstraintSchemaOperator];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const ConstraintSchemaOperator: Record<Operator, Operator> = {
+export const ConstraintSchemaOperator = {
     NOT_IN: 'NOT_IN',
     IN: 'IN',
     STR_ENDS_WITH: 'STR_ENDS_WITH',

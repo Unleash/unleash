@@ -13,14 +13,19 @@ import type { CreateStrategyVariantSchema } from './createStrategyVariantSchema'
 export interface CreateReleasePlanMilestoneStrategySchema {
     /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/concepts/activation-strategies#constraints */
     constraints?: ConstraintSchema[];
+    /** The name of the strategy type */
+    name?: string;
     /** An object containing the parameters for the strategy */
     parameters?: ParametersSchema;
     /** Ids of segments to use for this strategy */
     segments?: number[];
     /** The order of the strategy in the list */
     sortOrder: number;
-    /** The name of the strategy type */
-    strategyName: string;
+    /**
+     * The name of the strategy type
+     * @deprecated
+     */
+    strategyName?: string;
     /**
      * A descriptive title for the strategy
      * @nullable

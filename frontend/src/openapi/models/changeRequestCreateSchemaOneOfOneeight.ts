@@ -4,15 +4,13 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestCreateSchemaOneOfOneeightAction } from './changeRequestCreateSchemaOneOfOneeightAction';
-import type { ChangeRequestCreateSchemaOneOfOneeightPayload } from './changeRequestCreateSchemaOneOfOneeightPayload';
 
 /**
- * Update variants for this feature.
+ * Archive a feature.
  */
 export type ChangeRequestCreateSchemaOneOfOneeight = {
     /** The name of this action. */
     action: ChangeRequestCreateSchemaOneOfOneeightAction;
     /** The name of the feature that this change applies to. */
     feature: string;
-    payload: ChangeRequestCreateSchemaOneOfOneeightPayload;
 };

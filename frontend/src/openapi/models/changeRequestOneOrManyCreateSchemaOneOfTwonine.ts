@@ -4,16 +4,15 @@
  * See `gen:api` script in package.json
  */
 import type { ChangeRequestOneOrManyCreateSchemaOneOfTwonineAction } from './changeRequestOneOrManyCreateSchemaOneOfTwonineAction';
-import type { ChangeRequestOneOrManyCreateSchemaOneOfTwoninePayload } from './changeRequestOneOrManyCreateSchemaOneOfTwoninePayload';
+import type { ReleasePlanTemplateIdSchema } from './releasePlanTemplateIdSchema';
 
 /**
- * Start milestone of feature environment release plan.
+ * Add a release plan to this feature environment.
  */
 export type ChangeRequestOneOrManyCreateSchemaOneOfTwonine = {
     /** The name of this action. */
     action: ChangeRequestOneOrManyCreateSchemaOneOfTwonineAction;
     /** The name of the feature that this change applies to. */
     feature: string;
-    /** The ID of the release plan and which of its milestones to start. */
-    payload: ChangeRequestOneOrManyCreateSchemaOneOfTwoninePayload;
+    payload: ReleasePlanTemplateIdSchema;
 };

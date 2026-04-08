@@ -1,4 +1,4 @@
-import { ALL_PROJECTS } from '../../../server-impl.js';
+import { ALL_PROJECTS } from '../../../util/index.js';
 import type { EnvironmentVisibleRevisionState } from './client-feature-toggle-delta.js';
 
 export const getVisibleRevision = (

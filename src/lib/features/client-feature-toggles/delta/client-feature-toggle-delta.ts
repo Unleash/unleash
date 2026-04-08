@@ -101,6 +101,13 @@ const deltaRevisionIdMetric = createGauge({
     labelNames: ['environment'],
 });
 
+const setMaxRevision = <K>(map: Map<K, number>, key: K, revisionId: number) => {
+    const currentRevisionId = map.get(key) ?? 0;
+    if (revisionId > currentRevisionId) {
+        map.set(key, revisionId);
+    }
+};
+
 export class ClientFeatureToggleDelta extends EventEmitter {
     private static instance: ClientFeatureToggleDelta;
 
@@ -188,6 +195,9 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         const visibleRevision = this.getVisibleRevision(environment, projects);
 
         if (hasRequestedRevision && requestedRevisionId >= visibleRevision) {
+            this.logger.info(
+                `[delta] No new delta for environment=${environment} projects=${projects.join(',')} visibleRevision=${visibleRevision} requestedRevision=${requestedRevisionId}`,
+            );
             return undefined;
         }
         const delta = this.delta[environment];
@@ -265,6 +275,16 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             Map<string, number>
         >();
 
+        // helper function
+        const warnUnexpectedEventPayload = (
+            event: IEvent,
+            field: 'data' | 'preData',
+            expectedValue: string,
+        ) => {
+            this.logger.warn(
+                `[delta] Skipping event ${event.id} ${event.createdAt.toISOString()} (${event.type}) because ${field} ${expectedValue}.`,
+            );
+        };
         for (const event of changeEvents) {
             if (event.type === FEATURE_PROJECT_CHANGE && event.featureName) {
                 // A project change involves two steps: removing the feature from old project and adding it to new project
@@ -273,12 +293,10 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                     project: event.data.oldProject,
                     revisionId: event.id,
                 });
-                globallyUpdatedFeatures.set(
+                setMaxRevision(
+                    globallyUpdatedFeatures,
                     event.featureName,
-                    Math.max(
-                        globallyUpdatedFeatures.get(event.featureName) ?? 0,
-                        event.id,
-                    ),
+                    event.id,
                 );
             } else if (
                 event.type === 'feature-archived' &&
@@ -294,38 +312,36 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 event.type === 'segment-created' ||
                 event.type === 'segment-updated'
             ) {
-                segmentsUpdated.set(
-                    event.data.id,
-                    Math.max(segmentsUpdated.get(event.data.id) ?? 0, event.id),
-                );
+                const segmentId = event.data?.id;
+                if (!segmentId) {
+                    warnUnexpectedEventPayload(event, 'data', 'is missing id');
+                    continue;
+                }
+                setMaxRevision(segmentsUpdated, segmentId, event.id);
             } else if (event.type === 'segment-deleted') {
-                segmentsRemoved.set(
-                    event.preData.id,
-                    Math.max(
-                        segmentsRemoved.get(event.preData.id) ?? 0,
-                        event.id,
-                    ),
-                );
+                // we were previously using data.id for segment-deleted event, this was changed on Sep 29, 2023: https://github.com/Unleash/unleash/pull/4815
+                const segmentId = event.preData?.id;
+                if (!segmentId) {
+                    warnUnexpectedEventPayload(
+                        event,
+                        'preData',
+                        'is missing id',
+                    );
+                    continue;
+                }
+                setMaxRevision(segmentsRemoved, segmentId, event.id);
             } else if (event.featureName && event.type !== 'feature-deleted') {
                 if (event.environment == null) {
-                    globallyUpdatedFeatures.set(
+                    setMaxRevision(
+                        globallyUpdatedFeatures,
                         event.featureName,
-                        Math.max(
-                            globallyUpdatedFeatures.get(event.featureName) ?? 0,
-                            event.id,
-                        ),
+                        event.id,
                     );
                 } else {
                     const featureNames =
                         environmentUpdatedFeatures.get(event.environment) ??
                         new Map<string, number>();
-                    featureNames.set(
-                        event.featureName,
-                        Math.max(
-                            featureNames.get(event.featureName) ?? 0,
-                            event.id,
-                        ),
-                    );
+                    setMaxRevision(featureNames, event.featureName, event.id);
                     environmentUpdatedFeatures.set(
                         event.environment,
                         featureNames,
@@ -410,12 +426,10 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 featureName,
                 revisionId,
             ] of environmentUpdatedFeatures.get(environment) ?? []) {
-                featureUpdatesInEnvironment.set(
+                setMaxRevision(
+                    featureUpdatesInEnvironment,
                     featureName,
-                    Math.max(
-                        featureUpdatesInEnvironment.get(featureName) ?? 0,
-                        revisionId,
-                    ),
+                    revisionId,
                 );
             }
             const updatedToggles = await this.getChangedToggles(
@@ -467,14 +481,15 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         });
         const baseSegments = await this.segmentReadModel.getAllForClientIds();
 
+        const maxRevision = getVisibleRevision(revisionState);
         this.delta[environment] = new DeltaCache({
-            eventId: getVisibleRevision(revisionState),
+            eventId: maxRevision,
             type: DELTA_EVENT_TYPES.HYDRATION,
             features: baseFeatures,
             segments: baseSegments,
         });
+        this.lastDeltaProcessedRevisionId = maxRevision;
         this.visibleRevisions[environment] = revisionState;
-
         this.storeFootprint();
     }
 
@@ -515,12 +530,10 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 project = event.project;
             }
             if (project) {
-                revisionState.projectRevisions.set(
+                setMaxRevision(
+                    revisionState.projectRevisions,
                     project,
-                    Math.max(
-                        revisionState.projectRevisions.get(project) ?? 0,
-                        event.eventId,
-                    ),
+                    event.eventId,
                 );
                 environmentMax = Math.max(environmentMax, event.eventId);
             }

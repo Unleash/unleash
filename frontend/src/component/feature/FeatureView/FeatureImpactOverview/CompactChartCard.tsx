@@ -97,6 +97,7 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
             Object.keys(config.labelSelectors).length > 0
                 ? config.labelSelectors
                 : undefined,
+        source: config.source,
     });
 
     const currentValue = (() => {
@@ -137,6 +138,7 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
                     labelSelectors={config.labelSelectors}
                     yAxisMin={config.yAxisMin}
                     aggregationMode={config.aggregationMode}
+                    source={config.source}
                     showComponents={['xAxis', 'yAxis']}
                     overrideOptions={{
                         maintainAspectRatio: false,

@@ -6,6 +6,7 @@ export type ChartConfig = {
     aggregationMode: AggregationMode;
     labelSelectors: Record<string, string[]>;
     title?: string;
+    source?: 'internal' | 'external';
 };
 
 export type AggregationMode =

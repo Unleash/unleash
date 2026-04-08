@@ -22,6 +22,7 @@ export type ChartFormState = {
         yAxisMin: 'auto' | 'zero';
         aggregationMode: AggregationMode;
         labelSelectors: Record<string, string[]>;
+        source?: 'internal' | 'external';
     };
     actions: {
         setTitle: (title: string) => void;
@@ -30,7 +31,7 @@ export type ChartFormState = {
         setYAxisMin: (yAxisMin: 'auto' | 'zero') => void;
         setAggregationMode: (mode: AggregationMode) => void;
         setLabelSelectors: (labels: Record<string, string[]>) => void;
-        handleSeriesChange: (series: string) => void;
+        handleSeriesChange: (series: string, option?: { source?: 'internal' | 'external' }) => void;
         getConfigToSave: () => Omit<ChartConfig, 'id'>;
     };
     isValid: boolean;
@@ -56,6 +57,9 @@ export const useChartFormState = ({
         initialConfig?.aggregationMode ||
             getDefaultAggregation(getMetricType(metricName)),
     );
+    const [source, setSource] = useState<'internal' | 'external' | undefined>(
+        initialConfig?.source,
+    );
 
     const {
         data: { labels: currentAvailableLabels },
@@ -65,6 +69,7 @@ export const useChartFormState = ({
                   series: metricName,
                   range: timeRange,
                   aggregationMode,
+                  source,
               }
             : undefined,
     );
@@ -82,6 +87,7 @@ export const useChartFormState = ({
                         getMetricType(initialConfig.metricName),
                     ),
             );
+            setSource(initialConfig.source);
         } else if (open && !initialConfig) {
             setTitle('');
             setMetricName('');
@@ -89,11 +95,13 @@ export const useChartFormState = ({
             setYAxisMin('auto');
             setLabelSelectors({});
             setAggregationMode('count');
+            setSource(undefined);
         }
     }, [open, initialConfig]);
 
-    const handleSeriesChange = (series: string) => {
+    const handleSeriesChange = (series: string, option?: { source?: 'internal' | 'external' }) => {
         setMetricName(series);
+        setSource(option?.source);
         setLabelSelectors({});
         const metricType = getMetricType(series);
         if (metricType !== 'unknown') {
@@ -108,6 +116,7 @@ export const useChartFormState = ({
         yAxisMin,
         labelSelectors,
         aggregationMode,
+        source,
     });
 
     const isValid = metricName.length > 0;
@@ -134,6 +143,7 @@ export const useChartFormState = ({
             yAxisMin,
             aggregationMode,
             labelSelectors,
+            source,
         },
         actions: {
             setTitle,

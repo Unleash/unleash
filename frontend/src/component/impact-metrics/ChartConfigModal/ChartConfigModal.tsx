@@ -164,6 +164,7 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                         labelSelectors={formData.labelSelectors}
                         yAxisMin={formData.yAxisMin}
                         aggregationMode={formData.aggregationMode}
+                        source={formData.source}
                         isPreview
                     />
                 </StyledPreviewContainer>

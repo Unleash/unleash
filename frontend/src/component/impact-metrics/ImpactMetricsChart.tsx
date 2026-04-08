@@ -38,6 +38,7 @@ type ImpactMetricsChartProps = {
     isPreview?: boolean;
     showComponents?: ChartComponent[];
     threshold?: number;
+    source?: 'internal' | 'external';
 };
 
 export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
@@ -60,6 +61,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
         'notEnoughDataMessage',
     ],
     threshold,
+    source,
 }) => {
     const shouldShowComponent = (component: ChartComponent) =>
         showComponents.includes(component);
@@ -77,6 +79,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                       Object.keys(labelSelectors).length > 0
                           ? labelSelectors
                           : undefined,
+                  source,
               }
             : undefined,
     );

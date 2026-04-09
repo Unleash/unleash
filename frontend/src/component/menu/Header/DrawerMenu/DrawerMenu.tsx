@@ -1,8 +1,8 @@
 import type { VFC } from 'react';
 import { Link } from 'react-router-dom';
 import { Divider, Drawer, styled } from '@mui/material';
-import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
-import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
+import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
+import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';

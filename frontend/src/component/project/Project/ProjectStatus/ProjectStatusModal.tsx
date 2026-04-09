@@ -1,6 +1,6 @@
 import { Button, styled } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
-import { ReactComponent as ProjectStatusSvg } from 'assets/icons/projectStatus.svg';
+import ProjectStatusSvg from 'assets/icons/projectStatus.svg?react';
 import { ProjectActivity } from './ProjectActivity.tsx';
 import { ProjectLifecycleSummary } from './ProjectLifecycleSummary.tsx';
 import type { FC } from 'react';

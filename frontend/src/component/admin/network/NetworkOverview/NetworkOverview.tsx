@@ -8,8 +8,8 @@ import type {
     RequestsPerSecondSchema,
     RequestsPerSecondSchemaDataResultItem,
 } from 'openapi';
-import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
-import { ReactComponent as LogoIconWhite } from 'assets/icons/logoWhiteBg.svg';
+import LogoIcon from 'assets/icons/logoBg.svg?react';
+import LogoIconWhite from 'assets/icons/logoWhiteBg.svg?react';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NetworkPrometheusAPIWarning } from '../NetworkPrometheusAPIWarning.tsx';
 

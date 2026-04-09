@@ -15,7 +15,7 @@ import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
 import useToast from 'hooks/useToast.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
 import textureImage from 'assets/img/texture-signup.png';
-import { ReactComponent as Heart } from 'assets/icons/heart.svg';
+import Heart from 'assets/icons/heart.svg?react';
 import { formatAssetPath } from 'utils/formatPath.ts';
 import { SignupDialogComplete } from './SignupDialogComplete.tsx';
 import { useWelcomeDialogContext } from 'component/personalDashboard/WelcomeDialogContext.tsx';

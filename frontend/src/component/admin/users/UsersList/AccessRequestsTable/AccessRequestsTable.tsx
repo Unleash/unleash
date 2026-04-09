@@ -9,7 +9,10 @@ import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { sortTypes } from 'utils/sortTypes';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { useUserAccessRequests } from 'hooks/api/getters/useUserAccessRequests/useUserAccessRequests';
+import { useUserAccessRequestsApi } from 'hooks/api/actions/useUserAccessRequestsApi/useUserAccessRequestsApi';
 import type { UserAccessRequestSchema } from 'openapi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import { RoleSelectCell } from './RoleSelectCell.tsx';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
@@ -30,8 +33,10 @@ const StyledContainer = styled('div')(({ theme }) => ({
 }));
 
 export const AccessRequestsTable = () => {
-    const { roles } = useUsers();
-    const { accessRequests } = useUserAccessRequests();
+    const { roles, refetch: refetchUsers } = useUsers();
+    const { accessRequests, refetchAccessRequests } = useUserAccessRequests();
+    const { approveAccessRequest } = useUserAccessRequestsApi();
+    const { setToastData, setToastApiError } = useToast();
 
     const viewerRole = roles.find((r) => r.name.toLowerCase() === 'viewer');
     const defaultRoleId = viewerRole?.id ?? roles[0]?.id ?? 0;
@@ -47,12 +52,22 @@ export const AccessRequestsTable = () => {
         setSelectedRoles((prev) => ({ ...prev, [requestId]: roleId }));
     };
 
-    const handleApprove = (_request: UserAccessRequestSchema) => {
-        // noop for now
+    const handleApprove = async (request: UserAccessRequestSchema) => {
+        try {
+            await approveAccessRequest(request.id, getRoleId(request.id));
+            setToastData({
+                text: `Access request for ${request.email} approved`,
+                type: 'success',
+            });
+            refetchAccessRequests();
+            refetchUsers();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
     const handleDelete = (_request: UserAccessRequestSchema) => {
-        // noop for now
+        // TODO: implement reject
     };
 
     const columns = useMemo(

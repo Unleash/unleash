@@ -104,9 +104,15 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
         if (!data.series?.length) return null;
         const seriesData = data.series[0].data;
         if (!seriesData.length) return null;
-        const lastValue = seriesData[seriesData.length - 1][1];
+        const lastValue = Number(seriesData[seriesData.length - 1][1]);
+        const shouldSum =
+            config.aggregationMode === 'count' ||
+            config.aggregationMode === 'sum';
+        const aggregated = shouldSum
+            ? seriesData.reduce((sum, [, v]) => sum + Number(v), 0)
+            : lastValue;
         const suffix = config.aggregationMode === 'rps' ? '/s' : '';
-        return `${formatLargeNumbers(lastValue)}${suffix}`;
+        return `${formatLargeNumbers(aggregated)}${suffix}`;
     })();
 
     return (

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.6.1] - 2026-04-09
+
+### Miscellaneous Tasks
+
+- Stable npm version ([#11772](https://github.com/Unleash/unleash/issues/11772))
+
+
 ## [7.6.0] - 2026-04-09
 
 ### Bug Fixes

@@ -65,7 +65,6 @@ export const App = () => {
                     show={<Loader type='fullscreen' />}
                     elseShow={
                         <Demo>
-
                             <>
                                 <SkipNavLink />
                                 <ConditionallyRender

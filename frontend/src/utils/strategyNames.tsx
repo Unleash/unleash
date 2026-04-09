@@ -4,7 +4,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LanguageIcon from '@mui/icons-material/Language';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import CodeIcon from '@mui/icons-material/Code';
-import { ReactComponent as RolloutIcon } from 'assets/icons/rollout.svg';
+import RolloutIcon from 'assets/icons/rollout.svg?react';
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 
 export const formatStrategyName = (strategyName: string): string => {

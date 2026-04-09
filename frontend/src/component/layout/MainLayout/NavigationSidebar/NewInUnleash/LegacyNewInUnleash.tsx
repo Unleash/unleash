@@ -18,7 +18,7 @@ import {
     type NewInUnleashItemDetails,
 } from './NewInUnleashItem.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { ReactComponent as SignalsPreview } from 'assets/img/signals.svg';
+import SignalsPreview from 'assets/img/signals.svg?react';
 import LifecycleStagesImage from 'assets/img/lifecycle-stages.png';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeartOutlined';
 import { useNavigate } from 'react-router-dom';

@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import { useLastSeenColors } from 'component/feature/FeatureView/FeatureEnvironmentSeen/useLastSeenColors';
 import { Box, styled, Typography } from '@mui/material';
-import { ReactComponent as UsageLine } from 'assets/icons/usage-line.svg';
-import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
+import UsageLine from 'assets/icons/usage-line.svg?react';
+import UsageRate from 'assets/icons/usage-rate.svg?react';
 import { StyledIconWrapper } from 'component/feature/FeatureView/FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import { flexRow } from 'themes/themeStyles';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';

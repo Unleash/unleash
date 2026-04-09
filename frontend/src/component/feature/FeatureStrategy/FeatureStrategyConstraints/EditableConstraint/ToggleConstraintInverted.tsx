@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { ReactComponent as EqualsIcon } from 'assets/icons/constraint-equals.svg';
-import { ReactComponent as NotEqualsIcon } from 'assets/icons/constraint-not-equals.svg';
+import EqualsIcon from 'assets/icons/constraint-equals.svg?react';
+import NotEqualsIcon from 'assets/icons/constraint-not-equals.svg?react';
 
 const StyledButton = styled('button')(({ theme }) => ({
     display: 'grid',

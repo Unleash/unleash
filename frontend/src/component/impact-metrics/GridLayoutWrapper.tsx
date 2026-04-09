@@ -76,7 +76,7 @@ export const GridLayoutWrapper: FC<GridLayoutWrapperProps> = ({
                     w: cols.xs,
                     h: item.h ?? 4,
                     minW: cols.xs,
-                    minH: item.minH ?? 3,
+                    minH: item.minH ?? Math.min(3, item.h ?? 4),
                     maxW: cols.xs,
                     maxH: item.maxH ?? 8,
                     static: false,

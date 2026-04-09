@@ -33,7 +33,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
 }));
 
 export const AccessRequestsTable = () => {
-    const { roles } = useUsers();
+    const { roles, refetch: refetchUsers } = useUsers();
     const { accessRequests, refetchAccessRequests } = useUserAccessRequests();
     const { approveAccessRequest } = useUserAccessRequestsApi();
     const { setToastData, setToastApiError } = useToast();
@@ -60,6 +60,7 @@ export const AccessRequestsTable = () => {
                 type: 'success',
             });
             refetchAccessRequests();
+            refetchUsers();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

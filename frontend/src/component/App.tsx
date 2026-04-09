@@ -26,6 +26,7 @@ import { SecurityBanner } from './banners/internalBanners/SecurityBanner.tsx';
 import { MonthsOldVersionBanner } from './banners/internalBanners/MonthsOldVersionBanner.tsx';
 import { SignupDialog } from './signup/SignupDialog/SignupDialog.tsx';
 import { WelcomeDialog } from './personalDashboard/WelcomeDialog.tsx';
+import { SkipNavLink } from './common/SkipNavLink/SkipNavLink.tsx';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -65,6 +66,7 @@ export const App = () => {
                     elseShow={
                         <Demo>
                             <>
+                                <SkipNavLink />
                                 <ConditionallyRender
                                     condition={Boolean(
                                         uiConfig?.maintenanceMode,

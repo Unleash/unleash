@@ -46,8 +46,10 @@
     "gen:api:clean": "yarn gen:api && rm -rf src/openapi/apis && sed -i.bak '1q' src/openapi/index.ts && rm src/openapi/index.ts.bak"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
     "@biomejs/biome": "2.4.6",
     "@codemirror/lang-json": "6.0.2",
+    "@emotion/babel-plugin": "^11.13.5",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
     "@mui/icons-material": "5.15.3",
@@ -61,6 +63,7 @@
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.2",
     "@testing-library/user-event": "14.6.1",
+    "@types/babel__core": "^7",
     "@types/css-mediaquery": "^0.1.4",
     "@types/debounce": "1.2.4",
     "@types/deep-diff": "1.0.5",

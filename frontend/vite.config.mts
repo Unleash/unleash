@@ -6,6 +6,7 @@ import {
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import envCompatible from 'vite-plugin-env-compatible';
+import babel from '@rolldown/plugin-babel';
 
 const UNLEASH_API = process.env.UNLEASH_API || 'http://localhost:4242';
 const UNLEASH_BASE_PATH = process.env.UNLEASH_BASE_PATH || '/';
@@ -37,37 +38,23 @@ const vitestConfig = vitestDefineConfig({
     },
 });
 
+const emotionBabelPlugin = [
+    '@emotion',
+    {
+        autoLabel: 'always',
+        labelFormat: '[filename]--[local]',
+        importMap: {
+            '@mui/material': {
+                styled: {
+                    canonicalImport: ['@emotion/styled', 'default'],
+                    styledBaseImport: ['@mui/material', 'styled'],
+                },
+            },
+        },
+    },
+] as const;
+
 export default defineConfig(({ mode }) => {
-    const reactPluginArgs =
-        mode === 'development'
-            ? {
-                  babel: {
-                      plugins: [
-                          [
-                              '@emotion',
-                              {
-                                  autoLabel: 'always',
-                                  labelFormat: '[filename]--[local]',
-                                  importMap: {
-                                      '@mui/material': {
-                                          styled: {
-                                              canonicalImport: [
-                                                  '@emotion/styled',
-                                                  'default',
-                                              ],
-                                              styledBaseImport: [
-                                                  '@mui/material',
-                                                  'styled',
-                                              ],
-                                          },
-                                      },
-                                  },
-                              },
-                          ],
-                      ],
-                  },
-              }
-            : undefined;
 
     return mergeConfig(
         {
@@ -131,6 +118,11 @@ export default defineConfig(({ mode }) => {
                 react(),
                 svgr(),
                 envCompatible(),
+                ...(mode === 'development' ? [
+                    babel({
+                        plugins: [emotionBabelPlugin],
+                    })
+                ] : []),
             ],
             optimizeDeps: {
                 exclude: ['chartjs-adapter-date-fns'],

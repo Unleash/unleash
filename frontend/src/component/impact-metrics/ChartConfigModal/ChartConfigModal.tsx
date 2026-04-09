@@ -96,7 +96,6 @@ export interface ChartConfigModalProps {
     open: boolean;
     onClose: () => void;
     onSave: (config: Omit<ChartConfig, 'id'>) => void;
-    onDocsClicked?: () => void;
     initialConfig?: ChartConfig;
     metricSeries: (ImpactMetricsSeries & { name: string })[];
     loading?: boolean;
@@ -106,7 +105,6 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
     open,
     onClose,
     onSave,
-    onDocsClicked,
     initialConfig,
     metricSeries,
     loading = false,
@@ -148,7 +146,6 @@ export const ChartConfigModal: FC<ChartConfigModalProps> = ({
                             eventType: 'sidebar docs clicked',
                         },
                     });
-                    onDocsClicked?.();
                 }}
             >
                 <MenuBookIcon fontSize='small' />

@@ -1,37 +1,37 @@
-import { defineConfig, mergeConfig } from "vite";
+import { defineConfig, mergeConfig } from 'vite';
 import {
     configDefaults,
     defineConfig as vitestDefineConfig,
-} from "vitest/config";
-import react from "@vitejs/plugin-react";
-import svgr from "vite-plugin-svgr";
-import envCompatible from "vite-plugin-env-compatible";
+} from 'vitest/config';
+import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
+import envCompatible from 'vite-plugin-env-compatible';
 
-const UNLEASH_API = process.env.UNLEASH_API || "http://localhost:4242";
-const UNLEASH_BASE_PATH = process.env.UNLEASH_BASE_PATH || "/";
-const UNLEASH_FRONTEND_TOKEN = process.env.UNLEASH_FRONTEND_TOKEN || "";
+const UNLEASH_API = process.env.UNLEASH_API || 'http://localhost:4242';
+const UNLEASH_BASE_PATH = process.env.UNLEASH_BASE_PATH || '/';
+const UNLEASH_FRONTEND_TOKEN = process.env.UNLEASH_FRONTEND_TOKEN || '';
 
-if (!UNLEASH_BASE_PATH.startsWith("/") || !UNLEASH_BASE_PATH.endsWith("/")) {
-    console.error("UNLEASH_BASE_PATH must both start and end with /");
+if (!UNLEASH_BASE_PATH.startsWith('/') || !UNLEASH_BASE_PATH.endsWith('/')) {
+    console.error('UNLEASH_BASE_PATH must both start and end with /');
     process.exit(1);
 }
 
 const vitestConfig = vitestDefineConfig({
     test: {
         globals: true,
-        setupFiles: "src/setupTests.ts",
-        environment: "jsdom",
-        exclude: [...configDefaults.exclude, "**/cypress/**"],
+        setupFiles: 'src/setupTests.ts',
+        environment: 'jsdom',
+        exclude: [...configDefaults.exclude, '**/cypress/**'],
         server: {
             deps: {
-                inline: ["chartjs-adapter-date-fns"],
+                inline: ['chartjs-adapter-date-fns'],
             },
         },
     },
     css: {
         preprocessorOptions: {
             scss: {
-                api: "modern-compiler",
+                api: 'modern-compiler',
             },
         },
     },
@@ -39,25 +39,25 @@ const vitestConfig = vitestDefineConfig({
 
 export default defineConfig(({ mode }) => {
     const reactPluginArgs =
-        mode === "development"
+        mode === 'development'
             ? {
                   babel: {
                       plugins: [
                           [
-                              "@emotion",
+                              '@emotion',
                               {
-                                  autoLabel: "always",
-                                  labelFormat: "[filename]--[local]",
+                                  autoLabel: 'always',
+                                  labelFormat: '[filename]--[local]',
                                   importMap: {
-                                      "@mui/material": {
+                                      '@mui/material': {
                                           styled: {
                                               canonicalImport: [
-                                                  "@emotion/styled",
-                                                  "default",
+                                                  '@emotion/styled',
+                                                  'default',
                                               ],
                                               styledBaseImport: [
-                                                  "@mui/material",
-                                                  "styled",
+                                                  '@mui/material',
+                                                  'styled',
                                               ],
                                           },
                                       },
@@ -73,12 +73,12 @@ export default defineConfig(({ mode }) => {
         {
             base: UNLEASH_BASE_PATH,
             build: {
-                outDir: "build",
-                assetsDir: "static",
+                outDir: 'build',
+                assetsDir: 'static',
                 assetsInlineLimit: 0,
                 modulePreload: false,
                 cssCodeSplit: false,
-                ...(mode === "development" ? { sourcemap: true } : {}),
+                ...(mode === 'development' ? { sourcemap: true } : {}),
             },
             resolve: {
                 tsconfigPaths: true,
@@ -114,13 +114,13 @@ export default defineConfig(({ mode }) => {
                     },
                 },
                 fs: {
-                    allow: [".."],
+                    allow: ['..'],
                 },
             },
             plugins: [
                 {
-                    name: "html-rewrite",
-                    apply: "serve",
+                    name: 'html-rewrite',
+                    apply: 'serve',
                     transformIndexHtml(html) {
                         return html.replace(
                             /::unleashToken::/gi,
@@ -133,7 +133,7 @@ export default defineConfig(({ mode }) => {
                 envCompatible(),
             ],
             optimizeDeps: {
-                exclude: ["chartjs-adapter-date-fns"],
+                exclude: ['chartjs-adapter-date-fns'],
             },
         },
         vitestConfig,

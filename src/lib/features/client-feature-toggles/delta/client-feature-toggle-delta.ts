@@ -364,7 +364,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             } else {
                 // This is something we need to adjust for. If the event wasn't really needed we should not include it in the events to process
                 this.logger.error(
-                    `[delta] Skipping event ${event.type} ${event.id}. It was cosidered interesting but wasn't processed: ${JSON.stringify({ data: event.data, preData: event.preData })}.`,
+                    `[delta] Skipping event ${event.type} ${event.id}. It was considered interesting but wasn't processed: ${JSON.stringify({ data: event.data, preData: event.preData })}.`,
                 );
             }
         }

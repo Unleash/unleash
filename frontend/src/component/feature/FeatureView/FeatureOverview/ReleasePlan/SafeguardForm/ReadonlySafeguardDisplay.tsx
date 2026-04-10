@@ -1,7 +1,7 @@
 import ShieldIcon from '@mui/icons-material/ShieldOutlined';
 import { styled } from '@mui/material';
 import type { ReactNode } from 'react';
-import type { ISafeguard } from 'interfaces/releasePlans';
+import type { ISafeguard } from 'interfaces/safeguard';
 import { createStyledIcon } from '../shared/SharedFormComponents.tsx';
 import type { SafeguardType } from './SafeguardForm.tsx';
 

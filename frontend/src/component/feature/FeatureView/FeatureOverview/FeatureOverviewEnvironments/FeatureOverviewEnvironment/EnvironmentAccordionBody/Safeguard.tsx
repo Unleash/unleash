@@ -24,7 +24,8 @@ import type {
     IChangeRequestDeleteFeatureEnvSafeguard,
 } from 'component/changeRequest/changeRequest.types';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import type { IReleasePlan, ISafeguard } from 'interfaces/releasePlans';
+import type { IReleasePlan } from 'interfaces/releasePlans';
+import type { ISafeguard } from 'interfaces/safeguard';
 import { strategyBackground } from 'component/common/StrategyList/StrategyListItem';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

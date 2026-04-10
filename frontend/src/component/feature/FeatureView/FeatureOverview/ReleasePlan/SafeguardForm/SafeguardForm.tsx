@@ -44,7 +44,7 @@ import {
     StyledSelect,
     StyledTopRow,
 } from '../shared/SharedFormComponents.tsx';
-import type { ISafeguard } from 'interfaces/releasePlans.ts';
+import type { ISafeguard } from 'interfaces/safeguard.ts';
 import {
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_STRATEGY,

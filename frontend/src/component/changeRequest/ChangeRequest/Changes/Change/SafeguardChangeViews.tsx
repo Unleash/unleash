@@ -5,7 +5,7 @@ import {
     type ChangeRequestState,
 } from 'component/changeRequest/changeRequest.types';
 import type { CreateSafeguardSchema } from 'openapi';
-import type { ISafeguard } from 'interfaces/releasePlans';
+import type { ISafeguard } from 'interfaces/safeguard';
 import type { SafeguardType } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import { SafeguardForm } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm';

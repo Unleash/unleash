@@ -9,7 +9,7 @@ import {
     UPDATE_FEATURE_STRATEGY,
 } from 'component/providers/AccessProvider/permissions';
 import { AddSafeguard, Safeguard } from './Safeguard.tsx';
-import type { ISafeguard } from 'interfaces/releasePlans';
+import type { ISafeguard } from 'interfaces/safeguard';
 
 vi.mock(
     '../../../ReleasePlan/SafeguardForm/MiniMetricsChartWithTooltip.tsx',

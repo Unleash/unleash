@@ -1,8 +1,5 @@
 import type { IFeatureStrategy } from './strategy.ts';
-import type {
-    ReleasePlanSafeguardSchema,
-    FeatureEnvironmentSafeguardSchema,
-} from '../openapi/index.js';
+import type { ISafeguard } from './safeguard.ts';
 
 export interface IReleasePlanTemplate {
     id: string;
@@ -22,9 +19,6 @@ export interface IReleasePlanTemplate {
     archivedAt?: string;
 }
 
-export type ISafeguard =
-    | ReleasePlanSafeguardSchema
-    | FeatureEnvironmentSafeguardSchema;
 export interface IReleasePlan {
     id: string;
     name: string;

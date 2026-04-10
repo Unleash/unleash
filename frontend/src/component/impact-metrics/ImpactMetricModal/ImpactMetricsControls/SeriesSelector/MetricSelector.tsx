@@ -71,10 +71,13 @@ const withSelectedValue = (
     value: string,
 ): MetricOption[] => {
     if (value && !options.some((option) => option.name === value)) {
-        return [...options, { name: value, displayName: value, help: '' }];
+        return [{ name: value, displayName: value, help: '' }, ...options];
     }
     return options;
 };
+
+const groupLabel = (source?: MetricSource) =>
+    source === 'external' ? 'External metrics' : 'Internal metrics';
 
 export const MetricSelector: FC<MetricSelectorProps> = ({
     value,
@@ -88,6 +91,7 @@ export const MetricSelector: FC<MetricSelectorProps> = ({
     return (
         <Autocomplete
             options={allOptions}
+            groupBy={(option) => groupLabel(option.source)}
             getOptionLabel={(option) => option.displayName}
             value={allOptions.find((option) => option.name === value) || null}
             onChange={(_, newValue) => {

@@ -129,6 +129,9 @@ describe('ImpactMetricModal', () => {
         await screen.findByLabelText('my_custom_label');
         expect(screen.getByText('value1')).toBeInTheDocument();
 
+        expect(screen.getByText('Last 7 days')).toBeInTheDocument();
+        expect(screen.getByText('Rate per second')).toBeInTheDocument();
+
         const beginAtZero = screen.getByRole('checkbox', {
             name: /begin at zero/i,
         });

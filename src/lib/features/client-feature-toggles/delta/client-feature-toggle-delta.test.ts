@@ -639,7 +639,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
         });
     });
 
-    test('bulked events pick the max revision id for the envelope', async () => {
+    test('bulk events pick the max revision id for the envelope', async () => {
         let currentRevisionId = 1;
         const delta = new ClientFeatureToggleDelta(
             {

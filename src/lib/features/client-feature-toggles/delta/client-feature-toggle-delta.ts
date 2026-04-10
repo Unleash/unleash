@@ -261,12 +261,19 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 this.storeFootprint();
                 this.emit(UPDATE_DELTA);
             } catch (e) {
-                this.logger.warn(
-                    'Error updating client feature, reinitializing hydration event',
-                    e,
-                );
-                for (const environment of Object.keys(this.delta)) {
-                    await this.initEnvironmentDelta(environment);
+                if (e instanceof BadDataError) {
+                    this.logger.warn(
+                        'Error updating client feature, reinitializing hydration event',
+                        e,
+                    );
+                    for (const environment of Object.keys(this.delta)) {
+                        await this.initEnvironmentDelta(environment);
+                    }
+                } else {
+                    this.logger.error(
+                        'Unexpected error updating client feature delta',
+                        e,
+                    );
                 }
             }
         }
@@ -355,8 +362,9 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                     );
                 }
             } else {
-                throw new BadDataError(
-                    `[delta] Skipping event ${event.type} ${event.id} because it does not have a featureName or environment.`,
+                // This is something we need to adjust for. If the event wasn't really needed we should not include it in the events to process
+                this.logger.error(
+                    `[delta] Skipping event ${event.type} ${event.id}. It was cosidered interesting but wasn't processed: ${JSON.stringify({ data: event.data, preData: event.preData })}.`,
                 );
             }
         }

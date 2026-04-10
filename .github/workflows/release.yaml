@@ -33,7 +33,7 @@ jobs:
       - name: Enable corepack
         run: corepack enable
       - name: Make sure we have newest version of npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@~11.10.0
       - name: Build
         run: |
           yarn install --immutable

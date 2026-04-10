@@ -13,8 +13,7 @@ export const useFeatureImpactChartActions = (
     featureName: string,
 ) => {
     const [chartModalOpen, setChartModalOpen] = useState(false);
-    const { trackMetricSaved, trackDocsClicked } =
-        useTrackFlagpageImpactMetrics();
+    const { trackMetricSaved } = useTrackFlagpageImpactMetrics();
 
     const { createImpactMetric } = useImpactMetricsApi({
         projectId,
@@ -51,7 +50,6 @@ export const useFeatureImpactChartActions = (
         openChartModal,
         closeChartModal,
         saveChart,
-        trackDocsClicked,
         metricOptions,
         metadataLoading,
     };

@@ -87,12 +87,8 @@ export class PersonalDashboardService {
             this.projectReadModel.getProjectsFavoritedByUser(userId),
         ]);
 
-        const projectIds = [
-            ...new Set([...userProjectIds, ...userFavoritedProjectIds]),
-        ];
-
         const projects = await this.projectReadModel.getProjectsForAdminUi({
-            ids: projectIds,
+            ids: [...new Set([...userProjectIds, ...userFavoritedProjectIds])],
             archived: false,
         });
 

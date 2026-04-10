@@ -10,6 +10,7 @@ import { type MinimalUser, RoleName } from '../../server-impl.js';
 
 const userEmail = 'some-user@getunleash.io';
 const enterpriseProjectId = 'enterprise-only-project';
+const favoritedEnterpriseProjectId = 'favorited-enterprise-project';
 
 let db: ITestDb;
 let user: MinimalUser;
@@ -32,11 +33,24 @@ beforeAll(async () => {
         email: userEmail,
     });
 
-    await db.rawDatabase('projects').insert({
-        id: enterpriseProjectId,
-        name: 'Enterprise Only Project',
-        description: '',
-        health: 100,
+    await db.rawDatabase('projects').insert([
+        {
+            id: enterpriseProjectId,
+            name: 'Enterprise Only Project',
+            description: '',
+            health: 100,
+        },
+        {
+            id: favoritedEnterpriseProjectId,
+            name: 'Favorited Enterprise Only Project',
+            description: '',
+            health: 100,
+        },
+    ]);
+
+    await db.rawDatabase('favorite_projects').insert({
+        project: favoritedEnterpriseProjectId,
+        user_id: user.id,
     });
 });
 
@@ -74,6 +88,7 @@ test('personal dashboard should not return enterprise-only projects after downgr
     );
     expect(enterpriseProjectIds).toContain('default');
     expect(enterpriseProjectIds).toContain(enterpriseProjectId);
+    expect(enterpriseProjectIds).toContain(favoritedEnterpriseProjectId);
 
     await enterpriseApp.destroy();
 
@@ -88,6 +103,7 @@ test('personal dashboard should not return enterprise-only projects after downgr
     const projectIds = body.projects.map((p: { id: string }) => p.id);
     expect(projectIds).toContain('default');
     expect(projectIds).not.toContain(enterpriseProjectId);
+    expect(projectIds).not.toContain(favoritedEnterpriseProjectId);
 
     await ossApp.destroy();
 });

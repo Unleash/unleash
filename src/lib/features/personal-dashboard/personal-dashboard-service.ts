@@ -55,8 +55,6 @@ export class PersonalDashboardService {
 
     private accessStore: IAccessStore;
 
-    private isOss: boolean;
-
     constructor(
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectOwnersReadModel: IProjectOwnersReadModel,
@@ -67,7 +65,6 @@ export class PersonalDashboardService {
         privateProjectChecker: IPrivateProjectChecker,
         accountStore: IAccountStore,
         accessStore: IAccessStore,
-        isOss: boolean,
     ) {
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectOwnersReadModel = projectOwnersReadModel;
@@ -78,7 +75,6 @@ export class PersonalDashboardService {
         this.privateProjectChecker = privateProjectChecker;
         this.accountStore = accountStore;
         this.accessStore = accessStore;
-        this.isOss = isOss;
     }
 
     getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {
@@ -91,13 +87,9 @@ export class PersonalDashboardService {
             this.projectReadModel.getProjectsFavoritedByUser(userId),
         ]);
 
-        let projectIds = [
+        const projectIds = [
             ...new Set([...userProjectIds, ...userFavoritedProjectIds]),
         ];
-
-        if (this.isOss) {
-            projectIds = projectIds.filter((id) => id === 'default');
-        }
 
         const projects = await this.projectReadModel.getProjectsForAdminUi({
             ids: projectIds,

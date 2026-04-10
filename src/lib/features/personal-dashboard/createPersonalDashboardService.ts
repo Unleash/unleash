@@ -27,7 +27,12 @@ export const createPersonalDashboardService = (
     return new PersonalDashboardService(
         new PersonalDashboardReadModel(db),
         new ProjectOwnersReadModel(db),
-        new ProjectReadModel(db, config.eventBus, config.flagResolver),
+        new ProjectReadModel(
+            db,
+            config.eventBus,
+            config.flagResolver,
+            config.isOss,
+        ),
         new OnboardingReadModel(db),
         new EventStore(db, config.getLogger),
         new FeatureEventFormatterMd({
@@ -37,7 +42,6 @@ export const createPersonalDashboardService = (
         new PrivateProjectChecker(stores, config),
         new AccountStore(db, config.getLogger),
         new AccessStore(db, config.eventBus, config.getLogger),
-        config.isOss,
     );
 };
 
@@ -55,6 +59,5 @@ export const createFakePersonalDashboardService = (config: IUnleashConfig) => {
         new FakePrivateProjectChecker(),
         new FakeAccountStore(),
         new FakeAccessStore(),
-        config.isOss,
     );
 };

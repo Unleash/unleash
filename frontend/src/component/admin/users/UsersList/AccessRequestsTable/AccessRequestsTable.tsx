@@ -6,6 +6,7 @@ import { VirtualizedTable } from 'component/common/Table';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { sortTypes } from 'utils/sortTypes';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import { useUserAccessRequests } from 'hooks/api/getters/useUserAccessRequests/useUserAccessRequests';
@@ -35,7 +36,8 @@ const StyledContainer = styled('div')(({ theme }) => ({
 export const AccessRequestsTable = () => {
     const { roles, refetch: refetchUsers } = useUsers();
     const { accessRequests, refetchAccessRequests } = useUserAccessRequests();
-    const { approveAccessRequest } = useUserAccessRequestsApi();
+    const { approveAccessRequest, rejectAccessRequest } =
+        useUserAccessRequestsApi();
     const { setToastData, setToastApiError } = useToast();
 
     const viewerRole = roles.find((r) => r.name.toLowerCase() === 'viewer');
@@ -44,6 +46,8 @@ export const AccessRequestsTable = () => {
     const [selectedRoles, setSelectedRoles] = useState<Record<string, number>>(
         {},
     );
+    const [requestToReject, setRequestToReject] =
+        useState<UserAccessRequestSchema | null>(null);
 
     const getRoleId = (requestId: string) =>
         selectedRoles[requestId] ?? defaultRoleId;
@@ -66,8 +70,26 @@ export const AccessRequestsTable = () => {
         }
     };
 
-    const handleDelete = (_request: UserAccessRequestSchema) => {
-        // TODO: implement reject
+    const handleDelete = (request: UserAccessRequestSchema) => {
+        setRequestToReject(request);
+    };
+
+    const handleConfirmReject = async () => {
+        if (!requestToReject) {
+            return;
+        }
+        try {
+            await rejectAccessRequest(requestToReject.id);
+            setToastData({
+                text: `Access request for ${requestToReject.email} rejected`,
+                type: 'success',
+            });
+            refetchAccessRequests();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        } finally {
+            setRequestToReject(null);
+        }
     };
 
     const columns = useMemo(
@@ -192,6 +214,19 @@ export const AccessRequestsTable = () => {
                 headerGroups={headerGroups}
                 prepareRow={prepareRow}
             />
+            <Dialogue
+                open={Boolean(requestToReject)}
+                title='Reject access request?'
+                onClose={() => setRequestToReject(null)}
+                onClick={handleConfirmReject}
+                primaryButtonText='Reject request'
+                secondaryButtonText='Cancel'
+            >
+                <Typography>
+                    Are you sure you want to reject the access request
+                    {requestToReject ? ` for ${requestToReject.email}` : ''}?
+                </Typography>
+            </Dialogue>
         </StyledContainer>
     );
 };

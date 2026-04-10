@@ -103,7 +103,7 @@ const DetailsTable: React.FC<{
                                 <pre>
                                     <ins>
                                         {JSON.stringify(newValue, null, 2)
-                                            .split('\n')
+                                            ?.split('\n')
                                             .map((line, index) => (
                                                 <code
                                                     key={`${property}${line}${index}`}

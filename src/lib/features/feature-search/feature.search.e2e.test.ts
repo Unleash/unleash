@@ -105,7 +105,7 @@ const searchFeaturesWithLifecycle = async (
 const sortFeatures = async (
     {
         sortBy = '',
-        sortOrder = '',
+        sortOrder = undefined,
         project = 'default',
         favoritesFirst = 'false',
     }: FeatureSearchQueryParameters,

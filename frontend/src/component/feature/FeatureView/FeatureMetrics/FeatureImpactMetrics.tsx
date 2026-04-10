@@ -5,7 +5,7 @@ import Add from '@mui/icons-material/Add';
 import { SafeguardHelpIcon } from './Safeguard/SafeguardHelpIcon.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata.ts';
 import { type FC, useMemo, useState } from 'react';
-import { ChartConfigModal } from '../../../impact-metrics/ChartConfigModal/ChartConfigModal.tsx';
+import { ImpactMetricModal } from '../../../impact-metrics/ImpactMetricModal/ImpactMetricModal.tsx';
 import { useImpactMetricsApi } from 'hooks/api/actions/useImpactMetricsApi/useImpactMetricsApi.ts';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam.ts';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics.ts';
@@ -173,7 +173,7 @@ export const FeatureImpactMetrics: FC = () => {
                 </Box>
             )}
 
-            <ChartConfigModal
+            <ImpactMetricModal
                 open={isModalOpen}
                 onClose={handleCloseModal}
                 onSave={handleSaveChart}

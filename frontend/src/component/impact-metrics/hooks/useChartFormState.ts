@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import type { AggregationMode, ChartConfig, MetricSource } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import type { MetricSelection } from '../ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+import type { MetricSelection } from '../ImpactMetricModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
 import {
     getDefaultAggregation,
     getMetricType,

@@ -13,7 +13,7 @@ import { FeatureMetricsOverview } from './FeatureMetrics/FeatureMetricsOverview.
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { FeatureImpactHeader } from './FeatureImpactOverview/FeatureImpactHeader';
-import { ChartConfigModal } from '../../impact-metrics/ChartConfigModal/ChartConfigModal';
+import { ImpactMetricModal } from '../../impact-metrics/ImpactMetricModal/ImpactMetricModal';
 import { useFeatureImpactChartActions } from './useFeatureImpactChartActions';
 
 export const StyledLink = styled(Link)(() => ({
@@ -85,7 +85,7 @@ export const FeatureView = () => {
                 />
             </Routes>
             {showImpactMetrics && (
-                <ChartConfigModal
+                <ImpactMetricModal
                     open={chartModalOpen}
                     onClose={closeChartModal}
                     onSave={saveChart}

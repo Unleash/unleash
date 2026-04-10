@@ -37,6 +37,7 @@ export const createPersonalDashboardService = (
         new PrivateProjectChecker(stores, config),
         new AccountStore(db, config.getLogger),
         new AccessStore(db, config.eventBus, config.getLogger),
+        config.isOss,
     );
 };
 
@@ -54,5 +55,6 @@ export const createFakePersonalDashboardService = (config: IUnleashConfig) => {
         new FakePrivateProjectChecker(),
         new FakeAccountStore(),
         new FakeAccessStore(),
+        config.isOss,
     );
 };

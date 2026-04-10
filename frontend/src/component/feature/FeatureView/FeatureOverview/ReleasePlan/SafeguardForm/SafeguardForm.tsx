@@ -18,12 +18,12 @@ import {
     type ImpactMetricsSeries,
 } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
-import { RangeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/RangeSelector/RangeSelector';
-import { ModeSelector } from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/ModeSelector/ModeSelector';
+import { RangeSelector } from 'component/impact-metrics/ImpactMetricModal/ImpactMetricsControls/RangeSelector/RangeSelector';
+import { ModeSelector } from 'component/impact-metrics/ImpactMetricModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import {
     MetricSelector,
     type MetricSelection,
-} from 'component/impact-metrics/ChartConfigModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
+} from 'component/impact-metrics/ImpactMetricModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
 import type { MetricSource } from 'component/impact-metrics/types';
 import {
     getDefaultAggregation,

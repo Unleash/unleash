@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 import { Typography, styled, Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
-import { ChartConfigModal } from './ChartConfigModal/ChartConfigModal.tsx';
+import { ImpactMetricModal } from './ImpactMetricModal/ImpactMetricModal.tsx';
 import { ChartItem } from './ChartItem.tsx';
 import { PlausibleChartItem } from './PlausibleChartItem.tsx';
 import { GridLayoutWrapper, type GridItem } from './GridLayoutWrapper.tsx';
@@ -180,7 +180,7 @@ export const ImpactMetrics: FC = () => {
                 </>
             )}
 
-            <ChartConfigModal
+            <ImpactMetricModal
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
                 onSave={handleSaveChart}

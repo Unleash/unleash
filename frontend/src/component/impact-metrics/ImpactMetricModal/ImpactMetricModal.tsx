@@ -92,7 +92,7 @@ const StyledPreviewContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
 }));
 
-export interface ChartConfigModalProps {
+export interface ImpactMetricModalProps {
     open: boolean;
     onClose: () => void;
     onSave: (config: Omit<ChartConfig, 'id'>) => void;
@@ -101,7 +101,7 @@ export interface ChartConfigModalProps {
     loading?: boolean;
 }
 
-export const ChartConfigModal: FC<ChartConfigModalProps> = ({
+export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     open,
     onClose,
     onSave,

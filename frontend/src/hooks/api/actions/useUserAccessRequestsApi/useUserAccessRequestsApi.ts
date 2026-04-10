@@ -19,8 +19,22 @@ export const useUserAccessRequestsApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const rejectAccessRequest = async (id: string) => {
+        const requestId = 'rejectAccessRequest';
+        const req = createRequest(
+            `api/admin/user-access-requests/${id}`,
+            {
+                method: 'DELETE',
+            },
+            requestId,
+        );
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
         approveAccessRequest,
+        rejectAccessRequest,
         loading,
         errors,
     };

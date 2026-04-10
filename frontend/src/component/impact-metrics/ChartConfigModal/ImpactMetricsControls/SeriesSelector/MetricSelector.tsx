@@ -9,6 +9,7 @@ import {
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { MetricSource } from 'component/impact-metrics/types';
+import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
 
 type MetricOption = {
     name: string;
@@ -32,6 +33,7 @@ export type MetricSelectorProps = {
 
 const NoOptionsMessage = () => {
     const { trackEvent } = usePlausibleTracker();
+    const { trackDocsClicked } = useTrackFlagpageImpactMetrics();
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -49,13 +51,14 @@ const NoOptionsMessage = () => {
                 target='_blank'
                 rel='noopener noreferrer'
                 sx={{ alignSelf: 'flex-start', mt: 1 }}
-                onClick={() =>
+                onClick={() => {
                     trackEvent('impact-metrics', {
                         props: {
                             eventType: 'No options docs clicked',
                         },
-                    })
-                }
+                    });
+                    trackDocsClicked();
+                }}
             >
                 Set up your first metric
             </Button>

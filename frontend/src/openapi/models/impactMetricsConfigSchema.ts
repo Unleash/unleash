@@ -6,6 +6,7 @@
 import type { ImpactMetricsConfigSchemaAggregationMode } from './impactMetricsConfigSchemaAggregationMode';
 import type { ImpactMetricsConfigSchemaLabelSelectors } from './impactMetricsConfigSchemaLabelSelectors';
 import type { ImpactMetricsConfigSchemaMode } from './impactMetricsConfigSchemaMode';
+import type { ImpactMetricsConfigSchemaSource } from './impactMetricsConfigSchemaSource';
 import type { ImpactMetricsConfigSchemaStep } from './impactMetricsConfigSchemaStep';
 import type { ImpactMetricsConfigSchemaTimeRange } from './impactMetricsConfigSchemaTimeRange';
 import type { ImpactMetricsConfigSchemaYAxisMin } from './impactMetricsConfigSchemaYAxisMin';
@@ -27,7 +28,7 @@ export interface ImpactMetricsConfigSchema {
     /** The access mode for this impact metric configuration: "read" when referenced by a safeguard, "write" otherwise. */
     mode?: ImpactMetricsConfigSchemaMode;
     /** The Prometheus data source for this metric. Defaults to internal. */
-    source?: 'internal' | 'external';
+    source?: ImpactMetricsConfigSchemaSource;
     /**
      * The step interval for querying metrics data. This is automatically calculated from the timeRange and stored when the metric is created or updated.
      * @nullable

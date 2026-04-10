@@ -1,7 +1,8 @@
 import type { CreateFeatureSchemaType, FeatureSchema } from 'openapi';
 import type { IFeatureStrategy } from './strategy.js';
 import type { ITag } from './tags.js';
-import type { IReleasePlan, ISafeguard } from './releasePlans.js';
+import type { IReleasePlan } from './releasePlans.js';
+import type { ISafeguard } from './safeguard.js';
 
 /**
  * @deprecated use FeatureSchema from openapi

@@ -5,7 +5,7 @@ import { focusable } from 'themes/themeStyles';
 const StyledLink = styled('a')(({ theme }) => ({
     position: 'fixed',
     overflow: 'hidden',
-    zIndex: 1000,
+    zIndex: theme.zIndex.tooltip,
     top: theme.spacing(2.25),
     left: theme.spacing(2.25),
     padding: theme.spacing(1, 2),

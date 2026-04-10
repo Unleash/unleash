@@ -2,7 +2,7 @@
   "name": "unleash-server",
   "type": "module",
   "description": "Unleash is an enterprise ready feature flag service. It provides different strategies for handling feature flags.",
-  "version": "7.5.1",
+  "version": "7.6.1",
   "keywords": [
     "unleash",
     "feature flag",
@@ -194,7 +194,6 @@
     "ip": "^2.0.1",
     "semver": "^7.7.3",
     "tough-cookie": "4.1.4",
-    "brace-expansion": "2.0.2",
     "@wesleytodd/openapi/path-to-regexp": "6.3.0",
     "router/path-to-regexp": "1.9.0",
     "@types/express-session/@types/express": "4.17.25",

@@ -235,6 +235,13 @@ export const SCIM_GROUPS_DELETED = 'scim-groups-deleted' as const;
 
 export const CDN_TOKEN_CREATED = 'cdn-token-created' as const;
 
+export const USER_ACCESS_REQUEST_REGISTERED =
+    'user-access-request-registered' as const;
+export const USER_ACCESS_REQUEST_APPROVED =
+    'user-access-request-approved' as const;
+export const USER_ACCESS_REQUEST_REJECTED =
+    'user-access-request-rejected' as const;
+
 export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,
@@ -406,6 +413,9 @@ export const IEventTypes = [
     IMPACT_METRIC_CREATED,
     IMPACT_METRIC_UPDATED,
     IMPACT_METRIC_DELETED,
+    USER_ACCESS_REQUEST_REGISTERED,
+    USER_ACCESS_REQUEST_APPROVED,
+    USER_ACCESS_REQUEST_REJECTED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 

@@ -59,6 +59,9 @@ import {
     PROJECT_ARCHIVED,
     RELEASE_PLAN_PROGRESSIONS_PAUSED,
     RELEASE_PLAN_PROGRESSIONS_RESUMED,
+    USER_ACCESS_REQUEST_APPROVED,
+    USER_ACCESS_REQUEST_REGISTERED,
+    USER_ACCESS_REQUEST_REJECTED,
 } from '../events/index.js';
 import type { IAddonDefinition } from '../types/model.js';
 
@@ -155,6 +158,9 @@ const slackAppDefinition: IAddonDefinition = {
         USER_CREATED,
         USER_DELETED,
         USER_UPDATED,
+        USER_ACCESS_REQUEST_REGISTERED,
+        USER_ACCESS_REQUEST_APPROVED,
+        USER_ACCESS_REQUEST_REJECTED,
     ],
     tagTypes: [
         {

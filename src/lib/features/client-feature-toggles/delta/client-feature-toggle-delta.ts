@@ -25,9 +25,18 @@ import {
     isDeltaFeatureUpdatedEvent,
     isDeltaSegmentEvent,
 } from './client-feature-toggle-delta-types.js';
-import { FEATURE_PROJECT_CHANGE, type IEvent } from '../../../events/index.js';
+import {
+    FEATURE_ARCHIVED,
+    FEATURE_DELETED,
+    FEATURE_PROJECT_CHANGE,
+    SEGMENT_CREATED,
+    SEGMENT_DELETED,
+    SEGMENT_UPDATED,
+    type IEvent,
+} from '../../../events/index.js';
 import { getVisibleRevision } from './visible-revision.js';
 import { createGauge } from '../../../util/metrics/index.js';
+import { BadDataError } from '../../../server-impl.js';
 
 export type EnvironmentRevisions = Record<string, DeltaCache>;
 export type EnvironmentVisibleRevisionState = {
@@ -247,9 +256,26 @@ export class ClientFeatureToggleDelta extends EventEmitter {
 
     public async onUpdateRevisionEvent() {
         if (this.flagResolver.isEnabled('deltaApi')) {
-            await this.updateFeaturesDelta();
-            this.storeFootprint();
-            this.emit(UPDATE_DELTA);
+            try {
+                await this.updateFeaturesDelta();
+                this.storeFootprint();
+                this.emit(UPDATE_DELTA);
+            } catch (e) {
+                if (e instanceof BadDataError) {
+                    this.logger.warn(
+                        'Error updating client feature, reinitializing hydration event',
+                        e,
+                    );
+                    for (const environment of Object.keys(this.delta)) {
+                        await this.initEnvironmentDelta(environment);
+                    }
+                } else {
+                    this.logger.error(
+                        'Unexpected error updating client feature delta',
+                        e,
+                    );
+                }
+            }
         }
     }
 
@@ -275,16 +301,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             Map<string, number>
         >();
 
-        // helper function
-        const warnUnexpectedEventPayload = (
-            event: IEvent,
-            field: 'data' | 'preData',
-            expectedValue: string,
-        ) => {
-            this.logger.warn(
-                `[delta] Skipping event ${event.id} ${event.createdAt.toISOString()} (${event.type}) because ${field} ${expectedValue}.`,
-            );
-        };
         for (const event of changeEvents) {
             if (event.type === FEATURE_PROJECT_CHANGE && event.featureName) {
                 // A project change involves two steps: removing the feature from old project and adding it to new project
@@ -299,7 +315,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                     event.id,
                 );
             } else if (
-                event.type === 'feature-archived' &&
+                event.type === FEATURE_ARCHIVED &&
                 event.featureName &&
                 event.project
             ) {
@@ -309,28 +325,26 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                     revisionId: event.id,
                 });
             } else if (
-                event.type === 'segment-created' ||
-                event.type === 'segment-updated'
+                event.type === SEGMENT_CREATED ||
+                event.type === SEGMENT_UPDATED
             ) {
                 const segmentId = event.data?.id;
                 if (!segmentId) {
-                    warnUnexpectedEventPayload(event, 'data', 'is missing id');
-                    continue;
+                    throw new BadDataError(
+                        `[delta] Skipping event ${event.id} ${event.createdAt.toISOString()} (${event.type}) because data is missing id.`,
+                    );
                 }
                 setMaxRevision(segmentsUpdated, segmentId, event.id);
-            } else if (event.type === 'segment-deleted') {
+            } else if (event.type === SEGMENT_DELETED) {
                 // we were previously using data.id for segment-deleted event, this was changed on Sep 29, 2023: https://github.com/Unleash/unleash/pull/4815
                 const segmentId = event.preData?.id;
                 if (!segmentId) {
-                    warnUnexpectedEventPayload(
-                        event,
-                        'preData',
-                        'is missing id',
+                    throw new BadDataError(
+                        `[delta] Skipping event ${event.id} ${event.createdAt.toISOString()} (${event.type}) because preData is missing id.`,
                     );
-                    continue;
                 }
                 setMaxRevision(segmentsRemoved, segmentId, event.id);
-            } else if (event.featureName && event.type !== 'feature-deleted') {
+            } else if (event.featureName && event.type !== FEATURE_DELETED) {
                 if (event.environment == null) {
                     setMaxRevision(
                         globallyUpdatedFeatures,
@@ -347,6 +361,11 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                         featureNames,
                     );
                 }
+            } else {
+                // This is something we need to adjust for. If the event wasn't really needed we should not include it in the events to process
+                this.logger.error(
+                    `[delta] Skipping event ${event.type} ${event.id}. It was considered interesting but wasn't processed: ${JSON.stringify({ data: event.data, preData: event.preData })}.`,
+                );
             }
         }
 

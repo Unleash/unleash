@@ -88,7 +88,7 @@ const DetailsTable: React.FC<{
                                 <pre>
                                     <del>
                                         {JSON.stringify(oldValue, null, 2)
-                                            .split('\n')
+                                            ?.split('\n')
                                             .map((line, index) => (
                                                 <code
                                                     key={`${property}${line}${index}`}

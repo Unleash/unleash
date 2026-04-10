@@ -3301,18 +3301,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-theme-duotone@npm:4.25.8":
-  version: 4.25.8
-  resolution: "@uiw/codemirror-theme-duotone@npm:4.25.8"
+"@uiw/codemirror-theme-duotone@npm:4.25.9":
+  version: 4.25.9
+  resolution: "@uiw/codemirror-theme-duotone@npm:4.25.9"
   dependencies:
-    "@uiw/codemirror-themes": "npm:4.25.8"
-  checksum: 10c0/50ca76009117a6ce2824b5e17bf38f8ac672df18e8e173b50a2aac400a0369f0911033cd29147d25c2191494da6b7b85d53c48c620ebbf66b2d35534609651c3
+    "@uiw/codemirror-themes": "npm:4.25.9"
+  checksum: 10c0/ae12d03e4ad06b85f05bb8149a3d1337088f8b0cece9b97cd80f4bfefe202406515fa382348a6ca1f18973462adfdb7565a10777600b3af290c8a94ea122f0d1
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-themes@npm:4.25.8":
-  version: 4.25.8
-  resolution: "@uiw/codemirror-themes@npm:4.25.8"
+"@uiw/codemirror-themes@npm:4.25.9":
+  version: 4.25.9
+  resolution: "@uiw/codemirror-themes@npm:4.25.9"
   dependencies:
     "@codemirror/language": "npm:^6.0.0"
     "@codemirror/state": "npm:^6.0.0"
@@ -3321,7 +3321,7 @@ __metadata:
     "@codemirror/language": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: 10c0/062b85e6c96c1a3820b98301f4cf45e8f0cf732ead7543f70509afecd2e78cde4ff2c1ff2af5ca8e0841f71b7524e4d38c50a774a4476b1e6960966d0645e385
+  checksum: 10c0/b456ade7749438f0e5d4f817d897942114229ef78ea960034f9ef4a51277722dbb6cd22f882151640c0c66782bfc8fd372d9a5999e983e4004527162f7533a67
   languageName: node
   linkType: hard
 
@@ -10273,7 +10273,7 @@ __metadata:
     "@types/react-table": "npm:7.7.20"
     "@types/react-test-renderer": "npm:18.3.1"
     "@types/semver": "npm:7.7.1"
-    "@uiw/codemirror-theme-duotone": "npm:4.25.8"
+    "@uiw/codemirror-theme-duotone": "npm:4.25.9"
     "@uiw/react-codemirror": "npm:4.25.8"
     "@unleash/proxy-client-react": "npm:^5.1.0-beta.2"
     "@vitejs/plugin-react": "npm:4.7.0"

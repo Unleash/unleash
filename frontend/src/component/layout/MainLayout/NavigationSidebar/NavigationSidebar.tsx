@@ -13,12 +13,12 @@ import type { LegacyNewInUnleash } from './NewInUnleash/LegacyNewInUnleash.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { flexRow, focusable } from 'themes/themeStyles';
-import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
-import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
-import { ReactComponent as CelebatoryUnleashLogo } from 'assets/img/unleashHoliday.svg';
-import { ReactComponent as CelebatoryUnleashLogoWhite } from 'assets/img/unleashHolidayDark.svg';
-import { ReactComponent as LogoOnlyWhite } from 'assets/img/logo.svg';
-import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
+import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
+import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
+import CelebratoryUnleashLogo from 'assets/img/unleashHoliday.svg?react';
+import CelebratoryUnleashLogoWhite from 'assets/img/unleashHolidayDark.svg?react';
+import LogoOnlyWhite from 'assets/img/logo.svg?react';
+import LogoOnly from 'assets/img/logoDark.svg?react';
 import { Link } from 'react-router-dom';
 import { useFlag } from '@unleash/proxy-client-react';
 import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
@@ -95,7 +95,7 @@ const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '150px' });
 
 const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
 
-const StyledCelebatoryLogo = styled(CelebatoryUnleashLogo)({ width: '150px' });
+const StyledCelebatoryLogo = styled(CelebratoryUnleashLogo)({ width: '150px' });
 
 const StyledUnleashLogoOnly = styled(LogoOnly)(({ theme }) => ({
     width: '58px',
@@ -137,7 +137,7 @@ export const NavigationSidebar: FC<{
                                 darkmode={
                                     <ConditionallyRender
                                         condition={celebrateUnleashFrontend}
-                                        show={<CelebatoryUnleashLogoWhite />}
+                                        show={<CelebratoryUnleashLogoWhite />}
                                         elseShow={
                                             <StyledUnleashLogoWhite aria-label='Unleash logo' />
                                         }

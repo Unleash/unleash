@@ -21,6 +21,21 @@ const externalMetricSeries = [
     },
 ];
 
+const mixedMetricSeries = [
+    {
+        name: 'my_external_metric',
+        displayName: 'my_external_metric',
+        help: 'A custom external metric',
+        source: 'external' as const,
+    },
+    {
+        name: 'unleash_counter_flag_exposure',
+        displayName: 'unleash_counter_flag_exposure',
+        help: 'A built-in Unleash metric',
+        source: 'internal' as const,
+    },
+];
+
 const setupServerRoutes = (
     labels: Record<string, string[]> = {
         my_custom_label: ['value1', 'value2'],
@@ -92,6 +107,27 @@ describe('ImpactMetricModal', () => {
             source: 'external',
         });
         expect(onClose).toHaveBeenCalled();
+    });
+
+    test('groups metric options by source with section headers', async () => {
+        const user = userEvent.setup();
+
+        render(
+            <ImpactMetricModal
+                open
+                onClose={vi.fn()}
+                onSave={vi.fn()}
+                metricSeries={mixedMetricSeries}
+            />,
+        );
+
+        await screen.findByRole('heading', { name: 'Add impact metric' });
+
+        const metricInput = screen.getByLabelText(/metric name/i);
+        await user.click(metricInput);
+
+        expect(await screen.findByText('Internal metrics')).toBeInTheDocument();
+        expect(await screen.findByText('External metrics')).toBeInTheDocument();
     });
 
     test('prefills the form when editing an existing external metric chart', async () => {

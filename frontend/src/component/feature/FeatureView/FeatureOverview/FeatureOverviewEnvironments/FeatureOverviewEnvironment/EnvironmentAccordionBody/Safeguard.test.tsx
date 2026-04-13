@@ -138,13 +138,14 @@ const setupServerRoutes = () => {
         [],
     );
     testServerRoute(server, '/api/admin/impact-metrics/metadata', {
-        series: {
-            unleash_counter_http_requests_total: {
-                type: 'counter',
+        metrics: [
+            {
+                name: 'unleash_counter_http_requests_total',
                 help: 'Total HTTP requests',
                 displayName: 'http_requests_total',
+                source: 'internal',
             },
-        },
+        ],
     });
     testServerRoute(server, '/api/admin/impact-metrics/data', {
         labels: { appName: [] },
@@ -368,14 +369,14 @@ describe('Safeguard', () => {
         );
 
         testServerRoute(server, '/api/admin/impact-metrics/metadata', {
-            series: {
-                my_custom_metric: {
-                    type: 'unknown',
+            metrics: [
+                {
+                    name: 'my_custom_metric',
                     help: 'A custom metric',
                     displayName: 'my_custom_metric',
                     source: 'external',
                 },
-            },
+            ],
         });
         testServerRoute(server, '/api/admin/impact-metrics/', {
             series: [],
@@ -443,13 +444,14 @@ describe('Safeguard', () => {
         );
 
         testServerRoute(server, '/api/admin/impact-metrics/metadata', {
-            series: {
-                my_custom_metric: {
-                    type: 'unknown',
+            metrics: [
+                {
+                    name: 'my_custom_metric',
                     help: 'A custom metric',
                     displayName: 'my_custom_metric',
+                    source: 'internal',
                 },
-            },
+            ],
         });
         testServerRoute(server, '/api/admin/impact-metrics/', {
             series: [],

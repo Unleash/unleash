@@ -15,7 +15,7 @@ import { useNumericStringInput } from 'hooks/useNumericStringInput';
 import { MiniMetricsChartWithTooltip } from './MiniMetricsChartWithTooltip.tsx';
 import {
     useImpactMetricsOptions,
-    type ImpactMetricsSeries,
+    type ImpactMetric,
 } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
 import { RangeSelector } from 'component/impact-metrics/ImpactMetricModal/ImpactMetricsControls/RangeSelector/RangeSelector';
@@ -92,8 +92,6 @@ interface IBaseSafeguardFormProps {
     badge?: ReactNode;
     safeguardType?: SafeguardType;
 }
-
-type MetricOption = { name: string } & ImpactMetricsSeries;
 
 const getInitialValues = (safeguard?: ISafeguard) => ({
     metric: {
@@ -228,7 +226,7 @@ const useSafeguardMetricsData = (
 const useSafeguardFormHandlers = (
     formValues: ReturnType<typeof useSafeguardFormValues>,
     formMode: ReturnType<typeof useSafeguardFormMode>,
-    metricOptions: MetricOption[],
+    metricOptions: ImpactMetric[],
     metricType: MetricType,
 ) => {
     const {

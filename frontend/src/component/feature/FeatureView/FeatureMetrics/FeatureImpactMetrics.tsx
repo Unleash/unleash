@@ -178,7 +178,7 @@ export const FeatureImpactMetrics: FC = () => {
                 onClose={handleCloseModal}
                 onSave={handleSaveChart}
                 initialConfig={editingChart}
-                metricSeries={metricOptions}
+                metrics={metricOptions}
                 loading={metadataLoading}
             />
         </PageContent>

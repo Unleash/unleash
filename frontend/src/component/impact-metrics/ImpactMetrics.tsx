@@ -185,7 +185,7 @@ export const ImpactMetrics: FC = () => {
                 onClose={() => setModalOpen(false)}
                 onSave={handleSaveChart}
                 initialConfig={editingChart}
-                metricSeries={metricOptions}
+                metrics={metricOptions}
                 loading={metadataLoading || settingsLoading}
             />
         </>

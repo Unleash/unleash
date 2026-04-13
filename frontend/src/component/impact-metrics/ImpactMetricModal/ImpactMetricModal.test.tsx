@@ -77,7 +77,7 @@ describe('ImpactMetricModal', () => {
                 open
                 onClose={onClose}
                 onSave={onSave}
-                metricSeries={externalMetricSeries}
+                metrics={externalMetricSeries}
             />,
         );
 
@@ -125,7 +125,7 @@ describe('ImpactMetricModal', () => {
                 open
                 onClose={vi.fn()}
                 onSave={vi.fn()}
-                metricSeries={mixedMetricSeries}
+                metrics={mixedMetricSeries}
             />,
         );
 
@@ -151,7 +151,7 @@ describe('ImpactMetricModal', () => {
                 open
                 onClose={vi.fn()}
                 onSave={vi.fn()}
-                metricSeries={mixedMetricSeries}
+                metrics={mixedMetricSeries}
                 initialConfig={initialConfig}
             />,
         );
@@ -182,7 +182,7 @@ describe('ImpactMetricModal', () => {
                 open
                 onClose={vi.fn()}
                 onSave={vi.fn()}
-                metricSeries={mixedMetricSeries}
+                metrics={mixedMetricSeries}
                 initialConfig={initialConfig}
             />,
         );
@@ -215,7 +215,7 @@ describe('ImpactMetricModal', () => {
                 open
                 onClose={vi.fn()}
                 onSave={vi.fn()}
-                metricSeries={externalMetricSeries}
+                metrics={externalMetricSeries}
                 initialConfig={initialConfig}
             />,
         );

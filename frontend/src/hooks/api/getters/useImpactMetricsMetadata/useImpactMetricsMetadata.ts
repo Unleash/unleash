@@ -1,16 +1,16 @@
-import { useMemo } from 'react';
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
 import type { MetricSource } from 'component/impact-metrics/types';
 
-export type ImpactMetricsSeries = {
+export type ImpactMetric = {
+    name: string;
     help: string;
     displayName: string;
-    source?: MetricSource;
+    source: MetricSource;
 };
 
 export type ImpactMetricsMetadata = {
-    series: Record<string, ImpactMetricsSeries>;
+    metrics: ImpactMetric[];
 };
 
 export const useImpactMetricsMetadata = () => {
@@ -31,18 +31,8 @@ export const useImpactMetricsMetadata = () => {
 export const useImpactMetricsOptions = () => {
     const { metadata, loading, error } = useImpactMetricsMetadata();
 
-    const metricOptions = useMemo(() => {
-        if (!metadata?.series) {
-            return [];
-        }
-        return Object.entries(metadata.series).map(([name, rest]) => ({
-            name,
-            ...rest,
-        }));
-    }, [metadata]);
-
     return {
-        metricOptions,
+        metricOptions: metadata?.metrics ?? [],
         loading,
         error,
     };

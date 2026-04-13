@@ -89,7 +89,7 @@ export const FeatureView = () => {
                     open={chartModalOpen}
                     onClose={closeChartModal}
                     onSave={saveChart}
-                    metricSeries={metricOptions}
+                    metrics={metricOptions}
                     loading={metadataLoading}
                 />
             )}

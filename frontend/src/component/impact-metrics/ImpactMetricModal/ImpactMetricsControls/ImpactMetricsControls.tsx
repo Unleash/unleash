@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { Box, FormControlLabel, Checkbox, MenuItem } from '@mui/material';
-import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+import type { ImpactMetric } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { MetricSelector } from './SeriesSelector/MetricSelector.tsx';
 import { RangeSelector } from './RangeSelector/RangeSelector.tsx';
 import { ModeSelector } from './ModeSelector/ModeSelector.tsx';
@@ -16,7 +16,7 @@ export type ImpactMetricsControlsProps = {
         | 'setLabelSelectors'
         | 'setAggregationMode'
     >;
-    metricSeries: (ImpactMetricsSeries & { name: string })[];
+    metrics: ImpactMetric[];
     loading?: boolean;
     labelsFilter?: ReactNode;
 };
@@ -24,7 +24,7 @@ export type ImpactMetricsControlsProps = {
 export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
     formData,
     actions,
-    metricSeries,
+    metrics,
     loading,
     labelsFilter,
 }) => (
@@ -40,7 +40,7 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
                 value={formData.metricName}
                 valueSource={formData.source}
                 onChange={actions.handleSeriesChange}
-                options={metricSeries}
+                options={metrics}
                 loading={loading}
             />
 

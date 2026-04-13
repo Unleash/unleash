@@ -13,7 +13,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { ImpactMetricsControls } from './ImpactMetricsControls/ImpactMetricsControls.tsx';
 import { useChartFormState } from '../hooks/useChartFormState.ts';
 import type { ChartConfig } from '../types.ts';
-import type { ImpactMetricsSeries } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+import type { ImpactMetric } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { LabelsFilter } from './LabelFilter/LabelsFilter.tsx';
 import { ImpactMetricsChart } from '../ImpactMetricsChart.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
@@ -97,7 +97,7 @@ export interface ImpactMetricModalProps {
     onClose: () => void;
     onSave: (config: Omit<ChartConfig, 'id'>) => void;
     initialConfig?: ChartConfig;
-    metricSeries: (ImpactMetricsSeries & { name: string })[];
+    metrics: ImpactMetric[];
     loading?: boolean;
 }
 
@@ -106,7 +106,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     onClose,
     onSave,
     initialConfig,
-    metricSeries,
+    metrics,
     loading = false,
 }) => {
     const { formData, actions, isValid, currentAvailableLabels } =
@@ -203,7 +203,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                         <ImpactMetricsControls
                             formData={formData}
                             actions={actions}
-                            metricSeries={metricSeries}
+                            metrics={metrics}
                             loading={loading}
                             labelsFilter={
                                 currentAvailableLabels ? (

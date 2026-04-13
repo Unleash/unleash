@@ -25,6 +25,7 @@ export type MetricSelection = {
 
 export type MetricSelectorProps = {
     value: string;
+    valueSource?: MetricSource;
     onChange: (selection: MetricSelection) => void;
     options: MetricOption[];
     loading?: boolean;
@@ -69,9 +70,18 @@ const NoOptionsMessage = () => {
 const withSelectedValue = (
     options: MetricOption[],
     value: string,
+    valueSource?: MetricSource,
 ): MetricOption[] => {
     if (value && !options.some((option) => option.name === value)) {
-        return [{ name: value, displayName: value, help: '' }, ...options];
+        const orphan: MetricOption = {
+            name: value,
+            displayName: value,
+            help: '',
+            source: valueSource,
+        };
+        return valueSource === 'external'
+            ? [...options, orphan]
+            : [orphan, ...options];
     }
     return options;
 };
@@ -81,12 +91,13 @@ const groupLabel = (source?: MetricSource) =>
 
 export const MetricSelector: FC<MetricSelectorProps> = ({
     value,
+    valueSource,
     onChange,
     options,
     loading = false,
     label = 'Metric name',
 }) => {
-    const allOptions = withSelectedValue(options, value);
+    const allOptions = withSelectedValue(options, value, valueSource);
 
     return (
         <Autocomplete

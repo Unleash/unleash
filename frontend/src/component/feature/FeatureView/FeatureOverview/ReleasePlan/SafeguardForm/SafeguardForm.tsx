@@ -525,6 +525,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                     <StyledTopRow sx={{ ml: 3, mb: 1.5 }}>
                         <MetricSelector
                             value={metric.metricName}
+                            valueSource={metric.source}
                             onChange={handleMetricChange}
                             options={metricOptions}
                             loading={loading}

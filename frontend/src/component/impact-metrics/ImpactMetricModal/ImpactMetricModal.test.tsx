@@ -21,18 +21,26 @@ const externalMetricSeries = [
     },
 ];
 
+const baseChartConfig: Omit<ChartConfig, 'metricName' | 'source'> = {
+    id: 'chart-1',
+    timeRange: 'day',
+    yAxisMin: 'auto',
+    aggregationMode: 'count',
+    labelSelectors: {},
+};
+
 const mixedMetricSeries = [
-    {
-        name: 'my_external_metric',
-        displayName: 'my_external_metric',
-        help: 'A custom external metric',
-        source: 'external' as const,
-    },
     {
         name: 'unleash_counter_flag_exposure',
         displayName: 'unleash_counter_flag_exposure',
         help: 'A built-in Unleash metric',
         source: 'internal' as const,
+    },
+    {
+        name: 'my_external_metric',
+        displayName: 'my_external_metric',
+        help: 'A custom external metric',
+        source: 'external' as const,
     },
 ];
 
@@ -128,6 +136,66 @@ describe('ImpactMetricModal', () => {
 
         expect(await screen.findByText('Internal metrics')).toBeInTheDocument();
         expect(await screen.findByText('External metrics')).toBeInTheDocument();
+    });
+
+    test('appends an orphan external metric to the end of the options', async () => {
+        const user = userEvent.setup();
+        const initialConfig: ChartConfig = {
+            ...baseChartConfig,
+            metricName: 'orphan_external_metric',
+            source: 'external',
+        };
+
+        render(
+            <ImpactMetricModal
+                open
+                onClose={vi.fn()}
+                onSave={vi.fn()}
+                metricSeries={mixedMetricSeries}
+                initialConfig={initialConfig}
+            />,
+        );
+
+        await screen.findByRole('heading', { name: 'Edit impact metric' });
+
+        const metricInput = screen.getByLabelText(/metric name/i);
+        await user.click(metricInput);
+
+        const optionNames = (await screen.findAllByRole('option')).map(
+            (o) => o.textContent,
+        );
+        expect(optionNames[optionNames.length - 1]).toContain(
+            'orphan_external_metric',
+        );
+    });
+
+    test('prepends an orphan internal metric to the beginning of the options', async () => {
+        const user = userEvent.setup();
+        const initialConfig: ChartConfig = {
+            ...baseChartConfig,
+            metricName: 'orphan_internal_metric',
+            source: 'internal',
+        };
+
+        render(
+            <ImpactMetricModal
+                open
+                onClose={vi.fn()}
+                onSave={vi.fn()}
+                metricSeries={mixedMetricSeries}
+                initialConfig={initialConfig}
+            />,
+        );
+
+        await screen.findByRole('heading', { name: 'Edit impact metric' });
+
+        const metricInput = screen.getByLabelText(/metric name/i);
+        await user.click(metricInput);
+
+        const optionNames = (await screen.findAllByRole('option')).map(
+            (o) => o.textContent,
+        );
+        expect(optionNames[0]).toContain('orphan_internal_metric');
     });
 
     test('prefills the form when editing an existing external metric chart', async () => {

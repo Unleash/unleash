@@ -38,6 +38,7 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
         >
             <MetricSelector
                 value={formData.metricName}
+                valueSource={formData.source}
                 onChange={actions.handleSeriesChange}
                 options={metricSeries}
                 loading={loading}

@@ -165,7 +165,7 @@ export function getStrategyChangesThatWouldBeOverwritten(
     })();
 
     return getChangesThatWouldBeOverwritten(
-        omit(withSortedSegments.current, 'strategyName'),
+        omit(withSortedSegments.current, 'strategyName', 'sortOrder'),
         withSortedSegments.change,
         fallbacks,
     );

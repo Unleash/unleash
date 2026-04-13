@@ -205,7 +205,7 @@ describe('Strategy change conflict detection', () => {
             change,
         );
 
-        const { id, name, ...changedProperties } = withChanges;
+        const { id, name, sortOrder, ...changedProperties } = withChanges;
 
         const expectedOutput = Object.entries(changedProperties).map(
             ([property, oldValue]) => ({
@@ -438,6 +438,20 @@ describe('Strategy change conflict detection', () => {
         const result = getStrategyChangesThatWouldBeOverwritten(
             existingStrategy,
             changedVersion,
+        );
+
+        expect(result).toBeNull();
+    });
+
+    test('it does not list sort order as a strategy change, even if it has been updated since ', () => {
+        const currentWithDifferentSortOrder = {
+            ...existingStrategy,
+            sortOrder: 5,
+        };
+
+        const result = getStrategyChangesThatWouldBeOverwritten(
+            currentWithDifferentSortOrder,
+            change,
         );
 
         expect(result).toBeNull();

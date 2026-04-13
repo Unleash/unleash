@@ -345,9 +345,7 @@ const useSafeguardFormState = (
                 timeRange: formValues.timeRange,
                 aggregationMode: formValues.aggregationMode,
                 labelSelectors,
-                ...(formValues.metric.source
-                    ? { source: formValues.metric.source }
-                    : {}),
+                source: formValues.metric.source ?? 'internal',
             },
             triggerCondition: {
                 operator: formValues.operator,
@@ -466,7 +464,9 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     const showButtons = mode === 'create' || mode === 'edit';
 
     const miniChartMetricDisplayName = metricOptions.find(
-        (m) => m.name === metric.metricName,
+        (m) =>
+            m.name === metric.metricName &&
+            m.source === (metric.source ?? 'internal'),
     )?.displayName;
 
     const {

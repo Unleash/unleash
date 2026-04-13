@@ -37,9 +37,21 @@ const mixedMetricSeries = [
         source: 'internal' as const,
     },
     {
+        name: 'shared_metric',
+        displayName: 'shared_metric (internal)',
+        help: 'Internal shared metric',
+        source: 'internal' as const,
+    },
+    {
         name: 'my_external_metric',
         displayName: 'my_external_metric',
         help: 'A custom external metric',
+        source: 'external' as const,
+    },
+    {
+        name: 'shared_metric',
+        displayName: 'shared_metric (external)',
+        help: 'External shared metric',
         source: 'external' as const,
     },
 ];
@@ -196,6 +208,30 @@ describe('ImpactMetricModal', () => {
             (o) => o.textContent,
         );
         expect(optionNames[0]).toContain('orphan_internal_metric');
+    });
+
+    test('selects the correct option when name is shared across sources', async () => {
+        const initialConfig: ChartConfig = {
+            ...baseChartConfig,
+            metricName: 'shared_metric',
+            source: 'external',
+        };
+
+        render(
+            <ImpactMetricModal
+                open
+                onClose={vi.fn()}
+                onSave={vi.fn()}
+                metrics={mixedMetricSeries}
+                initialConfig={initialConfig}
+            />,
+        );
+
+        await screen.findByRole('heading', { name: 'Edit impact metric' });
+
+        expect(
+            screen.getByDisplayValue('shared_metric (external)'),
+        ).toBeInTheDocument();
     });
 
     test('prefills the form when editing an existing external metric chart', async () => {

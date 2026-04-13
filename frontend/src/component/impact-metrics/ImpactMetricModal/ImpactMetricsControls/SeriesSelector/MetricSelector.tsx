@@ -15,8 +15,14 @@ type MetricOption = {
     name: string;
     displayName: string;
     help: string;
-    source?: MetricSource;
+    source: MetricSource;
 };
+
+const matchesSelection = (
+    option: Pick<MetricOption, 'name' | 'source'>,
+    name: string,
+    source?: MetricSource,
+) => option.name === name && option.source === (source ?? 'internal');
 
 export type MetricSelection = {
     metricName: string;
@@ -72,12 +78,15 @@ const withSelectedValue = (
     value: string,
     valueSource?: MetricSource,
 ): MetricOption[] => {
-    if (value && !options.some((option) => option.name === value)) {
+    if (
+        value &&
+        !options.some((option) => matchesSelection(option, value, valueSource))
+    ) {
         const orphan: MetricOption = {
             name: value,
             displayName: value,
             help: '',
-            source: valueSource,
+            source: valueSource ?? 'internal',
         };
         return valueSource === 'external'
             ? [...options, orphan]
@@ -104,7 +113,11 @@ export const MetricSelector: FC<MetricSelectorProps> = ({
             options={allOptions}
             groupBy={(option) => groupLabel(option.source)}
             getOptionLabel={(option) => option.displayName}
-            value={allOptions.find((option) => option.name === value) || null}
+            value={
+                allOptions.find((option) =>
+                    matchesSelection(option, value, valueSource),
+                ) || null
+            }
             onChange={(_, newValue) => {
                 const selected = newValue || options[0];
                 onChange({
@@ -114,7 +127,11 @@ export const MetricSelector: FC<MetricSelectorProps> = ({
             }}
             disabled={loading}
             renderOption={(props, option, { inputValue }) => (
-                <Box component='li' {...props} key={option.name}>
+                <Box
+                    component='li'
+                    {...props}
+                    key={`${option.source}__${option.name}`}
+                >
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Typography variant='body2'>
                             <Highlighter search={inputValue}>

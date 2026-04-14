@@ -10,7 +10,7 @@ import noLogger from '../../test/fixtures/no-logger.js';
 import { addDays } from 'date-fns';
 import { vi } from 'vitest';
 
-test('should redirect to "/" after logout', async () => {
+test('should redirect to "/signed-out" after logout', async () => {
     const baseUriPath = '';
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
@@ -30,10 +30,10 @@ test('should redirect to "/" after logout', async () => {
     await request
         .post(`${baseUriPath}/logout`)
         .expect(302)
-        .expect('Location', `${baseUriPath}/`);
+        .expect('Location', `${baseUriPath}/signed-out`);
 });
 
-test('should redirect to "/basePath" after logout when baseUriPath is set', async () => {
+test('should redirect to "/basePath/signed-out" after logout when baseUriPath is set', async () => {
     const baseUriPath = '/basePath';
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
@@ -48,7 +48,7 @@ test('should redirect to "/basePath" after logout when baseUriPath is set', asyn
     await request
         .post('/logout')
         .expect(302)
-        .expect('Location', `${baseUriPath}/`);
+        .expect('Location', `${baseUriPath}/signed-out`);
 });
 
 test('should set "Clear-Site-Data" header', async () => {

@@ -1,27 +1,24 @@
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
 import type { MetricSource } from 'component/impact-metrics/types';
+import type {
+    ImpactMetricsDataSchema,
+    ImpactMetricsDataSchemaLabels,
+    ImpactMetricsDataSchemaSeriesItem,
+} from 'openapi';
 
-export type TimeSeriesData = [number, number][];
-
-export type ImpactMetricsLabels = Record<string, string[]>;
-
-export type ImpactMetricsSeries = {
-    metric: Record<string, string>;
-    data: TimeSeriesData;
+// Narrow the generated `(number | string)[][]` tuple to the actual contract
+// `[number, string][]`. OpenAPI 3.0 can't express ordered tuples, so orval
+// generates the loose form; the backend always returns [timestamp, value].
+export type ImpactMetricsLabels = ImpactMetricsDataSchemaLabels;
+export type ImpactMetricsSeries = Omit<
+    ImpactMetricsDataSchemaSeriesItem,
+    'data'
+> & {
+    data: [number, string][];
 };
-
-// TODO(impactMetrics): use OpenAPI types
-export type ImpactMetricsResponse = {
-    start?: string;
-    end?: string;
-    step?: string;
+export type ImpactMetricsResponse = Omit<ImpactMetricsDataSchema, 'series'> & {
     series: ImpactMetricsSeries[];
-    labels?: ImpactMetricsLabels;
-    debug?: {
-        query?: string;
-        isTruncated?: string;
-    };
 };
 
 export type ImpactMetricsQuery = {
@@ -85,10 +82,15 @@ export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
         );
 
     return {
-        data: data || {
-            series: [],
-            labels: {},
-        },
+        data:
+            data ||
+            ({
+                series: [],
+                labels: {},
+                start: '',
+                end: '',
+                step: '',
+            } as ImpactMetricsResponse),
         refetch,
         loading: shouldFetch ? loading : false,
         error,

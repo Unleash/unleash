@@ -187,4 +187,7 @@ export const EventSchemaType = {
     'impact-metric-created': 'impact-metric-created',
     'impact-metric-updated': 'impact-metric-updated',
     'impact-metric-deleted': 'impact-metric-deleted',
+    'user-access-request-registered': 'user-access-request-registered',
+    'user-access-request-approved': 'user-access-request-approved',
+    'user-access-request-rejected': 'user-access-request-rejected',
 } as const;

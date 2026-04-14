@@ -93,6 +93,7 @@ export type UiFlags = {
     filterFavorites?: boolean;
     externalPrometheusImpactMetrics?: boolean;
     pendingUserAccessRequests?: boolean;
+    onboardingFlagSetup?: boolean;
 };
 
 export interface IVersionInfo {

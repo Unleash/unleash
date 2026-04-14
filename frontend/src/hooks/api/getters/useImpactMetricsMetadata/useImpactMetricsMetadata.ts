@@ -1,17 +1,12 @@
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
-import type { MetricSource } from 'component/impact-metrics/types';
+import type {
+    AvailableImpactMetricsSchema,
+    AvailableImpactMetricsSchemaMetricsItem,
+} from 'openapi';
 
-export type ImpactMetric = {
-    name: string;
-    help: string;
-    displayName: string;
-    source: MetricSource;
-};
-
-export type ImpactMetricsMetadata = {
-    metrics: ImpactMetric[];
-};
+export type ImpactMetric = AvailableImpactMetricsSchemaMetricsItem;
+export type ImpactMetricsMetadata = AvailableImpactMetricsSchema;
 
 export const useImpactMetricsMetadata = () => {
     const PATH = `api/admin/impact-metrics/metadata`;

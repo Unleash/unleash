@@ -5,6 +5,7 @@
  */
 import type { MetricQuerySchemaAggregationMode } from './metricQuerySchemaAggregationMode';
 import type { MetricQuerySchemaLabelSelectors } from './metricQuerySchemaLabelSelectors';
+import type { MetricQuerySchemaSource } from './metricQuerySchemaSource';
 import type { MetricQuerySchemaTimeRange } from './metricQuerySchemaTimeRange';
 
 /**
@@ -17,6 +18,8 @@ export interface MetricQuerySchema {
     labelSelectors: MetricQuerySchemaLabelSelectors;
     /** The Prometheus metric series to query. It includes both unleash prefix and metric type and display name */
     metricName: string;
+    /** The Prometheus data source for this metric. Internal is the Unleash-managed Prometheus, external is a customer-provided Prometheus instance. Defaults to internal if not specified. */
+    source?: MetricQuerySchemaSource;
     /** The time range for the metric data. */
     timeRange: MetricQuerySchemaTimeRange;
 }

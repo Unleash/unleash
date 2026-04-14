@@ -1,7 +1,5 @@
 import { styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useFlag } from '@unleash/proxy-client-react';
-import DeprecatedSecondaryLoginActions from './DeprecatedSecondaryLoginActions';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -21,7 +19,7 @@ const StyledRef = styled('a')(({ theme }) => ({
     fontWeight: 'bold',
 }));
 
-const NewSecondaryLoginActions = () => {
+const SecondaryLoginActions = () => {
     return (
         <StyledContainer>
             <StyledLink to='/forgotten-password'>
@@ -41,14 +39,6 @@ const NewSecondaryLoginActions = () => {
             </Typography>
         </StyledContainer>
     );
-};
-
-const SecondaryLoginActions = () => {
-    const newLogin = useFlag('newLogin');
-    if (newLogin) {
-        return <NewSecondaryLoginActions />;
-    }
-    return <DeprecatedSecondaryLoginActions />;
 };
 
 export default SecondaryLoginActions;

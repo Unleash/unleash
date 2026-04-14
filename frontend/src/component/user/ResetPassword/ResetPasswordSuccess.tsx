@@ -1,6 +1,5 @@
 import { Button, styled, Typography } from '@mui/material';
-import { Link, Navigate } from 'react-router-dom';
-import { useFlag } from '@unleash/proxy-client-react';
+import { Link } from 'react-router-dom';
 import { AuthPageLayout } from '../common/AuthPageLayout';
 import { AuthSuccessIcon } from '../common/AuthSuccessIcon';
 
@@ -25,12 +24,6 @@ const StyledSubtitle = styled(Typography)(({ theme }) => ({
 }));
 
 const ResetPasswordSuccess = () => {
-    const newLogin = useFlag('newLogin');
-
-    if (!newLogin) {
-        return <Navigate to='/login' replace />;
-    }
-
     return (
         <AuthPageLayout>
             <StyledContainer>

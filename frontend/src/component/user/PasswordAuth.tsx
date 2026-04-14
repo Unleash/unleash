@@ -18,8 +18,6 @@ import {
     NotFoundError,
 } from 'utils/apiUtils';
 import useToast from 'hooks/useToast';
-import { useFlag } from '@unleash/proxy-client-react';
-import DeprecatedPasswordAuth from './DeprecatedPasswordAuth';
 
 interface IPasswordAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
@@ -41,10 +39,7 @@ const StyledButton = styled(Button)({
     width: '100%',
 });
 
-const NewPasswordAuth: VFC<IPasswordAuthProps> = ({
-    authDetails,
-    redirect,
-}) => {
+const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
     const navigate = useNavigate();
     const { refetchUser } = useAuthUser();
     const params = useQueryParams();
@@ -199,14 +194,6 @@ const NewPasswordAuth: VFC<IPasswordAuthProps> = ({
             />
         </>
     );
-};
-
-const PasswordAuth: VFC<IPasswordAuthProps> = (props) => {
-    const newLogin = useFlag('newLogin');
-    if (newLogin) {
-        return <NewPasswordAuth {...props} />;
-    }
-    return <DeprecatedPasswordAuth {...props} />;
 };
 
 export default PasswordAuth;

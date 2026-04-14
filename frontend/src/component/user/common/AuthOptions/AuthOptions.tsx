@@ -5,8 +5,6 @@ import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import useQueryParams from 'hooks/useQueryParams';
 import GoogleIcon from '@mui/icons-material/Google';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import { useFlag } from '@unleash/proxy-client-react';
-import DeprecatedAuthOptions from './DeprecatedAuthOptions';
 
 interface IAuthOptionProps {
     options?: IAuthOptions[];
@@ -66,7 +64,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(1.5),
 }));
 
-const NewAuthOptions = ({ options }: IAuthOptionProps) => {
+const AuthOptions = ({ options }: IAuthOptionProps) => {
     const query = useQueryParams();
     const redirectPath = query.get('redirect') || '';
 
@@ -91,14 +89,6 @@ const NewAuthOptions = ({ options }: IAuthOptionProps) => {
             ))}
         </StyledContainer>
     );
-};
-
-const AuthOptions = (props: IAuthOptionProps) => {
-    const newLogin = useFlag('newLogin');
-    if (newLogin) {
-        return <NewAuthOptions {...props} />;
-    }
-    return <DeprecatedAuthOptions {...props} />;
 };
 
 export default AuthOptions;

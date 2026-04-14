@@ -8,8 +8,6 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { parseRedirectParam } from 'component/user/Login/parseRedirectParam';
 import { getSessionStorageItem, setSessionStorageItem } from 'utils/storage';
 import { DEMO_TYPE } from 'constants/authTypes';
-import { useFlag } from '@unleash/proxy-client-react';
-import DeprecatedLogin from './DeprecatedLogin';
 import { AuthPageLayout } from '../common/AuthPageLayout';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
@@ -19,7 +17,7 @@ const StyledTitle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(3),
 }));
 
-const NewLogin = () => {
+const Login = () => {
     const { authDetails } = useAuthDetails();
     const { user } = useAuthUser();
     const query = useQueryParams();
@@ -60,15 +58,6 @@ const NewLogin = () => {
             <Authentication redirect={redirect} invited={invited} />
         </AuthPageLayout>
     );
-};
-
-const Login = () => {
-    const newLogin = useFlag('newLogin');
-    if (newLogin) {
-        return <NewLogin />;
-    }
-
-    return <DeprecatedLogin />;
 };
 
 export default Login;

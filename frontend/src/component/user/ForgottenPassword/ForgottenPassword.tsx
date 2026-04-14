@@ -13,8 +13,6 @@ import useLoading from 'hooks/useLoading';
 import { FORGOTTEN_PASSWORD_FIELD } from 'utils/testIds';
 import { formatApiPath } from 'utils/formatPath';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useFlag } from '@unleash/proxy-client-react';
-import DeprecatedForgottenPassword from './DeprecatedForgottenPassword';
 import OrDivider from '../common/OrDivider';
 import { AuthPageLayout } from '../common/AuthPageLayout';
 import { AuthSuccessIcon } from '../common/AuthSuccessIcon';
@@ -68,7 +66,7 @@ const StyledInfoContent = styled('div')(({ theme }) => ({
 
 type State = 'initial' | 'loading' | 'attempted' | 'too_many_attempts';
 
-const NewForgottenPassword = () => {
+const ForgottenPassword = () => {
     const [email, setEmail] = useState('');
     const [state, setState] = useState<State>('initial');
     const [attemptedEmail, setAttemptedEmail] = useState('');
@@ -186,14 +184,6 @@ const NewForgottenPassword = () => {
             </div>
         </AuthPageLayout>
     );
-};
-
-const ForgottenPassword = () => {
-    const newLogin = useFlag('newLogin');
-    if (newLogin) {
-        return <NewForgottenPassword />;
-    }
-    return <DeprecatedForgottenPassword />;
 };
 
 export default ForgottenPassword;

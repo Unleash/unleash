@@ -1,0 +1,181 @@
+import { type FC, type FormEvent, useId, useState } from 'react';
+import {
+    FormControl,
+    FormLabel,
+    Radio,
+    RadioGroup,
+    TextField,
+    Typography,
+    styled,
+} from '@mui/material';
+import {
+    useRegisterMetricApi,
+    type MetricType,
+} from 'hooks/api/actions/useRegisterMetricApi/useRegisterMetricApi';
+import { useRegisterImpactMetricApi } from 'hooks/api/actions/useImpactMetricsApi/useRegisterImpactMetricApi';
+
+type DefineMetricFormProps = {
+    formId: string;
+    onSubmitted: (metricName: string) => void;
+};
+
+const StyledForm = styled('form')(({ theme }) => ({
+    backgroundColor: theme.palette.background.elevation1,
+    borderRadius: theme.shape.borderRadius,
+    border: `1px solid ${theme.palette.divider}`,
+    padding: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
+const StyledLabel = styled(FormLabel)(({ theme }) => ({
+    color: theme.palette.text.primary,
+    marginBottom: theme.spacing(1),
+}));
+
+const CardContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'flex-start',
+    padding: theme.spacing(2),
+    background: theme.palette.background.default,
+    gap: '11px',
+    border: `1.5px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusLarge,
+    transition: 'border-color 0.3s',
+    position: 'relative',
+
+    ':hover, :focus-within': {
+        borderColor: theme.palette.primary.main,
+    },
+
+    label: {
+        textTransform: 'capitalize',
+        fontWeight: 'bold',
+        '::before': {
+            content: "''",
+            position: 'absolute',
+            inset: 0,
+            zIndex: 1,
+        },
+    },
+}));
+
+const RadioCard = ({ value, description, examples }) => {
+    const radioId = useId();
+    const descriptionId = useId();
+    const exampleId = useId();
+
+    return (
+        <CardContent>
+            <Radio
+                sx={{ padding: 0 }}
+                id={radioId}
+                value={value}
+                aria-describedby={`${descriptionId} ${exampleId}`}
+            />
+            <div>
+                <label htmlFor={radioId}>{value}</label>
+                <Typography id={descriptionId}>{description}</Typography>
+                <Typography
+                    variant='body2'
+                    color='text.secondary'
+                    sx={{ mt: 1 }}
+                    id={exampleId}
+                >
+                    Examples: {examples}
+                </Typography>
+            </div>
+        </CardContent>
+    );
+};
+
+const StyledRadioGroup = styled(RadioGroup)(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(1),
+}));
+
+export const DefineMetricForm: FC<DefineMetricFormProps> = ({
+    formId,
+    onSubmitted,
+}) => {
+    const defaultMetricType = 'counter';
+    const [metricName, setMetricName] = useState('');
+    const [metricType, setMetricType] = useState<MetricType>(defaultMetricType);
+    const { registerImpactMetric, loading } = useRegisterImpactMetricApi();
+    const metricNameInputId = useId();
+    const radioGroupLabelId = useId();
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (loading) {
+            return;
+        }
+        await registerImpactMetric({
+            name: metricName.trim(),
+            type: metricType,
+        });
+        onSubmitted(metricName.trim());
+    };
+
+    return (
+        <StyledForm id={formId} onSubmit={handleSubmit}>
+            <FormControl>
+                <StyledLabel htmlFor={metricNameInputId}>
+                    Metric name
+                </StyledLabel>
+                <TextField
+                    id={metricNameInputId}
+                    value={metricName}
+                    onChange={(event) => setMetricName(event.target.value)}
+                    inputProps={{
+                        pattern: '^[a-zA-Z_:][a-zA-Z0-9_:]*$',
+                        title: 'The name must contain only alphanumeric characters, underscores, and colons. It must start with a letter.',
+                    }}
+                    placeholder='e.g., checkout_error_count'
+                    variant='outlined'
+                    size='small'
+                    fullWidth
+                    required
+                    helperText={`Use letters, numbers, colons, and underscores. Be descriptive and specific.`}
+                    sx={{
+                        '.MuiFormHelperText-root': {
+                            marginInline: 0,
+                        },
+                    }}
+                />
+            </FormControl>
+
+            <FormControl>
+                <StyledLabel htmlFor={radioGroupLabelId}>
+                    Metric type
+                </StyledLabel>
+                <StyledRadioGroup
+                    onChange={(e) =>
+                        setMetricType(e.target.value as MetricType)
+                    }
+                    id={radioGroupLabelId}
+                    defaultValue={defaultMetricType}
+                    name='metricType'
+                >
+                    <RadioCard
+                        value='counter'
+                        description='Tracks values that only increase (e.g., error counts, request counts)'
+                        examples={'client_error_count, total_purchases'}
+                    />
+                    <RadioCard
+                        value='gauge'
+                        description='Tracks values that can go up or down (e.g., active users, queue size'
+                        examples={'active_connections, memory_usage'}
+                    />
+                    <RadioCard
+                        value='histogram'
+                        description='Tracks the distribution of values, (e.g., response times, payload sizes)'
+                        examples={'request_duration_ms, payload_size_bytes'}
+                    />
+                </StyledRadioGroup>
+            </FormControl>
+        </StyledForm>
+    );
+};

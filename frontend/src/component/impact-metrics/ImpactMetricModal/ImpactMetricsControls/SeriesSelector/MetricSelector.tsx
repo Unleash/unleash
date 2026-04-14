@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useState } from 'react';
 import {
     Autocomplete,
     TextField,
@@ -10,6 +10,8 @@ import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { MetricSource } from 'component/impact-metrics/types';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { RegisterMetricDialog } from 'component/impact-metrics/RegisterMetricDialog/RegisterMetricDialog';
 
 type MetricOption = {
     name: string;
@@ -38,9 +40,36 @@ export type MetricSelectorProps = {
     label?: string;
 };
 
-const NoOptionsMessage = () => {
+const NoOptionsMessage: FC<{ onRegisterClick?: () => void }> = ({
+    onRegisterClick,
+}) => {
     const { trackEvent } = usePlausibleTracker();
     const { trackDocsClicked } = useTrackFlagpageImpactMetrics();
+
+    const buttonProps = onRegisterClick
+        ? {
+              onClick: () => {
+                  trackEvent('impact-metrics', {
+                      props: {
+                          eventType: 'No option setup form opened',
+                      },
+                  });
+                  onRegisterClick();
+              },
+          }
+        : {
+              href: 'https://docs.getunleash.io/reference/impact-metrics',
+              target: '_blank',
+              rel: 'noopener noreferrer',
+              onClick: () => {
+                  trackEvent('impact-metrics', {
+                      props: {
+                          eventType: 'No options docs clicked',
+                      },
+                  });
+                  trackDocsClicked();
+              },
+          };
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -54,18 +83,8 @@ const NoOptionsMessage = () => {
             <Button
                 variant='contained'
                 size='small'
-                href='https://docs.getunleash.io/reference/impact-metrics'
-                target='_blank'
-                rel='noopener noreferrer'
                 sx={{ alignSelf: 'flex-start', mt: 1 }}
-                onClick={() => {
-                    trackEvent('impact-metrics', {
-                        props: {
-                            eventType: 'No options docs clicked',
-                        },
-                    });
-                    trackDocsClicked();
-                }}
+                {...buttonProps}
             >
                 Set up your first metric
             </Button>
@@ -107,57 +126,76 @@ export const MetricSelector: FC<MetricSelectorProps> = ({
     label = 'Metric name',
 }) => {
     const allOptions = withSelectedValue(options, value, valueSource);
+    const registerImpactMetricsEnabled = useUiFlag('registerImpactMetrics');
+    const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
 
     return (
-        <Autocomplete
-            options={allOptions}
-            groupBy={(option) => groupLabel(option.source)}
-            getOptionLabel={(option) => option.displayName}
-            value={
-                allOptions.find((option) =>
-                    matchesSelection(option, value, valueSource),
-                ) || null
-            }
-            onChange={(_, newValue) => {
-                const selected = newValue || options[0];
-                onChange({
-                    metricName: selected?.name || '',
-                    source: selected?.source,
-                });
-            }}
-            disabled={loading}
-            renderOption={(props, option, { inputValue }) => (
-                <Box
-                    component='li'
-                    {...props}
-                    key={`${option.source}__${option.name}`}
-                >
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography variant='body2'>
-                            <Highlighter search={inputValue}>
-                                {option.displayName}
-                            </Highlighter>
-                        </Typography>
-                        <Typography variant='caption' color='text.secondary'>
-                            <Highlighter search={inputValue}>
-                                {option.help}
-                            </Highlighter>
-                        </Typography>
+        <>
+            <Autocomplete
+                options={allOptions}
+                groupBy={(option) => groupLabel(option.source)}
+                getOptionLabel={(option) => option.displayName}
+                value={
+                    allOptions.find((option) =>
+                        matchesSelection(option, value, valueSource),
+                    ) || null
+                }
+                onChange={(_, newValue) => {
+                    const selected = newValue || options[0];
+                    onChange({
+                        metricName: selected?.name || '',
+                        source: selected?.source,
+                    });
+                }}
+                disabled={loading}
+                renderOption={(props, option, { inputValue }) => (
+                    <Box
+                        component='li'
+                        {...props}
+                        key={`${option.source}__${option.name}`}
+                    >
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Typography variant='body2'>
+                                <Highlighter search={inputValue}>
+                                    {option.displayName}
+                                </Highlighter>
+                            </Typography>
+                            <Typography
+                                variant='caption'
+                                color='text.secondary'
+                            >
+                                <Highlighter search={inputValue}>
+                                    {option.help}
+                                </Highlighter>
+                            </Typography>
+                        </Box>
                     </Box>
-                </Box>
-            )}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    label={label}
-                    placeholder='Search for a metric…'
-                    variant='outlined'
-                    size='small'
-                    required
-                />
-            )}
-            noOptionsText={<NoOptionsMessage />}
-            sx={{ minWidth: 300 }}
-        />
+                )}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label={label}
+                        placeholder='Search for a metric…'
+                        variant='outlined'
+                        size='small'
+                        required
+                    />
+                )}
+                noOptionsText={
+                    <NoOptionsMessage
+                        onRegisterClick={
+                            registerImpactMetricsEnabled
+                                ? () => setRegisterDialogOpen(true)
+                                : undefined
+                        }
+                    />
+                }
+                sx={{ minWidth: 300 }}
+            />
+            <RegisterMetricDialog
+                open={registerDialogOpen}
+                onClose={() => setRegisterDialogOpen(false)}
+            />
+        </>
     );
 };

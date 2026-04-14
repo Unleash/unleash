@@ -51,6 +51,7 @@ process.nextTick(async () => {
                         strictSchemaValidation: true,
                         customMetrics: true,
                         impactMetrics: true,
+                        registerImpactMetrics: true,
                         milestoneProgression: true,
                         safeguards: true,
                         gtmReleaseManagement: true,

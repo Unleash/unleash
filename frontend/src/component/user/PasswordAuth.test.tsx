@@ -36,7 +36,7 @@ test('should show deleted stale sessions info for Password Auth', async () => {
             />
         </>,
     );
-    const login = screen.getByLabelText('Username or email');
+    const login = screen.getByLabelText('Email');
     await userEvent.type(login, 'user@getunleash.io');
 
     const password = screen.getByLabelText('Password');

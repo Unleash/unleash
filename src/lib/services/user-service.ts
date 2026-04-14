@@ -232,8 +232,8 @@ export class UserService {
 
         const { readOnlyUsers } =
             await this.resourceLimitsService.getResourceLimits();
-        if (!this.flagResolver.isEnabled('readOnlyUsersUI') || !readOnlyUsers) {
-            users = users.map(({ seatType, ...user }) => user);
+        if (!readOnlyUsers) {
+            users = users.map(({ seatType: _removed, ...user }) => user);
         }
 
         return users;

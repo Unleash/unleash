@@ -78,7 +78,8 @@ export type IFlagKey =
     | 'newSignOut'
     | 'externalPrometheusImpactMetrics'
     | 'onlyFeatureTokensWithFeatureAPIs'
-    | 'pendingUserAccessRequests';
+    | 'pendingUserAccessRequests'
+    | 'onboardingFlagSetup';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -355,6 +356,10 @@ const flags: IFlags = {
     ),
     pendingUserAccessRequests: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PENDING_USER_ACCESS_REQUESTS,
+        false,
+    ),
+    onboardingFlagSetup: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_FLAG_SETUP,
         false,
     ),
 };

@@ -90,7 +90,7 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
     const timeLabel = timeRangeLabels[config.timeRange] ?? config.timeRange;
 
     const { data } = useImpactMetricsData({
-        series: config.metricName,
+        metricName: config.metricName,
         range: config.timeRange,
         aggregationMode: config.aggregationMode,
         labels:

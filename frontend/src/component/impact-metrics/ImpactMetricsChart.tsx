@@ -72,7 +72,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
     } = useImpactMetricsData(
         metricName
             ? {
-                  series: metricName,
+                  metricName,
                   range: timeRange,
                   aggregationMode,
                   labels:

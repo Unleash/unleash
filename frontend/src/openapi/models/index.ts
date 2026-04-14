@@ -1362,7 +1362,6 @@ export * from './queryImpactMetricsTimeSeries401';
 export * from './queryImpactMetricsTimeSeries403';
 export * from './queryImpactMetricsTimeSeries404';
 export * from './queryImpactMetricsTimeSeriesAggregationMode';
-export * from './queryImpactMetricsTimeSeriesMetricType';
 export * from './queryImpactMetricsTimeSeriesParams';
 export * from './queryImpactMetricsTimeSeriesRange';
 export * from './queryImpactMetricsTimeSeriesSource';

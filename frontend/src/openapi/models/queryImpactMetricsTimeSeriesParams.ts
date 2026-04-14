@@ -5,32 +5,31 @@
  */
 import type { QueryImpactMetricsTimeSeriesRange } from './queryImpactMetricsTimeSeriesRange';
 import type { QueryImpactMetricsTimeSeriesAggregationMode } from './queryImpactMetricsTimeSeriesAggregationMode';
-import type { QueryImpactMetricsTimeSeriesMetricType } from './queryImpactMetricsTimeSeriesMetricType';
 import type { QueryImpactMetricsTimeSeriesSource } from './queryImpactMetricsTimeSeriesSource';
 
 export type QueryImpactMetricsTimeSeriesParams = {
     /**
+     * The Prometheus metric name to query. Prefer `metricName` instead.
+     */
+    series?: string;
+    /**
      * The Prometheus metric name to query.
      */
-    series: string;
+    metricName: string;
     /**
      * The time range for the query.
      */
     range: QueryImpactMetricsTimeSeriesRange;
     /**
-     * The aggregation mode for the query. Also determines the metric type if the latter is not set.
+     * The aggregation mode for the query.
      */
-    aggregationMode?: QueryImpactMetricsTimeSeriesAggregationMode;
+    aggregationMode: QueryImpactMetricsTimeSeriesAggregationMode;
     /**
      * A JSON-encoded object mapping label names to arrays of label values to filter by.
      */
     labels?: string;
     /**
-     * The type of the Prometheus metric. Used to determine the appropriate query.
-     */
-    metricType?: QueryImpactMetricsTimeSeriesMetricType;
-    /**
-     * Whether the metric comes from the internal Unleash impact metrics or an external source. Defaults to `internal`.
+     * Whether the metric comes from the internal Unleash impact metrics or an external source.
      */
     source?: QueryImpactMetricsTimeSeriesSource;
 };

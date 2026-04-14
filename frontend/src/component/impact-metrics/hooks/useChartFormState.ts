@@ -67,7 +67,7 @@ export const useChartFormState = ({
     } = useImpactMetricsData(
         metricName
             ? {
-                  series: metricName,
+                  metricName,
                   range: timeRange,
                   aggregationMode,
                   source,

@@ -39,7 +39,7 @@ export const MiniMetricsChartWithTooltip: FC<
     } = useImpactMetricsData(
         metricName
             ? {
-                  series: metricName,
+                  metricName,
                   range: timeRange,
                   aggregationMode,
                   labels:

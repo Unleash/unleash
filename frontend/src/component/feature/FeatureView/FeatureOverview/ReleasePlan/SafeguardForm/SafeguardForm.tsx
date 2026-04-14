@@ -187,7 +187,7 @@ const useSafeguardMetricsData = (
     const { data: metricsData } = useImpactMetricsData(
         metricName
             ? {
-                  series: metricName,
+                  metricName,
                   range: timeRange,
                   aggregationMode: aggregationMode,
                   source,

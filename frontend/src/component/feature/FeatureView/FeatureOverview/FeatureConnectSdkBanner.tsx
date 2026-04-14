@@ -9,7 +9,7 @@ const BannerCard = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
     alignItems: 'flex-start',
     padding: theme.spacing(2),
-    paddingRight: theme.spacing(3),
+    paddingRight: theme.spacing(8),
     backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,

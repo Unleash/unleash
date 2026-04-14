@@ -13,13 +13,9 @@ import { useInstanceStats } from 'hooks/api/getters/useInstanceStats/useInstance
 import { formatApiPath } from '../../../../utils/formatPath.ts';
 import { PageContent } from '../../../common/PageContent/PageContent.tsx';
 import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 
 export const InstanceStats: FC = () => {
     const { stats } = useInstanceStats();
-    const {
-        uiConfig: { resourceLimits },
-    } = useUiConfig();
 
     let versionTitle: string;
     let version: string | undefined;

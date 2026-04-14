@@ -45,11 +45,7 @@ import { AccessRequestsTable } from './AccessRequestsTable/AccessRequestsTable.t
 
 const UsersList = () => {
     const navigate = useNavigate();
-    const {
-        isEnterprise,
-        isOss,
-        uiConfig: { resourceLimits },
-    } = useUiConfig();
+    const { isEnterprise, isOss } = useUiConfig();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();

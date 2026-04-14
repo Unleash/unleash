@@ -85,7 +85,6 @@ export type UiFlags = {
     extendedUsageMetrics?: boolean;
     newInUnleash?: boolean | Variant;
     gtmReleaseManagement?: boolean;
-    readOnlyUsersUI?: boolean;
     regexConstraintOperator?: boolean;
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;

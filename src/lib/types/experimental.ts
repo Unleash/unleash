@@ -67,7 +67,6 @@ export type IFlagKey =
     | 'newInUnleash'
     | 'oidcPkceSupport'
     | 'gtmReleaseManagement'
-    | 'readOnlyUsersUI'
     | 'remoteMcpServer'
     | 'regexConstraintOperator'
     | 'signupDialog'
@@ -307,10 +306,6 @@ const flags: IFlags = {
     ),
     gtmReleaseManagement: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GTM_RELEASE_MANAGEMENT,
-        false,
-    ),
-    readOnlyUsersUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_READ_ONLY_USERS_UI,
         false,
     ),
     remoteMcpServer: parseEnvVarBoolean(

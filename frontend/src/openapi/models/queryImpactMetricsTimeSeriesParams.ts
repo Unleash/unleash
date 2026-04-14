@@ -9,10 +9,6 @@ import type { QueryImpactMetricsTimeSeriesSource } from './queryImpactMetricsTim
 
 export type QueryImpactMetricsTimeSeriesParams = {
     /**
-     * The Prometheus metric name to query. Prefer `metricName` instead.
-     */
-    series?: string;
-    /**
      * The Prometheus metric name to query.
      */
     metricName: string;

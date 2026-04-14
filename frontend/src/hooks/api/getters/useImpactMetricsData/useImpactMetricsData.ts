@@ -25,9 +25,12 @@ export type ImpactMetricsQuery = {
     metricName: string;
     range: 'hour' | 'day' | 'week' | 'month';
     aggregationMode?: 'rps' | 'count' | 'avg' | 'sum' | 'p50' | 'p95' | 'p99';
-    labels?: Record<string, string[]>;
     source?: MetricSource;
+    labels?: Record<string, string[]>;
 };
+
+const DEFAULT_AGGREGATION_MODE = 'count';
+const DEFAULT_SOURCE: MetricSource = 'internal';
 
 export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
     const shouldFetch = Boolean(query?.metricName && query?.range);
@@ -37,8 +40,8 @@ export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
         const params = new URLSearchParams({
             metricName: query.metricName,
             range: query.range,
-            aggregationMode: query.aggregationMode ?? 'count',
-            source: query.source ?? 'internal',
+            aggregationMode: query.aggregationMode ?? DEFAULT_AGGREGATION_MODE,
+            source: query.source ?? DEFAULT_SOURCE,
         });
 
         if (query.labels && Object.keys(query.labels).length > 0) {

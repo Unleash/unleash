@@ -82,7 +82,15 @@ export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
         );
 
     return {
-        data: data || ({ series: [], labels: {} } as ImpactMetricsResponse),
+        data:
+            data ||
+            ({
+                series: [],
+                labels: {},
+                start: '',
+                end: '',
+                step: '',
+            } as ImpactMetricsResponse),
         refetch,
         loading: shouldFetch ? loading : false,
         error,

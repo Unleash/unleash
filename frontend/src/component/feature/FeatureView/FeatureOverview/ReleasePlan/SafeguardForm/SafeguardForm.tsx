@@ -191,6 +191,7 @@ const useSafeguardMetricsData = (
                   range: timeRange,
                   aggregationMode: aggregationMode,
                   source,
+                  mode: 'edit',
               }
             : undefined,
     );

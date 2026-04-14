@@ -71,6 +71,7 @@ export const useChartFormState = ({
                   range: timeRange,
                   aggregationMode,
                   source,
+                  mode: 'edit',
               }
             : undefined,
     );

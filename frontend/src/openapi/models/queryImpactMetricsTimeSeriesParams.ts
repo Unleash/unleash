@@ -5,6 +5,7 @@
  */
 import type { QueryImpactMetricsTimeSeriesRange } from './queryImpactMetricsTimeSeriesRange';
 import type { QueryImpactMetricsTimeSeriesAggregationMode } from './queryImpactMetricsTimeSeriesAggregationMode';
+import type { QueryImpactMetricsTimeSeriesMode } from './queryImpactMetricsTimeSeriesMode';
 import type { QueryImpactMetricsTimeSeriesSource } from './queryImpactMetricsTimeSeriesSource';
 
 export type QueryImpactMetricsTimeSeriesParams = {
@@ -24,6 +25,10 @@ export type QueryImpactMetricsTimeSeriesParams = {
      * A JSON-encoded object mapping label names to arrays of label values to filter by.
      */
     labels?: string;
+    /**
+     * Query mode. `edit` (default) also returns the available labels for the metric (used by filter UIs). `display` skips label discovery and returns time-series data only (cheaper; use for dashboard rendering).
+     */
+    mode?: QueryImpactMetricsTimeSeriesMode;
     /**
      * Whether the metric comes from the internal Unleash impact metrics or an external source.
      */

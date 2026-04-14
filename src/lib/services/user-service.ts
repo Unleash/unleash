@@ -230,12 +230,6 @@ export class UserService {
             }));
         }
 
-        const { readOnlyUsers } =
-            await this.resourceLimitsService.getResourceLimits();
-        if (!readOnlyUsers) {
-            users = users.map(({ seatType: _removed, ...user }) => user);
-        }
-
         return users;
     }
 

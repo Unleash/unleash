@@ -5,6 +5,7 @@
  */
 import type { ReleasePlanSafeguardSchemaImpactMetricAggregationMode } from './releasePlanSafeguardSchemaImpactMetricAggregationMode';
 import type { ReleasePlanSafeguardSchemaImpactMetricLabelSelectors } from './releasePlanSafeguardSchemaImpactMetricLabelSelectors';
+import type { ReleasePlanSafeguardSchemaImpactMetricSource } from './releasePlanSafeguardSchemaImpactMetricSource';
 import type { ReleasePlanSafeguardSchemaImpactMetricTimeRange } from './releasePlanSafeguardSchemaImpactMetricTimeRange';
 
 /**
@@ -19,8 +20,8 @@ export type ReleasePlanSafeguardSchemaImpactMetric = {
     labelSelectors: ReleasePlanSafeguardSchemaImpactMetricLabelSelectors;
     /** The Prometheus metric series to query. It includes both unleash prefix and metric type and display name */
     metricName: string;
-    /** The source of the metric data. */
-    source?: 'internal' | 'external';
+    /** The Prometheus data source for this metric. Internal is the Unleash-managed Prometheus, external is a customer-provided Prometheus instance. Defaults to internal if not specified. */
+    source?: ReleasePlanSafeguardSchemaImpactMetricSource;
     /** The time range for the metric data. */
     timeRange: ReleasePlanSafeguardSchemaImpactMetricTimeRange;
 };

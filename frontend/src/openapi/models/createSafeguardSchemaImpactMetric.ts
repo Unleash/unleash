@@ -5,6 +5,7 @@
  */
 import type { CreateSafeguardSchemaImpactMetricAggregationMode } from './createSafeguardSchemaImpactMetricAggregationMode';
 import type { CreateSafeguardSchemaImpactMetricLabelSelectors } from './createSafeguardSchemaImpactMetricLabelSelectors';
+import type { CreateSafeguardSchemaImpactMetricSource } from './createSafeguardSchemaImpactMetricSource';
 import type { CreateSafeguardSchemaImpactMetricTimeRange } from './createSafeguardSchemaImpactMetricTimeRange';
 
 /**
@@ -17,8 +18,8 @@ export type CreateSafeguardSchemaImpactMetric = {
     labelSelectors: CreateSafeguardSchemaImpactMetricLabelSelectors;
     /** The Prometheus metric series to query. It includes both unleash prefix and metric type and display name */
     metricName: string;
-    /** The Prometheus data source for this metric. Defaults to internal. */
-    source?: 'internal' | 'external';
+    /** The Prometheus data source for this metric. Internal is the Unleash-managed Prometheus, external is a customer-provided Prometheus instance. Defaults to internal if not specified. */
+    source?: CreateSafeguardSchemaImpactMetricSource;
     /** The time range for the metric data. */
     timeRange: CreateSafeguardSchemaImpactMetricTimeRange;
 };

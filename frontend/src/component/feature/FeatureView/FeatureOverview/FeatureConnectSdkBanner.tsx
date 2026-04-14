@@ -27,13 +27,13 @@ const IconBox = styled('div')(({ theme }) => ({
     color: theme.palette.common.white,
 }));
 
-const ContentRow = styled('div')({
+const ContentRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flex: 1,
-    gap: 16,
+    gap: theme.spacing(2),
     alignItems: 'flex-end',
     justifyContent: 'space-between',
-});
+}));
 
 const TextContainer = styled('div')({
     display: 'flex',

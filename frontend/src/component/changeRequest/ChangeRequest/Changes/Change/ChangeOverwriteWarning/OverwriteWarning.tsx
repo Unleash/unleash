@@ -19,6 +19,17 @@ const StyledDiff = styled(EventDiff)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
 }));
 
+const mapToJsonDiff = (changes: ChangesThatWouldBeOverwritten) => {
+    return Object.values(changes).reduce(
+        (acc, { property, oldValue, newValue }) => {
+            acc.data[property] = newValue;
+            acc.preData[property] = oldValue;
+            return acc;
+        },
+        { data: {}, preData: {} },
+    );
+};
+
 export const OverwriteWarning: React.FC<{
     changeType: 'segment' | 'strategy' | 'environment variant configuration';
     changesThatWouldBeOverwritten: ChangesThatWouldBeOverwritten | null;
@@ -32,16 +43,7 @@ export const OverwriteWarning: React.FC<{
         return null;
     }
 
-    const { data, preData } = Object.values(
-        changesThatWouldBeOverwritten,
-    ).reduce(
-        (acc, { property, oldValue, newValue }) => {
-            acc.data[property] = newValue;
-            acc.preData[property] = oldValue;
-            return acc;
-        },
-        { data: {}, preData: {} },
-    );
+    const { data, preData } = mapToJsonDiff(changesThatWouldBeOverwritten);
 
     return (
         <ChangesToOverwriteContainer>

@@ -47,6 +47,7 @@ export const MiniMetricsChartWithTooltip: FC<
                           ? labelSelectors
                           : undefined,
                   source,
+                  mode: 'display',
               }
             : undefined,
     );

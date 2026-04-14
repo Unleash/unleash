@@ -80,6 +80,7 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                           ? labelSelectors
                           : undefined,
                   source,
+                  mode: 'display',
               }
             : undefined,
     );

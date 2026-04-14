@@ -98,6 +98,7 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
                 ? config.labelSelectors
                 : undefined,
         source: config.source,
+        mode: 'display',
     });
 
     const currentValue = (() => {

@@ -27,6 +27,7 @@ export type ImpactMetricsQuery = {
     aggregationMode?: 'rps' | 'count' | 'avg' | 'sum' | 'p50' | 'p95' | 'p99';
     source?: MetricSource;
     labels?: Record<string, string[]>;
+    mode?: 'display' | 'edit';
 };
 
 const DEFAULT_AGGREGATION_MODE = 'count';
@@ -43,6 +44,10 @@ export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
             aggregationMode: query.aggregationMode ?? DEFAULT_AGGREGATION_MODE,
             source: query.source ?? DEFAULT_SOURCE,
         });
+
+        if (query.mode) {
+            params.append('mode', query.mode);
+        }
 
         if (query.labels && Object.keys(query.labels).length > 0) {
             // Send labels as they are - the backend will handle the formatting

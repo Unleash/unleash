@@ -104,24 +104,28 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
 
     // `start`/`end` arrive as Unix-second strings; the chart and overlay both
     // need the visible window in milliseconds to place things along the x-axis.
-    const window = parseVisibleWindow(start, end);
+    const visibleWindow = parseVisibleWindow(start, end);
 
-    const eventGroups = window
+    const eventGroups = visibleWindow
         ? groupEventsByProximity(
               featureEvents.filter(
                   (event) =>
-                      event.timestamp >= window.minMs &&
-                      event.timestamp <= window.maxMs,
+                      event.timestamp >= visibleWindow.minMs &&
+                      event.timestamp <= visibleWindow.maxMs,
               ),
-              window,
+              visibleWindow,
           )
         : [];
 
     const eventAnnotations = buildEventAnnotations(eventGroups, theme);
-    const chartOptions = buildChartOptions(window, timeRange, eventAnnotations);
+    const chartOptions = buildChartOptions(
+        visibleWindow,
+        timeRange,
+        eventAnnotations,
+    );
 
     const showOverlay =
-        !hasNoData && !loading && window !== null && plotArea !== null;
+        !hasNoData && !loading && visibleWindow !== null && plotArea !== null;
     const showLegend = !hasNoData && !loading && stepSeries.length > 0;
 
     return (

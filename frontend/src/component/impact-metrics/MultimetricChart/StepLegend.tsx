@@ -10,7 +10,10 @@ const StyledLegend = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(0.5),
 }));
 
-const StyledLegendItem = styled('button')(({ theme }) => ({
+// Rendered as a `<span role="button">` rather than `<button>` because this
+// legend is rendered inside an anchor (the card link), and a `<button>` nested
+// in an `<a>` is invalid HTML.
+const StyledLegendItem = styled('span')(({ theme }) => ({
     display: 'inline-flex',
     alignItems: 'center',
     gap: theme.spacing(0.75),
@@ -25,6 +28,10 @@ const StyledLegendItem = styled('button')(({ theme }) => ({
     transition: 'opacity 120ms ease, color 120ms ease',
     '&:hover': {
         backgroundColor: theme.palette.action.hover,
+    },
+    '&:focus-visible': {
+        outline: `2px solid ${theme.palette.primary.main}`,
+        outlineOffset: 2,
     },
 }));
 
@@ -57,11 +64,20 @@ export const StepLegend: FC<StepLegendProps> = ({
             return (
                 <StyledLegendItem
                     key={step.label}
-                    type='button'
+                    role='button'
+                    tabIndex={0}
+                    aria-pressed={isHidden}
                     onClick={(clickEvent) => {
                         clickEvent.stopPropagation();
                         clickEvent.preventDefault();
                         onToggle(index);
+                    }}
+                    onKeyDown={(keyEvent) => {
+                        if (keyEvent.key === 'Enter' || keyEvent.key === ' ') {
+                            keyEvent.stopPropagation();
+                            keyEvent.preventDefault();
+                            onToggle(index);
+                        }
                     }}
                     sx={{
                         opacity: isHidden ? 0.4 : 1,

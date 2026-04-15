@@ -6,6 +6,7 @@ import {
     type MultimetricStep,
 } from 'component/impact-metrics/MultimetricChart/MultimetricTotals';
 import { MultimetricChart } from 'component/impact-metrics/MultimetricChart/MultimetricChart';
+import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
 import type {
     MultimetricStepSeries,
     MultimetricFeatureEvent,
@@ -13,7 +14,7 @@ import type {
 
 export interface MultimetricChartCardProps {
     title: string;
-    timeRange: 'hour' | 'day' | 'week' | 'month';
+    timeRange: ChartTimeRange;
     stepCount: number;
     stepSeries: MultimetricStepSeries[];
     stepTotals: MultimetricStep[];
@@ -144,7 +145,7 @@ const StyledTotalsPane = styled('div')(({ theme }) => ({
     },
 }));
 
-const timeRangeLabels: Record<string, string> = {
+const timeRangeLabels: Record<ChartTimeRange, string> = {
     hour: 'Last hour',
     day: 'Last 24 hours',
     week: 'Last 7 days',
@@ -163,7 +164,7 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
     loading,
     href,
 }) => {
-    const timeLabel = timeRangeLabels[timeRange] ?? timeRange;
+    const timeLabel = timeRangeLabels[timeRange];
 
     const content: ReactNode = (
         <StyledRoot>

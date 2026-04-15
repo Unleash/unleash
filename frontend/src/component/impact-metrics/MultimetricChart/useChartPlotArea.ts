@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import {
+    useCallback,
+    useEffect,
+    useState,
+    type MutableRefObject,
+    type RefObject,
+} from 'react';
 import type { Chart as ChartInstance } from 'chart.js';
 
 export type PlotArea = { leftPx: number; widthPx: number };
@@ -10,8 +16,8 @@ export type PlotArea = { leftPx: number; widthPx: number };
 // Re-runs on container resize and whenever any value in `invalidateKeys`
 // changes — typically the dataset and any state that affects layout.
 export const useChartPlotArea = (
-    wrapperRef: React.RefObject<HTMLElement>,
-    chartRef: React.MutableRefObject<ChartInstance<'line'> | null>,
+    wrapperRef: RefObject<HTMLElement>,
+    chartRef: MutableRefObject<ChartInstance<'line'> | null>,
     invalidateKeys: unknown[],
 ): PlotArea | null => {
     const [plotArea, setPlotArea] = useState<PlotArea | null>(null);

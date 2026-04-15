@@ -88,7 +88,7 @@ export type ChartTimeRange = 'hour' | 'day' | 'week' | 'month';
 
 // Builds the Chart.js options for the line chart. Pure config — no React.
 export const buildChartOptions = (
-    window: VisibleWindow | null,
+    visibleWindow: VisibleWindow | null,
     timeRange: ChartTimeRange,
     eventAnnotations: Record<string, object>,
 ): ChartOptions<'line'> => ({
@@ -98,8 +98,8 @@ export const buildChartOptions = (
     scales: {
         x: {
             type: 'time' as const,
-            min: window?.minMs,
-            max: window?.maxMs,
+            min: visibleWindow?.minMs,
+            max: visibleWindow?.maxMs,
             time: {
                 unit: getTimeUnit(timeRange),
                 displayFormats: {

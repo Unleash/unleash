@@ -48,7 +48,6 @@ type MultimetricChartProps = {
     start?: string;
     end?: string;
     loading?: boolean;
-    colors: string[];
     featureEvents?: MultimetricFeatureEvent[];
 };
 
@@ -60,17 +59,17 @@ const withAlpha = (hex: string, alpha: number): string => {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-// All markers use the Unleash purple palette at varying intensities so the
-// chart reads cohesively while still differentiating event types.
+// Both event types use shades of the primary purple so the chart reads
+// cohesively. Enabled = darker (active), disabled = lighter (muted).
 const getEventColor = (
-    _theme: Theme,
+    theme: Theme,
     type: MultimetricFeatureEvent['type'],
 ): string => {
     switch (type) {
         case 'feature-environment-enabled':
-            return '#4C44B3'; // deep purple
+            return theme.palette.primary.dark;
         case 'feature-environment-disabled':
-            return '#8B85DC'; // muted purple
+            return theme.palette.primary.light;
     }
 };
 
@@ -161,10 +160,10 @@ const StyledMarker = styled(Box)(({ theme }) => ({
     borderRadius: 999,
     backgroundColor: theme.palette.background.paper,
     cursor: 'pointer',
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.06)',
+    boxShadow: theme.shadows[1],
     transition: 'box-shadow 150ms ease, background-color 150ms ease',
     '&:hover': {
-        boxShadow: '0 2px 6px rgba(108, 101, 229, 0.22)',
+        boxShadow: theme.shadows[3],
     },
 }));
 
@@ -195,7 +194,7 @@ const StyledTooltipHeader = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.5),
     padding: theme.spacing(0.25, 1),
     borderRadius: 999,
-    backgroundColor: withAlpha('#6C65E5', 0.1),
+    backgroundColor: withAlpha(theme.palette.primary.main, 0.1),
     color: theme.palette.primary.main,
     fontSize: 11,
     fontWeight: 600,
@@ -249,10 +248,10 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
     start,
     end,
     loading,
-    colors,
     featureEvents = [],
 }) => {
     const theme = useTheme();
+    const colors = theme.palette.charts.series;
     const wrapperRef = useRef<HTMLDivElement>(null);
     const [chartArea, setChartArea] = useState<{
         leftPx: number;
@@ -540,26 +539,32 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
                                     placement='top'
                                     componentsProps={{
                                         tooltip: {
-                                            sx: (t) => ({
+                                            sx: {
                                                 bgcolor:
-                                                    t.palette.background.paper,
-                                                color: t.palette.text.primary,
-                                                padding: t.spacing(1.25, 1.5),
+                                                    theme.palette.background
+                                                        .paper,
+                                                color: theme.palette.text
+                                                    .primary,
+                                                padding: theme.spacing(
+                                                    1.25,
+                                                    1.5,
+                                                ),
                                                 borderRadius:
-                                                    t.shape.borderRadiusMedium,
-                                                boxShadow: `0 10px 28px ${withAlpha('#0F0E2E', 0.08)}, 0 2px 6px ${withAlpha('#0F0E2E', 0.04)}`,
-                                                border: `1px solid ${t.palette.divider}`,
+                                                    theme.shape
+                                                        .borderRadiusMedium,
+                                                boxShadow: theme.shadows[6],
+                                                border: `1px solid ${theme.palette.divider}`,
                                                 maxWidth: 320,
-                                            }),
+                                            },
                                         },
                                         arrow: {
-                                            sx: (t) => ({
-                                                color: t.palette.background
+                                            sx: {
+                                                color: theme.palette.background
                                                     .paper,
                                                 '&::before': {
-                                                    border: `1px solid ${t.palette.divider}`,
+                                                    border: `1px solid ${theme.palette.divider}`,
                                                 },
-                                            }),
+                                            },
                                         },
                                     }}
                                     title={
@@ -581,6 +586,9 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
                                                         theme,
                                                         event.type,
                                                     );
+                                                const isDisabled =
+                                                    event.type ===
+                                                    'feature-environment-disabled';
                                                 return (
                                                     <StyledEventRow
                                                         key={event.id}
@@ -589,6 +597,10 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
                                                             sx={{
                                                                 backgroundColor:
                                                                     eventColor,
+                                                                opacity:
+                                                                    isDisabled
+                                                                        ? 0.5
+                                                                        : 1,
                                                             }}
                                                         >
                                                             <EventIcon

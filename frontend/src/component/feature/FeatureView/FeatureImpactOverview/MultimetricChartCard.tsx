@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { styled, Typography } from '@mui/material';
 import {
     MultimetricTotals,
-    STEP_COLORS,
     type MultimetricStep,
 } from 'component/impact-metrics/MultimetricChart/MultimetricTotals';
 import { MultimetricChart } from 'component/impact-metrics/MultimetricChart/MultimetricChart';
@@ -193,7 +192,6 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
                         start={start}
                         end={end}
                         loading={loading}
-                        colors={STEP_COLORS}
                         featureEvents={featureEvents}
                     />
                 </StyledChartPane>

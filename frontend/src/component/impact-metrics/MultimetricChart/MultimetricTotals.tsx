@@ -1,8 +1,7 @@
 import type { FC } from 'react';
-import { Box, styled, Tooltip, Typography } from '@mui/material';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import { Box, styled, Typography, useTheme } from '@mui/material';
 import { formatLargeNumbers } from '../metricsFormatters';
+import { ConversionIndicator } from './ConversionIndicator';
 
 export type MultimetricStep = {
     label: string;
@@ -76,27 +75,15 @@ const StyledStepValue = styled(Typography)({
     flexShrink: 0,
 });
 
-// Distinct but harmonized palette — cool-to-warm gradient
-export const STEP_COLORS = [
-    '#6C65E5', // purple
-    '#3B9BD4', // blue
-    '#1BA79F', // teal
-    '#E89C3B', // amber
-    '#D76588', // rose
-];
-
-const getStepColor = (index: number): string =>
-    STEP_COLORS[index % STEP_COLORS.length];
-
-const formatPct = (pct: number | null): string => {
-    if (pct === null) return '';
-    return Number.isInteger(pct) ? `${pct}%` : `${pct.toFixed(1)}%`;
-};
-
 export const MultimetricTotals: FC<MultimetricTotalsProps> = ({
     steps,
     compact,
 }) => {
+    const theme = useTheme();
+    const seriesColors = theme.palette.charts.series;
+    const getStepColor = (index: number): string =>
+        seriesColors[index % seriesColors.length];
+
     if (steps.length === 0) {
         return null;
     }
@@ -154,54 +141,11 @@ export const MultimetricTotals: FC<MultimetricTotalsProps> = ({
                         </StyledStepName>
                         <StyledConversion sx={{ width: conversionWidth }}>
                             {index > 0 &&
-                            step.previousStepPercentage !== null ? (
-                                <Tooltip
-                                    title={
-                                        step.previousStepPercentage > 100
-                                            ? 'This step has more events than the previous one'
-                                            : 'Conversion from previous step'
-                                    }
-                                    arrow
-                                >
-                                    <Box
-                                        sx={{
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            gap: 0.25,
-                                            color:
-                                                step.previousStepPercentage >
-                                                100
-                                                    ? 'success.main'
-                                                    : 'text.secondary',
-                                            fontSize: 'caption.fontSize',
-                                        }}
-                                    >
-                                        {step.previousStepPercentage > 100 ? (
-                                            <TrendingUpIcon
-                                                sx={{ fontSize: 14 }}
-                                            />
-                                        ) : (
-                                            <TrendingDownIcon
-                                                sx={{
-                                                    fontSize: 14,
-                                                    opacity: 0.6,
-                                                }}
-                                            />
-                                        )}
-                                        <Typography
-                                            component='span'
-                                            sx={{
-                                                fontSize: 'caption.fontSize',
-                                                color: 'inherit',
-                                            }}
-                                        >
-                                            {formatPct(
-                                                step.previousStepPercentage,
-                                            )}
-                                        </Typography>
-                                    </Box>
-                                </Tooltip>
-                            ) : null}
+                                step.previousStepPercentage !== null && (
+                                    <ConversionIndicator
+                                        percentage={step.previousStepPercentage}
+                                    />
+                                )}
                         </StyledConversion>
                         <StyledStepValue
                             sx={{

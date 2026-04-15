@@ -153,6 +153,10 @@ const StyledExpandedContent = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(3),
     backgroundColor: theme.palette.background.elevation2,
+    [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(2, 1.5),
+        gap: theme.spacing(2),
+    },
 }));
 
 const StyledChartRow = styled('div')(({ theme }) => ({

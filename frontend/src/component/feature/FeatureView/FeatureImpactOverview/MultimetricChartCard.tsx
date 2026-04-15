@@ -37,6 +37,8 @@ const cardBaseStyles = (theme: {
     display: 'flex',
     flexDirection: 'column' as const,
     minWidth: 0,
+    maxWidth: '100%',
+    width: '100%',
     textDecoration: 'none',
     color: 'inherit',
     gridColumn: '1 / -1',
@@ -51,28 +53,56 @@ const StyledCardDiv = styled('div')(({ theme }) => ({
     ...cardBaseStyles(theme),
 }));
 
-const StyledHeader = styled('div')({
+const StyledRoot = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'stretch',
-});
+    flex: 1,
+    minWidth: 0,
+    [theme.breakpoints.down('lg')]: {
+        flexDirection: 'column',
+    },
+}));
+
+const StyledChartColumn = styled('div')(({ theme }) => ({
+    flex: 2,
+    minWidth: 0,
+    display: 'flex',
+    flexDirection: 'column',
+}));
+
+const StyledTotalsColumn = styled('div')(({ theme }) => ({
+    flex: 1,
+    minWidth: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: theme.palette.background.elevation1,
+    borderTopRightRadius: theme.shape.borderRadiusMedium,
+    borderBottomRightRadius: theme.shape.borderRadiusMedium,
+    [theme.breakpoints.down('lg')]: {
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: theme.shape.borderRadiusMedium,
+    },
+}));
 
 const StyledChartHeader = styled('div')(({ theme }) => ({
-    flex: 2,
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(1.5, 3, 0, 3),
     minWidth: 0,
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(1.5, 2, 0, 2),
+    },
 }));
 
 const StyledTotalsHeader = styled('div')(({ theme }) => ({
-    flex: 1,
     display: 'flex',
     alignItems: 'flex-end',
     padding: theme.spacing(1.5, 3, 0, 3),
     minWidth: 0,
-    backgroundColor: theme.palette.background.elevation1,
-    borderTopRightRadius: theme.shape.borderRadiusMedium,
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(1, 2, 0.5, 2),
+    },
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
@@ -94,18 +124,24 @@ const StyledTotalsLabel = styled(Typography)(({ theme }) => ({
     letterSpacing: '0.06em',
 }));
 
-const StyledBody = styled('div')({
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'stretch',
-});
-
 const StyledChartPane = styled('div')(({ theme }) => ({
-    flex: 2,
-    minWidth: 0,
     display: 'flex',
+    minWidth: 0,
     height: theme.spacing(34),
     padding: theme.spacing(1.5, 3),
+    // Allow the chart canvas and its absolutely-positioned event overlay to
+    // shrink with the container instead of forcing the parent card wider.
+    '& > *': {
+        minWidth: 0,
+        flex: 1,
+    },
+    [theme.breakpoints.down('lg')]: {
+        height: theme.spacing(28),
+        padding: theme.spacing(1.5, 2),
+    },
+    [theme.breakpoints.down('sm')]: {
+        height: theme.spacing(24),
+    },
 }));
 
 const StyledTotalsPane = styled('div')(({ theme }) => ({
@@ -115,8 +151,9 @@ const StyledTotalsPane = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     padding: theme.spacing(1.5, 3),
-    backgroundColor: theme.palette.background.elevation1,
-    borderBottomRightRadius: theme.shape.borderRadiusMedium,
+    [theme.breakpoints.down('lg')]: {
+        padding: theme.spacing(1.5, 2),
+    },
 }));
 
 const timeRangeLabels: Record<string, string> = {
@@ -141,19 +178,14 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
     const timeLabel = timeRangeLabels[timeRange] ?? timeRange;
 
     const content: ReactNode = (
-        <>
-            <StyledHeader>
+        <StyledRoot>
+            <StyledChartColumn>
                 <StyledChartHeader>
                     <StyledTitle>{title}</StyledTitle>
                     <StyledSubtitle>
                         {stepCount} metrics &middot; {timeLabel}
                     </StyledSubtitle>
                 </StyledChartHeader>
-                <StyledTotalsHeader>
-                    <StyledTotalsLabel>Totals</StyledTotalsLabel>
-                </StyledTotalsHeader>
-            </StyledHeader>
-            <StyledBody>
                 <StyledChartPane>
                     <MultimetricChart
                         stepSeries={stepSeries}
@@ -165,11 +197,16 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
                         featureEvents={featureEvents}
                     />
                 </StyledChartPane>
+            </StyledChartColumn>
+            <StyledTotalsColumn>
+                <StyledTotalsHeader>
+                    <StyledTotalsLabel>Totals</StyledTotalsLabel>
+                </StyledTotalsHeader>
                 <StyledTotalsPane>
                     <MultimetricTotals steps={stepTotals} compact />
                 </StyledTotalsPane>
-            </StyledBody>
-        </>
+            </StyledTotalsColumn>
+        </StyledRoot>
     );
 
     if (href) {

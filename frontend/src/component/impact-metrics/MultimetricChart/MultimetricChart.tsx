@@ -87,6 +87,7 @@ const StyledWrapper = styled(Box)({
     position: 'relative',
     height: '100%',
     width: '100%',
+    minWidth: 0,
     minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
@@ -182,41 +183,40 @@ const StyledMarkerCount = styled(Typography)({
 const StyledTooltipContent = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1.25),
-    minWidth: 240,
-    maxWidth: 300,
-    padding: theme.spacing(0.25, 0),
+    gap: theme.spacing(1),
+    minWidth: 200,
+    maxWidth: 280,
 }));
 
 const StyledTooltipHeader = styled(Box)(({ theme }) => ({
-    display: 'flex',
+    display: 'inline-flex',
+    alignSelf: 'flex-start',
     alignItems: 'center',
-    gap: theme.spacing(0.75),
-    paddingBottom: theme.spacing(1),
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    color: theme.palette.text.secondary,
-    fontSize: theme.typography.caption.fontSize,
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    letterSpacing: '0.06em',
+    gap: theme.spacing(0.5),
+    padding: theme.spacing(0.25, 1),
+    borderRadius: 999,
+    backgroundColor: withAlpha('#6C65E5', 0.1),
+    color: theme.palette.primary.main,
+    fontSize: 11,
+    fontWeight: 600,
+    letterSpacing: '0.01em',
 }));
 
 const StyledEventRow = styled(Box)(({ theme }) => ({
     display: 'flex',
-    alignItems: 'flex-start',
-    gap: theme.spacing(1.25),
+    alignItems: 'center',
+    gap: theme.spacing(1),
 }));
 
-const StyledEventIconBadge = styled(Box)(({ theme }) => ({
+const StyledEventIconBadge = styled(Box)({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 28,
-    height: 28,
-    borderRadius: 8,
+    width: 20,
+    height: 20,
+    borderRadius: 6,
     flexShrink: 0,
-    boxShadow: `0 1px 2px ${withAlpha('#6C65E5', 0.2)}`,
-}));
+});
 
 const StyledEventMeta = styled(Box)({
     display: 'flex',
@@ -544,12 +544,12 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
                                                 bgcolor:
                                                     t.palette.background.paper,
                                                 color: t.palette.text.primary,
-                                                padding: t.spacing(1.5, 1.75),
+                                                padding: t.spacing(1.25, 1.5),
                                                 borderRadius:
                                                     t.shape.borderRadiusMedium,
-                                                boxShadow: `0 8px 24px ${withAlpha('#6C65E5', 0.18)}`,
+                                                boxShadow: `0 10px 28px ${withAlpha('#0F0E2E', 0.08)}, 0 2px 6px ${withAlpha('#0F0E2E', 0.04)}`,
                                                 border: `1px solid ${t.palette.divider}`,
-                                                maxWidth: 340,
+                                                maxWidth: 320,
                                             }),
                                         },
                                         arrow: {
@@ -567,13 +567,13 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
                                             <StyledTooltipHeader>
                                                 <FlagIcon
                                                     sx={{
-                                                        fontSize: 14,
-                                                        color: 'primary.main',
+                                                        fontSize: 12,
+                                                        color: 'inherit',
                                                     }}
                                                 />
                                                 {isGrouped
-                                                    ? `${group.events.length} production events`
-                                                    : 'Production event'}
+                                                    ? `${group.events.length} events in production`
+                                                    : 'Production'}
                                             </StyledTooltipHeader>
                                             {group.events.map((event) => {
                                                 const eventColor =
@@ -595,7 +595,7 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
                                                                 type={
                                                                     event.type
                                                                 }
-                                                                size={14}
+                                                                size={12}
                                                             />
                                                         </StyledEventIconBadge>
                                                         <StyledEventMeta>
@@ -613,8 +613,8 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
                                                                         event.timestamp,
                                                                     ),
                                                                     'MMM d, HH:mm',
-                                                                )}{' '}
-                                                                \u00b7{' '}
+                                                                )}
+                                                                {' · '}
                                                                 {
                                                                     event.createdBy
                                                                 }

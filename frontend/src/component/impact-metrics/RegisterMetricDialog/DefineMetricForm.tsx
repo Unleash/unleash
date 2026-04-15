@@ -119,7 +119,18 @@ export const DefineMetricForm = ({
 
     return (
         <StyledForm id={formId} onSubmit={handleSubmit}>
-            <FormControl>
+            <FormControl
+                sx={(theme) => ({
+                    '.MuiFormHelperText-root, label': {
+                        transition: 'color 0.2s ease',
+                    },
+                    ':has(input:invalid:not(:placeholder-shown))': {
+                        '.MuiFormHelperText-root, label': {
+                            color: theme.palette.error.main,
+                        },
+                    },
+                })}
+            >
                 <StyledLabel htmlFor={metricNameInputId}>
                     Metric name
                 </StyledLabel>

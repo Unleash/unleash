@@ -10,100 +10,12 @@ import { PlaceholderChart } from './ImpactDashboard/PlaceholderChart';
 import { CompactChartCard } from './CompactChartCard';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
-import {
-    MultimetricChartCard,
-    type MultimetricChartCardProps,
-} from './MultimetricChartCard';
-
-// Dev-only seed to verify the new presentational card renders in isolation.
-// Will be removed once the data container lands on a follow-up branch.
-const makeDummyStepSeries = (
-    stepIndex: number,
-    baseScale: number,
-): [number, number][] => {
-    const now = Math.floor(Date.now() / 1000);
-    const intervalSec = 60 * 60;
-    const points: [number, number][] = [];
-    for (let i = 24; i >= 0; i--) {
-        const ts = now - i * intervalSec;
-        const hour = new Date(ts * 1000).getHours();
-        const diurnal =
-            hour >= 9 && hour <= 17
-                ? 0.4 + Math.sin(((hour - 9) / 8) * Math.PI) * 0.6
-                : hour >= 6 && hour < 9
-                  ? 0.3
-                  : hour > 17 && hour <= 22
-                    ? 0.5
-                    : 0.1;
-        const noise = 0.75 + Math.sin(ts / 1000 + stepIndex) * 0.25;
-        points.push([ts, Math.round(baseScale * diurnal * noise)]);
-    }
-    return points;
-};
-
-const DUMMY_MULTIMETRIC_PROPS: MultimetricChartCardProps = {
-    title: 'Checkout flow',
-    timeRange: 'day',
-    stepCount: 5,
-    stepTotals: [
-        {
-            label: 'Viewed checkout',
-            value: 1204,
-            previousStepPercentage: null,
-        },
-        {
-            label: 'Added payment',
-            value: 720,
-            previousStepPercentage: 59.8,
-        },
-        {
-            label: 'Applied coupon',
-            value: 512,
-            previousStepPercentage: 71.1,
-        },
-        {
-            label: 'Purchased',
-            value: 360,
-            previousStepPercentage: 70.3,
-        },
-        {
-            label: 'Rated purchase',
-            value: 84,
-            previousStepPercentage: 23.3,
-        },
-    ],
-    stepSeries: [
-        { label: 'Viewed checkout', data: makeDummyStepSeries(0, 50) },
-        { label: 'Added payment', data: makeDummyStepSeries(1, 30) },
-        { label: 'Applied coupon', data: makeDummyStepSeries(2, 22) },
-        { label: 'Purchased', data: makeDummyStepSeries(3, 15) },
-        { label: 'Rated purchase', data: makeDummyStepSeries(4, 4) },
-    ],
-    featureEvents: [
-        {
-            id: 1,
-            timestamp: Date.now() - 6 * 3600 * 1000,
-            type: 'feature-environment-enabled',
-            label: 'Enabled',
-            createdBy: 'alice@company.io',
-        },
-        {
-            id: 2,
-            timestamp: Date.now() - 2 * 3600 * 1000,
-            type: 'feature-environment-disabled',
-            label: 'Disabled',
-            createdBy: 'bob@company.io',
-        },
-    ],
-    start: String(Math.floor((Date.now() - 24 * 3600 * 1000) / 1000)),
-    end: String(Math.floor(Date.now() / 1000)),
-    href: '/projects/default/features/demo/metrics',
-};
 
 const StyledContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     border: `1px solid ${theme.palette.divider}`,
+    overflow: 'hidden',
 }));
 
 const StyledHeaderBar = styled('div')(({ theme }) => ({
@@ -153,10 +65,6 @@ const StyledExpandedContent = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(3),
     backgroundColor: theme.palette.background.elevation2,
-    [theme.breakpoints.down('sm')]: {
-        padding: theme.spacing(2, 1.5),
-        gap: theme.spacing(2),
-    },
 }));
 
 const StyledChartRow = styled('div')(({ theme }) => ({
@@ -278,7 +186,28 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 </StyledHeaderBar>
                 <Collapse in={expanded}>
                     <StyledExpandedContent>
-                        <MultimetricChartCard {...DUMMY_MULTIMETRIC_PROPS} />
+                        <StyledEmptyDescription>
+                            Connect your metrics to see how this feature affects
+                            adoption, error counts, latency, and other key
+                            indicators during rollout.
+                        </StyledEmptyDescription>
+                        <StyledChartRow>
+                            <PlaceholderChart
+                                title='Adoption'
+                                change='+1,204'
+                                variant='upward'
+                            />
+                            <PlaceholderChart
+                                title='Errors'
+                                change='3'
+                                variant='downward'
+                            />
+                            <PlaceholderChart
+                                title='Latency (p95)'
+                                change='~230ms'
+                                variant='stable'
+                            />
+                        </StyledChartRow>
                     </StyledExpandedContent>
                 </Collapse>
             </StyledContainer>
@@ -320,7 +249,6 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                             />
                         ))}
                     </StyledChartRow>
-                    <MultimetricChartCard {...DUMMY_MULTIMETRIC_PROPS} />
                 </StyledExpandedContent>
                 <StyledFooter>
                     <Button

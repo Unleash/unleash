@@ -6,7 +6,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Add from '@mui/icons-material/Add';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics';
-import { PlaceholderChart } from './ImpactDashboard/PlaceholderChart';
 import { CompactChartCard } from './CompactChartCard';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
@@ -165,12 +164,6 @@ const StyledChartRow = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         gridTemplateColumns: '1fr',
     },
-}));
-
-const StyledEmptyDescription = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.text.secondary,
-    maxWidth: '100%',
 }));
 
 const StyledConnectButton = styled(Button)({

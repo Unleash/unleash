@@ -670,15 +670,6 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
         !hasNoData && !loading && window !== null && plotArea !== null;
     const showLegend = !hasNoData && !loading && stepSeries.length > 0;
 
-    // `LineChart`'s `cover` overlays a node on top of the canvas (the empty
-    // state) or shows a loading shimmer when given `true`. Otherwise pass
-    // `false` so the canvas renders unobstructed.
-    const cover = hasNoData ? (
-        <NotEnoughData description='Send impact metrics using Unleash SDK for these series to view the chart.' />
-    ) : (
-        Boolean(loading)
-    );
-
     return (
         <StyledWrapper ref={wrapperRef}>
             <StyledChartArea>

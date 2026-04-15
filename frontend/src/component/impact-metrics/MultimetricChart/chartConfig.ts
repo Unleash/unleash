@@ -24,13 +24,12 @@ export type VisibleWindow = {
 };
 
 // Parses the Unix-second `start`/`end` strings into a millisecond window.
-// Returns `null` when either bound is missing or the range is non-positive,
-// which is the signal callers use to skip window-dependent rendering.
+// Returns `null` only if the range is non-positive (malformed input) — callers
+// use that as the signal to skip window-dependent rendering.
 export const parseVisibleWindow = (
-    start: string | undefined,
-    end: string | undefined,
+    start: string,
+    end: string,
 ): VisibleWindow | null => {
-    if (!start || !end) return null;
     const minMs = Number.parseInt(start, 10) * 1000;
     const maxMs = Number.parseInt(end, 10) * 1000;
     const rangeMs = maxMs - minMs;

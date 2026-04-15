@@ -18,8 +18,8 @@ export interface MultimetricChartCardProps {
     stepSeries: MultimetricStepSeries[];
     stepTotals: MultimetricStep[];
     featureEvents?: MultimetricFeatureEvent[];
-    start?: string;
-    end?: string;
+    start: string;
+    end: string;
     loading?: boolean;
     href?: string;
 }

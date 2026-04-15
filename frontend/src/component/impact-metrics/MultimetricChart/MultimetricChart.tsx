@@ -54,8 +54,8 @@ const StyledChartFrame = styled(Box)({
 type MultimetricChartProps = {
     stepSeries: MultimetricStepSeries[];
     timeRange: ChartTimeRange;
-    start?: string;
-    end?: string;
+    start: string;
+    end: string;
     loading?: boolean;
     featureEvents?: MultimetricFeatureEvent[];
 };

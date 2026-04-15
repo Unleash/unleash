@@ -89,7 +89,6 @@ export type UiFlags = {
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
-    featureEnvSafeguards?: boolean;
     filterFavorites?: boolean;
     pendingUserAccessRequests?: boolean;
     onboardingFlagSetup?: boolean;

@@ -103,7 +103,7 @@ const setupServerRoutes = () => {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
-        flags: { safeguards: true, featureEnvSafeguards: true },
+        flags: { safeguards: true },
     });
     testServerRoute(server, '/api/admin/user', {
         user: {
@@ -262,46 +262,6 @@ describe('AddSafeguard', () => {
             'aria-disabled',
             'true',
         );
-    });
-
-    test('should directly select when featureEnv is not enabled', async () => {
-        const onSelect = vi.fn();
-        const user = userEvent.setup();
-
-        testServerRoute(server, '/api/admin/ui-config', {
-            versionInfo: {
-                current: { oss: 'version', enterprise: 'version' },
-            },
-            flags: { safeguards: true, featureEnvSafeguards: false },
-        });
-
-        render(<AddSafeguard onSelect={onSelect} releasePlan={releasePlan} />, {
-            route: '/',
-            permissions,
-        });
-
-        const addButton = await screen.findByText('Add safeguard');
-        await user.click(addButton);
-
-        expect(onSelect).toHaveBeenCalledWith('releasePlan');
-    });
-
-    test('should hide add button when featureEnv flag is off and no release plan', () => {
-        const onSelect = vi.fn();
-
-        testServerRoute(server, '/api/admin/ui-config', {
-            versionInfo: {
-                current: { oss: 'version', enterprise: 'version' },
-            },
-            flags: { safeguards: true, featureEnvSafeguards: false },
-        });
-
-        render(<AddSafeguard onSelect={onSelect} />, {
-            route: '/',
-            permissions,
-        });
-
-        expect(screen.queryByText('Add safeguard')).not.toBeInTheDocument();
     });
 });
 

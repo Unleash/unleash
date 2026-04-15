@@ -27,7 +27,6 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import type { ISafeguard } from 'interfaces/safeguard';
 import { strategyBackground } from 'component/common/StrategyList/StrategyListItem';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledSafeguardContainer = styled('div')(({ theme }) => ({
@@ -59,32 +58,19 @@ export const AddSafeguard = ({
     releasePlan?: { id: string; name: string };
 }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const featureEnvSafeguardsEnabled = useUiFlag('featureEnvSafeguards');
     const { trackEvent } = usePlausibleTracker();
-
-    if (!featureEnvSafeguardsEnabled && !releasePlan) return null;
 
     return (
         <StyledSafeguardContainer>
             <StyledAddSafeguardContent>
                 <StyledActionButton
                     onClick={(e) => {
-                        if (featureEnvSafeguardsEnabled) {
-                            trackEvent('safeguards', {
-                                props: {
-                                    eventType: 'choose safeguard opened',
-                                },
-                            });
-                            setAnchorEl(e.currentTarget);
-                        } else {
-                            trackEvent('safeguards', {
-                                props: {
-                                    eventType: 'form opened',
-                                    safeguardType: 'releasePlan',
-                                },
-                            });
-                            onSelect('releasePlan');
-                        }
+                        trackEvent('safeguards', {
+                            props: {
+                                eventType: 'choose safeguard opened',
+                            },
+                        });
+                        setAnchorEl(e.currentTarget);
                     }}
                     color='primary'
                     startIcon={<Add />}

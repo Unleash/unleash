@@ -72,7 +72,6 @@ export type IFlagKey =
     | 'signupDialog'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
-    | 'featureEnvSafeguards'
     | 'filterFavorites'
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'onlyFeatureTokensWithFeatureAPIs'
@@ -325,10 +324,6 @@ const flags: IFlags = {
     ),
     impactMetricsFlagPage: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS_FLAG_PAGE,
-        false,
-    ),
-    featureEnvSafeguards: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_ENV_SAFEGUARDS,
         false,
     ),
     filterFavorites: parseEnvVarBoolean(

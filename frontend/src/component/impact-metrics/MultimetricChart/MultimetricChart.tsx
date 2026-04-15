@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
     Box,
     Tooltip,
@@ -10,9 +10,13 @@ import {
 } from '@mui/material';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import FlagIcon from '@mui/icons-material/Flag';
-import { Chart as ChartJS, type ChartOptions } from 'chart.js';
+import {
+    Chart as ChartJS,
+    type Chart as ChartInstance,
+    type ChartOptions,
+} from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { format, fromUnixTime } from 'date-fns';
+import { format } from 'date-fns';
 import {
     LineChart,
     NotEnoughData,
@@ -27,30 +31,6 @@ import type { MultimetricStepSeries, MultimetricFeatureEvent } from './types';
 
 ChartJS.register(annotationPlugin);
 
-// Global plugin: after layout, store the plot area bounds on the canvas
-// element as data attributes so the overlay can measure them.
-ChartJS.register({
-    id: 'multimetricChartAreaTracker',
-    afterLayout: (chart) => {
-        const canvas = chart.canvas as HTMLCanvasElement | null;
-        if (!canvas) return;
-        canvas.dataset.chartAreaLeft = String(chart.chartArea.left);
-        canvas.dataset.chartAreaRight = String(chart.chartArea.right);
-        canvas.dispatchEvent(
-            new CustomEvent('multimetricChartAreaChange', { bubbles: true }),
-        );
-    },
-});
-
-type MultimetricChartProps = {
-    stepSeries: MultimetricStepSeries[];
-    timeRange: 'hour' | 'day' | 'week' | 'month';
-    start?: string;
-    end?: string;
-    loading?: boolean;
-    featureEvents?: MultimetricFeatureEvent[];
-};
-
 const withAlpha = (hex: string, alpha: number): string => {
     const h = hex.replace('#', '');
     const r = parseInt(h.slice(0, 2), 16);
@@ -59,8 +39,6 @@ const withAlpha = (hex: string, alpha: number): string => {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
-// Both event types use shades of the primary purple so the chart reads
-// cohesively. Enabled = darker (active), disabled = lighter (muted).
 const getEventColor = (
     theme: Theme,
     type: MultimetricFeatureEvent['type'],
@@ -73,13 +51,179 @@ const getEventColor = (
     }
 };
 
-const EventIcon: FC<{
-    type: MultimetricFeatureEvent['type'];
-    size?: number;
-    color?: string;
-}> = ({ type: _type, size = 14, color = '#fff' }) => {
-    const iconSx = { fontSize: size, color };
-    return <PowerSettingsNewIcon sx={iconSx} />;
+const EVENT_TYPE_LABEL: Record<MultimetricFeatureEvent['type'], string> = {
+    'feature-environment-enabled': 'Enabled',
+    'feature-environment-disabled': 'Disabled',
+};
+
+type VisibleWindow = { minMs: number; maxMs: number; rangeMs: number };
+
+// Parses the Unix-second `start`/`end` strings into a millisecond window.
+// Returns `null` when either bound is missing or the range is non-positive,
+// which is the signal callers use to skip window-dependent rendering.
+
+const parseVisibleWindow = (
+    start: string | undefined,
+    end: string | undefined,
+): VisibleWindow | null => {
+    if (!start || !end) return null;
+    const minMs = Number.parseInt(start, 10) * 1000;
+    const maxMs = Number.parseInt(end, 10) * 1000;
+    const rangeMs = maxMs - minMs;
+    if (rangeMs <= 0) return null;
+    return { minMs, maxMs, rangeMs };
+};
+
+type EventGroup = {
+    pct: number;
+    events: MultimetricFeatureEvent[];
+};
+
+// Collapses events that land within `PROXIMITY_PCT` of each other on the
+// x-axis into a single group, so the strip shows one pill instead of a
+// cluster of overlapping ones.
+const groupEventsByProximity = (
+    events: MultimetricFeatureEvent[],
+    window: VisibleWindow,
+): EventGroup[] => {
+    const PROXIMITY_PCT = 3;
+    const sorted = [...events].sort(
+        (left, right) => left.timestamp - right.timestamp,
+    );
+    const groups: EventGroup[] = [];
+    for (const event of sorted) {
+        const pct = ((event.timestamp - window.minMs) / window.rangeMs) * 100;
+        const last = groups[groups.length - 1];
+        // `sorted` is ascending, so `pct - last.pct` is always >= 0 — no abs needed.
+        if (last && pct - last.pct < PROXIMITY_PCT) {
+            last.events.push(event);
+            last.pct += (pct - last.pct) / last.events.length;
+        } else {
+            groups.push({ pct, events: [event] });
+        }
+    }
+    return groups;
+};
+
+// Builds the Chart.js annotation config that draws one dashed vertical line
+// per event group, lined up exactly with the pills on the overlay strip.
+const buildEventAnnotations = (
+    groups: EventGroup[],
+    theme: Theme,
+): Record<string, object> =>
+    groups.reduce<Record<string, object>>((acc, group, index) => {
+        const primary = group.events[group.events.length - 1];
+        const color = getEventColor(theme, primary.type);
+        acc[`event-line-${index}`] = {
+            type: 'line',
+            xMin: primary.timestamp,
+            xMax: primary.timestamp,
+            borderColor: color,
+            borderWidth: 1.5,
+            borderDash: [4, 3],
+        };
+        return acc;
+    }, {});
+
+// Transforms raw step series into the `{ labels, datasets }` shape Chart.js
+// expects
+const buildTimeSeriesChartData = (
+    stepSeries: MultimetricStepSeries[],
+    colors: readonly string[],
+    hiddenSteps: Set<number>,
+) => {
+    const allTimestamps = new Set<number>();
+    stepSeries.forEach((step) => {
+        step.data.forEach(([ts]) => {
+            allTimestamps.add(ts);
+        });
+    });
+    const sortedTimestamps = Array.from(allTimestamps).sort(
+        (earlier, later) => earlier - later,
+    );
+    const labels = sortedTimestamps.map((ts) => new Date(ts * 1000));
+
+    const datasets = stepSeries.map((step, index) => {
+        const dataMap = new Map(step.data);
+        const values = sortedTimestamps.map((ts) => dataMap.get(ts) ?? null);
+        const color = colors[index % colors.length];
+        return {
+            label: step.label,
+            data: values,
+            hidden: hiddenSteps.has(index),
+            borderColor: color,
+            backgroundColor: withAlpha(color, 0.12),
+            fill: true,
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: color,
+            pointHoverBorderColor: '#fff',
+            pointHoverBorderWidth: 2,
+            tension: 0.3,
+            spanGaps: true,
+        };
+    });
+
+    return { labels, datasets };
+};
+
+type PlotArea = { leftPx: number; widthPx: number };
+
+// useChartPlotArea: measures the Chart.js plot area so overlays (the event
+// strip) can be positioned to line up exactly with the drawn axes.
+const useChartPlotArea = (
+    wrapperRef: React.RefObject<HTMLElement>,
+    chartRef: React.MutableRefObject<ChartInstance<'line'> | null>,
+    invalidateKeys: unknown[],
+): PlotArea | null => {
+    const [plotArea, setPlotArea] = useState<PlotArea | null>(null);
+
+    const measure = useCallback(() => {
+        const wrapper = wrapperRef.current;
+        const chart = chartRef.current;
+        if (!wrapper || !chart) return;
+        const canvasRect = chart.canvas.getBoundingClientRect();
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const leftPx =
+            canvasRect.left - wrapperRect.left + chart.chartArea.left;
+        const widthPx = chart.chartArea.right - chart.chartArea.left;
+        setPlotArea((prev) => {
+            if (
+                prev &&
+                Math.abs(prev.leftPx - leftPx) < 0.5 &&
+                Math.abs(prev.widthPx - widthPx) < 0.5
+            ) {
+                return prev;
+            }
+            return { leftPx, widthPx };
+        });
+    }, [wrapperRef, chartRef]);
+
+    // Chart.js's chartArea is only populated after layout runs, so we defer
+    // measurement one frame. Also re-runs on container resize.
+    useEffect(() => {
+        const wrapper = wrapperRef.current;
+        if (!wrapper) return;
+
+        let frame = 0;
+        const schedule = () => {
+            cancelAnimationFrame(frame);
+            frame = requestAnimationFrame(measure);
+        };
+
+        const ro = new ResizeObserver(schedule);
+        ro.observe(wrapper);
+        schedule();
+
+        return () => {
+            cancelAnimationFrame(frame);
+            ro.disconnect();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [measure, ...invalidateKeys]);
+
+    return plotArea;
 };
 
 const StyledWrapper = styled(Box)({
@@ -148,8 +292,6 @@ const StyledMarkerWrapper = styled(Box)({
     transform: 'translate(-50%, -50%)',
 });
 
-// Outlined pill marker — white background with a colored border; the icon and
-// count inherit the pill's themed color, keeping the chart calm.
 const StyledMarker = styled(Box)(({ theme }) => ({
     position: 'relative',
     display: 'inline-flex',
@@ -176,8 +318,6 @@ const StyledMarkerCount = styled(Typography)({
     lineHeight: 1,
     letterSpacing: '0.02em',
 });
-
-// Tooltip styles
 
 const StyledTooltipContent = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -237,9 +377,178 @@ const StyledEventSubtext = styled(Typography)(({ theme }) => ({
     lineHeight: 1.4,
 }));
 
-const EVENT_TYPE_LABEL: Record<MultimetricFeatureEvent['type'], string> = {
-    'feature-environment-enabled': 'Enabled',
-    'feature-environment-disabled': 'Disabled',
+const FeatureEventTooltip: FC<{ group: EventGroup }> = ({ group }) => {
+    const theme = useTheme();
+    const isGrouped = group.events.length > 1;
+    return (
+        <StyledTooltipContent>
+            <StyledTooltipHeader>
+                <FlagIcon sx={{ fontSize: 12, color: 'inherit' }} />
+                {isGrouped
+                    ? `${group.events.length} events in production`
+                    : 'Production'}
+            </StyledTooltipHeader>
+            {group.events.map((event) => {
+                const eventColor = getEventColor(theme, event.type);
+                const isDisabled =
+                    event.type === 'feature-environment-disabled';
+                return (
+                    <StyledEventRow key={event.id}>
+                        <StyledEventIconBadge
+                            sx={{
+                                backgroundColor: eventColor,
+                                opacity: isDisabled ? 0.5 : 1,
+                            }}
+                        >
+                            <PowerSettingsNewIcon
+                                sx={{ fontSize: 12, color: '#fff' }}
+                            />
+                        </StyledEventIconBadge>
+                        <StyledEventMeta>
+                            <StyledEventLabel>
+                                {EVENT_TYPE_LABEL[event.type]}
+                            </StyledEventLabel>
+                            <StyledEventSubtext>
+                                {format(
+                                    new Date(event.timestamp),
+                                    'MMM d, HH:mm',
+                                )}
+                                {' · '}
+                                {event.createdBy}
+                            </StyledEventSubtext>
+                        </StyledEventMeta>
+                    </StyledEventRow>
+                );
+            })}
+        </StyledTooltipContent>
+    );
+};
+
+const FeatureEventMarker: FC<{ group: EventGroup }> = ({ group }) => {
+    const theme = useTheme();
+    const clampedPct = Math.max(0, Math.min(100, group.pct));
+    const primary = group.events[group.events.length - 1];
+    const primaryColor = getEventColor(theme, primary.type);
+    const isGrouped = group.events.length > 1;
+
+    return (
+        <Tooltip
+            arrow
+            placement='top'
+            componentsProps={{
+                tooltip: {
+                    sx: {
+                        bgcolor: theme.palette.background.paper,
+                        color: theme.palette.text.primary,
+                        padding: theme.spacing(1.25, 1.5),
+                        borderRadius: theme.shape.borderRadiusMedium,
+                        boxShadow: theme.shadows[6],
+                        border: `1px solid ${theme.palette.divider}`,
+                        maxWidth: 320,
+                    },
+                },
+                arrow: {
+                    sx: {
+                        color: theme.palette.background.paper,
+                        '&::before': {
+                            border: `1px solid ${theme.palette.divider}`,
+                        },
+                    },
+                },
+            }}
+            title={<FeatureEventTooltip group={group} />}
+        >
+            <StyledMarkerWrapper sx={{ left: `${clampedPct}%` }}>
+                <StyledMarker
+                    sx={{
+                        border: `1.5px solid ${primaryColor}`,
+                        backgroundColor: withAlpha(primaryColor, 0.12),
+                        color: primaryColor,
+                    }}
+                >
+                    <PowerSettingsNewIcon
+                        sx={{ fontSize: 13, color: primaryColor }}
+                    />
+                    {isGrouped && (
+                        <StyledMarkerCount sx={{ color: primaryColor }}>
+                            {group.events.length}
+                        </StyledMarkerCount>
+                    )}
+                </StyledMarker>
+            </StyledMarkerWrapper>
+        </Tooltip>
+    );
+};
+
+// FeatureEventOverlay: absolutely-positioned strip across the top of the plot
+// area that hosts all event markers. Positioned to match the Chart.js plot
+// bounds so pills line up with the vertical annotation lines underneath.
+const FeatureEventOverlay: FC<{
+    groups: EventGroup[];
+    plotArea: PlotArea;
+}> = ({ groups, plotArea }) => (
+    <StyledEventStrip
+        sx={{
+            left: `${plotArea.leftPx}px`,
+            width: `${plotArea.widthPx}px`,
+            right: 'auto',
+        }}
+    >
+        {groups.map((group) => (
+            <FeatureEventMarker key={group.events[0].id} group={group} />
+        ))}
+    </StyledEventStrip>
+);
+
+const StepLegend: FC<{
+    stepSeries: MultimetricStepSeries[];
+    colors: readonly string[];
+    hiddenSteps: Set<number>;
+    onToggle: (index: number) => void;
+}> = ({ stepSeries, colors, hiddenSteps, onToggle }) => (
+    <StyledLegend>
+        {stepSeries.map((step, index) => {
+            const color = colors[index % colors.length];
+            const isHidden = hiddenSteps.has(index);
+            return (
+                <StyledLegendItem
+                    key={step.label}
+                    type='button'
+                    onClick={(clickEvent) => {
+                        clickEvent.stopPropagation();
+                        clickEvent.preventDefault();
+                        onToggle(index);
+                    }}
+                    sx={{
+                        opacity: isHidden ? 0.4 : 1,
+                        textDecoration: isHidden ? 'line-through' : 'none',
+                    }}
+                >
+                    <StyledLegendSwatch
+                        sx={{
+                            backgroundColor: isHidden
+                                ? 'action.disabled'
+                                : color,
+                        }}
+                    />
+                    {step.label}
+                </StyledLegendItem>
+            );
+        })}
+    </StyledLegend>
+);
+
+// MultimetricChart: the orchestrating component. Wires together the Chart.js
+// line chart, the feature-event overlay (pills + annotation lines), and the
+// clickable step legend.
+
+type MultimetricChartProps = {
+    stepSeries: MultimetricStepSeries[];
+    timeRange: 'hour' | 'day' | 'week' | 'month';
+    start?: string;
+    end?: string;
+    loading?: boolean;
+    featureEvents?: MultimetricFeatureEvent[];
 };
 
 export const MultimetricChart: FC<MultimetricChartProps> = ({
@@ -253,20 +562,14 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
     const theme = useTheme();
     const colors = theme.palette.charts.series;
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const [chartArea, setChartArea] = useState<{
-        leftPx: number;
-        widthPx: number;
-    } | null>(null);
+    const chartInstanceRef = useRef<ChartInstance<'line'> | null>(null);
     const [hiddenSteps, setHiddenSteps] = useState<Set<number>>(new Set());
 
     const toggleStep = (index: number) => {
         setHiddenSteps((prev) => {
             const next = new Set(prev);
-            if (next.has(index)) {
-                next.delete(index);
-            } else {
-                next.add(index);
-            }
+            if (next.has(index)) next.delete(index);
+            else next.add(index);
             return next;
         });
     };
@@ -276,177 +579,44 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
         type: 'constant',
     });
 
-    // Listen for chart layout changes. Chart.js's chartArea is in CSS pixels
-    // (not canvas pixels) for the Line component with responsive defaults, so
-    // we use it directly without scaling.
-    useEffect(() => {
-        const wrapper = wrapperRef.current;
-        if (!wrapper) return;
+    const plotArea = useChartPlotArea(wrapperRef, chartInstanceRef, [
+        stepSeries,
+        hiddenSteps,
+    ]);
 
-        const update = () => {
-            const canvas = wrapper.querySelector(
-                'canvas',
-            ) as HTMLCanvasElement | null;
-            if (!canvas) return;
-            const leftData = canvas.dataset.chartAreaLeft;
-            const rightData = canvas.dataset.chartAreaRight;
-            if (!leftData || !rightData) return;
-            const canvasRect = canvas.getBoundingClientRect();
-            const wrapperRect = wrapper.getBoundingClientRect();
-            const leftPx =
-                canvasRect.left - wrapperRect.left + Number(leftData);
-            const widthPx = Number(rightData) - Number(leftData);
-            setChartArea((prev) => {
-                if (
-                    prev &&
-                    Math.abs(prev.leftPx - leftPx) < 0.5 &&
-                    Math.abs(prev.widthPx - widthPx) < 0.5
-                ) {
-                    return prev;
-                }
-                return { leftPx, widthPx };
-            });
-        };
+    const data = buildTimeSeriesChartData(stepSeries, colors, hiddenSteps);
 
-        wrapper.addEventListener('multimetricChartAreaChange', update);
-        const ro = new ResizeObserver(update);
-        ro.observe(wrapper);
-        update();
+    const hasNoData =
+        !loading &&
+        (stepSeries.length === 0 ||
+            stepSeries.every((step) => step.data.length === 0));
 
-        return () => {
-            wrapper.removeEventListener('multimetricChartAreaChange', update);
-            ro.disconnect();
-        };
-    }, []);
+    // `start`/`end` arrive as Unix-second strings; the chart and overlay both
+    // need the visible window in milliseconds to place things along the x-axis.
+    const window = parseVisibleWindow(start, end);
 
-    const data = useMemo(() => {
-        const allTimestamps = new Set<number>();
-        stepSeries.forEach((step) => {
-            step.data.forEach(([ts]) => {
-                allTimestamps.add(ts);
-            });
-        });
+    const eventGroups = window
+        ? groupEventsByProximity(
+              featureEvents.filter(
+                  (event) =>
+                      event.timestamp >= window.minMs &&
+                      event.timestamp <= window.maxMs,
+              ),
+              window,
+          )
+        : [];
 
-        const sortedTimestamps = Array.from(allTimestamps).sort(
-            (a, b) => a - b,
-        );
-
-        const labels = sortedTimestamps.map((ts) => new Date(ts * 1000));
-
-        const datasets = stepSeries.map((step, index) => {
-            const dataMap = new Map(step.data);
-            const values = sortedTimestamps.map(
-                (ts) => dataMap.get(ts) ?? null,
-            );
-            const color = colors[index % colors.length];
-            return {
-                label: step.label,
-                data: values,
-                hidden: hiddenSteps.has(index),
-                borderColor: color,
-                backgroundColor: withAlpha(color, 0.12),
-                fill: true,
-                borderWidth: 2,
-                pointRadius: 0,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: color,
-                pointHoverBorderColor: '#fff',
-                pointHoverBorderWidth: 2,
-                tension: 0.3,
-                spanGaps: true,
-            };
-        });
-
-        return { labels, datasets };
-    }, [stepSeries, colors, hiddenSteps]);
-
-    const notEnoughData = useMemo(() => {
-        if (loading) return false;
-        if (stepSeries.length === 0) return true;
-        return stepSeries.every((s) => s.data.length === 0);
-    }, [stepSeries, loading]);
-
-    const minTime = start
-        ? fromUnixTime(Number.parseInt(start, 10))
-        : undefined;
-    const maxTime = end ? fromUnixTime(Number.parseInt(end, 10)) : undefined;
-
-    const visibleEvents = useMemo(() => {
-        const minMs = minTime?.getTime();
-        const maxMs = maxTime?.getTime();
-        return featureEvents.filter((event) => {
-            if (minMs !== undefined && event.timestamp < minMs) return false;
-            if (maxMs !== undefined && event.timestamp > maxMs) return false;
-            return true;
-        });
-    }, [featureEvents, minTime, maxTime]);
-
-    const minMs = minTime?.getTime();
-    const maxMs = maxTime?.getTime();
-    const rangeMs =
-        minMs !== undefined && maxMs !== undefined ? maxMs - minMs : 0;
-
-    const eventGroups = useMemo(() => {
-        if (rangeMs <= 0)
-            return [] as { pct: number; events: MultimetricFeatureEvent[] }[];
-        const PROXIMITY_PCT = 3;
-        const sorted = [...visibleEvents].sort(
-            (a, b) => a.timestamp - b.timestamp,
-        );
-        const groups: { pct: number; events: MultimetricFeatureEvent[] }[] = [];
-        for (const event of sorted) {
-            const pct = ((event.timestamp - (minMs ?? 0)) / rangeMs) * 100;
-            const last = groups[groups.length - 1];
-            if (last && Math.abs(pct - last.pct) < PROXIMITY_PCT) {
-                last.events.push(event);
-                last.pct =
-                    last.events.reduce(
-                        (sum, e) =>
-                            sum +
-                            ((e.timestamp - (minMs ?? 0)) / rangeMs) * 100,
-                        0,
-                    ) / last.events.length;
-            } else {
-                groups.push({ pct, events: [event] });
-            }
-        }
-        return groups;
-    }, [visibleEvents, minMs, rangeMs]);
-
-    // One dashed vertical line per group (matches the pills exactly)
-    const eventAnnotations = useMemo(() => {
-        return eventGroups.reduce<Record<string, object>>(
-            (acc, group, index) => {
-                const primary = group.events[group.events.length - 1];
-                const color = getEventColor(theme, primary.type);
-                acc[`event-line-${index}`] = {
-                    type: 'line',
-                    xMin: primary.timestamp,
-                    xMax: primary.timestamp,
-                    borderColor: color,
-                    borderWidth: 1.5,
-                    borderDash: [4, 3],
-                };
-                return acc;
-            },
-            {},
-        );
-    }, [eventGroups, theme]);
+    const eventAnnotations = buildEventAnnotations(eventGroups, theme);
 
     const chartOptions: ChartOptions<'line'> = {
         maintainAspectRatio: false,
-        interaction: {
-            mode: 'index',
-            intersect: false,
-        },
-        layout: {
-            padding: { top: 28, right: 4, left: 4 },
-        },
+        interaction: { mode: 'index', intersect: false },
+        layout: { padding: { top: 28, right: 4, left: 4 } },
         scales: {
             x: {
                 type: 'time' as const,
-                min: minTime?.getTime(),
-                max: maxTime?.getTime(),
+                min: window?.minMs,
+                max: window?.maxMs,
                 time: {
                     unit: getTimeUnit(timeRange),
                     displayFormats: {
@@ -476,15 +646,17 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
         },
         plugins: {
             legend: { display: false },
-            annotation: {
-                annotations: eventAnnotations,
-            },
+            annotation: { annotations: eventAnnotations },
         } as ChartOptions<'line'>['plugins'],
         animations: {
             x: { duration: 0 },
             y: { duration: 0 },
         },
     };
+
+    const showOverlay =
+        !hasNoData && !loading && window !== null && plotArea !== null;
+    const showLegend = !hasNoData && !loading && stepSeries.length > 0;
 
     return (
         <StyledWrapper ref={wrapperRef}>
@@ -501,10 +673,13 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
                     }}
                 >
                     <LineChart
-                        data={notEnoughData || loading ? placeholderData : data}
+                        data={hasNoData || loading ? placeholderData : data}
                         overrideOptions={chartOptions}
+                        chartRef={(instance) => {
+                            chartInstanceRef.current = instance;
+                        }}
                         cover={
-                            notEnoughData ? (
+                            hasNoData ? (
                                 <NotEnoughData description='Send impact metrics using Unleash SDK for these series to view the chart.' />
                             ) : (
                                 loading
@@ -512,198 +687,20 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
                         }
                     />
                 </Box>
-                {!notEnoughData && !loading && rangeMs > 0 && chartArea && (
-                    <StyledEventStrip
-                        sx={{
-                            left: `${chartArea.leftPx}px`,
-                            width: `${chartArea.widthPx}px`,
-                            right: 'auto',
-                        }}
-                    >
-                        {eventGroups.map((group, groupIndex) => {
-                            const clampedPct = Math.max(
-                                0,
-                                Math.min(100, group.pct),
-                            );
-                            const primary =
-                                group.events[group.events.length - 1];
-                            const primaryColor = getEventColor(
-                                theme,
-                                primary.type,
-                            );
-                            const isGrouped = group.events.length > 1;
-                            return (
-                                <Tooltip
-                                    key={`event-group-${groupIndex}`}
-                                    arrow
-                                    placement='top'
-                                    componentsProps={{
-                                        tooltip: {
-                                            sx: {
-                                                bgcolor:
-                                                    theme.palette.background
-                                                        .paper,
-                                                color: theme.palette.text
-                                                    .primary,
-                                                padding: theme.spacing(
-                                                    1.25,
-                                                    1.5,
-                                                ),
-                                                borderRadius:
-                                                    theme.shape
-                                                        .borderRadiusMedium,
-                                                boxShadow: theme.shadows[6],
-                                                border: `1px solid ${theme.palette.divider}`,
-                                                maxWidth: 320,
-                                            },
-                                        },
-                                        arrow: {
-                                            sx: {
-                                                color: theme.palette.background
-                                                    .paper,
-                                                '&::before': {
-                                                    border: `1px solid ${theme.palette.divider}`,
-                                                },
-                                            },
-                                        },
-                                    }}
-                                    title={
-                                        <StyledTooltipContent>
-                                            <StyledTooltipHeader>
-                                                <FlagIcon
-                                                    sx={{
-                                                        fontSize: 12,
-                                                        color: 'inherit',
-                                                    }}
-                                                />
-                                                {isGrouped
-                                                    ? `${group.events.length} events in production`
-                                                    : 'Production'}
-                                            </StyledTooltipHeader>
-                                            {group.events.map((event) => {
-                                                const eventColor =
-                                                    getEventColor(
-                                                        theme,
-                                                        event.type,
-                                                    );
-                                                const isDisabled =
-                                                    event.type ===
-                                                    'feature-environment-disabled';
-                                                return (
-                                                    <StyledEventRow
-                                                        key={event.id}
-                                                    >
-                                                        <StyledEventIconBadge
-                                                            sx={{
-                                                                backgroundColor:
-                                                                    eventColor,
-                                                                opacity:
-                                                                    isDisabled
-                                                                        ? 0.5
-                                                                        : 1,
-                                                            }}
-                                                        >
-                                                            <EventIcon
-                                                                type={
-                                                                    event.type
-                                                                }
-                                                                size={12}
-                                                            />
-                                                        </StyledEventIconBadge>
-                                                        <StyledEventMeta>
-                                                            <StyledEventLabel>
-                                                                {
-                                                                    EVENT_TYPE_LABEL[
-                                                                        event
-                                                                            .type
-                                                                    ]
-                                                                }
-                                                            </StyledEventLabel>
-                                                            <StyledEventSubtext>
-                                                                {format(
-                                                                    new Date(
-                                                                        event.timestamp,
-                                                                    ),
-                                                                    'MMM d, HH:mm',
-                                                                )}
-                                                                {' · '}
-                                                                {
-                                                                    event.createdBy
-                                                                }
-                                                            </StyledEventSubtext>
-                                                        </StyledEventMeta>
-                                                    </StyledEventRow>
-                                                );
-                                            })}
-                                        </StyledTooltipContent>
-                                    }
-                                >
-                                    <StyledMarkerWrapper
-                                        sx={{ left: `${clampedPct}%` }}
-                                    >
-                                        <StyledMarker
-                                            sx={{
-                                                border: `1.5px solid ${primaryColor}`,
-                                                backgroundColor: withAlpha(
-                                                    primaryColor,
-                                                    0.12,
-                                                ),
-                                                color: primaryColor,
-                                            }}
-                                        >
-                                            <EventIcon
-                                                type={primary.type}
-                                                size={13}
-                                                color={primaryColor}
-                                            />
-                                            {isGrouped && (
-                                                <StyledMarkerCount
-                                                    sx={{ color: primaryColor }}
-                                                >
-                                                    {group.events.length}
-                                                </StyledMarkerCount>
-                                            )}
-                                        </StyledMarker>
-                                    </StyledMarkerWrapper>
-                                </Tooltip>
-                            );
-                        })}
-                    </StyledEventStrip>
+                {showOverlay && (
+                    <FeatureEventOverlay
+                        groups={eventGroups}
+                        plotArea={plotArea}
+                    />
                 )}
             </StyledChartArea>
-            {!notEnoughData && !loading && stepSeries.length > 0 && (
-                <StyledLegend>
-                    {stepSeries.map((step, index) => {
-                        const color = colors[index % colors.length];
-                        const isHidden = hiddenSteps.has(index);
-                        return (
-                            <StyledLegendItem
-                                key={`legend-${step.label}-${index}`}
-                                type='button'
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    toggleStep(index);
-                                }}
-                                sx={{
-                                    opacity: isHidden ? 0.4 : 1,
-                                    textDecoration: isHidden
-                                        ? 'line-through'
-                                        : 'none',
-                                }}
-                            >
-                                <StyledLegendSwatch
-                                    sx={{
-                                        backgroundColor: isHidden
-                                            ? 'action.disabled'
-                                            : color,
-                                    }}
-                                />
-                                {step.label}
-                            </StyledLegendItem>
-                        );
-                    })}
-                </StyledLegend>
+            {showLegend && (
+                <StepLegend
+                    stepSeries={stepSeries}
+                    colors={colors}
+                    hiddenSteps={hiddenSteps}
+                    onToggle={toggleStep}
+                />
             )}
         </StyledWrapper>
     );

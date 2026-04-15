@@ -1,4 +1,10 @@
-import { type ReactNode, useMemo, useState, type FC } from 'react';
+import {
+    type ReactNode,
+    useMemo,
+    useState,
+    type FC,
+    type RefCallback,
+} from 'react';
 import {
     CategoryScale,
     LinearScale,
@@ -8,6 +14,7 @@ import {
     Legend,
     TimeScale,
     Chart,
+    type Chart as ChartInstance,
     Filler,
     type ChartData,
     type ChartOptions,
@@ -46,12 +53,18 @@ const LineChartComponent: FC<{
     }: {
         tooltip: TooltipState | null;
     }) => ReturnType<FC>;
+    /**
+     * Called with the underlying Chart.js instance whenever it (re)mounts.
+     * Use this to read `chart.chartArea` from outside.
+     */
+    chartRef?: RefCallback<ChartInstance<'line'> | null>;
 }> = ({
     data,
     aspectRatio = 2.5,
     cover,
     overrideOptions,
     TooltipComponent,
+    chartRef,
 }) => {
     const theme = useTheme();
     const { locationSettings } = useLocationSettings();
@@ -75,6 +88,11 @@ const LineChartComponent: FC<{
     return (
         <StyledContainer>
             <Line
+                ref={(instance) => {
+                    chartRef?.(
+                        (instance as unknown as ChartInstance<'line'>) ?? null,
+                    );
+                }}
                 key={cover ? 'cover' : 'chart'}
                 options={options}
                 data={data}

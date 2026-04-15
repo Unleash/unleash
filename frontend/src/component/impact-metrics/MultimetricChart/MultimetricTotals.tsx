@@ -16,11 +16,11 @@ type MultimetricTotalsProps = {
 
 // Stacked bar + legend layout
 
-const StyledContainer = styled(Box)(({ theme }) => ({
+const StyledContainer = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-}));
+});
 
 const StyledStackedBar = styled(Box)(({ theme }) => ({
     display: 'flex',

@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { DefineMetricForm } from './DefineMetricForm';
 import { SuccessView } from './SuccessView';
-import { InfoSidebar } from './InfoSidebar';
+import { MetricDefinitionSidebar, SuccessSidebar } from './InfoSidebar';
 
 type RegisterMetricDialogProps = {
     open: boolean;
@@ -63,6 +63,28 @@ const Navigation = styled('div')(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(2, 6),
 }));
+
+const Sidebar = styled('aside')(({ theme }) => {
+    const spacing = theme.spacing(3);
+    return {
+        color: theme.palette.primary.contrastText,
+        fontSize: theme.typography.body2.fontSize,
+        padding: theme.spacing(9.5, 4),
+        width: '400px',
+        backgroundColor: theme.palette.background.sidebar,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: spacing,
+        '& > * + *::before': {
+            content: "''",
+            width: '100%',
+            display: 'block',
+            opacity: 0.3,
+            borderTop: `1px solid currentColor`,
+            height: spacing,
+        },
+    };
+});
 
 const InnerDialog: FC<Omit<RegisterMetricDialogProps, 'open'>> = ({
     onClose,
@@ -151,7 +173,15 @@ const InnerDialog: FC<Omit<RegisterMetricDialogProps, 'open'>> = ({
                     )}
                 </Navigation>
             </MainSection>
-            {isLargeScreen ? <InfoSidebar /> : null}
+            {isLargeScreen ? (
+                <Sidebar>
+                    {isDefineStage ? (
+                        <MetricDefinitionSidebar />
+                    ) : (
+                        <SuccessSidebar />
+                    )}
+                </Sidebar>
+            ) : null}
         </StyledDialog>
     );
 };

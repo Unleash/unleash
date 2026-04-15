@@ -1,129 +1,177 @@
 import type { FC } from 'react';
-import {
-    Box,
-    Divider,
-    Link,
-    List,
-    ListItem,
-    Typography,
-    styled,
-} from '@mui/material';
+import { Typography, styled } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import TipsAndUpdatesOutlinedIcon from '@mui/icons-material/TipsAndUpdatesOutlined';
+import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Link } from 'react-router-dom';
+import HelpOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
-const SidebarContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.background.sidebar,
-    padding: theme.spacing(6),
-    minWidth: '300px',
-    maxWidth: '350px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(3),
-}));
-
-const SidebarText = styled(Typography)(({ theme }) => ({
-    color: theme.palette.primary.contrastText,
+const SidebarSection = styled('article')(({ theme }) => ({
+    '--vertical-spacing': theme.spacing(1.5),
     fontSize: theme.typography.body2.fontSize,
+    '& > * + *': {
+        marginTop: theme.spacing(1.5),
+    },
+    h4: {
+        fontWeight: 'bold',
+    },
 }));
 
-const SectionTitle = styled(Box)(({ theme }) => ({
+const Tips = styled('ul')(({ theme }) => ({
+    paddingInline: theme.spacing(2.5),
+    margin: 0,
+}));
+
+const LinkList = styled('ul')(({ theme }) => ({
+    listStyle: 'none',
+    padding: 0,
+    marginBlockEnd: 0,
+    'li + li': {
+        marginTop: 'var(--vertical-spacing)',
+    },
+}));
+
+const Header = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
-    color: theme.palette.primary.contrastText,
-    fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.body2.fontSize,
-    marginBottom: theme.spacing(1),
+    marginBlockEnd: theme.spacing(2),
 }));
 
-const IconStyle = {
-    fontSize: '1.2rem',
+const StyledLink = styled(Link)(({ theme }) => ({
+    textDecoration: 'underline',
+    color: 'inherit',
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    fontSize: 'body2.fontSize',
+    width: 'fit-content',
+    borderRadius: theme.shape.borderRadius,
+
+    svg: {
+        fontSize: '20px',
+    },
+
+    ':focus-visible': {
+        outline: `2px solid currentColor`,
+        outlineOffset: theme.spacing(0.5),
+    },
+}));
+
+const SidebarLink = ({ to, children }) => {
+    return (
+        <StyledLink target='_blank' rel='noopener noreferrer' to={to}>
+            {children} <OpenInNewIcon />
+        </StyledLink>
+    );
 };
 
-export const InfoSidebar: FC = () => {
+export const MetricDefinitionSidebar: FC = () => {
     return (
-        <SidebarContainer>
-            <Box>
-                <SectionTitle>
-                    <InfoOutlinedIcon sx={IconStyle} />
-                    What are impact metrics?
-                </SectionTitle>
-                <SidebarText>
+        <>
+            <SidebarSection>
+                <Header>
+                    <InfoOutlinedIcon />
+                    <Typography variant='body2' component='h4'>
+                        What are impact metrics?
+                    </Typography>
+                </Header>
+                <Typography variant='body2'>
                     Impact metrics are numerical measurements that track the
                     impact of your feature flags. They help you understand if a
                     feature is performing as expected and can be set up to
                     trigger automated safeguards when issues arise.
-                </SidebarText>
-            </Box>
+                </Typography>
+            </SidebarSection>
 
-            <Divider sx={{ borderColor: 'rgba(255,255,255,0.2)' }} />
+            <SidebarSection>
+                <Header>
+                    <LightbulbOutlinedIcon />
+                    <Typography variant='body2' component='h4'>
+                        Best practices
+                    </Typography>
+                </Header>
+                <Tips>
+                    <li>
+                        Use descriptive, specific names that indicate what
+                        you're measuring
+                    </li>
+                    <li>
+                        Choose the metric type that matches how the value
+                        changes over time
+                    </li>
+                    <li>
+                        Track both positive indicators (success) and negative
+                        indicators (errors)
+                    </li>
+                </Tips>
+            </SidebarSection>
 
-            <Box>
-                <SectionTitle>
-                    <TipsAndUpdatesOutlinedIcon sx={IconStyle} />
-                    Best practices
-                </SectionTitle>
-                <List dense disablePadding sx={{ pl: 2 }}>
-                    <ListItem
-                        disableGutters
-                        sx={{
-                            display: 'list-item',
-                            listStyleType: 'disc',
-                            p: 0,
-                        }}
-                    >
-                        <SidebarText>
-                            Use descriptive, specific names that indicate what
-                            you're measuring
-                        </SidebarText>
-                    </ListItem>
-                    <ListItem
-                        disableGutters
-                        sx={{
-                            display: 'list-item',
-                            listStyleType: 'disc',
-                            p: 0,
-                        }}
-                    >
-                        <SidebarText>
-                            Choose the metric type that matches how the value
-                            changes over time
-                        </SidebarText>
-                    </ListItem>
-                    <ListItem
-                        disableGutters
-                        sx={{
-                            display: 'list-item',
-                            listStyleType: 'disc',
-                            p: 0,
-                        }}
-                    >
-                        <SidebarText>
-                            Track both positive indicators (success) and
-                            negative indicators (errors)
-                        </SidebarText>
-                    </ListItem>
-                </List>
-            </Box>
+            <div>
+                <SidebarLink to='https://docs.getunleash.io/reference/impact-metrics'>
+                    View full documentation
+                </SidebarLink>
+            </div>
+        </>
+    );
+};
 
-            <Divider sx={{ borderColor: 'rgba(255,255,255,0.2)' }} />
+export const SuccessSidebar: FC = () => {
+    return (
+        <>
+            <SidebarSection>
+                <Header>
+                    <HelpOutlinedIcon />
+                    <Typography variant='body2' component='h4'>
+                        Additional resources
+                    </Typography>
+                </Header>
+                <Typography variant='body2'>
+                    Some info about this metric type or how to implement
+                </Typography>
+                <LinkList role='list'>
+                    <li>
+                        <SidebarLink to='https://docs.getunleash.io/reference/impact-metrics'>
+                            View full documentation
+                        </SidebarLink>
+                    </li>
+                    <li>
+                        <SidebarLink to='https://docs.getunleash.io/reference/impact-metrics'>
+                            Guide to choosing metric types
+                        </SidebarLink>
+                    </li>
+                </LinkList>
+            </SidebarSection>
 
-            <Link
-                href='https://docs.getunleash.io/reference/impact-metrics'
-                target='_blank'
-                rel='noopener noreferrer'
-                sx={{
-                    color: 'primary.contrastText',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 0.5,
-                    fontSize: 'body2.fontSize',
-                }}
-            >
-                View full documentation
-                <OpenInNewIcon sx={{ fontSize: '1rem' }} />
-            </Link>
-        </SidebarContainer>
+            <SidebarSection>
+                <Header>
+                    <LightbulbOutlinedIcon />
+                    <Typography variant='body2' component='h4'>
+                        Pro tips
+                    </Typography>
+                </Header>
+                <Tips>
+                    <li>Start with a few key metrics and expand over time.</li>
+                    <li>Set up alerts for critical metrics.</li>
+                    <li>
+                        Review metric trends regularly to identify patterns.
+                    </li>
+                    <li>Document your metrics for team alignment.</li>
+                </Tips>
+            </SidebarSection>
+
+            <SidebarSection>
+                <Header>
+                    <InfoOutlinedIcon />
+                    <Typography variant='body2' component='h4'>
+                        Need help?
+                    </Typography>
+                </Header>
+                <Typography variant='body2'>
+                    Join our community slack or contact support if you have
+                    questions about setting up or using impact metrics.
+                </Typography>
+            </SidebarSection>
+        </>
     );
 };

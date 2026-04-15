@@ -1,4 +1,4 @@
-import { type FC, type FormEvent, useId, useState } from 'react';
+import { type FormEvent, useId, useState } from 'react';
 import {
     FormControl,
     FormLabel,
@@ -8,11 +8,8 @@ import {
     Typography,
     styled,
 } from '@mui/material';
-import {
-    useRegisterMetricApi,
-    type MetricType,
-} from 'hooks/api/actions/useRegisterMetricApi/useRegisterMetricApi';
 import { useRegisterImpactMetricApi } from 'hooks/api/actions/useImpactMetricsApi/useRegisterImpactMetricApi';
+import type { RegisterImpactMetricSchemaType } from 'openapi';
 
 type DefineMetricFormProps = {
     formId: string;
@@ -96,13 +93,14 @@ const StyledRadioGroup = styled(RadioGroup)(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-export const DefineMetricForm: FC<DefineMetricFormProps> = ({
+export const DefineMetricForm = ({
     formId,
     onSubmitted,
-}) => {
+}: DefineMetricFormProps) => {
     const defaultMetricType = 'counter';
     const [metricName, setMetricName] = useState('');
-    const [metricType, setMetricType] = useState<MetricType>(defaultMetricType);
+    const [metricType, setMetricType] =
+        useState<RegisterImpactMetricSchemaType>(defaultMetricType);
     const { registerImpactMetric, loading } = useRegisterImpactMetricApi();
     const metricNameInputId = useId();
     const radioGroupLabelId = useId();
@@ -153,7 +151,9 @@ export const DefineMetricForm: FC<DefineMetricFormProps> = ({
                 </StyledLabel>
                 <StyledRadioGroup
                     onChange={(e) =>
-                        setMetricType(e.target.value as MetricType)
+                        setMetricType(
+                            e.target.value as RegisterImpactMetricSchemaType,
+                        )
                     }
                     id={radioGroupLabelId}
                     defaultValue={defaultMetricType}

@@ -19,8 +19,6 @@ RUN yarn workspaces focus -A --production
 
 FROM node:$NODE_VERSION
 
-RUN apk upgrade --no-cache
-
 ENV NODE_ENV=production
 
 ENV TZ=UTC
@@ -32,6 +30,8 @@ COPY --from=builder /unleash/build /unleash/
 COPY --from=builder /unleash/node_modules /unleash/node_modules
 
 RUN rm -rf /usr/local/lib/node_modules/npm/
+
+RUN apk upgrade --no-cache
 
 EXPOSE 4242
 

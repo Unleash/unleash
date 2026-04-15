@@ -1379,6 +1379,8 @@ export * from './registerFrontendClient404';
 export * from './registerFrontendMetrics400';
 export * from './registerFrontendMetrics401';
 export * from './registerFrontendMetrics404';
+export * from './registerImpactMetricSchema';
+export * from './registerImpactMetricSchemaType';
 export * from './rejectUserAccessRequest401';
 export * from './rejectUserAccessRequest403';
 export * from './rejectUserAccessRequest404';

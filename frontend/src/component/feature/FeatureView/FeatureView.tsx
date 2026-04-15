@@ -91,6 +91,7 @@ export const FeatureView = () => {
                     onSave={saveChart}
                     metrics={metricOptions}
                     loading={metadataLoading}
+                    projectId={projectId}
                 />
             )}
         </div>

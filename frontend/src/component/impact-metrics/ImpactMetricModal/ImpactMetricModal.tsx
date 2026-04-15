@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import {
     Button,
     TextField,
@@ -8,6 +8,11 @@ import {
     useMediaQuery,
     Dialog,
     Typography,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    Radio,
+    RadioGroup,
 } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { ImpactMetricsControls } from './ImpactMetricsControls/ImpactMetricsControls.tsx';
@@ -18,6 +23,13 @@ import { LabelsFilter } from './LabelFilter/LabelsFilter.tsx';
 import { ImpactMetricsChart } from '../ImpactMetricsChart.tsx';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import { useUiFlag } from 'hooks/useUiFlag';
+import {
+    MultimetricChartFormBody,
+    initialFormConfig,
+    isFormValid as isMultimetricFormValid,
+} from '../MultimetricChartForm/MultimetricChartFormBody.tsx';
+import type { MultimetricChartFormConfig } from '../MultimetricChartForm/types.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -99,7 +111,11 @@ export interface ImpactMetricModalProps {
     initialConfig?: ChartConfig;
     metrics: ImpactMetric[];
     loading?: boolean;
+    /** Required when the multi-metric form is enabled (env multi-select source). */
+    projectId?: string;
 }
+
+type VisualizationType = 'chart' | 'multimetric';
 
 export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     open,
@@ -108,6 +124,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     initialConfig,
     metrics,
     loading = false,
+    projectId,
 }) => {
     const { formData, actions, isValid, currentAvailableLabels } =
         useChartFormState({
@@ -118,9 +135,39 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     const screenBreakpoint = useMediaQuery(theme.breakpoints.down('lg'));
     const { trackEvent } = usePlausibleTracker();
 
-    const handleSave = () => {
-        if (!isValid) return;
+    const multimetricFormEnabled = useUiFlag('multimetricChartForm');
+    const [visualizationType, setVisualizationType] =
+        useState<VisualizationType>('chart');
+    const [multimetricConfig, setMultimetricConfig] =
+        useState<MultimetricChartFormConfig>(initialFormConfig);
 
+    // Reset multi-metric form whenever the modal (re)opens.
+    useEffect(() => {
+        if (open) {
+            setVisualizationType('chart');
+            setMultimetricConfig(initialFormConfig());
+        }
+    }, [open]);
+
+    const isMultimetric =
+        multimetricFormEnabled && visualizationType === 'multimetric';
+
+    const submitDisabled = isMultimetric
+        ? !isMultimetricFormValid(multimetricConfig)
+        : !isValid;
+
+    const handleSave = () => {
+        if (isMultimetric) {
+            if (!isMultimetricFormValid(multimetricConfig)) return;
+            // First iteration: no backend persistence yet — log so the form can
+            // be exercised end-to-end before the API contract is locked in.
+            // eslint-disable-next-line no-console
+            console.log('multimetric chart config', multimetricConfig);
+            onClose();
+            return;
+        }
+
+        if (!isValid) return;
         onSave(actions.getConfigToSave());
         trackEvent('impact-metrics', {
             props: {
@@ -154,16 +201,29 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
             <Box sx={{ mt: 3 }}>
                 <StyledPreviewLabel>Preview chart</StyledPreviewLabel>
                 <StyledPreviewContainer>
-                    <ImpactMetricsChart
-                        key={screenBreakpoint ? 'small' : 'large'}
-                        metricName={formData.metricName}
-                        timeRange={formData.timeRange}
-                        labelSelectors={formData.labelSelectors}
-                        yAxisMin={formData.yAxisMin}
-                        aggregationMode={formData.aggregationMode}
-                        source={formData.source}
-                        isPreview
-                    />
+                    {isMultimetric ? (
+                        <Typography
+                            variant='body2'
+                            sx={{
+                                color: 'text.secondary',
+                                py: 4,
+                                textAlign: 'center',
+                            }}
+                        >
+                            Multi-metric chart preview coming soon
+                        </Typography>
+                    ) : (
+                        <ImpactMetricsChart
+                            key={screenBreakpoint ? 'small' : 'large'}
+                            metricName={formData.metricName}
+                            timeRange={formData.timeRange}
+                            labelSelectors={formData.labelSelectors}
+                            yAxisMin={formData.yAxisMin}
+                            aggregationMode={formData.aggregationMode}
+                            source={formData.source}
+                            isPreview
+                        />
+                    )}
                 </StyledPreviewContainer>
             </Box>
         </>
@@ -191,39 +251,100 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                                 : 'Add impact metric'}
                         </StyledTitle>
 
-                        <TextField
-                            label='Chart Title (optional)'
-                            value={formData.title}
-                            onChange={(e) => actions.setTitle(e.target.value)}
-                            fullWidth
-                            variant='outlined'
-                            size='small'
-                        />
-
-                        <ImpactMetricsControls
-                            formData={formData}
-                            actions={actions}
-                            metrics={metrics}
-                            loading={loading}
-                            labelsFilter={
-                                currentAvailableLabels ? (
-                                    <LabelsFilter
-                                        labelSelectors={formData.labelSelectors}
-                                        onChange={actions.setLabelSelectors}
-                                        availableLabels={currentAvailableLabels}
+                        {multimetricFormEnabled && !initialConfig && (
+                            <FormControl>
+                                <FormLabel id='visualization-type-label'>
+                                    Visualization
+                                </FormLabel>
+                                <RadioGroup
+                                    row
+                                    aria-labelledby='visualization-type-label'
+                                    value={visualizationType}
+                                    onChange={(event) =>
+                                        setVisualizationType(
+                                            event.target
+                                                .value as VisualizationType,
+                                        )
+                                    }
+                                >
+                                    <FormControlLabel
+                                        value='chart'
+                                        control={<Radio />}
+                                        label='Chart'
                                     />
-                                ) : null
-                            }
-                        />
+                                    <FormControlLabel
+                                        value='multimetric'
+                                        control={<Radio />}
+                                        label='Multi-metric'
+                                    />
+                                </RadioGroup>
+                            </FormControl>
+                        )}
+
+                        {isMultimetric ? (
+                            projectId ? (
+                                <MultimetricChartFormBody
+                                    projectId={projectId}
+                                    config={multimetricConfig}
+                                    onChange={setMultimetricConfig}
+                                    metrics={metrics}
+                                    loading={loading}
+                                />
+                            ) : (
+                                <Typography color='error' variant='body2'>
+                                    Multi-metric chart requires a project
+                                    context.
+                                </Typography>
+                            )
+                        ) : (
+                            <>
+                                <TextField
+                                    label='Chart Title (optional)'
+                                    value={formData.title}
+                                    onChange={(e) =>
+                                        actions.setTitle(e.target.value)
+                                    }
+                                    fullWidth
+                                    variant='outlined'
+                                    size='small'
+                                />
+
+                                <ImpactMetricsControls
+                                    formData={formData}
+                                    actions={actions}
+                                    metrics={metrics}
+                                    loading={loading}
+                                    labelsFilter={
+                                        currentAvailableLabels ? (
+                                            <LabelsFilter
+                                                labelSelectors={
+                                                    formData.labelSelectors
+                                                }
+                                                onChange={
+                                                    actions.setLabelSelectors
+                                                }
+                                                availableLabels={
+                                                    currentAvailableLabels
+                                                }
+                                            />
+                                        ) : null
+                                    }
+                                />
+                            </>
+                        )}
                     </StyledFormContent>
                     <StyledButtonContainer>
                         <Button onClick={onClose}>Cancel</Button>
                         <Button
                             variant='contained'
                             type='submit'
-                            disabled={!isValid}
+                            disabled={submitDisabled}
                         >
-                            {initialConfig ? 'Update' : 'Add impact metric'}
+                            {initialConfig
+                                ? 'Update'
+                                : isMultimetric
+                                  ? 'Add multi-metric chart'
+                                  : 'Add impact metric'}
                         </Button>
                     </StyledButtonContainer>
                 </StyledForm>

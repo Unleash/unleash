@@ -180,6 +180,7 @@ export const FeatureImpactMetrics: FC = () => {
                 initialConfig={editingChart}
                 metrics={metricOptions}
                 loading={metadataLoading}
+                projectId={projectId}
             />
         </PageContent>
     );

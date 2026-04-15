@@ -75,7 +75,6 @@ export type IFlagKey =
     | 'featureEnvSafeguards'
     | 'filterFavorites'
     | 'userTokenWithClientApiLoggingKillSwitch'
-    | 'externalPrometheusImpactMetrics'
     | 'onlyFeatureTokensWithFeatureAPIs'
     | 'pendingUserAccessRequests'
     | 'onboardingFlagSetup';
@@ -339,10 +338,6 @@ const flags: IFlags = {
     userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(
         process.env
             .UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING_KILL_SWITCH,
-        false,
-    ),
-    externalPrometheusImpactMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EXTERNAL_PROMETHEUS_IMPACT_METRICS,
         false,
     ),
     onlyFeatureTokensWithFeatureAPIs: parseEnvVarBoolean(

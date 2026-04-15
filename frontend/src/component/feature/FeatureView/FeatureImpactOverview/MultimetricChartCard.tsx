@@ -190,7 +190,7 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
                     <StyledTotalsLabel>Totals</StyledTotalsLabel>
                 </StyledTotalsHeader>
                 <StyledTotalsPane>
-                    <MultimetricTotals steps={stepTotals} compact />
+                    <MultimetricTotals steps={stepTotals} />
                 </StyledTotalsPane>
             </StyledTotalsColumn>
         </StyledRoot>

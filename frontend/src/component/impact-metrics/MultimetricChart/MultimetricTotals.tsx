@@ -11,20 +11,20 @@ export type MultimetricStep = {
 
 type MultimetricTotalsProps = {
     steps: MultimetricStep[];
-    compact?: boolean;
 };
-
-// Stacked bar + legend layout
 
 const StyledContainer = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
+    gap: 12,
+    padding: '4px 0',
 });
 
 const StyledStackedBar = styled(Box)(({ theme }) => ({
     display: 'flex',
     width: '100%',
+    height: 12,
     borderRadius: theme.shape.borderRadius,
     overflow: 'hidden',
 }));
@@ -35,10 +35,11 @@ const StyledSegment = styled(Box)({
     flexGrow: 0,
 });
 
-const StyledLegend = styled(Box)({
+const StyledLegend = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-});
+    gap: theme.spacing(0.5),
+}));
 
 const StyledLegendItem = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -47,38 +48,42 @@ const StyledLegendItem = styled(Box)(({ theme }) => ({
 }));
 
 const StyledColorDot = styled(Box)({
+    width: 8,
+    height: 8,
     borderRadius: '50%',
     flexShrink: 0,
 });
 
-const StyledStepName = styled(Typography)({
+const StyledStepName = styled(Typography)(({ theme }) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     flex: 1,
     minWidth: 0,
-});
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
+}));
 
 const StyledConversion = styled(Box)({
     display: 'inline-flex',
     alignItems: 'center',
     gap: 2,
+    width: 48,
     whiteSpace: 'nowrap',
     justifyContent: 'flex-end',
     flexShrink: 0,
 });
 
-const StyledStepValue = styled(Typography)({
+const StyledStepValue = styled(Typography)(({ theme }) => ({
     fontWeight: 700,
+    width: 48,
     whiteSpace: 'nowrap',
     textAlign: 'right',
     flexShrink: 0,
-});
+    fontSize: theme.typography.body2.fontSize,
+}));
 
-export const MultimetricTotals: FC<MultimetricTotalsProps> = ({
-    steps,
-    compact,
-}) => {
+export const MultimetricTotals: FC<MultimetricTotalsProps> = ({ steps }) => {
     const theme = useTheme();
     const seriesColors = theme.palette.charts.series;
     const getStepColor = (index: number): string =>
@@ -88,32 +93,22 @@ export const MultimetricTotals: FC<MultimetricTotalsProps> = ({
         return null;
     }
 
-    const totalValue = steps.reduce((sum, s) => sum + s.value, 0) || 1;
+    const totalValue = steps.reduce((sum, step) => sum + step.value, 0) || 1;
 
     const segmentWidths = steps.map((step) =>
         Math.max((step.value / totalValue) * 100, 1),
     );
-    const segmentSum = segmentWidths.reduce((a, b) => a + b, 0);
-    const normalizedWidths = segmentWidths.map((w) => (w / segmentSum) * 100);
-
-    // Sizing based on compact vs full
-    const barHeight = compact ? 12 : 24;
-    const containerGap = compact ? 1.5 : 2.5;
-    const containerPadding = compact ? '4px 0' : '16px 0';
-    const legendGap = compact ? 0.5 : 1;
-    const dotSize = compact ? 8 : 10;
-    const nameFontSize = compact ? 'body2.fontSize' : 'body1.fontSize';
-    const nameColor = compact ? 'text.secondary' : 'text.primary';
-    const conversionWidth = compact ? 48 : 56;
-    const valueWidth = compact ? 48 : 64;
-    const valueFontSize = compact ? 'body2.fontSize' : 'body1.fontSize';
+    const segmentSum = segmentWidths.reduce((acc, width) => acc + width, 0);
+    const normalizedWidths = segmentWidths.map(
+        (width) => (width / segmentSum) * 100,
+    );
 
     return (
-        <StyledContainer sx={{ gap: containerGap, padding: containerPadding }}>
-            <StyledStackedBar sx={{ height: barHeight }}>
+        <StyledContainer>
+            <StyledStackedBar>
                 {steps.map((step, index) => (
                     <StyledSegment
-                        key={`bar-${step.label}-${index}`}
+                        key={step.label}
                         style={{
                             width: `${normalizedWidths[index]}%`,
                             backgroundColor: getStepColor(index),
@@ -121,25 +116,14 @@ export const MultimetricTotals: FC<MultimetricTotalsProps> = ({
                     />
                 ))}
             </StyledStackedBar>
-            <StyledLegend sx={{ gap: legendGap }}>
+            <StyledLegend>
                 {steps.map((step, index) => (
-                    <StyledLegendItem key={`label-${step.label}-${index}`}>
+                    <StyledLegendItem key={step.label}>
                         <StyledColorDot
-                            sx={{
-                                width: dotSize,
-                                height: dotSize,
-                                backgroundColor: getStepColor(index),
-                            }}
+                            sx={{ backgroundColor: getStepColor(index) }}
                         />
-                        <StyledStepName
-                            sx={{
-                                fontSize: nameFontSize,
-                                color: nameColor,
-                            }}
-                        >
-                            {step.label}
-                        </StyledStepName>
-                        <StyledConversion sx={{ width: conversionWidth }}>
+                        <StyledStepName>{step.label}</StyledStepName>
+                        <StyledConversion>
                             {index > 0 &&
                                 step.previousStepPercentage !== null && (
                                     <ConversionIndicator
@@ -147,12 +131,7 @@ export const MultimetricTotals: FC<MultimetricTotalsProps> = ({
                                     />
                                 )}
                         </StyledConversion>
-                        <StyledStepValue
-                            sx={{
-                                fontSize: valueFontSize,
-                                width: valueWidth,
-                            }}
-                        >
+                        <StyledStepValue>
                             {formatLargeNumbers(Math.round(step.value))}
                         </StyledStepValue>
                     </StyledLegendItem>

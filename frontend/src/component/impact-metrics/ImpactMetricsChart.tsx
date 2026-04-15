@@ -164,12 +164,13 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                                 },
                                 tooltipFormat: 'PPpp',
                             },
+                            ...overrideScales.x,
                             ticks: {
                                 maxRotation: 45,
                                 minRotation: 45,
                                 maxTicksLimit: 8,
+                                ...overrideScales.x?.ticks,
                             },
-                            ...overrideScales.x,
                         }
                       : {
                             display: false,
@@ -184,14 +185,15 @@ export const ImpactMetricsChart: FC<ImpactMetricsChartProps> = ({
                                         ? 'Rate per second'
                                         : '',
                             },
+                            ...overrideScales.y,
                             ticks: {
                                 precision: 0,
                                 callback: (value: unknown): string | number =>
                                     typeof value === 'number'
                                         ? `${formatLargeNumbers(value)}${aggregationMode === 'rps' ? '/s' : ''}`
                                         : (value as number),
+                                ...overrideScales.y?.ticks,
                             },
-                            ...overrideScales.y,
                         }
                       : {
                             display: false,

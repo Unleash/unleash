@@ -34,6 +34,10 @@ const StyledMainContent = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+    // Flex items default to `min-width: auto`, which lets wide children (e.g. a
+    // chart canvas) push the column past its container. `minWidth: 0` lets it
+    // shrink to its parent's width and ellipsize/scroll internally instead.
+    minWidth: 0,
     gap: theme.spacing(2),
 }));
 

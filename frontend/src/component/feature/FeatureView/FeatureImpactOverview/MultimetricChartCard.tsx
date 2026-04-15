@@ -11,8 +11,6 @@ import type {
     MultimetricFeatureEvent,
 } from 'component/impact-metrics/MultimetricChart/types';
 
-export type { MultimetricStep, MultimetricStepSeries, MultimetricFeatureEvent };
-
 export interface MultimetricChartCardProps {
     title: string;
     timeRange: 'hour' | 'day' | 'week' | 'month';
@@ -33,14 +31,8 @@ const cardBaseStyles = (theme: {
     borderRadius: theme.shape.borderRadiusMedium,
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.paper,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    minWidth: 0,
-    maxWidth: '100%',
-    width: '100%',
     textDecoration: 'none',
     color: 'inherit',
-    gridColumn: '1 / -1',
 });
 
 const StyledCardLink = styled(Link)(({ theme }) => ({
@@ -55,24 +47,21 @@ const StyledCardDiv = styled('div')(({ theme }) => ({
 const StyledRoot = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'stretch',
-    flex: 1,
-    minWidth: 0,
+
     [theme.breakpoints.down('lg')]: {
         flexDirection: 'column',
     },
 }));
 
-const StyledChartColumn = styled('div')(({ theme }) => ({
+const StyledChartColumn = styled('div')({
     flex: 2,
     minWidth: 0,
     display: 'flex',
     flexDirection: 'column',
-}));
+});
 
 const StyledTotalsColumn = styled('div')(({ theme }) => ({
     flex: 1,
-    minWidth: 0,
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: theme.palette.background.elevation1,

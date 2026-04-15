@@ -134,18 +134,22 @@ const buildTimeSeriesChartData = (
 ) => {
     const allTimestamps = new Set<number>();
     stepSeries.forEach((step) => {
-        step.data.forEach(([ts]) => {
-            allTimestamps.add(ts);
+        step.data.forEach(([timestamp]) => {
+            allTimestamps.add(timestamp);
         });
     });
     const sortedTimestamps = Array.from(allTimestamps).sort(
         (earlier, later) => earlier - later,
     );
-    const labels = sortedTimestamps.map((ts) => new Date(ts * 1000));
+    const labels = sortedTimestamps.map(
+        (timestamp) => new Date(timestamp * 1000),
+    );
 
     const datasets = stepSeries.map((step, index) => {
-        const dataMap = new Map(step.data);
-        const values = sortedTimestamps.map((ts) => dataMap.get(ts) ?? null);
+        const valueByTimestamp = new Map(step.data);
+        const values = sortedTimestamps.map(
+            (timestamp) => valueByTimestamp.get(timestamp) ?? null,
+        );
         const color = colors[index % colors.length];
         return {
             label: step.label,
@@ -160,13 +164,66 @@ const buildTimeSeriesChartData = (
             pointHoverBackgroundColor: color,
             pointHoverBorderColor: '#fff',
             pointHoverBorderWidth: 2,
-            tension: 0.3,
+            tension: 0.2,
             spanGaps: true,
         };
     });
 
     return { labels, datasets };
 };
+
+// Builds the Chart.js options for the line chart. Pure config — no React, no
+// state — so it lives next to the other builders and the component body stays
+// focused on orchestration.
+const buildChartOptions = (
+    window: VisibleWindow | null,
+    timeRange: 'hour' | 'day' | 'week' | 'month',
+    eventAnnotations: Record<string, object>,
+): ChartOptions<'line'> => ({
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    layout: { padding: { top: 28, right: 4, left: 4 } },
+    scales: {
+        x: {
+            type: 'time' as const,
+            min: window?.minMs,
+            max: window?.maxMs,
+            time: {
+                unit: getTimeUnit(timeRange),
+                displayFormats: {
+                    [getTimeUnit(timeRange)]: getDisplayFormat(timeRange),
+                },
+                tooltipFormat: 'PPpp',
+            },
+            ticks: {
+                maxRotation: 0,
+                maxTicksLimit: 6,
+                font: { size: 10 },
+            },
+            grid: { display: false },
+        },
+        y: {
+            beginAtZero: true,
+            ticks: {
+                precision: 0,
+                maxTicksLimit: 4,
+                font: { size: 10 },
+                callback: (value: unknown): string | number =>
+                    typeof value === 'number'
+                        ? formatLargeNumbers(value)
+                        : (value as number),
+            },
+        },
+    },
+    plugins: {
+        legend: { display: false },
+        annotation: { annotations: eventAnnotations },
+    } as ChartOptions<'line'>['plugins'],
+    animations: {
+        x: { duration: 0 },
+        y: { duration: 0 },
+    },
+});
 
 type PlotArea = { leftPx: number; widthPx: number };
 
@@ -607,56 +664,20 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
         : [];
 
     const eventAnnotations = buildEventAnnotations(eventGroups, theme);
-
-    const chartOptions: ChartOptions<'line'> = {
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        layout: { padding: { top: 28, right: 4, left: 4 } },
-        scales: {
-            x: {
-                type: 'time' as const,
-                min: window?.minMs,
-                max: window?.maxMs,
-                time: {
-                    unit: getTimeUnit(timeRange),
-                    displayFormats: {
-                        [getTimeUnit(timeRange)]: getDisplayFormat(timeRange),
-                    },
-                    tooltipFormat: 'PPpp',
-                },
-                ticks: {
-                    maxRotation: 0,
-                    maxTicksLimit: 6,
-                    font: { size: 10 },
-                },
-                grid: { display: false },
-            },
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    precision: 0,
-                    maxTicksLimit: 4,
-                    font: { size: 10 },
-                    callback: (value: unknown): string | number =>
-                        typeof value === 'number'
-                            ? formatLargeNumbers(value)
-                            : (value as number),
-                },
-            },
-        },
-        plugins: {
-            legend: { display: false },
-            annotation: { annotations: eventAnnotations },
-        } as ChartOptions<'line'>['plugins'],
-        animations: {
-            x: { duration: 0 },
-            y: { duration: 0 },
-        },
-    };
+    const chartOptions = buildChartOptions(window, timeRange, eventAnnotations);
 
     const showOverlay =
         !hasNoData && !loading && window !== null && plotArea !== null;
     const showLegend = !hasNoData && !loading && stepSeries.length > 0;
+
+    // `LineChart`'s `cover` overlays a node on top of the canvas (the empty
+    // state) or shows a loading shimmer when given `true`. Otherwise pass
+    // `false` so the canvas renders unobstructed.
+    const cover = hasNoData ? (
+        <NotEnoughData description='Send impact metrics using Unleash SDK for these series to view the chart.' />
+    ) : (
+        Boolean(loading)
+    );
 
     return (
         <StyledWrapper ref={wrapperRef}>

@@ -16,13 +16,9 @@ export const useTrackRegisterImpactMetrics = () => {
         help,
     );
 
-    const trackFormOpened = () => formOpened();
-    const trackMetricCreated = () => metricCreated();
-    const trackDocsClickedAfterCreation = () => docsClickedAfterCreation();
-
     return {
-        trackFormOpened,
-        trackMetricCreated,
-        trackDocsClickedAfterCreation,
+        trackFormOpened: formOpened,
+        trackMetricCreated: metricCreated,
+        trackDocsClickedAfterCreation: docsClickedAfterCreation,
     };
 };

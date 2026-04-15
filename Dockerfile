@@ -19,7 +19,7 @@ RUN yarn workspaces focus -A --production
 
 FROM node:$NODE_VERSION
 
-RUN apk add --no-cache 'zlib>=1.3.2-r0'
+RUN apk upgrade --no-cache
 
 ENV NODE_ENV=production
 

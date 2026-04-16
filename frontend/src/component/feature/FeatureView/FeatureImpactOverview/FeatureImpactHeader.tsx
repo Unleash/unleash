@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { useMemo, type FC } from 'react';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { Button, Collapse, styled, Typography } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
@@ -8,8 +8,11 @@ import Add from '@mui/icons-material/Add';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics';
 import { PlaceholderChart } from './ImpactDashboard/PlaceholderChart';
 import { CompactChartCard } from './CompactChartCard';
+import { CollapsedMetricGroupCard } from './CollapsedMetricGroupCard';
+import { groupImpactMetricConfigs } from './groupImpactMetricConfigs';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -124,6 +127,17 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
         projectId,
         featureName,
     });
+
+    const collapseSimilarMetrics = useUiFlag('multiMetricChart');
+
+    const buckets = useMemo(
+        () =>
+            groupImpactMetricConfigs(
+                impactMetrics.configs,
+                collapseSimilarMetrics,
+            ),
+        [impactMetrics.configs, collapseSimilarMetrics],
+    );
 
     const expanded = impactMetricsAccordionState === 'open';
     const chartCount = impactMetrics.configs.length;
@@ -240,14 +254,26 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
             <Collapse in={expanded}>
                 <StyledExpandedContent>
                     <StyledChartRow>
-                        {impactMetrics.configs.map((config) => (
-                            <CompactChartCard
-                                key={config.id}
-                                config={config}
-                                projectId={projectId}
-                                featureName={featureName}
-                            />
-                        ))}
+                        {buckets.map((bucket) =>
+                            bucket.length >= 2 ? (
+                                <CollapsedMetricGroupCard
+                                    key={bucket
+                                        .map((c) => c.id)
+                                        .sort()
+                                        .join('-')}
+                                    configs={bucket}
+                                    projectId={projectId}
+                                    featureName={featureName}
+                                />
+                            ) : (
+                                <CompactChartCard
+                                    key={bucket[0].id}
+                                    config={bucket[0]}
+                                    projectId={projectId}
+                                    featureName={featureName}
+                                />
+                            ),
+                        )}
                     </StyledChartRow>
                 </StyledExpandedContent>
                 <StyledFooter>

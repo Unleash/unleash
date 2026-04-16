@@ -2,10 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { groupImpactConfigs } from './groupImpactConfigs';
 import type { ImpactMetricsConfigSchema } from 'openapi';
 
+let ulidCounter = 0;
+const fakeUlid = () => {
+    ulidCounter++;
+    return `01ARZ3NDEKTSV4RRFFQ69G5F${String(ulidCounter).padStart(2, '0')}`;
+};
+
 const makeConfig = (
     overrides: Partial<ImpactMetricsConfigSchema> = {},
 ): ImpactMetricsConfigSchema => ({
-    id: crypto.randomUUID(),
+    id: fakeUlid(),
     metricName: 'unleash_counter_test',
     displayName: 'Test metric',
     timeRange: 'day',

@@ -19,6 +19,7 @@ import { StrategyDragTooltip } from './StrategyDragTooltip.tsx';
 import { CleanupReminder } from '../CleanupReminder/CleanupReminder.tsx';
 import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature.ts';
 import { FeatureConnectSdkBanner } from './FeatureConnectSdkBanner.tsx';
+import { FeatureImplementFlagBanner } from './FeatureImplementFlagBanner.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -97,10 +98,16 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                 </div>
                 <StyledMainContent>
                     {!loading && onboardingFlagSetup && (
-                        <FeatureConnectSdkBanner
-                            projectId={projectId}
-                            featureId={featureId}
-                        />
+                        <>
+                            <FeatureConnectSdkBanner
+                                projectId={projectId}
+                                featureId={featureId}
+                            />
+                            <FeatureImplementFlagBanner
+                                projectId={projectId}
+                                featureId={featureId}
+                            />
+                        </>
                     )}
                     {!loading && header}
                     <FeatureOverviewEnvironments

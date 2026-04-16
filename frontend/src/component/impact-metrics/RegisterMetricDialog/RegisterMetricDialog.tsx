@@ -17,7 +17,9 @@ type RegisterMetricDialogProps = {
     onClose: () => void;
 };
 
-type DialogStage = 'define' | 'success';
+type DialogState =
+    | { stage: 'define' }
+    | { stage: 'success'; metricName: string };
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -90,11 +92,10 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
-    const [stage, setStage] = useState<DialogStage>('define');
-    const [createdMetricName, setCreatedMetricName] = useState('');
+    const [dialogState, setDialogState] = useState<DialogState>({
+        stage: 'define',
+    });
     const formId = useId();
-
-    const isDefineStage = stage === 'define';
 
     return (
         <StyledDialog open={true} onClose={onClose}>
@@ -118,7 +119,7 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
                         </Typography>
                     </div>
 
-                    {isDefineStage ? (
+                    {dialogState.stage === 'define' ? (
                         <>
                             <div>
                                 <Typography variant='h3' component='h4'>
@@ -135,19 +136,21 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
                             </div>
                             <DefineMetricForm
                                 formId={formId}
-                                onSubmitted={(name) => {
-                                    setCreatedMetricName(name);
-                                    setStage('success');
+                                onSubmitted={(metricName) => {
+                                    setDialogState({
+                                        stage: 'success',
+                                        metricName,
+                                    });
                                 }}
                             />
                         </>
                     ) : (
-                        <SuccessView metricName={createdMetricName} />
+                        <SuccessView metricName={dialogState.metricName} />
                     )}
                 </Content>
 
                 <Navigation>
-                    {isDefineStage ? (
+                    {dialogState.stage === 'define' ? (
                         <>
                             <Button
                                 variant='text'

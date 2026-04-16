@@ -55,8 +55,13 @@ export const MetricSeriesFetcher: FC<MetricSeriesFetcherProps> = ({
 
     useEffect(() => {
         const firstSeriesData = data.series?.[0]?.data ?? [];
+        // Guard NaN: without this, NaN !== NaN makes every equality check
+        // fire onSeriesLoaded every render and triggers a render loop.
         const numericData: [number, number][] = firstSeriesData.map(
-            ([ts, value]) => [ts, Number(value)],
+            ([ts, value]) => {
+                const n = Number(value);
+                return [ts, Number.isFinite(n) ? n : 0];
+            },
         );
 
         const total = (() => {

@@ -32,23 +32,21 @@ export const CollapsedMetricGroupCard: FC<CollapsedMetricGroupCardProps> = ({
     const { stepSeries, stepTotals, loading, start, end } = useMemo(() => {
         const orderedPayloads = configs.map((c) => state[c.id]);
 
+        const labelFor = (
+            c: ImpactMetricsConfigSchema,
+            payload: SeriesPayload | undefined,
+        ): string =>
+            payload?.label || c.title || c.displayName || c.metricName;
+
         const stepSeries: MultimetricStepSeries[] = configs.map(
             (c, index) => ({
-                label:
-                    orderedPayloads[index]?.label ??
-                    c.title ??
-                    c.displayName ??
-                    c.metricName,
+                label: labelFor(c, orderedPayloads[index]),
                 data: orderedPayloads[index]?.data ?? [],
             }),
         );
 
         const stepTotals: MultimetricStep[] = configs.map((c, index) => ({
-            label:
-                orderedPayloads[index]?.label ??
-                c.title ??
-                c.displayName ??
-                c.metricName,
+            label: labelFor(c, orderedPayloads[index]),
             value: orderedPayloads[index]?.total ?? 0,
             previousStepPercentage: null,
         }));

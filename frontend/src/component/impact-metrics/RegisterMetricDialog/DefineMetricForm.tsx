@@ -29,6 +29,9 @@ const StyledForm = styled('form')(({ theme }) => ({
 
 const StyledLabel = styled(FormLabel)(({ theme }) => ({
     color: theme.palette.text.primary,
+    '&.Mui-focused': {
+        color: 'currentColor',
+    },
     marginBottom: theme.spacing(1),
 }));
 
@@ -36,7 +39,6 @@ const RadioCardContainer = styled(Card)(({ theme }) => ({
     display: 'flex',
     alignItems: 'flex-start',
     gap: '11px',
-    background: theme.palette.background.default,
 }));
 
 const RadioCard = ({ value, description, examples }) => {

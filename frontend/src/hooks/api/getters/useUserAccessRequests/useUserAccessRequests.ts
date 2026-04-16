@@ -5,7 +5,8 @@ import type {
     UserAccessRequestSchema,
     UserAccessRequestsSchema,
 } from 'openapi';
-import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR.js';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
 
 interface IUseUserAccessRequestsOutput {
     accessRequests: UserAccessRequestSchema[];
@@ -15,7 +16,9 @@ interface IUseUserAccessRequestsOutput {
 }
 
 export const useUserAccessRequests = (): IUseUserAccessRequestsOutput => {
-    const { data, error, mutate } = useEnterpriseSWR<UserAccessRequestsSchema>(
+    const { isOss } = useUiConfig();
+    const { data, error, mutate } = useConditionalSWR<UserAccessRequestsSchema>(
+        !isOss(),
         { userAccessRequests: [] },
         formatApiPath('api/admin/user-access-requests'),
         fetcher,

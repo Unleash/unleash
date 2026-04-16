@@ -8,8 +8,11 @@ import Add from '@mui/icons-material/Add';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics';
 import { PlaceholderChart } from './ImpactDashboard/PlaceholderChart';
 import { CompactChartCard } from './CompactChartCard';
+import { GroupedChartCard } from './GroupedChartCard';
+import { groupImpactConfigs } from './groupImpactConfigs';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -119,6 +122,8 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     const { trackEvent } = usePlausibleTracker();
     const { trackAccordionOpened, trackAddMetricClicked } =
         useTrackFlagpageImpactMetrics();
+
+    const multiMetricEnabled = useUiFlag('multiMetricChart');
 
     const { impactMetrics } = useFeatureImpactMetrics({
         projectId,
@@ -240,14 +245,33 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
             <Collapse in={expanded}>
                 <StyledExpandedContent>
                     <StyledChartRow>
-                        {impactMetrics.configs.map((config) => (
-                            <CompactChartCard
-                                key={config.id}
-                                config={config}
-                                projectId={projectId}
-                                featureName={featureName}
-                            />
-                        ))}
+                        {multiMetricEnabled
+                            ? groupImpactConfigs(impactMetrics.configs).map(
+                                  (group) =>
+                                      group.configs.length >= 2 ? (
+                                          <GroupedChartCard
+                                              key={group.key}
+                                              group={group}
+                                              projectId={projectId}
+                                              featureName={featureName}
+                                          />
+                                      ) : (
+                                          <CompactChartCard
+                                              key={group.configs[0].id}
+                                              config={group.configs[0]}
+                                              projectId={projectId}
+                                              featureName={featureName}
+                                          />
+                                      ),
+                              )
+                            : impactMetrics.configs.map((config) => (
+                                  <CompactChartCard
+                                      key={config.id}
+                                      config={config}
+                                      projectId={projectId}
+                                      featureName={featureName}
+                                  />
+                              ))}
                     </StyledChartRow>
                 </StyledExpandedContent>
                 <StyledFooter>

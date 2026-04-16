@@ -15,6 +15,7 @@ import type {
 export interface MultimetricChartCardProps {
     title: string;
     timeRange: ChartTimeRange;
+    aggregationMode?: string;
     stepCount: number;
     stepSeries: MultimetricStepSeries[];
     stepTotals: MultimetricStep[];
@@ -38,6 +39,7 @@ const cardBaseStyles = (theme: {
 
 const StyledCardLink = styled(Link)(({ theme }) => ({
     ...cardBaseStyles(theme),
+    display: 'block',
     cursor: 'pointer',
 }));
 
@@ -152,9 +154,12 @@ const timeRangeLabels: Record<ChartTimeRange, string> = {
     month: 'Last 30 days',
 };
 
+const SUM_MODES = new Set(['count', 'sum']);
+
 export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
     title,
     timeRange,
+    aggregationMode,
     stepCount,
     stepSeries,
     stepTotals,
@@ -165,6 +170,10 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
     href,
 }) => {
     const timeLabel = timeRangeLabels[timeRange];
+    const totalsLabel =
+        aggregationMode && !SUM_MODES.has(aggregationMode)
+            ? 'Last recorded value'
+            : 'Totals';
 
     const content: ReactNode = (
         <StyledRoot>
@@ -188,7 +197,7 @@ export const MultimetricChartCard: FC<MultimetricChartCardProps> = ({
             </StyledChartColumn>
             <StyledTotalsColumn>
                 <StyledTotalsHeader>
-                    <StyledTotalsLabel>Totals</StyledTotalsLabel>
+                    <StyledTotalsLabel>{totalsLabel}</StyledTotalsLabel>
                 </StyledTotalsHeader>
                 <StyledTotalsPane>
                     <MultimetricTotals steps={stepTotals} />

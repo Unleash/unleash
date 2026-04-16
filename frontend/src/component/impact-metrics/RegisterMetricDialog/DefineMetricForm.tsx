@@ -11,6 +11,8 @@ import {
 import { Card } from './RegisterMetricDialog.styles';
 import { useRegisterImpactMetricApi } from 'hooks/api/actions/useImpactMetricsApi/useRegisterImpactMetricApi';
 import type { RegisterImpactMetricSchemaType } from 'openapi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 type DefineMetricFormProps = {
     formId: string;
@@ -38,7 +40,11 @@ const StyledLabel = styled(FormLabel)(({ theme }) => ({
 const RadioCardContainer = styled(Card)(({ theme }) => ({
     display: 'flex',
     alignItems: 'flex-start',
-    gap: '11px',
+    background: theme.palette.background.default,
+    paddingInlineStart: theme.spacing(0.5),
+    '.MuiRadio-root': {
+        marginBlockStart: `calc(-1 * ${theme.spacing(1.5)})`,
+    },
 }));
 
 const RadioCard = ({ value, description, examples }) => {
@@ -49,7 +55,6 @@ const RadioCard = ({ value, description, examples }) => {
     return (
         <RadioCardContainer>
             <Radio
-                sx={{ padding: 0 }}
                 id={radioId}
                 value={value}
                 aria-describedby={`${descriptionId} ${exampleId}`}
@@ -93,17 +98,22 @@ export const DefineMetricForm = ({
     const { registerImpactMetric, loading } = useRegisterImpactMetricApi();
     const metricNameInputId = useId();
     const radioGroupLabelId = useId();
+    const { setToastApiError } = useToast();
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (loading) {
             return;
         }
-        await registerImpactMetric({
-            name: metricName.trim(),
-            type: metricType,
-        });
-        onSubmitted(metricName.trim());
+        try {
+            await registerImpactMetric({
+                name: metricName.trim(),
+                type: metricType,
+            });
+            onSubmitted(metricName.trim());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
     return (

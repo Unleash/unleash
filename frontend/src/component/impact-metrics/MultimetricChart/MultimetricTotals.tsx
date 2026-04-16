@@ -132,7 +132,7 @@ export const MultimetricTotals: FC<MultimetricTotalsProps> = ({ steps }) => {
                                 )}
                         </StyledConversion>
                         <StyledStepValue>
-                            {formatLargeNumbers(Math.round(step.value))}
+                            {formatLargeNumbers(step.value)}
                         </StyledStepValue>
                     </StyledLegendItem>
                 ))}

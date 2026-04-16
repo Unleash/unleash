@@ -10,6 +10,8 @@ import {
 } from '@mui/material';
 import { useRegisterImpactMetricApi } from 'hooks/api/actions/useImpactMetricsApi/useRegisterImpactMetricApi';
 import type { RegisterImpactMetricSchemaType } from 'openapi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 type DefineMetricFormProps = {
     formId: string;
@@ -104,17 +106,22 @@ export const DefineMetricForm = ({
     const { registerImpactMetric, loading } = useRegisterImpactMetricApi();
     const metricNameInputId = useId();
     const radioGroupLabelId = useId();
+    const { setToastApiError } = useToast();
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (loading) {
             return;
         }
-        await registerImpactMetric({
-            name: metricName.trim(),
-            type: metricType,
-        });
-        onSubmitted(metricName.trim());
+        try {
+            await registerImpactMetric({
+                name: metricName.trim(),
+                type: metricType,
+            });
+            onSubmitted(metricName.trim());
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
     return (

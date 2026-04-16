@@ -12,6 +12,7 @@ import { CollapsedMetricGroupCard } from './CollapsedMetricGroupCard';
 import { groupImpactMetricConfigs } from './groupImpactMetricConfigs';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -133,9 +134,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
         featureName,
     });
 
-    // Stub for an upcoming feature-flag variant. When wired, replace the
-    // constant with a variant lookup.
-    const collapseSimilarMetrics = true;
+    const collapseSimilarMetrics = useUiFlag('multiMetricChart');
 
     const { groups, singletons } = useMemo(
         () =>

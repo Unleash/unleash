@@ -38,6 +38,7 @@ const cardBaseStyles = (theme: {
 
 const StyledCardLink = styled(Link)(({ theme }) => ({
     ...cardBaseStyles(theme),
+    display: 'block',
     cursor: 'pointer',
 }));
 

@@ -47,13 +47,27 @@ const mockImpactResponse = (value: number) => ({
     ],
 });
 
+const mockFeatureEvents = () => ({
+    events: [],
+    total: 0,
+});
+
+const stubEndpoints = () => {
+    testServerRoute(
+        server,
+        '/api/admin/impact-metrics/',
+        mockImpactResponse(5),
+    );
+    testServerRoute(
+        server,
+        '/api/admin/search/events',
+        mockFeatureEvents(),
+    );
+};
+
 describe('CollapsedMetricGroupCard', () => {
     it('renders a multi-series card with one series per config in input order', async () => {
-        testServerRoute(
-            server,
-            '/api/admin/impact-metrics/',
-            mockImpactResponse(5),
-        );
+        stubEndpoints();
 
         const configs = [
             make({
@@ -86,11 +100,7 @@ describe('CollapsedMetricGroupCard', () => {
     });
 
     it('renders href linking to the metrics page', async () => {
-        testServerRoute(
-            server,
-            '/api/admin/impact-metrics/',
-            mockImpactResponse(5),
-        );
+        stubEndpoints();
 
         const configs = [
             make({ id: 'a', metricName: 'unleash_counter_a' }),
@@ -115,11 +125,7 @@ describe('CollapsedMetricGroupCard', () => {
     });
 
     it('falls back through title -> displayName -> metricName for the title', async () => {
-        testServerRoute(
-            server,
-            '/api/admin/impact-metrics/',
-            mockImpactResponse(5),
-        );
+        stubEndpoints();
 
         const configs = [
             make({

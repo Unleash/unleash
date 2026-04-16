@@ -114,7 +114,9 @@ export interface ImpactMetricModalProps {
     projectId?: string;
 }
 
-type VisualizationType = 'chart' | 'multimetric';
+type ModalFormState =
+    | { type: 'chart' }
+    | { type: 'multimetric'; config: MultimetricChartFormConfig };
 
 export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     open,
@@ -135,31 +137,30 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     const { trackEvent } = usePlausibleTracker();
 
     const multimetricFormEnabled = useUiFlag('multiMetricChart');
-    const [visualizationType, setVisualizationType] =
-        useState<VisualizationType>('chart');
-    const [multimetricConfig, setMultimetricConfig] =
-        useState<MultimetricChartFormConfig>(() => initialFormConfig());
+    const [formState, setFormState] = useState<ModalFormState>({
+        type: 'chart',
+    });
 
     useEffect(() => {
         if (open) {
-            setVisualizationType('chart');
-            setMultimetricConfig(initialFormConfig());
+            setFormState({ type: 'chart' });
         }
     }, [open]);
 
     const canShowMultimetric = multimetricFormEnabled && Boolean(projectId);
     const isMultimetric =
-        canShowMultimetric && visualizationType === 'multimetric';
+        canShowMultimetric && formState.type === 'multimetric';
 
-    const submitDisabled = isMultimetric
-        ? !isMultimetricFormValid(multimetricConfig)
-        : !isValid;
+    const submitDisabled =
+        isMultimetric && formState.type === 'multimetric'
+            ? !isMultimetricFormValid(formState.config)
+            : !isValid;
 
     const handleSave = () => {
-        if (isMultimetric) {
-            if (!isMultimetricFormValid(multimetricConfig)) return;
+        if (isMultimetric && formState.type === 'multimetric') {
+            if (!isMultimetricFormValid(formState.config)) return;
             // eslint-disable-next-line no-console
-            console.log('multimetric chart config', multimetricConfig);
+            console.log('multimetric chart config', formState.config);
             onClose();
             return;
         }
@@ -256,13 +257,19 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                                 <RadioGroup
                                     row
                                     aria-labelledby='visualization-type-label'
-                                    value={visualizationType}
-                                    onChange={(event) =>
-                                        setVisualizationType(
-                                            event.target
-                                                .value as VisualizationType,
-                                        )
-                                    }
+                                    value={formState.type}
+                                    onChange={(event) => {
+                                        if (
+                                            event.target.value === 'multimetric'
+                                        ) {
+                                            setFormState({
+                                                type: 'multimetric',
+                                                config: initialFormConfig(),
+                                            });
+                                        } else {
+                                            setFormState({ type: 'chart' });
+                                        }
+                                    }}
                                 >
                                     <FormControlLabel
                                         value='chart'
@@ -278,11 +285,18 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                             </FormControl>
                         )}
 
-                        {isMultimetric && projectId ? (
+                        {isMultimetric &&
+                        projectId &&
+                        formState.type === 'multimetric' ? (
                             <MultimetricChartFormBody
                                 projectId={projectId}
-                                config={multimetricConfig}
-                                onChange={setMultimetricConfig}
+                                config={formState.config}
+                                onChange={(config) =>
+                                    setFormState({
+                                        type: 'multimetric',
+                                        config,
+                                    })
+                                }
                                 metrics={metrics}
                                 loading={loading}
                             />

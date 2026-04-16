@@ -104,6 +104,9 @@ const StyledPreviewContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
 }));
 
+// TODO: when multi-metric persistence lands, either add
+// `onSaveMultimetric?: (config: MultimetricChartFormConfig) => void` or unify
+// `onSave` behind a discriminated union so the caller handles both shapes.
 export interface ImpactMetricModalProps {
     open: boolean;
     onClose: () => void;
@@ -111,7 +114,6 @@ export interface ImpactMetricModalProps {
     initialConfig?: ChartConfig;
     metrics: ImpactMetric[];
     loading?: boolean;
-    /** Required when the multi-metric form is enabled (env multi-select source). */
     projectId?: string;
 }
 
@@ -135,11 +137,11 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     const screenBreakpoint = useMediaQuery(theme.breakpoints.down('lg'));
     const { trackEvent } = usePlausibleTracker();
 
-    const multimetricFormEnabled = useUiFlag('multimetricChartForm');
+    const multimetricFormEnabled = useUiFlag('multiMetricChart');
     const [visualizationType, setVisualizationType] =
         useState<VisualizationType>('chart');
     const [multimetricConfig, setMultimetricConfig] =
-        useState<MultimetricChartFormConfig>(initialFormConfig);
+        useState<MultimetricChartFormConfig>(() => initialFormConfig());
 
     // Reset multi-metric form whenever the modal (re)opens.
     useEffect(() => {
@@ -149,8 +151,12 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
         }
     }, [open]);
 
+    // Only allow multi-metric when the flag is on AND we have a project context
+    // (the environment multi-select needs it). Without projectId the radio is
+    // hidden entirely, so the user never reaches a broken form state.
+    const canShowMultimetric = multimetricFormEnabled && Boolean(projectId);
     const isMultimetric =
-        multimetricFormEnabled && visualizationType === 'multimetric';
+        canShowMultimetric && visualizationType === 'multimetric';
 
     const submitDisabled = isMultimetric
         ? !isMultimetricFormValid(multimetricConfig)
@@ -251,7 +257,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                                 : 'Add impact metric'}
                         </StyledTitle>
 
-                        {multimetricFormEnabled && !initialConfig && (
+                        {canShowMultimetric && !initialConfig && (
                             <FormControl>
                                 <FormLabel id='visualization-type-label'>
                                     Visualization
@@ -281,21 +287,14 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                             </FormControl>
                         )}
 
-                        {isMultimetric ? (
-                            projectId ? (
-                                <MultimetricChartFormBody
-                                    projectId={projectId}
-                                    config={multimetricConfig}
-                                    onChange={setMultimetricConfig}
-                                    metrics={metrics}
-                                    loading={loading}
-                                />
-                            ) : (
-                                <Typography color='error' variant='body2'>
-                                    Multi-metric chart requires a project
-                                    context.
-                                </Typography>
-                            )
+                        {isMultimetric && projectId ? (
+                            <MultimetricChartFormBody
+                                projectId={projectId}
+                                config={multimetricConfig}
+                                onChange={setMultimetricConfig}
+                                metrics={metrics}
+                                loading={loading}
+                            />
                         ) : (
                             <>
                                 <TextField

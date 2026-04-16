@@ -1,4 +1,4 @@
-import { type FC, useCallback } from 'react';
+import { type FC, useCallback, useEffect } from 'react';
 import {
     Box,
     Button,
@@ -17,6 +17,7 @@ import { RangeSelector } from '../ImpactMetricModal/ImpactMetricsControls/RangeS
 import { ModeSelector } from '../ImpactMetricModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import { getDefaultAggregation, getMetricType } from '../metricsFormatters';
 import type { ImpactMetric } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
+import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { EnvironmentMultiSelect } from './EnvironmentMultiSelect';
 import type { MultimetricChartFormConfig, MultimetricStepInput } from './types';
 
@@ -90,6 +91,19 @@ export const MultimetricChartFormBody: FC<MultimetricChartFormBodyProps> = ({
     loading = false,
 }) => {
     const { title, timeRange, steps, featureEventEnvironments } = config;
+
+    const { environments } = useProjectEnvironments(projectId);
+    const hasProductionEnv = environments.some(
+        (env) => env.enabled && env.name === 'production',
+    );
+
+    // Default to ['production'] once the environments have loaded and the user
+    // hasn't made a selection yet.
+    useEffect(() => {
+        if (featureEventEnvironments.length === 0 && hasProductionEnv) {
+            onChange({ ...config, featureEventEnvironments: ['production'] });
+        }
+    }, [hasProductionEnv]);
 
     const updateStep = useCallback(
         (index: number, updates: Partial<MultimetricStepInput>) => {

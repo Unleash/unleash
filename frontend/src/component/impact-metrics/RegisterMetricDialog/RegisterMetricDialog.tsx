@@ -11,6 +11,7 @@ import {
 import { DefineMetricForm } from './DefineMetricForm';
 import { SuccessView } from './SuccessView';
 import { MetricDefinitionSidebar } from './InfoSidebar';
+import { useTrackRegisterImpactMetrics } from './useTrackRegisterImpactMetrics';
 
 type RegisterMetricDialogProps = {
     open: boolean;
@@ -96,6 +97,7 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
         stage: 'define',
     });
     const formId = useId();
+    const { trackMetricCreated } = useTrackRegisterImpactMetrics();
 
     return (
         <StyledDialog open={true} onClose={onClose}>
@@ -141,6 +143,7 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
                                         stage: 'success',
                                         metricName,
                                     });
+                                    trackMetricCreated();
                                 }}
                             />
                         </>

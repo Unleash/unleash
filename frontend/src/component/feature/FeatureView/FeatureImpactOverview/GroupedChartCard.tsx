@@ -36,6 +36,7 @@ export const GroupedChartCard: FC<GroupedChartCardProps> = ({
             <MultimetricChartCard
                 title={title}
                 timeRange={group.timeRange}
+                aggregationMode={group.aggregationMode}
                 stepCount={group.configs.length}
                 stepSeries={stepSeries}
                 stepTotals={stepTotals}

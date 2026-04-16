@@ -16,11 +16,7 @@ function aggregateTotal(
     if (SUM_MODES.has(aggregationMode)) {
         return data.reduce((sum, [, v]) => sum + Number(v), 0);
     }
-    // For rate/average/percentile modes, compute the mean across all data
-    // points so the total reflects the overall chart shape rather than a
-    // single (potentially noisy) last sample.
-    const sum = data.reduce((acc, [, v]) => acc + Number(v), 0);
-    return sum / data.length;
+    return Number(data[data.length - 1][1]);
 }
 
 function buildPath(config: ImpactMetricsConfigSchema): string {

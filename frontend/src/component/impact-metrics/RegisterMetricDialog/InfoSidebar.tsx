@@ -53,7 +53,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
     },
 
     svg: {
-        fontSize: '20px',
+        fontSize: '1.4em',
     },
 }));
 

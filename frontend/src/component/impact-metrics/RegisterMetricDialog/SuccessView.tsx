@@ -1,4 +1,5 @@
 import { Box, Typography, type TypographyProps, styled } from '@mui/material';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useTrackRegisterImpactMetrics } from './useTrackRegisterImpactMetrics';
 
@@ -62,6 +63,9 @@ const CardLink = styled('a')(({ theme }) => ({
     '&:focus-visible': {
         outline: 'none',
     },
+    svg: {
+        fontSize: '1.4em',
+    },
 }));
 
 const StyledSubHeader = styled(Typography)<TypographyProps>(({ theme }) => ({
@@ -95,14 +99,14 @@ export const SuccessView = ({ metricName }: SuccessViewProps) => {
                     What's next?
                 </StyledSubHeader>
                 <NextStepCard>
-                    <StyledSubHeader variant='subtitle1'>
+                    <StyledSubHeader variant='subtitle1' component='p'>
                         <CardLink
                             href='https://docs.getunleash.io/concepts/impact-metrics#define-and-record-metrics-in-the-sdk'
                             target='_blank'
                             rel='noopener noreferrer'
                             onClick={() => trackDocsClickedAfterCreation()}
                         >
-                            Implement in your code
+                            Implement in your code <OpenInNewIcon />
                         </CardLink>
                     </StyledSubHeader>
                     <StyledParagraph variant='body2'>

@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { FeatureFlagSetupBannerCard } from './FeatureFlagSetupBannerCard.tsx';
+import { ImplementFlagDialog } from './ImplementFlagDialog/ImplementFlagDialog.tsx';
 
 interface FeatureImplementFlagBannerProps {
     projectId: string;
@@ -13,6 +15,7 @@ export const FeatureImplementFlagBanner = ({
 }: FeatureImplementFlagBannerProps) => {
     const { project } = useProjectOverview(projectId);
     const { metrics, loading } = useFeatureMetrics(projectId, featureId);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     if (project.onboardingStatus.status !== 'onboarded') {
         return null;
@@ -23,11 +26,18 @@ export const FeatureImplementFlagBanner = ({
     }
 
     return (
-        <FeatureFlagSetupBannerCard
-            title='Implement your flag'
-            description='Waiting for flag evaluations. Wrap your feature logic in a flag evaluation to get set up.'
-            buttonLabel='Wrap your code'
-            onButtonClick={() => {}}
-        />
+        <>
+            <FeatureFlagSetupBannerCard
+                title='Implement your flag'
+                description='Waiting for flag evaluations. Wrap your feature logic in a flag evaluation to get set up.'
+                buttonLabel='Wrap your code'
+                onButtonClick={() => setDialogOpen(true)}
+            />
+            <ImplementFlagDialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                feature={featureId}
+            />
+        </>
     );
 };

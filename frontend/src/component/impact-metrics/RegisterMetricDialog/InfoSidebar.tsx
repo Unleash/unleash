@@ -3,7 +3,6 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Link } from 'react-router-dom';
-import HelpOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 const SidebarSection = styled('article')(({ theme }) => ({
     '--vertical-spacing': theme.spacing(1.5),
@@ -19,15 +18,6 @@ const SidebarSection = styled('article')(({ theme }) => ({
 const Tips = styled('ul')(({ theme }) => ({
     paddingInline: theme.spacing(2.5),
     margin: 0,
-}));
-
-const LinkList = styled('ul')(({ theme }) => ({
-    listStyle: 'none',
-    padding: 0,
-    marginBlockEnd: 0,
-    'li + li': {
-        marginTop: 'var(--vertical-spacing)',
-    },
 }));
 
 const Header = styled('div')(({ theme }) => ({
@@ -111,66 +101,6 @@ export const MetricDefinitionSidebar = () => {
                     View full documentation
                 </SidebarLink>
             </div>
-        </>
-    );
-};
-
-export const SuccessSidebar = () => {
-    return (
-        <>
-            <SidebarSection>
-                <Header>
-                    <HelpOutlinedIcon />
-                    <Typography variant='body2' component='h4'>
-                        Additional resources
-                    </Typography>
-                </Header>
-                <Typography variant='body2'>
-                    Some info about this metric type or how to implement
-                </Typography>
-                <LinkList role='list'>
-                    <li>
-                        <SidebarLink to='https://docs.getunleash.io/reference/impact-metrics'>
-                            View full documentation
-                        </SidebarLink>
-                    </li>
-                    <li>
-                        <SidebarLink to='https://docs.getunleash.io/reference/impact-metrics'>
-                            Guide to choosing metric types
-                        </SidebarLink>
-                    </li>
-                </LinkList>
-            </SidebarSection>
-
-            <SidebarSection>
-                <Header>
-                    <LightbulbOutlinedIcon />
-                    <Typography variant='body2' component='h4'>
-                        Pro tips
-                    </Typography>
-                </Header>
-                <Tips>
-                    <li>Start with a few key metrics and expand over time.</li>
-                    <li>Set up alerts for critical metrics.</li>
-                    <li>
-                        Review metric trends regularly to identify patterns.
-                    </li>
-                    <li>Document your metrics for team alignment.</li>
-                </Tips>
-            </SidebarSection>
-
-            <SidebarSection>
-                <Header>
-                    <InfoOutlinedIcon />
-                    <Typography variant='body2' component='h4'>
-                        Need help?
-                    </Typography>
-                </Header>
-                <Typography variant='body2'>
-                    Join our community slack or contact support if you have
-                    questions about setting up or using impact metrics.
-                </Typography>
-            </SidebarSection>
         </>
     );
 };

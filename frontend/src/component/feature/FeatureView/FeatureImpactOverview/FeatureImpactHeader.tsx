@@ -266,7 +266,6 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                                 <CollapsedMetricGroupCard
                                     key={group
                                         .map((c) => c.id)
-                                        .slice()
                                         .sort()
                                         .join('-')}
                                     configs={group}

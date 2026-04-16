@@ -29,16 +29,30 @@ describe('groupImpactConfigs', () => {
     it('keeps a single config as a single-item group', () => {
         const config = makeConfig();
         const groups = groupImpactConfigs([config]);
-        expect(groups).toHaveLength(1);
-        expect(groups[0].configs).toEqual([config]);
+        expect(groups).toEqual([
+            {
+                key: 'day::count::auto::{}',
+                timeRange: 'day',
+                aggregationMode: 'count',
+                labelSelectors: {},
+                configs: [config],
+            },
+        ]);
     });
 
     it('groups configs with same timeRange, aggregationMode, and labelSelectors', () => {
         const a = makeConfig({ displayName: 'A', metricName: 'metric_a' });
         const b = makeConfig({ displayName: 'B', metricName: 'metric_b' });
         const groups = groupImpactConfigs([a, b]);
-        expect(groups).toHaveLength(1);
-        expect(groups[0].configs).toEqual([a, b]);
+        expect(groups).toEqual([
+            {
+                key: 'day::count::auto::{}',
+                timeRange: 'day',
+                aggregationMode: 'count',
+                labelSelectors: {},
+                configs: [a, b],
+            },
+        ]);
     });
 
     it('separates configs with different timeRange', () => {
@@ -77,8 +91,14 @@ describe('groupImpactConfigs', () => {
             labelSelectors: { region: ['eu'], env: ['prod'] },
         });
         const groups = groupImpactConfigs([a, b]);
-        expect(groups).toHaveLength(1);
-        expect(groups[0].configs).toEqual([a, b]);
+        expect(groups).toEqual([
+            expect.objectContaining({
+                timeRange: 'day',
+                aggregationMode: 'count',
+                labelSelectors: { env: ['prod'], region: ['eu'] },
+                configs: [a, b],
+            }),
+        ]);
     });
 
     it('treats label selectors as equal regardless of value order', () => {
@@ -125,9 +145,10 @@ describe('groupImpactConfigs', () => {
             mode: 'read',
         });
         const groups = groupImpactConfigs([a, b]);
-        expect(groups).toHaveLength(2);
-        expect(groups[0].configs).toEqual([a]);
-        expect(groups[1].configs).toEqual([b]);
+        expect(groups).toEqual([
+            expect.objectContaining({ configs: [a] }),
+            expect.objectContaining({ configs: [b] }),
+        ]);
     });
 
     it('does not group a read-mode config with matching write-mode configs', () => {
@@ -145,11 +166,16 @@ describe('groupImpactConfigs', () => {
             metricName: 'metric_w2',
         });
         const groups = groupImpactConfigs([writable1, safeguard, writable2]);
-        expect(groups).toHaveLength(2);
-        // writable configs grouped together
-        expect(groups[0].configs).toEqual([writable1, writable2]);
-        // safeguard stays solo
-        expect(groups[1].configs).toEqual([safeguard]);
+        expect(groups).toEqual([
+            expect.objectContaining({
+                timeRange: 'day',
+                aggregationMode: 'count',
+                configs: [writable1, writable2],
+            }),
+            expect.objectContaining({
+                configs: [safeguard],
+            }),
+        ]);
     });
 
     it('creates multiple groups for mixed configs', () => {
@@ -169,8 +195,17 @@ describe('groupImpactConfigs', () => {
             aggregationMode: 'rps',
         });
         const groups = groupImpactConfigs([dayCount1, dayCount2, weekRps]);
-        expect(groups).toHaveLength(2);
-        expect(groups[0].configs).toEqual([dayCount1, dayCount2]);
-        expect(groups[1].configs).toEqual([weekRps]);
+        expect(groups).toEqual([
+            expect.objectContaining({
+                timeRange: 'day',
+                aggregationMode: 'count',
+                configs: [dayCount1, dayCount2],
+            }),
+            expect.objectContaining({
+                timeRange: 'week',
+                aggregationMode: 'rps',
+                configs: [weekRps],
+            }),
+        ]);
     });
 });

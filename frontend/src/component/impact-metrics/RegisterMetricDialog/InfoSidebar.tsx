@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { Typography, styled } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
@@ -48,13 +47,13 @@ const StyledLink = styled(Link)(({ theme }) => ({
     width: 'fit-content',
     borderRadius: theme.shape.borderRadius,
 
-    svg: {
-        fontSize: '20px',
-    },
-
     ':focus-visible': {
         outline: `2px solid currentColor`,
         outlineOffset: theme.spacing(0.5),
+    },
+
+    svg: {
+        fontSize: '20px',
     },
 }));
 
@@ -66,7 +65,7 @@ const SidebarLink = ({ to, children }) => {
     );
 };
 
-export const MetricDefinitionSidebar: FC = () => {
+export const MetricDefinitionSidebar = () => {
     return (
         <>
             <SidebarSection>
@@ -116,7 +115,7 @@ export const MetricDefinitionSidebar: FC = () => {
     );
 };
 
-export const SuccessSidebar: FC = () => {
+export const SuccessSidebar = () => {
     return (
         <>
             <SidebarSection>

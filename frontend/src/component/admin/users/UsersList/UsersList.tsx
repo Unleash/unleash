@@ -60,7 +60,6 @@ const UsersList = () => {
         open: false,
     });
     const showUserDeviceCount = useUiFlag('showUserDeviceCount');
-    const showAccessRequests = useUiFlag('pendingUserAccessRequests');
     const showSSOUpgrade = isOss() && users.length > 3;
 
     const {
@@ -344,7 +343,7 @@ const UsersList = () => {
                 }
             />
             <UsersHeader />
-            {showAccessRequests ? <AccessRequestsTable /> : null}
+            <AccessRequestsTable />
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}

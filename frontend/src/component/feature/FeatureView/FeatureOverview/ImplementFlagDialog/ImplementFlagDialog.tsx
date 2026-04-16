@@ -107,13 +107,34 @@ const ListeningIcon = styled('div')(({ theme }) => ({
     height: 44,
     borderRadius: '50%',
     backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    fontWeight: theme.typography.fontWeightBold,
-    letterSpacing: 1,
+    gap: 3,
+    '@keyframes bubble': {
+        '0%, 80%, 100%': {
+            transform: 'scale(0.4)',
+            opacity: 0.5,
+        },
+        '40%': {
+            transform: 'scale(1)',
+            opacity: 1,
+        },
+    },
+    '& span': {
+        width: 6,
+        height: 6,
+        borderRadius: '50%',
+        backgroundColor: theme.palette.primary.contrastText,
+        animation: 'bubble 1.4s infinite ease-in-out both',
+    },
+    '& span:nth-of-type(1)': {
+        animationDelay: '-0.32s',
+    },
+    '& span:nth-of-type(2)': {
+        animationDelay: '-0.16s',
+    },
 }));
 
 const ListeningText = styled('div')({
@@ -200,7 +221,11 @@ export const ImplementFlagDialog = ({
                                 Test flag
                             </Typography>
                             <ListeningCard>
-                                <ListeningIcon>...</ListeningIcon>
+                                <ListeningIcon>
+                                    <span />
+                                    <span />
+                                    <span />
+                                </ListeningIcon>
                                 <ListeningText>
                                     <Typography
                                         variant='body2'

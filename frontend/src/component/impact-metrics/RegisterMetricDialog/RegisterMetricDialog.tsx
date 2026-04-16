@@ -11,6 +11,7 @@ import {
 import { DefineMetricForm } from './DefineMetricForm';
 import { SuccessView } from './SuccessView';
 import { MetricDefinitionSidebar } from './InfoSidebar';
+import { useTrackRegisterImpactMetrics } from './useTrackRegisterImpactMetrics';
 
 type RegisterMetricDialogProps = {
     open: boolean;
@@ -89,6 +90,7 @@ const Sidebar = styled('aside')(({ theme }) => {
 });
 
 const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
+    const { trackMetricCreated } = useTrackRegisterImpactMetrics();
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
@@ -141,6 +143,7 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
                                         stage: 'success',
                                         metricName,
                                     });
+                                    trackMetricCreated();
                                 }}
                             />
                         </>

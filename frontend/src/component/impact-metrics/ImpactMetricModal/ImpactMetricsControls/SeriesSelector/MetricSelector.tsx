@@ -12,6 +12,7 @@ import type { MetricSource } from 'component/impact-metrics/types';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { RegisterMetricDialog } from 'component/impact-metrics/RegisterMetricDialog/RegisterMetricDialog';
+import { useTrackRegisterImpactMetrics } from 'component/impact-metrics/RegisterMetricDialog/useTrackRegisterImpactMetrics';
 
 type MetricOption = {
     name: string;
@@ -125,6 +126,8 @@ export const MetricSelector: FC<MetricSelectorProps> = ({
     loading = false,
     label = 'Metric name',
 }) => {
+    const { trackFormOpened } = useTrackRegisterImpactMetrics();
+
     const allOptions = withSelectedValue(options, value, valueSource);
     const registerImpactMetricsEnabled = useUiFlag('registerImpactMetrics');
     const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
@@ -185,7 +188,10 @@ export const MetricSelector: FC<MetricSelectorProps> = ({
                     <NoOptionsMessage
                         onRegisterClick={
                             registerImpactMetricsEnabled
-                                ? () => setRegisterDialogOpen(true)
+                                ? () => {
+                                      trackFormOpened();
+                                      setRegisterDialogOpen(true);
+                                  }
                                 : undefined
                         }
                     />

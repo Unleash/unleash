@@ -1,4 +1,4 @@
-import { Box, Typography, styled } from '@mui/material';
+import { Box, Typography, type TypographyProps, styled } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useTrackRegisterImpactMetrics } from './useTrackRegisterImpactMetrics';
 
@@ -41,7 +41,7 @@ const StyledParagraph = styled(Typography)(({ theme }) => ({
 
 const NextStepCard = styled(Box)(({ theme }) => ({
     position: 'relative',
-    border: `1px solid ${theme.palette.divider}`,
+    border: `1.5px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
     transition: 'border-color 120ms ease',
@@ -62,13 +62,9 @@ const CardLink = styled('a')(({ theme }) => ({
     '&:focus-visible': {
         outline: 'none',
     },
-    '&:focus-visible::after': {
-        outline: `1px solid ${theme.palette.primary.main}`,
-        outlineOffset: '2px',
-    },
 }));
 
-const StyledSubHeader = styled(Typography)(({ theme }) => ({
+const StyledSubHeader = styled(Typography)<TypographyProps>(({ theme }) => ({
     marginBottom: theme.spacing(2),
     fontWeight: 'bold',
 }));
@@ -95,7 +91,7 @@ export const SuccessView = ({ metricName }: SuccessViewProps) => {
             </SuccessBox>
 
             <Box>
-                <StyledSubHeader variant='subtitle1'>
+                <StyledSubHeader component='h5' variant='subtitle1'>
                     What's next?
                 </StyledSubHeader>
                 <NextStepCard>

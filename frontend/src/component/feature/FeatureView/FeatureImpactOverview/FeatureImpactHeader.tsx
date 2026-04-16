@@ -88,12 +88,6 @@ const StyledChartRow = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledGroupStack = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-}));
-
 const StyledConnectButton = styled(Button)({
     textTransform: 'none',
     whiteSpace: 'nowrap',
@@ -136,7 +130,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
 
     const collapseSimilarMetrics = useUiFlag('multiMetricChart');
 
-    const { groups, singletons } = useMemo(
+    const buckets = useMemo(
         () =>
             groupImpactMetricConfigs(
                 impactMetrics.configs,
@@ -259,33 +253,28 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
 
             <Collapse in={expanded}>
                 <StyledExpandedContent>
-                    {groups.length > 0 && (
-                        <StyledGroupStack>
-                            {groups.map((group) => (
+                    <StyledChartRow>
+                        {buckets.map((bucket) =>
+                            bucket.length >= 2 ? (
                                 <CollapsedMetricGroupCard
-                                    key={group
+                                    key={bucket
                                         .map((c) => c.id)
                                         .sort()
                                         .join('-')}
-                                    configs={group}
+                                    configs={bucket}
                                     projectId={projectId}
                                     featureName={featureName}
                                 />
-                            ))}
-                        </StyledGroupStack>
-                    )}
-                    {singletons.length > 0 && (
-                        <StyledChartRow>
-                            {singletons.map((config) => (
+                            ) : (
                                 <CompactChartCard
-                                    key={config.id}
-                                    config={config}
+                                    key={bucket[0].id}
+                                    config={bucket[0]}
                                     projectId={projectId}
                                     featureName={featureName}
                                 />
-                            ))}
-                        </StyledChartRow>
-                    )}
+                            ),
+                        )}
+                    </StyledChartRow>
                 </StyledExpandedContent>
                 <StyledFooter>
                     <Button

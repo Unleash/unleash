@@ -1,9 +1,16 @@
 import type { FC } from 'react';
+import { styled } from '@mui/material';
 import type { ImpactMetricsConfigSchema } from 'openapi';
 import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
 import { useGroupedImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useGroupedImpactMetricsData';
 import { useFeatureEnvironmentEvents } from 'hooks/api/getters/useFeatureEnvironmentEvents/useFeatureEnvironmentEvents';
 import { MultimetricChartCard } from './MultimetricChartCard';
+
+// The card renders full-width inside the parent 3-column grid. Other cards
+// in that grid (CompactChartCard) take a single column each.
+const StyledFullRow = styled('div')({
+    gridColumn: '1 / -1',
+});
 
 interface CollapsedMetricGroupCardProps {
     configs: ImpactMetricsConfigSchema[];
@@ -31,17 +38,19 @@ export const CollapsedMetricGroupCard: FC<CollapsedMetricGroupCardProps> = ({
     const timeRange = configs[0].timeRange as ChartTimeRange;
 
     return (
-        <MultimetricChartCard
-            title={title}
-            timeRange={timeRange}
-            stepCount={configs.length}
-            stepSeries={stepSeries}
-            stepTotals={stepTotals}
-            featureEvents={featureEvents}
-            start={start}
-            end={end}
-            loading={loading}
-            href={`/projects/${projectId}/features/${featureName}/metrics`}
-        />
+        <StyledFullRow>
+            <MultimetricChartCard
+                title={title}
+                timeRange={timeRange}
+                stepCount={configs.length}
+                stepSeries={stepSeries}
+                stepTotals={stepTotals}
+                featureEvents={featureEvents}
+                start={start}
+                end={end}
+                loading={loading}
+                href={`/projects/${projectId}/features/${featureName}/metrics`}
+            />
+        </StyledFullRow>
     );
 };

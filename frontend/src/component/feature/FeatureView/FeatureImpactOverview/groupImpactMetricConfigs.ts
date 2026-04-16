@@ -1,10 +1,5 @@
 import type { ImpactMetricsConfigSchema } from 'openapi';
 
-type Result = {
-    groups: ImpactMetricsConfigSchema[][];
-    singletons: ImpactMetricsConfigSchema[];
-};
-
 const canonicalLabels = (
     labelSelectors: ImpactMetricsConfigSchema['labelSelectors'],
 ): Array<[string, string[]]> =>
@@ -24,12 +19,17 @@ const equalityKey = (config: ImpactMetricsConfigSchema): string =>
         labelSelectors: canonicalLabels(config.labelSelectors),
     });
 
+/**
+ * Buckets configs by their equality key (everything except id, metricName,
+ * displayName, title, source). Buckets are returned in first-occurrence
+ * order of their head. When disabled, every config becomes its own bucket.
+ */
 export const groupImpactMetricConfigs = (
     configs: ImpactMetricsConfigSchema[],
     enabled: boolean,
-): Result => {
+): ImpactMetricsConfigSchema[][] => {
     if (!enabled) {
-        return { groups: [], singletons: configs };
+        return configs.map((config) => [config]);
     }
 
     const buckets = new Map<string, ImpactMetricsConfigSchema[]>();
@@ -44,17 +44,5 @@ export const groupImpactMetricConfigs = (
         buckets.get(key)!.push(config);
     }
 
-    const groups: ImpactMetricsConfigSchema[][] = [];
-    const singletons: ImpactMetricsConfigSchema[] = [];
-
-    for (const key of bucketOrder) {
-        const bucket = buckets.get(key)!;
-        if (bucket.length >= 2) {
-            groups.push(bucket);
-        } else {
-            singletons.push(bucket[0]);
-        }
-    }
-
-    return { groups, singletons };
+    return bucketOrder.map((key) => buckets.get(key)!);
 };

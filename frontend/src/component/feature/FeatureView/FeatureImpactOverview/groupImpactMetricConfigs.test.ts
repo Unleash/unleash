@@ -17,34 +17,28 @@ const make = (
 ): ImpactMetricsConfigSchema => ({ ...base, ...overrides });
 
 describe('groupImpactMetricConfigs', () => {
-    it('returns empty groups and singletons for empty input', () => {
-        expect(groupImpactMetricConfigs([], true)).toEqual({
-            groups: [],
-            singletons: [],
-        });
+    it('returns an empty array for empty input', () => {
+        expect(groupImpactMetricConfigs([], true)).toEqual([]);
     });
 
-    it('returns everything as singletons when disabled', () => {
-        const configs = [
-            make({ id: 'a' }),
-            make({ id: 'b' }),
-            make({ id: 'c' }),
-        ];
-        expect(groupImpactMetricConfigs(configs, false)).toEqual({
-            groups: [],
-            singletons: configs,
-        });
+    it('returns every config as its own bucket when disabled', () => {
+        const a = make({ id: 'a' });
+        const b = make({ id: 'b' });
+        const c = make({ id: 'c' });
+        expect(groupImpactMetricConfigs([a, b, c], false)).toEqual([
+            [a],
+            [b],
+            [c],
+        ]);
     });
 
     it('groups two configs that differ only in metric name', () => {
         const a = make({ id: 'a', metricName: 'unleash_counter_a' });
         const b = make({ id: 'b', metricName: 'unleash_counter_b' });
-        const result = groupImpactMetricConfigs([a, b], true);
-        expect(result.groups).toEqual([[a, b]]);
-        expect(result.singletons).toEqual([]);
+        expect(groupImpactMetricConfigs([a, b], true)).toEqual([[a, b]]);
     });
 
-    it('separates one group from one singleton', () => {
+    it('keeps unmatched configs as singleton buckets', () => {
         const a = make({ id: 'a', metricName: 'm_a' });
         const b = make({ id: 'b', metricName: 'm_b' });
         const c = make({
@@ -52,12 +46,13 @@ describe('groupImpactMetricConfigs', () => {
             metricName: 'm_c',
             aggregationMode: 'sum',
         });
-        const result = groupImpactMetricConfigs([a, b, c], true);
-        expect(result.groups).toEqual([[a, b]]);
-        expect(result.singletons).toEqual([c]);
+        expect(groupImpactMetricConfigs([a, b, c], true)).toEqual([
+            [a, b],
+            [c],
+        ]);
     });
 
-    it('treats reordered label keys as the same group', () => {
+    it('treats reordered label keys as the same bucket', () => {
         const a = make({
             id: 'a',
             metricName: 'm_a',
@@ -68,10 +63,10 @@ describe('groupImpactMetricConfigs', () => {
             metricName: 'm_b',
             labelSelectors: { region: ['eu'], env: ['prod'] },
         });
-        expect(groupImpactMetricConfigs([a, b], true).groups).toEqual([[a, b]]);
+        expect(groupImpactMetricConfigs([a, b], true)).toEqual([[a, b]]);
     });
 
-    it('treats reordered label values as the same group', () => {
+    it('treats reordered label values as the same bucket', () => {
         const a = make({
             id: 'a',
             metricName: 'm_a',
@@ -82,37 +77,36 @@ describe('groupImpactMetricConfigs', () => {
             metricName: 'm_b',
             labelSelectors: { env: ['stage', 'prod'] },
         });
-        expect(groupImpactMetricConfigs([a, b], true).groups).toEqual([[a, b]]);
+        expect(groupImpactMetricConfigs([a, b], true)).toEqual([[a, b]]);
     });
 
     it('groups configs that differ only in source', () => {
         const a = make({ id: 'a', metricName: 'm_a', source: 'internal' });
         const b = make({ id: 'b', metricName: 'm_b', source: 'external' });
-        expect(groupImpactMetricConfigs([a, b], true).groups).toEqual([[a, b]]);
+        expect(groupImpactMetricConfigs([a, b], true)).toEqual([[a, b]]);
     });
 
     it('does NOT group configs that differ in mode', () => {
         const a = make({ id: 'a', metricName: 'm_a', mode: 'read' });
         const b = make({ id: 'b', metricName: 'm_b', mode: 'write' });
-        const result = groupImpactMetricConfigs([a, b], true);
-        expect(result.groups).toEqual([]);
-        expect(result.singletons).toEqual([a, b]);
+        expect(groupImpactMetricConfigs([a, b], true)).toEqual([[a], [b]]);
     });
 
     it('does NOT group configs that differ in aggregationMode', () => {
         const a = make({ id: 'a', metricName: 'm_a', aggregationMode: 'avg' });
         const b = make({ id: 'b', metricName: 'm_b', aggregationMode: 'p95' });
-        const result = groupImpactMetricConfigs([a, b], true);
-        expect(result.groups).toEqual([]);
-        expect(result.singletons).toEqual([a, b]);
+        expect(groupImpactMetricConfigs([a, b], true)).toEqual([[a], [b]]);
     });
 
-    it('preserves first-occurrence order across groups and singletons', () => {
+    it('orders buckets by the first-occurrence of their head', () => {
         const a = make({ id: 'a', metricName: 'm_a' });
         const x = make({ id: 'x', metricName: 'm_x', aggregationMode: 'sum' });
         const b = make({ id: 'b', metricName: 'm_b' });
-        const result = groupImpactMetricConfigs([a, x, b], true);
-        expect(result.groups).toEqual([[a, b]]);
-        expect(result.singletons).toEqual([x]);
+        // a heads bucket-1 at index 0, x heads bucket-2 at index 1,
+        // b joins bucket-1. Expected order: [bucket-1, bucket-2].
+        expect(groupImpactMetricConfigs([a, x, b], true)).toEqual([
+            [a, b],
+            [x],
+        ]);
     });
 });

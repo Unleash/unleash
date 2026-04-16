@@ -28,13 +28,23 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
         width: '100%',
         backgroundColor: 'transparent',
     },
+    padding: 0,
+    '& .MuiPaper-root > section': {
+        overflowX: 'hidden',
+    },
 }));
+
+const Container = styled('section')({
+    width: '100%',
+    display: 'flex',
+});
 
 const Content = styled('main')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
     minWidth: 0,
 }));
 
@@ -137,7 +147,7 @@ export const ImplementFlagDialog = ({
 
     return (
         <StyledDialog open={open} onClose={onClose}>
-            <Box sx={{ display: 'flex' }}>
+            <Container>
                 <Content>
                     <Header>
                         <Typography variant='body1' fontWeight='bold'>
@@ -218,7 +228,7 @@ export const ImplementFlagDialog = ({
                 {isLargeScreen && (
                     <ImplementFlagInformation onClose={onClose} />
                 )}
-            </Box>
+            </Container>
         </StyledDialog>
     );
 };

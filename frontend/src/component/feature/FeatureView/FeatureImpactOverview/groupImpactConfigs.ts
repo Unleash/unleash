@@ -14,7 +14,7 @@ function buildGroupKey(config: ImpactMetricsConfigSchema): string {
     for (const key of Object.keys(config.labelSelectors).sort()) {
         sortedLabels[key] = [...config.labelSelectors[key]].sort();
     }
-    return `${config.timeRange}::${config.aggregationMode}::${JSON.stringify(sortedLabels)}`;
+    return `${config.timeRange}::${config.aggregationMode}::${config.yAxisMin}::${JSON.stringify(sortedLabels)}`;
 }
 
 export function groupImpactConfigs(
@@ -23,6 +23,21 @@ export function groupImpactConfigs(
     const groups = new Map<string, ConfigGroup>();
 
     for (const config of configs) {
+        // Safeguard charts (mode === 'read') should always render as
+        // standalone cards so the shield icon and individual value remain
+        // visible.
+        if (config.mode === 'read') {
+            const soloKey = `solo::${config.id}`;
+            groups.set(soloKey, {
+                key: soloKey,
+                timeRange: config.timeRange as ChartTimeRange,
+                aggregationMode: config.aggregationMode,
+                labelSelectors: config.labelSelectors,
+                configs: [config],
+            });
+            continue;
+        }
+
         const key = buildGroupKey(config);
         const existing = groups.get(key);
         if (existing) {

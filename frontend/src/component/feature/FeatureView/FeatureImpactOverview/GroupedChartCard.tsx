@@ -27,7 +27,9 @@ export const GroupedChartCard: FC<GroupedChartCardProps> = ({
         project: projectId,
     });
 
-    const title = group.configs[0].title || group.configs[0].displayName;
+    const firstName = group.configs[0].title || group.configs[0].displayName;
+    const extra = group.configs.length - 1;
+    const title = extra > 0 ? `${firstName} +${extra} more` : firstName;
 
     return (
         <StyledWrapper>

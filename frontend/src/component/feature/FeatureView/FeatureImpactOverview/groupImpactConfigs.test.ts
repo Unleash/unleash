@@ -56,6 +56,13 @@ describe('groupImpactConfigs', () => {
         expect(groups).toHaveLength(2);
     });
 
+    it('separates configs with different yAxisMin', () => {
+        const a = makeConfig({ yAxisMin: 'auto' });
+        const b = makeConfig({ yAxisMin: 'zero' });
+        const groups = groupImpactConfigs([a, b]);
+        expect(groups).toHaveLength(2);
+    });
+
     it('treats label selectors as equal regardless of key order', () => {
         const a = makeConfig({
             labelSelectors: { env: ['prod'], region: ['eu'] },
@@ -98,6 +105,45 @@ describe('groupImpactConfigs', () => {
             'Second',
             'Third',
         ]);
+    });
+
+    it('never groups safeguard charts (mode === read)', () => {
+        const a = makeConfig({
+            displayName: 'A',
+            metricName: 'metric_a',
+            mode: 'read',
+        });
+        const b = makeConfig({
+            displayName: 'B',
+            metricName: 'metric_b',
+            mode: 'read',
+        });
+        const groups = groupImpactConfigs([a, b]);
+        expect(groups).toHaveLength(2);
+        expect(groups[0].configs).toEqual([a]);
+        expect(groups[1].configs).toEqual([b]);
+    });
+
+    it('does not group a read-mode config with matching write-mode configs', () => {
+        const writable1 = makeConfig({
+            displayName: 'W1',
+            metricName: 'metric_w1',
+        });
+        const safeguard = makeConfig({
+            displayName: 'S',
+            metricName: 'metric_s',
+            mode: 'read',
+        });
+        const writable2 = makeConfig({
+            displayName: 'W2',
+            metricName: 'metric_w2',
+        });
+        const groups = groupImpactConfigs([writable1, safeguard, writable2]);
+        expect(groups).toHaveLength(2);
+        // writable configs grouped together
+        expect(groups[0].configs).toEqual([writable1, writable2]);
+        // safeguard stays solo
+        expect(groups[1].configs).toEqual([safeguard]);
     });
 
     it('creates multiple groups for mixed configs', () => {

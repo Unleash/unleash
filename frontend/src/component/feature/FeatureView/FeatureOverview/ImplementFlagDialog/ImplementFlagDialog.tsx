@@ -86,6 +86,12 @@ const WaitingDot = styled('span')(({ theme }) => ({
     backgroundColor: theme.palette.warning.main,
 }));
 
+const CodeBlockWrapper = styled('div')(({ theme }) => ({
+    '& pre': {
+        maxHeight: theme.spacing(45),
+    },
+}));
+
 const ListeningCard = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.secondary.light,
     border: `1px solid ${theme.palette.secondary.border}`,
@@ -178,9 +184,11 @@ export const ImplementFlagDialog = ({
                             >
                                 Code example
                             </Typography>
-                            <Markdown components={{ code: CodeRenderer }}>
-                                {wrappedSnippet}
-                            </Markdown>
+                            <CodeBlockWrapper>
+                                <Markdown components={{ code: CodeRenderer }}>
+                                    {wrappedSnippet}
+                                </Markdown>
+                            </CodeBlockWrapper>
                         </Box>
 
                         <Box>

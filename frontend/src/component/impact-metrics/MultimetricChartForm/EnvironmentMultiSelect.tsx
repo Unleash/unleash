@@ -16,9 +16,6 @@ type EnvironmentMultiSelectProps = {
     label?: string;
 };
 
-// Multi-select chip picker for environments to overlay feature-enabled /
-// feature-disabled events on the chart. Sourced from the project's enabled
-// environments.
 export const EnvironmentMultiSelect: FC<EnvironmentMultiSelectProps> = ({
     projectId,
     value,

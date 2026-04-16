@@ -80,9 +80,6 @@ type MultimetricChartFormBodyProps = {
     loading?: boolean;
 };
 
-// Renders the multi-step builder for a multi-metric chart: title, time range,
-// 2-5 metric steps (with reorder/remove controls), and a multi-select picker
-// for which environments' feature-enable/disable events to overlay.
 export const MultimetricChartFormBody: FC<MultimetricChartFormBodyProps> = ({
     projectId,
     config,
@@ -97,8 +94,6 @@ export const MultimetricChartFormBody: FC<MultimetricChartFormBodyProps> = ({
         (env) => env.enabled && env.name === 'production',
     );
 
-    // Default to ['production'] once the environments have loaded and the user
-    // hasn't made a selection yet.
     useEffect(() => {
         if (featureEventEnvironments.length === 0 && hasProductionEnv) {
             onChange({ ...config, featureEventEnvironments: ['production'] });

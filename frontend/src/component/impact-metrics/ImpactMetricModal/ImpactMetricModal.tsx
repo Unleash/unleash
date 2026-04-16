@@ -104,9 +104,6 @@ const StyledPreviewContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
 }));
 
-// TODO: when multi-metric persistence lands, either add
-// `onSaveMultimetric?: (config: MultimetricChartFormConfig) => void` or unify
-// `onSave` behind a discriminated union so the caller handles both shapes.
 export interface ImpactMetricModalProps {
     open: boolean;
     onClose: () => void;
@@ -143,7 +140,6 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     const [multimetricConfig, setMultimetricConfig] =
         useState<MultimetricChartFormConfig>(() => initialFormConfig());
 
-    // Reset multi-metric form whenever the modal (re)opens.
     useEffect(() => {
         if (open) {
             setVisualizationType('chart');
@@ -151,9 +147,6 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
         }
     }, [open]);
 
-    // Only allow multi-metric when the flag is on AND we have a project context
-    // (the environment multi-select needs it). Without projectId the radio is
-    // hidden entirely, so the user never reaches a broken form state.
     const canShowMultimetric = multimetricFormEnabled && Boolean(projectId);
     const isMultimetric =
         canShowMultimetric && visualizationType === 'multimetric';
@@ -165,8 +158,6 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     const handleSave = () => {
         if (isMultimetric) {
             if (!isMultimetricFormValid(multimetricConfig)) return;
-            // First iteration: no backend persistence yet — log so the form can
-            // be exercised end-to-end before the API contract is locked in.
             // eslint-disable-next-line no-console
             console.log('multimetric chart config', multimetricConfig);
             onClose();

@@ -2,7 +2,7 @@ export type MetricSource = 'internal' | 'external';
 
 export type ChartConfig = {
     id: string;
-    metricName: string; // e.g. unleash_counter_my_metric
+    metricName: string; // e.g. my_metric
     timeRange: 'hour' | 'day' | 'week' | 'month';
     yAxisMin: 'auto' | 'zero';
     aggregationMode: AggregationMode;

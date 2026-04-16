@@ -3,10 +3,7 @@ import { formatApiPath } from 'utils/formatPath';
 import type { ImpactMetricsConfigSchema } from 'openapi';
 import type { MultimetricStepSeries } from 'component/impact-metrics/MultimetricChart/types';
 import type { MultimetricStep } from 'component/impact-metrics/MultimetricChart/MultimetricTotals';
-import {
-    buildImpactMetricsPath,
-    type ImpactMetricsResponse,
-} from './useImpactMetricsData';
+import type { ImpactMetricsResponse } from './useImpactMetricsData';
 
 const SUM_MODES = new Set(['count', 'sum']);
 
@@ -26,6 +23,34 @@ function aggregateTotal(
     return sum / data.length;
 }
 
+function buildPath(config: ImpactMetricsConfigSchema): string {
+    const params = new URLSearchParams({
+        metricName: config.metricName,
+        range: config.timeRange,
+        aggregationMode: config.aggregationMode,
+        source: config.source ?? 'internal',
+        mode: 'display',
+    });
+
+    if (Object.keys(config.labelSelectors).length > 0) {
+        const labelsParam = Object.entries(config.labelSelectors).reduce(
+            (acc, [key, values]) => {
+                if (values.length > 0) {
+                    acc[key] = values;
+                }
+                return acc;
+            },
+            {} as Record<string, string[]>,
+        );
+
+        if (Object.keys(labelsParam).length > 0) {
+            params.append('labels', JSON.stringify(labelsParam));
+        }
+    }
+
+    return `api/admin/impact-metrics/?${params.toString()}`;
+}
+
 export type GroupedImpactMetricsResult = {
     stepSeries: MultimetricStepSeries[];
     stepTotals: MultimetricStep[];
@@ -37,19 +62,7 @@ export type GroupedImpactMetricsResult = {
 export const useGroupedImpactMetricsData = (
     configs: ImpactMetricsConfigSchema[],
 ): GroupedImpactMetricsResult => {
-    const paths = configs.map((config) =>
-        buildImpactMetricsPath({
-            metricName: config.metricName,
-            range: config.timeRange,
-            aggregationMode: config.aggregationMode,
-            labels:
-                Object.keys(config.labelSelectors).length > 0
-                    ? config.labelSelectors
-                    : undefined,
-            source: config.source,
-            mode: 'display',
-        }),
-    );
+    const paths = configs.map(buildPath);
 
     const cacheKey =
         configs.length > 0

@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { DefineMetricForm } from './DefineMetricForm';
 import { SuccessView } from './SuccessView';
-import { MetricDefinitionSidebar, SuccessSidebar } from './InfoSidebar';
+import { MetricDefinitionSidebar } from './InfoSidebar';
 
 type RegisterMetricDialogProps = {
     open: boolean;
@@ -173,11 +173,7 @@ const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
             </MainSection>
             {isLargeScreen ? (
                 <Sidebar>
-                    {isDefineStage ? (
-                        <MetricDefinitionSidebar />
-                    ) : (
-                        <SuccessSidebar />
-                    )}
+                    <MetricDefinitionSidebar />
                 </Sidebar>
             ) : null}
         </StyledDialog>

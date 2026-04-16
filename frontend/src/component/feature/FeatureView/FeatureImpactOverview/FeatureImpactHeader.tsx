@@ -135,7 +135,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
 
     // Stub for an upcoming feature-flag variant. When wired, replace the
     // constant with a variant lookup.
-    const collapseSimilarMetrics = false;
+    const collapseSimilarMetrics = true;
 
     const { groups, singletons } = useMemo(
         () =>

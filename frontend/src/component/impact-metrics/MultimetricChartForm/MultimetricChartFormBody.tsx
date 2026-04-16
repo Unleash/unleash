@@ -112,17 +112,17 @@ export const MultimetricChartFormBody: FC<MultimetricChartFormBodyProps> = ({
         [config, onChange],
     );
 
+    const updateSteps = (next: MultimetricStepInput[]) =>
+        onChange({ ...config, steps: next });
+
     const addStep = () => {
         if (steps.length >= MAX_STEPS) return;
-        onChange({ ...config, steps: [...steps, emptyStep()] });
+        updateSteps([...steps, emptyStep()]);
     };
 
     const removeStep = (index: number) => {
         if (steps.length <= MIN_STEPS) return;
-        onChange({
-            ...config,
-            steps: steps.filter((_, stepIndex) => stepIndex !== index),
-        });
+        updateSteps(steps.filter((_, i) => i !== index));
     };
 
     const moveStep = (index: number, direction: -1 | 1) => {
@@ -130,7 +130,7 @@ export const MultimetricChartFormBody: FC<MultimetricChartFormBodyProps> = ({
         if (newIndex < 0 || newIndex >= steps.length) return;
         const next = [...steps];
         [next[index], next[newIndex]] = [next[newIndex], next[index]];
-        onChange({ ...config, steps: next });
+        updateSteps(next);
     };
 
     return (

@@ -151,15 +151,13 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     const isMultimetric =
         canShowMultimetric && formState.type === 'multimetric';
 
-    const submitDisabled =
-        isMultimetric && formState.type === 'multimetric'
-            ? !isMultimetricFormValid(formState.config)
-            : !isValid;
+    const submitDisabled = isMultimetric
+        ? !isMultimetricFormValid(formState.config)
+        : !isValid;
 
     const handleSave = () => {
-        if (isMultimetric && formState.type === 'multimetric') {
+        if (isMultimetric) {
             if (!isMultimetricFormValid(formState.config)) return;
-            // eslint-disable-next-line no-console
             console.log('multimetric chart config', formState.config);
             onClose();
             return;

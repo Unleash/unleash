@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { useMemo, type FC } from 'react';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { Button, Collapse, styled, Typography } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
@@ -8,6 +8,8 @@ import Add from '@mui/icons-material/Add';
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics';
 import { PlaceholderChart } from './ImpactDashboard/PlaceholderChart';
 import { CompactChartCard } from './CompactChartCard';
+import { CollapsedMetricGroupCard } from './CollapsedMetricGroupCard';
+import { groupImpactMetricConfigs } from './groupImpactMetricConfigs';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
 
@@ -85,6 +87,12 @@ const StyledChartRow = styled('div')(({ theme }) => ({
     },
 }));
 
+const StyledGroupStack = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
 const StyledConnectButton = styled(Button)({
     textTransform: 'none',
     whiteSpace: 'nowrap',
@@ -124,6 +132,19 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
         projectId,
         featureName,
     });
+
+    // Stub for an upcoming feature-flag variant. When wired, replace the
+    // constant with a variant lookup.
+    const collapseSimilarMetrics = false;
+
+    const { groups, singletons } = useMemo(
+        () =>
+            groupImpactMetricConfigs(
+                impactMetrics.configs,
+                collapseSimilarMetrics,
+            ),
+        [impactMetrics.configs, collapseSimilarMetrics],
+    );
 
     const expanded = impactMetricsAccordionState === 'open';
     const chartCount = impactMetrics.configs.length;
@@ -239,16 +260,34 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
 
             <Collapse in={expanded}>
                 <StyledExpandedContent>
-                    <StyledChartRow>
-                        {impactMetrics.configs.map((config) => (
-                            <CompactChartCard
-                                key={config.id}
-                                config={config}
-                                projectId={projectId}
-                                featureName={featureName}
-                            />
-                        ))}
-                    </StyledChartRow>
+                    {groups.length > 0 && (
+                        <StyledGroupStack>
+                            {groups.map((group) => (
+                                <CollapsedMetricGroupCard
+                                    key={group
+                                        .map((c) => c.id)
+                                        .slice()
+                                        .sort()
+                                        .join('-')}
+                                    configs={group}
+                                    projectId={projectId}
+                                    featureName={featureName}
+                                />
+                            ))}
+                        </StyledGroupStack>
+                    )}
+                    {singletons.length > 0 && (
+                        <StyledChartRow>
+                            {singletons.map((config) => (
+                                <CompactChartCard
+                                    key={config.id}
+                                    config={config}
+                                    projectId={projectId}
+                                    featureName={featureName}
+                                />
+                            ))}
+                        </StyledChartRow>
+                    )}
                 </StyledExpandedContent>
                 <StyledFooter>
                     <Button

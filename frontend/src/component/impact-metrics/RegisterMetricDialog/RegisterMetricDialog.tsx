@@ -1,4 +1,4 @@
-import { type FC, useId, useState } from 'react';
+import { useId, useState } from 'react';
 import {
     Button,
     Dialog,
@@ -86,9 +86,7 @@ const Sidebar = styled('aside')(({ theme }) => {
     };
 });
 
-const InnerDialog: FC<Omit<RegisterMetricDialogProps, 'open'>> = ({
-    onClose,
-}) => {
+const InnerDialog = ({ onClose }: Omit<RegisterMetricDialogProps, 'open'>) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
@@ -186,9 +184,9 @@ const InnerDialog: FC<Omit<RegisterMetricDialogProps, 'open'>> = ({
     );
 };
 
-export const RegisterMetricDialog: FC<RegisterMetricDialogProps> = ({
+export const RegisterMetricDialog = ({
     open,
     ...props
-}) => {
+}: RegisterMetricDialogProps) => {
     return open ? <InnerDialog {...props} /> : null;
 };

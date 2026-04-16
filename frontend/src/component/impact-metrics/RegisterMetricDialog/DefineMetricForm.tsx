@@ -8,6 +8,7 @@ import {
     Typography,
     styled,
 } from '@mui/material';
+import { Card } from './RegisterMetricDialog.styles';
 import { useRegisterImpactMetricApi } from 'hooks/api/actions/useImpactMetricsApi/useRegisterImpactMetricApi';
 import type { RegisterImpactMetricSchemaType } from 'openapi';
 
@@ -31,31 +32,11 @@ const StyledLabel = styled(FormLabel)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-const CardContent = styled('div')(({ theme }) => ({
+const RadioCardContainer = styled(Card)(({ theme }) => ({
     display: 'flex',
     alignItems: 'flex-start',
-    padding: theme.spacing(2),
-    background: theme.palette.background.default,
     gap: '11px',
-    border: `1.5px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusLarge,
-    transition: 'border-color 0.3s',
-    position: 'relative',
-
-    ':hover, :focus-within': {
-        borderColor: theme.palette.primary.main,
-    },
-
-    label: {
-        textTransform: 'capitalize',
-        fontWeight: 'bold',
-        '::before': {
-            content: "''",
-            position: 'absolute',
-            inset: 0,
-            zIndex: 1,
-        },
-    },
+    background: theme.palette.background.default,
 }));
 
 const RadioCard = ({ value, description, examples }) => {
@@ -64,7 +45,7 @@ const RadioCard = ({ value, description, examples }) => {
     const exampleId = useId();
 
     return (
-        <CardContent>
+        <RadioCardContainer>
             <Radio
                 sx={{ padding: 0 }}
                 id={radioId}
@@ -72,7 +53,13 @@ const RadioCard = ({ value, description, examples }) => {
                 aria-describedby={`${descriptionId} ${exampleId}`}
             />
             <div>
-                <label htmlFor={radioId}>{value}</label>
+                <label
+                    data-card-action
+                    htmlFor={radioId}
+                    style={{ textTransform: 'capitalize', fontWeight: 'bold' }}
+                >
+                    {value}
+                </label>
                 <Typography id={descriptionId}>{description}</Typography>
                 <Typography
                     variant='body2'
@@ -83,7 +70,7 @@ const RadioCard = ({ value, description, examples }) => {
                     Examples: {examples}
                 </Typography>
             </div>
-        </CardContent>
+        </RadioCardContainer>
     );
 };
 

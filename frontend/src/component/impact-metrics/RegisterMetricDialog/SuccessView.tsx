@@ -1,7 +1,7 @@
-import { Box, Typography, type TypographyProps, styled } from '@mui/material';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Box, Typography, styled } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useTrackRegisterImpactMetrics } from './useTrackRegisterImpactMetrics';
+import { Card, ExternalLink } from './RegisterMetricDialog.styles';
 
 type SuccessViewProps = {
     metricName: string;
@@ -40,38 +40,10 @@ const StyledParagraph = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const NextStepCard = styled(Box)(({ theme }) => ({
-    position: 'relative',
-    border: `1.5px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusLarge,
-    padding: theme.spacing(2),
-    transition: 'border-color 120ms ease',
-    '&:hover, &:focus-within': {
-        borderColor: theme.palette.primary.main,
-    },
-}));
-
-const CardLink = styled('a')(({ theme }) => ({
-    color: 'inherit',
-    textDecoration: 'none',
-    '&::after': {
-        content: '""',
-        position: 'absolute',
-        inset: 0,
-        borderRadius: 'inherit',
-    },
-    '&:focus-visible': {
-        outline: 'none',
-    },
-    svg: {
-        fontSize: '1.4em',
-    },
-}));
-
-const StyledSubHeader = styled(Typography)<TypographyProps>(({ theme }) => ({
+const StyledSubHeader = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(2),
     fontWeight: 'bold',
-}));
+})) as typeof Typography;
 
 export const SuccessView = ({ metricName }: SuccessViewProps) => {
     const { trackDocsClickedAfterCreation } = useTrackRegisterImpactMetrics();
@@ -98,23 +70,22 @@ export const SuccessView = ({ metricName }: SuccessViewProps) => {
                 <StyledSubHeader component='h5' variant='subtitle1'>
                     What's next?
                 </StyledSubHeader>
-                <NextStepCard>
-                    <StyledSubHeader variant='subtitle1' component='p'>
-                        <CardLink
-                            href='https://docs.getunleash.io/concepts/impact-metrics#define-and-record-metrics-in-the-sdk'
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            onClick={() => trackDocsClickedAfterCreation()}
-                        >
-                            Implement in your code <OpenInNewIcon />
-                        </CardLink>
+                <Card>
+                    <StyledSubHeader
+                        data-card-action
+                        to='https://docs.getunleash.io/concepts/impact-metrics#define-and-record-metrics-in-the-sdk'
+                        onClick={() => trackDocsClickedAfterCreation()}
+                        variant='subtitle2'
+                        component={ExternalLink}
+                    >
+                        Implement in your code
                     </StyledSubHeader>
                     <StyledParagraph variant='body2'>
                         To start collecting data, you need to implement the
                         metric in your application code using one of our SDKs.
                         View the documentation for setup instructions.
                     </StyledParagraph>
-                </NextStepCard>
+                </Card>
             </Box>
         </StyledContainer>
     );

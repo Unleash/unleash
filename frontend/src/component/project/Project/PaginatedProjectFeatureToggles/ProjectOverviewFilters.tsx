@@ -139,18 +139,12 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
                 ],
                 filterKey: 'favorite',
                 singularOperators: ['IS'] as [string, ...string[]],
-                pluralOperators: ['IS_ANY_OF'] as [
-                    string,
-                    ...string[],
-                ],
+                pluralOperators: ['IS_ANY_OF'] as [string, ...string[]],
             },
         ];
 
         setAvailableFilters(availableFilters);
-    }, [
-        JSON.stringify(tags),
-        JSON.stringify(flagCreators),
-    ]);
+    }, [JSON.stringify(tags), JSON.stringify(flagCreators)]);
 
     return (
         <StyledFilters

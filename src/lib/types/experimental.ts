@@ -74,7 +74,6 @@ export type IFlagKey =
     | 'impactMetricsFlagPage'
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'onlyFeatureTokensWithFeatureAPIs'
-    | 'pendingUserAccessRequests'
     | 'onboardingFlagSetup'
     | 'multiMetricChart';
 
@@ -333,10 +332,6 @@ const flags: IFlags = {
     ),
     onlyFeatureTokensWithFeatureAPIs: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ONLY_FEATURE_TOKENS_WITH_FEATURE_APIS,
-        false,
-    ),
-    pendingUserAccessRequests: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PENDING_USER_ACCESS_REQUESTS,
         false,
     ),
     onboardingFlagSetup: parseEnvVarBoolean(

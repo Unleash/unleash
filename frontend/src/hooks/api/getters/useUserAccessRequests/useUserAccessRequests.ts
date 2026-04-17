@@ -1,4 +1,3 @@
-import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
@@ -6,6 +5,8 @@ import type {
     UserAccessRequestSchema,
     UserAccessRequestsSchema,
 } from 'openapi';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
+import useUiConfig from '../useUiConfig/useUiConfig.js';
 
 interface IUseUserAccessRequestsOutput {
     accessRequests: UserAccessRequestSchema[];
@@ -15,7 +16,10 @@ interface IUseUserAccessRequestsOutput {
 }
 
 export const useUserAccessRequests = (): IUseUserAccessRequestsOutput => {
-    const { data, error, mutate } = useSWR<UserAccessRequestsSchema>(
+    const { isOss } = useUiConfig();
+    const { data, error, mutate } = useConditionalSWR<UserAccessRequestsSchema>(
+        !isOss(),
+        { userAccessRequests: [] },
         formatApiPath('api/admin/user-access-requests'),
         fetcher,
     );

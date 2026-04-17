@@ -13,6 +13,7 @@ import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpac
 import { useUiFlag } from 'hooks/useUiFlag';
 import { RegisterMetricDialog } from 'component/impact-metrics/RegisterMetricDialog/RegisterMetricDialog';
 import { useTrackRegisterImpactMetrics } from 'component/impact-metrics/RegisterMetricDialog/useTrackRegisterImpactMetrics';
+import { useRegisterImpactMetric } from 'component/impact-metrics/ImpactMetricRegistrationContext';
 
 type MetricOption = {
     name: string;
@@ -128,8 +129,14 @@ export const MetricSelector: FC<MetricSelectorProps> = ({
 }) => {
     const allOptions = withSelectedValue(options, value, valueSource);
     const registerImpactMetricsEnabled = useUiFlag('registerImpactMetrics');
-    const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
+    const registrationContext = useRegisterImpactMetric();
+    const [registerMetricDialogOpen, setRegisterMetricDialogOpen] =
+        useState(false);
     const { trackFormOpened } = useTrackRegisterImpactMetrics();
+
+    const switchToRegisterDialog = registrationContext?.openRegisterDialog;
+    const handleRegisterClick =
+        switchToRegisterDialog ?? (() => setRegisterMetricDialogOpen(true));
 
     return (
         <>
@@ -188,7 +195,7 @@ export const MetricSelector: FC<MetricSelectorProps> = ({
                         onRegisterClick={
                             registerImpactMetricsEnabled
                                 ? () => {
-                                      setRegisterDialogOpen(true);
+                                      handleRegisterClick();
                                       trackFormOpened();
                                   }
                                 : undefined
@@ -197,10 +204,12 @@ export const MetricSelector: FC<MetricSelectorProps> = ({
                 }
                 sx={{ minWidth: 300 }}
             />
-            <RegisterMetricDialog
-                open={registerDialogOpen}
-                onClose={() => setRegisterDialogOpen(false)}
-            />
+            {!registrationContext && (
+                <RegisterMetricDialog
+                    open={registerMetricDialogOpen}
+                    onClose={() => setRegisterMetricDialogOpen(false)}
+                />
+            )}
         </>
     );
 };

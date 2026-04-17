@@ -4,6 +4,8 @@ import { Typography, styled, Box } from '@mui/material';
 import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { ImpactMetricModal } from './ImpactMetricModal/ImpactMetricModal.tsx';
+import { RegisterMetricDialog } from './RegisterMetricDialog/RegisterMetricDialog';
+import { ImpactMetricRegistrationProvider } from './ImpactMetricRegistrationContext';
 import { ChartItem } from './ChartItem.tsx';
 import { PlausibleChartItem } from './PlausibleChartItem.tsx';
 import { GridLayoutWrapper, type GridItem } from './GridLayoutWrapper.tsx';
@@ -31,7 +33,9 @@ const _StyledDragHandle = styled(Box)(({ theme }) => ({
 }));
 
 export const ImpactMetrics: FC = () => {
-    const [modalOpen, setModalOpen] = useState(false);
+    const [createChartDialogOpen, setCreateChartDialogOpen] = useState(false);
+    const [registerMetricDialogOpen, setRegisterMetricDialogOpen] =
+        useState(false);
     const [editingChart, setEditingChart] = useState<ChartConfig | undefined>();
     const { setToastApiError } = useToast();
     const plausibleMetricsEnabled = useUiFlag('plausibleMetrics');
@@ -54,7 +58,7 @@ export const ImpactMetrics: FC = () => {
 
     const handleAddChart = () => {
         setEditingChart(undefined);
-        setModalOpen(true);
+        setCreateChartDialogOpen(true);
         trackEvent('impact-metrics', {
             props: {
                 eventType: 'global chart modal open',
@@ -64,7 +68,7 @@ export const ImpactMetrics: FC = () => {
 
     const handleEditChart = (config: ChartConfig) => {
         setEditingChart(config);
-        setModalOpen(true);
+        setCreateChartDialogOpen(true);
     };
 
     const handleSaveChart = async (config: Omit<ChartConfig, 'id'>) => {
@@ -74,7 +78,7 @@ export const ImpactMetrics: FC = () => {
             } else {
                 await addChart(config);
             }
-            setModalOpen(false);
+            setCreateChartDialogOpen(false);
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }
@@ -180,14 +184,27 @@ export const ImpactMetrics: FC = () => {
                 </>
             )}
 
-            <ImpactMetricModal
-                open={modalOpen}
-                onClose={() => setModalOpen(false)}
-                onSave={handleSaveChart}
-                initialConfig={editingChart}
-                metrics={metricOptions}
-                loading={metadataLoading || settingsLoading}
-            />
+            <ImpactMetricRegistrationProvider
+                value={{
+                    openRegisterDialog: () => {
+                        setCreateChartDialogOpen(false);
+                        setRegisterMetricDialogOpen(true);
+                    },
+                }}
+            >
+                <ImpactMetricModal
+                    open={createChartDialogOpen}
+                    onClose={() => setCreateChartDialogOpen(false)}
+                    onSave={handleSaveChart}
+                    initialConfig={editingChart}
+                    metrics={metricOptions}
+                    loading={metadataLoading || settingsLoading}
+                />
+                <RegisterMetricDialog
+                    open={registerMetricDialogOpen}
+                    onClose={() => setRegisterMetricDialogOpen(false)}
+                />
+            </ImpactMetricRegistrationProvider>
         </>
     );
 };

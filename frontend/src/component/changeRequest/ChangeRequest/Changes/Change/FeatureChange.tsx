@@ -22,7 +22,7 @@ import { StrategyChange } from './StrategyChange.tsx';
 
 const StyledSingleChangeBox = styled(Box)(({ theme }) => ({
     overflow: 'hidden',
-    border: `1px solid${theme.palette.divider}`,
+    border: `1px solid ${theme.palette.divider}`,
     borderBottomWidth: 0,
     borderRadius: 0,
     '&[data-conflict="change"]': {

@@ -119,9 +119,7 @@ export const MultimetricChart: FC<MultimetricChartProps> = ({
 
     const eventAnnotations = buildEventAnnotations(eventGroups, theme);
     const showPlaceholder = hasNoData || loading;
-    // While the placeholder's 98-day-wide weekly samples are on screen, skip
-    // the timeRange-scoped x-axis config; otherwise Chart.js can be asked to
-    // generate a tick per minute across 98 days and throws "too far apart".
+
     const chartOptions = showPlaceholder
         ? {}
         : buildChartOptions(visibleWindow, timeRange, eventAnnotations);

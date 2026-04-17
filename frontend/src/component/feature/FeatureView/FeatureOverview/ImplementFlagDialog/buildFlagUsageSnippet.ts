@@ -32,8 +32,10 @@ export const buildFlagUsageSnippet = (
     return `\`\`\`${lastBlock.language}\n${code}\n\`\`\``;
 };
 
+const FENCED_CODE_BLOCK = /```(\w*)\n([\s\S]*?)```/g;
+
 const extractLastCodeBlock = (markdown: string) => {
-    const matches = [...markdown.matchAll(/```(\w*)\n([\s\S]*?)```/g)];
+    const matches = [...markdown.matchAll(FENCED_CODE_BLOCK)];
     if (matches.length === 0) return null;
     const [, language, code] = matches[matches.length - 1];
     return { language, code: code.trim() };

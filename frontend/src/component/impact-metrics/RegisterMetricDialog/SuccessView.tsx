@@ -91,18 +91,18 @@ export const SuccessView = ({ metricName }: SuccessViewProps) => {
                     {metricName}
                 </StyledMetricName>
                 {isAvailable ? (
-                    <Typography variant='body2' color='success.main'>
+                    <Typography variant='body2'>
                         The metric is now available.
                     </Typography>
                 ) : timedOut ? (
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography variant='body2'>
                         Your metric may take a bit longer to become available.
                         You can close this dialog and check back shortly.
                     </Typography>
                 ) : (
                     <StyledLoading>
                         <CircularProgress size={16} />
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography variant='body2'>
                             Waiting for metric to become available…
                         </Typography>
                     </StyledLoading>

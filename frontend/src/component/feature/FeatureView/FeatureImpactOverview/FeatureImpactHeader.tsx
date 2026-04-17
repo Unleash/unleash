@@ -246,8 +246,13 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                 <StyledExpandedContent>
                     <StyledChartRow>
                         {multiMetricEnabled
-                            ? groupImpactConfigs(impactMetrics.configs).map(
-                                  (group) =>
+                            ? [...groupImpactConfigs(impactMetrics.configs)]
+                                  .sort(
+                                      (left, right) =>
+                                          Number(right.configs.length >= 2) -
+                                          Number(left.configs.length >= 2),
+                                  )
+                                  .map((group) =>
                                       group.configs.length >= 2 ? (
                                           <GroupedChartCard
                                               key={group.key}
@@ -263,7 +268,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                                               featureName={featureName}
                                           />
                                       ),
-                              )
+                                  )
                             : impactMetrics.configs.map((config) => (
                                   <CompactChartCard
                                       key={config.id}

@@ -15,10 +15,7 @@ import {
     CodeRenderer,
     codeRenderSnippets,
 } from 'component/onboarding/dialog/CodeRenderer';
-import {
-    allSdks,
-    type SdkName,
-} from 'component/onboarding/dialog/sharedTypes';
+import { allSdks, type SdkName } from 'component/onboarding/dialog/sharedTypes';
 import { ImplementFlagInformation } from './ImplementFlagInformation.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({

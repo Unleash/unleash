@@ -16,14 +16,17 @@ import type {
 import { CLIENT_DELTA_MEMORY } from '../../../metric-events.js';
 import EventEmitter from 'events';
 import type { Logger } from '../../../logger.js';
-import type { ClientFeaturesDeltaSchema } from '../../../openapi/index.js';
+import type {
+    ClientFeatureSchema,
+    ClientFeaturesDeltaSchema,
+} from '../../../openapi/index.js';
 import {
     DELTA_EVENT_TYPES,
     type DeltaEvent,
     type DeltaHydrationEvent,
     isDeltaFeatureRemovedEvent,
     isDeltaFeatureUpdatedEvent,
-    isDeltaSegmentEvent,
+    isDeltaVisibleRevisionSegmentEvent,
 } from './client-feature-toggle-delta-types.js';
 import {
     FEATURE_ARCHIVED,
@@ -34,14 +37,21 @@ import {
     SEGMENT_UPDATED,
     type IEvent,
 } from '../../../events/index.js';
-import { getVisibleRevision } from './visible-revision.js';
+import {
+    getReferencedSegmentIds,
+    getVisibleRevision,
+} from './visible-revision.js';
 import { createGauge } from '../../../util/metrics/index.js';
 import { BadDataError } from '../../../server-impl.js';
 
 export type EnvironmentRevisions = Record<string, DeltaCache>;
 export type EnvironmentVisibleRevisionState = {
     projectRevisions: Map<string, number>;
-    globalSegmentRevision: number;
+    // Tracks the latest revision per segment so we can keep segment changes in
+    // memory without automatically making every segment event visible for the
+    // whole environment. The environment revision should only consider segment
+    // revisions for segments that are actually referenced by visible features.
+    segmentRevisions: Map<number, number>;
 };
 
 export const UPDATE_DELTA = 'UPDATE_DELTA';
@@ -51,6 +61,7 @@ export const filterEventsByQuery = (
     requestedRevisionId: number,
     projects: string[],
     namePrefix: string,
+    visibleSegmentIds?: Set<number>,
 ) => {
     const targetedEvents = events.filter(
         (revision) => revision.eventId > requestedRevisionId,
@@ -74,9 +85,29 @@ export const filterEventsByQuery = (
         );
     };
 
+    const isVisibleSegment = (revision: DeltaEvent) => {
+        if (
+            !isDeltaVisibleRevisionSegmentEvent(revision) ||
+            !visibleSegmentIds
+        ) {
+            return true;
+        }
+
+        return visibleSegmentIds.has(revision.segment.id);
+    };
+
     return targetedEvents.filter((revision) => {
+        const isAnySegmentDeltaEvent =
+            revision.type === DELTA_EVENT_TYPES.SEGMENT_UPDATED ||
+            revision.type === DELTA_EVENT_TYPES.SEGMENT_REMOVED;
+        const segmentMatches =
+            visibleSegmentIds === undefined
+                ? isAnySegmentDeltaEvent
+                : isDeltaVisibleRevisionSegmentEvent(revision) &&
+                  isVisibleSegment(revision);
+
         return (
-            isDeltaSegmentEvent(revision) ||
+            segmentMatches ||
             (startsWithPrefix(revision) &&
                 (allProjects || isInProject(revision)))
         );
@@ -201,7 +232,16 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             await this.initEnvironmentDelta(environment);
         }
 
-        const visibleRevision = this.getVisibleRevision(environment, projects);
+        const hydrationEvent = this.delta[environment].getHydrationEvent();
+        const visibleSegmentIds = getReferencedSegmentIds(
+            hydrationEvent.features,
+            projects,
+            namePrefix,
+        );
+        const visibleRevision = this.getVisibleRevision(
+            environment,
+            hydrationEvent.features,
+        );
 
         if (hasRequestedRevision && requestedRevisionId >= visibleRevision) {
             this.logger.info(
@@ -214,7 +254,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             !hasRequestedRevision ||
             delta.isMissingRevision(requestedRevisionId)
         ) {
-            const hydrationEvent = delta.getHydrationEvent();
             const filteredEvent = filterHydrationEventByQuery(
                 hydrationEvent,
                 projects,
@@ -242,6 +281,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 requestedRevisionId,
                 projects,
                 namePrefix,
+                visibleSegmentIds,
             );
 
             if (events.length === 0) {
@@ -436,6 +476,15 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             segmentId,
         }));
 
+        // Segment removal needs to update the cached hydration payload for
+        // long-lived pods, but it must not advance the visible revision. Only
+        // segment updates can make an already-visible payload change on their own.
+        const segmentCacheEvents = [
+            ...segmentsUpdatedEvents,
+            ...segmentsRemovedEvents,
+        ];
+        const segmentVisibleRevisionEvents = [...segmentsUpdatedEvents];
+
         for (const environment of environments) {
             // merge globally updated features with environment specific updates, keep the max revision id for each feature
             const featureUpdatesInEnvironment = new Map<string, number>(
@@ -467,13 +516,12 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             this.delta[environment].addEvents([
                 ...featuresRemovedEvents,
                 ...featuresUpdatedEvents,
-                ...segmentsUpdatedEvents,
-                ...segmentsRemovedEvents,
+                ...segmentCacheEvents,
             ]);
             this.updateVisibleRevisions(
                 environment,
                 [...featuresRemovedEvents, ...featuresUpdatedEvents],
-                [...segmentsUpdatedEvents, ...segmentsRemovedEvents],
+                segmentVisibleRevisionEvents,
             );
         }
         this.lastDeltaProcessedRevisionId = eventsTo;
@@ -500,7 +548,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         });
         const baseSegments = await this.segmentReadModel.getAllForClientIds();
 
-        const maxRevision = getVisibleRevision(revisionState);
+        const maxRevision = getVisibleRevision(revisionState, baseFeatures);
         this.delta[environment] = new DeltaCache({
             eventId: maxRevision,
             type: DELTA_EVENT_TYPES.HYDRATION,
@@ -509,38 +557,42 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         });
         this.lastDeltaProcessedRevisionId = maxRevision;
         this.visibleRevisions[environment] = revisionState;
+        deltaRevisionIdMetric.labels({ environment }).set(maxRevision);
         this.storeFootprint();
     }
 
     private getVisibleRevision(
         environment: string,
-        projects: string[],
+        features: ClientFeatureSchema[] = [],
     ): number {
         const revisionState = this.visibleRevisions[environment];
-        return getVisibleRevision(revisionState, projects);
+        return getVisibleRevision(revisionState, features);
     }
 
     private updateVisibleRevisions(
         environment: string,
         featureEvents: DeltaEvent[],
-        segmentEvents: DeltaEvent[],
+        segmentRevisionEvents: DeltaEvent[],
     ) {
         const revisionState = this.visibleRevisions[environment] ?? {
             projectRevisions: new Map<string, number>(),
-            globalSegmentRevision: 0,
+            segmentRevisions: new Map<number, number>(),
         };
 
-        if (segmentEvents.length > 0) {
-            for (const event of segmentEvents) {
-                revisionState.globalSegmentRevision = Math.max(
-                    revisionState.globalSegmentRevision,
+        if (segmentRevisionEvents.length > 0) {
+            for (const event of segmentRevisionEvents) {
+                if (!isDeltaVisibleRevisionSegmentEvent(event)) {
+                    continue;
+                }
+
+                setMaxRevision(
+                    revisionState.segmentRevisions,
+                    event.segment.id,
                     event.eventId,
                 );
             }
         }
 
-        // assume segment revision id as max feature event
-        let environmentMax = revisionState.globalSegmentRevision;
         for (const event of featureEvents) {
             let project: string | undefined;
             if (event.type === DELTA_EVENT_TYPES.FEATURE_UPDATED) {
@@ -554,9 +606,15 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                     project,
                     event.eventId,
                 );
-                environmentMax = Math.max(environmentMax, event.eventId);
             }
         }
+
+        const hydrationFeatures =
+            this.delta[environment].getHydrationEvent().features;
+        const environmentMax = getVisibleRevision(
+            revisionState,
+            hydrationFeatures,
+        );
 
         deltaRevisionIdMetric.labels({ environment }).set(environmentMax);
         this.visibleRevisions[environment] = revisionState;

@@ -6,6 +6,8 @@ import {
     FEATURE_PROJECT_CHANGE,
     FEATURE_TAGGED,
     FEATURE_UPDATED,
+    SEGMENT_CREATED,
+    SEGMENT_DELETED,
     SEGMENT_UPDATED,
     type IEvent,
 } from '../../../lib/events/index.js';
@@ -377,7 +379,7 @@ describe('getDeltaRevisionState', () => {
 
         expect(state.projectRevisions.get('default')).toBe(defaultStored.id);
         expect(state.projectRevisions.get('other')).toBe(otherStored.id);
-        expect(state.globalSegmentRevision).toBe(segmentStored.id);
+        expect(state.segmentRevisions.get(123)).toBe(segmentStored.id);
     });
 
     test('respects environment filtering and includes null-environment feature events', async () => {
@@ -452,7 +454,7 @@ describe('getDeltaRevisionState', () => {
 
         expect(state.projectRevisions.get('old-project')).toBe(storedMove.id);
         expect(state.projectRevisions.get('new-project')).toBe(storedMove.id);
-        expect(state.globalSegmentRevision).toBe(0);
+        expect(state.segmentRevisions.size).toBe(0);
     });
 
     test('ignores non-interesting feature events', async () => {
@@ -471,7 +473,42 @@ describe('getDeltaRevisionState', () => {
         const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
 
         expect(state.projectRevisions.size).toBe(0);
-        expect(state.globalSegmentRevision).toBe(0);
+        expect(state.segmentRevisions.size).toBe(0);
+    });
+
+    test('ignores created and deleted segment events when building visible segment revisions', async () => {
+        const segmentCreatedEvent = {
+            type: SEGMENT_CREATED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            data: { id: 321, name: 'segment-a' },
+        };
+
+        const segmentDeletedEvent = {
+            type: SEGMENT_DELETED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            preData: { id: 654, name: 'segment-b' },
+        };
+
+        await eventStore.store(segmentCreatedEvent);
+        await eventStore.store(segmentDeletedEvent);
+
+        const allEvents = await eventStore.getAll();
+        const createdStored = allEvents.find(
+            (e) => e.type === SEGMENT_CREATED,
+        )!;
+        const deletedStored = allEvents.find(
+            (e) => e.type === SEGMENT_DELETED,
+        )!;
+
+        const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
+
+        expect(createdStored).toBeDefined();
+        expect(deletedStored).toBeDefined();
+        expect(state.segmentRevisions.size).toBe(0);
     });
 
     test('returns latest project and segment revisions', async () => {
@@ -516,7 +553,7 @@ describe('getDeltaRevisionState', () => {
 
         expect(state.projectRevisions.get('default')).not.toBe(firstStored.id);
         expect(state.projectRevisions.get('default')).toBe(secondStored.id);
-        expect(state.globalSegmentRevision).toBe(segmentStored.id);
+        expect(state.segmentRevisions.get(999)).toBe(segmentStored.id);
     });
 });
 

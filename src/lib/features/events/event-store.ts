@@ -314,11 +314,22 @@ export class EventStore implements IEventStore {
             .modify(applyEnvironmentFilter)
             .groupByRaw(`data->>'oldProject'`);
 
-        const segmentRow: { revisionId?: number | string } | undefined =
-            await this.db(TABLE)
-                .max({ revisionId: 'id' })
-                .where({ type: SEGMENT_UPDATED })
-                .first();
+        const segmentRows: Array<{
+            segmentId?: number | string;
+            revisionId?: number | string;
+        }> = await this.db(TABLE)
+            .select(
+                this.db.raw(
+                    `COALESCE((data->>'id')::int, (pre_data->>'id')::int) as "segmentId"`,
+                ),
+            )
+            .max({ revisionId: 'id' })
+            // Only segment updates can change an already-visible payload on
+            // their own. Segment create/delete are preceded by feature
+            // dereference/reference changes, so visibility should advance via
+            // feature events instead of segment-only revision state.
+            .whereIn('type', [SEGMENT_UPDATED])
+            .groupByRaw(`COALESCE((data->>'id')::int, (pre_data->>'id')::int)`);
 
         stopTimer();
 
@@ -337,9 +348,21 @@ export class EventStore implements IEventStore {
             }
         }
 
+        const segmentRevisions = new Map<number, number>();
+        for (const row of segmentRows) {
+            if (row.segmentId == null) {
+                continue;
+            }
+
+            segmentRevisions.set(
+                Number(row.segmentId),
+                Number(row.revisionId ?? 0),
+            );
+        }
+
         return {
             projectRevisions,
-            globalSegmentRevision: Number(segmentRow?.revisionId ?? 0),
+            segmentRevisions,
         };
     }
 

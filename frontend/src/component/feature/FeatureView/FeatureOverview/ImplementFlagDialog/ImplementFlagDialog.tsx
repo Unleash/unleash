@@ -17,6 +17,7 @@ import {
 } from 'component/onboarding/dialog/CodeRenderer';
 import { allSdks, type SdkName } from 'component/onboarding/dialog/sharedTypes';
 import { ImplementFlagInformation } from './ImplementFlagInformation.tsx';
+import { buildFlagUsageSnippet } from './buildFlagUsageSnippet.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -139,13 +140,6 @@ const ListeningText = styled('div')({
     flexDirection: 'column',
 });
 
-const extractLastCodeBlock = (markdown: string) => {
-    const matches = [...markdown.matchAll(/```(\w*)\n([\s\S]*?)```/g)];
-    if (matches.length === 0) return null;
-    const [, language, code] = matches[matches.length - 1];
-    return { language, code: code.trim() };
-};
-
 interface ImplementFlagDialogProps {
     open: boolean;
     onClose: () => void;
@@ -161,13 +155,10 @@ export const ImplementFlagDialog = ({
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
     const [sdkName, setSdkName] = useState<SdkName>(allSdks[0].name);
 
-    const rawSnippet = codeRenderSnippets[sdkName] || '';
-    const [connectSnippet] = rawSnippet.split('---\n');
-    const lastBlock = extractLastCodeBlock(connectSnippet);
-    const code = (lastBlock?.code ?? '').replaceAll('<YOUR_FLAG>', feature);
-    const wrappedSnippet = lastBlock
-        ? `\`\`\`${lastBlock.language}\n${code}\n\`\`\``
-        : '';
+    const wrappedSnippet = buildFlagUsageSnippet(
+        codeRenderSnippets[sdkName] || '',
+        feature,
+    );
 
     return (
         <StyledDialog open={open} onClose={onClose}>

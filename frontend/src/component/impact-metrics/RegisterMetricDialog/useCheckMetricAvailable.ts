@@ -8,8 +8,7 @@ export const useCheckMetricAvailable = (metricName: string) => {
     const [timedOut, setTimedOut] = useState(false);
 
     const { metadata } = useImpactMetricsMetadata({
-        refreshInterval: POLL_INTERVAL,
-        enabled: !timedOut,
+        refreshInterval: timedOut ? 0 : POLL_INTERVAL,
     });
 
     const isAvailable =

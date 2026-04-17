@@ -14,6 +14,7 @@ import {
     type IChangeRequestResumeMilestoneProgression,
     type IChangeRequestStartMilestone,
     type IChangeRequestUpdateMilestoneStrategy,
+    type IFeatureChange,
 } from 'component/changeRequest/changeRequest.types';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useFeatureReleasePlans } from 'hooks/api/getters/useFeatureReleasePlans/useFeatureReleasePlans';
@@ -44,6 +45,13 @@ import {
     SafeguardDeleteView,
 } from './SafeguardChangeViews.tsx';
 import { StrategyItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem.tsx';
+
+export const isConsolidatedMilestoneAction = (
+    action: IFeatureChange['action'],
+): boolean =>
+    action === 'changeMilestoneProgression' ||
+    action === 'deleteMilestoneProgression' ||
+    action === 'updateMilestoneStrategy';
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
     display: 'flex',
@@ -489,34 +497,7 @@ export const ReleasePlanChange: FC<{
         }
     };
 
-    // If this is a release plan modification change (progression or milestone strategy)
-    // and we have the full feature object, consolidate with other such changes
-    if (
-        feature &&
-        (change.action === 'changeMilestoneProgression' ||
-            change.action === 'deleteMilestoneProgression' ||
-            change.action === 'updateMilestoneStrategy')
-    ) {
-        const consolidatedChanges = feature.changes.filter(
-            (
-                change,
-            ): change is
-                | IChangeRequestChangeMilestoneProgression
-                | IChangeRequestDeleteMilestoneProgression
-                | IChangeRequestUpdateMilestoneStrategy =>
-                change.action === 'changeMilestoneProgression' ||
-                change.action === 'deleteMilestoneProgression' ||
-                change.action === 'updateMilestoneStrategy',
-        );
-
-        // Only render if this is the first consolidated change
-        const isFirst =
-            consolidatedChanges.length > 0 && consolidatedChanges[0] === change;
-
-        if (!isFirst) {
-            return null; // Skip rendering, will be handled by the first one
-        }
-
+    if (feature && isConsolidatedMilestoneAction(change.action)) {
         return (
             <ConsolidatedReleasePlanChanges
                 feature={feature}

@@ -1,4 +1,7 @@
-import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
+import type { SWRConfiguration } from 'swr';
+import { useCallback } from 'react';
+import { fetcher } from '../useApiGetter/useApiGetter.js';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR.js';
 import { formatApiPath } from 'utils/formatPath';
 import type {
     AvailableImpactMetricsSchema,
@@ -8,17 +11,29 @@ import type {
 export type ImpactMetric = AvailableImpactMetricsSchemaMetricsItem;
 export type ImpactMetricsMetadata = AvailableImpactMetricsSchema;
 
-export const useImpactMetricsMetadata = () => {
-    const PATH = `api/admin/impact-metrics/metadata`;
-    const { data, refetch, loading, error } =
-        useApiGetter<ImpactMetricsMetadata>(formatApiPath(PATH), () =>
-            fetcher(formatApiPath(PATH), 'Impact metrics metadata'),
-        );
+const fallbackMetadata: ImpactMetricsMetadata = { metrics: [] };
+
+export const useImpactMetricsMetadata = (
+    options?: SWRConfiguration & { enabled?: boolean },
+) => {
+    const enabled = options?.enabled ?? true;
+    const PATH = formatApiPath('api/admin/impact-metrics/metadata');
+    const { data, error, mutate } = useConditionalSWR<ImpactMetricsMetadata>(
+        enabled,
+        fallbackMetadata,
+        PATH,
+        () => fetcher(PATH, 'Impact metrics metadata'),
+        options,
+    );
+
+    const refetch = useCallback(() => {
+        mutate();
+    }, [mutate]);
 
     return {
         metadata: data,
         refetch,
-        loading,
+        loading: !error && !data,
         error,
     };
 };

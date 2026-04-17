@@ -1,7 +1,14 @@
-import { Box, Button, Typography, styled } from '@mui/material';
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Typography,
+    styled,
+} from '@mui/material';
 import CodeIcon from '@mui/icons-material/Code';
 import { useTrackRegisterImpactMetrics } from './useTrackRegisterImpactMetrics';
 import { Link } from 'react-router-dom';
+import { useCheckMetricAvailable } from './useCheckMetricAvailable';
 
 type SuccessViewProps = {
     metricName: string;
@@ -51,8 +58,16 @@ const StyledMetricName = styled(Typography)(({ theme }) => ({
     width: 'fit-content',
 }));
 
+const StyledLoading = styled(Box)({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+});
+
 export const SuccessView = ({ metricName }: SuccessViewProps) => {
     const { trackDocsClickedAfterCreation } = useTrackRegisterImpactMetrics();
+    const { isAvailable, timedOut } = useCheckMetricAvailable(metricName);
 
     return (
         <SuccessBox>
@@ -75,6 +90,23 @@ export const SuccessView = ({ metricName }: SuccessViewProps) => {
                     </Typography>
                     {metricName}
                 </StyledMetricName>
+                {isAvailable ? (
+                    <Typography variant='body2' color='success.main'>
+                        The metric is now available.
+                    </Typography>
+                ) : timedOut ? (
+                    <Typography variant='body2' color='text.secondary'>
+                        Your metric may take a bit longer to become available.
+                        You can close this dialog and check back shortly.
+                    </Typography>
+                ) : (
+                    <StyledLoading>
+                        <CircularProgress size={16} />
+                        <Typography variant='body2' color='text.secondary'>
+                            Waiting for metric to become available…
+                        </Typography>
+                    </StyledLoading>
+                )}
             </TextContent>
 
             <Button

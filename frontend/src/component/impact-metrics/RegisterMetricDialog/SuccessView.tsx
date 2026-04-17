@@ -65,8 +65,9 @@ export const SuccessView = ({ metricName }: SuccessViewProps) => {
                     Implement the impact metric
                 </Typography>
                 <Typography>
-                    The metric is now accessible from the UI. You'll need to add
-                    it to your code to start receiving metrics.
+                    The metric will be available in the UI shortly (typically
+                    within a minute). You'll need to add it to your code to
+                    start receiving actual metric data.
                 </Typography>
                 <StyledMetricName>
                     <Typography component='span' fontWeight='bold'>

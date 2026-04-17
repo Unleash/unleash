@@ -5,6 +5,7 @@ import { MetricSelector } from './SeriesSelector/MetricSelector.tsx';
 import { RangeSelector } from './RangeSelector/RangeSelector.tsx';
 import { ModeSelector } from './ModeSelector/ModeSelector.tsx';
 import type { ChartFormState } from '../../hooks/useChartFormState.ts';
+import { useLocation } from 'react-router-dom';
 
 export type ImpactMetricsControlsProps = {
     formData: ChartFormState['formData'];
@@ -27,59 +28,67 @@ export const ImpactMetricsControls: FC<ImpactMetricsControlsProps> = ({
     metrics,
     loading,
     labelsFilter,
-}) => (
-    <Box>
-        <Box
-            sx={(theme) => ({
-                display: 'flex',
-                flexDirection: 'column',
-                gap: theme.spacing(3),
-            })}
-        >
-            <MetricSelector
-                value={formData.metricName}
-                valueSource={formData.source}
-                onChange={actions.handleSeriesChange}
-                options={metrics}
-                loading={loading}
-            />
+}) => {
+    const { pathname } = useLocation();
+    const entryPoint = pathname.includes('/impact-metrics')
+        ? 'impact-metrics-page'
+        : 'flag-impact-metrics-accordion';
 
-            {labelsFilter}
+    return (
+        <Box>
+            <Box
+                sx={(theme) => ({
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: theme.spacing(3),
+                })}
+            >
+                <MetricSelector
+                    value={formData.metricName}
+                    valueSource={formData.source}
+                    onChange={actions.handleSeriesChange}
+                    options={metrics}
+                    loading={loading}
+                    entryPoint={entryPoint}
+                />
 
+                {labelsFilter}
+
+                {formData.metricName ? (
+                    <>
+                        <RangeSelector
+                            value={formData.timeRange}
+                            onChange={actions.setTimeRange}
+                        >
+                            <MenuItem value='hour'>Last hour</MenuItem>
+                            <MenuItem value='day'>Last 24 hours</MenuItem>
+                            <MenuItem value='week'>Last 7 days</MenuItem>
+                            <MenuItem value='month'>Last 30 days</MenuItem>
+                        </RangeSelector>
+                        <ModeSelector
+                            value={formData.aggregationMode}
+                            onChange={actions.setAggregationMode}
+                            metricType={formData.metricType}
+                        />
+                    </>
+                ) : null}
+            </Box>
             {formData.metricName ? (
-                <>
-                    <RangeSelector
-                        value={formData.timeRange}
-                        onChange={actions.setTimeRange}
-                    >
-                        <MenuItem value='hour'>Last hour</MenuItem>
-                        <MenuItem value='day'>Last 24 hours</MenuItem>
-                        <MenuItem value='week'>Last 7 days</MenuItem>
-                        <MenuItem value='month'>Last 30 days</MenuItem>
-                    </RangeSelector>
-                    <ModeSelector
-                        value={formData.aggregationMode}
-                        onChange={actions.setAggregationMode}
-                        metricType={formData.metricType}
-                    />
-                </>
+                <FormControlLabel
+                    sx={(theme) => ({ margin: theme.spacing(1.5, 0) })}
+                    control={
+                        <Checkbox
+                            checked={formData.yAxisMin === 'zero'}
+                            onChange={(e) =>
+                                actions.setYAxisMin(
+                                    e.target.checked ? 'zero' : 'auto',
+                                )
+                            }
+                        />
+                    }
+                    label='Begin at zero'
+                />
             ) : null}
         </Box>
-        {formData.metricName ? (
-            <FormControlLabel
-                sx={(theme) => ({ margin: theme.spacing(1.5, 0) })}
-                control={
-                    <Checkbox
-                        checked={formData.yAxisMin === 'zero'}
-                        onChange={(e) =>
-                            actions.setYAxisMin(
-                                e.target.checked ? 'zero' : 'auto',
-                            )
-                        }
-                    />
-                }
-                label='Begin at zero'
-            />
-        ) : null}
-    </Box>
-);
+    );
+};

@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 import {
     Autocomplete,
     TextField,
@@ -39,10 +39,16 @@ export type MetricSelectorProps = {
     options: MetricOption[];
     loading?: boolean;
     label?: string;
+    entryPoint?:
+        | 'impact-metrics-page'
+        | 'flag-impact-metrics-accordion'
+        | 'flag-safeguards';
 };
 
-const NoOptionsMessage: FC<{ onRegisterClick?: () => void }> = ({
+const NoOptionsMessage = ({
     onRegisterClick,
+}: {
+    onRegisterClick?: () => void;
 }) => {
     const { trackEvent } = usePlausibleTracker();
     const { trackDocsClicked } = useTrackFlagpageImpactMetrics();
@@ -118,18 +124,19 @@ const withSelectedValue = (
 const groupLabel = (source?: MetricSource) =>
     source === 'external' ? 'External metrics' : 'Internal metrics';
 
-export const MetricSelector: FC<MetricSelectorProps> = ({
+export const MetricSelector = ({
     value,
     valueSource,
     onChange,
     options,
     loading = false,
     label = 'Metric name',
-}) => {
+    entryPoint,
+}: MetricSelectorProps) => {
     const allOptions = withSelectedValue(options, value, valueSource);
     const registerImpactMetricsEnabled = useUiFlag('registerImpactMetrics');
     const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
-    const { trackFormOpened } = useTrackRegisterImpactMetrics();
+    const { trackFormOpened } = useTrackRegisterImpactMetrics(entryPoint);
 
     return (
         <>

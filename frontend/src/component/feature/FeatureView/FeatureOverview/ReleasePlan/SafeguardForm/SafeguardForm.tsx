@@ -529,6 +529,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                             options={metricOptions}
                             loading={loading}
                             label=''
+                            entryPoint='flag-safeguards'
                         />
 
                         <StyledTopRow>

@@ -43,7 +43,7 @@ export const getVisibleRevision = (
             ? projects
             : Array.from(revisionState.projectRevisions.keys());
     // assume segment revision as max because segment changes are always visible
-    let visibleRevision = revisionState.maxCachedSegmentRevisionChange ?? 0;
+    let visibleRevision = revisionState.visibleSegmentRevision ?? 0;
     for (const project of projectList) {
         visibleRevision = Math.max(
             visibleRevision,

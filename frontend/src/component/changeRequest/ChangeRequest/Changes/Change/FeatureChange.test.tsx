@@ -8,14 +8,6 @@ import type {
     IFeatureChange,
 } from 'component/changeRequest/changeRequest.types';
 
-vi.mock('./ReleasePlanChange.tsx', () => ({
-    isConsolidatedMilestoneAction: (action: string) =>
-        action === 'changeMilestoneProgression' ||
-        action === 'deleteMilestoneProgression' ||
-        action === 'updateMilestoneStrategy',
-    ReleasePlanChange: () => null,
-}));
-
 describe('Schedule conflicts', () => {
     const change = {
         id: 15,

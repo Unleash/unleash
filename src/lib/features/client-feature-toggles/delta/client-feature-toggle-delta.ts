@@ -45,7 +45,6 @@ export type EnvironmentRevisions = Record<string, DeltaCache>;
 export type EnvironmentVisibleRevisionState = {
     projectRevisions: Map<string, number>;
     visibleSegmentRevision: number;
-    maxCachedSegmentRevisionChange: number;
 };
 
 export const UPDATE_DELTA = 'UPDATE_DELTA';
@@ -510,11 +509,22 @@ export class ClientFeatureToggleDelta extends EventEmitter {
     }
 
     private async initEnvironmentDelta(environment: string) {
-        const revisionState =
-            await this.eventStore.getDeltaRevisionState(environment);
         const baseFeatures = await this.getClientFeatures({
             environment,
         });
+        const referencedSegmentIds = getReferencedSegmentIds(baseFeatures);
+        // get the revision state at the time of hydration, so we can determine the visible revision
+        // for this environment and also determine which segment changes are visible based on the
+        // referenced segments in the hydration features
+        const revisionState = await this.eventStore.getDeltaRevisionState(
+            environment,
+            referencedSegmentIds,
+        );
+        // base segments still has to represent all the known state for segments,
+        // otherwise we might miss changes to segments that are not referenced by any feature
+        // in the hydration event but are updated/removed in the delta events.
+        // Note: because updated segments comes with all the segment's data,
+        // we could in theory get away with only including referenced segments in the hydration event
         const baseSegments = await this.segmentReadModel.getAllForClientIds();
 
         const maxRevision = getVisibleRevision(revisionState);
@@ -546,16 +556,11 @@ export class ClientFeatureToggleDelta extends EventEmitter {
     ) {
         const revisionState = this.visibleRevisions[environment] ?? {
             projectRevisions: new Map<string, number>(),
-            maxCachedSegmentRevisionChange: 0,
             visibleSegmentRevision: 0,
         };
 
         if (segmentEvents.length > 0) {
             for (const event of segmentEvents) {
-                revisionState.maxCachedSegmentRevisionChange = Math.max(
-                    revisionState.maxCachedSegmentRevisionChange,
-                    event.eventId,
-                );
                 // only consider visible, updated segments that are referenced
                 if (
                     event.type === DELTA_EVENT_TYPES.SEGMENT_UPDATED &&

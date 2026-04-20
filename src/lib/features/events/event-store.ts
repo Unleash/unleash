@@ -266,6 +266,7 @@ export class EventStore implements IEventStore {
 
     async getDeltaRevisionState(
         environment: string,
+        referencedSegmentIds: Set<number> | undefined = undefined,
     ): Promise<EnvironmentVisibleRevisionState> {
         const stopTimer = this.metricTimer('getDeltaRevisionState');
         const shouldFilterEnvironment = environment !== ALL_ENVS;
@@ -314,11 +315,26 @@ export class EventStore implements IEventStore {
             .modify(applyEnvironmentFilter)
             .groupByRaw(`data->>'oldProject'`);
 
-        const segmentRow: { revisionId?: number | string } | undefined =
-            await this.db(TABLE)
+        const backwardCompatibilityQuery = async () =>
+            this.db(TABLE)
                 .max({ revisionId: 'id' })
                 .where({ type: SEGMENT_UPDATED })
                 .first();
+        const newQuery = async () =>
+            this.db(TABLE)
+                .max({ revisionId: 'id' })
+                .where({ type: SEGMENT_UPDATED })
+                .whereIn('id', Array.from(referencedSegmentIds!))
+                .first();
+        const segmentRow: { revisionId?: number | string } | undefined =
+            // referencedSegmentIds === undefined represents the current usage pattern in enterprise
+            // next we should adapt the code in enterprise and remove this conditional expecting
+            // always to receive referenced segment ids.
+            referencedSegmentIds === undefined
+                ? await backwardCompatibilityQuery()
+                : referencedSegmentIds.size > 0
+                  ? await newQuery()
+                  : undefined;
 
         stopTimer();
 
@@ -339,7 +355,7 @@ export class EventStore implements IEventStore {
 
         return {
             projectRevisions,
-            maxCachedSegmentRevisionChange: Number(segmentRow?.revisionId ?? 0),
+            visibleSegmentRevision: Number(segmentRow?.revisionId ?? 0),
         };
     }
 

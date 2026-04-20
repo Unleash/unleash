@@ -59,3 +59,9 @@ export const isDeltaSegmentEvent = (
         event.type === DELTA_EVENT_TYPES.SEGMENT_REMOVED
     );
 };
+
+export const isDeltaSegmentUpdatedEvent = (
+    event: DeltaEvent,
+): event is Extract<DeltaEvent, { type: 'segment-updated' }> => {
+    return event.type === DELTA_EVENT_TYPES.SEGMENT_UPDATED;
+};

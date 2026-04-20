@@ -7,7 +7,7 @@ const revisionState: EnvironmentVisibleRevisionState = {
         ['alpha', 11],
         ['beta', 14],
     ]),
-    globalSegmentRevision: 12,
+    maxCachedSegmentRevisionChange: 12,
 };
 
 describe('getVisibleRevision', () => {

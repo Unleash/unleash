@@ -339,7 +339,7 @@ export class EventStore implements IEventStore {
 
         return {
             projectRevisions,
-            globalSegmentRevision: Number(segmentRow?.revisionId ?? 0),
+            maxCachedSegmentRevisionChange: Number(segmentRow?.revisionId ?? 0),
         };
     }
 

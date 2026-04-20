@@ -175,8 +175,6 @@ export const createStores = (
         featureSearchStore: new FeatureSearchStore(
             db,
             eventBus,
-            getLogger,
-            config.flagResolver,
         ),
         inactiveUsersStore: new InactiveUsersStore(db, eventBus, getLogger),
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),

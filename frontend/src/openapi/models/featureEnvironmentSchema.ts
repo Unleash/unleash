@@ -40,7 +40,7 @@ export interface FeatureEnvironmentSchema {
      * @minimum 0
      */
     no?: number;
-    /** Release plans for this feature environment (only available when milestoneProgression feature flag is enabled) */
+    /** Release plans for this feature environment */
     releasePlans?: ReleasePlanSchema[];
     /** Safeguards for this feature environment */
     safeguards?: FeatureEnvironmentSafeguardSchema[];

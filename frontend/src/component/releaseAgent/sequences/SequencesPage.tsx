@@ -29,6 +29,7 @@ import RocketIcon from '@mui/icons-material/RocketLaunchOutlined';
 import TuneIcon from '@mui/icons-material/TuneOutlined';
 import DeleteActionIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesomeOutlined';
+import CampaignIcon from '@mui/icons-material/CampaignOutlined';
 import {
     Link as RouterLink,
     useNavigate,
@@ -376,6 +377,18 @@ const describeAction = (action: ScheduledAction): string => {
                 ? `Enable ${action.featureName}`
                 : `Disable ${action.featureName}`;
         }
+        case 'mcp.invoke': {
+            const payload = action.payload as {
+                server?: string;
+                tool?: string;
+                arguments?: Record<string, unknown>;
+            };
+            const channel =
+                (payload.arguments?.channel as string | undefined) ??
+                (payload.arguments?.to as string | undefined);
+            const target = channel ? ` → ${channel}` : '';
+            return `Notify via ${payload.server ?? 'mcp'}.${payload.tool ?? 'tool'}${target}`;
+        }
         default:
             return `${action.actionType} on ${action.featureName}`;
     }
@@ -428,6 +441,18 @@ const describeGroup = (
             const payload = sample.payload as { enabled?: boolean };
             return payload.enabled ? `Enable ${who}` : `Disable ${who}`;
         }
+        case 'mcp.invoke': {
+            const payload = sample.payload as {
+                server?: string;
+                tool?: string;
+                arguments?: Record<string, unknown>;
+            };
+            const channel =
+                (payload.arguments?.channel as string | undefined) ??
+                (payload.arguments?.to as string | undefined);
+            const target = channel ? ` → ${channel}` : '';
+            return `Notify via ${payload.server ?? 'mcp'}.${payload.tool ?? 'tool'}${target}`;
+        }
         default:
             return `${actionType} on ${who}`;
     }
@@ -443,6 +468,8 @@ const actionIcon = (action: ScheduledAction) => {
             return <DeleteActionIcon fontSize='small' />;
         case 'feature_environment.setEnabled':
             return <PowerIcon fontSize='small' />;
+        case 'mcp.invoke':
+            return <CampaignIcon fontSize='small' />;
         default:
             return <TuneIcon fontSize='small' />;
     }
@@ -472,6 +499,8 @@ const groupKey = (action: ScheduledAction): string => {
         parameters?: { rollout?: unknown };
         patch?: { parameters?: { rollout?: unknown } };
         enabled?: boolean;
+        server?: string;
+        tool?: string;
     };
     const signature =
         action.actionType === 'strategy.create'
@@ -482,7 +511,9 @@ const groupKey = (action: ScheduledAction): string => {
                 ? `enabled:${payload.enabled}`
                 : action.actionType === 'strategy.delete'
                   ? 'delete'
-                  : action.actionType;
+                  : action.actionType === 'mcp.invoke'
+                    ? `mcp:${payload.server ?? ''}:${payload.tool ?? ''}`
+                    : action.actionType;
     return `${minute}|${action.actionType}|${signature}|${action.status}`;
 };
 

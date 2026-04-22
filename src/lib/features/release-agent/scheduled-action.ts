@@ -32,6 +32,13 @@ export type FeatureEnvironmentSetEnabledPayload = {
     enabled: boolean;
 };
 
+export type McpInvokePayload = {
+    server: string;
+    tool: string;
+    arguments: Record<string, unknown>;
+    response?: unknown;
+};
+
 export type ScheduledAction =
     | ScheduledActionBase<'strategy.create', StrategyCreatePayload>
     | ScheduledActionBase<'strategy.update', StrategyUpdatePayload>
@@ -39,7 +46,8 @@ export type ScheduledAction =
     | ScheduledActionBase<
           'feature_environment.setEnabled',
           FeatureEnvironmentSetEnabledPayload
-      >;
+      >
+    | ScheduledActionBase<'mcp.invoke', McpInvokePayload>;
 
 interface ScheduledActionBase<TType extends string, TPayload> {
     id: string;

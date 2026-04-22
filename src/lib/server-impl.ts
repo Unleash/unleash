@@ -145,7 +145,18 @@ import type {
 } from './features/release-agent/scheduled-sequence.js';
 import type { IScheduledActionStore } from './features/release-agent/scheduled-action-store.js';
 import type { IScheduledSequenceStore } from './features/release-agent/scheduled-sequence-store.js';
-import type { ReleaseAgentService } from './features/release-agent/release-agent-service.js';
+import type {
+    AvailableImpactMetric,
+    AvailableMcpServer,
+    AvailableMcpTool,
+    IAvailableImpactMetricsProvider,
+    IMcpServerCatalogProvider,
+    ISequenceCommitParticipant,
+    ReleaseAgentService,
+    SafeguardMetricQuery,
+    SafeguardRequest,
+} from './features/release-agent/release-agent-service.js';
+import type { McpInvokePayload } from './features/release-agent/scheduled-action.js';
 import type { IChangeRequestAccessReadModel } from './features/change-request-access-service/change-request-access-read-model.js';
 import { EventStore } from './db/event-store.js';
 import RoleStore from './db/role-store.js';
@@ -625,6 +636,15 @@ export type {
     IScheduledActionStore,
     IScheduledSequenceStore,
     ReleaseAgentService,
+    AvailableImpactMetric,
+    AvailableMcpServer,
+    AvailableMcpTool,
+    IAvailableImpactMetricsProvider,
+    IMcpServerCatalogProvider,
+    ISequenceCommitParticipant,
+    McpInvokePayload,
+    SafeguardMetricQuery,
+    SafeguardRequest,
     IChangeRequestAccessReadModel,
     IRoleWithProject,
     ISchemaValidationErrors,

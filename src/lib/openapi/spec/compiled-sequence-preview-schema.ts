@@ -44,6 +44,7 @@ export const compiledSequencePreviewSchema = {
                             'strategy.update',
                             'strategy.delete',
                             'feature_environment.setEnabled',
+                            'mcp.invoke',
                         ],
                     },
                     payload: {

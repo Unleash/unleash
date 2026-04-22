@@ -49,6 +49,22 @@ export interface IAvailableImpactMetricsProvider {
     getAvailableMetrics(): Promise<AvailableImpactMetric[]>;
 }
 
+export type AvailableMcpTool = {
+    name: string;
+    description?: string;
+    inputSchema?: Record<string, unknown>;
+};
+
+export type AvailableMcpServer = {
+    name: string;
+    description?: string;
+    tools: AvailableMcpTool[];
+};
+
+export interface IMcpServerCatalogProvider {
+    listServers(): Promise<AvailableMcpServer[]>;
+}
+
 export interface ISequenceCommitParticipant {
     onCommit(
         sequence: ScheduledSequence,
@@ -63,6 +79,10 @@ const NOOP_METRICS_PROVIDER: IAvailableImpactMetricsProvider = {
 
 const NOOP_COMMIT_PARTICIPANT: ISequenceCommitParticipant = {
     onCommit: async () => {},
+};
+
+const NOOP_MCP_CATALOG: IMcpServerCatalogProvider = {
+    listServers: async () => [],
 };
 
 export type CreateSequenceInput = {
@@ -109,6 +129,7 @@ export type CompiledSequencePreview = {
 export type ReleaseAgentServiceOptions = {
     availableImpactMetricsProvider?: IAvailableImpactMetricsProvider;
     commitParticipant?: ISequenceCommitParticipant;
+    mcpServerCatalog?: IMcpServerCatalogProvider;
 };
 
 export class ReleaseAgentService {
@@ -118,6 +139,7 @@ export class ReleaseAgentService {
     private readonly flagResolver: IFlagResolver;
     private metricsProvider: IAvailableImpactMetricsProvider;
     private commitParticipant: ISequenceCommitParticipant;
+    private mcpCatalog: IMcpServerCatalogProvider;
 
     constructor(
         stores: Stores,
@@ -137,6 +159,7 @@ export class ReleaseAgentService {
             options.availableImpactMetricsProvider ?? NOOP_METRICS_PROVIDER;
         this.commitParticipant =
             options.commitParticipant ?? NOOP_COMMIT_PARTICIPANT;
+        this.mcpCatalog = options.mcpServerCatalog ?? NOOP_MCP_CATALOG;
     }
 
     setAvailableImpactMetricsProvider(
@@ -147,6 +170,10 @@ export class ReleaseAgentService {
 
     setCommitParticipant(participant: ISequenceCommitParticipant) {
         this.commitParticipant = participant;
+    }
+
+    setMcpServerCatalog(catalog: IMcpServerCatalogProvider) {
+        this.mcpCatalog = catalog;
     }
 
     private assertEnabled() {
@@ -299,6 +326,33 @@ export class ReleaseAgentService {
                     );
                 }
                 return;
+            case 'mcp.invoke': {
+                if (
+                    typeof payload.server !== 'string' ||
+                    payload.server.trim() === ''
+                ) {
+                    throw new BadDataError(
+                        `${label} must include a non-empty payload.server`,
+                    );
+                }
+                if (
+                    typeof payload.tool !== 'string' ||
+                    payload.tool.trim() === ''
+                ) {
+                    throw new BadDataError(
+                        `${label} must include a non-empty payload.tool`,
+                    );
+                }
+                if (
+                    !payload.arguments ||
+                    typeof payload.arguments !== 'object'
+                ) {
+                    throw new BadDataError(
+                        `${label} must include a payload.arguments object`,
+                    );
+                }
+                return;
+            }
         }
     }
 
@@ -419,8 +473,10 @@ export class ReleaseAgentService {
             );
         }
 
-        const availableMetrics =
-            await this.metricsProvider.getAvailableMetrics();
+        const [availableMetrics, availableMcpServers] = await Promise.all([
+            this.metricsProvider.getAvailableMetrics(),
+            this.mcpCatalog.listServers(),
+        ]);
 
         const compilerInput = {
             project: input.project,
@@ -428,6 +484,7 @@ export class ReleaseAgentService {
             prompt: input.prompt,
             features: input.features,
             availableMetrics,
+            availableMcpServers,
         };
 
         const compiled = isAnthropicCompilerConfigured()

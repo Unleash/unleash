@@ -16,12 +16,13 @@ Rules you MUST follow:
 - You always target the project, environment, and feature list the user supplies. Do not invent feature names.
 - You produce an ordered list of actions, each with an absolute ISO-8601 UTC fireAt timestamp.
 - Compute every fireAt relative to the supplied "now" timestamp.
-- You have four action types: strategy.create, strategy.update, strategy.delete, feature_environment.setEnabled.
+- You have five action types: strategy.create, strategy.update, strategy.delete, feature_environment.setEnabled, mcp.invoke.
 - strategy.create payload: { strategyName, parameters?, constraints?, variants?, segments?, title?, disabled?, sortOrder? }.
 - strategy.update payload: { strategyRef: { type: "owned", sortOrder: N }, patch: { parameters?, constraints?, variants?, segments?, title?, disabled?, sortOrder? } }. You may NOT change strategyName on an update — create a new strategy instead if you need a different type.
 - strategy.delete payload: { strategyRef: { type: "owned", sortOrder: N } }.
 - The strategyRef's sortOrder must match the sortOrder of an earlier strategy.create in the same sequence.
 - feature_environment.setEnabled payload is { enabled: boolean }.
+- mcp.invoke payload: { server, tool, arguments }. "server" must be one of the names in the "Available MCP servers" section of the user message. "tool" must be one of that server's tool names. "arguments" must match the tool's inputSchema. Use mcp.invoke for notifications and side-effects ("post to Slack", "page the on-call", "send an email"). Schedule it at the same fireAt as the rollout step it accompanies — the executor will process actions in order within the minute. For mcp.invoke actions, set featureName to one of the sequence's features (the one the notification is about); if it's about multiple features, pick any one.
 - Ordering rule when a sequence both creates strategies and enables the environment for the same feature: the FIRST strategy.create for that feature MUST have a fireAt strictly earlier than the fireAt of any feature_environment.setEnabled with enabled=true. Enabling an environment that has no strategies auto-creates a 100% default rollout, which would blow past a gradual rollout. A small gap of a few seconds is enough — prefer setting the setEnabled(true) a few seconds after the strategy.create, not a full minute later. The executor ticks every minute, so both actions in the same minute will fire in the correct order within that tick.
 - For gradual rollouts, prefer the "flexibleRollout" strategy with numeric percentage string parameters: { rollout: "10", stickiness: "default", groupId: "<feature>" }.
 - Keep the sequence small and legible. Typical rollouts have 2–5 actions per feature.
@@ -153,6 +154,33 @@ const actionSchema = {
                     type: 'object',
                     required: ['enabled'],
                     properties: { enabled: { type: 'boolean' } },
+                    additionalProperties: false,
+                },
+            },
+        },
+        {
+            properties: {
+                actionType: { const: 'mcp.invoke' },
+                payload: {
+                    type: 'object',
+                    required: ['server', 'tool', 'arguments'],
+                    properties: {
+                        server: {
+                            type: 'string',
+                            description:
+                                'Name of an MCP server from the provided list.',
+                        },
+                        tool: {
+                            type: 'string',
+                            description: 'Tool name exposed by that server.',
+                        },
+                        arguments: {
+                            type: 'object',
+                            additionalProperties: true,
+                            description:
+                                "Arguments matching the tool's inputSchema.",
+                        },
+                    },
                     additionalProperties: false,
                 },
             },
@@ -306,6 +334,14 @@ const buildUserMessage = (input: MockCompileInput): string => {
                       2,
                   ),
               ].join('\n');
+    const mcpServers = input.availableMcpServers ?? [];
+    const mcpBlock =
+        mcpServers.length === 0
+            ? 'Available MCP servers: (none configured in this instance — do not emit mcp.invoke actions)'
+            : [
+                  'Available MCP servers (you may only target these server names and tool names on mcp.invoke actions; "arguments" must match the tool\'s inputSchema):',
+                  JSON.stringify(mcpServers, null, 2),
+              ].join('\n');
     return [
         `Project: ${input.project}`,
         `Environment: ${input.environment}`,
@@ -313,6 +349,8 @@ const buildUserMessage = (input: MockCompileInput): string => {
         `Now: ${nowIso}`,
         '',
         metricsBlock,
+        '',
+        mcpBlock,
         '',
         'Rollout request:',
         input.prompt,

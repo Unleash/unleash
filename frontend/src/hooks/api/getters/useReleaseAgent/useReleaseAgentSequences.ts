@@ -24,7 +24,8 @@ export type ScheduledAction = {
         | 'strategy.create'
         | 'strategy.update'
         | 'strategy.delete'
-        | 'feature_environment.setEnabled';
+        | 'feature_environment.setEnabled'
+        | 'mcp.invoke';
     payload: Record<string, unknown>;
     ownedStrategyId?: string | null;
     status: ScheduledActionStatus;

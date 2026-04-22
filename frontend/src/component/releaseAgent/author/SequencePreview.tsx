@@ -19,6 +19,7 @@ import RocketIcon from '@mui/icons-material/RocketLaunchOutlined';
 import PowerIcon from '@mui/icons-material/PowerSettingsNewOutlined';
 import TuneIcon from '@mui/icons-material/TuneOutlined';
 import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import CampaignIcon from '@mui/icons-material/CampaignOutlined';
 import type {
     CompiledPreview,
     PreviewAction,
@@ -143,6 +144,18 @@ const describeAction = (action: PreviewAction): string => {
                 ? `Enable ${action.featureName} in environment`
                 : `Disable ${action.featureName} in environment`;
         }
+        case 'mcp.invoke': {
+            const payload = action.payload as {
+                server?: string;
+                tool?: string;
+                arguments?: Record<string, unknown>;
+            };
+            const channel =
+                (payload.arguments?.channel as string | undefined) ??
+                (payload.arguments?.to as string | undefined);
+            const target = channel ? ` to ${channel}` : '';
+            return `Notify via ${payload.server ?? 'mcp'}.${payload.tool ?? 'tool'}${target}`;
+        }
         default:
             return `${(action as PreviewAction).actionType} on ${action.featureName}`;
     }
@@ -158,6 +171,8 @@ const ActionIcon = ({ action }: { action: PreviewAction }) => {
             return <DeleteIcon fontSize='small' />;
         case 'feature_environment.setEnabled':
             return <PowerIcon fontSize='small' />;
+        case 'mcp.invoke':
+            return <CampaignIcon fontSize='small' />;
         default:
             return <TuneIcon fontSize='small' />;
     }

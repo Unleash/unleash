@@ -195,15 +195,6 @@ export const ReleaseAgentAuthorPage = () => {
     const canSend =
         status === 'idle' && features.length > 0 && prompt.trim().length > 0;
 
-    const scrollToBottom = () => {
-        requestAnimationFrame(() => {
-            window.scrollTo({
-                top: document.documentElement.scrollHeight,
-                behavior: 'smooth',
-            });
-        });
-    };
-
     const send = async () => {
         if (!canSend) return;
         const userTurn: ChatTurn = {
@@ -215,7 +206,6 @@ export const ReleaseAgentAuthorPage = () => {
         const currentPrompt = prompt.trim();
         setPrompt('');
         setStatus('compiling');
-        scrollToBottom();
 
         try {
             const result = await compileSequence({
@@ -237,7 +227,6 @@ export const ReleaseAgentAuthorPage = () => {
             ]);
         } finally {
             setStatus('idle');
-            scrollToBottom();
         }
     };
 

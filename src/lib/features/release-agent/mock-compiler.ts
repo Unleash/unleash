@@ -1,5 +1,6 @@
 import type {
     AvailableImpactMetric,
+    AvailableMcpServer,
     CreateActionInput,
     SafeguardRequest,
 } from './release-agent-service.js';
@@ -11,6 +12,7 @@ export type MockCompileInput = {
     features: string[];
     now?: Date;
     availableMetrics?: AvailableImpactMetric[];
+    availableMcpServers?: AvailableMcpServer[];
 };
 
 export type MockCompileOutput = {

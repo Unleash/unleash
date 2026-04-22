@@ -44,6 +44,8 @@ import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewInte
 import { PaginatedApplicationList } from '../application/ApplicationList/PaginatedApplicationList.jsx';
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { Insights } from '../insights/Insights.jsx';
+import { IncidentsList } from 'component/incidents/pages/IncidentsList';
+import { IncidentDetail } from 'component/incidents/pages/IncidentDetail';
 import { LazyImpactMetricsPage } from '../impact-metrics/LazyImpactMetricsPage.tsx';
 import { FeedbackList } from '../feedbackNew/FeedbackList.jsx';
 import { Application } from 'component/application/Application';
@@ -172,6 +174,20 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { primary: true },
         enterprise: true,
+    },
+    {
+        path: '/incidents',
+        title: 'Incidents',
+        component: IncidentsList,
+        type: 'protected',
+        menu: { primary: true },
+    },
+    {
+        path: '/incidents/:id',
+        title: 'Incident',
+        component: IncidentDetail,
+        type: 'protected',
+        menu: {},
     },
 
     // Impact Metrics

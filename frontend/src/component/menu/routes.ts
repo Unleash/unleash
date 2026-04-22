@@ -190,10 +190,19 @@ export const routes: IRoute[] = [
     // Release Agent (experimental)
     {
         path: '/release-agent',
-        title: 'Release agent',
-        component: ReleaseAgentAuthorPage,
+        title: 'Releases',
+        component: SequencesPage,
         type: 'protected',
         menu: { primary: true },
+        flag: 'releaseAgent',
+    },
+    {
+        path: '/release-agent/new',
+        title: 'Draft release',
+        parent: '/release-agent',
+        component: ReleaseAgentAuthorPage,
+        type: 'protected',
+        menu: {},
         flag: 'releaseAgent',
     },
     {

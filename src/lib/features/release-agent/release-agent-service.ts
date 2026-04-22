@@ -392,11 +392,17 @@ export class ReleaseAgentService {
     async listSequences(
         project: string,
         environment: string,
-    ): Promise<ScheduledSequence[]> {
+    ): Promise<CreatedSequence[]> {
         this.assertEnabled();
-        return this.sequenceStore.getByProjectAndEnvironment(
+        const sequences = await this.sequenceStore.getByProjectAndEnvironment(
             project,
             environment,
+        );
+        return Promise.all(
+            sequences.map(async (sequence) => ({
+                sequence,
+                actions: await this.actionStore.getBySequenceId(sequence.id),
+            })),
         );
     }
 

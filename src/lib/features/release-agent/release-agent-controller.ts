@@ -252,7 +252,9 @@ export default class ReleaseAgentController extends Controller {
             environment,
         );
         res.json({
-            sequences: sequences.map((s) => toSequenceResponse(s)),
+            sequences: sequences.map(({ sequence, actions }) =>
+                toSequenceResponse(sequence, actions),
+            ),
         });
     }
 

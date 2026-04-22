@@ -194,7 +194,8 @@ describe('ReleaseAgentService', () => {
 
         const list = await releaseAgentService.listSequences('p1', 'dev');
         expect(list).toHaveLength(1);
-        expect(list[0].project).toBe('p1');
-        expect(list[0].environment).toBe('dev');
+        expect(list[0].sequence.project).toBe('p1');
+        expect(list[0].sequence.environment).toBe('dev');
+        expect(list[0].actions).toBeDefined();
     });
 });

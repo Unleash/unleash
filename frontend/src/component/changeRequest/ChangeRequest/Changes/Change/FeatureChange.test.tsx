@@ -154,6 +154,37 @@ describe('Schedule conflicts', () => {
 });
 
 describe('Consolidated milestone changes', () => {
+    const planSnapshot = {
+        id: 'plan-1',
+        name: 'Test plan',
+        description: '',
+        createdAt: '',
+        createdByUserId: 1,
+        featureName: 'milestone-test',
+        environment: 'default',
+        safeguards: [],
+        milestones: [
+            {
+                id: 'milestone-1',
+                name: 'Milestone 1',
+                releasePlanDefinitionId: 'plan-1',
+                strategies: [],
+            },
+            {
+                id: 'milestone-2',
+                name: 'Milestone 2',
+                releasePlanDefinitionId: 'plan-1',
+                strategies: [],
+            },
+            {
+                id: 'milestone-3',
+                name: 'Milestone 3',
+                releasePlanDefinitionId: 'plan-1',
+                strategies: [],
+            },
+        ],
+    };
+
     const makeConsolidatedChange = (id: number): IFeatureChange => ({
         id,
         action: 'changeMilestoneProgression' as const,
@@ -161,6 +192,7 @@ describe('Consolidated milestone changes', () => {
             sourceMilestone: `milestone-${id}`,
             targetMilestone: `milestone-${id + 1}`,
             transitionCondition: { intervalMinutes: 30 },
+            snapshot: planSnapshot,
         },
         createdAt: new Date(),
         createdBy: { id: 1, username: 'admin', imageUrl: '' },
@@ -188,35 +220,42 @@ describe('Consolidated milestone changes', () => {
         approvals: [],
         rejections: [],
         comments: [],
-        state: 'Draft',
+        state: 'Applied',
     };
 
-    it('renders only one change container when multiple consolidated milestone changes are present', () => {
-        const { getByTestId } = render(
-            <div data-testid='feature-changes'>
-                <FeatureChange
-                    actions={null}
-                    changeRequest={changeRequest}
-                    change={change1}
-                    feature={multiChangeFeature}
-                />
-                <FeatureChange
-                    actions={null}
-                    changeRequest={changeRequest}
-                    change={change2}
-                    feature={multiChangeFeature}
-                />
-                <FeatureChange
-                    actions={null}
-                    changeRequest={changeRequest}
-                    change={change3}
-                    feature={multiChangeFeature}
-                />
-            </div>,
+    it('renders the first consolidated change with all changes listed', () => {
+        render(
+            <FeatureChange
+                actions={null}
+                changeRequest={changeRequest}
+                change={change1}
+                feature={multiChangeFeature}
+            />,
         );
 
-        // Only the first consolidated milestone change should render a container;
-        // subsequent ones return null and do not appear in the document.
-        expect(getByTestId('feature-changes').children).toHaveLength(1);
+        const items = screen.getAllByRole('listitem');
+        expect(items).toHaveLength(3);
+        expect(items[0]).toHaveTextContent(
+            'Editing automation for Milestone 1',
+        );
+        expect(items[1]).toHaveTextContent(
+            'Editing automation for Milestone 2',
+        );
+        expect(items[2]).toHaveTextContent(
+            'Editing automation for Milestone 3',
+        );
+    });
+
+    it('renders nothing for consolidated changes after the first', () => {
+        render(
+            <FeatureChange
+                actions={null}
+                changeRequest={changeRequest}
+                change={change2}
+                feature={multiChangeFeature}
+            />,
+        );
+
+        expect(screen.queryAllByRole('listitem')).toHaveLength(0);
     });
 });

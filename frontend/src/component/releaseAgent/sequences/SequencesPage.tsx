@@ -1,16 +1,19 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     Alert,
     Box,
     Button,
     Chip,
     CircularProgress,
+    Collapse,
     Dialog,
     DialogContent,
     DialogTitle,
     Divider,
     IconButton,
     LinearProgress,
+    Link,
+    MenuItem,
     Paper,
     Stack,
     TextField,
@@ -20,12 +23,17 @@ import {
 import RefreshIcon from '@mui/icons-material/RefreshOutlined';
 import AddIcon from '@mui/icons-material/AddOutlined';
 import CloseIcon from '@mui/icons-material/CloseOutlined';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMoreOutlined';
 import PowerIcon from '@mui/icons-material/PowerSettingsNewOutlined';
 import RocketIcon from '@mui/icons-material/RocketLaunchOutlined';
 import TuneIcon from '@mui/icons-material/TuneOutlined';
 import DeleteActionIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesomeOutlined';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import {
+    Link as RouterLink,
+    useNavigate,
+    useSearchParams,
+} from 'react-router-dom';
 import { usePageTitle } from 'hooks/usePageTitle';
 import {
     type ScheduledAction,
@@ -36,6 +44,8 @@ import {
 } from 'hooks/api/getters/useReleaseAgent/useReleaseAgentSequences';
 import { useReleaseAgentSequence } from 'hooks/api/getters/useReleaseAgent/useReleaseAgentSequence';
 import { useReleaseAgentApi } from 'hooks/api/actions/useReleaseAgentApi/useReleaseAgentApi';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 
 const sequenceStatusColor: Record<
     ScheduledSequenceStatus,
@@ -120,6 +130,181 @@ const EmptyState = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
 }));
 
+const StatusPill = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'status',
+})<{ status: ScheduledActionStatus }>(({ theme, status }) => {
+    const palette =
+        status === 'executed'
+            ? theme.palette.success
+            : status === 'failed'
+              ? theme.palette.error
+              : status === 'skipped'
+                ? theme.palette.warning
+                : null;
+    if (!palette) {
+        return {
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: theme.spacing(0.25, 1),
+            borderRadius: 999,
+            fontSize: 12,
+            fontWeight: 600,
+            lineHeight: 1.5,
+            backgroundColor: theme.palette.background.default,
+            color: theme.palette.text.secondary,
+            border: `1px solid ${theme.palette.divider}`,
+        };
+    }
+    return {
+        display: 'inline-flex',
+        alignItems: 'center',
+        padding: theme.spacing(0.25, 1),
+        borderRadius: 999,
+        fontSize: 12,
+        fontWeight: 600,
+        lineHeight: 1.5,
+        backgroundColor: palette.light,
+        color: palette.dark,
+        border: `1px solid ${palette.border}`,
+    };
+});
+
+const StatusChip = ({ status }: { status: ScheduledActionStatus }) => (
+    <StatusPill status={status}>{status}</StatusPill>
+);
+
+const CodeBlock = styled(Box)(({ theme }) => ({
+    margin: 0,
+    marginTop: theme.spacing(1),
+    padding: theme.spacing(1.25),
+    fontSize: 11.5,
+    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+    overflow: 'auto',
+    backgroundColor: theme.palette.background.default,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.spacing(0.75),
+    whiteSpace: 'pre',
+}));
+
+const ExpandButton = styled(IconButton, {
+    shouldForwardProp: (prop) => prop !== 'expanded',
+})<{ expanded: boolean }>(({ theme, expanded }) => ({
+    transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+    transition: theme.transitions.create('transform', { duration: 200 }),
+}));
+
+type DetailStepProps = {
+    group: StepGroup;
+    index: number;
+    project: string;
+};
+
+const DetailStep = ({ group, index, project }: DetailStepProps) => {
+    const [expanded, setExpanded] = useState(false);
+    return (
+        <Paper variant='outlined' sx={{ p: 1.5 }}>
+            <Stack
+                direction='row'
+                justifyContent='space-between'
+                alignItems='flex-start'
+                spacing={1}
+            >
+                <Stack
+                    direction='row'
+                    spacing={1}
+                    alignItems='flex-start'
+                    sx={{ minWidth: 0, flex: 1 }}
+                >
+                    <Box sx={{ mt: 0.25 }}>{actionIcon(group.sample)}</Box>
+                    <Stack spacing={0.5} sx={{ minWidth: 0 }}>
+                        <Typography variant='body2'>
+                            #{index + 1} ·{' '}
+                            {describeGroup(
+                                group.actionType,
+                                group.sample,
+                                group.features,
+                            )}
+                        </Typography>
+                        <Stack
+                            direction='row'
+                            spacing={0.5}
+                            flexWrap='wrap'
+                            useFlexGap
+                            sx={{ alignItems: 'center' }}
+                        >
+                            {group.features.map((feature) => (
+                                <Link
+                                    key={feature}
+                                    component={RouterLink}
+                                    to={`/projects/${encodeURIComponent(project)}/features/${encodeURIComponent(feature)}`}
+                                    variant='caption'
+                                    underline='hover'
+                                    sx={{
+                                        fontFamily:
+                                            'ui-monospace, SFMono-Regular, Menlo, monospace',
+                                    }}
+                                >
+                                    {feature}
+                                </Link>
+                            ))}
+                            {group.features.length > 1 ? (
+                                <Typography
+                                    variant='caption'
+                                    color='text.secondary'
+                                >
+                                    · batched same-minute
+                                </Typography>
+                            ) : null}
+                        </Stack>
+                    </Stack>
+                </Stack>
+                <Stack
+                    direction='row'
+                    spacing={1}
+                    alignItems='center'
+                    sx={{ flexShrink: 0 }}
+                >
+                    <Typography variant='caption' color='text.secondary'>
+                        fires {formatTime(group.fireAt)}
+                    </Typography>
+                    <StatusChip status={group.status} />
+                    <ExpandButton
+                        expanded={expanded}
+                        size='small'
+                        onClick={() => setExpanded((v) => !v)}
+                        aria-label={expanded ? 'Hide JSON' : 'Show JSON'}
+                    >
+                        <ExpandMoreIcon fontSize='small' />
+                    </ExpandButton>
+                </Stack>
+            </Stack>
+            {group.error ? (
+                <Typography
+                    variant='caption'
+                    color='error'
+                    sx={{ display: 'block', mt: 0.5 }}
+                >
+                    {group.error}
+                </Typography>
+            ) : null}
+            <Collapse in={expanded} unmountOnExit>
+                <CodeBlock component='pre'>
+                    {JSON.stringify(
+                        {
+                            actionType: group.actionType,
+                            fireAt: group.fireAt,
+                            features: group.features,
+                            payload: group.sample.payload,
+                        },
+                        null,
+                        2,
+                    )}
+                </CodeBlock>
+            </Collapse>
+        </Paper>
+    );
+};
+
 const formatTime = (iso: string): string => {
     try {
         return new Date(iso).toLocaleString(undefined, {
@@ -196,6 +381,58 @@ const describeAction = (action: ScheduledAction): string => {
     }
 };
 
+const formatFeatureList = (features: string[]): string => {
+    if (features.length === 0) return '';
+    if (features.length === 1) return features[0];
+    if (features.length === 2) return `${features[0]} and ${features[1]}`;
+    const head = features.slice(0, -1).join(', ');
+    return `${head}, and ${features[features.length - 1]}`;
+};
+
+const describeGroup = (
+    actionType: ScheduledAction['actionType'],
+    sample: ScheduledAction,
+    features: string[],
+): string => {
+    const who = formatFeatureList(features);
+    switch (actionType) {
+        case 'strategy.create': {
+            const payload = sample.payload as {
+                strategyName?: string;
+                parameters?: Record<string, unknown>;
+            };
+            if (payload.strategyName === 'flexibleRollout') {
+                const rollout = payload.parameters?.rollout as
+                    | string
+                    | undefined;
+                return rollout
+                    ? `Create rollout at ${rollout}% for ${who}`
+                    : `Create strategy for ${who}`;
+            }
+            return `Create ${payload.strategyName ?? 'strategy'} for ${who}`;
+        }
+        case 'strategy.update': {
+            const payload = sample.payload as {
+                patch?: { parameters?: Record<string, unknown> };
+            };
+            const rollout = payload.patch?.parameters?.rollout as
+                | string
+                | undefined;
+            return rollout
+                ? `Ramp ${who} to ${rollout}%`
+                : `Update strategy on ${who}`;
+        }
+        case 'strategy.delete':
+            return `Remove strategy from ${who}`;
+        case 'feature_environment.setEnabled': {
+            const payload = sample.payload as { enabled?: boolean };
+            return payload.enabled ? `Enable ${who}` : `Disable ${who}`;
+        }
+        default:
+            return `${actionType} on ${who}`;
+    }
+};
+
 const actionIcon = (action: ScheduledAction) => {
     switch (action.actionType) {
         case 'strategy.create':
@@ -219,25 +456,83 @@ const stepLabel: Record<ReleaseStepKind, string> = {
     done: 'Last step',
 };
 
-const pickSteps = (
-    actions: ScheduledAction[],
-): { kind: ReleaseStepKind; action: ScheduledAction }[] => {
+type StepGroup = {
+    actionType: ScheduledAction['actionType'];
+    sample: ScheduledAction;
+    features: string[];
+    fireAt: string;
+    status: ScheduledActionStatus;
+    error?: string | null;
+};
+
+const groupKey = (action: ScheduledAction): string => {
+    const minute = Math.floor(new Date(action.fireAt).getTime() / 60_000);
+    const payload = action.payload as {
+        strategyName?: string;
+        parameters?: { rollout?: unknown };
+        patch?: { parameters?: { rollout?: unknown } };
+        enabled?: boolean;
+    };
+    const signature =
+        action.actionType === 'strategy.create'
+            ? `${payload.strategyName ?? ''}:${payload.parameters?.rollout ?? ''}`
+            : action.actionType === 'strategy.update'
+              ? `update:${payload.patch?.parameters?.rollout ?? ''}`
+              : action.actionType === 'feature_environment.setEnabled'
+                ? `enabled:${payload.enabled}`
+                : action.actionType === 'strategy.delete'
+                  ? 'delete'
+                  : action.actionType;
+    return `${minute}|${action.actionType}|${signature}|${action.status}`;
+};
+
+const groupActions = (actions: ScheduledAction[]): StepGroup[] => {
     const sorted = [...(actions ?? [])].sort(
         (a, b) => a.sortOrder - b.sortOrder,
     );
-    const nextPending = sorted.find((a) => a.status === 'pending');
-    const executed = sorted.filter((a) => a.status !== 'pending');
+    const groups = new Map<string, StepGroup>();
+    for (const action of sorted) {
+        const key = groupKey(action);
+        const existing = groups.get(key);
+        if (existing) {
+            if (!existing.features.includes(action.featureName)) {
+                existing.features.push(action.featureName);
+            }
+            if (action.error && !existing.error) {
+                existing.error = action.error;
+            }
+        } else {
+            groups.set(key, {
+                actionType: action.actionType,
+                sample: action,
+                features: [action.featureName],
+                fireAt: action.fireAt,
+                status: action.status,
+                error: action.error ?? undefined,
+            });
+        }
+    }
+    return Array.from(groups.values());
+};
+
+const pickStepGroups = (
+    actions: ScheduledAction[],
+): { kind: ReleaseStepKind; group: StepGroup }[] => {
+    const groups = groupActions(actions);
+    const pending = groups.filter((g) => g.status === 'pending');
+    const executed = groups.filter((g) => g.status !== 'pending');
+    const nextPending = pending[0];
     const latestRan = executed[executed.length - 1];
 
-    const steps: { kind: ReleaseStepKind; action: ScheduledAction }[] = [];
+    const steps: { kind: ReleaseStepKind; group: StepGroup }[] = [];
     if (latestRan) {
         steps.push({
             kind: nextPending ? 'current' : 'done',
-            action: latestRan,
+            group: latestRan,
         });
     }
     if (nextPending) {
-        steps.push({ kind: 'next', action: nextPending });
+        steps.push({ kind: 'next', group: nextPending });
     }
     return steps;
 };
@@ -256,7 +551,7 @@ type CardProps = {
 const ReleaseCardView = ({ sequence, onOpen }: CardProps) => {
     const actions = sequence.actions ?? [];
     const now = new Date();
-    const steps = pickSteps(actions);
+    const steps = pickStepGroups(actions);
     const features = featureNames(actions);
     const completed = actions.filter(
         (a) => a.status === 'executed' || a.status === 'skipped',
@@ -311,6 +606,10 @@ const ReleaseCardView = ({ sequence, onOpen }: CardProps) => {
                                 size='small'
                                 label={f}
                                 variant='outlined'
+                                clickable
+                                component={RouterLink}
+                                to={`/projects/${encodeURIComponent(sequence.project)}/features/${encodeURIComponent(f)}`}
+                                onClick={(e) => e.stopPropagation()}
                             />
                         ))}
                     </Stack>
@@ -331,10 +630,10 @@ const ReleaseCardView = ({ sequence, onOpen }: CardProps) => {
                             No steps to show.
                         </Typography>
                     ) : (
-                        steps.map(({ kind, action }) => (
-                            <StepBlock key={`${action.id}-${kind}`}>
+                        steps.map(({ kind, group }) => (
+                            <StepBlock key={`${group.sample.id}-${kind}`}>
                                 <Box sx={{ mt: 0.25, color: 'text.secondary' }}>
-                                    {actionIcon(action)}
+                                    {actionIcon(group.sample)}
                                 </Box>
                                 <Stack
                                     sx={{ flex: 1, minWidth: 0 }}
@@ -349,26 +648,28 @@ const ReleaseCardView = ({ sequence, onOpen }: CardProps) => {
                                         }}
                                     >
                                         {stepLabel[kind]} ·{' '}
-                                        {formatRelative(action.fireAt, now)}
+                                        {formatRelative(group.fireAt, now)}
+                                        {group.features.length > 1
+                                            ? ` · ${group.features.length} flags`
+                                            : ''}
                                     </Typography>
                                     <Typography variant='body2'>
-                                        {describeAction(action)}
+                                        {describeGroup(
+                                            group.actionType,
+                                            group.sample,
+                                            group.features,
+                                        )}
                                     </Typography>
-                                    {action.error ? (
+                                    {group.error ? (
                                         <Typography
                                             variant='caption'
                                             color='error'
                                         >
-                                            {action.error}
+                                            {group.error}
                                         </Typography>
                                     ) : null}
                                 </Stack>
-                                <Chip
-                                    size='small'
-                                    label={action.status}
-                                    color={actionStatusColor[action.status]}
-                                    variant='outlined'
-                                />
+                                <StatusChip status={group.status} />
                             </StepBlock>
                         ))
                     )}
@@ -383,6 +684,17 @@ export const SequencesPage = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
+    const { projects } = useProjects();
+    const { environments } = useEnvironments();
+    const projectOptions = useMemo(
+        () => projects.map((p) => ({ id: p.id, name: p.name ?? p.id })),
+        [projects],
+    );
+    const environmentOptions = useMemo(
+        () => environments.filter((e) => e.enabled !== false),
+        [environments],
+    );
+
     const [project, setProject] = useState(
         searchParams.get('project') ?? 'default',
     );
@@ -390,6 +702,26 @@ export const SequencesPage = () => {
         searchParams.get('environment') ?? 'development',
     );
     const selectedId = searchParams.get('sequence') ?? undefined;
+
+    useEffect(() => {
+        if (
+            projectOptions.length > 0 &&
+            !projectOptions.some((p) => p.id === project) &&
+            !searchParams.get('project')
+        ) {
+            setProject(projectOptions[0].id);
+        }
+    }, [projectOptions, project, searchParams]);
+
+    useEffect(() => {
+        if (
+            environmentOptions.length > 0 &&
+            !environmentOptions.some((e) => e.name === environment) &&
+            !searchParams.get('environment')
+        ) {
+            setEnvironment(environmentOptions[0].name);
+        }
+    }, [environmentOptions, environment, searchParams]);
 
     const { sequences, loading, error, refetch } = useReleaseAgentSequences(
         project,
@@ -453,19 +785,45 @@ export const SequencesPage = () => {
 
             <FiltersRow>
                 <TextField
+                    select
                     size='small'
                     label='Project'
                     value={project}
                     onChange={(e) => setProject(e.target.value)}
-                    sx={{ minWidth: 180 }}
-                />
+                    sx={{
+                        minWidth: 200,
+                        '& .MuiSelect-select': { textAlign: 'left' },
+                    }}
+                >
+                    {projectOptions.length === 0 ? (
+                        <MenuItem value={project}>{project}</MenuItem>
+                    ) : null}
+                    {projectOptions.map((p) => (
+                        <MenuItem key={p.id} value={p.id}>
+                            {p.name}
+                        </MenuItem>
+                    ))}
+                </TextField>
                 <TextField
+                    select
                     size='small'
                     label='Environment'
                     value={environment}
                     onChange={(e) => setEnvironment(e.target.value)}
-                    sx={{ minWidth: 180 }}
-                />
+                    sx={{
+                        minWidth: 200,
+                        '& .MuiSelect-select': { textAlign: 'left' },
+                    }}
+                >
+                    {environmentOptions.length === 0 ? (
+                        <MenuItem value={environment}>{environment}</MenuItem>
+                    ) : null}
+                    {environmentOptions.map((env) => (
+                        <MenuItem key={env.name} value={env.name}>
+                            {env.name}
+                        </MenuItem>
+                    ))}
+                </TextField>
             </FiltersRow>
 
             {error ? (
@@ -613,7 +971,13 @@ const SequenceDetailDialog = ({
 
     return (
         <>
-            <DialogTitle sx={{ pb: 1 }}>
+            <DialogTitle
+                sx={{
+                    pb: 1.5,
+                    backgroundColor: 'primary.main',
+                    color: 'primary.contrastText',
+                }}
+            >
                 <Stack
                     direction='row'
                     justifyContent='space-between'
@@ -626,20 +990,32 @@ const SequenceDetailDialog = ({
                         alignItems='center'
                         sx={{ minWidth: 0 }}
                     >
-                        <Typography variant='h6' noWrap>
+                        <Typography variant='h6' noWrap color='inherit'>
                             Release {sequence.id.slice(-8)}
                         </Typography>
                         <Chip
                             size='small'
                             label={sequence.status}
-                            color={sequenceStatusColor[sequence.status]}
+                            sx={{
+                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                color: 'primary.contrastText',
+                                border: 'none',
+                            }}
                         />
                     </Stack>
-                    <IconButton size='small' onClick={onClose}>
+                    <IconButton
+                        size='small'
+                        onClick={onClose}
+                        sx={{ color: 'inherit' }}
+                    >
                         <CloseIcon fontSize='small' />
                     </IconButton>
                 </Stack>
-                <Typography variant='caption' color='text.secondary'>
+                <Typography
+                    variant='caption'
+                    color='inherit'
+                    sx={{ opacity: 0.85 }}
+                >
                     {sequence.project} · {sequence.environment} · created{' '}
                     {formatTime(sequence.createdAt)}
                 </Typography>
@@ -651,84 +1027,44 @@ const SequenceDetailDialog = ({
                         sx={{
                             p: 1.5,
                             mb: 2,
-                            backgroundColor: 'background.default',
+                            backgroundColor: 'secondary.light',
+                            borderColor: 'secondary.border',
                         }}
                     >
                         <Typography
                             variant='caption'
-                            color='text.secondary'
-                            sx={{ textTransform: 'uppercase' }}
+                            sx={{
+                                textTransform: 'uppercase',
+                                letterSpacing: 1,
+                                color: 'secondary.dark',
+                                fontWeight: 600,
+                            }}
                         >
                             prompt
                         </Typography>
-                        <Typography variant='body2' sx={{ mt: 0.5 }}>
+                        <Typography
+                            variant='body2'
+                            sx={{ mt: 0.5, color: 'secondary.dark' }}
+                        >
                             {sequence.prompt}
                         </Typography>
                     </Paper>
                 ) : null}
 
                 <Typography variant='subtitle2' sx={{ mb: 1 }}>
-                    Actions ({sequence.actions?.length ?? 0})
+                    Steps ({groupActions(sequence.actions ?? []).length})
                 </Typography>
                 <Stack spacing={1}>
-                    {(sequence.actions ?? [])
-                        .slice()
-                        .sort((a, b) => a.sortOrder - b.sortOrder)
-                        .map((action) => (
-                            <Paper
-                                key={action.id}
-                                variant='outlined'
-                                sx={{ p: 1.5 }}
-                            >
-                                <Stack
-                                    direction='row'
-                                    justifyContent='space-between'
-                                    alignItems='center'
-                                    spacing={1}
-                                >
-                                    <Stack
-                                        direction='row'
-                                        spacing={1}
-                                        alignItems='center'
-                                    >
-                                        {actionIcon(action)}
-                                        <Typography variant='body2'>
-                                            #{action.sortOrder} ·{' '}
-                                            {describeAction(action)}
-                                        </Typography>
-                                    </Stack>
-                                    <Stack
-                                        direction='row'
-                                        spacing={1}
-                                        alignItems='center'
-                                    >
-                                        <Typography
-                                            variant='caption'
-                                            color='text.secondary'
-                                        >
-                                            fires {formatTime(action.fireAt)}
-                                        </Typography>
-                                        <Chip
-                                            size='small'
-                                            label={action.status}
-                                            color={
-                                                actionStatusColor[action.status]
-                                            }
-                                            variant='outlined'
-                                        />
-                                    </Stack>
-                                </Stack>
-                                {action.error ? (
-                                    <Typography
-                                        variant='caption'
-                                        color='error'
-                                        sx={{ display: 'block', mt: 0.5 }}
-                                    >
-                                        {action.error}
-                                    </Typography>
-                                ) : null}
-                            </Paper>
-                        ))}
+                    {groupActions(sequence.actions ?? []).map(
+                        (group, index) => (
+                            <DetailStep
+                                key={`${group.sample.id}-${index}`}
+                                group={group}
+                                index={index}
+                                project={sequence.project}
+                            />
+                        ),
+                    )}
                 </Stack>
 
                 {sequence.status === 'active' ? (

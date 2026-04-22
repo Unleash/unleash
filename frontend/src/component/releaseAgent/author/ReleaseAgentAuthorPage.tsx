@@ -1,10 +1,11 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     Alert,
     Box,
     Button,
     CircularProgress,
     IconButton,
+    MenuItem,
     Paper,
     Stack,
     TextField,
@@ -19,6 +20,8 @@ import {
     useReleaseAgentApi,
     type CompiledPreview,
 } from 'hooks/api/actions/useReleaseAgentApi/useReleaseAgentApi';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { FeaturePicker } from './FeaturePicker.tsx';
 import { SequencePreview } from './SequencePreview.tsx';
 
@@ -30,7 +33,7 @@ type ChatTurn =
 const Container = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    height: 'calc(100vh - 120px)',
+    minHeight: 'calc(100vh - 120px)',
     maxWidth: 960,
     margin: '0 auto',
     padding: theme.spacing(2),
@@ -61,8 +64,6 @@ const Title = styled(Typography)(({ theme }) => ({
 
 const Scroll = styled(Box)(({ theme }) => ({
     flex: 1,
-    overflowY: 'auto',
-    paddingRight: theme.spacing(1),
     marginBottom: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
@@ -142,8 +143,37 @@ export const ReleaseAgentAuthorPage = () => {
     const navigate = useNavigate();
     const { compileSequence, commitSequence } = useReleaseAgentApi();
 
+    const { projects } = useProjects();
+    const { environments } = useEnvironments();
+    const projectOptions = useMemo(
+        () => projects.map((p) => ({ id: p.id, name: p.name ?? p.id })),
+        [projects],
+    );
+    const environmentOptions = useMemo(
+        () => environments.filter((e) => e.enabled !== false),
+        [environments],
+    );
+
     const [project, setProject] = useState('default');
     const [environment, setEnvironment] = useState('development');
+
+    useEffect(() => {
+        if (
+            projectOptions.length > 0 &&
+            !projectOptions.some((p) => p.id === project)
+        ) {
+            setProject(projectOptions[0].id);
+        }
+    }, [projectOptions, project]);
+
+    useEffect(() => {
+        if (
+            environmentOptions.length > 0 &&
+            !environmentOptions.some((e) => e.name === environment)
+        ) {
+            setEnvironment(environmentOptions[0].name);
+        }
+    }, [environmentOptions, environment]);
     const [features, setFeatures] = useState<string[]>([]);
     const [prompt, setPrompt] = useState('');
     const [turns, setTurns] = useState<ChatTurn[]>([]);
@@ -151,7 +181,6 @@ export const ReleaseAgentAuthorPage = () => {
         'idle',
     );
     const [committingId, setCommittingId] = useState<number | null>(null);
-    const scrollRef = useRef<HTMLDivElement | null>(null);
 
     const hasConversation = turns.length > 0;
 
@@ -168,9 +197,10 @@ export const ReleaseAgentAuthorPage = () => {
 
     const scrollToBottom = () => {
         requestAnimationFrame(() => {
-            if (scrollRef.current) {
-                scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-            }
+            window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth',
+            });
         });
     };
 
@@ -253,6 +283,7 @@ export const ReleaseAgentAuthorPage = () => {
             sx={{ alignItems: 'center' }}
         >
             <TextField
+                select
                 size='small'
                 label='Project'
                 value={project}
@@ -260,15 +291,40 @@ export const ReleaseAgentAuthorPage = () => {
                     setProject(e.target.value);
                     setFeatures([]);
                 }}
-                sx={{ minWidth: 140 }}
-            />
+                sx={{
+                    minWidth: 160,
+                    '& .MuiSelect-select': { textAlign: 'left' },
+                }}
+            >
+                {projectOptions.length === 0 ? (
+                    <MenuItem value={project}>{project}</MenuItem>
+                ) : null}
+                {projectOptions.map((p) => (
+                    <MenuItem key={p.id} value={p.id}>
+                        {p.name}
+                    </MenuItem>
+                ))}
+            </TextField>
             <TextField
+                select
                 size='small'
                 label='Environment'
                 value={environment}
                 onChange={(e) => setEnvironment(e.target.value)}
-                sx={{ minWidth: 140 }}
-            />
+                sx={{
+                    minWidth: 160,
+                    '& .MuiSelect-select': { textAlign: 'left' },
+                }}
+            >
+                {environmentOptions.length === 0 ? (
+                    <MenuItem value={environment}>{environment}</MenuItem>
+                ) : null}
+                {environmentOptions.map((env) => (
+                    <MenuItem key={env.name} value={env.name}>
+                        {env.name}
+                    </MenuItem>
+                ))}
+            </TextField>
             <Box sx={{ flex: 1, width: '100%' }}>
                 <FeaturePicker
                     project={project}
@@ -376,7 +432,7 @@ export const ReleaseAgentAuthorPage = () => {
 
     return (
         <Container>
-            <Scroll ref={scrollRef}>
+            <Scroll>
                 {turns.map((turn, index) => {
                     if (turn.kind === 'user') {
                         return (

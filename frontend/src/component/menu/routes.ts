@@ -45,6 +45,8 @@ import { PaginatedApplicationList } from '../application/ApplicationList/Paginat
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { Insights } from '../insights/Insights.jsx';
 import { LazyImpactMetricsPage } from '../impact-metrics/LazyImpactMetricsPage.tsx';
+import { ReleaseAgentAuthorPage } from 'component/releaseAgent/author/ReleaseAgentAuthorPage.tsx';
+import { SequencesPage } from 'component/releaseAgent/sequences/SequencesPage.tsx';
 import { FeedbackList } from '../feedbackNew/FeedbackList.jsx';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
@@ -183,6 +185,25 @@ export const routes: IRoute[] = [
         menu: { primary: true },
         enterprise: true,
         flag: 'impactMetrics',
+    },
+
+    // Release Agent (experimental)
+    {
+        path: '/release-agent',
+        title: 'Release agent',
+        component: ReleaseAgentAuthorPage,
+        type: 'protected',
+        menu: { primary: true },
+        flag: 'releaseAgent',
+    },
+    {
+        path: '/release-agent/sequences',
+        title: 'Sequences',
+        parent: '/release-agent',
+        component: SequencesPage,
+        type: 'protected',
+        menu: {},
+        flag: 'releaseAgent',
     },
 
     // Applications

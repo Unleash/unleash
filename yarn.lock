@@ -5,6 +5,22 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
+"@anthropic-ai/sdk@npm:^0.90.0":
+  version: 0.90.0
+  resolution: "@anthropic-ai/sdk@npm:0.90.0"
+  dependencies:
+    json-schema-to-ts: "npm:^3.1.1"
+  peerDependencies:
+    zod: ^3.25.0 || ^4.0.0
+  peerDependenciesMeta:
+    zod:
+      optional: true
+  bin:
+    anthropic-ai-sdk: bin/cli
+  checksum: 10c0/ebf35f62e07cd1ed747e20fc95d807d7a6c8adc6ef00d1dbe8a2a36698268aea2e82309b83cddc43f32a23b344bb3c3e250a884e22cf5426761ebc066dae37b6
+  languageName: node
+  linkType: hard
+
 "@apidevtools/json-schema-ref-parser@npm:14.0.1":
   version: 14.0.1
   resolution: "@apidevtools/json-schema-ref-parser@npm:14.0.1"
@@ -3871,7 +3887,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-schema-to-ts@npm:3.1.1":
+"json-schema-to-ts@npm:3.1.1, json-schema-to-ts@npm:^3.1.1":
   version: 3.1.1
   resolution: "json-schema-to-ts@npm:3.1.1"
   dependencies:
@@ -6554,6 +6570,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "unleash-server@workspace:."
   dependencies:
+    "@anthropic-ai/sdk": "npm:^0.90.0"
     "@apidevtools/swagger-parser": "npm:12.1.0"
     "@biomejs/biome": "npm:^2.4.6"
     "@cyclonedx/yarn-plugin-cyclonedx": "npm:^3.3.0"

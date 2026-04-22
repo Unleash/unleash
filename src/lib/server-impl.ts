@@ -106,6 +106,10 @@ import {
     createFakeProjectService,
     createFeatureToggleService,
     createReleasePlanMilestoneStrategyService,
+    createReleaseAgentService,
+    createFakeReleaseAgentService,
+    ScheduledSequenceStore,
+    ScheduledActionStore,
     createInstanceStatsService,
     createProjectService,
     createTagTypeService,
@@ -129,6 +133,19 @@ import SessionStore from './db/session-store.js';
 import metricsHelper from './util/metrics-helper.js';
 import type { ReleasePlanMilestoneStrategyWriteModel } from './features/release-plans/release-plan-milestone-strategy-store.js';
 import type { ReleasePlanMilestoneStrategyService } from './features/release-plans/release-plan-milestone-strategy-service.js';
+import type {
+    ScheduledAction,
+    ScheduledActionStatus,
+    ScheduledActionWriteModel,
+} from './features/release-agent/scheduled-action.js';
+import type {
+    ScheduledSequence,
+    ScheduledSequenceStatus,
+    ScheduledSequenceWriteModel,
+} from './features/release-agent/scheduled-sequence.js';
+import type { IScheduledActionStore } from './features/release-agent/scheduled-action-store.js';
+import type { IScheduledSequenceStore } from './features/release-agent/scheduled-sequence-store.js';
+import type { ReleaseAgentService } from './features/release-agent/release-agent-service.js';
 import type { IChangeRequestAccessReadModel } from './features/change-request-access-service/change-request-access-read-model.js';
 import { EventStore } from './db/event-store.js';
 import RoleStore from './db/role-store.js';
@@ -495,6 +512,10 @@ export {
     createEnvironmentService,
     createFeatureToggleService,
     createReleasePlanMilestoneStrategyService,
+    createReleaseAgentService,
+    createFakeReleaseAgentService,
+    ScheduledSequenceStore,
+    ScheduledActionStore,
     createProjectService,
     createFakeProjectService,
     findParam,
@@ -595,6 +616,15 @@ export type {
     ReleasePlanMilestoneWriteModel,
     ReleasePlanMilestoneStrategyWriteModel,
     ReleasePlanMilestoneStrategyService,
+    ScheduledAction,
+    ScheduledActionStatus,
+    ScheduledActionWriteModel,
+    ScheduledSequence,
+    ScheduledSequenceStatus,
+    ScheduledSequenceWriteModel,
+    IScheduledActionStore,
+    IScheduledSequenceStore,
+    ReleaseAgentService,
     IChangeRequestAccessReadModel,
     IRoleWithProject,
     ISchemaValidationErrors,

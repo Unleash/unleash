@@ -165,6 +165,25 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "flag": "releaseAgent",
+    "menu": {
+      "primary": true,
+    },
+    "path": "/release-agent",
+    "title": "Release agent",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "flag": "releaseAgent",
+    "menu": {},
+    "parent": "/release-agent",
+    "path": "/release-agent/sequences",
+    "title": "Sequences",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "menu": {},
     "parent": "/applications",
     "path": "/applications/:name/*",

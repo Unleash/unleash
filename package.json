@@ -73,6 +73,7 @@
     "schema:update": "node ./.husky/update-openapi-spec-list.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.90.0",
     "@json2csv/plainjs": "^7.0.6",
     "@slack/web-api": "^7.14.1",
     "@wesleytodd/openapi": "^1.1.0",

@@ -24,6 +24,7 @@ import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
 import { Link } from 'react-router-dom';
 import { ReleaseTemplatesBanner } from 'component/common/ReleaseTemplatesBanner/ReleaseTemplatesBanner';
+import { IncidentDashboardBanner } from 'component/incidents/dashboard/IncidentDashboardBanner';
 import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
@@ -291,6 +292,7 @@ export const PersonalDashboard = () => {
 
     return (
         <MainContent>
+            <IncidentDashboardBanner />
             {isEnterprise() && gtmReleaseManagementEnabled && !isNewUser && (
                 <ReleaseTemplatesBanner />
             )}

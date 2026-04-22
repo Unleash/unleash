@@ -5,6 +5,7 @@ npm-debug
 /dist
 .vscode
 .claude
+.superpowers
 
 # Logs
 logs

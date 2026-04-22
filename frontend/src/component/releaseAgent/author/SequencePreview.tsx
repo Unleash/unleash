@@ -1,4 +1,12 @@
-import { Box, Chip, Divider, Paper, Stack, Typography } from '@mui/material';
+import {
+    Alert,
+    Box,
+    Chip,
+    Divider,
+    Paper,
+    Stack,
+    Typography,
+} from '@mui/material';
 import type { CompiledPreview } from 'hooks/api/actions/useReleaseAgentApi/useReleaseAgentApi';
 
 type Props = {
@@ -69,6 +77,56 @@ export const SequencePreview = ({ preview }: Props) => {
                     </Paper>
                 ))}
             </Stack>
+
+            {preview.clarification ? (
+                <Alert severity='info' sx={{ mt: 2 }}>
+                    {preview.clarification}
+                </Alert>
+            ) : null}
+
+            {preview.safeguards.length > 0 ? (
+                <>
+                    <Divider sx={{ my: 2 }} />
+                    <Typography variant='subtitle2' sx={{ mb: 1 }}>
+                        Safeguards
+                    </Typography>
+                    <Stack spacing={1}>
+                        {preview.safeguards.map((safeguard, index) => (
+                            <Paper
+                                key={`safeguard-${safeguard.featureName}-${index}`}
+                                variant='outlined'
+                                sx={{ p: 1.5 }}
+                            >
+                                <Typography variant='body2' sx={{ mb: 1 }}>
+                                    On feature{' '}
+                                    <strong>{safeguard.featureName}</strong>:
+                                    disable environment if{' '}
+                                    <strong>
+                                        {safeguard.impactMetric.metricName}
+                                    </strong>{' '}
+                                    ({safeguard.impactMetric.aggregationMode}{' '}
+                                    over {safeguard.impactMetric.timeRange}){' '}
+                                    {safeguard.triggerCondition.operator}{' '}
+                                    {safeguard.triggerCondition.threshold}
+                                </Typography>
+                                <Box
+                                    component='pre'
+                                    sx={{
+                                        m: 0,
+                                        p: 1,
+                                        fontSize: 12,
+                                        overflow: 'auto',
+                                        backgroundColor: 'background.default',
+                                        borderRadius: 1,
+                                    }}
+                                >
+                                    {JSON.stringify(safeguard, null, 2)}
+                                </Box>
+                            </Paper>
+                        ))}
+                    </Stack>
+                </>
+            ) : null}
         </Paper>
     );
 };

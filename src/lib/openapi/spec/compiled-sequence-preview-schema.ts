@@ -1,10 +1,11 @@
 import type { FromSchema } from 'json-schema-to-ts';
+import { releaseAgentSafeguardSchema } from './release-agent-safeguard-schema.js';
 
 export const compiledSequencePreviewSchema = {
     $id: '#/components/schemas/compiledSequencePreviewSchema',
     additionalProperties: false,
     description:
-        'Preview of a Scheduled Sequence produced by the release agent. Not persisted until the client calls POST /sequences with the preview contents.',
+        'Preview of a Scheduled Sequence produced by the release agent. Not persisted until the client calls POST /sequences with the preview contents. If the agent needs clarification, actions and safeguards are empty and `clarification` is set instead.',
     type: 'object',
     required: [
         'project',
@@ -14,6 +15,7 @@ export const compiledSequencePreviewSchema = {
         'agentVersion',
         'rationale',
         'actions',
+        'safeguards',
     ],
     properties: {
         project: { type: 'string' },
@@ -52,8 +54,19 @@ export const compiledSequencePreviewSchema = {
                 },
             },
         },
+        safeguards: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/releaseAgentSafeguardSchema',
+            },
+        },
+        clarification: {
+            type: 'string',
+            description:
+                'Set when the agent needs more information from the user. When present, `actions` and `safeguards` are empty.',
+        },
     },
-    components: { schemas: {} },
+    components: { schemas: { releaseAgentSafeguardSchema } },
 } as const;
 
 export type CompiledSequencePreviewSchema = FromSchema<

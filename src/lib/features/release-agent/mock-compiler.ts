@@ -1,4 +1,8 @@
-import type { CreateActionInput } from './release-agent-service.js';
+import type {
+    AvailableImpactMetric,
+    CreateActionInput,
+    SafeguardRequest,
+} from './release-agent-service.js';
 
 export type MockCompileInput = {
     project: string;
@@ -6,6 +10,7 @@ export type MockCompileInput = {
     prompt: string;
     features: string[];
     now?: Date;
+    availableMetrics?: AvailableImpactMetric[];
 };
 
 export type MockCompileOutput = {
@@ -14,6 +19,8 @@ export type MockCompileOutput = {
     agentVersion: string;
     actions: CreateActionInput[];
     rationale: string;
+    safeguards: SafeguardRequest[];
+    clarificationNeeded?: string;
 };
 
 /**
@@ -78,6 +85,7 @@ export const mockCompile = (input: MockCompileInput): MockCompileOutput => {
         model: 'mock-compiler',
         agentVersion: '0.1.0',
         actions,
+        safeguards: [],
         rationale:
             features.length === 0
                 ? 'No features selected; returning an empty sequence.'

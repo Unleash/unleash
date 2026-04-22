@@ -21,6 +21,25 @@ export type PreviewAction = {
     sortOrder?: number;
 };
 
+export type PreviewSafeguard = {
+    featureName: string;
+    impactMetric: {
+        metricName: string;
+        timeRange: 'hour' | 'day' | 'week' | 'month';
+        aggregationMode:
+            | 'rps'
+            | 'count'
+            | 'avg'
+            | 'sum'
+            | 'p95'
+            | 'p99'
+            | 'p50';
+        labelSelectors: Record<string, string[]>;
+        source?: 'internal' | 'external';
+    };
+    triggerCondition: { operator: '>' | '<'; threshold: number };
+};
+
 export type CompiledPreview = {
     project: string;
     environment: string;
@@ -29,6 +48,8 @@ export type CompiledPreview = {
     agentVersion: string;
     rationale: string;
     actions: PreviewAction[];
+    safeguards: PreviewSafeguard[];
+    clarification?: string;
 };
 
 export type CommitRequestBody = {
@@ -38,6 +59,7 @@ export type CommitRequestBody = {
     model?: string | null;
     agentVersion?: string | null;
     actions: PreviewAction[];
+    safeguards?: PreviewSafeguard[];
 };
 
 const BASE = 'api/admin/release-agent';

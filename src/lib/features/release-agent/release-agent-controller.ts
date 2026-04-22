@@ -219,6 +219,9 @@ export default class ReleaseAgentController extends Controller {
                         sortOrder: action.sortOrder,
                     }) as CreateActionInput,
             ),
+            safeguards: req.body.safeguards as
+                | CreateSequenceInput['safeguards']
+                | undefined,
         };
 
         const { sequence, actions } =
@@ -300,6 +303,8 @@ export default class ReleaseAgentController extends Controller {
                 payload: action.payload as Record<string, unknown>,
                 sortOrder: action.sortOrder,
             })),
+            safeguards: preview.safeguards,
+            clarification: preview.clarification,
         });
     }
 }

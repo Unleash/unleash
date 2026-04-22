@@ -177,6 +177,7 @@ export * from './public-signup-tokens-schema.js';
 export * from './push-variants-schema.js';
 export * from './ready-check-schema.js';
 export * from './record-ui-error-schema.js';
+export * from './release-agent-safeguard-schema.js';
 export * from './release-plan-milestone-schema.js';
 export * from './release-plan-milestone-strategy-schema.js';
 export * from './release-plan-safeguard-schema.js';

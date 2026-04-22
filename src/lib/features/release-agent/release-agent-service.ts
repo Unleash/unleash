@@ -24,6 +24,47 @@ interface Stores {
     scheduledActionStore: IScheduledActionStore;
 }
 
+export type SafeguardMetricQuery = {
+    metricName: string;
+    timeRange: 'hour' | 'day' | 'week' | 'month';
+    aggregationMode: 'rps' | 'count' | 'avg' | 'sum' | 'p95' | 'p99' | 'p50';
+    labelSelectors: Record<string, string[]>;
+    source?: 'internal' | 'external';
+};
+
+export type SafeguardRequest = {
+    featureName: string;
+    impactMetric: SafeguardMetricQuery;
+    triggerCondition: { operator: '>' | '<'; threshold: number };
+};
+
+export type AvailableImpactMetric = {
+    name: string;
+    help?: string;
+    displayName?: string;
+    source: 'internal' | 'external';
+};
+
+export interface IAvailableImpactMetricsProvider {
+    getAvailableMetrics(): Promise<AvailableImpactMetric[]>;
+}
+
+export interface ISequenceCommitParticipant {
+    onCommit(
+        sequence: ScheduledSequence,
+        safeguards: SafeguardRequest[],
+        auditUser: IAuditUser,
+    ): Promise<void>;
+}
+
+const NOOP_METRICS_PROVIDER: IAvailableImpactMetricsProvider = {
+    getAvailableMetrics: async () => [],
+};
+
+const NOOP_COMMIT_PARTICIPANT: ISequenceCommitParticipant = {
+    onCommit: async () => {},
+};
+
 export type CreateSequenceInput = {
     project: string;
     environment: string;
@@ -31,6 +72,7 @@ export type CreateSequenceInput = {
     model?: string | null;
     agentVersion?: string | null;
     actions: CreateActionInput[];
+    safeguards?: SafeguardRequest[];
 };
 
 export type CreateActionInput = Omit<
@@ -60,6 +102,13 @@ export type CompiledSequencePreview = {
     agentVersion: string;
     rationale: string;
     actions: CreateActionInput[];
+    safeguards: SafeguardRequest[];
+    clarification?: string;
+};
+
+export type ReleaseAgentServiceOptions = {
+    availableImpactMetricsProvider?: IAvailableImpactMetricsProvider;
+    commitParticipant?: ISequenceCommitParticipant;
 };
 
 export class ReleaseAgentService {
@@ -67,6 +116,8 @@ export class ReleaseAgentService {
     private readonly sequenceStore: IScheduledSequenceStore;
     private readonly actionStore: IScheduledActionStore;
     private readonly flagResolver: IFlagResolver;
+    private metricsProvider: IAvailableImpactMetricsProvider;
+    private commitParticipant: ISequenceCommitParticipant;
 
     constructor(
         stores: Stores,
@@ -74,6 +125,7 @@ export class ReleaseAgentService {
             getLogger,
             flagResolver,
         }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
+        options: ReleaseAgentServiceOptions = {},
     ) {
         this.logger = getLogger(
             'features/release-agent/release-agent-service.ts',
@@ -81,6 +133,20 @@ export class ReleaseAgentService {
         this.sequenceStore = stores.scheduledSequenceStore;
         this.actionStore = stores.scheduledActionStore;
         this.flagResolver = flagResolver;
+        this.metricsProvider =
+            options.availableImpactMetricsProvider ?? NOOP_METRICS_PROVIDER;
+        this.commitParticipant =
+            options.commitParticipant ?? NOOP_COMMIT_PARTICIPANT;
+    }
+
+    setAvailableImpactMetricsProvider(
+        provider: IAvailableImpactMetricsProvider,
+    ) {
+        this.metricsProvider = provider;
+    }
+
+    setCommitParticipant(participant: ISequenceCommitParticipant) {
+        this.commitParticipant = participant;
     }
 
     private assertEnabled() {
@@ -89,7 +155,10 @@ export class ReleaseAgentService {
         }
     }
 
-    private validateActions(actions: CreateActionInput[]) {
+    private validateActions(
+        actions: CreateActionInput[],
+        safeguards: SafeguardRequest[] = [],
+    ) {
         if (!actions || actions.length === 0) {
             throw new BadDataError(
                 'A sequence must contain at least one action',
@@ -114,6 +183,51 @@ export class ReleaseAgentService {
             this.validatePayload(action);
         }
         this.validateEnablementOrdering(actions);
+        this.validateSafeguards(actions, safeguards);
+    }
+
+    private validateSafeguards(
+        actions: CreateActionInput[],
+        safeguards: SafeguardRequest[],
+    ) {
+        if (safeguards.length === 0) return;
+        const featureNames = new Set(actions.map((a) => a.featureName));
+        for (const safeguard of safeguards) {
+            if (!safeguard.featureName) {
+                throw new BadDataError(
+                    'Every safeguard must target a feature (featureName)',
+                );
+            }
+            if (!featureNames.has(safeguard.featureName)) {
+                throw new BadDataError(
+                    `Safeguard targets feature "${safeguard.featureName}" which has no actions in this sequence`,
+                );
+            }
+            const metric = safeguard.impactMetric;
+            if (
+                !metric ||
+                typeof metric.metricName !== 'string' ||
+                metric.metricName.trim() === ''
+            ) {
+                throw new BadDataError(
+                    `Safeguard for feature "${safeguard.featureName}" must include a non-empty impactMetric.metricName`,
+                );
+            }
+            const cond = safeguard.triggerCondition;
+            if (!cond || (cond.operator !== '>' && cond.operator !== '<')) {
+                throw new BadDataError(
+                    `Safeguard for feature "${safeguard.featureName}" must set triggerCondition.operator to ">" or "<"`,
+                );
+            }
+            if (
+                typeof cond.threshold !== 'number' ||
+                !Number.isFinite(cond.threshold)
+            ) {
+                throw new BadDataError(
+                    `Safeguard for feature "${safeguard.featureName}" must set triggerCondition.threshold to a finite number`,
+                );
+            }
+        }
     }
 
     private validateEnablementOrdering(actions: CreateActionInput[]) {
@@ -220,7 +334,8 @@ export class ReleaseAgentService {
         auditUser: IAuditUser,
     ): Promise<CreatedSequence> {
         this.assertEnabled();
-        this.validateActions(input.actions);
+        const safeguards = input.safeguards ?? [];
+        this.validateActions(input.actions, safeguards);
 
         const sequenceId = ulid();
         const sequence = await this.sequenceStore.insert({
@@ -248,6 +363,21 @@ export class ReleaseAgentService {
         this.logger.info(
             `Created scheduled sequence ${sequenceId} with ${actions.length} actions`,
         );
+
+        if (safeguards.length > 0) {
+            try {
+                await this.commitParticipant.onCommit(
+                    sequence,
+                    safeguards,
+                    auditUser,
+                );
+            } catch (err) {
+                this.logger.error(
+                    `Sequence ${sequenceId} committed but safeguard participant failed; safeguards may not be attached`,
+                    err,
+                );
+            }
+        }
 
         return { sequence, actions };
     }
@@ -283,11 +413,15 @@ export class ReleaseAgentService {
             );
         }
 
+        const availableMetrics =
+            await this.metricsProvider.getAvailableMetrics();
+
         const compilerInput = {
             project: input.project,
             environment: input.environment,
             prompt: input.prompt,
             features: input.features,
+            availableMetrics,
         };
 
         const compiled = isAnthropicCompilerConfigured()
@@ -300,7 +434,36 @@ export class ReleaseAgentService {
             );
         }
 
-        this.validateActions(compiled.actions);
+        if (compiled.clarificationNeeded) {
+            return {
+                project: input.project,
+                environment: input.environment,
+                prompt: compiled.prompt,
+                model: compiled.model,
+                agentVersion: compiled.agentVersion,
+                rationale: compiled.rationale,
+                actions: [],
+                safeguards: [],
+                clarification: compiled.clarificationNeeded,
+            };
+        }
+
+        if (compiled.safeguards.length > 0 && availableMetrics.length === 0) {
+            return {
+                project: input.project,
+                environment: input.environment,
+                prompt: compiled.prompt,
+                model: compiled.model,
+                agentVersion: compiled.agentVersion,
+                rationale: compiled.rationale,
+                actions: [],
+                safeguards: [],
+                clarification:
+                    'You asked for a safeguard, but no impact metrics are configured in this instance. Create an impact metric first, then re-prompt.',
+            };
+        }
+
+        this.validateActions(compiled.actions, compiled.safeguards);
 
         return {
             project: input.project,
@@ -310,6 +473,7 @@ export class ReleaseAgentService {
             agentVersion: compiled.agentVersion,
             rationale: compiled.rationale,
             actions: compiled.actions,
+            safeguards: compiled.safeguards,
         };
     }
 

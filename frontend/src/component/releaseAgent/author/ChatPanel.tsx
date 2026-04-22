@@ -75,6 +75,7 @@ export const ChatPanel = ({
                 model: preview.model,
                 agentVersion: preview.agentVersion,
                 actions: preview.actions,
+                safeguards: preview.safeguards,
             });
             onCommitted(created.id);
         } catch (err: any) {

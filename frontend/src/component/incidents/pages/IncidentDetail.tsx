@@ -1,6 +1,6 @@
 // frontend/src/component/incidents/pages/IncidentDetail.tsx
 import { styled, Paper } from '@mui/material';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { usePageTitle } from 'hooks/usePageTitle';
 import useToast from 'hooks/useToast';
 import { getIncidentById } from '../mockData.ts';
@@ -17,23 +17,14 @@ const PageWrap = styled('div')(({ theme }) => ({ padding: theme.spacing(2, 0) })
 const Header = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: theme.spacing(1.5),
     marginBottom: theme.spacing(1),
 }));
 
-const HeaderLeft = styled('div')(() => ({ flex: 1, minWidth: 0 }));
-
-const Breadcrumb = styled('div')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(0.5),
-    '& a': { color: theme.palette.primary.main, textDecoration: 'none' },
-}));
-
 const Title = styled('h1')(({ theme }) => ({
     ...theme.typography.h1,
-    margin: theme.spacing(0.5, 0, 1),
+    margin: 0,
     color: theme.palette.text.primary,
 }));
 
@@ -89,10 +80,7 @@ export const IncidentDetail = () => {
     return (
         <PageWrap>
             <Header>
-                <HeaderLeft>
-                    <Breadcrumb><Link to='/incidents'>Incidents</Link>  /  #{incident.id}</Breadcrumb>
-                    <Title>{incident.service} incident</Title>
-                </HeaderLeft>
+                <Title>{incident.service} incident</Title>
                 <DismissReportButton onClick={() => toast('Incident dismissed (mock)')} />
             </Header>
 

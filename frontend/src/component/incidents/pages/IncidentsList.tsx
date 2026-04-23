@@ -218,7 +218,9 @@ export const IncidentsList = () => {
 
     const renderRow = (i: Incident, isActive: boolean) => (
         <Row key={i.id} to={`/incidents/${i.id}`} isActive={isActive} isHead={false}>
-            <Badge color={statusBadgeColor(i.status)}>{STATUS_LABEL[i.status]}</Badge>
+            <span>
+                <Badge color={statusBadgeColor(i.status)}>{STATUS_LABEL[i.status]}</Badge>
+            </span>
             <IdCell>#{i.id}</IdCell>
             <ServiceCell>{i.service}</ServiceCell>
             <span>{renderVerdict(i)}</span>

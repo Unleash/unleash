@@ -182,17 +182,17 @@ test('should allow requests with a token secret alias', async () => {
         .get('/api/frontend')
         .set('Authorization', 'null')
         .expect('Content-Type', /json/)
-        .expect(401);
+        .expect(403);
     await app.request
         .get('/api/frontend')
         .set('Authorization', randomId())
         .expect('Content-Type', /json/)
-        .expect(401);
+        .expect(403);
     await app.request
         .get('/api/frontend')
         .set('Authorization', tokenA.secret.slice(0, -1))
         .expect('Content-Type', /json/)
-        .expect(401);
+        .expect(403);
     await app.request
         .get('/api/frontend')
         .set('Authorization', tokenA.secret)
@@ -266,7 +266,7 @@ test('should not allow requests with an invalid frontend token', async () => {
         .get('/api/frontend')
         .set('Authorization', frontendToken.secret.slice(0, -1))
         .expect('Content-Type', /json/)
-        .expect(401);
+        .expect(403);
 });
 
 test('should allow requests with a frontend token', async () => {

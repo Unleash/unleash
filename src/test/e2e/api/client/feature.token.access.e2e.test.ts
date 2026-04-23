@@ -227,12 +227,12 @@ test('returns 401 when not provided token', async () => {
         .expect(401);
 });
 
-test('returns 401 when provided token that doesnt exist', async () => {
+test('returns 403 when provided token that doesnt exist', async () => {
     await app.request
         .get('/api/client/features')
         .set('Authorization', '*:production.secret')
         .expect('Content-Type', /json/)
-        .expect(401);
+        .expect(403);
 });
 
 test('returns 403 when provided admin token', async () => {

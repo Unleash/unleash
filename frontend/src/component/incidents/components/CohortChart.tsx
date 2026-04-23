@@ -11,29 +11,30 @@ const Toggle = styled('div')(({ theme }) => ({
     display: 'inline-flex',
     background: theme.palette.background.elevation1,
     border: `1px solid ${theme.palette.divider}`,
-    borderRadius: 6,
+    borderRadius: theme.shape.borderRadius,
     padding: 2,
     marginBottom: theme.spacing(1),
-    fontSize: 10,
+    fontSize: theme.fontSizes.smallerBody,
 }));
 
 const ToggleBtn = styled('button', {
     shouldForwardProp: (prop) => prop !== 'active',
 })<{ active: boolean }>(({ theme, active }) => ({
-    padding: '3px 9px',
+    padding: theme.spacing(0.5, 1.25),
     border: 'none',
-    background: active ? '#fff' : 'transparent',
+    background: active ? theme.palette.background.paper : 'transparent',
     color: active ? theme.palette.text.primary : theme.palette.text.secondary,
-    fontSize: 10,
+    fontSize: theme.fontSizes.smallerBody,
     fontWeight: active ? 600 : 500,
     cursor: 'pointer',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     boxShadow: active ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
     display: 'inline-flex',
     alignItems: 'center',
-    gap: 4,
+    gap: 5,
+    fontFamily: 'inherit',
     '& .count': {
-        fontSize: 9,
+        fontSize: theme.fontSizes.smallerBody,
         color: active ? theme.palette.text.secondary : theme.palette.text.disabled,
         fontWeight: 500,
     },
@@ -50,16 +51,16 @@ const ChartBox = styled('div')(({ theme }) => ({
     overflow: 'hidden',
 }));
 
-const Legend = styled('div')(() => ({
+const Legend = styled('div')(({ theme }) => ({
     position: 'absolute',
     top: 8,
     right: 10,
     display: 'flex',
     gap: 10,
-    fontSize: 10,
+    fontSize: theme.fontSizes.smallerBody,
     background: 'rgba(255,255,255,0.92)',
     padding: '4px 8px',
-    borderRadius: 5,
+    borderRadius: theme.shape.borderRadius,
 }));
 
 const LegendDot = styled('span', {
@@ -91,7 +92,7 @@ const XAxis = styled('div')(({ theme }) => ({
     right: 10,
     display: 'flex',
     justifyContent: 'space-between',
-    fontSize: 10,
+    fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
 }));
 
@@ -112,15 +113,15 @@ const EventsOverlay = styled('div', {
 const LegendRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexWrap: 'wrap',
-    gap: 10,
+    gap: theme.spacing(1.25),
     marginTop: theme.spacing(1),
-    padding: '6px 10px',
+    padding: theme.spacing(0.75, 1.25),
     background: theme.palette.background.elevation1,
     border: `1px solid ${theme.palette.divider}`,
-    borderRadius: 6,
-    fontSize: 9,
+    borderRadius: theme.shape.borderRadius,
+    fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
-    '& .lg-item': { display: 'flex', alignItems: 'center', gap: 4 },
+    '& .lg-item': { display: 'flex', alignItems: 'center', gap: 5 },
 }));
 
 export interface CohortChartProps {

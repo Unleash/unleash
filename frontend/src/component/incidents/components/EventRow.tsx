@@ -1,8 +1,12 @@
-// frontend/src/component/incidents/components/EventRow.tsx
 import { styled } from '@mui/material';
-import { EventIconCircle, VerdictPill, verdictLabel } from '../styles/eventTokens.ts';
+import { Badge } from 'component/common/Badge/Badge';
+import {
+    EventIconCircle,
+    getEventIconProps,
+    verdictBadgeColor,
+    verdictLabel,
+} from '../styles/eventTokens.ts';
 import type { EventType, EventVerdict } from '../types.ts';
-import { getEventIconProps } from '../styles/eventTokens.ts';
 
 export type EventRowAccent = 'none' | 'likely' | 'possible' | 'ruled';
 
@@ -14,30 +18,30 @@ const Row = styled('div', {
     alignItems: 'center',
     columnGap: theme.spacing(1.25),
     padding: theme.spacing(1, 1.25),
-    borderRadius: 6,
-    background: '#fff',
+    borderRadius: theme.shape.borderRadius,
+    background: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
-    fontSize: 11,
+    fontSize: theme.fontSizes.smallBody,
     ...(accent === 'likely' && {
-        borderLeft: '3px solid #b91c1c',
-        background: '#fef2f2',
+        borderLeft: `3px solid ${theme.palette.error.main}`,
+        background: theme.palette.error.light,
     }),
     ...(accent === 'possible' && {
-        borderLeft: '3px solid #f59e0b',
-        background: '#fffbeb',
+        borderLeft: `3px solid ${theme.palette.warning.main}`,
+        background: theme.palette.warning.light,
     }),
     ...(accent === 'ruled' && {
-        background: '#fafbfc',
+        background: theme.palette.background.elevation1,
     }),
-    '& + &': { marginTop: 5 },
+    '& + &': { marginTop: theme.spacing(0.75) },
 }));
 
 const Time = styled('span')(({ theme }) => ({
     fontFamily: 'ui-monospace, monospace',
     fontWeight: 600,
     color: theme.palette.text.primary,
-    fontSize: 11,
-    minWidth: 38,
+    fontSize: theme.fontSizes.smallBody,
+    minWidth: 44,
 }));
 
 const Label = styled('div', {
@@ -46,6 +50,7 @@ const Label = styled('div', {
     color: theme.palette.text.secondary,
     lineHeight: 1.4,
     '& .main': {
+        fontSize: theme.fontSizes.smallBody,
         fontWeight: 500,
         color: theme.palette.text.primary,
         ...(strikethrough && {
@@ -56,9 +61,9 @@ const Label = styled('div', {
     },
     '& .note': {
         display: 'block',
-        fontSize: 10,
+        fontSize: theme.fontSizes.smallerBody,
         color: theme.palette.text.secondary,
-        marginTop: 1,
+        marginTop: 2,
     },
 }));
 
@@ -88,7 +93,7 @@ export const EventRow = ({
                 <span className='main'>{label}</span>
                 {note ? <span className='note'>{note}</span> : null}
             </Label>
-            <VerdictPill verdict={verdict}>{verdictLabel(verdict)}</VerdictPill>
+            <Badge color={verdictBadgeColor(verdict)}>{verdictLabel(verdict)}</Badge>
         </Row>
     );
 };

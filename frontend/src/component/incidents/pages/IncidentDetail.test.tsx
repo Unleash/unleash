@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
 import { ThemeProvider } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
+import { lightTheme } from 'themes/theme';
 import UIContext from 'contexts/UIContext';
 import { AnnouncerContext } from 'component/common/Announcer/AnnouncerContext/AnnouncerContext';
 import { IncidentDetail } from './IncidentDetail.tsx';
@@ -21,7 +21,7 @@ const renderWithRoute = (id: string) => {
     return render(
         <UIContext.Provider value={uiStub}>
             <AnnouncerContext.Provider value={announcerStub}>
-                <ThemeProvider theme={createTheme()}>
+                <ThemeProvider theme={lightTheme}>
                     <MemoryRouter initialEntries={[`/incidents/${id}`]}>
                         <Routes>
                             <Route path='/incidents/:id' element={<IncidentDetail />} />

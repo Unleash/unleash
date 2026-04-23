@@ -25,15 +25,14 @@ const Header = styled('div')(({ theme }) => ({
 const HeaderLeft = styled('div')(() => ({ flex: 1, minWidth: 0 }));
 
 const Breadcrumb = styled('div')(({ theme }) => ({
-    fontSize: 11,
+    fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
     marginBottom: theme.spacing(0.5),
     '& a': { color: theme.palette.primary.main, textDecoration: 'none' },
 }));
 
 const Title = styled('h1')(({ theme }) => ({
-    fontSize: 18,
-    fontWeight: 700,
+    ...theme.typography.h1,
     margin: theme.spacing(0.5, 0, 1),
     color: theme.palette.text.primary,
 }));
@@ -51,20 +50,20 @@ const SectionHead = styled('div')(({ theme }) => ({
     alignItems: 'baseline',
     justifyContent: 'space-between',
     marginBottom: theme.spacing(1.25),
-    '& h3': { fontSize: 14, fontWeight: 600, margin: 0 },
-    '& .aux': { fontSize: 11, color: theme.palette.text.secondary },
+    '& h3': { ...theme.typography.h3, margin: 0 },
+    '& .aux': { fontSize: theme.fontSizes.smallerBody, color: theme.palette.text.secondary },
 }));
 
 const Methodology = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1.25),
     padding: theme.spacing(1.25, 1.75),
-    background: '#fffbeb',
-    border: '1px solid #fde68a',
-    borderRadius: 10,
+    background: theme.palette.warning.light,
+    border: `1px solid ${theme.palette.warning.border}`,
+    borderRadius: theme.shape.borderRadiusMedium,
     marginBottom: theme.spacing(1.5),
-    fontSize: 11,
-    color: '#92400e',
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.warning.dark,
     lineHeight: 1.5,
     '&::before': { content: '"ⓘ"', fontWeight: 700, fontSize: 14 },
 }));

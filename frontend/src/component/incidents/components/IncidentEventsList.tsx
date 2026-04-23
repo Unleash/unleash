@@ -15,8 +15,8 @@ const SectionHead = styled('div')(({ theme }) => ({
     alignItems: 'baseline',
     justifyContent: 'space-between',
     marginBottom: theme.spacing(1.25),
-    '& h3': { fontSize: 14, fontWeight: 600, margin: 0 },
-    '& .aux': { fontSize: 11, color: theme.palette.text.secondary },
+    '& h3': { ...theme.typography.h3, margin: 0 },
+    '& .aux': { fontSize: theme.fontSizes.smallerBody, color: theme.palette.text.secondary },
 }));
 
 export interface IncidentEventsListProps {

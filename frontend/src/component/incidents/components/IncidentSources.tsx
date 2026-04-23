@@ -14,8 +14,8 @@ const SectionHead = styled('div')(({ theme }) => ({
     alignItems: 'baseline',
     justifyContent: 'space-between',
     marginBottom: theme.spacing(1.25),
-    '& h3': { fontSize: 14, fontWeight: 600, margin: 0 },
-    '& .aux': { fontSize: 11, color: theme.palette.text.secondary },
+    '& h3': { ...theme.typography.h3, margin: 0 },
+    '& .aux': { fontSize: theme.fontSizes.smallerBody, color: theme.palette.text.secondary },
 }));
 
 const Grid = styled('div')(({ theme }) => ({
@@ -27,20 +27,20 @@ const Grid = styled('div')(({ theme }) => ({
 const LinkCard = styled('a')(({ theme }) => ({
     padding: theme.spacing(1.25, 1.5),
     border: `1px solid ${theme.palette.divider}`,
-    borderRadius: 10,
-    background: '#fff',
+    borderRadius: theme.shape.borderRadiusMedium,
+    background: theme.palette.background.paper,
     textDecoration: 'none',
     color: theme.palette.text.primary,
-    fontSize: 12,
+    fontSize: theme.fontSizes.smallBody,
     display: 'flex',
     flexDirection: 'column',
     gap: 2,
     '&:hover': {
         borderColor: theme.palette.primary.main,
-        background: '#f5f3ff',
+        background: theme.palette.secondary.light,
     },
     '& .lbl': {
-        fontSize: 10,
+        fontSize: theme.fontSizes.smallerBody,
         color: theme.palette.text.secondary,
         textTransform: 'uppercase',
         letterSpacing: '0.3px',

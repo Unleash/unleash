@@ -1,14 +1,13 @@
-// frontend/src/component/incidents/styles/eventTokens.ts
 import { styled } from '@mui/material';
 import type { EventType, EventVerdict, SuspectGroup } from '../types.ts';
 
 const EVENT_TYPE_COLORS: Record<EventType, { bg: string; letter: string }> = {
-    deploy:    { bg: '#1e40af', letter: 'D' },
-    flag:      { bg: '#b91c1c', letter: 'F' },
+    deploy: { bg: '#1e40af', letter: 'D' },
+    flag: { bg: '#b91c1c', letter: 'F' },
     'flag-warn': { bg: '#f59e0b', letter: 'F' },
-    metric:    { bg: '#6b7280', letter: 'M' },
-    alert:     { bg: '#f59e0b', letter: '!' },
-    agent:     { bg: '#5b21b6', letter: 'A' },
+    metric: { bg: '#6b7280', letter: 'M' },
+    alert: { bg: '#f59e0b', letter: '!' },
+    agent: { bg: '#5b21b6', letter: 'A' },
 };
 
 export const getEventIconProps = (type: EventType) => EVENT_TYPE_COLORS[type];
@@ -25,70 +24,66 @@ export const EventIconCircle = styled('span', {
     borderRadius: '50%',
     background: EVENT_TYPE_COLORS[type].bg,
     color: '#fff',
-    fontSize: size === 'sm' ? 9 : 10,
+    fontSize: size === 'sm' ? 10 : 11,
     fontWeight: 700,
     fontFamily: 'ui-monospace, SF Mono, Consolas, monospace',
     flexShrink: 0,
     lineHeight: 1,
 }));
 
-/** Verdict pill used on every event row. */
-export const VerdictPill = styled('span', {
-    shouldForwardProp: (prop) => prop !== 'verdict',
-})<{ verdict: EventVerdict }>(({ verdict }) => {
-    const styles: Record<EventVerdict, { background: string; color: string; border?: string }> = {
-        likely:    { background: '#b91c1c', color: '#fff' },
-        possible:  { background: '#f59e0b', color: '#fff' },
-        'ruled-out': { background: '#e5e7eb', color: '#6b7280' },
-        effect:    { background: '#f3f4f6', color: '#6b7280' },
-        alert:     { background: '#f3f4f6', color: '#6b7280' },
-        agent:     { background: '#f3f4f6', color: '#6b7280' },
-    };
-    const s = styles[verdict];
-    return {
-        padding: '2px 7px',
-        borderRadius: 10,
-        fontSize: 9,
-        fontWeight: 700,
-        textTransform: 'uppercase',
-        letterSpacing: '0.4px',
-        whiteSpace: 'nowrap',
-        background: s.background,
-        color: s.color,
-    };
-});
+export const verdictLabel = (verdict: EventVerdict): string =>
+    (
+        {
+            likely: 'Likely cause',
+            possible: 'Possible',
+            'ruled-out': 'Ruled out',
+            effect: 'Effect',
+            alert: 'Alert',
+            agent: 'Agent',
+        } as const
+    )[verdict];
 
-export const verdictLabel = (verdict: EventVerdict): string => ({
-    likely: 'Likely cause',
-    possible: 'Possible',
-    'ruled-out': 'Ruled out',
-    effect: 'Effect',
-    alert: 'Alert',
-    agent: 'Agent',
-} as const)[verdict];
+/** Maps verdict → Unleash Badge color palette. */
+export const verdictBadgeColor = (
+    verdict: EventVerdict,
+): 'error' | 'warning' | 'disabled' | 'neutral' => {
+    switch (verdict) {
+        case 'likely':
+            return 'error';
+        case 'possible':
+            return 'warning';
+        case 'ruled-out':
+            return 'disabled';
+        default:
+            return 'neutral';
+    }
+};
 
 /** Color swatch used in suspects group headers. */
 export const GroupDot = styled('span', {
     shouldForwardProp: (prop) => prop !== 'group',
-})<{ group: SuspectGroup }>(({ group }) => {
+})<{ group: SuspectGroup }>(({ theme, group }) => {
     const colors: Record<SuspectGroup, string> = {
-        likely: '#b91c1c',
-        possible: '#f59e0b',
-        'couldnt-exclude': '#f59e0b',
-        'ruled-out': '#9ca3af',
+        likely: theme.palette.error.main,
+        possible: theme.palette.warning.main,
+        'couldnt-exclude': theme.palette.warning.main,
+        'ruled-out': theme.palette.text.disabled,
     };
     return {
-        width: 7,
-        height: 7,
+        width: 8,
+        height: 8,
         borderRadius: '50%',
         display: 'inline-block',
         background: colors[group],
     };
 });
 
-export const suspectGroupLabel = (group: SuspectGroup): string => ({
-    likely: 'Likely cause',
-    possible: 'Possible cause',
-    'couldnt-exclude': "Couldn't exclude",
-    'ruled-out': 'Ruled out',
-} as const)[group];
+export const suspectGroupLabel = (group: SuspectGroup): string =>
+    (
+        {
+            likely: 'Likely cause',
+            possible: 'Possible cause',
+            'couldnt-exclude': "Couldn't exclude",
+            'ruled-out': 'Ruled out',
+        } as const
+    )[group];

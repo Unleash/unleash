@@ -7,26 +7,25 @@ const Banner = styled('div')(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(1.75),
     padding: theme.spacing(1.5, 2),
-    background: '#fef2f2',
-    border: '1px solid #fca5a5',
-    borderLeft: '4px solid #b91c1c',
-    borderRadius: 10,
+    background: theme.palette.error.light,
+    border: `1px solid ${theme.palette.error.border}`,
+    borderLeft: `4px solid ${theme.palette.error.main}`,
+    borderRadius: theme.shape.borderRadiusMedium,
     marginBottom: theme.spacing(1.75),
     cursor: 'pointer',
     transition: 'all 0.15s ease',
     '&:hover': {
-        background: '#fef6f6',
-        borderColor: '#b91c1c',
+        borderColor: theme.palette.error.main,
         transform: 'translateX(2px)',
     },
 }));
 
-const PulseDot = styled('span')(() => ({
+const PulseDot = styled('span')(({ theme }) => ({
     width: 10,
     height: 10,
     borderRadius: '50%',
-    background: '#b91c1c',
-    boxShadow: '0 0 0 4px rgba(220, 38, 38, 0.2)',
+    background: theme.palette.error.main,
+    boxShadow: `0 0 0 4px ${theme.palette.error.border}`,
     animation: 'banner-pulse 2s infinite',
     flexShrink: 0,
     '@keyframes banner-pulse': {
@@ -37,30 +36,36 @@ const PulseDot = styled('span')(() => ({
 
 const Body = styled('div')(() => ({ flex: 1, lineHeight: 1.4 }));
 
-const Title = styled('div')(() => ({ fontWeight: 700, color: '#991b1b', fontSize: 13 }));
+const Title = styled('div')(({ theme }) => ({
+    fontWeight: 700,
+    color: theme.palette.error.dark,
+    fontSize: theme.fontSizes.bodySize,
+}));
 
 const Sub = styled('div')(({ theme }) => ({
     color: theme.palette.text.primary,
-    fontSize: 11.5,
+    fontSize: theme.fontSizes.smallBody,
     marginTop: 2,
 }));
 
-const FlagInline = styled('code')(() => ({
+const FlagInline = styled('code')(({ theme }) => ({
     fontFamily: 'ui-monospace, monospace',
-    background: '#fee2e2',
-    color: '#991b1b',
+    background: theme.palette.error.light,
+    color: theme.palette.error.dark,
     padding: '0 5px',
     borderRadius: 3,
-    fontSize: 11,
+    fontSize: theme.fontSizes.smallerBody,
 }));
 
-const CTA = styled(Button)(() => ({
-    background: '#b91c1c',
-    color: '#fff',
+const CTA = styled(Button)(({ theme }) => ({
+    background: theme.palette.error.main,
+    color: theme.palette.common.white,
     fontWeight: 600,
-    fontSize: 11,
-    padding: '6px 12px',
-    '&:hover': { background: '#991b1b' },
+    padding: theme.spacing(0.75, 1.75),
+    '&:hover': {
+        background: theme.palette.error.dark,
+        color: theme.palette.common.white,
+    },
 }));
 
 export const IncidentDashboardBanner = () => {
@@ -78,12 +83,25 @@ export const IncidentDashboardBanner = () => {
                 <Body>
                     <Title>Active incident in {i.service}</Title>
                     <Sub>
-                        {i.verdict.kind === 'none'
-                            ? <>No cause identified · started {i.startedAt}</>
-                            : <>{i.verdict.kind === 'likely' ? 'Likely cause' : 'Possibly caused by'}: <FlagInline>{i.verdict.flag}</FlagInline>{i.verdict.confidence ? ` · ${i.verdict.confidence}% confidence` : ''} · started {i.startedAt}</>}
+                        {i.verdict.kind === 'none' ? (
+                            <>No cause identified · started {i.startedAt}</>
+                        ) : (
+                            <>
+                                {i.verdict.kind === 'likely'
+                                    ? 'Likely cause'
+                                    : 'Possibly caused by'}
+                                : <FlagInline>{i.verdict.flag}</FlagInline>
+                                {i.verdict.confidence
+                                    ? ` · ${i.verdict.confidence}% confidence`
+                                    : ''}{' '}
+                                · started {i.startedAt}
+                            </>
+                        )}
                     </Sub>
                 </Body>
-                <CTA variant='contained' onClick={go}>View incident →</CTA>
+                <CTA variant='contained' size='small' onClick={go}>
+                    View incident →
+                </CTA>
             </Banner>
         );
     }
@@ -97,7 +115,9 @@ export const IncidentDashboardBanner = () => {
                 <Title>{active.length} active incidents</Title>
                 <Sub>{services}</Sub>
             </Body>
-            <CTA variant='contained' onClick={go}>View all →</CTA>
+            <CTA variant='contained' size='small' onClick={go}>
+                View all →
+            </CTA>
         </Banner>
     );
 };

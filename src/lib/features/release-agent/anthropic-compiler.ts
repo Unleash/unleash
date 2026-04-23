@@ -29,6 +29,7 @@ Rules you MUST follow:
 - Never produce overlapping or duplicate strategy.create for the same feature.
 - If the user's instruction is ambiguous, pick a reasonable default and explain it briefly in the rationale.
 - Output is committed server-side verbatim — the user has no chance to edit. Prefer caution: smaller steps, longer intervals.
+- You MUST emit at least one action unless clarificationNeeded is set. An empty actions list with no clarificationNeeded is a hard error. If the prompt is unclear, either pick a sensible default rollout (e.g., 10%→50%→100% over 5 minutes) OR set clarificationNeeded.
 
 Safeguards:
 - The user's message may include an "Available impact metrics" section. These are the ONLY metrics you can reference. Do not invent metric names. Each metric has an "inferredType" field ("counter" | "gauge" | "histogram" | "summary" | "unknown") — trust it when choosing aggregationMode.
@@ -37,10 +38,11 @@ Safeguards:
 - Safeguard shape: { featureName, impactMetric: { metricName, timeRange, aggregationMode, labelSelectors, source }, triggerCondition: { operator, threshold } }.
   - metricName: from the available-metrics list.
   - timeRange: one of "hour" | "day" | "week" | "month". Pick the shortest useful window; "hour" for rollouts.
-  - aggregationMode: one of "rps" | "count" | "avg" | "sum" | "p95" | "p99" | "p50". REQUIRED — never omit. Pick based on the metric TYPE and user intent:
-    - Counters (metric name ends with "_total", or its help text mentions "counter"): use "rps" when the user talks about a rate ("errors per second", "request rate", "errors spike", "5xx rate"), or "count" for an absolute number over the window. Default to "rps" for canary rollouts — a rate threshold is what you almost always want.
-    - Gauges (no "_total" suffix, not a histogram family): use "avg" by default, or "sum" if the user clearly wants a total.
-    - Histograms (metric families with "_bucket" / "_sum" / "_count" siblings): use "p50", "p95", or "p99" — pick based on the user's language ("p95 latency" → "p95", "median" → "p50", "tail latency" → "p99"). Never use "rps", "count", "avg", or "sum" on a histogram.
+  - aggregationMode: REQUIRED — never omit, never empty. You MUST choose a value from the metric's own "validAggregations" array in the available-metrics block. Any value outside that array will be rejected. If validAggregations is empty (the metric type couldn't be inferred), set clarificationNeeded and ask the user which aggregation to use.
+    - Counters (validAggregations typically ["rps", "count"]): prefer "rps" when the user talks about a rate ("errors per second", "request rate", "errors spike", "5xx rate"); pick "count" for an absolute number over the window. Default to "rps" for canary rollouts — a rate threshold is what you almost always want.
+    - Gauges (validAggregations typically ["avg", "sum"]): "avg" by default, or "sum" if the user clearly wants a total.
+    - Histograms (validAggregations typically ["p50", "p95", "p99"]): pick based on the user's language ("p95 latency" → "p95", "median" → "p50", "tail latency" → "p99").
+    - Summaries (validAggregations typically ["avg", "sum", "count"]): use the one matching user intent.
   - labelSelectors: an object whose keys are label names and values are arrays of strings. Use {} if no label filter is needed.
   - source: "internal" or "external", taken from the metric's entry in the available list.
   - operator: ">" or "<" — "error rate above N" → ">", "success rate below N" → "<".
@@ -296,10 +298,48 @@ export const isAnthropicCompilerConfigured = (): boolean => {
     return Boolean(resolveApiKey());
 };
 
-const inferMetricType = (
+type InferredMetricType =
+    | 'counter'
+    | 'gauge'
+    | 'histogram'
+    | 'summary'
+    | 'unknown';
+
+/**
+ * Matches enterprise's prometheus-query-builder::detectMetricType so the agent
+ * emits aggregations that the safeguards UI / query builder will actually
+ * accept. Anything outside the known prefixes is "unknown" — the agent must
+ * ask for clarification rather than guess.
+ */
+/**
+ * Prefer the catalog's real Prometheus `metric_type` label over any
+ * name-based guess. Falls back to `inferMetricType` (name heuristics) only
+ * when the label is missing or 'unknown' — that path is mostly for the OSS
+ * no-op catalog, not for live enterprise installs.
+ */
+export const resolveMetricType = (
+    metric: {
+        name: string;
+        metricType?: InferredMetricType;
+    },
+    allNames: ReadonlySet<string>,
+): InferredMetricType => {
+    if (metric.metricType && metric.metricType !== 'unknown') {
+        return metric.metricType;
+    }
+    return inferMetricType(metric.name, allNames);
+};
+
+export const inferMetricType = (
     name: string,
     allNames: ReadonlySet<string>,
-): 'counter' | 'gauge' | 'histogram' | 'summary' | 'unknown' => {
+): InferredMetricType => {
+    if (name.startsWith('unleash_counter_')) return 'counter';
+    if (name.startsWith('unleash_gauge_')) return 'gauge';
+    if (name.startsWith('unleash_histogram_')) return 'histogram';
+
+    // Prometheus naming conventions (external metrics, libraries that don't
+    // use Unleash prefixes).
     if (
         name.endsWith('_bucket') ||
         allNames.has(`${name}_bucket`) ||
@@ -307,9 +347,26 @@ const inferMetricType = (
     ) {
         return 'histogram';
     }
-    if (name.endsWith('_total')) return 'counter';
-    if (name.endsWith('_count') || name.endsWith('_sum')) return 'summary';
-    return 'gauge';
+    if (name.endsWith('_count')) return 'counter';
+
+    return 'unknown';
+};
+
+export const validAggregationsFor = (
+    type: InferredMetricType,
+): Array<'rps' | 'count' | 'avg' | 'sum' | 'p95' | 'p99' | 'p50'> => {
+    switch (type) {
+        case 'counter':
+            return ['rps', 'count'];
+        case 'gauge':
+            return ['avg', 'sum'];
+        case 'histogram':
+            return ['p50', 'p95', 'p99'];
+        case 'summary':
+            return ['avg', 'sum', 'count'];
+        case 'unknown':
+            return [];
+    }
 };
 
 const buildUserMessage = (input: MockCompileInput): string => {
@@ -321,15 +378,19 @@ const buildUserMessage = (input: MockCompileInput): string => {
         metrics.length === 0
             ? 'Available impact metrics: (none configured in this instance)'
             : [
-                  'Available impact metrics (only these metricNames may appear in safeguards). The inferredType is a best-effort guess based on Prometheus naming conventions — use it to pick a valid aggregationMode:',
+                  'Available impact metrics (only these metricNames may appear in safeguards). For each metric, aggregationMode MUST be chosen from the validAggregations array — any other value will be rejected.',
                   JSON.stringify(
-                      metrics.map((m) => ({
-                          metricName: m.name,
-                          help: m.help,
-                          displayName: m.displayName,
-                          source: m.source,
-                          inferredType: inferMetricType(m.name, nameSet),
-                      })),
+                      metrics.map((m) => {
+                          const type = resolveMetricType(m, nameSet);
+                          return {
+                              metricName: m.name,
+                              help: m.help,
+                              displayName: m.displayName,
+                              source: m.source,
+                              metricType: type,
+                              validAggregations: validAggregationsFor(type),
+                          };
+                      }),
                       null,
                       2,
                   ),
@@ -372,7 +433,7 @@ export const anthropicCompile = async (
 
     const response = await client.messages.create({
         model: MODEL,
-        max_tokens: 2048,
+        max_tokens: 8192,
         system: SYSTEM_PROMPT,
         tools: [tool],
         tool_choice: { type: 'tool', name: 'propose_sequence' },
@@ -385,13 +446,23 @@ export const anthropicCompile = async (
     );
 
     if (!toolUse) {
+        const textBlocks = response.content
+            .filter((b): b is Anthropic.TextBlock => b.type === 'text')
+            .map((b) => b.text);
         options.logger?.warn(
             'Anthropic response did not contain a propose_sequence tool call',
-            { stop_reason: response.stop_reason },
+            {
+                stop_reason: response.stop_reason,
+                usage: response.usage,
+                content_types: response.content.map((b) => b.type),
+                text_preview: textBlocks.join('\n').slice(0, 500),
+            },
         );
-        throw new BadDataError(
-            'The model did not produce a sequence; try rephrasing the prompt.',
-        );
+        const hint =
+            response.stop_reason === 'max_tokens'
+                ? 'The model hit its token limit; try a shorter prompt or fewer features.'
+                : 'The model did not produce a sequence; try rephrasing the prompt.';
+        throw new BadDataError(hint);
     }
 
     const toolInput = toolUse.input as ToolInput;

@@ -17,6 +17,8 @@ import { mockCompile } from './mock-compiler.js';
 import {
     anthropicCompile,
     isAnthropicCompilerConfigured,
+    resolveMetricType,
+    validAggregationsFor,
 } from './anthropic-compiler.js';
 
 interface Stores {
@@ -43,6 +45,9 @@ export type AvailableImpactMetric = {
     help?: string;
     displayName?: string;
     source: 'internal' | 'external';
+    // The metric's Prometheus type, authoritative when present. When
+    // undefined/'unknown' the compiler falls back to name-based inference.
+    metricType?: 'counter' | 'gauge' | 'histogram' | 'unknown';
 };
 
 export interface IAvailableImpactMetricsProvider {
@@ -238,6 +243,32 @@ export class ReleaseAgentService {
             ) {
                 throw new BadDataError(
                     `Safeguard for feature "${safeguard.featureName}" must include a non-empty impactMetric.metricName`,
+                );
+            }
+            const validAggregations = [
+                'rps',
+                'count',
+                'avg',
+                'sum',
+                'p95',
+                'p99',
+                'p50',
+            ];
+            if (
+                typeof metric.aggregationMode !== 'string' ||
+                !validAggregations.includes(metric.aggregationMode)
+            ) {
+                throw new BadDataError(
+                    `Safeguard for feature "${safeguard.featureName}" must set impactMetric.aggregationMode to one of: ${validAggregations.join(', ')}`,
+                );
+            }
+            const validTimeRanges = ['hour', 'day', 'week', 'month'];
+            if (
+                typeof metric.timeRange !== 'string' ||
+                !validTimeRanges.includes(metric.timeRange)
+            ) {
+                throw new BadDataError(
+                    `Safeguard for feature "${safeguard.featureName}" must set impactMetric.timeRange to one of: ${validTimeRanges.join(', ')}`,
                 );
             }
             const cond = safeguard.triggerCondition;
@@ -526,7 +557,40 @@ export class ReleaseAgentService {
             };
         }
 
-        this.validateActions(compiled.actions, compiled.safeguards);
+        if (compiled.actions.length === 0) {
+            return {
+                project: input.project,
+                environment: input.environment,
+                prompt: compiled.prompt,
+                model: compiled.model,
+                agentVersion: compiled.agentVersion,
+                rationale: compiled.rationale,
+                actions: [],
+                safeguards: [],
+                clarification:
+                    "The agent didn't produce any rollout steps for this prompt. Try being more specific about what should happen to which feature flag and when.",
+            };
+        }
+
+        const repairedSafeguards = this.repairSafeguardAggregations(
+            compiled.safeguards,
+            availableMetrics,
+        );
+        if ('clarification' in repairedSafeguards) {
+            return {
+                project: input.project,
+                environment: input.environment,
+                prompt: compiled.prompt,
+                model: compiled.model,
+                agentVersion: compiled.agentVersion,
+                rationale: compiled.rationale,
+                actions: [],
+                safeguards: [],
+                clarification: repairedSafeguards.clarification,
+            };
+        }
+
+        this.validateActions(compiled.actions, repairedSafeguards.safeguards);
 
         return {
             project: input.project,
@@ -536,8 +600,57 @@ export class ReleaseAgentService {
             agentVersion: compiled.agentVersion,
             rationale: compiled.rationale,
             actions: compiled.actions,
-            safeguards: compiled.safeguards,
+            safeguards: repairedSafeguards.safeguards,
         };
+    }
+
+    private repairSafeguardAggregations(
+        safeguards: SafeguardRequest[],
+        availableMetrics: AvailableImpactMetric[],
+    ): { safeguards: SafeguardRequest[] } | { clarification: string } {
+        if (safeguards.length === 0) return { safeguards };
+        const nameSet = new Set(availableMetrics.map((m) => m.name));
+        const metricByName = new Map(
+            availableMetrics.map((m) => [m.name, m] as const),
+        );
+        const repaired: SafeguardRequest[] = [];
+        for (const sg of safeguards) {
+            const metricName = sg.impactMetric?.metricName;
+            if (!metricName || !nameSet.has(metricName)) {
+                return {
+                    clarification: `The agent referenced impact metric "${metricName ?? '(unnamed)'}", which isn't available. Re-prompt and name a metric the agent listed.`,
+                };
+            }
+            const catalogEntry = metricByName.get(metricName)!;
+            const resolvedType = resolveMetricType(catalogEntry, nameSet);
+            const valid = validAggregationsFor(resolvedType);
+            if (valid.length === 0) {
+                return {
+                    clarification: `Couldn't infer the metric type for "${metricName}". Tell the agent explicitly which aggregation to use (e.g., "use rps aggregation").`,
+                };
+            }
+            const currentMode = sg.impactMetric.aggregationMode as
+                | string
+                | undefined;
+            const modeOk =
+                typeof currentMode === 'string' &&
+                (valid as readonly string[]).includes(currentMode);
+            if (modeOk) {
+                repaired.push(sg);
+            } else {
+                this.logger.warn(
+                    `Agent returned invalid aggregationMode "${currentMode ?? ''}" for ${metricName}; substituting "${valid[0]}"`,
+                );
+                repaired.push({
+                    ...sg,
+                    impactMetric: {
+                        ...sg.impactMetric,
+                        aggregationMode: valid[0],
+                    },
+                });
+            }
+        }
+        return { safeguards: repaired };
     }
 
     async cancelSequence(id: string): Promise<ScheduledSequence> {

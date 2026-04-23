@@ -155,7 +155,12 @@ export const IncidentHero = ({ incident, onAction, onFeedback }: IncidentHeroPro
                 <Badge color='error'>Active</Badge>
                 <Badge>{incident.service}</Badge>
                 {warningChip ? <Badge color='warning'>{warningChip}</Badge> : null}
-                <Badge>alert fired · started {incident.startedAt}</Badge>
+                {incident.alertSource ? (
+                    <Badge color='info'>
+                        via {incident.alertSource.displayName} · {incident.alertSource.externalId}
+                    </Badge>
+                ) : null}
+                <Badge>started {incident.startedAt}</Badge>
             </Chips>
 
             <Verdict kind={verdict.kind === 'likely' ? 'declarative' : 'hedged'}>

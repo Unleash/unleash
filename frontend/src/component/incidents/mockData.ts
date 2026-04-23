@@ -1,7 +1,15 @@
 // frontend/src/component/incidents/mockData.ts
 import type { Incident } from './types.ts';
 
-const commonSources: Incident['sources'] = [
+const pagerDutyAlert = (id: string): Incident['alertSource'] => ({
+    system: 'pagerduty',
+    displayName: 'PagerDuty',
+    externalId: id,
+    url: '#',
+});
+
+const sourcesWithAlert = (pdId: string): Incident['sources'] => [
+    { kind: 'alert', label: `PagerDuty · ${pdId}`, href: '#' },
     { kind: 'metrics', label: 'Grafana dashboard', href: '#' },
     { kind: 'errors', label: 'Sentry issues', href: '#' },
     { kind: 'flag', label: 'Flag in Unleash', href: '#' },
@@ -84,10 +92,11 @@ const highConfidenceIncident: Incident = {
         { id: 'e2', time: '14:01', chartOffset: 27.5, type: 'deploy', label: 'checkout-service v2.4.1 rolled out', verdict: 'ruled-out', isSuspect: true },
         { id: 'e3', time: '14:05', chartOffset: 42, type: 'flag', label: 'checkout-v2 rollout 25% → 100%', verdict: 'likely', isSuspect: true },
         { id: 'e4', time: '14:07', chartOffset: 52.5, type: 'metric', label: 'first error spike in exposed cohort', verdict: 'effect', isSuspect: false },
-        { id: 'e5', time: '14:12', chartOffset: 65, type: 'alert', label: 'PagerDuty: checkout-service err rate > 2%', verdict: 'alert', isSuspect: false },
+        { id: 'e5', time: '14:12', chartOffset: 65, type: 'alert', label: 'PagerDuty · err rate > 2% · PD-01H5JZVKQ', verdict: 'alert', isSuspect: false },
         { id: 'e6', time: '14:18', chartOffset: 80, type: 'agent', label: 'agent investigation started', verdict: 'agent', isSuspect: false },
     ],
-    sources: commonSources,
+    sources: sourcesWithAlert('PD-01H5JZVKQ'),
+    alertSource: pagerDutyAlert('PD-01H5JZVKQ'),
     assignee: { initials: 'HS', name: 'Henning' },
 };
 
@@ -188,10 +197,11 @@ const lowConfidenceIncident: Incident = {
         { id: 'e2', time: '14:01', chartOffset: 27.5, type: 'deploy', label: 'cart v2.4.1 rolled out', verdict: 'possible', isSuspect: true },
         { id: 'e3', time: '14:05', chartOffset: 42, type: 'flag-warn', label: 'cart-redesign rollout 25% → 100%', verdict: 'possible', isSuspect: true },
         { id: 'e4', time: '14:07', chartOffset: 52.5, type: 'metric', label: 'error rate diverges from 7-day baseline', verdict: 'effect', isSuspect: false },
-        { id: 'e5', time: '14:12', chartOffset: 65, type: 'alert', label: 'PagerDuty: cart-service err rate > 2%', verdict: 'alert', isSuspect: false },
+        { id: 'e5', time: '14:12', chartOffset: 65, type: 'alert', label: 'PagerDuty · err rate > 2% · PD-01H5K2BCDE', verdict: 'alert', isSuspect: false },
         { id: 'e6', time: '14:18', chartOffset: 80, type: 'agent', label: 'agent investigation started', verdict: 'agent', isSuspect: false },
     ],
-    sources: commonSources,
+    sources: sourcesWithAlert('PD-01H5K2BCDE'),
+    alertSource: pagerDutyAlert('PD-01H5K2BCDE'),
 };
 
 const noCauseIncident: Incident = {
@@ -231,10 +241,11 @@ const noCauseIncident: Incident = {
     suspects: [],
     events: [
         { id: 'e1', time: '13:10', chartOffset: 50, type: 'metric', label: 'first error spike detected', verdict: 'effect', isSuspect: false },
-        { id: 'e2', time: '13:12', chartOffset: 60, type: 'alert', label: 'PagerDuty: payments-api err rate > 2%', verdict: 'alert', isSuspect: false },
+        { id: 'e2', time: '13:12', chartOffset: 60, type: 'alert', label: 'PagerDuty · err rate > 2% · PD-01H5KDHM2', verdict: 'alert', isSuspect: false },
         { id: 'e3', time: '13:18', chartOffset: 75, type: 'agent', label: 'agent investigation started', verdict: 'agent', isSuspect: false },
     ],
-    sources: commonSources,
+    sources: sourcesWithAlert('PD-01H5KDHM2'),
+    alertSource: pagerDutyAlert('PD-01H5KDHM2'),
     assignee: { initials: 'AN', name: 'Ana' },
 };
 
@@ -262,7 +273,8 @@ const historical: Incident[] = [
         cohort: highConfidenceIncident.cohort,
         suspects: [],
         events: [],
-        sources: commonSources,
+        sources: sourcesWithAlert('PD-01H5J4Z72'),
+        alertSource: pagerDutyAlert('PD-01H5J4Z72'),
         assignee: { initials: 'HS', name: 'Henning' },
     },
     {
@@ -287,7 +299,8 @@ const historical: Incident[] = [
         cohort: lowConfidenceIncident.cohort,
         suspects: [],
         events: [],
-        sources: commonSources,
+        sources: sourcesWithAlert('PD-01H4YWP8T'),
+        alertSource: pagerDutyAlert('PD-01H4YWP8T'),
         assignee: { initials: 'AN', name: 'Ana' },
     },
 ];

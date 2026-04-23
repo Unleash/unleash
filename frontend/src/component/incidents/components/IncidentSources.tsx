@@ -20,7 +20,7 @@ const SectionHead = styled('div')(({ theme }) => ({
 
 const Grid = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
     gap: theme.spacing(1.25),
 }));
 
@@ -50,6 +50,7 @@ const LinkCard = styled('a')(({ theme }) => ({
 }));
 
 const KIND_LABEL: Record<Incident['sources'][number]['kind'], string> = {
+    alert: 'Alert source',
     metrics: 'Metrics',
     errors: 'Errors',
     flag: 'Flag',

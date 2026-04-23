@@ -50,9 +50,16 @@ export interface CohortData {
 }
 
 export interface IncidentSource {
-    kind: 'metrics' | 'errors' | 'flag' | 'deploy';
+    kind: 'metrics' | 'errors' | 'flag' | 'deploy' | 'alert';
     label: string;
     href: string;
+}
+
+export interface AlertSource {
+    system: 'pagerduty' | 'datadog' | 'grafana' | 'other';
+    displayName: string;
+    externalId: string; // e.g. "PD-01H5JZVKQMW7XG"
+    url: string;
 }
 
 export interface IncidentAction {
@@ -97,6 +104,8 @@ export interface Incident {
     suspects: Suspect[];
     events: IncidentEvent[];
     sources: IncidentSource[];
+    /** Where the originating alert came from (PagerDuty, Datadog, etc.). */
+    alertSource?: AlertSource;
     assignee?: { initials: string; name: string };
 }
 

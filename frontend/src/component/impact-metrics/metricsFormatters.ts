@@ -70,9 +70,6 @@ export const getMetricType = (
     ) {
         return metricTypeLabel[0] as MetricType;
     }
-    if (seriesName.startsWith('unleash_counter_')) return 'counter';
-    if (seriesName.startsWith('unleash_gauge_')) return 'gauge';
-    if (seriesName.startsWith('unleash_histogram_')) return 'histogram';
     if (seriesName.endsWith('_bucket')) return 'histogram';
     if (seriesName.endsWith('_count')) return 'counter';
     return 'unknown';

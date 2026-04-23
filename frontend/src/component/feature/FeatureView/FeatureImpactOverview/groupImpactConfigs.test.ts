@@ -12,7 +12,7 @@ const makeConfig = (
     overrides: Partial<ImpactMetricsConfigSchema> = {},
 ): ImpactMetricsConfigSchema => ({
     id: fakeUlid(),
-    metricName: 'unleash_counter_test',
+    metricName: 'test_metric',
     displayName: 'Test metric',
     timeRange: 'day',
     aggregationMode: 'count',

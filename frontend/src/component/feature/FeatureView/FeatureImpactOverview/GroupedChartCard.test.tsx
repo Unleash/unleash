@@ -16,7 +16,7 @@ const server = testServerSetup();
 
 const base: ImpactMetricsConfigSchema = {
     id: 'id-1',
-    metricName: 'unleash_counter_signups',
+    metricName: 'signups',
     displayName: 'Signups',
     timeRange: 'day',
     aggregationMode: 'count',
@@ -35,7 +35,7 @@ const mockImpactResponse = (value: number) => ({
     labels: {},
     series: [
         {
-            metric: { __name__: 'unleash_counter' },
+            metric: { __name__: 'signups' },
             data: [
                 [1700000000, String(value)],
                 [1700003600, String(value)],
@@ -69,12 +69,12 @@ describe('GroupedChartCard', () => {
         const configs = [
             make({
                 id: 'a',
-                metricName: 'unleash_counter_a',
+                metricName: 'metric_a',
                 displayName: 'Alpha',
             }),
             make({
                 id: 'b',
-                metricName: 'unleash_counter_b',
+                metricName: 'metric_b',
                 displayName: 'Beta',
             }),
         ];
@@ -105,8 +105,8 @@ describe('GroupedChartCard', () => {
         testServerRoute(server, '/api/admin/search/events', mockEventsResponse);
 
         const configs = [
-            make({ id: 'a', metricName: 'unleash_counter_a' }),
-            make({ id: 'b', metricName: 'unleash_counter_b' }),
+            make({ id: 'a', metricName: 'metric_a' }),
+            make({ id: 'b', metricName: 'metric_b' }),
         ];
 
         render(
@@ -137,11 +137,11 @@ describe('GroupedChartCard', () => {
         const configs = [
             make({
                 id: 'a',
-                metricName: 'unleash_counter_a',
+                metricName: 'metric_a',
                 displayName: 'Display',
                 title: 'Custom Title',
             }),
-            make({ id: 'b', metricName: 'unleash_counter_b' }),
+            make({ id: 'b', metricName: 'metric_b' }),
         ];
 
         render(
@@ -170,7 +170,7 @@ describe('GroupedChartCard', () => {
         const configs = [
             make({
                 id: 'a',
-                metricName: 'unleash_counter_a',
+                metricName: 'metric_a',
                 displayName: 'Solo',
             }),
         ];

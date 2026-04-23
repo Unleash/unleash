@@ -33,7 +33,7 @@ const PinWrap = styled('div', {
 
 const PinTime = styled('span')(({ theme }) => ({
     fontFamily: 'ui-monospace, monospace',
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
     marginTop: 2,
     background: 'rgba(255,255,255,0.9)',
@@ -51,7 +51,7 @@ const Tooltip = styled('div')(({ theme }) => ({
     color: theme.palette.common.white,
     padding: theme.spacing(0.75, 1.25),
     borderRadius: theme.shape.borderRadius,
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     whiteSpace: 'nowrap',
     opacity: 0,
     pointerEvents: 'none',
@@ -70,7 +70,7 @@ const Tooltip = styled('div')(({ theme }) => ({
     '& .tip-head': { fontWeight: 700 },
     '& .tip-src': {
         color: theme.palette.text.disabled,
-        fontSize: theme.fontSizes.smallerBody,
+        fontSize: theme.fontSizes.smallBody,
         textTransform: 'uppercase',
         letterSpacing: '0.3px',
         marginLeft: 5,

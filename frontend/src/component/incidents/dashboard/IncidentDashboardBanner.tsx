@@ -54,7 +54,7 @@ const FlagInline = styled('code')(({ theme }) => ({
     color: theme.palette.error.dark,
     padding: '0 5px',
     borderRadius: 3,
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const CTA = styled(Button)(({ theme }) => ({

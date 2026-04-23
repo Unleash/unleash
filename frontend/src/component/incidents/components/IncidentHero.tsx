@@ -91,7 +91,7 @@ const ConfLabelTitle = styled('div')(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 const ConfLabelSub = styled('div')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
 }));
 const ConfMeter = styled('div')(({ theme }) => ({

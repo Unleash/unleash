@@ -15,7 +15,7 @@ const SectionHead = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     marginBottom: theme.spacing(1.25),
     '& h3': { ...theme.typography.h3, margin: 0 },
-    '& .aux': { fontSize: theme.fontSizes.smallerBody, color: theme.palette.text.secondary },
+    '& .aux': { fontSize: theme.fontSizes.smallBody, color: theme.palette.text.secondary },
 }));
 
 const Grid = styled('div')(({ theme }) => ({
@@ -40,7 +40,7 @@ const LinkCard = styled('a')(({ theme }) => ({
         background: theme.palette.secondary.light,
     },
     '& .lbl': {
-        fontSize: theme.fontSizes.smallerBody,
+        fontSize: theme.fontSizes.smallBody,
         color: theme.palette.text.secondary,
         textTransform: 'uppercase',
         letterSpacing: '0.3px',

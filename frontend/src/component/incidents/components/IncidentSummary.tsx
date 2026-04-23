@@ -44,7 +44,7 @@ const IfWrong = styled('div', {
     '& .title': {
         fontWeight: 700,
         color: theme.palette.primary.main,
-        fontSize: theme.fontSizes.smallerBody,
+        fontSize: theme.fontSizes.smallBody,
         textTransform: 'uppercase',
         letterSpacing: '0.3px',
         marginBottom: theme.spacing(0.75),

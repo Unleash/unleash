@@ -14,7 +14,7 @@ const Toggle = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     padding: 2,
     marginBottom: theme.spacing(1),
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const ToggleBtn = styled('button', {
@@ -24,7 +24,7 @@ const ToggleBtn = styled('button', {
     border: 'none',
     background: active ? theme.palette.background.paper : 'transparent',
     color: active ? theme.palette.text.primary : theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     fontWeight: active ? 600 : 500,
     cursor: 'pointer',
     borderRadius: theme.shape.borderRadius,
@@ -34,7 +34,7 @@ const ToggleBtn = styled('button', {
     gap: 5,
     fontFamily: 'inherit',
     '& .count': {
-        fontSize: theme.fontSizes.smallerBody,
+        fontSize: theme.fontSizes.smallBody,
         color: active ? theme.palette.text.secondary : theme.palette.text.disabled,
         fontWeight: 500,
     },
@@ -57,7 +57,7 @@ const Legend = styled('div')(({ theme }) => ({
     right: 10,
     display: 'flex',
     gap: 10,
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     background: 'rgba(255,255,255,0.92)',
     padding: '4px 8px',
     borderRadius: theme.shape.borderRadius,
@@ -92,7 +92,7 @@ const XAxis = styled('div')(({ theme }) => ({
     right: 10,
     display: 'flex',
     justifyContent: 'space-between',
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
 }));
 
@@ -119,7 +119,7 @@ const LegendRow = styled('div')(({ theme }) => ({
     background: theme.palette.background.elevation1,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
     '& .lg-item': { display: 'flex', alignItems: 'center', gap: 5 },
 }));

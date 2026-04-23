@@ -55,7 +55,7 @@ const Chip = styled('button', {
     cursor: 'pointer',
     fontFamily: 'inherit',
     '& .count': {
-        fontSize: theme.fontSizes.smallerBody,
+        fontSize: theme.fontSizes.smallBody,
         padding: '1px 6px',
         borderRadius: 8,
         background: active ? 'rgba(255,255,255,0.25)' : theme.palette.background.elevation1,
@@ -65,7 +65,7 @@ const Chip = styled('button', {
 }));
 
 const SectionHead = styled('div')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     fontWeight: 700,
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
@@ -121,7 +121,7 @@ const Row = styled(Link, {
         ? {}
         : { background: isActive ? theme.palette.error.light : theme.palette.background.elevation1 },
     ...(isHead && {
-        fontSize: theme.fontSizes.smallerBody,
+        fontSize: theme.fontSizes.smallBody,
         fontWeight: 700,
         color: theme.palette.text.secondary,
         textTransform: 'uppercase',
@@ -152,7 +152,7 @@ const FlagCode = styled('code')(({ theme }) => ({
     color: theme.palette.error.dark,
     padding: '1px 5px',
     borderRadius: 3,
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
 }));
 
 const ConfCell = styled('span', {
@@ -170,14 +170,14 @@ const ConfCell = styled('span', {
 }));
 
 const MetaCell = styled('span')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
 }));
 
 const AssigneeCell = styled('span', {
     shouldForwardProp: (prop) => prop !== 'assigned',
 })<{ assigned: boolean }>(({ theme, assigned }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: assigned ? theme.palette.text.primary : theme.palette.text.disabled,
     fontStyle: assigned ? 'normal' : 'italic',
 }));

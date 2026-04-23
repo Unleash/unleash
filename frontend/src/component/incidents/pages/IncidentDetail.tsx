@@ -42,7 +42,7 @@ const SectionHead = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     marginBottom: theme.spacing(1.25),
     '& h3': { ...theme.typography.h3, margin: 0 },
-    '& .aux': { fontSize: theme.fontSizes.smallerBody, color: theme.palette.text.secondary },
+    '& .aux': { fontSize: theme.fontSizes.smallBody, color: theme.palette.text.secondary },
 }));
 
 const Methodology = styled('div')(({ theme }) => ({
@@ -53,7 +53,7 @@ const Methodology = styled('div')(({ theme }) => ({
     border: `1px solid ${theme.palette.warning.border}`,
     borderRadius: theme.shape.borderRadiusMedium,
     marginBottom: theme.spacing(1.5),
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.warning.dark,
     lineHeight: 1.5,
     '&::before': { content: '"ⓘ"', fontWeight: 700, fontSize: 14 },

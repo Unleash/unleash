@@ -18,14 +18,14 @@ const SectionHead = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     marginBottom: theme.spacing(1.25),
     '& h3': { ...theme.typography.h3, margin: 0 },
-    '& .aux': { fontSize: theme.fontSizes.smallerBody, color: theme.palette.text.secondary },
+    '& .aux': { fontSize: theme.fontSizes.smallBody, color: theme.palette.text.secondary },
 }));
 
 const GroupHead = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.fontSizes.smallBody,
     fontWeight: 700,
     textTransform: 'uppercase',
     letterSpacing: '0.4px',

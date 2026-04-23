@@ -61,7 +61,7 @@ const Label = styled('div', {
     },
     '& .note': {
         display: 'block',
-        fontSize: theme.fontSizes.smallerBody,
+        fontSize: theme.fontSizes.smallBody,
         color: theme.palette.text.secondary,
         marginTop: 2,
     },

@@ -1,4 +1,5 @@
-import { Switch, FormControlLabel, useMediaQuery } from '@mui/material';
+import { Box, Switch, FormControlLabel, useMediaQuery } from '@mui/material';
+import { AiAgentsBadge } from 'component/ai-agents/AiAgentsBadge';
 import EventJson from 'component/events/EventJson/EventJson';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -135,6 +136,18 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                 bodyClass={'no-padding'}
                 header={
                     <PageHeader
+                        titleElement={
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                }}
+                            >
+                                <span>{`${title} (${total})`}</span>
+                                <AiAgentsBadge type='events' label='Events AI agents' />
+                            </Box>
+                        }
                         title={`${title} (${total})`}
                         actions={
                             <>

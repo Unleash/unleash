@@ -75,6 +75,7 @@ export const PrimaryNavigationList: FC<{
 
     const { isOss, isEnterprise } = useUiConfig();
     const impactMetricsEnabled = useUiFlag('impactMetrics');
+    const aiAgentsEnabled = useUiFlag('aiAgents');
     const showChangeRequestList = isEnterprise();
 
     return (
@@ -94,6 +95,9 @@ export const PrimaryNavigationList: FC<{
             ) : null}
             {!isOss() && impactMetricsEnabled ? (
                 <PrimaryListItem href='/impact-metrics' text='Impact Metrics' />
+            ) : null}
+            {!isOss() && aiAgentsEnabled ? (
+                <PrimaryListItem href='/ai-agents' text='AI agents' />
             ) : null}
             <ConfigurationAccordion
                 mode={mode}

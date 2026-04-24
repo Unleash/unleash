@@ -92,6 +92,7 @@ export type UiFlags = {
     filterFavorites?: boolean;
     onboardingFlagSetup?: boolean;
     multiMetricChart?: boolean;
+    aiAgents?: boolean;
 };
 
 export interface IVersionInfo {

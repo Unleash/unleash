@@ -59,6 +59,34 @@ const TopContainer = styled(Box, {
     zIndex: 2,
 }));
 
+const HackathonBadge = styled('span')(({ theme }) => ({
+    position: 'absolute',
+    bottom: theme.spacing(0),
+    right: theme.spacing(-1.5),
+    transform: 'rotate(-8deg)',
+    background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 60%, ${theme.palette.primary.light} 100%)`,
+    color: theme.palette.primary.contrastText,
+    fontSize: '9px',
+    fontWeight: 700,
+    letterSpacing: '0.5px',
+    textTransform: 'uppercase',
+    padding: '2px 6px',
+    borderRadius: 4,
+    boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
+    whiteSpace: 'nowrap',
+    pointerEvents: 'none',
+    animation: 'hackathonPulse 2.4s ease-in-out infinite',
+    '@keyframes hackathonPulse': {
+        '0%, 100%': { transform: 'rotate(-8deg) scale(1)' },
+        '50%': { transform: 'rotate(-8deg) scale(1.08)' },
+    },
+}));
+
+const LogoContainer = styled('span')({
+    position: 'relative',
+    display: 'inline-flex',
+});
+
 const MidContainer = styled(Box)(({ theme }) => ({
     flex: 1,
     width: '100%',
@@ -133,26 +161,29 @@ export const NavigationSidebar: FC<{
                     condition={mode === 'full'}
                     show={
                         <StyledLink to='/' sx={flexRow} aria-label='Home'>
-                            <ThemeMode
-                                darkmode={
-                                    <ConditionallyRender
-                                        condition={celebrateUnleashFrontend}
-                                        show={<CelebatoryUnleashLogoWhite />}
-                                        elseShow={
-                                            <StyledUnleashLogoWhite aria-label='Unleash logo' />
-                                        }
-                                    />
-                                }
-                                lightmode={
-                                    <ConditionallyRender
-                                        condition={celebrateUnleashFrontend}
-                                        show={<StyledCelebatoryLogo />}
-                                        elseShow={
-                                            <StyledUnleashLogo aria-label='Unleash logo' />
-                                        }
-                                    />
-                                }
-                            />
+                            <LogoContainer>
+                                <ThemeMode
+                                    darkmode={
+                                        <ConditionallyRender
+                                            condition={celebrateUnleashFrontend}
+                                            show={<CelebatoryUnleashLogoWhite />}
+                                            elseShow={
+                                                <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                                            }
+                                        />
+                                    }
+                                    lightmode={
+                                        <ConditionallyRender
+                                            condition={celebrateUnleashFrontend}
+                                            show={<StyledCelebatoryLogo />}
+                                            elseShow={
+                                                <StyledUnleashLogo aria-label='Unleash logo' />
+                                            }
+                                        />
+                                    }
+                                />
+                                <HackathonBadge>Hackathon 2026</HackathonBadge>
+                            </LogoContainer>
                         </StyledLink>
                     }
                     elseShow={

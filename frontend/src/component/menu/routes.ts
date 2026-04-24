@@ -45,6 +45,7 @@ import { PaginatedApplicationList } from '../application/ApplicationList/Paginat
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { Insights } from '../insights/Insights.jsx';
 import { LazyImpactMetricsPage } from '../impact-metrics/LazyImpactMetricsPage.tsx';
+import { AiAgents } from '../ai-agents/AiAgents.tsx';
 import { FeedbackList } from '../feedbackNew/FeedbackList.jsx';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
@@ -183,6 +184,17 @@ export const routes: IRoute[] = [
         menu: { primary: true },
         enterprise: true,
         flag: 'impactMetrics',
+    },
+
+    // AI agents
+    {
+        path: '/ai-agents',
+        title: 'AI agents',
+        component: AiAgents,
+        type: 'protected',
+        menu: { primary: true },
+        enterprise: true,
+        flag: 'aiAgents',
     },
 
     // Applications

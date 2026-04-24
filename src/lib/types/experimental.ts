@@ -76,7 +76,8 @@ export type IFlagKey =
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'onlyFeatureTokensWithFeatureAPIs'
     | 'onboardingFlagSetup'
-    | 'multiMetricChart';
+    | 'multiMetricChart'
+    | 'aiAgents';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -345,6 +346,10 @@ const flags: IFlags = {
     ),
     multiMetricChart: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MULTI_METRIC_CHART,
+        false,
+    ),
+    aiAgents: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_AI_AGENTS,
         false,
     ),
 };

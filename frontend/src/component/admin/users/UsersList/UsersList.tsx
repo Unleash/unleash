@@ -15,7 +15,8 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUsersPlan } from 'hooks/useUsersPlan';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Button, IconButton, Tooltip, useMediaQuery } from '@mui/material';
+import { AiAgentsBadge } from 'component/ai-agents/AiAgentsBadge';
+import { Box, Button, IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UserTypeCell } from './UserTypeCell/UserTypeCell.tsx';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
@@ -302,6 +303,18 @@ const UsersList = () => {
             isLoading={loading}
             header={
                 <PageHeader
+                    titleElement={
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1,
+                            }}
+                        >
+                            <span>{`Users (${rows.length})`}</span>
+                            <AiAgentsBadge type='users' label='Users AI agents' />
+                        </Box>
+                    }
                     title={`Users (${rows.length})`}
                     actions={
                         <>

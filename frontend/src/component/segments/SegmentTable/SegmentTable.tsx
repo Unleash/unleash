@@ -1,5 +1,7 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
+import { AiAgentsBadge } from 'component/ai-agents/AiAgentsBadge';
+import { Box } from '@mui/material';
 import {
     SortableTableHeader,
     Table,
@@ -105,6 +107,18 @@ export const SegmentTable = () => {
         <PageContent
             header={
                 <PageHeader
+                    titleElement={
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1,
+                            }}
+                        >
+                            <span>{`Segments (${rows.length})`}</span>
+                            <AiAgentsBadge type='segments' label='Segments AI agents' />
+                        </Box>
+                    }
                     title={`Segments (${rows.length})`}
                     actions={
                         <>

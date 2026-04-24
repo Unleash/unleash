@@ -85,6 +85,7 @@ export default defineConfig(({ mode }) => {
                 open: true,
                 host: true,
                 port: 3000,
+                allowedHosts: ['unleash.charsolutions.com'],
                 proxy: {
                     [`${UNLEASH_BASE_PATH}api`]: {
                         target: UNLEASH_API,

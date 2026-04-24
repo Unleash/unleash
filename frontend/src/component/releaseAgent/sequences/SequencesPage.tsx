@@ -109,7 +109,7 @@ const ReleaseCard = styled(Paper)(({ theme }) => ({
     ),
     '&:hover': {
         borderColor: theme.palette.secondary.border,
-        boxShadow: `0 8px 24px -16px ${theme.palette.secondary.border}`,
+        boxShadow: `0 4px 16px -12px ${theme.palette.divider}`,
     },
 }));
 
@@ -546,24 +546,26 @@ const groupActions = (actions: ScheduledAction[]): StepGroup[] => {
     return Array.from(groups.values());
 };
 
+const MAX_NEXT_STEPS = 2;
+
 const pickStepGroups = (
     actions: ScheduledAction[],
 ): { kind: ReleaseStepKind; group: StepGroup }[] => {
     const groups = groupActions(actions);
     const pending = groups.filter((g) => g.status === 'pending');
     const executed = groups.filter((g) => g.status !== 'pending');
-    const nextPending = pending[0];
+    const upcoming = pending.slice(0, MAX_NEXT_STEPS);
     const latestRan = executed[executed.length - 1];
 
     const steps: { kind: ReleaseStepKind; group: StepGroup }[] = [];
     if (latestRan) {
         steps.push({
-            kind: nextPending ? 'current' : 'done',
+            kind: upcoming.length > 0 ? 'current' : 'done',
             group: latestRan,
         });
     }
-    if (nextPending) {
-        steps.push({ kind: 'next', group: nextPending });
+    for (const group of upcoming) {
+        steps.push({ kind: 'next', group });
     }
     return steps;
 };

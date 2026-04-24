@@ -420,7 +420,8 @@ export class ReleaseAgentService {
     ): Promise<CreatedSequence> {
         this.assertEnabled();
         const safeguards = input.safeguards ?? [];
-        this.validateActions(input.actions, safeguards);
+        const actions = this.rebaseActionsIntoFuture(input.actions);
+        this.validateActions(actions, safeguards);
 
         const sequenceId = ulid();
         const sequence = await this.sequenceStore.insert({
@@ -433,7 +434,7 @@ export class ReleaseAgentService {
             agentVersion: input.agentVersion ?? null,
         });
 
-        const actionWrites: ScheduledActionWriteModel[] = input.actions.map(
+        const actionWrites: ScheduledActionWriteModel[] = actions.map(
             (action, index) =>
                 ({
                     ...action,
@@ -443,10 +444,11 @@ export class ReleaseAgentService {
                 }) as ScheduledActionWriteModel,
         );
 
-        const actions = await this.actionStore.bulkInsert(actionWrites);
+        const persistedActions =
+            await this.actionStore.bulkInsert(actionWrites);
 
         this.logger.info(
-            `Created scheduled sequence ${sequenceId} with ${actions.length} actions`,
+            `Created scheduled sequence ${sequenceId} with ${persistedActions.length} actions`,
         );
 
         if (safeguards.length > 0) {
@@ -464,7 +466,34 @@ export class ReleaseAgentService {
             }
         }
 
-        return { sequence, actions };
+        return { sequence, actions: persistedActions };
+    }
+
+    /**
+     * The compile pass hands us absolute fireAt timestamps. Compile + user
+     * review can easily take 30–60s, so by commit time the earliest step is
+     * often in the past. Forward-shift the whole schedule so the first step
+     * fires at least `minHeadstartMs` after now, preserving relative spacing.
+     */
+    private rebaseActionsIntoFuture(
+        actions: CreateActionInput[],
+        minHeadstartMs = 30_000,
+    ): CreateActionInput[] {
+        if (actions.length === 0) return actions;
+        const firstFire = actions.reduce(
+            (min, a) => (a.fireAt < min ? a.fireAt : min),
+            actions[0].fireAt,
+        );
+        const target = new Date(Date.now() + minHeadstartMs);
+        if (firstFire >= target) return actions;
+        const deltaMs = target.getTime() - firstFire.getTime();
+        this.logger.info(
+            `Rebasing sequence forward by ${Math.round(deltaMs / 1000)}s to keep first step in the future`,
+        );
+        return actions.map((a) => ({
+            ...a,
+            fireAt: new Date(a.fireAt.getTime() + deltaMs),
+        }));
     }
 
     async getSequence(id: string): Promise<CreatedSequence> {

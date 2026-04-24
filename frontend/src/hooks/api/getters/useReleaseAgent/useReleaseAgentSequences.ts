@@ -60,10 +60,17 @@ export const useReleaseAgentSequences = (
           )
         : null;
 
-    const { data, error, mutate } = useSWR<ListResponse>(path, (p: string) =>
-        fetch(p)
-            .then(handleErrorResponses('Release agent sequences'))
-            .then((res) => res.json()),
+    const { data, error, mutate } = useSWR<ListResponse>(
+        path,
+        (p: string) =>
+            fetch(p)
+                .then(handleErrorResponses('Release agent sequences'))
+                .then((res) => res.json()),
+        {
+            // Poll so in-flight releases tick forward without a manual refresh.
+            refreshInterval: 15_000,
+            revalidateOnFocus: true,
+        },
     );
 
     const refetch = useCallback(() => {

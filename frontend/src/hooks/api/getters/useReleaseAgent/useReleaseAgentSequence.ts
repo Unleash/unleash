@@ -15,6 +15,12 @@ export const useReleaseAgentSequence = (id?: string) => {
             fetch(p)
                 .then(handleErrorResponses('Release agent sequence'))
                 .then((res) => res.json()),
+        {
+            // Keep the detail dialog in sync with the executor tick (60s)
+            // without forcing the user to refresh.
+            refreshInterval: 10_000,
+            revalidateOnFocus: true,
+        },
     );
 
     const refetch = useCallback(() => {

@@ -518,6 +518,44 @@ describe('getDeltaRevisionState', () => {
         expect(state.projectRevisions.get('default')).toBe(secondStored.id);
         expect(state.visibleSegmentRevision).toBe(segmentStored.id);
     });
+
+    test('filters segment revision by referenced segment ids from event payload', async () => {
+        const firstSegmentEvent = {
+            type: SEGMENT_UPDATED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            data: { id: 123, name: 'segment-a' },
+        };
+
+        const secondSegmentEvent = {
+            type: SEGMENT_UPDATED,
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            data: { id: 999, name: 'segment-b' },
+        };
+
+        await eventStore.store(firstSegmentEvent);
+        await eventStore.store(secondSegmentEvent);
+
+        const allEvents = await eventStore.getAll();
+        const firstStored = allEvents.find(
+            (e) => e.type === SEGMENT_UPDATED && e.data.id === 123,
+        )!;
+        const secondStored = allEvents.find(
+            (e) => e.type === SEGMENT_UPDATED && e.data.id === 999,
+        )!;
+
+        expect(secondStored.id).toBeGreaterThan(firstStored.id);
+
+        const state = await eventStore.getDeltaRevisionState(
+            ALL_ENVS,
+            new Set([123]),
+        );
+
+        expect(state.visibleSegmentRevision).toBe(firstStored.id);
+    });
 });
 
 test('Should filter events by ID using IS operator', async () => {

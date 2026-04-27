@@ -56,7 +56,7 @@ export const MetricsSummaryChart: VFC<IMetricsSummaryChartProps> = ({
         return {
             datasets: [
                 {
-                    label: 'Total Requests',
+                    label: 'Total Evaluations',
                     data: data,
                     borderColor: theme.palette.primary.light,
                     backgroundColor: fillGradientPrimary,

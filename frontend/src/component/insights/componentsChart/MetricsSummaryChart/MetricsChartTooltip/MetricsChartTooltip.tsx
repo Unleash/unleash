@@ -114,7 +114,7 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     />
                     <InfoLine
                         iconChar={'▣ '}
-                        title={`Total requests: ${(point.value.totalRequests ?? 0).toLocaleString()}`}
+                        title={`Total evaluations: ${(point.value.totalRequests ?? 0).toLocaleString()}`}
                         color={'info'}
                     />
                     <InfoLine

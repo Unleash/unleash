@@ -48,7 +48,7 @@ export const getVisibleRevision = (
         visibleRevision = Math.max(
             0,
             ...Array.from(referencedSegmentIds, (segmentId) => {
-                return revisionState.segmentRevisions?.get(segmentId) ?? 0;
+                return revisionState.segmentRevisions.get(segmentId) ?? 0;
             }),
         );
     }

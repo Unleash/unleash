@@ -44,7 +44,7 @@ import { BadDataError } from '../../../server-impl.js';
 export type EnvironmentRevisions = Record<string, DeltaCache>;
 export type EnvironmentVisibleRevisionState = {
     projectRevisions: Map<string, number>;
-    segmentRevisions?: Map<number, number>;
+    segmentRevisions: Map<number, number>;
     maxSegmentRevision: number;
 };
 
@@ -576,9 +576,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             maxSegmentRevision: 0,
             segmentRevisions: new Map<number, number>(),
         };
-        const segmentRevisions =
-            revisionState.segmentRevisions ?? new Map<number, number>();
-        revisionState.segmentRevisions = segmentRevisions;
 
         if (segmentEvents.length > 0) {
             const referencedSegmentIds = getReferencedSegmentIds(
@@ -590,7 +587,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                     event.segment.id
                 ) {
                     setMaxRevision(
-                        segmentRevisions,
+                        revisionState.segmentRevisions,
                         event.segment.id,
                         event.eventId,
                     );

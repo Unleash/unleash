@@ -57,7 +57,6 @@ process.nextTick(async () => {
                         gtmReleaseManagement: true,
                         regexConstraintOperator: true,
                         enterpriseEdgeTokensList: true,
-                        filterFavorites: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
                         onlyFeatureTokensWithFeatureAPIs: false,
                     },

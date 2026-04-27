@@ -89,7 +89,6 @@ export type UiFlags = {
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
-    filterFavorites?: boolean;
     onboardingFlagSetup?: boolean;
     multiMetricChart?: boolean;
 };

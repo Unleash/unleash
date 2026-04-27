@@ -241,10 +241,20 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             await this.initEnvironmentDelta(environment);
         }
 
-        const visibleRevision = this.getQueryVisibleRevision(
-            environment,
+        const delta = this.delta[environment];
+        const hydrationEvent = delta.getHydrationEvent();
+        const filteredHydrationEvent = filterHydrationEventByQuery(
+            hydrationEvent,
             projects,
             namePrefix,
+        );
+        const referencedSegmentIds = getReferencedSegmentIds(
+            filteredHydrationEvent.features,
+        );
+        const visibleRevision = getVisibleRevision(
+            this.visibleRevisions[environment],
+            projects,
+            referencedSegmentIds,
         );
 
         if (hasRequestedRevision && requestedRevisionId >= visibleRevision) {
@@ -253,43 +263,19 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             );
             return undefined;
         }
-        const delta = this.delta[environment];
+
         if (
             !hasRequestedRevision ||
             delta.isMissingRevision(requestedRevisionId)
         ) {
-            const hydrationEvent = delta.getHydrationEvent();
-            const filteredEvent = filterHydrationEventByQuery(
-                hydrationEvent,
-                projects,
-                namePrefix,
-            );
-
-            const effectiveEventId = this.getQueryVisibleRevision(
-                environment,
-                projects,
-                namePrefix,
-            );
-            filteredEvent.eventId = effectiveEventId;
+            filteredHydrationEvent.eventId = visibleRevision;
             this.logger.info(
-                `[revision] Fresh delta hydration for environment=${environment} projects=${projects.join(',')} visibleRevision=${visibleRevision} hydrationEventId=${hydrationEvent.eventId} returnedHydrationEventId=${filteredEvent.eventId}`,
+                `[revision] Fresh delta hydration for environment=${environment} projects=${projects.join(',')} visibleRevision=${visibleRevision} hydrationEventId=${hydrationEvent.eventId} returnedHydrationEventId=${filteredHydrationEvent.eventId}`,
             );
 
-            const response: ClientFeaturesDeltaSchema = {
-                events: [filteredEvent],
-            };
-
-            return Promise.resolve(response);
+            return { events: [filteredHydrationEvent] };
         } else {
             const environmentEvents = delta.getEvents();
-            const hydrationEvent = delta.getHydrationEvent();
-            const visibleFeatures = filterHydrationEventByQuery(
-                hydrationEvent,
-                projects,
-                namePrefix,
-            ).features;
-            const referencedSegmentIds =
-                getReferencedSegmentIds(visibleFeatures);
             const filteredEvents = filterEventsByQuery(
                 environmentEvents,
                 requestedRevisionId,
@@ -306,9 +292,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 return undefined;
             }
 
-            return {
-                events,
-            };
+            return { events };
         }
     }
 
@@ -580,32 +564,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         this.visibleRevisions[environment] = revisionState;
         deltaRevisionIdMetric.labels({ environment }).set(maxRevision);
         this.storeFootprint();
-    }
-
-    private getQueryVisibleRevision(
-        environment: string,
-        projects: string[],
-        namePrefix: string = '',
-    ): number {
-        const revisionState = this.visibleRevisions[environment];
-        const hydrationEvent = this.delta[environment]?.getHydrationEvent() ?? {
-            eventId: 0,
-            type: DELTA_EVENT_TYPES.HYDRATION,
-            features: [],
-            segments: [],
-        };
-        const visibleFeatures = filterHydrationEventByQuery(
-            hydrationEvent,
-            projects,
-            namePrefix,
-        ).features;
-        const referencedSegmentIds = getReferencedSegmentIds(visibleFeatures);
-
-        return getVisibleRevision(
-            revisionState,
-            projects,
-            referencedSegmentIds,
-        );
     }
 
     private updateVisibleRevisions(

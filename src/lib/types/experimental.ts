@@ -69,7 +69,6 @@ export type IFlagKey =
     | 'gtmReleaseManagement'
     | 'remoteMcpServer'
     | 'regexConstraintOperator'
-    | 'signupDialog'
     | 'enterpriseEdgeTokensList'
     | 'impactMetricsFlagPage'
     | 'userTokenWithClientApiLoggingKillSwitch'
@@ -311,10 +310,6 @@ const flags: IFlags = {
     ),
     regexConstraintOperator: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REGEX_CONSTRAINT_OPERATOR,
-        false,
-    ),
-    signupDialog: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIGNUP_DIALOG,
         false,
     ),
     enterpriseEdgeTokensList: parseEnvVarBoolean(

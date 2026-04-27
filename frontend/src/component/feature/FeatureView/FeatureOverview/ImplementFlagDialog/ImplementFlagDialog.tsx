@@ -285,11 +285,11 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                         <StatusDot connected={evaluated} />
                         <Typography
                             variant='body2'
-                            color={
-                                evaluated ? 'success.main' : 'warning.main'
-                            }
+                            color={evaluated ? 'success.main' : 'warning.main'}
                         >
-                            {evaluated ? 'Connected' : 'Waiting for evaluations'}
+                            {evaluated
+                                ? 'Connected'
+                                : 'Waiting for evaluations'}
                         </Typography>
                     </StatusIndicator>
                     <Button

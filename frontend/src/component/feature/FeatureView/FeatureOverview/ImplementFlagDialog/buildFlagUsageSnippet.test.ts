@@ -80,9 +80,9 @@ describe('buildFlagUsageSnippet', () => {
     });
 
     it('returns an empty string when there are no code blocks', () => {
-        expect(buildFlagUsageSnippet('just prose, no fences', 'x', API_URL)).toBe(
-            '',
-        );
+        expect(
+            buildFlagUsageSnippet('just prose, no fences', 'x', API_URL),
+        ).toBe('');
         expect(buildFlagUsageSnippet('', 'x', API_URL)).toBe('');
     });
 });

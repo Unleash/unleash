@@ -43,7 +43,7 @@ export const getVisibleRevision = (
         projects.length > 0 && !projects.includes(ALL_PROJECTS)
             ? projects
             : Array.from(revisionState.projectRevisions.keys());
-    let visibleRevision = revisionState.visibleSegmentRevision ?? 0;
+    let visibleRevision = revisionState.maxSegmentRevision ?? 0;
     if (referencedSegmentIds) {
         visibleRevision = Math.max(
             0,

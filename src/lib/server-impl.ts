@@ -88,6 +88,7 @@ import type { Constraint } from 'unleash-client/lib/strategy/strategy.js';
 import {
     type ClientFeatureToggleDelta,
     type DeltaEvent,
+    type EnvironmentVisibleRevisionState,
     UPDATE_DELTA,
 } from './features/client-feature-toggles/delta/client-feature-toggle-delta.js';
 import type { IQueryParam } from './features/feature-toggle/types/feature-toggle-strategies-store-type.js';
@@ -587,6 +588,7 @@ export type {
     Constraint,
     ClientFeatureToggleDelta,
     DeltaEvent,
+    EnvironmentVisibleRevisionState,
     IQueryParam,
     PatService,
     IRoleWithPermissions,

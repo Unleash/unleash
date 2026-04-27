@@ -187,16 +187,11 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
     const [sdkName, setSdkName] = useState<SdkName>(allSdks[0].name);
 
-    // Poll metrics so we can flip from "waiting" → "connected" the moment
-    // the SDK reports the first evaluation, without the user reloading.
     const { metrics } = useFeatureMetrics(projectId, feature, {
         refreshInterval: 1000,
     });
     const evaluated = metrics.seenApplications.length > 0;
 
-    // Server SDKs (Node, Python, Java, …) hit the regular client API; client
-    // SDKs (React, Vue, JS, …) hit the frontend API. Mirror the existing
-    // mapping in onboarding's TestSdkConnection / SelectSdk.
     const { uiConfig } = useUiConfig();
     const isFrontendSdk = clientSdks.some((sdk) => sdk.name === sdkName);
     const apiUrl = `${uiConfig.unleashUrl}/api${isFrontendSdk ? '/frontend' : ''}/`;

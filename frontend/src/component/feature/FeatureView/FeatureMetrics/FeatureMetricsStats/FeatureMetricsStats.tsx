@@ -95,7 +95,7 @@ export const FeatureMetricsStats = ({
                         <PrettifyLargeNumber value={totalYes + totalNo} />
                     </StyledValue>
                     <StyledText>
-                        Total requests for the feature in the environment{' '}
+                        Total evaluations for the feature in the environment{' '}
                         {hoursSuffix}.
                     </StyledText>
                 </StyledItem>

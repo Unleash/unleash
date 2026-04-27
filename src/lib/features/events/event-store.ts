@@ -315,32 +315,20 @@ export class EventStore implements IEventStore {
             .modify(applyEnvironmentFilter)
             .groupByRaw(`data->>'oldProject'`);
 
-        const backwardCompatibilityQuery = async () =>
-            this.db(TABLE)
-                .max({ revisionId: 'id' })
-                .where({ type: SEGMENT_UPDATED })
-                .first();
-        const newQuery = async () =>
-            this.db(TABLE)
-                .max({ revisionId: 'id' })
-                .where({ type: SEGMENT_UPDATED })
-                .whereRaw(`(data->>'id')::int = ANY(?::int[])`, [
-                    Array.from(referencedSegmentIds!),
-                ])
-                .first();
-        const segmentRow: { revisionId?: number | string } | undefined =
-            // referencedSegmentIds === undefined represents the current usage pattern in enterprise
-            // next we should adapt the code in enterprise and remove this conditional expecting
-            // always to receive referenced segment ids.
-            referencedSegmentIds === undefined
-                ? await backwardCompatibilityQuery()
-                : referencedSegmentIds.size > 0
-                  ? await newQuery()
-                  : undefined;
+        const segmentRows: Array<{
+            segmentId?: number | string;
+            revisionId?: number | string;
+        }> = await this.db(TABLE)
+            .select(this.db.raw(`(data->>'id')::int as "segmentId"`))
+            .max({ revisionId: 'id' })
+            .where({ type: SEGMENT_UPDATED })
+            .modify(applyEnvironmentFilter)
+            .groupByRaw(`(data->>'id')::int`);
 
         stopTimer();
 
         const projectRevisions = new Map<string, number>();
+        const segmentRevisions = new Map<number, number>();
 
         for (const row of [...projectRows, ...movedRows]) {
             if (!row.project) {
@@ -355,9 +343,29 @@ export class EventStore implements IEventStore {
             }
         }
 
+        for (const row of segmentRows) {
+            const segmentId = Number(row.segmentId);
+            if (!segmentId) {
+                continue;
+            }
+
+            segmentRevisions.set(segmentId, Number(row.revisionId ?? 0));
+        }
+
+        const visibleSegmentRevision =
+            referencedSegmentIds === undefined
+                ? Math.max(0, ...segmentRevisions.values())
+                : Math.max(
+                      0,
+                      ...Array.from(referencedSegmentIds, (segmentId) => {
+                          return segmentRevisions.get(segmentId) ?? 0;
+                      }),
+                  );
+
         return {
             projectRevisions,
-            visibleSegmentRevision: Number(segmentRow?.revisionId ?? 0),
+            visibleSegmentRevision,
+            segmentRevisions,
         };
     }
 

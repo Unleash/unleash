@@ -33,6 +33,7 @@ export const getReferencedSegmentIds = (
 export const getVisibleRevision = (
     revisionState: EnvironmentVisibleRevisionState | undefined,
     projects: string[] = ['*'],
+    referencedSegmentIds?: Set<number>,
 ): number => {
     if (!revisionState) {
         return 0;
@@ -42,8 +43,15 @@ export const getVisibleRevision = (
         projects.length > 0 && !projects.includes(ALL_PROJECTS)
             ? projects
             : Array.from(revisionState.projectRevisions.keys());
-    // assume segment revision as max because segment changes are always visible
     let visibleRevision = revisionState.visibleSegmentRevision ?? 0;
+    if (referencedSegmentIds) {
+        visibleRevision = Math.max(
+            0,
+            ...Array.from(referencedSegmentIds, (segmentId) => {
+                return revisionState.segmentRevisions?.get(segmentId) ?? 0;
+            }),
+        );
+    }
     for (const project of projectList) {
         visibleRevision = Math.max(
             visibleRevision,

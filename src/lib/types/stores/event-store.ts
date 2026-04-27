@@ -48,6 +48,7 @@ export interface IEventStore
     ): Promise<{
         projectRevisions: Map<string, number>;
         visibleSegmentRevision: number;
+        segmentRevisions?: Map<number, number>;
     }>;
     getRevisionRange(start: number, end: number): Promise<IEvent[]>;
     query(operations: IQueryOperations[]): Promise<IEvent[]>;

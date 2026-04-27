@@ -155,6 +155,23 @@ const materializeReferencedSegments = (
     return materializedEvents;
 };
 
+const getQueryVisibility = (
+    hydrationEvent: DeltaHydrationEvent,
+    projects: string[],
+    namePrefix: string,
+) => {
+    const visibleFeatures = filterHydrationEventByQuery(
+        hydrationEvent,
+        projects,
+        namePrefix,
+    ).features;
+
+    return {
+        visibleFeatures,
+        referencedSegmentIds: getReferencedSegmentIds(visibleFeatures),
+    };
+};
+
 const deltaRevisionIdMetric = createGauge({
     name: 'delta_environment_revision_id',
     help: 'Current delta revision id for environment',
@@ -294,9 +311,8 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         } else {
             const environmentEvents = delta.getEvents();
             const hydrationEvent = delta.getHydrationEvent();
-            // only consider segments that are referenced by the features in hydration event
-            const referencedSegmentIds = getReferencedSegmentIds(
-                hydrationEvent.features,
+            const { referencedSegmentIds } = getQueryVisibility(
+                hydrationEvent,
                 projects,
                 namePrefix,
             );
@@ -601,8 +617,13 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         namePrefix: string = '',
     ): number {
         const revisionState = this.visibleRevisions[environment];
-        const referencedSegmentIds = getReferencedSegmentIds(
-            this.delta[environment]?.getHydrationEvent().features ?? [],
+        const { referencedSegmentIds } = getQueryVisibility(
+            this.delta[environment]?.getHydrationEvent() ?? {
+                eventId: 0,
+                type: DELTA_EVENT_TYPES.HYDRATION,
+                features: [],
+                segments: [],
+            },
             projects,
             namePrefix,
         );

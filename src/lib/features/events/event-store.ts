@@ -324,10 +324,9 @@ export class EventStore implements IEventStore {
             this.db(TABLE)
                 .max({ revisionId: 'id' })
                 .where({ type: SEGMENT_UPDATED })
-                .whereIn(
-                    this.db.raw(`(data->>'id')::int`),
+                .whereRaw(`(data->>'id')::int = ANY(?::int[])`, [
                     Array.from(referencedSegmentIds!),
-                )
+                ])
                 .first();
         const segmentRow: { revisionId?: number | string } | undefined =
             // referencedSegmentIds === undefined represents the current usage pattern in enterprise

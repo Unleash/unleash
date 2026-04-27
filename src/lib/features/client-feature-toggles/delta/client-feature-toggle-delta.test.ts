@@ -506,6 +506,157 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
         });
     });
 
+    test('returns segment payload when a feature newly references a previously hidden segment update', async () => {
+        let currentRevisionId = 7;
+
+        const eventStore = {
+            getDeltaRevisionState: async () => ({
+                projectRevisions: new Map([['default', 7]]),
+                visibleSegmentRevision: 7,
+            }),
+            getRevisionRange: async (from: number, to: number) => {
+                if (from === 7 && to === 14) {
+                    return [
+                        {
+                            id: 12,
+                            type: 'segment-updated',
+                            data: { id: 1, name: 'segment-a' },
+                            createdAt: new Date(),
+                        },
+                        {
+                            id: 14,
+                            type: 'feature-updated',
+                            featureName: 'test-flag',
+                            project: 'default',
+                            environment: 'development',
+                            data: { name: 'test-flag', enabled: true },
+                            createdAt: new Date(),
+                        },
+                    ];
+                }
+
+                return [
+                    {
+                        id: 15,
+                        type: 'feature-updated',
+                        featureName: 'test-flag',
+                        project: 'default',
+                        environment: 'development',
+                        data: { name: 'test-flag', enabled: true },
+                        createdAt: new Date(),
+                    },
+                ];
+            },
+            getMaxRevisionId: async () => currentRevisionId,
+        } as any;
+
+        const readModel = {
+            getAll: async ({
+                toggleNames = [],
+            }: {
+                toggleNames?: string[];
+            }) => {
+                if (
+                    toggleNames.includes('test-flag') &&
+                    currentRevisionId >= 15
+                ) {
+                    return [
+                        {
+                            name: 'test-flag',
+                            project: 'default',
+                            enabled: true,
+                            strategies: [{ name: 'default', segments: [1] }],
+                        },
+                    ];
+                }
+
+                return [
+                    {
+                        name: 'test-flag',
+                        project: 'default',
+                        enabled: true,
+                        strategies: [{ name: 'default' }],
+                    },
+                ];
+            },
+        } as any;
+
+        const segmentReadModel = {
+            getAllForClientIds: async (ids?: number[]) =>
+                ids?.includes(1)
+                    ? [{ id: 1, name: 'segment-a', constraints: [] }]
+                    : [],
+        } as any;
+
+        const delta = new ClientFeatureToggleDelta(
+            readModel,
+            segmentReadModel,
+            eventStore,
+            {
+                on: () => undefined,
+            } as any,
+            {
+                isEnabled: (name: string) => name === 'deltaApi',
+            } as any,
+            createDeltaConfig(),
+        );
+
+        const hydration = await delta.getDelta(undefined, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+        expect(hydration?.events[0]?.eventId).toBe(7);
+
+        currentRevisionId = 14;
+        await delta.onUpdateRevisionEvent();
+
+        const unrelatedUpdate = await delta.getDelta(7, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+        expect(unrelatedUpdate).toEqual({
+            events: [
+                {
+                    eventId: 14,
+                    type: 'feature-updated',
+                    feature: {
+                        name: 'test-flag',
+                        project: 'default',
+                        enabled: true,
+                        strategies: [{ name: 'default' }],
+                    },
+                },
+            ],
+        });
+
+        currentRevisionId = 15;
+        await delta.onUpdateRevisionEvent();
+
+        const newlyReferencedSegment = await delta.getDelta(14, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+        expect(newlyReferencedSegment).toEqual({
+            events: [
+                {
+                    eventId: 15,
+                    type: 'feature-updated',
+                    feature: {
+                        name: 'test-flag',
+                        project: 'default',
+                        enabled: true,
+                        strategies: [{ name: 'default', segments: [1] }],
+                    },
+                },
+                {
+                    eventId: 15,
+                    type: 'segment-updated',
+                    segment: { id: 1, name: 'segment-a', constraints: [] },
+                },
+            ],
+        });
+    });
+
     test('materializes delta_environment_revision_id on first hydration request', async () => {
         const environment = 'metric-materialization-test';
         const delta = new ClientFeatureToggleDelta(

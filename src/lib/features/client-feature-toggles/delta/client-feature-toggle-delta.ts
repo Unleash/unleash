@@ -25,6 +25,7 @@ import {
     isDeltaFeatureUpdatedEvent,
     isDeltaSegmentUpdatedEvent,
 } from './client-feature-toggle-delta-types.js';
+import type { ClientFeatureSchema } from '../../../openapi/spec/client-feature-schema.js';
 import {
     FEATURE_ARCHIVED,
     FEATURE_DELETED,
@@ -108,6 +109,88 @@ export const filterHydrationEventByQuery = (
             );
         }),
     };
+};
+
+const getFeatureStateAtRevision = (
+    featureName: string,
+    requestedRevisionId: number,
+    environmentEvents: DeltaEvent[],
+): ClientFeatureSchema | undefined => {
+    const latestFeatureEvent = environmentEvents
+        .filter(
+            (event) =>
+                event.eventId <= requestedRevisionId &&
+                ((isDeltaFeatureUpdatedEvent(event) &&
+                    event.feature.name === featureName) ||
+                    (isDeltaFeatureRemovedEvent(event) &&
+                        event.featureName === featureName)),
+        )
+        .sort((a, b) => b.eventId - a.eventId)[0];
+
+    if (!latestFeatureEvent) {
+        return undefined;
+    }
+
+    if (!isDeltaFeatureUpdatedEvent(latestFeatureEvent)) {
+        return undefined;
+    }
+
+    return latestFeatureEvent.feature;
+};
+
+const materializeReferencedSegments = (
+    events: DeltaEvent[],
+    requestedRevisionId: number,
+    hydrationEvent: DeltaHydrationEvent,
+    environmentEvents: DeltaEvent[],
+): DeltaEvent[] => {
+    const emittedSegmentIds = new Set(
+        events
+            .filter(isDeltaSegmentUpdatedEvent)
+            .map((event) => event.segment.id),
+    );
+    const syntheticSegmentEvents: DeltaEvent[] = [];
+
+    for (const event of events) {
+        if (!isDeltaFeatureUpdatedEvent(event)) {
+            continue;
+        }
+
+        const previousFeature = getFeatureStateAtRevision(
+            event.feature.name,
+            requestedRevisionId,
+            environmentEvents,
+        );
+        const previousSegments = getReferencedSegmentIds(
+            previousFeature ? [previousFeature] : [],
+        );
+        const currentSegments = getReferencedSegmentIds([event.feature]);
+
+        for (const segmentId of currentSegments) {
+            if (
+                previousSegments.has(segmentId) ||
+                emittedSegmentIds.has(segmentId)
+            ) {
+                continue;
+            }
+
+            const segment = hydrationEvent.segments.find(
+                (s) => s.id === segmentId,
+            );
+            if (!segment) {
+                continue;
+            }
+
+            syntheticSegmentEvents.push({
+                eventId: event.eventId,
+                type: DELTA_EVENT_TYPES.SEGMENT_UPDATED,
+                segment,
+            });
+            emittedSegmentIds.add(segmentId);
+        }
+    }
+
+    return syntheticSegmentEvents;
 };
 
 const deltaRevisionIdMetric = createGauge({
@@ -243,9 +326,10 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             return Promise.resolve(response);
         } else {
             const environmentEvents = delta.getEvents();
+            const hydrationEvent = delta.getHydrationEvent();
             // only consider segments that are referenced by the features in hydration event
             const referencedSegmentIds = getReferencedSegmentIds(
-                delta.getHydrationEvent().features,
+                hydrationEvent.features,
                 projects,
                 namePrefix,
             );
@@ -256,13 +340,19 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 namePrefix,
                 referencedSegmentIds,
             );
+            const segmentEvents = materializeReferencedSegments(
+                events,
+                requestedRevisionId,
+                hydrationEvent,
+                environmentEvents,
+            );
 
-            if (events.length === 0) {
+            if (events.length === 0 && segmentEvents.length === 0) {
                 return undefined;
             }
 
             return {
-                events,
+                events: [...events, ...segmentEvents],
             };
         }
     }

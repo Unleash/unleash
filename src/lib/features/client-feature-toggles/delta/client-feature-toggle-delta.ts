@@ -241,7 +241,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             await this.initEnvironmentDelta(environment);
         }
 
-        const visibleRevision = this.getVisibleRevision(
+        const visibleRevision = this.getQueryVisibleRevision(
             environment,
             projects,
             namePrefix,
@@ -265,7 +265,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 namePrefix,
             );
 
-            const effectiveEventId = this.getVisibleRevision(
+            const effectiveEventId = this.getQueryVisibleRevision(
                 environment,
                 projects,
                 namePrefix,
@@ -582,7 +582,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         this.storeFootprint();
     }
 
-    private getVisibleRevision(
+    private getQueryVisibleRevision(
         environment: string,
         projects: string[],
         namePrefix: string = '',

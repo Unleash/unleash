@@ -325,7 +325,7 @@ export class EventStore implements IEventStore {
                 .max({ revisionId: 'id' })
                 .where({ type: SEGMENT_UPDATED })
                 .whereIn(
-                    await this.db.raw(`CAST(data->>'id' AS INTEGER)`),
+                    this.db.raw(`(data->>'id')::int`),
                     Array.from(referencedSegmentIds!),
                 )
                 .first();

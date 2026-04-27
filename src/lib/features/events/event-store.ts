@@ -352,7 +352,7 @@ export class EventStore implements IEventStore {
             segmentRevisions.set(segmentId, Number(row.revisionId ?? 0));
         }
 
-        const maxSegmentRevision =
+        const maxReferencedSegmentRevision =
             referencedSegmentIds === undefined
                 ? Math.max(0, ...segmentRevisions.values())
                 : Math.max(
@@ -364,7 +364,7 @@ export class EventStore implements IEventStore {
 
         return {
             projectRevisions,
-            maxSegmentRevision,
+            maxReferencedSegmentRevision,
             segmentRevisions,
         };
     }

@@ -45,7 +45,7 @@ export type EnvironmentRevisions = Record<string, DeltaCache>;
 export type EnvironmentVisibleRevisionState = {
     projectRevisions: Map<string, number>;
     segmentRevisions: Map<number, number>;
-    maxSegmentRevision: number;
+    maxReferencedSegmentRevision: number;
 };
 
 export const UPDATE_DELTA = 'UPDATE_DELTA';
@@ -573,7 +573,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
     ) {
         const revisionState = this.visibleRevisions[environment] ?? {
             projectRevisions: new Map<string, number>(),
-            maxSegmentRevision: 0,
+            maxReferencedSegmentRevision: 0,
             segmentRevisions: new Map<number, number>(),
         };
 
@@ -593,8 +593,8 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                     );
                     // only consider visible, updated segments that are referenced
                     if (referencedSegmentIds.has(event.segment.id)) {
-                        revisionState.maxSegmentRevision = Math.max(
-                            revisionState.maxSegmentRevision,
+                        revisionState.maxReferencedSegmentRevision = Math.max(
+                            revisionState.maxReferencedSegmentRevision,
                             event.eventId,
                         );
                     }
@@ -603,7 +603,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         }
 
         // assume segment revision id as max feature event
-        let environmentMax = revisionState.maxSegmentRevision;
+        let environmentMax = revisionState.maxReferencedSegmentRevision;
         for (const event of featureEvents) {
             let project: string | undefined;
             if (event.type === DELTA_EVENT_TYPES.FEATURE_UPDATED) {

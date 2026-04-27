@@ -7,7 +7,7 @@ const revisionState: EnvironmentVisibleRevisionState = {
         ['alpha', 11],
         ['beta', 14],
     ]),
-    maxSegmentRevision: 12,
+    maxReferencedSegmentRevision: 12,
     segmentRevisions: new Map([
         [101, 12],
         [202, 9],

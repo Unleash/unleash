@@ -40,6 +40,7 @@ import {
 } from './visible-revision.js';
 import { createGauge } from '../../../util/metrics/index.js';
 import { BadDataError } from '../../../server-impl.js';
+import { ref } from 'process';
 
 export type EnvironmentRevisions = Record<string, DeltaCache>;
 export type EnvironmentVisibleRevisionState = {
@@ -115,44 +116,33 @@ const materializeReferencedSegments = (
     events: DeltaEvent[],
     hydrationEvent: DeltaHydrationEvent,
 ): DeltaEvent[] => {
-    const materializedEvents: DeltaEvent[] = [];
+    const segmentMap = new Map(hydrationEvent.segments.map((s) => [s.id, s]));
     const emittedSegmentIds = new Set(
         events
             .filter(isDeltaSegmentUpdatedEvent)
             .map((event) => event.segment.id),
     );
 
-    for (const event of events) {
-        materializedEvents.push(event);
-
+    return events.flatMap((event) => {
         if (!isDeltaFeatureUpdatedEvent(event)) {
-            continue;
+            return [event];
         }
 
-        const currentSegments = getReferencedSegmentIds([event.feature]);
-
-        for (const segmentId of currentSegments) {
-            if (emittedSegmentIds.has(segmentId)) {
-                continue;
-            }
-
-            const segment = hydrationEvent.segments.find(
-                (s) => s.id === segmentId,
-            );
-            if (!segment) {
-                continue;
-            }
-
-            materializedEvents.push({
-                eventId: event.eventId,
-                type: DELTA_EVENT_TYPES.SEGMENT_UPDATED,
-                segment,
+        const syntheticNewSegmentEvents = [
+            ...getReferencedSegmentIds([event.feature]),
+        ]
+            .filter((id) => !emittedSegmentIds.has(id) && segmentMap.has(id))
+            .map((id) => {
+                emittedSegmentIds.add(id);
+                return {
+                    eventId: event.eventId,
+                    type: DELTA_EVENT_TYPES.SEGMENT_UPDATED,
+                    segment: segmentMap.get(id)!,
+                } as DeltaEvent;
             });
-            emittedSegmentIds.add(segmentId);
-        }
-    }
 
-    return materializedEvents;
+        return [event, ...syntheticNewSegmentEvents];
+    });
 };
 
 const getQueryVisibility = (
@@ -558,9 +548,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 environment,
                 [...featuresRemovedEvents, ...featuresUpdatedEvents],
                 [...segmentsUpdatedEvents, ...segmentsRemovedEvents],
-                getReferencedSegmentIds(
-                    this.delta[environment].getHydrationEvent().features,
-                ),
             );
         }
         this.lastDeltaProcessedRevisionId = eventsTo;
@@ -639,7 +626,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         environment: string,
         featureEvents: DeltaEvent[],
         segmentEvents: DeltaEvent[],
-        referencedSegmentIds: Set<number>,
     ) {
         const revisionState = this.visibleRevisions[environment] ?? {
             projectRevisions: new Map<string, number>(),
@@ -651,6 +637,9 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         revisionState.segmentRevisions = segmentRevisions;
 
         if (segmentEvents.length > 0) {
+            const referencedSegmentIds = getReferencedSegmentIds(
+                this.delta[environment].getHydrationEvent().features,
+            );
             for (const event of segmentEvents) {
                 if (
                     event.type === DELTA_EVENT_TYPES.SEGMENT_UPDATED &&
@@ -661,17 +650,13 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                         event.segment.id,
                         event.eventId,
                     );
-                }
-                // only consider visible, updated segments that are referenced
-                if (
-                    event.type === DELTA_EVENT_TYPES.SEGMENT_UPDATED &&
-                    event.segment.id &&
-                    referencedSegmentIds.has(event.segment.id)
-                ) {
-                    revisionState.visibleSegmentRevision = Math.max(
-                        revisionState.visibleSegmentRevision,
-                        event.eventId,
-                    );
+                    // only consider visible, updated segments that are referenced
+                    if (referencedSegmentIds.has(event.segment.id)) {
+                        revisionState.visibleSegmentRevision = Math.max(
+                            revisionState.visibleSegmentRevision,
+                            event.eventId,
+                        );
+                    }
                 }
             }
         }

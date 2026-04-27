@@ -40,7 +40,6 @@ import {
 } from './visible-revision.js';
 import { createGauge } from '../../../util/metrics/index.js';
 import { BadDataError } from '../../../server-impl.js';
-import { ref } from 'process';
 
 export type EnvironmentRevisions = Record<string, DeltaCache>;
 export type EnvironmentVisibleRevisionState = {
@@ -143,23 +142,6 @@ const materializeReferencedSegments = (
 
         return [event, ...syntheticNewSegmentEvents];
     });
-};
-
-const getQueryVisibility = (
-    hydrationEvent: DeltaHydrationEvent,
-    projects: string[],
-    namePrefix: string,
-) => {
-    const visibleFeatures = filterHydrationEventByQuery(
-        hydrationEvent,
-        projects,
-        namePrefix,
-    ).features;
-
-    return {
-        visibleFeatures,
-        referencedSegmentIds: getReferencedSegmentIds(visibleFeatures),
-    };
 };
 
 const deltaRevisionIdMetric = createGauge({
@@ -301,11 +283,13 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         } else {
             const environmentEvents = delta.getEvents();
             const hydrationEvent = delta.getHydrationEvent();
-            const { referencedSegmentIds } = getQueryVisibility(
+            const visibleFeatures = filterHydrationEventByQuery(
                 hydrationEvent,
                 projects,
                 namePrefix,
-            );
+            ).features;
+            const referencedSegmentIds =
+                getReferencedSegmentIds(visibleFeatures);
             const filteredEvents = filterEventsByQuery(
                 environmentEvents,
                 requestedRevisionId,
@@ -604,16 +588,18 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         namePrefix: string = '',
     ): number {
         const revisionState = this.visibleRevisions[environment];
-        const { referencedSegmentIds } = getQueryVisibility(
-            this.delta[environment]?.getHydrationEvent() ?? {
-                eventId: 0,
-                type: DELTA_EVENT_TYPES.HYDRATION,
-                features: [],
-                segments: [],
-            },
+        const hydrationEvent = this.delta[environment]?.getHydrationEvent() ?? {
+            eventId: 0,
+            type: DELTA_EVENT_TYPES.HYDRATION,
+            features: [],
+            segments: [],
+        };
+        const visibleFeatures = filterHydrationEventByQuery(
+            hydrationEvent,
             projects,
             namePrefix,
-        );
+        ).features;
+        const referencedSegmentIds = getReferencedSegmentIds(visibleFeatures);
 
         return getVisibleRevision(
             revisionState,

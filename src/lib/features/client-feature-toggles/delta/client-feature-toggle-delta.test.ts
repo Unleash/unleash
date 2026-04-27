@@ -243,7 +243,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             {
                 getDeltaRevisionState: async () => ({
                     projectRevisions: new Map([['default', 1]]),
-                    maxSegmentRevision: 0,
+                    maxReferencedSegmentRevision: 0,
                     segmentRevisions: new Map(),
                 }),
                 getRevisionRange: async () => [
@@ -332,7 +332,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             ({
                 getDeltaRevisionState: async () => ({
                     projectRevisions: new Map([['default', 1]]),
-                    maxSegmentRevision: 0,
+                    maxReferencedSegmentRevision: 0,
                     segmentRevisions: new Map(),
                 }),
                 getRevisionRange: async () => [
@@ -406,7 +406,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             ({
                 getDeltaRevisionState: async () => ({
                     projectRevisions: new Map([['default', 1]]),
-                    maxSegmentRevision: 1,
+                    maxReferencedSegmentRevision: 1,
                     segmentRevisions: new Map(),
                 }),
                 getRevisionRange: async () => [
@@ -515,7 +515,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
         const eventStore = {
             getDeltaRevisionState: async () => ({
                 projectRevisions: new Map([['default', 7]]),
-                maxSegmentRevision: 7,
+                maxReferencedSegmentRevision: 7,
                 segmentRevisions: new Map(),
             }),
             getRevisionRange: async (from: number, to: number) => {
@@ -679,7 +679,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             {
                 getDeltaRevisionState: async () => ({
                     projectRevisions: new Map([['default', 7]]),
-                    maxSegmentRevision: 0,
+                    maxReferencedSegmentRevision: 0,
                     segmentRevisions: new Map(),
                 }),
                 getMaxRevisionId: async () => 7,
@@ -730,7 +730,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                 {
                     getDeltaRevisionState: async () => ({
                         projectRevisions: new Map([['default', 85815]]),
-                        maxSegmentRevision: 0,
+                        maxReferencedSegmentRevision: 0,
                         segmentRevisions: new Map(),
                     }),
                     getMaxRevisionId: async () => globalRevisionId,
@@ -779,7 +779,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             {
                 getDeltaRevisionState: async () => ({
                     projectRevisions: new Map(),
-                    maxSegmentRevision: 0,
+                    maxReferencedSegmentRevision: 0,
                     segmentRevisions: new Map(),
                 }),
                 getMaxRevisionId: async () => 0,
@@ -825,7 +825,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             {
                 getDeltaRevisionState: async () => ({
                     projectRevisions: new Map(),
-                    maxSegmentRevision: 0,
+                    maxReferencedSegmentRevision: 0,
                     segmentRevisions: new Map(),
                 }),
                 getMaxRevisionId: async () => 0,
@@ -887,7 +887,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             {
                 getDeltaRevisionState: async () => ({
                     projectRevisions: new Map([['default', 1]]),
-                    maxSegmentRevision: 0,
+                    maxReferencedSegmentRevision: 0,
                     segmentRevisions: new Map(),
                 }),
                 getRevisionRange: async () => [
@@ -979,7 +979,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             {
                 getDeltaRevisionState: async () => ({
                     projectRevisions: new Map([['default', 1]]),
-                    maxSegmentRevision: 0,
+                    maxReferencedSegmentRevision: 0,
                     segmentRevisions: new Map(),
                 }),
                 getRevisionRange: async () => [
@@ -1088,7 +1088,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             {
                 getDeltaRevisionState: async () => ({
                     projectRevisions: new Map([['old-project', 1]]),
-                    maxSegmentRevision: 0,
+                    maxReferencedSegmentRevision: 0,
                     segmentRevisions: new Map(),
                 }),
                 getRevisionRange: async () => [
@@ -1237,7 +1237,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             {
                 getDeltaRevisionState: async () => ({
                     projectRevisions: new Map([['default', 1]]),
-                    maxSegmentRevision: 0,
+                    maxReferencedSegmentRevision: 0,
                     segmentRevisions: new Map(),
                 }),
                 getRevisionRange: async () => [

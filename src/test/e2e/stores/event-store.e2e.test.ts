@@ -377,7 +377,7 @@ describe('getDeltaRevisionState', () => {
 
         expect(state.projectRevisions.get('default')).toBe(defaultStored.id);
         expect(state.projectRevisions.get('other')).toBe(otherStored.id);
-        expect(state.maxSegmentRevision).toBe(segmentStored.id);
+        expect(state.maxReferencedSegmentRevision).toBe(segmentStored.id);
     });
 
     test('respects environment filtering and includes null-environment feature events', async () => {
@@ -452,7 +452,7 @@ describe('getDeltaRevisionState', () => {
 
         expect(state.projectRevisions.get('old-project')).toBe(storedMove.id);
         expect(state.projectRevisions.get('new-project')).toBe(storedMove.id);
-        expect(state.maxSegmentRevision).toBe(0);
+        expect(state.maxReferencedSegmentRevision).toBe(0);
     });
 
     test('ignores non-interesting feature events', async () => {
@@ -471,7 +471,7 @@ describe('getDeltaRevisionState', () => {
         const state = await eventStore.getDeltaRevisionState(ALL_ENVS);
 
         expect(state.projectRevisions.size).toBe(0);
-        expect(state.maxSegmentRevision).toBe(0);
+        expect(state.maxReferencedSegmentRevision).toBe(0);
     });
 
     test('returns latest project and segment revisions', async () => {
@@ -516,7 +516,7 @@ describe('getDeltaRevisionState', () => {
 
         expect(state.projectRevisions.get('default')).not.toBe(firstStored.id);
         expect(state.projectRevisions.get('default')).toBe(secondStored.id);
-        expect(state.maxSegmentRevision).toBe(segmentStored.id);
+        expect(state.maxReferencedSegmentRevision).toBe(segmentStored.id);
     });
 
     test('filters segment revision by referenced segment ids from event payload', async () => {
@@ -554,7 +554,7 @@ describe('getDeltaRevisionState', () => {
             new Set([123]),
         );
 
-        expect(state.maxSegmentRevision).toBe(firstStored.id);
+        expect(state.maxReferencedSegmentRevision).toBe(firstStored.id);
     });
 });
 

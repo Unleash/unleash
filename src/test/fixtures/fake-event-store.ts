@@ -37,12 +37,12 @@ class FakeEventStore implements IEventStore {
         _referencedSegmentIds?: Set<number>,
     ): Promise<{
         projectRevisions: Map<string, number>;
-        maxSegmentRevision: number;
+        maxReferencedSegmentRevision: number;
         segmentRevisions: Map<number, number>;
     }> {
         return Promise.resolve({
             projectRevisions: new Map(),
-            maxSegmentRevision: 0,
+            maxReferencedSegmentRevision: 0,
             segmentRevisions: new Map(),
         });
     }

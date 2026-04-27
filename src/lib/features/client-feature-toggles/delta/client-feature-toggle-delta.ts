@@ -268,7 +268,11 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             !hasRequestedRevision ||
             delta.isMissingRevision(requestedRevisionId)
         ) {
-            filteredHydrationEvent.eventId = visibleRevision;
+            const returnedHydrationEventId =
+                visibleRevision === 0
+                    ? hydrationEvent.eventId
+                    : visibleRevision;
+            filteredHydrationEvent.eventId = returnedHydrationEventId;
             this.logger.info(
                 `[revision] Fresh delta hydration for environment=${environment} projects=${projects.join(',')} visibleRevision=${visibleRevision} hydrationEventId=${hydrationEvent.eventId} returnedHydrationEventId=${filteredHydrationEvent.eventId}`,
             );

@@ -47,7 +47,7 @@ export interface IEventStore
         referencedSegmentIds?: Set<number>,
     ): Promise<{
         projectRevisions: Map<string, number>;
-        maxSegmentRevision: number;
+        maxReferencedSegmentRevision: number;
         segmentRevisions: Map<number, number>;
     }>;
     getRevisionRange(start: number, end: number): Promise<IEvent[]>;

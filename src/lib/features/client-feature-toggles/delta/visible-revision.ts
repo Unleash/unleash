@@ -4,7 +4,7 @@ import type { ClientFeatureSchema } from '../../../openapi/index.js';
 
 export const getReferencedSegmentIds = (
     features: ClientFeatureSchema[],
-    projects: string[] = ['*'],
+    projects: string[] = [ALL_PROJECTS],
     namePrefix: string = '',
 ): Set<number> => {
     const allProjects =
@@ -32,7 +32,7 @@ export const getReferencedSegmentIds = (
 
 export const getVisibleRevision = (
     revisionState: EnvironmentVisibleRevisionState | undefined,
-    projects: string[] = ['*'],
+    projects: string[] = [ALL_PROJECTS],
     referencedSegmentIds?: Set<number>,
 ): number => {
     if (!revisionState) {
@@ -45,12 +45,13 @@ export const getVisibleRevision = (
             : Array.from(revisionState.projectRevisions.keys());
     let visibleRevision = revisionState.maxReferencedSegmentRevision ?? 0;
     if (referencedSegmentIds) {
-        visibleRevision = Math.max(
-            0,
-            ...Array.from(referencedSegmentIds, (segmentId) => {
-                return revisionState.segmentRevisions.get(segmentId) ?? 0;
-            }),
-        );
+        visibleRevision = 0;
+        for (const segmentId of referencedSegmentIds) {
+            visibleRevision = Math.max(
+                visibleRevision,
+                revisionState.segmentRevisions.get(segmentId) ?? 0,
+            );
+        }
     }
     for (const project of projectList) {
         visibleRevision = Math.max(

@@ -352,15 +352,22 @@ export class EventStore implements IEventStore {
             segmentRevisions.set(segmentId, Number(row.revisionId ?? 0));
         }
 
-        const maxReferencedSegmentRevision =
-            referencedSegmentIds === undefined
-                ? Math.max(0, ...segmentRevisions.values())
-                : Math.max(
-                      0,
-                      ...Array.from(referencedSegmentIds, (segmentId) => {
-                          return segmentRevisions.get(segmentId) ?? 0;
-                      }),
-                  );
+        let maxReferencedSegmentRevision = 0;
+        if (referencedSegmentIds === undefined) {
+            for (const revisionId of segmentRevisions.values()) {
+                maxReferencedSegmentRevision = Math.max(
+                    maxReferencedSegmentRevision,
+                    revisionId,
+                );
+            }
+        } else {
+            for (const segmentId of referencedSegmentIds) {
+                maxReferencedSegmentRevision = Math.max(
+                    maxReferencedSegmentRevision,
+                    segmentRevisions.get(segmentId) ?? 0,
+                );
+            }
+        }
 
         return {
             projectRevisions,

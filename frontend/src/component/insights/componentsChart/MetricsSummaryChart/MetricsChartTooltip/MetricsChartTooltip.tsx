@@ -119,12 +119,12 @@ export const MetricsSummaryTooltip: VFC<{ tooltip: TooltipState | null }> = ({
                     />
                     <InfoLine
                         iconChar={'▲ '}
-                        title={`Exposed: ${(point.value.totalYes ?? 0).toLocaleString()}`}
+                        title={`Enabled: ${(point.value.totalYes ?? 0).toLocaleString()}`}
                         color={'success'}
                     />
                     <InfoLine
                         iconChar={'▼ '}
-                        title={`Not exposed: ${(point.value.totalNo ?? 0).toLocaleString()}`}
+                        title={`Not enabled: ${(point.value.totalNo ?? 0).toLocaleString()}`}
                         color={'error'}
                     />
                     <ConditionallyRender

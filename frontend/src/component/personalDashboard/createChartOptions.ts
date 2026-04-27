@@ -126,7 +126,7 @@ export const createBarChartOptions = (
                         ] as unknown as IPoint;
 
                         if (
-                            item.dataset.label !== 'Exposed' ||
+                            item.dataset.label !== 'Enabled' ||
                             data.variants === undefined
                         ) {
                             return '';

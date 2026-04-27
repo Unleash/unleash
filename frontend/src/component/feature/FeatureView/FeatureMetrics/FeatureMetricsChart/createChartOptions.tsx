@@ -44,7 +44,7 @@ export const createChartOptions = (
                 usePointStyle: true,
                 position: 'nearest',
                 itemSort: (a, b) => {
-                    const order = ['Exposed', 'Not exposed'];
+                    const order = ['Enabled', 'Not enabled'];
                     const aIndex = order.indexOf(a.dataset.label!);
                     const bIndex = order.indexOf(b.dataset.label!);
                     return aIndex - bIndex;
@@ -66,7 +66,7 @@ export const createChartOptions = (
                         ] as unknown as IPoint;
 
                         if (
-                            item.dataset.label !== 'Exposed' ||
+                            item.dataset.label !== 'Enabled' ||
                             data.variants === undefined
                         ) {
                             return '';

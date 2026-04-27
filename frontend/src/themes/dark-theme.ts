@@ -230,8 +230,8 @@ const theme = {
             E1: '#68A611',
             series: colors.chartSeries,
             flagMetrics: {
-                exposed: '#A39EFF',
-                notExposed: '#D8D6FF',
+                enabled: '#A39EFF',
+                notEnabled: '#D8D6FF',
             },
         },
 

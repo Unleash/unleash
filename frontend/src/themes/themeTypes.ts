@@ -148,8 +148,8 @@ declare module '@mui/material/styles' {
             E1: string;
             series: string[];
             flagMetrics: {
-                exposed: string;
-                notExposed: string;
+                enabled: string;
+                notEnabled: string;
             };
         };
 

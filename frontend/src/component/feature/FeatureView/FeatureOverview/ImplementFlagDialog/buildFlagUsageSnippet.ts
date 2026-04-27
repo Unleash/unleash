@@ -24,11 +24,14 @@
 export const buildFlagUsageSnippet = (
     rawSnippet: string,
     feature: string,
+    apiUrl: string,
 ): string => {
     const [connectSection] = rawSnippet.split('---\n');
     const lastBlock = extractLastCodeBlock(connectSection);
     if (!lastBlock) return '';
-    const code = lastBlock.code.replaceAll('<YOUR_FLAG>', feature);
+    const code = lastBlock.code
+        .replaceAll('<YOUR_FLAG>', feature)
+        .replaceAll('<YOUR_API_URL>', apiUrl);
     return `\`\`\`${lastBlock.language}\n${code}\n\`\`\``;
 };
 

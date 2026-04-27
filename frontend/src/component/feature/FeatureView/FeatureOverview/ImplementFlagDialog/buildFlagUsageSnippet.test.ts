@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { buildFlagUsageSnippet } from './buildFlagUsageSnippet.ts';
 
+const API_URL = 'https://example.com/api/';
+
 describe('buildFlagUsageSnippet', () => {
     it('extracts the last code block from a 3-step snippet and substitutes the flag name', () => {
         const raw = [
@@ -20,12 +22,12 @@ describe('buildFlagUsageSnippet', () => {
             '```',
         ].join('\n');
 
-        expect(buildFlagUsageSnippet(raw, 'my-flag')).toBe(
+        expect(buildFlagUsageSnippet(raw, 'my-flag', API_URL)).toBe(
             "```jsx\nconst enabled = useFlag('my-flag');\n```",
         );
     });
 
-    it('picks the init+check block for 2-step snippets where the flag check lives inside the init block', () => {
+    it('picks the init+check block for 2-step snippets and substitutes both the flag and the API URL', () => {
         const raw = [
             '1\\. Install',
             '```sh',
@@ -34,13 +36,13 @@ describe('buildFlagUsageSnippet', () => {
             '',
             '2\\. Run Unleash',
             '```js',
-            'const u = initialize({ url });',
+            "const u = initialize({ url: '<YOUR_API_URL>' });",
             "setInterval(() => console.log(u.isEnabled('<YOUR_FLAG>')), 1000);",
             '```',
         ].join('\n');
 
-        expect(buildFlagUsageSnippet(raw, 'checkout')).toBe(
-            "```js\nconst u = initialize({ url });\nsetInterval(() => console.log(u.isEnabled('checkout')), 1000);\n```",
+        expect(buildFlagUsageSnippet(raw, 'checkout', API_URL)).toBe(
+            "```js\nconst u = initialize({ url: 'https://example.com/api/' });\nsetInterval(() => console.log(u.isEnabled('checkout')), 1000);\n```",
         );
     });
 
@@ -58,26 +60,29 @@ describe('buildFlagUsageSnippet', () => {
             '- [docs](https://example.com)',
         ].join('\n');
 
-        expect(buildFlagUsageSnippet(raw, 'x')).toBe(
+        expect(buildFlagUsageSnippet(raw, 'x', API_URL)).toBe(
             "```jsx\nuseFlag('x')\n```",
         );
     });
 
-    it('replaces every occurrence of the <YOUR_FLAG> placeholder', () => {
+    it('replaces every occurrence of the placeholders', () => {
         const raw = [
             '```js',
             "const a = isEnabled('<YOUR_FLAG>');",
             "const b = isEnabled('<YOUR_FLAG>');",
+            "fetch('<YOUR_API_URL>'); fetch('<YOUR_API_URL>');",
             '```',
         ].join('\n');
 
-        expect(buildFlagUsageSnippet(raw, 'flag-x')).toBe(
-            "```js\nconst a = isEnabled('flag-x');\nconst b = isEnabled('flag-x');\n```",
+        expect(buildFlagUsageSnippet(raw, 'flag-x', API_URL)).toBe(
+            "```js\nconst a = isEnabled('flag-x');\nconst b = isEnabled('flag-x');\nfetch('https://example.com/api/'); fetch('https://example.com/api/');\n```",
         );
     });
 
     it('returns an empty string when there are no code blocks', () => {
-        expect(buildFlagUsageSnippet('just prose, no fences', 'x')).toBe('');
-        expect(buildFlagUsageSnippet('', 'x')).toBe('');
+        expect(buildFlagUsageSnippet('just prose, no fences', 'x', API_URL)).toBe(
+            '',
+        );
+        expect(buildFlagUsageSnippet('', 'x', API_URL)).toBe('');
     });
 });

@@ -38,6 +38,7 @@ export const FeatureImplementFlagBanner = ({
             <ImplementFlagDialog
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}
+                projectId={projectId}
                 feature={featureId}
             />
         </>

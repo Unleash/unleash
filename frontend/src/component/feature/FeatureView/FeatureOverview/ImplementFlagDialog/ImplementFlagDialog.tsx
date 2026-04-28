@@ -166,13 +166,13 @@ export const ImplementFlagDialog = ({
     feature,
 }: ImplementFlagDialogProps) => (
     <StyledDialog open={open} onClose={onClose}>
-        {open ? (
+        {open && (
             <DialogBody
                 projectId={projectId}
                 feature={feature}
                 onClose={onClose}
             />
-        ) : null}
+        )}
     </StyledDialog>
 );
 

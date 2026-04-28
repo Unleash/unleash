@@ -152,6 +152,34 @@ const ListeningText = styled('div')({
     flexDirection: 'column',
 });
 
+const ListeningStatus = ({ evaluated }: { evaluated: boolean }) => (
+    <ListeningCard>
+        <ListeningIcon>
+            {evaluated ? (
+                <CheckIcon />
+            ) : (
+                <>
+                    <span />
+                    <span />
+                    <span />
+                </>
+            )}
+        </ListeningIcon>
+        <ListeningText>
+            <Typography variant='body2' fontWeight='bold' color='primary'>
+                {evaluated
+                    ? 'Got the first evaluation!'
+                    : 'Listening for the first evaluation…'}
+            </Typography>
+            <Typography variant='caption' color='primary'>
+                {evaluated
+                    ? 'Your flag is wired up. Finish setup to close this dialog.'
+                    : 'Render the code path above anywhere to check that we receive metric evaluations.'}
+            </Typography>
+        </ListeningText>
+    </ListeningCard>
+);
+
 interface ImplementFlagDialogProps {
     open: boolean;
     onClose: () => void;
@@ -249,35 +277,7 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
                         >
                             Test flag
                         </Typography>
-                        <ListeningCard>
-                            <ListeningIcon>
-                                {evaluated ? (
-                                    <CheckIcon />
-                                ) : (
-                                    <>
-                                        <span />
-                                        <span />
-                                        <span />
-                                    </>
-                                )}
-                            </ListeningIcon>
-                            <ListeningText>
-                                <Typography
-                                    variant='body2'
-                                    fontWeight='bold'
-                                    color='primary'
-                                >
-                                    {evaluated
-                                        ? 'Got the first evaluation!'
-                                        : 'Listening for the first evaluation…'}
-                                </Typography>
-                                <Typography variant='caption' color='primary'>
-                                    {evaluated
-                                        ? 'Your flag is wired up. Finish setup to close this dialog.'
-                                        : 'Render the code path above anywhere to check that we receive metric evaluations.'}
-                                </Typography>
-                            </ListeningText>
-                        </ListeningCard>
+                        <ListeningStatus evaluated={evaluated} />
                     </Box>
                 </Body>
                 <Footer>

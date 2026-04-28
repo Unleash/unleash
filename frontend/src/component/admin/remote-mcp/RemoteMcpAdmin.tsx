@@ -6,6 +6,8 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { RemoteMcpToggle } from './RemoteMcpToggle.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
+import NotFound from 'component/common/NotFound/NotFound';
 
 const DOCS_URL = 'https://docs.getunleash.io/reference/remote-mcp';
 
@@ -33,13 +35,21 @@ const StyledDocsLink = styled('a')(({ theme }) => ({
     '&:hover': { textDecoration: 'underline' },
 }));
 
-export const RemoteMcpAdmin = () => (
-    <div>
-        <PermissionGuard permissions={[ADMIN]}>
-            <RemoteMcpPage />
-        </PermissionGuard>
-    </div>
-);
+export const RemoteMcpAdmin = () => {
+    const remoteMcpEnabled = useUiFlag('remoteMcpServer');
+
+    if (!remoteMcpEnabled) {
+        return <NotFound />;
+    }
+
+    return (
+        <div>
+            <PermissionGuard permissions={[ADMIN]}>
+                <RemoteMcpPage />
+            </PermissionGuard>
+        </div>
+    );
+};
 
 const RemoteMcpPage = () => {
     return (

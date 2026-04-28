@@ -1,4 +1,11 @@
-import { Box, Chip, FormControlLabel, styled, Switch, Typography } from '@mui/material';
+import {
+    Box,
+    Chip,
+    FormControlLabel,
+    styled,
+    Switch,
+    Typography,
+} from '@mui/material';
 import { useState } from 'react';
 import useToast from 'hooks/useToast';
 
@@ -72,6 +79,7 @@ export const RemoteMcpToggle = () => {
                         <Switch
                             onChange={handleToggle}
                             checked={enabled}
+                            disabled={true} // Toggle is disabled until backend support is implemented
                             name='enabled'
                         />
                     }

@@ -588,7 +588,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                     const segmentId = event.segment.id;
                     if (!segmentId) {
                         this.logger.warn(
-                            `Ignoring segment event ${event.type} without a segment id. EventId=${event.id}`,
+                            `Ignoring segment event ${event.type} without a segment id. EventId=${event.eventId}`,
                         );
                         continue;
                     }

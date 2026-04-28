@@ -8,6 +8,7 @@ import { Stepper } from './Stepper.tsx';
 import { Badge } from 'component/common/Badge/Badge';
 import { Markdown } from 'component/common/Markdown/Markdown';
 import { CodeRenderer, codeRenderSnippets } from './CodeRenderer.tsx';
+import { buildSdkApiUrl } from './buildSdkApiUrl.ts';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 2, 8),
@@ -41,9 +42,7 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
     const { uiConfig } = useUiConfig();
 
     const sdkIcon = allSdks.find((item) => item.name === sdk.name)?.icon;
-    const clientApiUrl = `${uiConfig.unleashUrl}/api/`;
-    const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend/`;
-    const apiUrl = sdk.type === 'client' ? clientApiUrl : frontendApiUrl;
+    const apiUrl = buildSdkApiUrl(uiConfig.unleashUrl, sdk.name);
 
     const snippet = (codeRenderSnippets[sdk.name] || '')
         .replace('<YOUR_API_TOKEN>', apiKey)

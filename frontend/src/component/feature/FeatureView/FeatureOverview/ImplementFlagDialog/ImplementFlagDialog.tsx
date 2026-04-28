@@ -16,11 +16,8 @@ import {
     CodeRenderer,
     codeRenderSnippets,
 } from 'component/onboarding/dialog/CodeRenderer';
-import {
-    allSdks,
-    clientSdks,
-    type SdkName,
-} from 'component/onboarding/dialog/sharedTypes';
+import { allSdks, type SdkName } from 'component/onboarding/dialog/sharedTypes';
+import { buildSdkApiUrl } from 'component/onboarding/dialog/buildSdkApiUrl';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ImplementFlagInformation } from './ImplementFlagInformation.tsx';
@@ -221,8 +218,7 @@ const DialogBody = ({ projectId, feature, onClose }: DialogBodyProps) => {
     const evaluated = metrics.seenApplications.length > 0;
 
     const { uiConfig } = useUiConfig();
-    const isFrontendSdk = clientSdks.some((sdk) => sdk.name === sdkName);
-    const apiUrl = `${uiConfig.unleashUrl}/api${isFrontendSdk ? '/frontend' : ''}/`;
+    const apiUrl = buildSdkApiUrl(uiConfig.unleashUrl, sdkName);
 
     const wrappedSnippet = buildFlagUsageSnippet(
         codeRenderSnippets[sdkName] || '',

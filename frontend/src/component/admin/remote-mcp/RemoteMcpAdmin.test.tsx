@@ -28,6 +28,8 @@ describe('RemoteMcpAdmin', () => {
 
         render(<RemoteMcpAdmin />, { permissions: [{ permission: 'ADMIN' }] });
 
-        expect(await screen.findByText('Remote MCP')).toBeInTheDocument();
+        expect(
+            await screen.findByText('Remote MCP Server'),
+        ).toBeInTheDocument();
     });
 });

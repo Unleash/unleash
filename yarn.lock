@@ -1058,7 +1058,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@standard-schema/spec@npm:^1.0.0, @standard-schema/spec@npm:^1.1.0":
+"@standard-schema/spec@npm:^1.1.0":
   version: 1.1.0
   resolution: "@standard-schema/spec@npm:1.1.0"
   checksum: 10c0/d90f55acde4b2deb983529c87e8025fa693de1a5e8b49ecc6eb84d1fd96328add0e03d7d551442156c7432fd78165b2c26ff561b970a9a881f046abb78d6a526
@@ -3812,8 +3812,8 @@ __metadata:
   linkType: hard
 
 "joi@npm:^18.0.2":
-  version: 18.0.2
-  resolution: "joi@npm:18.0.2"
+  version: 18.1.2
+  resolution: "joi@npm:18.1.2"
   dependencies:
     "@hapi/address": "npm:^5.1.1"
     "@hapi/formula": "npm:^3.0.2"
@@ -3821,8 +3821,8 @@ __metadata:
     "@hapi/pinpoint": "npm:^2.0.1"
     "@hapi/tlds": "npm:^1.1.1"
     "@hapi/topo": "npm:^6.0.2"
-    "@standard-schema/spec": "npm:^1.0.0"
-  checksum: 10c0/e395e07df0051e7bd8da02436ef3f10d52561b0331b6c289de1725745f336a952b72672fc3687d4e81d3354f9b3580feb60ffca71281a585c48b63dade09e1fb
+    "@standard-schema/spec": "npm:^1.1.0"
+  checksum: 10c0/67d6fcbd81c017adf31ae6e0e6cd9d82ba25d6835d2981970ec0ea3198f2e8223aded756cdb8d5ed14fff3d6da2e2684a0767a770bcc544ce00fdcf9748e104a
   languageName: node
   linkType: hard
 

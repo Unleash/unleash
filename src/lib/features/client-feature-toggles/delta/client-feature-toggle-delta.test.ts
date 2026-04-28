@@ -1411,4 +1411,105 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             ],
         });
     });
+
+    test('returns delta events in revision order even when cached by event type', async () => {
+        let currentRevisionId = 24;
+
+        const delta = new ClientFeatureToggleDelta(
+            {
+                getAll: async ({
+                    toggleNames = [],
+                }: {
+                    toggleNames?: string[];
+                }) => {
+                    const feature = {
+                        name: 'first',
+                        project: 'default',
+                        enabled: false,
+                        strategies:
+                            currentRevisionId >= 26
+                                ? [{ name: 'default', segments: [101] }]
+                                : [],
+                    };
+
+                    if (toggleNames.length === 0) {
+                        return [feature];
+                    }
+
+                    return toggleNames.includes('first') ? [feature] : [];
+                },
+            } as any,
+            {
+                getAllForClientIds: async (ids?: number[]) =>
+                    ids === undefined || ids.includes(101)
+                        ? [{ id: 101, name: 'segment-a', constraints: [] }]
+                        : [],
+            } as any,
+            {
+                getDeltaRevisionState: async () => ({
+                    projectRevisions: new Map([['default', 24]]),
+                    maxReferencedSegmentRevision: 0,
+                    segmentRevisions: new Map(),
+                }),
+                getRevisionRange: async () => [
+                    {
+                        id: 25,
+                        type: 'segment-created',
+                        data: { id: 101, name: 'segment-a' },
+                        createdAt: new Date(),
+                    },
+                    {
+                        id: 26,
+                        type: 'feature-updated',
+                        featureName: 'first',
+                        project: 'default',
+                        environment: 'development',
+                        createdAt: new Date(),
+                    },
+                ],
+                getMaxRevisionId: async () => currentRevisionId,
+            } as any,
+            {
+                on: () => undefined,
+            } as any,
+            {
+                isEnabled: (name: string) => name === 'deltaApi',
+            } as any,
+            createDeltaConfig(),
+        );
+
+        await delta.getDelta(undefined, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+
+        currentRevisionId = 26;
+        await delta.onUpdateRevisionEvent();
+
+        const result = await delta.getDelta(24, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+
+        expect(result?.events.map((event) => event.eventId)).toEqual([25, 26]);
+        expect(result).toEqual({
+            events: [
+                {
+                    eventId: 25,
+                    type: 'segment-updated',
+                    segment: { id: 101, name: 'segment-a', constraints: [] },
+                },
+                {
+                    eventId: 26,
+                    type: 'feature-updated',
+                    feature: {
+                        name: 'first',
+                        project: 'default',
+                        enabled: false,
+                        strategies: [{ name: 'default', segments: [101] }],
+                    },
+                },
+            ],
+        });
+    });
 });

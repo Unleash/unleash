@@ -111,6 +111,10 @@ export const filterHydrationEventByQuery = (
     };
 };
 
+const sortEventsByRevision = (events: DeltaEvent[]): DeltaEvent[] => {
+    return [...events].sort((first, second) => first.eventId - second.eventId);
+};
+
 const materializeReferencedSegments = (
     events: DeltaEvent[],
     hydrationEvent: DeltaHydrationEvent,
@@ -288,7 +292,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 referencedSegmentIds,
             );
             const events = materializeReferencedSegments(
-                filteredEvents,
+                sortEventsByRevision(filteredEvents),
                 hydrationEvent,
             );
 

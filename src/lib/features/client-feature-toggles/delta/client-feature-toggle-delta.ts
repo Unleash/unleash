@@ -140,7 +140,7 @@ const materializeReferencedSegments = (
                 } as DeltaEvent;
             });
 
-        return [event, ...syntheticNewSegmentEvents];
+        return [...syntheticNewSegmentEvents, event];
     });
 };
 

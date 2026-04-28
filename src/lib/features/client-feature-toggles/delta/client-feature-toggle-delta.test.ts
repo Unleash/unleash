@@ -740,6 +740,11 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             events: [
                 {
                     eventId: 15,
+                    type: 'segment-updated',
+                    segment: { id: 1, name: 'segment-a', constraints: [] },
+                },
+                {
+                    eventId: 15,
                     type: 'feature-updated',
                     feature: {
                         name: 'test-flag',
@@ -747,11 +752,6 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                         enabled: true,
                         strategies: [{ name: 'default', segments: [1] }],
                     },
-                },
-                {
-                    eventId: 15,
-                    type: 'segment-updated',
-                    segment: { id: 1, name: 'segment-a', constraints: [] },
                 },
             ],
         });

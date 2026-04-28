@@ -553,8 +553,6 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         // base segments still has to represent all the known state for segments,
         // otherwise we might miss changes to segments that are not referenced by any feature
         // in the hydration event but are updated/removed in the delta events.
-        // Note: because updated segments comes with all the segment's data,
-        // we could in theory get away with only including referenced segments in the hydration event
         const baseSegments = await this.segmentReadModel.getAllForClientIds();
 
         const maxRevision = getVisibleRevision(revisionState);

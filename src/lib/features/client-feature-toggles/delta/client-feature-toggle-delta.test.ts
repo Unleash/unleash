@@ -6,7 +6,10 @@ import {
     filterEventsByQuery,
 } from './client-feature-toggle-delta.js';
 import { DeltaCache } from './delta-cache.js';
-import { FEATURE_PROJECT_CHANGE } from '../../../events/index.js';
+import {
+    FEATURE_PROJECT_CHANGE,
+    SEGMENT_DELETED,
+} from '../../../events/index.js';
 
 const createLogger = () =>
     ({
@@ -504,6 +507,99 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                     eventId: 2,
                     type: 'segment-updated',
                     segment: { id: 101, name: 'segment-a', constraints: [] },
+                },
+            ],
+        });
+    });
+
+    test('segment-removed is delivered with the feature update that dereferences it', async () => {
+        let currentRevisionId = 1;
+        let featureReferencesSegment = true;
+
+        const delta = new ClientFeatureToggleDelta(
+            {
+                getAll: async () => [
+                    {
+                        name: 'first',
+                        project: 'default',
+                        enabled: false,
+                        strategies: [
+                            featureReferencesSegment
+                                ? { name: 'default', segments: [101] }
+                                : { name: 'default' },
+                        ],
+                    },
+                ],
+            } as any,
+            {
+                getAllForClientIds: async (ids?: number[]) =>
+                    ids === undefined || ids.includes(101)
+                        ? [{ id: 101, name: 'segment-a', constraints: [] }]
+                        : [],
+            } as any,
+            {
+                getDeltaRevisionState: async () => ({
+                    projectRevisions: new Map([['default', 1]]),
+                    maxReferencedSegmentRevision: 1,
+                    segmentRevisions: new Map([[101, 1]]),
+                }),
+                getRevisionRange: async () => [
+                    {
+                        id: 2,
+                        type: 'feature-updated',
+                        featureName: 'first',
+                        project: 'default',
+                        environment: 'development',
+                        createdAt: new Date(),
+                    },
+                    {
+                        id: 3,
+                        type: SEGMENT_DELETED,
+                        preData: { id: 101, name: 'segment-a' },
+                        createdAt: new Date(),
+                    },
+                ],
+                getMaxRevisionId: async () => currentRevisionId,
+            } as any,
+            {
+                on: () => undefined,
+            } as any,
+            {
+                isEnabled: (name: string) => name === 'deltaApi',
+            } as any,
+            createDeltaConfig(),
+        );
+
+        await delta.getDelta(undefined, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+
+        featureReferencesSegment = false;
+        currentRevisionId = 3;
+        await delta.onUpdateRevisionEvent();
+
+        const result = await delta.getDelta(1, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+
+        expect(result).toEqual({
+            events: [
+                {
+                    eventId: 2,
+                    type: 'feature-updated',
+                    feature: {
+                        name: 'first',
+                        project: 'default',
+                        enabled: false,
+                        strategies: [{ name: 'default' }],
+                    },
+                },
+                {
+                    eventId: 3,
+                    type: 'segment-removed',
+                    segmentId: 101,
                 },
             ],
         });

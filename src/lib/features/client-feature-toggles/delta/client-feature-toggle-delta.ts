@@ -586,22 +586,32 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 this.delta[environment].getHydrationEvent().features,
             );
             for (const event of segmentEvents) {
-                if (
-                    event.type === DELTA_EVENT_TYPES.SEGMENT_UPDATED &&
-                    event.segment.id
-                ) {
+                if (event.type === DELTA_EVENT_TYPES.SEGMENT_UPDATED) {
+                    const segmentId = event.segment.id;
+                    if (!segmentId) {
+                        this.logger.warn(
+                            `Ignoring segment event ${event.type} without a segment id. EventId=${event.id}`,
+                        );
+                        continue;
+                    }
                     setMaxRevision(
                         revisionState.segmentRevisions,
-                        event.segment.id,
+                        segmentId,
                         event.eventId,
                     );
-                    // only consider visible, updated segments that are referenced
-                    if (referencedSegmentIds.has(event.segment.id)) {
+                    if (referencedSegmentIds.has(segmentId)) {
                         revisionState.maxReferencedSegmentRevision = Math.max(
                             revisionState.maxReferencedSegmentRevision,
                             event.eventId,
                         );
                     }
+                } else if (event.type === DELTA_EVENT_TYPES.SEGMENT_REMOVED) {
+                    // Segment removal does not advance visible revision by itself:
+                    // a valid removal requires the segment to have been dereferenced first,
+                    // and that feature update is what makes the delta visible.
+                    // We only remove the stale per-segment revision entry here because
+                    // the segment no longer exists.
+                    revisionState.segmentRevisions.delete(event.segmentId);
                 }
             }
         }

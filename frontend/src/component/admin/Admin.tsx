@@ -19,6 +19,7 @@ import NotFound from 'component/common/NotFound/NotFound';
 import { Banners } from './banners/Banners.tsx';
 import { License } from './license/License.tsx';
 import { AdminHome } from './AdminHome.tsx';
+import { RemoteMcpAdmin } from './remote-mcp/RemoteMcpAdmin.tsx';
 import { lazy } from 'react';
 
 const EnterpriseEdge = lazy(
@@ -51,6 +52,7 @@ export const Admin = () => {
                     element={<FlaggedBillingRedirect />}
                 />
                 <Route path='billing' element={<Billing />} />
+                <Route path='remote-mcp' element={<RemoteMcpAdmin />} />
                 <Route path='instance-privacy' element={<InstancePrivacy />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>

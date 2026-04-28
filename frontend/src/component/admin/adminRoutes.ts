@@ -159,6 +159,14 @@ export const adminRoutes: INavigationMenuItem[] = [
         notFlag: 'consumptionModelUI',
     },
 
+    // Remote MCP
+    {
+        path: '/admin/remote-mcp',
+        title: 'Remote MCP server',
+        menu: { adminSettings: true },
+        flag: 'remoteMcpServer',
+    },
+
     // Instance configuration
     {
         path: '/admin/maintenance',

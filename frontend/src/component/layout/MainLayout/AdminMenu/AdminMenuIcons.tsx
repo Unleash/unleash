@@ -9,6 +9,7 @@ import SingleSignOnIcon from '@mui/icons-material/AssignmentOutlined';
 import LanguageIcon from '@mui/icons-material/Language';
 import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
+import IntegrationInstructionsOutlinedIcon from '@mui/icons-material/IntegrationInstructionsOutlined';
 import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import type { FC } from 'react';
 
@@ -20,6 +21,7 @@ const icons: Record<string, typeof SvgIcon> = {
     sso: SingleSignOnIcon,
     '/admin/enterprise-edge': LanguageIcon,
     network: HubOutlinedIcon,
+    '/admin/remote-mcp': IntegrationInstructionsOutlinedIcon,
     instance: BuildOutlinedIcon,
     '/admin/billing': BillingIcon,
     '/history': EventNoteIcon,

@@ -91,6 +91,7 @@ export type UiFlags = {
     impactMetricsFlagPage?: boolean;
     onboardingFlagSetup?: boolean;
     multiMetricChart?: boolean;
+    remoteMcpServer?: boolean;
 };
 
 export interface IVersionInfo {

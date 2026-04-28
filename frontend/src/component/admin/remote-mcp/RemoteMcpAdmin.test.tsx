@@ -18,7 +18,7 @@ describe('RemoteMcpAdmin', () => {
                 "Ooops. That's a page we haven't toggled on yet.",
             ),
         ).toBeInTheDocument();
-        expect(screen.queryByText('Remote MCP')).not.toBeInTheDocument();
+        expect(screen.queryByText('Remote MCP Server')).not.toBeInTheDocument();
     });
 
     test('shows the page when remoteMcpServer flag is on', async () => {

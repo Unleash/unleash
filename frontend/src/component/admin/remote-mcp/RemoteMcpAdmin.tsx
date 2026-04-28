@@ -9,7 +9,8 @@ import { RemoteMcpToggle } from './RemoteMcpToggle.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import NotFound from 'component/common/NotFound/NotFound';
 
-const DOCS_URL = 'https://docs.getunleash.io/reference/remote-mcp';
+const DOCS_URL =
+    'https://github.com/Unleash/unleash-mcp#remote-agent-setup-experimental';
 
 const StyledTitleRow = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -58,7 +59,7 @@ const RemoteMcpPage = () => {
                 <PageHeader
                     titleElement={
                         <StyledTitleRow>
-                            Remote MCP
+                            Remote MCP Server
                             <HelpIcon
                                 htmlTooltip
                                 tooltip={
@@ -76,8 +77,8 @@ const RemoteMcpPage = () => {
         >
             <StyledLayout>
                 <Alert severity='warning'>
-                    Only enable this if your organization allows DCR (Dynamic
-                    Client Registration) application workflows.
+                    Only enable this if your organization allows OAuth 2.0
+                    Dynamic Client Registration authorization workflow.
                 </Alert>
                 <RemoteMcpToggle />
                 <StyledDocsLink

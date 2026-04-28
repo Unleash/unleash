@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import useToast from 'hooks/useToast';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledCard = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -43,6 +44,9 @@ const StyledDescription = styled(Typography)(({ theme }) => ({
 
 export const RemoteMcpToggle = () => {
     const [enabled, setEnabled] = useState(false);
+    const {
+        uiConfig: { unleashUrl },
+    } = useUiConfig();
     const { setToastData } = useToast();
 
     const handleToggle = () => {
@@ -58,21 +62,22 @@ export const RemoteMcpToggle = () => {
         <StyledCard>
             <StyledCardLeft>
                 <StyledTitle variant='body1'>
-                    Enable remote MCP for this instance
+                    Enable Remote MCP Server for this instance
                 </StyledTitle>
                 <StyledDescription>
                     When enabled, Unleash exposes a Streamable HTTP MCP server
-                    at /api/mcp. Authentication uses standard Unleash API tokens
-                    — admins choose which tokens may connect.
+                    at{' '}
+                    <pre style={{ display: 'inline' }}>
+                        {unleashUrl}/api/admin/mcp
+                    </pre>
+                </StyledDescription>
+                <StyledDescription>
+                    Authentication uses standard Unleash PAT tokens — once
+                    enabled, users will be able to exchange their current login
+                    session for a PAT token, valid for 24h.
                 </StyledDescription>
             </StyledCardLeft>
             <StyledCardRight>
-                <Chip
-                    label={enabled ? 'Enabled' : 'Disabled'}
-                    color={enabled ? 'success' : 'default'}
-                    variant='outlined'
-                    size='small'
-                />
                 <FormControlLabel
                     sx={{ margin: 0 }}
                     control={
@@ -83,7 +88,7 @@ export const RemoteMcpToggle = () => {
                             name='enabled'
                         />
                     }
-                    label=''
+                    label={enabled ? 'Enabled' : 'Disabled'}
                 />
             </StyledCardRight>
         </StyledCard>

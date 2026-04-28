@@ -1833,6 +1833,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^1.15.0":
+  version: 1.15.2
+  resolution: "axios@npm:1.15.2"
+  dependencies:
+    follow-redirects: "npm:^1.15.11"
+    form-data: "npm:^4.0.5"
+    proxy-from-env: "npm:^2.1.0"
+  checksum: 10c0/4eeae0feeaa7fdc1ef24f81f8b378fdadedf4aebdd6bf224484675160f8744cf17b9b0d1c215279979940f7e8ce463beffa2f713099612e428eac238515c81d5
+  languageName: node
+  linkType: hard
+
 "balanced-match@npm:^1.0.0":
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
@@ -3811,7 +3822,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"joi@npm:^18.0.2":
+"joi@npm:^18.0.2, joi@npm:^18.1.2":
   version: 18.1.2
   resolution: "joi@npm:18.1.2"
   dependencies:
@@ -6895,17 +6906,17 @@ __metadata:
   linkType: hard
 
 "wait-on@npm:^9.0.4":
-  version: 9.0.4
-  resolution: "wait-on@npm:9.0.4"
+  version: 9.0.5
+  resolution: "wait-on@npm:9.0.5"
   dependencies:
-    axios: "npm:^1.13.5"
-    joi: "npm:^18.0.2"
-    lodash: "npm:^4.17.23"
+    axios: "npm:^1.15.0"
+    joi: "npm:^18.1.2"
+    lodash: "npm:^4.18.1"
     minimist: "npm:^1.2.8"
     rxjs: "npm:^7.8.2"
   bin:
     wait-on: bin/wait-on
-  checksum: 10c0/914d3a76eab98e1964e3de2286a6b911ec52e667dd0232cce7eadf63573a05a61ffb32db622d8707eec075a1d027d1b83583f2a506278a26f34f2e2103ad77d9
+  checksum: 10c0/79823ebda9bb08ae341abb49d298d001039071ac103f6557da69371ae92a6b35ea8faca0b1c349f08c7b6db0ea527705bea9044a6a41e5a0e4470ee9d95fdcd1
   languageName: node
   linkType: hard
 

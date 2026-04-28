@@ -75,7 +75,8 @@ export type IFlagKey =
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'onlyFeatureTokensWithFeatureAPIs'
     | 'onboardingFlagSetup'
-    | 'multiMetricChart';
+    | 'multiMetricChart'
+    | 'elasticEventSync';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -340,6 +341,10 @@ const flags: IFlags = {
     ),
     multiMetricChart: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MULTI_METRIC_CHART,
+        false,
+    ),
+    elasticEventSync: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ELASTIC_EVENT_SYNC,
         false,
     ),
 };

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { FeatureFlagSetupBannerCard } from './FeatureFlagSetupBannerCard.tsx';
 import { ImplementFlagDialog } from './ImplementFlagDialog/ImplementFlagDialog.tsx';
@@ -15,13 +15,13 @@ export const FeatureImplementFlagBanner = ({
     featureId,
 }: FeatureImplementFlagBannerProps) => {
     const { project } = useProjectOverview(projectId);
-    const { metrics, loading } = useFeatureMetrics(projectId, featureId);
+    const { feature, loading } = useFeature(projectId, featureId);
     const { trackEvent } = usePlausibleTracker();
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const isOnboarded = project.onboardingStatus.status === 'onboarded';
-    const hasNoMetrics = !loading && metrics.seenApplications.length === 0;
-    const showBanner = isOnboarded && hasNoMetrics;
+    const isInitialStage = !loading && feature.lifecycle?.stage === 'initial';
+    const showBanner = isOnboarded && isInitialStage;
 
     if (!showBanner && !dialogOpen) {
         return null;

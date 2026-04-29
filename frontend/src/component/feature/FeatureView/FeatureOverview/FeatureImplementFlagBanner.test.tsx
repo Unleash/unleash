@@ -9,13 +9,9 @@ const PROJECT_ID = 'banner-project';
 const FEATURE_ID = 'banner-feature';
 
 const setupReadyForImplement = () => {
-    testServerRoute(
-        server,
-        `/api/admin/projects/${PROJECT_ID}/overview`,
-        {
-            onboardingStatus: { status: 'onboarded' },
-        },
-    );
+    testServerRoute(server, `/api/admin/projects/${PROJECT_ID}/overview`, {
+        onboardingStatus: { status: 'onboarded' },
+    });
 
     testServerRoute(
         server,

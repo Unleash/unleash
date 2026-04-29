@@ -125,6 +125,7 @@ export const FeatureToggleListTable: FC = () => {
                     onFlagTypeClick,
                     onFavorite,
                 ),
+                meta: { width: '100%', align: 'left' },
             }),
             columnHelper.accessor('createdBy', {
                 id: 'createdBy',

@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { MultipleRoleSelect } from './MultipleRoleSelect.tsx';
 import { fireEvent, screen } from '@testing-library/react';

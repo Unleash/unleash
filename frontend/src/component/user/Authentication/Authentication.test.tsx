@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import Authentication from 'component/user/Authentication/Authentication';
 import { screen } from '@testing-library/react';
 import {

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useOptimisticUpdate } from './useOptimisticUpdate.js';
 import { act } from 'react';

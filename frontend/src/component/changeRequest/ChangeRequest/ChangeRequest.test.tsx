@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 
 import { Route, Routes } from 'react-router-dom';

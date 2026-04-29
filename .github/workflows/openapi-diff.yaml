@@ -46,23 +46,24 @@ jobs:
           echo "BASE_SHA=$BASE_SHA" >> $GITHUB_ENV
       - name: Checkout baseline commit
         run: git checkout "${BASE_SHA}"
+      - uses: pnpm/action-setup@v5
       - name: Install node
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
       - name: Install dependencies
         run: |
-          yarn install --immutable
+          pnpm install --frozen-lockfile
       - name: Start Unleash test instance
         run: |
           # fake frontend build
-          mkdir frontend/build
+          mkdir -p frontend/build
           touch frontend/build/index.html
           touch frontend/build/favicon.ico
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
+          NODE_ENV=openapi pnpm dev:backend > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
@@ -83,7 +84,7 @@ jobs:
       - name: Download OpenAPI spec from baseline
         run: curl -sSL -o openapi-stable.json "http://localhost:4242/docs/openapi.json"
       - name: Upload openapi-stable.json
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: openapi-stable
           path: openapi-stable.json
@@ -107,23 +108,24 @@ jobs:
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
       - name: Install node
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
       - name: Install dependencies
         run: |
-          yarn install --immutable
+          pnpm install --frozen-lockfile
       - name: Start Unleash test instance
         run: |
           # fake frontend build
-          mkdir frontend/build
+          mkdir -p frontend/build
           touch frontend/build/index.html
           touch frontend/build/favicon.ico
           # end fake frontend build
 
           # start unleash in background
-          NODE_ENV=openapi yarn dev:backend > /tmp/unleash-server.log 2>&1 &
+          NODE_ENV=openapi pnpm dev:backend > /tmp/unleash-server.log 2>&1 &
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_SSL: 'false'
@@ -144,7 +146,7 @@ jobs:
       - name: Download OpenAPI spec (current branch)
         run: curl -sSL -o openapi-current.json http://localhost:4242/docs/openapi.json
       - name: Upload openapi-current.json
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: openapi-current
           path: openapi-current.json
@@ -156,11 +158,11 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Download openapi-current.json
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: openapi-current
       - name: Download openapi-stable.json
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: openapi-stable
       - name: Run OpenAPI diff

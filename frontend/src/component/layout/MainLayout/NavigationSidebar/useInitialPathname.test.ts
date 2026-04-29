@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { normalizeTopLevelPath } from './useInitialPathname.js';
 
 test('normalization test', () => {

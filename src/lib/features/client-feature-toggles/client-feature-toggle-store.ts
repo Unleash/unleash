@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
 import type { Logger } from '../../logger.js';
@@ -20,7 +20,7 @@ import {
 import type EventEmitter from 'events';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import type { Db } from '../../db/db.js';
-import Raw = Knex.Raw;
+type Raw<T = any> = Knex.Raw<T>;
 import { sortStrategies } from '../../util/sortStrategies.js';
 import type { ITag } from '../../tags/index.js';
 

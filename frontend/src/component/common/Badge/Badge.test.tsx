@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { screen } from '@testing-library/react';
 import { Badge } from './Badge.tsx';
 import { render } from 'utils/testRenderer';

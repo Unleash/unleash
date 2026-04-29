@@ -1,4 +1,4 @@
-import { Knex } from 'knex';
+import type { Knex } from 'knex';
 import type {
     IFeatureToggleClient,
     IStrategyConfig,
@@ -7,7 +7,7 @@ import type {
 import { ensureStringValue, mapValues } from '../../util/index.js';
 import type { Db } from '../../db/db.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
-import Raw = Knex.Raw;
+type Raw<T = any> = Knex.Raw<T>;
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
 import type EventEmitter from 'events';

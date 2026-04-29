@@ -59,11 +59,13 @@ jobs:
         run: |
           git config user.name "Github Actions Bot"
           git config user.email "<>"
+      - uses: pnpm/action-setup@v5
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
       - if: ${{ endsWith(github.event.inputs.version, '0') }}
         run: |
           PREV_COMMIT=$(git rev-list --tags --max-count=1)
@@ -95,9 +97,7 @@ jobs:
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
           echo "$changelog" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-      - run: yarn install --immutable
-        env:
-          YARN_ENABLE_SCRIPTS: false
+      - run: pnpm install --frozen-lockfile --ignore-scripts
       - name: npm version
         run: |
           npm version ${{ github.event.inputs.version }}
@@ -123,11 +123,13 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
+      - uses: pnpm/action-setup@v5
       - name: Use Node js 22
         uses: actions/setup-node@v6
         with:
           node-version: '22.x'
-          cache: 'yarn'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
       - name: upgrade package version
         run: |
           jq --arg version "${{ github.event.inputs.version }}" '.version=$version' package.json > package.json.tmp
@@ -136,10 +138,8 @@ jobs:
         run: git checkout origin/${{ github.ref_name }} -- CHANGELOG.md
       - name: lint
         run: |
-          yarn install --immutable
-          yarn lint:fix
-        env:
-          YARN_ENABLE_SCRIPTS: false
+          pnpm install --frozen-lockfile --ignore-scripts
+          pnpm lint:fix
       - name: push changes
         run: |
           git add package.json CHANGELOG.md

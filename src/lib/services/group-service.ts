@@ -245,7 +245,7 @@ export class GroupService {
             }
         }
 
-        if (existingGroup && Boolean(existingGroup.scimId)) {
+        if (existingGroup?.scimId) {
             if (existingGroup.name !== group.name) {
                 throw new BadDataError(
                     'Cannot update the name of a SCIM group',

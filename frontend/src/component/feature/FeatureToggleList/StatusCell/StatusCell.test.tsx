@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { StatusCell } from './StatusCell.tsx';
 import { screen } from '@testing-library/dom';

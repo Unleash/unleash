@@ -21,24 +21,22 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v5
+
       - name: Use Node.js 20
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
-          cache: 'yarn'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
-      - name: Enable corepack
-        run: corepack enable
-
-      - run: yarn install --immutable
-        env:
-          YARN_ENABLE_SCRIPTS: false
+      - run: pnpm install --frozen-lockfile --ignore-scripts
 
       - run: |
-          yarn run biome check --fix --unsafe || true # Run unsafe auto-fixes
-          yarn lint:fix || true # Fix linting issues
+          pnpm run biome check --fix --unsafe || true # Run unsafe auto-fixes
+          pnpm lint:fix || true # Fix linting issues
 
-      - run: yarn test:updateSnapshot || true # Update test snapshots
+      - run: pnpm test:updateSnapshot || true # Update test snapshots
 
       - run: |
           # Undo deletes for snapshots

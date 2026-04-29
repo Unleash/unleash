@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { useGroupedProjectTrends } from './useGroupedProjectTrends.js';
 import { renderHook } from '@testing-library/react';
 

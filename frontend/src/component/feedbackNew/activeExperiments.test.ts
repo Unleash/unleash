@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { getActiveExperiments } from './activeExperiments.ts';
 import type { FeedbackSchema } from 'openapi';
 

@@ -42,8 +42,7 @@ export default class UnleashClient {
 
         this.strategies.forEach((strategy: Strategy) => {
             if (
-                !strategy ||
-                !strategy.name ||
+                !strategy?.name ||
                 typeof strategy.name !== 'string' ||
                 typeof strategy.isEnabled !== 'function'
             ) {

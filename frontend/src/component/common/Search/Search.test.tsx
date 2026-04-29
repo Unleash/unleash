@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { render } from 'utils/testRenderer';
 import { fireEvent, screen } from '@testing-library/react';

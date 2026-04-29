@@ -300,7 +300,7 @@ export class FeatureToggleService {
         if (toggle === undefined) {
             throw new NotFoundError(`Could not find feature ${featureName}`);
         }
-        if (toggle.archived || Boolean(toggle.archivedAt)) {
+        if (toggle.archived || toggle.archivedAt) {
             throw new ArchivedFeatureError();
         }
     }
@@ -1418,11 +1418,7 @@ export class FeatureToggleService {
 
         const strategyTasks = newToggle.environments.flatMap((e) =>
             e.strategies.map((s) => {
-                if (
-                    replaceGroupId &&
-                    s.parameters &&
-                    s.parameters.hasOwnProperty('groupId')
-                ) {
+                if (replaceGroupId && s.parameters?.hasOwnProperty('groupId')) {
                     s.parameters.groupId = newFeatureName;
                 }
                 const context = {

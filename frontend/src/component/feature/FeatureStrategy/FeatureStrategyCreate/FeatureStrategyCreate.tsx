@@ -189,7 +189,7 @@ export const FeatureStrategyCreate = () => {
         }
     };
 
-    const emptyFeature = !data || !data.project;
+    const emptyFeature = !data?.project;
 
     if (emptyFeature) return null;
 

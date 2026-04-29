@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import type { IConstraint } from 'interfaces/strategy';
 import { serializeConstraint } from './api-payload-constraint-replacer.ts';
 import { constraintId } from 'constants/constraintId';

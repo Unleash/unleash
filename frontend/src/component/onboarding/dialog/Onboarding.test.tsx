@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { ConnectSdkDialog } from './ConnectSdkDialog.tsx';
 import { fireEvent, screen, waitFor } from '@testing-library/react';

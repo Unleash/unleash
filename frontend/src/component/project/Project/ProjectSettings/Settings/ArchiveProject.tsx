@@ -2,8 +2,7 @@ import { Link, styled } from '@mui/material';
 import { DELETE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ArchiveProjectDialogue } from '../../ArchiveProject/ArchiveProjectDialogue.tsx';
 

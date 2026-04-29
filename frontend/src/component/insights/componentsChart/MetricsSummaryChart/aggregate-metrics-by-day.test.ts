@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { aggregateDataPerDate } from './aggregate-metrics-by-day.js';
 
 describe('aggregateDataPerDate', () => {

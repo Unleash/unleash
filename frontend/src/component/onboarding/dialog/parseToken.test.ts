@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { parseToken } from './parseToken.js';
 
 describe('parseToken', () => {

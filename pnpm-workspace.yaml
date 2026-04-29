@@ -1,0 +1,55 @@
+packages:
+  - frontend
+
+allowBuilds:
+  "@parcel/watcher": true
+  "@scarf/scarf": true
+  cpu-features: true
+  cypress: true
+  es5-ext: true
+  esbuild: true
+  msw: true
+  ssh2: true
+
+catalog:
+  "@biomejs/biome": ^2.4.14
+  "@types/lodash.isequal": ^4.5.8
+  "@types/node": 22.19.17
+  "@types/semver": 7.7.1
+  "@vitest/coverage-v8": ^4.1.5
+  "@vitest/ui": ^4.1.5
+  date-fns: ^4.1.0
+  fast-json-patch: ^3.1.1
+  knex: 3.2.10
+  pkginfo: ^0.4.1
+  re2js: 2.3.1
+  semver: ^7.7.4
+  typescript: 5.9.3
+  vitest: ^4.1.5
+patchedDependencies:
+  cypress-vite: .pnpm/patches/cypress-vite-npm-1.8.0-5384b5466c.patch
+overrides:
+  "@codemirror/state": "6.6.0"
+  "@types/express-session>@types/express": "4.17.25"
+  "@types/react": "18.3.28"
+  "@wesleytodd/openapi>path-to-regexp": "6.3.0"
+  "@xmldom/xmldom": "^0.9.0"
+  ansi-regex: "^5.0.1"
+  async: "^3.2.4"
+  es5-ext: "0.10.64"
+  glob: "^10.5.0"
+  ip: "^2.0.1"
+  json-schema: "^0.4.0"
+  json5: "^2.2.2"
+  jsonpath-plus: "10.4.0"
+  lodash: ">=4.18.0"
+  "minimatch@3.1.2": "10.2.5"
+  node-forge: "^1.0.0"
+  nwsapi: "2.2.13"
+  prompt: "link:./node_modules/.cache/null"
+  "router>path-to-regexp": "1.9.0"
+  semver: "7.7.4"
+  set-value: "^4.0.1"
+  ssh2: "^1.4.0"
+  tough-cookie: "4.1.4"
+  ws: "^8.18.0"

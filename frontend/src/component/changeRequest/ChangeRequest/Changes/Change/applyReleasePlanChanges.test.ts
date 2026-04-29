@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { applyReleasePlanChanges } from './applyReleasePlanChanges';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import type {

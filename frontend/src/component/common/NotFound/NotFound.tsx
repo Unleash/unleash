@@ -1,7 +1,7 @@
 import type React from 'react';
 import type { FC } from 'react';
 import { Button, styled, Typography } from '@mui/material';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { useLastViewedPage } from 'component/InitialRedirect';
 
 import LogoIcon from 'assets/icons/logoBg.svg?react';

@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { filterLegalValues } from './LegalValueLabel.js';
 
 describe('filterLegalValues function tests', () => {

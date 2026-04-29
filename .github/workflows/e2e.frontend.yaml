@@ -14,23 +14,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Cache node modules and Cypress binary
-        id: cache-node-modules
+      - uses: pnpm/action-setup@v5
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+      - name: Cache Cypress binary
+        id: cache-cypress
         uses: actions/cache@v5
         with:
-          path: |
-            frontend/node_modules
-            ~/.cache/Cypress
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
-      - name: Install frontend dependencies
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: yarn install --immutable
-        working-directory: frontend
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
       - name: Build static frontend
-        run: yarn build
-        working-directory: frontend
+        run: pnpm --dir frontend build
       - name: Upload frontend build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: frontend-build
           path: frontend/build
@@ -50,18 +52,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.x
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
       - name: Download frontend build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: frontend-build
           path: frontend/build
-      - name: Restore node modules and Cypress binary
+      - name: Restore Cypress binary
         uses: actions/cache/restore@v5
         with:
-          path: |
-            frontend/node_modules
-            ~/.cache/Cypress
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
       - name: Start Unleash test instance
         run: |
           docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
@@ -80,7 +89,7 @@ jobs:
         id: artifact-name
         run: echo "name=cypress-artifacts-$(echo '${{ matrix.test }}' | tr '/' '-')" >> $GITHUB_OUTPUT
       - name: Upload Cypress artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: ${{ steps.artifact-name.outputs.name }}

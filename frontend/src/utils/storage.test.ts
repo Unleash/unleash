@@ -4,7 +4,7 @@ import {
     setSessionStorageItem,
     getSessionStorageItem,
 } from './storage.js';
-import { vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mocking the global localStorage
 const localStorageMock = (() => {

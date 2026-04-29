@@ -34,25 +34,32 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v5
       - name: Use Node.js 22.x
         uses: actions/setup-node@v6
         with:
           node-version: 22.x
-          cache: 'yarn'
-      - name: Enable corepack
-        run: corepack enable
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
       - name: Install deps
-        run: yarn install
+        run: pnpm install --frozen-lockfile
       - name: Build backend
-        run: yarn build:backend
+        run: pnpm build:backend
       - name: Tests on 22.x
         id: coverage
-        run: yarn test:coverage
+        run: pnpm test:coverage
         env:
           CI: true
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
           NODE_ENV: test
           PORT: 4243
+      - name: Upload test report
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: test-results
+          path: reports/jest-junit.xml
+          if-no-files-found: error
       - name: Report coverage
         uses: davelosert/vitest-coverage-report-action@v2

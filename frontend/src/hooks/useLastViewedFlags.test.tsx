@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import type React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useLastViewedFlags } from './useLastViewedFlags.ts';

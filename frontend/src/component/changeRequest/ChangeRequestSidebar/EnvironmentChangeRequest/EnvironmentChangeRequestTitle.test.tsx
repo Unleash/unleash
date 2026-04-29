@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { type FC, useState } from 'react';
 import { screen } from '@testing-library/react';
 import { ChangeRequestTitle } from './ChangeRequestTitle.tsx';

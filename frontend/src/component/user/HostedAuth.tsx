@@ -2,7 +2,7 @@ import { type FormEventHandler, useState, type VFC } from 'react';
 import { Button, styled, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import useQueryParams from 'hooks/useQueryParams';
 import AuthOptions from './common/AuthOptions/AuthOptions.tsx';
 import DividerText from 'component/common/DividerText/DividerText';

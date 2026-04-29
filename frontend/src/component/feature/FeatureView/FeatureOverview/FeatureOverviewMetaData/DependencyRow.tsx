@@ -162,7 +162,7 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                 </StyledMetaDataItem>
             ) : null}
             {hasParentDependency &&
-            Boolean(feature.dependencies[0]?.variants?.length) ? (
+            feature.dependencies[0]?.variants?.length ? (
                 <StyledMetaDataItem>
                     <StyledMetaDataItemLabel>
                         Dependency value:

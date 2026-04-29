@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { validateParameterValue } from 'utils/validateParameterValue';
 
 const createStrategy = (type: string, required: boolean) => {

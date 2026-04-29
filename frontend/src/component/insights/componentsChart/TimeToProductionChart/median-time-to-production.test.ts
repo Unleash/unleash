@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { medianTimeToProduction } from './median-time-to-production.js';
 import type { InstanceInsightsSchema } from 'openapi';
 

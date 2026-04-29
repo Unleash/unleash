@@ -15,6 +15,15 @@ export const applicationOverviewIssuesSchema = {
             description: 'The list of strategies that are missing from Unleash',
             example: ['feature1', 'feature2'],
         },
+        deprecatedStrategies: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+            description:
+                'The list of strategies that are deprecated in Unleash',
+            example: ['feature3', 'featureX'],
+        },
     },
     components: {},
 } as const;

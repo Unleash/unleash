@@ -10,4 +10,6 @@
 export interface ApplicationOverviewIssuesSchema {
     /** The list of strategies that are missing from Unleash */
     missingStrategies: string[];
+    /** The list of strategies that are deprecated in Unleash */
+    deprecatedStrategies?: string[];
 }

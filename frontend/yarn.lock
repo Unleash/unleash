@@ -4386,9 +4386,9 @@ __metadata:
   linkType: hard
 
 "countries-and-timezones@npm:^3.4.0":
-  version: 3.8.0
-  resolution: "countries-and-timezones@npm:3.8.0"
-  checksum: 10c0/5252abe77d346b899390feef5b28aa77702663a7b99eb1d665e289a4b83d2208531cad7580bee61c2692634c270c26bdce4000fa42ad99f23fcdf9c60ef3739d
+  version: 3.9.0
+  resolution: "countries-and-timezones@npm:3.9.0"
+  checksum: 10c0/ea5f39a3ab5e2a73133968fee23644e4722a94525bc01ec5b50f6e2ccceefeb367b6107bb405aaed2e530587733c705ef7aa71784fce233b4036f424128dda1d
   languageName: node
   linkType: hard
 

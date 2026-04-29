@@ -4769,10 +4769,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"normalize-url@npm:^8.1.1":
-  version: 8.1.1
-  resolution: "normalize-url@npm:8.1.1"
-  checksum: 10c0/1beb700ce42acb2288f39453cdf8001eead55bbf046d407936a40404af420b8c1c6be97a869884ae9e659d7b1c744e40e905c875ac9290644eec2e3e6fb0b370
+"normalize-url@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "normalize-url@npm:9.0.0"
+  checksum: 10c0/ff8271b26b808dc4c9caf309e1f5f0dcf75e4e05c5c09f3ee3c9dde2bda7f761df1b4c9458758c1919e3420a71c464da8026c1a9a11dedff99c056f3efd6afbc
   languageName: node
   linkType: hard
 
@@ -6646,7 +6646,7 @@ __metadata:
     mustache: "npm:^4.2.0"
     nock: "npm:^14.0.11"
     nodemailer: "npm:^8.0.5"
-    normalize-url: "npm:^8.1.1"
+    normalize-url: "npm:^9.0.0"
     openapi-enforcer: "npm:1.23.0"
     openapi-types: "npm:^12.1.3"
     owasp-password-strength-test: "npm:^1.3.0"

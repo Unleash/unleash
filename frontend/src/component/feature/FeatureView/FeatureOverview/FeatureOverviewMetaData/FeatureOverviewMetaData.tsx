@@ -6,6 +6,7 @@ import {
     ListItemIcon,
     ListItemText,
     styled,
+    Tooltip,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
@@ -78,12 +79,18 @@ export const StyledMetaDataItemLabel = styled('span')(({ theme }) => ({
 
 const StyledMetaDataItemText = styled('span')({
     overflowWrap: 'anywhere',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
 });
 
 export const StyledMetaDataItemValue = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
+    flex: 1,
+    minWidth: 0,
+    justifyContent: 'flex-end',
 }));
 
 export const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
@@ -300,9 +307,11 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                                 Created by:
                             </StyledMetaDataItemLabel>
                             <StyledMetaDataItemValue>
-                                <StyledMetaDataItemText data-loading>
-                                    {feature.createdBy?.name}
-                                </StyledMetaDataItemText>
+                                <Tooltip title={feature.createdBy?.name || ''}>
+                                    <StyledMetaDataItemText data-loading>
+                                        {feature.createdBy?.name}
+                                    </StyledMetaDataItemText>
+                                </Tooltip>
                             </StyledMetaDataItemValue>
                         </StyledMetaDataItem>
                     ) : null}

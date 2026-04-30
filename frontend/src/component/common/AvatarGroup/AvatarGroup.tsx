@@ -12,7 +12,7 @@ import {
     UserAvatar,
 } from 'component/common/UserAvatar/UserAvatar';
 import { objectId } from 'utils/objectId';
-import millify from 'millify';
+import { millify } from 'millify';
 
 const StyledAvatars = styled('div')(({ theme }) => ({
     display: 'inline-flex',

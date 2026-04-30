@@ -416,7 +416,6 @@ export default class ClientApplicationsStore
     ): IApplicationOverview {
         const featureCount = new Set(rows.flatMap((row) => row.features)).size;
         const missingStrategies: Set<string> = new Set();
-        const deprecatedStrategies: Set<string> = new Set();
 
         const environments = rows.reduce((acc, row) => {
             const {
@@ -435,18 +434,10 @@ export default class ClientApplicationsStore
 
             strategies?.forEach((strategy) => {
                 if (
-                    DEPRECATED_STRATEGIES.includes(strategy) &&
-                    existingStrategies.includes(strategy)
-                ) {
-                    deprecatedStrategies.add(strategy);
-                }
-
-                if (
                     !DEPRECATED_STRATEGIES.includes(strategy) &&
                     !existingStrategies.includes(strategy)
                 ) {
                     missingStrategies.add(strategy);
-                } else {
                 }
             });
 
@@ -492,7 +483,6 @@ export default class ClientApplicationsStore
             environments,
             issues: {
                 missingStrategies: [...missingStrategies],
-                deprecatedStrategies: [...deprecatedStrategies],
             },
         };
     }

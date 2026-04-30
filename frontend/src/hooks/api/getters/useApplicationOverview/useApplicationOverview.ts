@@ -9,7 +9,6 @@ const placeHolderApplication: ApplicationOverviewSchema = {
     projects: [],
     issues: {
         missingStrategies: [],
-        deprecatedStrategies: [],
     },
 };
 export const useApplicationOverview = (

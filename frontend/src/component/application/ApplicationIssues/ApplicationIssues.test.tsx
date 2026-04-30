@@ -23,7 +23,6 @@ test('Display all application issues', async () => {
         ],
         issues: {
             missingStrategies: ['defaultStrategy', 'mainStrategy'],
-            deprecatedStrategies: ['oldStrategy'],
         },
     };
     render(<ApplicationIssues application={application} />);
@@ -35,9 +34,6 @@ test('Display all application issues', async () => {
     );
     await screen.findByText(
         `We detected 2 strategy types defined in the SDK that do not exist in Unleash`,
-    );
-    await screen.findByText(
-        `We detected 1 strategy types defined in the SDK that is deprecated.`,
     );
     await screen.findByText(`We detected the following outdated SDKs`);
     await screen.findByText(`unleash-client-php:1.13.0`);
@@ -76,7 +72,6 @@ test('Each SDK version should be displayed once', async () => {
         ],
         issues: {
             missingStrategies: [],
-            deprecatedStrategies: [],
         },
     };
     render(<ApplicationIssues application={application} />);

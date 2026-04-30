@@ -91,10 +91,6 @@ interface IStrategiesMissingProps {
     strategies: string[];
 }
 
-interface IStrategiesDeprecatedProps {
-    strategies: string[];
-}
-
 interface IOutdatedSDKsProps {
     sdks: string[];
 }
@@ -183,30 +179,6 @@ const StrategiesMissing = ({ strategies }: IStrategiesMissingProps) => {
     );
 };
 
-const StrategiesDeprecated = ({ strategies }: IStrategiesDeprecatedProps) => {
-    const length = strategies.length;
-    if (length === 0) {
-        return null;
-    }
-
-    return (
-        <IssueTextContainer>
-            <Box>{`We detected ${length} strategy type${
-                length !== 1 ? 's' : ''
-            } defined in the SDK that ${
-                length !== 1 ? 'do' : 'does'
-            } are deprecated in Unleash.`}</Box>
-            <StyledList>
-                {strategies.map((strategy) => (
-                    <IssueRowContainer key={strategy}>
-                        <StyledListElement>{strategy}</StyledListElement>
-                    </IssueRowContainer>
-                ))}
-            </StyledList>
-        </IssueTextContainer>
-    );
-};
-
 const OutdatedSDKs = ({ sdks }: IOutdatedSDKsProps) => {
     if (sdks.length === 0) {
         return null;
@@ -243,10 +215,7 @@ export const getApplicationIssues = (
     const issueCount =
         outdatedSdks.length +
         missingFeatures.length +
-        application.issues.missingStrategies.length +
-        (application.issues.deprecatedStrategies
-            ? application.issues.deprecatedStrategies.length
-            : 0);
+        application.issues.missingStrategies.length;
 
     return {
         issueCount,
@@ -277,10 +246,6 @@ export const ApplicationIssues = ({ application }: IApplicationIssuesProps) => {
                 <FeaturesMissing features={missingFeatures} />
                 <StrategiesMissing
                     strategies={application.issues.missingStrategies}
-                />
-                application.issues.deprecatedStrategies ??{' '}
-                <StrategiesDeprecated
-                    strategies={application.issues.deprecatedStrategies!}
                 />
             </IssueContainer>
         </WarningContainer>

@@ -4416,7 +4416,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress-vite@npm:^1.8.0":
+"cypress-vite@npm:1.8.0":
   version: 1.8.0
   resolution: "cypress-vite@npm:1.8.0"
   dependencies:
@@ -4425,6 +4425,18 @@ __metadata:
   peerDependencies:
     vite: ^2.9.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
   checksum: 10c0/8b8660ef93e0f1be0cc4af6a852266c760b57c603199ccb726400918f4cb2aa954ec1a6b8905e82e492a24343f49291beed582297ac59089b1afddd1840fbab7
+  languageName: node
+  linkType: hard
+
+"cypress-vite@patch:cypress-vite@npm%3A1.8.0#~/.yarn/patches/cypress-vite-npm-1.8.0-5384b5466c.patch":
+  version: 1.8.0
+  resolution: "cypress-vite@patch:cypress-vite@npm%3A1.8.0#~/.yarn/patches/cypress-vite-npm-1.8.0-5384b5466c.patch::version=1.8.0&hash=cf3518"
+  dependencies:
+    chokidar: "npm:^3.5.3"
+    debug: "npm:^4.3.4"
+  peerDependencies:
+    vite: ^2.9.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
+  checksum: 10c0/3ee6c23614bb7837b017d67c38cfaab350815ad594c808040e1697377b5fb64c4d32621bdf0fa9487e1247c48d6b7c9ee67cca05fb18338a1248a05650f8ed1b
   languageName: node
   linkType: hard
 
@@ -10263,7 +10275,7 @@ __metadata:
     countries-and-timezones: "npm:^3.4.0"
     css-mediaquery: "npm:^0.1.2"
     cypress: "npm:15.13.1"
-    cypress-vite: "npm:^1.8.0"
+    cypress-vite: "patch:cypress-vite@npm%3A1.8.0#~/.yarn/patches/cypress-vite-npm-1.8.0-5384b5466c.patch"
     date-fns: "npm:4.1.0"
     date-fns-tz: "npm:^3.0.0"
     debounce: "npm:2.2.0"

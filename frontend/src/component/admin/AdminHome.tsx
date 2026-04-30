@@ -1,13 +1,13 @@
 import {
     Box,
     Button,
-    Grid,
     Paper,
     styled,
     Typography,
     useMediaQuery,
     useTheme,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { useInstanceStats } from 'hooks/api/getters/useInstanceStats/useInstanceStats';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
@@ -245,25 +245,25 @@ const InstanceStatsWidget = ({
         <StyledWidget>
             <InstanceStatsHeader>Instance statistics</InstanceStatsHeader>
             <StyledGridContainer container>
-                <StyledGridItem item>
+                <StyledGridItem>
                     <StyledGridItemContent>
                         <StatNumber>{users}</StatNumber>
                         <StatText>Users</StatText>
                     </StyledGridItemContent>
                 </StyledGridItem>
-                <StyledGridItem item>
+                <StyledGridItem>
                     <StyledGridItemContent>
                         <StatNumber>{featureToggles}</StatNumber>
                         <StatText>Feature flags</StatText>
                     </StyledGridItemContent>
                 </StyledGridItem>
-                <StyledGridItem item>
+                <StyledGridItem>
                     <StyledGridItemContent>
                         <StatNumber>{projects}</StatNumber>
                         <StatText>Projects</StatText>
                     </StyledGridItemContent>
                 </StyledGridItem>
-                <StyledGridItem item>
+                <StyledGridItem>
                     <StyledGridItemContent>
                         <StatNumber>{environments}</StatNumber>
                         <StatText>Environments</StatText>
@@ -307,10 +307,11 @@ export const AdminHome = () => {
             {stats && !stats.loading && (
                 <Grid container spacing={3}>
                     <Grid
-                        item
-                        md={breakpointedInstanceWidgetSize}
-                        sm={12}
-                        xs={12}
+                        size={{
+                            md: breakpointedInstanceWidgetSize,
+                            sm: 12,
+                            xs: 12,
+                        }}
                     >
                         <InstanceWidget
                             plan={plan}
@@ -321,10 +322,11 @@ export const AdminHome = () => {
                         />
                     </Grid>
                     <Grid
-                        item
-                        md={breakpointedInstanceStatsWidgetSize}
-                        sm={12}
-                        xs={12}
+                        size={{
+                            md: breakpointedInstanceStatsWidgetSize,
+                            sm: 12,
+                            xs: 12,
+                        }}
                     >
                         <InstanceStatsWidget
                             environments={stats.stats?.environments ?? 0}

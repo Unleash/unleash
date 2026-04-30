@@ -1,11 +1,11 @@
 import {
     FormControl,
-    Grid,
     InputLabel,
     MenuItem,
     Select,
     type SelectChangeEvent,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { SelectCounterLabel } from './SelectCounterLabel.js';
 
 interface IExploreCounterFilter {
@@ -36,7 +36,7 @@ export const ExploreCounterFilter = ({
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
                 <Grid container spacing={2}>
                     <FormControl>
                         <InputLabel id='counter-label' size='small'>

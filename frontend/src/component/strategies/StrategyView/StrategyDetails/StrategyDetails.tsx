@@ -1,5 +1,4 @@
 import {
-    Grid,
     List,
     ListItem,
     ListItemAvatar,
@@ -7,6 +6,7 @@ import {
     Tooltip,
     useTheme,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import Add from '@mui/icons-material/Add';
 import RadioButtonChecked from '@mui/icons-material/RadioButtonChecked';
 import { AppsLinkList } from 'component/common';
@@ -68,20 +68,20 @@ export const StrategyDetails = ({
                 <ConditionallyRender
                     condition={strategy.deprecated}
                     show={
-                        <Grid item>
+                        <Grid>
                             <h5 style={{ color: theme.palette.error.main }}>
                                 Deprecated
                             </h5>
                         </Grid>
                     }
                 />
-                <Grid item sm={12} md={12}>
+                <Grid size={{ sm: 12, md: 12 }}>
                     <h6>Parameters</h6>
                     <hr />
                     <List>{renderParameters(parameters)}</List>
                 </Grid>
 
-                <Grid item sm={12} md={12}>
+                <Grid size={{ sm: 12, md: 12 }}>
                     <h6>
                         Applications using this strategy{' '}
                         {applications.length >= 1000 && '(Capped at 1000)'}

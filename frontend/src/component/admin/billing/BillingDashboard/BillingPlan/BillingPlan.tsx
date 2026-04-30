@@ -1,4 +1,5 @@
-import { Alert, Grid, Paper, styled } from '@mui/material';
+import { Alert, Paper, styled } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { InstancePlan, InstanceState } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -66,7 +67,7 @@ export const BillingPlan = () => {
 
     if (!instanceStatus)
         return (
-            <Grid item xs={12} md={7}>
+            <Grid size={{ xs: 12, md: 7 }}>
                 <StyledPlanBox data-loading sx={{ flex: 1, height: '400px' }} />
             </Grid>
         );
@@ -77,7 +78,7 @@ export const BillingPlan = () => {
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;
 
     return (
-        <Grid item xs={12} md={7}>
+        <Grid size={{ xs: 12, md: 7 }}>
             <StyledPlanBox>
                 <ConditionallyRender
                     condition={inactive}

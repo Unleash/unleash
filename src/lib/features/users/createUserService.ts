@@ -1,5 +1,4 @@
 import { ResetTokenStore } from '../../db/reset-token-store.js';
-import SettingStore from '../settings/setting-store.js';
 import {
     createAccessService,
     createEventsService,
@@ -10,9 +9,9 @@ import {
     ResourceLimitsService,
     SessionService,
     SessionStore,
-    SettingService,
     UserService,
 } from '../../server-impl.js';
+import { createSettingService } from '../settings/createSettingService.js';
 import { UserStore } from './user-store.js';
 
 export const createUserService = (
@@ -36,12 +35,7 @@ export const createUserService = (
         config.getLogger,
     );
     const sessionService = new SessionService({ sessionStore }, config);
-    const settingStore = new SettingStore(db, config.getLogger);
-    const settingService = new SettingService(
-        { settingStore },
-        config,
-        eventService,
-    );
+    const settingService = createSettingService(config)(db);
     const accessService = createAccessService(db, config);
     const emailService = new EmailService(config);
     const resourceLimitsService = new ResourceLimitsService(config);

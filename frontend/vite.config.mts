@@ -55,7 +55,6 @@ const emotionBabelPlugin = [
 ] as const;
 
 export default defineConfig(({ mode }) => {
-
     return mergeConfig(
         {
             base: UNLEASH_BASE_PATH,
@@ -69,6 +68,20 @@ export default defineConfig(({ mode }) => {
             },
             resolve: {
                 tsconfigPaths: true,
+                // Route @mui/icons-material deep imports to the package's
+                // ESM build. Vite 8 follows Node-style CJS interop for ESM
+                // importers (see "Consistent CommonJS Interop" in the v8
+                // migration guide), so `import Icon from
+                // '@mui/icons-material/Foo'` would otherwise return the raw
+                // `module.exports` object, not the icon component. v5 has
+                // no `exports` field, so we redirect manually. Drop this
+                // once we're on v6+.
+                alias: [
+                    {
+                        find: /^@mui\/icons-material\/(?!esm\/)(.+)$/,
+                        replacement: '@mui/icons-material/esm/$1',
+                    },
+                ],
             },
             server: {
                 open: true,
@@ -118,11 +131,13 @@ export default defineConfig(({ mode }) => {
                 react(),
                 svgr(),
                 envCompatible(),
-                ...(mode === 'development' ? [
-                    babel({
-                        plugins: [emotionBabelPlugin],
-                    })
-                ] : []),
+                ...(mode === 'development'
+                    ? [
+                          babel({
+                              plugins: [emotionBabelPlugin],
+                          }),
+                      ]
+                    : []),
             ],
             optimizeDeps: {
                 exclude: ['chartjs-adapter-date-fns'],

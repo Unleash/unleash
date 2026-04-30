@@ -68,20 +68,6 @@ export default defineConfig(({ mode }) => {
             },
             resolve: {
                 tsconfigPaths: true,
-                // Route @mui/icons-material deep imports to the package's
-                // ESM build. Vite 8 follows Node-style CJS interop for ESM
-                // importers (see "Consistent CommonJS Interop" in the v8
-                // migration guide), so `import Icon from
-                // '@mui/icons-material/Foo'` would otherwise return the raw
-                // `module.exports` object, not the icon component. v5 has
-                // no `exports` field, so we redirect manually. Drop this
-                // once we're on v6+.
-                alias: [
-                    {
-                        find: /^@mui\/icons-material\/(?!esm\/)(.+)$/,
-                        replacement: '@mui/icons-material/esm/$1',
-                    },
-                ],
             },
             server: {
                 open: true,
@@ -126,6 +112,34 @@ export default defineConfig(({ mode }) => {
                             /::unleashToken::/gi,
                             UNLEASH_FRONTEND_TOKEN,
                         );
+                    },
+                },
+                {
+                    // Route @mui/icons-material deep imports to the
+                    // package's ESM build. Vite 8 follows Node-style CJS
+                    // interop for ESM importers (see "Consistent CommonJS
+                    // Interop" in the v8 migration guide), so `import Icon
+                    // from '@mui/icons-material/Foo'` would otherwise return
+                    // the raw `module.exports` object, not the icon
+                    // component. v5 has no `exports` field, so we redirect
+                    // manually. Drop this once we're on v6+.
+                    name: 'mui-icons-material-esm-redirect',
+                    enforce: 'pre',
+                    async resolveId(source, importer, options) {
+                        const prefix = '@mui/icons-material/';
+                        if (
+                            !source.startsWith(prefix) ||
+                            source.startsWith(`${prefix}esm/`)
+                        ) {
+                            return null;
+                        }
+                        const redirected = `${prefix}esm/${source.slice(prefix.length)}`;
+                        const resolved = await this.resolve(
+                            redirected,
+                            importer,
+                            { ...options, skipSelf: true },
+                        );
+                        return resolved;
                     },
                 },
                 react(),

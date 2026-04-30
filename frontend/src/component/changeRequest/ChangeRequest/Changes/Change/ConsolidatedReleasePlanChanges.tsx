@@ -177,9 +177,12 @@ export const ConsolidatedReleasePlanChanges: FC<{
                             const changes = changesByMilestone[id];
                             if (!changes) return null;
 
-                            return changes.map(({ description }) => {
+                            return changes.map(({ change, description }) => {
                                 return (
-                                    <li data-action={description.action}>
+                                    <li
+                                        key={change.id}
+                                        data-action={description.action}
+                                    >
                                         {description.text}
                                     </li>
                                 );

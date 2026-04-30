@@ -108,7 +108,7 @@ export const MultimetricTotals: FC<MultimetricTotalsProps> = ({ steps }) => {
             <StyledStackedBar>
                 {steps.map((step, index) => (
                     <StyledSegment
-                        key={step.label}
+                        key={`${index}-${step.label}`}
                         style={{
                             width: `${normalizedWidths[index]}%`,
                             backgroundColor: getStepColor(index),
@@ -118,7 +118,7 @@ export const MultimetricTotals: FC<MultimetricTotalsProps> = ({ steps }) => {
             </StyledStackedBar>
             <StyledLegend>
                 {steps.map((step, index) => (
-                    <StyledLegendItem key={step.label}>
+                    <StyledLegendItem key={`${index}-${step.label}`}>
                         <StyledColorDot
                             sx={{ backgroundColor: getStepColor(index) }}
                         />

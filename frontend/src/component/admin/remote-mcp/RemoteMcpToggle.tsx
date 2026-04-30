@@ -65,10 +65,7 @@ export const RemoteMcpToggle = () => {
                 </StyledTitle>
                 <StyledDescription>
                     When enabled, Unleash exposes a Streamable HTTP MCP server
-                    at{' '}
-                    <pre style={{ display: 'inline' }}>
-                        {unleashUrl}/api/admin/mcp
-                    </pre>
+                    at <code>{unleashUrl}/api/admin/mcp</code>
                 </StyledDescription>
                 <StyledDescription>
                     Authentication uses standard Unleash PAT tokens — once

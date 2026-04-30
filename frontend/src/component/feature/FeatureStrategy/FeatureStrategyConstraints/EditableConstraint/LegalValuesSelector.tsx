@@ -79,7 +79,9 @@ const BaseLegalValueSelector: FC<BaseProps> = ({
             }
         }
     };
-    const Control = multiSelect ? Checkbox : Radio;
+    const Control = (multiSelect ? Checkbox : Radio) as (
+        props: CheckboxProps,
+    ) => JSX.Element;
 
     return (
         <LegalValuesSelectorWidget>

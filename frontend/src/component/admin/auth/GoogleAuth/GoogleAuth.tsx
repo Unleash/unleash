@@ -4,10 +4,10 @@ import {
     Box,
     Button,
     FormControlLabel,
-    Grid,
     Switch,
     TextField,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { Alert } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
@@ -90,15 +90,15 @@ export const GoogleAuth = () => {
                 </Alert>
             </Box>
             <form onSubmit={onSubmit}>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item xs={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ xs: 5 }}>
                         <strong>Enable</strong>
                         <p>
                             Enable Google users to login. Value is ignored if
                             Client ID and Client Secret are not defined.
                         </p>
                     </Grid>
-                    <Grid item xs={6} style={{ padding: '20px' }}>
+                    <Grid size={{ xs: 6 }} style={{ padding: '20px' }}>
                         <FormControlLabel
                             control={
                                 <Switch
@@ -112,15 +112,15 @@ export const GoogleAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item xs={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ xs: 5 }}>
                         <strong>Client ID</strong>
                         <p>
                             (Required) The Client ID provided by Google when
                             registering the application.
                         </p>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={{ xs: 6 }}>
                         <TextField
                             onChange={updateField}
                             label='Client ID'
@@ -134,15 +134,15 @@ export const GoogleAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Client Secret</strong>
                         <p>
                             (Required) Client Secret provided by Google when
                             registering the application.
                         </p>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid size={{ md: 6 }}>
                         <TextField
                             onChange={updateField}
                             label='Client Secret'
@@ -156,8 +156,8 @@ export const GoogleAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Unleash hostname</strong>
                         <p>
                             (Required) The hostname you are running Unleash on
@@ -170,7 +170,7 @@ export const GoogleAuth = () => {
                             </small>
                         </p>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid size={{ md: 6 }}>
                         <TextField
                             onChange={updateField}
                             label='Unleash Hostname'
@@ -183,15 +183,15 @@ export const GoogleAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Auto-create users</strong>
                         <p>
                             Enable automatic creation of new users when signing
                             in with Google.
                         </p>
                     </Grid>
-                    <Grid item md={6} style={{ padding: '20px' }}>
+                    <Grid size={{ md: 6 }} style={{ padding: '20px' }}>
                         <Switch
                             onChange={updateAutoCreate}
                             name='enabled'
@@ -199,15 +199,15 @@ export const GoogleAuth = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Email domains</strong>
                         <p>
                             (Optional) Comma separated list of email domains
                             that should be allowed to sign in.
                         </p>
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid size={{ md: 6 }}>
                         <TextField
                             onChange={updateField}
                             label='Email domains'
@@ -223,7 +223,7 @@ export const GoogleAuth = () => {
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    <Grid item md={5}>
+                    <Grid size={{ md: 5 }}>
                         <Button
                             variant='contained'
                             color='primary'

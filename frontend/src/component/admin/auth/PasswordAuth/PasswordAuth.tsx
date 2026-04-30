@@ -1,7 +1,8 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import { Button, FormControlLabel, Grid, Switch } from '@mui/material';
+import { Button, FormControlLabel, Switch } from '@mui/material';
 import { Alert } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import useAuthSettings from 'hooks/api/getters/useAuthSettings/useAuthSettings';
 import useAuthSettingsApi, {
     type ISimpleAuthSettings,
@@ -84,12 +85,12 @@ export const PasswordAuth = () => {
                         {tokens.filter(({ type }) => type === 'admin').length}
                     </Link>
                 </Alert>
-                <Grid container spacing={3} mb={2}>
-                    <Grid item md={5}>
+                <Grid container spacing={3} sx={{ mb: 2 }}>
+                    <Grid size={{ md: 5 }}>
                         <strong>Password based login</strong>
                         <p>Allow users to login with username & password</p>
                     </Grid>
-                    <Grid item md={6} style={{ padding: '20px' }}>
+                    <Grid size={{ md: 6 }} style={{ padding: '20px' }}>
                         <FormControlLabel
                             control={
                                 <Switch
@@ -106,7 +107,7 @@ export const PasswordAuth = () => {
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    <Grid item md={12}>
+                    <Grid size={{ md: 12 }}>
                         <Button
                             variant='contained'
                             color='primary'

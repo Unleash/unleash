@@ -18,7 +18,7 @@ import { AccessService } from './access-service.js';
 import { ApiTokenService } from './api-token-service.js';
 import UserService from './user-service.js';
 import ResetTokenService from './reset-token-service.js';
-import SettingService from './setting-service.js';
+import SettingService from '../features/settings/setting-service.js';
 import SessionService from './session-service.js';
 import UserFeedbackService from './user-feedback-service.js';
 import { FeatureToggleService } from '../features/feature-toggle/feature-toggle-service.js';

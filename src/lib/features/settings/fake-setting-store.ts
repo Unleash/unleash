@@ -1,4 +1,4 @@
-import type { ISettingStore } from '../../lib/types/stores/settings-store.js';
+import type { ISettingStore } from './settings-store-type.js';
 
 export default class FakeSettingStore implements ISettingStore {
     settings: Map<string, any> = new Map();

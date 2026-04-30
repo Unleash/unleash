@@ -1,6 +1,8 @@
-import dbInit, { type ITestDb } from '../helpers/database-init.js';
-import getLogger from '../../fixtures/no-logger.js';
-import type { IUnleashStores } from '../../../lib/types/index.js';
+import dbInit, {
+    type ITestDb,
+} from '../../../test/e2e/helpers/database-init.js';
+import getLogger from '../../../test/fixtures/no-logger.js';
+import type { IUnleashStores } from '../../types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;

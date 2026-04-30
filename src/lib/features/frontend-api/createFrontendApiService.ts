@@ -1,14 +1,14 @@
 import { FrontendApiService } from './frontend-api-service.js';
 import { SegmentReadModel } from '../segment/segment-read-model.js';
 import type ClientMetricsServiceV2 from '../metrics/client-metrics/metrics-service-v2.js';
-import SettingService from '../../services/setting-service.js';
-import SettingStore from '../../db/setting-store.js';
+import SettingService from '../settings/setting-service.js';
+import SettingStore from '../settings/setting-store.js';
 import { createEventsService, createFakeEventsService } from '../index.js';
 import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service.js';
 import { GlobalFrontendApiCache } from './global-frontend-api-cache.js';
 import ClientFeatureToggleReadModel from './client-feature-toggle-read-model.js';
 import { FakeSegmentReadModel } from '../segment/fake-segment-read-model.js';
-import FakeSettingStore from '../../../test/fixtures/fake-setting-store.js';
+import FakeSettingStore from '../settings/fake-setting-store.js';
 import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model.js';
 import type { IUnleashConfig } from '../../types/index.js';
 import type { Db } from '../../db/db.js';

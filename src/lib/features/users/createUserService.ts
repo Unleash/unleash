@@ -1,5 +1,5 @@
 import { ResetTokenStore } from '../../db/reset-token-store.js';
-import SettingStore from '../../db/setting-store.js';
+import SettingStore from '../settings/setting-store.js';
 import {
     createAccessService,
     createEventsService,

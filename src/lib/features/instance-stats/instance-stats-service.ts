@@ -19,7 +19,7 @@ import type { IUserStore } from '../../types/stores/user-store.js';
 import type { ISegmentStore } from '../segment/segment-store-type.js';
 import type { IRoleStore } from '../../types/stores/role-store.js';
 import type VersionService from '../../services/version-service.js';
-import type { ISettingStore } from '../../types/stores/settings-store.js';
+import type { ISettingStore } from '../settings/settings-store-type.js';
 import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../../events/index.js';
 import type { IApiTokenStore, IFlagResolver } from '../../types/index.js';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../util/index.js';

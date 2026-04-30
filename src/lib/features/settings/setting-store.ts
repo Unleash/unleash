@@ -1,6 +1,6 @@
-import type { Logger, LogProvider } from '../logger.js';
-import type { ISettingStore } from '../types/stores/settings-store.js';
-import type { Db } from './db.js';
+import type { Logger, LogProvider } from '../../logger.js';
+import type { ISettingStore } from './settings-store-type.js';
+import type { Db } from '../../db/db.js';
 
 const TABLE = 'settings';
 

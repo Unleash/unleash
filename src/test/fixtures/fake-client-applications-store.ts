@@ -85,6 +85,13 @@ export default class FakeClientApplicationsStore
         throw new Error('Method not implemented.');
     }
 
+    mapApplicationOverviewData(
+        rows: any[],
+        existingStrategies: string[],
+    ): IApplicationOverview {
+        throw new Error('Method not implemented.');
+    }
+
     async removeInactiveApplications(): Promise<number> {
         return 0;
     }

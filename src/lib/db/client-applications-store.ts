@@ -123,6 +123,8 @@ export default class ClientApplicationsStore
 
     private timer: Function;
 
+    private flagResolver: IFlagResolver;
+
     constructor(
         db: Db,
         eventBus: EventEmitter,

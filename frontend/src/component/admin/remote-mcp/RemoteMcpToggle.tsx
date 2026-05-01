@@ -5,9 +5,11 @@ import {
     Switch,
     Typography,
 } from '@mui/material';
-import { useState } from 'react';
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useRemoteMcpSettings } from 'hooks/api/getters/useRemoteMcpSettings/useRemoteMcpSettings';
+import { useRemoteMcpSettingsApi } from 'hooks/api/actions/useRemoteMcpSettingsApi/useRemoteMcpSettingsApi';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const StyledCard = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -42,19 +44,26 @@ const StyledDescription = styled(Typography)(({ theme }) => ({
 }));
 
 export const RemoteMcpToggle = () => {
-    const [enabled, setEnabled] = useState(false);
+    const { settings, loading, refetch } = useRemoteMcpSettings();
+    const { setRemoteMcpSettings, loading: saving } = useRemoteMcpSettingsApi();
     const {
         uiConfig: { unleashUrl },
     } = useUiConfig();
-    const { setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
 
-    const handleToggle = () => {
-        const next = !enabled;
-        setEnabled(next);
-        setToastData({
-            type: 'success',
-            text: `Remote MCP server has been successfully ${next ? 'enabled' : 'disabled'}`,
-        });
+    const handleToggle = async () => {
+        const next = !settings.enabled;
+        try {
+            await setRemoteMcpSettings(next);
+            setToastData({
+                type: 'success',
+                text: `Remote MCP server has been successfully ${next ? 'enabled' : 'disabled'}`,
+            });
+        } catch (error) {
+            setToastApiError(formatUnknownError(error));
+        } finally {
+            refetch();
+        }
     };
 
     return (
@@ -79,12 +88,12 @@ export const RemoteMcpToggle = () => {
                     control={
                         <Switch
                             onChange={handleToggle}
-                            checked={enabled}
-                            disabled={true} // Toggle is disabled until backend support is implemented
+                            checked={settings.enabled}
+                            disabled={loading || saving}
                             name='enabled'
                         />
                     }
-                    label={enabled ? 'Enabled' : 'Disabled'}
+                    label={settings.enabled ? 'Enabled' : 'Disabled'}
                 />
             </StyledCardRight>
         </StyledCard>

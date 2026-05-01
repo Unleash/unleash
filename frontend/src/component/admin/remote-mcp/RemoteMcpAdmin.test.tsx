@@ -25,6 +25,9 @@ describe('RemoteMcpAdmin', () => {
         testServerRoute(server, '/api/admin/ui-config', {
             flags: { remoteMcpServer: true },
         });
+        testServerRoute(server, '/api/admin/remote-mcp/settings', {
+            enabled: false,
+        });
 
         render(<RemoteMcpAdmin />, { permissions: [{ permission: 'ADMIN' }] });
 

@@ -12,10 +12,10 @@ const DEFAULT_DATA: RemoteMcpSettings = {
 };
 
 export const useRemoteMcpSettings = () => {
-    const { data, refetch, loading, error } =
-        useApiGetter<RemoteMcpSettings>(formatApiPath(PATH), () =>
-            fetcher(formatApiPath(PATH), 'Remote MCP settings'),
-        );
+    const { data, refetch, loading, error } = useApiGetter<RemoteMcpSettings>(
+        formatApiPath(PATH),
+        () => fetcher(formatApiPath(PATH), 'Remote MCP settings'),
+    );
 
     return {
         settings: data ?? DEFAULT_DATA,

@@ -6,10 +6,7 @@ import type {
     ProjectOnboarding,
     OnboardingStatus,
 } from './onboarding-read-model-type.js';
-import {
-    FEATURE_ENVIRONMENT_DISABLED,
-    FEATURE_ENVIRONMENT_ENABLED,
-} from '../../events/index.js';
+import { FEATURE_ENVIRONMENT_ENABLED } from '../../events/index.js';
 
 const instanceEventLookup = {
     'first-user-login': 'firstLogin',
@@ -123,10 +120,7 @@ export class OnboardingReadModel implements IOnboardingReadModel {
             }
 
             const toggleResult = await db('events')
-                .whereIn('type', [
-                    FEATURE_ENVIRONMENT_ENABLED,
-                    FEATURE_ENVIRONMENT_DISABLED,
-                ])
+                .whereIn('type', [FEATURE_ENVIRONMENT_ENABLED])
                 .where('project', projectId)
                 .countDistinct('type as count')
                 .first();

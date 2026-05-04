@@ -90,6 +90,7 @@ export type UiFlags = {
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
     onboardingFlagSetup?: boolean;
+    onboardingProjectSetupNewSteps?: boolean;
     multiMetricChart?: boolean;
     remoteMcpServer?: boolean;
 };

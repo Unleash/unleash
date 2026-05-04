@@ -95,7 +95,9 @@ const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '150px' });
 
 const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
 
-const StyledCelebatoryLogo = styled(CelebratoryUnleashLogo)({ width: '150px' });
+const StyledCelebratoryLogo = styled(CelebratoryUnleashLogo)({
+    width: '150px',
+});
 
 const StyledUnleashLogoOnly = styled(LogoOnly)(({ theme }) => ({
     width: '58px',
@@ -146,7 +148,7 @@ export const NavigationSidebar: FC<{
                                 lightmode={
                                     <ConditionallyRender
                                         condition={celebrateUnleashFrontend}
-                                        show={<StyledCelebatoryLogo />}
+                                        show={<StyledCelebratoryLogo />}
                                         elseShow={
                                             <StyledUnleashLogo aria-label='Unleash logo' />
                                         }

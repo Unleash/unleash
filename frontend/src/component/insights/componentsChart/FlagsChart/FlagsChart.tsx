@@ -13,10 +13,7 @@ interface IFlagsChartProps {
     isLoading?: boolean;
 }
 
-export const FlagsChart: FC<IFlagsChartProps> = ({
-    flagTrends,
-    isLoading,
-}) => {
+export const FlagsChart: FC<IFlagsChartProps> = ({ flagTrends, isLoading }) => {
     const theme = useTheme();
     const notEnoughData = !isLoading && flagTrends.length < 2;
     const placeholderData = usePlaceholderData({ fill: true, type: 'double' });

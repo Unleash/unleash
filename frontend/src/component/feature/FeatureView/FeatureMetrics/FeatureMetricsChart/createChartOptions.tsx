@@ -52,7 +52,7 @@ export const createChartOptions = (
                 callbacks: {
                     beforeBody: (items) => {
                         const total = items.reduce(
-                            (sum, item) => sum + item.parsed.y,
+                            (sum, item) => sum + (item.parsed.y ?? 0),
                             0,
                         );
                         return `${total.toLocaleString(locationSettings.locale)} - Total evaluations`;
@@ -80,12 +80,12 @@ export const createChartOptions = (
                         `Time: ${
                             hoursBack > 48
                                 ? formatDateYMDHM(
-                                      items[0].parsed.x,
+                                      items[0].parsed.x ?? 0,
                                       locationSettings.locale,
                                       'UTC',
                                   )
                                 : formatDateHM(
-                                      items[0].parsed.x,
+                                      items[0].parsed.x ?? 0,
                                       locationSettings.locale,
                                   )
                         }`,
@@ -107,7 +107,7 @@ export const createChartOptions = (
                 display: true,
                 font: {
                     size: 16,
-                    weight: '400',
+                    weight: 400,
                 },
                 color: theme.palette.text.primary,
             },
@@ -125,7 +125,9 @@ export const createChartOptions = (
                 ticks: { precision: 0, color: theme.palette.text.secondary },
                 grid: {
                     color: theme.palette.divider,
-                    borderColor: theme.palette.divider,
+                },
+                border: {
+                    color: theme.palette.divider,
                 },
             },
             x: {
@@ -163,5 +165,5 @@ defaults.font = {
     ...defaults.font,
     family: 'Sen',
     size: 13,
-    weight: '400',
+    weight: 400,
 };

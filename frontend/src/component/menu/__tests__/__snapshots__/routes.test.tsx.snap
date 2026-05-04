@@ -22,8 +22,30 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": {
       "$$typeof": Symbol(react.lazy),
+      "_debugInfo": [
+        {
+          "awaited": {
+            "debugStack": [Error: react-stack-top-frame],
+            "debugTask": null,
+            "end": -1,
+            "name": "lazy",
+            "owner": null,
+            "start": -1,
+            "value": null,
+          },
+        },
+      ],
       "_init": [Function],
       "_payload": {
+        "_ioInfo": {
+          "debugStack": [Error: react-stack-top-frame],
+          "debugTask": null,
+          "end": -1,
+          "name": "lazy",
+          "owner": null,
+          "start": -1,
+          "value": null,
+        },
         "_result": [Function],
         "_status": -1,
       },
@@ -54,8 +76,30 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": {
       "$$typeof": Symbol(react.lazy),
+      "_debugInfo": [
+        {
+          "awaited": {
+            "debugStack": [Error: react-stack-top-frame],
+            "debugTask": null,
+            "end": -1,
+            "name": "lazy",
+            "owner": null,
+            "start": -1,
+            "value": null,
+          },
+        },
+      ],
       "_init": [Function],
       "_payload": {
+        "_ioInfo": {
+          "debugStack": [Error: react-stack-top-frame],
+          "debugTask": null,
+          "end": -1,
+          "name": "lazy",
+          "owner": null,
+          "start": -1,
+          "value": null,
+        },
         "_result": [Function],
         "_status": -1,
       },
@@ -69,8 +113,30 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": {
       "$$typeof": Symbol(react.lazy),
+      "_debugInfo": [
+        {
+          "awaited": {
+            "debugStack": [Error: react-stack-top-frame],
+            "debugTask": null,
+            "end": -1,
+            "name": "lazy",
+            "owner": null,
+            "start": -1,
+            "value": null,
+          },
+        },
+      ],
       "_init": [Function],
       "_payload": {
+        "_ioInfo": {
+          "debugStack": [Error: react-stack-top-frame],
+          "debugTask": null,
+          "end": -1,
+          "name": "lazy",
+          "owner": null,
+          "start": -1,
+          "value": null,
+        },
         "_result": [Function],
         "_status": -1,
       },
@@ -121,8 +187,30 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": {
       "$$typeof": Symbol(react.lazy),
+      "_debugInfo": [
+        {
+          "awaited": {
+            "debugStack": [Error: react-stack-top-frame],
+            "debugTask": null,
+            "end": -1,
+            "name": "lazy",
+            "owner": null,
+            "start": -1,
+            "value": null,
+          },
+        },
+      ],
       "_init": [Function],
       "_payload": {
+        "_ioInfo": {
+          "debugStack": [Error: react-stack-top-frame],
+          "debugTask": null,
+          "end": -1,
+          "name": "lazy",
+          "owner": null,
+          "start": -1,
+          "value": null,
+        },
         "_result": [Function],
         "_status": -1,
       },
@@ -148,8 +236,30 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": {
       "$$typeof": Symbol(react.lazy),
+      "_debugInfo": [
+        {
+          "awaited": {
+            "debugStack": [Error: react-stack-top-frame],
+            "debugTask": null,
+            "end": -1,
+            "name": "lazy",
+            "owner": null,
+            "start": -1,
+            "value": null,
+          },
+        },
+      ],
       "_init": [Function],
       "_payload": {
+        "_ioInfo": {
+          "debugStack": [Error: react-stack-top-frame],
+          "debugTask": null,
+          "end": -1,
+          "name": "lazy",
+          "owner": null,
+          "start": -1,
+          "value": null,
+        },
         "_result": [Function],
         "_status": -1,
       },
@@ -474,8 +584,30 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": {
       "$$typeof": Symbol(react.lazy),
+      "_debugInfo": [
+        {
+          "awaited": {
+            "debugStack": [Error: react-stack-top-frame],
+            "debugTask": null,
+            "end": -1,
+            "name": "lazy",
+            "owner": null,
+            "start": -1,
+            "value": null,
+          },
+        },
+      ],
       "_init": [Function],
       "_payload": {
+        "_ioInfo": {
+          "debugStack": [Error: react-stack-top-frame],
+          "debugTask": null,
+          "end": -1,
+          "name": "lazy",
+          "owner": null,
+          "start": -1,
+          "value": null,
+        },
         "_result": [Function],
         "_status": -1,
       },

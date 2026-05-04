@@ -15,10 +15,7 @@ interface IUsersChartProps {
     isLoading?: boolean;
 }
 
-export const UsersChart: FC<IUsersChartProps> = ({
-    userTrends,
-    isLoading,
-}) => {
+export const UsersChart: FC<IUsersChartProps> = ({ userTrends, isLoading }) => {
     const showInactiveUsers = useUiFlag('showInactiveUsers');
     const theme = useTheme();
     const notEnoughData = !isLoading && userTrends.length < 2;

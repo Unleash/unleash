@@ -10,9 +10,7 @@ interface IRolePermissionsCellProps {
     row: { original: IRole };
 }
 
-export const RolePermissionsCell: FC<IRolePermissionsCellProps> = ({
-    row,
-}) => {
+export const RolePermissionsCell: FC<IRolePermissionsCellProps> = ({ row }) => {
     const { original: rowRole } = row;
     const { role } = useRole(rowRole.id.toString());
 

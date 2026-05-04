@@ -17,10 +17,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
 }));
 
 // `getValue is for new @tanstack/react-table (v8), `value` is for legacy react-table (v7)
-export const FeatureTypeCell: FC<IFeatureTypeProps> = ({
-    value,
-    getValue,
-}) => {
+export const FeatureTypeCell: FC<IFeatureTypeProps> = ({ value, getValue }) => {
     const type = value || getValue?.() || undefined;
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(type);

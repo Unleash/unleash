@@ -1,5 +1,5 @@
-import type { CodeComponent } from 'react-markdown/lib/ast-to-react';
-import type { FC } from 'react';
+import type { FC, ComponentProps } from 'react';
+import type { ExtraProps } from 'react-markdown';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { IconButton, styled, Tooltip } from '@mui/material';
@@ -79,10 +79,15 @@ const CopyBlock: FC<{ title: string; code: string }> = ({ title, code }) => {
     );
 };
 
-export const CodeRenderer: CodeComponent = ({ inline = false, children }) => {
-    if (!inline && typeof children?.[0] === 'string') {
-        return <CopyBlock code={children[0]} title='Copy code' />;
+export const CodeRenderer: FC<ComponentProps<'code'> & ExtraProps> = ({
+    children,
+    className,
+}) => {
+    // In react-markdown v9, block code fences have a language class; inline code does not
+    const isCodeBlock = Boolean(className);
+    if (isCodeBlock && typeof children === 'string') {
+        return <CopyBlock code={children} title='Copy code' />;
     }
 
-    return <code>{children}</code>;
+    return <code className={className}>{children}</code>;
 };

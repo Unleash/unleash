@@ -168,7 +168,7 @@ export const CompactChartCard: FC<CompactChartCardProps> = ({
                                     maxTicksLimit: 3,
                                     font: { size: 10 },
                                 },
-                                grid: { drawBorder: false },
+                                border: { display: false },
                             },
                         },
                         plugins: {

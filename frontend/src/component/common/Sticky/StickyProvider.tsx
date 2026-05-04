@@ -12,9 +12,9 @@ interface IStickyProviderProps {
 }
 
 export const StickyProvider = ({ children }: IStickyProviderProps) => {
-    const [stickyItems, setStickyItems] = useState<RefObject<HTMLDivElement | null>[]>(
-        [],
-    );
+    const [stickyItems, setStickyItems] = useState<
+        RefObject<HTMLDivElement | null>[]
+    >([]);
     const [resizeListeners, setResizeListeners] = useState(
         new Set<RefObject<HTMLDivElement | null>>(),
     );

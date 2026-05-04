@@ -51,7 +51,9 @@ export const createOptions = (
                 type: 'linear',
                 grid: {
                     color: theme.palette.divider,
-                    borderColor: theme.palette.divider,
+                },
+                border: {
+                    color: theme.palette.divider,
                 },
                 ticks: {
                     color: theme.palette.text.secondary,
@@ -72,7 +74,9 @@ export const createOptions = (
                 },
                 grid: {
                     color: 'transparent',
-                    borderColor: 'transparent',
+                },
+                border: {
+                    color: 'transparent',
                 },
                 ticks: {
                     color: theme.palette.text.secondary,

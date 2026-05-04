@@ -110,7 +110,8 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
     setCurrentStep,
     mode,
 }) => {
-    const constraintsAccordionListRef = useRef<IEditableConstraintsListRef>(undefined);
+    const constraintsAccordionListRef =
+        useRef<IEditableConstraintsListRef>(undefined);
     const navigate = useNavigate();
     const { hasAccess } = useContext(AccessContext);
     const { context = [] } = useAssignableUnleashContext(project);

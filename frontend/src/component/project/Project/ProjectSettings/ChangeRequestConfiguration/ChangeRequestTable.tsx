@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState, type VFC as FC } from 'react';
+import { type FC, useContext, useMemo, useState } from 'react';
 import { type HeaderGroup, useGlobalFilter, useTable } from 'react-table';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import {

@@ -9,9 +9,11 @@ interface IPlaygroundGuidanceSectionProps {
     sectionNumber: string;
 }
 
-export const PlaygroundGuidanceSection: FC<
-    IPlaygroundGuidanceSectionProps
-> = ({ headerText, bodyText, sectionNumber }) => {
+export const PlaygroundGuidanceSection: FC<IPlaygroundGuidanceSectionProps> = ({
+    headerText,
+    bodyText,
+    sectionNumber,
+}) => {
     return (
         <Box
             sx={{

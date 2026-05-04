@@ -92,7 +92,7 @@
     "copy-to-clipboard": "3.3.3",
     "countries-and-timezones": "^3.4.0",
     "css-mediaquery": "^0.1.2",
-    "cypress": "15.13.1",
+    "cypress": "15.14.1",
     "cypress-vite": "patch:cypress-vite@npm%3A1.8.0#~/.yarn/patches/cypress-vite-npm-1.8.0-5384b5466c.patch",
     "date-fns": "4.1.0",
     "date-fns-tz": "^3.0.0",

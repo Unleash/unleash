@@ -4455,9 +4455,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:15.13.1":
-  version: 15.13.1
-  resolution: "cypress@npm:15.13.1"
+"cypress@npm:15.14.1":
+  version: 15.14.1
+  resolution: "cypress@npm:15.14.1"
   dependencies:
     "@cypress/request": "npm:^3.0.10"
     "@cypress/xvfb": "npm:^1.2.4"
@@ -4504,7 +4504,7 @@ __metadata:
     yauzl: "npm:^2.10.0"
   bin:
     cypress: bin/cypress
-  checksum: 10c0/eecc539d15af2f5bfc7ab9cb5502fc1e2f9f71571dbcb392b5d99109786c63548dd4a0aa20c512beb61a0a76dee10ea6c421a79026e96fb3a9dddd59c319541d
+  checksum: 10c0/a4cf496c9a44ab910fe14a3bff973bed3fe5ad44f865195346eac219c49d7da97761d5e489e1389e676366ba1f45a4868deeec737cc35db6aa6a82f971840d88
   languageName: node
   linkType: hard
 
@@ -10345,7 +10345,7 @@ __metadata:
     copy-to-clipboard: "npm:3.3.3"
     countries-and-timezones: "npm:^3.4.0"
     css-mediaquery: "npm:^0.1.2"
-    cypress: "npm:15.13.1"
+    cypress: "npm:15.14.1"
     cypress-vite: "patch:cypress-vite@npm%3A1.8.0#~/.yarn/patches/cypress-vite-npm-1.8.0-5384b5466c.patch"
     date-fns: "npm:4.1.0"
     date-fns-tz: "npm:^3.0.0"

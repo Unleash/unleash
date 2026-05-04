@@ -1,0 +1,7 @@
+`import $_ from $source` where {
+    $source <: or {
+        `'$_.svg'`,
+        `"$_.svg"`
+    },
+    register_diagnostic(span=$source, message="SVG must be imported with '?react' to use as a React component (e.g., './icon.svg?react').")
+}

@@ -1,7 +1,18 @@
-`import $_ from $source` where {
-    $source <: or {
-        `'$_.svg'`,
-        `"$_.svg"`
+or {
+    `import $name from $source` where {
+        $name <: r"[A-Z]\w*",
+        $source <: or {
+            `'$_.svg'`,
+            `"$_.svg"`
+        },
+        register_diagnostic(span=$source, message="SVG import convention mismatch. PascalCase name = React component: add '?react' so vite-plugin-svgr converts it (e.g. import PascalName from './icon.svg?react'). If you just want a URL string then rename to camelCase and (e.g. import camelName from './icon.svg').")
     },
-    register_diagnostic(span=$source, message="SVG must be imported with '?react' to use as a React component (e.g., './icon.svg?react').")
+    `import $name from $source` where {
+        $name <: r"[a-z]\w*",
+        $source <: or {
+            `'$_.svg?react'`,
+            `"$_.svg?react"`
+        },
+        register_diagnostic(span=$source, message="SVG import convention mismatch. camelCase name = URL string: drop '?react' and keep bare '.svg' (e.g. import camelName from './icon.svg'). If you just want a React component then rename to PascalCase and keep '?react' so vite-plugin-svgr converts it (e.g. import PascalName from './icon.svg?react').")
+    }
 }

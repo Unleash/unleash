@@ -1,6 +1,5 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.6/schema.json",
-  "plugins": ["./plugins/no-svg-without-react.grit"],
   "linter": {
     "enabled": true,
     "rules": {
@@ -71,6 +70,10 @@
     }
   },
   "overrides": [
+    {
+      "includes": ["frontend/**"],
+      "plugins": ["./plugins/no-svg-without-react.grit"]
+    },
     {
       "linter": {
         "rules": {

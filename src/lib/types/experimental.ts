@@ -75,7 +75,8 @@ export type IFlagKey =
     | 'onlyFeatureTokensWithFeatureAPIs'
     | 'onboardingFlagSetup'
     | 'multiMetricChart'
-    | 'elasticEventSync';
+    | 'elasticEventSync'
+    | 'externalImpactMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -340,6 +341,10 @@ const flags: IFlags = {
     ),
     elasticEventSync: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ELASTIC_EVENT_SYNC,
+        false,
+    ),
+    externalImpactMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EXTERNAL_IMPACT_METRICS,
         false,
     ),
 };

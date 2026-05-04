@@ -3,6 +3,7 @@ import {
     configDefaults,
     defineConfig as vitestDefineConfig,
 } from 'vitest/config';
+import tsconfigPaths from 'vite-tsconfig-paths';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import envCompatible from 'vite-plugin-env-compatible';
@@ -65,9 +66,6 @@ export default defineConfig(({ mode }) => {
                 modulePreload: false,
                 cssCodeSplit: false,
                 ...(mode === 'development' ? { sourcemap: true } : {}),
-            },
-            resolve: {
-                tsconfigPaths: true,
             },
             server: {
                 open: true,
@@ -143,6 +141,7 @@ export default defineConfig(({ mode }) => {
                     },
                 },
                 react(),
+                tsconfigPaths(),
                 svgr(),
                 envCompatible(),
                 ...(mode === 'development'

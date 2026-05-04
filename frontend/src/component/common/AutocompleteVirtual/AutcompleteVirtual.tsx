@@ -35,7 +35,7 @@ const ListboxComponent = forwardRef<
                     }}
                 >
                     {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                        const element = items[virtualRow.index] as ReactElement;
+                        const element = items[virtualRow.index] as ReactElement<any>;
 
                         if (!element) {
                             return null;

@@ -7,7 +7,7 @@ import {
     useTheme,
 } from '@mui/material';
 import type { AutocompleteRenderInputParams } from '@mui/material/Autocomplete';
-import type { ReactNode } from 'react';
+import type { ReactNode, JSX } from 'react';
 
 interface IAutocompleteBoxProps {
     label: string;

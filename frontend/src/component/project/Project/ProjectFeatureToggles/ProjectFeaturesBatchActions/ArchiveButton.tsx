@@ -1,4 +1,4 @@
-import { useMemo, useState, type VFC } from 'react';
+import { useMemo, useState, type FC } from 'react';
 import { Button } from '@mui/material';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -23,7 +23,7 @@ const isFeatureInUse = (feature?: FeatureSchema): boolean => {
     );
 };
 
-export const ArchiveButton: VFC<IArchiveButtonProps> = ({
+export const ArchiveButton: FC<IArchiveButtonProps> = ({
     projectId,
     featureIds,
     features,

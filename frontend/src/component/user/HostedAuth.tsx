@@ -1,4 +1,4 @@
-import { type FormEventHandler, useState, type VFC } from 'react';
+import { type FormEventHandler, useState, type FC } from 'react';
 import { Button, styled, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { StyledAutofillTextField } from './StyledAutofillTextField.tsx';
@@ -38,7 +38,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
     textAlign: 'center',
 }));
 
-const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
+const HostedAuth: FC<IHostedAuthProps> = ({ authDetails, redirect }) => {
     const { refetchUser } = useAuthUser();
     const navigate = useNavigate();
     const params = useQueryParams();

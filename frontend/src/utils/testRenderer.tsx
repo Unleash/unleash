@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, JSX } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import {
     render as rtlRender,

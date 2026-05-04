@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, JSX } from 'react';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import type { AggregationMode } from '../../../types.ts';
 

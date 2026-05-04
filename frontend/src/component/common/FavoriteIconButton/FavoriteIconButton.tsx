@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { IconButton, type IconButtonProps } from '@mui/material';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 import StarIcon from '@mui/icons-material/Star';
@@ -10,7 +10,7 @@ interface IFavoriteIconButtonProps extends IconButtonProps {
     size?: 'medium' | 'large';
 }
 
-export const FavoriteIconButton: VFC<IFavoriteIconButtonProps> = ({
+export const FavoriteIconButton: FC<IFavoriteIconButtonProps> = ({
     isFavorite,
     size = 'large',
     ...props

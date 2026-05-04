@@ -2,7 +2,7 @@ import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import useLoading from 'hooks/useLoading';
 import { StyledCardsGrid } from '../IntegrationList.styles';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard.tsx';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Typography, styled } from '@mui/material';
 import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -22,7 +22,7 @@ type ConfiguredIntegrationsProps = {
     providers: AddonTypeSchema[];
 };
 
-export const ConfiguredIntegrations: VFC<ConfiguredIntegrationsProps> = ({
+export const ConfiguredIntegrations: FC<ConfiguredIntegrationsProps> = ({
     loading,
     addons,
     providers,

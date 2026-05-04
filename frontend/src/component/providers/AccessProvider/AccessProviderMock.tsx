@@ -14,7 +14,7 @@ interface IAccessProviderProps {
 export const AccessProviderMock = ({
     permissions,
     children,
-}: IAccessProviderProps): ReactElement => {
+}: IAccessProviderProps): ReactElement<any> => {
     const value: IAccessContext = useMemo(
         () => ({
             isAdmin: checkAdmin(permissions),

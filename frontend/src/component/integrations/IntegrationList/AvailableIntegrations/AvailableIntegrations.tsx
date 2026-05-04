@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import type { AddonTypeSchema } from 'openapi';
 import { IntegrationCard } from '../IntegrationCard/IntegrationCard.tsx';
@@ -51,7 +51,7 @@ const StyledGrayContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
+export const AvailableIntegrations: FC<IAvailableIntegrationsProps> = ({
     providers,
 }) => {
     const { isEnterprise } = useUiConfig();

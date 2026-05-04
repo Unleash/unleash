@@ -4,7 +4,7 @@ import { json } from '@codemirror/lang-json';
 import {
     type Dispatch,
     type SetStateAction,
-    type VFC,
+    type FC,
     useCallback,
 } from 'react';
 import { styled, useTheme, Box } from '@mui/material';
@@ -83,7 +83,7 @@ const EditorStatusError = () => {
     );
 };
 
-export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
+export const PlaygroundEditor: FC<IPlaygroundEditorProps> = ({
     context,
     setContext,
     error,

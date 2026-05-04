@@ -1,6 +1,6 @@
 import { Typography, styled, useTheme } from '@mui/material';
 import { Table, TableBody, TableCell, TableRow } from 'component/common/Table';
-import { useMemo, type VFC } from 'react';
+import { useMemo, type FC } from 'react';
 import type { IFeatureVariant } from 'interfaces/featureToggle';
 import { calculateVariantWeight } from 'component/common/util';
 import { useGlobalFilter, useSortBy, useTable } from 'react-table';
@@ -29,7 +29,7 @@ const StyledCheckIcon = styled(CheckCircleOutlined)(({ theme }) => ({
     color: theme.palette.success.main,
 }));
 
-export const VariantInformation: VFC<IVariantInformationProps> = ({
+export const VariantInformation: FC<IVariantInformationProps> = ({
     variants,
     selectedVariant,
 }) => {

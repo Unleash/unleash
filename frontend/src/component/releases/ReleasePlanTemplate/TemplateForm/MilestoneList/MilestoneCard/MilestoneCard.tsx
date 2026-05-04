@@ -237,7 +237,7 @@ export const MilestoneCard = ({
     const onStrategyDragOver =
         (targetId: string) =>
         (
-            ref: RefObject<HTMLDivElement>,
+            ref: RefObject<HTMLDivElement | null>,
             targetIndex: number,
         ): DragEventHandler<HTMLDivElement> =>
         (event) => {
@@ -272,7 +272,7 @@ export const MilestoneCard = ({
 
     const onStrategyDragStartRef =
         (
-            ref: RefObject<HTMLDivElement>,
+            ref: RefObject<HTMLDivElement | null>,
             index: number,
         ): DragEventHandler<HTMLButtonElement> =>
         (event) => {

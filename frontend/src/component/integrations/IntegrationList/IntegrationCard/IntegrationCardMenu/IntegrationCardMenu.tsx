@@ -1,4 +1,4 @@
-import { useCallback, useState, type VFC } from 'react';
+import { useCallback, useState, type FC } from 'react';
 import {
     Alert,
     IconButton,
@@ -42,7 +42,7 @@ const StyledMenu = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
-export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
+export const IntegrationCardMenu: FC<IIntegrationCardMenuProps> = ({
     addon,
 }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);

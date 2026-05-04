@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
 import {
     Box,
     IconButton,
@@ -46,7 +46,7 @@ interface IActionsCellProps {
     onOpenStaleDialog: (props: { featureId: string; stale: boolean }) => void;
 }
 
-export const ActionsCell: VFC<IActionsCellProps> = ({
+export const ActionsCell: FC<IActionsCellProps> = ({
     projectId,
     row,
     onOpenArchiveDialog,

@@ -3,9 +3,9 @@ import { StyledAutofillTextField } from 'component/user/StyledAutofillTextField'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import type React from 'react';
-import { useState, type VFC } from 'react';
+import { useState, type FC } from 'react';
 
-const PasswordField: VFC<TextFieldProps> = ({ ...rest }) => {
+const PasswordField: FC<TextFieldProps> = ({ ...rest }) => {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => {

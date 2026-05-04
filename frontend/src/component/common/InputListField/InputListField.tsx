@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { TextField, type TextFieldProps } from '@mui/material';
 
 interface IInputListFieldProps {
@@ -13,7 +13,7 @@ interface IInputListFieldProps {
     FormHelperTextProps?: TextFieldProps['FormHelperTextProps'];
 }
 
-export const InputListField: VFC<IInputListFieldProps> = ({
+export const InputListField: FC<IInputListFieldProps> = ({
     values = [],
     updateValues,
     placeholder = '',

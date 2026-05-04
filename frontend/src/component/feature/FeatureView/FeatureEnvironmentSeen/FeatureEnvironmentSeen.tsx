@@ -52,7 +52,7 @@ const StyledTooltipResolver = styled(TooltipResolver)(({ theme }) => ({
 
 const TooltipContainer: FC<{
     color?: string;
-    tooltip: ReactElement | string;
+    tooltip: ReactElement<any> | string;
     sx?: SxProps;
     children?: React.ReactNode;
 }> = ({ sx, tooltip, color, children }) => {

@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Box, styled, type Theme, Typography } from '@mui/material';
 import { ConditionallyRender } from '../../../common/ConditionallyRender/ConditionallyRender.tsx';
 
@@ -20,7 +20,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1.5, 2),
 }));
 
-export const FeatureStaleCell: VFC<IFeatureStaleCellProps> = ({ value }) => {
+export const FeatureStaleCell: FC<IFeatureStaleCellProps> = ({ value }) => {
     return (
         <StyledBox>
             <ConditionallyRender

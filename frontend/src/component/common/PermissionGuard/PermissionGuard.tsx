@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, type JSX } from 'react';
 import { Alert, styled } from '@mui/material';
 import { ADMIN } from '@server/types/permissions';
 import AccessContext from 'contexts/AccessContext';

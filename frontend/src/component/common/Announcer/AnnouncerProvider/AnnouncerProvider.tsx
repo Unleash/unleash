@@ -8,7 +8,7 @@ interface IAnnouncerProviderProps {
 
 export const AnnouncerProvider = ({
     children,
-}: IAnnouncerProviderProps): ReactElement => {
+}: IAnnouncerProviderProps): ReactElement<any> => {
     const [announcement, setAnnouncement] = useState<string>();
 
     const value = useMemo(

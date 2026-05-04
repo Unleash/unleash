@@ -10,7 +10,7 @@ export interface ChangeRequestScheduledDialogProps {
     onClose: () => void;
     scheduledTime?: string;
     message: string;
-    permissionButton?: ReactElement;
+    permissionButton?: ReactElement<any>;
     disabled?: boolean;
 }
 

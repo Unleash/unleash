@@ -1,5 +1,5 @@
 import { useInstanceMetrics } from 'hooks/api/getters/useInstanceMetrics/useInstanceMetrics';
-import { useMemo, type VFC } from 'react';
+import { useMemo, type FC } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
     CategoryScale,
@@ -190,7 +190,7 @@ const toChartData = (
     return [];
 };
 
-export const NetworkTraffic: VFC = () => {
+export const NetworkTraffic: FC = () => {
     const { locationSettings } = useLocationSettings();
     const { metrics } = useInstanceMetrics();
     const theme = useTheme();

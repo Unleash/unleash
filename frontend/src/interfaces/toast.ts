@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 export interface IToast {
     type: 'success' | 'error';
     text: string;

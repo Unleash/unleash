@@ -1,4 +1,4 @@
-import { useEffect, useState, type VFC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
@@ -125,7 +125,7 @@ const ArchiveParentError = ({
     return null;
 };
 
-const ScheduledChangeRequestAlert: VFC<{
+const ScheduledChangeRequestAlert: FC<{
     changeRequests?: ScheduledChangeRequestViewModel[];
     projectId: string;
 }> = ({ changeRequests, projectId }) => {
@@ -323,7 +323,7 @@ const useVerifyArchive = (
     return { disableArchive, offendingParents, hasDeletedDependencies };
 };
 
-export const FeatureArchiveDialog: VFC<IFeatureArchiveDialogProps> = ({
+export const FeatureArchiveDialog: FC<IFeatureArchiveDialogProps> = ({
     isOpen,
     onClose,
     onConfirm,

@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Link, styled, Tooltip, Typography } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon.tsx';
@@ -112,7 +112,7 @@ const StyledOpenInNewIcon = styled(OpenInNewIcon)(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
 }));
 
-export const IntegrationCard: VFC<IIntegrationCardProps> = ({
+export const IntegrationCard: FC<IIntegrationCardProps> = ({
     variant = 'default',
     icon,
     title,

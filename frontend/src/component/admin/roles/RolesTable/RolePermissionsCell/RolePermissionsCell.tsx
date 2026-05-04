@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import type { IRole } from 'interfaces/role';
@@ -10,7 +10,7 @@ interface IRolePermissionsCellProps {
     row: { original: IRole };
 }
 
-export const RolePermissionsCell: VFC<IRolePermissionsCellProps> = ({
+export const RolePermissionsCell: FC<IRolePermissionsCellProps> = ({
     row,
 }) => {
     const { original: rowRole } = row;

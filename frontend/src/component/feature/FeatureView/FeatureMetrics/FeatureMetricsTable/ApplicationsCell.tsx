@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { styled, Typography } from '@mui/material';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -16,7 +16,7 @@ interface IFeatureTagCellProps {
     };
 }
 
-export const ApplicationsCell: VFC<IFeatureTagCellProps> = ({ row }) => {
+export const ApplicationsCell: FC<IFeatureTagCellProps> = ({ row }) => {
     if (
         row.original.selectedApplications &&
         row.original.selectedApplications.length > 1

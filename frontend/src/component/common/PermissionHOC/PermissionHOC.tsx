@@ -12,7 +12,7 @@ type IPermissionHOCProps = {
     environmentId?: string;
     tooltip?: string;
     tooltipProps?: Omit<ITooltipResolverProps, 'children' | 'title'>;
-    children: ({ hasAccess }: { hasAccess?: boolean }) => ReactElement;
+    children: ({ hasAccess }: { hasAccess?: boolean }) => ReactElement<any>;
 };
 
 export const PermissionHOC: FC<IPermissionHOCProps> = ({

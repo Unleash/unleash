@@ -1,4 +1,4 @@
-import { Fragment, type VFC } from 'react';
+import { Fragment, type FC } from 'react';
 import type { PlaygroundSegmentSchema } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ConstraintExecutionWithoutResults } from '../ConstraintExecution/ConstraintExecutionWithoutResults.tsx';
@@ -9,7 +9,7 @@ interface ISegmentExecutionWithoutResultProps {
     segments?: PlaygroundSegmentSchema[];
 }
 
-export const SegmentExecutionWithoutResult: VFC<
+export const SegmentExecutionWithoutResult: FC<
     ISegmentExecutionWithoutResultProps
 > = ({ segments }) => {
     if (!segments) return null;

@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Divider, Drawer, styled } from '@mui/material';
 import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
@@ -29,7 +29,7 @@ interface IDrawerMenuProps {
     toggleDrawer: () => void;
 }
 
-export const DrawerMenu: VFC<IDrawerMenuProps> = ({
+export const DrawerMenu: FC<IDrawerMenuProps> = ({
     open = false,
     toggleDrawer,
 }) => {

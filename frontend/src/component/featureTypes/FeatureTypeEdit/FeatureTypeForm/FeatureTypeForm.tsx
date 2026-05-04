@@ -1,4 +1,4 @@
-import { type FormEventHandler, type VFC, useState, useCallback } from 'react';
+import { type FormEventHandler, type FC, useState, useCallback } from 'react';
 import { Box, Button, Typography, Checkbox, styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -36,7 +36,7 @@ const StyledForm = styled('form')(() => ({
     flexGrow: 1,
 }));
 
-export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
+export const FeatureTypeForm: FC<FeatureTypeFormProps> = ({
     featureType,
     loading,
 }) => {

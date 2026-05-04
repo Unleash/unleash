@@ -1,4 +1,4 @@
-import { useMemo, useState, type VFC } from 'react';
+import { useMemo, useState, type FC } from 'react';
 import { Button } from '@mui/material';
 import { ManageBulkTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageBulkTagsDialog';
 import type { FeatureSchema, TagSchema } from 'openapi';
@@ -15,7 +15,7 @@ interface IManageTagsProps {
     onChange?: () => void;
 }
 
-export const ManageTags: VFC<IManageTagsProps> = ({
+export const ManageTags: FC<IManageTagsProps> = ({
     projectId,
     data,
     onChange,

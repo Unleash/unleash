@@ -1,4 +1,4 @@
-import { useRef, useState, type VFC } from 'react';
+import { useRef, useState, type FC } from 'react';
 import {
     useTheme,
     IconButton,
@@ -13,7 +13,7 @@ import ChangeRequestProcessWithScheduleImage from 'assets/img/changeRequestProce
 
 type IChangeRequestProcessHelpProps = {};
 
-export const ChangeRequestProcessHelp: VFC<
+export const ChangeRequestProcessHelp: FC<
     IChangeRequestProcessHelpProps
 > = () => {
     const ref = useRef<HTMLButtonElement>(null);

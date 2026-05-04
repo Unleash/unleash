@@ -2,7 +2,7 @@ import { Checkbox, styled, TextField } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import type { IUser } from 'interfaces/user';
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import type { IGroupUser } from 'interfaces/group';
 import { UG_USERS_ID } from 'utils/testIds';
@@ -75,7 +75,7 @@ interface IGroupFormUsersSelectProps {
     setUsers: React.Dispatch<React.SetStateAction<IGroupUser[]>>;
 }
 
-export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
+export const GroupFormUsersSelect: FC<IGroupFormUsersSelectProps> = ({
     users,
     setUsers,
 }) => {

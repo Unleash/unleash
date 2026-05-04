@@ -148,7 +148,7 @@ export const EnvironmentAccordionBody = ({
 
     const onDragStartRef =
         (
-            ref: RefObject<HTMLDivElement>,
+            ref: RefObject<HTMLDivElement | null>,
             index: number,
         ): DragEventHandler<HTMLButtonElement> =>
         (event) => {
@@ -168,7 +168,7 @@ export const EnvironmentAccordionBody = ({
     const onDragOver =
         (targetId: string) =>
         (
-            ref: RefObject<HTMLDivElement>,
+            ref: RefObject<HTMLDivElement | null>,
             targetIndex: number,
         ): DragEventHandler<HTMLDivElement> =>
         (event) => {

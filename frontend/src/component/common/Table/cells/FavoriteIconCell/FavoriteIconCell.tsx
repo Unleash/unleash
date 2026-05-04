@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { Box, IconButton, styled } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
@@ -32,7 +32,7 @@ interface IFavoriteIconCellProps {
     onClick?: () => void;
 }
 
-export const FavoriteIconCell: VFC<IFavoriteIconCellProps> = ({
+export const FavoriteIconCell: FC<IFavoriteIconCellProps> = ({
     value,
     onClick,
 }) => (

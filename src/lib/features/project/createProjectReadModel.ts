@@ -9,8 +9,9 @@ export const createProjectReadModel = (
     db: Db,
     eventBus: EventEmitter,
     flagResolver: IFlagResolver,
+    isOss: boolean = false,
 ): IProjectReadModel => {
-    return new ProjectReadModel(db, eventBus, flagResolver);
+    return new ProjectReadModel(db, eventBus, flagResolver, isOss);
 };
 
 export const createFakeProjectReadModel = (): IProjectReadModel => {

@@ -134,6 +134,7 @@ export const createProjectService = (
         db,
         eventBus,
         config.flagResolver,
+        config.isOss,
     );
 
     const onboardingReadModel = createOnboardingReadModel(db);

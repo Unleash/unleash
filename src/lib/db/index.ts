@@ -195,6 +195,7 @@ export const createStores = (
             db,
             eventBus,
             config.flagResolver,
+            config.isOss,
         ),
         userUnsubscribeStore: new UserUnsubscribeStore(db),
         userSubscriptionsReadModel: new UserSubscriptionsReadModel(db),

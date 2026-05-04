@@ -17,6 +17,7 @@ export const createOnboardingService =
             db,
             eventBus,
             flagResolver,
+            config.isOss,
         );
         const userStore = new UserStore(db, getLogger);
         const onboardingService = new OnboardingService(

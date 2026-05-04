@@ -52,8 +52,16 @@ export class ProjectReadModel implements IProjectReadModel {
 
     private timer: Function;
 
-    constructor(db: Db, eventBus: EventEmitter, _flagResolver: IFlagResolver) {
+    private isOss: boolean;
+
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        _flagResolver: IFlagResolver,
+        isOss: boolean = false,
+    ) {
         this.db = db;
+        this.isOss = isOss;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'project',
@@ -261,7 +269,7 @@ export class ProjectReadModel implements IProjectReadModel {
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {
-        const projects = await this.db
+        let projects = this.db
             .from((db) => {
                 db.select('role_user.project')
                     .from('role_user')
@@ -289,17 +297,29 @@ export class ProjectReadModel implements IProjectReadModel {
                     .as('query');
             })
             .pluck('project');
+
+        if (this.isOss) {
+            projects = projects.where('project', 'default');
+        }
+
         return projects;
     }
 
     async getProjectsFavoritedByUser(userId: number): Promise<string[]> {
-        const favoritedProjects = await this.db
+        let favoritedProjects = this.db
             .select('favorite_projects.project')
             .from('favorite_projects')
             .leftJoin('projects', 'favorite_projects.project', 'projects.id')
             .where('favorite_projects.user_id', userId)
             .andWhere('projects.archived_at', null)
             .pluck('project');
+
+        if (this.isOss) {
+            favoritedProjects = favoritedProjects.where(
+                'favorite_projects.project',
+                'default',
+            );
+        }
 
         return favoritedProjects;
     }

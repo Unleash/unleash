@@ -19,7 +19,9 @@ export class FakeOnboardingReadModel implements IOnboardingReadModel {
         return Promise.resolve([]);
     }
 
-    async getOnboardingStatusForProject(): Promise<OnboardingStatus | null> {
+    async getOnboardingStatusForProject(
+        _projectId?: string,
+    ): Promise<OnboardingStatus | null> {
         return null;
     }
 }

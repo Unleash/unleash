@@ -1,10 +1,15 @@
 import type { Db } from '../../db/db.js';
+import type { IFlagResolver } from '../../types/index.js';
 import type {
     IOnboardingReadModel,
     InstanceOnboarding,
     ProjectOnboarding,
     OnboardingStatus,
 } from './onboarding-read-model-type.js';
+import {
+    FEATURE_ENVIRONMENT_DISABLED,
+    FEATURE_ENVIRONMENT_ENABLED,
+} from '../../events/index.js';
 
 const instanceEventLookup = {
     'first-user-login': 'firstLogin',
@@ -23,8 +28,11 @@ const projectEventLookup = {
 export class OnboardingReadModel implements IOnboardingReadModel {
     private db: Db;
 
-    constructor(db: Db) {
+    private flagResolver: IFlagResolver;
+
+    constructor(db: Db, flagResolver: IFlagResolver) {
         this.db = db;
+        this.flagResolver = flagResolver;
     }
 
     async getInstanceOnboardingMetrics(): Promise<InstanceOnboarding> {
@@ -83,6 +91,9 @@ export class OnboardingReadModel implements IOnboardingReadModel {
     async getOnboardingStatusForProject(
         projectId: string,
     ): Promise<OnboardingStatus | null> {
+        const useNewSteps = this.flagResolver.isEnabled(
+            'onboardingProjectSetupNewSteps',
+        );
         const projectExists = await this.db('projects')
             .select(1)
             .where('id', projectId)
@@ -107,7 +118,25 @@ export class OnboardingReadModel implements IOnboardingReadModel {
             .first();
 
         if (lastSeen) {
-            return { status: 'onboarded' };
+            if (!useNewSteps) {
+                return { status: 'onboarded' };
+            }
+
+            const toggleResult = await db('events')
+                .whereIn('type', [
+                    FEATURE_ENVIRONMENT_ENABLED,
+                    FEATURE_ENVIRONMENT_DISABLED,
+                ])
+                .where('project', projectId)
+                .countDistinct('type as count')
+                .first();
+
+            const toggleCount = Number(toggleResult?.count ?? 0);
+
+            if (toggleCount >= 1) {
+                return { status: 'onboarded' };
+            }
+            return { status: 'sdk-connected' };
         }
 
         const feature = await this.db('features')

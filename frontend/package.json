@@ -52,6 +52,7 @@
     "@emotion/babel-plugin": "^11.13.5",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
+    "@mui/base": "5.0.0-beta.70",
     "@mui/icons-material": "7.3.10",
     "@mui/lab": "7.0.1-beta.24",
     "@mui/material": "7.3.10",

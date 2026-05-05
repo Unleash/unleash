@@ -3,7 +3,7 @@ import {
     TabPanel as MuiTabPanel,
     Tabs as MuiTabs,
     TabsList as MuiTabsList,
-} from '@mui/base';
+} from '@mui/base'; // TODO: migrate off deprecated @mui/base
 import { Button, type ButtonProps, styled } from '@mui/material';
 import type { PropsWithChildren } from 'react';
 

@@ -47,11 +47,6 @@ const IconHeader = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const RightAlignedRow = styled('div')({
-    display: 'flex',
-    justifyContent: 'flex-end',
-});
-
 const Footer = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
@@ -59,10 +54,6 @@ const Footer = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
-
-const StatusToggleLabel = styled(FormControlLabel)({
-    margin: 0,
-});
 
 const DOCS_URL =
     'https://docs.getunleash.io/concepts/impact-metrics#enable-external-metrics';
@@ -87,22 +78,24 @@ const ImpactMetricsPage = () => {
         useExternalImpactMetricsSourceApi();
     const { setToastData, setToastApiError } = useToast();
 
-    const [enabled, setEnabled] = useState(source.enabled);
-    const [prometheusUrl, setPrometheusUrl] = useState(source.url ?? '');
+    const currentUrl = source.url ?? '';
+
+    const [enabled, setEnabled] = useState(false);
+    const [prometheusUrl, setPrometheusUrl] = useState('');
 
     useEffect(() => {
         setEnabled(source.enabled);
-        setPrometheusUrl(source.url ?? '');
-    }, [source]);
+        setPrometheusUrl(currentUrl);
+    }, [source.enabled, currentUrl]);
 
     const trimmedUrl = prometheusUrl.trim();
-    const canSave = !saving && (!enabled || trimmedUrl.length > 0);
-    const isDirty =
-        enabled !== source.enabled || trimmedUrl !== (source.url ?? '');
+    const isDirty = enabled !== source.enabled || trimmedUrl !== currentUrl;
+    const hasUrlWhenRequired = !enabled || trimmedUrl.length > 0;
+    const canSave = isDirty && !saving && hasUrlWhenRequired;
 
     const handleCancel = () => {
         setEnabled(source.enabled);
-        setPrometheusUrl(source.url ?? '');
+        setPrometheusUrl(currentUrl);
     };
 
     const handleSave = async () => {
@@ -159,7 +152,7 @@ const ImpactMetricsPage = () => {
                     <Typography fontWeight='bold'>
                         External metrics status
                     </Typography>
-                    <StatusToggleLabel
+                    <FormControlLabel
                         control={
                             <Switch
                                 checked={enabled}
@@ -199,11 +192,6 @@ const ImpactMetricsPage = () => {
                         fullWidth
                         size='small'
                     />
-                    <RightAlignedRow>
-                        <Button variant='contained' disabled={!trimmedUrl}>
-                            Test connection
-                        </Button>
-                    </RightAlignedRow>
                 </Card>
 
                 <Footer>
@@ -216,7 +204,7 @@ const ImpactMetricsPage = () => {
                     <Button
                         variant='contained'
                         onClick={handleSave}
-                        disabled={!canSave || !isDirty}
+                        disabled={!canSave}
                     >
                         Save
                     </Button>

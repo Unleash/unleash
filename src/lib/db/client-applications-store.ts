@@ -33,6 +33,7 @@ const DEPRECATED_STRATEGIES = [
     'gradualRolloutRandom',
     'gradualRolloutSessionId',
     'gradualRolloutUserId',
+    'userWithId',
 ];
 
 const mapRow: (any) => IClientApplication = (row) => ({

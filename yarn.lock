@@ -1691,14 +1691,14 @@ __metadata:
   linkType: hard
 
 "ajv@npm:^8.0.0, ajv@npm:^8.12.0, ajv@npm:^8.17.1, ajv@npm:^8.18.0":
-  version: 8.18.0
-  resolution: "ajv@npm:8.18.0"
+  version: 8.20.0
+  resolution: "ajv@npm:8.20.0"
   dependencies:
     fast-deep-equal: "npm:^3.1.3"
     fast-uri: "npm:^3.0.1"
     json-schema-traverse: "npm:^1.0.0"
     require-from-string: "npm:^2.0.2"
-  checksum: 10c0/e7517c426173513a07391be951879932bdf3348feaebd2199f5b901c20f99d60db8cd1591502d4d551dc82f594e82a05c4fe1c70139b15b8937f7afeaed9532f
+  checksum: 10c0/5df9a1c8f83863cde1bd3a9ddb426f599718f88e3dc9153616c79fb28e0be455335830d7f21d745576519f057b371352daa31047b6a33d7036fe08777d60cf2a
   languageName: node
   linkType: hard
 
@@ -2944,13 +2944,13 @@ __metadata:
   linkType: hard
 
 "express-rate-limit@npm:^8.3.0":
-  version: 8.3.2
-  resolution: "express-rate-limit@npm:8.3.2"
+  version: 8.4.1
+  resolution: "express-rate-limit@npm:8.4.1"
   dependencies:
     ip-address: "npm:10.1.0"
   peerDependencies:
     express: ">= 4.11"
-  checksum: 10c0/5b64d0691071086cdb8cfc6bcd5e761f5687cf4fabdebfe2a043ea5b4d31443637181e7be71e7ffabce76aee816daee62c1ca83250045847957da408a129f650
+  checksum: 10c0/ead87bcf7b9b4094d2a597b6a77569eed34c7d2ff3a449eeef25e1cd4a96dc3de17b8da93e8cf82f757ef441974846138b4bc371621fbc72346f8cc4a07a712b
   languageName: node
   linkType: hard
 
@@ -3018,7 +3018,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-check@npm:4.6.0, fast-check@npm:^3.0.0 || ^4.0.0":
+"fast-check@npm:4.7.0":
+  version: 4.7.0
+  resolution: "fast-check@npm:4.7.0"
+  dependencies:
+    pure-rand: "npm:^8.0.0"
+  checksum: 10c0/7edce2b82d11d5325e9e79a2377e1f6e7200d27219edda2e3449d827e994c34461132fc149c90e41b78fc8e6ef4aae77d45350ac7bb1bc4a81110401d0a49fbc
+  languageName: node
+  linkType: hard
+
+"fast-check@npm:^3.0.0 || ^4.0.0":
   version: 4.6.0
   resolution: "fast-check@npm:4.6.0"
   dependencies:
@@ -3607,10 +3616,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ip-address@npm:10.1.0, ip-address@npm:^10.0.1, ip-address@npm:^10.1.0":
+"ip-address@npm:10.1.0":
   version: 10.1.0
   resolution: "ip-address@npm:10.1.0"
   checksum: 10c0/0103516cfa93f6433b3bd7333fa876eb21263912329bfa47010af5e16934eeeff86f3d2ae700a3744a137839ddfad62b900c7a445607884a49b5d1e32a3d7566
+  languageName: node
+  linkType: hard
+
+"ip-address@npm:^10.0.1, ip-address@npm:^10.1.0":
+  version: 10.2.0
+  resolution: "ip-address@npm:10.2.0"
+  checksum: 10c0/5a00aada6e922c9c69dfc800ed5d0fa3348675ebdeed0e1575f503f27ca385b5f534363c9af7ad1daf64c1f1409388cdd3cc2e9b9b0fe1c924a431378d55075a
   languageName: node
   linkType: hard
 
@@ -4137,19 +4153,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:16.3.3":
-  version: 16.3.3
-  resolution: "lint-staged@npm:16.3.3"
+"lint-staged@npm:16.4.0":
+  version: 16.4.0
+  resolution: "lint-staged@npm:16.4.0"
   dependencies:
     commander: "npm:^14.0.3"
     listr2: "npm:^9.0.5"
-    micromatch: "npm:^4.0.8"
+    picomatch: "npm:^4.0.3"
     string-argv: "npm:^0.3.2"
-    tinyexec: "npm:^1.0.2"
+    tinyexec: "npm:^1.0.4"
     yaml: "npm:^2.8.2"
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: 10c0/e404007ca608f2adc8acb1f358a55bc2e613dce7c71dea5ee7a4d1c2da2eaa145f6cffb05eca0db2769586e7cddd58b22ec44934cc62147772d74154aa66f5bd
+  checksum: 10c0/67625a49a2a01368c7df2da7e553567a79c4b261d9faf3436e00fc3a2f9c4bbe7295909012c47b3d9029e269fd7d7469901a5120573527a032f15797aa497c26
   languageName: node
   linkType: hard
 
@@ -4752,9 +4768,9 @@ __metadata:
   linkType: hard
 
 "nodemailer@npm:^8.0.5":
-  version: 8.0.5
-  resolution: "nodemailer@npm:8.0.5"
-  checksum: 10c0/5e8450499bd059c56d74ba96fa5f9928de2ecdae0d53c083dba5661d797114c1f9524d30f992d0263cc5a7dcf5a54b9c1d92dc1f766da150c9d0bde7d3798431
+  version: 8.0.7
+  resolution: "nodemailer@npm:8.0.7"
+  checksum: 10c0/f1580263ad7fba64a493c47c4d78f06679c0da9cc3becbe6b628311a16474c07286fc4e530006ea262537594ccc475dc569fd519275222fd01f99c315976aeac
   languageName: node
   linkType: hard
 
@@ -4769,10 +4785,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"normalize-url@npm:^8.1.1":
-  version: 8.1.1
-  resolution: "normalize-url@npm:8.1.1"
-  checksum: 10c0/1beb700ce42acb2288f39453cdf8001eead55bbf046d407936a40404af420b8c1c6be97a869884ae9e659d7b1c744e40e905c875ac9290644eec2e3e6fb0b370
+"normalize-url@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "normalize-url@npm:9.0.0"
+  checksum: 10c0/ff8271b26b808dc4c9caf309e1f5f0dcf75e4e05c5c09f3ee3c9dde2bda7f761df1b4c9458758c1919e3420a71c464da8026c1a9a11dedff99c056f3efd6afbc
   languageName: node
   linkType: hard
 
@@ -5353,9 +5369,9 @@ __metadata:
   linkType: hard
 
 "re2js@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "re2js@npm:1.2.2"
-  checksum: 10c0/423b058c205cb35b5d89b401268f0587798d33cefe94e43863c428b9bd0eb993102658201b52ffd13338e657a8e81d4a99a2de11d43a71303ad155065d8ea95c
+  version: 1.3.3
+  resolution: "re2js@npm:1.3.3"
+  checksum: 10c0/a241f356b5f6817954404255f1e03098d37a601520331dc82d14ac5b83d7cdd4b7ed11627d0550e45fb982092a0e0f93c308fd7adbd0b50ab260b0f31d2ba487
   languageName: node
   linkType: hard
 
@@ -6253,6 +6269,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tinyexec@npm:^1.0.4":
+  version: 1.1.2
+  resolution: "tinyexec@npm:1.1.2"
+  checksum: 10c0/9e0ef6c001ce54688cf16833a02f70a339276219ca947b88930b124267de2cffc764ff44e87e7369384b1d75ab63491465412cbbdf06f2437956b9ab66ab4491
+  languageName: node
+  linkType: hard
+
 "tinyglobby@npm:^0.2.12, tinyglobby@npm:^0.2.15":
   version: 0.2.15
   resolution: "tinyglobby@npm:0.2.15"
@@ -6620,7 +6643,7 @@ __metadata:
     express: "npm:^4.22.1"
     express-rate-limit: "npm:^8.3.0"
     express-session: "npm:^1.19.0"
-    fast-check: "npm:4.6.0"
+    fast-check: "npm:4.7.0"
     fast-json-patch: "npm:^3.1.1"
     fetch-mock: "npm:^12.6.0"
     hash-sum: "npm:^2.0.0"
@@ -6636,7 +6659,7 @@ __metadata:
     json-schema-to-ts: "npm:3.1.1"
     knex: "npm:^3.1.0"
     ky: "npm:^1.14.3"
-    lint-staged: "npm:16.3.3"
+    lint-staged: "npm:16.4.0"
     lodash.groupby: "npm:^4.6.0"
     lodash.sortby: "npm:^4.7.0"
     log4js: "npm:^6.9.1"
@@ -6646,7 +6669,7 @@ __metadata:
     mustache: "npm:^4.2.0"
     nock: "npm:^14.0.11"
     nodemailer: "npm:^8.0.5"
-    normalize-url: "npm:^8.1.1"
+    normalize-url: "npm:^9.0.0"
     openapi-enforcer: "npm:1.23.0"
     openapi-types: "npm:^12.1.3"
     owasp-password-strength-test: "npm:^1.3.0"

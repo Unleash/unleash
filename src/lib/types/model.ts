@@ -368,7 +368,7 @@ export interface IProjectHealth {
 
 export type ProjectOnboardingStatus =
     | {
-          status: 'onboarding-started' | 'onboarded';
+          status: 'onboarding-started' | 'sdk-connected' | 'onboarded';
       }
     | { status: 'first-flag-created'; feature: string };
 

@@ -1,10 +1,10 @@
-import { ReactComponent as StrategyDefaultIcon } from 'assets/img/strategyDefault.svg';
-import { ReactComponent as StrategyGradualIcon } from 'assets/img/strategyGradual.svg';
-import { ReactComponent as StrategyIPsIcon } from 'assets/img/strategyIPs.svg';
-import { ReactComponent as StrategyOnIcon } from 'assets/img/strategyOn.svg';
-import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
-import { ReactComponent as StrategyHostsIcon } from 'assets/img/strategyHosts.svg';
-import { ReactComponent as StrategyCustomIcon } from 'assets/img/strategyCustom.svg';
+import StrategyDefaultIcon from 'assets/img/strategyDefault.svg?react';
+import StrategyGradualIcon from 'assets/img/strategyGradual.svg?react';
+import StrategyIPsIcon from 'assets/img/strategyIPs.svg?react';
+import StrategyOnIcon from 'assets/img/strategyOn.svg?react';
+import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
+import StrategyHostsIcon from 'assets/img/strategyHosts.svg?react';
+import StrategyCustomIcon from 'assets/img/strategyCustom.svg?react';
 
 interface IFeatureStrategyMenuCardIconProps {
     name: string;

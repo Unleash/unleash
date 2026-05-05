@@ -168,7 +168,11 @@ export const projectOverviewSchema = {
                     properties: {
                         status: {
                             type: 'string',
-                            enum: ['onboarding-started', 'onboarded'],
+                            enum: [
+                                'onboarding-started',
+                                'sdk-connected',
+                                'onboarded',
+                            ],
                             example: 'onboarding-started',
                         },
                     },

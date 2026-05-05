@@ -1,5 +1,4 @@
 import type { FC, ComponentProps } from 'react';
-import type { ExtraProps } from 'react-markdown';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { IconButton, styled, Tooltip } from '@mui/material';
@@ -20,6 +19,7 @@ import php from './snippets/php.md?raw';
 import react from './snippets/react.md?raw';
 import rust from './snippets/rust.md?raw';
 import swift from './snippets/swift.md?raw';
+import type { ExtraProps } from 'react-markdown';
 
 export const codeRenderSnippets: Record<SdkName, string> = {
     Android: android,
@@ -81,7 +81,7 @@ const CopyBlock: FC<{ title: string; code: string }> = ({ title, code }) => {
 
 export const CodeRenderer: FC<ComponentProps<'code'> & ExtraProps> = ({
     children,
-    className,
+    className
 }) => {
     // In react-markdown v9, block code fences have a language class; inline code does not
     const isCodeBlock = Boolean(className);

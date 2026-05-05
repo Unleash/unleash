@@ -52,9 +52,9 @@
     "@emotion/babel-plugin": "^11.13.5",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
-    "@mui/icons-material": "6.5.0",
-    "@mui/lab": "6.0.1-beta.36",
-    "@mui/material": "6.5.0",
+    "@mui/icons-material": "7.3.10",
+    "@mui/lab": "7.0.1-beta.24",
+    "@mui/material": "7.3.10",
     "@mui/x-date-pickers": "^7.0.0",
     "@rolldown/plugin-babel": "^0.2.2",
     "@tanstack/react-table": "^8.10.7",
@@ -154,7 +154,8 @@
     "@types/react": "18.3.28",
     "nwsapi": "2.2.13",
     "lodash": ">=4.18.0",
-    "minimatch@3.1.2": "10.2.5"
+    "minimatch@3.1.2": "10.2.5",
+    "react-is": "18.3.1"
   },
   "jest": {
     "moduleNameMapper": {

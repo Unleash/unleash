@@ -135,13 +135,14 @@ export const ProjectOnboarding = ({
     const isSDKConnected = project.onboardingStatus?.status === 'sdk-connected';
     const isOndoarded = project.onboardingStatus?.status === 'onboarded';
 
-    const step = isOndoarded
-        ? NUMBER_OF_STEPS
-        : isSDKConnected
-          ? 2
-          : isFirstFlagCreated
-            ? 1
-            : 0;
+    let step = 0;
+    if (isOndoarded) {
+        step = NUMBER_OF_STEPS;
+    } else if (isSDKConnected) {
+        step = 2;
+    } else if (isFirstFlagCreated) {
+        step = 1;
+    }
 
     const closeOnboardingFlow = () => {
         setOnboardingFlow('closed');

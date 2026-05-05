@@ -7,20 +7,20 @@ exports[`InstanceStatusBar should warn when the trial has churned 1`] = `
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-shyxu-MuiSvgIcon-root"
     data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
   >
     <path
-      d="M12 5.99 19.53 19H4.47L12 5.99M12 2 1 21h22L12 2z"
+      d="M12 5.99 19.53 19H4.47zM12 2 1 21h22z"
     />
     <path
       d="M13 16h-2v2h2zm0-6h-2v5h2z"
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-vnf5d5-MuiTypography-root"
   >
     <strong>
       Warning!
@@ -47,20 +47,20 @@ exports[`InstanceStatusBar should warn when the trial has expired 1`] = `
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-shyxu-MuiSvgIcon-root"
     data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
   >
     <path
-      d="M12 5.99 19.53 19H4.47L12 5.99M12 2 1 21h22L12 2z"
+      d="M12 5.99 19.53 19H4.47zM12 2 1 21h22z"
     />
     <path
       d="M13 16h-2v2h2zm0-6h-2v5h2z"
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-vnf5d5-MuiTypography-root"
   >
     <strong>
       Warning!
@@ -87,20 +87,20 @@ exports[`InstanceStatusBar should warn when the trial has expired for enterprise
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-shyxu-MuiSvgIcon-root"
     data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
   >
     <path
-      d="M12 5.99 19.53 19H4.47L12 5.99M12 2 1 21h22L12 2z"
+      d="M12 5.99 19.53 19H4.47zM12 2 1 21h22z"
     />
     <path
       d="M13 16h-2v2h2zm0-6h-2v5h2z"
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-vnf5d5-MuiTypography-root"
   >
     <strong>
       Warning!
@@ -127,17 +127,17 @@ exports[`InstanceStatusBar should warn when the trial is about to expire 1`] = `
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-cle2im-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-sviav0-MuiSvgIcon-root"
     data-testid="InfoOutlinedIcon"
     focusable="false"
     viewBox="0 0 24 24"
   >
     <path
-      d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-vnf5d5-MuiTypography-root"
   >
     <strong>
       Heads up!
@@ -162,17 +162,17 @@ exports[`InstanceStatusBar should warn when the trial is far from expired 1`] = 
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-cle2im-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-sviav0-MuiSvgIcon-root"
     data-testid="InfoOutlinedIcon"
     focusable="false"
     viewBox="0 0 24 24"
   >
     <path
-      d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+      d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8"
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-vnf5d5-MuiTypography-root"
   >
     <strong>
       Heads up!
@@ -192,20 +192,20 @@ exports[`InstanceStatusBar should warn when trialExpiry has passed 1`] = `
 >
   <svg
     aria-hidden="true"
-    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-prk1jy-MuiSvgIcon-root"
+    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-shyxu-MuiSvgIcon-root"
     data-testid="WarningAmberIcon"
     focusable="false"
     viewBox="0 0 24 24"
   >
     <path
-      d="M12 5.99 19.53 19H4.47L12 5.99M12 2 1 21h22L12 2z"
+      d="M12 5.99 19.53 19H4.47zM12 2 1 21h22z"
     />
     <path
       d="M13 16h-2v2h2zm0-6h-2v5h2z"
     />
   </svg>
   <p
-    class="MuiTypography-root MuiTypography-body1 mui-12kykmh-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-body1 mui-vnf5d5-MuiTypography-root"
   >
     <strong>
       Warning!

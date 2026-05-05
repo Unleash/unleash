@@ -4,10 +4,10 @@ import {
     Button,
     type ButtonProps,
     Collapse,
-    Grid,
     styled,
     Typography,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { styles as themeStyles } from 'component/common';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';

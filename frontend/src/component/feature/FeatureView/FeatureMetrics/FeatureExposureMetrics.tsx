@@ -6,7 +6,7 @@ import {
     FeatureMetricsHours,
 } from './FeatureMetricsHours/FeatureMetricsHours.tsx';
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { FeatureMetricsContent } from './FeatureMetricsContent/FeatureMetricsContent.tsx';
 import { FeatureMetricsChips } from './FeatureMetricsChips/FeatureMetricsChips.tsx';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -101,7 +101,7 @@ export const FeatureExposureMetrics = () => {
     return (
         <PageContent header={<PageHeader title='Exposure metrics' />}>
             <Grid container component='header' spacing={2}>
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                     <ConditionallyRender
                         condition={environments.size > 0}
                         show={
@@ -116,7 +116,7 @@ export const FeatureExposureMetrics = () => {
                         }
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <ConditionallyRender
                         condition={applications.size > 0}
                         show={
@@ -156,7 +156,7 @@ export const FeatureExposureMetrics = () => {
                         }
                     />
                 </Grid>
-                <Grid item xs={12} md={2}>
+                <Grid size={{ xs: 12, md: 2 }}>
                     <FeatureMetricsHours
                         hoursBack={hoursBack}
                         setHoursBack={(value) => setQuery({ hoursBack: value })}

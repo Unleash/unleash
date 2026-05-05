@@ -1,4 +1,5 @@
-import { styled, Typography, Grid, Button } from '@mui/material';
+import { styled, Typography, Button } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import LaunchIcon from '@mui/icons-material/Launch';

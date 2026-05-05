@@ -1,10 +1,12 @@
 import type { Db } from '../../db/db.js';
+import type { IFlagResolver } from '../../types/index.js';
 import type {
     IOnboardingReadModel,
     InstanceOnboarding,
     ProjectOnboarding,
     OnboardingStatus,
 } from './onboarding-read-model-type.js';
+import { FEATURE_ENVIRONMENT_ENABLED } from '../../events/index.js';
 
 const instanceEventLookup = {
     'first-user-login': 'firstLogin',
@@ -23,8 +25,11 @@ const projectEventLookup = {
 export class OnboardingReadModel implements IOnboardingReadModel {
     private db: Db;
 
-    constructor(db: Db) {
+    private flagResolver: IFlagResolver;
+
+    constructor(db: Db, flagResolver: IFlagResolver) {
         this.db = db;
+        this.flagResolver = flagResolver;
     }
 
     async getInstanceOnboardingMetrics(): Promise<InstanceOnboarding> {
@@ -83,6 +88,9 @@ export class OnboardingReadModel implements IOnboardingReadModel {
     async getOnboardingStatusForProject(
         projectId: string,
     ): Promise<OnboardingStatus | null> {
+        const useNewSteps = this.flagResolver.isEnabled(
+            'onboardingProjectSetupNewSteps',
+        );
         const projectExists = await this.db('projects')
             .select(1)
             .where('id', projectId)
@@ -107,7 +115,21 @@ export class OnboardingReadModel implements IOnboardingReadModel {
             .first();
 
         if (lastSeen) {
-            return { status: 'onboarded' };
+            if (!useNewSteps) {
+                return { status: 'onboarded' };
+            }
+
+            const toggleExists = await db('events')
+                .where('type', FEATURE_ENVIRONMENT_ENABLED)
+                .where('project', projectId)
+                .select(db.raw('1'))
+                .limit(1)
+                .first();
+
+            if (toggleExists) {
+                return { status: 'onboarded' };
+            }
+            return { status: 'sdk-connected' };
         }
 
         const feature = await this.db('features')

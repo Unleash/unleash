@@ -185,7 +185,7 @@ export const createStores = (
         projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(db),
         featureLifecycleStore: new FeatureLifecycleStore(db, eventBus),
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),
-        onboardingReadModel: createOnboardingReadModel(db),
+        onboardingReadModel: createOnboardingReadModel(db, config.flagResolver),
         onboardingStore: new OnboardingStore(db),
         featureLifecycleReadModel: new FeatureLifecycleReadModel(db),
         largestResourcesReadModel: new LargestResourcesReadModel(db),

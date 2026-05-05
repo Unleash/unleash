@@ -190,4 +190,5 @@ export const EventSchemaType = {
     'user-access-request-registered': 'user-access-request-registered',
     'user-access-request-approved': 'user-access-request-approved',
     'user-access-request-rejected': 'user-access-request-rejected',
+    'remote-mcp-server-settings-updated': 'remote-mcp-server-settings-updated',
 } as const;

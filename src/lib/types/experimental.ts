@@ -74,8 +74,10 @@ export type IFlagKey =
     | 'userTokenWithClientApiLoggingKillSwitch'
     | 'onlyFeatureTokensWithFeatureAPIs'
     | 'onboardingFlagSetup'
+    | 'onboardingProjectSetupNewSteps'
     | 'multiMetricChart'
-    | 'elasticEventSync';
+    | 'elasticEventSync'
+    | 'externalImpactMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -334,12 +336,20 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_FLAG_SETUP,
         false,
     ),
+    onboardingProjectSetupNewSteps: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_PROJECT_SETUP_NEW_STEPS,
+        false,
+    ),
     multiMetricChart: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MULTI_METRIC_CHART,
         false,
     ),
     elasticEventSync: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ELASTIC_EVENT_SYNC,
+        false,
+    ),
+    externalImpactMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EXTERNAL_IMPACT_METRICS,
         false,
     ),
 };

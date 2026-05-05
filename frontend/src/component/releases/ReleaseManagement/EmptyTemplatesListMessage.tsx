@@ -1,6 +1,6 @@
 import { Button, styled, Typography } from '@mui/material';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
-import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
+import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { Link, useNavigate } from 'react-router-dom';
 

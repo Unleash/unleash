@@ -1,6 +1,6 @@
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
+import ReleaseTemplateIcon from 'assets/img/releaseTemplates.svg?react';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans.ts';
 import { Box, Button, styled } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';

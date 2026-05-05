@@ -3616,10 +3616,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ip-address@npm:10.1.0, ip-address@npm:^10.0.1, ip-address@npm:^10.1.0":
+"ip-address@npm:10.1.0":
   version: 10.1.0
   resolution: "ip-address@npm:10.1.0"
   checksum: 10c0/0103516cfa93f6433b3bd7333fa876eb21263912329bfa47010af5e16934eeeff86f3d2ae700a3744a137839ddfad62b900c7a445607884a49b5d1e32a3d7566
+  languageName: node
+  linkType: hard
+
+"ip-address@npm:^10.0.1, ip-address@npm:^10.1.0":
+  version: 10.2.0
+  resolution: "ip-address@npm:10.2.0"
+  checksum: 10c0/5a00aada6e922c9c69dfc800ed5d0fa3348675ebdeed0e1575f503f27ca385b5f534363c9af7ad1daf64c1f1409388cdd3cc2e9b9b0fe1c924a431378d55075a
   languageName: node
   linkType: hard
 
@@ -4146,19 +4153,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:16.3.3":
-  version: 16.3.3
-  resolution: "lint-staged@npm:16.3.3"
+"lint-staged@npm:16.4.0":
+  version: 16.4.0
+  resolution: "lint-staged@npm:16.4.0"
   dependencies:
     commander: "npm:^14.0.3"
     listr2: "npm:^9.0.5"
-    micromatch: "npm:^4.0.8"
+    picomatch: "npm:^4.0.3"
     string-argv: "npm:^0.3.2"
-    tinyexec: "npm:^1.0.2"
+    tinyexec: "npm:^1.0.4"
     yaml: "npm:^2.8.2"
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: 10c0/e404007ca608f2adc8acb1f358a55bc2e613dce7c71dea5ee7a4d1c2da2eaa145f6cffb05eca0db2769586e7cddd58b22ec44934cc62147772d74154aa66f5bd
+  checksum: 10c0/67625a49a2a01368c7df2da7e553567a79c4b261d9faf3436e00fc3a2f9c4bbe7295909012c47b3d9029e269fd7d7469901a5120573527a032f15797aa497c26
   languageName: node
   linkType: hard
 
@@ -4778,10 +4785,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"normalize-url@npm:^8.1.1":
-  version: 8.1.1
-  resolution: "normalize-url@npm:8.1.1"
-  checksum: 10c0/1beb700ce42acb2288f39453cdf8001eead55bbf046d407936a40404af420b8c1c6be97a869884ae9e659d7b1c744e40e905c875ac9290644eec2e3e6fb0b370
+"normalize-url@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "normalize-url@npm:9.0.0"
+  checksum: 10c0/ff8271b26b808dc4c9caf309e1f5f0dcf75e4e05c5c09f3ee3c9dde2bda7f761df1b4c9458758c1919e3420a71c464da8026c1a9a11dedff99c056f3efd6afbc
   languageName: node
   linkType: hard
 
@@ -5362,9 +5369,9 @@ __metadata:
   linkType: hard
 
 "re2js@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "re2js@npm:1.2.2"
-  checksum: 10c0/423b058c205cb35b5d89b401268f0587798d33cefe94e43863c428b9bd0eb993102658201b52ffd13338e657a8e81d4a99a2de11d43a71303ad155065d8ea95c
+  version: 1.3.3
+  resolution: "re2js@npm:1.3.3"
+  checksum: 10c0/a241f356b5f6817954404255f1e03098d37a601520331dc82d14ac5b83d7cdd4b7ed11627d0550e45fb982092a0e0f93c308fd7adbd0b50ab260b0f31d2ba487
   languageName: node
   linkType: hard
 
@@ -6262,6 +6269,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tinyexec@npm:^1.0.4":
+  version: 1.1.2
+  resolution: "tinyexec@npm:1.1.2"
+  checksum: 10c0/9e0ef6c001ce54688cf16833a02f70a339276219ca947b88930b124267de2cffc764ff44e87e7369384b1d75ab63491465412cbbdf06f2437956b9ab66ab4491
+  languageName: node
+  linkType: hard
+
 "tinyglobby@npm:^0.2.12, tinyglobby@npm:^0.2.15":
   version: 0.2.15
   resolution: "tinyglobby@npm:0.2.15"
@@ -6645,7 +6659,7 @@ __metadata:
     json-schema-to-ts: "npm:3.1.1"
     knex: "npm:^3.1.0"
     ky: "npm:^1.14.3"
-    lint-staged: "npm:16.3.3"
+    lint-staged: "npm:16.4.0"
     lodash.groupby: "npm:^4.6.0"
     lodash.sortby: "npm:^4.7.0"
     log4js: "npm:^6.9.1"
@@ -6655,7 +6669,7 @@ __metadata:
     mustache: "npm:^4.2.0"
     nock: "npm:^14.0.11"
     nodemailer: "npm:^8.0.5"
-    normalize-url: "npm:^8.1.1"
+    normalize-url: "npm:^9.0.0"
     openapi-enforcer: "npm:1.23.0"
     openapi-types: "npm:^12.1.3"
     owasp-password-strength-test: "npm:^1.3.0"

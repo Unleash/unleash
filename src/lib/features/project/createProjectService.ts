@@ -136,7 +136,7 @@ export const createProjectService = (
         config.flagResolver,
     );
 
-    const onboardingReadModel = createOnboardingReadModel(db);
+    const onboardingReadModel = createOnboardingReadModel(db, flagResolver);
 
     return new ProjectService(
         {

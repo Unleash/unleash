@@ -15,7 +15,7 @@ test('modal should close when escape is pressed', () => {
 
     expect(screen.getByText('New dialogue created')).toBeInTheDocument();
 
-    const dialogue = screen.getByRole('presentation');
+    const dialogue = screen.getByRole('dialog');
     fireEvent.keyDown(dialogue, { key: 'Escape', code: 'Escape' });
 
     expect(mockSetOpen).toHaveBeenCalledWith(false);

@@ -119,15 +119,14 @@ export class OnboardingReadModel implements IOnboardingReadModel {
                 return { status: 'onboarded' };
             }
 
-            const toggleResult = await db('events')
-                .whereIn('type', [FEATURE_ENVIRONMENT_ENABLED])
+            const toggleExists = await db('events')
+                .where('type', FEATURE_ENVIRONMENT_ENABLED)
                 .where('project', projectId)
-                .countDistinct('type as count')
+                .select(db.raw('1'))
+                .limit(1)
                 .first();
 
-            const toggleCount = Number(toggleResult?.count ?? 0);
-
-            if (toggleCount >= 1) {
+            if (toggleExists) {
                 return { status: 'onboarded' };
             }
             return { status: 'sdk-connected' };

@@ -4,7 +4,7 @@ import {
     useState,
     type VFC,
 } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button, styled, TextField } from '@mui/material';
 import styles from './DemoAuth.module.scss';
 import Logo from 'assets/img/logo.svg?react';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';
@@ -14,6 +14,12 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
+
+const StyledForm = styled('form')({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+});
 
 interface IDemoAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
@@ -45,7 +51,7 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <StyledForm onSubmit={handleSubmit}>
             <Logo className={styles.logo} aria-label='Unleash logo' />
             <div className={styles.container}>
                 <h2>Access the Unleash demo instance</h2>
@@ -100,7 +106,7 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                     </a>
                 </p>
             </div>
-        </form>
+        </StyledForm>
     );
 };
 

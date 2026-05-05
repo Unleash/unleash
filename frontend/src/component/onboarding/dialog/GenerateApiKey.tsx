@@ -208,7 +208,7 @@ export const GenerateApiKey = ({
 
     useEffect(() => {
         onApiKey(currentEnvironmentToken?.secret || null);
-    }, [currentEnvironmentToken]);
+    }, [onApiKey, currentEnvironmentToken]);
 
     const parsedToken = parseToken(currentEnvironmentToken?.secret);
 

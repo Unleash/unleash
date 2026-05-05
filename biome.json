@@ -190,7 +190,6 @@
         "frontend/src/component/layout/MainLayout/AdminMenu/AdminNavigationItems.tsx",
         "frontend/src/component/layout/MainLayout/NavigationSidebar/useNavigationMode.ts",
         "frontend/src/component/onboarding/dialog/ConnectSdkDialog.tsx",
-        "frontend/src/component/onboarding/dialog/GenerateApiKey.tsx",
         "frontend/src/component/personalDashboard/FlagMetricsChart.tsx",
         "frontend/src/component/personalDashboard/PersonalDashboard.tsx",
         "frontend/src/component/personalDashboard/WelcomeDialogProvider.tsx",

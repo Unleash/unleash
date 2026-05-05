@@ -11,7 +11,7 @@ interface IApiDetailsProps {
     uiConfig: IPartialUiConfig;
 }
 
-export const ApiDetails = (props: IApiDetailsProps): ReactElement<any> => {
+export const ApiDetails = (props: IApiDetailsProps): ReactElement => {
     const instanceId = props.uiConfig.versionInfo?.instanceId;
     const { name, version, buildNumber } = formatCurrentVersion(props.uiConfig);
     const { environment, billing } = props.uiConfig;

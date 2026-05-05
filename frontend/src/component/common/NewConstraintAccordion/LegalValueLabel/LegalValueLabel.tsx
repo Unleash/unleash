@@ -11,7 +11,7 @@ import { Truncator } from 'component/common/Truncator/Truncator';
 
 interface ILegalValueTextProps {
     legal: ILegalValue;
-    control: React.ReactElement<any>;
+    control: React.ReactElement;
     filter?: string;
     value?: string;
 }

@@ -19,7 +19,7 @@ const StyledContainer = styled('div')({
 
 export const AnnouncerElement = ({
     announcement,
-}: IAnnouncerElementProps): ReactElement<any> => {
+}: IAnnouncerElementProps): ReactElement => {
     return (
         <StyledContainer
             role='status'

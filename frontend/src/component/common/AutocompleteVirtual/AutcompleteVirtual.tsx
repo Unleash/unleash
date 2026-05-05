@@ -1,6 +1,8 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import {
+    type CSSProperties,
     Children,
+    type ComponentPropsWithRef,
     type HTMLAttributes,
     type ReactElement,
     cloneElement,
@@ -8,6 +10,10 @@ import {
     useRef,
 } from 'react';
 import { Autocomplete, type AutocompleteProps } from '@mui/material';
+
+type VirtualizedRowProps = ComponentPropsWithRef<'li'> & {
+    'data-index'?: number;
+};
 
 const ListboxComponent = forwardRef<
     HTMLDivElement,
@@ -37,13 +43,13 @@ const ListboxComponent = forwardRef<
                     {rowVirtualizer.getVirtualItems().map((virtualRow) => {
                         const element = items[
                             virtualRow.index
-                        ] as ReactElement<any>;
+                        ] as ReactElement<VirtualizedRowProps>;
 
                         if (!element) {
                             return null;
                         }
 
-                        const inlineStyle = {
+                        const inlineStyle: CSSProperties = {
                             position: 'absolute',
                             left: 0,
                             width: '100%',

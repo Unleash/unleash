@@ -53,7 +53,7 @@ const Authentication = ({
         return null;
     }
 
-    let content: ReactElement<any>;
+    let content: ReactElement;
     if (authDetails.type === PASSWORD_TYPE) {
         content = (
             <>

@@ -10,7 +10,7 @@ interface IAccessProviderProps {
 
 export const AccessProvider = ({
     children,
-}: IAccessProviderProps): ReactElement<any> => {
+}: IAccessProviderProps): ReactElement => {
     const { permissions } = useAuthPermissions();
 
     const value: IAccessContext = useMemo(

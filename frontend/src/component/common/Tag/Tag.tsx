@@ -34,7 +34,7 @@ const ColorDot = styled('div')<{ $color: string }>(({ theme, $color }) => ({
 interface ITagProps {
     tag: TagSchema;
     onDelete?: () => void;
-    deleteIcon?: ReactElement<any>;
+    deleteIcon?: ReactElement;
     maxLength?: number;
 }
 
@@ -75,7 +75,7 @@ export const Tag = ({
                 {`${tag.type}:${displayValue}`}
             </span>
         </span>
-    ) as ReactElement<any>;
+    ) as ReactElement;
 
     return (
         <StyledChip

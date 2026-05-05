@@ -81,7 +81,7 @@ const CopyBlock: FC<{ title: string; code: string }> = ({ title, code }) => {
 
 export const CodeRenderer: FC<ComponentProps<'code'> & ExtraProps> = ({
     children,
-    className
+    className,
 }) => {
     // In react-markdown v9+, block code fences have a language class; inline code does not.
     // Children may be passed as a string or as an array (e.g. [string]) depending on the version.

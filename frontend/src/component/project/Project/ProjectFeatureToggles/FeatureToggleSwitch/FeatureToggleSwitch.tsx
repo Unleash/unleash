@@ -53,7 +53,7 @@ export const FeatureToggleSwitch: VFC<FeatureToggleSwitchProps> = ({
                     environmentId={environmentName}
                     projectId={projectId}
                     permission={UPDATE_FEATURE_ENVIRONMENT}
-                    inputProps={{ 'aria-label': environmentName }}
+                    slotProps={{ input: { 'aria-label': environmentName } }}
                     onClick={onClick}
                     data-testid={'permission-switch'}
                     disabled={value !== isChecked}

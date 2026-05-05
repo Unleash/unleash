@@ -19,9 +19,19 @@ const LinkRenderer = ({
     );
 };
 
+type MarkdownProps = ComponentProps<typeof ReactMarkdown> & {
+    className?: string;
+};
+
 export const Markdown = ({
     components,
+    className,
     ...props
-}: ComponentProps<typeof ReactMarkdown>) => (
-    <ReactMarkdown components={{ a: LinkRenderer, ...components }} {...props} />
+}: MarkdownProps) => (
+    <div className={className}>
+        <ReactMarkdown
+            components={{ a: LinkRenderer, ...components }}
+            {...props}
+        />
+    </div>
 );

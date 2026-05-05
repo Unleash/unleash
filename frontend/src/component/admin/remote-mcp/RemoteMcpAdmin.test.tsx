@@ -25,7 +25,6 @@ describe('RemoteMcpAdmin', () => {
         testServerRoute(server, '/api/admin/ui-config', {
             flags: { remoteMcpServer: true },
         });
-
         render(<RemoteMcpAdmin />, { permissions: [{ permission: 'ADMIN' }] });
 
         expect(

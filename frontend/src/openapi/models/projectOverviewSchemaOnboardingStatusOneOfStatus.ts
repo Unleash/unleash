@@ -10,6 +10,5 @@ export type ProjectOverviewSchemaOnboardingStatusOneOfStatus =
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ProjectOverviewSchemaOnboardingStatusOneOfStatus = {
     'onboarding-started': 'onboarding-started',
-    'sdk-connected': 'sdk-connected',
     onboarded: 'onboarded',
 } as const;

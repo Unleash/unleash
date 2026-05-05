@@ -2,7 +2,6 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Button,
     styled,
     Typography,
 } from '@mui/material';
@@ -16,6 +15,7 @@ import { FlagCreationButton } from '../../project/Project/PaginatedProjectFeatur
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { SdkExample } from './SdkExample.tsx';
+import { OnboardingProgress } from './OnboardingProgress.tsx';
 
 interface IProjectOnboardingProps {
     projectId: string;
@@ -121,6 +121,8 @@ const SuccessContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2, 2, 2, 2),
 }));
 
+const NUMBER_OF_STEPS = 3;
+
 export const ProjectOnboarding = ({
     projectId,
     setConnectSdkOpen,
@@ -130,7 +132,16 @@ export const ProjectOnboarding = ({
     const { project } = useProjectOverview(projectId);
     const isFirstFlagCreated =
         project.onboardingStatus?.status === 'first-flag-created';
+    const isSDKConnected = project.onboardingStatus?.status === 'sdk-connected';
     const isOndoarded = project.onboardingStatus?.status === 'onboarded';
+
+    const step = isOndoarded
+        ? NUMBER_OF_STEPS
+        : isSDKConnected
+          ? 2
+          : isFirstFlagCreated
+            ? 1
+            : 0;
 
     const closeOnboardingFlow = () => {
         setOnboardingFlow('closed');
@@ -145,19 +156,11 @@ export const ProjectOnboarding = ({
             >
                 <TitleRow>
                     <Typography fontWeight='bold'>Project setup</Typography>
-
-                    {isOndoarded && (
-                        <Button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                closeOnboardingFlow();
-                            }}
-                            variant='outlined'
-                            component='span'
-                        >
-                            Dismiss
-                        </Button>
-                    )}
+                    <OnboardingProgress
+                        step={step}
+                        maxSteps={NUMBER_OF_STEPS}
+                        onDismiss={closeOnboardingFlow}
+                    />
                 </TitleRow>
             </StyledAccordionSummary>
             <StyledAccordionDetails>

@@ -1,4 +1,12 @@
-import { IconButton, styled, Tooltip, Typography } from '@mui/material';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button,
+    styled,
+    Typography,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Add from '@mui/icons-material/Add';
 import {
     UPDATE_PROJECT,
@@ -8,7 +16,6 @@ import { FlagCreationButton } from '../../project/Project/PaginatedProjectFeatur
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { SdkExample } from './SdkExample.tsx';
-import CloseIcon from '@mui/icons-material/Close';
 
 interface IProjectOnboardingProps {
     projectId: string;
@@ -22,25 +29,34 @@ interface ICreateFlagProps {
     refetchFeatures: () => void;
 }
 
-const Container = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: theme.palette.background.paper,
-    flexBasis: '70%',
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    background: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const TitleBox = styled('div')(({ theme }) => ({
-    padding: theme.spacing(2, 2.5, 2, 5),
-    borderBottom: '1px solid',
-    borderColor: theme.palette.divider,
-    minHeight: '80px',
+const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+    padding: theme.spacing(0.5, 3),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const TitleRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    padding: 0,
+    margin: 0,
+    marginRight: theme.spacing(1),
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    padding: 0,
 }));
 
 const Actions = styled('div')(({ theme }) => ({
     display: 'flex',
     flexGrow: 1,
-    padding: theme.spacing(0, 1),
     [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
         padding: theme.spacing(0),
@@ -105,13 +121,6 @@ const SuccessContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2, 2, 2, 2),
 }));
 
-const TitleRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-}));
-
 export const ProjectOnboarding = ({
     projectId,
     setConnectSdkOpen,
@@ -121,67 +130,80 @@ export const ProjectOnboarding = ({
     const { project } = useProjectOverview(projectId);
     const isFirstFlagCreated =
         project.onboardingStatus?.status === 'first-flag-created';
+    const isOndoarded = project.onboardingStatus?.status === 'onboarded';
 
     const closeOnboardingFlow = () => {
         setOnboardingFlow('closed');
     };
 
     return (
-        <Container>
-            <TitleBox>
+        <StyledAccordion defaultExpanded>
+            <StyledAccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls='panel1-content'
+                id='panel1-header'
+            >
                 <TitleRow>
-                    <Typography fontWeight='bold'>
-                        Welcome to your project
-                    </Typography>
-                    <Tooltip title='Close' arrow>
-                        <IconButton onClick={closeOnboardingFlow} size='small'>
-                            <CloseIcon />
-                        </IconButton>
-                    </Tooltip>
-                </TitleRow>
-                <Typography variant='body2'>
-                    Complete the steps below to start working with this project
-                </Typography>
-            </TitleBox>
-            <Actions>
-                <ActionBox>
-                    {project.onboardingStatus?.status ===
-                    'first-flag-created' ? (
-                        <ExistingFlag />
-                    ) : (
-                        <CreateFlag
-                            projectId={projectId}
-                            refetchFeatures={refetchFeatures}
-                        />
+                    <Typography fontWeight='bold'>Project setup</Typography>
+
+                    {isOndoarded && (
+                        <Button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                closeOnboardingFlow();
+                            }}
+                            variant='outlined'
+                            component='span'
+                        >
+                            Dismiss
+                        </Button>
                     )}
-                </ActionBox>
-                <ActionBox>
-                    <TitleContainer>
-                        <NeutralCircleContainer>2</NeutralCircleContainer>
-                        Connect an SDK
-                    </TitleContainer>
-                    <Typography>
-                        Your project is not yet connected to any SDK. To start
-                        using your feature flag, connect an SDK to the project.
-                    </Typography>
-                    <ResponsiveButton
-                        onClick={() => {
-                            setConnectSdkOpen(true);
-                        }}
-                        maxWidth='200px'
-                        projectId={projectId}
-                        Icon={Add}
-                        disabled={!isFirstFlagCreated}
-                        permission={[UPDATE_PROJECT, CREATE_PROJECT_API_TOKEN]}
-                    >
-                        Connect SDK
-                    </ResponsiveButton>
-                </ActionBox>
-                <ActionBox>
-                    <SdkExample />
-                </ActionBox>
-            </Actions>
-        </Container>
+                </TitleRow>
+            </StyledAccordionSummary>
+            <StyledAccordionDetails>
+                <Actions>
+                    <ActionBox>
+                        {project.onboardingStatus?.status ===
+                        'first-flag-created' ? (
+                            <ExistingFlag />
+                        ) : (
+                            <CreateFlag
+                                projectId={projectId}
+                                refetchFeatures={refetchFeatures}
+                            />
+                        )}
+                    </ActionBox>
+                    <ActionBox>
+                        <TitleContainer>
+                            <NeutralCircleContainer>2</NeutralCircleContainer>
+                            Connect SDKs
+                        </TitleContainer>
+                        <Typography>
+                            To start using your feature flag, connect an SDK to
+                            the project.
+                        </Typography>
+                        <ResponsiveButton
+                            onClick={() => {
+                                setConnectSdkOpen(true);
+                            }}
+                            maxWidth='200px'
+                            projectId={projectId}
+                            Icon={Add}
+                            disabled={!isFirstFlagCreated}
+                            permission={[
+                                UPDATE_PROJECT,
+                                CREATE_PROJECT_API_TOKEN,
+                            ]}
+                        >
+                            Connect SDK
+                        </ResponsiveButton>
+                    </ActionBox>
+                    <ActionBox>
+                        <SdkExample />
+                    </ActionBox>
+                </Actions>
+            </StyledAccordionDetails>
+        </StyledAccordion>
     );
 };
 
@@ -194,11 +216,10 @@ const CreateFlag = ({ projectId, refetchFeatures }: ICreateFlagProps) => {
                 Create a feature flag
             </TitleContainer>
             <Typography>
-                The project currently holds no feature flags. Create one to get
-                started.
+                You must create a feature flag before you can connect a SDK.
             </Typography>
             <FlagCreationButton
-                text='Create flag'
+                text='New feature flag'
                 skipNavigationOnComplete={true}
                 onSuccess={() => {
                     refetch();

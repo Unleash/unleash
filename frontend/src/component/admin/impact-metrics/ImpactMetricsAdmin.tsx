@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-    Box,
     Button,
     FormControlLabel,
     Link,
@@ -17,6 +16,12 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useUiFlag } from 'hooks/useUiFlag';
 import NotFound from 'component/common/NotFound/NotFound';
 
+const Layout = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+}));
+
 const Card = styled('section')(({ theme }) => ({
     padding: theme.spacing(3),
     backgroundColor: theme.palette.background.elevation1,
@@ -26,11 +31,34 @@ const Card = styled('section')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const Layout = styled('div')(({ theme }) => ({
+const StatusCard = styled(Card)({
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+});
+
+const IconHeader = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(3),
+    alignItems: 'center',
+    gap: theme.spacing(1),
 }));
+
+const RightAlignedRow = styled('div')({
+    display: 'flex',
+    justifyContent: 'flex-end',
+});
+
+const Footer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    borderTop: `1px solid ${theme.palette.divider}`,
+}));
+
+const StatusToggleLabel = styled(FormControlLabel)({
+    margin: 0,
+});
 
 const DOCS_URL =
     'https://docs.getunleash.io/concepts/impact-metrics#enable-external-metrics';
@@ -57,23 +85,17 @@ const ImpactMetricsPage = () => {
         <PageContent header={<PageHeader titleElement='Impact Metrics' />}>
             <Layout>
                 <Card>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 1,
-                        }}
-                    >
+                    <IconHeader>
                         <InfoOutlinedIcon fontSize='small' color='primary' />
                         <Typography fontWeight='bold'>
                             How does it work?
                         </Typography>
-                    </Box>
+                    </IconHeader>
                     <Typography variant='body2' color='text.secondary'>
-                        This integration allows Unleash to read your
-                        organization's own metrics from any Prometheus API
-                        compatible source (e.g. Prometheus, VictoriaMetrics).
-                        Once connected, you can use those metrics to:
+                        Unleash can read your organization's own metrics from
+                        any Prometheus API compatible source (e.g. Prometheus,
+                        VictoriaMetrics). Once connected, you can use those
+                        metrics to:
                     </Typography>
                     <Typography
                         variant='body2'
@@ -93,18 +115,11 @@ const ImpactMetricsPage = () => {
                     </Typography>
                 </Card>
 
-                <Card
-                    sx={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                    }}
-                >
+                <StatusCard>
                     <Typography fontWeight='bold'>
-                        Integration status
+                        External metrics status
                     </Typography>
-                    <FormControlLabel
-                        sx={{ m: 0 }}
+                    <StatusToggleLabel
                         control={
                             <Switch
                                 checked={enabled}
@@ -114,16 +129,16 @@ const ImpactMetricsPage = () => {
                         }
                         label={enabled ? 'Enabled' : 'Disabled'}
                     />
-                </Card>
+                </StatusCard>
 
                 <Card>
                     <Typography fontWeight='bold'>
                         Metrics source URL
                     </Typography>
                     <Typography variant='body2' color='text.secondary'>
-                        To set up this integration, add the URL to your
-                        organization's Prometheus API compatible source (e.g.
-                        Prometheus, VictoriaMetrics). Check out{' '}
+                        Add the URL to your organization's Prometheus API
+                        compatible source (e.g. Prometheus, VictoriaMetrics).
+                        Check out{' '}
                         <Link
                             href={DOCS_URL}
                             target='_blank'
@@ -142,26 +157,17 @@ const ImpactMetricsPage = () => {
                         fullWidth
                         size='small'
                     />
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <RightAlignedRow>
                         <Button variant='contained' disabled={!prometheusUrl}>
-                            Test integration
+                            Test connection
                         </Button>
-                    </Box>
+                    </RightAlignedRow>
                 </Card>
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        gap: 2,
-                        pt: 2,
-                        borderTop: 1,
-                        borderColor: 'divider',
-                    }}
-                >
+                <Footer>
                     <Button>Cancel</Button>
                     <Button variant='contained'>Save</Button>
-                </Box>
+                </Footer>
             </Layout>
         </PageContent>
     );

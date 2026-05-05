@@ -137,10 +137,6 @@ export const DefineMetricForm = ({
                     id={metricNameInputId}
                     value={metricName}
                     onChange={(event) => setMetricName(event.target.value)}
-                    inputProps={{
-                        pattern: '^[a-zA-Z_:][a-zA-Z0-9_:]*$',
-                        title: 'The name must contain only alphanumeric characters, underscores, and colons. It must start with a letter.',
-                    }}
                     placeholder='e.g., checkout_error_count'
                     variant='outlined'
                     size='small'
@@ -150,6 +146,12 @@ export const DefineMetricForm = ({
                     sx={{
                         '.MuiFormHelperText-root': {
                             marginInline: 0,
+                        },
+                    }}
+                    slotProps={{
+                        htmlInput: {
+                            pattern: '^[a-zA-Z_:][a-zA-Z0-9_:]*$',
+                            title: 'The name must contain only alphanumeric characters, underscores, and colons. It must start with a letter.',
                         },
                     }}
                 />

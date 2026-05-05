@@ -51,14 +51,17 @@ export const DateTimePicker = ({
                 const parsedDate = parseValidDate(e.target.value);
                 onChange(parsedDate ?? value);
             }}
-            FormHelperTextProps={{
-                'data-testid': INPUT_ERROR_TEXT,
-            }}
-            inputProps={{
-                min: min ? getDate(min.toISOString()) : min,
-                max: max ? getDate(max.toISOString()) : max,
-            }}
             {...rest}
+            slotProps={{
+                htmlInput: {
+                    min: min ? getDate(min.toISOString()) : min,
+                    max: max ? getDate(max.toISOString()) : max,
+                },
+
+                formHelperText: {
+                    'data-testid': INPUT_ERROR_TEXT,
+                },
+            }}
         />
     );
 };

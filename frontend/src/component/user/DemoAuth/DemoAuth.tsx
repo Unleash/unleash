@@ -65,7 +65,6 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                         value={email}
                         className={styles.emailField}
                         onChange={handleChange}
-                        inputProps={{ 'data-testid': 'email-input-field' }}
                         size='small'
                         variant='outlined'
                         label='Email'
@@ -74,6 +73,9 @@ const DemoAuth: VFC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                         data-testid={LOGIN_EMAIL_ID}
                         required
                         type={email === 'admin' ? 'text' : 'email'}
+                        slotProps={{
+                            htmlInput: { 'data-testid': 'email-input-field' },
+                        }}
                     />
 
                     <Button

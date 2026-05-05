@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
-    "@biomejs/biome": "2.4.6",
+    "@biomejs/biome": "2.4.13",
     "@codemirror/lang-json": "6.0.2",
     "@emotion/babel-plugin": "^11.13.5",
     "@emotion/react": "11.14.0",

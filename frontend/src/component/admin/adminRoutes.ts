@@ -167,6 +167,14 @@ export const adminRoutes: INavigationMenuItem[] = [
         flag: 'remoteMcpServer',
     },
 
+    // Impact Metrics
+    {
+        path: '/admin/impact-metrics',
+        title: 'Impact Metrics',
+        menu: { adminSettings: true },
+        flag: 'externalImpactMetrics',
+    },
+
     // Instance configuration
     {
         path: '/admin/maintenance',

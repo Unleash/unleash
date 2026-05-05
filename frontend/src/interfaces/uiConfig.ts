@@ -93,6 +93,7 @@ export type UiFlags = {
     onboardingProjectSetupNewSteps?: boolean;
     multiMetricChart?: boolean;
     remoteMcpServer?: boolean;
+    externalImpactMetrics?: boolean;
 };
 
 export interface IVersionInfo {

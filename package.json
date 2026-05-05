@@ -178,7 +178,7 @@
     "ts-node": "10.9.2",
     "tsc-watch": "7.2.0",
     "typescript": "5.9.3",
-    "vite-node": "^5.3.0",
+    "vite-node": "^6.0.0",
     "vitest": "^4.0.18",
     "wait-on": "^9.0.4"
   },

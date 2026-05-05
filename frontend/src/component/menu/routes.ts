@@ -49,6 +49,7 @@ import { FeedbackList } from '../feedbackNew/FeedbackList.jsx';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
 import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject.jsx';
+import { LazyStoriesPage } from 'component/stories/LazyStoriesPage';
 import { PersonalDashboard } from '../personalDashboard/PersonalDashboard.jsx';
 import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseManagement';
 import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
@@ -509,6 +510,15 @@ export const routes: IRoute[] = [
     },
 
     /* If you update this route path, make sure you update the path in SWRProvider.tsx */
+    {
+        path: '/_stories',
+        title: 'Stories',
+        hidden: true,
+        component: LazyStoriesPage,
+        type: 'unprotected',
+        menu: {},
+        isStandalone: true,
+    },
     {
         path: '/login',
         title: 'Log in',
